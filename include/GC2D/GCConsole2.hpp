@@ -23,6 +23,7 @@ class TMessageLoader;
 class TBathtub;
 class TBossEel;
 class TConsoleStr;
+class TTakeActor;
 
 class TGCConsole2 : public JDrama::TViewObj {
 public:
@@ -174,7 +175,7 @@ public:
 	/* 0xB8 */ u32 unkB8;
 	/* 0xBC */ TBathtub* unkBC;
 	/* 0xC0 */ TBossEel* unkC0;
-	/* 0xC4 */ void* unkC4;
+	/* 0xC4 */ TTakeActor* unkC4;
 	/* 0xC8 */ TBoundPane* unkC8;
 	/* 0xCC */ TBoundPane* unkCC;
 	/* 0xD0 */ TBoundPane* unkD0;
