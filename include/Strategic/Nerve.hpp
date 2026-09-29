@@ -19,12 +19,18 @@ public:
 		static const Name& theNerve();                                         \
 	};
 
-#define DEFINE_NERVE(Name, T)                                                  \
+#define DEFINE_NERVE_INSTANCE(Name)                                            \
 	const Name& Name::theNerve()                                               \
 	{                                                                          \
 		static Name instance;                                                  \
 		return instance;                                                       \
-	}                                                                          \
+	}
+
+#define DEFINE_NERVE_EXECUTE(Name, T)                                          \
 	BOOL Name::execute(TSpineBase<T>* spine) const
+
+#define DEFINE_NERVE(Name, T)                                                  \
+	DEFINE_NERVE_INSTANCE(Name)                                                \
+	DEFINE_NERVE_EXECUTE(Name, T)
 
 #endif
