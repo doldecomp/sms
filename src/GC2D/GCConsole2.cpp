@@ -57,19 +57,21 @@ JUTPoint TGCConsole2::cCoinTopPoint(0, 0);
 JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
-// Possibly inline
+// Possibly inline: retail computes this in two steps (neg, then add),
+// which only survives folding across an inline boundary.
 static inline int getOffsetForAboveScreen(const TExPane* pane)
 {
 	return -(pane->mInitialBounds.y2 + 1);
 }
 
-// Possibly inline
+// Possibly inline: retail computes this in two steps (subfic 465, then
+// addi 60), which only survives folding across an inline boundary.
 static inline int getOffsetForBelowScreen(const TExPane* pane)
 {
 	return 465 - pane->mInitialBounds.y1;
 }
 
-// Possibly inline
+// fabricated: shared code, 2 calls in processAppearCoin, processDownCoin.
 static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
                                           J2DPane* pane)
 {
@@ -79,19 +81,19 @@ static inline void setEmitterToPaneCenter(JPABaseEmitter* emitter,
 	                                0.0f);
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in loadAfter.
 static inline void syncPaneBounds(TBoundPane* pane)
 {
 	pane->unk4 = pane->getPane()->mBounds;
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in loadAfter, detachBoundPaneFromParent.
 static inline void detachPaneFromParent(J2DPane* pane)
 {
 	pane->mPaneTree.getParent()->removeChild(&pane->mPaneTree);
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in drawWaterBack.
 static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
                                     f32 topTex, f32 bottomTex)
 {
@@ -107,7 +109,7 @@ static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
 	GXEnd();
 }
 
-// Possibly inline
+// fabricated: called once, from drawWaterBack.
 static inline u32 getPressureFlashColor(u8& counter)
 {
 	u32 color = 0xff3f3f00;
@@ -129,14 +131,15 @@ static inline u32 getPressureFlashColor(u8& counter)
 	return color;
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in drawWaterOrJuice, updateWaterGaugeFill,
+// updateYoshiJuiceIconState.
 static inline bool isMountedYoshi(TMario* mario)
 {
 	TYoshi* yoshi = mario->mYoshi;
 	return yoshi != nullptr && yoshi->mState == TYoshi::STATE_MOUNTED;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateWaterGaugeFill(TGCConsole2* console)
 {
 	TMario* mario       = gpMarioOriginal;
@@ -198,7 +201,7 @@ static inline void updateWaterGaugeFill(TGCConsole2* console)
 	console->unk28 = currentWater;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateYoshiJuiceIconState(TGCConsole2* console)
 {
 	if (isMountedYoshi(gpMarioOriginal)) {
@@ -228,7 +231,7 @@ static inline void updateYoshiJuiceIconState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 2 calls in perform.
 static inline void playHudMoveSound(u32 soundID)
 {
 	if (gpMarDirector->unk124 != 0)
@@ -240,14 +243,14 @@ static inline void playHudMoveSound(u32 soundID)
 	SMSGetMSound()->startSoundSystemSE(soundID, 0, nullptr, 0);
 }
 
-// fabricated
+// fabricated: shared code, 4 calls in processBalloonTextStep.
 static inline void writeBalloonTextByte(TGCConsole2* console, u8 value)
 {
 	console->unk3D8->write(&value, 1);
 	console->unk3DC->write(&value, 1);
 }
 
-// fabricated
+// fabricated: shared code, 2 calls in processBalloonTextStep.
 static inline void writeBalloonColor(TGCConsole2* console, const char* text,
                                      int length)
 {
@@ -255,7 +258,7 @@ static inline void writeBalloonColor(TGCConsole2* console, const char* text,
 	console->unk3DC->write(text, length);
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void processBalloonTextStep(TGCConsole2* console)
 {
 	JSUMemoryInputStream* input   = (JSUMemoryInputStream*)console->unk3D4;
@@ -351,7 +354,7 @@ static inline void processBalloonTextStep(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 5 calls in startCameraDemo, updateLifeMeterState.
 static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 {
 	if (console->unk38 || console->unk4C)
@@ -369,7 +372,7 @@ static inline bool startLifeMeterDisappear(TGCConsole2* console, u16 frame)
 	return true;
 }
 
-// fabricated
+// fabricated: shared code, 4 calls in startAppearLife, startInsertLife.
 static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 {
 	if (console->unk1CC[0] >= 4) {
@@ -399,7 +402,7 @@ static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 2 calls in updateLifeMeterState.
 static inline void playLifeChangeSound(u32 sound)
 {
 	if (gpMarDirector->mState == TMarDirector::STATE_UNK4
@@ -408,7 +411,7 @@ static inline void playLifeChangeSound(u32 sound)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateLifeMeterState(TGCConsole2* console)
 {
 	u8 amount;
@@ -636,27 +639,28 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in loadAfter.
 static inline void detachBoundPaneFromParent(TBoundPane* pane)
 {
 	detachPaneFromParent(pane->getPane());
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in loadAfter.
 static inline void initHiddenPaneAbove(TExPane* pane)
 {
 	pane->updatePaneOffset(1, 0, -(pane->mInitialBounds.y2 + 1));
 	pane->update();
 }
 
-// fabricated
+// fabricated: called once, from loadAfter.
 static inline void initHiddenPaneOffset(TExPane* pane, int offset)
 {
 	pane->updatePaneOffset(1, 0, offset);
 	pane->update();
 }
 
-// fabricated
+// fabricated: shared code, 43 calls in loadAfter, setCounterDigits,
+// setShineDigits and 6 more.
 template <class Pane>
 static inline void setDigitPane(Pane* pane, JUTTexture** textures, int digit)
 {
@@ -664,26 +668,8 @@ static inline void setDigitPane(Pane* pane, JUTTexture** textures, int digit)
 	    ->changeTexture(textures[digit]->getTexInfo(), 0);
 }
 
-// fabricated
-template <class Pane>
-static inline void setThreeDigits(Pane** panes, JUTTexture** textures,
-                                  int value, bool showHundreds)
-{
-	int hundreds = value / 100;
-	int tens     = (value / 10) % 10;
-	int ones     = value % 10;
-
-	setDigitPane(panes[0], textures, hundreds);
-	setDigitPane(panes[1], textures, tens);
-	setDigitPane(panes[2], textures, ones);
-
-	if (showHundreds && value >= 100)
-		panes[0]->getPane()->show();
-	else
-		panes[0]->getPane()->hide();
-}
-
-// fabricated
+// fabricated: shared code, 3 calls in loadAfter, updateMarioAppearState,
+// updateMarioLifeCounter.
 static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
                                 int value)
 {
@@ -691,7 +677,7 @@ static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
 	setDigitPane(panes[1], textures, value % 10);
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateMarioLifeCounter(TGCConsole2* console)
 {
 	int lives = TFlagManager::smInstance->getFlag(0x20001);
@@ -704,7 +690,7 @@ static inline void updateMarioLifeCounter(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: called once, from loadAfter.
 template <class Pane>
 static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
                                     int value)
@@ -721,7 +707,7 @@ static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
 	}
 }
 
-// fabricated
+// fabricated: called once, from loadAfter.
 template <class Pane>
 static inline void setShineDigits(Pane** panes, JUTTexture** textures,
                                   int value)
@@ -741,7 +727,7 @@ static inline void setShineDigits(Pane** panes, JUTTexture** textures,
 	}
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in updateCounterState, updateRedCoinCounter.
 static inline void emitCounterParticle(TBoundPane* pane)
 {
 	JUTRect bounds(pane->getPane()->mGlobalBounds);
@@ -751,7 +737,7 @@ static inline void emitCounterParticle(TBoundPane* pane)
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
 }
 
-// fabricated
+// fabricated: shared code, 5 calls in updateCoinCounterAnimation.
 static inline void emitAtPaneCenter(TBoundPane* pane, JUTRect& bounds)
 {
 	bounds = pane->getPane()->mGlobalBounds;
@@ -761,7 +747,7 @@ static inline void emitAtPaneCenter(TBoundPane* pane, JUTRect& bounds)
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
 }
 
-// fabricated
+// fabricated: shared code, 5 calls in updateCounterState.
 static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
                                  int digit)
 {
@@ -772,7 +758,7 @@ static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
 	gpEmitterManager4D2->createEmitter(position, 0x1FC, nullptr, nullptr);
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateRedCoinCounter(TGCConsole2* console)
 {
 	int redCoins = TFlagManager::smInstance->getFlag(0x60000);
@@ -791,7 +777,7 @@ static inline void updateRedCoinCounter(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateCoinCounterAnimation(TGCConsole2* console)
 {
 	if ((s8)console->unk68 <= 0)
@@ -894,7 +880,7 @@ static inline void updateCoinCounterAnimation(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateJetCounterAnimation(TGCConsole2* console)
 {
 	int flag   = -1;
@@ -965,7 +951,7 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 		setDigitPane(console->unk414[1], console->unkE0, ones);
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateCounterState(TGCConsole2* console)
 {
 	int blueTotal = TFlagManager::smInstance->getFlag(0x40001);
@@ -1105,7 +1091,7 @@ static inline void updateCounterState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateCoinCounter(TGCConsole2* console)
 {
 	int coins = TFlagManager::smInstance->getFlag(0x40002);
@@ -1138,7 +1124,7 @@ static inline void updateCoinCounter(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateStarHudAutoHide(TGCConsole2* console)
 {
 	if (console->unk34)
@@ -1161,7 +1147,7 @@ static inline void updateStarHudAutoHide(TGCConsole2* console)
 	console->unk5A = 0;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateLifeMeterBlink(TGCConsole2* console)
 {
 	if (!console->unk1C4->getPane()->isVisible())
@@ -1215,7 +1201,7 @@ static inline void updateLifeMeterBlink(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 2 calls in processAppearCoin, processAppearStar.
 static inline void updateDownBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1233,7 +1219,8 @@ static inline void updateDownBlendPaneState(TBlendPane*& pane, bool& isFinished)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 18 calls in processAppearCoin, processAppearMario,
+// processAppearStar and 1 more.
 static inline void updateDownPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1251,7 +1238,8 @@ static inline void updateDownPaneState(TBoundPane*& pane, bool& isFinished)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 15 calls in processAppearJet, processAppearRed,
+// processAppearTank and 1 more.
 static inline void updateUpPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1269,7 +1257,7 @@ static inline void updateUpPaneState(TBoundPane*& pane, bool& isFinished)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 2 calls in processAppearTank.
 static inline void updateUpPaneStateAfter(TBoundPane*& pane, bool& isFinished,
                                           int frame, int startFrame)
 {
@@ -1288,7 +1276,7 @@ static inline void updateUpPaneStateAfter(TBoundPane*& pane, bool& isFinished,
 	}
 }
 
-// fabricated
+// fabricated: called once, from processAppearJet.
 static inline void updateUpBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1306,7 +1294,7 @@ static inline void updateUpBlendPaneState(TBlendPane*& pane, bool& isFinished)
 	}
 }
 
-// fabricated
+// fabricated: shared code, 3 calls in processDownCoin.
 static inline void updateCoinPaneState(TBoundPane*& pane, bool& isFinished)
 {
 	if (pane->update()) {
@@ -1324,7 +1312,7 @@ static inline void updateCoinPaneState(TBoundPane*& pane, bool& isFinished)
 	}
 }
 
-// fabricated
+// fabricated: called once, from processDownCoin.
 static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	pane->update();
@@ -1344,7 +1332,7 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateShineAppearState(TGCConsole2* console)
 {
 	if (!console->unk34)
@@ -1361,7 +1349,7 @@ static inline void updateShineAppearState(TGCConsole2* console)
 	++console->unk5C;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateJetAppearState(TGCConsole2* console)
 {
 	if (console->unk3D && console->processAppearJet(console->unk72++)) {
@@ -1369,7 +1357,7 @@ static inline void updateJetAppearState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateRedCoinAppearState(TGCConsole2* console)
 {
 	if (console->unk3C && console->processAppearRed(console->unk74++)) {
@@ -1377,7 +1365,7 @@ static inline void updateRedCoinAppearState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateTimerAppearState(TGCConsole2* console)
 {
 	if (console->unk3E && console->processAppearTimer(console->unk76++)) {
@@ -1385,7 +1373,7 @@ static inline void updateTimerAppearState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateTelopState(TGCConsole2* console, u32 flags)
 {
 	if (console->unk42) {
@@ -1440,7 +1428,7 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 		++console->unk55C;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateWaterTankState(TGCConsole2* console)
 {
 	if (console->unk45 && console->processAppearTank(console->unk7C++)) {
@@ -1483,14 +1471,14 @@ static inline void updateWaterTankState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateCoinAppearState(TGCConsole2* console)
 {
 	if (console->unk4F && console->processAppearCoin(console->unk88++))
 		console->unk4F = 0;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void updateMarioAppearState(TGCConsole2* console)
 {
 	if (console->unk3A && console->processAppearMario(console->unk70++)) {
@@ -1519,7 +1507,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 	}
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline bool updateBalloonAppearState(TGCConsole2* console)
 {
 	if (!console->processAppearBalloon())
@@ -1532,7 +1520,7 @@ static inline bool updateBalloonAppearState(TGCConsole2* console)
 	return true;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline bool updateBalloonDisappearState(TGCConsole2* console)
 {
 	if (!console->processDisappearBalloon())
@@ -1552,7 +1540,7 @@ static inline bool updateBalloonDisappearState(TGCConsole2* console)
 	return true;
 }
 
-// fabricated
+// fabricated: one section of perform, called once.
 static inline void drawWaterOrJuice(TGCConsole2* console, J2DOrthoGraph& graph)
 {
 	if (isMountedYoshi(gpMarioOriginal)) {
