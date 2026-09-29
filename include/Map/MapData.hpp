@@ -53,7 +53,8 @@ enum BGTypeBits {
 
 	BG_TYPE_OOB = 0x600,
 
-	BG_TYPE_SAND = 0x701,
+	BG_TYPE_UNK700 = 0x700,
+	BG_TYPE_SAND   = 0x701,
 
 	BG_TYPE_DEATH_PLANE                              = 0x800,
 	BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH = 0x801,
@@ -258,6 +259,14 @@ public:
 	bool isUnk300() const
 	{
 		if (mBGType == BG_TYPE_UNK300)
+			return true;
+		else
+			return false;
+	}
+
+	bool isUnk700() const
+	{
+		if (mBGType == BG_TYPE_UNK700)
 			return true;
 		else
 			return false;
