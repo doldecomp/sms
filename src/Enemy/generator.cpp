@@ -27,8 +27,8 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 	stream >> mPos.x >> mPos.y >> mPos.z;
 	stream >> mRot.x >> mRot.y >> mRot.z;
 
-	f32 unused;
-	stream >> unused >> unused >> unused;
+	JGeometry::TVec3<f32> scale;
+	stream >> scale.x >> scale.y >> scale.z;
 	stream.readString();
 
 	s32 count = stream.readS32();
@@ -44,8 +44,7 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 	stream >> mInterval;
 
 	s32 timer = mInterval;
-	timer *= MsRandF();
-	mTimer = timer;
+	mTimer    = timer * MsRandF();
 
 	gpConductor->registerGenerator(this);
 }
@@ -109,9 +108,9 @@ void TOneShotGenerator::loadAfter()
 		initHitActor(0x2000001, 1, 0x80000000, 80.0f, 120.0f, 80.0f, 120.0f);
 		offHitFlag(HIT_FLAG_NO_COLLISION);
 
-		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
-		    ->getChildren()
-		    .push_back(this);
+		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search("敵グループ"));
+		group->getChildren().push_back(this);
 		gpConductor->registerOtherObj(this);
 	}
 }
