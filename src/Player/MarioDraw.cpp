@@ -1268,7 +1268,7 @@ void TMario::initModel()
 
 	SomeModelMarioStruct* setInfo = new SomeModelMarioStruct[2];
 	setInfo[0] = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
-	setInfo[1] = (SomeModelMarioStruct) { mJointIdChnChest, 2, 1, 0, 0, 1 };
+	setInfo[1] = (SomeModelMarioStruct) { mJointIdChest, 2, 1, 0, 0, 1 };
 	modelMario->unk10 = 2;
 	modelMario->unk24 = setInfo;
 
@@ -1402,7 +1402,7 @@ void TMario::initModel()
 	mMultiMtxEffect                 = new TMultiMtxEffect;
 	mMultiMtxEffect->mNumBones      = 3;
 	u16* boneIds                    = new u16[3];
-	boneIds[0]                      = mJointIdChnChest;
+	boneIds[0]                      = mJointIdChest;
 	boneIds[1]                      = mJointIdArmR1;
 	boneIds[2]                      = mJointIdArmL1;
 	mMultiMtxEffect->mBoneIDs       = boneIds;
@@ -1790,7 +1790,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 		    ->setCallBack(MarioHeadCtrl);
 	}
 
-	modelData->getJointNodePointer(mJointIdChest)->setCallBack(MarioWaistCtrl);
+	modelData->getJointNodePointer(mJointIdChnChest)->setCallBack(MarioWaistCtrl);
 
 	if (0x4B0 > gpMarDirector->mMoveTickCount || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
@@ -1919,7 +1919,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 
 	J3DModelData* modelData = mModel->unk8->getModelData();
 	modelData->getJointNodePointer(mJointIdHead)->setCallBack(nullptr);
-	modelData->getJointNodePointer(mJointIdChest)->setCallBack(nullptr);
+	modelData->getJointNodePointer(mJointIdChnChest)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChnFootR)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);

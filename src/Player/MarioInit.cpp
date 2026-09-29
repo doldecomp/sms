@@ -217,8 +217,8 @@ TMario::TMario()
 	mHandModels[1][0] = nullptr;
 	mHandModels[1][1] = nullptr;
 
-	mJointIdChnChest = 0;
 	mJointIdChest    = 0;
+	mJointIdChnChest = 0;
 	mJointIdArmR1    = 0;
 	mJointIdArmL1    = 0;
 	mJointIdHandR    = 0;
