@@ -204,8 +204,8 @@ void TEnemyMario::initModel()
 	frameCtrl[2].setRate(SMSGetAnmFrameRate());
 
 	SomeModelMarioStruct* setInfo = new SomeModelMarioStruct[2];
-	setInfo[0] = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
-	setInfo[1] = (SomeModelMarioStruct) { mJointIdChest, 2, 1, 0, 0, 1 };
+	setInfo[0]        = (SomeModelMarioStruct) { 0, 2, 0, 0x14, 0x41, 0 };
+	setInfo[1]        = (SomeModelMarioStruct) { mJointIdChest, 2, 1, 0, 0, 1 };
 	modelMario->unk10 = 2;
 	modelMario->unk24 = setInfo;
 
