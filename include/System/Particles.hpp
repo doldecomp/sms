@@ -261,6 +261,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_KIL_SMOKE                 = 0x174,
 	PARTICLE_MS_PUKU_PICHI                = 0x177,
 	PARTICLE_MS_PUKU_AWA                  = 0x178,
+	PARTICLE_MS_BOMB_LIMIT                = 0x17F,
 	PARTICLE_MS_TAMA_HIT                  = 0x185,
 	PARTICLE_MS_TAMA_BLUR                 = 0x186,
 	PARTICLE_MS_TLS_YODARE_L              = 0x187,
