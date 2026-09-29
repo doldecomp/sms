@@ -26,6 +26,7 @@
 #include <System/ParamInst.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 #include <M3DUtil/M3UJoint.hpp>
 
 static const char* bwanwan_bastable[] = {
@@ -471,7 +472,29 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message) { }
 
 MtxPtr TBWPicket::getTakingMtx() { return unk74; }
 
-BOOL TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos) { }
+BOOL TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos)
+{
+	if (mOwner->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
+	    || mOwner->mSpine->getLatestNerve() == &TNerveBWDie::theNerve()
+	    || mOwner->mHitPoints != 0) {
+		return FALSE;
+	}
+
+	TBWLeash* leash = mOwner->mLeash;
+	TRope* rope     = leash->mRope;
+
+	JGeometry::TVec3<f32> delta = rope->mPoints->unkC;
+
+	rope->constraintTail(pos);
+
+	// calculate displacement
+	delta.sub(rope->mPoints->unkC);
+	delta.negate();
+
+	leash->mOwner->mPicketPullDelta = delta;
+
+	return TRUE;
+}
 
 DEFINE_NERVE(TNerveBWGraphWander, TLiveActor) { }
 DEFINE_NERVE(TNerveBWRoll, TLiveActor) { }

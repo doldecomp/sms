@@ -11,8 +11,8 @@
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+#include <MarioUtil/MtxUtil.hpp>
 
-class TLiveActor;
 class TBossWanwan;
 class TBWLeash;
 class TBWLeashNode;
@@ -58,11 +58,11 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
 
-	/* 0x4  */ u32 unk0; // fabr
-	/* 0x8  */ u32 unk1; // fabr
-	/* 0xc  */ u32 unk2; // fabr
-	/* 0x10 */ f32 unk3; // fabr
-	/* 0x14 */ f32 unk4; // fabr
+	/* 0x4  */ u32 unk4;
+	/* 0x8  */ u32 unk8;
+	/* 0xc  */ u32 unkc;
+	/* 0x10 */ TBossWanwan* mOwner;
+	/* 0x14 */ TRope* mRope;
 	/* 0x18 */ TBWLeashNode** mNodes;
 };
 
@@ -139,15 +139,12 @@ public:
 
 	f32 getUnk168() const { return unk168; }
 
-private:
-	/* 0x150 */ TBWLeash* mLeash;
-	/* 0x154 */ TBWPicket* mPicket;
+	/* 0x150 */ TBWPicket* mPicket;
+	/* 0x154 */ TBWLeash* mLeash;
 	/* 0x158 */ TBWLeashNode* mChainRoot;
-	/* 0x15C */ TBossWanwanMtxCalc* mMtxCalc;
-	/* 0x160 */ u32 unk160;
-	/* 0x164 */ u32 unk164;
+	/* 0x15C */ JGeometry::TVec3<f32> mPicketPullDelta; // guessed name
 	/* 0x168 */ f32 unk168;
-	/* 0x16C */ u32 unk16C;
+	/* 0x16C */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x170 */ u32 unk170;
 	/* 0x174 */ u32 unk174;
 	/* 0x178 */ u32 unk178;
