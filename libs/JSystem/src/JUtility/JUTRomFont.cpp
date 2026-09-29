@@ -121,22 +121,22 @@ f32 JUTRomFont::drawChar_scale(float pos_x, float pos_y, float scale_x,
 	// Bottom left
 	GXPosition3f32((s16)posMinX, (s16)posMinY, 0.0f);
 	GXColor1u32(mColor1);
-	GXPosition2u16(texMinX, texMinY);
+	GXTexCoord2u16(texMinX, texMinY);
 
 	// Bottom right
 	GXPosition3f32((s16)posMaxX, (s16)posMinY, 0.0f);
 	GXColor1u32(mColor2);
-	GXPosition2u16(texMaxX, texMinY);
+	GXTexCoord2u16(texMaxX, texMinY);
 
 	// Top right
 	GXPosition3f32((s16)posMaxX, (s16)posMaxY, 0.0f);
 	GXColor1u32(mColor4);
-	GXPosition2u16(texMaxX, texMaxY);
+	GXTexCoord2u16(texMaxX, texMaxY);
 
 	// Top left
 	GXPosition3f32((s16)posMinX, (s16)posMaxY, 0.0f);
 	GXColor1u32(mColor3);
-	GXPosition2u16(texMinX, texMaxY);
+	GXTexCoord2u16(texMinX, texMaxY);
 	GXEnd();
 
 	return xScale * (width + shift);
