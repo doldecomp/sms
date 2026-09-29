@@ -561,7 +561,7 @@ BOOL TMario::waitMain()
 	int result = 0;
 
 	checkEnforceJump();
-	checkCollision();
+	checkReturn();
 	setNormalAttackArea();
 
 	if (mHeldObject != nullptr && (mInput & 0x2000 ? true : false)) {

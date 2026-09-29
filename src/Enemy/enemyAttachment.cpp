@@ -70,7 +70,7 @@ void TEnemyAttachment::bind()
 	JGeometry::TVec3<f32> local_1C = mPosition;
 	local_1C += mLinearVelocity;
 	local_1C += mVelocity;
-	setBehavior();
+	recoverScale();
 	mVelocity.y -= getNowGravity();
 	if (mVelocity.y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
@@ -162,7 +162,7 @@ void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk150 == 0) {
 		if (cue & CUE_CALC_ANIM)
-			kill();
+			behaveToHost();
 		return;
 	}
 

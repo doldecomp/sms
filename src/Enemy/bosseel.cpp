@@ -396,7 +396,7 @@ void TBEelTears::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_MOVE)
-		control();
+		moveObject();
 
 	if (cue & CUE_CALC_ANIM) {
 		Mtx44 effectMtx;
@@ -407,7 +407,7 @@ void TBEelTears::perform(u32 cue, JDrama::TGraphics* graphics)
 		    ->getTexGenBlock()
 		    ->getTexMtx(1)
 		    ->setEffectMtx(effectMtx);
-		requestShadow();
+		updateAnmSound();
 	}
 
 	if (cue & CUE_CALC_ANIM)
@@ -1515,7 +1515,7 @@ void TBossEel::init(TLiveManager* manager)
 			    = jntNames->getIndex(sCollisionJointTable[i]);
 			mMapCollisions[i] = new TMapCollisionMove;
 			mMapCollisions[i]->init(sCollisionFileTable[i], 2, this);
-			mMapCollisions[i]->moveTrans(mPosition);
+			mMapCollisions[i]->setUpTrans(mPosition);
 		}
 	}
 

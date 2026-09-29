@@ -1105,7 +1105,8 @@ void TYoshi::entry()
 		tevColor.color.g = g;
 		tevColor.color.b = b;
 		tevColor.color.a = 0xFF;
-		modelData->getMaterialNodePointer(i)->setTevColor(2, &tevColor);
+		modelData->getMaterialNodePointer(i)->getTevBlock()->setTevColor(
+		    2, tevColor);
 	}
 
 	{
@@ -1117,7 +1118,8 @@ void TYoshi::entry()
 		mMirrorModels[0]
 		    ->getModelData()
 		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
+		    ->getTevBlock()
+		    ->setTevColor(2, tevColor);
 	}
 
 	{
@@ -1129,7 +1131,8 @@ void TYoshi::entry()
 		mMirrorModels[1]
 		    ->getModelData()
 		    ->getMaterialNodePointer(0)
-		    ->setTevColor(2, &tevColor);
+		    ->getTevBlock()
+		    ->setTevColor(2, tevColor);
 	}
 
 	mActor->entry();

@@ -1849,5 +1849,5 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_DRAW)
-		unk30->prerender(graphics, unk24->getBathtubData(), unk20, unk14, 2);
+		unk30->render(graphics, unk24->getBathtubData(), unk20, unk14, 2);
 }

@@ -139,7 +139,7 @@ void TMapEventSink::startControl()
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	unk5C[mRaisingBuildingIdx]->moveTrans(JGeometry::TVec3<f32>(
+	unk5C[mRaisingBuildingIdx]->setUpTrans(JGeometry::TVec3<f32>(
 	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
 }
 

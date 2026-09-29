@@ -408,13 +408,13 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			if (gpMarDirector->unkA0 == nullptr)
 				return 0;
 
-			JGeometry::TVec3<f32> npcResetToPos;
-			gpMarDirector->unkA0->resetToPosition(npcResetToPos);
+			JGeometry::TVec3<f32> npcFocalPoint
+			    = gpMarDirector->unkA0->getFocalPoint();
 			JGeometry::TVec3<f32> pos;
 			pos.x = gpMarioForCallBack->mPosition.x;
 			pos.y = gpMarioForCallBack->mPosition.y + 112.0f;
 			pos.z = gpMarioForCallBack->mPosition.z;
-			JGeometry::TVec3<f32> other = npcResetToPos - pos;
+			JGeometry::TVec3<f32> other = npcFocalPoint - pos;
 
 			f32 mult = std::sqrtf(other.x * other.x + other.z * other.z);
 

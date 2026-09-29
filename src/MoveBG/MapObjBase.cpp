@@ -11,6 +11,7 @@
 #include <MarioUtil/ShadowUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
@@ -576,7 +577,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_CALC_VIEW) && mMActor
 	    && checkMapObjFlag(MAP_OBJ_FLAG_UNK400)) {
-		getModel()->viewCalc();
+		static_cast<SDLModel*>(getModel())->viewCalcSimple();
 		cue &= ~CUE_CALC_VIEW;
 		requestShadow();
 	}

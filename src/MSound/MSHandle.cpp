@@ -98,7 +98,7 @@ void MSHandle::setSeDistanceParameters()
 	setSeDistancePan(type);
 	setSeDistancePitch(type);
 	setSePositionDopplar();
-	setSeDistanceFir(type);
+	setSeDistanceFxmix(type);
 
 	if (!(getSwBit() & JAISeSwBit_NoMapFxmix)) {
 		f32 dVar4 = interPointer->getMapInfoFxParameter(mActorGroundNumber);
