@@ -1489,10 +1489,8 @@ void TMario::checkController(JDrama::TGraphics*)
 	}
 
 	if (mIntendedMag > 0.0f) {
-		// camera angle at offset 0x258 lives inside the unk21C[..]
-		// placeholder array of CPolarSubCamera -- TODO: name & expose it
 		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH)
-		               + (*(s16*)((char*)gpCamera + 0x258) + yawJitter);
+		               + (gpCamera->unk258 + yawJitter);
 	} else {
 		mIntendedYaw = mFaceAngle.y;
 	}

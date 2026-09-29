@@ -1,4 +1,5 @@
 #include <Camera/Camera.hpp>
+#include <Camera/CameraJetCoaster.hpp>
 
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
@@ -105,7 +106,7 @@ bool CPolarSubCamera::isJetCoaster1stCamera() const
 {
 	bool result = false;
 	if (mMode == CAMERA_MODE_JET_COASTER && unk2B8 != nullptr
-	    && (*((u8*)unk2B8 + 0xC) & 0x1))
+	    && unk2B8->isLButtonMode())
 		result = true;
 	return result;
 }

@@ -54,7 +54,8 @@ const char* cMareCommonPollutionBmtName  = "/scene/mareCommon/mare_yogore.bmt";
 
 void TBoardNpcManager::clipActors(JDrama::TGraphics* graphics)
 {
-	clipActorsAux(graphics, *(f32*)((u8*)gpConductor + 0x9C), 200.0f);
+	clipActorsAux(graphics, gpConductor->getCondParams().mEnemyFarClip.get(),
+	              200.0f);
 }
 
 void TBoardNpcManager::createModelData()

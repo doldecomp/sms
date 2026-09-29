@@ -22,6 +22,7 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <Strategic/TakeActor.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
@@ -2032,7 +2033,7 @@ void TGCConsole2::loadAfter()
 	unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 
 	TNozzleBase* nozzle = gpMarioOriginal->mWaterGun->getCurrentNozzle();
-	unk28               = *(u32*)((u8*)nozzle + 0xCC);
+	unk28               = nozzle->mEmitParams.mAmountMax.get();
 
 	unkBC = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
 	unkC0 = static_cast<TBossEel*>(JDrama::TNameRefGen::search("めおとウナギ"));
@@ -3345,7 +3346,9 @@ void TGCConsole2::checkChangeTelopArray()
 			unk570 = scDolpicNewsDolpic0;
 			break;
 		case 1:
-			if (*(u32*)((u8*)unkC4 + 0x68) != 0)
+			if (static_cast<TTakeActor*>(static_cast<JDrama::TNameRef*>(unkC4))
+			        ->getHolder()
+			    != nullptr)
 				unk570 = scDolpicNewsDolpic1;
 			else
 				unk570 = nullptr;
