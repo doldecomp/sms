@@ -723,27 +723,6 @@ static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
 
 // fabricated
 template <class Pane>
-static inline void setBlueCoinDigits(Pane** panes, JUTTexture** textures,
-                                     int value)
-{
-	if (value < 100) {
-		setDigitPane(panes[0], textures, (int)(value * 0.1f));
-		setDigitPane(panes[1], textures, value % 10);
-		if (panes[2]->getPane()->isVisible())
-			panes[2]->getPane()->hide();
-	} else {
-		setDigitPane(panes[0], textures, (int)(value * 0.01f));
-
-		int remainder = value - (int)(value * 0.01f) * 100;
-		setDigitPane(panes[1], textures, (int)(remainder * 0.1f));
-		setDigitPane(panes[2], textures, remainder % 10);
-		if (!panes[2]->getPane()->isVisible())
-			panes[2]->getPane()->show();
-	}
-}
-
-// fabricated
-template <class Pane>
 static inline void setShineDigits(Pane** panes, JUTTexture** textures,
                                   int value)
 {
@@ -940,38 +919,7 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 // fabricated
 static inline void updateCounterState(TGCConsole2* console)
 {
-	TFlagManager* flags = TFlagManager::smInstance;
-
-	int coins = flags->getFlag(0x40002);
-	if (coins > 999)
-		coins = 999;
-	else if (coins < 0)
-		coins = 0;
-
-	if (coins != console->unk20) {
-		if (!console->unk68)
-			console->unk68 = 1;
-		console->unk20 = coins;
-	}
-
-	bool waitForStarHud
-	    = gpMarioOriginal->mStatus == 0xC400201
-	      && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU
-	      && !console->unk50 && !console->unk140->isInterpolatorAtZero();
-	if (waitForStarHud) {
-		++console->unk30;
-		if (console->unk30 > 0xc8) {
-			console->startAppearStar();
-			console->startAppearMario(false);
-			console->unk70 = 0xffff;
-			console->unk59 = 0;
-			console->unk30 = 0;
-		}
-	} else {
-		console->unk30 = 0;
-	}
-
-	int blueTotal = flags->getFlag(0x40001);
+	int blueTotal = TFlagManager::smInstance->getFlag(0x40001);
 	if ((int)console->unk168 != blueTotal) {
 		++console->unk168;
 
@@ -987,7 +935,23 @@ static inline void updateCounterState(TGCConsole2* console)
 		if (blueValue < 0)
 			blueValue = 0;
 
-		setBlueCoinDigits(console->unk154, console->unkE0, blueValue);
+		if (blueValue < 100) {
+			setDigitPane(console->unk154[0], console->unkE0,
+			             (int)(blueValue * 0.1f));
+			setDigitPane(console->unk154[1], console->unkE0, blueValue % 10);
+			if (console->unk154[2]->getPane()->isVisible())
+				console->unk154[2]->getPane()->hide();
+		} else {
+			setDigitPane(console->unk154[0], console->unkE0,
+			             (int)(blueValue * 0.01f));
+
+			int remainder = blueValue - (int)(blueValue * 0.01f) * 100;
+			setDigitPane(console->unk154[1], console->unkE0,
+			             (int)(remainder * 0.1f));
+			setDigitPane(console->unk154[2], console->unkE0, remainder % 10);
+			if (!console->unk154[2]->getPane()->isVisible())
+				console->unk154[2]->getPane()->show();
+		}
 		if (console->unk160->getPane()->isVisible()) {
 			emitCounterParticle(console->unk154[1]);
 			if (blueValue % 10 == 0)
@@ -1005,7 +969,7 @@ static inline void updateCounterState(TGCConsole2* console)
 			console->unk16C = 0;
 	}
 
-	int shines = flags->getFlag(0x40000);
+	int shines = TFlagManager::smInstance->getFlag(0x40000);
 	if (console->unk8A == 0 && (int)console->unk64 != shines)
 		console->unk8A = 1;
 
@@ -1028,8 +992,26 @@ static inline void updateCounterState(TGCConsole2* console)
 					MSoundSESystem::MSoundSE::startSoundSystemSE(0x4850, 0,
 					                                             nullptr, 0);
 				}
-				setBlueCoinDigits(console->unk154, console->unkE0,
-				                  console->unk170);
+				if (console->unk170 < 100) {
+					setDigitPane(console->unk154[0], console->unkE0,
+					             (int)(console->unk170 * 0.1f));
+					setDigitPane(console->unk154[1], console->unkE0,
+					             console->unk170 % 10);
+					if (console->unk154[2]->getPane()->isVisible())
+						console->unk154[2]->getPane()->hide();
+				} else {
+					setDigitPane(console->unk154[0], console->unkE0,
+					             (int)(console->unk170 * 0.01f));
+
+					int remainder = console->unk170
+					                - (int)(console->unk170 * 0.01f) * 100;
+					setDigitPane(console->unk154[1], console->unkE0,
+					             (int)(remainder * 0.1f));
+					setDigitPane(console->unk154[2], console->unkE0,
+					             remainder % 10);
+					if (!console->unk154[2]->getPane()->isVisible())
+						console->unk154[2]->getPane()->show();
+				}
 			}
 		}
 
@@ -1071,6 +1053,39 @@ static inline void updateCounterState(TGCConsole2* console)
 		}
 
 		++console->unk8A;
+	}
+}
+
+// fabricated
+static inline void updateCoinCounter(TGCConsole2* console)
+{
+	int coins = TFlagManager::smInstance->getFlag(0x40002);
+	if (coins > 999)
+		coins = 999;
+	else if (coins < 0)
+		coins = 0;
+
+	if (coins != console->unk20) {
+		if (!console->unk68)
+			console->unk68 = 1;
+		console->unk20 = coins;
+	}
+
+	bool waitForStarHud
+	    = gpMarioOriginal->mStatus == 0xC400201
+	      && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU
+	      && !console->unk50 && !console->unk140->isInterpolatorAtZero();
+	if (waitForStarHud) {
+		++console->unk30;
+		if (console->unk30 > 0xc8) {
+			console->startAppearStar();
+			console->startAppearMario(false);
+			console->unk70 = 0xffff;
+			console->unk59 = 0;
+			console->unk30 = 0;
+		}
+	} else {
+		console->unk30 = 0;
 	}
 }
 
@@ -1302,7 +1317,6 @@ static inline void updateJetAppearState(TGCConsole2* console)
 {
 	if (console->unk3D && console->processAppearJet(console->unk72++)) {
 		console->unk3D = 0;
-		console->unk72 = 0;
 	}
 }
 
@@ -1311,7 +1325,6 @@ static inline void updateRedCoinAppearState(TGCConsole2* console)
 {
 	if (console->unk3C && console->processAppearRed(console->unk74++)) {
 		console->unk3C = 0;
-		console->unk74 = 0;
 	}
 }
 
@@ -1320,18 +1333,12 @@ static inline void updateTimerAppearState(TGCConsole2* console)
 {
 	if (console->unk3E && console->processAppearTimer(console->unk76++)) {
 		console->unk3E = 0;
-		console->unk76 = 0;
 	}
 }
 
 // fabricated
 static inline void updateTelopState(TGCConsole2* console, u32 flags)
 {
-	if (console->unk3F && console->unk44C->update()) {
-		console->unk44C->getPane()->hide();
-		console->unk3F = 0;
-	}
-
 	if (console->unk42) {
 		if (console->unk520->update()) {
 			console->unk42 = 0;
@@ -1460,11 +1467,6 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 	    && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
 		if (++console->unk70 > 0x190)
 			console->startDisappearMario();
-	}
-
-	if (console->unk3B && console->unk3A8->update()) {
-		console->unk3B = 0;
-		console->unk3A8->getPane()->hide();
 	}
 }
 
@@ -1953,7 +1955,20 @@ void TGCConsole2::loadAfter()
 	int blueCoinValue = unk168 - spentBlueCoins * 10;
 	if (blueCoinValue < 0)
 		blueCoinValue = 0;
-	setBlueCoinDigits(unk154, unkE0, blueCoinValue);
+	if (blueCoinValue < 100) {
+		setDigitPane(unk154[0], unkE0, (int)(blueCoinValue * 0.1f));
+		setDigitPane(unk154[1], unkE0, blueCoinValue % 10);
+		if (unk154[2]->getPane()->isVisible())
+			unk154[2]->getPane()->hide();
+	} else {
+		setDigitPane(unk154[0], unkE0, (int)(blueCoinValue * 0.01f));
+
+		int remainder = blueCoinValue - (int)(blueCoinValue * 0.01f) * 100;
+		setDigitPane(unk154[1], unkE0, (int)(remainder * 0.1f));
+		setDigitPane(unk154[2], unkE0, remainder % 10);
+		if (!unk154[2]->getPane()->isVisible())
+			unk154[2]->getPane()->show();
+	}
 	unk170 = blueCoinValue;
 
 	unk20 = TFlagManager::smInstance->getFlag(0x40002);
@@ -2052,7 +2067,7 @@ void TGCConsole2::loadAfter()
 
 	unkBC = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
 	unkC0 = static_cast<TBossEel*>(JDrama::TNameRefGen::search("めおとウナギ"));
-	unkC4 = JDrama::TNameRefGen::search("ピーチ姫");
+	unkC4 = static_cast<TTakeActor*>(JDrama::TNameRefGen::search("ピーチ姫"));
 }
 
 void TGCConsole2::entryHelpActor(THelpActor* param_1)
@@ -3350,9 +3365,7 @@ void TGCConsole2::checkChangeTelopArray()
 			unk570 = scDolpicNewsDolpic0;
 			break;
 		case 1:
-			if (static_cast<TTakeActor*>(static_cast<JDrama::TNameRef*>(unkC4))
-			        ->getHolder()
-			    != nullptr)
+			if (unkC4->getHolder() != nullptr)
 				unk570 = scDolpicNewsDolpic1;
 			else
 				unk570 = nullptr;
@@ -3910,21 +3923,27 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 
 		updateLifeMeterState(this);
+		updateCoinCounter(this);
 		updateStarHudAutoHide(this);
-		updateShineAppearState(this);
 
 		if (unk35) {
 			bool done = true;
-			if (!unk140->update())
-				done = false;
-			if (!unk160->update())
-				done = false;
-			if (!unk108->update())
-				done = false;
+			done &= unk108->update();
+			done &= unk140->update();
+			done &= unk160->update();
 
-			setEmitterToPaneCenter(unk124, unkCC->getPane());
-			setEmitterToPaneCenter(unk164, unk14C->getPane());
-			setEmitterToPaneCenter(unk144, unk12C->getPane());
+			JUTRect bounds(unkCC->getPane()->mGlobalBounds);
+			unk124->mGlobalTranslation.set(
+			    bounds.x1 + bounds.getWidth() * 0.5f,
+			    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+			bounds = unk14C->getPane()->mGlobalBounds;
+			unk164->mGlobalTranslation.set(
+			    bounds.x1 + bounds.getWidth() * 0.5f,
+			    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+			bounds = unk12C->getPane()->mGlobalBounds;
+			unk144->mGlobalTranslation.set(
+			    bounds.x1 + bounds.getWidth() * 0.5f,
+			    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 			if (done) {
 				unk140->getPane()->hide();
@@ -3935,14 +3954,9 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 			}
 		}
 
-		updateWaterGaugeFill(this);
 		updateCounterState(this);
-		updateJetAppearState(this);
-
-		updateRedCoinCounter(this);
-		updateRedCoinAppearState(this);
-		updateTimerAppearState(this);
-		updateTelopState(this, flags);
+		updateShineAppearState(this);
+		updateWaterGaugeFill(this);
 
 		if (!unk46 && SMS_CheckMarioFlag(0x10000) && !unk45 && !unk50)
 			startAppearTank();
@@ -3964,8 +3978,24 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 
 		updateMarioLifeCounter(this);
 
-		if (!unk3F && unk4A)
+		if (unk3B && unk3A8->update()) {
+			unk3B = 0;
+			unk3A8->getPane()->hide();
+		}
+		updateTelopState(this, flags);
+		updateJetAppearState(this);
+		updateRedCoinCounter(this);
+		updateRedCoinAppearState(this);
+		if (unk58 && unk428->update())
+			unk58 = 0;
+		updateTimerAppearState(this);
+
+		if (unk3F) {
+			if (unk44C->update())
+				unk3F = 0;
+		} else if (unk4A) {
 			setTimer(-1);
+		}
 
 		if (unk59) {
 			playHudMoveSound(0x4819);
