@@ -276,20 +276,20 @@ void TNormalLift::readRailFlag()
 {
 	TRailMapObj::readRailFlag();
 
-	TGraphWeb* graph = unk138->unk0;
+	TGraphWeb* graph = unk138->getGraph();
 
-	if (!unk138->unk0)
+	if (!graph)
 		return;
 
-	if (!graph->isDummy())
+	if (graph->isDummy())
 		return;
 
-	TRailNode* railNode = graph->getCurrentNode().getRailNode();
-	if (railNode->mFlags & 0x800) {
-		unk150 = railNode->mPitch;
+	TGraphNode& node = graph->getGraphNode(unk138->getCurGraphIndex());
+	if (node.getRailNode()->mFlags & 0x800) {
+		unk150 = node.getRailNode()->mPitch;
 	}
-	if (railNode->mFlags & 0x1000) {
-		u16 roll = railNode->mRoll;
+	if (node.getRailNode()->mFlags & 0x1000) {
+		u16 roll = node.getRailNode()->mRoll;
 		if (roll == 0xffff)
 			roll = 0;
 		unk152 = roll;
@@ -503,11 +503,8 @@ void TRollBlock::calcRootMatrix()
 {
 	J3DModel* model = getModel();
 	MtxPtr mtx      = model->getBaseTRMtx();
-	s16 rotZ        = mRotation.z * (65536.0f / 360.0f);
-	s16 rotY        = mRotation.y * (65536.0f / 360.0f);
-	s16 rotX        = mRotation.x * (65536.0f / 360.0f);
-	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z, rotX,
-	               rotY, rotZ);
+	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y - mYOffset, mPosition.z,
+	               mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseScale(mScaling);
 
 	Mtx rot;
