@@ -1309,7 +1309,15 @@ void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
 	f32 dist = delta.squared();
 
 	if (mRequestNum < 0x200) {
-		mRequests[mRequestNum]               = param_1;
+		TCircleShadowRequest& request        = mRequests[mRequestNum];
+		request.mPosition                    = pos;
+		request.mRadiusX                     = param_1.mRadiusX;
+		request.mRadiusZ                     = param_1.mRadiusZ;
+		request.mRotationY                   = param_1.mRotationY;
+		request.mCameraDistSq                = param_1.mCameraDistSq;
+		request.mShadowType                  = param_1.mShadowType;
+		request.mNeedsGroundCheck            = param_1.mNeedsGroundCheck;
+		request.mActorType                   = param_1.mActorType;
 		mRequests[mRequestNum].mActorType    = param_2;
 		mRequests[mRequestNum].mCameraDistSq = dist;
 		mRequestNum++;
