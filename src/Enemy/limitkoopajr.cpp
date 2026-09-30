@@ -123,8 +123,7 @@ void TLimitKoopaJr::emitKoopaJrEffects() { }
 void TLimitKoopaJr::setAnimationIndex(int index)
 {
 	getMActor()->setBckFromIndex(index);
-	const char** basTable = getBasNameTable();
-	setAnmSound(basTable == nullptr ? nullptr : basTable[index]);
+	setAnmSound(getBas(index));
 }
 
 void TLimitKoopaJr::updateTimers()
