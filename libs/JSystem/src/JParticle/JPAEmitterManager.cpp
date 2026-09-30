@@ -16,7 +16,8 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 		param_5 = JKRHeap::getCurrentHeap();
 
 	u32 bytesForParticles
-	    = ALIGN_NEXT(param_2 * sizeof(JPAParticle), 0x20) + 0x80;
+	    = ALIGN_NEXT(param_2 * sizeof(JPAParticle), 0x20)
+	      + ALIGN_NEXT(sizeof(JKRSolidHeap), 0x10);
 	unkC = JKRCreateSolidHeap(bytesForParticles, param_5, false);
 	if (unkC) {
 		for (int i = 0; i < param_2; ++i) {
@@ -27,7 +28,8 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 	}
 
 	u32 bytesForEmitters
-	    = ALIGN_NEXT(param_3 * sizeof(JPABaseEmitter), 0x20) + 0x80;
+	    = ALIGN_NEXT(param_3 * sizeof(JPABaseEmitter), 0x20)
+	      + ALIGN_NEXT(sizeof(JKRSolidHeap), 0x10);
 	unk20 = JKRCreateSolidHeap(bytesForEmitters, param_5, false);
 	if (unk20) {
 		for (int i = 0; i < param_3; ++i) {
@@ -37,7 +39,8 @@ JPAEmitterManager::JPAEmitterManager(JPAResourceManager* param_1, s32 param_2,
 	}
 
 	u32 bytesForFields
-	    = ALIGN_NEXT(param_4 * sizeof(JPABaseField), 0x20) + 0x80;
+	    = ALIGN_NEXT(param_4 * sizeof(JPABaseField), 0x20)
+	      + ALIGN_NEXT(sizeof(JKRSolidHeap), 0x10);
 	unk34 = JKRCreateSolidHeap(bytesForFields, param_5, false);
 	if (unk34) {
 		for (int i = 0; i < param_4; ++i) {
