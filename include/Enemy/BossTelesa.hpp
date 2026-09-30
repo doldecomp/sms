@@ -79,7 +79,7 @@ public:
 	/* 0x19B */ u8 unk19B;
 	/* 0x19C */ u8 unk19C;
 	/* 0x19D */ u8 unk19D[3];
-	/* 0x1A0 */ void* unk1A0;
+	/* 0x1A0 */ TBossTelesa* unk1A0;
 	/* 0x1A4 */ s32 unk1A4;
 	/* 0x1A8 */ bool unk1A8[3];
 	/* 0x1AB */ u8 unk1AB[0x31];
