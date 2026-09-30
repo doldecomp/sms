@@ -10,56 +10,53 @@
 #include <M3DUtil/M3UJoint.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 
 class TBossWanwan;
 class TBWLeash;
 class TBWLeashNode;
+class TRope;
 
 class TBWHit : public THitActor {
 public:
-	TBWHit(TBossWanwan* owner, int joint_index,
-	       const char* name = "idk"); // yeah
-
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	void getTakingMtx();
-	void moveRequest(const JGeometry::TVec3<float>&);
 
 private:
 	/* 0x68 */ TBossWanwan* mOwner;
 	/* 0x6C */ s32 mJointIndex;
 };
 
-class TBWPicket : public THitActor {
+class TBWPicket : public TTakeActor {
 public:
+	TBWPicket(const char* name = "ボスワンワン杭");
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL moveRequest(const JGeometry::TVec3<float>&);
 
 private:
-	/* 0x68 */ TBWHit* mHit;
-	/* 0x6C */ u32 unk6C;
 	/* 0x70 */ TBossWanwan* mOwner;
 	/* 0x74 */ TMtx34f unk74;
 };
 
 class TBWBinder : public TBinder {
 public:
-	TBWBinder();
+	TBWBinder() { };
+	virtual ~TBWBinder();
 	virtual void bind(TLiveActor*);
 };
 
-class TBWLeash {
+class TBWLeash : public JDrama::TViewObj {
 public:
-	TBWLeash(TBossWanwan*, int, const char*);
-	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	TBWLeash(TBossWanwan* owner, int nodeCount,
+	         const char* name = "ボスワンワンリーシュ");
+	virtual ~TBWLeash();
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
 
-	/* 0x4  */ u32 unk4;
-	/* 0x8  */ u32 unk8;
 	/* 0xc  */ u32 unkc;
 	/* 0x10 */ TBossWanwan* mOwner;
 	/* 0x14 */ TRope* mRope;
@@ -71,8 +68,8 @@ public:
 	TBWLeashNode(int, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void calcMatrix();
-	virtual void calcTemperature();
+	void calcMatrix();
+	void calcTemperature();
 
 private:
 	// THitActor ends at 0x68
@@ -130,14 +127,20 @@ public:
 	virtual void kill();
 	virtual void init(TLiveManager*);
 	void shakeCamera(int shakeType);
-	BOOL receiveMessage(THitActor* sender, u32 message);
-	void calcRootMatrix();
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void calcRootMatrix();
 	void slideToCurPathNode(float, float);
-	void control();
+	virtual void control();
 	void emitEffects();
-	void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	f32 getUnk168() const { return unk168; }
+
+	// fabricated
+	const TNerveBase<TLiveActor>* getLatestNerve()
+	{
+		return mSpine->getLatestNerve();
+	}
 
 	/* 0x150 */ TBWPicket* mPicket;
 	/* 0x154 */ TBWLeash* mLeash;
@@ -148,19 +151,23 @@ public:
 	/* 0x170 */ u32 unk170;
 	/* 0x174 */ u32 unk174;
 	/* 0x178 */ u32 unk178;
-	/* 0x17C */ u32 unk17C;
+	/* 0x17C */ BOOL unk17C;
 	/* 0x180 */ u32 unk180;
 	/* 0x184 */ u32 unk184;
 	/* 0x188 */ u32 unk188;
 	/* 0x18C */ u8 msInvincible;
-	/* 0x190 */ u16 unk190;
-	/* 0x194 */ u16 unk194;
+	/* 0x18D */ u8 unk18D;
+	/* 0x190 */ u32 unk190;
+	/* 0x194 */ bool unk194;
+	/* 0x195 */ u8 unk195;
 	/* 0x198 */ u32 unk198;
 	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ BOOL unk1a0;
-	/* 0x1A8 */ u32 mWaterHitCount;
-	/* 0x1AC */ f32 mDistToMarioSquared;
+	/* 0x1A0 */ u8 unk1A0;
+	/* 0x1A4 */ f32 unk1A4;
+	/* 0x1A8 */ f32 mWaterHitCount;
+	/* 0x1AC */ f32 unk1AC;
 	/* 0x1B0 */ TBWParams* mParams;
+	/* 0x1B4 */ u16 unk1B4;
 };
 
 class TBossWanwanManager : public TEnemyManager {
@@ -168,8 +175,8 @@ public:
 	TBossWanwanManager(const char* name = "ボスワンワンマネージャ");
 
 	virtual void load(JSUMemoryInputStream&);
-	TSpineEnemy* createEnemyInstance();
-	void createModelData();
+	virtual TSpineEnemy* createEnemyInstance();
+	virtual void createModelData();
 };
 
 DECLARE_NERVE(TNerveBWGraphWander, TLiveActor);

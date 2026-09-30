@@ -1,9 +1,5 @@
-#include <MSound/MSSetSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
-#include <MSound/SoundEffects.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <Enemy/BossWanwan.hpp>
 #include <Camera/CameraShake.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
@@ -12,6 +8,7 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -27,7 +24,17 @@
 #include <JSystem/JGeometry/JGUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
-#include <M3DUtil/M3UJoint.hpp>
+
+// to match __sinit__
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
 
 static const char* bwanwan_bastable[] = {
 	"/scene/bwanwan/bas/bwanwan_bark.bas",
@@ -36,9 +43,9 @@ static const char* bwanwan_bastable[] = {
 	"/scene/bwanwan/bas/bwanwan_wait2.bas",
 };
 
-JGeometry::TVec3<f32> BW_BATH_POS     = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-JGeometry::TVec3<f32> BW_PICKET_START = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-JGeometry::TVec3<f32> BW_HEAD_START   = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+static JGeometry::TVec3<f32> BW_BATH_POS(-1000.0f, 4.5f, -6217.2f);
+static JGeometry::TVec3<f32> BW_PICKET_START(6012.84f, 0.0f, 7323.15f);
+static JGeometry::TVec3<f32> BW_HEAD_START(5741.72f, -100.0f, 6311.62f);
 
 TBWParams::TBWParams(const char* path)
     : TSpineEnemyParams(path)
@@ -63,16 +70,40 @@ TBWParams::TBWParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
+    : JDrama::TViewObj(name)
+    , mOwner(owner)
+    , mRope(nullptr)
+    , mNodes(nullptr)
+{
+}
+
 TBossWanwan::TBossWanwan(const char* name)
     : TSpineEnemy(name)
     , mPicket(nullptr)
-    , mChainRoot(nullptr)
     , mLeash(nullptr)
-    , mWaterHitCount(0)
+    , mChainRoot(nullptr)
+    , unk168(0.0f)
+    , mMtxCalc(nullptr)
+    , unk17C(0)
+    , unk180(0)
+    , unk184(0)
+    , unk188(0)
+    , msInvincible(0)
+    , unk18D(0)
     , unk190(0)
-    , unk1a0(false)
+    , unk194(true)
+    , unk195(0)
+    , unk198(0)
+    , unk19C(0)
+    , unk1A0(0)
+    , unk1A4(0.0f)
+    , mWaterHitCount(0.0f)
+    , unk1AC(0.0f)
+    , mParams(nullptr)
+    , unk1B4(0)
 {
-	// various settings
+	mBinder = new TBWBinder();
 }
 
 void TBossWanwan::kill() { return; }
@@ -134,8 +165,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			sender->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 			this->mHitPoints = 0;
 			this->mWaterHitCount++;
-			if (!this->unk1a0) {
-				this->unk1a0 = true;
+			if (!this->unk1A0) {
+				this->unk1A0 = true;
 			}
 
 			MtxPtr mtx = this->getModel()->getAnmMtx(1);
@@ -291,11 +322,6 @@ void TBossWanwan::emitEffects()
 	}
 }
 
-TBossWanwanManager::TBossWanwanManager(const char* name)
-    : TEnemyManager(name)
-{
-}
-
 TSpineEnemy* TBossWanwanManager::createEnemyInstance()
 {
 	return new TBossWanwan;
@@ -378,11 +404,6 @@ void TBossWanwanMtxCalc::calc(u16 index)
 	}
 }
 
-TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
-    : mNodes(nullptr)
-{
-}
-
 void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 void TBWLeashNode::calcTemperature()
@@ -429,14 +450,6 @@ void TBWLeashNode::calcMatrix()
 	*/
 }
 
-TBWHit::TBWHit(TBossWanwan* owner, int joint_index, const char* name)
-    : THitActor(name)
-    , mOwner(owner)
-    , mJointIndex(joint_index)
-{
-	// initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
-}
-
 void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -462,20 +475,57 @@ BOOL TBWHit::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TBWHit::moveRequest(const JGeometry::TVec3<float>& pos) { }
-
 void TBWBinder::bind(TLiveActor* actor) { }
 
 void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
-BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message) { }
+BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
+{
+	if (sender->mActorType == 0x80000001) {
+		if (message == HIT_MESSAGE_HIP_DROP) {
+			TBossWanwan* owner = mOwner;
+			owner->unk17C      = 1;
+			owner->unk184      = 0;
+			SMSGetMSound()->startSoundActor(0x28c0, &mPosition, 0, nullptr, 0,
+			                                4);
+			return TRUE;
+		}
+		if (message == HIT_MESSAGE_TAKE) {
+			TBossWanwan* owner = mOwner;
+
+			if (owner->unk17C != 0) {
+				JPABaseEmitter* emit = gpMarioParticleManager->emit(
+				    BWAN_JPA_JUMP_SMOKE, &owner->mChainRoot->mPosition, 0, 0);
+
+				if (emit != nullptr) {
+					JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
+					emit->setGlobalDynamicsScale(scale);
+					emit->setGlobalParticleScale(scale);
+				}
+			}
+			owner->unk194 = 0;
+			owner->unk17C = 0;
+			mHolder       = (TTakeActor*)sender;
+			return TRUE;
+		}
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+			mHolder = nullptr;
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
 
 MtxPtr TBWPicket::getTakingMtx() { return unk74; }
 
 BOOL TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos)
 {
-	if (mOwner->mSpine->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
-	    || mOwner->mSpine->getLatestNerve() == &TNerveBWDie::theNerve()
+	// TODO: getLatestNerve requires 2 levels of inlining to get emitted
+	// out-of-line, fabricated the getLatestNerve()
+	// function in TBossWanwan to temporarely avoid this issue.
+	if (mOwner->getLatestNerve() == &TNerveBWJumpToBath::theNerve()
+	    || mOwner->getLatestNerve() == &TNerveBWDie::theNerve()
 	    || mOwner->mHitPoints != 0) {
 		return FALSE;
 	}
@@ -494,6 +544,11 @@ BOOL TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos)
 	leash->mOwner->mPicketPullDelta = delta;
 
 	return TRUE;
+}
+
+TBossWanwanManager::TBossWanwanManager(const char* name)
+    : TEnemyManager(name)
+{
 }
 
 DEFINE_NERVE(TNerveBWGraphWander, TLiveActor) { }
