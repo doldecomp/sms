@@ -777,3 +777,29 @@ Two symptoms of a *missing* destructor, both meaning "the target keeps this in m
 Fix: give the smallest offending value/helper type an empty `~T() {}` and re-check.
 This is a global change, so re-run the baseline — one destructor can fix (or shift) many callsites at once.
 Concrete case: adding `~TMsRange<f32>()` (a field of `TSmallEnemyParams`) took several `TFooManager::load` functions from ~95% to 100%.
+
+## A small function stays a call once it is nested more than three inline levels deep
+
+This was measured with a test file compiled with the project's own flags (`-O4,p -inline auto -inline deferred`), not derived from the compiler's source.
+Needs human review: it comes from a handful of test cases and one unit (`GC2D/SelectShine2.cpp`).
+
+A three-statement inline such as `TVec3::add` is expanded while it sits at most three inline levels deep.
+One level deeper it is emitted as a real call, and at five levels the wrapper functions themselves stay calls.
+Measured with a chain `top -> f_n -> ... -> f_1 -> add`: `n` of 1 and 2 inline `add`, `n` of 3 and 4 leave `bl add`, and `n` of 5 or more leave `bl f_1`, `bl f_2` and so on.
+
+Depth counts every inline layer, including operators and constructors, so ordinary looking expressions can reach it:
+- `a + b` on a `TVec3<f32>` is `operator+` (its first argument is passed by value), which calls `+=`, which calls `add`.
+  The result is a struct copy, `bl TVec3::add`, and another copy.
+  Writing `TVec3 c = a; c.add(b);` inlines it instead.
+- Returning `TVec3<f32>(x, y, z)` from an inline function goes constructor, then `set<float>`, and leaves `bl TVec3::set<float>`.
+- `TVec2 d = c - p;` is `operator-`, then `-=`, then `sub`, and leaves `bl TVec2::sub`.
+  The assignment form `c = c - p;` and a direct `d.sub(p)` both inline it.
+
+Symptoms in the target: `bl add`, `bl set<float>` or `bl sub` where a straightforward source inlines them, `lwz`/`stw` struct copies around the call, and weak `set<f>` or `sub` functions emitted in the unit.
+The map's UNUSED entries tell you which inline helpers exist, so put the vector expression inside the right helper.
+`getPosition` and `getAngle` in `SelectShine2.cpp` are the worked example: the target's `set<float>` and `sub` calls come from them.
+
+To test a hypothesis quickly, compile a short file that includes the header and disassemble it with `build/binutils/powerpc-eabi-objdump.exe -dr`.
+A call shows up as an `R_PPC_REL24` relocation to the function's mangled name.
+`ninja -t commands build/GMSP01/src/<path>.o` prints the exact compiler command line.
+The `inline_trace.py` helper named in the tip about zero-argument constructor calls above has never been committed to this repository, so it is not available.
