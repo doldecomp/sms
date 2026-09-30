@@ -128,7 +128,7 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 	if ((cue & CUE_DRAW_INIT) != 0) {
 		GXColor color = unk12;
-		color.a       = gpSunMgr->getUnk1CAlpha();
+		color.a       = gpSunMgr->unk18.a;
 		GXSetChanMatColor(GX_COLOR0A0, color);
 		setting(graphics->getViewMtx());
 	}
@@ -145,7 +145,7 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx afStack_110;
 		PSMTXTrans(afStack_110, -gpMarioPos->x, 0.0f, -gpMarioPos->z);
 		Mtx afStack_140;
-		PSMTXTrans(afStack_140, 1.75f, 1.75f, 0.0f);
+		PSMTXTrans(afStack_140, 0.5f, 0.5f, 0.0f);
 		PSMTXConcat(afStack_e0, afStack_110, afStack_e0);
 		PSMTXConcat(afStack_50, afStack_e0, afStack_50);
 		PSMTXConcat(afStack_140, afStack_50, afStack_50);
