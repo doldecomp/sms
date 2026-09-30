@@ -213,6 +213,7 @@ cflags_base_base = [
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     "-Dnullptr=0",
+    "-Dalignof=__builtin_align",
     f"-DVERSION_{config.version}",
 ]
 

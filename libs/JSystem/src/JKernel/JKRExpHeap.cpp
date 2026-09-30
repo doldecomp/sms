@@ -170,7 +170,7 @@ void* JKRExpHeap::alloc(u32 size, int alignment)
 
 void* JKRExpHeap::allocFromHead(u32 size, int align)
 {
-	size                    = ALIGN_NEXT(size, 4);
+	size                    = ALIGN_NEXT(size, alignof(CMemBlock));
 	u32 foundSize           = -1;
 	u32 foundOffset         = 0;
 	CMemBlock* foundBlock   = nullptr;
@@ -276,7 +276,7 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 
 void* JKRExpHeap::allocFromHead(u32 size)
 {
-	size                  = ALIGN_NEXT(size, 4);
+	size                  = ALIGN_NEXT(size, alignof(CMemBlock));
 	int foundSize         = -1;
 	CMemBlock* foundBlock = nullptr;
 
@@ -372,7 +372,7 @@ void* JKRExpHeap::allocFromTail(u32 size, int align)
 
 void* JKRExpHeap::allocFromTail(u32 size)
 {
-	u32 size2             = ALIGN_NEXT(size, 4);
+	u32 size2             = ALIGN_NEXT(size, alignof(CMemBlock));
 	CMemBlock* foundBlock = nullptr;
 	for (CMemBlock* block = mTail; block; block = block->mPrev) {
 		if (block->mAllocatedSpace >= size2) {
@@ -482,7 +482,7 @@ s32 JKRExpHeap::resize(void* ptr, u32 size)
 		unlock();
 		return -1;
 	}
-	size = ALIGN_NEXT(size, 4);
+	size = ALIGN_NEXT(size, alignof(CMemBlock));
 	if (size == block->mAllocatedSpace) {
 		unlock();
 		return size;
