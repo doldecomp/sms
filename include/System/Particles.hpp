@@ -239,6 +239,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	BGESO_JPA_MS_BOGE_ASE                 = 0x138,
 	BGESO_JPA_MS_BOGE_NAMIDA              = 0x139,
 	BGESO_JPA_MS_BOGE_WASH                = 0x13B,
+	PARTICLE_MS_POPO_SHUWA_A              = 0x13C,
+	PARTICLE_MS_POPO_SHUWA_B              = 0x13D,
 	PARTICLE_MS_PACKN_HD_ROCK             = 0x13E,
 	PARTICLE_MS_PACKN_HD_SMOKE            = 0x13F,
 	GATEKEEPER_JPA_MS_GKPA_BOTA           = 0x140,
