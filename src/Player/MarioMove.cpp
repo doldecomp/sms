@@ -2405,7 +2405,7 @@ void TMario::gunExec()
 			mWaterGun->emit();
 			mWaterGun->resetWaterToFull();
 		}
-	} else if (unk390 == 0) {
+	} else if (mUpperState == UPPER_STATE_PUMPING) {
 		mWaterGun->emit();
 	}
 
