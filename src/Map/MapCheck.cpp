@@ -45,7 +45,7 @@ inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 	f32 y2 = r31->getPoint2().y;
 	f32 y3 = r31->getPoint3().y;
 
-	if (r31->checkFlag(0x4)) {
+	if (r31->checkFlag(BG_CHECK_FLAG_X_FACING)) {
 		if (nx > 0.0f) {
 			cz = -cz;
 

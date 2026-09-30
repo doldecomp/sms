@@ -98,7 +98,7 @@ u32 J3DDrawPacket::endPatch()
 J3DMatPacket::J3DMatPacket()
 {
 	mpMaterial = 0;
-	unk3C      = 0xffffffff;
+	unk3C      = (uintptr_t)-1;
 	mTexture   = 0;
 	unk44      = 0;
 }

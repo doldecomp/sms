@@ -8,7 +8,8 @@ class JSUMemoryInputStream;
 
 // fabricated
 enum BGCheckFlagBits {
-	BG_CHECK_FLAG_ILLEGAL = 0x10,
+	BG_CHECK_FLAG_X_FACING = 0x8,
+	BG_CHECK_FLAG_ILLEGAL  = 0x10,
 };
 
 // fabricated

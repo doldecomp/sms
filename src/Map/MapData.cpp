@@ -27,9 +27,9 @@ u32 TBGCheckData::getPlaneType()
 		return 1;
 
 	if (mNormal.x < -0.707f || 0.707f < mNormal.x)
-		mFlags |= 0x8;
+		mFlags |= BG_CHECK_FLAG_X_FACING;
 	else
-		mFlags &= ~0x8;
+		mFlags &= ~BG_CHECK_FLAG_X_FACING;
 
 	return 2;
 }
