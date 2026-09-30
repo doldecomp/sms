@@ -172,6 +172,14 @@ class TMBindShadowManager;
 extern TMBindShadowManager* gpBindShadowManager;
 
 class TMBindShadowManager : public JDrama::TViewObj {
+private:
+	class TCylinder;
+	class TSetup1;
+	class TSetup2;
+	class TSetup3;
+	class TSetup4;
+	class TSetup5;
+
 public:
 	TMBindShadowManager(const char* name = "<TMBindShadowManager>");
 

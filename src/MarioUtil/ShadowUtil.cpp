@@ -742,84 +742,151 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 }
 
+class TMBindShadowManager::TCylinder : public TGDLStatic {
+public:
+	TCylinder(u32 size)
+	    : TGDLStatic(size)
+	{
+	}
+
+	virtual void makeDL()
+	{
+		int div = 10;
+		f32 z   = 1.0f;
+		f32 nz  = -z;
+		int i;
+
+		f32 cosTable[100];
+		f32 sinTable[100];
+
+		for (i = 0; i <= div; i++) {
+			f32 angle   = M_PI * (2.0f * i) / div;
+			cosTable[i] = cosf(angle);
+			sinTable[i] = sinf(angle);
+		}
+
+		GDBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, div * 2 + 2);
+		for (i = 0; i <= div; i++) {
+			GDPosition3f32(cosTable[i], sinTable[i], nz);
+			GDPosition3f32(cosTable[i], sinTable[i], z);
+		}
+		GDEnd();
+
+		GDBegin(GX_TRIANGLEFAN, GX_VTXFMT0, div + 2);
+		GDPosition3f32(0.0f, 0.0f, z);
+		for (i = 0; i <= div; i++)
+			GDPosition3f32(cosTable[i], -sinTable[i], z);
+		GDEnd();
+
+		GDBegin(GX_TRIANGLEFAN, GX_VTXFMT0, div + 2);
+		GDPosition3f32(0.0f, 0.0f, nz);
+		for (i = 0; i <= div; i++)
+			GDPosition3f32(cosTable[i], sinTable[i], nz);
+		GDEnd();
+	}
+};
+
+class TMBindShadowManager::TSetup1 : public TGDLStatic {
+public:
+	TSetup1(u32 size)
+	    : TGDLStatic(size)
+	{
+	}
+
+	virtual void makeDL()
+	{
+		GDSetGenMode2(0, 1, 1, 0, GX_CULL_BACK);
+		GDSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
+		              GX_DF_NONE, GX_AF_NONE);
+		GDSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
+		              GX_DF_NONE, GX_AF_NONE);
+		GDSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+		GDSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+		              GX_COLOR0A0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+		              GX_COLOR0A0);
+
+		GDSetChanMatColor(GX_COLOR0A0, (GXColor) { 30, 50, 115, 180 });
+		GDSetCurrentMtx(0, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c);
+
+		static GXVtxDescList vl[]
+		    = { { GX_VA_POS, GX_DIRECT }, { GX_VA_NULL, GX_NONE } };
+		GDSetVtxDescv(vl);
+
+		static GXVtxAttrFmtList fl[] = { { GX_VA_POS, GX_POS_XYZ, GX_F32, 0 },
+			                             { GX_VA_NULL, GX_POS_XYZ, GX_U8, 0 } };
+		GDSetVtxAttrFmtv(GX_VTXFMT0, fl);
+	}
+};
+
+class TMBindShadowManager::TSetup2 : public TGDLStatic {
+public:
+	TSetup2(u32 size)
+	    : TGDLStatic(size)
+	{
+	}
+
+	virtual void makeDL()
+	{
+		GDSetCullMode(GX_CULL_NONE);
+		GDSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
+		GDSetBlendModeEtc(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP,
+		                  GX_FALSE, GX_TRUE, GX_FALSE);
+		GDSetDstAlpha(GX_TRUE, 0);
+	}
+};
+
+class TMBindShadowManager::TSetup3 : public TGDLStatic {
+public:
+	TSetup3(u32 size)
+	    : TGDLStatic(size)
+	{
+	}
+
+	virtual void makeDL()
+	{
+		GDSetDstAlpha(GX_FALSE, 0);
+		GDSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+		GDSetCullMode(GX_CULL_BACK);
+		GDSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
+	}
+};
+
+class TMBindShadowManager::TSetup4 : public TGDLStatic {
+public:
+	TSetup4(u32 size)
+	    : TGDLStatic(size)
+	{
+	}
+
+	virtual void makeDL()
+	{
+		GDSetDstAlpha(GX_TRUE, 0);
+		GDSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
+		GDSetCullMode(GX_CULL_FRONT);
+		GDSetBlendModeEtc(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
+		                  GX_LO_NOOP, GX_TRUE, GX_TRUE, GX_FALSE);
+	}
+};
+
+class TMBindShadowManager::TSetup5 : public TGDLStatic {
+public:
+	TSetup5(u32 size)
+	    : TGDLStatic(size)
+	{
+	}
+
+	virtual void makeDL()
+	{
+		GDSetDstAlpha(GX_TRUE, 0);
+		GDSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
+		GDSetCullMode(GX_CULL_BACK);
+		GDSetBlendModeEtc(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
+		                  GX_LO_NOOP, GX_FALSE, GX_TRUE, GX_FALSE);
+	}
+};
+
 void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 {
-	class TCylinder : public TGDLStatic {
-	public:
-		TCylinder(u32 size)
-		    : TGDLStatic(size)
-		{
-		}
-
-		virtual void makeDL()
-		{
-			int div = 10;
-			f32 z   = 1.0f;
-			f32 nz  = -z;
-			int i;
-
-			f32 cosTable[100];
-			f32 sinTable[100];
-
-			for (i = 0; i <= div; i++) {
-				f32 angle   = M_PI * (2.0f * i) / div;
-				cosTable[i] = cosf(angle);
-				sinTable[i] = sinf(angle);
-			}
-
-			GDBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, div * 2 + 2);
-			for (i = 0; i <= div; i++) {
-				GDPosition3f32(cosTable[i], sinTable[i], nz);
-				GDPosition3f32(cosTable[i], sinTable[i], z);
-			}
-			GDEnd();
-
-			GDBegin(GX_TRIANGLEFAN, GX_VTXFMT0, div + 2);
-			GDPosition3f32(0.0f, 0.0f, z);
-			for (i = 0; i <= div; i++)
-				GDPosition3f32(cosTable[i], -sinTable[i], z);
-			GDEnd();
-
-			GDBegin(GX_TRIANGLEFAN, GX_VTXFMT0, div + 2);
-			GDPosition3f32(0.0f, 0.0f, nz);
-			for (i = 0; i <= div; i++)
-				GDPosition3f32(cosTable[i], sinTable[i], nz);
-			GDEnd();
-		}
-	};
-
-	class TSetup1 : public TGDLStatic {
-	public:
-		TSetup1(u32 size)
-		    : TGDLStatic(size)
-		{
-		}
-
-		virtual void makeDL()
-		{
-			GDSetGenMode2(0, 1, 1, 0, GX_CULL_BACK);
-			GDSetChanCtrl(GX_COLOR0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
-			              GX_DF_NONE, GX_AF_NONE);
-			GDSetChanCtrl(GX_ALPHA0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
-			              GX_DF_NONE, GX_AF_NONE);
-			GDSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
-			GDSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
-			              GX_COLOR0A0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
-			              GX_COLOR0A0);
-
-			GDSetChanMatColor(GX_COLOR0A0, (GXColor) { 30, 50, 115, 180 });
-			GDSetCurrentMtx(0, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c, 0x3c);
-
-			static GXVtxDescList vl[]
-			    = { { GX_VA_POS, GX_DIRECT }, { GX_VA_NULL, GX_NONE } };
-			GDSetVtxDescv(vl);
-
-			static GXVtxAttrFmtList fl[]
-			    = { { GX_VA_POS, GX_POS_XYZ, GX_F32, 0 },
-				    { GX_VA_NULL, GX_POS_XYZ, GX_U8, 0 } };
-			GDSetVtxAttrFmtv(GX_VTXFMT0, fl);
-		}
-	};
 
 	GXSetZCompLoc(GX_TRUE);
 
@@ -838,23 +905,6 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 
 		if (!(param_1 & ary->unk0))
 			continue;
-
-		class TSetup2 : public TGDLStatic {
-		public:
-			TSetup2(u32 size)
-			    : TGDLStatic(size)
-			{
-			}
-
-			virtual void makeDL()
-			{
-				GDSetCullMode(GX_CULL_NONE);
-				GDSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
-				GDSetBlendModeEtc(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP,
-				                  GX_FALSE, GX_TRUE, GX_FALSE);
-				GDSetDstAlpha(GX_TRUE, 0);
-			}
-		};
 
 		static TSetup2 setup2(0x80);
 		setup2.callDL();
@@ -909,22 +959,6 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		TAlphaShadowQuad* quad = mQuadArys[i].mQuadHead;
 		u8 lowPoly             = 0;
 
-		class TSetup3 : public TGDLStatic {
-		public:
-			TSetup3(u32 size)
-			    : TGDLStatic(size)
-			{
-			}
-
-			virtual void makeDL()
-			{
-				GDSetDstAlpha(GX_FALSE, 0);
-				GDSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
-				GDSetCullMode(GX_CULL_BACK);
-				GDSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ZERO, GX_LO_NOOP);
-			}
-		};
-
 		static TSetup3 setup3(0x80);
 		setup3.callDL();
 		if (quad->mRequest->mCameraDistSq < 20000000.0f) {
@@ -940,24 +974,6 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 			quad = quad->mNext;
 		}
 
-		class TSetup4 : public TGDLStatic {
-		public:
-			TSetup4(u32 size)
-			    : TGDLStatic(size)
-			{
-			}
-
-			virtual void makeDL()
-			{
-				GDSetDstAlpha(GX_TRUE, 0);
-				GDSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
-				GDSetCullMode(GX_CULL_FRONT);
-				GDSetBlendModeEtc(GX_BM_BLEND, GX_BL_DSTALPHA,
-				                  GX_BL_INVDSTALPHA, GX_LO_NOOP, GX_TRUE,
-				                  GX_TRUE, GX_FALSE);
-			}
-		};
-
 		static TSetup4 setup4(0x80);
 		setup4.callDL();
 
@@ -967,24 +983,6 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 			drawShadowVolume(lowPoly, quad);
 			quad = quad->mNext;
 		}
-
-		class TSetup5 : public TGDLStatic {
-		public:
-			TSetup5(u32 size)
-			    : TGDLStatic(size)
-			{
-			}
-
-			virtual void makeDL()
-			{
-				GDSetDstAlpha(GX_TRUE, 0);
-				GDSetZMode(GX_TRUE, GX_ALWAYS, GX_FALSE);
-				GDSetCullMode(GX_CULL_BACK);
-				GDSetBlendModeEtc(GX_BM_BLEND, GX_BL_DSTALPHA,
-				                  GX_BL_INVDSTALPHA, GX_LO_NOOP, GX_FALSE,
-				                  GX_TRUE, GX_FALSE);
-			}
-		};
 
 		static TSetup5 setup5(0x100);
 		setup5.callDL();
