@@ -348,6 +348,14 @@ bool TYumbo::isFreeze() const
 	return nerve == &TNerveYumboFreeze::theNerve();
 }
 
+#ifdef VERSION_GMSP01
+bool TYumbo::isChangedBlock() const
+{
+	// TODO: PAL-only; its body is not in the JP build
+	return false;
+}
+#endif
+
 bool TYumbo::isDead() const
 {
 	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();

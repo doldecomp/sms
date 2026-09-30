@@ -43,6 +43,9 @@ public:
 	TYumboSeed* getUnusedSeed();
 	bool isDead() const;
 	bool isFreeze() const;
+#ifdef VERSION_GMSP01
+	bool isChangedBlock() const;
+#endif
 	bool isWaterproof() const;
 	void changeToYumbo();
 	void changeToFlower();
