@@ -12,7 +12,7 @@ void CPolarSubCamera::calcInHouseNoSub_()
 {
 	if (unk2CA != -1) {
 		unk2C8 = unk2CA;
-		if ((f32)mSaveEx->mInHouseMinFrame.get() < (f32)unk2CC)
+		if ((f32)unk2CC < (f32)mSaveEx->mInHouseMinFrame.get())
 			unk2CC += 1;
 	} else if (unk2C8 != -1) {
 		if ((f32)unk2CC < (f32)mSaveEx->mInHouseMinFrame.get()) {
@@ -69,9 +69,9 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 				}
 			}
 		}
+		unk2CA = -1;
 	}
 
-	unk2CA = -1;
 	calcInHouseNoSub_();
 }
 
