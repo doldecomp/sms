@@ -196,7 +196,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				TMushroom1up* mushroom = static_cast<TMushroom1up*>(sender);
 				if (mushroom->unk13A == 0
 				    && !(mushroom->unk13C < 120 ? true : false)) {
-					mHealth = mDeParams.mHpMax.get();
+					mHealth = mDeParams.mHPMax.get();
 					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 						mWaterGun->addWater(mWaterGun->getMaxWater());
 					}
@@ -223,7 +223,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 		case 0x2000003C: // shirt/cap pickup
 			mCap->setModelActive(TMarioCap::E_CAP_MODEL_HAT);
-			mHealth = mDeParams.mHpMax.get();
+			mHealth = mDeParams.mHPMax.get();
 			emitGetEffect();
 			return TRUE;
 		case 0x2000000E: // yellow coin
@@ -245,7 +245,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				    static_cast<TMapObjBase*>(sender)->mInitialRotation.y);
 				mModelFaceAngle = mFaceAngle.y;
 				setPlayerVelocity(0.0f);
-				mHealth = mDeParams.mHpMax.get();
+				mHealth = mDeParams.mHPMax.get();
 				mAir    = mMaxAir;
 				changePlayerStatus(MARIO_STATUS_WIN_DEMO, 0, true);
 				return TRUE;

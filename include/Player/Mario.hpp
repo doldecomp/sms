@@ -177,7 +177,7 @@ public:
 		TParamRT<f32> mWaistPitch;
 		TParamRT<s16> mWaistRollMax;
 		TParamRT<s16> mWaistPitchMax;
-		TParamRT<s32> mRoll;
+		TParamRT<f32> mRoll;
 		TParamRT<f32> mPitch;
 		TParamRT<s16> mRollMax;
 		TParamRT<s16> mPitchMax;
@@ -560,7 +560,7 @@ public:
 	public:
 		TDeParams();
 
-		TParamRT<s16> mHpMax;
+		TParamRT<s16> mHPMax;
 		TParamRT<f32> mRunningMax;
 		TParamRT<f32> mDashMax;
 		TParamRT<f32> mDashAcc;
