@@ -77,21 +77,6 @@ u32 TBossTelesa::mTelesaGenerateInterval = 400;
 f32 TBossTelesa::mCameraMoveLimit        = 1000.0f;
 f32 TBossTelesa::mCameraMoveSp           = 0.02f;
 
-static inline TBossTelesa* getBoss(TSpineBase<TLiveActor>* spine)
-{
-	return (TBossTelesa*)spine->getBody();
-}
-
-static inline TBubble* getBubble(TSpineBase<TLiveActor>* spine)
-{
-	return (TBubble*)spine->getBody();
-}
-
-static inline TBossTelesa* getSlotOwner(TTelesaSlot* slot)
-{
-	return (TBossTelesa*)slot->unk1A0;
-}
-
 TBubbleSaveLoadParams::TBubbleSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
     , PARAM_INIT(mSLLiveTime, 200)
@@ -326,7 +311,7 @@ void TBubble::appendEnemy()
 
 DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 {
-	TBubble* bubble = getBubble(spine);
+	TBubble* bubble = (TBubble*)spine->getBody();
 	if (spine->getTime() == 0) {
 		bubble->offHitFlag(HIT_FLAG_NO_COLLISION);
 
@@ -388,7 +373,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 
 DEFINE_NERVE(TNerveBubbleSplit, TLiveActor)
 {
-	TBubble* bubble = getBubble(spine);
+	TBubble* bubble = (TBubble*)spine->getBody();
 	if (spine->getTime() == 0) {
 		bubble->onHitFlag(HIT_FLAG_NO_COLLISION);
 		bubble->split();
@@ -635,7 +620,7 @@ void TTelesaSlot::moveObject()
 
 			for (int j = 0; j < unk148; ++j) {
 				if (unk198[j]) {
-					TBossTelesa* owner = getSlotOwner(this);
+					TBossTelesa* owner = unk1A0;
 					TBossTelesaSaveLoadParams* params
 					    = (TBossTelesaSaveLoadParams*)owner->unk15C;
 					f32 rate = params->mSLSlotHitCollectRate.get();
@@ -658,7 +643,7 @@ void TTelesaSlot::moveObject()
 				allStopped = false;
 
 			if (allStopped) {
-				TBossTelesa* owner = getSlotOwner(this);
+				TBossTelesa* owner = unk1A0;
 				TTelesaSlot* slot  = (TTelesaSlot*)owner->unk184;
 
 				if (slot->getSlotResult() == 2 || slot->getSlotResult() == 0) {
@@ -718,7 +703,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 		return;
 
 	TBossTelesaSaveLoadParams* params
-	    = (TBossTelesaSaveLoadParams*)getSlotOwner(this)->unk15C;
+	    = (TBossTelesaSaveLoadParams*)unk1A0->unk15C;
 	collectRate = params->mSLSlotFirstHitCollectRate.get();
 
 	if (SMS_GetMarioHP() == 1)
@@ -736,11 +721,11 @@ void TTelesaSlot::forceStopSlot(int idx)
 		unk198[idx] = false;
 	}
 
-	if (unk1A4 == getSlotOwner(this)->unk1A8)
+	if (unk1A4 == unk1A0->unk1A8)
 		unk1A4 = 3;
 
 	if (unk1A4 == 0) {
-		if (getSlotOwner(this)->unk370 == 0)
+		if (unk1A0->unk370 == 0)
 			unk1A4 = 1;
 		else if (SMS_GetMarioHP() >= 6)
 			unk1A4 = 3;
@@ -830,8 +815,12 @@ int TTelesaSlot::getResultFromAng(f32 ang)
 	return 2;
 }
 
+// TODO: reconstruct the UNUSED body (map size 0x19c). No retail call site
+// remains in this TU.
 void TTelesaSlot::calcObjCollision() { }
 
+// TODO: reconstruct the UNUSED body (map size 0x58). No retail call site
+// remains in this TU.
 void TTelesaSlot::entryObjCollision() { }
 
 TBossTelesa::TBossTelesa(const char* name)
@@ -880,7 +869,7 @@ void TBossTelesa::init(TLiveManager* manager)
 		mWallRadius       = params->mSLWallRadius.get();
 		mHeadHeight       = params->mSLHeadHeight.get();
 		mScaledBodyRadius = mBodyScale * mBodyRadius;
-		mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+		mHitPoints        = getMaxHitPoints();
 	}
 
 	initHitActor(0, 5, 0x98000000, mBodyRadius, mHeadHeight, mBodyRadius,
@@ -930,7 +919,7 @@ void TBossTelesa::init(TLiveManager* manager)
 
 	for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 		TMapObjBase* actor = gpMapObjManager->getObj(i);
-		if (actor->mActorType == 0x4000019A) {
+		if (actor->isActorType(0x4000019A)) {
 			unk154    = nullptr;
 			unk158    = nullptr;
 			mPosition = actor->mPosition;
@@ -988,12 +977,7 @@ void TBossTelesa::loadAfter()
 		int found = 0;
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
-			u8 isRoulette;
-			if (actor->mActorType == rouletteType)
-				isRoulette = 1;
-			else
-				isRoulette = 0;
-			if (isRoulette) {
+			if (actor->isActorType(rouletteType)) {
 				unk178[found] = (TRoulette*)actor;
 				found++;
 			}
@@ -1004,12 +988,7 @@ void TBossTelesa::loadAfter()
 	if ((u32)gpMapObjManager->getObjNumWithActorType(slotType) != 0) {
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
-			u8 isSlot;
-			if (actor->mActorType == slotType)
-				isSlot = 1;
-			else
-				isSlot = 0;
-			if (isSlot) {
+			if (actor->isActorType(slotType)) {
 				unk184         = (TTelesaSlot*)actor;
 				unk184->unk1A0 = this;
 			}
@@ -1018,25 +997,17 @@ void TBossTelesa::loadAfter()
 
 	int fruitIndex = 0;
 	for (int i = 0; i < 6; ++i)
-		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitCoconut", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		unk2A8[fruitIndex++]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitCoconut");
 	for (int i = 0; i < 6; ++i)
-		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitPapaya", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		unk2A8[fruitIndex++]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitPapaya");
 	for (int i = 0; i < 2; ++i)
-		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitPine", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		unk2A8[fruitIndex++]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitPine");
 	for (int i = 0; i < 6; ++i)
-		unk2A8[fruitIndex++] = TMapObjBaseManager::newAndRegisterObj(
-		    "FruitDurian", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		unk2A8[fruitIndex++]
+		    = TMapObjBaseManager::newAndRegisterObj("FruitDurian");
 
 	for (int i = 0; i < 20; ++i) {
 		unk2A8[i]->onMapObjFlag(0x04000000);
@@ -1098,10 +1069,7 @@ void TBossTelesa::loadAfter()
 	    JDrama::TNameRefGen::search("テレサマネージャー"));
 
 	for (int i = 0; i < 5; ++i)
-		TMapObjBaseManager::newAndRegisterObj(
-		    "bottle_large", JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f),
-		    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+		TMapObjBaseManager::newAndRegisterObj("bottle_large");
 
 	SMS_LoadParticle("/scene/btelesa/jpa/ms_btls_fhit.jpa",
 	                 SCENE_BTELESA_JPA_MS_BTLS_FHIT);
@@ -1205,7 +1173,7 @@ void TBossTelesa::moveObject()
 		gpCamera->unk290 = unk360;
 	}
 
-	if (*gpMarioFlag & 0x400) {
+	if (SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1, &mPosition,
 		                                0, nullptr, 0, 4);
 	}
@@ -1224,7 +1192,7 @@ void TBossTelesa::moveObject()
 	}
 
 	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()) {
-		u8 maxHp = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+		u8 maxHp       = getMaxHitPoints();
 		u8 targetAlpha = mNormalAlpha + (maxHp - mHitPoints) * 30;
 		if (targetAlpha > 0xFE)
 			targetAlpha = 0xFE;
@@ -1467,12 +1435,7 @@ BOOL TBossTelesa::receiveMessage(THitActor*, u32) { return FALSE; }
 BOOL TBossTelesa::checkMessage(THitActor* actor, u32 message)
 {
 	if (message == HIT_MESSAGE_TRAMPLE) {
-		bool isMario;
-		if (actor->mActorType == 0x80000001)
-			isMario = true;
-		else
-			isMario = false;
-		if (!isMario) {
+		if (!actor->isActorType(0x80000001)) {
 			if (mSpine->getCurrentNerve()
 			    == &TNerveBossTelesaPrepareSlot::theNerve())
 				mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
@@ -1492,12 +1455,12 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 {
 	unk380 = -1;
 
-	if ((actor->mActorType & 0xFFFF0000) != 0x40000000)
+	if ((actor->getActorType() & 0xFFFF0000) != 0x40000000)
 		return;
 	if (mSpine->getCurrentNerve() != &TNerveBossTelesaPrepareSlot::theNerve())
 		return;
 
-	switch (actor->mActorType) {
+	switch (actor->getActorType()) {
 	case 0x40000390:
 		unk348.r = 0xE6;
 		unk348.g = 0x64;
@@ -1526,7 +1489,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		return;
 	}
 
-	if (!unk350 && actor->mActorType != 0x40000395) {
+	if (!unk350 && !actor->isActorType(0x40000395)) {
 		if (unk35A) {
 			unk35A = 0;
 			gpMarDirector->mConsole->startAppearBalloon(0xE000F, true);
@@ -1689,19 +1652,8 @@ bool TBossTelesa::slotFall()
 	if (unk184->mPosition.y < unk178[0]->mPosition.y - 1100.0f)
 		return TRUE;
 
-	THitActor* switchActor     = unk178[0]->unk150;
-	switchActor->mAttackRadius = 280.0f;
-	switchActor->mAttackHeight = 100.0f;
-	switchActor->mDamageRadius = 280.0f;
-	switchActor->mDamageHeight = 100.0f;
-	switchActor->calcEntryRadius();
-
-	switchActor                = unk178[1]->unk150;
-	switchActor->mAttackRadius = 280.0f;
-	switchActor->mAttackHeight = 100.0f;
-	switchActor->mDamageRadius = 280.0f;
-	switchActor->mDamageHeight = 100.0f;
-	switchActor->calcEntryRadius();
+	unk178[0]->unk150->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
+	unk178[1]->unk150->setHitParams(280.0f, 100.0f, 280.0f, 100.0f);
 
 	return FALSE;
 }
@@ -1715,59 +1667,58 @@ void TBossTelesa::flashItem(int result)
 	int index = 0;
 	for (int i = 0; i < 5; ++i) {
 		TLiveActor* actor = unk2A8[index++];
-		u32* liveFlag     = &actor->mLiveFlag;
-		if (!(*liveFlag & LIVE_FLAG_DEAD) && actor->mHolder == nullptr) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && actor->mHolder == nullptr) {
 			if (phase < 8)
-				*liveFlag |= LIVE_FLAG_HIDDEN;
+				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				*liveFlag &= ~LIVE_FLAG_HIDDEN;
+				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 
-		actor    = unk2A8[index++];
-		liveFlag = &actor->mLiveFlag;
-		if (!(*liveFlag & LIVE_FLAG_DEAD) && actor->mHolder == nullptr) {
+		actor = unk2A8[index++];
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && actor->mHolder == nullptr) {
 			if (phase < 8)
-				*liveFlag |= LIVE_FLAG_HIDDEN;
+				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				*liveFlag &= ~LIVE_FLAG_HIDDEN;
+				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 
-		actor    = unk2A8[index++];
-		liveFlag = &actor->mLiveFlag;
-		if (!(*liveFlag & LIVE_FLAG_DEAD) && actor->mHolder == nullptr) {
+		actor = unk2A8[index++];
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && actor->mHolder == nullptr) {
 			if (phase < 8)
-				*liveFlag |= LIVE_FLAG_HIDDEN;
+				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				*liveFlag &= ~LIVE_FLAG_HIDDEN;
+				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 
-		actor    = unk2A8[index++];
-		liveFlag = &actor->mLiveFlag;
-		if (!(*liveFlag & LIVE_FLAG_DEAD) && actor->mHolder == nullptr) {
+		actor = unk2A8[index++];
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && actor->mHolder == nullptr) {
 			if (phase < 8)
-				*liveFlag |= LIVE_FLAG_HIDDEN;
+				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				*liveFlag &= ~LIVE_FLAG_HIDDEN;
+				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 	}
 
 	for (int i = 0; i < 10; ++i) {
 		TLiveActor* actor = unk2F8[i];
-		u32* liveFlag     = &actor->mLiveFlag;
-		if (!(*liveFlag & LIVE_FLAG_DEAD) && actor->mHolder == nullptr) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && actor->mHolder == nullptr) {
 			if (phase < 8)
-				*liveFlag |= LIVE_FLAG_HIDDEN;
+				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				*liveFlag &= ~LIVE_FLAG_HIDDEN;
+				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 
-		actor    = unk320[i];
-		liveFlag = &actor->mLiveFlag;
-		if (!(*liveFlag & LIVE_FLAG_DEAD)) {
+		actor = unk320[i];
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			if (phase < 8)
-				*liveFlag |= LIVE_FLAG_HIDDEN;
+				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				*liveFlag &= ~LIVE_FLAG_HIDDEN;
+				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 	}
 }
@@ -1856,8 +1807,7 @@ void TBossTelesa::setBckAnm(int index)
 	mMActor->setBckFromIndex(index);
 	mMActor->setMotionBlendRatioForBck(unk168);
 
-	const char** basTable = getBasNameTable();
-	setAnmSound(!basTable ? nullptr : basTable[index]);
+	setAnmSound(getBas(index));
 }
 
 bool TBossTelesa::isInDamage() { return unk35B != 0; }
@@ -1868,8 +1818,7 @@ void TBossTelesa::rouletteStart()
 	TMsRange<f32> directionRange(-1.0f, 1.0f);
 	f32 dir = directionRange.rand();
 
-	TSpineEnemyParams* params = getSaveParam();
-	u8 maxHitPoints = params ? getSaveParam()->mSLHitPointMax.get() : 1;
+	u8 maxHitPoints = getMaxHitPoints();
 	f32 hpSpeed = (maxHitPoints - mHitPoints) * TBossTelesa::mRouletteUpRate;
 
 	for (int i = 0; i < 3; ++i) {
@@ -2220,7 +2169,7 @@ void TBossTelesa::fanfale() { }
 
 DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->unk388 = 0;
 		if (boss->unk350 && boss->mHitPoints != 0)
@@ -2235,40 +2184,26 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk160 = 2;
 				boss->unk168 = 1.0f;
 
-				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(
-				    anmActor->getCurBckAnmPtr());
+				boss->getMActor()->setBckOldMotionBlendAnmPtr(
+				    boss->getMActor()->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(2);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-				const char** basTable = boss->getBasNameTable();
-				const char* basName;
-				if (!basTable)
-					basName = nullptr;
-				else
-					basName = basTable[2];
-				boss->setAnmSound(basName);
+				boss->setAnmSound(boss->getBas(2));
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1F, 1.0f);
 			} else {
 				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 				boss->unk160 = 5;
 				boss->unk168 = 1.0f;
 
-				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(
-				    anmActor->getCurBckAnmPtr());
+				boss->getMActor()->setBckOldMotionBlendAnmPtr(
+				    boss->getMActor()->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(5);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-				const char** basTable = boss->getBasNameTable();
-				const char* basName;
-				if (!basTable)
-					basName = nullptr;
-				else
-					basName = basTable[5];
-				boss->setAnmSound(basName);
+				boss->setAnmSound(boss->getBas(5));
 				boss->mMActor->setBrkFromIndex(0);
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK20, 1.0f);
 			}
@@ -2279,19 +2214,13 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk160 = 3;
 			boss->unk168 = 1.0f;
 
-			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+			boss->getMActor()->setBckOldMotionBlendAnmPtr(
+			    boss->getMActor()->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(3);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-			const char** basTable = boss->getBasNameTable();
-			const char* basName;
-			if (!basTable)
-				basName = nullptr;
-			else
-				basName = basTable[3];
-			boss->setAnmSound(basName);
+			boss->setAnmSound(boss->getBas(3));
 			boss->mMActor->setBrkFromIndex(1);
 			boss->unk184->mScaling.set(0.0f, 0.0f, 0.0f);
 
@@ -2360,37 +2289,25 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			boss->unk160 = 7;
 			boss->unk168 = 1.0f;
 
-			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+			boss->getMActor()->setBckOldMotionBlendAnmPtr(
+			    boss->getMActor()->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(7);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-			const char** basTable = boss->getBasNameTable();
-			const char* basName;
-			if (!basTable)
-				basName = nullptr;
-			else
-				basName = basTable[7];
-			boss->setAnmSound(basName);
+			boss->setAnmSound(boss->getBas(7));
 		} else if (boss->mMActor->checkCurBckFromIndex(7)) {
 			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 			boss->unk160 = 6;
 			boss->unk168 = 1.0f;
 
-			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+			boss->getMActor()->setBckOldMotionBlendAnmPtr(
+			    boss->getMActor()->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(6);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-			const char** basTable = boss->getBasNameTable();
-			const char* basName;
-			if (!basTable)
-				basName = nullptr;
-			else
-				basName = basTable[6];
-			boss->setAnmSound(basName);
+			boss->setAnmSound(boss->getBas(6));
 		} else {
 			SMS_ResetDamageFogEffect(boss->mMActor->getModel()->getModelData());
 
@@ -2403,20 +2320,13 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				boss->unk160 = 15;
 				boss->unk168 = 1.0f;
 
-				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(
-				    anmActor->getCurBckAnmPtr());
+				boss->getMActor()->setBckOldMotionBlendAnmPtr(
+				    boss->getMActor()->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(15);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-				const char** basTable = boss->getBasNameTable();
-				const char* basName;
-				if (!basTable)
-					basName = nullptr;
-				else
-					basName = basTable[15];
-				boss->setAnmSound(basName);
+				boss->setAnmSound(boss->getBas(15));
 				boss->mMActor->setBtpFromIndex(2);
 				spine->pushAfterCurrent(
 				    &TNerveBossTelesaPrepareSlot::theNerve());
@@ -2432,25 +2342,19 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0 || !boss->mMActor->checkCurBckFromIndex(14)) {
 		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 		boss->unk160 = 14;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(14);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[14];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(14));
 	} else {
 		if (boss->mMActor->getFrameCtrl(0)->checkPass(40.0f))
 			boss->genAttacker();
@@ -2463,25 +2367,19 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (!boss->mMActor->checkCurBckFromIndex(4)) {
 		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 		boss->unk160 = 4;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(4);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[4];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(4));
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2497,14 +2395,12 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->onLiveFlag(LIVE_FLAG_HIDDEN);
 		boss->unk350 = 0;
 
-		u8 maxHp = boss->getSaveParam()
-		               ? boss->getSaveParam()->mSLHitPointMax.get()
-		               : 1;
+		u8 maxHp = boss->getMaxHitPoints();
 		u8 alpha = TBossTelesa::mNormalAlpha + (maxHp - boss->mHitPoints) * 30;
 		alpha    = MsClamp<u8>(alpha, 0, 0xFE);
 		boss->unk34C.a = alpha;
@@ -2530,26 +2426,20 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		if (!boss->mMActor->checkCurBckFromIndex(0)) {
 			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 			boss->unk160 = 0;
 			boss->unk168 = 1.0f;
 
-			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+			boss->getMActor()->setBckOldMotionBlendAnmPtr(
+			    boss->getMActor()->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(0);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-			const char** basTable = boss->getBasNameTable();
-			const char* basName;
-			if (!basTable)
-				basName = nullptr;
-			else
-				basName = basTable[0];
-			boss->setAnmSound(basName);
+			boss->setAnmSound(boss->getBas(0));
 
 			if (!boss->unk384) {
 				boss->unk384 = 1;
@@ -2568,19 +2458,13 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		boss->unk160 = 15;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(15);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[15];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(15));
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2592,9 +2476,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 	}
 
 	if (spine->getTime() > 800) {
-		u8 maxHp     = boss->getSaveParam()
-		                   ? boss->getSaveParam()->mSLHitPointMax.get()
-		                   : 1;
+		u8 maxHp     = boss->getMaxHitPoints();
 		int interval = TBossTelesa::mTelesaGenerateInterval
 		               + (maxHp - boss->mHitPoints) * 100;
 		if (spine->getTime() % interval == 1) {
@@ -2602,19 +2484,13 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->unk160 = 14;
 			boss->unk168 = 1.0f;
 
-			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+			boss->getMActor()->setBckOldMotionBlendAnmPtr(
+			    boss->getMActor()->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(14);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-			const char** basTable = boss->getBasNameTable();
-			const char* basName;
-			if (!basTable)
-				basName = nullptr;
-			else
-				basName = basTable[14];
-			boss->setAnmSound(basName);
+			boss->setAnmSound(boss->getBas(14));
 		}
 	}
 
@@ -2624,25 +2500,19 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 		boss->unk160 = 11;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(11);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[11];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(11));
 	}
 
 	if (boss->mMActor->checkCurBckFromIndex(11)) {
@@ -2655,19 +2525,13 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 			boss->unk160 = 15;
 			boss->unk168 = 1.0f;
 
-			MActor* anmActor = boss->mMActor;
-			anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+			boss->getMActor()->setBckOldMotionBlendAnmPtr(
+			    boss->getMActor()->getCurBckAnmPtr());
 
 			boss->mMActor->setBckFromIndex(15);
 			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-			const char** basTable = boss->getBasNameTable();
-			const char* basName;
-			if (!basTable)
-				basName = nullptr;
-			else
-				basName = basTable[15];
-			boss->setAnmSound(basName);
+			boss->setAnmSound(boss->getBas(15));
 			boss->mMActor->setBtpFromIndex(2);
 			boss->unk184->forceStopSlot(1);
 		}
@@ -2682,26 +2546,20 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (!boss->mMActor->checkCurBckFromIndex(14)
 	    && boss->unk364 < TBossTelesa::mBaseHoseiPosY - 200.0f) {
 		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 		boss->unk160 = 14;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(14);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[14];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(14));
 	} else if (boss->checkCurAnmEnd(0) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
 		boss->unk368 = 0;
@@ -2721,25 +2579,19 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
 		boss->unk160 = 15;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(15);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[15];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(15));
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2751,20 +2603,13 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk160 = 12;
 				boss->unk168 = 1.0f;
 
-				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(
-				    anmActor->getCurBckAnmPtr());
+				boss->getMActor()->setBckOldMotionBlendAnmPtr(
+				    boss->getMActor()->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(12);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-				const char** basTable = boss->getBasNameTable();
-				const char* basName;
-				if (!basTable)
-					basName = nullptr;
-				else
-					basName = basTable[12];
-				boss->setAnmSound(basName);
+				boss->setAnmSound(boss->getBas(12));
 				boss->mMActor->setBtpFromIndex(1);
 			} else if (boss->mMActor->checkCurBckFromIndex(12)) {
 				TBossTelesaSaveLoadParams* params
@@ -2774,28 +2619,19 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 					boss->unk160 = 13;
 					boss->unk168 = 1.0f;
 
-					MActor* anmActor = boss->mMActor;
-					anmActor->setBckOldMotionBlendAnmPtr(
-					    anmActor->getCurBckAnmPtr());
+					boss->getMActor()->setBckOldMotionBlendAnmPtr(
+					    boss->getMActor()->getCurBckAnmPtr());
 
 					boss->mMActor->setBckFromIndex(13);
 					boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-					const char** basTable = boss->getBasNameTable();
-					const char* basName;
-					if (!basTable)
-						basName = nullptr;
-					else
-						basName = basTable[13];
-					boss->setAnmSound(basName);
+					boss->setAnmSound(boss->getBas(13));
 				}
 			} else {
 				boss->unk36C = 0;
 				boss->unk350 = 0;
 
-				u8 maxHp = boss->getSaveParam()
-				               ? boss->getSaveParam()->mSLHitPointMax.get()
-				               : 1;
+				u8 maxHp = boss->getMaxHitPoints();
 				u8 alpha = TBossTelesa::mNormalAlpha
 				           + (maxHp - boss->mHitPoints) * 30;
 				if (alpha > 0xFE)
@@ -2807,20 +2643,13 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk160 = 15;
 				boss->unk168 = 1.0f;
 
-				MActor* anmActor = boss->mMActor;
-				anmActor->setBckOldMotionBlendAnmPtr(
-				    anmActor->getCurBckAnmPtr());
+				boss->getMActor()->setBckOldMotionBlendAnmPtr(
+				    boss->getMActor()->getCurBckAnmPtr());
 
 				boss->mMActor->setBckFromIndex(15);
 				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-				const char** basTable = boss->getBasNameTable();
-				const char* basName;
-				if (!basTable)
-					basName = nullptr;
-				else
-					basName = basTable[15];
-				boss->setAnmSound(basName);
+				boss->setAnmSound(boss->getBas(15));
 				boss->mMActor->setBtpFromIndex(2);
 			}
 		}
@@ -2881,14 +2710,12 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (boss->mMActor->checkCurBckFromIndex(16)) {
 		if (boss->checkCurAnmEnd(0)) {
 			boss->unk350 = 0;
 
-			u8 maxHp = boss->getSaveParam()
-			               ? boss->getSaveParam()->mSLHitPointMax.get()
-			               : 1;
+			u8 maxHp = boss->getMaxHitPoints();
 			u8 alpha
 			    = TBossTelesa::mNormalAlpha + (maxHp - boss->mHitPoints) * 30;
 			alpha = MsClamp<u8>(alpha, 0, 0xFE);
@@ -2901,19 +2728,13 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 		boss->unk160 = 16;
 		boss->unk168 = 1.0f;
 
-		MActor* anmActor = boss->mMActor;
-		anmActor->setBckOldMotionBlendAnmPtr(anmActor->getCurBckAnmPtr());
+		boss->getMActor()->setBckOldMotionBlendAnmPtr(
+		    boss->getMActor()->getCurBckAnmPtr());
 
 		boss->mMActor->setBckFromIndex(16);
 		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
 
-		const char** basTable = boss->getBasNameTable();
-		const char* basName;
-		if (!basTable)
-			basName = nullptr;
-		else
-			basName = basTable[16];
-		boss->setAnmSound(basName);
+		boss->setAnmSound(boss->getBas(16));
 
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_THANKYOU,
 		                                &boss->mPosition, 0, nullptr, 0, 4);
@@ -2924,7 +2745,7 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 
 DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 {
-	TBossTelesa* boss = getBoss(spine);
+	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->onLiveFlag(LIVE_FLAG_HIDDEN);
 		if (SMS_SendMessageToMario(boss, HIT_MESSAGE_TAKE))
