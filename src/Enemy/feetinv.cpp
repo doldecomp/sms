@@ -14,7 +14,7 @@ inline f32 getAngleBetween(const JGeometry::TVec3<f32>& a,
 	crossVec.cross(a, b);
 
 	s16 rawAngle = matan(a.dot(b), MsVECMag2(&crossVec));
-	return std::abs(SHORTANGLE2DEG(rawAngle));
+	return SHORTANGLE2DEG(rawAngle);
 }
 
 // fabricated
@@ -26,7 +26,7 @@ inline f32 MsAsin(f32 x)
 		return -90.0f;
 	} else {
 		f32 cosSq  = -((x * x) - 1.0f);
-		f32 cosVal = (f32)((f64)cosSq * __frsqrte(cosSq));
+		f32 cosVal = cosSq * __frsqrte(cosSq);
 		return SHORTANGLE2DEG(matan(cosVal, x));
 	}
 }
@@ -40,7 +40,7 @@ inline f32 MsAcos(f32 x)
 		return 180.0f;
 	} else {
 		f32 cosSq  = -((x * x) - 1.0f);
-		f32 cosVal = (f32)((f64)cosSq * __frsqrte(cosSq));
+		f32 cosVal = cosSq * __frsqrte(cosSq);
 		return 90.0f - SHORTANGLE2DEG(matan(cosVal, x));
 	}
 }
@@ -53,13 +53,13 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 
 	JGeometry::TVec3<f32> kneePos;
 	kneePos.x = kneeMtx[0][3];
-	kneePos.x = kneeMtx[1][3];
-	kneePos.x = kneeMtx[2][3];
+	kneePos.y = kneeMtx[1][3];
+	kneePos.z = kneeMtx[2][3];
 
 	JGeometry::TVec3<f32> footPos;
 	footPos.x = footMtx[0][3];
-	footPos.x = footMtx[1][3];
-	footPos.x = footMtx[2][3];
+	footPos.y = footMtx[1][3];
+	footPos.z = footMtx[2][3];
 
 	JGeometry::TVec3<f32> shin(footPos);
 	shin -= kneePos;
@@ -76,8 +76,8 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		MtxPtr hipMtx = model->getAnmMtx(hipIdx);
 		JGeometry::TVec3<f32> hipPos;
 		hipPos.x = hipMtx[0][3];
-		hipPos.x = hipMtx[1][3];
-		hipPos.x = hipMtx[2][3];
+		hipPos.y = hipMtx[1][3];
+		hipPos.z = hipMtx[2][3];
 
 		JGeometry::TVec3<f32> thigh(kneePos);
 		thigh -= hipPos;
@@ -92,7 +92,7 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		f32 cosHipAngle = -((toFootLen * toFootLen)
 		                    - ((thighLen * thighLen) + (shinLen * shinLen)))
 		                  / (2.0f * thighLen * shinLen);
-		f32 hipAngle = MsAcos(cosHipAngle); // NOTE: in the asm the 90.0f - is optimised away, need to verify the codegen ACTUALLY does this
+		f32 hipAngle = MsAcos(cosHipAngle);
 
 		f32 sinRatio       = (shinLen * MsSin(hipAngle)) / toFootLen;
 		f32 kneeSolveAngle = MsAsin(sinRatio);
@@ -103,28 +103,27 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		PSMTXConcat(hipMtx, rotMtx, hipMtx);
 
 		JGeometry::TVec3<f32> dir;
-		dir.y = hipMtx[0][0];
+		dir.x = hipMtx[0][0];
 		dir.y = hipMtx[1][0];
 		dir.z = hipMtx[2][0];
 		dir.setLength(thighLen);
 
-		JGeometry::TVec3<f32> newKnee(hipPos);
-		newKnee.add(dir);
-		kneePos = newKnee;
+		JGeometry::TVec3<f32> newKnee = hipPos + dir;
+		kneePos                       = newKnee;
 
 		kneeMtx[0][3] = kneePos.x;
 		kneeMtx[1][3] = kneePos.y;
 		kneeMtx[2][3] = kneePos.z;
 
 		JGeometry::TVec3<f32> kneeFwd;
-		kneeFwd.y = kneeMtx[0][2];
+		kneeFwd.x = kneeMtx[0][2];
 		kneeFwd.y = kneeMtx[1][2];
 		kneeFwd.z = kneeMtx[2][2];
 
 		JGeometry::TVec3<f32> kneeSide;
-		kneeSide.y = kneeMtx[0][1];
-		kneeSide.y = kneeMtx[1][1];
-		kneeSide.z = kneeMtx[2][1];
+		kneeSide.x = kneeMtx[0][0];
+		kneeSide.y = kneeMtx[1][0];
+		kneeSide.z = kneeMtx[2][0];
 
 		f32 kneeFwdLen  = kneeFwd.length();
 		f32 kneeSideLen = kneeSide.length();
@@ -137,30 +136,30 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		kneeMtx[1][0] = newDir.y;
 		kneeMtx[2][0] = newDir.z;
 
-		JGeometry::TVec3<f32> kneeYDir;
-		kneeYDir.y = kneeMtx[0][0];
-		kneeYDir.y = kneeMtx[1][0];
-		kneeYDir.z = kneeMtx[2][0];
+		JGeometry::TVec3<f32> oldUp;
+		oldUp.x = kneeMtx[0][1];
+		oldUp.y = kneeMtx[1][1];
+		oldUp.z = kneeMtx[2][1];
 
 		JGeometry::TVec3<f32> upRaw;
-		upRaw.cross(newDir, kneeYDir);
+		upRaw.cross(newDir, oldUp);
 		upRaw.setLength(kneeFwdLen);
 
-		kneeMtx[0][1] = upRaw.x;
-		kneeMtx[1][1] = upRaw.y;
-		kneeMtx[2][1] = upRaw.z;
+		kneeMtx[0][2] = upRaw.x;
+		kneeMtx[1][2] = upRaw.y;
+		kneeMtx[2][2] = upRaw.z;
 
 		footMtx[0][3] = footPos.x;
 		footMtx[1][3] = footPos.y;
 		footMtx[2][3] = footPos.z;
 
 		JGeometry::TVec3<f32> footFwd;
-		footFwd.y = footMtx[0][1];
+		footFwd.x = footMtx[0][1];
 		footFwd.y = footMtx[1][1];
 		footFwd.z = footMtx[2][1];
 
 		JGeometry::TVec3<f32> footSide;
-		footSide.y = footMtx[0][0];
+		footSide.x = footMtx[0][0];
 		footSide.y = footMtx[1][0];
 		footSide.z = footMtx[2][0];
 
@@ -168,24 +167,27 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		f32 footSideLen = footSide.length();
 
 		const JGeometry::TVec3<f32>& normal = groundData->getNormal();
-		JGeometry::TVec3<f32> negNormal     = normal * -footFwdLen;
+		JGeometry::TVec3<f32> negNormal;
+		negNormal.x = -normal.x * footFwdLen;
+		negNormal.y = -normal.y * footFwdLen;
+		negNormal.z = -normal.z * footFwdLen;
 
 		footMtx[0][1] = negNormal.x;
 		footMtx[1][1] = negNormal.y;
 		footMtx[2][1] = negNormal.z;
 
 		JGeometry::TVec3<f32> footZDir;
-		footZDir.y = footMtx[0][2];
+		footZDir.x = footMtx[0][2];
 		footZDir.y = footMtx[1][2];
 		footZDir.z = footMtx[2][2];
 
-		JGeometry::TVec3<f32> footUpRaw;
-		footUpRaw.cross(negNormal, footZDir);
-		footUpRaw.setLength(footSideLen);
+		JGeometry::TVec3<f32> footSideRaw;
+		footSideRaw.cross(negNormal, footZDir);
+		footSideRaw.setLength(footSideLen);
 
-		footMtx[0][1] = footUpRaw.x;
-		footMtx[1][1] = footUpRaw.y;
-		footMtx[2][1] = footUpRaw.z;
+		footMtx[0][0] = footSideRaw.x;
+		footMtx[1][0] = footSideRaw.y;
+		footMtx[2][0] = footSideRaw.z;
 	}
 }
 
