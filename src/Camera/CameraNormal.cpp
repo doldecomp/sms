@@ -142,7 +142,8 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 					switch (mMode) {
 					case CAMERA_MODE_DIVING:
 					case CAMERA_MODE_HOVERING:
-						f30 = CLBAbs(sVar9 - unk258) * (2.0f / 65536.0f);
+						f30 = CLBAbs<int>((s16)(sVar9 - unk258))
+						      * (2.0f / 65536.0f);
 						break;
 					default:
 						f30 = (1.0f
