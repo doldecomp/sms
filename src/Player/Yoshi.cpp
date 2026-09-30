@@ -241,10 +241,10 @@ void TYoshi::init(TMario* param_1)
 	mBodyAnmSoundTable[16] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_l.bas");
 	mBodyAnmSoundTable[17] = JKRGetResource("/yoshi/bas/yoshi_sidewalk_r.bas");
 	mBodyAnmSoundTable[18] = JKRGetResource("/yoshi/bas/yoshi_slide_end.bas");
-	mBodyAnmSoundTable[20] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
-	mBodyAnmSoundTable[21] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
-	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
-	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
+	mBodyAnmSoundTable[22] = JKRGetResource("/yoshi/bas/yoshi_wait.bas");
+	mBodyAnmSoundTable[23] = JKRGetResource("/yoshi/bas/yoshi_wait_alone.bas");
+	mBodyAnmSoundTable[24] = JKRGetResource("/yoshi/bas/yoshi_walk.bas");
+	mBodyAnmSoundTable[25] = JKRGetResource("/yoshi/bas/yoshi_water_die.bas");
 	// clang-format on
 
 	changeAnimation(0x17);
@@ -486,7 +486,14 @@ void TYoshi::getOff(bool param_1)
 	MSBgm::setStageBgmYoshiPercussion(false);
 }
 
-void TYoshi::thinkJumpEnd(u16, u16*) { }
+BOOL TYoshi::thinkJumpEnd(u16 cur_idx, u16* new_idx)
+{
+	if (cur_idx == 12) {
+		*new_idx = 11;
+		return TRUE;
+	}
+	return FALSE;
+}
 
 // TODO: tons of missing inlines
 void TYoshi::thinkAnimation()
@@ -497,15 +504,7 @@ void TYoshi::thinkAnimation()
 	u32 status    = mMario->mStatus;
 
 	if (status & MARIO_STATUS_FLAG_RUNNING) {
-		BOOL tmp;
-		if (curIdx == 12) {
-			newIdx = 11;
-			tmp    = true;
-		} else {
-			tmp = false;
-		}
-
-		if (!tmp) {
+		if (!thinkJumpEnd(curIdx, &newIdx)) {
 			newIdx = 15;
 			if (status == MARIO_STATUS_CATCH || status == MARIO_STATUS_OIL_SLIP
 			    || status == MARIO_STATUS_OIL_SLOPE
@@ -626,46 +625,27 @@ void TYoshi::thinkUpper()
 
 	J3DJoint* joint
 	    = mActor->getModel()->getModelData()->getJointNodePointer(18);
-	const TWaterGun* waterGun = mMario->mWaterGun;
-
-	bool shouldUseEatMtx = false;
-
 	if (mTongue->mState != TYoshiTongue::STATE_IDLE
-	    && waterGun->mCurrentWater != 0) {
-		if (waterGun->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)waterGun->getCurrentNozzle())->unk385
-			    == TNozzleTrigger::ACTIVE)
-				shouldUseEatMtx = true;
-			else
-				shouldUseEatMtx = false;
-		} else {
-			if (waterGun->getCurrentNozzle()->unk378 > 0.0f)
-				shouldUseEatMtx = true;
-			else
-				shouldUseEatMtx = false;
-		}
-	}
-
-	if (shouldUseEatMtx) {
+	    || mMario->mWaterGun->isEmitting()) {
 		if (joint->getMtxCalc() != unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
 			unk5C.setEnd(unk4C->getFrameMax());
 			unk5C.setFrame(0.0f);
 			joint->setMtxCalc(unk54);
-			mBodyAnmSound->initAnmSound(mBodyAnmSoundTable[3], 1, 0.0f);
+			mTongueAnmSound->initAnmSound(mBodyAnmSoundTable[3], 1, 0.0f);
 		}
 
 		unk4C->setFrame(unk5C.getFrame());
 	} else {
-		if (joint->getMtxCalc() == unk58) {
+		if (joint->getMtxCalc() == unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
 			unk5C.setEnd(unk50->getFrameMax());
 			unk5C.setFrame(0.0f);
 			joint->setMtxCalc(unk58);
-			mBodyAnmSound->initAnmSound(mBodyAnmSoundTable[4], 1, 0.0f);
-		} else if (joint->getMtxCalc() != unk58) {
+			mTongueAnmSound->initAnmSound(mBodyAnmSoundTable[4], 1, 0.0f);
+		} else if (joint->getMtxCalc() == unk58) {
 			if (unk5C.checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				joint->setMtxCalc(nullptr);
@@ -885,7 +865,7 @@ void TYoshi::movement()
 		mTranslation = mMario->mPosition;
 		mEggRotSpeed = mMario->mFaceAngle.y;
 
-		if (mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_B)) {
+		if (mMario->mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_B)) {
 			emitTongue();
 		}
 		if (unkC <= 0)
