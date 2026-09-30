@@ -286,6 +286,13 @@ bool TYumbo::isAllSeedBroken() const
 	return true;
 }
 
+#ifdef VERSION_GMSP01
+bool TYumbo::isChangedBlock() const
+{
+	return mSpine->getLatestNerve() == &TNerveSmallEnemyChange::theNerve();
+}
+#endif
+
 void TYumbo::shotSeeds()
 {
 	TYumboSeed* seed = getUnusedSeed();
@@ -347,14 +354,6 @@ bool TYumbo::isFreeze() const
 	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	return nerve == &TNerveYumboFreeze::theNerve();
 }
-
-#ifdef VERSION_GMSP01
-bool TYumbo::isChangedBlock() const
-{
-	// TODO: PAL-only; its body is not in the JP build
-	return false;
-}
-#endif
 
 bool TYumbo::isDead() const
 {
