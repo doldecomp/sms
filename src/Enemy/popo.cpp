@@ -4,6 +4,8 @@
 #include <Enemy/Popo.hpp>
 #include <Enemy/SmallEnemy.hpp>
 #include <Enemy/WalkerEnemy.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+#include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
 #include <JSystem/JDrama/JDRActor.hpp>
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
