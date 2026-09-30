@@ -349,7 +349,7 @@ void TSmallEnemy::genEventCoin()
 
 	if (mCoin) {
 		TCoin* coin;
-		if (isActorType(0x2000000E)) {
+		if (mCoin->isActorType(0x2000000E)) {
 			coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
 		} else {
 			coin = mCoin;
@@ -387,7 +387,7 @@ void TSmallEnemy::genEventCoin()
 				coin->mPosition.y = mPosition.y;
 				MsVECNormalize(&local_d0, &local_d0);
 				coin->mVelocity.set(local_d0.x * 4,
-				                    TMsRange<f32>(16.0f, 8.0f).rand(),
+				                    TMsRange<f32>(8.0f, 16.0f).rand(),
 				                    local_d0.z * 4);
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
 			}
@@ -472,8 +472,9 @@ void TSmallEnemy::moveObject()
 		JGeometry::TVec3<f32> v;
 		v.zero();
 
-		JGeometry::TVec3<f32> local_74;
-		local_74.sub(mPosition, col->mPosition);
+		JGeometry::TVec3<f32> local_74(mPosition.x - col->mPosition.x,
+		                               mPosition.y - col->mPosition.y,
+		                               mPosition.z - col->mPosition.z);
 		if (local_74.x == 0.0f && local_74.y == 0.0f && local_74.z == 0.0f)
 			local_74.x += 1;
 
@@ -623,14 +624,16 @@ int TSmallEnemy::getChangeBlockTime()
 
 bool TSmallEnemy::changeMove()
 {
-	if (TSmallEnemyManager::mBlockWaitTime * 0.2f <= mSpine->getTime()) {
+	if (mSpine->getTime() <= TSmallEnemyManager::mBlockWaitTime * 0.2f) {
 		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
 
-		mJuiceBlock->mPosition.y += unk188 * 2.0f
-		                            * MsSin(mSpine->getTime() * 130.0f / time)
-		                            * TSmallEnemyManager::mBlockWaitMoveY;
+		mJuiceBlock->mPosition.y
+		    = mPosition.y
+		      + TSmallEnemyManager::mBlockWaitMoveY * 2.0f
+		            * MsSin(mSpine->getTime() * 130.0f / time) * unk188;
 
-		mJuiceBlock->mRotation.y += mSpine->getTime() * 1080.0f / time;
+		mJuiceBlock->mRotation.y
+		    = mRotation.y + mSpine->getTime() * 1080.0f / time;
 	} else {
 		if (mSpine->getTime() > TSmallEnemyManager::mBlockWaitTime) {
 			if (mSpine->getTime() > getChangeBlockTime() - 200) {
@@ -642,6 +645,8 @@ bool TSmallEnemy::changeMove()
 			}
 
 			switch (unk185) {
+			case 1:
+				return false;
 			case 2: {
 				JGeometry::TVec3<f32> local_38(0.0f, 0.0f, 1.0f);
 				Mtx afStack_68;
@@ -655,7 +660,7 @@ bool TSmallEnemy::changeMove()
 				if (gpMap->isTouchedOneWallAndMoveXZ(
 				        &mJuiceBlock->mPosition.x, mJuiceBlock->mPosition.y,
 				        &mJuiceBlock->mPosition.z, mBodyRadius * 20.0f))
-					return 1;
+					return true;
 
 				JGeometry::TVec3<f32> local_74 = mJuiceBlock->mPosition;
 				local_74.x += local_38.x * 300.0f;
@@ -665,7 +670,7 @@ bool TSmallEnemy::changeMove()
 				f32 d = gpMap->checkGround(local_74.x, local_74.y + mHeadHeight,
 				                           local_74.z, &local_2C);
 				if (d > mJuiceBlock->mPosition.y)
-					return 1;
+					return true;
 				break;
 			}
 
@@ -677,14 +682,12 @@ bool TSmallEnemy::changeMove()
 				                         mJuiceBlock->mPosition.z, &local_2C);
 				if (local_2C && mJuiceBlock->mPosition.y + mHeadHeight > d
 				    && local_2C->mActor != mJuiceBlock)
-					return 1;
+					return true;
 				break;
 			}
 
-			case 0:
-			case 1:
-			case 4:
-				return 0;
+			default:
+				return false;
 			}
 
 			Vec local_80;
@@ -706,7 +709,7 @@ bool TSmallEnemy::changeMove()
 		}
 	}
 
-	return 0;
+	return false;
 }
 
 void TSmallEnemy::scalingChangeActor()
@@ -729,7 +732,7 @@ void TSmallEnemy::changeOut()
 	                                nullptr, 0, 4);
 
 	kill();
-	mJuiceBlock->mPosition = mPosition;
+	mPosition = mJuiceBlock->mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -745,12 +748,13 @@ void TSmallEnemy::decHpByWater(THitActor* param_1)
 	if (uVar2 < 1)
 		uVar2 = 1;
 
-	if (mHitPoints < uVar2) {
+	u8 hitPoints = mHitPoints;
+	if (hitPoints < uVar2) {
 		mHitPoints = 0;
 		return;
 	}
 
-	mHitPoints -= uVar2;
+	mHitPoints = hitPoints - uVar2;
 }
 
 void TSmallEnemy::kill()
@@ -911,8 +915,9 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 
 	JGeometry::TVec3<f32> result(0.0f, 0.0f, 0.0f);
 
-	JGeometry::TVec3<f32> local_14;
-	local_14.sub(mPosition, param_1->getPosition());
+	JGeometry::TVec3<f32> local_14(mPosition.x - param_1->mPosition.x,
+	                               mPosition.y - param_1->mPosition.y,
+	                               mPosition.z - param_1->mPosition.z);
 
 	if (local_14.x == 0.0f && local_14.y == 0.0f && local_14.z == 0.0f)
 		local_14.x += 1.0f;

@@ -23,10 +23,10 @@ public:
 	f32 getSLGiveUpHeight() const { return mSLGiveUpHeight.get(); }
 	s32 getSLAttackWait() const { return mSLAttackWait.get(); }
 	s32 getSLFreezeWait() const { return mSLFreezeWait.get(); }
-	s32 getSLDamageRadius() const { return mSLDamageRadius.get(); }
-	s32 getSLDamageHeight() const { return mSLDamageHeight.get(); }
-	s32 getSLAttackRadius() const { return mSLAttackRadius.get(); }
-	s32 getSLAttackHeight() const { return mSLAttackHeight.get(); }
+	f32 getSLDamageRadius() const { return mSLDamageRadius.get(); }
+	f32 getSLDamageHeight() const { return mSLDamageHeight.get(); }
+	f32 getSLAttackRadius() const { return mSLAttackRadius.get(); }
+	f32 getSLAttackHeight() const { return mSLAttackHeight.get(); }
 	f32 getSLTurnSpeedLow() const { return mSLTurnSpeedLow.get(); }
 	f32 getSLTurnSpeedHigh() const { return mSLTurnSpeedHigh.get(); }
 	f32 getSLBodyScaleLow() const { return mSLBodyScaleLow.get(); }
