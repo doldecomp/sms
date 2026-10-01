@@ -56,6 +56,14 @@ public:
 	{
 	}
 
+	enum {
+		STATE_UNK2 = 0x2,
+		STATE_UNK3 = 0x3,
+		STATE_UNK4 = 0x4,
+		STATE_UNK5 = 0x5,
+		STATE_UNK6 = 0x6,
+	};
+
 public:
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ u8 unk140;
@@ -82,6 +90,12 @@ public:
 	    , unk144(nullptr)
 	{
 	}
+
+	enum {
+		STATE_UNK2 = 0x2,
+		STATE_UNK3 = 0x3,
+		STATE_UNK4 = 0x4,
+	};
 
 public:
 	/* 0x13C */ f32 unk13C;
@@ -113,6 +127,12 @@ public:
 
 	static f32 mFallHeight;
 	static int mWaitTime;
+
+	enum {
+		STATE_UNK2 = 0x2,
+		STATE_UNK3 = 0x3,
+		STATE_UNK4 = 0x4,
+	};
 
 public:
 	/* 0x13C */ TGraphTracer* unk13C;

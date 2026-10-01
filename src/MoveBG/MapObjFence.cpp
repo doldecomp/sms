@@ -85,17 +85,17 @@ void TRevolvingFenceOuter::initMapCollisionData()
 BOOL TRevolvingFenceInner::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == HIT_MESSAGE_SUPER_HIP_DROP && !unk140) {
-		if (isState(1)) {
+		if (isState(STATE_NORMAL)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1,
 			                                &mPosition, 0, nullptr, 0, 4);
-			mState = 3;
+			mState = STATE_UNK3;
 			startBck("fence_revolve_inner_roll_down");
 			offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 			return TRUE;
-		} else if (isState(2)) {
+		} else if (isState(STATE_UNK2)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2,
 			                                &mPosition, 0, nullptr, 0, 4);
-			mState = 4;
+			mState = STATE_UNK4;
 			startBck("fence_revolve_inner_roll_up");
 			offMapObjFlag(MAP_OBJ_FLAG_UNK100);
 			return TRUE;
@@ -109,17 +109,17 @@ BOOL TRevolvingFenceInner::receiveMessage(THitActor* param_1, u32 param_2)
 		    || (0.0f < angle && angle < 90.0f)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1,
 			                                &mPosition, 0, nullptr, 0, 4);
-			if (isState(1))
-				mState = 3;
+			if (isState(STATE_NORMAL))
+				mState = STATE_UNK3;
 			else
-				mState = 4;
+				mState = STATE_UNK4;
 		} else {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2,
 			                                &mPosition, 0, nullptr, 0, 4);
-			if (isState(1))
-				mState = 5;
+			if (isState(STATE_NORMAL))
+				mState = STATE_UNK5;
 			else
-				mState = 6;
+				mState = STATE_UNK6;
 		}
 		return TRUE;
 	}
@@ -141,42 +141,42 @@ void TRevolvingFenceInner::calcCurrentMtx()
 void TRevolvingFenceInner::controlWall()
 {
 	switch (mState) {
-	case 1:
-	case 2:
+	case STATE_NORMAL:
+	case STATE_UNK2:
 		break;
-	case 3:
+	case STATE_UNK3:
 		unk13C += mSpeed;
 		if (unk13C > 180.0f) {
 			unk13C      = 180.0f;
 			mRotation.y = unk13C + mInitialRotation.y;
-			mState      = 2;
+			mState      = STATE_UNK2;
 		}
 		calcCurrentMtx();
 		break;
-	case 4:
+	case STATE_UNK4:
 		unk13C += mSpeed;
 		if (unk13C > 360.0f) {
 			unk13C      = 0.0f;
 			mRotation.y = unk13C + mInitialRotation.y;
-			mState      = 1;
+			mState      = STATE_NORMAL;
 		}
 		calcCurrentMtx();
 		break;
-	case 5:
+	case STATE_UNK5:
 		unk13C -= mSpeed;
 		if (unk13C < -180.0f) {
 			unk13C      = 180.0f;
 			mRotation.y = unk13C + mInitialRotation.y;
-			mState      = 2;
+			mState      = STATE_UNK2;
 		}
 		calcCurrentMtx();
 		break;
-	case 6:
+	case STATE_UNK6:
 		unk13C -= mSpeed;
 		if (unk13C < 0.0f) {
 			unk13C      = 0.0f;
 			mRotation.y = unk13C + mInitialRotation.y;
-			mState      = 1;
+			mState      = STATE_NORMAL;
 		}
 		calcCurrentMtx();
 		break;
@@ -186,23 +186,23 @@ void TRevolvingFenceInner::controlWall()
 void TRevolvingFenceInner::controlGroundRoof()
 {
 	switch (mState) {
-	case 1:
-	case 2:
+	case STATE_NORMAL:
+	case STATE_UNK2:
 		break;
-	case 3:
-	case 5:
+	case STATE_UNK3:
+	case STATE_UNK5:
 		if (mMActor->curAnmEndsNext()) {
-			mState = 2;
+			mState = STATE_UNK2;
 			mMActor->setFrameRate(0.0f, ANM_TYPE_BCK);
 			mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 			mMActor->calc();
 			onMapObjFlag(MAP_OBJ_FLAG_UNK100);
 		}
 		break;
-	case 4:
-	case 6:
+	case STATE_UNK4:
+	case STATE_UNK6:
 		if (mMActor->curAnmEndsNext()) {
-			mState = 1;
+			mState = STATE_NORMAL;
 			mMActor->setFrameRate(0.0f, ANM_TYPE_BCK);
 			mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 			mMActor->calc();
@@ -260,7 +260,7 @@ void TFenceWater::draw() const { }
 
 BOOL TFenceWater::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (!isState(3) && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (!isState(STATE_UNK3) && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		unk13C = mWaterAccel;
 		if (unk13C > 0.0f)
 			changeStatusToGo();
@@ -273,39 +273,39 @@ void TFenceWater::changeStatusToGo()
 {
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATER_FENCE_FW, &mPosition, 0,
 	                                nullptr, 0, 4);
-	mState = 2;
+	mState = STATE_UNK2;
 }
 
 void TFenceWater::changeStatusToWait()
 {
 	unk140 = 0.0f;
 	unk13C = 0.0f;
-	mState = 1;
+	mState = STATE_NORMAL;
 }
 
 void TFenceWater::controlRotation()
 {
 	switch (mState) {
-	case 1:
+	case STATE_NORMAL:
 		break;
-	case 2:
+	case STATE_UNK2:
 		unk140 -= unk13C;
 		if (unk140 <= -90.0f) {
 			unk140 = -90.0f;
 			unk13C = 0.0f;
-			mState = 3;
+			mState = STATE_UNK3;
 			startStateTimer(mTurnedWaitTime);
 		}
 		break;
-	case 3:
+	case STATE_UNK3:
 		if (!isStateTimerEngaged()) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATER_FENCE_REV,
 			                                &mPosition, 0, nullptr, 0, 4);
 			unk13C = mBackSpeed;
-			mState = 4;
+			mState = STATE_UNK4;
 		}
 		break;
-	case 4:
+	case STATE_UNK4:
 		unk140 += unk13C;
 		if (unk140 >= 0.0f)
 			changeStatusToWait();
@@ -378,7 +378,7 @@ BOOL TRailFence::receiveMessage(THitActor* param_1, u32 param_2)
 		                                0, nullptr, 0, 4);
 		setUpMapCollision(1);
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-		mState = 2;
+		mState = STATE_UNK2;
 		return TRUE;
 	}
 	return FALSE;
@@ -419,7 +419,7 @@ void TRailFence::goOnRail()
 			                                &mPosition, 0, nullptr, 0, 4);
 			startStateTimer(mWaitTime);
 			startAnim(1);
-			mState = 3;
+			mState = STATE_UNK3;
 			return;
 		}
 		tracer->moveToShortestNext();
@@ -436,20 +436,20 @@ void TRailFence::control()
 {
 	TMapObjBase::control();
 	switch (mState) {
-	case 1:
+	case STATE_NORMAL:
 		break;
-	case 2:
+	case STATE_UNK2:
 		goOnRail();
 		break;
-	case 3:
+	case STATE_UNK3:
 		if (!isStateTimerEngaged()) {
 			removeMapCollision();
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK,
 			                                &mPosition, 0, nullptr, 0, 4);
-			mState = 4;
+			mState = STATE_UNK4;
 		}
 		break;
-	case 4:
+	case STATE_UNK4:
 		falling();
 		break;
 	}
