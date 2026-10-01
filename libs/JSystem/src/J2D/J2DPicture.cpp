@@ -158,7 +158,7 @@ bool J2DPicture::insert(JUTTexture* tex, u8 idx, float alpha)
 	for (u8 i = 3; idx < i; --i) {
 		mTextures[i] = mTextures[i - 1];
 		unk104[i]    = unk104[i - 1];
-		unk114[i]    = unk104[i + 3];
+		unk114[i]    = unk114[i - 1];
 		unkFD[i]     = unkFD[i - 1];
 	}
 	mTextures[idx] = tex;
