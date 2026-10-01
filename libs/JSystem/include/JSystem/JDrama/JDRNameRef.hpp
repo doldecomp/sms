@@ -23,6 +23,14 @@ public:
 	{
 	}
 
+	// from marioL.MAP
+	const TNameRef& operator=(const TNameRef& other)
+	{
+		mName    = other.mName;
+		mKeyCode = other.mKeyCode;
+		return *this;
+	}
+
 	/// Hashes @p string to a 16-bit key code for faster comparisons
 	static u16 calcKeyCode(char const* string);
 
@@ -77,8 +85,9 @@ public:
 	 */
 	virtual void loadAfter();
 
-	// TODO: which one of this was public API? is the inline even real?
 	virtual TNameRef* searchF(u16 key, char const* name);
+
+	// from marioL.MAP
 	TNameRef* search(const char* name)
 	{
 		return searchF(calcKeyCode(name), name);
