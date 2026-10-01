@@ -112,7 +112,7 @@ void TRoulette::moveObject()
 {
 	TLiveActor::moveObject();
 	if (unk142 != 0)
-		mRotation.x += unk13C;
+		mRotation.y += unk13C;
 
 	if (unk141 != 0 && unk140 != 0) {
 		gpMarioOriginal->mGamePad->onNeutralMarioKey();
@@ -252,7 +252,7 @@ void TSlotDrum::initMapObj()
 
 void TSlotDrum::initNeonMatColor()
 {
-	const char* matNames[3] = { "_NEON_A", "_NEON_B", "_NEON_C" };
+	const char* matNames[3] = { "_NEON_C", "_NEON_B", "_NEON_A" };
 	for (int i = 0; i < 3; i++) {
 		unk170[i].r = 120;
 		unk170[i].g = 230;
@@ -324,10 +324,9 @@ void TSlotDrum::moveObject()
 						for (int j = 0; j < unk148; ++j) {
 							if (i == j)
 								continue;
-							if (unk138[j] != 0.0f)
-								return;
-							if ((unk13C[j] >= (f32)unk168
-							     && unk13C[j] > 360.0f))
+							if (unk138[j] != 0.0f
+							    || (unk13C[j] >= (f32)unk168
+							        && unk13C[j] < 360.0f))
 								return;
 						}
 						MSBgm::startBGM(MSD_BGM_FANFARE_RACE);
@@ -448,15 +447,17 @@ void TItemSlotDrum::moveObject()
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
 					                                &mPosition, 0, nullptr, 0,
 					                                4);
-					bool allStopped = 0.0f == unk138[0] && 0.0f == unk138[1]
-					                  && 0.0f == unk138[2];
+					bool allStopped = true;
+					for (int k = 0; k < 3; ++k)
+						if (unk138[k] != 0.0f)
+							allStopped = false;
 					if (allStopped) {
 						unk1A2 = true;
 						generateItem();
 					}
 					for (int j = 0; j < unk148; ++j) {
 						if (unk19F[j]) {
-							if (TMsRange<f32>(0.0f, 1.0f).rand() < 0.9f)
+							if (TMsRange<f32>(0.0f, 1.0f).rand() <= 0.9f)
 								unk19C[j] = true;
 							else
 								unk19F[j] = false;
@@ -525,7 +526,7 @@ void TItemSlotDrum::generateItem()
 		    mPosition, "テレサマネージャー", 1);
 		if (item != nullptr) {
 			Mtx m;
-			MsMtxSetRotY(m, mRotation.x);
+			MsMtxSetRotY(m, mRotation.y);
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
 			MTXMultVec(m, &off, &off);
 			item->mPosition += off;
@@ -542,7 +543,7 @@ void TItemSlotDrum::generateItem()
 		}
 		for (int i = 0; i < count; ++i) {
 			Mtx m;
-			MsMtxSetRotY(m, spread * ((f32)i - 1.0f) + (mRotation.x - spread));
+			MsMtxSetRotY(m, spread * (f32)i + (mRotation.y - spread));
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
 			MTXMultVec(m, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
@@ -551,10 +552,9 @@ void TItemSlotDrum::generateItem()
 			if (item != nullptr) {
 				item->mPosition += off;
 				MsVECNormalize(&off, &off);
-				item->mVelocity.x = 12.0f * off.x;
-				item->mVelocity.y = TMsRange<f32>(5.0f, 10.0f).rand();
-				item->mVelocity.z = 12.0f * off.z;
-				item->offLiveFlag(LIVE_FLAG_UNK10);
+				item->setVelocityAndFlag10(12.0f * off.x,
+				                           TMsRange<f32>(5.0f, 10.0f).rand(),
+				                           12.0f * off.z);
 			}
 		}
 	} else {
@@ -600,7 +600,8 @@ int TItemSlotDrum::getForcastResult(int idx)
 				break;
 		}
 	}
-	return getResultFromAng((int)(angle / unk168) * unk168);
+	angle = (int)(angle / unk168) * unk168;
+	return getResultFromAng(angle);
 }
 
 int TItemSlotDrum::getResultFromAng(f32 ang)
@@ -741,7 +742,7 @@ u32 TCasinoPanelGate::touchWater(THitActor* water)
 	if (fabsf(mPosition.z - water->mPosition.z) < 50.0f) {
 		unk164 = 1;
 		int idx;
-		if (water->mPosition.y > 3.0f * unk144 + mPosition.y) {
+		if (water->mPosition.y > mPosition.y + unk144 * 3.0f) {
 			if (water->mPosition.x < mPosition.x - unk140)
 				idx = 12;
 			else if (water->mPosition.x < mPosition.x)
@@ -750,9 +751,9 @@ u32 TCasinoPanelGate::touchWater(THitActor* water)
 				idx = 15;
 			else
 				idx = 14;
-			if (water->mPosition.y < 3.5f * unk144 + mPosition.y)
+			if (water->mPosition.y < mPosition.y + unk144 * 3.5f)
 				unk164 = -1;
-		} else if (water->mPosition.y > 2.0f * unk144 + mPosition.y) {
+		} else if (water->mPosition.y > mPosition.y + unk144 * 2.0f) {
 			if (water->mPosition.x < mPosition.x - unk140)
 				idx = 8;
 			else if (water->mPosition.x < mPosition.x)
@@ -761,7 +762,7 @@ u32 TCasinoPanelGate::touchWater(THitActor* water)
 				idx = 11;
 			else
 				idx = 10;
-			if (water->mPosition.y < 2.5f * unk144 + mPosition.y)
+			if (water->mPosition.y < mPosition.y + unk144 * 2.5f)
 				unk164 = -1;
 		} else if (water->mPosition.y > mPosition.y + unk144) {
 			if (water->mPosition.x < mPosition.x - unk140)
@@ -772,7 +773,7 @@ u32 TCasinoPanelGate::touchWater(THitActor* water)
 				idx = 7;
 			else
 				idx = 6;
-			if (water->mPosition.y < 1.5f * unk144 + mPosition.y)
+			if (water->mPosition.y < mPosition.y + unk144 * 1.5f)
 				unk164 = -1;
 		} else {
 			if (water->mPosition.x < mPosition.x - unk140)
@@ -783,7 +784,7 @@ u32 TCasinoPanelGate::touchWater(THitActor* water)
 				idx = 3;
 			else
 				idx = 2;
-			if (water->mPosition.y < 0.5f * unk144 + mPosition.y)
+			if (water->mPosition.y < mPosition.y + unk144 * 0.5f)
 				unk164 = -1;
 		}
 		unk138[idx] += unk154 * unk164;
@@ -958,14 +959,13 @@ void TCloset::moveObject()
 						    fabsf(unk138[i]), 0, 0, nullptr, 0, 4);
 					if ((int)fabsf(unk13C[i]) % 180 == 0) {
 						unk138[i] = 0.0f;
-						if (unk13C[i] < 180.0f || unk13C[i] == 360.0f) {
+						if (unk13C[i] <= 180.0f || unk13C[i] >= 360.0f) {
 							for (int j = 0; j < unk148; ++j) {
 								if (i == j)
 									continue;
-								if (unk138[j] != 0.0f)
-									return;
-								if (!(unk13C[j] < 180.0f
-								      || unk13C[j] >= 360.0f))
+								if (unk138[j] != 0.0f
+								    || (unk13C[j] >= 180.0f
+								        && unk13C[j] < 360.0f))
 									return;
 							}
 							unk16C = 1;
