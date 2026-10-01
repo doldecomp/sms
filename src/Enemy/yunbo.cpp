@@ -288,10 +288,7 @@ bool TYumbo::isAllSeedBroken() const
 }
 
 #ifdef VERSION_GMSP01
-bool TYumbo::isChangedBlock() const
-{
-	return mSpine->getLatestNerve() == &TNerveSmallEnemyChange::theNerve();
-}
+bool TYumbo::isChangedBlock() const { return false; }
 #endif
 
 void TYumbo::shotSeeds()
