@@ -73,9 +73,7 @@ static int PakkunRootCallback(J3DNode* node, int type)
 	if (type == 0) {
 		TPakkun* pakkun = gpCurPakkun;
 		if (pakkun != nullptr) {
-			u8 maxHitPoints = pakkun->getSaveParam()
-			                      ? pakkun->getSaveParam()->mSLHitPointMax.get()
-			                      : 1;
+			u8 maxHitPoints = pakkun->getMaxHitPoints();
 			if (gpCurPakkun->mHitPoints == maxHitPoints) {
 				return true;
 			}
@@ -84,10 +82,8 @@ static int PakkunRootCallback(J3DNode* node, int type)
 			MtxPtr anmMtx   = gpCurPakkun->getMActor()->getModel()->getAnmMtx(
                 joint->getJntNo());
 
-			TRotation3f scaling;
-			scaling.ref(0, 3) = 0.0f;
-			scaling.ref(1, 3) = 0.0f;
-			scaling.ref(2, 3) = 0.0f;
+			TPosition3f scaling;
+			scaling.setTrans(0.0f, 0.0f, 0.0f);
 
 			f32 scale  = gpCurPakkun->unk1B8;
 			f32 scaleY = scale;
@@ -98,7 +94,7 @@ static int PakkunRootCallback(J3DNode* node, int type)
 			}
 
 			scaling.setScale(scale, scaleY, scaleZ);
-			MTXConcat(scaling, anmMtx, anmMtx);
+			MTXConcat(anmMtx, scaling, anmMtx);
 
 			scaling.setScale(scale, scale, scale);
 			MTXConcat(J3DSys::mCurrentMtx, scaling, J3DSys::mCurrentMtx);
@@ -118,10 +114,8 @@ static int PakkunRootCallback2(J3DNode* node, int type)
 		MtxPtr anmMtx = gpCurPakkun->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)node)->getJntNo());
 
-		TRotation3f scaling;
-		scaling.ref(0, 3) = 0.0f;
-		scaling.ref(1, 3) = 0.0f;
-		scaling.ref(2, 3) = 0.0f;
+		TPosition3f scaling;
+		scaling.setTrans(0.0f, 0.0f, 0.0f);
 
 		f32 scale = 1.0f / gpCurPakkun->unk1B8;
 		scaling.setScale(scale, scale, scale);
@@ -372,8 +366,15 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 }
 
 // UNUSED
-// TODO: Reconstruct the original 0x98-byte body.
-void TPakkun::createPakkunSmoke(JGeometry::TVec3<f32>&) { }
+void TPakkun::createPakkunSmoke(JGeometry::TVec3<f32>& position)
+{
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SEED_SINK, &position, 0,
+	                                nullptr, 0, 4);
+	gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_ROCK, &position, 1,
+	                             unk194);
+	gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_SMOKE, &position, 1,
+	                             unk194);
+}
 
 // UNUSED
 void TPakkun::seedPollute(JGeometry::TVec3<f32>& position)
@@ -518,13 +519,13 @@ void TPakkunSeed::behaveToHost()
 
 void TPakkunSeed::behaveToHitWall(const TBGCheckData* ground)
 {
-	f32 reflect = -(1.5f * mVelocity.dot(ground->mNormal));
-	mVelocity.x += reflect * ground->mNormal.x;
-	mVelocity.y += reflect * ground->mNormal.y;
+	f32 reflect = -(1.5f * mVelocity.dot(ground->getNormal()));
+	mVelocity.x += reflect * ground->getNormal().x;
+	mVelocity.y += reflect * ground->getNormal().y;
 	if (unk150 == PAKKUN_SEED_STATE_SHOOT) {
 		mVelocity.y = -5.0f;
 	}
-	mVelocity.z += reflect * ground->mNormal.z;
+	mVelocity.z += reflect * ground->getNormal().z;
 	unk16C->unk1B0 = 1;
 }
 
@@ -619,14 +620,7 @@ void TPakkunSeed::rebirth()
 	}
 
 	if (!mGroundPlane->isWaterSurface()) {
-		TPakkun* owner = unk16C;
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SEED_SINK, &mPosition,
-		                                0, nullptr, 0, 4);
-
-		gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_ROCK, &mPosition, 1,
-		                             owner->unk194);
-		gpMarioParticleManager->emit(PARTICLE_MS_PACKN_HD_SMOKE, &mPosition, 1,
-		                             owner->unk194);
+		unk16C->createPakkunSmoke(mPosition);
 		return;
 	}
 
@@ -692,11 +686,7 @@ void TStayPakkun::init(TLiveManager* manager)
 
 void TStayPakkun::reset()
 {
-	gpCurPakkun = this;
-	TSmallEnemy::reset();
-	unk1B1   = 1;
-	unk1B2.a = 0;
-	unk1B8   = 1.0f;
+	TPakkun::reset();
 	unk1B2.a = 255;
 	offLiveFlag(LIVE_FLAG_UNK800);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
@@ -723,17 +713,13 @@ void TStayPakkun::genRandomItem()
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	    PARTICLE_MS_POPO_BOMB_A, &unk1A4, 0, nullptr);
-	if (emitter) {
-		emitter->setGlobalDynamicsScale(JGeometry::TVec3<f32>(1.5f));
-		emitter->setGlobalParticleScale(JGeometry::TVec3<f32>(1.5f));
-	}
+	if (emitter)
+		emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
 
 	emitter = gpMarioParticleManager->emit(PARTICLE_MS_POPO_BOMB_B, &unk1A4, 0,
 	                                       nullptr);
-	if (emitter) {
-		emitter->setGlobalDynamicsScale(JGeometry::TVec3<f32>(1.5f));
-		emitter->setGlobalParticleScale(JGeometry::TVec3<f32>(1.5f));
-	}
+	if (emitter)
+		emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
 }
 
 void TStayPakkun::calcRootMatrix()
@@ -747,7 +733,7 @@ void TStayPakkun::setBehavior()
 	if (isBckAnm(PAKKUN_ANM_UNK4))
 		--mHitPoints;
 
-	u8 maxHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	u8 maxHitPoints = getMaxHitPoints();
 	unk1B2.a        = mHitPoints * 255 / maxHitPoints;
 	unk1B8
 	    = 1.0f
@@ -775,7 +761,7 @@ bool TStayPakkun::isHitValid(u32 message)
 		unk1BC = 1;
 
 		gpPollution->clean(mPosition.x, mGroundHeight, mPosition.z,
-		                   32.0f * getSaveParam()->mSLPolluteRange.get());
+		                   32.0f * getSaveParam()->getSLPolluteRange());
 		if (unk194->isState(PAKKUN_SEED_STATE_HIDE))
 			unk194->kill();
 		setBckAnm(PAKKUN_ANM_CRUSH_TO_HIDE);
@@ -786,8 +772,7 @@ bool TStayPakkun::isHitValid(u32 message)
 
 void TStayPakkun::shootIn()
 {
-	unk194->appear();
-	unk194->set();
+	TPakkun::shootIn();
 
 	for (int i = 0; i < 2; ++i) {
 		unk19C[i]->appear();
@@ -1057,10 +1042,7 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 			    && gpPollution->isPolluted(self->mPosition.x, self->mPosition.y,
 			                               self->mPosition.z)
 			    && self->isFindMario(0.9f)) {
-				self->mHitPoints
-				    = self->getSaveParam()
-				          ? self->getSaveParam()->mSLHitPointMax.get()
-				          : 1;
+				self->mHitPoints = self->getMaxHitPoints();
 				spine->pushAfterCurrent(&TNerveStayPakkunAppear::theNerve());
 				return true;
 			}
@@ -1108,8 +1090,7 @@ DEFINE_NERVE(TNerveStayPakkunAppear, TLiveActor)
 		JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		    PARTICLE_MS_GENE_HIT, &self->mPosition, 1, self);
 		if (emitter) {
-			emitter->setGlobalDynamicsScale(JGeometry::TVec3<f32>(1.5f));
-			emitter->setGlobalParticleScale(JGeometry::TVec3<f32>(1.5f));
+			emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
 			SMSSetEmitterPolColor(emitter, 6);
 		}
 	}
