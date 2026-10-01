@@ -242,7 +242,7 @@ void TTelesa::init(TLiveManager* manager)
 	                     *img);
 	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
-		for (u16 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
+		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
 			;
 	}
 
@@ -285,13 +285,12 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mImitatedBmd) {
 			if (cue & CUE_CALC_ANIM) {
 				const TBGCheckData* pTStack_5c;
-				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
-				                   &pTStack_5c);
+				f32 ground = gpMap->checkGround(mPosition.x, mPosition.y,
+				                                mPosition.z, &pTStack_5c);
 				Mtx afStack_58;
 				MtxPtr afStackPtr = afStack_58;
-				MsMtxSetXYZRPH(afStackPtr, mPosition.x, mPosition.y,
-				               mPosition.z, mRotation.x, mRotation.y,
-				               mRotation.z);
+				MsMtxSetXYZRPH(afStackPtr, mPosition.x, ground, mPosition.z,
+				               mRotation.x, mRotation.y, mRotation.z);
 				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStackPtr);
 				mImitatedBmd->getMActor()->getModel()->setBaseScale(
 				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
@@ -448,13 +447,15 @@ void TTelesa::calcRootMatrix()
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x187, mMActor->getModel()->getAnmMtx(4), 1, this)) {
+		        PARTICLE_MS_TLS_YODARE_L, mMActor->getModel()->getAnmMtx(4), 1,
+		        this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
+		        PARTICLE_MS_TLS_YODARE_S, mMActor->getModel()->getAnmMtx(3), 1,
+		        this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
@@ -506,7 +507,7 @@ void TTelesa::bind()
 	if (nextPos.y <= mGroundHeight + 0.05f) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);
-		if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve())
+		if (mSpine->getCurrentNerve() == &TNerveTelesaDie::theNerve())
 			nextPos.y = mGroundHeight;
 	} else {
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -775,11 +776,9 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	f32 s = MsSin(mRotation.y);
-	f32 c = MsCos(mRotation.y);
-
-	pos.x += c * 1000.0f;
-	pos.z += s * 1000.0f;
+	s16 angle = DEG2SHORTANGLE(mRotation.y);
+	pos.x += JMASSin(angle) * 1000.0f;
+	pos.z += JMASCos(angle) * 1000.0f;
 
 	setGoalPath(TPathNode(pos));
 }
@@ -1073,25 +1072,23 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		// TODO: this is an inline
 
-		if (!self->resetBaseGround()) {
-			if (self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
-				return false;
+		if (self->resetBaseGround()
+		    || self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware)) {
+			gpMarioParticleManager->emitAndBindToPosPtr(
+			    PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr);
+
+			self->mImitatedBmd = nullptr;
+			self->setFlyParam(1.0f);
+
+			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+
+			SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
+			                                &self->mPosition, 0, nullptr, 0, 4);
+
+			// end of inline
+
+			return true;
 		}
-
-		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
-		                                            nullptr);
-
-		self->mImitatedBmd = nullptr;
-		self->setFlyParam(1.0f);
-
-		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
-		                                &self->mPosition, 0, nullptr, 0, 4);
-
-		// end of inline
-
-		return true;
 	}
 
 	return false;
