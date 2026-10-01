@@ -395,8 +395,8 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 event_id,
 
 	switch (event_id) {
 	case 777: {
-		char buffer[64];
-		snprintf(buffer, 64, "シャイン（%s）", name);
+		char buffer[256];
+		snprintf(buffer, sizeof(buffer), "シャイン（%s）", name);
 		return static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buffer));
 	} break;
 
