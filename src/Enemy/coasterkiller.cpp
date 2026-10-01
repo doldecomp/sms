@@ -42,7 +42,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-const char* killer_bastable[] = {
+static const char* killer_bastable[] = {
 	"/scene/killer/bas/downkiller_down1.bas", nullptr, nullptr,
 	"/scene/killer/bas/killer_search1.bas",   nullptr,
 };
@@ -107,15 +107,12 @@ void TCoasterEnemy::moveCoaster()
 	JGeometry::TVec3<f32> forward;
 	mQuat.getZDir(forward);
 
-	JGeometry::TVec3<f32> axis;
-	axis.cross(forward, delta);
-
 	JGeometry::TVec3<f32> up;
 	mQuat.getYDir(up);
 
 	JGeometry::TQuat4<f32> steer;
-	steer.setRotate(forward, axis, 0.1f);
-	mQuat.mul(steer);
+	steer.setRotate(forward, delta, 0.1f);
+	mQuat.mul(steer, mQuat);
 
 	// Y-axis rotation
 	JGeometry::TVec3<f32> right;
@@ -130,7 +127,7 @@ void TCoasterEnemy::moveCoaster()
 		tiltQuat.rotate(forward, curUp);
 
 		steer.setRotate(up, curUp, 0.1f);
-		mQuat.mul(steer);
+		mQuat.mul(steer, mQuat);
 	}
 
 	static_cast<JGeometry::TVec4<f32>&>(mQuat).normalize();
@@ -143,11 +140,6 @@ void TCoasterEnemy::calcRootMatrix()
 	pos.setQT(mQuat, mPosition);
 	getModel()->setBaseScale(mScaling);
 	getModel()->setBaseTRMtx(pos);
-}
-
-void TCoasterEnemy::setNormalFlyAnm()
-{
-	// nothing
 }
 
 void TCoasterEnemy::setWalkAnm() { setNormalFlyAnm(); }
