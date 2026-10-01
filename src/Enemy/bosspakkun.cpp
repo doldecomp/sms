@@ -1589,7 +1589,7 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT, jointMtx, 1, boss);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, jointMtx, 1, boss);
+	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_WATHIT_W, jointMtx, 1, (u8*)boss + 1);
 
 	if (boss->unk170 != 0) {
 		boss->changeBck(26);
@@ -1636,7 +1636,7 @@ DEFINE_NERVE(TNerveBPTumble, TLiveActor)
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    SCENE_BOSSPAKKUN_JPA_MS_BOPA_JITA, boss->getModel()->getAnmMtx(0), 1,
-	    boss);
+	    (u8*)boss + 8);
 	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x11), 1.0f);
 	if ((spine->getTime() / 60) % 2 != 0)
 		boss->rumblePad(0, boss->mPosition);
@@ -2017,26 +2017,17 @@ DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
 
 	if (spine->getTime()
 	    >= boss->getBossPakkunParams()->mSLWaitFrameStg0.get()) {
-		JGeometry::TVec3<f32>* marioPos = gpMarioPos;
-		if (boss->unk188 == nullptr) {
-			boss->unk188 = static_cast<TAreaCylinderManager*>(
-			    gpConductor->search("ゲロエリアマネージャー"));
-		}
-
-		BOOL marioInArea = boss->unk188 == nullptr
-		                       ? false
-		                       : boss->unk188->contain(*marioPos);
-		if (marioInArea) {
+		if (boss->inArea(*gpMarioPos)) {
 			if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
 				spine->pushAfterCurrent(&TNerveBPCannonL::theNerve());
 				return true;
 			}
 		}
-	}
 
-	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		spine->pushAfterCurrent(&TNerveBPWaitL::theNerve());
-		return true;
+		if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+			spine->pushAfterCurrent(&TNerveBPWaitL::theNerve());
+			return true;
+		}
 	}
 
 	return false;
