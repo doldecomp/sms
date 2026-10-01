@@ -26,6 +26,8 @@ public:
 	void startMonteReplay(u32 param1);
 	void startGateDrawing();
 	void forceDisappear();
+	void checkCollision();
+	void execKill();
 
 public:
 	/* 0x150 */ TEnemyMario* mEnemyMario;
