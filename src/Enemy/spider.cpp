@@ -40,7 +40,8 @@ void TSpider::bind(TLiveActor* param_1)
 	if (param_1->mPosition.y - local_50.y > 0.0f) {
 		const TBGCheckData* local_64;
 		f32 dVar7 = gpMap->checkGround(
-		    local_50.x, local_50.y + ((TSpineEnemy*)param_1)->getHeadHeight(),
+		    local_50.x,
+		    param_1->mPosition.y + ((TSpineEnemy*)param_1)->getHeadHeight(),
 		    local_50.z, &local_64);
 		dVar7 += 1.0f;
 		if (dVar7 > fVar3) {
@@ -75,8 +76,8 @@ void TSpider::bind(TLiveActor* param_1)
 	param_1->mGroundPlane  = local_60;
 
 	TBGWallCheckRecord local_90(
-	    local_50.x, local_50.y, local_50.z,
-	    ((TSpineEnemy*)param_1)->mBodyScale * param_1->mHeadHeight, 1, 0);
+	    local_50.x, local_50.y + ((TSpineEnemy*)param_1)->getHeadHeight(),
+	    local_50.z, ((TSpineEnemy*)param_1)->getWallRadius(), 1, 0);
 
 	JGeometry::TVec3<f32> local_bc;
 	f32 unaff_f29;
@@ -114,9 +115,8 @@ void TSpider::bind(TLiveActor* param_1)
 
 			unk8 = 0x3C;
 
-			JGeometry::TVec3<f32> tmp;
-			tmp.scale(((TSpineEnemy*)param_1)->getWallRadius() * unk10, normal);
-			local_bc.sub(tmp, local_90.mCenter);
+			normal.scale(((TSpineEnemy*)param_1)->getWallRadius() * unk10);
+			local_bc -= normal;
 
 			unk10 += 1.0f / 60.0f;
 			if (unk10 > 1.0f)
