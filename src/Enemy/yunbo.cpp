@@ -37,6 +37,7 @@
 #include <System/ParamInst.hpp>
 #include <System/Params.hpp>
 #include <System/Particles.hpp>
+#include <macros.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -137,7 +138,7 @@ void TYumbo::init(TLiveManager* param_1)
 	mManager->manageActor(this);
 	initMActorAndKeeper();
 	mSpine->initWith(&TNerveYumboDancing::theNerve());
-	TYumboSeed** end = unk194 + 16;
+	TYumboSeed** end = unk194 + ARRAY_COUNT(unk194);
 	for (TYumboSeed** it = unk194; it != end; ++it) {
 		*it = new TYumboSeed(getActorKeeper()->createMActor("samboSeed.bmd", 3),
 		                     *this);
@@ -206,7 +207,7 @@ void TYumbo::moveObject()
 void TYumbo::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	TSmallEnemy::perform(param_1, param_2);
-	TYumboSeed** end = unk194 + 16;
+	TYumboSeed** end = unk194 + ARRAY_COUNT(unk194);
 	for (TYumboSeed** it = unk194; it != end; ++it)
 		(*it)->perform(param_1, param_2);
 }
@@ -278,7 +279,7 @@ bool TYumbo::isWantToAppear() const
 
 bool TYumbo::isAllSeedBroken() const
 {
-	TYumboSeed* const* end = unk194 + 16;
+	TYumboSeed* const* end = unk194 + ARRAY_COUNT(unk194);
 	for (TYumboSeed* const* it = unk194; it != end; ++it) {
 		if (!((*it)->unk70 & 1))
 			return false;
@@ -363,7 +364,7 @@ bool TYumbo::isDead() const
 
 TYumboSeed* TYumbo::getUnusedSeed()
 {
-	TYumboSeed** end = unk194 + 16;
+	TYumboSeed** end = unk194 + ARRAY_COUNT(unk194);
 	for (TYumboSeed** it = unk194; it != end; ++it) {
 		TYumboSeed* seed = *it;
 		if (seed->unk70 & 1)
