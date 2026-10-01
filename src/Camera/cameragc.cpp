@@ -180,21 +180,7 @@ void CPolarSubCamera::loadAfter()
 	    = CLBLinearInbetween(mCurrentParams->mXAngleMin,
 	                         mCurrentParams->mXAngleMax, mCurrentTarget.unk28);
 
-	JGeometry::TVec3<f32> marPos = SMS_GetMarioPos();
-	f32 fVar1;
-	if (isNormalDeadDemo()) {
-		fVar1 = 35.0f;
-	} else {
-		fVar1 = mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
-		        + mCurrentParams->mAtOffsetY;
-		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
-			fVar1 += 260.0f;
-		if (mMode == CAMERA_MODE_DEFINITE_D2)
-			fVar1 += unk290;
-	}
-
-	marPos.y += fVar1;
-	gpCameraMario->unk0.set(marPos);
+	setMarioLookat_();
 
 	if (unk70 != nullptr) {
 		unk70->calcPosAndAt(&mPosition, &mTarget);
@@ -219,13 +205,11 @@ void CPolarSubCamera::loadAfter()
 	mCurrentTarget.unk18.set(mPosition);
 	mCurrentTarget.mTarget.set(mTarget);
 
-	TCameraOption* option = gpCameraOption;
 	if (SMS_isOptionMap()) {
-		mCurrentTarget.mPosition = mPosition;
-		mCurrentTarget.mTarget   = mTarget;
-		option = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
+		mCurrentTarget.mPosition.set(mPosition);
+		mCurrentTarget.mTarget.set(mTarget);
+		gpCameraOption = new TCameraOption(mPosition, &mCurrentTarget.mTarget);
 	}
-	gpCameraOption = option;
 
 	unk256 = mCurrentTarget.mPitch;
 	unk258 = mCurrentTarget.mYaw;
@@ -256,7 +240,7 @@ void CPolarSubCamera::loadAfter()
 
 	MTXCopy(unk1EC, unk21C);
 
-	fabricatedInline2();
+	calcExternalData_();
 
 	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE) && gpMarDirector->unk7D == 1) {
 		gpMarDirector->fireStartDemoCamera(cJetCoasterDemoBckName, nullptr, -1,
@@ -282,7 +266,23 @@ MtxPtr CPolarSubCamera::getToroccoMtx_() const
 	return gpMarioOriginal->mTorocco->mModel->getAnmMtx(2);
 }
 
-void CPolarSubCamera::setMarioLookat_() { }
+void CPolarSubCamera::setMarioLookat_()
+{
+	JGeometry::TVec3<f32> marPos = SMS_GetMarioPos();
+	f32 yOffset;
+	if (isNormalDeadDemo()) {
+		yOffset = 35.0f;
+	} else {
+		yOffset = mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
+		          + mCurrentParams->mAtOffsetY;
+		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
+			yOffset += 260.0f;
+		if (mMode == CAMERA_MODE_DEFINITE_D2)
+			yOffset += unk290;
+	}
+	marPos.y += yOffset;
+	gpCameraMario->unk0.set(marPos);
+}
 
 JGeometry::TVec3<f32> CPolarSubCamera::getUsualLookat() const
 {
@@ -379,14 +379,13 @@ bool CPolarSubCamera::isMarioReadyGun_() const
 
 bool CPolarSubCamera::isMarioAimWithGun_() const
 {
-	return isMarioReadyGun_()
-	       && unk120->checkFrameMeaning(TMarioGamePad::MEANING_R);
+	return isMarioReadyGun_() && unk120->checkMeaning(TMarioGamePad::MEANING_R);
 }
 
 bool CPolarSubCamera::isMarioCrabWalk_() const
 {
 	return isMarioReadyGun_()
-	       && unk120->checkFrameMeaning(TMarioGamePad::MEANING_CAM_L);
+	       && unk120->checkMeaning(TMarioGamePad::MEANING_CAM_L);
 }
 
 void CPolarSubCamera::execInvalidAutoChase_()
@@ -855,7 +854,15 @@ void CPolarSubCamera::calcFinalPosAndAt_()
 	}
 }
 
-void CPolarSubCamera::calcExternalData_() { }
+void CPolarSubCamera::calcExternalData_()
+{
+	CLBCrossToPolar(mTarget, mPosition, &unk256, &unk258);
+	unk25C.set(unk148.x - unk124.x, unk148.y - unk124.y, unk148.z - unk124.z);
+	unk25C.normalize();
+	unk270 = MsClamp(CLBCalcRatio(mCurrentParams->mXAngleMin,
+	                              mCurrentParams->mXAngleMax, unk256),
+	                 0.0f, 1.0f);
+}
 
 // TODO: this should be weak/inline
 void CPolarSubCamera::ctrlGameCamera_()
@@ -873,20 +880,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 	if (unk282 != 0)
 		unk282 -= 1;
 
-	JGeometry::TVec3<f32> marPos = *gpMarioPos;
-	f32 yOffset;
-	if (isNormalDeadDemo()) {
-		yOffset = 35.0f;
-	} else {
-		yOffset = mCurrentTarget.unk28 * mCurrentParams->mXRotRatioAtOffsetY
-		          + mCurrentParams->mAtOffsetY;
-		if (SMS_GetMarioStatus() == MARIO_STATUS_KICK_ROOF_ROLL_UP)
-			yOffset += 260.0f;
-		if (mMode == CAMERA_MODE_DEFINITE_D2)
-			yOffset += unk290;
-	}
-	marPos.y += yOffset;
-	gpCameraMario->unk0.set(marPos);
+	setMarioLookat_();
 	gpCameraMario->calcAndSetMarioData();
 
 	mPreviousTarget = mCurrentTarget;
@@ -966,7 +960,7 @@ void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 				ctrlGameCamera_();
 			calcFinalPosAndAt_();
 
-			fabricatedInline2();
+			calcExternalData_();
 		}
 
 		if (mMode != CAMERA_MODE_REPRODUCE_DEMO) {

@@ -781,7 +781,7 @@ public:
 	void doSpinJumping();
 	void setJumpingAttackArea();
 	void doJumping();
-	void askStrongGroundTouch();
+	bool askStrongGroundTouch();
 	BOOL jumpingBasic(int, int, int);
 	BOOL considerJumpRotate();
 	BOOL checkBackTrig();
@@ -842,7 +842,7 @@ public:
 	void warpRequest(const JGeometry::TVec3<f32>&, f32);
 	void flowMove(const JGeometry::TVec3<f32>&);
 	void windMove(const JGeometry::TVec3<f32>&);
-	void getGroundJumpPower() const;
+	f32 getGroundJumpPower() const;
 	BOOL onYoshi() const;
 	void addVelocity(f32);
 	BOOL considerRotateJumpStart();
@@ -887,9 +887,9 @@ public:
 	void checkEnforceJump();
 	void doReturn();
 	void checkThrowObject();
-	void getDizzyAngle();
-	void getDizzyPower();
-	void getLRLevel(u8);
+	int getDizzyAngle();
+	f32 getDizzyPower();
+	f32 getLRLevel(u8);
 	int checkStickRotate(int*);
 	void checkStickSmash();
 	void makeHistory();
@@ -943,7 +943,7 @@ public:
 	BOOL isRunningTurnning();
 	void changePlayerCatching();
 	bool isRunningInWater();
-	void getRunningInWaterBrake();
+	f32 getRunningInWaterBrake();
 	BOOL doRunningAnimation();
 	void getSlopeNormalAccele(f32*, f32*);
 	void getSlopeSlideAccele(f32*, f32*);

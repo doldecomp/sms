@@ -24,13 +24,27 @@
 // TODO: should be in a header and violate ODR
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 
-void CalcJumpVelocityY(f32, f32) { }
+f32 CalcJumpVelocityY(f32 height, f32 gravity)
+{
+	f32 velocity = 0.0f;
+	if (gravity > 0.0f)
+		velocity = gravity * 0.5f
+		           * (MsSqrtf(height * (1.0f / gravity) * 8.0f + 1.0f) + 1.0f);
+	return velocity;
+}
 
-void TBaseNPC::isNowMotionBlend() const { }
+bool TBaseNPC::isNowMotionBlend() const
+{
+	bool result = true;
+	if (!mInbetweenCtrl->isMotionBlending()
+	    && !mInbetweenCtrl->isForcedBlendRatio())
+		result = false;
+	return result;
+}
 
-void TBaseNPC::offStopMotionBlend() { }
+void TBaseNPC::offStopMotionBlend() { mInbetweenCtrl->stopMotionBlend(); }
 
-void TBaseNPC::onStopMotionBlend() { }
+void TBaseNPC::onStopMotionBlend() { mInbetweenCtrl->startMotionBlend(); }
 
 void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
                           EnumNpcStopMotionBlendOnOff param_2)
@@ -188,9 +202,9 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	}
 
 	if (param_2 == NPC_STOP_MOTION_BLEND_ON)
-		mInbetweenCtrl->startMotionBlend();
+		onStopMotionBlend();
 	else
-		mInbetweenCtrl->stopMotionBlend();
+		offStopMotionBlend();
 
 	setCurAnmSound();
 }
@@ -278,12 +292,7 @@ void TBaseNPC::walkAnmRateChange_()
 				unk1CC = 0;
 				unk1D0 = 0.0f;
 
-				bool bVar3 = true;
-				if (!mInbetweenCtrl->isMotionBlending()
-				    && !mInbetweenCtrl->isForcedBlendRatio())
-					bVar3 = false;
-
-				if (!bVar3)
+				if (!isNowMotionBlend())
 					npcWaitIn();
 				else if (!mInbetweenCtrl->isMotionBlending())
 					mMActor->setFrameRate(unk1D0, ANM_TYPE_BCK);
@@ -412,15 +421,8 @@ bool TBaseNPC::npcRecoverFromSinking()
 	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
 		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
-			f32 dVar6 = getGravityY();
-			f32 fVar1 = 0.0f;
-			f32 tmp   = unk1C4 - mPosition.y + 150.0f;
-			if (dVar6 > 0.0f) {
-				fVar1 = dVar6 * 0.5f
-				        * (MsSqrtf(tmp * (1.0f / dVar6) * 8.0f + 1.0f) + 1.0f);
-			}
-
-			mVelocity.y = fVar1;
+			mVelocity.y = CalcJumpVelocityY(unk1C4 - mPosition.y + 150.0f,
+			                                getGravityY());
 			if (mVelocity.y < 5.0f)
 				mVelocity.y = 5.0f;
 		}
@@ -518,7 +520,7 @@ void TBaseNPC::npcTalkOut()
 			}
 		}
 
-		offLiveFlag(LIVE_FLAG_UNK8000);
+		offLiveFlag(LIVE_FLAG_UNK80000);
 		changeNerveFromTalk_();
 		if (mThrowCtrl == nullptr && mActorType == 0x4000006)
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);

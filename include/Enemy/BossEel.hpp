@@ -199,7 +199,7 @@ public:
 	/* 0x074 */ u8 mToothType;
 	/* 0x078 */ JGeometry::TVec3<f32> mTrembleRotation;
 	/* 0x084 */ s32 mDamageCooldown;
-	/* 0x088 */ Mtx mDetachedMtx;
+	/* 0x088 */ TPosition3f mDetachedMtx;
 	/* 0x0B8 */ GXColor mColor;
 	/* 0x0BC */ bool mCanShedTears;
 };
@@ -227,7 +227,7 @@ public:
 	const TBossEel* getOwner() const;
 
 public:
-	/* 0x1C */ Mtx mBlendMtx;
+	/* 0x1C */ TPosition3f mBlendMtx;
 	/* 0x4C */ SDLModel* mBlendModel;
 	/* 0x50 */ s32 mCopyConnectedMtx;
 	/* 0x54 */ s16 mBlinkTimer;

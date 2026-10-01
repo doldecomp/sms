@@ -36,6 +36,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 extern OSThread gSetupThread;
 
@@ -888,7 +889,7 @@ u8 TMarDirector::updateGameMode()
 				onFlag(DIRECTOR_FLAG_STAGE_TRANSITION_PENDING);
 				unk126 = 3;
 				fireStartDemoCamera(nullptr, nullptr, -1, 0.0f, false, nullptr,
-				                    0, unk250, 0);
+				                    0, unk250, 1);
 				break;
 			}
 
@@ -953,7 +954,7 @@ u8 TMarDirector::updateGameMode()
 	}
 
 	if (mDemoQueueHead == mDemoQueueTail)
-		offFlag(DIRECTOR_FLAG_END_DEMO_PENDING);
+		offFlag(DIRECTOR_FLAG_DEMO_PENDING);
 
 	unk125 = unk124;
 
@@ -1141,8 +1142,8 @@ void TMarDirector::moveStage()
 		case 5:
 		case 6:
 		case 8:
-			unkE4 = 2;
-			unkB4 = TApplication::APP_STATE_BOOT;
+			unkE4 = 8;
+			unkB4 = TApplication::APP_STATE_TITLE;
 			break;
 
 		case 9:
@@ -1180,10 +1181,10 @@ void TMarDirector::moveStage()
 	}
 
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		u32 r5 = 0;
-		if ((int)gpMarioOriginal->mWaterGun->mSecondNozzle == 3)
-			r5 = 4;
-		TFlagManager::getInstance()->setFlag(0x40004, r5);
+		int nozzle = gpMarioOriginal->mWaterGun->mSecondNozzle;
+		if (nozzle == TWaterGun::Yoshi)
+			nozzle = TWaterGun::Hover;
+		TFlagManager::getInstance()->setFlag(0x40004, nozzle);
 	}
 }
 

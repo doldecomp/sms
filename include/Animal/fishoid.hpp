@@ -89,7 +89,6 @@ class TFishoidManager : public TEnemyManager {
 public:
 	TFishoidManager(const char* name = "回遊魚マネージャー");
 
-	virtual ~TFishoidManager();
 	virtual void createModelData();
 };
 

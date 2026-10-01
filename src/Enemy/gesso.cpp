@@ -184,39 +184,28 @@ void TGessoManager::requestPolluteModel(JGeometry::TVec3<float>& position,
 static int GessoBodyCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
-		if (gpCurGesso == nullptr || !gpCurGesso->isNotWandering())
+		if (gpCurGesso == nullptr || !gpCurGesso->isUseBodyCallBack())
 			return true;
 
 		J3DJoint* joint = (J3DJoint*)param_1;
 		MtxPtr anmMtx   = gpCurGesso->getModel()->getAnmMtx(joint->getJntNo());
 
+		TPosition3f local_44;
+		local_44.setTrans(0.0f, 0.0f, 0.0f);
 		f32 scale = gpCurGesso->getBodyScale();
-		Mtx local_44;
-		local_44[0][0] = scale;
-		local_44[0][1] = 0.0f;
-		local_44[0][2] = 0.0f;
-		local_44[0][3] = 0.0f;
-
-		local_44[1][0] = 0.0f;
-		local_44[1][1] = scale;
-		local_44[1][2] = 0.0f;
-		local_44[1][3] = 0.0f;
-
-		local_44[2][0] = 0.0f;
-		local_44[2][1] = 0.0f;
-		local_44[2][2] = scale;
-		local_44[2][3] = 0.0f;
+		local_44.setScale(scale, scale, scale);
 
 		f32 maxAngle = gpCurGesso->getSaveParams()->mSLBodyAngMax.get();
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
 		                    maxAngle);
 
 		Mtx local_74;
-		MsMtxSetRotX(local_74, angle);
+		MtxPtr rotation = local_74;
+		MsMtxSetRotX(rotation, angle);
 
-		MTXConcat(anmMtx, local_74, anmMtx);
+		MTXConcat(anmMtx, rotation, anmMtx);
 		MTXConcat(anmMtx, local_44, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rotation, J3DSys::mCurrentMtx);
 		MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 	}
 	return true;
@@ -464,7 +453,7 @@ void TGesso::polluteBehavior()
 	if (mSpine->getCurrentNerve() == &TNerveGessoPollute::theNerve())
 		return;
 
-	if (mPollutionTimer < unk1E8->mSLPollutionInterval.get())
+	if (mPollutionTimer <= unk1E8->mSLPollutionInterval.get())
 		return;
 
 	if (!MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
@@ -487,14 +476,12 @@ void TGesso::setPolluteGoal()
 
 	if (unk1D8 == 0) {
 		TMsRange<f32> range(-100.0f, 100.0f);
-		(void)&range; // TODO: due to range.rand() being wrong
 		mPolluteVelocity.set(SMS_GetMarioPos().x + range.rand(),
 		                     SMS_GetMarioPos().y,
 		                     SMS_GetMarioPos().z + range.rand());
 
-		JGeometry::TVec3<f32> local;
-		calcVelocityToJumpToY(local, polluteObjSpeed, polluteObjGravity);
-		mPolluteVelocity = local;
+		mPolluteVelocity = calcVelocityToJumpToY(
+		    mPolluteVelocity, polluteObjSpeed, polluteObjGravity);
 	} else {
 		mPolluteVelocity = SMS_GetMarioPos();
 		mPolluteVelocity.x -= mPosition.x;
@@ -536,7 +523,12 @@ void TGesso::pollute()
 	mPolluteObj->mPosition.z = mtx[2][3] + local_2c.z;
 }
 
-void TGesso::isUseBodyCallBack() const { }
+bool TGesso::isUseBodyCallBack() const
+{
+	if (mState == STATE_WANDERING)
+		return false;
+	return true;
+}
 
 void TGesso::setAfterDeadEffect()
 {
@@ -751,7 +743,11 @@ void TGesso::rollEnd()
 		offLiveFlag(LIVE_FLAG_UNK8);
 }
 
-void TGesso::modifyRotate() { }
+void TGesso::modifyRotate()
+{
+	mStayYaw *= 0.8f;
+	mRotation *= 0.8f;
+}
 
 void TGesso::fallEnd()
 {
@@ -792,8 +788,7 @@ void TGesso::turnOut()
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
-// TODO: the size & logic matches but it won't inline =(
-inline bool TGesso::checkDropInWater()
+bool TGesso::checkDropInWater()
 {
 	// Don't skip your calculus class, kids.
 	JGeometry::TVec3<f32> position = mPosition;
@@ -809,10 +804,7 @@ inline bool TGesso::checkDropInWater()
 	gpMap->checkGround(position.x, mHeadHeight * 2.0f + position.y, position.z,
 	                   &local_34);
 
-	if (local_34->isWaterSurface())
-		return true;
-	else
-		return false;
+	return local_34->isWaterSurface() ? true : false;
 }
 
 void TGesso::initAttacker(THitActor* param_1)
@@ -1015,15 +1007,11 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		if (self->isBckAnm(10)) {
 			self->setBckAnm(9);
 		} else if (self->isBckAnm(9)) {
-			if (spine->getTime() > self->unk1E8->mSLFreezeWait.get()) {
-				u8 tmp = self->unk165;
-				if (tmp != 0)
-					self->unk165 = 0;
-
-				if (tmp == 0)
-					self->setBckAnm(8);
-			}
-			self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+			if (spine->getTime() > self->unk1E8->mSLFreezeWait.get()
+			    && !self->unsetUnk165())
+				self->setBckAnm(8);
+			else
+				self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 		} else if (self->isBckAnm(8)) {
 			return true;
 		}
@@ -1033,7 +1021,7 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		if (self->unk1DC.y < 1.5f) {
 			if (self->isBckAnm(9)) {
 				gpMarioParticleManager->emitAndBindToPosPtr(
-				    0x12F, &self->mPosition, 1, self);
+				    PARTICLE_MS_POI_KIZETSU, &self->mPosition, 1, self);
 			}
 		} else {
 			self->unk1DC.y *= 0.3f;
@@ -1173,11 +1161,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 			}
 		} else if (self->isBckAnm(7)) {
 			self->offLiveFlag(LIVE_FLAG_UNK8);
-			self->mStayYaw *= 0.8f;
-
-			self->mRotation.x *= 0.8f;
-			self->mRotation.y *= 0.8f;
-			self->mRotation.z *= 0.8f;
+			self->modifyRotate();
 
 			if (self->checkCurAnmEnd(0)) {
 				self->fallEnd();

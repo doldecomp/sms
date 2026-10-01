@@ -17,6 +17,7 @@
 #include <Map/PollutionManager.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Player/MarioCap.hpp>
+#include <macros.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -176,7 +177,10 @@ void TMario::windMove(const JGeometry::TVec3<f32>& wind)
 	mPosition.z += wind.z;
 }
 
-void TMario::getGroundJumpPower() const { }
+f32 TMario::getGroundJumpPower() const
+{
+	return mGroundPlane ? 0.01f * mGroundPlane->getActiveJumpPower() : 0.0f;
+}
 
 BOOL TMario::onYoshi() const { return mYoshi != nullptr && mYoshi->onYoshi(); }
 
@@ -400,7 +404,21 @@ void TMario::isTurnStart() { }
 
 void TMario::isTurnning() { }
 
-void TMario::setMissJumping() { }
+void TMario::setMissJumping()
+{
+	mFaceAngle.x    = 0;
+	mModelFaceAngle = mFaceAngle.y;
+	if (mForwardVel > 0.0f) {
+		s16 slopeAngle = mSlopeAngle + 0x8000;
+		s16 angle      = mFaceAngle.y - slopeAngle;
+		f32 x          = mForwardVel * JMASSin(angle);
+		f32 z          = mForwardVel * JMASCos(angle) * 0.75f;
+		setPlayerVelocity(MsSqrtf(x * x + z * z));
+		mFaceAngle.y = slopeAngle + matan(z, x);
+	}
+	dropObject();
+	changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
+}
 
 void TMario::setPlayerJumpSpeed(f32 speed_mult, f32 force)
 {
@@ -412,9 +430,9 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	u32 nextStatus = status;
 
 	unk2BC = mPosition.y;
-	if (mSlopeAngle > mDeParams.mRocketRotSp.get() / 2)
-		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-		                   mDirtyParams.mPolSizeJump.get());
+	if (mFootPrintTimer > mDeParams.mFootPrintTimerMax.get() / 2)
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+		                     mDirtyParams.mPolSizeJump.get());
 
 	switch (status) {
 	case MARIO_STATUS_JUMP:
@@ -428,10 +446,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 				nextStatus = MARIO_STATUS_FORCE_JUMP;
 				break;
 			} else if (mGroundPlane->isThing3()) {
-				mVel.y += -unkBC
-				          + ((mGroundPlane
-				                  ? 0.01f * mGroundPlane->getActiveJumpPower()
-				                  : 0.0f));
+				mVel.y += -unkBC + getGroundJumpPower();
 
 				if (mGroundPlane->mActor != nullptr)
 					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
@@ -463,9 +478,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 
 	case MARIO_STATUS_FORCE_JUMP:
-		mVel.y = mGroundPlane != nullptr
-		             ? 0.01f * mGroundPlane->getActiveJumpPower()
-		             : 0.0f;
+		mVel.y = getGroundJumpPower();
 		startVoice(MSD_SE_MV22_JUMP_MID_01);
 		break;
 
@@ -569,23 +582,23 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 				startVoice(MSD_SE_MV15_EXERT_INST_01);
 			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Hover)
 				startVoice(MSD_SE_MV21_JUMP_SMALL_01);
-			mVel.y = 10.0f;
+			setPlayerJumpSpeed(0.0f, 10.0f);
 		}
 		break;
 	}
 
 	case MARIO_STATUS_TRAMPLE:
 		switch (mAnimationId) {
+		default:
+			startVoice(MSD_SE_MV21_JUMP_SMALL_01);
+			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep1.get());
+			break;
 		case ANIM_STEP2:
 			startVoice(MSD_SE_MV22_JUMP_MID_01);
-			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep1.get());
+			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep2.get());
 			break;
 		case ANIM_STEP3:
 			startVoice(MSD_SE_MV23_JUMP_LARGE_01);
-			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep2.get());
-			break;
-		default:
-			startVoice(MSD_SE_MV21_JUMP_SMALL_01);
 			setPlayerJumpSpeed(0.25f, mDeParams.mTramplePowStep3.get());
 			break;
 		}
@@ -674,7 +687,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 u32 TMario::setStatusToRunning(u32 status, u32)
 {
-	f32 mag = mIntendedMag <= 8.0f ? 8.0f : mIntendedMag;
+	f32 mag = mIntendedMag <= 8.0f ? mIntendedMag : 8.0f;
 
 	switch (status) {
 	case MARIO_STATUS_RUN:
@@ -683,10 +696,7 @@ u32 TMario::setStatusToRunning(u32 status, u32)
 		break;
 
 	case MARIO_STATUS_SLIP:
-		s16 diff     = mSlopeAngle - mFaceAngle.y;
-		bool inFront = diff > -0x4000 && diff < 0x4000;
-
-		if (inFront)
+		if (isFrontSlip(0))
 			status = MARIO_STATUS_SLIP_FORE;
 		else
 			status = MARIO_STATUS_SLIP_BACK;
@@ -750,20 +760,7 @@ int TMario::changePlayerStatus(u32 status, u32 arg, bool force)
 BOOL TMario::changePlayerTriJump()
 {
 	if (isJumpMiss()) {
-		mFaceAngle.x    = 0;
-		mModelFaceAngle = mFaceAngle.y;
-		if (mForwardVel > 0.0f) {
-			// TODO: inline
-			s16 a     = mSlopeAngle + 0x8000;
-			s16 angle = mFaceAngle.y - a;
-			f32 x     = mForwardVel * JMASSin(angle);
-			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
-			f32 mag   = MsSqrtf(x * x + z * z);
-			setPlayerVelocity(mag);
-			mFaceAngle.y = a + matan(z, x);
-		}
-		dropObject();
-		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
+		setMissJumping();
 	} else {
 		if (considerRotateJumpStart())
 			return 1;
@@ -777,20 +774,7 @@ BOOL TMario::changePlayerTriJump()
 int TMario::changePlayerJumping(u32 param_1, u32 param_2)
 {
 	if (isJumpMiss()) {
-		mFaceAngle.x    = 0;
-		mModelFaceAngle = mFaceAngle.y;
-		if (mForwardVel > 0.0f) {
-			// TODO: inline
-			s16 a     = mSlopeAngle + 0x8000;
-			s16 angle = mFaceAngle.y - a;
-			f32 x     = mForwardVel * JMASSin(angle);
-			f32 z     = mForwardVel * JMASCos(angle) * 0.75f;
-			f32 mag   = MsSqrtf(x * x + z * z);
-			setPlayerVelocity(mag);
-			mFaceAngle.y = a + matan(z, x);
-		}
-		dropObject();
-		changePlayerStatus(MARIO_STATUS_MISS_JUMP, 0, false);
+		setMissJumping();
 	} else {
 		if (considerRotateJumpStart())
 			return 1;
@@ -1155,7 +1139,7 @@ void TMario::thinkDirty()
 	}
 
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER)) {
-		if (mPosition.y > mFloorPosition.z - 1.0f)
+		if (mPosition.y > mFloorPosition.z - 200.0f)
 			meltInWaterEffect();
 		mFootPrintTimer = 0;
 		mDirty -= mDirtyParams.mDecSwimming.get();
@@ -1172,11 +1156,7 @@ void TMario::thinkDirty()
 		mFootPrintTimer = 0;
 	}
 
-	if (mDirty < 0.0f)
-		mDirty = 0.0f;
-
-	if (mDirtyParams.mDirtyMax.get() < mDirty)
-		mDirty = mDirtyParams.mDirtyMax.get();
+	dirtyLimitCheck();
 }
 
 void TMario::thinkHeight()
@@ -1307,11 +1287,38 @@ void TMario::checkThrowObject()
 	}
 }
 
-void TMario::getDizzyAngle() { }
+int TMario::getDizzyAngle()
+{
+	return JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
+	       * mGraffitoParams.mDizzyAngleY.get() * mDizzyTimer
+	       / mGraffitoParams.mDizzyWalkCtMax.get();
+}
 
-void TMario::getDizzyPower() { }
+f32 TMario::getDizzyPower()
+{
+	return JMASCos(mDizzyTimer * mGraffitoParams.mDizzyPowerRate.get())
+	       * mGraffitoParams.mDizzyPower.get();
+}
 
-void TMario::getLRLevel(u8) { }
+f32 TMario::getLRLevel(u8 level)
+{
+	u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
+	u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
+	u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
+	f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
+
+	if (level < zero)
+		return 0.0f;
+
+	if (level < middle)
+		return midLvl * (f32)(level - zero) / (f32)(middle - zero);
+
+	if (level < max)
+		return midLvl
+		       + (1.0f - midLvl) * (f32)(level - middle) / (f32)(max - middle);
+
+	return 1.0f;
+}
 
 void TMario::checkController(JDrama::TGraphics*)
 {
@@ -1355,86 +1362,12 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mAnalogRU8 = mGamePad->mCompSPos[3];
 	unk108->mAnalogLU8 = mGamePad->mCompSPos[2];
 
-	// 3-segment (zero, middle, max) trigger curve, run 4 times:
-	// for unk108->mAnalogR (R trigger), unk108->mAnalogL (L trigger),
-	// then again for unk10C (L) and unk110 (R) Mario-side copies.
-	// TODO: doesn't match at all!
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[3];
-		f32 out;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk108->mAnalogR = out;
-	}
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[2];
-		f32 out;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk108->mAnalogL = out;
-	}
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[2];
-		f32 out;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk10C = out;
-	}
-	{
-		u8 zero    = mControllerParams.mAnalogLRToZeroVal.get();
-		u8 middle  = mControllerParams.mAnalogLRToMiddleVal.get();
-		u8 max     = mControllerParams.mAnalogLRToMaxVal.get();
-		f32 midLvl = mControllerParams.mAnalogLRMiddleLevel.get();
-		u8 v       = (u8)(s32)mGamePad->mCompSPos[3];
-		f32 out;
-		if (v < zero)
-			out = 0.0f;
-		else if (v < middle)
-			out = (midLvl * (f32)(v - zero)) / (f32)(middle - zero);
-		else if (v < max)
-			out = midLvl
-			      + (((1.0f - midLvl) * (f32)(v - middle))
-			         / (f32)(max - middle));
-		else
-			out = 1.0f;
-		unk110 = out;
-	}
+	u8 analogR       = mGamePad->mCompSPos[3];
+	u8 analogL       = mGamePad->mCompSPos[2];
+	unk108->mAnalogR = getLRLevel(analogR);
+	unk108->mAnalogL = getLRLevel(analogL);
+	unk10C           = getLRLevel(analogL);
+	unk110           = getLRLevel(analogR);
 
 	// Stick deadzone: subtract 6 if outside +/- 7
 	unk108->mStickH = 0.0f;
@@ -1449,10 +1382,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		unk108->mStickV = (f32)(unk108->mStickVS16 - 6);
 
 	// Stick distance, then mLengthMult^mLengthMultTimes (unrolled in 8s)
-	f32 dist = (unk108->mStickH * unk108->mStickH)
-	           + (unk108->mStickV * unk108->mStickV);
-	if (dist > 0.0f)
-		dist = MsSqrtf(dist);
+	f32 dist = MsSqrtf(unk108->mStickH * unk108->mStickH
+	                   + unk108->mStickV * unk108->mStickV);
 
 	for (int i = 0; i < mControllerParams.mLengthMultTimes.get(); ++i)
 		dist *= mControllerParams.mLengthMult.get();
@@ -1475,15 +1406,8 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	s32 yawJitter = 0;
 	if (mDizzyTimer > 0) {
-		yawJitter = JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
-		            * mGraffitoParams.mDizzyAngleY.get() * mDizzyTimer
-		            / mGraffitoParams.mDizzyWalkCtMax.get();
-
-		f32 magDizzy
-		    = JMASCos(mDizzyTimer * mGraffitoParams.mDizzyPowerRate.get())
-		      * mGraffitoParams.mDizzyPower.get();
-
-		mIntendedMag += magDizzy;
+		yawJitter = getDizzyAngle();
+		mIntendedMag += getDizzyPower();
 		if (mIntendedMag < 0.0f)
 			mIntendedMag = 0.0f;
 	}
@@ -1598,9 +1522,8 @@ int TMario::checkStickRotate(int* outDir)
 	int incCount = 0;
 	int decCount = 0;
 
-	// TODO: volatile is fake, but it's uninitialized,
-	// so a bug, it seems?
-	volatile BOOL q[4];
+	// TODO: it's uninitialized, so a bug, it seems?
+	BOOL q[4];
 
 	for (int i = 0; i < unk534 - 1; i++) {
 		f32 angle = (f32)unk530[i];
@@ -1621,14 +1544,10 @@ int TMario::checkStickRotate(int* outDir)
 	}
 
 	int sum = 0;
-	if (q[0] == 1)
-		sum++;
-	if (q[1] == 1)
-		sum++;
-	if (q[2] == 1)
-		sum++;
-	if (q[3] == 1)
-		sum++;
+	for (int i = 0; i < ARRAY_COUNT(q); i++) {
+		if (q[i] == 1)
+			sum++;
+	}
 
 	if (sum >= 4) {
 		if (incCount > decCount)
@@ -1714,9 +1633,10 @@ void TMario::checkCurrentPlane()
 			if (record.mResultWalls[i]->isThing5())
 				damageExec(&mFloorHitActor, record.mResultWalls[i]->getData());
 
-		// TODO: do we have to use a TPartition here after all?
 		if (record.mResultWallsNum == 2
-		    && record.mResultWalls[0]->getNormal().squared() < -0.9f) {
+		    && record.mResultWalls[0]->getNormal().dot(
+		           record.mResultWalls[1]->getNormal())
+		           < -0.9f) {
 
 			JGeometry::TVec3<f32> normal1 = record.mResultWalls[0]->getNormal();
 			JGeometry::TVec3<f32> normal2 = record.mResultWalls[1]->getNormal();
@@ -1777,9 +1697,8 @@ void TMario::checkCurrentPlane()
 
 		if (mPosition.y > mFloorPosition.y + 100.0f)
 			mInput |= 0x4;
-
-		offFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
 	}
+	offFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
 }
 
 void TMario::getActorMtx(const THitActor&, Mtx) { }
@@ -2333,7 +2252,7 @@ void TMario::thinkDiving() { }
 
 void TMario::thinkTorocco()
 {
-	mToroccoAngle += unk108->mStickH * mDeParams.mRecoverTimer.get();
+	mToroccoAngle += unk108->mStickHS16 * mDeParams.mToroccoRotSp.get();
 }
 
 void TMario::thinkSound()
@@ -2440,7 +2359,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 {
 	unk9C         = mFaceAngle.y;
 	mPrevPosition = mPosition;
-	offUnk114(UNK114_FLAG_PROFILE);
+	offUnk114(UNK114_FLAG_UNK8);
 
 	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
