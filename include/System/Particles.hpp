@@ -104,6 +104,9 @@ enum E_SMS_EFFECT_ONETIME_NORMAL /* 0 */ {
 	MAPOBJ_MS_WATCOIN_HIT               = 0x57,
 	MAPOBJ_MS_WATCOIN_KIRA              = 0x58,
 	MAP_MAP_MS_OBJUP_SLOPE_A            = 0x59,
+	MAPOBJ_BALLOONKOOPAJR               = 0x5A,
+	MAPOBJ_BALLOONKOOPAJRA              = 0x5B,
+	MAPOBJ_BALLOONKOOPAJRB              = 0x5C,
 	MAPOBJ_MS_EX_HAHEN                  = 0x63,
 	MAP_POLLUTION_MS_NEWFIRE_A          = 0x65,
 	MAP_MAP_MS_OBJUP_MANIYA_A           = 0x66,
@@ -202,6 +205,7 @@ enum E_SMS_EFFECT_ONETIME_NORMAL /* 0 */ {
 
 enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_HIKAGE1_A                 = 0x100,
+	PARTICLE_MS_HIKAGE1_B                 = 0x101,
 	PARTICLE_MS_MARIWALLSL1               = 0x102,
 	PARTICLE_MS_M_SLIPSMOKE               = 0x103,
 	PARTICLE_MS_M_BLUR3                   = 0x104,
@@ -297,6 +301,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_AMN_SPARK_L               = 0x181,
 	PARTICLE_MS_AMN_SPARK_R               = 0x182,
 	PARTICLE_MS_AMN_SPARK_M               = 0x183,
+	MAPOBJ_AMIKING                        = 0x184,
 	PARTICLE_MS_TAMA_HIT                  = 0x185,
 	PARTICLE_MS_TAMA_BLUR                 = 0x186,
 	PARTICLE_MS_TLS_YODARE_L              = 0x187,
