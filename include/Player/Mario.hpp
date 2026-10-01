@@ -943,7 +943,7 @@ public:
 	BOOL isRunningTurnning();
 	void changePlayerCatching();
 	bool isRunningInWater();
-	void getRunningInWaterBrake();
+	f32 getRunningInWaterBrake();
 	BOOL doRunningAnimation();
 	void getSlopeNormalAccele(f32*, f32*);
 	void getSlopeSlideAccele(f32*, f32*);
