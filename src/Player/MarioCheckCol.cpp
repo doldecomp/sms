@@ -44,9 +44,9 @@ void TMario::hitNormal(THitActor* actor)
 
 	TWaterGun* wg = mWaterGun;
 	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
-		TModelWaterManager::mStaticHitActor.mPosition   = mPosition;
-		TModelWaterManager::mStaticHitActor.mPosition.y = mPosition.y + 80.0f;
-		TModelWaterManager::mStaticHitActor.unk68       = 0;
+		TModelWaterManager::mStaticHitActor.mPosition = mPosition;
+		TModelWaterManager::mStaticHitActor.mPosition.y += 80.0f;
+		TModelWaterManager::mStaticHitActor.unk68 = 0;
 		actor->receiveMessage(&TModelWaterManager::mStaticHitActor,
 		                      HIT_MESSAGE_SPRAYED_BY_WATER);
 	}
@@ -258,7 +258,7 @@ void TMario::checkCollision()
 			f32 dx   = yt.x - mPosition.x;
 			f32 dist = std::sqrtf(dx * dx + dz * dz);
 
-			if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && isHolding()
+			if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && !isHolding()
 			    && mVel.y < 0.0f && yt.y < mPosition.y && mStatus != 0x89C
 			    && mStatus != MARIO_STATUS_THROWN_DOWN
 			    && mStatus != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {
@@ -311,18 +311,6 @@ void TMario::checkCollision()
 		case 0x8000001:
 		case 0x8000003:
 		case 0x8000013:
-		case 0x8000016:
-		case 0x8000017:
-		case 0x8000018:
-		case 0x8000019:
-		case 0x800001A:
-		case 0x800001B:
-		case 0x800001C:
-		case 0x800001D:
-		case 0x800001E:
-		case 0x800001F:
-		case 0x8000020:
-		case 0x8000021:
 		case 0x8000024:
 		case 0x10000001:
 		case 0x10000002:
@@ -398,6 +386,8 @@ void TMario::checkCollision()
 			break;
 
 		// R1: keepDistance (cases sharing L_80161364 leaf)
+		case 0x8000022:
+		case 0x8000023:
 		case 0x10000033:
 		case 0x400001A6:
 			keepDistance(*mCollisions[i], 0.0f);
@@ -540,6 +530,18 @@ void TMario::checkCollision()
 		// empty cases
 		case 0x8000004:
 		case 0x8000012:
+		case 0x8000016:
+		case 0x8000017:
+		case 0x8000018:
+		case 0x8000019:
+		case 0x800001A:
+		case 0x800001B:
+		case 0x800001C:
+		case 0x800001D:
+		case 0x800001E:
+		case 0x800001F:
+		case 0x8000020:
+		case 0x8000021:
 		case 0x10000005:
 		case 0x10000006:
 		case 0x10000009:
