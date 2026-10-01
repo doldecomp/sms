@@ -45,7 +45,7 @@ BOOL TMario::readBillboard()
 	// Missing stack space
 	// volatile u32 padding[16];
 
-	TBaseNPC* talkingNpc = gpMarDirector->unkA0;
+	TBaseNPC* talkingNpc = gpMarDirector->getTalkingNPC();
 	switch (mStatusState) {
 	case 0: {
 		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
@@ -57,8 +57,8 @@ BOOL TMario::readBillboard()
 		f32 dist = std::sqrtf(dx * dx + dz * dz);
 		if (dist < 100.0f) {
 			JGeometry::TVec3<f32> moveDist;
-			moveDist.x = dx / dist * 2.0f * 50.0f + mPosition.x;
-			moveDist.z = dz / dist * 2.0f * 50.0f + mPosition.z;
+			moveDist.x = dx / dist * 50.0f * 2.0f + talkingNpc->mPosition.x;
+			moveDist.z = dz / dist * 50.0f * 2.0f + talkingNpc->mPosition.z;
 			moveDist.y = mFloorPosition.y;
 			moveRequest(moveDist);
 		}
@@ -221,7 +221,7 @@ BOOL TMario::warpIn()
 			offUnk114(UNK114_FLAG_VISIBLE);
 			rumbleStart(0x15, 0x14);
 		}
-		if (mAutoDemoParams.mWarpInBallsTime.get() > (f32)mStatusTimer) {
+		if ((f32)mStatusTimer > mAutoDemoParams.mWarpInBallsTime.get()) {
 			mStatusTimer = 0;
 			unk468       = mAutoDemoParams.mWarpInVecBase.get();
 			mStatusState = 2;
