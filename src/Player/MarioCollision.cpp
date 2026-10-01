@@ -37,8 +37,8 @@ void TMario::incHP(int hp)
 	}
 
 	mHealth += hp;
-	if (mHealth > mDeParams.mHpMax.get()) {
-		mHealth = mDeParams.mHpMax.get();
+	if (mHealth > mDeParams.mHPMax.get()) {
+		mHealth = mDeParams.mHPMax.get();
 	} else {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr, 0);
 	}
