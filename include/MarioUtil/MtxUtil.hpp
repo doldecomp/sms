@@ -74,9 +74,9 @@ public:
 		// no ctor exists in symbol map so weak inlined?
 		TDeParams(const char* prm)
 		    : TParams(prm)
-		    , PARAM_INIT(mAcc, JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f))
+		    , PARAM_INIT(mAcc, JGeometry::TVec3<f32>(0.0f, -4.0f, 0.0f))
 		    , PARAM_INIT(mL, 50.0f)
-		    , PARAM_INIT(mBrake, 0.9f)
+		    , PARAM_INIT(mBrake, 0.7f)
 		    , PARAM_INIT(mVelScale, 1.0f)
 		{
 			TParams::load(mPrmPath);
@@ -157,7 +157,7 @@ void SMS_MakeJointsToArc(J3DModel*, const JGeometry::TVec3<f32>&,
                          const JGeometry::TVec3<f32>&);
 void SMS_MtxLookAt(MtxPtr, const JGeometry::TVec3<f32>&,
                    const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&);
-void SMS_GetLightPerspectiveForEffectMtx(MtxPtr);
+void SMS_GetLightPerspectiveForEffectMtx(Mtx44);
 
 class TRopePoint {
 public:
