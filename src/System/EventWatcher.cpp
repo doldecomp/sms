@@ -207,8 +207,9 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int count = 0;
 
 	if (arg_num >= 3) {
-		THitActor* which = (THitActor*)getNameRefPtr(
-		    interp->mProcessStack.getFromTop(arg_num - 1));
+		THitActor* which
+		    = (THitActor*)getNameRefPtr(interp->mProcessStack.getFromBottom(
+		        interp->mProcessStack.size() - arg_num));
 		if (which) {
 			f32 dist
 			    = interp->mProcessStack.getFromTop(arg_num - 2).getDataFloat();
@@ -216,7 +217,8 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			count = 1;
 			for (u32 i = 2; i < arg_num; ++i) {
 				THitActor* other = (THitActor*)getNameRefPtr(
-				    interp->mProcessStack.getFromTop(arg_num - 1 - i));
+				    interp->mProcessStack.getFromBottom(
+				        interp->mProcessStack.size() - (arg_num - i)));
 				if (other) {
 					JGeometry::TVec3<f32> diff = which->mPosition;
 					diff -= other->mPosition;
@@ -503,14 +505,12 @@ static void evSetGraffitoMultiplied(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->verifyArgNum(1, &arg_num);
 	int enable = TSpcSlice(interp->pop()).getDataInt();
 
-	TPollutionManager* pollution = gpPollution;
-	int i                        = 0;
-	if (enable) {
-		for (; i < pollution->getJointModelNum(); ++i)
-			pollution->getLayer(i)->startSpread();
-	} else {
-		for (; i < pollution->getJointModelNum(); ++i)
-			pollution->getLayer(i)->stopSpread();
+	for (int i = 0; i < gpPollution->getJointModelNum(); ++i) {
+		TPollutionLayer* layer = gpPollution->getLayer(i);
+		if (enable)
+			layer->startSpread();
+		else
+			layer->stopSpread();
 	}
 
 	interp->push();
@@ -625,7 +625,7 @@ static void evInsertTimer(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int p1 = interp->pop().getDataInt();
 	int p2 = interp->pop().getDataInt();
 
-	if (p2 == 0)
+	if (p2 == 1)
 		SMSGetMarDirector()->getConsole()->startAppearTimer(0, p1);
 	else if (p2 == 2)
 		SMSGetMarDirector()->getConsole()->startAppearTimer(1, p1);
@@ -841,7 +841,7 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int p1 = interp->pop().getDataInt();
 	int p2 = interp->pop().getDataInt();
 
-	int count = p2 - p1 + 1;
+	int count = p1 - p2 + 1;
 
 	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
@@ -1269,9 +1269,11 @@ static void evIsWaterMelonIsReached(TSpcTypedInterp<TEventWatcher>* interp,
 	TBigWatermelon* melon = (TBigWatermelon*)interp->pop().getDataInt();
 
 	int result = 0;
-	f32 dx     = -4660.0f - melon->mPosition.x;
-	f32 dz     = 12000.0f - melon->mPosition.z;
-	if (dx * dx + dz * dz <= 90000.0f)
+	JGeometry::TVec3<f32> delta;
+	delta.sub(JGeometry::TVec3<f32>(-4660.0f, 0.0f, 12000.0f),
+	          melon->mPosition);
+	delta.y = 0.0f;
+	if (delta.squared() <= 90000.0f)
 		result = 1;
 
 	interp->push(result);
