@@ -541,18 +541,7 @@ void TChuuHana::bind()
 	mLinearVelocity = next - mPosition;
 }
 
-void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& push)
-{
-	JGeometry::TVec3<f32> vel(mVelocity);
-	JGeometry::TVec3<f32> tmp(mVelocity);
-	// fabricated: the target copies the vector once per component
-	JGeometry::TVec3<f32> xz(JGeometry::TVec3<f32>(tmp).x, 0.0f,
-	                         JGeometry::TVec3<f32>(tmp).z);
-	f32 speed = JGeometry::TUtil<f32>::sqrt(xz.x * xz.x + xz.z * xz.z);
-	VECAdd(&vel, &push, &vel);
-	vel.y     = 0.0f;
-	mVelocity = vel;
-}
+void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1) { }
 
 BOOL TChuuHana::receiveMessage(THitActor* sender, u32 message)
 {
@@ -658,9 +647,7 @@ bool TChuuHana::willFall(s32 param_1)
 
 	if (unk218 != nullptr) {
 		JGeometry::TVec3<f32> diff;
-		diff.x = mPosition.x - unk218->mPosition.x;
-		diff.y = mPosition.y - unk218->mPosition.y;
-		diff.z = mPosition.z - unk218->mPosition.z;
+		diff.sub(mPosition, unk218->mPosition);
 		if (diff.length() > radius) {
 			setSafeGoal();
 			return true;
@@ -704,28 +691,7 @@ void TChuuHana::setSafeGoal()
 	unk1B2 = 1;
 }
 
-void TChuuHana::rolling()
-{
-	JGeometry::TVec3<f32> vel(mVelocity);
-	// fabricated: the target copies the vector once per component
-	JGeometry::TVec3<f32> d(JGeometry::TVec3<f32>(vel).x, 0.0f,
-	                        JGeometry::TVec3<f32>(vel).z);
-	d.x -= unk204.x;
-	d.z -= unk204.z;
-	d.scale(0.2f);
-	unk204.x += d.x;
-	unk204.z += d.z;
-
-	f32 x  = unk204.x;
-	unk1B8 = 2.0f
-	         * (JGeometry::TUtil<f32>::sqrt(x * x + unk204.z * unk204.z)
-	            / mBodyRadius);
-	unk210 += unk1B8;
-	if (unk210 > 360.0f)
-		unk210 -= 360.0f;
-	if (unk210 < 0.0f)
-		unk210 += 360.0f;
-}
+void TChuuHana::rolling() { }
 
 void TChuuHana::rollStart()
 {
