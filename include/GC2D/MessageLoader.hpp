@@ -3,14 +3,17 @@
 
 #include <dolphin/types.h>
 
+class JMSMesgEntry {
+public:
+	/* 0x0 */ u32 unk0;
+	/* 0x4 */ s16 unk4;
+	/* 0x6 */ s16 unk6;
+	/* 0x8 */ char unk8[0x4];
+};
+
 class TMessageLoader {
 public:
-	struct EntryInfo {
-		/* 0x0 */ u32 unk0;
-		/* 0x4 */ s16 unk4;
-		/* 0x6 */ s16 unk6;
-		/* 0x8 */ char unk8[0x4];
-	};
+	typedef JMSMesgEntry EntryInfo;
 
 	TMessageLoader();
 	TMessageLoader(const char*);
