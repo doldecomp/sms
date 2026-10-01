@@ -56,19 +56,18 @@ public:
 
 class TBGTentacle : public JDrama::TViewObj {
 public:
-	// TODO: are these values correct? probably not
 	enum {
-		TSTATE_UNK0       = 0,
-		TSTATE_WAIT       = 1,
-		TSTATE_ATTACK     = 2,
-		TSTATE_REST       = 3,
-		TSTATE_HELD       = 4,
-		TSTATE_AMPUTEE    = 5,
-		TSTATE_STUN       = 6,
-		TSTATE_HIDE       = 7,
-		TSTATE_FOLLOWBODY = 8,
-		TSTATE_SYNCBODY   = 9,
-		TSTATE_GUARD      = 10,
+		TSTATE_WAIT       = 0,
+		TSTATE_ATTACK     = 1,
+		TSTATE_REST       = 2,
+		TSTATE_HELD       = 3,
+		TSTATE_AMPUTEE    = 4,
+		TSTATE_STUN       = 5,
+		TSTATE_HIDE       = 6,
+		TSTATE_FOLLOWBODY = 7,
+		TSTATE_SYNCBODY   = 8,
+		TSTATE_GUARD      = 9,
+		TSTATE_UNKA       = 10,
 	};
 
 	class TTentacleParams : public TParams {
@@ -129,7 +128,7 @@ public:
 
 	void incDamage();
 	void throwMario(THitActor*, THitActor*);
-	BOOL isAttacking() const;
+	bool isAttacking() const;
 	bool canTake() const;
 	f32 getNodeLen() const;
 	void continuousRumble();
@@ -161,23 +160,6 @@ public:
 			return true;
 		return false;
 	}
-
-	// fabricated
-	bool isThing3()
-	{
-		if (mState == 10)
-			return false;
-		if (mState == 4)
-			return false;
-		if (mState == 6)
-			return false;
-		return true;
-	}
-
-	// fabricated
-	// fabricated; defined in bgtentacle.cpp because it needs TBossGesso
-	// to be a complete type.
-	bool isAttackable();
 
 	TNode* getFirstNode() { return &mNodes[0]; }
 	TNode* getLastNode() { return &mNodes[mNodeNum - 1]; }
