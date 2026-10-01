@@ -240,11 +240,11 @@ public:
 	void makeVecToLocalX(f32, JGeometry::TVec3<f32>*) const;
 	void makeVecToLocalZ(f32, JGeometry::TVec3<f32>*) const;
 	void getNormalVecFromTarget(f32, f32, f32, JGeometry::TVec3<f32>*) const;
-	void getNormalVecFromOffset(f32, f32, f32, JGeometry::TVec3<f32>*);
+	static void getNormalVecFromOffset(f32, f32, f32, JGeometry::TVec3<f32>*);
 	void getNormalVecFromTargetXZ(f32, f32, JGeometry::TVec3<f32>*) const;
-	void getNormalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
+	static void getNormalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
 	static void rotateVecByAxisY(JGeometry::TVec3<f32>*, f32);
-	void getVerticalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
+	static void getVerticalVecFromOffsetXZ(f32, f32, JGeometry::TVec3<f32>*);
 	void getVerticalVecToTargetXZ(f32, f32, JGeometry::TVec3<f32>*) const;
 	void calcReflectingVelocity(const TBGCheckData* wall, f32,
 	                            JGeometry::TVec3<f32>* velocity) const;
@@ -288,7 +288,7 @@ public:
 	static void setJointScaleY(J3DJoint*, f32);
 	static void setJointScaleZ(J3DJoint*, f32);
 	static void calcMap();
-	void getMapModel();
+	static J3DModel* getMapModel();
 	void getMapModelData();
 	void getMapMActor();
 	static TJointObj* getBuildingJointObj(int);
