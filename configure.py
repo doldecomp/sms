@@ -213,6 +213,7 @@ cflags_base_base = [
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     "-Dnullptr=0",
+    "-Dalignof=__builtin_align",
     f"-DVERSION_{config.version}",
 ]
 
@@ -1214,7 +1215,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/hauntLeg.cpp"),
             PCHObject(NonMatching, "Enemy/areacylinder.cpp"),
             PCHObject(NonMatching, "Enemy/wireTrap.cpp"),
-            PCHObject(NonMatching, "Enemy/BossHanachanSound.cpp"),
+            PCHObject(MatchingFor("GMSJ01"), "Enemy/BossHanachanSound.cpp"),
             PCHObject(NonMatching, "Enemy/rocket.cpp"),
             PCHObject(NonMatching, "Enemy/Kazekun.cpp"),
             PCHObject(NonMatching, "Enemy/bossManta.cpp"),

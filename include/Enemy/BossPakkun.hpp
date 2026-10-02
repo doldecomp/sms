@@ -192,7 +192,7 @@ public:
 	/* 0x1A0 */ JGeometry::TVec3<f32> unk1A0;
 	/* 0x1AC */ JGeometry::TVec3<f32> unk1AC;
 	/* 0x1B8 */ s32 unk1B8;
-	/* 0x1BC */ u8 unk1BC;
+	/* 0x1BC */ s8 unk1BC;
 	/* 0x1C0 */ s32 unk1C0;
 	/* 0x1C4 */ s8 unk1C4;
 	/* 0x1C8 */ f32 unk1C8;

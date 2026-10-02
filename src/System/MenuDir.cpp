@@ -83,7 +83,7 @@ int TMenuDirector::rsetup()
 	unk3C = new J2DSetScreen("title.blo", arc);
 
 	if (!unk3C)
-		return 0;
+		return 1;
 
 	group2d->getChildren().push_back(new TMenuBase(unk3C));
 

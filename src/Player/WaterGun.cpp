@@ -566,7 +566,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 				SMSRumbleMgr->start(20, (int)mFludd->mMario->unk564,
 				                    (f32*)nullptr);
 		}
-		if (unk384 && unk385 == TNozzleTrigger::INACTIVE
+		if (unk384 != true && unk385 == TNozzleTrigger::INACTIVE
 		    && controllerWork.mAnalogR > 0.0f) {
 			SMSGetMSound()->startSoundActor(
 			    MSD_SE_SY_NEWP_AIR_TAME, mFludd->mEmitPos[0], 0, nullptr, 0, 4);
@@ -1483,8 +1483,8 @@ void TWaterGun::movement()
 		unk1CC4 = 0;
 	}
 
-	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mChangeSpeed.get();
-	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mChangeSpeed.get();
+	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mHoverSmooth.get();
+	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mHoverSmooth.get();
 
 	rotateProp(getCurrentNozzle()->unk378);
 
@@ -1494,8 +1494,8 @@ void TWaterGun::movement()
 		unk1CD2 += mNozzleList[mCurrentNozzle]->unk378
 		           * mWatergunParams.mNozzleAngleYSpeed.get();
 		unk1CD2 *= mWatergunParams.mNozzleAngleYBrake.get();
-		if (mWatergunParams.mHoverRotMax.get() < unk1CD2) {
-			unk1CD2 = mWatergunParams.mHoverRotMax.get();
+		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
+			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
 		unk1CD0 = unk1CD0 + unk1CD2;
 	} else {

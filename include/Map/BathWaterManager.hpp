@@ -29,27 +29,27 @@ public:
 
 	JGeometry::TVec3<f32> getPos(int i, int j, f32 h) const
 	{
+		f32 angle = (f32)i * (JGeometry::TUtil<f32>::PI() / 10.0f);
 		f32 t     = (f32)i / (f32)j;
 		f32 amp   = t * (unk3C - h);
-		f32 angle = (f32)i * 0.31415927f;
 
 		JGeometry::TVec3<f32> result;
 		result = mPos;
 
 		f32 s = amp * sinf(angle);
-		result.x += unk18.at(0, 0) * s;
-		result.y += unk18.at(0, 1) * s;
-		result.z += unk18.at(0, 2) * s;
+		result.x += unk18.mMtx[0][0] * s;
+		result.y += unk18.mMtx[0][1] * s;
+		result.z += unk18.mMtx[0][2] * s;
 
 		f32 c = amp * cosf(angle);
-		result.x += unk18.at(2, 0) * c;
-		result.y += unk18.at(2, 1) * c;
-		result.z += unk18.at(2, 2) * c;
+		result.x += unk18.mMtx[2][0] * c;
+		result.y += unk18.mMtx[2][1] * c;
+		result.z += unk18.mMtx[2][2] * c;
 
 		f32 yScale = (1.0f - t) * -(unk44 - h);
-		result.x += unk18.at(1, 0) * yScale;
-		result.y += unk18.at(1, 1) * yScale;
-		result.z += unk18.at(1, 2) * yScale;
+		result.x += unk18.mMtx[1][0] * yScale;
+		result.y += unk18.mMtx[1][1] * yScale;
+		result.z += unk18.mMtx[1][2] * yScale;
 
 		return result;
 	}

@@ -91,10 +91,7 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 		SMSGetMSound()->startSoundSet(MSD_SE_BS_MANTA_ATTACK, &self->mPosition,
 		                              0, 0.0f, 0, 0, 4);
 
-	JGeometry::TVec3<f32> toTarget;
-	toTarget.sub(self->mPosition, self->unk158);
-
-	if (toTarget.length() < 500.0f || time % 150 == 0) {
+	if (self->mPosition.distance(self->unk158) < 500.0f || time % 150 == 0) {
 		JGeometry::TVec3<f32> pt
 		    = graph->indexToPoint((int)(MsRandF() * graph->getNodeNum()));
 
@@ -487,7 +484,7 @@ void TBossManta::moveObject()
 
 	for (int i = 0; i < mColCount; ++i)
 		if (mCollisions[i]->isActorType(0x80000001))
-			AttackMario(mCollisions[i]);
+			AttackMario(this);
 }
 
 BOOL TBossManta::isSpawnState()
@@ -692,7 +689,7 @@ bool TBossManta::isDamageable()
 
 bool TBossManta::isPolluting()
 {
-	const u8 pollute[6] = { 1, 1, 1, 1, 1, 1 };
+	const bool pollute[6] = { true, true, true, true, true, true };
 	return pollute[mGeneration];
 }
 
@@ -713,17 +710,18 @@ f32 TBossManta::getPolluteRadius()
 
 void TBossManta::updateAttractor()
 {
-	JGeometry::TVec3<f32> local_108 = mPosition;
-	local_108 -= unk158;
+	JGeometry::TVec3<f32> local_108 = unk158;
+	local_108 -= mPosition;
 	local_108.y = 0.0f;
 	local_108.normalize();
 	local_108 *= getSaveParams()->mSLAttractorPower.get();
 
 	JGeometry::TVec3<f32> facing = unk170;
-	facing *= getSaveParams()->mSLPusherPower.get();
+	facing *= getSaveParams()->mSLEscapeLookPoint.get();
 
 	JGeometry::TVec3<f32> selfPos = mPosition;
 	selfPos += facing;
+	selfPos.y = 0.0f;
 
 	for (int i = 0; i < getManager()->getActiveObjNum(); ++i) {
 		TBossManta* other = (TBossManta*)getManager()->getObj(i);
@@ -733,22 +731,20 @@ void TBossManta::updateAttractor()
 			continue;
 
 		JGeometry::TVec3<f32> otherFacing = other->unk170;
-		otherFacing *= getSaveParams()->mSLPusherPower.get();
+		otherFacing *= getSaveParams()->mSLEscapeLookedPoint.get();
 
-		JGeometry::TVec3<f32> otherPos = mPosition;
+		JGeometry::TVec3<f32> otherPos = other->mPosition;
 		otherPos += otherFacing;
 
-		JGeometry::TVec3<f32> delta;
-		delta.sub(selfPos, otherPos);
+		JGeometry::TVec3<f32> delta = selfPos;
+		delta -= otherPos;
 		delta.y = 0.0f;
 
 		if (0.1f < delta.length()
 		    && delta.length() < getSaveParams()->mSLEscapeRegion.get()) {
-			JGeometry::TVec3<f32> thing;
-			thing.set(delta);
-			thing.normalize();
-			thing *= getSaveParams()->mSLPusherPower.get() / thing.length();
-			local_108 += thing;
+			delta.normalize();
+			delta *= getSaveParams()->mSLPusherPower.get() / delta.length();
+			local_108 += delta;
 		}
 	}
 
@@ -986,7 +982,7 @@ void TBossMantaAdditionalCollision::perform(u32 cue,
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
-				AttackMario(mCollisions[i]);
+				AttackMario(this);
 	}
 }
 
@@ -1251,11 +1247,11 @@ void TBossMantaManager::setupEfbAlpha(JDrama::TGraphics* graphics)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-	GXPosition3f32(0.0f, (f32)SMSGetGameRenderHeight(), -1.0f);
+	GXPosition3f32(0.0f, (f32)SMSGetGameRenderHeight(), -10.0f);
 	GXPosition3f32((f32)SMSGetGameRenderWidth(), (f32)SMSGetGameRenderHeight(),
-	               -1.0f);
-	GXPosition3f32((f32)SMSGetGameRenderWidth(), 0.0f, -1.0f);
-	GXPosition3f32(0.0f, 0.0f, -1.0f);
+	               -10.0f);
+	GXPosition3f32((f32)SMSGetGameRenderWidth(), 0.0f, -10.0f);
+	GXPosition3f32(0.0f, 0.0f, -10.0f);
 	GXEnd();
 
 	GXSetNumChans(1);
@@ -1282,7 +1278,7 @@ void TBossMantaManager::createEnemies(int num)
 		num = getCapacity() - getObjNum();
 
 	if (unk38 != nullptr) {
-		u8 limit = unk38->mSLActiveEnemyNum.get();
+		u8 limit = unk38->mSLInstanceNum.get();
 		if (num + getObjNum() > limit)
 			num = limit - getObjNum();
 	}

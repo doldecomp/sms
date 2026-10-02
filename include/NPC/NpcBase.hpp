@@ -138,7 +138,7 @@ public:
 	void setDummyConnectActor(const JDrama::TActor*);
 	void setBalloonMessage(u32, s32);
 	const GXColor* getPtrInitPollutionColor() const;
-	void isNowMotionBlend() const;
+	bool isNowMotionBlend() const;
 	void offStopMotionBlend();
 	void onStopMotionBlend();
 	void npcWaitIn();

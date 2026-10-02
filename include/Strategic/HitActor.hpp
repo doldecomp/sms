@@ -47,6 +47,7 @@ enum THitFlagBits {
 	// Maybe these entire flags should be renamed to "hit filter"?
 	HIT_FLAG_UNK8000000  = 0x8000000,
 	HIT_FLAG_UNK10000000 = 0x10000000,
+	HIT_FLAG_UNK20000000 = 0x20000000,
 	HIT_FLAG_UNK40000000 = 0x40000000,
 };
 

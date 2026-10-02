@@ -24,7 +24,7 @@ public:
 	void isStartWire(const JGeometry::TVec3<f32>&, f32) const;
 	bool isEndWire(const JGeometry::TVec3<f32>&, f32) const;
 	void getStartRangePos(f32);
-	void getEndRangePos(f32);
+	static f32 getEndRangePos(f32);
 
 private:
 	/* 0x04 */ s32 mWireNumber;

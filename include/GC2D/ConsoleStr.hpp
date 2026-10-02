@@ -8,6 +8,7 @@ class J2DSetScreen;
 class TExPane;
 class J2DTextBox;
 class TBoundPane;
+class JPABaseEmitter;
 
 class TConsoleStr : public JDrama::TViewObj {
 public:
@@ -37,27 +38,36 @@ public:
 	static JUTPoint cShineGetRight3;
 	static JUTPoint cShineGetLeft3;
 
+	enum {
+		STATE_UNK0 = 0x0,
+		STATE_UNK1 = 0x1,
+		STATE_UNK2 = 0x2,
+		STATE_UNK3 = 0x3,
+		STATE_UNK4 = 0x4,
+		STATE_UNK5 = 0x5,
+		STATE_UNK6 = 0x6,
+		STATE_UNK7 = 0x7,
+		STATE_UNK8 = 0x8,
+	};
+
 public:
 	/* 0x10 */ J2DSetScreen* unk10;
 	/* 0x14 */ J2DSetScreen* unk14;
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ int unk1C;
-	/* 0x20 */ u32 unk20;
+	/* 0x20 */ s32 unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ TBoundPane* unk28[3];
-	/* 0x34 */ JUTPoint unk34[66];
+	/* 0x34 */ JUTPoint unk34[3][22];
 	/* 0x244 */ TBoundPane* unk244[9];
 	/* 0x268 */ TBoundPane* unk268[5];
 	/* 0x27C */ TExPane* unk27C[5];
 	/* 0x290 */ TExPane* unk290[2];
-	/* 0x298 */ TExPane* unk298;
-	/* 0x29C */ TExPane* unk29C;
+	/* 0x298 */ TExPane* unk298[2];
 	/* 0x2A0 */ J2DTextBox* unk2A0[2];
 	/* 0x2A8 */ u8 unk2A8;
 	/* 0x2A9 */ u8 unk2A9;
-	/* 0x2AC */ void* unk2AC;
-	/* 0x2B0 */ void* unk2B0;
-	/* 0x2B4 */ void* unk2B4;
+	/* 0x2AC */ JPABaseEmitter* unk2AC[3];
 	/* 0x2B8 */ int unk2B8;
 	/* 0x2BC */ int unk2BC;
 };

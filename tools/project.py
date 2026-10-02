@@ -1964,6 +1964,7 @@ def generate_compile_commands(
                 "--target=powerpc-eabi",
                 "-fdeclspec",
                 "-Dasm=",
+                "-D__builtin_align=__alignof",
                 "-D__cntlzw=__builtin_clzl",
                 *cflags,
                 "-c",

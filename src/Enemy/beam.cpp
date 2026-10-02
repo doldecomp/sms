@@ -103,16 +103,17 @@ void TConeBeam::calcVertices(int count)
 			JGeometry::TVec3<f32> local_11c;
 			local_11c.zero();
 
-			local_11c += local_140 * s;
-			local_11c += local_134 * c;
+			local_11c += local_140 * c;
+			local_11c += local_134 * s;
 
 			local_11c += unk0C;
 
 			mVtx[i] = local_11c;
 		}
 	} else {
-		JGeometry::TPartition3<f32> partition(mBGCheckData->getNormal(),
-		                                      mBGCheckData->getPlaneDistance());
+		JGeometry::TPartition3<f32> partition;
+		partition.mDist = mBGCheckData->getPlaneDistance();
+		partition.mNormal.set(mBGCheckData->getNormal());
 		f32 local_128Len = PSVECMag(&local_128);
 		f32 angle        = matan(local_128Len, mScale)
 		            * (360.0f / 65536.0f); // this is SHORT2DEGANGLE constant
@@ -200,6 +201,7 @@ void TBeamManager::drawAllBeam()
 	for (int i = 0; i < mBeamCount; i++) {
 		mBeams[i].drawConeBeam(mColor);
 	}
+	mBeamCount = 0;
 }
 
 void TBeamManager::requestCone(const JGeometry::TVec3<f32>& pos,
@@ -235,6 +237,5 @@ void TBeamManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_DRAW) {
 		setupMaterial();
 		drawAllBeam();
-		mBeamCount = 0;
 	}
 }

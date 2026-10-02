@@ -11,10 +11,10 @@ public:
 	TCameraBck();
 	bool isFileExist(const char*) const;
 	void getDemoFileName() const;
-	void isNowDemo() const;
+	bool isNowDemo() const;
 	void startDemo(const char*, const JGeometry::TVec3<f32>*);
 	int getTotalDemoFrames() const;
-	void isDemoFinished() const;
+	bool isDemoFinished() const;
 	void endDemo();
 	void restartDemo();
 	bool updateDemo(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*,

@@ -1297,7 +1297,7 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		break;
 
 	case 2: {
-		u8 oldSelect = unk2E9;
+		s8 oldSelect = unk2E9;
 		u32 input    = unk270->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
@@ -1747,9 +1747,9 @@ void TCardSave::execMovement_()
 		} else if (bm.unk18 == 0
 		           || bm.unk8
 		                  == TFlagManager::getInstance()->getLastSaveTime()) {
-			unk310 = PROGRESS_UNK2C;
-		} else {
 			unk310 = PROGRESS_UNK16;
+		} else {
+			unk310 = PROGRESS_UNK2C;
 		}
 		break;
 	}

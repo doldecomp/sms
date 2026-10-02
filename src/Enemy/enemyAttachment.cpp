@@ -145,7 +145,7 @@ void TEnemyAttachment::sendMessage()
 		}
 
 		if (mCollisions[i] != unk160) {
-			((TLiveActor*)mCollisions[i])->kill();
+			kill();
 		}
 	}
 }
@@ -220,10 +220,7 @@ void TEnemyPolluteModelManager::generatePolluteModel(
 {
 	TEnemyPolluteModel* model = unk18[unk10];
 
-	const TBGCheckData* check;
-	gpMap->checkGround(param_1, &check);
-	if (!check->checkFlag(BG_CHECK_FLAG_ILLEGAL) && !check->isWaterSurface())
-		model->generate(param_1, param_2);
+	model->generate(param_1, param_2);
 
 	++unk10;
 	if (unk10 >= unk14)
@@ -262,6 +259,11 @@ void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
                                   JGeometry::TVec3<f32>& param_2)
 {
+	const TBGCheckData* check;
+	gpMap->checkGround(param_1, &check);
+	if (check->isIllegalData() || check->isWaterSurface())
+		return;
+
 	unk44 = param_1;
 	unk50 = param_2;
 

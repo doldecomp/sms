@@ -111,7 +111,12 @@ bool TMario::isRunningInWater()
 	return false;
 }
 
-void TMario::getRunningInWaterBrake() { }
+f32 TMario::getRunningInWaterBrake()
+{
+	return 1.0f
+	       - (mFloorPosition.z - mPosition.y) / mRunParams.mSwimDepth.get()
+	             * (1.0f - mRunParams.mInWaterBrake.get());
+}
 
 BOOL TMario::doRunningAnimation()
 {
@@ -120,7 +125,7 @@ BOOL TMario::doRunningAnimation()
 	f32 rate;
 	f32 sp;
 
-	sp = mIntendedMag > mForwardVel ? mForwardVel : mIntendedMag;
+	sp = mIntendedMag > mForwardVel ? mIntendedMag : mForwardVel;
 
 	if (sp < 4.0f)
 		sp = 4.0f;
@@ -139,10 +144,7 @@ BOOL TMario::doRunningAnimation()
 				rate = sp * mRunParams.mRunAnmSpeedMult.get()
 				       + mRunParams.mRunAnmSpeedBase.get();
 				if (isRunningInWater()) {
-					f32 tmp = (mFloorPosition.z - mPosition.y)
-					          / mRunParams.mSwimDepth.get();
-					rate *= (1.0f
-					         - tmp * (1.0f - mRunParams.mInWaterBrake.get()))
+					rate *= getRunningInWaterBrake()
 					        * mRunParams.mInWaterAnmBrake.get();
 				}
 				setAnimation(ANIM_RUN2, rate);
@@ -470,8 +472,8 @@ void TMario::doStopping() { }
 void TMario::doRunning()
 {
 	f32 sp = mIntendedMag < mRunParams.mMaxSpeed.get()
-	             ? mRunParams.mMaxSpeed.get()
-	             : mIntendedMag;
+	             ? mIntendedMag
+	             : mRunParams.mMaxSpeed.get();
 
 	if (onYoshi())
 		sp *= mYoshiParams.mRunYoshiMult.get();
@@ -508,13 +510,10 @@ void TMario::doRunning()
 		rotSp = (s16)((f32)rotSp * mYoshiParams.mRotYoshiMult.get());
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		rotSp = mDeParams.mRunningRotSpMin.get();
+		rotSp = mRunParams.mDashRotSp.get();
 
 	if (isRunningInWater()) {
-		mForwardVel *= -(
-		    (((mFloorPosition.z - mPosition.y) / mRunParams.mSwimDepth.get())
-		     * (1.0f - mRunParams.mInWaterBrake.get()))
-		    - 1.0f);
+		mForwardVel *= getRunningInWaterBrake();
 	}
 
 	mFaceAngle.y
@@ -794,7 +793,7 @@ BOOL TMario::rotating()
 	if (mStatus == MARIO_STATUS_ROTATE_L)
 		mModelFaceAngle = mStatusTimer * 4096;
 	else
-		mModelFaceAngle = -(mStatusTimer * 4096);
+		mModelFaceAngle = mStatusTimer * -4096;
 
 	return 0;
 }
@@ -959,7 +958,7 @@ BOOL TMario::surfing()
 		s16 maxAngle;
 		f32 minSpeed;
 
-		if (mWallPlane->isWaterSurface()) {
+		if (mGroundPlane->isWaterSurface()) {
 			maxAngle = getSurfingParamsWater()->mClashAngle.get();
 			minSpeed = getSurfingParamsWater()->mClashSpeed.get();
 		} else {
@@ -969,7 +968,7 @@ BOOL TMario::surfing()
 
 		if ((wallToFace < -maxAngle || maxAngle < wallToFace)
 		    && mForwardVel > minSpeed) {
-			decHP(mDeParams.mHpMax.get());
+			decHP(mDeParams.mHPMax.get());
 			BOOL ret = changePlayerStatus(MARIO_STATUS_JUMP_BACK_DOWN, 0, true);
 			mForwardVel = 0.8f * -mForwardVel;
 			mVel.y      = 50.0f;
@@ -1256,7 +1255,7 @@ BOOL TMario::oilRun()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeRun.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
 
 	{
 		f32 rotSp = mDirtyParams.mSlipRotate.get();
@@ -1326,7 +1325,7 @@ BOOL TMario::oilSlip()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeSlip.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
 	                                nullptr, 0, 4);
 
@@ -1361,8 +1360,8 @@ BOOL TMario::oilSlope()
 		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-	                   mDirtyParams.mPolSizeSlip.get());
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+	                     mDirtyParams.mPolSizeSlip.get());
 	return slipBackCommon(MARIO_STATUS_CATCH_LOST, MARIO_STATUS_LANDING, 0x89);
 }
 

@@ -573,8 +573,8 @@ void THideObjPictureTwin::afterFinishedAnim()
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);
 
-		SMSGetMarDirector()->fireStartDemoCamera(unk178, &mPosition, -1, 0.0f,
-		                                         true, nullptr, 0, nullptr, 0);
+		SMSGetMarDirector()->fireStartDemoCamera(
+		    unk178, &obj->mPosition, -1, 0.0f, true, nullptr, 0, nullptr, 0);
 	}
 	mState = 3;
 }
@@ -668,7 +668,7 @@ void TBreakHideObj::initMapObj()
 	}
 }
 
-void TWoodBox::fabricatedGroundKillCheck(f32 dX, f32 dY)
+void TWoodBox::killNearWoodBox(f32 dX, f32 dY) const
 {
 	const TBGCheckData* groundPlane;
 	f32 resY = gpMap->checkGround(dX + gpMarioPos->x, gpMarioPos->y + 1000.0f,
@@ -693,10 +693,10 @@ void TWoodBox::kill()
 	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
 	                                nullptr, 0, 4);
 
-	fabricatedGroundKillCheck(50.0f, 50.0f);
-	fabricatedGroundKillCheck(50.0f, -50.0f);
-	fabricatedGroundKillCheck(-50.0f, 50.0f);
-	fabricatedGroundKillCheck(-50.0f, -50.0f);
+	killNearWoodBox(-50.0f, -50.0f);
+	killNearWoodBox(50.0f, -50.0f);
+	killNearWoodBox(-50.0f, 50.0f);
+	killNearWoodBox(50.0f, 50.0f);
 }
 
 void TWoodBox::loadAfter()

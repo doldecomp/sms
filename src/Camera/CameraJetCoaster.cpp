@@ -110,7 +110,7 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		if (startedLButton)
 			setUpToLButtonCamera_(CAMERA_MODE_JET_COASTER);
 
-		f32 stickY = -unk120->mCompSPos[5];
+		f32 stickY = -unk120->mCompSPos[1];
 		if (mTargetFreezeFrames == 0)
 			getNozzleTopPos_(&mCurrentTarget.mTarget);
 
@@ -158,38 +158,16 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		rotation.mult33(offsetUpTmp, offsetUp);
 		offsetUp *= mCurrentParams->mOffsetLookatXZ;
 
-		mCurrentTarget.unk18 += offsetUpTmp;
-		newTarget += offsetUpTmp;
+		mCurrentTarget.unk18 += offsetUp;
+		newTarget += offsetUp;
 
-		unk254 = CLBDegToShortAngle(MsGetRotFromYaxisZ(newTarget));
+		unk254 = CLBDegToShortAngle(MsGetRotFromYaxisZ(toroccoAxisY));
 		mFovy  = mCurrentParams->mFovy;
 	} else {
 		if (startedLButton)
 			setUpFromLButtonCamera_();
 
-		// Update jetcoaster manual offsets and chase towards limits
-		{
-			TCameraJetCoaster* jc = unk2B8;
-
-			jc->unk8 -= unk120->mCompSPos[7]
-			            * (f32)jc->unk0->mSLOffsetAngleXManualSpeed.get();
-
-			jc->unkA += unk120->mCompSPos[6]
-			            * (f32)jc->unk0->mSLOffsetAngleYManualSpeed.get();
-
-			jc->unk8
-			    = MsClamp<s16>(jc->unk8, -jc->unk0->mSLOffsetAngleXLimit.get(),
-			                   jc->unk0->mSLOffsetAngleXLimit.get());
-			jc->unkA
-			    = MsClamp<s16>(jc->unkA, -jc->unk0->mSLOffsetAngleYLimit.get(),
-			                   jc->unk0->mSLOffsetAngleYLimit.get());
-
-			CLBChaseAngleDecrease(&jc->unk4, jc->unk8,
-			                      jc->unk0->mSLOffsetAngleXChase.get());
-			CLBChaseAngleDecrease(&jc->unk6, jc->unkA,
-			                      jc->unk0->mSLOffsetAngleYChase.get());
-		}
-		// TODO: probably an inline ends here because unk2B8 is re-loaded?
+		unk2B8->calcNowOffsetAngle(unk120->mCompSPos[7], unk120->mCompSPos[6]);
 
 		mCurrentTarget.unk18   = unk2B8->unk10;
 		mCurrentTarget.mTarget = unk2B8->unk1C;
@@ -253,4 +231,16 @@ TCameraJetCoaster::TCameraJetCoaster()
 	unk0 = new TCamSaveJetCoaster;
 }
 
-void TCameraJetCoaster::calcNowOffsetAngle(f32, f32) { }
+void TCameraJetCoaster::calcNowOffsetAngle(f32 stick_y, f32 stick_x)
+{
+	unk8 -= stick_y * unk0->mSLOffsetAngleXManualSpeed.get();
+	unkA += stick_x * unk0->mSLOffsetAngleYManualSpeed.get();
+
+	unk8 = MsClamp<s16>(unk8, -unk0->mSLOffsetAngleXLimit.get(),
+	                    unk0->mSLOffsetAngleXLimit.get());
+	unkA = MsClamp<s16>(unkA, -unk0->mSLOffsetAngleYLimit.get(),
+	                    unk0->mSLOffsetAngleYLimit.get());
+
+	CLBChaseAngleDecrease(&unk4, unk8, unk0->mSLOffsetAngleXChase.get());
+	CLBChaseAngleDecrease(&unk6, unkA, unk0->mSLOffsetAngleYChase.get());
+}

@@ -581,7 +581,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 		return;
 
 	if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE)
-		execNoticeOnOffProc_(NOTICE_MODE_UNK0);
+		execNoticeOnOffProc_(NOTICE_MODE_UNK1);
 
 	int prevMode = mMode;
 

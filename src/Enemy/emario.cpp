@@ -145,6 +145,35 @@ void TEMario::init(TLiveManager* manager)
 	onLiveFlag(LIVE_FLAG_UNK10);
 }
 
+void TEMario::checkCollision()
+{
+	for (s32 i = 0; i < mColCount; ++i) {
+		switch (mCollisions[i]->mActorType) {
+		case 0x80000001: {
+			if (JGeometry::TVec3<f32>(mPosition - mCollisions[i]->getPosition())
+			        .length()
+			    < mEnemyMario->mAttackRange) {
+				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
+			}
+		} break;
+
+		case 0x400000bc: {
+			if (!mEnemyMario->checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
+				if (JGeometry::TVec3<f32>(mCollisions[i]->getPosition()
+				                          - mPosition)
+				        .length()
+				    < (mCollisions[i]->getAttackRadius()
+				       + mEnemyMario->getDamageRadius())) {
+					mEnemyMario->changePlayerStatus(MARIO_STATUS_SURF, 0,
+					                                false);
+					mEnemyMario->emitGetEffect();
+				}
+			}
+		} break;
+		}
+	}
+}
+
 BOOL TEMario::receiveMessage(THitActor* sender, u32 message)
 {
 	TSpineEnemy::receiveMessage(sender, message);
@@ -165,6 +194,8 @@ void TEMario::kill()
 	if (SMS_isMultiPlayerMap())
 		gpCamera->removeMultiPlayer(&mPosition);
 }
+
+void TEMario::execKill() { }
 
 bool TEMario::isGoal()
 {
@@ -195,35 +226,8 @@ void TEMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 	}
 
-	if (!(cue & CUE_MOVE)) {
-		return;
-	}
-
-	if (mEnemyMario->canControl() == 0) {
-		return;
-	}
-
-	for (s32 i = 0; i < mColCount; ++i) {
-		switch (mCollisions[i]->mActorType) {
-		case 0x80000001: {
-			if (mPosition.distance(mCollisions[i]->getPosition())
-			    < mEnemyMario->mAttackRange) {
-				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
-			}
-		} break;
-
-		case 0x400000bc: {
-			if (!mEnemyMario->checkStatusType(0x10000)) {
-
-				if (mCollisions[i]->getPosition().distance(mPosition)
-				    < (mCollisions[i]->getAttackRadius()
-				       + mEnemyMario->getDamageRadius())) {
-					mEnemyMario->changePlayerStatus(0x810446, 0, false);
-					mEnemyMario->emitGetEffect();
-				}
-			}
-		} break;
-		}
+	if ((cue & CUE_MOVE) && mEnemyMario->canControl()) {
+		checkCollision();
 	}
 
 	mEnemyMario->perform(cue, graphics);

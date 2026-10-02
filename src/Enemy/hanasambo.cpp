@@ -1140,7 +1140,7 @@ void TSamboHead::behaveToWater(THitActor* param_1)
 	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
 
-	JGeometry::TVec3<f32> velocity = mLinearVelocity;
+	JGeometry::TVec3<f32> velocity = mVelocity;
 	velocity.y                     = 0.0f;
 
 	JGeometry::TVec3<f32> jump(mPosition.x - gpMarioPos->x, 0.0f,
@@ -1376,7 +1376,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	} else {
-		JGeometry::TVec3<f32> velocity = self->mLinearVelocity;
+		JGeometry::TVec3<f32> velocity = self->mVelocity;
 		if (velocity.y < 0.0f && self->isBckAnm(8)) {
 			self->setBckAnm(7);
 			self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
@@ -1385,7 +1385,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 
 	if (self->mPosition.y > 30.0f + self->mGroundHeight) {
 		f32 limit                      = self->unk194->mSLJumpAngY.get();
-		JGeometry::TVec3<f32> velocity = self->mLinearVelocity;
+		JGeometry::TVec3<f32> velocity = self->mVelocity;
 		self->unk1AC = MsClamp(MsGetRotFromZaxis(velocity).x, -limit, limit);
 	} else {
 		self->unk1AC *= 0.8f;
@@ -1434,7 +1434,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
-		self->unk1A0 = self->mLinearVelocity;
+		self->unk1A0 = self->mVelocity;
 	}
 
 	if (self->isHitWallInBound()) {
