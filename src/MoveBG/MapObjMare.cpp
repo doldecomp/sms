@@ -932,16 +932,8 @@ void TMareFall::load(JSUMemoryInputStream& param_1)
 {
 	TMapObjBase::load(param_1);
 
-	if (!gParticleFlagLoaded[MAPOBJ_MAREFALLSPLASH]) {
-		gpResourceManager->load("/scene/mapObj/mareFallSplash.jpa",
-		                        MAPOBJ_MAREFALLSPLASH);
-		gParticleFlagLoaded[MAPOBJ_MAREFALLSPLASH] = true;
-	}
-	if (!gParticleFlagLoaded[MAPOBJ_MAREFALLSMOKE]) {
-		gpResourceManager->load("/scene/mapObj/mareFallSmoke.jpa",
-		                        MAPOBJ_MAREFALLSMOKE);
-		gParticleFlagLoaded[MAPOBJ_MAREFALLSMOKE] = true;
-	}
+	SMS_LoadParticle("/scene/mapObj/mareFallSplash.jpa", MAPOBJ_MAREFALLSPLASH);
+	SMS_LoadParticle("/scene/mapObj/mareFallSmoke.jpa", MAPOBJ_MAREFALLSMOKE);
 }
 
 void TMareCork::loadAfter()
@@ -950,21 +942,12 @@ void TMareCork::loadAfter()
 	if (unk138->receiveMessage(this, HIT_MESSAGE_TAKE))
 		mHeldObject = unk138;
 
-	if (!gParticleFlagLoaded[MAP_MAP_MS_MARE_GUNWAT_A]) {
-		gpResourceManager->load("/scene/map/map/ms_mare_gunwat_a.jpa",
-		                        MAP_MAP_MS_MARE_GUNWAT_A);
-		gParticleFlagLoaded[MAP_MAP_MS_MARE_GUNWAT_A] = true;
-	}
-	if (!gParticleFlagLoaded[MAP_MAP_MS_MARE_GUNWAT_B]) {
-		gpResourceManager->load("/scene/map/map/ms_mare_gunwat_b.jpa",
-		                        MAP_MAP_MS_MARE_GUNWAT_B);
-		gParticleFlagLoaded[MAP_MAP_MS_MARE_GUNWAT_B] = true;
-	}
-	if (!gParticleFlagLoaded[MAP_MAP_MS_MARE_GUNWAT_C]) {
-		gpResourceManager->load("/scene/map/map/ms_mare_gunwat_c.jpa",
-		                        MAP_MAP_MS_MARE_GUNWAT_C);
-		gParticleFlagLoaded[MAP_MAP_MS_MARE_GUNWAT_C] = true;
-	}
+	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_a.jpa",
+	                 MAP_MAP_MS_MARE_GUNWAT_A);
+	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_b.jpa",
+	                 MAP_MAP_MS_MARE_GUNWAT_B);
+	SMS_LoadParticle("/scene/map/map/ms_mare_gunwat_c.jpa",
+	                 MAP_MAP_MS_MARE_GUNWAT_C);
 
 	TMapObjBase::loadAfter();
 	unk13C.set(0.0f, 0.0f, 0.0f);
