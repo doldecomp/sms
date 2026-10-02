@@ -87,7 +87,8 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		// TODO: a mystery is happening here with the args, but it's definitely
 		// this inline (maybe one more inlining layer?)
 		JGeometry::TVec3<f32> near9grid[9];
-		CLBCalcNearNinePos(near9grid, nullptr, gpCamera->unk124,
+		S16Vec euler;
+		CLBCalcNearNinePos(near9grid, &euler, gpCamera->unk124,
 		                   gpCamera->mTarget, gpCamera->getFinalAngleZ(),
 		                   gpCamera->getNear(), gpCamera->getFovy(),
 		                   gpCamera->getAspect());
