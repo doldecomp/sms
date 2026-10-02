@@ -205,7 +205,7 @@ void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 == CUE_CALC_ANIM) {
 		if (unk1C != nullptr && unk20 != nullptr) {
 			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
-			unk1C->animeLoop(&unk10->mPosition, ctrl->getFrame(),
+			unk1C->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(),
 			                 ctrl->getRate(), 0, 4);
 		}
 

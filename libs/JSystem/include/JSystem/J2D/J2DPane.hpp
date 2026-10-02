@@ -34,6 +34,9 @@ enum J2DBasePosition {
 	J2DBasePosition_3,
 	J2DBasePosition_4,
 	J2DBasePosition_5,
+	J2DBasePosition_6,
+	J2DBasePosition_7,
+	J2DBasePosition_8,
 };
 
 class J2DPane {
