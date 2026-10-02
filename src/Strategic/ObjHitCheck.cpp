@@ -218,7 +218,7 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 
 		if (checkDistance((*it)->mPosition, (*it)->getAttackRadius(),
 		                  (*it)->getAttackHeight(), mario->mPosition,
-		                  mario->getAttackRadius(), mario->getAttackHeight())) {
+		                  mario->getDamageRadius(), mario->getDamageHeight())) {
 			suffererIsInAttackArea(*it, mario);
 		}
 	}
