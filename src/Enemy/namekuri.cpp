@@ -372,7 +372,7 @@ void TNameKuri::calcRootMatrix()
 		JGeometry::TVec3<f32> local_88(MsSin(mRotation.y), 0.0f,
 		                               MsCos(mRotation.y));
 
-		JGeometry::TVec3<f32> normal = unk138->getNormal();
+		JGeometry::TVec3<f32> normal = mGroundPlane->getNormal();
 
 		JGeometry::TVec3<f32> local_a0;
 		local_a0.cross(normal, local_88);
