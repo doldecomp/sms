@@ -5,7 +5,7 @@
 
 class TMapObjMessenger : public THitActor {
 public:
-	TMapObjMessenger(const char*);
+	TMapObjMessenger(const char* name = "地形オブジェメッセンジャー");
 
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
