@@ -89,7 +89,7 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		JGeometry::TVec3<f32> near9grid[9];
 		S16Vec euler;
 		CLBCalcNearNinePos(near9grid, &euler, gpCamera->unk124,
-		                   gpCamera->mTarget, gpCamera->getFinalAngleZ(),
+		                   gpCamera->unk148, gpCamera->getFinalAngleZ(),
 		                   gpCamera->getNear(), gpCamera->getFovy(),
 		                   gpCamera->getAspect());
 

@@ -24,9 +24,11 @@ public:
 	// fabricated
 	f32 calcHiddenRatio()
 	{
-		int hiddenCount = 0;
-		for (int i = 0; i < 17; ++i) {
-			if (unkB4[i].x != -1 && unkB4[i].y != -1 && unk180[i] == 0)
+		int hiddenCount                  = 0;
+		const JGeometry::TVec2<s16>* pos = unkB4;
+		const bool* visible              = unk180;
+		for (int i = 0; i < 17; ++i, ++pos, ++visible) {
+			if (pos->x != -1 && pos->y != -1 && *visible == 0)
 				++hiddenCount;
 		}
 		return hiddenCount * (1.0f / 17.0f);
@@ -38,8 +40,9 @@ public:
 	// TODO: incorrect! Maybe a cameralib inline or even TVec3?
 	bool isInBounds(f32 bounds)
 	{
-		return -bounds <= unkF8[0].x && unkF8[0].x <= bounds
-		               && -bounds <= unkF8[0].y && unkF8[0].y <= bounds
+		const JGeometry::TVec2<f32>& pos = unkF8[0];
+		return -bounds <= pos.x && pos.x <= bounds && -bounds <= pos.y
+		               && pos.y <= bounds
 		           ? true
 		           : false;
 	}
