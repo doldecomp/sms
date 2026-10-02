@@ -55,6 +55,10 @@ Next, local variables can expand the stack even if they are always stored in a r
 
 When no obviously correct way to make stack frame size match exists, a trick should be used to correctly match the function's context: a temporary char array of required size to inflate the stack. Such hacks however should be removed or commented out after the function is matching to allow for a possible proper solution in the future.
 
+## Reading frame-size differences
+
+The frame is `8 + locals rounded up to 8 + saved GPRs × 4 rounded up to 8 + saved FPRs × 8`. A 4-byte change in locals can therefore move the frame by 8 or by 0. Each inlined call site keeps its own temporaries, sibling branches don't share them, and a loop body counts once. A frame that is too small usually means the original had more inline expansions or deeper inline chains at the same instructions. It rarely means a missing local.
+
 ## Ifs
 
 Ifs are always compiled to very simple code:
@@ -153,6 +157,18 @@ DSPInterface::flushChannel(channel->unk0);
 Both forms give the same instructions, but the wrapper form reads correctly and it colours the registers correctly in long functions.
 `JAInter::StreamLib::callBack` went from 98.7% to 99.8% on this rewrite alone.
 Keep the pointer local only where the code **reads a field** through it.
+
+## Check out-of-line copies before changing an inline
+
+When MWCC declines to inline something, it emits a weak or local copy into the caller's unit, and `mario.MAP` lists it. That copy is the original body. Diff it before changing the inline. If the ROM calls an inline out of line at some sites and inlines it at others, the difference is at those call sites, not in its body.
+
+## Narrowing casts are a hint
+
+A `clrlwi`/`extsh` before a use rarely means the original had a cast. Look first for a parameter, return, local or member type that narrows the value.
+
+## Signedness and width show in the compare
+
+`cmpwi` vs `cmplwi` and `extsb`/`extsh` vs `clrlwi` give the sign and width of a value. Fix the declared type rather than adding casts.
 
 ## Reference Locals Affect Register Allocation
 
