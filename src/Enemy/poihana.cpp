@@ -25,7 +25,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-const char* poihana_bastable[] = {
+static const char* poihana_bastable[] = {
 	"/scene/poihana/bas/poihana_dash.bas",
 	"/scene/poihana/bas/poihana_death.bas",
 	"/scene/poihana/bas/poihana_getup.bas",
@@ -48,8 +48,8 @@ TPoihanaSaveLoadParams::TPoihanaSaveLoadParams(const char* path)
     , PARAM_INIT(mSLBackThrowVal, 0.5f)
     , PARAM_INIT(mSLSleepFrame, 1000)
     , PARAM_INIT(mSLWakeFrame, 2000)
-    , PARAM_INIT(mSLTrapJumpMinSpY, 10.0f)
     , PARAM_INIT(mSLTrapJumpMaxSpY, 10.0f)
+    , PARAM_INIT(mSLTrapJumpMinSpY, 10.0f)
     , PARAM_INIT(mSLTrapJumpMaxSpXZ, 8.0f)
     , PARAM_INIT(mSLTrapJumpMinSpXZ, 8.0f)
     , PARAM_INIT(mSLTrapJumpGravity, 1.0f)
@@ -356,9 +356,9 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
 			JGeometry::TVec3<f32> vel = mLinearVelocity;
-			mLinearVelocity.x *= -2.0f;
-			mLinearVelocity.y *= 5.0f;
-			mLinearVelocity.z *= -2.0f;
+			vel.x *= -2.0f;
+			vel.y *= 5.0f;
+			vel.z *= -2.0f;
 			mVelocity = vel;
 
 			mPosition.y += 10.0f;
@@ -661,8 +661,8 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 			SMS_SendMessageToMario(self, HIT_MESSAGE_THROWN);
 			f32 backThrowVal = self->unk19C->mSLBackThrowVal.get();
 			Mtx afStack_4c;
-			MsMtxSetRotRPH(afStack_4c, self->mPosition.x, self->mPosition.y,
-			               self->mPosition.z);
+			MsMtxSetRotRPH(afStack_4c, self->mRotation.x, self->mRotation.y,
+			               self->mRotation.z);
 			JGeometry::TVec3<f32> local_58(0.0f, 1.0f, -backThrowVal);
 			MTXMultVec(afStack_4c, &local_58, &local_58);
 			SMS_ThrowMario(local_58, self->unk19C->mSLThrowSpeed.get());
@@ -698,15 +698,10 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				// TODO: rand interval class
-				volatile f32 trapJumpMaxSpY
-				    = self->unk19C->mSLTrapJumpMaxSpY.get();
-				volatile f32 trapJumpMaxSpXZ
-				    = self->unk19C->mSLTrapJumpMaxSpXZ.get();
-				volatile f32 trapJumpMinSpY
-				    = self->unk19C->mSLTrapJumpMinSpY.get();
-				volatile f32 trapJumpMinSpXZ
-				    = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				TMsRange<f32> rangeXZ(self->unk19C->mSLTrapJumpMinSpXZ.get(),
+				                      self->unk19C->mSLTrapJumpMaxSpXZ.get());
+				TMsRange<f32> rangeY(self->unk19C->mSLTrapJumpMinSpY.get(),
+				                     self->unk19C->mSLTrapJumpMaxSpY.get());
 
 				JGeometry::TVec3<f32> local_48;
 				const TLiveActor* groundActor
@@ -715,15 +710,13 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 					local_48 = self->mPosition - groundActor->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
-				if (local_48.x == 0.0f && local_48.y == 0.0f
-				    && local_48.z == 0.0f)
+				if (local_48.x == local_48.y == local_48.z)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				// TODO: rand interval class
-				local_48.x *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
-				local_48.y = MsRandF(trapJumpMinSpY, trapJumpMaxSpY);
-				local_48.z *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				local_48.x *= rangeXZ.rand();
+				local_48.y = rangeY.rand();
+				local_48.z *= rangeXZ.rand();
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;
