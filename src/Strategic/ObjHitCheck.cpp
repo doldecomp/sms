@@ -246,7 +246,7 @@ void TObjHitCheck::checkActorsHit()
 		checkWater();
 
 	if (!(gpStrategy->unk50 & 0x800))
-		checkGroupPlayer(gpStrategy->unk10[3]);
+		checkGroupPlayer(gpStrategy->unk10[5]);
 }
 
 void TObjHitCheck::clearHitNum()
