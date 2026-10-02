@@ -415,7 +415,7 @@ void SMS_MtxLookAt(MtxPtr, const JGeometry::TVec3<f32>&,
 {
 }
 
-void SMS_GetLightPerspectiveForEffectMtx(MtxPtr mtx)
+void SMS_GetLightPerspectiveForEffectMtx(Mtx44 mtx)
 {
 	C_MTXPerspective(mtx, gpCamera->getFovy(), gpCamera->getAspect(),
 	                 gpCamera->getNear(), gpCamera->getFar());
