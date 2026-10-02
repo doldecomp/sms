@@ -7,6 +7,7 @@
 
 class TLiveActor;
 class TBossHanachanPartsBase;
+class TBossHanachanPartsBody;
 class TBossHanachanCommonSaveParams;
 class TBossHanachanChangeSaveParams;
 class TSphereLink;
@@ -14,7 +15,27 @@ class TSphereLink;
 class TBossHanachan : public TSpineEnemy {
 public:
 	TBossHanachan(const char*);
+	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void init(TLiveManager*);
+	virtual void bind();
+	virtual void moveObject();
+	virtual void kill();
+	virtual BOOL hasMapCollision() const;
+
 	static void staticLoadParticle();
+	void removeAllMapCollision();
+	void execDamage();
+	void goToInitialRecoverGraphNode();
+	void execSlip();
+	void execWalk(bool);
+	bool isCanWalk() const;
+	f32 getBodyMaxRotateZ() const;
+	bool checkFallDecideAndSetup();
+	bool isTumbleCompletelyAllBody() const;
+	void execBodyCalcAnim_();
+	void execHeadCalcAnim_();
+	void throwMario_(THitActor*);
+	void setRandomWeakBodyIndex();
 	void changeAnmRateAndFrameUpdate_();
 	void copyFrameFromOldAnmToNewAnm_();
 	void setHeadAndBodyNonstopMotionBlendRatio_(f32);
@@ -30,6 +51,9 @@ public:
 	void setTumbleBckRate_(TBossHanachanPartsBase*);
 	void setHeadAndBodyAnm(EnumBossHanachanAnmKind,
 	                       EnumBossHanachanStopMotionBlendOnOff);
+	void emitCamShake_();
+	void emitOneTimeSandPillar_(TBossHanachanPartsBody*);
+	void emitParticle_();
 
 public:
 	/* 0x150 */ TBossHanachanPartsBase* unk150[8];
