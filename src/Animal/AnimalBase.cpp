@@ -114,7 +114,7 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
-	    .push_back(other);
+	    .push_back(this);
 }
 
 void TAnimalBase::load(JSUMemoryInputStream& stream)
