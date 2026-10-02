@@ -346,13 +346,13 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			canPlayAnimation = false;
 
 		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
-			canPlayAnimation = true;
+			canPlayAnimation = false;
 
 		if (canPlayAnimation) {
 			// I don't think this is correct, but was the closest i could get
 			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
 			                               + animOffset2 * 8];
-			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
+			if (mHolder != nullptr && mHolder->isActorType(0x40000098)) {
 				// Knocked from a wire hang by damage?
 				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
 			} else {
