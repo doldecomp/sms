@@ -155,7 +155,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 		unk1D4[i] = new TExPane(unk34, key);
 
-		((J2DPicture*)unk1D4[i]->getPane())->mBlack = 0x01006667;
+		((J2DPicture*)unk1D4[i]->getPane())->mBlack = 0x00FFFF00;
 
 		unk1D4[i]->setPaneAlpha(20, 0xff, 0);
 	}
