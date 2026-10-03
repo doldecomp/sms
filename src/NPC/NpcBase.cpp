@@ -676,7 +676,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!bVar5) {
-		offLiveFlag(LIVE_FLAG_DONT_TALK);
+		offLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK40000);
 		return;
 	}
 
