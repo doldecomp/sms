@@ -168,7 +168,7 @@ void TBathtubGrip::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (unk260 != 0)
 		return;
 
-	if (cue & 1) {
+	if (cue & CUE_MOVE) {
 		MTXCopy(*getRootJointMtx(), unk25C->getModel()->getBaseTRMtx());
 		if (isCracking()) {
 			if (unk25C->curAnmEndsNext(0, nullptr))
@@ -538,13 +538,13 @@ Mtx* TBathtub::getRootJointMtx() const
 void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TMapObjBase::perform(cue, graphics);
-	if (cue & 1) {
+	if (cue & CUE_MOVE) {
 		MTXCopy(getShineMtx(), unk29C->getModel()->getBaseTRMtx());
 		JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
 		unk29C->getModel()->setBaseScale(scale);
 	}
 
-	if (cue & 1) {
+	if (cue & CUE_MOVE) {
 		int ticks = SMSGetMarDirector()->mMoveTickCount;
 		switch (getNumGripsDead()) {
 		case 0:
@@ -570,11 +570,11 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 		}
 	}
-	if (cue & 2)
+	if (cue & CUE_CALC_ANIM)
 		unk29C->calc();
-	if (cue & 4)
+	if (cue & CUE_CALC_VIEW)
 		unk29C->viewCalc();
-	if (cue & 0x200) {
+	if (cue & CUE_ENTRY) {
 		MtxPtr mtx = unk29C->getModel()->getBaseTRMtx();
 		JGeometry::TVec3<f32> pos;
 		pos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
