@@ -55,6 +55,7 @@ class TMapObjBillboard : public THideObjBase {
 public:
 	TMapObjBillboard(const char* name = "看板")
 	    : THideObjBase(name)
+	    , unk150(nullptr)
 	{
 	}
 
