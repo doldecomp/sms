@@ -247,8 +247,8 @@ public:
 		                 const JGeometry::TVec3<f32>& grav2, int& count,
 		                 JGeometry::TVec3<f32>& accum)
 		{
-			JGeometry::TVec3<f32> m(data.unk18.at(1, 0), data.unk18.at(1, 1),
-			                        data.unk18.at(1, 2));
+			JGeometry::TVec3<f32> m(data.unk18.at(0, 1), data.unk18.at(1, 1),
+			                        data.unk18.at(2, 1));
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
 			f32 outerR = data.unk40 + radius;
@@ -1732,8 +1732,14 @@ void TBathWaterManager::throwMario(f32 param_1)
 	JGeometry::TVec3<f32> diff;
 	diff.sub(SMS_GetMarioPos(), data.mPos);
 
+	JGeometry::TVec3<f32> xDir;
+	JGeometry::TVec3<f32> yDir;
+	JGeometry::TVec3<f32> zDir;
+	data.unk18.getXDir(xDir);
+	data.unk18.getYDir(yDir);
+	data.unk18.getZDir(zDir);
 	JGeometry::TVec3<f32> local;
-	data.unk18.mult33(diff, local);
+	local.set(diff.dot(xDir), diff.dot(yDir), diff.dot(zDir));
 
 	JGeometry::TVec3<f32> horiz;
 	horiz   = local;
@@ -1765,7 +1771,7 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 {
 
 	JGeometry::TVec3<f32> axis;
-	axis.set(data.unk18.at(1, 0), 0.0f, data.unk18.at(1, 2));
+	axis.set(data.unk18.at(0, 1), 0.0f, data.unk18.at(2, 1));
 
 	if (axis.isZero())
 		return false;

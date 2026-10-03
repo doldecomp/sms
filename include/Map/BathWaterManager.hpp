@@ -63,7 +63,9 @@ public:
 public:
 	/* 0x00 */ JGeometry::TVec3<f32> mPos;
 	/* 0x0C */ JGeometry::TVec3<f32> unk0C;
-	/* 0x18 */ JGeometry::TRotation3<TMtx33f> unk18;
+	/* 0x18 */ JGeometry::TRotation3<
+	    JGeometry::TMatrix33<JGeometry::SMatrix33R<f32> > >
+	    unk18;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ f32 unk40;
 	/* 0x44 */ f32 unk44;
