@@ -165,8 +165,8 @@ int TSelectDir::rsetup()
 	JDrama::TLookAtCamera* camera3D = new JDrama::TLookAtCamera(
 	    JGeometry::TVec3<f32>(300.0f, 240.0f, 1300.0f),
 	    JGeometry::TVec3<f32>(300.0f, 240.0f, 0.0f),
-	    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 30.0f, 1.3333334f,
-	    "<TLookAtCamera>");
+	    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 30.0f, 1.3333334f, 50.0f,
+	    10000.0f, "<TLookAtCamera>");
 	group3D->getChildren().push_back(camera3D);
 
 	JDrama::TScreen* screen3D = new JDrama::TScreen(rect, "Screen 3D");
