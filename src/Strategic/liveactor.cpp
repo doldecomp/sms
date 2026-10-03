@@ -2,6 +2,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/question.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/spcinterp.hpp>
 #include <Strategic/Binder.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -230,20 +231,17 @@ void TLiveActor::bind()
 
 void TLiveActor::control()
 {
-	// TODO: what is unk90???
-	if (unk90 == nullptr || *(int*)((char*)unk90 + 4) == 0) {
+	if (unk90 == nullptr || unk90->mStepsToDo == 0) {
 		if (mSpine)
 			mSpine->update();
+	} else if (!mSpine) {
+		if (unk90 != nullptr && unk90->mStepsToDo != 0)
+			unk90->update();
+	} else if (mSpine->getCurrentNerve() != nullptr
+	           || mSpine->getVertebraeCount() > 0) {
+		mSpine->update();
 	} else {
-		if (!mSpine) {
-			if (unk90 && *(int*)((char*)unk90 + 4) != 0) {
-				// call on unk90
-			}
-		} else if (mSpine->isIdle()) {
-			// call on unk90
-		} else {
-			mSpine->update();
-		}
+		unk90->update();
 	}
 }
 

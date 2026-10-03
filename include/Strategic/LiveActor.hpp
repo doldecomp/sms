@@ -9,6 +9,7 @@
 // TODO: where should this live?
 struct TLodAnmIndex;
 class MActor;
+template <class T> class TSpcTypedInterp;
 class TMActorKeeper;
 class MAnmSound;
 class JKRFileLoader;
@@ -167,7 +168,7 @@ public:
 	/* 0x84 */ const char* mAnmSoundPath;
 	/* 0x88 */ TBinder* mBinder;
 	/* 0x8C */ TSpineBase<TLiveActor>* mSpine;
-	/* 0x90 */ void* unk90;
+	/* 0x90 */ TSpcTypedInterp<TLiveActor>* unk90;
 	// TODO: Analyze mLinearVelocity vs mVelocity some more
 	// and decide on better names
 	/* 0x94 */ JGeometry::TVec3<f32> mLinearVelocity;
