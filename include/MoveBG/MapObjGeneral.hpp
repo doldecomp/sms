@@ -77,7 +77,7 @@ public:
 	};
 
 public:
-	/* 0x138 */ const TBGCheckData* unk138; // TODO: maybe not const
+	/* 0x138 */ TBGCheckData* unk138;
 	/* 0x13C */ const TBGCheckData* unk13C;
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ f32 unk144;
