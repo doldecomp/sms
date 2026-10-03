@@ -60,7 +60,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 
 			// TODO: inline
 			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
-			f32 clipMin  = mSaveNotice->mOffClipRatio.get();
+			f32 clipMin  = -clipMax;
 			bool inClipX = false;
 			bool inClipY = false;
 			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
@@ -95,7 +95,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 
 		// TODO: inline
 		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
-		f32 clipMin  = mSaveNotice->mOnClipRatio.get();
+		f32 clipMin  = -clipMax;
 		bool inClipX = false;
 		bool inClipY = false;
 		if (clipMin <= clipPos.x && clipPos.x <= clipMax) {

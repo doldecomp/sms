@@ -480,37 +480,37 @@ void CPolarSubCamera::calcPosAndAt_()
 		}
 	}
 
-	s16 yawDelta  = 0;
-	f32 distDelta = 0.0f;
-	s16 yawSpeed  = CLBLinearInbetween<s16>(
-        mCurrentParams->mYAngleManualSpeedXMin,
-        mCurrentParams->mYAngleManualSpeedXMax, mCurrentTarget.unk28);
-	f32 distSpeed = CLBLinearInbetween<f32>(mCurrentParams->mHoldAddDistXZMin,
-	                                        mCurrentParams->mHoldAddDistXZMax,
-	                                        mCurrentTarget.unk28);
+	s16 holdAngleX    = 0;
+	f32 holdDist      = 0.0f;
+	s16 holdAngleXMax = CLBLinearInbetween<s16>(
+	    mCurrentParams->mHoldOffsetAngleXMin,
+	    mCurrentParams->mHoldOffsetAngleXMax, mCurrentTarget.unk28);
+	f32 holdDistMax = CLBLinearInbetween<f32>(mCurrentParams->mHoldAddDistXZMin,
+	                                          mCurrentParams->mHoldAddDistXZMax,
+	                                          mCurrentTarget.unk28);
 
 	if (isNormalCameraSpecifyMode(mMode)) {
 		if (isMarioReadyGun_()) {
-			f32 mag   = gpCameraMario->unk1C;
-			distDelta = mag * distSpeed;
-			yawDelta  = (s16)(mag * (f32)yawSpeed);
+			f32 mag    = gpCameraMario->unk1C;
+			holdDist   = mag * holdDistMax;
+			holdAngleX = (s16)(mag * (f32)holdAngleXMax);
 		}
 	}
 
-	CLBChaseAngleDecrease(&unk2AC->unk0, yawDelta,
-	                      mSaveEx->mSLAimAngleYChaseMin.get());
-	CLBChaseDecrease(&unk2AC->unk4, distDelta, mSaveEx->mSLHoldDistChase.get(),
+	CLBChaseAngleDecrease(&unk2AC->unk0, holdAngleX,
+	                      mSaveEx->mSLHoldAngleXChase.get());
+	CLBChaseDecrease(&unk2AC->unk4, holdDist, mSaveEx->mSLHoldDistChase.get(),
 	                 0.0f);
 
-	if (distSpeed < 0.001f) {
-		if (yawSpeed != 0) {
-			s16 absSpeed = CLBAbs(yawSpeed);
-			s16 absDelta = CLBAbs(yawDelta);
+	if (holdDistMax < 0.001f) {
+		if (holdAngleXMax != 0) {
+			s16 absSpeed = CLBAbs(holdAngleXMax);
+			s16 absDelta = CLBAbs(holdAngleX);
 			unk2AC->unkC = (f32)absDelta * (1.0f / (f32)absSpeed);
 			unk2AC->unkC = MsClamp(unk2AC->unkC, 0.0f, 1.0f);
 		}
 	} else {
-		unk2AC->unkC = distDelta * (1.0f / distSpeed);
+		unk2AC->unkC = holdDist * (1.0f / holdDistMax);
 		unk2AC->unkC = MsClamp(unk2AC->unkC, 0.0f, 1.0f);
 	}
 
@@ -654,7 +654,7 @@ void CPolarSubCamera::calcPosAndAt_()
 							f32 cushDist = cushion * nDist;
 							if (cushDist > cushion * dist) {
 								unk64 |= CAMERA_FLAG_UNK100;
-								mCurrentTarget.mPosition = newPos;
+								mCurrentTarget.unk18 = newPos;
 							} else {
 								f32 minDist
 								    = cushion
@@ -686,32 +686,32 @@ void CPolarSubCamera::calcPosAndAt_()
 										useMid = true;
 								}
 								if (useMid) {
-									mCurrentTarget.mPosition.set(base);
+									mCurrentTarget.unk18.set(base);
 								} else {
 									CLBPolarToCross(saveAt,
-									                mCurrentTarget.mPosition,
-									                nDist, nVA, yAngle);
+									                mCurrentTarget.unk18, nDist,
+									                nVA, yAngle);
 								}
-								mCurrentTarget.mPosition.y = newPos.y;
+								mCurrentTarget.unk18.y = newPos.y;
 							}
 						} else {
-							mCurrentTarget.mPosition = newPos;
+							mCurrentTarget.unk18 = newPos;
 						}
 
 						f32 sY = JMASSin(yAngle);
 						f32 cY = JMASCos(yAngle);
 
 						if (fabricatedInline3()) {
-							f32 dx = gpMarioPos->x - mCurrentTarget.mPosition.x;
-							f32 dz = gpMarioPos->z - mCurrentTarget.mPosition.z;
+							f32 dx   = gpMarioPos->x - mCurrentTarget.unk18.x;
+							f32 dz   = gpMarioPos->z - mCurrentTarget.unk18.z;
 							f32 d  = MsSqrtf(dx * dx + dz * dz);
 							f32 minD = mSaveEx->mSLMinCushionXZ.get();
 							f32 mD2
 							    = minD < dist * cushion ? dist * cushion : minD;
 							if (d < mD2) {
 								f32 add = mD2 - d;
-								mCurrentTarget.mPosition.x += sY * add;
-								mCurrentTarget.mPosition.z += cY * add;
+								mCurrentTarget.unk18.x += sY * add;
+								mCurrentTarget.unk18.z += cY * add;
 							}
 						}
 
@@ -720,10 +720,10 @@ void CPolarSubCamera::calcPosAndAt_()
 						case CAMERA_MODE_MARE_UNDER_GROUND:
 							break;
 						default:
-							mCurrentTarget.mPosition.x = -(
-							    unk2AC->unk4 * sY - mCurrentTarget.mPosition.x);
-							mCurrentTarget.mPosition.z = -(
-							    unk2AC->unk4 * cY - mCurrentTarget.mPosition.z);
+							mCurrentTarget.unk18.x
+							    = -(unk2AC->unk4 * sY - mCurrentTarget.unk18.x);
+							mCurrentTarget.unk18.z
+							    = -(unk2AC->unk4 * cY - mCurrentTarget.unk18.z);
 							break;
 						}
 
@@ -739,17 +739,17 @@ void CPolarSubCamera::calcPosAndAt_()
 						}
 					}
 				}
-				mPosition.x = mCurrentTarget.mPosition.x;
-				mPosition.z = mCurrentTarget.mPosition.z;
+				mCurrentTarget.mPosition.x = mCurrentTarget.unk18.x;
+				mCurrentTarget.mPosition.z = mCurrentTarget.unk18.z;
 				execHeightPan_();
-				finalAt.y = mCurrentTarget.unk18.y;
+				finalAt.y = mCurrentTarget.mTarget.y;
 				Vec posCpy;
-				posCpy = mPosition;
+				posCpy = mCurrentTarget.mPosition;
 				if (isNeedWallCheck_() && execWallCheck_(&posCpy)) {
-					CLBCrossToPolar(mCurrentTarget.mTarget, mPosition,
-					                &mCurrentTarget.mPitch,
-					                &mCurrentTarget.mYaw);
-					mCurrentTarget.unk28 = mCurrentTarget.unk30;
+					CLBCrossToPolar(
+					    mCurrentTarget.mTarget, mCurrentTarget.mPosition,
+					    &mCurrentTarget.mPitch, &mCurrentTarget.mYaw);
+					mCurrentTarget.unk28 = mPreviousTarget.unk28;
 				}
 				if (isNeedRoofCheck_()) {
 					Vec roofCheck = posCpy;
@@ -788,8 +788,8 @@ void CPolarSubCamera::calcPosAndAt_()
 			}
 			if (unk64 & CAMERA_FLAG_UNK4) {
 				chaseXZ = 1.0f;
-			} else if (unk120->mCompSPos[6] != 0.0f
-			           || unk120->mCompSPos[7] != 0.0f) {
+			} else if (unk120->getSubStickY() != 0.0f
+			           || unk120->getSubStickX() != 0.0f) {
 				f32 v = gpCameraMario->mFrameMoveDistHorizontal;
 				if (v > 20.0f)
 					v = 20.0f;
@@ -798,7 +798,7 @@ void CPolarSubCamera::calcPosAndAt_()
 				    mCurrentParams->mPosChaseRateXZ_C,
 				    CLBCalcRatio<f32>(20.0f, 0.0f, v));
 			}
-			if (unk120->mCompSPos[6] != 0.0f) {
+			if (unk120->getSubStickY() != 0.0f) {
 				f32 v = gpCameraMario->mFrameMoveDistVertical;
 				if (v > 20.0f)
 					v = 20.0f;

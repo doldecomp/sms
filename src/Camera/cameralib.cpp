@@ -25,7 +25,7 @@ static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
 
 	mtxT.identity();
 	mtxT.setRotate(param_axis, angle);
-	mtxT.mult33(*vec);
+	CLBMultTranspose33(mtxT, *vec);
 }
 
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
@@ -383,7 +383,7 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 		local_e4.identity33();
 		local_e4.setRotate(local_80, fVar16.z);
 
-		local_e4.mult33(local_68);
+		CLBMultTranspose33(local_e4, local_68);
 	}
 
 	{
@@ -401,7 +401,7 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 		local_118.identity33();
 		local_118.setRotate(local_80, fVar16.z);
 
-		local_118.mult33(local_74);
+		CLBMultTranspose33(local_118, local_74);
 	}
 
 	f32 fVar3 = near_dims.y * 0.5f;

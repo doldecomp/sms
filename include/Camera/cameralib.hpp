@@ -135,6 +135,24 @@ template <class T> T CLBSquared(T v) { return v * v; }
 template <class T> inline T CLBAbs(T v) { return v >= 0 ? v : -v; }
 
 // fabricated
+inline void CLBMultTranspose33(const JGeometry::TRotation3<TMtx33f>& mtx,
+                               const JGeometry::TVec3<f32>& src,
+                               JGeometry::TVec3<f32>& dst)
+{
+	dst.x = src.x * mtx.at(0, 0) + src.y * mtx.at(1, 0) + src.z * mtx.at(2, 0);
+	dst.y = src.x * mtx.at(0, 1) + src.y * mtx.at(1, 1) + src.z * mtx.at(2, 1);
+	dst.z = src.x * mtx.at(0, 2) + src.y * mtx.at(1, 2) + src.z * mtx.at(2, 2);
+}
+
+// fabricated
+inline void CLBMultTranspose33(const JGeometry::TRotation3<TMtx33f>& mtx,
+                               JGeometry::TVec3<f32>& vec)
+{
+	JGeometry::TVec3<f32> src = vec;
+	CLBMultTranspose33(mtx, src, vec);
+}
+
+// fabricated
 inline s16 CLBDegToShortAngle(f32 deg)
 {
 	return CLBRoundf<s16>(deg * (65536.0f / 360.0f));
