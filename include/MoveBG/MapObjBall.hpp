@@ -65,8 +65,6 @@ public:
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	// This definition is being occluded by TMapObjGeneral::getLivingTime for
-	// some reason
 	virtual u32 getLivingTime() const { return mFruitLivingTime; }
 	virtual void appearing();
 	virtual void breaking();
@@ -93,13 +91,12 @@ public:
 		STATE_WAIT_EFFECT = 0xD,
 	};
 
-	// fabricated
-	inline void hideTouchActor(THitActor*);
-
 	static u32 mFruitWaitTimeToAppear;
 	static f32 mScaleUpSpeed;
 	static u32 mFruitLivingTime;
 	static f32 mBreakingScaleSpeed;
+	static f32 mRottingScaleSpeed;
+	static GXColorS10 mRottenColor;
 
 	f32 unk198;
 	GXColorS10 mFruitColor;
