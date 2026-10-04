@@ -313,112 +313,51 @@ void TMapObjBall::touchActor(THitActor* actor)
 
 void TMapObjBall::calcCurrentMtx()
 {
+	TRotation3f rot;
+	rot.identity();
 
-	Mtx local48;
-	local48[2][3]             = 0.0f;
-	local48[1][3]             = 0.0f;
-	local48[0][3]             = 0.0f;
-	local48[1][2]             = 0.0f;
-	local48[0][2]             = 0.0f;
-	local48[2][1]             = 0.0f;
-	local48[0][1]             = 0.0f;
-	local48[2][0]             = 0.0f;
-	local48[1][0]             = 0.0f;
-	local48[2][2]             = 1.0f;
-	local48[1][1]             = 1.0f;
-	local48[0][0]             = 1.0f;
-	JGeometry::TVec3<f32> vec = mVelocity;
-	if (abs(mVelocity.x) < mMapObjData->mPhysical->unk4->unkC) {
-		JGeometry::TVec3<f32> vec2 = mVelocity;
-		if (abs(mVelocity.z) < mMapObjData->mPhysical->unk4->unkC
-		    && mGroundPlane->mNormal.y == 1.0f) {
-			mVelocity.x = 0.0f;
-			mVelocity.z = 0.0f;
-		}
+	if (abs(getVelocity().x) < mMapObjData->mPhysical->unk4->unkC
+	    && abs(getVelocity().z) < mMapObjData->mPhysical->unk4->unkC
+	    && mGroundPlane->getNormal().y == 1.0f) {
+		mVelocity.x = 0.0f;
+		mVelocity.z = 0.0f;
 	}
 
-	JGeometry::TVec3<f32> vec3 = mVelocity;
-	if (!(abs(mVelocity.x) > mMapObjData->mPhysical->unk4->unkC)) {
-		JGeometry::TVec3<f32> vec4 = mVelocity;
-		if (!(abs(mVelocity.z) > mMapObjData->mPhysical->unk4->unkC)) {
-			goto todo;
-		}
+	if (abs(getVelocity().x) > mMapObjData->mPhysical->unk4->unkC
+	    || abs(getVelocity().z) > mMapObjData->mPhysical->unk4->unkC) {
+		JGeometry::TVec3<f32> axis;
+		getVerticalVecToTargetXZ(mPosition.x + getVelocity().x,
+		                         mPosition.z + getVelocity().z, &axis);
+		JGeometry::TVec3<f32> vel = getVelocity();
+		f32 dist = JGeometry::TUtil<f32>::sqrt(vel.x * vel.x + vel.z * vel.z);
+		rot.setRotate(axis, dist / mBodyRadius * 2.0f);
 	}
 
-	JGeometry::TVec3<f32> vec5 = mVelocity;
-	JGeometry::TVec3<f32> vec6 = vec5;
-	TMapObjBase::getVerticalVecToTargetXZ(mPosition.x + mVelocity.x,
-	                                      mPosition.z + mVelocity.z, &vec);
-	JGeometry::TVec3<f32> vec7 = mVelocity;
-	JGeometry::TVec3<f32> vec8 = vec7;
-	f32 fVar1                  = mVelocity.x;
-	f32 fVar2                  = mVelocity.z;
-	fVar1                      = fVar1 * fVar1 + fVar2 * fVar2;
-	if (fVar1 < 0.0f) {
-		fVar2 = JGeometry::TUtil<f32>::inv_sqrt(fVar1);
-		fVar1 = fVar1 * (fVar2 / 2.0f) * -(fVar1 * fVar2 * fVar2 - 3.0f);
-	}
-	f32 dVar8 = 1.0f;
-	f32 dVar7 = (fVar1 / mBodyRadius) * 2.0f;
-	f32 dVar3 = vec.dot(vec);
-	JGeometry::TVec3<f32> local124;
-	if (dVar3 <= 1 / 262144.0f) {
-		local124.z = 0.0f;
-		local124.y = 0.0f;
-		local124.x = 0.0f;
-	} else {
-		dVar3 = JGeometry::TUtil<f32>::inv_sqrt(dVar3);
-		local124.scale(dVar8 * dVar3, vec);
-	}
+	TMtx34f anmMtx;
+	anmMtx.set(getModel()->getAnmMtx(0));
+	anmMtx.ref(0, 3) = 0.0f;
+	anmMtx.ref(1, 3) = 0.0f;
+	anmMtx.ref(2, 3) = 0.0f;
+	MTXConcat(rot, anmMtx, rot);
+	rot.ref(0, 3) = mPosition.x;
+	rot.ref(1, 3) = mPosition.y + mBodyRadius;
+	rot.ref(2, 3) = mPosition.z;
+	if (isActorType(0x40000394) && rot.ref(1, 1) > 0.0f)
+		rot.ref(1, 3) -= 50.0f * rot.ref(1, 1);
+	if (isActorType(0x40000392))
+		rot.ref(1, 3) -= 10.0f * (1.0f - rot.ref(1, 1));
 
-	f32 fVar9     = sinf(dVar7);
-	dVar3         = fVar9;
-	fVar9         = cosf(dVar7);
-	dVar7         = fVar9;
-	f32 dVar6     = local124.x;
-	f32 dVar5     = 1.0f - dVar7;
-	dVar8         = local124.y;
-	f32 dVar4     = local124.z;
-	local48[0][0] = dVar5 * (dVar6 * dVar6) + dVar7;
-	fVar9         = dVar8 * (dVar5 * dVar6);
-	fVar1         = dVar4 * (dVar5 * dVar6);
-	local48[0][1] = fVar9 - (dVar3 * dVar4);
-	local48[0][2] = fVar1 + (dVar3 * dVar8);
-	local48[1][0] = fVar9 + (dVar3 * dVar4);
-	fVar9         = dVar4 * (dVar5 * dVar8);
-	local48[1][1] = dVar5 * (dVar8 * dVar8) + dVar7;
-	local48[1][2] = fVar9 - (dVar3 * dVar6);
-	local48[2][0] = fVar1 - (dVar3 * dVar8);
-	local48[2][1] = fVar9 + (dVar3 * dVar6);
-	local48[2][2] = dVar5 * (dVar4 * dVar4) + dVar7;
-todo:
-	Mtx afStack94;
-	gekkoCopy(afStack94, *(getModel()->getAnmMtx(0)));
-	JGeometry::TVec3<f32> vec9(0.0f);
-	PSMTXConcat(local48, afStack94, local48);
-	local48[0][3] = mPosition.x;
-	local48[1][3] = mPosition.y + mBodyRadius;
-	local48[2][3] = mPosition.z;
-	if (isActorType(0x40000394) && local48[1][1] > 0.0f) {
-		local48[1][3] = -(local48[1][1] * 50.0f - local48[1][3]);
-	}
-	if (isActorType(0x40000392)) {
-		local48[1][3] = -((1.0f - local48[1][1]) * 10.0f - local48[1][3]);
-	}
-
-	J3DModel* model = getModel();
-	PSMTXCopy(local48, model->getAnmMtx(0));
+	getModel()->setAnmMtx(0, rot);
 }
 
 void TMapObjBall::checkWallCollision(JGeometry::TVec3<f32>* wall)
 {
-	TBGWallCheckRecord wallRecord;
-	wallRecord.mCenter.x   = wall->x;
-	wallRecord.mCenter.y   = mBodyRadius + wall->y;
-	wallRecord.mCenter.z   = wall->z;
-	wallRecord.mRadius     = mBodyRadius;
-	wallRecord.mFlags      = mMapObjData->mPhysical->mWallCheckFlags;
-	wallRecord.mMaxResults = 4;
+	JGeometry::TVec3<f32> center;
+	center.x = wall->x;
+	center.y = wall->y + mBodyRadius;
+	center.z = wall->z;
+	TBGWallCheckRecord wallRecord(center, mBodyRadius, 4,
+	                              mMapObjData->mPhysical->mWallCheckFlags);
 	if (gpMap->isTouchedWallsAndMoveXZ(&wallRecord)) {
 		unk138  = wallRecord.mResultWalls[0];
 		wall->x = wallRecord.mCenter.x;
@@ -470,13 +409,10 @@ void TMapObjBall::control()
 	}
 
 	if (isState(STATE_HOLDING)) {
-		TTakeActor* holder = mHolder;
-		MtxPtr takingMtx   = holder->getTakingMtx();
-		Mtx takingMtxCopy;
-		PSMTXCopy(takingMtx, takingMtxCopy);
-		takingMtxCopy[2][2] += unk190;
-		J3DModel* model = TLiveActor::getModel();
-		PSMTXCopy(takingMtxCopy, model->getAnmMtx(0));
+		Mtx mtx;
+		MTXCopy(mHolder->getTakingMtx(), mtx);
+		mtx[1][3] += unk190;
+		getModel()->setAnmMtx(0, mtx);
 	} else {
 		if (!getVelocity().isZero() || mGroundPlane->mActor != nullptr) {
 			calcCurrentMtx();
@@ -1013,24 +949,9 @@ void TResetFruit::control()
 		break;
 	}
 	case STATE_APPEARING:
-	case STATE_BREAKING: {
-		TMapObjGeneral::control();
-		if (unk194 != 0) {
-			unk194 -= 1;
-		}
-
-		if (isState(STATE_HOLDING)) {
-			Mtx takingMtx;
-			PSMTXCopy(mHolder->getTakingMtx(), takingMtx);
-			takingMtx[2][2] += unk190;
-			PSMTXCopy(takingMtx, getModel()->getAnmMtx(0));
-		} else {
-			if (!getVelocity().isZero() || mGroundPlane->mActor != nullptr) {
-				calcCurrentMtx();
-			}
-		}
+	case STATE_BREAKING:
+		TMapObjBall::control();
 		break;
-	}
 	case STATE_ROTTING:
 		waitEffect();
 		break;
@@ -1405,13 +1326,10 @@ void TBigWatermelon::control()
 	}
 
 	if (isState(STATE_HOLDING)) {
-		TTakeActor* holder = mHolder;
-		MtxPtr takingMtx   = holder->getTakingMtx();
-		Mtx takingMtxCopy;
-		PSMTXCopy(takingMtx, takingMtxCopy);
-		takingMtxCopy[2][2] += unk190;
-		J3DModel* model = TLiveActor::getModel();
-		PSMTXCopy(takingMtxCopy, model->getAnmMtx(0));
+		Mtx mtx;
+		MTXCopy(mHolder->getTakingMtx(), mtx);
+		mtx[1][3] += unk190;
+		getModel()->setAnmMtx(0, mtx);
 	} else {
 		if (!getVelocity().isZero() || mGroundPlane->mActor != nullptr) {
 			calcCurrentMtx();
