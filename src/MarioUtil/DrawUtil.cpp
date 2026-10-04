@@ -1,7 +1,12 @@
+#include "MarioUtil/RandomUtil.hpp"
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Camera/SunMgr.hpp>
+#include <Camera/Camera.hpp>
+#include <System/MarDirector.hpp>
+#include <JSystem/JMath.hpp>
+#include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
 #include <Map/JointModel.hpp>
 #include <Map/PollutionManager.hpp>
 #include <Map/PollutionLayer.hpp>
@@ -15,6 +20,8 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
+#include <dolphin/os/OSCache.h>
+#include <stdlib.h>
 
 TSilhouette* gpSilhouetteManager;
 
@@ -31,33 +38,45 @@ void TSilhouette::load(JSUMemoryInputStream& stream)
 void TSilhouette::loadAfter()
 {
 	// TODO: ewwww floats
-	unk10     = 1;
-	unk12     = gpSunMgr->unk18;
-	unk12.a   = 0;
-	unk24     = 30.0f;
-	unk28     = 650.0f;
-	unk2C     = 1500.0f;
-	f32 fVar1 = unk24;
-	f32 fVar2 = unk28;
-	f32 fVar3 = unk2C;
-	f32 fVar4 = (fVar1 - fVar2) * 0.9f * 0.5f;
-	f32 fVar5 = (fVar1 * fVar1 - fVar2 * fVar2) * 0.9f * 0.5f;
-	f32 fVar6 = (fVar2 - fVar3) * 0.5f * 0.05f;
-	unk38     = (fVar6 * -0.4f - fVar4 * -0.45f)
-	        / (fVar5 * fVar6
-	           - (fVar2 * fVar2 - fVar3 * fVar3) * 0.5f * 0.05f * fVar4);
-	unk34 = -(fVar5 * unk38 - -0.4f) / fVar4;
-	unk30 = 0.9 - (unk38 * fVar1 * fVar1 + fVar1 * unk34);
+	unk10    = 1;
+	unk12    = gpSunMgr->unk18;
+	unk12.a  = 0;
+	unk24[0] = 30.0f;
+	unk24[1] = 650.0f;
+	unk24[2] = 1500.0f;
+
+	// quadratic-fit solve for the light attenuation coefficients k0/k1/k2
+	// (unk30/34/38) such that 1/atten == k0 + k1*d + k2*d^2 passes through the
+	// three sample points atten = {0.9, 0.5, 0.05} at distances
+	// d = {30, 650, 1500}. k0 is eliminated by subtracting adjacent equations
+	// scaled by a[i]*a[i+1], leaving a 2x2 system solved via Cramer's rule.
+	f32 m[3][2];
+	f32 dist[3];
+	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
+
+	for (int i = 0; i < 3; ++i)
+		dist[i] = unk24[i];
+
+	for (int i = 0; i < 2; ++i) {
+		m[0][i]
+		    = atten[i + 1]
+		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
+		m[1][i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
+		m[2][i] = atten[i + 1] - atten[i];
+	}
+
+	unk38 = (m[2][0] * m[1][1] - m[2][1] * m[1][0])
+	        / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
+	unk34 = (m[2][0] - m[0][0] * unk38) / m[1][0];
+	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
 	unk3C = 8e-05f;
 
 	if (gpPollution->getJointModelNum() > 0) {
-		TPollutionLayer* pJVar9
-		    = (TPollutionLayer*)gpPollution->getJointModel(0);
-		ResTIMG* img = pJVar9->unk58;
-		unk40        = new JUTTexture(img);
+		const ResTIMG* img = gpPollution->getLayer(0)->getPollutionImage();
+		unk40              = new JUTTexture(img);
 	}
-	ResTIMG* pRVar8 = (ResTIMG*)JKRFileLoader::getGlbResource(
-	    "/common/timg/H_marukage_xlu_i8.bti");
+	const ResTIMG* pRVar8
+	    = (const ResTIMG*)JKRGetResource("/common/timg/H_marukage_xlu_i8.bti");
 
 	unk44 = new JUTTexture(pRVar8);
 	unk48 = 0.0f;
@@ -68,10 +87,10 @@ void TSilhouette::loadAfter()
 void TSilhouette::setting(MtxPtr param_1)
 {
 	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
-	Vec local_6C = *gpMarioPos;
-	Vec local_60;
-	PSMTXMultVec(param_1, &local_6C, &local_60);
 	GXLightObj GStack_54;
+	Vec local_60;
+	Vec local_6C = SMS_GetMarioPos();
+	MTXMultVec(param_1, &local_6C, &local_60);
 	GXInitLightPos(&GStack_54, local_60.x, local_60.y, local_60.z);
 	GXInitLightAttnK(&GStack_54, unk30, unk34, unk38);
 	GXInitLightAttnA(&GStack_54, 1.0f, 0.0f, 0.0f);
@@ -90,36 +109,35 @@ void TSilhouette::setting(MtxPtr param_1)
 	GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 }
 
-void TSilhouette::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 1) != 0) {
-		f32 fVar1
-		    = SMS_CheckMarioFlag(MARIO_FLAG_ABOVE_SEWER_FLOOR) ? unk50 : 0.0f;
+	if ((cue & CUE_MOVE) != 0) {
+		f32 fVar1 = SMS_CheckMarioFlag(MARIO_FLAG_OCCLUDED) ? unk50 : 0.0f;
 		unk48 += unk4C * (fVar1 - unk48);
 		unk12.a = unk48;
 	}
 
-	if ((param_1 & 8) != 0) {
+	if ((cue & CUE_DRAW) != 0) {
 		GXSetNumChans(1);
 		GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 1,
 		              GX_DF_NONE, GX_AF_SPOT);
 		GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
 		              GX_DF_NONE, GX_AF_NONE);
 		GXSetChanMatColor(GX_COLOR0A0, unk12);
-		setting(param_2->getUnkB4());
+		setting(graphics->getViewMtx());
 	}
-	if ((param_1 & 0x80) != 0) {
+	if ((cue & CUE_DRAW_INIT) != 0) {
 		GXColor color = unk12;
-		color.a       = gpSunMgr->getUnk1CAlpha();
+		color.a       = gpSunMgr->unk18.a;
 		GXSetChanMatColor(GX_COLOR0A0, color);
-		setting(param_2->getUnkB4());
+		setting(graphics->getViewMtx());
 	}
-	if (((param_1 & 0x10) != 0) && gpPollution->getJointModelNum()) {
+	if (((cue & CUE_SET_PROJECTION) != 0) && gpPollution->getJointModelNum()) {
 		Mtx afStack_80;
 		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);
 		Mtx afStack_b0;
-		PSMTXRotRad(afStack_b0, 0x58, 1.570796f);
+		PSMTXRotRad(afStack_b0, 0x58, 1.5707964f);
 		Mtx afStack_50;
 		PSMTXConcat(afStack_80, afStack_b0, afStack_50);
 		Mtx afStack_e0;
@@ -127,7 +145,7 @@ void TSilhouette::perform(u32 param_1, JDrama::TGraphics* param_2)
 		Mtx afStack_110;
 		PSMTXTrans(afStack_110, -gpMarioPos->x, 0.0f, -gpMarioPos->z);
 		Mtx afStack_140;
-		PSMTXTrans(afStack_140, 1.75f, 1.75f, 0.0f);
+		PSMTXTrans(afStack_140, 0.5f, 0.5f, 0.0f);
 		PSMTXConcat(afStack_e0, afStack_110, afStack_e0);
 		PSMTXConcat(afStack_50, afStack_e0, afStack_50);
 		PSMTXConcat(afStack_140, afStack_50, afStack_50);
@@ -169,22 +187,270 @@ void TSilhouette::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 void TSilhouette::calcSilhouetteBorder() { }
 
-void TTrembleModelEffect::init(J3DModel*) { }
-
-void TTrembleModelEffect::tremble(f32, f32, f32, int) { }
-
-void TTrembleModelEffect::clash(f32) { }
-
-void TTrembleModelEffect::movement() { }
-
-void TTrembleModelEffect::reset() { }
-
-void SMS_AddDamageFogEffect(J3DModelData*, const JGeometry::TVec3<f32>&,
-                            JDrama::TGraphics*)
+void TTrembleModelEffect::init(J3DModel* model)
 {
+	int found = 0;
+	unk0      = model;
+	unk10     = 0;
+
+	GXVtxAttrFmtList* fmt
+	    = model->getModelData()->getVertexData().getVtxAttrFmtList();
+	while (fmt->attr != GX_VA_NULL) {
+		if (fmt->attr == GX_VA_POS) {
+			if (fmt->type == GX_S16) {
+				unk8  = 0;
+				found = 1;
+				unkA  = fmt->frac;
+				unkC  = 1 << fmt->frac;
+			} else if (fmt->type == GX_F32) {
+				unk8  = 0;
+				found = 1;
+				unk8 |= 2;
+				unkA = 0;
+				unkC = 1;
+			}
+			break;
+		}
+	}
+
+	if (found == 1) {
+		unk4  = unk0->getModelData()->getVertexData().getVtxPosArray();
+		u32 n = unk0->getModelData()->getVertexData().getVtxNum();
+		unk9  = 0;
+		switch (unk8 & 2) {
+		case 0: {
+			unk14     = new JGeometry::TVec3<s16>[n];
+			unk18[0]  = new JGeometry::TVec3<s16>[n];
+			unk18[1]  = new JGeometry::TVec3<s16>[n];
+			unk20     = new JGeometry::TVec3<s16>[n];
+			unk24     = 0;
+			unk26     = 0;
+			void* src = model->getModelData()->getVertexData().getVtxPosArray();
+			for (u32 i = 0; i < n; ++i) {
+				unk14[i]    = ((JGeometry::TVec3<s16>*)src)[i];
+				unk18[0][i] = ((JGeometry::TVec3<s16>*)src)[i];
+				unk18[1][i] = ((JGeometry::TVec3<s16>*)src)[i];
+				unk20[i].set(0, 0, 0);
+			}
+			break;
+		}
+		case 2: {
+			unk28     = new JGeometry::TVec3<f32>[n];
+			unk2C[0]  = new JGeometry::TVec3<f32>[n];
+			unk2C[1]  = new JGeometry::TVec3<f32>[n];
+			unk34     = new JGeometry::TVec3<f32>[n];
+			unk38     = 0.0f;
+			unk3C     = 0.0f;
+			void* src = model->getModelData()->getVertexData().getVtxPosArray();
+			for (u32 i = 0; i < n; ++i) {
+				unk28[i]    = ((JGeometry::TVec3<f32>*)src)[i];
+				unk2C[0][i] = ((JGeometry::TVec3<f32>*)src)[i];
+				unk2C[1][i] = ((JGeometry::TVec3<f32>*)src)[i];
+				unk34[i].set(0.0f, 0.0f, 0.0f);
+			}
+			break;
+		}
+		}
+	}
 }
 
-void SMS_ResetDamageFogEffect(J3DModelData*) { }
+void TTrembleModelEffect::tremble(f32 magnitude, f32 spring, f32 damping,
+                                  int duration)
+{
+	unk8 |= 1;
+	switch (unk8 & 2) {
+	case 0: {
+		unk26                      = (s16)(spring * unkC);
+		unk24                      = (s16)(damping * unkC);
+		JGeometry::TVec3<s16>* src = (JGeometry::TVec3<s16>*)unk4;
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
+			unk20[i].x  = (s16)(unkC * (magnitude * (2.0f * MsRandF() - 1.0f)));
+			unk20[i].y  = (s16)(unkC * (magnitude * (2.0f * MsRandF() - 1.0f)));
+			unk20[i].z  = (s16)(unkC * (magnitude * (2.0f * MsRandF() - 1.0f)));
+			unk14[i]    = src[i];
+			unk18[0][i] = src[i];
+			unk18[1][i] = src[i];
+		}
+		break;
+	}
+	case 2: {
+		unk3C                      = spring;
+		unk38                      = damping;
+		JGeometry::TVec3<f32>* src = (JGeometry::TVec3<f32>*)unk4;
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
+			unk34[i].x  = magnitude * (2.0f * MsRandF() - 1.0f);
+			unk34[i].y  = magnitude * (2.0f * MsRandF() - 1.0f);
+			unk34[i].z  = magnitude * (2.0f * MsRandF() - 1.0f);
+			unk28[i]    = src[i];
+			unk2C[0][i] = src[i];
+			unk2C[1][i] = src[i];
+		}
+		break;
+	}
+	}
+	unk10 = duration;
+	unk8 &= ~4;
+}
+
+void TTrembleModelEffect::clash(f32 magnitude)
+{
+	tremble(magnitude, 0.0f, 0.0f, 0);
+	switch (unk8 & 2) {
+	case 0:
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
+			JGeometry::TVec3<s16> t = unk14[i] + unk20[i];
+			unk14[i]                = t;
+			unk18[0][i]             = t;
+			unk18[1][i]             = t;
+		}
+		break;
+
+	case 2:
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
+			JGeometry::TVec3<f32> t = unk28[i] + unk34[i];
+			unk28[i]                = t;
+			unk2C[0][i]             = t;
+			unk2C[1][i]             = t;
+		}
+		break;
+	}
+	unk8 |= 4;
+}
+
+void TTrembleModelEffect::movement()
+{
+	if (!(unk8 & 1))
+		return;
+
+	if ((unk8 & 4) != 4) {
+		unk10--;
+		if (unk10 <= 0) {
+			reset();
+			return;
+		}
+	}
+
+	switch (unk8 & 2) {
+	case 0: {
+		JGeometry::TVec3<s16>* src = (JGeometry::TVec3<s16>*)unk4;
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
+			JGeometry::TVec3<s16> diff = src[i] - unk14[i];
+			unk20[i].x += (s16)((diff.x * unk26) >> unkA);
+			unk20[i].y += (s16)((diff.y * unk26) >> unkA);
+			unk20[i].z += (s16)((diff.z * unk26) >> unkA);
+			unk20[i].x = (s16)((unk24 * unk20[i].x) >> unkA);
+			unk20[i].y = (s16)((unk24 * unk20[i].y) >> unkA);
+			unk20[i].z = (s16)((unk24 * unk20[i].z) >> unkA);
+			unk14[i] += unk20[i];
+			unk18[unk9][i] = unk14[i];
+		}
+		DCFlushRange(unk18[unk9],
+		             unk0->getModelData()->getVertexData().getVtxNum() * 6);
+		unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk18[unk9]);
+		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
+			unk0->getShapePacket(0)->setVtxPos(unk18[unk9]);
+		break;
+	}
+	case 2: {
+		JGeometry::TVec3<f32>* src = (JGeometry::TVec3<f32>*)unk4;
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
+			JGeometry::TVec3<f32> diff = src[i] - unk28[i];
+			unk34[i].x += diff.x * unk3C;
+			unk34[i].y += diff.y * unk3C;
+			unk34[i].z += diff.z * unk3C;
+			unk34[i].x = unk38 * unk34[i].x;
+			unk34[i].y = unk38 * unk34[i].y;
+			unk34[i].z = unk38 * unk34[i].z;
+			unk28[i] += unk34[i];
+			unk2C[unk9][i] = unk28[i];
+		}
+		DCFlushRange(unk2C[unk9],
+		             unk0->getModelData()->getVertexData().getVtxNum() * 12);
+		unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk2C[unk9]);
+		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
+			unk0->getShapePacket(0)->setVtxPos(unk2C[unk9]);
+		break;
+	}
+	}
+
+	unk9 = 1 - unk9;
+}
+
+void TTrembleModelEffect::reset()
+{
+	switch (unk8 & 2) {
+	case 0: {
+		JGeometry::TVec3<s16>* src = (JGeometry::TVec3<s16>*)unk4;
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     i++) {
+			unk20[i].set(0, 0, 0);
+			unk14[i]    = src[i];
+			unk18[0][i] = src[i];
+			unk18[1][i] = src[i];
+		}
+		break;
+	}
+	case 2: {
+		JGeometry::TVec3<f32>* src = (JGeometry::TVec3<f32>*)unk4;
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     i++) {
+			unk34[i].set(0.0f, 0.0f, 0.0f);
+			unk28[i]    = src[i];
+			unk2C[0][i] = src[i];
+			unk2C[1][i] = src[i];
+		}
+		break;
+	}
+	}
+
+	unk8 &= ~1;
+	GXInvalidateVtxCache();
+	unk0->getModelData()->getVertexData().setVtxPosArray(unk4);
+	unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk4);
+	unk0->getVertexBuffer()->setVtxPosArrayPointer(1, unk4);
+	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
+}
+
+void SMS_AddDamageFogEffect(J3DModelData* param_1,
+                            const JGeometry::TVec3<f32>& param_2,
+                            JDrama::TGraphics* param_3)
+{
+	Vec local_80;
+	MTXMultVec(param_3->getViewMtx(), param_2, &local_80);
+
+	f32 startBase = -700.0f;
+	f32 endBase   = 500.0f;
+	f32 s         = JMASSin((s16)(gpMarDirector->mMoveTickCount * 0x888));
+	f32 startOsc  = (-400.0f - startBase) * s;
+	f32 endOsc    = (800.0f - endBase) * s;
+
+	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
+		J3DFog* fog
+		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
+		fog->mStartZ = -local_80.z + startBase + startOsc;
+		fog->mEndZ   = -local_80.z + endBase + endOsc;
+		fog->mNearZ  = gpCamera->getNear();
+		fog->mFarZ   = gpCamera->getFar();
+	}
+}
+
+void SMS_ResetDamageFogEffect(J3DModelData* param_1)
+{
+	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
+		J3DFog* fog
+		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
+		fog->mNearZ  = gpCamera->getNear();
+		fog->mFarZ   = gpCamera->getFar();
+		fog->mEndZ   = fog->mFarZ;
+		fog->mStartZ = fog->mEndZ - 1.0f;
+	}
+}
 
 // fabricated
 struct Plane {
@@ -242,86 +508,79 @@ static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
 	f32 farLeft   = left * (far / near);
 	f32 farRight  = right * (far / near);
 
-	Vec local_98;
-	Vec local_8c;
-	Vec local_80;
-	Vec local_74;
-	Vec local_68;
-	Vec local_5c;
-	Vec local_50;
-	Vec local_44;
+	Vec corner[8];
 
-	local_44.x = left;
-	local_44.y = top;
-	local_44.z = -near;
+	corner[0].x = left;
+	corner[0].y = top;
+	corner[0].z = -near;
 
-	local_50.x = farLeft;
-	local_50.y = farTop;
-	local_50.z = -far;
+	corner[1].x = farLeft;
+	corner[1].y = farTop;
+	corner[1].z = -far;
 
-	local_5c.x = right;
-	local_5c.y = top;
-	local_5c.z = -near;
+	corner[2].x = right;
+	corner[2].y = top;
+	corner[2].z = -near;
 
-	local_68.x = farRight;
-	local_68.y = farTop;
-	local_68.z = -far;
+	corner[3].x = farRight;
+	corner[3].y = farTop;
+	corner[3].z = -far;
 
-	local_74.x = left;
-	local_74.y = bottom;
-	local_74.z = -near;
+	corner[4].x = left;
+	corner[4].y = bottom;
+	corner[4].z = -near;
 
-	local_80.x = farLeft;
-	local_80.y = farBottom;
-	local_80.z = -far;
+	corner[5].x = farLeft;
+	corner[5].y = farBottom;
+	corner[5].z = -far;
 
-	local_8c.x = right;
-	local_8c.y = bottom;
-	local_8c.z = -near;
+	corner[6].x = right;
+	corner[6].y = bottom;
+	corner[6].z = -near;
 
-	local_98.x = farRight;
-	local_98.y = farBottom;
-	local_98.z = -far;
+	corner[7].x = farRight;
+	corner[7].y = farBottom;
+	corner[7].z = -far;
 
 	Vec v1;
 	Vec v2;
 	Vec normal;
 
-	VECSubtract(&local_50, &local_44, &v1);
-	VECSubtract(&local_5c, &local_44, &v2);
+	VECSubtract(&corner[1], &corner[0], &v1);
+	VECSubtract(&corner[2], &corner[0], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[0].set(&normal, &local_44);
+	sViewPlane[0].set(&normal, &corner[0]);
 
-	VECSubtract(&local_8c, &local_74, &v1);
-	VECSubtract(&local_80, &local_74, &v2);
+	VECSubtract(&corner[6], &corner[4], &v1);
+	VECSubtract(&corner[5], &corner[4], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[1].set(&normal, &local_74);
+	sViewPlane[1].set(&normal, &corner[4]);
 
-	VECSubtract(&local_74, &local_44, &v1);
-	VECSubtract(&local_50, &local_44, &v2);
+	VECSubtract(&corner[4], &corner[0], &v1);
+	VECSubtract(&corner[1], &corner[0], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[2].set(&normal, &local_44);
+	sViewPlane[2].set(&normal, &corner[0]);
 
-	VECSubtract(&local_68, &local_5c, &v1);
-	VECSubtract(&local_8c, &local_5c, &v2);
+	VECSubtract(&corner[3], &corner[2], &v1);
+	VECSubtract(&corner[6], &corner[2], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[3].set(&normal, &local_5c);
+	sViewPlane[3].set(&normal, &corner[2]);
 
-	VECSubtract(&local_5c, &local_44, &v1);
-	VECSubtract(&local_74, &local_44, &v2);
+	VECSubtract(&corner[2], &corner[0], &v1);
+	VECSubtract(&corner[4], &corner[0], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[4].set(&normal, &local_44);
+	sViewPlane[4].set(&normal, &corner[0]);
 
-	VECSubtract(&local_68, &local_98, &v1);
-	VECSubtract(&local_80, &local_98, &v2);
+	VECSubtract(&corner[3], &corner[7], &v1);
+	VECSubtract(&corner[5], &corner[7], &v2);
 	VECCrossProduct(&v1, &v2, &normal);
 	MsVECNormalize(&normal, &normal);
-	sViewPlane[5].set(&normal, &local_98);
+	sViewPlane[5].set(&normal, &corner[7]);
 }
 
 static f32 sKeepViewClipFovy;
@@ -373,7 +632,40 @@ BOOL ViewFrustumClipCheck(JDrama::TGraphics* gfx, Vec* position, f32 radius)
 
 void ViewFrustumRectClipCheck(JDrama::TGraphics*, Vec*, f32, f32) { }
 
-int SMS_CountPolygonNumInShape(J3DShape*) { }
+int SMS_CountPolygonNumInShape(J3DShape* shape)
+{
+	int sizeTable[4] = {
+		/* GX_NONE   */ 0,
+		/* GX_DIRECT */ 1,
+		/* GX_INDEX8 */ 1,
+		/* GX_INDEX16*/ 2,
+	};
+
+	int polyNum = 0;
+	int vtxSize = 0;
+	for (GXVtxDescList* desc = shape->getVtxDesc(); desc->attr != GX_VA_NULL;
+	     desc++) {
+		vtxSize += sizeTable[desc->type];
+	}
+
+	for (u16 i = 0; i < shape->getMtxGroupNum(); i++) {
+		u8* dl = shape->getShapeDraw(i)->getDisplayList();
+		u8* p  = dl;
+		while (p - dl < shape->getShapeDraw(i)->getDisplayListSize()) {
+			u8 op = *p;
+			if (op == GX_TRIANGLEFAN || op == GX_TRIANGLESTRIP) {
+				u16 n   = *(u16*)(p + 1);
+				polyNum = n + polyNum;
+				p += vtxSize * n;
+				polyNum -= 2;
+				p += 3;
+			} else {
+				break;
+			}
+		}
+	}
+	return polyNum;
+}
 
 void SMS_CountPolygonNumInModelData(J3DModelData*) { }
 
@@ -388,20 +680,54 @@ void SMS_CreatePolygonOrderListInModelData(J3DModelData*,
 
 void SMS_DrawBillboardLine(const JDrama::TGraphics*,
                            const JGeometry::TVec3<f32>*, int, int, f32,
-                           const _GXColor*)
+                           const GXColor*)
 {
 }
 
-void SMS_DrawCube(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&) {
+void SMS_DrawCube(const JGeometry::TVec3<f32>& param_1,
+                  const JGeometry::TVec3<f32>& param_2)
+{
+	GXBegin(GX_QUADS, GX_VTXFMT0, 24);
+
+	GXPosition3f32(param_1.x, param_1.y, param_1.z);
+	GXPosition3f32(param_1.x, param_1.y, param_2.z);
+	GXPosition3f32(param_2.x, param_1.y, param_2.z);
+	GXPosition3f32(param_2.x, param_1.y, param_1.z);
+
+	GXPosition3f32(param_1.x, param_1.y, param_1.z);
+	GXPosition3f32(param_2.x, param_1.y, param_1.z);
+	GXPosition3f32(param_2.x, param_2.y, param_1.z);
+	GXPosition3f32(param_1.x, param_2.y, param_1.z);
+
+	GXPosition3f32(param_1.x, param_1.y, param_1.z);
+	GXPosition3f32(param_1.x, param_2.y, param_1.z);
+	GXPosition3f32(param_1.x, param_2.y, param_2.z);
+	GXPosition3f32(param_1.x, param_1.y, param_2.z);
+
+	GXPosition3f32(param_2.x, param_2.y, param_2.z);
+	GXPosition3f32(param_1.x, param_2.y, param_2.z);
+	GXPosition3f32(param_1.x, param_2.y, param_1.z);
+	GXPosition3f32(param_2.x, param_2.y, param_1.z);
+
+	GXPosition3f32(param_2.x, param_2.y, param_2.z);
+	GXPosition3f32(param_2.x, param_1.y, param_2.z);
+	GXPosition3f32(param_1.x, param_1.y, param_2.z);
+	GXPosition3f32(param_1.x, param_2.y, param_2.z);
+
+	GXPosition3f32(param_2.x, param_2.y, param_2.z);
+	GXPosition3f32(param_2.x, param_2.y, param_1.z);
+	GXPosition3f32(param_2.x, param_1.y, param_1.z);
+	GXPosition3f32(param_2.x, param_1.y, param_2.z);
+
+	GXEnd();
 }
 
 void SMS_SettingDrawShape(J3DModelData* param_1, u16 param_2)
 {
 	J3DShape* shape = param_1->getShapeNodePointer(param_2);
-	GXCallDisplayList(shape->getDrawList(), 0xC0);
-	J3DVertexData& data = param_1->getVertexData();
-	j3dSys.unk10C       = data.getVtxPosArray();
-	j3dSys.unk110       = data.getVtxNormArray();
+	GXCallDisplayList(shape->getVcdVatCmd(), J3DShape::kVcdVatDLSize);
+	j3dSys.setVtxPos(param_1->getVtxPosArray());
+	j3dSys.setVtxNrm(param_1->getVtxNormArray());
 	shape->loadVtxArray();
 }
 
@@ -433,34 +759,38 @@ void SMS_ShowJoint(J3DMaterial* param_1, bool param_2)
 {
 	if (param_2) {
 		for (; param_1 != nullptr; param_1 = param_1->getNext())
-			param_1->getShape()->offFlag(1);
+			param_1->getShape()->offFlag(J3DShpFlag_Visible);
 	} else {
 		for (; param_1 != nullptr; param_1 = param_1->getNext())
-			param_1->getShape()->onFlag(1);
+			param_1->getShape()->onFlag(J3DShpFlag_Visible);
 	}
 }
 
-void MsWireInit(_GXVtxFmt) { }
+void MsWireInit(GXVtxFmt) { }
 
-void MsDrawCube(const JGeometry::TVec3<f32>&, f32, _GXColor) { }
+void MsDrawCube(const JGeometry::TVec3<f32>&, f32, GXColor) { }
 
 void MsDrawAxis(MtxPtr, f32) { }
 
 void SMS_DrawBeamAux(int) { }
 
 void SMS_DrawConeBeam(const JGeometry::TVec3<f32>&,
-                      const JGeometry::TVec3<f32>&, f32, int, const _GXColor&)
+                      const JGeometry::TVec3<f32>&, f32, int, const GXColor&)
 {
 }
 
-void SMS_DrawHorzCircle(const JGeometry::TVec3<f32>&, f32, int, const _GXColor&)
+void SMS_DrawHorzCircle(const JGeometry::TVec3<f32>&, f32, int, const GXColor&)
 {
 }
 
 void SMS_CalcMatAnmAndMakeDL(J3DModel* param_1, u16 param_2)
 {
 	J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(param_2);
-	mat->getMaterialAnm()->calc(mat);
+
+	param_1->getModelData()
+	    ->getMaterialNodePointer(param_2)
+	    ->getMaterialAnm()
+	    ->calc(mat);
 	j3dSys.setMatPacket(param_1->getMatPacket(param_2));
 	mat->makeDisplayList();
 }
@@ -470,14 +800,12 @@ void SMS_CopyMaterialToSort(J3DMaterial*, J3DModel*, u16) { }
 void SMS_UnifyMaterial(J3DModel* param_1)
 {
 	J3DModelData* modelData = param_1->getModelData();
-	J3DMaterial* unifier    = modelData->getMaterialNodePointer(0);
-	for (u16 i = 0; i < modelData->getMaterialNum(); i = i + 1) {
+	J3DMaterial* unifier = param_1->getModelData()->getMaterialNodePointer(0);
+	for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
 		J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(i);
-		u32 thing        = unifier->unk18 & 0x7fffffff;
-		mat->unk18       = thing;
-		param_1->getMatPacket(i)->unk3C = thing;
-
-		u16 texNo = unifier->getTevBlock()->getTexNo(0);
-		mat->getTevBlock()->setTexNo(0, texNo);
+		u32 materialID   = unifier->getMaterialID();
+		mat->setMaterialID(materialID);
+		param_1->getMatPacket(i)->setMaterialID(materialID);
+		mat->setTexNo(0, unifier->getTevBlock()->getTexNo(0));
 	}
 }

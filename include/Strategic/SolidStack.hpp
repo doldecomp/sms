@@ -2,7 +2,7 @@
 #define ENEMY_SOLID_STACK_HPP
 
 #include <dolphin/types.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 template <class T> class TSolidStack {
 	/* 0x0 */ int mCapacity;

@@ -34,11 +34,11 @@ void TMarioEffect::init(TMario* mario)
 
 	void* tobikomiBmd
 	    = JKRFileLoader::getGlbResource("/mario/04_tobikomi/04_tobikomi.bmd");
-	u32 flag = 0x10040000;
+	u32 flag = J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift);
 	for (int i = 0; i < 2; ++i) {
-		J3DModel* model = new J3DModel(
-		    J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0, 1);
-		unk74[i]->setModel(model, 0);
+		unk74[i]->setModel(
+		    new J3DModel(J3DModelLoaderDataBase::load(tobikomiBmd, flag), 0, 1),
+		    0);
 	}
 
 	MActorAnmData* anmDataWaterboost = new MActorAnmData;
@@ -49,13 +49,16 @@ void TMarioEffect::init(TMario* mario)
 
 	void* waterboostBmd = JKRFileLoader::getGlbResource(
 	    "/mario/01_waterboost/01_waterboost.bmd");
-	J3DModel* waterboostModel = new J3DModel(
-	    J3DModelLoaderDataBase::load(waterboostBmd, 0x10040000), 0, 1);
-	unk80->setModel(waterboostModel, 0);
+	unk80->setModel(
+	    new J3DModel(J3DModelLoaderDataBase::load(
+	                     waterboostBmd, J3DMLF_MaterialPEFull
+	                                        | (4 << J3DMLF_TevStageNumShift)),
+	                 0, 1),
+	    0);
 	unk80->setBck("01_waterboost_in");
 	unk80->setBtk("01_waterboost");
-	unk80->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-	unk80->getFrameCtrl(4)->setRate(SMSGetAnmFrameRate());
+	unk80->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+	unk80->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
 
 	gpConductor->registerOtherObj(this);
 }
@@ -101,10 +104,10 @@ void TMarioEffect::setJumpIntoWaterEffect()
 	unk74[idx]->setBtk("04_tobikomi");
 	unk74[idx]->setBrk("04_tobikomi");
 
-	unk74[idx]->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(2)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(4)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(5)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BPK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BRK)->setRate(SMSGetAnmFrameRate());
 
 	unk74[idx]->getModel()->setBaseTRMtx(localMtx);
 
@@ -134,10 +137,10 @@ void TMarioEffect::setJumpIntoWaterEffectSmall()
 	unk74[idx]->setBtk("04_tobikomi");
 	unk74[idx]->setBrk("04_tobikomi");
 
-	unk74[idx]->getFrameCtrl(0)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(2)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(4)->setRate(SMSGetAnmFrameRate());
-	unk74[idx]->getFrameCtrl(5)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BPK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
+	unk74[idx]->getFrameCtrl(ANM_TYPE_BRK)->setRate(SMSGetAnmFrameRate());
 
 	unk74[idx]->getModel()->setBaseTRMtx(localMtx);
 
@@ -154,19 +157,19 @@ void TMarioEffect::startDashEffect()
 {
 	unk80->setBck("01_waterboost_in");
 	unk80->setBtk("01_waterboost");
-	unk80->getFrameCtrl(0)->setFrame(0.0f);
-	unk80->getFrameCtrl(4)->setFrame(0.0f);
+	unk80->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+	unk80->getFrameCtrl(ANM_TYPE_BTK)->setFrame(0.0f);
 }
 
 void TMarioEffect::endDashEffect()
 {
 	unk80->setBck("01_waterboost_out");
-	unk80->getFrameCtrl(0)->setFrame(0.0f);
+	unk80->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 }
 
-void TMarioEffect::perform(u32 param_1, JDrama::TGraphics* gfx)
+void TMarioEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		switch (unk7C) {
 		case 0:
 			if (unk68->checkFlag(MARIO_FLAG_FLUDD_EMITTING)) {
@@ -190,33 +193,34 @@ void TMarioEffect::perform(u32 param_1, JDrama::TGraphics* gfx)
 			break;
 
 		case 2:
-			if (unk80->getFrameCtrl(0)->checkState(
-			        J3DFrameCtrl::STATE_COMPLETED_ONCE
-			        | J3DFrameCtrl::STATE_LOOPED_ONCE))
+			if (unk80->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				unk7C = 0;
 			break;
 		}
 	}
 
-	if ((param_1 & 0x2) && unk7C != 0) {
+	if ((cue & CUE_CALC_ANIM) && unk7C != 0) {
 		if (unk68->mWaterGun->getEmitMtx(0) != nullptr) {
 			unk80->getModel()->setBaseTRMtx(unk68->mWaterGun->getEmitMtx(0));
-			unk80->perform(0x2, gfx);
+			unk80->perform(CUE_CALC_ANIM, graphics);
 		}
 	}
 
-	if ((param_1 & 0x4) && unk7C != 0)
-		unk80->perform(0x4, gfx);
+	if ((cue & CUE_CALC_VIEW) && unk7C != 0)
+		unk80->perform(CUE_CALC_VIEW, graphics);
 
-	if ((param_1 & 0x200) && unk7C != 0)
-		unk80->perform(0x200, gfx);
+	if ((cue & CUE_ENTRY) && unk7C != 0)
+		unk80->perform(CUE_ENTRY, graphics);
 
 	for (int i = 0; i < 2; ++i) {
 		if (unk6C[i] == 1) {
-			unk74[i]->perform(param_1, gfx);
-			if (unk74[i]->getFrameCtrl(0)->checkState(
-			        J3DFrameCtrl::STATE_COMPLETED_ONCE
-			        | J3DFrameCtrl::STATE_LOOPED_ONCE))
+			unk74[i]->perform(cue, graphics);
+			if (unk74[i]
+			        ->getFrameCtrl(ANM_TYPE_BCK)
+			        ->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
+			                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
 				unk6C[i] = 0;
 		}
 	}

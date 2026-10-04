@@ -9,8 +9,8 @@ void TStageEnemyInfo::load(JSUMemoryInputStream& stream)
 	stream.readString(buffer, 256);
 	mManagerName = new char[1 + strlen(buffer)];
 	strcpy(mManagerName, buffer);
-	stream.read(&mFlags, 4);
-	stream.read(&mWeight, 4);
+	stream >> mFlags;
+	stream >> mWeight;
 }
 
 TStageEnemyInfoTable::TStageEnemyInfoTable(const char* name)

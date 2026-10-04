@@ -1,5 +1,6 @@
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <Strategic/HitActor.hpp>
 #include <System/TimeRec.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -40,6 +41,12 @@ TObjManager::TObjManager(const char* name)
 {
 }
 
+void TObjManager::initObjArray(int capacity)
+{
+	mCapacity = capacity;
+	unk18     = new THitActor*[mCapacity];
+}
+
 void TObjManager::manageObj(THitActor* obj)
 {
 	unk18[mObjNum] = obj;
@@ -55,8 +62,9 @@ void TObjManager::load(JSUMemoryInputStream& stream)
 	unk1C = (TObjChara*)JDrama::TNameRefGen::getInstance()
 	            ->getRootNameRef()
 	            ->search(buffer);
-	mCapacity = stream.readU32();
-	unk18     = new THitActor*[mCapacity];
+	s32 capacity;
+	stream >> capacity;
+	initObjArray(capacity);
 }
 
 MActorAnmData* TObjManager::getMActorAnmData()
@@ -66,16 +74,16 @@ MActorAnmData* TObjManager::getMActorAnmData()
 	return unk20;
 }
 
-void TObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk30 & 1)
-		TTimeRec::startTimer();
+		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 
 	for (int i = 0; i < mObjNum; ++i)
-		unk18[i]->testPerform(param_1, param_2);
+		unk18[i]->testPerform(cue, graphics);
 
 	if (unk30 & 1)
-		TTimeRec::endTimer();
+		TTimeRec::snapCPUTime(0);
 }
 
 void TObjManager::createModelDataArray(const TModelDataLoadEntry* entries)
@@ -102,7 +110,11 @@ void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
 void TObjManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[2]
-	    = { { "default.bmd", 0x10210000, 0 }, { nullptr, 0, 0 } };
+	    = { { "default.bmd",
+		      J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		          | (1 << J3DMLF_TevStageNumShift),
+		      0 },
+		    { nullptr, 0, 0 } };
 	createModelDataArray(entry);
 }
 

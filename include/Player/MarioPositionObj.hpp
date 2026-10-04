@@ -11,7 +11,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*) { }
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 	const JGeometry::TVec3<f32>& getUnk10(u8 idx) const { return unk10[idx]; }
 	const JGeometry::TVec3<f32>& getUnk70(u8 idx) const { return unk70[idx]; }

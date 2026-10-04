@@ -13,7 +13,7 @@ static void coneInPlane(const JGeometry::TVec3<f32>& origin, f32 angle,
 {
 	// Scale perpendicular component by cone opening
 	JGeometry::TVec3<f32> dir = offsetDir;
-	dir.scale(JMASin(angle));
+	dir.scale(MsSin(angle));
 
 	// Add the axis direction to get the final ray direction
 	dir += axis;
@@ -97,22 +97,23 @@ void TConeBeam::calcVertices(int count)
 
 	if (mBGCheckData == nullptr) {
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 s = mScale * JMASin(i * (360.0f / mVtxCount)) / 2.0f;
-			f32 c = mScale * JMACos(i * (360.0f / mVtxCount)) / 2.0f;
+			f32 s = mScale * MsSin(i * (360.0f / mVtxCount)) / 2.0f;
+			f32 c = mScale * MsCos(i * (360.0f / mVtxCount)) / 2.0f;
 
 			JGeometry::TVec3<f32> local_11c;
 			local_11c.zero();
 
-			local_11c += local_140 * s;
-			local_11c += local_134 * c;
+			local_11c += local_140 * c;
+			local_11c += local_134 * s;
 
 			local_11c += unk0C;
 
 			mVtx[i] = local_11c;
 		}
 	} else {
-		JGeometry::TPartition3<f32> partition(mBGCheckData->getNormal(),
-		                                      mBGCheckData->getPlaneDistance());
+		JGeometry::TPartition3<f32> partition;
+		partition.mDist = mBGCheckData->getPlaneDistance();
+		partition.mNormal.set(mBGCheckData->getNormal());
 		f32 local_128Len = PSVECMag(&local_128);
 		f32 angle        = matan(local_128Len, mScale)
 		            * (360.0f / 65536.0f); // this is SHORT2DEGANGLE constant
@@ -120,8 +121,8 @@ void TConeBeam::calcVertices(int count)
 		PSVECNormalize(&local_128, &local_128);
 
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 sinA = JMASin(i * (360.0f / mVtxCount));
-			f32 cosA = JMACos(i * (360.0f / mVtxCount));
+			f32 sinA = MsSin(i * (360.0f / mVtxCount));
+			f32 cosA = MsCos(i * (360.0f / mVtxCount));
 
 			JGeometry::TVec3<f32> local_ec;
 			local_ec.zero();
@@ -200,6 +201,7 @@ void TBeamManager::drawAllBeam()
 	for (int i = 0; i < mBeamCount; i++) {
 		mBeams[i].drawConeBeam(mColor);
 	}
+	mBeamCount = 0;
 }
 
 void TBeamManager::requestCone(const JGeometry::TVec3<f32>& pos,
@@ -230,11 +232,10 @@ void TBeamManager::requestCone(const JGeometry::TVec3<f32>& pos,
 	beam.calcVertices(mBeamVtxCount);
 }
 
-void TBeamManager::perform(u32 param_1, JDrama::TGraphics* graphics)
+void TBeamManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x8) {
+	if (cue & CUE_DRAW) {
 		setupMaterial();
 		drawAllBeam();
-		mBeamCount = 0;
 	}
 }

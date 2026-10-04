@@ -1,7 +1,7 @@
 #include <System/Application.hpp>
 #include <stdio.h>
 #include <stdlib.h>
-#include <types.h>
+#include <dolphin/types.h>
 #include <dolphin/os.h>
 #include <dolphin/vi.h>
 #include <dolphin/gx.h>
@@ -39,7 +39,6 @@
 #include <System/CardManager.hpp>
 #include <System/ScenarioArchiveName.hpp>
 #include <System/MarNameRefGen.hpp>
-#include <System/StageUtil.hpp>
 #include <System/GCLogoDir.hpp>
 #include <System/MovieDirector.hpp>
 #include <System/SelectDir.hpp>
@@ -49,7 +48,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <System/DummyStrings.hpp>
 
 TMarDirector* gpMarDirector;
 MSound* gpMSound;
@@ -67,11 +66,36 @@ static void* arcBufMario;
 static void* arcBufCmn;
 static void* bufStageArcBin;
 static void* spGameHeapBlock;
+#ifdef VERSION_GMSP01
+static JKRMemArchive* sCmn2DArc;
+static void* sCmn2DArcBuf;
+#endif
 
 TARAMBlock gArBkConsole;
 TARAMBlock gArBkGuide;
 
 extern "C" void ReInitializeGX();
+u8 SMS_getShineIDofExStage(u8);
+
+#ifdef VERSION_GMSP01
+f32 SMSGetRealVSyncTimesPerSec()
+{
+	f32 result = 60.0f;
+	switch (VIGetTvFormat()) {
+	case VI_MPAL:
+	case VI_NTSC:
+	case VI_EURGB60:
+		result = 60.0f;
+		break;
+	case VI_PAL:
+		result = 50.0f;
+		break;
+	}
+	return result;
+}
+
+f32 SMSGetVSyncTimesPerSec() { return SMSGetRealVSyncTimesPerSec() / 2.0f; }
+#else
 
 f32 SMSGetVSyncTimesPerSec()
 {
@@ -89,6 +113,8 @@ f32 SMSGetVSyncTimesPerSec()
 	return result / 2.0f;
 }
 
+#endif
+
 f32 SMSGetAnmFrameRate() { return 60.0f / SMSGetVSyncTimesPerSec(); }
 
 TApplication::TApplication()
@@ -103,81 +129,83 @@ TApplication::TApplication()
 {
 }
 
-void* SMSLoadArchive(const char* param_1, void* param_2, u32 param_3,
-                     JKRHeap* param_4)
+void* SMSLoadArchive(const char* path, void* dst, u32 dstLength, JKRHeap* heap)
 {
-	if (param_4 == nullptr)
-		param_4 = JKRGetCurrentHeap();
+	if (heap == nullptr)
+		heap = JKRGetCurrentHeap();
 
 	void* result = nullptr;
 
 	// Try to load a compressed version of the archive first
 	char compressedArcPath[64];
-	strcpy(compressedArcPath, param_1);
+	strcpy(compressedArcPath, path);
 	char* loc = strstr(compressedArcPath, ".arc");
 	if (loc != nullptr) {
 		strcpy(loc, ".szs");
 		s32 entryNum = DVDConvertPathToEntrynum(compressedArcPath);
 		if (entryNum != -1) {
-			result = JKRDvdRipper::loadToMainRAM(
-			    compressedArcPath, (u8*)param_2, EXPAND_SWITCH_DECOMPRESS,
-			    param_3, param_4, JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0,
-			    nullptr);
+			result = JKRDvdToMainRam(compressedArcPath, (u8*)dst,
+			                         EXPAND_SWITCH_DECOMPRESS, dstLength, heap,
+			                         JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0,
+			                         nullptr);
 		}
 	}
 
 	// If that fails, then try to load the uncompressed version
 	if (result == nullptr)
-		result = JKRDvdRipper::loadToMainRAM(
-		    param_1, (u8*)param_2, EXPAND_SWITCH_DEFAULT, param_3, param_4,
+		result = JKRDvdToMainRam(
+		    path, (u8*)dst, EXPAND_SWITCH_DEFAULT, dstLength, heap,
 		    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
 
 	return result;
 }
 
-void SMSLoadArchiveARAM(TARAMBlock* param_1, const char* param_2)
+void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path)
 {
 	// Try to load a compressed version of the archive first
 	char compressedArcPath[64];
-	strcpy(compressedArcPath, param_2);
+	strcpy(compressedArcPath, path);
+#ifdef VERSION_GMSP01
+	out_block->mBlock = nullptr;
+#endif
 	char* loc = strstr(compressedArcPath, ".arc");
 	if (loc != nullptr) {
 		strcpy(loc, ".szs");
 		s32 entryNum = DVDConvertPathToEntrynum(compressedArcPath);
 		if (entryNum != -1) {
-			param_1->unk0 = JKRDvdAramRipper::loadToAram(
+			out_block->mBlock = JKRDvdAramRipper::loadToAram(
 			    compressedArcPath, 0, EXPAND_SWITCH_DEFAULT, 0, 0);
-			param_1->unk4 = true;
+			out_block->mIsCompressed = true;
 		}
 	}
 
 	// If that fails, then try to load the uncompressed version
-	if (param_1->unk0 == nullptr) {
-		param_1->unk0 = JKRDvdAramRipper::loadToAram(
-		    (char*)param_2, 0, EXPAND_SWITCH_DEFAULT, 0, 0);
-		param_1->unk4 = false;
+	if (out_block->mBlock == nullptr) {
+		out_block->mBlock = JKRDvdAramRipper::loadToAram(
+		    (char*)path, 0, EXPAND_SWITCH_DEFAULT, 0, 0);
+		out_block->mIsCompressed = false;
 	}
 }
 
-void SMSMountAramArchive(JKRMemArchive* param_1, TARAMBlock& param_2)
+void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block)
 {
-	if (param_2.unk4) {
-		JKRAram::aramToMainRam(param_2.unk0, (u8*)gpMarDirector->getUnkD4(), 0,
-		                       0, EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr,
-		                       -1, nullptr);
+	if (block.mIsCompressed) {
+		JKRAram::aramToMainRam(
+		    block.mBlock, (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
+		    EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr, -1, nullptr);
 	} else {
-		JKRAram::aramToMainRam(param_2.unk0, (u8*)gpMarDirector->getUnkD4(), 0,
-		                       0, EXPAND_SWITCH_DEFAULT, 0, nullptr, -1,
-		                       nullptr);
+		JKRAram::aramToMainRam(block.mBlock,
+		                       (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
+		                       EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
 	}
-	param_1->mountFixed(gpMarDirector->getUnkD4(), MBF_0);
+	archive->mountFixed(SMSGetMarDirector()->getUnkD4(), MBF_0);
 }
 
-JKRArchive* SMSSwitch2DArchive(const char* param_1, TARAMBlock& param_2)
+JKRArchive* SMSSwitch2DArchive(const char* arc_path, TARAMBlock& block)
 {
-	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume(param_1);
+	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume(arc_path);
 	arch->unmountFixed();
-	SMSMountAramArchive(arch, param_2);
+	SMSMountAramArchive(arch, block);
 	return arch;
 }
 
@@ -237,13 +265,13 @@ void TApplication::initialize()
 
 	SMSRumbleMgr = new RumbleMgr(true, true, true, true);
 	SMSRumbleMgr->init();
-	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0),
+	mFader = new TSmplFader(JUtility::TColor(0, 0, 0, 0xff),
 	                        SMSGetVSyncTimesPerSec(), "ルートフェーダー");
 	mFader->setDisplaySize(SMSGetGCLogoRenderWidth(),
 	                       SMSGetGCLogoRenderHeight());
 	TFlagManager::start(JKRGetCurrentHeap());
 	TTimeRec::start(0xDFC0);
-	TTimeRec::instance()->unk81C |= 1;
+	TTimeRec::instance()->mFlags.on(1);
 	TDrawSyncManager::smInstance->setCallback(0, 0xDFC0, 0xDFFF,
 	                                          TTimeRec::instance());
 	mMeter = new TProcessMeter(2);
@@ -258,11 +286,48 @@ void TApplication::initialize()
 	OSResumeThread(&gSetupThread);
 }
 
+#ifdef VERSION_GMSP01
+#pragma dont_inline on
+void load2DResource2Aram()
+{
+	static u8 sLoadResourceLang     = -1;
+	static const char* cmn2dNames[] = {
+		"/data/cmn2d_en.arc", "/data/cmn2d_ge.arc", "/data/cmn2d_fr.arc",
+		"/data/cmn2d_sp.arc", "/data/cmn2d_it.arc",
+	};
+	static const char* game_6Names[] = {
+		"/data/game_6_en.arc", "/data/game_6_ge.arc", "/data/game_6_fr.arc",
+		"/data/game_6_sp.arc", "/data/game_6_it.arc",
+	};
+	static const char* guideNames[] = {
+		"/data/guide_en.arc", "/data/guide_ge.arc", "/data/guide_fr.arc",
+		"/data/guide_sp.arc", "/data/guide_it.arc",
+	};
+
+	if (sLoadResourceLang
+	    != (u8)TFlagManager::getInstance()->getFlag(0xA0001)) {
+		sLoadResourceLang = (u8)TFlagManager::getInstance()->getFlag(0xA0001);
+		if (JKRFileLoader::getVolume("cmn2d") != nullptr)
+			sCmn2DArc->unmountFixed();
+
+		SMSLoadArchive(cmn2dNames[sLoadResourceLang], sCmn2DArcBuf, 0xA000,
+		               nullptr);
+		sCmn2DArc->mountFixed(sCmn2DArcBuf, MBF_0);
+		JKRAram::getAramHeap()->freeAll();
+
+		SMSLoadArchiveARAM(&gArBkConsole, game_6Names[sLoadResourceLang]);
+		SMSLoadArchiveARAM(&gArBkGuide, guideNames[sLoadResourceLang]);
+	}
+}
+#pragma dont_inline off
+#endif
+
+#pragma dont_inline on
 void* TApplication::setupThreadFuncLogo()
 {
-	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK0))
+	while (!SMSGetMSound()->checkWaveOnAram(MS_WAVE_UNK0))
 		OSYieldThread();
-	while (!gpMSound->checkWaveOnAram(MS_WAVE_UNK210))
+	while (!SMSGetMSound()->checkWaveOnAram(MS_WAVE_UNK210))
 		OSYieldThread();
 
 	arcBufMario
@@ -271,16 +336,20 @@ void* TApplication::setupThreadFuncLogo()
 	arcBufCmn
 	    = SMSLoadArchive("/data/common.arc", nullptr, 0, JKRGetRootHeap());
 
-	bufStageArcBin = JKRDvdRipper::loadToMainRAM(
+	bufStageArcBin = JKRDvdToMainRam(
 	    "/data/stageArc.bin", nullptr, EXPAND_SWITCH_DEFAULT, 0, mHeap,
 	    JKRDvdRipper::ALLOC_DIRECTION_FORWARD, 0, nullptr);
 
+#ifdef VERSION_GMSP01
+	load2DResource2Aram();
+#else
 	SMSLoadArchiveARAM(&gArBkConsole, "/data/game_6.arc");
-
 	SMSLoadArchiveARAM(&gArBkGuide, "/data/guide.arc");
+#endif
 
 	return nullptr;
 }
+#pragma dont_inline off
 
 static void* SetupThreadFuncLogo(void* param)
 {
@@ -294,15 +363,16 @@ void TApplication::initialize_bootAfter()
 	this_01->mountFixed(arcBufNLogo, MBF_0);
 
 	this_01->becomeCurrent("/font");
-	u32 uVar1
-	    = this_01->getResSize(this_01->getResource("standard_fontEx.bfn"));
+	void* fontRes = this_01->getResource("standard_fontEx.bfn");
+	u32 uVar1     = this_01->getResSize(fontRes);
 	ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
 	this_01->readResource(font, uVar1, "standard_fontEx.bfn");
 	gpSystemFont = new JUTResFont(font, nullptr);
 
 	this_01->becomeCurrent("/audi");
-	u32 uVar3 = this_01->getResSize(this_01->getResource("mSound.aaf"));
-	u8* buf   = new u8[uVar3];
+	void* aafRes = this_01->getResource("mSound.aaf");
+	u32 uVar3    = this_01->getResSize(aafRes);
+	u8* buf      = new u8[uVar3];
 	this_01->readResource(buf, uVar3, "mSound.aaf");
 	JKRHeap* prevHeap = JKRGetCurrentHeap();
 	gpMSound = new MSound(prevHeap, nullptr, 0xF40000, buf, nullptr, 0xb00000);
@@ -320,6 +390,11 @@ void TApplication::initialize_bootAfter()
 	gpCardManager = new TCardManager(sectorWorkArea, cardWorkArea, 0, 14,
 	                                 workerThreadStack, 0x1000);
 	gpCardManager->readOptionBlock();
+
+#ifdef VERSION_GMSP01
+	sCmn2DArcBuf = new (0x20) u8[0xA000];
+	sCmn2DArc    = new JKRMemArchive;
+#endif
 
 	mHeap->becomeCurrentHeap();
 
@@ -345,9 +420,9 @@ void TApplication::initialize_nlogoAfter()
 		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
 		JDrama::TNameRefGen::getInstance()->load(stream);
-		unk30 = JDrama::TNameRefGen::search<
-		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> > >(
-		    "ステージ毎シナリオアーカイブ名群");
+		unk30 = static_cast<
+		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
+		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
 
 		delete JDrama::TNameRefGen::instance;
 		JDrama::TNameRefGen::instance = nullptr;
@@ -355,14 +430,19 @@ void TApplication::initialize_nlogoAfter()
 
 	gpRomFont = nullptr;
 	((JKRExpHeap*)mHeap)->destroy();
-	JKRGetRootHeap()->getSize(spGameHeapBlock);
+	JKRGetRootHeap()->free(spGameHeapBlock);
 
 	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
 	gpCardManager->mIcons
 	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
 	gpCardManager->mBanner
+#ifdef VERSION_GMSP01
+	    = (ResTIMG*)piVar2->getResource("/card/mariobnr.bti") + 1;
+#else
 	    = (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1;
+#endif
 
+#ifndef VERSION_GMSP01
 	int status;
 	while ((status = gpCardManager->getLastStatus()) == -1)
 		OSYieldThread();
@@ -372,6 +452,8 @@ void TApplication::initialize_nlogoAfter()
 		gpCardManager->getOptionReadStream(&stream);
 		TFlagManager::getInstance()->loadOption(stream);
 	}
+
+#endif
 
 	gpCardManager->unmount();
 
@@ -389,8 +471,8 @@ void TApplication::initialize_nlogoAfter()
 
 	JMANewSinTable(0xC);
 
-	JKRHeap* heap = JKRGetCurrentHeap();
-	mHeap         = JKRSolidHeap::create(heap->getFreeSize(), heap, true);
+	mHeap = JKRSolidHeap::create(JKRGetCurrentHeap()->getFreeSize(),
+	                             JKRGetCurrentHeap(), true);
 	mHeap->becomeCurrentHeap();
 }
 
@@ -417,9 +499,9 @@ bool TApplication::checkAdditionalMovie()
 {
 	bool result = false;
 
-	const TGameSequence& currArea = gpApplication.mCurrArea;
+	const TGameSequence& currArea = SMSGetApplication()->mCurrArea;
 
-	u8 uVar1 = SMS_getShineIDofExStage(currArea.unk0);
+	u8 uVar1 = SMS_getShineIDofExStage(currArea.getStage());
 	if (uVar1 != 0xFF) {
 		if (!TFlagManager::getInstance()->getShineFlag(uVar1)) {
 			if (!TFlagManager::getInstance()->getBool(0x3000D)) {
@@ -429,9 +511,9 @@ bool TApplication::checkAdditionalMovie()
 			}
 		}
 	} else {
-		switch (currArea.unk0) {
+		switch (currArea.getStage()) {
 		case 0:
-			if (currArea.unk1 == 0) {
+			if (currArea.getScenario() == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x30009)) {
 					mMovie = 1;
 					TFlagManager::getInstance()->setBool(true, 0x30009);
@@ -441,13 +523,13 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 1:
-			if (currArea.unk1 == 0) {
+			if (currArea.getScenario() == 0) {
 				if (!TFlagManager::getInstance()->getBool(0x3000B)) {
 					mMovie = 3;
 					TFlagManager::getInstance()->setBool(true, 0x3000B);
 					result = true;
 				}
-			} else if (currArea.unk1 == 1) {
+			} else if (currArea.getScenario() == 1) {
 				if (!TFlagManager::getInstance()->getBool(0x3000C)) {
 					mMovie = 4;
 					TFlagManager::getInstance()->setBool(true, 0x3000C);
@@ -457,7 +539,7 @@ bool TApplication::checkAdditionalMovie()
 			break;
 
 		case 8:
-			if (currArea.unk1 == 2) {
+			if (currArea.getScenario() == 2) {
 				if (!TFlagManager::getInstance()->getBool(0x3000D)) {
 					mMovie = 5;
 					TFlagManager::getInstance()->setBool(true, 0x3000D);
@@ -474,6 +556,9 @@ bool TApplication::checkAdditionalMovie()
 void TApplication::proc()
 {
 	while (mAppState != APP_STATE_QUIT) {
+#ifdef VERSION_GMSP01
+		mDisplay->unk4C = 2;
+#endif
 		u8 nextState = APP_STATE_DEFAULT;
 		int iVar9    = 0;
 
@@ -496,7 +581,7 @@ void TApplication::proc()
 			TMenuDirector* dir = new TMenuDirector;
 			mDirector          = dir;
 			dir->setup(mDisplay, mGamePads[0]);
-			TFlagManager::getInstance()->setFlag(3, 0x20001);
+			TFlagManager::getInstance()->setFlag(0x20001, 3);
 			mCurrArea.set(1, 0, 0);
 		} break;
 
@@ -504,6 +589,10 @@ void TApplication::proc()
 			if (checkAdditionalMovie()) {
 				// Show a movie before entering a stage, e.g. the secret levels
 				SMSSetupMovieRenderingInfo(mDisplay);
+#ifdef VERSION_GMSP01
+				if ((mDisplay->getRenderMode().viTVmode >> 2) == VI_PAL)
+					mDisplay->unk4C = 1;
+#endif
 				mFader->setDisplaySize((u16)SMSGetGameRenderWidth(),
 				                       (u16)SMSGetGameRenderHeight());
 				TMovieDirector* dir = new TMovieDirector;
@@ -532,12 +621,16 @@ void TApplication::proc()
 		} break;
 
 		case APP_STATE_DONE:
-			gpApplication.mMovie = 9;
+			SMSGetApplication()->setMovie(9);
 			mNextArea.set(15, 0, 0);
 			// FALLTHROUGH
 
 		case APP_STATE_MOVIE: {
 			SMSSetupMovieRenderingInfo(mDisplay);
+#ifdef VERSION_GMSP01
+			if ((mDisplay->getRenderMode().viTVmode >> 2) == VI_PAL)
+				mDisplay->unk4C = 1;
+#endif
 			mFader->setDisplaySize((u16)SMSGetGameRenderWidth(),
 			                       (u16)SMSGetGameRenderHeight());
 			TMovieDirector* dir = new TMovieDirector;
@@ -549,7 +642,8 @@ void TApplication::proc()
 		if (!iVar9)
 			nextState = gameLoop();
 
-		delete mDirector;
+		if (mDirector != nullptr)
+			mDirector->~TDirector();
 		mDirector = nullptr;
 
 		switch (mAppState) {
@@ -596,14 +690,13 @@ int TApplication::gameLoop()
 	while (nextState <= APP_STATE_DEFAULT) {
 		mDisplay->startRendering();
 
-		// TODO: TimeRec BS
-		TTimeRec::startTimerTwice(mDisplay->unk60->mLastRetraceTime, 0);
-		TTimeRec::snapGxTimeStatic(0);
+		TTimeRec::startFrameSt(mDisplay->unk60->mLastRetraceTime);
+		TTimeRec::snapGXTimeSt(0);
 
 		TMarioGamePad::read();
 		for (int i = 0; i < 4; i++) {
 			mGamePads[i]->updateMeaning();
-			mGamePads[i]->onFlag(0x40);
+			mGamePads[i]->onFlag(TMarioGamePad::PAD_FLAG_0x40);
 		}
 
 		if (int dvderr = drawDVDErr()) {
@@ -643,24 +736,22 @@ int TApplication::gameLoop()
 			JDrama::TGraphics graphics;
 			graphics.unkFE = 0;
 
-			JDrama::TVideo* video = mDisplay->unk60;
-			GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-			              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
-			GXSetScissor(0, 0, video->mNextRenderMode.fbWidth,
-			             video->mNextRenderMode.efbHeight);
+			const GXRenderModeObj& rmode
+			    = mDisplay->getVideo()->mNextRenderMode;
+			GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f,
+			              1.0f);
+			GXSetScissor(0, 0, rmode.fbWidth, rmode.efbHeight);
 			Mtx afStack_1ac;
-			C_MTXOrtho(afStack_1ac, 0.0f, (f32)video->mNextRenderMode.fbWidth,
-			           0.0f, (f32)video->mNextRenderMode.efbHeight, -1.0f,
-			           1.0f);
+			C_MTXOrtho(afStack_1ac, 0.0f, (f32)rmode.efbHeight, 0.0f,
+			           (f32)rmode.fbWidth, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
 			mFader->update();
-			mFader->draw(JDrama::TRect(0, 0, video->mNextRenderMode.fbWidth,
-			                           video->mNextRenderMode.efbHeight));
+			mFader->draw(JDrama::TRect(0, 0, rmode.fbWidth, rmode.efbHeight));
 			if (gpMSound != nullptr)
 				gpMSound->mainLoop();
 		}
 
-		TTimeRec::endTimer();
+		TTimeRec::snapCPUTime(0);
 
 		THPPlayerDrawDone();
 		mDisplay->endRendering();
@@ -680,56 +771,179 @@ int TApplication::gameLoop()
 	return nextState;
 }
 
+#ifdef VERSION_GMSP01
+static const char* sDvdErrMsgs[][6] = {
+	{
+	    "An error has occurred. Turn the\npower OFF and check the \n"
+	    "NINTENDO GAMECUBE\x99"
+	    "\nInstruction Booklet for further instructions.",
+	    "The Disc could not be read.\nPlease read the NINTENDO GAMECUBE\x99"
+	    "\nInstruction Booklet for\nmore information.",
+	    "Reading Disc... ",
+	    "The Disc Cover is open.\nTo continue playing,\nplease close the\nDisc "
+	    "Cover.",
+	    "Please insert a Super Mario Sunshine\nGame Disc.",
+	    "This Disc is not\nSuper Mario Sunshine.\nPlease insert a Super\n"
+	    "Mario Sunshine Game Disc.",
+	},
+	{
+	    "Ein Fehler ist aufgetreten. Bitte schalte\nden NINTENDO GAMECUBE\x99"
+	    " aus und\nlies die Bedienungsanleitung,\num weitere Informationen zu "
+	    "erhalten.",
+	    "Diese Disc kann nicht gelesen werden.\nBitte lies die "
+	    "Bedienungsanleitung\n"
+	    "des NINTENDO GAMECUBE\x99"
+	    ",\num weitere Informationen zu erhalten.",
+	    "Disc wird gelesen...",
+	    "Disc-Deckel ist ge\xF6"
+	    "ffnet. Bitte\nschlie\xDF"
+	    "e den Disc-Deckel,\n"
+	    "um weiterzuspielen.",
+	    "Bitte lege eine Super Mario Sunshine\nGame Disc ein.",
+	    "Diese Disc beinhaltet nicht Super Mario Sunshine.\n"
+	    "Bitte lege eine Super Mario Sunshine\nGame Disc ein.",
+	},
+	{
+	    "Une erreur est survenue. Eteignez\nla console et r\xE9"
+	    "f\xE9"
+	    "rez-vous au manuel\n"
+	    "d'instructions NINTENDO GAMECUBE\x99"
+	    "\npour de plus amples informations.",
+	    "La lecture du disque a \xE9"
+	    "chou\xE9"
+	    ".\nVeuillez-vous r\xE9"
+	    "f\xE9"
+	    "rer au manuel\nd'instructions NINTENDO GAMECUBE\x99"
+	    "\npour de plus amples informations.",
+	    "Lecture du disque...",
+	    "Le couvercle est ouvert.\nPour continuer \xE0"
+	    " jouer,\n"
+	    "veuillez fermer le couvercle.",
+	    "Veuillez ins\xE9"
+	    "rer\nle disque\nSuper Mario Sunshine.",
+	    "Ce disque n'est pas\nle bon. Veuillez\nins\xE9"
+	    "rer le disque\n"
+	    "Super Mario Sunshine.",
+	},
+	{
+	    "Se ha producido un error. Apaga la consola\ny consulta el manual de "
+	    "instrucciones\n"
+	    "de NINTENDO GAMECUBE\x99"
+	    " para\nobtener m\xE1"
+	    "s informaci\xF3"
+	    "n.",
+	    "No se puede leer el disco. Consulta\nel manual de instrucciones de \n"
+	    "NINTENDO GAMECUBE\x99"
+	    "\npara obtener m\xE1"
+	    "s informaci\xF3"
+	    "n.",
+	    "Leyendo el disco...",
+	    "La tapa est\xE1"
+	    " abierta.\nCi\xE9"
+	    "rrala para seguir jugando.",
+	    "Coloca el disco de Super Mario Sunshine.",
+	    "\xC9"
+	    "ste no es el disco de\nSuper Mario Sunshine.\n"
+	    "Coloca el disco apropiado.",
+	},
+	{
+	    "Si \xE8"
+	    " verificato un errore. Spegni (OFF) e\n"
+	    "controlla il manuale d'istruzioni del\nNINTENDO GAMECUBE\x99"
+	    "\nper ulteriori indicazioni.",
+	    "Impossibile leggere il disco. Consulta il manuale \n"
+	    "d'istruzioni del NINTENDO GAMECUBE\x99"
+	    "\nper ulteriori indicazioni.",
+	    "Lettura del disco in corso...",
+	    "Il coperchio del disco \xE8"
+	    "\naperto. Se vuoi proseguire\n"
+	    "il gioco, chiudi il\ncoperchio del disco.",
+	    "Inserisci il disco\nSuper Mario Sunshine.",
+	    "Questo disco non \xE8"
+	    " \nSuper Mario Sunshine.\n"
+	    "Inserisci il disco \nSuper Mario Sunshine.",
+	},
+};
+#endif
+
 int TApplication::drawDVDErr()
 {
 	char message[512];
 	u32 error = 0;
+#ifdef VERSION_GMSP01
+	u32 language;
+	language = TFlagManager::getInstance()->getFlag(0xA0001);
+#endif
 
 	switch (DVDGetDriveStatus()) {
 	case -1:
+#ifdef VERSION_GMSP01
+		snprintf(message, 512, sDvdErrMsgs[language][0]);
+#else
 		snprintf(message, 512,
 		         "エラーが発生しました。\n"
 		         "本体のパワーボタンを押して電源をOFFにし\n"
 		         "本体の取扱説明書の指示に従ってください。");
+#endif
 		error = 'em_1';
 		break;
 
 	case 11:
+#ifdef VERSION_GMSP01
+		snprintf(message, 512, sDvdErrMsgs[language][1]);
+#else
 		snprintf(message, 512,
 		         "ディスクを読めませんでした。\n"
 		         "くわしくは、本体の取扱説明書を\n"
 		         "お読みください。");
+#endif
 		error = 'em_2';
 		break;
 
 	case 1:
 		if (DVDCheckDisk() == 0) {
+#ifdef VERSION_GMSP01
+			snprintf(message, 512, sDvdErrMsgs[language][2]);
+#else
 			snprintf(message, 512, "ディスクを読み込んでいます。");
+#endif
 			error = 'em_3';
 		}
 		break;
 
 	case 5:
+#ifdef VERSION_GMSP01
+		snprintf(message, 512, sDvdErrMsgs[language][3]);
+#else
 		snprintf(message, 512,
 		         "ディスクカバーが開いています。\n"
 		         "ゲームを続ける場合は\n"
 		         "ディスクカバーを閉めてください。");
+#endif
 		error = 'em_4';
 		break;
 
 	case 4:
+#ifdef VERSION_GMSP01
+		snprintf(message, 512, sDvdErrMsgs[language][4]);
+#else
 		snprintf(message, 512,
 		         "「スーパーマリオサンシャイン」の\n"
 		         "ディスクをセットしてください。");
+#endif
 		error = 'em_5';
 		break;
 
 	case 6:
+#ifdef VERSION_GMSP01
+		snprintf(message, 512, sDvdErrMsgs[language][5]);
+#else
 		snprintf(message, 512,
 		         "このディスクは、「スーパーマリオサンシャイン」の\n"
 		         "ディスクではありません。\n"
 		         "「スーパーマリオサンシャイン」の\n"
 		         "ディスクをセットしてください。 ");
+#endif
 		error = 'em_6';
 		break;
 	}
@@ -737,10 +951,9 @@ int TApplication::drawDVDErr()
 	if (error != 0) {
 		ReInitializeGX();
 		SMS_DrawInit();
-		JDrama::TVideo* video = mDisplay->unk60;
+		const GXRenderModeObj& rmode = mDisplay->getVideo()->mNextRenderMode;
 
-		GXSetViewport(0.0f, 0.0f, video->mNextRenderMode.fbWidth,
-		              video->mNextRenderMode.efbHeight, 0.0f, 1.0f);
+		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f, 1.0f);
 		Mtx afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
@@ -784,7 +997,7 @@ int TApplication::drawDVDErr()
 		print.unk44  = (GXColor) { 0xff, 0xff, 0, 0xff };
 		print.unk48  = (GXColor) { 0xff, 0xff, 0, 0xff };
 		f32 msgWidth = print.getWidth(message);
-		print.print((600.0f - msgWidth) / 2.0f, 230, message);
+		print.print(0.5f * (600.0f - msgWidth), 230, message);
 	}
 
 	return error;
@@ -795,16 +1008,16 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.size()) {
-		if (mCurrArea.getScenario() < tmp[mCurrArea.getStage()].size()) {
+	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+		TNameRefAryT<TScenarioArchiveName>& scenarios
+		    = tmp[mCurrArea.getStage()];
+		if (mCurrArea.getScenario() < scenarios.size()) {
 			const char* scenarioArcName
-			    = tmp[mCurrArea.getStage()][mCurrArea.getScenario()].getName();
+			    = scenarios.getChildren()[mCurrArea.getScenario()].mArcName;
 
 			DVDChangeDir("/data/scene");
-			void* archBlob
-			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr);
-
-			if (archBlob) {
+			if (void* archBlob
+			    = SMSLoadArchive(scenarioArcName, nullptr, 0, nullptr)) {
 				JKRMemArchive* arch = new JKRMemArchive;
 				arch->mountFixed(archBlob, MBF_0);
 				result = arch;

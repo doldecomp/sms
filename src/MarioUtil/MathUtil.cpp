@@ -92,32 +92,32 @@ static u16 atntable[] = {
 
 #define qr0 0
 
-int IConverge(int param_1, int param_2, int param_3, int param_4)
+int IConverge(int value, int target, int inc, int dec)
 {
-	int result = param_1;
-	if (result < param_2) {
-		result += param_3;
-		if (result > param_2)
-			result = param_2;
+	int result = value;
+	if (result < target) {
+		result += inc;
+		if (result > target)
+			result = target;
 	} else {
-		result -= param_4;
-		if (result < param_2)
-			result = param_2;
+		result -= dec;
+		if (result < target)
+			result = target;
 	}
 	return result;
 }
 
-f32 FConverge(f32 param_1, f32 param_2, f32 param_3, f32 param_4)
+f32 FConverge(f32 value, f32 target, f32 inc, f32 dec)
 {
-	f32 result = param_1;
-	if (result < param_2) {
-		result += param_3;
-		if (result > param_2)
-			result = param_2;
+	f32 result = value;
+	if (result < target) {
+		result += inc;
+		if (result > target)
+			result = target;
 	} else {
-		result -= param_4;
-		if (result < param_2)
-			result = param_2;
+		result -= dec;
+		if (result < target)
+			result = target;
 	}
 	return result;
 }
@@ -127,44 +127,45 @@ static u16 GetAtanTable(f32 param_1, f32 param_2)
 	if (param_1 == 0)
 		return atntable[0];
 
-	int idx = param_2 * __fres(param_1) * 1024.0f + 0.5f;
-	return atntable[idx];
+	return atntable[(int)(param_2 * __fres(param_1) * 1024.0f + 0.5f)];
 }
 
 s16 matan(f32 param_1, f32 param_2)
 {
+	u16 result;
 	// TODO: currently too lazy to figure out how exactly they use symmetries
 	// here and what exact result transforms are needed in various branches.
 	// Probably should be something nice and symmetric and not this.
 	if (param_2 >= 0.0f) {
 		if (param_1 >= 0.0f) {
 			if (param_1 >= param_2)
-				return 0x0000 + GetAtanTable(param_1, param_2);
+				result = 0x0000 + GetAtanTable(param_1, param_2);
 			else
-				return 0x4000 - GetAtanTable(param_1, param_2);
+				result = 0x4000 - GetAtanTable(param_2, param_1);
 		} else {
 			param_1 = -param_1;
 			if (param_1 < param_2)
-				return GetAtanTable(param_1, param_2) + 0x4000;
+				result = 0x4000 + GetAtanTable(param_2, param_1);
 			else
-				return GetAtanTable(param_1, param_2) + 0x8000;
+				result = 0x8000 - GetAtanTable(param_1, param_2);
 		}
 	} else {
 		param_2 = -param_2;
 
 		if (param_1 < 0.0f) {
 			param_1 = -param_1;
-			if (param_1 <= param_2)
-				return GetAtanTable(param_1, param_2) + 0x8000;
+			if (param_1 >= param_2)
+				result = 0x8000 + GetAtanTable(param_1, param_2);
 			else
-				return GetAtanTable(param_1, param_2) + -0x4000;
+				result = 0xC000 - GetAtanTable(param_2, param_1);
 		} else {
 			if (param_1 < param_2)
-				return GetAtanTable(param_1, param_2) - 0x4000;
+				result = 0xC000 + GetAtanTable(param_2, param_1);
 			else
-				return -GetAtanTable(param_1, param_2);
+				result = 0x0000 - GetAtanTable(param_1, param_2);
 		}
 	}
+	return result;
 }
 
 static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
@@ -189,16 +190,6 @@ static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
 }
 
 // TODO: very much fake
-static inline f32 fake_sqrt(f32 mag)
-{
-	if (mag > 0.0f) {
-		f64 root = __frsqrte(mag);
-		return 0.5f * root * (3.0f - mag * (root * root)) * mag;
-	}
-	return 0.0f;
-}
-
-// TODO: very much fake
 static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
                                        f32* out)
 {
@@ -214,9 +205,8 @@ static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
 
 	// TODO: it smells to me like this entire function is not real but a result
 	// of MWCC optimizing out stuff for once
-	f32 dVar3 = fake_sqrt(a);
 
-	*out = -(matan(dVar3, axis.y) * (360.0f / 65536.0f));
+	*out = -(matan(MsSqrtf(a), axis.y) * (360.0f / 65536.0f));
 }
 
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
@@ -235,13 +225,13 @@ JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 
 void MsMtxSetRotRPH(MtxPtr param_1, f32 r, f32 p, f32 h)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	f32 sr = MsSin(r);
+	f32 sp = MsSin(p);
+	f32 sh = MsSin(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 cr = MsCos(r);
+	f32 cp = MsCos(p);
+	f32 ch = MsCos(h);
 
 	char trash[0x4]; // TODO: skill issue
 
@@ -272,17 +262,21 @@ void MsMtxSetXYZRPH(MtxPtr param_1, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h)
 	f32 cp = JMASCos(p);
 	f32 ch = JMASCos(h);
 
+	param_1[2][0] = -sp;
 	param_1[0][0] = ch * cp;
 	param_1[1][0] = sh * cp;
-	param_1[2][0] = -sp;
-
-	param_1[0][1] = sr * (ch * sp) - (sh * cr);
-	param_1[1][1] = sr * (sh * sp) + (ch * cr);
 	param_1[2][1] = cp * sr;
-
-	param_1[0][2] = cr * (ch * sp) + (sh * sr);
-	param_1[1][2] = cr * (sh * sp) - (ch * sr);
 	param_1[2][2] = cp * cr;
+
+	f32 crsh = cr * sh;
+	f32 srch = sr * ch;
+	f32 srsh = sr * sh;
+	f32 crch = cr * ch;
+
+	param_1[0][1] = srch * sp - crsh;
+	param_1[1][2] = crsh * sp - srch;
+	param_1[0][2] = crch * sp + srsh;
+	param_1[1][1] = srsh * sp + crch;
 
 	param_1[0][3] = x;
 	param_1[1][3] = y;
@@ -292,13 +286,13 @@ void MsMtxSetXYZRPH(MtxPtr param_1, f32 x, f32 y, f32 z, s16 r, s16 p, s16 h)
 void MsMtxSetTRS(MtxPtr param_1, f32 x, f32 y, f32 z, f32 r, f32 p, f32 h,
                  f32 sx, f32 sy, f32 sz)
 {
-	f32 sr = JMASin(r);
-	f32 sp = JMASin(p);
-	f32 sh = JMASin(h);
+	f32 sr = MsSin(r);
+	f32 sp = MsSin(p);
+	f32 sh = MsSin(h);
 
-	f32 cr = JMACos(r);
-	f32 cp = JMACos(p);
-	f32 ch = JMACos(h);
+	f32 cr = MsCos(r);
+	f32 cp = MsCos(p);
+	f32 ch = MsCos(h);
 
 	char trash[0x8]; // TODO: skill issue
 

@@ -8,7 +8,8 @@ class JSUMemoryInputStream;
 
 // fabricated
 enum BGCheckFlagBits {
-	BG_CHECK_FLAG_ILLEGAL = 0x10,
+	BG_CHECK_FLAG_X_FACING = 0x8,
+	BG_CHECK_FLAG_ILLEGAL  = 0x10,
 };
 
 // fabricated
@@ -53,7 +54,8 @@ enum BGTypeBits {
 
 	BG_TYPE_OOB = 0x600,
 
-	BG_TYPE_SAND = 0x701,
+	BG_TYPE_UNK700 = 0x700,
+	BG_TYPE_SAND   = 0x701,
 
 	BG_TYPE_DEATH_PLANE                              = 0x800,
 	BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH = 0x801,
@@ -263,6 +265,14 @@ public:
 			return false;
 	}
 
+	bool isUnk700() const
+	{
+		if (mBGType == BG_TYPE_UNK700)
+			return true;
+		else
+			return false;
+	}
+
 	bool isEnemyThrough() const
 	{
 		if (mBGType == BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH
@@ -365,7 +375,7 @@ public:
 			return false;
 	}
 
-	bool isUnkC() const
+	bool isSlider() const
 	{
 		// TODO: wtf is 0xA000? 0x8000 | 0x2000 the later being a new flag?
 		if (mBGType == BG_TYPE_UNKC || mBGType == BG_TYPE_CAM_NOCLIP_UNKC
@@ -416,6 +426,22 @@ public:
 	bool isShadow() const
 	{
 		if (mBGType & BG_PROPERTY_FLAG_SHADOW)
+			return true;
+		else
+			return false;
+	}
+
+	bool isCameraWontClip() const
+	{
+		if (mBGType & BG_PROPERTY_FLAG_CAMERA_WONT_CLIP)
+			return true;
+		else
+			return false;
+	}
+
+	bool isThing() const
+	{
+		if (mBGType & 0xA000)
 			return true;
 		else
 			return false;

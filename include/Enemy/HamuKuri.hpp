@@ -18,6 +18,14 @@ public:
 	virtual void stateLaunch();
 };
 
+class THamuKuriLauncherManager : public TLauncherManager {
+public:
+	THamuKuriLauncherManager(const char* name)
+	    : TLauncherManager(name)
+	{
+	}
+};
+
 // ============= params =============
 
 class THamuKuriSaveLoadParams : public TWalkerEnemyParams {
@@ -80,7 +88,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual void createAnmData();
 	virtual TSpineEnemy* createEnemyInstance();
@@ -94,6 +102,7 @@ public:
 	// fabricated
 	int getUnk6C() const { return unk6C; }
 	void setUnk6C(int v) { unk6C = v; }
+	THamuKuri* getUnk70() { return unk70; }
 
 public:
 	/* 0x60 */ u32 unk60;
@@ -105,7 +114,7 @@ public:
 
 class THaneHamuKuriManager : public THamuKuriManager {
 public:
-	THaneHamuKuriManager(const char* name = "ハムクリマネージャー");
+	THaneHamuKuriManager(const char* name = "はねハムクリマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -121,7 +130,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 
@@ -172,7 +181,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setOwner(THamuKuri* hamu)
 	{
@@ -190,7 +199,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 
@@ -242,14 +251,14 @@ public:
 	void setSearchActor(THitActor*);
 	bool isGiveUpSearchActor();
 	void jumpToSearchActor();
-	void canGoForSearchActor();
+	bool canGoForSearchActor();
 	void changeCapHolder();
 	void selectCapHolder();
 	void makeCapFly(TMapObjBase*);
 	void setWallDeadEffect();
 	void setAppearAnm();
-	void isAttackToHam();
-	void isSerialWallDie();
+	bool isAttackToHam();
+	bool isSerialWallDie();
 	void forceRoll(JGeometry::TVec3<f32>, bool);
 
 	static f32 mCapGravityY;
@@ -319,7 +328,7 @@ public:
 	/* 0x214 */ f32 unk214;
 	/* 0x218 */ f32 unk218;
 	/* 0x21C */ f32 unk21C;
-	/* 0x220 */ Vec unk220;
+	/* 0x220 */ JGeometry::TVec3<f32> unk220;
 	/* 0x22C */ THaneHamuKuriSaveLoadParams* unk22C;
 	/* 0x230 */ f32 unk230;
 	/* 0x234 */ f32 unk234;
@@ -368,7 +377,7 @@ class TDangoHamuKuri : public THamuKuri {
 public:
 	TDangoHamuKuri(const char* = "だんごハムクリ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual MtxPtr getTakingMtx();
 	virtual void init(TLiveManager*);
@@ -407,7 +416,7 @@ class TBossDangoHamuKuri : public TDangoHamuKuri {
 public:
 	TBossDangoHamuKuri(const char* = "ボスだんごハムクリ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void moveObject();
 	virtual void reset();
@@ -418,8 +427,8 @@ public:
 
 	bool isDead();
 	void generateBody();
-	void isNowAttack();
-	void isNowGenerate();
+	bool isNowAttack();
+	bool isNowGenerate();
 
 public:
 	/* 0x238 */ int unk238;
@@ -442,7 +451,7 @@ public:
 	virtual void setBckAnm(int index) { TSmallEnemy::setBckAnm(index); }
 	virtual void walkBehavior(int, f32);
 
-	bool recoverFire();
+	void recoverFire();
 	void genFire();
 	void dieFire();
 	void changeTevColor();
@@ -467,7 +476,13 @@ public:
 	virtual void attackToMario();
 	virtual void setMActorAndKeeper();
 	virtual bool isCollidMove(THitActor*);
-	virtual void onHaveCap();
+	virtual void onHaveCap()
+	{
+		unk198                    = 1;
+		TDoroHamuKuriManager* man = (TDoroHamuKuriManager*)getManager();
+		man->unk70                = this;
+		man->unk74->setOwner(this);
+	}
 };
 
 // ============= nerves =============

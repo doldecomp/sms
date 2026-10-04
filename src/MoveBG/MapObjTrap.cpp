@@ -6,6 +6,7 @@
 #include <Player/MarioAccess.hpp>
 #include <System/Application.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Strategy.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
@@ -27,9 +28,9 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001E, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("アイテムグループ"));
+	group->getChildren().push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
@@ -38,10 +39,10 @@ BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
 	return unk68->receiveMessage(sender, message);
 }
 
-void TLampTrapSpikeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapSpikeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
-	if (param_1 & 1) {
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_MOVE) {
 		mPosition = unk68->mPosition;
 		mPosition.y += 2300.0f;
 		if (unk68->unk138 == 2 || unk68->unk138 == 0 || unk68->unk138 == 1) {
@@ -54,6 +55,9 @@ void TLampTrapSpikeHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 TLampTrapSpike::TLampTrapSpike(const char* name)
     : TMapObjBase(name)
+    , unk138(3)
+    , unk13C(0)
+    , unk140(nullptr)
 {
 }
 
@@ -71,7 +75,7 @@ void TLampTrapSpike::loadAfter()
 
 BOOL TLampTrapSpike::receiveMessage(THitActor* sender, u32 message)
 {
-	TMapObjBase::receiveMessage(sender, message);
+	return TMapObjBase::receiveMessage(sender, message);
 }
 
 void TLampTrapSpike::control()
@@ -81,14 +85,14 @@ void TLampTrapSpike::control()
 
 	switch (thing) {
 	case 0: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
-		if (mMActor->curAnmEndsNext(0, nullptr)) {
+		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 2;
 		}
@@ -97,14 +101,14 @@ void TLampTrapSpike::control()
 	} break;
 
 	case 1: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
-		if (mMActor->curAnmEndsNext(0, nullptr)) {
+		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
@@ -115,12 +119,11 @@ void TLampTrapSpike::control()
 	case 2:
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(ctrl->getEnd());
 			ctrl->setRate(0.0f);
-			if (gpMSound->gateCheck(MSD_SE_OBJ_MVING_FENCT_SET))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_OBJ_MVING_FENCT_SET, mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
+			                                &mPosition, 0, nullptr, 0, 4);
 		}
 		if (unk13C >= 360) {
 			unk13C = 0;
@@ -132,7 +135,7 @@ void TLampTrapSpike::control()
 	case 3:
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_down");
-			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0)) {
+			if (J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK)) {
 				ctrl->setFrame(ctrl->getEnd());
 				ctrl->setRate(0.0f);
 			}
@@ -145,10 +148,10 @@ void TLampTrapSpike::control()
 		break;
 
 	case 4: {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.1f);
 		}
@@ -162,10 +165,10 @@ void TLampTrapSpike::control()
 
 	default:
 	case 5:
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (unk13C == 0) {
 			mMActor->setBck("lamptrapspike_up");
-			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(-SMSGetAnmFrameRate());
 		}
@@ -183,16 +186,16 @@ void TLampTrapSpike::control()
 	}
 
 	TMapObjBase::control();
-	TBGCheckData* plane = SMS_GetMarioGrPlane();
+	const TBGCheckData* plane = SMS_GetMarioGrPlane();
 	if (bVar1 && plane && plane->getActor() == this
 	    && SMS_IsMarioTouchGround4cm())
 		SMS_SendMessageToMario(this, 0xA);
 }
 
-void TLampTrapSpike::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapSpike::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjBase::perform(param_1, param_2);
-	unk140->perform(param_1, param_2);
+	TMapObjBase::perform(cue, graphics);
+	unk140->perform(cue, graphics);
 }
 
 TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
@@ -200,9 +203,9 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
     , unk68(trap)
 {
 	initHitActor(0x4000001D, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
-	JDrama::TNameRefGen::search<TIdxGroupObj>("アイテムグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("アイテムグループ"));
+	group->getChildren().push_back(this);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
@@ -211,10 +214,10 @@ BOOL TLampTrapIronHit::receiveMessage(THitActor* sender, u32 message)
 	return unk68->receiveMessage(sender, message);
 }
 
-void TLampTrapIronHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapIronHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
-	if (param_1 & 1) {
+	THitActor::perform(cue, graphics);
+	if (cue & CUE_MOVE) {
 		mPosition = unk68->mPosition;
 		mPosition.y += 2300.0f;
 		if (unk68->unk13C > 0)
@@ -270,7 +273,7 @@ void TLampTrapIron::control()
 {
 	TMapObjBase::control();
 	if (unk140 <= 0) {
-		TBGCheckData* plane = SMS_GetMarioGrPlane();
+		const TBGCheckData* plane = SMS_GetMarioGrPlane();
 		if (plane && plane->getActor() == this && SMS_IsMarioTouchGround4cm())
 			SMS_SendMessageToMario(this, 10);
 	} else {
@@ -280,13 +283,15 @@ void TLampTrapIron::control()
 	}
 }
 
-void TLampTrapIron::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLampTrapIron::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjBase::perform(param_1, param_2);
-	unk138->perform(param_1, param_2);
-	if ((param_1 & 2) && unk13C > 0) {
-		gpMarioParticleManager->emit(0x1F1, &mPosition, 3, this);
-		gpMarioParticleManager->emit(0x12C, &mPosition, 1, this);
+	TMapObjBase::perform(cue, graphics);
+	unk138->perform(cue, graphics);
+	if ((cue & CUE_CALC_ANIM) && unk13C > 0) {
+		gpMarioParticleManager->emit(PARTICLE_MS_TEPPANFIRE_B, &mPosition, 3,
+		                             this);
+		gpMarioParticleManager->emit(PARTICLE_MS_TEPPANFIRE_A, &mPosition, 1,
+		                             this);
 	}
 }
 

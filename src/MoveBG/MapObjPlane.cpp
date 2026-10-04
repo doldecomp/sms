@@ -75,7 +75,8 @@ void TMapObjPlane::draw()
 	for (int z = 0; z < mExtents - 1; ++z) {
 		f32 fVar1 = unkFC;
 
-		f32 worldZ = mCollision->gridToWorld(z);
+		f32 worldZ     = mCollision->gridToWorld(z);
+		f32 nextWorldZ = worldZ + fVar1;
 
 		GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mExtents * 2);
 		for (int x = 0; x < mExtents; ++x) {
@@ -85,7 +86,7 @@ void TMapObjPlane::draw()
 			GXNormal3f32(normalAt(x, z).x, normalAt(x, z).y, normalAt(x, z).z);
 			GXTexCoord2f32(getTexPos(x), getTexPos(z));
 
-			GXPosition3f32(worldX, heightAt(x, z + 1), worldZ + fVar1);
+			GXPosition3f32(worldX, heightAt(x, z + 1), nextWorldZ);
 			GXNormal3f32(normalAt(x, z + 1).x, normalAt(x, z + 1).y,
 			             normalAt(x, z + 1).z);
 			GXPosition2f32(getTexPos(x), getTexPos(z + 1));
@@ -94,7 +95,7 @@ void TMapObjPlane::draw()
 	}
 }
 
-f32 TMapObjPlane::getTexPos(f32 v) const { return mTexScale * v; }
+f32 TMapObjPlane::getTexPos(f32 v) const { return v * mTexScale; }
 
 void TMapObjPlane::updateCheckData(int x, int z)
 {
@@ -102,8 +103,8 @@ void TMapObjPlane::updateCheckData(int x, int z)
 		return;
 
 	f32 x1 = mCollision->gridToWorld(x);
-	f32 z1 = mCollision->gridToWorld(z);
 	f32 x2 = mCollision->gridToWorld(x + 1);
+	f32 z1 = mCollision->gridToWorld(z);
 	f32 z2 = mCollision->gridToWorld(z + 1);
 
 	JGeometry::TVec3<f32> local_64(x1, heightAt(x, z) + 2.0f, z1);
@@ -218,9 +219,9 @@ BOOL TMapObjPlane::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TMapObjPlane::perform(u32 param_1, JDrama::TGraphics*)
+void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (mAlbedo != nullptr && (param_1 & 8)) {
+	if (mAlbedo != nullptr && (cue & CUE_DRAW)) {
 		initDraw();
 		draw();
 	}

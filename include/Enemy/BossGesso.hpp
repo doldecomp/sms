@@ -60,7 +60,7 @@ class TBGBeakHit : public TTakeActor {
 public:
 	TBGBeakHit(TBossGesso* owner, const char* name = "クチバシ（つかみ）");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL moveRequest(const JGeometry::TVec3<f32>&);
@@ -75,7 +75,7 @@ class TBGEyeHit : public THitActor {
 public:
 	TBGEyeHit(TBossGesso* owner, int joint_index, const char* name = "目");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 private:
@@ -87,7 +87,7 @@ class TBGBodyHit : public THitActor {
 public:
 	TBGBodyHit(TBossGesso* owner, int joint_index, const char* name = "胴体");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 private:
@@ -118,7 +118,7 @@ public:
 	TBGCork(TBossGesso* owner);
 
 	void crush();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x0 */ TBossGesso* mOwner;
@@ -142,7 +142,7 @@ public:
 
 	TBossGesso(const char* name = "ボスゲッソー");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -225,13 +225,13 @@ public:
 	/* 0x170 */ TBGEyeHit* mLeftEye;
 	/* 0x174 */ TBGEyeHit* mRightEye;
 	/* 0x178 */ MActor* unk178;
-	/* 0x17C */ u8 unk17C;
+	/* 0x17C */ s8 unk17C;
 	/* 0x180 */ TBGPolDrop* mPolDrop;
 	/* 0x184 */ TBGBodyHit* mBody;
 	/* 0x188 */ f32 unk188;
 	/* 0x18C */ TBGCork* mCork;
 	/* 0x190 */ J3DGXColor unk190;
-	/* 0x194 */ u8 unk194;
+	/* 0x194 */ s8 unk194;
 	/* 0x195 */ s8 unk195;
 	/* 0x196 */ s8 unk196;
 	/* 0x198 */ u32 unk198;

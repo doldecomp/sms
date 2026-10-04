@@ -11,3 +11,27 @@ splits: config/GMSJ01/splits.txt
 mw_comment_version: 8 # GC Linker 1.2.5
 symbols_known: true # Very fast analysis
 fill_gaps: false # Alignments known
+
+# MSoundBGMId constants (0x800100xx) that the tracker pairs into .text
+block_relocations:
+  - source: 0x800EBDCC
+  - source: 0x800EBDD0
+  - source: 0x800EBE14
+  - source: 0x800EBE18
+  - source: 0x801100D4
+  - source: 0x801103F0
+  - source: 0x80110400
+  - source: 0x80110440
+  - source: 0x80110448
+  - source: 0x8011056C
+  - source: 0x80110570
+  - source: 0x80110584
+  - source: 0x80110588
+  - source: 0x8011059C
+  - source: 0x801105AC
+  - source: 0x801106D0
+  - source: 0x801106D8
+  - source: 0x8022DD7C
+  - source: 0x8022DD80
+  - source: 0x8023306C
+  - source: 0x80233074

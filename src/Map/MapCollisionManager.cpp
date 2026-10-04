@@ -37,17 +37,16 @@ void TMapCollisionManager::createCollision(const char* param_1, u8 param_2)
 inline u8 col_type(u16 param_1) { return param_1 & 3; }
 inline u16 col_other(u16 param_1) { return param_1 & 0xFFFC; }
 
-void TMapCollisionManager::init(const char* param_1, u16 param_2,
-                                const char* param_3)
+void TMapCollisionManager::init(const char* file, u16 param_2, const char* path)
 {
 	char fullPath[256];
 	char buffer[256];
 	const char* folder;
 
 	if (mFolder == nullptr)
-		mFolder = param_3;
+		mFolder = path;
 
-	createCollision(param_1, col_type(param_2));
+	createCollision(file, col_type(param_2));
 
 	if (mFolder) {
 		if (mFolder[0] != '/') {
@@ -60,10 +59,10 @@ void TMapCollisionManager::init(const char* param_1, u16 param_2,
 		folder = "";
 	}
 
-	if (param_1[0] != '/')
-		sprintf(fullPath, "%s/%s", folder, param_1);
+	if (file[0] != '/')
+		sprintf(fullPath, "%s/%s", folder, file);
 	else
-		sprintf(fullPath, "%s%s", folder, param_1);
+		sprintf(fullPath, "%s%s", folder, file);
 
 	mEntries[mEntryNum]->init(fullPath, col_other(param_2) | 2, unk10);
 

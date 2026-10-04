@@ -3,6 +3,7 @@
 
 #include <JSystem/JDrama/JDRGraphics.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
 struct M3UMtxCalcSetInfo;
 class J3DModel;
@@ -48,7 +49,7 @@ public:
 	    : unk4(nullptr)
 	    , unk8(nullptr)
 	    , unkC(nullptr)
-	    , unk10(nullptr)
+	    , unk10(0)
 	    , unk14(nullptr)
 	    , unk1C(nullptr)
 	{
@@ -61,7 +62,7 @@ public:
 	virtual void entryIn();
 	virtual void entryOut();
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void entryOutTexPatternAnm();
 	void entryInTexPatternAnm();
 	void updateInTexPatternAnm();
@@ -87,7 +88,11 @@ public:
 	/* 0x10 */ u16 unk10;
 	/* 0x14 */ M3UMtxCalcSetInfo* unk14; // Size matches unk1C
 	/* 0x18 */ u32 unk18;
-	/* 0x1C */ u8* unk1C; // Another small item of 2 u8
+	struct Unk1CStruct {
+		u8 unk0;
+		u8 unk1;
+	};
+	/* 0x1C */ Unk1CStruct* unk1C;
 };
 
 #endif

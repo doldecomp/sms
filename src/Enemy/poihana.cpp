@@ -25,7 +25,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-const char* poihana_bastable[] = {
+static const char* poihana_bastable[] = {
 	"/scene/poihana/bas/poihana_dash.bas",
 	"/scene/poihana/bas/poihana_death.bas",
 	"/scene/poihana/bas/poihana_getup.bas",
@@ -48,8 +48,8 @@ TPoihanaSaveLoadParams::TPoihanaSaveLoadParams(const char* path)
     , PARAM_INIT(mSLBackThrowVal, 0.5f)
     , PARAM_INIT(mSLSleepFrame, 1000)
     , PARAM_INIT(mSLWakeFrame, 2000)
-    , PARAM_INIT(mSLTrapJumpMinSpY, 10.0f)
     , PARAM_INIT(mSLTrapJumpMaxSpY, 10.0f)
+    , PARAM_INIT(mSLTrapJumpMinSpY, 10.0f)
     , PARAM_INIT(mSLTrapJumpMaxSpXZ, 8.0f)
     , PARAM_INIT(mSLTrapJumpMinSpXZ, 8.0f)
     , PARAM_INIT(mSLTrapJumpGravity, 1.0f)
@@ -70,14 +70,14 @@ void TPoiHanaManager::load(JSUMemoryInputStream& stream)
 
 TSmallEnemy* TPoiHanaManager::createEnemyInstance()
 {
-	if (gpApplication.mCurrArea.unk0 == 0x38)
+	if (SMSGetApplication()->mCurrArea.getStage() == 0x38)
 		return new TPoiHana;
 	return nullptr;
 }
 
-void TPoiHanaManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPoiHanaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 }
 
 void TPoiHanaManager::initSetEnemies()
@@ -93,9 +93,9 @@ void TPoiHanaManager::initSetEnemies()
 	}
 }
 
-BOOL TPoiHanaCollision::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TPoiHanaCollision::receiveMessage(THitActor* sender, u32 message)
 {
-	return unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(sender, message);
 }
 
 void TPoiHanaCollision::checkHit()
@@ -150,7 +150,7 @@ void TPoiHana::init(TLiveManager* param_1)
 	unk19C = (TPoihanaSaveLoadParams*)getSaveParam();
 	unk1BC = new TPoiHanaCollision;
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk1BC);
 
@@ -212,10 +212,10 @@ void TPoiHana::moveObject()
 	}
 }
 
-void TPoiHana::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPoiHana::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
-	unk1BC->THitActor::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
+	unk1BC->THitActor::perform(cue, graphics);
 }
 
 void TPoiHana::bind()
@@ -306,26 +306,26 @@ void TPoiHana::setDeadAnm()
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_POI_DEAD, &mPosition, 0, nullptr)) {
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 	}
 
 	if (!mGroundPlane->isSand()) {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	} else {
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 }
@@ -356,9 +356,9 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
 			JGeometry::TVec3<f32> vel = mLinearVelocity;
-			mLinearVelocity.x *= -2.0f;
-			mLinearVelocity.y *= 5.0f;
-			mLinearVelocity.z *= -2.0f;
+			vel.x *= -2.0f;
+			vel.y *= 5.0f;
+			vel.z *= -2.0f;
 			mVelocity = vel;
 
 			mPosition.y += 10.0f;
@@ -384,8 +384,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
 				mGoToSleepTimer = 0;
 
-				// TODO: random interval class
-				mGoToSleepTimer = MsRandF(-500.0f, 500.0f);
+				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
 
 				mSpine->setNext(&TNervePoihanaSleep::theNerve());
 				unk195 = true;
@@ -417,42 +416,42 @@ void TPoiHana::calcRootMatrix()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_KIZETSU, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(5))
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_POI_ZZZ, &mPosition, 1, this)) {
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 	if (isBckAnm(12) || isBckAnm(13)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(18.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(18.0f)) {
 			if (!mGroundPlane->isSand()) {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_B, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 			} else {
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 				if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 				        PARTICLE_MS_JUMP_ED_A, &mPosition, 0, nullptr)) {
-					emitter->setScale(mScaling);
+					emitter->setGlobalScale(mScaling);
 				}
 			}
 		}
 	}
 
 	if (isBckAnm(2) && mGroundPlane->isSand()
-	    && mMActor->getFrameCtrl(0)->checkPass(34.0f)) {
+	    && mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(34.0f)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_POI_SAND, &mPosition, 0,
 		                             nullptr);
 	}
@@ -573,12 +572,11 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 
 	self->mGoToSleepTimer += 1;
 	if ((self->unk194 || self->unsetUnk165()) && !self->isBckAnm(10)) {
-		if (gpMSound->gateCheck(MSD_SE_EN_KOHANA_WAKEUP3))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_KOHANA_WAKEUP3, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_KOHANA_WAKEUP3,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 
 		self->setBckAnm(10);
-		self->getMActor()->getFrameCtrl(0)->setFrame(148.0f);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(148.0f);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -653,23 +651,23 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		self->mThrowTimer = 1;
 	}
 
-	if (self->getMActor()->getFrameCtrl(0)->checkPass(4.0f)
+	if (self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(4.0f)
 	    && self->mThrowTimer > 0)
-		self->getMActor()->setFrameRate(0.0f, 0);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 
 	if (self->mThrowTimer > 0) {
 		self->mThrowTimer += 1;
 		if (self->mThrowTimer > 16) {
-			SMS_SendMessageToMario(self, HIT_MESSAGE_UNK7);
+			SMS_SendMessageToMario(self, HIT_MESSAGE_THROWN);
 			f32 backThrowVal = self->unk19C->mSLBackThrowVal.get();
 			Mtx afStack_4c;
-			MsMtxSetRotRPH(afStack_4c, self->mPosition.x, self->mPosition.y,
-			               self->mPosition.z);
+			MsMtxSetRotRPH(afStack_4c, self->mRotation.x, self->mRotation.y,
+			               self->mRotation.z);
 			JGeometry::TVec3<f32> local_58(0.0f, 1.0f, -backThrowVal);
 			MTXMultVec(afStack_4c, &local_58, &local_58);
 			SMS_ThrowMario(local_58, self->unk19C->mSLThrowSpeed.get());
 			self->mThrowTimer = 0;
-			self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+			self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 			self->mThrowTimer = 0;
 		}
 	}
@@ -700,15 +698,10 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				// TODO: rand interval class
-				volatile f32 trapJumpMaxSpY
-				    = self->unk19C->mSLTrapJumpMaxSpY.get();
-				volatile f32 trapJumpMaxSpXZ
-				    = self->unk19C->mSLTrapJumpMaxSpXZ.get();
-				volatile f32 trapJumpMinSpY
-				    = self->unk19C->mSLTrapJumpMinSpY.get();
-				volatile f32 trapJumpMinSpXZ
-				    = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				TMsRange<f32> rangeXZ(self->unk19C->mSLTrapJumpMinSpXZ.get(),
+				                      self->unk19C->mSLTrapJumpMaxSpXZ.get());
+				TMsRange<f32> rangeY(self->unk19C->mSLTrapJumpMinSpY.get(),
+				                     self->unk19C->mSLTrapJumpMaxSpY.get());
 
 				JGeometry::TVec3<f32> local_48;
 				const TLiveActor* groundActor
@@ -717,15 +710,13 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 					local_48 = self->mPosition - groundActor->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
-				if (local_48.x == 0.0f && local_48.y == 0.0f
-				    && local_48.z == 0.0f)
+				if (local_48.x == local_48.y == local_48.z)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				// TODO: rand interval class
-				local_48.x *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
-				local_48.y = MsRandF(trapJumpMinSpY, trapJumpMaxSpY);
-				local_48.z *= MsRandF(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				local_48.x *= rangeXZ.rand();
+				local_48.y = rangeY.rand();
+				local_48.z *= rangeXZ.rand();
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;

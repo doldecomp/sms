@@ -3,18 +3,19 @@
 TTHPRender::TTHPRender(const char* name)
     : JDrama::TViewObj(name)
 {
-	x           = 0;
-	y           = 0;
+	mPos.x      = 0;
+	mPos.y      = 0;
 	frameNumber = -1;
 }
 
-void TTHPRender::perform(u32 flags, JDrama::TGraphics* gfx)
+void TTHPRender::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((flags & 8)) {
+	if ((cue & CUE_DRAW)) {
 
 		SMS_DrawInit();
-		GXLoadPosMtxImm(gfx->mViewMtx, GX_PNMTX0);
+		GXLoadPosMtxImm(graphics->mViewMtx, GX_PNMTX0);
 		GXSetCurrentMtx(GX_PNMTX0);
-		frameNumber = THPPlayerDrawCurrentFrame(0, x, y, polyW, polyH);
+		frameNumber = THPPlayerDrawCurrentFrame(0, mPos.x, mPos.y, mSize.mWidth,
+		                                        mSize.mHeight);
 	}
 }

@@ -12,26 +12,26 @@ void TMapXlu::changeNormalJoint()
 	for (int i = 0; i < gpMap->getRootJointModel()->getChildrenNum(); ++i)
 		gpMap->getRootJointModel()->getChild(i)->stand();
 
-	for (int i = 0; i < unk0; ++i)
-		for (int j = 0; j < unk4[i].unk0; ++j)
+	for (int i = 0; i < mPrioGroupNum; ++i)
+		for (int j = 0; j < mPrioGroups[i].mObjectNum; ++j)
 			gpMap->getRootJointModel()
-			    ->getChild(unk4[i].unk4[j])
-			    ->getChild(unk4[i].unk8[j])
+			    ->getChild(mPrioGroups[i].mChildIdx[j])
+			    ->getChild(mPrioGroups[i].mGrandchildIdx[j])
 			    ->sit();
 }
 
-bool TMapXlu::changeXluJoint(int n)
+bool TMapXlu::changeXluJoint(int prio)
 {
-	if (n >= unk0)
+	if (prio >= mPrioGroupNum)
 		return false;
 
 	for (int i = 0; i < gpMap->getRootJointModel()->getChildrenNum(); ++i)
 		gpMap->getRootJointModel()->getChild(i)->sit();
 
-	for (int i = 0; i < unk4[n].unk0; ++i)
+	for (int i = 0; i < mPrioGroups[prio].mObjectNum; ++i)
 		gpMap->getRootJointModel()
-		    ->getChild(unk4[n].unk4[i])
-		    ->getChild(unk4[n].unk8[i])
+		    ->getChild(mPrioGroups[prio].mChildIdx[i])
+		    ->getChild(mPrioGroups[prio].mGrandchildIdx[i])
 		    ->stand();
 
 	return true;
@@ -39,29 +39,29 @@ bool TMapXlu::changeXluJoint(int n)
 
 void TMapXlu::init(JSUMemoryInputStream& stream)
 {
-	int tmp;
-	stream.read(&tmp, 4);
-	unk0 = tmp;
-	if (unk0 != 0) {
-		unk4 = new Entry[unk0];
-		for (int i = 0; i < unk0; ++i) {
-			Entry& entry = unk4[i];
-			stream.read(&tmp, 4);
-			entry.unk0 = tmp;
-			entry.unk4 = new u32[entry.unk0];
-			entry.unk8 = new u32[entry.unk0];
-			for (int j = 0; j < entry.unk0; ++j) {
-				stream.read(&tmp, 4);
-				entry.unk4[j] = tmp;
-				stream.read(&tmp, 4);
-				entry.unk8[j] = tmp;
+	s32 tmp;
+	stream >> tmp;
+	mPrioGroupNum = tmp;
+	if (mPrioGroupNum != 0) {
+		mPrioGroups = new TXluPrioGroup[mPrioGroupNum];
+		for (int i = 0; i < mPrioGroupNum; ++i) {
+			TXluPrioGroup& entry = mPrioGroups[i];
+			stream >> tmp;
+			entry.mObjectNum     = tmp;
+			entry.mChildIdx      = new u32[entry.mObjectNum];
+			entry.mGrandchildIdx = new u32[entry.mObjectNum];
+			for (int j = 0; j < entry.mObjectNum; ++j) {
+				stream >> tmp;
+				entry.mChildIdx[j] = tmp;
+				stream >> tmp;
+				entry.mGrandchildIdx[j] = tmp;
 			}
 		}
 	}
 }
 
 TMapXlu::TMapXlu()
-    : unk0(0)
-    , unk4(nullptr)
+    : mPrioGroupNum(0)
+    , mPrioGroups(nullptr)
 {
 }

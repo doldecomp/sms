@@ -11,8 +11,8 @@ public:
 	/* 0x340 */ TParamRT<f32> mSLBackThrowVal;
 	/* 0x354 */ TParamRT<s32> mSLSleepFrame;
 	/* 0x368 */ TParamRT<s32> mSLWakeFrame;
-	/* 0x390 */ TParamRT<f32> mSLTrapJumpMinSpY;
 	/* 0x37c */ TParamRT<f32> mSLTrapJumpMaxSpY;
+	/* 0x390 */ TParamRT<f32> mSLTrapJumpMinSpY;
 	/* 0x3a4 */ TParamRT<f32> mSLTrapJumpMaxSpXZ;
 	/* 0x3b8 */ TParamRT<f32> mSLTrapJumpMinSpXZ;
 	/* 0x3cc */ TParamRT<f32> mSLTrapJumpGravity;
@@ -22,7 +22,7 @@ class TPoiHanaManager : public TSmallEnemyManager {
 public:
 	TPoiHanaManager(const char* name = "ポイハナマネージャー");
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 };
@@ -31,7 +31,10 @@ class TPoiHana;
 
 class TPoiHanaCollision : public THitActor {
 public:
-	TPoiHanaCollision(const char* name = "ポイハナコリジョン") { }
+	TPoiHanaCollision(const char* name = "ポイハナコリジョン")
+	    : THitActor(name)
+	{
+	}
 
 	virtual BOOL receiveMessage(THitActor*, u32);
 
@@ -47,7 +50,7 @@ public:
 	TPoiHana(const char* name = "ポイハナ");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void bind();

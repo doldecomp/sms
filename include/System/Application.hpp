@@ -22,16 +22,20 @@ class JKRArchive;
 class JUTResFont;
 
 f32 SMSGetVSyncTimesPerSec();
+#ifdef VERSION_GMSP01
+f32 SMSGetRealVSyncTimesPerSec();
+void load2DResource2Aram();
+#endif
 f32 SMSGetAnmFrameRate();
 void* SMSLoadArchive(const char*, void*, u32, JKRHeap*);
 
 struct TARAMBlock {
-	/* 0x0 */ JKRAramBlock* unk0;
-	/* 0x4 */ bool unk4;
+	/* 0x0 */ JKRAramBlock* mBlock;
+	/* 0x4 */ bool mIsCompressed;
 };
-void SMSLoadArchiveARAM(TARAMBlock*, const char*);
-void SMSMountAramArchive(JKRMemArchive*, TARAMBlock&);
-JKRArchive* SMSSwitch2DArchive(const char*, TARAMBlock&);
+void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path);
+void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block);
+JKRArchive* SMSSwitch2DArchive(const char* arc_path, TARAMBlock& block);
 extern TARAMBlock gArBkConsole;
 extern TARAMBlock gArBkGuide;
 extern JUTResFont* gpSystemFont;
@@ -55,6 +59,8 @@ public:
 	// fabricated
 	void setNextArea(const TGameSequence& next_area) { mNextArea = next_area; }
 	u32 getMovie() const { return mMovie; }
+
+	TSMSFader* getFader() const { return mFader; }
 	void setMovie(u32 v) { mMovie = v; }
 
 public:
@@ -91,6 +97,9 @@ public:
 };
 
 extern TApplication gpApplication;
+
+// fabricated
+inline TApplication* SMSGetApplication() { return &gpApplication; }
 
 class TCardManager;
 extern TCardManager* gpCardManager;

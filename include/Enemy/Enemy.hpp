@@ -12,16 +12,6 @@ class TSpineEnemyParams;
 class TEnemyManager;
 extern void* gpMarioAddress;
 
-// TODO: this definitely has a better place to live
-// I took it from walkerEnemy.cpp
-static inline f32 vecdist(const JGeometry::TVec3<f32>& a,
-                          const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> tmp = a;
-	tmp.sub(b);
-	return tmp.length();
-}
-
 class TSpineEnemyParams : public TParams {
 public:
 	TSpineEnemyParams(const char*);
@@ -42,7 +32,7 @@ public:
 	~TSpineEnemy();
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -56,7 +46,7 @@ public:
 	virtual f32 getPhaseShift() const { return 0.0f; }
 	virtual BOOL isReachedToGoal() const
 	{
-		return vecdist(unk104.getPoint(), mPosition) < 100.0f ? TRUE : FALSE;
+		return unk104.getPoint().distance(mPosition) < 100.0f ? TRUE : FALSE;
 	}
 
 	void calcEnemyRootMatrix();
@@ -76,7 +66,7 @@ public:
 	void goToDirectedNextGraphNode(const JGeometry::TVec3<f32>&);
 	void goToDirLimitedNextGraphNode(f32);
 	void updateStayCount(f32);
-	bool turnToCurPathNode(f32);
+	BOOL turnToCurPathNode(f32);
 	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32);
 	void zigzagToCurPathNode(f32 march_speed, f32 turn_speed, f32 cycle,
 	                         f32 angle);
@@ -99,23 +89,6 @@ public:
 		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	}
 
-	// fabricated
-	void setGoalPathMario()
-	{
-		TPathNode node((THitActor*)gpMarioAddress);
-
-		// the hell
-		if (gpMarioAddress) {
-			node.unk4.set(*(f32*)((u8*)gpMarioAddress + 0x10),
-			              *(f32*)((u8*)gpMarioAddress + 0x14),
-			              *(f32*)((u8*)gpMarioAddress + 0x18));
-		}
-
-		unkF4  = node;
-		unk104 = node;
-
-		unk114.clear();
-	}
 	void setGoalPath(const TPathNode& point)
 	{
 		unkF4  = point;

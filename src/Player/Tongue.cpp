@@ -1,5 +1,5 @@
 #include "JSystem/JGeometry/JGVec3.hpp"
-#include "types.h"
+#include <dolphin/types.h>
 #include <Player/Tongue.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
@@ -26,25 +26,26 @@ static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 void TYoshiTongue::init(TYoshi* yoshi)
 {
-
 	J3DModelData* modelData = J3DModelLoaderDataBase::load(
-	    JKRGetResource("/mario/bmd/yoshi_tongue.bmd"), 0x10040000);
+	    JKRGetResource("/mario/bmd/yoshi_tongue.bmd"),
+	    J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift));
 
 	mYoshi = yoshi;
 	mModel = new J3DModel(modelData, 0x10000, 1);
 
 	J3DModelData* modelData2 = mModel->getModelData();
 	for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-		modelData2->getShapeNodePointer(i)->onFlag(1);
+		modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 	mTipModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(
-	        JKRGetResource("/mario/bmd/yoshi_tongue_tip.bmd"), 0x10040000),
+	        JKRGetResource("/mario/bmd/yoshi_tongue_tip.bmd"),
+	        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 	    0x10000, 1);
 
 	J3DModelData* modelData3 = mTipModel->getModelData();
 	for (u16 i = 0; i < modelData3->getShapeNum(); ++i)
-		modelData3->getShapeNodePointer(i)->onFlag(1);
+		modelData3->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 	mState       = STATE_IDLE;
 	mProgress    = 0;
@@ -67,14 +68,14 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	unkD4             = 0;
 
 	initHitActor(0x08000083U, 5U, 0x70000000, 1000.0f, 500.0f, 50.0f, 500.0f);
-	unk64 &= ~1;
+	offHitFlag(HIT_FLAG_NO_COLLISION);
 }
 
 void TYoshiTongue::initInLoadAfter()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* grp
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("敵グループ");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("敵グループ"));
 	grp->getChildren().push_back(this);
 
 	TMirrorActor* ma = new TMirrorActor("ヨッシー舌in鏡");
@@ -230,7 +231,7 @@ void TYoshiTongue::movement()
 	default:
 		mAttackRadius = 300.0f;
 		calcEntryRadius();
-		unk64 &= ~0x2;
+		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 		break;
 
 	case STATE_EXTENDING:
@@ -350,7 +351,7 @@ void TYoshiTongue::movement()
 	}
 	}
 
-	ensureTakeSituation();
+	checkTaking();
 	mPosition   = mTipPos;
 	mPosition.y = -((0.5f * mAttackHeight) - mPosition.y);
 }
@@ -368,21 +369,21 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 	case STATE_EXTENDING: {
 		J3DModelData* modelData = mModel->getModelData();
 		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->onFlag(1);
+			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 		J3DModelData* modelData2 = mTipModel->getModelData();
 		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->onFlag(1);
+			modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 		break;
 	}
 	default:
 		J3DModelData* modelData = mModel->getModelData();
 		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
-			modelData->getShapeNodePointer(i)->offFlag(1);
+			modelData->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
 
 		J3DModelData* modelData2 = mTipModel->getModelData();
 		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
-			modelData2->getShapeNodePointer(i)->offFlag(1);
+			modelData2->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
 
 		JGeometry::TVec3<f32> tip = mTipPos;
 		tip.y += 50.0f;
@@ -404,17 +405,17 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 
 		Mtx modelMtx;
 		modelMtx[0][0] = tmp.x;
-		modelMtx[0][1] = tmp.y;
-		modelMtx[0][2] = tmp.z;
+		modelMtx[0][1] = up.x;
+		modelMtx[0][2] = dir.x;
 		modelMtx[0][3] = tip.x;
 
-		modelMtx[1][0] = up.x;
+		modelMtx[1][0] = tmp.y;
 		modelMtx[1][1] = up.y;
-		modelMtx[1][2] = up.z;
+		modelMtx[1][2] = dir.y;
 		modelMtx[1][3] = tip.y;
 
-		modelMtx[2][0] = dir.x;
-		modelMtx[2][1] = dir.y;
+		modelMtx[2][0] = tmp.z;
+		modelMtx[2][1] = up.z;
 		modelMtx[2][2] = dir.z;
 		modelMtx[2][3] = tip.z;
 

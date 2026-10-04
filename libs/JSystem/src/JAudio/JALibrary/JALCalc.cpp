@@ -1,0 +1,92 @@
+#include <JSystem/JAudio/JALibrary/JALCalc.hpp>
+#include <JSystem/JMath.hpp>
+#include <math.h>
+namespace JALCalc {
+
+const f32 cEqualCSlope = 1.0f;
+const f32 cPlusPSlope  = 1.0f;
+
+f32 linearTransform(f32 x, f32 xStart, f32 xEnd, f32 yStart, f32 yEnd,
+                    bool unbounded)
+{
+	f32 result = ((x - xStart) * ((yEnd - yStart) / (xEnd - xStart)) + yStart);
+
+	if (unbounded)
+		return result;
+
+	if (yStart < yEnd)
+		return result > yEnd ? yEnd : (result < yStart ? yStart : result);
+	else
+		return result > yStart ? yStart : (result < yEnd ? yEnd : result);
+}
+
+f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
+                  CurveSign curve)
+{
+	f32 param;
+	if (curve == CS_POSITIVE_CURVE) {
+		param = linearTransform(x, xStart, xEnd, 0.0f, y, true);
+		param = expf(param);
+		param = linearTransform(param, 1.0f, expf(y), yStart, yEnd, true);
+	} else if (curve == CS_NEGATIVE_CURVE) {
+		param = linearTransform(x, xStart, xEnd, y, 0.0f, true);
+		param = expf(param);
+		param = linearTransform(param, expf(y), 1.0f, yStart, yEnd, true);
+	} else {
+		param = linearTransform(x, xStart, xEnd, yStart, yEnd, false);
+	}
+
+	if (param > yEnd)
+		return yEnd;
+
+	if (param < yStart)
+		return yStart;
+
+	return param;
+}
+
+f32 getParamByExp_0_1(f32, f32, f32, f32, CurveSign) { return 0.0f; }
+
+f32 getRandom(f32 amplitude, f32 curveSlope, f32 plusSlope)
+{
+	f32 val0 = 2.0f * plusSlope;
+	f32 val1 = -2.0f * (1.0f - plusSlope);
+
+	f32 val2 = getRandom_0_1() < plusSlope ? val0 : val1;
+
+	amplitude *= val2;
+
+	f32 val3 = powf(getRandom_0_1(), curveSlope);
+	return val3 * amplitude;
+}
+
+f32 getRandom_0_1()
+{
+	static JMath::TRandom_fast_ oRandom(0);
+	return oRandom.get_ufloat_1();
+}
+
+s32 getRandom_Sign() { return 0; }
+
+f32 pow2(f32) { return 0.0f; }
+
+f32 getRint(f32) { return 0.0f; }
+
+f32 getDist(Vec* vec1, Vec* vec2) { return std::sqrtf(getDistPow(vec1, vec2)); }
+
+f32 getDistPow(Vec* vec1, Vec* vec2)
+{
+	if (vec2) {
+		float dy = powf(vec1->y - vec2->y, 2.0f);
+		float dx = powf(vec1->x - vec2->x, 2.0f);
+		float dz = powf(vec1->z - vec2->z, 2.0f);
+		return dx + dy + dz;
+	} else {
+		float dy = std::powf(vec1->y, 2.0f);
+		float dx = std::powf(vec1->x, 2.0f);
+		float dz = std::powf(vec1->z, 2.0f);
+		return dx + dy + dz;
+	}
+}
+
+} // namespace JALCalc

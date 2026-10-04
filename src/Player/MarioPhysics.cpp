@@ -1,5 +1,6 @@
 #include <Player/Mario.hpp>
 #include <Player/Yoshi.hpp>
+#include <System/Particles.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
@@ -33,7 +34,7 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	f32 dist   = MsSqrtf(dx * dx + dz * dz);
 
 	if (dist == 0.0f)
-		dist = 1.0f;
+		dist = dx = 1.0f;
 
 	if (!(dist < thresh))
 		return;
@@ -49,7 +50,7 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 			burst = true;
 
 		if (burst == true) {
-			emitParticle(0xc);
+			emitParticle(PARTICLE_MS_DMG_C);
 			changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0);
 			return;
 		}
@@ -77,12 +78,14 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	JGeometry::TVec3<f32> diff = newPos - mPosition;
 
 	f32 step = diff.length();
-	if (50.0f < step)
-		step = 50.0f;
+	if (step > 0.0f) {
+		if (50.0f < step)
+			step = 50.0f;
 
-	diff.normalize();
+		diff.normalize();
 
-	mPosition += diff * step;
+		mPosition += diff * step;
+	}
 }
 
 void TMario::keepDistance(const THitActor& actor, f32 param_2)
@@ -140,7 +143,7 @@ int TMario::checkGroundAtWalking(Vec* v)
 
 	f32 floorY;
 	const TBGCheckData* ground;
-	if (checkStatusFlag(0x10000)) {
+	if (checkStatusType(0x10000)) {
 		floorY = gpMap->checkGround(v->x, v->y + 30.0f, v->z, &ground);
 	} else {
 		checkGroundPlane(v->x, v->y + 30.0f, v->z, &floorY, &ground);
@@ -165,7 +168,7 @@ int TMario::checkGroundAtWalking(Vec* v)
 	}
 
 	if (fabsf(mPosition.y - floorY) > 100000.0f) {
-		mPosition = unk29C;
+		mPosition = mPrevPosition;
 	} else {
 		mPosition.x      = v->x;
 		mPosition.y      = floorY;
@@ -200,7 +203,7 @@ int TMario::waitProcess()
 {
 	setPlayerVelocity(0.0f);
 	if (fabsf(mPosition.y - mFloorPosition.y) > 100000.0f) {
-		mPosition = unk29C;
+		mPosition = mPrevPosition;
 		changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, false);
 	} else {
 		mPosition.y = mFloorPosition.y;
@@ -331,7 +334,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 	TBGCheckData* wall1 = checkWallPlane(&pos, 150.0f, unk15C);
 	TBGCheckData* wall2 = checkWallPlane(&pos, 30.0f, unk15C);
 
-	if (checkStatusFlag(0x10000)) {
+	if (checkStatusType(0x10000)) {
 		mFloorPosition.y
 		    = gpMap->checkGround(pos.x, pos.y + 30.0f, pos.z, &mGroundPlane);
 	} else {
@@ -348,7 +351,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 	mPosition.set(pos);
 
 	if (mGroundPlane->isIllegalData()) {
-		mPosition  = unk29C;
+		mPosition  = mPrevPosition;
 		groundCode = 2;
 	} else {
 		BOOL passable = false;
@@ -359,7 +362,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 		    && mGroundPlane->isGroundPoundToPassThrough())
 			passable = true;
 
-		if (checkStatusFlag(0x10000) && mGroundPlane->isWaterSurface())
+		if (checkStatusType(0x10000) && mGroundPlane->isWaterSurface())
 			passable = false;
 
 		if (passable == 0 && pos.y <= mFloorPosition.y) {
@@ -377,7 +380,7 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 
 			if (mRoofPlane->getActor() != nullptr)
 				((THitActor*)mRoofPlane->getActor())
-				    ->receiveMessage(this, HIT_MESSAGE_UNK2);
+				    ->receiveMessage(this, HIT_MESSAGE_PUSH_UP);
 
 			setPlayerVelocity(0.0f);
 

@@ -11,8 +11,9 @@ public:
 
 	TMapObjGeneral(const char* name = "汎用地形オブジェ");
 
+	virtual void initMapObj();
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void ensureTakeSituation();
 	virtual void calcRootMatrix();
@@ -20,12 +21,11 @@ public:
 	virtual void bind();
 	virtual void kill();
 	virtual void appear();
-	virtual void initMapObj();
 	virtual void checkIllegalAttr() const { }
 	virtual void touchPlayer(THitActor*);
 	virtual u32 touchWater(THitActor*);
 	virtual u32 getLivingTime() const { return mNormalLivingTime; }
-	virtual int getFlushTime() const { }
+	virtual int getFlushTime() const { return mNormalFlushTime; }
 	virtual bool isPollutedGround(const JGeometry::TVec3<f32>&) const;
 	virtual void work();
 	virtual void appearing();
@@ -63,6 +63,18 @@ public:
 	static u32 mNormalWaitToAppearTime;
 	static f32 mNormalAppearingScaleUp;
 	static f32 mNormalThrowSpeedRate;
+
+	enum {
+		STATE_APPEARING         = 0x2,
+		STATE_BREAKING          = 0x3,
+		STATE_TOUCHING_PLAYER   = 0x4,
+		STATE_TOUCHING_WATER    = 0x5,
+		STATE_HOLDING           = 0x6,
+		STATE_SINKING           = 0x7,
+		STATE_BURIED            = 0x8,
+		STATE_RECOVERING        = 0x9,
+		STATE_WAITING_TO_APPEAR = 0xA,
+	};
 
 public:
 	/* 0x138 */ TBGCheckData* unk138;

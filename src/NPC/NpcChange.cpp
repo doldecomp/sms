@@ -2,6 +2,7 @@
 #include <Strategic/Spine.hpp>
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <MarioUtil/MapUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -191,8 +192,8 @@ void TBaseNPC::changeNerveFromTalk_()
 	mSpine->setNext(nullptr);
 
 	if (mThrowCtrl != nullptr) {
-		if (checkLiveFlag(LIVE_FLAG_UNK20000000)) {
-			offLiveFlag(LIVE_FLAG_UNK20000000);
+		if (checkLiveFlag(LIVE_FLAG_DONT_THROW)) {
+			offLiveFlag(LIVE_FLAG_DONT_THROW);
 		} else {
 			mSpine->setNext(&TNerveNPCThrow::theNerve());
 		}
@@ -347,7 +348,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (gpMarDirector->isTalkOrDemoModeNow())
 			return;
 
-		gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
+		                             nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))
@@ -456,55 +458,62 @@ void TBaseNPC::changeNerveProc_()
 			bVar5 = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
 		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
-		           && !checkLiveFlag(0xc10207)
+		           && !checkLiveFlag(
+		               LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+		               | LIVE_FLAG_UNK200 | LIVE_FLAG_DONT_TALK
+		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
-			if (isSunflowerReviving() && isNerveCanGoToTalk()
+			if (!isSunflowerReviving() && isNerveCanGoToTalk()
 			    && (mActorType != 0x4000006
 			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
+				bool inCameraCube = true;
 				if (gpMarDirector->mMap == 7) {
 					JGeometry::TVec3<f32> local_58 = mPosition;
 					local_58.y += 75.0f;
-					if (SMS_IsInSameCameraCube(local_58))
+					inCameraCube = SMS_IsInSameCameraCube(local_58);
+				}
+
+				if (inCameraCube) {
+					f32 fVar1;
+					f32 fVar2;
+					if (mThrowCtrl != nullptr) {
+						fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
+						fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
+					} else {
+						if (mActorType == 0x400001A) {
+							fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
+						} else {
+							fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
+						}
+						fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
+					}
+
+					f32 fVar3;
+					if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
+					    || isSunflower() || mActorType == 0x400001D) {
+						fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
+					} else {
+						fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
+					}
+
+					if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
+					    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
+					    && MsIsInSight(
+					        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
+					        mPosition, fVar2,
+					        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(),
+					        0.0f))
 						bVar5 = true;
 				}
-
-				f32 fVar1;
-				f32 fVar2;
-				if (mThrowCtrl != nullptr) {
-					fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
-					fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
-				} else {
-					if (mActorType == 0x400001A) {
-						fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
-					} else {
-						fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
-					}
-					fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
-				}
-
-				f32 fVar3;
-				if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
-				    || isSunflower() || mActorType == 0x400001D) {
-					fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
-				} else {
-					fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
-				}
-
-				if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
-				    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
-				    && MsIsInSight(
-				        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
-				        mPosition, fVar2,
-				        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(), 0.0f))
-					bVar5 = true;
 			}
 		}
 
 		if (bVar5) {
 			onLiveFlag(LIVE_FLAG_UNK20000);
 			if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+				bVar4 = true;
 				offLiveFlag(LIVE_FLAG_UNK40000);
 				const TNerveBase<TLiveActor>* current
 				    = mSpine->getCurrentNerve();
@@ -545,7 +554,7 @@ void TBaseNPC::changeNerveProc_()
 	unk15C->unk0 = 0;
 
 	if (latestNerve == &TNerveNPCSink::theNerve()) {
-		if (gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z))
+		if (gpPollution->isPolluted(mPosition.x, unk1C4, mPosition.z))
 			return;
 
 		mSpine->setNext(&TNerveNPCRecoverFromSink::theNerve());

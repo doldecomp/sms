@@ -1,6 +1,7 @@
 #ifndef ENEMY_SMALL_ENEMY_HPP
 #define ENEMY_SMALL_ENEMY_HPP
 
+#include <MarioUtil/RandomUtil.hpp>
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Strategic/Nerve.hpp>
@@ -11,7 +12,7 @@ class TJuiceBlock;
 
 class TSmallEnemyParams : public TSpineEnemyParams {
 public:
-	TSmallEnemyParams(const char*);
+	TSmallEnemyParams(const char* name);
 
 	f32 getSLJumpForce() const { return mSLJumpForce.get(); }
 	f32 getSLSearchLength() const { return mSLSearchLength.get(); }
@@ -22,10 +23,10 @@ public:
 	f32 getSLGiveUpHeight() const { return mSLGiveUpHeight.get(); }
 	s32 getSLAttackWait() const { return mSLAttackWait.get(); }
 	s32 getSLFreezeWait() const { return mSLFreezeWait.get(); }
-	s32 getSLDamageRadius() const { return mSLDamageRadius.get(); }
-	s32 getSLDamageHeight() const { return mSLDamageHeight.get(); }
-	s32 getSLAttackRadius() const { return mSLAttackRadius.get(); }
-	s32 getSLAttackHeight() const { return mSLAttackHeight.get(); }
+	f32 getSLDamageRadius() const { return mSLDamageRadius.get(); }
+	f32 getSLDamageHeight() const { return mSLDamageHeight.get(); }
+	f32 getSLAttackRadius() const { return mSLAttackRadius.get(); }
+	f32 getSLAttackHeight() const { return mSLAttackHeight.get(); }
 	f32 getSLTurnSpeedLow() const { return mSLTurnSpeedLow.get(); }
 	f32 getSLTurnSpeedHigh() const { return mSLTurnSpeedHigh.get(); }
 	f32 getSLBodyScaleLow() const { return mSLBodyScaleLow.get(); }
@@ -68,10 +69,9 @@ public:
 	/* 0x288 */ TParamRT<u8> mSLStampRange;
 	/* 0x29C */ TParamRT<s32> mSLPolluteInterval;
 	/* 0x2B0 */ TParamRT<u8> mSLGenerateOnlyDead;
-	/* 0x2C4 */ f32 unk2C4;
-	/* 0x2C8 */ f32 unk2C8;
-	/* 0x2CC */ f32 unk2CC;
-	/* 0x2D0 */ f32 unk2D0;
+
+	/* 0x2C4 */ TMsRange<f32> mTurnSpeedRange;
+	/* 0x2CC */ TMsRange<f32> mBodyScaleRange;
 };
 
 class TSmallEnemyManager : public TEnemyManager {
@@ -113,7 +113,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void moveObject();
@@ -144,7 +144,7 @@ public:
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
-	virtual void initAttacker(THitActor*);
+	virtual void initAttacker(THitActor*) { unk184 = 1; }
 	virtual bool isHitValid(u32)
 	{
 		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;
@@ -169,8 +169,16 @@ public:
 	void behaveToHitOthers(THitActor*);
 
 	// fabricated
+	TSmallEnemyParams* getSaveParams() const
+	{
+		return (TSmallEnemyParams*)getSaveParam();
+	}
+
+	// fabricated
 	TSmallEnemyParams* getSaveParam2() const
 	{
+		// TODO: need 2 different inlines here, one with qualification and one
+		// without
 		return (TSmallEnemyParams*)TSpineEnemy::getSaveParam();
 	}
 	f32 getUnk158() const { return unk158; }
@@ -192,6 +200,11 @@ public:
 		return result;
 	}
 
+	enum {
+		LIVE_FLAG_MELT_ON_DEATH
+		= VERSION_SELECT(GMSJ01(0x10000), GMSP01(0x20000)),
+	};
+
 public:
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ f32 unk154;
@@ -204,7 +217,7 @@ public:
 	/* 0x168 */ char unk168[0x174 - 0x168];
 	/* 0x174 */ u32 unk174;
 	/* 0x178 */ TJuiceBlock* mJuiceBlock;
-	/* 0x17C */ int mCoinId;
+	/* 0x17C */ s32 mCoinId;
 	/* 0x180 */ TCoin* mCoin;
 	/* 0x184 */ u8 unk184;
 	/* 0x185 */ u8 unk185;

@@ -6,7 +6,6 @@
 #include <Player/Yoshi.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
-#include <System/StageUtil.hpp>
 #include <System/MarioGamePad.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Map/Map.hpp>
@@ -14,6 +13,8 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+bool SMS_isMultiPlayerMap();
 
 // TODO: stuff from other rogue includes
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
@@ -53,7 +54,7 @@ TMario::TMario()
     , mSlipParamsYoshi("/Mario/SlipParamYoshi.prm")
     , mUpperBodyParams("/Mario/UpperBody.prm")
     , mDmgParamsEnemyCommon("/Mario/DmgEnemyCommon.prm")
-    , mDmgParamsHamakuri("/Mario/DmgHamakuri.prm")
+    , mDmgParamsHamakuri("/Mario/DmgHamukuri.prm")
     , mDmgParamsNamekuri("/Mario/DmgNamekuri.prm")
     , mDmgParamsHinokuri("/Mario/DmgHinokuri.prm")
     , mDmgParamsFire("/Mario/DmgFire.prm")
@@ -83,7 +84,9 @@ TMario::TMario()
     , mDmgMapParams9("/Mario/DmgMapCode9.prm")
     , mOptionParams("/Mario/Option.prm")
 {
-	unk114          = 0x412;
+	unk114 = UNK114_FLAG_DO_OCCLUSION_PROBE | UNK114_FLAG_UNK10
+	         | UNK114_FLAG_VISIBLE;
+
 	unk116          = 0;
 	mInput          = 0;
 	unk78           = 0;
@@ -100,7 +103,7 @@ TMario::TMario()
 	mModelFaceAngle = 0;
 	unk9C           = 0;
 	unk9E           = 0;
-	unkA0           = 0;
+	mDizzyTimer     = 0;
 	mVel.x          = 0.0f;
 	mVel.y          = 0.0f;
 	mVel.z          = 0.0f;
@@ -108,68 +111,68 @@ TMario::TMario()
 	mSlideVelX      = 0.0f;
 	mSlideVelZ      = 0.0f;
 
-	unkBC = 0.0f;
-	unkC0 = 0.0f;
-	unkC4 = 0;
-	unkC8 = 0.0f;
-	unkCC = 0.033333335f;
-	unkD0 = 0.016666668f;
-	unkD4 = 0xb4;
-	unkD5 = 0xb4;
+	unkBC      = 0.0f;
+	mDashSpeed = 0.0f;
+	mDashTimer = 0;
+	unkC8      = 0.0f;
+	unkCC      = 0.033333335f;
+	unkD0      = 0.016666668f;
+	unkD4      = 0xb4;
+	unkD5      = 0xb4;
 
 	mWallPlane   = nullptr;
 	mRoofPlane   = nullptr;
 	mGroundPlane = TMap::getIllegalCheckData();
 	mWaterFloor  = nullptr;
 
-	mFloorPosition.x = 0.0f;
-	mFloorPosition.y = 0.0f;
-	mFloorPosition.z = 0.0f;
-	mSlopeAngle      = 0;
-	unkF6            = 0;
-	mLightID         = 0;
-	mAnimationId     = 0xc3;
-	unkFC            = 0;
-	unkFE            = 0;
-	unk100           = 0;
-	unk104           = 0.0f;
-	unk108           = nullptr;
-	unk118           = 0;
-	unk11C           = 0;
-	mHealth          = mDeParams.mHpMax.get();
-	unk122           = 0;
-	unk124           = 0;
-	unk126           = 0;
-	unk128           = 0;
-	unk130           = (f32)(mHealth + 1) - 1e-05f;
-	unk12C           = unk130;
-	unk144           = 0xffffffff;
-	unk148           = 0;
-	unk14C           = 0;
-	unk14E           = 0;
-	unk154           = 0;
-	unk158           = nullptr;
-	unk15C           = 0.0f;
+	mFloorPosition.x     = 0.0f;
+	mFloorPosition.y     = 0.0f;
+	mFloorPosition.z     = 0.0f;
+	mSlopeAngle          = 0;
+	unkF6                = 0;
+	mLightID             = 0;
+	mAnimationId         = 0xc3;
+	unkFC                = 0;
+	unkFE                = 0;
+	unk100               = 0;
+	unk104               = 0.0f;
+	unk108               = nullptr;
+	mFlag                = 0;
+	mPrevFlag            = 0;
+	mHealth              = mDeParams.mHPMax.get();
+	unk122               = 0;
+	unk124               = 0;
+	mHotTimer            = 0;
+	mHotTimerMax         = 0;
+	mMaxAir              = (f32)(mHealth + 1) - 1e-05f;
+	mAir                 = mMaxAir;
+	unk144               = 0xffffffff;
+	unk148               = 0;
+	mInvincibilityFrames = 0;
+	mFreezeTimer         = 0;
+	unk154               = 0;
+	unk158               = nullptr;
+	unk15C               = 0.0f;
 	unk160.zero();
-	unk16C.zero();
-	unk178.zero();
-	unk184.zero();
-	unk190.zero();
-	unk1A8.zero();
+	mHeadPos.zero();
+	mCenterPos.zero();
+	mRightHandPos.zero();
+	mWaterRipplePos.zero();
+	mFootprintPos.zero();
 	unk1B4.zero();
-	unk19C.zero();
-	MTXIdentity(unk1C0);
+	mDamagePos.zero();
+	MTXIdentity(mHeadMtx);
 	MTXIdentity(unk1F0);
 	MTXIdentity(unk220);
 	MTXIdentity(unk250);
-	unk280 = mPosition;
-	unk28C = mRotation;
-	unk29C = mPosition;
-	unk2A8 = mPosition;
-	unk2B4 = mFaceAngle;
-	unk2BA = 0;
-	unk2BC = 0.0f;
-	unk2C0 = nullptr;
+	unk280        = mPosition;
+	unk28C        = mRotation;
+	mPrevPosition = mPosition;
+	unk2A8        = mPosition;
+	unk2B4        = mFaceAngle;
+	mOobKillTimer = 0;
+	unk2BC        = 0.0f;
+	unk2C0        = nullptr;
 	MTXIdentity(unk2C4);
 
 	unk2F4.x = 0.0f;
@@ -183,60 +186,60 @@ TMario::TMario()
 	unk314 = 0.0f;
 	unk310 = 0;
 	MTXIdentity(unk318);
-	unk348        = 0.0f;
-	unk34C        = 0;
-	unk34E        = 0;
-	unk350        = 0;
-	unk354        = 0.0f;
-	unk358        = 0.0f;
-	unk35C        = 0.0f;
-	unk360        = 0;
-	unk362        = 0;
-	unk364        = 0;
-	unk366        = 0;
-	unk368        = 0.0f;
-	unk36C        = 0.0f;
-	unk370        = 0.0f;
-	unk374        = 0.0f;
-	unk378        = 0.0f;
-	mPumpCooldown = 0;
-	mUpperState   = UPPER_STATE_IDLE;
-	unk384        = 0;
-	unk388        = 6;
-	unk390        = 0;
-	unk394        = nullptr;
-	unk398        = nullptr;
-	unk39C        = 0;
-	unk3A0        = 0;
-	mModel        = nullptr;
+	mPumpAnmRate             = 0.0f;
+	unk34C                   = 0;
+	mStandingOnGraffitoTimer = 0;
+	mPollutionTypeStandingOn = 0;
+	unk354                   = 0.0f;
+	unk358                   = 0.0f;
+	unk35C                   = 0.0f;
+	mFootPrintTimer          = 0;
+	mWetWaterParticleTimer   = 0;
+	unk364                   = 0;
+	unk366                   = 0;
+	mSinkTimer               = 0.0f;
+	unk36C                   = 0.0f;
+	unk370                   = 0.0f;
+	unk374                   = 0.0f;
+	unk378                   = 0.0f;
+	mPumpCooldown            = 0;
+	mUpperState              = UPPER_STATE_IDLE;
+	unk384                   = 0;
+	mPlayerType              = PLAYER_TYPE_INVALID;
+	unk390                   = 0;
+	unk394                   = nullptr;
+	unk398                   = nullptr;
+	unk39C                   = 0;
+	unk3A0                   = 0;
+	mModel                   = nullptr;
 
 	mHandModels[0][0] = nullptr;
 	mHandModels[0][1] = nullptr;
 	mHandModels[1][0] = nullptr;
 	mHandModels[1][1] = nullptr;
 
-	mBoneIDs[0]  = 0;
-	mBoneIDs[1]  = 0;
-	mBoneIDs[2]  = 0;
-	mBoneIDs[3]  = 0;
-	mBoneIDs[4]  = 0;
-	mBoneIDs[5]  = 0;
-	mBoneIDs[6]  = 0;
-	mBoneIDs[7]  = 0;
-	mBoneIDs[8]  = 0;
-	mBoneIDs[9]  = 0;
-	mBoneIDs[10] = 0;
-	mBoneIDs[11] = 0;
+	mJointIdChest    = 0;
+	mJointIdChnChest = 0;
+	mJointIdArmR1    = 0;
+	mJointIdArmL1    = 0;
+	mJointIdHandR    = 0;
+	mJointIdHandL    = 0;
+	mJointIdChnFootR = 0;
+	mJointIdFootR    = 0;
+	mJointIdChnFootL = 0;
+	mJointIdFootL    = 0;
+	mJointIdHead     = 0;
+	mJointIdMHead    = 0;
 
-	unk3D4 = 0;
-	unk3D6 = 0;
+	mMaterialIdEyeL = 0;
+	mMaterialIdEyeR = 0;
 
-	unk3D8    = 0.0f;
-	unk3DC    = 0.0f;
-	mCap      = nullptr;
-	mWaterGun = nullptr;
-	unk3E8    = 4;
-	unk3EC    = 0.0f;
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
+	mCap        = nullptr;
+	mWaterGun   = nullptr;
+	unk3E8      = 4;
+	unk3EC      = 0.0f;
 
 	mYoshi     = nullptr;
 	mSurfGesso = nullptr;
@@ -298,7 +301,7 @@ TMario::TMario()
 	mWireSfxDelay    = 20;
 	mWireQueuedSfxID = 0;
 
-	unk54E             = 0x4000;
+	unk54E             = 0x400;
 	mWireSwingPosAngle = 0x4000;
 	mWireSwingNegAngle = 0xC000;
 
@@ -326,7 +329,7 @@ void TMario::load(JSUMemoryInputStream& stream)
 	stream >> unk298;
 	u32 local_20;
 	stream >> local_20;
-	unk118 = 0;
+	mFlag = 0;
 	if (local_20 & 1)
 		offFlag(MARIO_FLAG_HAS_FLUDD);
 	else
@@ -349,10 +352,10 @@ void TMario::loadAfter()
 	initParticle();
 
 	if (isMario())
-		SMSGetMSound()->setPlayerInfo(&mPosition, &unk29C,
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
 		                              mModel->getModel()->getAnmMtx(1), true);
 	else
-		SMSGetMSound()->setPlayerInfo(&mPosition, &unk29C,
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
 		                              mModel->getModel()->getAnmMtx(1), false);
 
 	finalDrawInitialize();
@@ -361,11 +364,11 @@ void TMario::loadAfter()
 
 void TMario::initValues()
 {
-	mHealth = mDeParams.mHpMax.get();
-	unk134  = 0.0f;
-	unk138  = 1.0f;
-	unk13C  = 0;
-	unk140  = 0.0f;
+	mHealth     = mDeParams.mHPMax.get();
+	mDirty      = 0.0f;
+	mOilBrake   = 1.0f;
+	mDirtyTimer = 0;
+	unk140      = 0.0f;
 
 	unk108              = new TMarioControllerWork;
 	unk108->mStickHS16  = 0;
@@ -384,14 +387,14 @@ void TMario::initValues()
 	unk154 = new TWaterEmitInfo("/Mario/DamageWaterEmit.prm");
 	unk158 = new TWaterEmitInfo("/Mario/WetWaterEmit.prm");
 
-	unk388            = 0;
-	unk389            = 0;
+	mPlayerType       = PLAYER_TYPE_MARIO;
+	mSurfGessoType    = SURF_GESSO_TYPE_RED;
 	mHolderHeightDiff = 0.0f;
 
 	initModel();
 
-	unk3D8 = 0.0f;
-	unk3DC = 0.0f;
+	mWaistRoll  = 0.0f;
+	mWaistPitch = 0.0f;
 
 	mCap      = new TMarioCap(this);
 	mWaterGun = new TWaterGun(this);
@@ -452,11 +455,13 @@ void TMario::resetHistory()
 	unk53B = 0;
 }
 
+void TMario::stageSetting() { }
+
 void TMario::setGamePad(TMarioGamePad* pad) { mGamePad = pad; }
 
 TMario::TDeParams::TDeParams()
     : TParams("/Mario/Mario.prm")
-    , PARAM_INIT(mHpMax, 8)
+    , PARAM_INIT(mHPMax, 8)
     , PARAM_INIT(mRunningMax, 45.0f)
     , PARAM_INIT(mDashMax, 60.0f)
     , PARAM_INIT(mDashAcc, 0.5f)
@@ -928,12 +933,12 @@ TMario::TDivingParams::TDivingParams(const char* prm)
 TMario::TEParams::TEParams(const char* prm)
     : TParams(prm)
     , PARAM_INIT(mDamage, 1)
-    , PARAM_INIT(mDownType, 0)
+    , PARAM_INIT(mDownType, 1)
     , PARAM_INIT(mWaterEmit, 0)
-    , PARAM_INIT(mMotor, 0)
-    , PARAM_INIT(mMinSpeed, 0.0f)
+    , PARAM_INIT(mMotor, 25)
+    , PARAM_INIT(mMinSpeed, 16.0f)
     , PARAM_INIT(mDirty, 0.0f)
-    , PARAM_INIT(mInvincibleTime, 0)
+    , PARAM_INIT(mInvincibleTime, 300)
 {
 	TParams::load(mPrmPath);
 }
@@ -946,7 +951,7 @@ TMario::TAutoDemoParams::TAutoDemoParams()
     , PARAM_INIT(mWarpInTremble, 15.0f)
     , PARAM_INIT(mWarpInVecBase, 0.3f)
     , PARAM_INIT(mWarpTransTremble, 50.0f)
-    , PARAM_INIT(mReadRotSp, 0x400f)
+    , PARAM_INIT(mReadRotSp, 0x400)
 {
 	TParams::load(mPrmPath);
 }

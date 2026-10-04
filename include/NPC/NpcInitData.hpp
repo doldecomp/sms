@@ -18,14 +18,12 @@ struct TNpcTakeData {
 
 // fabricated
 struct TNpcModelDataEntry {
-	/* 0x0 */ const TColorChangeInfo* unk0;
-	/* 0x4 */ u32 unk4;
+	/* 0x0 */ const TColorChangeInfo* unk0[2];
 };
 
 // fabricated
 struct TNpcModelData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ u32 unk4;
+	/* 0x0 */ const char* unk0[2];
 	/* 0x8 */ const char* unk8[2];
 	/* 0x10 */ TNpcModelDataEntry unk10[3];
 	/* 0x28 */ s16 unk28;

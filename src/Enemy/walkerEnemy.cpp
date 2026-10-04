@@ -20,6 +20,7 @@ TWalkerEnemyParams::TWalkerEnemyParams(const char* path)
     , PARAM_INIT(mSLZigzagAngle, 30.0f)
     , PARAM_INIT(mSLMarchSpeedLow, 0.8f)
     , PARAM_INIT(mSLMarchSpeedHigh, 1.5f)
+    , unk324(0.0f, 1.0f)
 {
 	TParams::load(mPrmPath);
 	unk324.mMin = mSLMarchSpeedLow.get();
@@ -38,22 +39,22 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	getWalker()->reset();
 	getWalker()->unk18 = 150.0f;
 
-	mMarchSpeed = getSaveParam2()->unk324.get();
+	mMarchSpeed = getSaveParam2()->unk324.rand();
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 }
 
 // TODO: fake
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
-	f32 c = radius * JMACos(theta);
-	f32 s = radius * JMASin(theta);
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
 void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-	    && (mInstanceIndex & 0xF) == (gpMarDirector->unk58 & 0xF)) {
+	    && (mInstanceIndex & 0xF) == (gpMarDirector->mMoveTickCount & 0xF)) {
 		doShortCut();
 	}
 
@@ -94,12 +95,12 @@ void TWalkerEnemy::reset()
 	unk124->reset();
 	TSmallEnemy::reset();
 
-	mMarchSpeed = getSaveParam2()->unk324.get();
+	mMarchSpeed = getSaveParam2()->unk324.rand();
 
 	((TWalker*)mBinder)->reset();
 	mSpine->reset();
 	mSpine->setNext(mSpine->getDefault());
-	setGoalPathMario();
+	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 }
 
 void TWalkerEnemy::walkBehavior(int param_1, float param_2)
@@ -137,7 +138,7 @@ void TWalkerEnemy::behaveToFindMario()
 		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
-		setGoalPathMario();
+		setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
@@ -171,7 +172,7 @@ bool TWalkerEnemy::isResignationAttack()
 
 bool TWalkerEnemy::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> tmp = unk104.getPoint();
+	JGeometry::TVec3<f32> tmp = getUnk104().getPoint();
 	tmp -= mPosition;
 	tmp.y = 0.0f;
 
@@ -303,7 +304,7 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	TWalkerEnemy* self = (TWalkerEnemy*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setRunAnm();
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	if (spine->getTime() == 10)

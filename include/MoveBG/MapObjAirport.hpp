@@ -35,7 +35,7 @@ public:
 public:
 	/* 0x64 */ u32 unk64;
 	/* 0x68 */ u32 unk68;
-	/* 0x6C */ TLiveActor* unk6C; // TODO: wrong type
+	/* 0x6C */ TGateKeeperBase* unk6C;
 };
 
 #endif

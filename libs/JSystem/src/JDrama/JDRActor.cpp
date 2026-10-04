@@ -1,0 +1,63 @@
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/JDrama/JDRActor.hpp>
+#include <JSystem/JDrama/JDRLighting.hpp>
+#include <JSystem/JDrama/JDRCharacter.hpp>
+
+void JDrama::TActor::load(JSUMemoryInputStream& stream)
+{
+	TPlacement::load(stream);
+
+	stream >> mRotation.x >> mRotation.y >> mRotation.z;
+	stream >> mScaling.x >> mScaling.y >> mScaling.z;
+
+	char str[0x50];
+	stream.readString(str, 0x50);
+
+	unk3C = static_cast<TCharacter*>(TNameRefGen::search(str));
+
+	TLightMap* lightMap = new TLightMap;
+
+	unk40 = lightMap;
+	lightMap->load(stream);
+}
+
+void JDrama::TActor::issueGXLight(u32 param_1, JDrama::TGraphics* param_2)
+{
+	if (unk40 != nullptr)
+		unk40->perform(param_1 | CUE_LIGHT, param_2);
+}
+
+void JDrama::TActor::perform(u32 cue, TGraphics* graphics)
+{
+	if (cue & CUE_DRAW)
+		issueGXLight(cue, graphics);
+}
+
+JDrama::TActor::~TActor() { }
+
+void JDrama::TActor::JSGGetTranslation(Vec* v) const { *v = mPosition; }
+
+void JDrama::TActor::JSGSetTranslation(const Vec& v)
+{
+	mPosition.x = v.x;
+	mPosition.y = v.y;
+	mPosition.z = v.z;
+}
+
+void JDrama::TActor::JSGGetScaling(Vec* v) const { *v = mScaling; }
+
+void JDrama::TActor::JSGSetScaling(const Vec& v)
+{
+	mScaling.x = v.x;
+	mScaling.y = v.y;
+	mScaling.z = v.z;
+}
+
+void JDrama::TActor::JSGGetRotation(Vec* v) const { *v = mRotation; }
+
+void JDrama::TActor::JSGSetRotation(const Vec& v)
+{
+	mRotation.x = v.x;
+	mRotation.y = v.y;
+	mRotation.z = v.z;
+}

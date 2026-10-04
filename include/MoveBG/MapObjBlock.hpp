@@ -20,16 +20,18 @@ public:
 
 class TSandBlock : public TMapObjBase {
 public:
-	// Fabricated
-	enum EState {
-		STATE_WAITING   = 1,
+	enum {
 		STATE_RESTORING = 2,
 		STATE_TOUCHED   = 3,
 		STATE_FALLING   = 4,
 		STATE_GONE      = 5
 	};
 
-	TSandBlock(const char* name = "砂ブロック");
+	TSandBlock(const char* name = "砂ブロック")
+	    : TMapObjBase(name)
+	{
+	}
+
 	virtual void initMapObj();
 	virtual void control();
 	virtual void touchPlayer(THitActor*);
@@ -68,7 +70,11 @@ public:
 
 class TIceBlock : public TMapObjBase {
 public:
-	TIceBlock(const char* name = "アイスブロック");
+	TIceBlock(const char* name = "アイスブロック")
+	    : TMapObjBase(name)
+	{
+	}
+
 	virtual void initMapObj();
 	virtual void calc();
 	virtual void control();
@@ -83,7 +89,11 @@ public:
 
 class TBrickBlock : public THideObjBase {
 public:
-	TBrickBlock(const char* name = "レンガブロック");
+	TBrickBlock(const char* name = "レンガブロック")
+	    : THideObjBase(name)
+	{
+	}
+
 	virtual void initMapObj();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void kill();
@@ -101,6 +111,9 @@ public:
 	virtual void kill();
 	virtual void moveObject();
 	virtual void initMapObj();
+#ifdef VERSION_GMSP01
+	virtual void touchActor(THitActor*);
+#endif
 
 	JGeometry::TVec3<f32>& getUnk140() { return unk140; }
 
@@ -112,19 +125,24 @@ public:
 
 class TTelesaBlock : public TJuiceBlock {
 public:
-	TTelesaBlock()
-	    : TJuiceBlock("テレサブロック")
+	TTelesaBlock(const char* name = "テレサブロック")
+	    : TJuiceBlock(name)
 	{
 	}
 
 	virtual void setGroundCollision();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void initMapObj();
 };
 
 class TSuperHipDropBlock : public TBreakHideObj {
 public:
-	TSuperHipDropBlock(const char* name = "スーパーヒップドロップブロック");
+	TSuperHipDropBlock(const char* name = "スーパーヒップドロップブロック")
+	    : TBreakHideObj(name)
+	    , mMonteBlockBroken(false)
+	{
+	}
+
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 

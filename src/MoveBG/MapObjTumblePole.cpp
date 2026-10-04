@@ -1,4 +1,5 @@
 #include <MoveBG/MapObjTumblePole.hpp>
+#include <JSystem/JGadget/std-list.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

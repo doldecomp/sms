@@ -10,29 +10,21 @@
 #include <MSound/SoundEffects.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <MarioUtil/DrawUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/MirrorActor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static void dummy() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy2() { static Vec data_2100 = { 1.0f, 1.0f, 1.0f }; }
-static void dummy3() { static u32 data_2100[] = { 0, 2, 1, 3 }; }
-
 #include <M3DUtil/InfectiousStrings.hpp>
-
-static void dummy4(Vec& v)
-{
-	v = (Vec) { 0.0f, 0.0f, 0.0f };
-	v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -10828,12 +10820,13 @@ void TMapObjBase::initUnique()
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
 	case 0x2000003C:
-		mMActor->setLightType(0);
+		mMActor->setLightType(LIGHT_TYPE_PLAYER);
 		break;
 	case 0x2000000E:
 		if (mMActor) {
-			u32 uVar4 = getModel()->getMatPacket(0)->unk3C;
-			getModel()->getMatPacket(0)->unk3C = uVar4 & 0x7fffffff;
+			getModel()->getMatPacket(0)->setMaterialID(
+			    getModel()->getMatPacket(0)->getMaterialID()
+			    & ~J3DMatPacket::DIFF_FLAG);
 		}
 		break;
 	case 0x40000048:
@@ -10866,13 +10859,12 @@ void TMapObjBase::initUnique()
 		startAllAnim(mMActor, unkF4);
 		break;
 	case 0x4000003C:
-		if (mMActor->unkC)
-			mMActor->unkC->initSimpleMotionBlend(0x14);
+		mMActor->initSimpleMotionBlend(0x14);
 		break;
 	case 0x400000A8:
 	case 0x40000096:
 	case 0x4000009A:
-	case 0x4000009D:
+	case 0x4000009B:
 	case 0x4000009E:
 	case 0x4000009F:
 	case 0x400000A1:
@@ -10892,6 +10884,8 @@ void TMapObjBase::initUnique()
 		setMatTable(gpMapObjManager->unk90);
 		break;
 	case 0x400000CB:
+	case 0x400000CD:
+	case 0x400000CE:
 		setMatTable(gpMapObjManager->unkC0);
 		SMS_UnifyMaterial(getModel());
 		break;
@@ -10933,7 +10927,7 @@ void TMapObjBase::initUnique()
 		mMActor = mMActorKeeper->mActors[0];
 		break;
 	case 0x400000D0:
-		mMActor->setLightType(1);
+		mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		break;
 	case 0x400000DB:
 		mPosition.y += mScaling.y * 50.0f;
@@ -10956,8 +10950,9 @@ void TMapObjBase::initHoldData()
 {
 	if (getMapObjData()->mHold != nullptr) {
 		TMapObjHoldData* hold = getMapObjData()->mHold;
-		hold->unk8  = J3DModelLoaderDataBase::load(JKRGetResource(hold->unk0),
-		                                           0x240000);
+		hold->unk8            = J3DModelLoaderDataBase::load(
+            JKRGetResource(hold->unk0),
+            J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
 		hold->unkC  = new J3DModel(hold->unk8, 0, 1);
 		u16 idx     = hold->unk8->unkB0->getIndex(hold->unk4);
 		hold->unk10 = hold->unkC->getAnmMtx(idx);
@@ -11006,13 +11001,12 @@ void TMapObjBase::initObjCollisionData()
 	}
 
 	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
-		unk64 |= 2;
+		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 
 	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
-		unk64 |= 4;
+		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
 }
 
-#pragma dont_inline on
 void TMapObjBase::initBckMoveData()
 {
 	if (mMapObjData->mMove != nullptr) {
@@ -11022,29 +11016,25 @@ void TMapObjBase::initBckMoveData()
 		    JKRGetResource(move->unk0));
 
 		J3DModelData* data         = mMActor->getModel()->getModelData();
-		data->mJointNodePointer[0] = data->getJointNodePointer(1);
+		J3DJoint* joint            = data->getJointNodePointer(1);
+		data->mJointNodePointer[0] = joint;
 
-		// TODO: this requires the J3DJoint.hpp header, but that has the dreaded
-		// compound literal in .data problem that we share with TWW, so avoid it
-		// for now
-
-		// J3DTransformInfo& info
-		//     = data->getJointNodePointer(0)->getTransformInfo();
-		// info.mScale.x         = 1.0f;
-		// info.mScale.y         = 1.0f;
-		// info.mScale.z         = 1.0f;
-		// info.mRotation.x      = 0;
-		// info.mRotation.y      = 0;
-		// info.mRotation.z      = 0;
-		// info.mTranslate.x     = 0.0f;
-		// info.mTranslate.y     = 0.0f;
-		// info.mTranslate.z     = 0.0f;
-		move->unk8 = new J3DFrameCtrl(move->unk4->mMaxFrame);
+		J3DTransformInfo info;
+		info.mScale.x     = 1.0f;
+		info.mScale.y     = 1.0f;
+		info.mScale.z     = 1.0f;
+		info.mRotation.x  = 0;
+		info.mRotation.y  = 0;
+		info.mRotation.z  = 0;
+		info.mTranslate.x = 0.0f;
+		info.mTranslate.y = 0.0f;
+		info.mTranslate.z = 0.0f;
+		data->getJointNodePointer(0)->setTransformInfo(info);
+		move->unk8 = new J3DFrameCtrl(move->unk4->getFrameMax());
 		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
 		move->unk8->setRate(SMSGetAnmFrameRate());
 	}
 }
-#pragma dont_inline off
 
 bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 {
@@ -11061,7 +11051,7 @@ MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
 	MActor* oldActor = mMActor;
 	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
 	mMActor          = newActor;
-	if (checkMapObjFlag(0x4000)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000)) {
 		mMActor->setLightID(0);
 		mMActor->unmarkUnk40();
 	}
@@ -11082,14 +11072,19 @@ void TMapObjBase::makeMActors()
 		return;
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
-	if (unkF8 & 0x8000)
-		mMActorKeeper->mModelLoaderFlags = 0x11220000;
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000))
+		mMActorKeeper->mModelLoaderFlags
+		    = J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
 	else
-		mMActorKeeper->mModelLoaderFlags = 0x10220000;
+		mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+		                                   | J3DMLF_UseUniqueMaterials
+		                                   | (2 << J3DMLF_TevStageNumShift);
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		mMActor = initMActor(anim->unk4[0].unk0, nullptr, getSDLModelFlag());
+		mMActor = initMActor(anim->unk4[0].unk0, anim->unk4[0].unkC,
+		                     getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
 			if (anim->unk4[i].unk10 && mAnmSound == nullptr)
@@ -11097,7 +11092,8 @@ void TMapObjBase::makeMActors()
 
 			if (anim->unk4[i].unk0 != nullptr
 			    && !isAlreadyRegistered(anim, i)) {
-				initMActor(anim->unk4[i].unk0, nullptr, getSDLModelFlag());
+				initMActor(anim->unk4[i].unk0, anim->unk4[i].unkC,
+				           getSDLModelFlag());
 			}
 		}
 	} else {
@@ -11110,18 +11106,20 @@ void TMapObjBase::makeMActors()
 void TMapObjBase::initModelData()
 {
 	makeMActors();
-	if (checkMapObjFlag(0x800) && getMActor()) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800) && getMActor()) {
 		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
-		if (getGroundPlane()->isShadow() && !checkMapObjFlag(0x4000))
+		if (getGroundPlane()->isShadow()
+		    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK4000))
 			gpMapObjManager->entryStaticDrawBufferShadow(
 			    getMActor()->getModel());
 		else
 			gpMapObjManager->entryStaticDrawBufferSun(getMActor()->getModel());
 	}
 
-	if (checkMapObjFlag(0x10) || checkMapObjFlag(0x20)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK10)
+	    || checkMapObjFlag(MAP_OBJ_FLAG_UNK20)) {
 		TMirrorActor* ma = new TMirrorActor(getName());
-		if (checkMapObjFlag(0x20))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20))
 			ma->init(getModel(), 0x1A);
 		else
 			ma->init(getModel(), 0x18);
@@ -11144,15 +11142,16 @@ void TMapObjBase::initActorData()
 	mMapObjData = sObjDataTable[i];
 	unkF8       = mMapObjData->unk34;
 
-	mManager = JDrama::TNameRefGen::search<TLiveManager>(mMapObjData->unk8);
+	mManager = static_cast<TLiveManager*>(
+	    JDrama::TNameRefGen::search(mMapObjData->unk8));
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
 	mPosition.y += mYOffset;
 	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
-	if (checkMapObjFlag(0x1))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1))
 		offLiveFlag(LIVE_FLAG_UNK100);
-	if (checkMapObjFlag(0x100000))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100000))
 		unkE8 = 2;
 }
 
@@ -11172,17 +11171,17 @@ void TMapObjBase::initMapObj()
 	checkIllegalAttr();
 
 	if (mMActor && checkActorType(0x40000000))
-		mMActor->setLightType(2);
+		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)
-		mLiveFlag |= 0x8;
+		mLiveFlag |= LIVE_FLAG_UNK8;
 
-	if (checkMapObjFlag(0x8000) && !isActorType(0x40000084)) {
-		TScreenTexture* ref = JDrama::TNameRefGen::search<TScreenTexture>(
-		    "スクリーンテクスチャ");
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
+		TScreenTexture* ref = static_cast<TScreenTexture*>(
+		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		mMActor->setLightType(3);
+		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	}
 
 	makeObjDead();

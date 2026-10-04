@@ -1,6 +1,7 @@
 #ifndef STRATEGIC_LIVE_ACTOR_HPP
 #define STRATEGIC_LIVE_ACTOR_HPP
 
+#include <version.h>
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/LiveManager.hpp>
 #include <Strategic/Nerve.hpp>
@@ -8,6 +9,7 @@
 // TODO: where should this live?
 struct TLodAnmIndex;
 class MActor;
+template <class T> class TSpcTypedInterp;
 class TMActorKeeper;
 class MAnmSound;
 class JKRFileLoader;
@@ -17,12 +19,13 @@ class J3DModel;
 class TBinder;
 class TMapCollisionManager;
 
-enum TLiveFlagBits {
+enum {
 	LIVE_FLAG_DEAD        = 0x1,
 	LIVE_FLAG_HIDDEN      = 0x2,
 	LIVE_FLAG_CLIPPED_OUT = 0x4,
 	LIVE_FLAG_UNK8        = 0x8,
 	LIVE_FLAG_UNK10       = 0x10,
+	LIVE_FLAG_UNK20       = 0x20,
 	LIVE_FLAG_UNK40       = 0x40,
 	LIVE_FLAG_AIRBORNE    = 0x80,
 	LIVE_FLAG_UNK100      = 0x100,
@@ -31,22 +34,29 @@ enum TLiveFlagBits {
 	LIVE_FLAG_UNK800      = 0x800,
 	LIVE_FLAG_UNK1000     = 0x1000,
 	LIVE_FLAG_UNK2000     = 0x2000,
-	LIVE_FLAG_UNK4000     = 0x4000,
-	LIVE_FLAG_UNK8000     = 0x8000,
-	LIVE_FLAG_UNK10000    = 0x10000,
-	LIVE_FLAG_UNK20000    = 0x20000,
-	LIVE_FLAG_UNK40000    = 0x40000,
-	LIVE_FLAG_UNK80000    = 0x80000,
-	LIVE_FLAG_UNK100000   = 0x100000,
-	LIVE_FLAG_UNK200000   = 0x200000,
-	LIVE_FLAG_UNK400000   = 0x400000,
-	LIVE_FLAG_SINK_BOTTOM = 0x800000, // for NPCs only
-	LIVE_FLAG_UNK1000000  = 0x1000000,
-	LIVE_FLAG_UNK2000000  = 0x2000000,
-	LIVE_FLAG_UNK4000000  = 0x4000000,
-	LIVE_FLAG_UNK8000000  = 0x8000000,
-	LIVE_FLAG_UNK10000000 = 0x10000000,
-	LIVE_FLAG_UNK20000000 = 0x20000000,
+#ifdef VERSION_GMSP01
+	LIVE_FLAG_CALC_INT_FRAME = 0x4000,
+#endif
+	LIVE_FLAG_UNK4000  = VERSION_SELECT(GMSJ01(0x4000), GMSP01(0x8000)),
+	LIVE_FLAG_UNK8000  = VERSION_SELECT(GMSJ01(0x8000), GMSP01(0x10000)),
+	LIVE_FLAG_UNK10000 = VERSION_SELECT(GMSJ01(0x10000), GMSP01(0x20000)),
+	// WARNING: some flag values are overloaded between derived classes. E.g.
+	// LIVE_FLAG_UNK10000 means different things for NPCs and small enemies.
+	// Be careful about placing stuff here -- it might belong to derived classes
+	// instead.
+	LIVE_FLAG_UNK20000   = VERSION_SELECT(GMSJ01(0x20000), GMSP01(0x40000)),
+	LIVE_FLAG_UNK40000   = VERSION_SELECT(GMSJ01(0x40000), GMSP01(0x80000)),
+	LIVE_FLAG_UNK80000   = VERSION_SELECT(GMSJ01(0x80000), GMSP01(0x100000)),
+	LIVE_FLAG_UNK100000  = VERSION_SELECT(GMSJ01(0x100000), GMSP01(0x200000)),
+	LIVE_FLAG_UNK200000  = VERSION_SELECT(GMSJ01(0x200000), GMSP01(0x400000)),
+	LIVE_FLAG_UNK400000  = VERSION_SELECT(GMSJ01(0x400000), GMSP01(0x800000)),
+	LIVE_FLAG_UNK1000000 = VERSION_SELECT(GMSJ01(0x1000000), GMSP01(0x2000000)),
+	LIVE_FLAG_UNK2000000 = VERSION_SELECT(GMSJ01(0x2000000), GMSP01(0x4000000)),
+	LIVE_FLAG_UNK4000000 = VERSION_SELECT(GMSJ01(0x4000000), GMSP01(0x8000000)),
+	LIVE_FLAG_UNK8000000
+	= VERSION_SELECT(GMSJ01(0x8000000), GMSP01(0x10000000)),
+	LIVE_FLAG_UNK10000000
+	= VERSION_SELECT(GMSJ01(0x10000000), GMSP01(0x20000000)),
 };
 
 class TLiveActor : public TTakeActor {
@@ -84,7 +94,7 @@ public:
 	JGeometry::TVec3<f32> calcVelocityToJumpToY(const JGeometry::TVec3<f32>&,
 	                                            f32 speed, f32 gravity) const;
 	void calcVelocityToJumpToXZ(const JGeometry::TVec3<f32>&, f32, f32) const;
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void load(JSUMemoryInputStream&);
 	void initLodAnm(const TLodAnmIndex*, int, f32);
 	J3DModel* getModel() const;
@@ -141,6 +151,13 @@ public:
 		mLinearVelocity = v;
 	}
 	TLodAnm* getLodAnm() { return unkD0; }
+	const char* getBas(int idx) const
+	{
+		const char** basTable = getBasNameTable();
+		if (!basTable)
+			return nullptr;
+		return basTable[idx];
+	}
 
 public:
 	/* 0x70 */ TLiveManager* mManager;
@@ -151,7 +168,7 @@ public:
 	/* 0x84 */ const char* mAnmSoundPath;
 	/* 0x88 */ TBinder* mBinder;
 	/* 0x8C */ TSpineBase<TLiveActor>* mSpine;
-	/* 0x90 */ void* unk90;
+	/* 0x90 */ TSpcTypedInterp<TLiveActor>* unk90;
 	// TODO: Analyze mLinearVelocity vs mVelocity some more
 	// and decide on better names
 	/* 0x94 */ JGeometry::TVec3<f32> mLinearVelocity;
@@ -169,7 +186,7 @@ public:
 	/* 0xE4 */ f32 mGroundActorYaw;
 	/* 0xE8 */ s8 unkE8; // riding mode?
 	/* 0xEC */ TMapCollisionManager* mMapCollisionManager;
-	/* 0xF0 */ u32 mLiveFlag; // LiveFlagBits
+	/* 0xF0 */ u32 mLiveFlag;
 };
 
 #endif

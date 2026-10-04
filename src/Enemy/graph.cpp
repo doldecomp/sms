@@ -5,14 +5,7 @@
 #include <Map/MapData.hpp>
 #include <Map/Map.hpp>
 #include <stdlib.h>
-#include <types.h>
-
-static void dummy(Vec* v)
-{
-	static Vec v1  = { 1.0f, 1.0f, 1.0f };
-	static Vec v2  = { 1.0f, 1.0f, 1.0f };
-	static int a[] = { 0, 2, 1, 3 };
-}
+#include <dolphin/types.h>
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -268,8 +261,6 @@ int TGraphWeb::getShortestNextIndex(int param_1, int param_2, u32 param_3) const
 
 	return result;
 }
-
-static inline f32 MsRandF() { return rand() * (1.f / (RAND_MAX + 1)); }
 
 int TGraphWeb::getRandomNextIndex(int param_1, int param_2, u32 param_3) const
 {
@@ -676,7 +667,8 @@ void TGraphWeb::calcGraphDirection(int n)
 
 void TGraphWeb::initGoalIndex(const Vec& param_1)
 {
-	unk10 = findNearestNodeIndex(param_1, 0xffffffff);
+	unk10 = findNearestNodeIndex(
+	    JGeometry::TVec3<f32>(param_1.x, param_1.y, param_1.z), 0xffffffff);
 	for (int i = 0; i < unk8; ++i)
 		getGraphNode(i).unk4 = 0;
 	getCurrentNode().unk4 += 1;
@@ -728,7 +720,7 @@ JGeometry::TVec3<f32> TGraphWeb::indexToPoint(int param_1) const
 	return result;
 }
 
-void TGraphWeb::perform(u32, JDrama::TGraphics*) { }
+void TGraphWeb::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 BOOL TGraphWeb::isDummy() const
 {
@@ -846,10 +838,10 @@ TGraphWeb* TGraphGroup::getGraphByName(const char* name)
 	return unkC;
 }
 
-void TGraphGroup::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGraphGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	for (int i = 0; i < unk4; ++i)
-		unk8[i]->perform(param_1, param_2);
+		unk8[i]->perform(cue, graphics);
 }
 
 TGraphTracer::TGraphTracer()

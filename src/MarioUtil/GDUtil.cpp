@@ -1,10 +1,11 @@
+#include <string.h>
 #include <MarioUtil/GDUtil.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <macros.h>
 
 static TGDLStatic* currentTGDLStatic;
 
-void TGDLStaticOverFlow() { currentTGDLStatic->unk11 = 1; }
+static void TGDLStaticOverFlow() { currentTGDLStatic->unk11 = 1; }
 
 TGDLStatic::TGDLSentinel::~TGDLSentinel()
 {

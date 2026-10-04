@@ -11,7 +11,7 @@ public:
 	TRailMapObj(const char*);
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setGroundCollision();
 	virtual void control();
 	virtual u32 getShadowType();
@@ -50,7 +50,7 @@ public:
 	void initMapObj();
 	void control();
 	void setGroundCollision();
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x150 */ u16 unk150;

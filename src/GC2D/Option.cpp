@@ -216,7 +216,7 @@ void TPaneScalingControl::update()
 	int iVar5  = mInitialBounds.getHeight();
 
 	f32 progress = (f32)mFrameCtrl.getFrame() / (f32)mFrameCtrl.getEnd();
-	f32 fVar2    = mAmplitude * JMASin(RAD_TO_DEG(progress * (2 * M_PI)));
+	f32 fVar2    = mAmplitude * MsSin(RAD_TO_DEG(progress * (2 * M_PI)));
 
 	int uVar6 = fVar2 * iVar10;
 	int uVar1 = fVar2 * iVar5;
@@ -863,8 +863,6 @@ bool TOptionControl::movementOption()
 	return false;
 }
 
-static inline void fake(TOptionSoundUnit* unit) { int v = unit->getValue(); }
-
 // mario walks back from the options screen to the card select screen
 bool TOptionControl::movementOption2Card()
 {
@@ -873,8 +871,7 @@ bool TOptionControl::movementOption2Card()
 		mScreen->search('oya1')->hide();
 		mScreen->search('oya2')->hide();
 
-		if (mInitialRumbleValue == mRumbleOption->getValue())
-			fake(mSoundOption);
+		isChangedSetting();
 
 		return true;
 	}

@@ -5,12 +5,12 @@
 
 class TMapObjMessenger : public THitActor {
 public:
-	TMapObjMessenger(const char*);
+	TMapObjMessenger(const char* name = "地形オブジェメッセンジャー");
 
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
-	/* 0x68 */ u32 unk68;
+	/* 0x68 */ THitActor* unk68;
 };
 
 #endif

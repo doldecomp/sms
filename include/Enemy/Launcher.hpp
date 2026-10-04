@@ -42,7 +42,7 @@ public:
 	// fabricated
 	TLauncherParams* getSaveParam2() const
 	{
-		return (TLauncherParams*)TSpineEnemy::getSaveParam();
+		return (TLauncherParams*)getSaveParam();
 	}
 
 public:
@@ -64,7 +64,7 @@ public:
 	TCommonLauncher(const char* name = "コモンランチャー");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual const char** getBasNameTable() const;
 	virtual void stateInitial();
@@ -77,7 +77,7 @@ public:
 
 public:
 	/* 0x164 */ const char* unk164;
-	/* 0x168 */ int mLaunchPeriod;
+	/* 0x168 */ s32 mLaunchPeriod;
 };
 
 class TCommonLauncherManager : public TLauncherManager {

@@ -1,13 +1,10 @@
+#include <string.h>
 #include <System/CardManager.hpp>
 #include <macros.h>
 #include <stdio.h>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 #include <System/FlagManager.hpp>
-
-f32 dummy[]  = { 1.0f, 1.0f, 1.0f };
-f32 dummy2[] = { 1.0f, 1.0f, 1.0f };
-u32 dummy3[] = { 0, 2, 1, 3 };
 
 static u8 sDetach[2];
 const char CardFileName[0x20] = "super_mario_sunshine\0\0\0\0\0\0\0\0\0\0\0";
@@ -29,13 +26,45 @@ static u32 CalcCheckSum(const void* data, u32 size)
 {
 	u16* ptr = (u16*)data;
 	u32 top, bottom;
-	top = bottom = 0;
-	for (u32 i = 0; i < size / 2; ++i, ++ptr) {
+	u32 i;
+	for (top = bottom = 0, i = 0; i < size / 2; ++i, ++ptr) {
 		top += ptr[0];
 		bottom += ~ptr[0];
 	}
 	return (top << 16) | bottom & 0xffff;
 }
+
+struct HeaderData {
+	/* 0x04 */ char mTitle[0x20];
+	/* 0x24 */ char mComment[0x20];
+	/* 0x40 */ char mBanner[0xE00];
+	/* 0xE40 */ char mIcons[0xA00];
+};
+
+struct TCardSector {
+	void clearData();
+	void setCheckSum(u32 write_count);
+	bool isCheckSumValid() const
+	{
+		return !(CalcCheckSum(this, 0x1FFC) - mCheckSum);
+	}
+	s32 read(CARDFileInfo* file, s32 index, TCardManager::TCriteria* criteria);
+
+	// fabricated
+	HeaderData* getHeader() { return &mHeader; }
+	void* getData() { return &mHeader; }
+	size_t getDataSize() const
+	{
+		return sizeof(mHeader) + sizeof(mOptionBlock);
+	}
+	s32 getWriteCount() const { return mWriteCount; }
+
+public:
+	/* 0x0 */ s32 mWriteCount;
+	/* 0x4 */ HeaderData mHeader;
+	/* 0x1844 */ char mOptionBlock[0x7B8];
+	/* 0x1FFC */ s32 mCheckSum;
+};
 
 void TCardSector::clearData()
 {
@@ -45,14 +74,7 @@ void TCardSector::clearData()
 void TCardSector::setCheckSum(u32 write_count)
 {
 	mWriteCount = write_count;
-	u16* ptr    = (u16*)this;
-	u32 top, bottom;
-	top = bottom = 0;
-	for (u32 i = 0; i < 0x1FFC / 2; ++i, ++ptr) {
-		top += ptr[0];
-		bottom += ~ptr[0];
-	}
-	mCheckSum = (top << 16) | bottom & 0xffff;
+	mCheckSum   = CalcCheckSum(this, 0x1FFC);
 }
 
 // TODO: incorrect
@@ -64,9 +86,9 @@ s32 TCardSector::read(CARDFileInfo* file, s32 index,
 	if (errc == CARD_RESULT_READY) {
 		s32 writeCount   = mWriteCount;
 		const void* data = &mHeader;
-		bool eq          = !(CalcCheckSum(this, 0x1FFC) - mCheckSum);
-		criteria->set(eq ? TCardManager::TCriteria::STATE_VALID
-		                 : TCardManager::TCriteria::STATE_CHECKSUM_BAD,
+		criteria->set(isCheckSumValid()
+		                  ? TCardManager::TCriteria::STATE_VALID
+		                  : TCardManager::TCriteria::STATE_CHECKSUM_BAD,
 		              writeCount, data);
 	}
 	return errc;
@@ -75,47 +97,41 @@ s32 TCardSector::read(CARDFileInfo* file, s32 index,
 void TCardManager::TCriteria::set(TCardManager::TCriteria::TEBlockStat state,
                                   u32 write_count, const void* sector_data)
 {
-	(void)0;
-	(void)0;
 	mState = state;
 	if (mState == STATE_VALID) {
 		mWriteCount = write_count;
 		memcpy(&mPreviewBytes, sector_data, sizeof(mPreviewBytes));
-	} else {
-		setEmpty();
-	}
-}
-
-void TCardManager::TCriteria::setEmpty()
-{
-	if (mState == STATE_EMPTY) {
+	} else if (mState == STATE_EMPTY) {
 		mWriteCount = 0;
 		memset(mPreviewBytes, 0, sizeof(mPreviewBytes));
 	}
 }
 
-// TODO: incorrect
+void TCardManager::TCriteria::setEmpty()
+{
+	mState      = STATE_EMPTY;
+	mWriteCount = 0;
+	memset(mPreviewBytes, 0, sizeof(mPreviewBytes));
+}
+
 #pragma dont_inline on
 s32 TCardManager::decideUseSector(TCardManager::TCriteria* criteria)
 {
-	if (criteria[0].getState() == TCriteria::STATE_EMPTY)
-		return CARD_RESULT_WRONGDEVICE;
-
-	if (criteria[0].getState() == TCriteria::STATE_CHECKSUM_BAD) {
+	s32 result;
+	if (criteria[0].getState() == TCriteria::STATE_EMPTY) {
+		result = CARD_RESULT_WRONGDEVICE;
+	} else if (criteria[0].getState() == TCriteria::STATE_CHECKSUM_BAD) {
 		if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD)
-			return CARD_RESULT_BUSY;
-		return 1;
+			result = CARD_RESULT_BUSY;
+		else
+			result = 1;
+	} else if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD) {
+		result = 0;
+	} else {
+		result = criteria[0].getWriteCount() >= criteria[1].getWriteCount() ? 0
+		                                                                    : 1;
 	}
-
-	if (criteria[1].getState() == TCriteria::STATE_CHECKSUM_BAD)
-		return 0;
-
-	s32 idx;
-	if (criteria[0].getWriteCount() >= criteria[1].getWriteCount())
-		idx = 0;
-	else
-		idx = 1;
-	return idx;
+	return result;
 }
 #pragma dont_inline off
 
@@ -394,9 +410,9 @@ s32 TCardManager::format_()
 		result = CARDFormat(mChannel);
 		if (result == CARD_RESULT_READY)
 			mFsCheckedOk = true;
-		if (result == CARD_RESULT_IOERROR)
-			unmount_();
 	}
+	if (result == CARD_RESULT_IOERROR)
+		unmount_();
 	return result;
 }
 
@@ -441,14 +457,11 @@ s32 TCardManager::filledInitData_(CARDFileInfo* file)
 	sector->setCheckSum(0);
 
 	for (int i = 1; i < ARRAY_COUNT(mSectorCriteria); ++i) {
-		TCriteria* crit = &mSectorCriteria[i];
-		if (crit->getState() != TCriteria::STATE_EMPTY)
-			continue;
-
-		s32 errc = writeCardSector_(file, i, sector, crit);
-
-		if (errc != 0)
-			return errc;
+		if (mSectorCriteria[i].getState() == TCriteria::STATE_EMPTY) {
+			s32 errc = writeCardSector_(file, i, sector, &mSectorCriteria[i]);
+			if (errc != 0)
+				return errc;
+		}
 	}
 
 	return setCardStat_(file);
@@ -467,12 +480,13 @@ s32 TCardManager::setCardStat_(CARDFileInfo* file)
 		CARDSetBannerFormat(&stat, CARD_STAT_BANNER_C8);
 		CARDSetIconAnim(&stat, CARD_STAT_ANIM_LOOP);
 
-		CARDSetIconFormat(&stat, 0, CARD_STAT_ICON_C8);
-		CARDSetIconSpeed(&stat, 0, CARD_STAT_SPEED_SLOW);
-		CARDSetIconFormat(&stat, 1, CARD_STAT_ICON_C8);
-		CARDSetIconSpeed(&stat, 1, CARD_STAT_SPEED_SLOW);
+		int i;
+		for (i = 0; i < 2; ++i) {
+			CARDSetIconFormat(&stat, i, CARD_STAT_ICON_C8);
+			CARDSetIconSpeed(&stat, i, CARD_STAT_SPEED_SLOW);
+		}
 
-		for (u16 i = 2; i < CARD_ICON_MAX; ++i) {
+		for (; i < CARD_ICON_MAX; ++i) {
 			CARDSetIconFormat(&stat, i, CARD_STAT_ICON_NONE);
 			CARDSetIconSpeed(&stat, i, CARD_STAT_SPEED_END);
 		}
@@ -634,8 +648,7 @@ s32 TCardManager::readOptionBlock_()
 	s32 result = open_(&info);
 	if (result == CARD_RESULT_READY) {
 		TCardSector* sector = (TCardSector*)mSector;
-
-		if (mSectorCriteria[0].mState == TCriteria::STATE_UNREAD) {
+		if (mSectorCriteria[0].mState == TCriteria::STATE_EMPTY) {
 			sector->clearData();
 			sector->setCheckSum(0);
 		} else {
@@ -718,9 +731,7 @@ s32 TCardManager::writeCardSector_(CARDFileInfo* file, s32 index,
 	if (errc != CARD_RESULT_READY)
 		return errc;
 
-	errc = sector->read(file, index, criteria);
-
-	return errc;
+	return sector->read(file, index, criteria);
 }
 
 s32 TCardManager::cmdLoop()

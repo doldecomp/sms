@@ -18,11 +18,11 @@ public:
 	{
 	}
 
-	static void finalize();
-
 	bool load(const char* filename);
 	void load(JSUMemoryInputStream& stream);
+
 	static void init();
+	static void finalize();
 
 public:
 	const char* mPrmPath;

@@ -24,13 +24,27 @@
 // TODO: should be in a header and violate ODR
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 
-void CalcJumpVelocityY(f32, f32) { }
+f32 CalcJumpVelocityY(f32 height, f32 gravity)
+{
+	f32 velocity = 0.0f;
+	if (gravity > 0.0f)
+		velocity = gravity * 0.5f
+		           * (MsSqrtf(height * (1.0f / gravity) * 8.0f + 1.0f) + 1.0f);
+	return velocity;
+}
 
-void TBaseNPC::isNowMotionBlend() const { }
+bool TBaseNPC::isNowMotionBlend() const
+{
+	bool result = true;
+	if (!mInbetweenCtrl->isMotionBlending()
+	    && !mInbetweenCtrl->isForcedBlendRatio())
+		result = false;
+	return result;
+}
 
-void TBaseNPC::offStopMotionBlend() { }
+void TBaseNPC::offStopMotionBlend() { mInbetweenCtrl->stopMotionBlend(); }
 
-void TBaseNPC::onStopMotionBlend() { }
+void TBaseNPC::onStopMotionBlend() { mInbetweenCtrl->startMotionBlend(); }
 
 void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
                           EnumNpcStopMotionBlendOnOff param_2)
@@ -60,7 +74,7 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	}
 
 	if (isSunflower()) {
-		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(5);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BRK);
 		if (checkUnk1D8(UNK1D8_FLAG_UNK1)) {
 			if (param_1 == NPC_ANM_KIND_UNK5) {
 				mMActor->setBrkFromIndex(mActorType == 0x400001A ? 1 : 1);
@@ -188,9 +202,9 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 	}
 
 	if (param_2 == NPC_STOP_MOTION_BLEND_ON)
-		mInbetweenCtrl->startMotionBlend();
+		onStopMotionBlend();
 	else
-		mInbetweenCtrl->stopMotionBlend();
+		offStopMotionBlend();
 
 	setCurAnmSound();
 }
@@ -243,13 +257,13 @@ void TBaseNPC::randomizeBckAndBtpFrame_()
 {
 	s16 bckEnd            = 0;
 	s16 bckFrame          = 0;
-	J3DFrameCtrl* bckCtrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* bckCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	if (bckCtrl != nullptr) {
 		bckEnd   = bckCtrl->getEnd();
 		bckFrame = bckEnd * MsRandF();
 		bckCtrl->setFrame(bckFrame);
 	}
-	J3DFrameCtrl* btpCtrl = mMActor->getFrameCtrl(3);
+	J3DFrameCtrl* btpCtrl = mMActor->getFrameCtrl(ANM_TYPE_BTP);
 	if (btpCtrl != nullptr) {
 		s16 btpEnd   = btpCtrl->getEnd();
 		s16 btpFrame = btpEnd == bckEnd ? bckFrame : (s16)(btpEnd * MsRandF());
@@ -278,17 +292,12 @@ void TBaseNPC::walkAnmRateChange_()
 				unk1CC = 0;
 				unk1D0 = 0.0f;
 
-				bool bVar3 = true;
-				if (!mInbetweenCtrl->isMotionBlending()
-				    && !mInbetweenCtrl->isForcedBlendRatio())
-					bVar3 = false;
-
-				if (!bVar3)
+				if (!isNowMotionBlend())
 					npcWaitIn();
 				else if (!mInbetweenCtrl->isMotionBlending())
-					mMActor->setFrameRate(unk1D0, 0);
+					mMActor->setFrameRate(unk1D0, ANM_TYPE_BCK);
 			} else {
-				mMActor->setFrameRate(unk1D0, 0);
+				mMActor->setFrameRate(unk1D0, ANM_TYPE_BCK);
 			}
 		} break;
 
@@ -336,7 +345,7 @@ void TBaseNPC::walkAnmRateChange_()
 
 			CLBChaseDecrease(&unk1D0, dVar132,
 			                 mPtrSaveNormal->mMoveWalkAnmRateChase.get(), 0.0f);
-			mMActor->setFrameRate(unk1D0, 0);
+			mMActor->setFrameRate(unk1D0, ANM_TYPE_BCK);
 		} break;
 
 		default:
@@ -409,26 +418,18 @@ void TBaseNPC::npcFallIn()
 
 bool TBaseNPC::npcRecoverFromSinking()
 {
-	bool result = false;
-
 	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
-		if (mMActor->getFrameCtrl(0)->checkPass(32.0f)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
-			f32 dVar6 = getGravityY();
-			f32 fVar1 = 0.0f;
-			f32 tmp   = unk1C4 - mPosition.y + 150.0f;
-			if (dVar6 > 0.0f) {
-				fVar1 = dVar6 * 0.5f
-				        * (MsSqrtf(tmp * (1.0f / dVar6) * 8.0f + 1.0f) + 1.0f);
-			}
-
-			mVelocity.y = fVar1;
+			mVelocity.y = CalcJumpVelocityY(unk1C4 - mPosition.y + 150.0f,
+			                                getGravityY());
 			if (mVelocity.y < 5.0f)
 				mVelocity.y = 5.0f;
 		}
 	}
 
-	if (mMActor->isCurAnmAlreadyEnd(0)) {
+	bool result = false;
+	if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		result = true;
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);
@@ -496,7 +497,7 @@ void TBaseNPC::npcTalking()
 		bVar1 = true;
 
 	if (bVar1 && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A
-	    && mMActor->isCurAnmAlreadyEnd(0)) {
+	    && mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		peachTiredOut_();
 	}
 }
@@ -519,7 +520,7 @@ void TBaseNPC::npcTalkOut()
 			}
 		}
 
-		offLiveFlag(LIVE_FLAG_UNK8000);
+		offLiveFlag(LIVE_FLAG_UNK80000);
 		changeNerveFromTalk_();
 		if (mThrowCtrl == nullptr && mActorType == 0x4000006)
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);
@@ -603,7 +604,7 @@ bool TBaseNPC::npcWetting()
 			npcHappyIn(0);
 			npcWetOut();
 			result = true;
-		} else if (mMActor->isCurAnmAlreadyEnd(0)) {
+		} else if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 			npcWetOut();
 			result = true;
 		}
@@ -613,7 +614,7 @@ bool TBaseNPC::npcWetting()
 			case NPC_ANM_KIND_UNK5:
 			case NPC_ANM_KIND_UNKB:
 			case NPC_ANM_KIND_UNK14:
-				if (mMActor->isCurAnmAlreadyEnd(0)) {
+				if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 					unk22C->doThing3(240, 480);
 					if (unk22C->doThing2()) {
 						EnumNpcAnmKind EVar12 = NPC_ANM_KIND_UNK7;
@@ -626,7 +627,7 @@ bool TBaseNPC::npcWetting()
 
 			case NPC_ANM_KIND_UNK7:
 			case NPC_ANM_KIND_UNK1B:
-				if (mMActor->isCurAnmAlreadyEnd(0)) {
+				if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 					npcWetOut();
 					result = true;
 				}
@@ -637,7 +638,7 @@ bool TBaseNPC::npcWetting()
 				switch (unkD0->getCurrentAnmKind()) {
 				case NPC_ANM_KIND_UNK5:
 				case NPC_ANM_KIND_UNK14:
-					if (mMActor->isCurAnmAlreadyEnd(0)) {
+					if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 						if (isStateGoToMad_()) {
 							npcMadIn();
 						} else {
@@ -660,7 +661,7 @@ bool TBaseNPC::npcWetting()
 							result = true;
 						}
 					} else {
-						if (mMActor->isCurAnmAlreadyEnd(0)) {
+						if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 							npcWetOut();
 							result = true;
 						}
@@ -676,7 +677,7 @@ bool TBaseNPC::npcWetting()
 					switch (mActorType) {
 					case 0x4000016:
 					case 0x4000017:
-						if (mMActor->isCurAnmAlreadyEnd(0)) {
+						if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 							switch (unkD0->getCurrentAnmKind()) {
 							case NPC_ANM_KIND_UNK5:
 								requestNpcAnm_(NPC_ANM_KIND_UNK7,
@@ -704,7 +705,7 @@ bool TBaseNPC::npcWetting()
 						break;
 
 					default:
-						if (mMActor->isCurAnmAlreadyEnd(0)) {
+						if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 							switch (unkD0->getCurrentAnmKind()) {
 							case NPC_ANM_KIND_UNK5:
 							case NPC_ANM_KIND_UNKB:
@@ -769,7 +770,7 @@ bool TBaseNPC::npcThrowing()
 		unk1DC = CLBPalFrame(30);
 	} else if (uVar1 == uVar4) {
 		mThrowCtrl->throwMario(this);
-	} else if (mMActor->isCurAnmAlreadyEnd(0)) {
+	} else if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		result = true;
 	}
 
@@ -815,7 +816,7 @@ bool TBaseNPC::npcMadding()
 
 		case NPC_ANM_KIND_MAD:
 		case NPC_ANM_KIND_UNKB:
-			if (mMActor->isCurAnmAlreadyEnd(0)) {
+			if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 				result = true;
 				offLiveFlag(LIVE_FLAG_UNK2000000);
 			}
@@ -864,12 +865,12 @@ bool TBaseNPC::npcMareStanding()
 	switch (unkD0->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_UNK5:
 	case NPC_ANM_KIND_UNKE:
-		if (mMActor->isCurAnmAlreadyEnd(0) && unk22C->doThing2())
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK) && unk22C->doThing2())
 			requestNpcAnm_(NPC_ANM_KIND_UNK7, NPC_STOP_MOTION_BLEND_OFF);
 		break;
 
 	case NPC_ANM_KIND_UNK7:
-		if (mMActor->isCurAnmAlreadyEnd(0))
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 			result = true;
 		break;
 
@@ -974,7 +975,7 @@ bool TBaseNPC::sunflowerReviving()
 	bool result = false;
 	if (checkUnk1D8(UNK1D8_FLAG_UNK2)
 	    && unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
-		if (mMActor->isCurAnmAlreadyEnd(0)) {
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 			offUnk1D8(UNK1D8_FLAG_UNK2);
 			if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
 				requestTalkAnm_();
@@ -994,12 +995,12 @@ void TBaseNPC::monteMESetAnmWhenFar()
 		break;
 
 	case NPC_ANM_KIND_UNK2:
-		if (mMActor->isCurAnmAlreadyEnd(0))
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 			requestNpcAnm_(NPC_ANM_KIND_UNK1, NPC_STOP_MOTION_BLEND_OFF);
 		break;
 
 	case NPC_ANM_KIND_UNK3:
-		if (mMActor->isCurAnmAlreadyEnd(0))
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 			requestNpcAnm_(NPC_ANM_KIND_UNK2, NPC_STOP_MOTION_BLEND_OFF);
 		break;
 
@@ -1017,12 +1018,12 @@ void TBaseNPC::monteMESetAnmWhenNear()
 
 	case NPC_ANM_KIND_UNK3:
 	case NPC_ANM_KIND_MAD:
-		if (mMActor->isCurAnmAlreadyEnd(0))
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_OFF);
 		break;
 
 	case NPC_ANM_KIND_UNK2:
-		if (mMActor->isCurAnmAlreadyEnd(0))
+		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK))
 			requestNpcAnm_(NPC_ANM_KIND_UNK3, NPC_STOP_MOTION_BLEND_OFF);
 		break;
 

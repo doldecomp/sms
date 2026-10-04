@@ -1,0 +1,35 @@
+#ifndef JASDRIVERIF_HPP
+#define JASDRIVERIF_HPP
+
+#include <dolphin/types.h>
+
+namespace JASystem {
+
+namespace Driver {
+	void init();
+
+	void setMixerLevel(f32, f32);
+	u16 getMixerLevel();
+
+	void setOutputMode(u32);
+	u32 getOutputMode();
+
+	void setUpdateInterval(u8);
+	u8 getUpdateInterval();
+
+	void setDSPQueueNum(u32);
+
+	inline f32 Clamp01(f32 value)
+	{
+		if (value <= 0.0f)
+			return 0.0f;
+		if (value >= 1.0f)
+			return 1.0f;
+		return value;
+	}
+
+} // namespace Driver
+
+} // namespace JASystem
+
+#endif // JASDRIVERIF_HPP

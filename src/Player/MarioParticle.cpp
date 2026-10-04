@@ -59,7 +59,7 @@ void TMario::moveParticle()
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_M_HAMON_D, unk220, 1, this);
 		if (emitter != nullptr) {
-			emitter->unk180.a = mWaterWakeAlpha;
+			emitter->setGlobalAlpha(mWaterWakeAlpha);
 			mWaterWakeAlpha -= mParticleParams.mWaveAlphaDec.get();
 		}
 	}
@@ -99,7 +99,7 @@ void TMario::emitSweat(s16 rot)
 {
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkFlag(MARIO_FLAG_IN_ANY_WATER) && !isUnderWater()) {
-		MtxPtr mtx = mModel->getModel()->getAnmMtx(mBoneIDs[10]);
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(mJointIdHead);
 		JGeometry::TVec3<f32> pos;
 		pos.x = mtx[0][3];
 		pos.y = mtx[1][3];
@@ -113,7 +113,7 @@ void TMario::emitSweat(s16 rot)
 void TMario::emitSweatSometimes()
 {
 	s16 angle = mFaceAngle.y;
-	if (!(gpMarDirector->unk58 & 0xF))
+	if (!(gpMarDirector->mMoveTickCount & 0xF))
 		emitSweat(angle);
 }
 
@@ -126,8 +126,9 @@ void TMario::emitGetEffect()
 
 void TMario::emitGetWaterEffect()
 {
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, &unk160,
-	                                            0, nullptr);
+	JGeometry::TVec3<f32>* pos = &unk160;
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_B, pos, 0,
+	                                            nullptr);
 }
 
 void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
@@ -154,7 +155,7 @@ void TMario::smallTouchDownEffect()
 	static JGeometry::TVec3<f32> scale(0.7f, 0.7f, 0.7f);
 
 	if (emitter != nullptr)
-		emitter->setScale(scale);
+		emitter->setGlobalScale(scale);
 }
 
 void TMario::rippleEffect()
@@ -163,7 +164,7 @@ void TMario::rippleEffect()
 		SMS_EmitRipplePool(unk220, this);
 	} else {
 		SMS_EmitRippleSea(unk220, this);
-		if ((checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
+		if ((checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		    && mForwardVel > mParticleParams.mWaveEmitSpeed.get()) {
 			mWaterWakeAlpha = 0xFF;
 		}
@@ -176,7 +177,7 @@ void TMario::inOutWaterEffect(f32 waterY)
 	pos.y                     = mFloorPosition.z;
 
 	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)
-	    || (unk11C & 0x10000 ? true : false)) {
+	    || checkPrevFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
 		mMarioEffect->setJumpIntoWaterEffectSmall();
 		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_A, &pos, 0,
 		                             nullptr);
@@ -192,22 +193,23 @@ void TMario::inOutWaterEffect(f32 waterY)
 	if (absVelY > mWaterEffectParams.mJumpIntoMdlEffectSpY.get()) {
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 
-		if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
+		if (!checkStatusType(MARIO_STATUS_FLAG_UNK200))
 			gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_A, &pos, 0,
 			                             nullptr);
 
 		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_B, &pos, 0,
 		                             nullptr);
-		gpMarioParticleManager->emit(0x1D4, &pos, 2, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_C, &pos, 2,
+		                             nullptr);
 		return;
 	}
 
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_UNK200))
+	if (!checkStatusType(MARIO_STATUS_FLAG_UNK200))
 		gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_A, &pos, 0,
 		                             nullptr);
 
 	gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_B, &pos, 0, nullptr);
-	gpMarioParticleManager->emit(0x1D5, &pos, 2, nullptr);
+	gpMarioParticleManager->emit(PARTICLE_MS_M_TOBIKOMI_S_C, &pos, 2, nullptr);
 	return;
 }
 
@@ -238,11 +240,9 @@ void TMario::bubbleFromMouth(int idx)
 {
 	if (isMario()) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitParticleCallBack(
-		    PARTICLE_MS_M_AWA, &unk16C, 1, &bubbleCallBack,
-		    (const void*)((u8*)this + idx * 0x4290));
-		if (emitter != nullptr) {
-			emitter->setGlobalRTMatrix(unk1C0);
-		}
+		    PARTICLE_MS_M_AWA, &mHeadPos, 1, &bubbleCallBack, &this[idx]);
+		if (emitter != nullptr)
+			emitter->setGlobalRTMatrix(mHeadMtx);
 	}
 }
 
@@ -262,10 +262,10 @@ void TMario::bubbleFromBody()
 		    = (t * (mParticleParams.mBodyBubbleEmitMax.get() - emitMin))
 		      + emitMin;
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitParticleCallBack(
-		    PARTICLE_MS_M_AWA_S, &unk178, 1, &bubbleCallBack, this);
+		    PARTICLE_MS_M_AWA_S, &mCenterPos, 1, &bubbleCallBack, this);
 		if (emitter != nullptr) {
 			emitter->setGlobalRTMatrix(getCenterAnmMtx());
-			emitter->mChildSpawnRate = spawnRate;
+			emitter->setRate(spawnRate);
 		}
 	}
 }
@@ -274,17 +274,16 @@ void TMario::swimmingBubbleEffect()
 {
 	if (isMario()) {
 		if (!checkFlag(MARIO_FLAG_GAME_OVER)) {
-			if ((unk16C.y + mParticleParams.mBubbleDepth.get())
+			if ((mHeadPos.y + mParticleParams.mBubbleDepth.get())
 			        < mFloorPosition.z
 			    && isMario()) {
 				JPABaseEmitter* emitter
 				    = gpMarioParticleManager->emitParticleCallBack(
-				        PARTICLE_MS_M_AWA, &unk16C, 1, &bubbleCallBack, this);
-				if (emitter != nullptr) {
-					emitter->setGlobalRTMatrix(unk1C0);
-				}
+				        PARTICLE_MS_M_AWA, &mHeadPos, 1, &bubbleCallBack, this);
+				if (emitter != nullptr)
+					emitter->setGlobalRTMatrix(mHeadMtx);
 			}
-			if ((unk178.y + mParticleParams.mBubbleDepth.get())
+			if ((mCenterPos.y + mParticleParams.mBubbleDepth.get())
 			    < mFloorPosition.z) {
 				bubbleFromBody();
 			}
@@ -295,16 +294,16 @@ void TMario::swimmingBubbleEffect()
 void TMario::runningRippleEffect()
 {
 	if (mForwardVel > 30.0f) {
-		gpMarioParticleManager->emit(PARTICLE_MS_M_WATRUN_A, &unk190, 0,
-		                             nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_M_WATRUN_A, &mWaterRipplePos,
+		                             0, nullptr);
 	}
-	SMS_EmitRippleTiny(&unk190);
+	SMS_EmitRippleTiny(&mWaterRipplePos);
 }
 
 void TMario::blurEffect()
 {
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_M_BLUR1, mModel->unk8->mNodeMatrices[1], 1, this);
+	    PARTICLE_MS_M_BLUR1, mModel->getModel()->getAnmMtx(1), 1, this);
 }
 
 void TMario::wallSlipEffect()
@@ -321,7 +320,7 @@ void TMario::treeSlipEffect()
 	static JGeometry::TVec3<f32> scale(0.8f, 0.8f, 0.8f);
 
 	if (emitter != nullptr)
-		emitter->setScale(scale);
+		emitter->setGlobalScale(scale);
 }
 
 void TMario::frontSlipEffect()
@@ -339,15 +338,15 @@ void TMario::frontSlipEffect()
 
 	if (!(mPosition.y < mFloorPosition.z)) {
 		if (checkFlag(MARIO_FLAG_ON_SAND)) {
-			calcGroundMtx(unk178);
+			calcGroundMtx(mCenterPos);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_M_SLIDESAND_B, unk250, 1, this);
 			gpMarioParticleManager->emitAndBindToPosPtr(
-			    PARTICLE_MS_M_SLIDESAND_A, &unk178, 1, this);
+			    PARTICLE_MS_M_SLIDESAND_A, &mCenterPos, 1, this);
 			return;
 		}
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    PARTICLE_MS_M_SLIPSMOKE, mModel->unk8->mNodeMatrices[0], 1, this);
+		    PARTICLE_MS_M_SLIPSMOKE, mModel->getModel()->getAnmMtx(0), 1, this);
 	}
 }
 
@@ -370,19 +369,19 @@ void TMario::surfingEffect()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_A, (MtxPtr)getRootAnmMtx(), 3, this);
 	if (emitter != nullptr)
-		emitter->setScale(scaleVec);
+		emitter->setGlobalScale(scaleVec);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_B, unk1F0, 1, this);
 	if (emitter != nullptr)
-		emitter->setScale(scaleVec);
+		emitter->setGlobalScale(scaleVec);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_D, unk1F0, 1, this);
 	if (emitter != nullptr)
-		emitter->setScale(scaleVec);
+		emitter->setGlobalScale(scaleVec);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_GESOSURF_C, unk1F0, 1, this);
 	if (emitter != nullptr)
-		emitter->setScale(scaleVec);
+		emitter->setGlobalScale(scaleVec);
 }
 
 struct TWarpInCallBack
@@ -394,12 +393,12 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
                               JPABaseParticle* particle)
 {
 	// TODO: awful vector maths :(
-	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->unk120;
+	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->getUserWork();
 
 	f32 timer = (f32)gpMarioOriginal->mStatusTimer;
 	f32 tmp   = gpMarioOriginal->unk468;
 
-	f32 factor = ((((int)particle >> 2) & 0x3F) / 16.0f + 1.0f);
+	f32 factor = ((((intptr_t)particle >> 2) & 0x3F) / 16.0f + 1.0f);
 
 	JGeometry::TVec3<f32> v = *vel;
 
@@ -426,35 +425,35 @@ void TMario::warpInEffect()
 		u16 boneIdx;
 		switch (i) {
 		case 0:
-			boneIdx = unk3C4;
+			boneIdx = mJointIdCenter;
 			break;
 		case 1:
-			boneIdx = mBoneIDs[10];
+			boneIdx = mJointIdHead;
 			break;
 		case 2:
-			boneIdx = mBoneIDs[10];
+			boneIdx = mJointIdHead;
 			break;
 		case 3:
-			boneIdx = mBoneIDs[4];
+			boneIdx = mJointIdHandR;
 			break;
 		case 4:
-			boneIdx = mBoneIDs[5];
+			boneIdx = mJointIdHandL;
 			break;
 		case 5:
-			boneIdx = mBoneIDs[6];
+			boneIdx = mJointIdChnFootR;
 			break;
 		case 6:
-			boneIdx = mBoneIDs[7];
+			boneIdx = mJointIdFootR;
 			break;
 		case 7:
-			boneIdx = mBoneIDs[8];
+			boneIdx = mJointIdChnFootL;
 			break;
 		case 8:
-			boneIdx = mBoneIDs[9];
+			boneIdx = mJointIdFootL;
 			break;
 		case 9:
 		default:
-			boneIdx = unk3C4;
+			boneIdx = mJointIdCenter;
 			break;
 		}
 
@@ -469,8 +468,8 @@ void TMario::warpInEffect()
 			JPABaseEmitter* emitter
 			    = gpMarioParticleManager->emitAndBindToMtx(id, mtx, 0, this);
 			if (emitter != nullptr) {
-				emitter->unk114 = &warpInCallBack;
-				emitter->unk120 = &mWarpInDir;
+				emitter->setParticleCallBackPtr(&warpInCallBack);
+				emitter->setUserWork((uintptr_t)&mWarpInDir);
 			}
 		}
 	}
@@ -488,7 +487,7 @@ void TMario::warpInEffect()
 void TMario::warpInLight()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(MAP_MAP_GATE_MS_MARIOWP_SENKO,
-	                                            &unk178, 0, this);
+	                                            &mCenterPos, 0, this);
 }
 
 void TMario::warpOutEffect(int kind, f32 rotDeg)
@@ -509,36 +508,36 @@ void TMario::warpOutEffect(int kind, f32 rotDeg)
 	case 2:
 	default:
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    PARTICLE_MS_MARIOAP_BODY, mModel->getModel()->getAnmMtx(unk3C4), 0,
-		    this);
+		    PARTICLE_MS_MARIOAP_BODY,
+		    mModel->getModel()->getAnmMtx(mJointIdCenter), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_HEAD,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[10]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdHead), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_CAP,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[10]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdHead), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_RHAND,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[4]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdHandR), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_LHAND,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[5]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdHandL), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_RLEG,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[6]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdChnFootR), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_RFOOT,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[7]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdFootR), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_LLEG,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[8]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdChnFootL), 0, this);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_MARIOAP_LFOOT,
-		    mModel->getModel()->getAnmMtx(mBoneIDs[9]), 0, this);
+		    mModel->getModel()->getAnmMtx(mJointIdFootL), 0, this);
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_MARIOAP_WATGUN,
-			    mModel->getModel()->getAnmMtx(unk3C4), 0, this);
+			    mModel->getModel()->getAnmMtx(mJointIdCenter), 0, this);
 		}
 		break;
 	}
@@ -568,11 +567,11 @@ void TMario::emitBlurSpinJump()
 	                                            getCenterAnmMtx(), 1, this);
 	gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_BLUR2SP,
 	                                            getCenterAnmMtx(), 1, this);
-	if (unk134 > 0.0f) {
+	if (mDirty > 0.0f) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    MAP_POLLUTION_MS_M_SPINOS, getCenterAnmMtx(), 1, this);
 		if (emitter != nullptr) {
-			emitter->mChildSpawnRate = 0.003921569f * (1.75f * unk134);
+			emitter->setRate(0.003921569f * (1.75f * mDirty));
 		}
 	}
 }
@@ -580,9 +579,9 @@ void TMario::emitBlurSpinJump()
 void TMario::emitRotateShootEffect()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_SPINSHOT_A,
-	                                            &unk178, 1, this);
+	                                            &mCenterPos, 1, this);
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_SPINSHOT_B,
-	                                            &unk178, 1, this);
+	                                            &mCenterPos, 1, this);
 }
 
 void TMario::emitFootPrintWithEffect(int effectId, int printId)
@@ -602,11 +601,11 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 		} else {
 			if (getMotionFrameCtrl().checkPass(38.0f)) {
 				foot = 0;
-				mtx  = mModel->getModel()->getAnmMtx(mBoneIDs[9]);
+				mtx  = mModel->getModel()->getAnmMtx(mJointIdFootL);
 			}
 			if (getMotionFrameCtrl().checkPass(8.0f)) {
 				foot = 1;
-				mtx  = mModel->getModel()->getAnmMtx(mBoneIDs[7]);
+				mtx  = mModel->getModel()->getAnmMtx(mJointIdFootR);
 			}
 		}
 	}
@@ -627,18 +626,18 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 	}
 
 	if (mtx != nullptr && foot != 2) {
-		unk1A8.x = mtx[0][3];
-		unk1A8.y = mtx[1][3];
-		unk1A8.z = mtx[2][3];
+		mFootprintPos.x = mtx[0][3];
+		mFootprintPos.y = mtx[1][3];
+		mFootprintPos.z = mtx[2][3];
 
 		// wtf is this bs?
 		u32 b2 = printId > 0;
 		u32 b  = mForwardVel > 20.0f;
 		if (mStatus == MARIO_STATUS_RUN && b && b2)
-			gpMarioParticleManager->emit(printId, &unk1A8, 0, nullptr);
+			gpMarioParticleManager->emit(printId, &mFootprintPos, 0, nullptr);
 
 		if (effectId > 0) {
-			calcGroundMtx(unk1A8);
+			calcGroundMtx(mFootprintPos);
 			gpMarioParticleManager->emitAndBindToMtx(effectId, unk250, 0,
 			                                         nullptr);
 		}
@@ -657,16 +656,16 @@ void TMario::emitSandEffect()
 
 void TMario::meltInWaterEffect()
 {
-	if (unk134 > 0.0f) {
+	if (mDirty > 0.0f) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    MAP_POLLUTION_MS_M_TOKEOS, unk220, 1, this);
 		if (emitter != nullptr) {
-			emitter->mChildSpawnRate
-			    = 0.003921569f
-			      * (unk134 * mParticleParams.mMeltInWaterMax.get());
+			emitter->setRate(
+			    0.003921569f
+			    * (mDirty * mParticleParams.mMeltInWaterMax.get()));
 			if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER)) {
 				JGeometry::TVec3<f32> scale(0.6f, 0.6f, 0.6f);
-				emitter->setScale(scale);
+				emitter->setGlobalScale(scale);
 			}
 		}
 	}
@@ -691,28 +690,28 @@ void TMario::rocketEffectStart()
 
 void TMario::elecEffect()
 {
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_BIRI_A, &unk178,
-	                                            1, this);
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_BIRI_C, &unk178,
-	                                            1, this);
-	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_BIRI_B, &unk178,
-	                                            1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_BIRI_A,
+	                                            &mCenterPos, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_BIRI_C,
+	                                            &mCenterPos, 1, this);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_M_BIRI_B,
+	                                            &mCenterPos, 1, this);
 }
 
 void TMario::elecEndEffect()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_OFF,
-	                                            &unk178, 0, this);
+	                                            &mCenterPos, 0, this);
 }
 
 void TMario::kickRoofEffect()
 {
 	if (getMotionFrameCtrl().checkPass(8.0f)) {
-		MtxPtr mtx = mModel->unk8->mNodeMatrices[mBoneIDs[10]];
-		unk1A8.x   = mtx[0][3];
-		unk1A8.y   = mtx[1][3];
-		unk1A8.z   = mtx[2][3];
-		gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk1A8, 0,
+		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdHead);
+		mFootprintPos.x = mtx[0][3];
+		mFootprintPos.y = mtx[1][3];
+		mFootprintPos.z = mtx[2][3];
+		gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &mFootprintPos, 0,
 		                             nullptr);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
@@ -739,12 +738,12 @@ void TMario::toroccoEffect()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_TORO_WIND, mTorocco->getModel()->getAnmMtx(0), 1, this);
 	if (emitter != nullptr) {
-		emitter->mChildSpawnRate = dist * mParticleParams.mToroccoWind.get();
+		emitter->setRate(dist * mParticleParams.mToroccoWind.get());
 	}
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_TORO_HIBANA, mTorocco->getModel()->getAnmMtx(0), 1, this);
 	if (emitter != nullptr) {
-		emitter->mChildSpawnRate = dist * mParticleParams.mToroccoSpark.get();
+		emitter->setRate(dist * mParticleParams.mToroccoSpark.get());
 	}
 }
 
@@ -754,10 +753,10 @@ void TMario::kickFruitEffect()
 	    PARTICLE_MS_M_AMIATTACK, &mPosition, 0, nullptr);
 	if (emitter != nullptr) {
 		JGeometry::TVec3<f32> scale(1.2f, 1.2f, 1.2f);
-		emitter->setScale(scale);
+		emitter->setGlobalScale(scale);
 		JGeometry::TVec3<f32> pos = mPosition;
 		pos.y += 30.0f;
-		emitter->mTrans.set(pos);
+		emitter->setGlobalTranslation(pos);
 	}
 }
 
@@ -766,7 +765,7 @@ void TMario::sinkInSandEffect()
 	JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	    PARTICLE_MS_POI_SAND, &mPosition, 0, nullptr);
 	if (emitter)
-		emitter->setScale(JGeometry::TVec3<f32>(0.5f, 0.5f, 0.5f));
+		emitter->setGlobalScale(JGeometry::TVec3<f32>(0.5f, 0.5f, 0.5f));
 }
 
 bool TMario::askJumpIntoWaterEffectExist() const

@@ -177,7 +177,7 @@ public:
 		TParamRT<f32> mWaistPitch;
 		TParamRT<s16> mWaistRollMax;
 		TParamRT<s16> mWaistPitchMax;
-		TParamRT<s32> mRoll;
+		TParamRT<f32> mRoll;
 		TParamRT<f32> mPitch;
 		TParamRT<s16> mRollMax;
 		TParamRT<s16> mPitchMax;
@@ -560,7 +560,7 @@ public:
 	public:
 		TDeParams();
 
-		TParamRT<s16> mHpMax;
+		TParamRT<s16> mHPMax;
 		TParamRT<f32> mRunningMax;
 		TParamRT<f32> mDashMax;
 		TParamRT<f32> mDashAcc;
@@ -621,7 +621,7 @@ public:
 	virtual ~TMario() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL moveRequest(const JGeometry::TVec3<f32>&);
@@ -781,7 +781,7 @@ public:
 	void doSpinJumping();
 	void setJumpingAttackArea();
 	void doJumping();
-	void askStrongGroundTouch();
+	bool askStrongGroundTouch();
 	BOOL jumpingBasic(int, int, int);
 	BOOL considerJumpRotate();
 	BOOL checkBackTrig();
@@ -842,7 +842,7 @@ public:
 	void warpRequest(const JGeometry::TVec3<f32>&, f32);
 	void flowMove(const JGeometry::TVec3<f32>&);
 	void windMove(const JGeometry::TVec3<f32>&);
-	void getGroundJumpPower() const;
+	f32 getGroundJumpPower() const;
 	BOOL onYoshi() const;
 	void addVelocity(f32);
 	BOOL considerRotateJumpStart();
@@ -887,9 +887,9 @@ public:
 	void checkEnforceJump();
 	void doReturn();
 	void checkThrowObject();
-	void getDizzyAngle();
-	void getDizzyPower();
-	void getLRLevel(u8);
+	int getDizzyAngle();
+	f32 getDizzyPower();
+	f32 getLRLevel(u8);
 	int checkStickRotate(int*);
 	void checkStickSmash();
 	void makeHistory();
@@ -943,7 +943,7 @@ public:
 	BOOL isRunningTurnning();
 	void changePlayerCatching();
 	bool isRunningInWater();
-	void getRunningInWaterBrake();
+	f32 getRunningInWaterBrake();
 	BOOL doRunningAnimation();
 	void getSlopeNormalAccele(f32*, f32*);
 	void getSlopeSlideAccele(f32*, f32*);
@@ -1193,12 +1193,17 @@ public:
 	void animSound();
 	void soundMovement();
 	void startVoiceYoshi(u32);
-	void checkStatusType(s32) const;
+	bool checkStatusType(s32 flag) const
+	{
+		return mStatus & flag ? true : false;
+	}
 
 	// fabricated
 	f32 getIntendedMag() const { return mIntendedMag; }
 	f32 getIntendedYaw() const { return mIntendedYaw * (360.0f / 65536.0f); }
 	THitActor* getFloorHitActor() { return &mFloorHitActor; }
+	s16 getHealth() const { return mHealth; }
+	s16 getAir() const { return mAir; }
 
 	// fabricated
 	bool isTouchGround4cm() const
@@ -1210,7 +1215,7 @@ public:
 	{
 		if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA))
 			return true;
-		if (checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
+		if (checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 			return false;
 		return true;
 	}
@@ -1219,9 +1224,20 @@ public:
 
 	// Fabricated
 	// See E_MARIO_FLAG
-	bool checkFlag(u32 flag) const { return unk118 & flag ? true : false; }
-	void onFlag(u32 flag) { unk118 |= flag; }
-	void offFlag(u32 flag) { unk118 &= ~flag; }
+	bool checkFlag(u32 flag) const { return mFlag & flag ? true : false; }
+	bool checkPrevFlag(u32 flag) const
+	{
+		return mPrevFlag & flag ? true : false;
+	}
+	void onFlag(u32 flag) { mFlag |= flag; }
+	void offFlag(u32 flag) { mFlag &= ~flag; }
+
+	// Fabricated
+	bool checkUnk114(u32 flag) const { return unk114 & flag ? true : false; }
+	void onUnk114(u32 flag) { unk114 |= flag; }
+	void offUnk114(u32 flag) { unk114 &= ~flag; }
+
+	s16 getUnk9C() { return unk9C; }
 
 	// Fabricated
 	bool fabricatedIsPumping() const
@@ -1236,14 +1252,19 @@ public:
 	}
 
 	// Fabricated
-	bool checkStatusFlag(u32 actionFlag) const
+	u32 getPreviousStatus() const { return mPrevStatus; }
+	u32 getStatus() const { return mStatus; }
+
+	// Fabricated
+	bool isSleeping() const
 	{
-		return mStatus & actionFlag ? true : false;
+		bool sleepKind = true;
+		if (mStatus != MARIO_STATUS_SLEEPY && mStatus != MARIO_STATUS_SLEEP)
+			sleepKind = false;
+		return sleepKind;
 	}
 
-	// TODO: rename and sort out the status category checks
-
-	// fabricated
+	// Fabricated
 	bool isRoofing() const
 	{
 		if ((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)
@@ -1267,18 +1288,6 @@ public:
 		return false;
 	}
 
-	// Fabricated
-	bool isActionThing() const
-	{
-		if ((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)
-		        >= (MARIO_STATUS_ASCEND & MARIO_STATUS_TYPE_AND_ID_MASK)
-		    && (MARIO_STATUS_WIRE_WAIT & MARIO_STATUS_TYPE_AND_ID_MASK)
-		           >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
-			return true;
-
-		return false;
-	}
-
 	// Fabricated and probably wrong
 	void damageExec(THitActor* hittingActor, int code)
 	{
@@ -1293,7 +1302,12 @@ public:
 	}
 
 	// Fabricated
-	s32 checkUnk368() const { return unk368 > 0.0f ? 1 : 0; }
+	BOOL isSinking() const { return mSinkTimer > 0.0f ? TRUE : FALSE; }
+
+	const JGeometry::TVec3<f32>& getPrevPosition() const
+	{
+		return mPrevPosition;
+	}
 
 public:
 	/* 0x74 */ u32 mInput;
@@ -1523,7 +1537,7 @@ public:
 	/* 0x9A */ s16 mModelFaceAngle;
 	/* 0x9C */ s16 unk9C;
 	/* 0x9E */ s16 unk9E;
-	/* 0xA0 */ s16 unkA0;
+	/* 0xA0 */ s16 mDizzyTimer;
 	/* 0xA2 */ u16 unkA2;
 	/* 0xA4 */ JGeometry::TVec3<f32> mVel;
 
@@ -1532,8 +1546,8 @@ public:
 	/* 0xB8 */ f32 mSlideVelZ;
 
 	/* 0xBC */ f32 unkBC;
-	/* 0xC0 */ f32 unkC0;
-	/* 0xC4 */ s16 unkC4;
+	/* 0xC0 */ f32 mDashSpeed;
+	/* 0xC4 */ s16 mDashTimer;
 	/* 0xC6 */ s16 unkC6;
 	/* 0xC8 */ f32 unkC8;
 	/* 0xCC */ f32 unkCC;
@@ -1566,55 +1580,79 @@ public:
 	/* 0x10C */ f32 unk10C;
 	/* 0x110 */ f32 unk110;
 
+	enum {
+		// turns on `perform` profiling
+		UNK114_FLAG_PROFILE = 0x1,
+		// turns on mario drawing
+		UNK114_FLAG_VISIBLE = 0x2,
+		// tilts mario towards ground slope?
+		UNK114_FLAG_UNK8 = 0x8,
+		// sillhouette drawing?
+		UNK114_FLAG_UNK10 = 0x10,
+		// Some electroshock related effect drawing?
+		UNK114_FLAG_UNK20 = 0x20,
+		// Cheat to always have max FLUDD water?
+		UNK114_FLAG_UNK80 = 0x80,
+		// No fall damage cheat?
+		UNK114_FLAG_UNK100 = 0x100,
+		// Enables/disables invisible box drawing that's used to probe
+		// for mario visibility to the camera, which in turn controls drawing of
+		// mario's sillhouette.
+		UNK114_FLAG_DO_OCCLUSION_PROBE = 0x400,
+	};
+
 	/* 0x114 */ u16 unk114;
 	/* 0x116 */ u16 unk116;
-	/* 0x118 */ u32 unk118; // see E_MARIO_FLAG
-
-	/* 0x11C */ u32 unk11C;
+	/* 0x118 */ u32 mFlag; // see E_MARIO_FLAG
+	/* 0x11C */ u32 mPrevFlag;
 
 	/* 0x120 */ s16 mHealth;
 
 	/* 0x122 */ u16 unk122;
-
 	/* 0x124 */ u16 unk124;
-	/* 0x126 */ u16 unk126;
-	/* 0x128 */ s16 unk128;
+
+	// no cap -> mHotTimer counts up to mHotTimerMax and then mario is damaged
+	/* 0x126 */ u16 mHotTimer;
+	/* 0x128 */ s16 mHotTimerMax;
+
 	/* 0x12A */ s16 unk12A;
-	/* 0x12C */ f32 unk12C;
-	/* 0x130 */ f32 unk130;
-	/* 0x134 */ f32 unk134; // Amount of dirty?
-	/* 0x138 */ f32 unk138;
-	/* 0x13C */ s16 unk13C;
+
+	/* 0x12C */ f32 mAir;
+	/* 0x130 */ f32 mMaxAir;
+
+	/* 0x134 */ f32 mDirty;
+	/* 0x138 */ f32 mOilBrake;
+	/* 0x13C */ s16 mDirtyTimer;
 	/* 0x13E */ s16 unk13E;
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ u32 unk144;
 	/* 0x148 */ THitActor* unk148;
-	/* 0x14C */ s16 unk14C;
-	/* 0x14E */ s16 unk14E;
-	/* 0x150 */ s16 unk150;
+	/* 0x14C */ s16 mInvincibilityFrames;
+	/* 0x14E */ s16 mFreezeTimer;
+	/* 0x150 */ s16 mFreezeImmunityTimer;
 	/* 0x154 */ TWaterEmitInfo* unk154;
 	/* 0x158 */ TWaterEmitInfo* unk158;
 	/* 0x15C */ f32 unk15C;
 	// Bone positions
 	/* 0x160 */ JGeometry::TVec3<f32> unk160;
-	/* 0x16C */ JGeometry::TVec3<f32> unk16C;
-	/* 0x178 */ JGeometry::TVec3<f32> unk178; // center anm mtx?
-	/* 0x184 */ JGeometry::TVec3<f32> unk184;
-	/* 0x190 */ JGeometry::TVec3<f32> unk190;
-	/* 0x19C */ JGeometry::TVec3<f32> unk19C; // damage pos
-	/* 0x1A8 */ JGeometry::TVec3<f32> unk1A8;
+	/* 0x16C */ JGeometry::TVec3<f32> mHeadPos;
+	/* 0x178 */ JGeometry::TVec3<f32> mCenterPos;
+	/* 0x184 */ JGeometry::TVec3<f32> mRightHandPos;
+	/* 0x190 */ JGeometry::TVec3<f32> mWaterRipplePos;
+	/* 0x19C */ JGeometry::TVec3<f32> mDamagePos;
+	/* 0x1A8 */ JGeometry::TVec3<f32> mFootprintPos;
 	/* 0x1B4 */ JGeometry::TVec3<f32> unk1B4;
-	/* 0x1C0 */ Mtx unk1C0;
+	/* 0x1C0 */ Mtx mHeadMtx;
 	/* 0x1F0 */ Mtx unk1F0;
 	/* 0x220 */ Mtx unk220;
 	/* 0x250 */ Mtx unk250;
 	/* 0x280 */ JGeometry::TVec3<f32> unk280;
 	/* 0x28C */ JGeometry::TVec3<f32> unk28C;
 	/* 0x298 */ u32 unk298;
-	/* 0x29C */ JGeometry::TVec3<f32> unk29C;
+	/* 0x29C */ JGeometry::TVec3<f32> mPrevPosition;
 	/* 0x2A8 */ JGeometry::TVec3<f32> unk2A8;
 	/* 0x2B4 */ S16Vec unk2B4;
-	/* 0x2BA */ s16 unk2BA;
+	/* 0x2BA */ s16 mOobKillTimer;
 	/* 0x2BC */ f32 unk2BC;
 	/* 0x2C0 */ const TLiveActor* unk2C0;
 	/* 0x2C4 */ Mtx unk2C4;
@@ -1624,18 +1662,18 @@ public:
 	/* 0x310 */ u32 unk310;
 	/* 0x314 */ f32 unk314;
 	/* 0x318 */ Mtx unk318;
-	/* 0x348 */ f32 unk348;
+	/* 0x348 */ f32 mPumpAnmRate;
 	/* 0x34C */ u16 unk34C;
-	/* 0x34E */ u16 unk34E;
-	/* 0x350 */ s32 unk350;
+	/* 0x34E */ u16 mStandingOnGraffitoTimer;
+	/* 0x350 */ s32 mPollutionTypeStandingOn;
 	/* 0x354 */ f32 unk354;
 	/* 0x358 */ f32 unk358;
 	/* 0x35C */ f32 unk35C;
-	/* 0x360 */ s16 unk360;
-	/* 0x362 */ s16 unk362;
+	/* 0x360 */ s16 mFootPrintTimer;
+	/* 0x362 */ s16 mWetWaterParticleTimer;
 	/* 0x364 */ s16 unk364;
 	/* 0x366 */ s16 unk366;
-	/* 0x368 */ f32 unk368;
+	/* 0x368 */ f32 mSinkTimer;
 	/* 0x36C */ f32 unk36C;
 	/* 0x370 */ f32 unk370;
 	/* 0x374 */ f32 unk374;
@@ -1653,11 +1691,26 @@ public:
 		UPPER_STATE_IDLE,
 	};
 
-	/* 0x380 */ u32 mUpperState;   // pump state?
+	/* 0x380 */ u32 mUpperState;
 	/* 0x384 */ THitActor* unk384; // Last receiveMessage sender
-	/* 0x388 */ u8 unk388;
-	// TODO: Make enum (0 = red, 1 = yellow, 2 = green)
-	/* 0x389 */ u8 unk389; // Blooper color
+
+	enum {
+		PLAYER_TYPE_MARIO        = 0,
+		PLAYER_TYPE_SHADOW_MARIO = 1,
+		PLAYER_TYPE_MONTE_MAN    = 2, // el piantissimo
+		PLAYER_TYPE_P2           = 3,
+		PLAYER_TYPE_P3           = 4,
+		PLAYER_TYPE_P4           = 5,
+		PLAYER_TYPE_INVALID      = 6,
+	};
+
+	/* 0x388 */ u8 mPlayerType;
+	enum {
+		SURF_GESSO_TYPE_RED,
+		SURF_GESSO_TYPE_YELLOW,
+		SURF_GESSO_TYPE_GREEN,
+	};
+	/* 0x389 */ u8 mSurfGessoType;
 	/* 0x38A */ u16 unk38A;
 	/* 0x38C */ f32 mHolderHeightDiff;
 	/* 0x390 */ TMBindShadowBody* unk390;
@@ -1670,14 +1723,25 @@ public:
 	/* 0x3AC */ J3DModelData* mBodyModelData; // Body model data
 	/* 0x3B0 */ J3DModel* mHandModels[2][2];  // Hand models
 	/* 0x3C0 */ J3DModel* mRHand4ndModel;
-	/* 0x3C4 */ u8 unk3C4;       // Cemter Anm mtx idx
-	/* 0x3C5 */ u8 mBoneIDs[12]; // Array of bone ids
+	/* 0x3C4 */ u8 mJointIdCenter;
+	/* 0x3C5 */ u8 mJointIdChest;
+	/* 0x3C6 */ u8 mJointIdChnChest;
+	/* 0x3C7 */ u8 mJointIdArmR1;
+	/* 0x3C8 */ u8 mJointIdArmL1;
+	/* 0x3C9 */ u8 mJointIdHandR;
+	/* 0x3CA */ u8 mJointIdHandL;
+	/* 0x3CB */ u8 mJointIdChnFootR;
+	/* 0x3CC */ u8 mJointIdFootR;
+	/* 0x3CD */ u8 mJointIdChnFootL;
+	/* 0x3CE */ u8 mJointIdFootL;
+	/* 0x3CF */ u8 mJointIdHead;
+	/* 0x3D0 */ u8 mJointIdMHead;
 	/* 0x3D1 */ u8 unk3D1;
 	/* 0x3D2 */ s16 unk3D2;
-	/* 0x3D4 */ u16 unk3D4; // _mat_eye_L idx
-	/* 0x3D6 */ u16 unk3D6; // _mat_eye_R idx
-	/* 0x3D8 */ f32 unk3D8;
-	/* 0x3DC */ f32 unk3DC;
+	/* 0x3D4 */ u16 mMaterialIdEyeL;
+	/* 0x3D6 */ u16 mMaterialIdEyeR;
+	/* 0x3D8 */ f32 mWaistRoll;
+	/* 0x3DC */ f32 mWaistPitch;
 	/* 0x3E0 */ TMarioCap* mCap;
 
 	/* 0x3E4 */ TWaterGun* mWaterGun;
@@ -1772,11 +1836,11 @@ public:
 	TBarParams mBarParams;
 
 	/* 0x1640 */ TSurfingParams mSurfingParamsWaterRed;
-	TSurfingParams mSurfingParamsGroundRed;
-	TSurfingParams mSurfingParamsWaterYellow;
-	TSurfingParams mSurfingParamsGroundYellow;
-	TSurfingParams mSurfingParamsWaterGreen;
-	TSurfingParams mSurfingParamsGroundGreen;
+	/* 0x1814 */ TSurfingParams mSurfingParamsGroundRed;
+	/* 0x19E8 */ TSurfingParams mSurfingParamsWaterYellow;
+	/* 0x1BBC */ TSurfingParams mSurfingParamsGroundYellow;
+	/* 0x1D90 */ TSurfingParams mSurfingParamsWaterGreen;
+	/* 0x1F64 */ TSurfingParams mSurfingParamsGroundGreen;
 
 	/* 0x2138 */ THHoverParams mHoverParams;
 	/* 0x217C */ TDivingParams mDivingParams;

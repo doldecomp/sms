@@ -26,4 +26,36 @@ inline int MsRandI(int l, int r)
 	return 1 + l + rnd;
 }
 
+// A random-in-range helper. Only ever used fully inlined, so the only trace
+// left in the binary is the two UNUSED dtors for TMsRange<f32> / TMsRange<s32>.
+template <typename T> class TMsRange {
+public:
+	TMsRange(T min, T max)
+	    : mMin(min)
+	    , mMax(max)
+	{
+	}
+
+	void set(T min, T max)
+	{
+		mMin = min;
+		mMax = max;
+	}
+
+	T rand() const
+	{
+		T range = mMax - mMin;
+		return mMin + (T)(range * MsRandF());
+	}
+
+	// real AND required
+	// Without it, codegen is wrong for `TMsRange::rand` AND every single class
+	// inheriting from TSmallEnemyParams. Why? No idea.
+	~TMsRange() { }
+
+public:
+	/* 0x0 */ T mMin;
+	/* 0x4 */ T mMax;
+};
+
 #endif

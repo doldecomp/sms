@@ -8,19 +8,20 @@ class JSUMemoryInputStream;
 class TMapXlu {
 public:
 	TMapXlu();
+
 	void init(JSUMemoryInputStream&);
-	bool changeXluJoint(int);
+	bool changeXluJoint(int prio);
 	void changeNormalJoint();
 
-	struct Entry {
-		/* 0x0 */ s32 unk0;
-		/* 0x4 */ u32* unk4;
-		/* 0x8 */ u32* unk8;
+private:
+	struct TXluPrioGroup {
+		/* 0x0 */ s32 mObjectNum;
+		/* 0x4 */ u32* mChildIdx;
+		/* 0x8 */ u32* mGrandchildIdx;
 	};
 
-public:
-	/* 0x0 */ s32 unk0;
-	/* 0x4 */ Entry* unk4;
+	/* 0x0 */ s32 mPrioGroupNum;
+	/* 0x4 */ TXluPrioGroup* mPrioGroups;
 };
 
 #endif

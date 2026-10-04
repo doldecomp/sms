@@ -1,6 +1,7 @@
 #include <Player/Mario.hpp>
 #include <Player/WaterGun.hpp>
 #include <Player/NozzleTrigger.hpp>
+#include <System/Particles.hpp>
 #include <Map/MapData.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
@@ -110,7 +111,12 @@ bool TMario::isRunningInWater()
 	return false;
 }
 
-void TMario::getRunningInWaterBrake() { }
+f32 TMario::getRunningInWaterBrake()
+{
+	return 1.0f
+	       - (mFloorPosition.z - mPosition.y) / mRunParams.mSwimDepth.get()
+	             * (1.0f - mRunParams.mInWaterBrake.get());
+}
 
 BOOL TMario::doRunningAnimation()
 {
@@ -119,7 +125,7 @@ BOOL TMario::doRunningAnimation()
 	f32 rate;
 	f32 sp;
 
-	sp = mIntendedMag > mForwardVel ? mForwardVel : mIntendedMag;
+	sp = mIntendedMag > mForwardVel ? mIntendedMag : mForwardVel;
 
 	if (sp < 4.0f)
 		sp = 4.0f;
@@ -138,10 +144,7 @@ BOOL TMario::doRunningAnimation()
 				rate = sp * mRunParams.mRunAnmSpeedMult.get()
 				       + mRunParams.mRunAnmSpeedBase.get();
 				if (isRunningInWater()) {
-					f32 tmp = (mFloorPosition.z - mPosition.y)
-					          / mRunParams.mSwimDepth.get();
-					rate *= (1.0f
-					         - tmp * (1.0f - mRunParams.mInWaterBrake.get()))
+					rate *= getRunningInWaterBrake()
 					        * mRunParams.mInWaterAnmBrake.get();
 				}
 				setAnimation(ANIM_RUN2, rate);
@@ -156,9 +159,9 @@ BOOL TMario::doRunningAnimation()
 					mix = (rate - lo) / (hi - lo);
 				unk414.z = 1.0f - mix;
 				if (onYoshi()) {
-					mModel->unk20->unk18->unk50 = 0.0f;
+					mModel->unk20->unk18->mMotionBlendRatio = 0.0f;
 				} else {
-					mModel->unk20->unk18->unk50 = unk414.z;
+					mModel->unk20->unk18->mMotionBlendRatio = unk414.z;
 				}
 				loop = false;
 			}
@@ -200,7 +203,7 @@ void TMario::getSlopeNormalAccele(f32* arg0, f32* arg1)
 		return;
 	}
 
-	if (mGroundPlane->isUnkC()) {
+	if (mGroundPlane->isSlider()) {
 		*arg0 = mSlipParamsAllSlider.mSlopeAcceleUp.get();
 		*arg1 = mSlipParamsAllSlider.mSlopeAcceleDown.get();
 		return;
@@ -235,7 +238,7 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 		return;
 	}
 
-	if (mGroundPlane->isUnkC()) {
+	if (mGroundPlane->isSlider()) {
 		*arg0 = mSlipParamsAllSlider.mSlideAcceleUp.get();
 		*arg1 = mSlipParamsAllSlider.mSlideAcceleDown.get();
 		return;
@@ -267,7 +270,7 @@ f32 TMario::getChangeAngleSpeed()
 	if (isForceSlip()) {
 		angSp = (f32)mSlipParamsAll.mSlideAngleYSp.get();
 	} else {
-		if (mGroundPlane->isUnkC()) {
+		if (mGroundPlane->isSlider()) {
 			angSp = (f32)mSlipParamsAllSlider.mSlideAngleYSp.get();
 		} else if (mGroundPlane->isUnk2()) {
 			angSp = (f32)mSlipParams45.mSlideAngleYSp.get();
@@ -301,7 +304,7 @@ f32 TMario::getSlideStickMult()
 	if (isForceSlip())
 		return mSlipParamsAll.mStickSlideMult.get();
 
-	if (mGroundPlane->isUnkC())
+	if (mGroundPlane->isSlider())
 		return mSlipParamsAllSlider.mStickSlideMult.get();
 
 	if (mGroundPlane->isUnk2())
@@ -386,7 +389,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		slipFr = mSlipParamsOil.mSlipFriction.get();
 	} else if (isForceSlip()) {
 		slipFr = mSlipParamsAll.mSlipFriction.get();
-	} else if (mGroundPlane->isUnkC()) {
+	} else if (mGroundPlane->isSlider()) {
 		slipFr = mSlipParamsAllSlider.mSlipFriction.get();
 	} else if (mGroundPlane->isUnk2()) {
 		slipFr = mSlipParams45.mSlipFriction.get();
@@ -424,7 +427,7 @@ BOOL TMario::doSliding(f32 stopThreshold)
 
 	slideProcess(0.0f, mult);
 
-	if (!mGroundPlane->isUnk1() && !mGroundPlane->isUnkC()) {
+	if (!mGroundPlane->isUnk1() && !mGroundPlane->isSlider()) {
 		if (mForwardVel * mForwardVel < stopThreshold * stopThreshold) {
 			setPlayerVelocity(0.0f);
 			stopped = true;
@@ -469,8 +472,8 @@ void TMario::doStopping() { }
 void TMario::doRunning()
 {
 	f32 sp = mIntendedMag < mRunParams.mMaxSpeed.get()
-	             ? mRunParams.mMaxSpeed.get()
-	             : mIntendedMag;
+	             ? mIntendedMag
+	             : mRunParams.mMaxSpeed.get();
 
 	if (onYoshi())
 		sp *= mYoshiParams.mRunYoshiMult.get();
@@ -507,13 +510,10 @@ void TMario::doRunning()
 		rotSp = (s16)((f32)rotSp * mYoshiParams.mRotYoshiMult.get());
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
-		rotSp = mDeParams.mRunningRotSpMin.get();
+		rotSp = mRunParams.mDashRotSp.get();
 
 	if (isRunningInWater()) {
-		mForwardVel *= -(
-		    (((mFloorPosition.z - mPosition.y) / mRunParams.mSwimDepth.get())
-		     * (1.0f - mRunParams.mInWaterBrake.get()))
-		    - 1.0f);
+		mForwardVel *= getRunningInWaterBrake();
 	}
 
 	mFaceAngle.y
@@ -525,10 +525,10 @@ void TMario::doRunning()
 
 TMario::TSurfingParams* TMario::getSurfingParamsWater()
 {
-	switch (unk389) {
-	case 1:
+	switch (mSurfGessoType) {
+	case SURF_GESSO_TYPE_YELLOW:
 		return &mSurfingParamsWaterYellow;
-	case 2:
+	case SURF_GESSO_TYPE_GREEN:
 		return &mSurfingParamsWaterGreen;
 	default:
 		return &mSurfingParamsWaterRed;
@@ -537,10 +537,10 @@ TMario::TSurfingParams* TMario::getSurfingParamsWater()
 
 TMario::TSurfingParams* TMario::getSurfingParamsGround()
 {
-	switch (unk389) {
-	case 1:
+	switch (mSurfGessoType) {
+	case SURF_GESSO_TYPE_YELLOW:
 		return &mSurfingParamsGroundYellow;
-	case 2:
+	case SURF_GESSO_TYPE_GREEN:
 		return &mSurfingParamsGroundGreen;
 	default:
 		return &mSurfingParamsGroundRed;
@@ -683,9 +683,9 @@ BOOL TMario::running()
 	}
 
 	if (isRunningTurnning() && mForwardVel >= mRunParams.mTurnNeedSp.get()) {
-		emitParticle(0x15, mFaceAngle.y + 0x8000);
-		emitParticle(0x17, mFaceAngle.y + 0x8000);
-		emitParticle(0x16, mFaceAngle.y + 0x8000);
+		emitParticle(PARTICLE_MS_MARIWALK1_A, mFaceAngle.y + 0x8000);
+		emitParticle(PARTICLE_MS_MARIWALK1_C, mFaceAngle.y + 0x8000);
+		emitParticle(PARTICLE_MS_MARIWALK1_B, mFaceAngle.y + 0x8000);
 		return changePlayerStatus(MARIO_STATUS_TURN, 0, false);
 	}
 
@@ -720,12 +720,12 @@ BOOL TMario::running()
 			break;
 		}
 
-		if (unk118 & MARIO_FLAG_VISIBLE)
+		if (mFlag & MARIO_FLAG_VISIBLE)
 			pushed = true;
 
 		if (!pushed) {
 			if (mForwardVel > mDeParams.mClashSpeed.get()) {
-				emitParticle(0xC);
+				emitParticle(PARTICLE_MS_DMG_C);
 				return changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN,
 				                            0);
 			}
@@ -751,7 +751,7 @@ BOOL TMario::running()
 			}
 
 			doPushingAnimation(prevPos);
-			unkC4 = 0;
+			mDashTimer = 0;
 			offFlag(MARIO_FLAG_FLUDD_EMITTING);
 		}
 		break;
@@ -793,7 +793,7 @@ BOOL TMario::rotating()
 	if (mStatus == MARIO_STATUS_ROTATE_L)
 		mModelFaceAngle = mStatusTimer * 4096;
 	else
-		mModelFaceAngle = -(mStatusTimer * 4096);
+		mModelFaceAngle = mStatusTimer * -4096;
 
 	return 0;
 }
@@ -958,7 +958,7 @@ BOOL TMario::surfing()
 		s16 maxAngle;
 		f32 minSpeed;
 
-		if (mWallPlane->isWaterSurface()) {
+		if (mGroundPlane->isWaterSurface()) {
 			maxAngle = getSurfingParamsWater()->mClashAngle.get();
 			minSpeed = getSurfingParamsWater()->mClashSpeed.get();
 		} else {
@@ -968,7 +968,7 @@ BOOL TMario::surfing()
 
 		if ((wallToFace < -maxAngle || maxAngle < wallToFace)
 		    && mForwardVel > minSpeed) {
-			decHP(mDeParams.mHpMax.get());
+			decHP(mDeParams.mHPMax.get());
 			BOOL ret = changePlayerStatus(MARIO_STATUS_JUMP_BACK_DOWN, 0, true);
 			mForwardVel = 0.8f * -mForwardVel;
 			mVel.y      = 50.0f;
@@ -1098,7 +1098,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 		return;
 	case 1:
 		setAnimation(slipAnim, 1.0f);
-		unk114 |= 8;
+		onUnk114(UNK114_FLAG_UNK8);
 		frontSlipEffect();
 		return;
 	case 2:
@@ -1111,7 +1111,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 			if (absVel < 0.0f)
 				absVel = -absVel;
 			if (absVel > mDeParams.mClashSpeed.get())
-				emitParticle(0xC);
+				emitParticle(PARTICLE_MS_DMG_C);
 		}
 		if (isSlipStart()) {
 			if (mWallPlane != nullptr) {
@@ -1139,7 +1139,7 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 			setPlayerVelocity(0.0f);
 			changePlayerStatus(statusOnStop, 0, false);
 		}
-		unk114 |= 8;
+		onUnk114(UNK114_FLAG_UNK8);
 		return;
 	}
 }
@@ -1255,7 +1255,7 @@ BOOL TMario::oilRun()
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeRun.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
 
 	{
 		f32 rotSp = mDirtyParams.mSlipRotate.get();
@@ -1268,13 +1268,13 @@ BOOL TMario::oilRun()
 	    += mIntendedMag * JMASSin(mFaceAngle.y) * mDirtyParams.mSlipRunSp.get();
 	mVel.z
 	    += mIntendedMag * JMASCos(mFaceAngle.y) * mDirtyParams.mSlipRunSp.get();
-	unk13C--;
-	if (unk13C <= 0) {
-		unk13C = 0;
-		unk138 = 0.0f;
+	mDirtyTimer--;
+	if (mDirtyTimer <= 0) {
+		mDirtyTimer = 0;
+		mOilBrake   = 0.0f;
 	}
-	mVel.x *= unk138;
-	mVel.z *= unk138;
+	mVel.x *= mOilBrake;
+	mVel.z *= mOilBrake;
 	mForwardVel = 0.0f;
 	mSlideVelX  = 0.0f;
 	mSlideVelZ  = 0.0f;
@@ -1317,21 +1317,21 @@ BOOL TMario::oilSlip()
 		    = mIntendedYaw - IConverge(diff, 0, (s16)rotSp, (s16)rotSp);
 	}
 
-	unk13C--;
-	if (unk13C <= 0) {
-		unk13C = 0;
-		unk138 = 0.0f;
+	mDirtyTimer--;
+	if (mDirtyTimer <= 0) {
+		mDirtyTimer = 0;
+		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
 
 	f32 tmp = mDirtyParams.mPolSizeSlip.get();
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
 	                                nullptr, 0, 4);
 
 	mForwardVel += mIntendedMag * JMASCos((s16)(mFaceAngle.y - mIntendedYaw))
 	               * mDirtyParams.mSlipCatchSp.get();
-	mForwardVel *= unk138;
+	mForwardVel *= mOilBrake;
 	setPlayerVelocity(mForwardVel);
 
 	if (-1.0f < mForwardVel && mForwardVel < 1.0f) {
@@ -1354,14 +1354,14 @@ BOOL TMario::oilSlip()
 
 BOOL TMario::oilSlope()
 {
-	unk13C--;
-	if (unk13C <= 0) {
-		unk13C = 0;
-		unk138 = 0.0f;
+	mDirtyTimer--;
+	if (mDirtyTimer <= 0) {
+		mDirtyTimer = 0;
+		mOilBrake   = 0.0f;
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
-	gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
-	                   mDirtyParams.mPolSizeSlip.get());
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+	                     mDirtyParams.mPolSizeSlip.get());
 	return slipBackCommon(MARIO_STATUS_CATCH_LOST, MARIO_STATUS_LANDING, 0x89);
 }
 
@@ -1397,7 +1397,7 @@ BOOL TMario::backDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(1, 86.0f, mStatusArg);
@@ -1409,7 +1409,7 @@ BOOL TMario::foreDown()
 
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SDWNF, 42.0f, mStatusArg);
@@ -1420,7 +1420,7 @@ BOOL TMario::shortBackDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SDOWN, 88.0f, mStatusArg);
@@ -1431,7 +1431,7 @@ BOOL TMario::shortForeDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SHFDN, 80.0f, mStatusArg);
@@ -1442,7 +1442,7 @@ BOOL TMario::safeBackDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SFBDN, 200.0f, mStatusArg);
@@ -1453,7 +1453,7 @@ BOOL TMario::safeForeDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SFFDN, 100.0f, mStatusArg);
@@ -1464,7 +1464,7 @@ BOOL TMario::catchDown()
 {
 	if (mStatusTimer == 0) {
 		mStatusTimer++;
-		emitParticle(0xC);
+		emitParticle(PARTICLE_MS_DMG_C);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 	}
 	downingCommon(ANIM_SLDWN, 128.0f, mStatusArg);
@@ -1665,9 +1665,9 @@ BOOL TMario::moveMain()
 	checkEnforceJump();
 	checkReturn();
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK40000)
-	    && !checkStatusFlag(MARIO_STATUS_OIL_RUN)
-	    && !checkStatusFlag(MARIO_STATUS_OIL_SLIP)) {
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK40000)
+	    && !checkStatusType(MARIO_STATUS_OIL_RUN)
+	    && !checkStatusType(MARIO_STATUS_OIL_SLIP)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0, nullptr,
 		                                0, 4);
 	}

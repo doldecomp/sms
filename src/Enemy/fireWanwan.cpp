@@ -27,6 +27,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <macros.h>
 
 namespace {
 const GXColorS10 cBodyColorOnFire   = { 400, -50, -100, 0 };
@@ -299,20 +300,20 @@ void TFireWanwanManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TFireWanwanManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TFireWanwanManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, graphics);
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TFireWanwan* wanwan = (TFireWanwan*)unk18[i];
 		if (!gpMap->isInArea(wanwan->mPosition.x, wanwan->mPosition.z)
 		    || (wanwan->getGroundPlane()
 		        && wanwan->getGroundPlane()->isDeathPlane())) {
-			wanwan->kill();
+			wanwan->reset();
 		}
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		checkBalloonHelpBoss22();
 		checkBalloonHelpBoss23();
 		checkBalloonHelpBoss24();
@@ -401,15 +402,22 @@ void TFireWanwanTailNode::setBarAnmMtx(MtxPtr mtx)
 }
 
 #pragma dont_inline on
-void TFireWanwanTailNode::perform(u32 param_1, JDrama::TGraphics* param_2,
+void TFireWanwanTailNode::perform(u32 cue, JDrama::TGraphics* graphics,
                                   const JGeometry::TVec3<f32>& param_3,
                                   const JGeometry::TVec3<f32>& param_4)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		TPosition3f mtx;
 
-		SMS_CalcToDirMatrix(mtx, param_4,
-		                    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+		JGeometry::TVec3<f32> xDir;
+		xDir.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), param_4);
+		xDir.normalize();
+		JGeometry::TVec3<f32> yDir;
+		yDir.cross(param_4, xDir);
+		yDir.normalize();
+		mtx.setXDir(xDir);
+		mtx.setYDir(yDir);
+		mtx.setZDir(param_4);
 
 		mtx.setTrans(param_3);
 
@@ -419,7 +427,7 @@ void TFireWanwanTailNode::perform(u32 param_1, JDrama::TGraphics* param_2,
 	}
 
 	if (!(unk10 & 0x4))
-		mMActor->perform(param_1, param_2);
+		mMActor->perform(cue, graphics);
 }
 #pragma dont_inline off
 
@@ -430,18 +438,18 @@ TFireWanwanTailHit::TFireWanwanTailHit(TFireWanwan& param_1)
 	MTXIdentity(unk74);
 }
 
-BOOL TFireWanwanTailHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TFireWanwanTailHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->getActorType() == 0x80000001) {
-		if (param_2 == HIT_MESSAGE_TAKE) {
+	if (sender->getActorType() == 0x80000001) {
+		if (message == HIT_MESSAGE_TAKE) {
 			if (!mOwner->canTakenByMario())
 				return false;
 
-			behaveTaken(param_1);
+			behaveTaken(sender);
 			return true;
 		}
 
-		if (param_2 == HIT_MESSAGE_UNK7 || param_2 == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			behaveApart();
 			return true;
 		}
@@ -454,9 +462,8 @@ void TFireWanwanTailHit::behaveTaken(THitActor* param_1)
 {
 	mHolder            = (TTakeActor*)param_1;
 	unkA4->mFixTailPos = true;
-	if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_HOLD))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_WANWAN_HOLD,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_HOLD, &mPosition, 0,
+	                                nullptr, 0, 4);
 	((TFireWanwanManager*)mOwner->getManager())->unk64 = 1;
 
 	mCurTailLength  = unkA4->getLength();
@@ -515,27 +522,27 @@ void TFireWanwanTailHit::init()
 		actor->getModel()->calc();
 	}
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 	initHitActor(0x10000028, 0, 0, 0.0f, 0.0f, 30.0f, 200.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(HIT_FLAG_UNK2);
+	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mIsOnFire = false;
 }
 
-void TFireWanwanTailHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, graphics);
 
 	setDamageRadius(mOwner->getSaveParam2()->mTailEndColRange.get());
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		MtxPtr mtx = mOwner->getTailMtx();
 		movementBody(JGeometry::TVec3<f32>(mtx[0][3], mtx[1][3], mtx[2][3]));
 	}
 
-	performNodes(param_1, param_2);
+	performNodes(cue, graphics);
 
 	{
 		MtxPtr mtx = unkA8[4]->mMActor->getModel()->getBaseTRMtx();
@@ -543,10 +550,10 @@ void TFireWanwanTailHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    mtx[0][3], mtx[1][3] - mDamageHeight * 0.5f, mtx[2][3]));
 	}
 
-	if ((param_1 & 2) && mIsOnFire)
+	if ((cue & CUE_CALC_ANIM) && mIsOnFire)
 		onFireEffect();
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		unkBC->update();
 
 	if (mHolder != nullptr) {
@@ -568,17 +575,13 @@ void TFireWanwanTailHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		mPrevTailLength = mCurTailLength;
 		mCurTailLength  = unkA4->getLength();
 
-		if (mCurTailLength - mPrevTailLength > 0.0f) {
+		if (0.0f < mCurTailLength - mPrevTailLength) {
 			JGeometry::TVec3<f32> local_60 = SMS_GetMarioPos();
 			local_60 -= mOwner->mPosition;
-			f32 fVar1 = local_60.length();
 
-			// TODO: this is definitely an inline!!! but where???
-			JGeometry::TVec3<f32>* pos = &unkA4->unk0[2].mPos;
-			if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_PULL))
-				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    MSD_SE_EN_WANWAN_PULL, pos, nullptr, fVar1, 0, 0, nullptr,
-				    0, 4);
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_EN_WANWAN_PULL, &unkA4->unk0[2].mPos, nullptr,
+			    local_60.length(), 0, 0, nullptr, 0, 4);
 		}
 	}
 }
@@ -685,9 +688,8 @@ void TFireWanwanTailHit::onFireEffect()
 	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_B, mtx, this, scaleVec);
 	SMS_EasyEmitParticle(PARTICLE_MS_MOE_FIRE_D, mtx, this, scaleVec);
 
-	if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_FLAME))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_WANWAN_FLAME,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_FLAME, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TFireWanwanTailHit::offFireEffect()
@@ -884,7 +886,7 @@ void TFireWanwan::decideTarget(const JGeometry::TVec3<f32>& param_1)
 
 void TFireWanwan::doAdjustTarget()
 {
-	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 	f32 fVar8 = JGeometry::TUtil<f32>::clamp(ctrl->getFrame() / ctrl->getEnd(),
 	                                         0.0f, 1.0f);
@@ -952,30 +954,29 @@ bool TFireWanwan::isOverHungTailRumble() const
 	return mHungTailRumbleTimer > 3600;
 }
 
-BOOL TFireWanwan::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TFireWanwan::receiveMessage(THitActor* sender, u32 message)
 {
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 		return false;
 
 	case HIT_MESSAGE_SPRAYED_BY_WATER: {
-		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &param_1->getPosition(),
+		SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &sender->getPosition(),
 		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		u8 maxHp = getMaxHitPoints();
 		if (maxHp == mHitPoints)
-			if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_1ST_WATER))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_EN_WANWAN_1ST_WATER, &mPosition, 0, nullptr, 0, 4);
-		decHpByWater(param_1);
-		behaveToWater(param_1);
+			SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_1ST_WATER,
+			                                &mPosition, 0, nullptr, 0, 4);
+		decHpByWater(sender);
+		behaveToWater(sender);
 		if (mSprayedByWaterCooldown == 0)
 			mSprayedByWaterCooldown = 1;
 		return true;
 	}
 
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 }
 
@@ -983,9 +984,8 @@ void TFireWanwan::behaveToWater(THitActor* param_1)
 {
 	if (!unk194->mIsOnFire) {
 		if (mSprayedByWaterCooldown == 0) {
-			if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_COOL_MORE))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_BS_WANWAN_COOL_MORE, &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL_MORE,
+			                                &mPosition, 0, nullptr, 0, 4);
 			if (!isRecovering()) {
 				JGeometry::TVec3<f32> scale = mScaling;
 				scale *= 0.75f;
@@ -999,9 +999,8 @@ void TFireWanwan::behaveToWater(THitActor* param_1)
 
 	if (mHitPoints != 0) {
 		if (mSprayedByWaterCooldown == 0)
-			if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_TO_COOL))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_EN_WANWAN_TO_COOL, &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_TO_COOL,
+			                                &mPosition, 0, nullptr, 0, 4);
 		if (isWandering()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveFireWanwanFindMario::theNerve());
@@ -1010,9 +1009,8 @@ void TFireWanwan::behaveToWater(THitActor* param_1)
 		return;
 	}
 
-	if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_COOL))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_WANWAN_COOL,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
 	mSpine->reset();
 	mSpine->setNext(&TNerveFireWanwanEscape::theNerve());
 	unk194->offFireEffect();
@@ -1050,9 +1048,8 @@ void TFireWanwan::changeBodyToSilver(f32 param_1)
 
 void TFireWanwan::startThrownSound()
 {
-	if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_THROWN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_WANWAN_THROWN,
-		                                          mPosition, 0, &unk1B8, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_THROWN, &mPosition, 0,
+	                                &unk1B8, 0, 4);
 }
 
 void TFireWanwan::stopTriggerSound()
@@ -1084,21 +1081,21 @@ void TFireWanwan::kill()
 
 bool TFireWanwan::isHitValid(u32) { return false; }
 
-void TFireWanwan::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TFireWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
-	if (!(param_1 & 2)) {
+	TSmallEnemy::perform(cue, graphics);
+	if (!(cue & CUE_CALC_ANIM)) {
 		calcRootMatrix();
 		mMActor->calc();
 	}
 
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		emitEffects();
 		unk238->update();
 	}
 
 	if (!checkLiveFlag(LIVE_FLAG_DEAD))
-		unk194->perform(param_1, param_2);
+		unk194->perform(cue, graphics);
 }
 
 void TFireWanwan::calcRootMatrix()
@@ -1289,7 +1286,7 @@ void TFireWanwan::emitEffects()
 
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        PARTICLE_MS_M_SLIPSMOKE, pos, this, mScaling))
-			emitter->unk180.a = 179;
+			emitter->setGlobalAlpha(179);
 	}
 
 	if (isRecovering()) {
@@ -1309,7 +1306,7 @@ void TFireWanwan::emitEffects()
 		local_4c *= 0.22f;
 		if (JPABaseEmitter* emitter = SMS_EasyEmitParticle(
 		        BWANWAN_JPA_MS_BWAN_KIRA, mtx, this, local_4c))
-			emitter->mChildSpawnRate = 0.1f;
+			emitter->setRate(0.1f);
 		local_4c.set(1.5f, 1.5f, 1.5f);
 		SMS_EasyEmitParticle(PARTICLE_MS_NPC_HAMON_B, &mRipplePos, this,
 		                     local_4c);
@@ -1336,11 +1333,11 @@ void TFireWanwan::emitEffectsOnHittingWall(
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtx(
 	        PARTICLE_MS_WALLKICK_A, transform.mMtx, 0, nullptr))
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtx(
 	        PARTICLE_MS_WALLKICK_B, transform.mMtx, 0, nullptr))
-		emitter->setScale(mScaling);
+		emitter->setGlobalScale(mScaling);
 }
 
 void TFireWanwan::checkHitActors()
@@ -1458,7 +1455,7 @@ bool TFireWanwan::isWalking() const
 bool TFireWanwan::isWandering() const
 {
 	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
-	return nerve == &TNerveFireWanwanRecover::theNerve()
+	return nerve == &TNerveFireWanwanRecoverGraph::theNerve()
 	       || nerve == &TNerveFireWanwanTurn::theNerve() || isWalking();
 }
 
@@ -1609,9 +1606,8 @@ void TFireWanwan::bind()
 
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 8.0f);
 		stopTriggerSound();
-		if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_REFLECT))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_WANWAN_REFLECT, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_REFLECT, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	if (isFlying() && !checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
@@ -1883,7 +1879,7 @@ DEFINE_NERVE(TNerveFireWanwanAttack, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(3);
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	if (self->doAttack()) {
@@ -1961,17 +1957,16 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(2);
-		self->getMActor()->setFrameRate(0.0f, 4);
-		self->getMActor()->getFrameCtrl(4)->setFrame(0.0f);
+		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BTK);
+		self->getMActor()->getFrameCtrl(ANM_TYPE_BTK)->setFrame(0.0f);
 		TFireWanwanManager* manager = (TFireWanwanManager*)self->getManager();
 		manager->receiveMessageFromBody(self,
 		                                TFireWanwanManager::BODY_MSG_RECOVERED);
 
-		if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_RECOVER))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_WANWAN_RECOVER, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_RECOVER,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 
-		f32 end = self->getMActor()->getFrameCtrl(0)->getEnd();
+		f32 end = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd();
 
 		self->changeBodyToRed(end);
 	}
@@ -2004,9 +1999,8 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		}
 
 		self->stopTriggerSound();
-		if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_DOWN))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_WANWAN_DOWN, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_DOWN, &self->mPosition,
+		                                0, nullptr, 0, 4);
 
 		self->changeBodyToSilver(40);
 
@@ -2023,9 +2017,8 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 	vel.z *= 0.9f;
 	self->mVelocity = vel;
 
-	if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_AFTER))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_EN_WANWAN_AFTER, &self->mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_AFTER, &self->mPosition, 0,
+	                                nullptr, 0, 4);
 
 	return false;
 }
@@ -2037,7 +2030,7 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 	}
 
 	JGeometry::TVec3<f32> vec = self->mPosition;
@@ -2067,7 +2060,7 @@ DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
 		JGeometry::TVec3<f32> vel
 		    = fromPolar(self->mRotation.y, self->unk194->mThrowPow);
@@ -2103,11 +2096,10 @@ DEFINE_NERVE(TNerveFireWanwanFreeze, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
-		if (SMSGetMSound()->gateCheck(MSD_SE_EN_COMMON_TWINKLE))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_COMMON_TWINKLE, &self->mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_TWINKLE,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	self->setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
@@ -2128,7 +2120,7 @@ DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
 		self->initEscapeNextGraphNode();
 		self->setBckAnm(0);
 		self->getMActor()->setBtkFromIndex(0);
-		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 4);
+		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BTK);
 
 		self->changeBodyToBlack(40);
 	}
@@ -2143,9 +2135,8 @@ DEFINE_NERVE(TNerveFireWanwanEscape, TLiveActor)
 
 	self->doEscape();
 
-	if (gpMSound->gateCheck(MSD_SE_EN_WANWAN_BARK2))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_EN_WANWAN_BARK2, &self->mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_WANWAN_BARK2, &self->mPosition, 0,
+	                                nullptr, 0, 4);
 
 	return false;
 }

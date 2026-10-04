@@ -1,13 +1,12 @@
-#include "Camera/CameraShake.hpp"
-#include "Enemy/Enemy.hpp"
-#include "Enemy/SmallEnemy.hpp"
-#include "Strategic/LiveActor.hpp"
 #include <Enemy/CoasterKiller.hpp>
+#include <Enemy/Enemy.hpp>
 #include <Enemy/Walker.hpp>
 #include <Enemy/Graph.hpp>
 #include <Enemy/Spider.hpp>
 #include <Enemy/Conductor.hpp>
+#include <Enemy/SmallEnemy.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Camera/CameraShake.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <Map/MapData.hpp>
 #include <M3DUtil/MActor.hpp>
@@ -21,6 +20,7 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <M3DUtil/SDLModel.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
@@ -37,9 +37,12 @@
 #include <Enemy/EffectObj.hpp>
 #include <macros.h>
 
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-const char* killer_bastable[] = {
+static const char* killer_bastable[] = {
 	"/scene/killer/bas/downkiller_down1.bas", nullptr, nullptr,
 	"/scene/killer/bas/killer_search1.bas",   nullptr,
 };
@@ -75,10 +78,10 @@ void TCoasterEnemy::reset()
 	mPathIdx = 0;
 }
 
-void TCoasterEnemy::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCoasterEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TWalkerEnemy::perform(param_1, param_2);
-	if (param_1 & 1) { } // required to move param_1 into r31
+	TWalkerEnemy::perform(cue, graphics);
+	if (cue & CUE_MOVE) { } // required to move param_1 into r31
 }
 
 f32 TCoasterEnemy::getGravityY() const { return 0.0f; }
@@ -104,15 +107,12 @@ void TCoasterEnemy::moveCoaster()
 	JGeometry::TVec3<f32> forward;
 	mQuat.getZDir(forward);
 
-	JGeometry::TVec3<f32> axis;
-	axis.cross(forward, delta);
-
 	JGeometry::TVec3<f32> up;
 	mQuat.getYDir(up);
 
 	JGeometry::TQuat4<f32> steer;
-	steer.setRotate(forward, axis, 0.1f);
-	mQuat.mul(steer);
+	steer.setRotate(forward, delta, 0.1f);
+	mQuat.mul(steer, mQuat);
 
 	// Y-axis rotation
 	JGeometry::TVec3<f32> right;
@@ -127,7 +127,7 @@ void TCoasterEnemy::moveCoaster()
 		tiltQuat.rotate(forward, curUp);
 
 		steer.setRotate(up, curUp, 0.1f);
-		mQuat.mul(steer);
+		mQuat.mul(steer, mQuat);
 	}
 
 	static_cast<JGeometry::TVec4<f32>&>(mQuat).normalize();
@@ -140,11 +140,6 @@ void TCoasterEnemy::calcRootMatrix()
 	pos.setQT(mQuat, mPosition);
 	getModel()->setBaseScale(mScaling);
 	getModel()->setBaseTRMtx(pos);
-}
-
-void TCoasterEnemy::setNormalFlyAnm()
-{
-	// nothing
 }
 
 void TCoasterEnemy::setWalkAnm() { setNormalFlyAnm(); }
@@ -214,25 +209,20 @@ void TCoasterKiller::init(TLiveManager* mgr)
 
 void TCoasterKiller::reset() { TCoasterEnemy::reset(); }
 
-void TCoasterKiller::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCoasterKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TCoasterEnemy::perform(param_1, param_2);
+	TCoasterEnemy::perform(cue, graphics);
 
-	if ((param_1 * 2) && (param_1 & 1) == 0) {
-		mParticlePos.setQT(getQuat(), mPosition);
-		gpMarioParticleManager->emitAndBindToMtxPtr(0x174, mParticlePos.mMtx, 1,
-		                                            this);
+	if ((cue & CUE_CALC_ANIM) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
+		mParticlePos.setQT(mQuat, mPosition);
+		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_KIL_SMOKE,
+		                                            mParticlePos, 1, this);
 
 		if (mSpine->getCurrentNerve()
 		    != &TNerveCoasterKillerExplosion::theNerve()) {
-			JGeometry::TVec3<f32> dist;
-			dist.sub(getPosition(), *gpMarioPos);
-			f32 len = dist.length2();
-			if (gpMSound->gateCheck(MSD_SE_EN_KILLER_FLY_KUPPA)) {
-				MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-				    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr, len, 0, 0,
-				    nullptr, 0, 4);
-			}
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_EN_KILLER_FLY_KUPPA, &mPosition, nullptr,
+			    mPosition.distance(SMS_GetMarioPos()), 0, 0, nullptr, 0, 4);
 		}
 	}
 }
@@ -324,12 +314,12 @@ void TCoasterKiller::setDeadAnm()
 {
 	mMActor = getActorKeeper()->getMActor("downkiller_model1.bmd");
 	setBckAnm(0);
-	TSpineEnemy* effectBase = gpConductor->makeOneEnemyAppear(
-	    mPosition, "エフェクト爆発マネージャー", 1);
-	if (effectBase != nullptr) {
-		TEffectExplosion* effect = (TEffectExplosion*)effectBase;
+	TEffectExplosion* effect
+	    = (TEffectExplosion*)gpConductor->makeOneEnemyAppear(
+	        mPosition, "エフェクト爆発マネージャー", 1);
+	if (effect != nullptr) {
 		effect->generate(mPosition, mScaling);
-		mScaling *= 0.6f;
+		effect->mScaling *= 0.6f;
 	}
 }
 
@@ -352,7 +342,7 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 		if (self->checkCurAnmEnd(0)) {
 			self->onLiveFlag(LIVE_FLAG_DEAD);
 			self->onLiveFlag(LIVE_FLAG_UNK8);
-			self->offLiveFlag(LIVE_FLAG_UNK10000);
+			self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 			self->mHolder = nullptr;
 			self->stopAnmSound();
 			spine->reset();

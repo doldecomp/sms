@@ -7,21 +7,22 @@ TStrategy* gpStrategy;
 void TIdxGroupObj::loadSuper(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObjPtrListT<THitActor>::loadSuper(stream);
-	stream.read(&unk20, 4);
+	stream >> unk20;
 }
 
 TStrategy::TStrategy(const char* name)
     : JDrama::TViewObj(name)
     , unk50(0)
 {
-	for (int i = 0; i < ARRAY_COUNT(unk10); ++i)
+	for (s32 i = 0; i < ARRAY_COUNT(unk10); ++i)
 		unk10[i] = nullptr;
 }
 
 void TStrategy::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	new TObjHitCheck();
+
+	TObjHitCheck* hitCheck = new TObjHitCheck();
 
 	int count = stream.readU32();
 	for (int i = 0; i < count; ++i) {
@@ -66,49 +67,49 @@ JDrama::TNameRef* TStrategy::searchF(u16 key, const char* name)
 	return nullptr;
 }
 
-void TStrategy::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TStrategy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 
-	if ((param_1 & 3) != 0) {
+	if ((cue & (CUE_MOVE | CUE_CALC_ANIM)) != 0) {
 		if (unk10[0] != (TIdxGroupObj*)0x0)
-			unk10[0]->testPerform(param_1, param_2);
+			unk10[0]->testPerform(cue, graphics);
 
 		if (unk10[3] != (TIdxGroupObj*)0x0)
-			unk10[3]->testPerform(param_1, param_2);
+			unk10[3]->testPerform(cue, graphics);
 
 		if (unk10[4] != (TIdxGroupObj*)0x0)
-			unk10[4]->testPerform(param_1, param_2);
+			unk10[4]->testPerform(cue, graphics);
 
-		if (unk10[0xb] != (TIdxGroupObj*)0x0)
-			unk10[0xb]->testPerform(param_1, param_2);
+		if (unk10[11] != (TIdxGroupObj*)0x0)
+			unk10[11]->testPerform(cue, graphics);
 
 		if (unk10[6] != (TIdxGroupObj*)0x0)
-			unk10[6]->testPerform(param_1, param_2);
+			unk10[6]->testPerform(cue, graphics);
 
 		if (unk10[9] != (TIdxGroupObj*)0x0)
-			unk10[9]->testPerform(param_1, param_2);
+			unk10[9]->testPerform(cue, graphics);
 	}
 
-	if ((param_1 & 8) != 0) {
+	if ((cue & CUE_DRAW) != 0) {
 		if (unk10[0] != (TIdxGroupObj*)0x0)
-			unk10[0]->testPerform(param_1, param_2);
+			unk10[0]->testPerform(cue, graphics);
 
 		if (unk10[3] != (TIdxGroupObj*)0x0)
-			unk10[3]->testPerform(param_1, param_2);
+			unk10[3]->testPerform(cue, graphics);
 
 		if (unk10[4] != (TIdxGroupObj*)0x0)
-			unk10[4]->testPerform(param_1, param_2);
+			unk10[4]->testPerform(cue, graphics);
 
 		if (unk10[5] != (TIdxGroupObj*)0x0)
-			unk10[5]->testPerform(param_1, param_2);
+			unk10[5]->testPerform(cue, graphics);
 
-		if (unk10[0xb] != (TIdxGroupObj*)0x0)
-			unk10[0xb]->testPerform(param_1, param_2);
+		if (unk10[11] != (TIdxGroupObj*)0x0)
+			unk10[11]->testPerform(cue, graphics);
 
 		if (unk10[6] != (TIdxGroupObj*)0x0)
-			unk10[6]->testPerform(param_1, param_2);
+			unk10[6]->testPerform(cue, graphics);
 
 		if (unk10[9] != (TIdxGroupObj*)0x0)
-			unk10[9]->testPerform(param_1, param_2);
+			unk10[9]->testPerform(cue, graphics);
 	}
 }

@@ -21,9 +21,9 @@ void TMapEvent::controlMapEvent() { }
 
 void TMapEvent::watchMapEvent() { }
 
-void TMapEvent::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapEvent::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!stateIs(0) && (param_1 & 1)) {
+	if (!stateIs(0) && (cue & CUE_MOVE)) {
 		if (stateIs(1) && watch())
 			startControl();
 

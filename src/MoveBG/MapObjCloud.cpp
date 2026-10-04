@@ -4,6 +4,7 @@
 #include <Enemy/Graph.hpp>
 #include <Player/MarioAccess.hpp>
 #include <MarioUtil/PacketUtil.hpp>
+#include <MarioUtil/ShadowUtil.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 
@@ -73,22 +74,13 @@ void TRideCloud::initMapObj()
 void TRideCloud::load(JSUMemoryInputStream& stream)
 {
 	TRailMapObj::load(stream);
-	u32 r;
-	u32 g;
-	u32 b;
-	u32 a;
-	stream.read(&r, 4);
-	stream.read(&g, 4);
-	stream.read(&b, 4);
-	stream.read(&a, 4);
+	u32 r, g, b, a;
+	stream >> r >> g >> b >> a;
 	unk16E.r = r & 0xff;
 	unk16E.g = g & 0xff;
 	unk16E.b = b & 0xff;
 	unk16E.a = 0xff;
-	stream.read(&r, 4);
-	stream.read(&g, 4);
-	stream.read(&b, 4);
-	stream.read(&a, 4);
+	stream >> r >> g >> b >> a;
 	unk176.r = r & 0xff;
 	unk176.g = g & 0xff;
 	unk176.b = b & 0xff;
@@ -99,7 +91,7 @@ void TRideCloud::load(JSUMemoryInputStream& stream)
 	onLiveFlag(LIVE_FLAG_UNK8);
 }
 
-u32 TRideCloud::getShadowType() { return 0; }
+u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
 void TRideCloud::control()
 {
@@ -163,9 +155,9 @@ void TRideCloud::control()
 	}
 }
 
-void TRideCloud::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TRideCloud::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 4)
+	if (cue & CUE_CALC_VIEW)
 		mScaledBodyRadius = unk154 * mScaling.x;
-	TRailMapObj::perform(param_1, param_2);
+	TRailMapObj::perform(cue, graphics);
 }

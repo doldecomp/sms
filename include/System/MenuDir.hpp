@@ -37,6 +37,7 @@ public:
 	/* 0x48 */ u32 unk48;
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ bool unk50;
+	/* 0x54 */ u32 unk54;
 };
 
 #endif

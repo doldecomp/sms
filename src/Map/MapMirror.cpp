@@ -11,6 +11,7 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -19,16 +20,16 @@
 
 void TMirrorCamera::makeMirrorViewMtx() { }
 
-void TMirrorCamera::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x14) {
-		C_MTXPerspective(param_2->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
+	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
+		C_MTXPerspective(graphics->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
 		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
-		MTXCopy(unk30, param_2->mViewMtx);
-		param_2->mNearPlane = gpCamera->mNear;
-		param_2->mFarPlane  = gpCamera->mFar;
-		if (param_1 & 0x10)
-			GXSetProjection(param_2->mProjMtx.mMtx, GX_PERSPECTIVE);
+		MTXCopy(unk30, graphics->mViewMtx);
+		graphics->mNearPlane = gpCamera->mNear;
+		graphics->mFarPlane  = gpCamera->mFar;
+		if (cue & CUE_SET_PROJECTION)
+			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
 	}
 }
@@ -37,8 +38,8 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 {
 	GXLoadTexObj(&unk60, GX_TEXMAP0);
 	Mtx afStack_38;
-	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->mFovy,
-	                      gpCamera->mAspect, 1.0f, -1.0f, 1.0f, 1.0f);
+	C_MTXLightPerspective(afStack_38, unk80 * gpCamera->getFovy(),
+	                      gpCamera->getAspect(), 0.5f, -0.5f, 0.5f, 0.5f);
 
 	Mtx afStack_68;
 	MTXConcat(getUnk30(), param_1, afStack_68);
@@ -93,7 +94,7 @@ static u8 getVertexFormat(const J3DModelData* model_data, GXAttr attr)
 
 void TMirrorModel::setPlane()
 {
-	MtxPtr mtx = unk4->unk4->unk20;
+	MtxPtr mtx = unk4->getModel()->getBaseTRMtx();
 	MTXMultVec(mtx, &unkC, &unkC);
 	MTXMultVecSR(mtx, &unk18, &unk18);
 	VECNormalize(&unk18, &unk18);
@@ -174,7 +175,9 @@ inline static void identity34(MtxPtr mtx)
 void TMirrorModel::init(const char* name)
 {
 	unk4 = SMS_MakeMActorWithAnmData(name, gpMirrorModelManager->getUnk20(), 2,
-	                                 0x10210000);
+	                                 J3DMLF_MaterialPEFull
+	                                     | J3DMLF_UseUniqueMaterials
+	                                     | (1 << J3DMLF_TevStageNumShift));
 
 	TPosition3f local_44;
 	local_44.identity();
@@ -252,7 +255,7 @@ bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
 	           : false;
 }
 
-void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	JGeometry::TVec3<f32> local_44 = *gpMarioPos;
 	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
@@ -269,13 +272,13 @@ void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (unk18 != -1) {
-		if (param_1 & 2)
+		if (cue & CUE_CALC_ANIM)
 			unk1C[unk18]->calc();
 
-		if (param_1 & 4)
+		if (cue & CUE_CALC_VIEW)
 			unk1C[unk18]->unk4->viewCalc();
 
-		if (param_1 & 0x200) {
+		if (cue & CUE_ENTRY) {
 			unk1C[unk18]->setPlane();
 
 			// TODO: awful vector math, one of unused functions inlined
@@ -285,7 +288,8 @@ void TMirrorModelManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 void TMirrorModelManager::findMirrorCamera()
 {
-	unk24 = JDrama::TNameRefGen::search<TMirrorCamera>("鏡カメラ");
+	unk24
+	    = static_cast<TMirrorCamera*>(JDrama::TNameRefGen::search("鏡カメラ"));
 }
 
 void TMirrorModelManager::loadAfter()
@@ -297,14 +301,12 @@ void TMirrorModelManager::loadAfter()
 		J3DTexture* texture
 		    = unk1C[i]->getUnk4()->getModel()->getModelData()->getTexture();
 
-		// This looks like setResTIMG but isn't???
-
+		ResTIMG& target       = *texture->getResTIMG(0);
 		const ResTIMG& source = *unk24->getUnk94();
-		ResTIMG& target       = texture->mResources[0];
 
 		target = source;
 		target.imageDataOffset
-		    = (u32)&source + source.imageDataOffset - (u32)&target;
+		    = (uintptr_t)&source + source.imageDataOffset - (uintptr_t)&target;
 	}
 }
 
@@ -317,12 +319,12 @@ void TMirrorModelManager::registerObjMirror(TMirrorModel* model)
 void TMirrorModelManager::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	int local_28;
-	int local_2C;
-	int local_30;
-	stream.read(&local_28, 4);
-	stream.read(&local_2C, 4);
-	stream.read(&local_30, 4);
+	s32 local_28;
+	s32 local_2C;
+	s32 local_30;
+	stream >> local_28;
+	stream >> local_2C;
+	stream >> local_30;
 	unk14 = local_28 + local_2C + local_30 * 2;
 
 	if (unk14 != 0) {
@@ -357,8 +359,8 @@ TMirrorModelManager::TMirrorModelManager(const char* name)
 	gpMirrorModelManager = this;
 }
 
-void TMirrorMapDrawBuf::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorMapDrawBuf::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!(param_1 & 8) || (gpMirrorModelManager->unk18 != -1 ? true : false))
-		JDrama::TDrawBufObj::perform(param_1, param_2);
+	if (!(cue & CUE_DRAW) || (gpMirrorModelManager->unk18 != -1 ? true : false))
+		JDrama::TDrawBufObj::perform(cue, graphics);
 }

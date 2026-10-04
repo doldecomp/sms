@@ -83,6 +83,16 @@ void SMS_SetMarioAccessParams();
 // Real, see bossgesso
 inline JGeometry::TVec3<f32>& SMS_GetMarioPos() { return *gpMarioPos; }
 
+inline f32 SMS_GetMarioX() { return gpMarioPos->x; }
+inline f32 SMS_GetMarioY() { return gpMarioPos->y; }
+inline f32 SMS_GetMarioZ() { return gpMarioPos->z; }
+inline s16 SMS_GetMarioAngleX() { return *gpMarioAngleX; }
+inline s16 SMS_GetMarioAngleY() { return *gpMarioAngleY; }
+inline s16 SMS_GetMarioAngleZ() { return *gpMarioAngleZ; }
+inline f32 SMS_GetMarioSpeedX() { return *gpMarioSpeedX; }
+inline f32 SMS_GetMarioSpeedY() { return *gpMarioSpeedY; }
+inline f32 SMS_GetMarioSpeedZ() { return *gpMarioSpeedZ; }
+
 inline JGeometry::TVec3<f32>
 SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
 {
@@ -94,22 +104,6 @@ SMS_DistanceFromMarioVec(const JGeometry::TVec3<f32>& pos)
 inline f32 SMS_DistanceFromMario(const JGeometry::TVec3<f32>& pos)
 {
 	return SMS_DistanceFromMarioVec(pos).length();
-}
-
-// fabricated and very unlikely to be real
-// TODO: removeme
-inline void SMS_GetMarioPosStupid(Vec* result)
-{
-	result->x = 0;
-	result->y = 0;
-	result->z = 0;
-
-	if (!gpMarioAddress)
-		return;
-
-	result->z = *(f32*)((u8*)gpMarioAddress + 0x18);
-	result->y = *(f32*)((u8*)gpMarioAddress + 0x14);
-	result->x = *(f32*)((u8*)gpMarioAddress + 0x10);
 }
 
 // fabricated

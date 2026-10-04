@@ -3,12 +3,13 @@
 
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
+#include <JSystem/JGadget/std-list.hpp>
 
 class TSimpleEffect : public JDrama::TActor {
 public:
 	TSimpleEffect(const char* name);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void emitEffect() = 0;
 
 	MtxPtr getUnk48() { return unk48; }
@@ -39,7 +40,7 @@ public:
 	TEffectObjBase(const char* name = "<EffectObjBase>");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init();
 	virtual void reset();
@@ -63,7 +64,7 @@ public:
 	TEffectObjManager(const char* name = "<EffectObjManager>");
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void generateEffect(Vec);
 	void addListEffectObj(TEffectObjBase*);

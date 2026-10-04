@@ -45,7 +45,7 @@ inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 	f32 y2 = r31->getPoint2().y;
 	f32 y3 = r31->getPoint3().y;
 
-	if (r31->checkFlag(0x4)) {
+	if (r31->checkFlag(BG_CHECK_FLAG_X_FACING)) {
 		if (nx > 0.0f) {
 			cz = -cz;
 
@@ -283,7 +283,7 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 	}
 
 	*result = &mIllegalCheckData;
-	return 9999999.0f;
+	return -32767.0f;
 }
 
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
@@ -300,11 +300,11 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 
 	const TBGCheckData* local_60;
 	f32 dVar5 = checkGroundList(
-	    x, y, z, flags, getGridRoot18(gridX, gridZ).getRoofList(), &local_60);
+	    x, y, z, flags, getGridRoot18(gridX, gridZ).getGroundList(), &local_60);
 
 	const TBGCheckData* local_64;
 	f32 dVar6 = checkGroundList(
-	    x, y, z, flags, getGridRoot14(gridX, gridZ).getRoofList(), &local_64);
+	    x, y, z, flags, getGridRoot14(gridX, gridZ).getGroundList(), &local_64);
 
 	if (mGroundPlane != nullptr) {
 		const TBGCheckData* local_68;

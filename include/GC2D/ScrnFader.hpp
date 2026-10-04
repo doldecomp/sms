@@ -34,7 +34,7 @@ public:
 	TSMSFader(JUtility::TColor, f32, const char* name);
 
 	virtual void load(JSUMemoryInputStream& stream);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void update();
 	virtual void draw(const JDrama::TRect&);
 
@@ -65,6 +65,7 @@ public:
 	{
 		return mFadeStatus == FADE_STATUS_FULLY_FADED_OUT;
 	}
+	f32 getRate() const { return mRate; }
 
 public:
 	/* 0x10 */ u16 unk10;
@@ -98,7 +99,7 @@ public:
 	}
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	virtual void update();
 

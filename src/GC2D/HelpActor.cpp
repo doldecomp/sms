@@ -4,6 +4,7 @@
 #include <Strategic/LiveActor.hpp>
 #include <MoveBG/MapObjBase.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
+#include <version.h>
 
 THelpActor::THelpActor(const char* name)
     : THitActor(name)
@@ -19,19 +20,19 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 	THitActor::load(stream);
 	u32 auStack_c;
 	u32 local_10;
-	stream.read(&auStack_c, 4);
-	stream.read(&local_10, 4);
+	stream >> auStack_c;
+	stream >> local_10;
 	unk6C = stream.readString();
 	initHitActor(0x40000320, 1, -0x80000000, mScaling.x * 100.0f,
 	             mScaling.y * 100.0f, 1.0f, 1.0f);
-	unk68 = local_10 + 0xE0030;
+	unk68 = local_10 + VERSION_SELECT(GMSJ01(0xE0030), GMSP01(0x33));
 }
 
 void THelpActor::loadAfter()
 {
 	THitActor::loadAfter();
-	unk70 = JDrama::TNameRefGen::search<TLiveActor>(unk6C);
-	JDrama::TNameRefGen::search<TGCConsole2>("GCコンソール")
+	unk70 = static_cast<TLiveActor*>(JDrama::TNameRefGen::search(unk6C));
+	static_cast<TGCConsole2*>(JDrama::TNameRefGen::search("GCコンソール"))
 	    ->entryHelpActor(this);
 }
 
@@ -46,23 +47,21 @@ int THelpActor::getHelpID()
 	return -1;
 }
 
-void THelpActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THelpActor::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (unk74) {
 			if (getHelpID() == -1)
-				if (gpMarDirector->getConsole()->startDisappearBalloon(unk68,
-				                                                       false))
+				if (SMSGetMarDirector()->getConsole()->startDisappearBalloon(
+				        unk68, false))
 					unk74 = false;
 		} else {
 			if (getHelpID() != -1)
-				if (gpMarDirector->getConsole()->startAppearBalloon(unk68,
-				                                                    false))
+				if (SMSGetMarDirector()->getConsole()->startAppearBalloon(
+				        unk68, false))
 					unk74 = true;
 		}
 	}
-	// TODO: skill issue
-	char trash[0x10];
 }
 
 bool THelpActor::check() { return unk70->checkLiveFlag(LIVE_FLAG_DEAD); }

@@ -28,11 +28,11 @@ public:
 	MSHandle() { }
 
 	virtual void setSeDistanceParameters();
-	virtual void setSeDistanceVolume(u8 param);
-	virtual void setSeDistancePan(u8 param);
-	virtual void setSeDistancePitch(u8 param);
-	virtual void setSeDistanceDolby(u8 param);
-	virtual f32 setDistanceVolumeCommon(f32 volume, u8 param);
+	virtual void setSeDistanceVolume(u8 moveTime);
+	virtual void setSeDistancePan(u8 moveTime);
+	virtual void setSeDistancePitch(u8 moveTime);
+	virtual void setSeDistanceDolby(u8 moveTime);
+	virtual f32 setDistanceVolumeCommon(f32 volume, u8 moveTime);
 
 	static f32 calcVolume(f32 param1, f32 param2, f32 param3, u8 param4,
 	                      u8 param5);

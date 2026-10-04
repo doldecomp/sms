@@ -54,7 +54,8 @@ const char* cMareCommonPollutionBmtName  = "/scene/mareCommon/mare_yogore.bmt";
 
 void TBoardNpcManager::clipActors(JDrama::TGraphics* graphics)
 {
-	clipActorsAux(graphics, *(f32*)((u8*)gpConductor + 0x9C), 200.0f);
+	clipActorsAux(graphics, gpConductor->getCondParams().mEnemyFarClip.get(),
+	              200.0f);
 }
 
 void TBoardNpcManager::createModelData()
@@ -73,7 +74,7 @@ TMareJellyFishManager::TMareJellyFishManager(const char* name)
 	gpMareJellyFishManager = this;
 }
 
-void TMareJellyFishManager::perform(u32, JDrama::TGraphics*) { }
+void TMareJellyFishManager::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 void TMareJellyFishManager::createModelData()
 {
@@ -91,8 +92,8 @@ void TMareJellyFishManager::createModelData()
 
 	const ResTIMG* realTex
 	    = (const ResTIMG*)JKRFileLoader::getGlbResource(cJellyFishRealTexName);
-	TScreenTexture* screenTex
-	    = JDrama::TNameRefGen::search<TScreenTexture>(cScreenTexViewObjName);
+	TScreenTexture* screenTex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search(cScreenTexViewObjName));
 	const ResTIMG* screenTexInfo = screenTex->getTexture()->getTexInfo();
 
 	J3DModelData* modelData;
@@ -210,76 +211,6 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 	}
 }
 
-J3DMaterialTable* TNPCManager::getBmt_(bool) { return nullptr; }
-
-SDLModelData* TNPCManager::getPartsSDLModelData(const char* name) const
-{
-	SDLModelData* result = nullptr;
-
-	if (unk5C != nullptr)
-		result = unk5C->getDataByName(name);
-
-	if (result == nullptr && unk60 != nullptr)
-		result = unk60->getDataByName(name);
-
-	return result;
-}
-
-void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
-{
-	f32 nearClip = unk54;
-	f32 farClip  = *unk58;
-
-	if (gpMarDirector->mMap == 1) {
-		CPolarSubCamera* cam = gpCamera;
-
-		// TODO: need camera inlines!
-		bool shouldClamp = !cam->isSimpleDemoCamera()
-		                   && ((cam->mMode == 0x49) ? true : false);
-
-		if (!(shouldClamp ? true : false) && gpCamera->mMode != 0xD
-		    && gpCamera->unk54 == 0xD
-		    && (gpCamera->isNowInbetween() || gpCamera->mMode == 0x13)) {
-
-		} else if (farClip < 15000.0f)
-			farClip = 15000.0f;
-	}
-
-	SetViewFrustumClipCheckPerspective(gpCamera->mAspect, gpCamera->mFovy,
-	                                   nearClip, farClip);
-
-	for (int i = 0, e = mObjNum; i < e; ++i) {
-		TBaseNPC* actor = (TBaseNPC*)unk18[i];
-
-		JGeometry::TVec3<f32> checkPos = actor->mPosition;
-		checkPos.y += 75.0f;
-
-		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
-		    && SMS_IsInOtherFastCube(checkPos)) {
-			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			continue;
-		}
-
-		if (ViewFrustumClipCheck(graphics, actor->mPosition, unk3C)) {
-			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-		} else {
-			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-		}
-	}
-}
-
-void TNPCManager::perform(u32 flags, JDrama::TGraphics* graphics)
-{
-	if (flags & 0x200) {
-		for (int i = 0, e = mObjNum; i < e; ++i) {
-			TBaseNPC* npc = (TBaseNPC*)unk18[i];
-			npc->onLiveFlag(LIVE_FLAG_UNK1000000);
-		}
-	}
-
-	TEnemyManager::perform(flags, graphics);
-}
-
 void TNPCManager::makeCommonPartsModelDataKeeper_(u32 param_1,
                                                   const char* param_2,
                                                   TModelDataKeeper** param_3)
@@ -311,22 +242,83 @@ void TNPCManager::changeTextureToPollution_(J3DModelData* model)
 	}
 }
 
-void TMonteMBaseManager::changeTextureToStraw_(J3DModelData*) { }
-
-void TMonteWBaseManager::changeTextureToStraw_(J3DModelData*) { }
-
-TMareBaseManager::TMareBaseManager(const char* name)
-    : TNPCManager(name)
+void TMonteMBaseManager::changeTextureToStraw_(J3DModelData* model)
 {
-	if (mStaticBmtNormal == nullptr) {
-		mStaticBmtNormal = J3DModelLoaderDataBase::loadMaterialTable(
-		    JKRGetResource(cMareCommonNormalBmtName));
+	ResTIMG* strawTex
+	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
+	SMS_ChangeTextureAll(model, cMonteMDummyStrawTexName, *strawTex);
+}
+
+void TMonteWBaseManager::changeTextureToStraw_(J3DModelData* model)
+{
+	ResTIMG* strawTex
+	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteWRealStrawTexName);
+	SMS_ChangeTextureAll(model, cMonteWDummyStrawTexName, *strawTex);
+}
+
+J3DMaterialTable* TNPCManager::getBmt_(bool) { return nullptr; }
+
+SDLModelData* TNPCManager::getPartsSDLModelData(const char* name) const
+{
+	SDLModelData* result = nullptr;
+
+	if (unk5C != nullptr)
+		result = unk5C->getDataByName(name);
+
+	if (result == nullptr && unk60 != nullptr)
+		result = unk60->getDataByName(name);
+
+	return result;
+}
+
+void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
+{
+	f32 nearClip = unk54;
+	f32 farClip  = *unk58;
+
+	if (gpMarDirector->mMap == 1) {
+		CPolarSubCamera* cam = gpCamera;
+
+		// TODO: figure out these inlines. fabricatedInline3 matches in camera
+		// itself but not here for some reason...
+		if (gpCamera->isDemoCamera() || !gpCamera->fabricatedInline3())
+			if (farClip < 15000.0f)
+				farClip = 15000.0f;
 	}
 
-	if (mStaticBmtPollution == nullptr) {
-		mStaticBmtPollution = J3DModelLoaderDataBase::loadMaterialTable(
-		    JKRGetResource(cMareCommonPollutionBmtName));
+	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->mAspect,
+	                                   nearClip, farClip);
+
+	for (int i = 0, e = mObjNum; i < e; ++i) {
+		TBaseNPC* actor = (TBaseNPC*)unk18[i];
+
+		JGeometry::TVec3<f32> checkPos = actor->mPosition;
+		checkPos.y += 75.0f;
+
+		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
+		    && SMS_IsInOtherFastCube(checkPos)) {
+			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+			continue;
+		}
+
+		if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
+			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		} else {
+			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		}
 	}
+}
+
+void TNPCManager::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & CUE_ENTRY) {
+		for (int i = 0, e = mObjNum; i < e; ++i) {
+			TBaseNPC* npc = (TBaseNPC*)unk18[i];
+			npc->onLiveFlag(LIVE_FLAG_UNK1000000);
+		}
+	}
+
+	TEnemyManager::perform(cue, graphics);
 }
 
 TMonteMBaseManager::TMonteMBaseManager(const char* name)
@@ -357,6 +349,20 @@ TMareWBaseManager::TMareWBaseManager(const char* name)
 	                                &mStaticCommonKeeper);
 }
 
+TMareBaseManager::TMareBaseManager(const char* name)
+    : TNPCManager(name)
+{
+	if (mStaticBmtNormal == nullptr) {
+		mStaticBmtNormal = J3DModelLoaderDataBase::loadMaterialTable(
+		    JKRGetResource(cMareCommonNormalBmtName));
+	}
+
+	if (mStaticBmtPollution == nullptr) {
+		mStaticBmtPollution = J3DModelLoaderDataBase::loadMaterialTable(
+		    JKRGetResource(cMareCommonPollutionBmtName));
+	}
+}
+
 J3DMaterialTable* TMareBaseManager::getBmt_(bool pollution)
 {
 	if (pollution)
@@ -385,106 +391,91 @@ void TMonteWSpecialManager::createAnmData() { TObjManager::createAnmData(); }
 
 void TMonteMFManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x6, 0x10210000);
 }
 
 void TMonteMGManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x7, 0x10210000);
 }
 
 void TMonteMHManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x8, 0x10210000);
 }
 
 void TMonteWCManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0xC, 0x10210000);
 }
 
 void TMareMAManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0xE, 0x10210000);
 }
 
 void TMareMBManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0xF, 0x10210000);
 }
 
 void TMareMCManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x10, 0x10210000);
 }
 
 void TMareMDManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x11, 0x10210000);
 }
 
 void TMareWAManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x13, 0x10210000);
 }
 
 void TMareWBManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x14, 0x10210000);
 }
 
 void TKinopioManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x15, 0x10210000);
 }
 
 void TKinojiiManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x16, 0x10010000);
 }
 
 void TPeachManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x17, 0x10010000);
 }
 
 void TRaccoonDogManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	makeOriginalPartsModelDataKeeper_(0x18, 0x10210000);
 }
 
 void TSunflowerLManager::load(JSUMemoryInputStream& stream)
 {
-	TEnemyManager::load(stream);
-	unk3C = 250.0f;
+	TNPCManager::load(stream);
 	unk3C = 500.0f;
 }
 void TMonteMManager::createModelData()
@@ -496,17 +487,9 @@ void TMonteMManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
-
-	modelData = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMAManager::createModelData()
@@ -518,17 +501,9 @@ void TMonteMAManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
-
-	modelData = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMBManager::createModelData()
@@ -540,11 +515,7 @@ void TMonteMBManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMCManager::createModelData()
@@ -556,17 +527,9 @@ void TMonteMCManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
-
-	modelData = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMDManager::createModelData()
@@ -578,11 +541,7 @@ void TMonteMDManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMEManager::createModelData()
@@ -604,11 +563,7 @@ void TMonteMFManager::createModelData()
 
 	createModelDataArrayBase(entry, "/scene/monteM");
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMGManager::createModelData()
@@ -620,11 +575,7 @@ void TMonteMGManager::createModelData()
 
 	createModelDataArrayBase(entry, "/scene/monteMC");
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteMHManager::createModelData()
@@ -636,11 +587,7 @@ void TMonteMHManager::createModelData()
 
 	createModelDataArrayBase(entry, "/scene/monteMA");
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteMRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteMDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteWManager::createModelData()
@@ -652,17 +599,9 @@ void TMonteWManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteWRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteWDummyStrawTexName, *strawTex);
-
-	modelData = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteWAManager::createModelData()
@@ -674,17 +613,9 @@ void TMonteWAManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteWRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteWDummyStrawTexName, *strawTex);
-
-	modelData = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteWBManager::createModelData()
@@ -696,11 +627,7 @@ void TMonteWBManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteWRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteWDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMonteWCManager::createModelData()
@@ -712,11 +639,7 @@ void TMonteWCManager::createModelData()
 
 	createModelDataArrayBase(entry, "/scene/monteW");
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* strawTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cMonteWRealStrawTexName);
-	SMS_ChangeTextureAll(modelData, cMonteWDummyStrawTexName, *strawTex);
+	changeTextureToStraw_(getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMareMBaseManager::createModelData()
@@ -728,12 +651,8 @@ void TMareMBaseManager::createModelData()
 
 	createModelDataArrayBase(entry, "/scene/mareM");
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TMareWBaseManager::createModelData()
@@ -745,12 +664,8 @@ void TMareWBaseManager::createModelData()
 
 	createModelDataArrayBase(entry, "/scene/mareW");
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TKinopioManager::createModelData()
@@ -762,12 +677,8 @@ void TKinopioManager::createModelData()
 
 	createModelDataArray(entry);
 
-	J3DModelData* modelData
-	    = getModelDataKeeper()->getNthData(0)->getModelData();
-	ResTIMG* pollutionTex
-	    = (ResTIMG*)JKRFileLoader::getGlbResource(cRealPollutionTexName);
-	if (pollutionTex != nullptr)
-		SMS_ChangeTextureAll(modelData, cDummyPollutionTexName, *pollutionTex);
+	changeTextureToPollution_(
+	    getModelDataKeeper()->getNthData(0)->getModelData());
 }
 
 void TKinojiiManager::createModelData()

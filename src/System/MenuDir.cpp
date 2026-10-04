@@ -21,6 +21,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 TMenuDirector::TMenuDirector()
     : unk18(0)
@@ -40,7 +41,7 @@ TMenuDirector::TMenuDirector()
 
 TMenuDirector::~TMenuDirector()
 {
-	unk2C->offFlag(0x1);
+	unk2C->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("title");
 	if (arc)
 		arc->unmountFixed();
@@ -59,7 +60,7 @@ void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
 	unk14         = new JDrama::TDStageGroup(param_1);
 	unk2C         = param_2;
-	unk2C->mFlags = 1;
+	unk2C->mFlags = TMarioGamePad::PAD_FLAG_MENU_INPUT;
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
 	               gpSetupThreadStack + 0x10000, 0x10000, 0x11, 0);
 	OSResumeThread(&gSetupThread);
@@ -82,7 +83,7 @@ int TMenuDirector::rsetup()
 	unk3C = new J2DSetScreen("title.blo", arc);
 
 	if (!unk3C)
-		return 0;
+		return 1;
 
 	group2d->getChildren().push_back(new TMenuBase(unk3C));
 
@@ -142,7 +143,7 @@ int TMenuDirector::rsetup()
 		SMSMakeTextBuffer(textBox, 22);
 	}
 
-	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp;
+	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp("<DStageDisp>");
 	unk14->getChildren().push_back(stageDisp);
 
 	JDrama::TRect rect(0, 0, SMSGetTitleRenderWidth(),
@@ -150,7 +151,7 @@ int TMenuDirector::rsetup()
 	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
 
 	JDrama::TOrthoProj* camera
-	    = new JDrama::TOrthoProj(0.0f, 16.0f, 600.0f, 464.0f);
+	    = new JDrama::TOrthoProj(-1.0f, 1.0f, 16.0f, 464.0f, 0.0f, 600.0f);
 	group2d->getChildren().push_back(camera);
 
 	JDrama::TScreen* screen = new JDrama::TScreen(rect, "Screen 2D");
@@ -170,10 +171,10 @@ int TMenuDirector::direct()
 			return 0;
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
-		gpApplication.mFader->startFadeinT(0.25f);
-		if (TFlagManager::getInstance()->getBool(0x30007)) {
+		SMSGetApplication()->getFader()->startFadeinT(0.25f);
+		if (!TFlagManager::getInstance()->getBool(0x30007)) {
 			TFlagManager::getInstance()->setBool(true, 0x30007);
-			gpMSound->loadWave(MS_WAVE_UNK128);
+			SMSGetMSound()->loadWave(MS_WAVE_DEFAULT);
 		}
 		unk50 = true;
 	}
@@ -318,10 +319,8 @@ int TMenuDirector::direct()
 		if (unk44->checkFlag(0x1)) {
 			setFixedStageValue();
 			unk18 = 2;
-			gpApplication.mFader->startFadeoutT(0.25f);
-			TGameSequence nextArea;
-			nextArea.set(unk48, unk4C, 0);
-			gpApplication.setNextArea(nextArea);
+			SMSGetApplication()->getFader()->startFadeoutT(0.25f);
+			SMSGetApplication()->setNextArea(TGameSequence(unk48, unk4C));
 		} else if (unk44->checkFlag(0x2)) {
 			unk18 = 0;
 			unk40->unfade();
@@ -331,8 +330,8 @@ int TMenuDirector::direct()
 		break;
 
 	case 2:
-		if (gpApplication.mFader->isFullyFadedOut()
-		    && gpMSound->checkWaveOnAram(MS_WAVE_UNK128)) {
+		if (SMSGetApplication()->getFader()->isFullyFadedOut()
+		    && SMSGetMSound()->checkWaveOnAram(MS_WAVE_DEFAULT)) {
 			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
 				uVar13 = TApplication::APP_STATE_MOVIE;
 			else
@@ -341,7 +340,7 @@ int TMenuDirector::direct()
 		break;
 
 	case 3:
-		if (gpApplication.mFader->isFullyFadedOut())
+		if (SMSGetApplication()->getFader()->isFullyFadedOut())
 			uVar13 = TApplication::APP_STATE_QUIT;
 		break;
 	}
@@ -360,7 +359,7 @@ void TMenuDirector::setFixedStageValue()
 		int movie = unk4C;
 		if (unk48 == 0x12)
 			movie += 0x14;
-		gpApplication.mMovie = movie;
+		SMSGetApplication()->setMovie(movie);
 
 		unk48 = 0xf;
 		unk4C = 0;

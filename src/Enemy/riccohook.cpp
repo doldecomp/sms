@@ -1,8 +1,26 @@
 #include <Enemy/RiccoHook.hpp>
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
-#include <JSystem/JMath.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+
+// @non-matching -- the issue seems to stem from the JDrama TNameRefGen
+// search/push_back calls.
+THookTake::THookTake(TRiccoHook* owner, const char* name)
+    : TTakeActor(name)
+    , mOwner(owner)
+{
+	initHitActor(0x400000BB, 1, -0x80000000,
+	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
+	             mOwner->getSaveLoadParam()->mSLHitHeight.get(),
+	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
+	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
+
+	static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::search("オブジェクトグループ"))
+	    ->getChildren()
+	    .push_back(this);
+}
 
 MtxPtr THookTake::getTakingMtx() { return nullptr; }
 
@@ -19,7 +37,7 @@ BOOL THookTake::receiveMessage(THitActor* sender, u32 message)
 			return TRUE;
 		}
 
-		if (message == HIT_MESSAGE_UNK7 || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
 			mHeldObject = nullptr;
 			return TRUE;
 		}
@@ -28,35 +46,28 @@ BOOL THookTake::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-void THookTake::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THookTake::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((param_1 & 1) != 0) {
+	if ((cue & CUE_MOVE) != 0) {
 		mPosition = mOwner->getPosition();
 		mPosition.y -= 900.0f;
 	}
 
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, graphics);
 
-	if ((param_1 & 1) != 0 && mHeldObject != nullptr) {
+	if ((cue & CUE_MOVE) != 0 && mHeldObject != nullptr) {
 		moveHeldObject();
 	}
 }
 
-// @non-matching -- the issue seems to stem from the JDrama TNameRefGen
-// search/push_back calls.
-THookTake::THookTake(TRiccoHook* owner, const char* name)
-    : TTakeActor(name)
-    , mOwner(owner)
+THookParams::THookParams(const char* path)
+    : TSpineEnemyParams(path)
+    , PARAM_INIT(mSLHitHeight, 900.0f)
+    , PARAM_INIT(mSLHitRadius, 120.0f)
+    , PARAM_INIT(mSLHangRadius, 30.0f)
+    , PARAM_INIT(mSLMoveSpeed, 4.0f)
 {
-	initHitActor(0x400000BB, 1, -0x80000000,
-	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
-	             mOwner->getSaveLoadParam()->mSLHitHeight.get(),
-	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
-	             mOwner->getSaveLoadParam()->mSLHitHeight.get());
-
-	JDrama::TNameRefGen::search<TIdxGroupObj>("オブジェクトグループ")
-	    ->getChildren()
-	    .push_back(this);
+	TParams::load(mPrmPath);
 }
 
 TRiccoHook::TRiccoHook(const char* name)
@@ -87,23 +98,13 @@ BOOL TRiccoHook::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
-void TRiccoHook::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TRiccoHook::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSpineEnemy::perform(param_1, param_2);
-	mHookTake->perform(param_1, param_2);
-	if ((param_1 & 1) && mTimer > 0) {
+	TSpineEnemy::perform(cue, graphics);
+	mHookTake->perform(cue, graphics);
+	if ((cue & CUE_MOVE) && mTimer > 0) {
 		mTimer--;
 	}
-}
-
-THookParams::THookParams(const char* path)
-    : TSpineEnemyParams(path)
-    , PARAM_INIT(mSLHitHeight, 900.0f)
-    , PARAM_INIT(mSLHitRadius, 120.0f)
-    , PARAM_INIT(mSLHangRadius, 30.0f)
-    , PARAM_INIT(mSLMoveSpeed, 4.0f)
-{
-	TParams::load(mPrmPath);
 }
 
 TRiccoHookManager::TRiccoHookManager(const char* name)
@@ -130,8 +131,8 @@ TSpineEnemy* TRiccoHookManager::createEnemyInstance() { return nullptr; }
 // Can't find any other way to get the * 1.0f's to emit
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
-	f32 c = radius * JMACos(theta);
-	f32 s = radius * JMASin(theta);
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
@@ -140,13 +141,13 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 	TRiccoHook* self = (TRiccoHook*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		f32 y                        = self->getRotation().y;
-		JGeometry::TVec3<f32>& polar = polarXZ(y, 1.0f);
+		f32 y                              = self->getRotation().y;
+		const JGeometry::TVec3<f32>& polar = polarXZ(y, 1.0f);
 
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	if (vecdist(self->unk104.getPoint(), self->getPosition()) < 10.0f) {
+	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {

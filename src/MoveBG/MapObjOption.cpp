@@ -12,24 +12,18 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
-
 void TFileLoadBlock::makeBlockNoCard() { }
 
 void TFileLoadBlock::makeBlockNormal()
 {
 	startAnim(0);
-	mState = 1;
+	mState = STATE_NORMAL;
 }
 
 void TFileLoadBlock::makeBlockRock()
 {
 	startAnim(1);
-	mState = 2;
+	mState = STATE_ROCKING;
 }
 
 static int sRumbleTime = 8;
@@ -39,24 +33,23 @@ void TFileLoadBlock::pushed()
 	startBck("fileloadblock");
 	gpCardLoad->setSelected(unk138);
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
-	gpMarioParticleManager->emit(0x6E, &unk144, 0, nullptr);
-	gpMarioParticleManager->emit(0x39, &unk144, 0, nullptr);
-	mTimeTilAppear         = 0x78;
-	unk13C->mTimeTilAppear = 0x78;
-	unk140->mTimeTilAppear = 0x78;
+	gpMarioParticleManager->emit(MAP_MAP_MS_M_FILEBLOCK, &unk144, 0, nullptr);
+	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk144, 0, nullptr);
+	mStateTimer         = 120;
+	unk13C->mStateTimer = 120;
+	unk140->mStateTimer = 120;
 }
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
 {
-	if (isState(1) && marioHeadAttack() && !isWaitingToAppear()) {
+	if (isState(STATE_NORMAL) && marioHeadAttack() && !isStateTimerEngaged())
 		pushed();
-	}
 }
 
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
-
-	if (isState(1) && message == HIT_MESSAGE_UNK2 && !isWaitingToAppear()) {
+	if (isState(STATE_NORMAL) && message == HIT_MESSAGE_PUSH_UP
+	    && !isStateTimerEngaged()) {
 		pushed();
 		return true;
 	}
@@ -69,20 +62,20 @@ void TFileLoadBlock::loadAfter()
 	TMapObjBase::loadAfter();
 
 	if (unk138 == 0) {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＢ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	} else if (unk138 == 1) {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＣ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＡ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＣ"));
 	} else {
-		unk13C
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＡ");
-		unk140
-		    = JDrama::TNameRefGen::search<TFileLoadBlock>("ロードブロックＢ");
+		unk13C = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＡ"));
+		unk140 = static_cast<TFileLoadBlock*>(
+		    JDrama::TNameRefGen::search("ロードブロックＢ"));
 	}
 }
 

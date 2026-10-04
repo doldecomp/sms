@@ -142,7 +142,7 @@ inline void TBaseNPC::emitPollutionParticle_(int particle, MtxPtr mtx)
 {
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	        particle, mtx, 0, nullptr)) {
-		emitter->setScale(getEffectScale_());
+		emitter->setGlobalScale(getEffectScale_());
 		SMSSetEmitterPolColor(emitter, 6);
 	}
 }
@@ -184,7 +184,7 @@ inline void TBaseNPC::emitWashEffect_()
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
 		        particle, mPollutionEffectMtxPtr, 1, this)) {
-			emitter->setScale(getEffectScale_());
+			emitter->setGlobalScale(getEffectScale_());
 			SMSSetEmitterPolColor(emitter, 6);
 		}
 	}
@@ -208,7 +208,8 @@ inline bool TBaseNPC::isPolWaitCEffectEmitTime_() const
 	}
 
 	if (checkFrames)
-		result = IsCheckPassFrame(mMActor->getFrameCtrl(0), checkFrames);
+		result = IsCheckPassFrame(mMActor->getFrameCtrl(ANM_TYPE_BCK),
+		                          checkFrames);
 
 	return result;
 }
@@ -216,13 +217,15 @@ inline bool TBaseNPC::isPolWaitCEffectEmitTime_() const
 inline bool TBaseNPC::isPolWaitLEffectEmitTime_() const
 {
 	static const f32 sCheckFrameMonte[] = { 28.0f, 52.0f, 76.0f, -1.0f };
-	return IsCheckPassFrame(mMActor->getFrameCtrl(0), sCheckFrameMonte);
+	return IsCheckPassFrame(mMActor->getFrameCtrl(ANM_TYPE_BCK),
+	                        sCheckFrameMonte);
 }
 
 inline bool TBaseNPC::isPolWaitREffectEmitTime_() const
 {
 	static const f32 sCheckFrameMonte[] = { 128.0f, 152.0f, 176.0f, -1.0f };
-	return IsCheckPassFrame(mMActor->getFrameCtrl(0), sCheckFrameMonte);
+	return IsCheckPassFrame(mMActor->getFrameCtrl(ANM_TYPE_BCK),
+	                        sCheckFrameMonte);
 }
 
 void TBaseNPC::emitParticle_()

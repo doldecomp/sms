@@ -1,4 +1,4 @@
-name: marioEU
+name: mario
 object_base: orig/GMSP01
 object: sys/main.dol
 
@@ -11,3 +11,27 @@ splits: config/GMSP01/splits.txt
 mw_comment_version: 8 # GC Linker 1.2.5
 symbols_known: true # Very fast analysis
 fill_gaps: false # Alignments known
+
+# MSoundBGMId constants (0x800100xx) that the tracker pairs into .text
+block_relocations:
+  - source: 0x80162B88
+  - source: 0x80162B8C
+  - source: 0x80168B58
+  - source: 0x80168B60
+  - source: 0x802906F8
+  - source: 0x802906FC
+  - source: 0x80290740
+  - source: 0x80290744
+  - source: 0x802B392C
+  - source: 0x802B3C50
+  - source: 0x802B3C60
+  - source: 0x802B3CA0
+  - source: 0x802B3CA8
+  - source: 0x802B3E18
+  - source: 0x802B3E1C
+  - source: 0x802B3E30
+  - source: 0x802B3E34
+  - source: 0x802B3E48
+  - source: 0x802B3E58
+  - source: 0x802B3F88
+  - source: 0x802B3F90

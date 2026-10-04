@@ -28,7 +28,7 @@ void TNpcInbetween::execMotionBlend(MActor* mactor)
 		J3DAnmTransform* anm = mactor->getBckOldMotionBlendAnmPtr();
 
 		if (anm != nullptr) {
-			J3DFrameCtrl ctrl = *mactor->getFrameCtrl(0);
+			J3DFrameCtrl ctrl = *mactor->getFrameCtrl(ANM_TYPE_BCK);
 			ctrl.update();
 			anm->setFrame(ctrl.getFrame());
 			ratio = mForcedBlendRatio;

@@ -18,18 +18,12 @@ public:
 	/* 0x18 */ M3UMtxCalcSIAnmBlendQuat* unk18;
 };
 
-class M3UMarioMtxCalcSetInfo {
-public:
-	/* 0x0 */ u16 mJointIdx;
-	/* 0x2 */ u8 unk2; // unknown
-	/* 0x3 */ u8 mMtxCalcIdx;
-	/* 0x4 */ u16 mAnmTransformIdx[2];
-	/* 0x8 */ u8 mFrameCtrlIdx;
-	/* 0xA */ u16 unkA;
-	/* 0xC */ u16 unkC;
-	/* 0xE */ u16 unkE;
-	/* 0x10 */ u16 unk10;
-	/* 0x12 */ u16 unk12;
+struct SomeModelMarioStruct {
+	/* 0x0 */ s16 unk0;
+	/* 0x2 */ u8 unk2;
+	/* 0x3 */ u8 unk3;
+	/* 0x4 */ u16 unk4[2];
+	/* 0x8 */ u8 unk8;
 };
 
 class M3UModelMario : public M3UModel {
@@ -42,7 +36,7 @@ public:
 
 public:
 	/* 0x20 */ M3UModelCommonMario* unk20;
-	/* 0x24 */ M3UMarioMtxCalcSetInfo* unk24;
+	/* 0x24 */ SomeModelMarioStruct* unk24;
 	/* 0x28 */ J3DMtxCalcSoftimage unk28;
 };
 

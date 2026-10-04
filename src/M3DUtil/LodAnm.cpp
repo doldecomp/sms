@@ -28,7 +28,7 @@ bool TLodAnm::setBckAnm_(int param_1)
 
 	bool result = false;
 
-	int iVar3 = mOwner->getMActor()->getCurAnmIdx(0);
+	int iVar3 = mOwner->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 
 	int tmp;
 	if (mLodAnmIndexTable == nullptr)
@@ -60,7 +60,7 @@ bool TLodAnm::setBtpAnm_(int param_1)
 
 	bool result = false;
 
-	int iVar3 = mOwner->getMActor()->getCurAnmIdx(3);
+	int iVar3 = mOwner->getMActor()->getCurAnmIdx(ANM_TYPE_BTP);
 
 	int tmp = mLodAnmIndexTable[param_1].unk8[unk8];
 

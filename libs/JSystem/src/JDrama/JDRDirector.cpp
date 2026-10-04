@@ -1,0 +1,56 @@
+#include <JSystem/JDrama/JDRDirector.hpp>
+#include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JDrama/JDRCamera.hpp>
+#include <JSystem/JDrama/JDRActor.hpp>
+
+using namespace JDrama;
+
+TNameRef* TDirector::searchF(u16 key, const char* name)
+{
+	TNameRef* res = TNameRef::searchF(key, name);
+	if (res)
+		return res;
+
+	if (unk10) {
+		TNameRef* r = unk10->searchF(key, name);
+		if (r)
+			return r;
+	}
+
+	if (unk14) {
+		TNameRef* r = unk14->searchF(key, name);
+		if (r)
+			return r;
+	}
+
+	return nullptr;
+}
+
+int TDirector::direct()
+{
+	TGraphics graphics;
+	graphics.unk0 = 1;
+	unk10->testPerform(CUE_MOVE | CUE_CALC_ANIM, &graphics);
+	graphics.unk0 = 0;
+	unk14->testPerform(CUE_DRAW, &graphics);
+	return 0;
+}
+
+JStage::TObject* TDirector::JSGFindObject(const char* name,
+                                          JStage::TEObject type) const
+{
+	TDirector* self     = const_cast<TDirector*>(this);
+	TNameRef* candidate = self->search(name);
+
+	if (candidate) {
+		switch (candidate->getType()) {
+		case 1:
+			return static_cast<TCamera*>(candidate);
+
+		case 2:
+			return static_cast<TActor*>(candidate);
+		}
+	}
+
+	return nullptr;
+}

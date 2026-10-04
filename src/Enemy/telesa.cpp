@@ -7,6 +7,7 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JMath.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
@@ -18,6 +19,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/MtxUtil.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MoveBG/MapObjManager.hpp>
@@ -70,20 +72,17 @@ TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     , PARAM_INIT(mSLTelesaPowerByWater, 40.0f)
     , PARAM_INIT(mSLLoopAppearTime, 100)
     , PARAM_INIT(mSLLoopHideTime, 100)
-    , unk458(0.0f)
-    , unk45C(1.0f)
-    , unk460(0.0f)
-    , unk464(1.0f)
-    , unk468(0.0f)
-    , unk46C(1.0f)
+    , unk458(0.0f, 1.0f)
+    , unk460(0.0f, 1.0f)
+    , unk468(0.0f, 1.0f)
 {
 	TParams::load(mPrmPath);
-	unk458 = mSLFlyHeightMin.get();
-	unk45C = mSLFlyHeightMax.get();
-	unk460 = mSLFlyAmplitudeMin.get();
-	unk464 = mSLFlyAmplitudeMax.get();
-	unk468 = mSLFlyFrequencyMin.get();
-	unk46C = mSLFlyFrequencyMax.get();
+	unk458.mMin = mSLFlyHeightMin.get();
+	unk458.mMax = mSLFlyHeightMax.get();
+	unk460.mMin = mSLFlyAmplitudeMin.get();
+	unk460.mMax = mSLFlyAmplitudeMax.get();
+	unk468.mMin = mSLFlyFrequencyMin.get();
+	unk468.mMax = mSLFlyFrequencyMax.get();
 }
 
 TTelesaManager::TTelesaManager(const char* name)
@@ -98,9 +97,10 @@ void TTelesaManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new TTelesaSaveLoadParams("/enemy/telesa.prm");
 
-	void* data = JKRGetResource("/scene/telesa/modoki.bmd");
-	mModokiTelesaModel
-	    = new SDLModelData(J3DModelLoaderDataBase::load(data, 0x11020000));
+	void* data         = JKRGetResource("/scene/telesa/modoki.bmd");
+	mModokiTelesaModel = new SDLModelData(J3DModelLoaderDataBase::load(
+	    data, J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+	              | (2 << J3DMLF_TevStageNumShift)));
 
 	TSmallEnemyManager::load(stream);
 }
@@ -153,10 +153,9 @@ void TTelesaManager::telesaForceKill()
 		}
 	}
 	if (anyKilled) {
-		Vec* pos = &getObj(0)->mPosition;
-		if (gpMSound->gateCheck(MSD_SE_EN_TELESA_DISAPPEAR))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_TELESA_DISAPPEAR, pos, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_DISAPPEAR,
+		                                &getObj(0)->mPosition, 0, nullptr, 0,
+		                                4);
 	}
 }
 
@@ -233,17 +232,17 @@ void TTelesa::init(TLiveManager* manager)
 
 	setFlyParam(1.0f);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img    = tex->getTexture()->getTexInfo();
 	J3DSkinDeform* deform = new J3DSkinDeform;
 	mMActor->getModel()->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	mMActor->resetDL();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(), "H_ma_rak_dummy",
 	                     *img);
-	mMActor->setLightType(3);
+	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	if (mInstanceIndex == 0) {
-		for (u16 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
+		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i)
 			;
 	}
 
@@ -279,29 +278,29 @@ void TTelesa::reset()
 	mTelesaBaseColor = cTelesaColor[0];
 }
 
-void TTelesa::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
-			if (param_1 & 2) {
+			if (cue & CUE_CALC_ANIM) {
 				const TBGCheckData* pTStack_5c;
-				gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z,
-				                   &pTStack_5c);
+				f32 ground = gpMap->checkGround(mPosition.x, mPosition.y,
+				                                mPosition.z, &pTStack_5c);
 				Mtx afStack_58;
-				MsMtxSetXYZRPH(afStack_58, mPosition.x, mPosition.y,
-				               mPosition.z, mRotation.x, mRotation.y,
-				               mRotation.z);
-				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStack_58);
-				J3DModel* model = mImitatedBmd->getMActor()->getModel();
-				model->unk14    = JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
+				MtxPtr afStackPtr = afStack_58;
+				MsMtxSetXYZRPH(afStackPtr, mPosition.x, ground, mPosition.z,
+				               mRotation.x, mRotation.y, mRotation.z);
+				mImitatedBmd->getMActor()->getModel()->setBaseTRMtx(afStackPtr);
+				mImitatedBmd->getMActor()->getModel()->setBaseScale(
+				    JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 			}
 
-			if (param_1 & 0x200)
+			if (cue & CUE_ENTRY)
 				mImitatedBmd->getMActor()->setLightData(mGroundPlane,
 				                                        mPosition);
 
-			mImitatedBmd->getMActor()->perform(param_1, param_2);
+			mImitatedBmd->getMActor()->perform(cue, graphics);
 		}
 	}
 }
@@ -315,16 +314,15 @@ void TTelesa::drawObject(JDrama::TGraphics* param_1)
 // TODO: wild guess
 void TTelesa::setFlyParam(f32 param_1)
 {
-	// TODO: random interval stuff :(
-	mTargetFlyHeight = MsRandF(unk194->unk458, unk194->unk45C);
+	mTargetFlyHeight = unk194->unk458.rand();
 	mTargetFlyHeight *= param_1;
 	mCurrentFlyHeight = 0.0f;
 
-	mFlyBobAmplitude = MsRandF(unk194->unk460, unk194->unk464);
+	mFlyBobAmplitude = unk194->unk460.rand();
 	mFlyBobAmplitude *= param_1;
 	mFlyBobPhase = 0.0f;
 
-	mFlyBobFrequency = MsRandF(unk194->unk468, unk194->unk46C);
+	mFlyBobFrequency = unk194->unk468.rand();
 }
 
 void TTelesa::setBehavior()
@@ -340,8 +338,8 @@ void TTelesa::setBehavior()
 		mFlyBobPhase = 0.0f;
 
 	f32 phase      = (mFlyBobPhase * 360.0f) / mFlyBobFrequency;
-	mFlyBobOffsetY = mFlyBobAmplitude * JMASin(phase);
-	f32 newRotX    = 10.0f - mFlyAngMax * JMACos(phase);
+	mFlyBobOffsetY = mFlyBobAmplitude * MsSin(phase);
+	f32 newRotX    = 10.0f - mFlyAngMax * MsCos(phase);
 	if (abs(newRotX - mRotation.x) > 5.0f)
 		mRotation.x == -newRotX; // HUH???
 	else
@@ -437,7 +435,7 @@ void TTelesa::calcRootMatrix()
 	if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 		for (u16 i = 0;
 		     i < mMActor->getModel()->getModelData()->getMaterialNum(); ++i) {
-			Mtx afStack_94;
+			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
 			mMActor->getModel()
 			    ->getModelData()
@@ -449,14 +447,16 @@ void TTelesa::calcRootMatrix()
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x187, mMActor->getModel()->getAnmMtx(4), 1, this)) {
-			emitter->unk180.a = mTelesaFadeColor.a;
+		        PARTICLE_MS_TLS_YODARE_L, mMActor->getModel()->getAnmMtx(4), 1,
+		        this)) {
+			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        0x188, mMActor->getModel()->getAnmMtx(4), 1, this)) {
-			emitter->unk180.a = mTelesaFadeColor.a;
+		        PARTICLE_MS_TLS_YODARE_S, mMActor->getModel()->getAnmMtx(3), 1,
+		        this)) {
+			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
 
@@ -492,7 +492,7 @@ void TTelesa::bind()
 		    = gpMap->checkGround(nextPos.x, nextPos.y + mHeadHeight + 200.0f,
 		                         nextPos.z, &mGroundPlane);
 
-		if (unk184 == nullptr
+		if (unk184 == 0
 		    && mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 			if (unk124->getGraph() && !unk124->getGraph()->isDummy()) {
 				JGeometry::TVec3<f32> VStack_24;
@@ -507,7 +507,7 @@ void TTelesa::bind()
 	if (nextPos.y <= mGroundHeight + 0.05f) {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);
-		if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve())
+		if (mSpine->getCurrentNerve() == &TNerveTelesaDie::theNerve())
 			nextPos.y = mGroundHeight;
 	} else {
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -554,13 +554,11 @@ bool TTelesa::changeByJuice()
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 		mSpine->pushAfterCurrent(&TNerveTelesaFreeze::theNerve());
 
-		if (gpMSound->gateCheck(MSD_SE_EN_TELESA_FIX))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_TELESA_FIX, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_FIX, &mPosition, 0,
+		                                nullptr, 0, 4);
 
-		if (gpMSound->gateCheck(MSD_SE_OBJ_AWAY_INTO_GRAF))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition,
+		                                0, nullptr, 0, 4);
 
 		unk185 = 1;
 
@@ -582,13 +580,12 @@ void TTelesa::scalingChangeActor()
 void TTelesa::changeOut()
 {
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	if (gpMSound->gateCheck(MSD_SE_EN_TELSA_RECOVER))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELSA_RECOVER,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
+	                                nullptr, 0, 4);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mPosition = mJuiceBlock->mPosition;
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
-	getMActor()->setFrameRate(SMSGetAnmFrameRate(), 0);
+	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
 }
@@ -687,7 +684,7 @@ void TTelesa::initAttacker(THitActor* param_1)
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
 	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
-	mPosition.set(mtx[3][0], mtx[3][1] - 150.0f, mtx[3][2]);
+	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
 	mVelocity.set(0.0f, 8.0f, 0.0f);
@@ -700,12 +697,11 @@ void TTelesa::initAttacker(THitActor* param_1)
 	offHitFlag(HIT_FLAG_UNK10000000);
 	unk150 &= ~0x40;
 	onLiveFlag(LIVE_FLAG_HIDDEN);
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
 
-	if (gpMSound->gateCheck(MSD_SE_EN_TELESA_APPEAR))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELESA_APPEAR,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TTelesa::initItemAttacker(THitActor* param_1)
@@ -720,11 +716,10 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 
 	setFlyParam(1.0f);
 	unk150 &= ~0x40;
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mHeadHeight = 250.0f;
-	if (gpMSound->gateCheck(MSD_SE_EN_TELESA_APPEAR))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_TELESA_APPEAR,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELESA_APPEAR, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TTelesa::setAttacker()
@@ -763,10 +758,7 @@ void TTelesa::setAttackPoint()
 
 	f32 dx = SMS_GetMarioPos().x - mPosition.x;
 	f32 dz = SMS_GetMarioPos().z - mPosition.z;
-	// TODO: random interval
-	volatile f32 minR = 0.7f;
-	volatile f32 maxR = 1.6f;
-	f32 r             = MsRandF(minR, maxR);
+	f32 r  = TMsRange<f32>(0.7f, 1.6f).rand();
 
 	pos.x += dx * r;
 	pos.z += dz * r;
@@ -776,7 +768,7 @@ void TTelesa::setAttackPoint()
 
 void TTelesa::setFirstAttackPoint()
 {
-	TRotation3f SStack_78; // TODO: uuuuuh...
+	TPosition3f SStack_78;
 
 	if (unk184)
 		mRotation.y = 180.0f - mInstanceIndex * 720.0f;
@@ -784,11 +776,9 @@ void TTelesa::setFirstAttackPoint()
 	JGeometry::TVec3<f32> pos = mPosition;
 
 	// TODO: probably done via TRotation calls? Why is is all so inlined ;(
-	f32 s = JMASin(mRotation.y);
-	f32 c = JMACos(mRotation.y);
-
-	pos.x += c * 1000.0f;
-	pos.z += s * 1000.0f;
+	s16 angle = DEG2SHORTANGLE(mRotation.y);
+	pos.x += JMASSin(angle) * 1000.0f;
+	pos.z += JMASCos(angle) * 1000.0f;
 
 	setGoalPath(TPathNode(pos));
 }
@@ -812,7 +802,7 @@ void TTelesa::setTypeCanSee()
 	mTelesaType = TELESA_TYPE_CAN_SEE;
 	mFadeState  = FADE_STATE_VISIBLE;
 	offLiveFlag(LIVE_FLAG_HIDDEN);
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 }
 
 void TTelesa::changeTevKColor()
@@ -832,7 +822,7 @@ void TTelesa::changeTevKColor()
 				loopAppearTime = unk194->mSLAppearTime.get();
 			if (mFadeLoopTimer <= loopAppearTime)
 				break;
-			mMActor->setLightType(3);
+			mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 			mFadeState     = FADE_STATE_FADE_OUT;
 			mFadeLoopTimer = 0;
 			break;
@@ -864,7 +854,7 @@ void TTelesa::changeTevKColor()
 			mFadeState         = FADE_STATE_VISIBLE;
 			mFadeTimer         = 0;
 			mTelesaFadeColor.a = 0xff;
-			mMActor->setLightType(1);
+			mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		} else {
 			mTelesaFadeColor.a = progress;
 		}
@@ -953,7 +943,7 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 
-	stream.read(&mImitationIndex, 0x4);
+	stream >> mImitationIndex;
 
 	SDLModelData* modelToUse = ((TTelesaManager*)mManager)->mModokiTelesaModel;
 	switch (mImitationIndex) {
@@ -961,63 +951,63 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 
 	case 1:
 		if (void* data = JKRGetResource("/scene/mapObj/coin.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 2:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_red.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 3:
 		if (void* data = JKRGetResource("/scene/mapObj/coin_blue.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 4:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitBanana.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 5:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitDurian.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 6:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPapaya.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 7:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitPine.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 8:
 		if (void* data = JKRGetResource("/scene/mapObj/fruitCoconut.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 9:
 		if (void* data = JKRGetResource("/scene/mapObj/mashroom1up.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 10:
 		if (void* data = JKRGetResource("/scene/mapObj/kibako.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 11:
 		if (void* data = JKRGetResource("/scene/mapObj/woodbarrel.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	case 12:
 		if (void* data = JKRGetResource("/scene/monteM/mom_model.bmd"))
-			modelToUse = new SDLModelData(
-			    J3DModelLoaderDataBase::load(data, 0x10020000));
+			modelToUse = new SDLModelData(J3DModelLoaderDataBase::load(
+			    data, J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift)));
 		break;
 	}
 
@@ -1046,8 +1036,8 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 	TSharedParts* imitatedItem = self->mImitatedBmd;
 
-	if (gpApplication.mCurrArea.unk0 != 7
-	    && gpApplication.mCurrArea.unk0 != 14) {
+	if (SMSGetApplication()->mCurrArea.getStage() != 7
+	    && SMSGetApplication()->mCurrArea.getStage() != 14) {
 		if (spine->getTime() == 0 && imitatedItem != nullptr) {
 			((TMarioModokiTelesa*)self)->imitateAnm();
 			imitatedItem->getMActor()->setBckFromIndex(0);
@@ -1064,7 +1054,7 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	self->walkBehavior(3, 1.0f);
 
 	if (spine->getTime() == 10) {
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 
 		if (imitatedItem != nullptr) {
 			((TMarioModokiTelesa*)self)->imitateAnm();
@@ -1082,26 +1072,23 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		// TODO: this is an inline
 
-		if (!self->resetBaseGround()) {
-			if (self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware))
-				return false;
+		if (self->resetBaseGround()
+		    || self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware)) {
+			gpMarioParticleManager->emitAndBindToPosPtr(
+			    PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr);
+
+			self->mImitatedBmd = nullptr;
+			self->setFlyParam(1.0f);
+
+			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+
+			SMSGetMSound()->startSoundActor(MSD_SE_EN_KM_TELSA_REVEAL,
+			                                &self->mPosition, 0, nullptr, 0, 4);
+
+			// end of inline
+
+			return true;
 		}
-
-		gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &self->mPosition, 0,
-		                                            nullptr);
-
-		self->mImitatedBmd = nullptr;
-		self->setFlyParam(1.0f);
-
-		spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-
-		if (gpMSound->gateCheck(MSD_SE_EN_KM_TELSA_REVEAL))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_KM_TELSA_REVEAL, &self->mPosition, 0, nullptr, 0, 4);
-
-		// end of inline
-
-		return true;
 	}
 
 	return false;
@@ -1121,7 +1108,8 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 		}
 
 		if (self->getUnk184()) {
-			gpMarioParticleManager->emit(0xCD, &self->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+			                             &self->mPosition, 0, nullptr);
 		} else {
 			self->setBckAnm(2);
 		}
@@ -1132,7 +1120,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 	if (self->checkCurAnmEnd(0) || self->getUnk184()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
-		self->offLiveFlag(LIVE_FLAG_UNK10000);
+		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->onHitFlag(HIT_FLAG_NO_COLLISION);
 		self->stopAnmSound();
@@ -1162,7 +1150,7 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
-		self->setGoalPathMario();
+		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 	} else if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(4)) {
 			if (!self->isFlying()) {
@@ -1228,7 +1216,10 @@ TSmallEnemy* TKageMarioModokiManager::createEnemyInstance()
 void TKageMarioModokiManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "default.bmd", 0x11020000, 0 },
+		{ "default.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -1245,10 +1236,10 @@ void TKageMarioModoki::init(TLiveManager* manager)
 	TWalkerEnemy::init(manager);
 	mSpine->initWith(&TNerveKageMarioModokiWait::theNerve());
 	mMActor->resetDL();
-	mMActor->setLightType(3);
+	mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 
-	TScreenTexture* tex
-	    = JDrama::TNameRefGen::search<TScreenTexture>("スクリーンテクスチャ");
+	TScreenTexture* tex = static_cast<TScreenTexture*>(
+	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 	const ResTIMG* img = tex->getTexture()->getTexInfo();
 	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
 	                     "H_kagemario_dummy", *img);
@@ -1266,8 +1257,8 @@ DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD) && self->isFindMario(1.0f)) {
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
-		        0xCD, &self->mPosition, 0, nullptr)) {
-			emitter->setScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+		        PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr)) {
+			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 		}
 
 		self->onLiveFlag(LIVE_FLAG_DEAD);

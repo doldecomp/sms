@@ -27,11 +27,12 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 	if (count != 0 && actor->getInstanceIndex() >= count) {
 		TLiveActor* other = manager->getObj(actor->getInstanceIndex() % count);
 
-		int anmIdx = other->getMActor()->getCurAnmIdx(0);
+		int anmIdx = other->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		mActor->setBckFromIndex(anmIdx);
 
-		J3DFrameCtrl* myCtrl    = mActor->getFrameCtrl(0);
-		J3DFrameCtrl* otherCtrl = other->getMActor()->getFrameCtrl(0);
+		J3DFrameCtrl* myCtrl = mActor->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* otherCtrl
+		    = other->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		myCtrl->setFrame(otherCtrl->getFrame());
 	} else if (actor->getActorType() != 0x800001) {
 		// not the right type, skip animation setup
@@ -41,7 +42,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 			int lo     = CLBPalFrame<int>(150);
 			int* timer = actor->mFrameTimer;
 			timer[0]   = 0;
-			timer[1]   = lo + (int)((f32)(hi - lo) * (MsRandF())) + 1;
+			timer[1]   = MsRandI(hi, lo);
 		}
 
 		int* timer = actor->mFrameTimer;
@@ -50,17 +51,21 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 			timer[0] = timer[1];
 		}
 
-		BOOL anmEndsNext = mActor->curAnmEndsNext(0, 0);
+		BOOL anmEndsNext = mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr);
 
-		if (mActor->getCurAnmIdx(0) == 1 && anmEndsNext) {
-			if (!mActor->checkCurBckFromIndex(0))
-				mActor->setBckFromIndex(0);
+		switch (mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
+		case 1:
+			if (anmEndsNext) {
+				if (!mActor->checkCurBckFromIndex(0))
+					mActor->setBckFromIndex(0);
 
-			int hi     = CLBPalFrame<int>(500);
-			int lo     = CLBPalFrame<int>(150);
-			int* timer = actor->mFrameTimer;
-			timer[0]   = 0;
-			timer[1]   = lo + (int)((f32)(hi - lo) * (MsRandF())) + 1;
+				int hi     = CLBPalFrame<int>(500);
+				int lo     = CLBPalFrame<int>(150);
+				int* timer = actor->mFrameTimer;
+				timer[0]   = 0;
+				timer[1]   = MsRandI(hi, lo);
+			}
+			break;
 		}
 	}
 
@@ -81,9 +86,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 			actor->goToRandomNextGraphNode();
 			actor->resetRandomCurPathNode();
 
-			const JGeometry::TVec3<f32>& fwdPos = actor->unkF4.getPoint();
-
-			if (actor->mPosition.y <= fwdPos.y) {
+			if (actor->mPosition.y <= actor->getUnkF4().getPoint().y) {
 				if (!mActor->checkCurBckFromIndex(1))
 					mActor->setBckFromIndex(1);
 
@@ -91,7 +94,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 				int lo     = CLBPalFrame<int>(60);
 				int* timer = actor->mFrameTimer;
 				timer[0]   = 0;
-				timer[1]   = lo + (int)((f32)(hi - lo) * (MsRandF())) + 1;
+				timer[1]   = MsRandI(lo, hi);
 			} else {
 				if (!mActor->checkCurBckFromIndex(0))
 					mActor->setBckFromIndex(0);
@@ -100,7 +103,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 				int lo     = CLBPalFrame<int>(150);
 				int* timer = actor->mFrameTimer;
 				timer[0]   = 0;
-				timer[1]   = lo + (int)((f32)(hi - lo) * (MsRandF())) + 1;
+				timer[1]   = MsRandI(lo, hi);
 			}
 		}
 	}

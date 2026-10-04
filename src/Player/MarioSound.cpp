@@ -1,6 +1,7 @@
 #include <Player/Mario.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Player/Yoshi.hpp>
+#include <Map/PollutionLayer.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <Map/MapData.hpp>
 #include <System/Application.hpp>
@@ -23,7 +24,7 @@ void TMario::soundMovement()
 	bool hasShineHolder = true;
 	u32 curStatus       = mStatus;
 
-	if (SMSGetMSound()->unkA8 & 1)
+	if (SMSGetMSound()->mSeGateMask & MSSeGate_Continuous)
 		mSoundValues.unk18 = 0;
 	else
 		mSoundValues.unk18 = 1;
@@ -256,10 +257,10 @@ void TMario::soundMovement()
 		}
 
 		if (mColCount != 0) {
-			if (*mCollisions != nullptr) {
+			if (mCollisions[0] != nullptr) {
 				mSoundValues.unk29 = 4;
-				mSoundValues.unk14 = (*mCollisions)->mActorType;
-				if ((*mCollisions)->checkActorType(0x04000000))
+				mSoundValues.unk14 = mCollisions[0]->mActorType;
+				if (mCollisions[0]->checkActorType(0x04000000))
 					mSoundValues.unk28 = 1;
 				else
 					mSoundValues.unk28 = 2;
@@ -482,7 +483,7 @@ void TMario::soundMovement()
 			}
 		} else if (curStatus == MARIO_STATUS_FORCE_JUMP
 		           && mSoundValues.unk00 != MARIO_STATUS_FORCE_JUMP
-		           && gpApplication.mCurrArea.getStage() == 2) {
+		           && SMSGetApplication()->mCurrArea.getStage() == 2) {
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_ROPE_JUMP_C, &mPosition,
 			                                0, nullptr, 0, 4);
 			if (mHealth > 2) {
@@ -623,9 +624,9 @@ void TMario::animSound()
 	mSoundFlags = mGroundPlane->unk6;
 
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
-		if (unk350 == 0
-		    && unk368 >= mGraffitoParams.mSinkTime.get()
-		                     * mGraffitoParams.mSinkDmgDepth.get())
+		if (mPollutionTypeStandingOn == POLLUTION_TYPE_SINK
+		    && mSinkTimer >= mGraffitoParams.mSinkTime.get()
+		                         * mGraffitoParams.mSinkDmgDepth.get())
 			mSoundFlags |= 0x600;
 		else
 			mSoundFlags |= 0x500;
@@ -643,8 +644,8 @@ void TMario::animSound()
 		}
 	}
 
-	if (unk368 > 0.0f ? TRUE : FALSE) {
-		if (-(unk368 / mGraffitoParams.mSinkTime.get())
+	if (isSinking()) {
+		if (-(mSinkTimer / mGraffitoParams.mSinkTime.get())
 		        * mGraffitoParams.mSinkHeight.get()
 		    > 30.0f)
 			mSoundFlags |= 0x400;
@@ -667,9 +668,9 @@ void TMario::animSound()
 	else
 		mSoundFlags |= 0x1000;
 
-	if (unk388 == 1)
+	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO)
 		mSoundFlags |= 0x20000000;
-	else if (unk388 == 2)
+	else if (mPlayerType == PLAYER_TYPE_MONTE_MAN)
 		mSoundFlags |= 0x60000000;
 
 	mSoundFlags += mHealth * 0x1000000;
@@ -694,10 +695,10 @@ u8 TMario::getVoiceStatus()
 	if (onYoshi())
 		return 1;
 
-	switch (unk388) {
-	case 1:
+	switch (mPlayerType) {
+	case PLAYER_TYPE_SHADOW_MARIO:
 		return 2;
-	case 2:
+	case PLAYER_TYPE_MONTE_MAN:
 		return 6;
 	}
 

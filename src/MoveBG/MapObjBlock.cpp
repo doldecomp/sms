@@ -43,9 +43,9 @@ void TBreakableBlock::touchPlayer(THitActor* player)
 
 void TSandBlock::touchPlayer(THitActor* player)
 {
-	if (marioIsOn() && checkState(TSandBlock::STATE_WAITING)) {
-		setTimeTilAppear(mWaitTimeToFall);
-		setState(TSandBlock::STATE_TOUCHED);
+	if (marioIsOn() && mState == STATE_NORMAL) {
+		startStateTimer(mWaitTimeToFall);
+		setState(STATE_TOUCHED);
 	}
 }
 
@@ -54,24 +54,24 @@ void TSandBlock::control()
 	TMapObjBase::control();
 
 	switch (mState) {
-	case TSandBlock::STATE_WAITING:
+	case STATE_NORMAL:
 		break;
-	case TSandBlock::STATE_RESTORING:
+	case STATE_RESTORING:
 		mScaling.x += mSandScaleUp;
 		mScaling.y += mSandScaleUp;
 		mScaling.z += mSandScaleUp;
 		if (mScaling.y >= mInitialScaling.x) {
 			mScaling.set(mInitialScaling);
-			setState(TSandBlock::STATE_WAITING);
+			setState(STATE_NORMAL);
 		}
 		break;
-	case TSandBlock::STATE_TOUCHED:
-		if (!isAppearTimeFinished()) {
+	case STATE_TOUCHED:
+		if (!isStateTimerEngaged()) {
 			setUpMapCollision(1);
-			setState(TSandBlock::STATE_FALLING);
+			setState(STATE_FALLING);
 		}
 		break;
-	case TSandBlock::STATE_FALLING:
+	case STATE_FALLING: {
 		mScaling.y -= mSandScaleDown;
 		gpMSound->startSoundActor(MSD_SE_OBJ_SANDBLOCK_BREAK, &mPosition, 0,
 		                          nullptr, 0, 0x4);
@@ -83,20 +83,19 @@ void TSandBlock::control()
 			mScaling.x = mScaling.y;
 			mScaling.z = mScaling.y;
 			TMapObjBase::sleep();
-			setTimeTilAppear(mSandWaitTime);
-			setState(TSandBlock::STATE_GONE);
+			startStateTimer(mSandWaitTime);
+			setState(STATE_GONE);
 		}
-
-		break;
-	case TSandBlock::STATE_GONE:
-		if (!isAppearTimeFinished()
+	} break;
+	case STATE_GONE:
+		if (!isStateTimerEngaged()
 		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
 			JGeometry::TVec3<f32> scaleCopy = mScaling;
 			mScaling.set(mInitialScaling);
 			setUpMapCollision(0);
 			mScaling.set(scaleCopy);
-			setState(TSandBlock::STATE_RESTORING);
+			setState(STATE_RESTORING);
 		}
 		break;
 	}
@@ -165,10 +164,8 @@ void TLeanBlock::initMapObj()
 	unk140 = 0.01f;
 	unk144 = 0.005f;
 	unk148 = 1.0f;
-	// TODO: Float registers mismatching
-	// I see other places are doing scaling._ * 100.0f aswell, possible inline?
-	unk138 = mScaling.x * 100.0f * 0.5f;
-	unk13C = mScaling.z * 100.0f * 0.5f;
+	unk138 = (mScaling.x * 100.0f) / 2.0f;
+	unk13C = (mScaling.z * 100.0f) / 2.0f;
 	calcDefaultMtx();
 }
 
@@ -207,7 +204,8 @@ u32 TIceBlock::touchWater(THitActor* param_1)
 
 	int id = getWaterID(param_1);
 	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
-		gpMarioParticleManager->emit(0xE7, &param_1->getPosition(), 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &param_1->getPosition(), 0, nullptr);
 		gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f,
 		                        0, 0, 4);
 		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
@@ -230,18 +228,15 @@ u32 TIceBlock::touchWater(THitActor* param_1)
 void TIceBlock::control()
 {
 	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x157, &mPosition, 1, this);
+	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKA, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->unk154.x = mScaling.x;
-		emitter->unk154.y = mScaling.y;
-		emitter->unk154.z = mScaling.z;
+		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
-	emitter = gpMarioParticleManager->emit(0x158, &mPosition, 1, this);
+	emitter
+	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKB, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->unk154.x = mScaling.x;
-		emitter->unk154.y = mScaling.y;
-		emitter->unk154.z = mScaling.z;
+		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
 	offHitFlag(HIT_FLAG_NO_COLLISION);
@@ -270,12 +265,13 @@ void TIceBlock::control()
 
 void TIceBlock::calc()
 {
-	Mtx mtx;
+	Mtx44 mtx;
 	SMS_GetLightPerspectiveForEffectMtx(mtx);
-	J3DModelData* data = getModel()->getModelData();
-	J3DTexMtx* info
-	    = data->getMaterialNodePointer(0)->getTexGenBlock()->getTexMtx(1);
-	info->setEffectMtx(mtx);
+	getModel()
+	    ->getModelData()
+	    ->getMaterialNodePointer(0)
+	    ->getTexMtx(1)
+	    ->setEffectMtx(mtx);
 }
 
 void TIceBlock::initMapObj()
@@ -302,7 +298,8 @@ BOOL TBrickBlock::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isActorType(0x80000001) && marioHeadAttack()) {
 		kill();
 		return TRUE;
-	} else if (sender->isActorType(0x8000005) && message == 0xe) {
+	} else if (sender->isActorType(0x8000005)
+	           && message == HIT_MESSAGE_ATTACK) {
 		kill();
 		return TRUE;
 	}
@@ -338,21 +335,30 @@ void TJuiceBlock::kill()
 	makeObjDead();
 }
 
+#ifdef VERSION_GMSP01
+void TJuiceBlock::touchActor(THitActor* actor)
+{
+	if (actor->checkActorType(ACTOR_TYPE_UNK40000000)
+	    && !actor->isActorType(0x400002C6))
+		kill();
+}
+#endif
+
 void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 
-void TTelesaBlock::perform(u32 flags, JDrama::TGraphics* graphics)
+void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	mLiveFlag &= ~LIVE_FLAG_UNK200;
 	if (!gpMarDirector->isTalkModeNow()) {
-		TMapObjBase::perform(flags, graphics);
+		TMapObjBase::perform(cue, graphics);
 	} else {
-		if (flags & 1) {
+		if (cue & CUE_MOVE) {
 			TJuiceBlock::moveObject();
 		}
-		mMActor->perform(flags, graphics);
+		mMActor->perform(cue, graphics);
 	}
 
-	if (flags & 2) {
+	if (cue & CUE_CALC_ANIM) {
 
 		// TODO: Possibly more TRotation3f inlines?
 		TRotation3f mtx;
@@ -380,14 +386,13 @@ void TTelesaBlock::setGroundCollision()
 
 BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 3) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		kill();
-		if (mMonteBlockBroken) {
+		if (mMonteBlockBroken)
 			TFlagManager::getInstance()->setBool(true, 0x1038C);
-		}
 
-		gpMSound->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition, 0,
-		                          nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition,
+		                                0, nullptr, 0, 4);
 		return TRUE;
 	}
 	return FALSE;

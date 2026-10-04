@@ -13,7 +13,7 @@ int SMS_GetMonteVillageAreaInMario()
 {
 	int retvar = 4;
 	if (gpMarDirector->mMap == 8) {
-		if (gpCamera->mMode == 0x33) {
+		if (gpCamera->mMode == CAMERA_MODE_LOOK_DOWN) {
 			return retvar = 1;
 		}
 		switch (gpCubeFastC->unk1C) {
@@ -47,7 +47,7 @@ const TLiveActor* SMS_GetGroundActor(const TBGCheckData* check_data,
 
 float SMS_GetSandRiseUpRatio(const TLiveActor* actor)
 {
-	float retvar = actor->getModel()->mNodeMatrices[0][1][1];
+	float retvar = actor->getModel()->getAnmMtx(0)[1][1];
 
 	if (retvar > 1.0f) {
 		retvar = 1.0f;

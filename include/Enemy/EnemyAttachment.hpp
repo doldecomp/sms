@@ -10,7 +10,7 @@ class TEnemyAttachment : public TSpineEnemy {
 public:
 	TEnemyAttachment(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor*, u32) { return FALSE; }
 	virtual void calcRootMatrix();
 	virtual void bind();
@@ -33,10 +33,11 @@ public:
 	virtual void recoverScale();
 	virtual f32 getNowGravity() { return mGravity; }
 
-	bool isUnk150Zero() const { return unk150 == 0 ? true : false; }
+	// Fabricated
+	bool isState(int check) const { return unk150 == check ? true : false; }
 
 public:
-	/* 0x150 */ int unk150;
+	/* 0x150 */ int unk150; // mState? 0 = hide, 1 = visible, pakkun has more
 	/* 0x154 */ u32 unk154;
 	/* 0x158 */ int unk158;
 	/* 0x15C */ char unk15C[4];
@@ -57,7 +58,7 @@ public:
 	{
 	}
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveActor*);
 
 	void generatePolluteModel(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
@@ -72,7 +73,7 @@ class TEnemyPolluteModel : public JDrama::TViewObj {
 public:
 	TEnemyPolluteModel(TLiveActor*, int, SDLModelData*, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setAnm() { }
 
 	void generate(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);

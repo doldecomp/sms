@@ -98,7 +98,7 @@ public:
 
 	TWaterGun(TMario* mario);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void changeBackup();
 	void calcAnimation(JDrama::TGraphics*);
@@ -135,7 +135,7 @@ public:
 
 		return false;
 	}
-	bool isPressureOn();
+	BOOL isPressureOn();
 	void movement();
 	void rotateProp(f32);
 	void setAmountToRate(f32);
@@ -143,17 +143,7 @@ public:
 	BOOL suck();
 	void triggerPressureMovement(const TMarioControllerWork&);
 
-	J3DModel* getModel() { return mFluddModel->unk4; }
-
-	// Fabricated
-	// TODO: Definitely not from watergun
-	inline void playSoundWithInfo(u32 id, const Vec* pos, u32 _unk, f32 _unk2)
-	{
-		if (gpMSound->gateCheck(id)) {
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    id, pos, nullptr, _unk2, _unk, 0, nullptr, 0, 4);
-		}
-	}
+	J3DModel* getModel() { return mFluddModel->mModel; }
 
 	// Fabricated
 	inline bool hasFlag(u16 flag)
@@ -168,6 +158,7 @@ public:
 	}
 
 	// Fabricated
+	void onFlag(u16 flag) { mFlags |= flag; }
 	void offFlag(u16 flag) { mFlags &= ~flag; }
 
 	// Fabricated
@@ -209,6 +200,9 @@ public:
 
 	// Fabricated
 	void resetWaterToFull() { mCurrentWater = getMaxWater(); }
+
+	// Fabricated
+	s32 getCurrentWater() const { return mCurrentWater; }
 
 	// Fabricated
 	void updateUnk1C88(u8 emittedWater)
@@ -286,6 +280,12 @@ public:
 	const JGeometry::TVec3<f32>& getEmitPos0() const { return mEmitPos[0]; }
 
 public:
+	enum {
+		WATER_GUN_FLAG_UNK2  = 0x2,
+		WATER_GUN_FLAG_UNK4  = 0x4,
+		WATER_GUN_FLAG_UNK10 = 0x10,
+	};
+
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;

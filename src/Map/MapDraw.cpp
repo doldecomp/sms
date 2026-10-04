@@ -1,7 +1,6 @@
 #include <Map/MapDraw.hpp>
 #include <Map/Map.hpp>
 #include <Camera/Camera.hpp>
-#include <System/Resolution.hpp>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <dolphin/gx.h>
@@ -10,9 +9,15 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
+// NOTE: Yes, this is an ODR violation, and I'm pretty sure they had it
+// in the original code as well, because everywhere else these functions
+// return a u16, but here they MUST return an int for some reason???
+int SMSGetGameRenderHeight();
+int SMSGetGameRenderWidth();
+
+void TMapDrawWall::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!(param_1 & 8))
+	if (!(cue & CUE_DRAW))
 		return;
 
 	if (gpCamera->getUnk2C8() == -1) {
@@ -46,7 +51,7 @@ void TMapDrawWall::perform(u32 param_1, JDrama::TGraphics* param_2)
 	GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
 	GXSetChanMatColor(GX_COLOR0A0,
-	                  (GXColor) { unk14.r, unk14.g, unk14.b, unk18 });
+	                  (GXColor) { unk14.r, unk14.g, unk14.b, (u8)unk18 });
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	JUTTexture texture(unk10);
@@ -92,4 +97,4 @@ TMapDrawWall::TMapDrawWall(const char* name)
 {
 }
 
-void TMap::draw(unsigned long, JDrama::TGraphics*) const { }
+void TMap::draw(u32, JDrama::TGraphics*) const { }

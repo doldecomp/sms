@@ -103,8 +103,8 @@ void TSplashManager::makeDL(JDrama::TGraphics* param_1) const
 
 		f32 fVar1 = ((f32)unk648 - splash->unk10) / unk648 * unk634 + unk630;
 
-		GXColor color
-		    = (GXColor) { 0xff, 0xff, 0xff, splash->unk10 * 255 / unk648 };
+		GXColor color = (GXColor) { 0xff, 0xff, 0xff,
+			                        (u8)(splash->unk10 * 255 / unk648) };
 
 		thing[0].set(pos.x - fVar1, pos.y + fVar1, pos.z);
 		thing[1].set(pos.x + fVar1, pos.y + fVar1, pos.z);
@@ -157,16 +157,16 @@ void TSplashManager::draw() const
 	GXSetClipMode(GX_CLIP_ENABLE);
 }
 
-void TSplashManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSplashManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		move();
 
 	if (unk10 & 1) {
-		if (param_1 & 4)
-			makeDL(param_2);
+		if (cue & CUE_CALC_VIEW)
+			makeDL(graphics);
 
-		if (param_1 & 8)
+		if (cue & CUE_DRAW)
 			draw();
 	}
 }

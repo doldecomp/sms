@@ -24,6 +24,8 @@ script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))
 
 OBJDIFF_CLI = os.environ.get("OBJDIFF_CLI", os.path.join(root_dir, "build", "tools", "objdiff-cli"))
+if os.name == "nt" and not OBJDIFF_CLI.lower().endswith(".exe") and os.path.exists(OBJDIFF_CLI + ".exe"):
+    OBJDIFF_CLI += ".exe"
 
 
 def run_objdiff(unit: str) -> Dict[str, Any]:

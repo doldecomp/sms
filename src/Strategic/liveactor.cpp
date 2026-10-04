@@ -2,6 +2,7 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/question.hpp>
 #include <Strategic/Spine.hpp>
+#include <Strategic/spcinterp.hpp>
 #include <Strategic/Binder.hpp>
 #include <System/MarDirector.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -38,8 +39,8 @@ TLiveActor::TLiveActor(const char* name)
 	mSpine         = nullptr;
 	unk90          = nullptr;
 
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mLinearVelocity.setAll(0.0f);
+	mAngularVelocity.setAll(0.0f);
 
 	mVelocity.set(0.0f, 0.0f, 0.0f);
 
@@ -54,13 +55,13 @@ TLiveActor::TLiveActor(const char* name)
 	mGroundActorYaw      = 0.0f;
 	unkE8                = 1;
 	mMapCollisionManager = nullptr;
-	mLiveFlag            = 0x100;
+	mLiveFlag            = LIVE_FLAG_UNK100;
 
 	mRidePos.zero();
 
 	mGroundPlane = TMap::getIllegalCheckData();
-	if (gpMarDirector->mMap != 8)
-		mLiveFlag |= 0x2000;
+	if (gpMarDirector->getCurrentMap() != 8)
+		mLiveFlag |= LIVE_FLAG_UNK2000;
 }
 
 TLiveActor::~TLiveActor() { }
@@ -127,7 +128,7 @@ void TLiveActor::calcRideMomentum()
 	}
 }
 
-J3DModel* TLiveActor::getModel() const { return mMActor->unk4; }
+J3DModel* TLiveActor::getModel() const { return mMActor->mModel; }
 
 Mtx* TLiveActor::getRootJointMtx() const { return nullptr; }
 
@@ -170,7 +171,8 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 
 	char buffer[256];
 	stream.readString(buffer, 256);
-	TLiveManager* mgr = JDrama::TNameRefGen::search<TLiveManager>(buffer);
+	TLiveManager* mgr
+	    = static_cast<TLiveManager*>(JDrama::TNameRefGen::search(buffer));
 
 	mGroundPlane = TMap::getIllegalCheckData();
 
@@ -229,20 +231,17 @@ void TLiveActor::bind()
 
 void TLiveActor::control()
 {
-	// TODO: what is unk90???
-	if (unk90 == nullptr || *(int*)((char*)unk90 + 4) == 0) {
+	if (unk90 == nullptr || unk90->mStepsToDo == 0) {
 		if (mSpine)
 			mSpine->update();
+	} else if (!mSpine) {
+		if (unk90 != nullptr && unk90->mStepsToDo != 0)
+			unk90->update();
+	} else if (mSpine->getCurrentNerve() != nullptr
+	           || mSpine->getVertebraeCount() > 0) {
+		mSpine->update();
 	} else {
-		if (!mSpine) {
-			if (unk90 && *(int*)((char*)unk90 + 4) != 0) {
-				// call on unk90
-			}
-		} else if (mSpine->isIdle()) {
-			// call on unk90
-		} else {
-			mSpine->update();
-		}
+		unk90->update();
 	}
 }
 
@@ -256,13 +255,13 @@ void TLiveActor::calcRootMatrix()
 
 void TLiveActor::kill()
 {
-	mLiveFlag |= 0x1;
-	mLiveFlag |= 0x40;
+	mLiveFlag |= LIVE_FLAG_DEAD;
+	mLiveFlag |= LIVE_FLAG_UNK40;
 }
 
 BOOL TLiveActor::receiveMessage(THitActor*, u32) { return FALSE; }
 
-u32 TLiveActor::getShadowType() { return 0; }
+u32 TLiveActor::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
 void TLiveActor::setGroundCollision()
 {
@@ -294,98 +293,115 @@ void TLiveActor::moveObject()
 
 void TLiveActor::requestShadow()
 {
-	if (mLiveFlag & 0xB)
+	if (mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8))
 		return;
 
-	if (!(mLiveFlag & 0x204) || (mLiveFlag & 0x400)) {
+	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
+	    || (mLiveFlag & LIVE_FLAG_UNK400)) {
 		TCircleShadowRequest local_2c;
 
-		local_2c.unk0 = mPosition;
+		local_2c.mPosition = mPosition;
 
 		if (!isAirborne()) {
-			local_2c.unk0.y = mGroundHeight;
-			local_2c.unk1D  = 0;
+			local_2c.mPosition.y       = mGroundHeight;
+			local_2c.mNeedsGroundCheck = 0;
 		}
 
-		local_2c.unkC = local_2c.unk10 = mScaledBodyRadius;
+		local_2c.mRadiusX = local_2c.mRadiusZ = mScaledBodyRadius;
 
-		local_2c.unk1C = getShadowType();
-		local_2c.unk14 = mRotation.y;
+		local_2c.mShadowType = getShadowType();
+		local_2c.mRotationY  = mRotation.y;
 
-		if (mLiveFlag & 0x400) {
+		if (mLiveFlag & LIVE_FLAG_UNK400) {
 			gpBindShadowManager->forceRequest(local_2c, getActorType());
 		} else {
 			gpBindShadowManager->request(local_2c, getActorType());
 		}
 	}
 
-	if (!(mLiveFlag & 0x204) && !checkActorType(0x40000000)) {
+	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
+	    && !checkActorType(ACTOR_TYPE_UNK40000000)) {
 		gpQuestionManager->request(mPosition, mScaledBodyRadius);
 	}
 }
 
 void TLiveActor::drawObject(JDrama::TGraphics*)
 {
-	if (mLiveFlag & 3 || !mMActor)
+	if (mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) || !mMActor)
 		return;
 
 	mMActor->setLightData(mGroundPlane, mPosition);
 	mMActor->entry();
 }
 
-void TLiveActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (mLiveFlag & 0x201)
+	if (mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
 		return;
 
-	if (param_1 & 1)
+	if (cue & CUE_MOVE)
 		moveObject();
 
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		updateAnmSound();
 
 	if (mMActor) {
-		if (param_1 & 2)
+#ifdef VERSION_GMSP01
+		f32 frame;
+#endif
+		if (cue & CUE_CALC_ANIM) {
 			mMActor->frameUpdate();
+#ifdef VERSION_GMSP01
+			if (mLiveFlag & LIVE_FLAG_CALC_INT_FRAME) {
+				J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+				frame              = ctrl->getFrame();
+				ctrl->setFrame((int)frame);
+			}
+#endif
+		}
 
-		if (param_1 & 4)
+		if (cue & CUE_CALC_VIEW)
 			requestShadow();
 
-		if (!(mLiveFlag & 6)) {
-			if (param_1 & 2) {
+		if (!(mLiveFlag & (LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))) {
+			if (cue & CUE_CALC_ANIM) {
 				calcRootMatrix();
 				mMActor->calc();
+#ifdef VERSION_GMSP01
+				if (mLiveFlag & LIVE_FLAG_CALC_INT_FRAME)
+					mMActor->getFrameCtrl(0)->setFrame(frame);
+#endif
 			}
 
-			if (param_1 & 4)
+			if (cue & CUE_CALC_VIEW)
 				mMActor->viewCalc();
 
-			if (param_1 & 0x200)
-				drawObject(param_2);
+			if (cue & CUE_ENTRY)
+				drawObject(graphics);
 		}
 	}
 }
 
 void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (mLiveFlag & 0x201)
+	if (mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
 		return;
 	if (!mMActor)
 		return;
 
-	if (param_1 & 4)
+	if (param_1 & CUE_CALC_VIEW)
 		requestShadow();
 
-	if (!(mLiveFlag & 6)) {
-		if (param_1 & 2) {
+	if (!(mLiveFlag & (LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))) {
+		if (param_1 & CUE_CALC_ANIM) {
 			calcRootMatrix();
 			mMActor->calc();
 		}
 
-		if (param_1 & 4)
+		if (param_1 & CUE_CALC_VIEW)
 			mMActor->viewCalc();
 
-		if (param_1 & 0x200)
+		if (param_1 & CUE_ENTRY)
 			drawObject(param_2);
 	}
 }
@@ -395,7 +411,7 @@ TLiveActor::calcVelocityToJumpToY(const JGeometry::TVec3<f32>& param_1,
                                   f32 speed, f32 gravity) const
 {
 	JGeometry::TVec3<f32> vec;
-	SMSCalcJumpVelocityY(param_1, mPosition, speed, gravity, -3.0625f, &vec);
+	SMSCalcJumpVelocityY(param_1, mPosition, speed, gravity, -40.0f, &vec);
 	return vec;
 }
 
@@ -414,12 +430,12 @@ int TLiveActor::getJointTransByIndex(int param_1,
 		return -1;
 	}
 
-	if (mLiveFlag & 4) {
+	if (mLiveFlag & LIVE_FLAG_CLIPPED_OUT) {
 		*param_2 = mPosition;
 		return param_1;
 	}
 
-	MtxPtr mtx = mMActor->unk4->getAnmMtx(param_1);
+	MtxPtr mtx = mMActor->mModel->getAnmMtx(param_1);
 	param_2->set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	return param_1;
 }
@@ -431,7 +447,7 @@ MtxPtr TLiveActor::getTakingMtx()
 	if (!mMActor)
 		return nullptr;
 
-	return mMActor->unk4->unk20;
+	return mMActor->getModel()->getBaseTRMtx();
 }
 
 void TLiveActor::initAnmSound()
@@ -440,9 +456,9 @@ void TLiveActor::initAnmSound()
 		return;
 
 	if (checkActorType(0x4000000))
-		mAnmSound = new MAnmSoundNPC(gpMSound);
+		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
 	else
-		mAnmSound = new MAnmSound(gpMSound);
+		mAnmSound = new MAnmSound(SMSGetMSound());
 
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }
@@ -454,7 +470,7 @@ void TLiveActor::updateAnmSound()
 	if (!mAnmSoundPath)
 		return;
 
-	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	mAnmSound->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 }
 
@@ -478,12 +494,9 @@ void TLiveActor::setCurAnmSound()
 	const char* name = nullptr;
 
 	if (mMActor) {
-		int idx = mMActor->getCurAnmIdx(0);
-		if (idx >= 0) {
-			const char** table = getBasNameTable();
-
-			name = !table ? nullptr : table[idx];
-		}
+		int idx = mMActor->getCurAnmIdx(ANM_TYPE_BCK);
+		if (idx >= 0)
+			name = getBas(idx);
 	}
 
 	setAnmSound(name);

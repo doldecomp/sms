@@ -26,9 +26,9 @@ void TMario::incHP(int hp)
 {
 	// volatile u32 padding[10];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		unk12C += hp;
-		if (unk12C > unk130) {
-			unk12C = unk130;
+		mAir += hp;
+		if (mAir > mMaxAir) {
+			mAir = mMaxAir;
 		} else {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr,
 			                                   0);
@@ -37,8 +37,8 @@ void TMario::incHP(int hp)
 	}
 
 	mHealth += hp;
-	if (mHealth > mDeParams.mHpMax.get()) {
-		mHealth = mDeParams.mHpMax.get();
+	if (mHealth > mDeParams.mHPMax.get()) {
+		mHealth = mDeParams.mHPMax.get();
 	} else {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_HP_RECOVER, 0, nullptr, 0);
 	}
@@ -48,13 +48,13 @@ void TMario::decHP(int hp)
 {
 	// volatile u32 padding[2];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		unk12C -= hp;
+		mAir -= hp;
 
 		for (int i = 0; i < 10; ++i) {
 			bubbleFromMouth(i);
 		}
 
-		if (unk12C < 1.0f) {
+		if (mAir < 1.0f) {
 			loserExec();
 			changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 		}
@@ -78,20 +78,20 @@ s16 TMario::getAttackAngle(const THitActor* other)
 void TMario::dropObject()
 {
 	if (mHeldObject != nullptr) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
 		mHeldObject = nullptr;
 	}
 }
 
 bool TMario::isTakeSituation(THitActor* object)
 {
-	if (unk14C > 0)
+	if (mInvincibilityFrames > 0)
 		return false;
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK80000000))
 		return false; // Airborn?
 
-	if (checkStatusFlag(MARIO_STATUS_FLAG_UNK10000000))
+	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000000))
 		return false;
 
 	if (mStatus == MARIO_STATUS_CATCH)
@@ -128,13 +128,13 @@ bool TMario::isTakeSituation(THitActor* object)
 
 bool TMario::canTake(THitActor* object)
 {
-	return mGamePad->checkMeaning(TMarioGamePad::MEANING_0x100)
+	return mGamePad->checkMeaning(TMarioGamePad::MEANING_B)
 	       && isTakeSituation(object);
 }
 
 BOOL TMario::trampleExec(THitActor* param_1)
 {
-	if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING))
+	if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 		return false;
 
 	if (mStatus == MARIO_STATUS_DIVE)
@@ -170,9 +170,9 @@ BOOL TMario::trampleExec(THitActor* param_1)
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_B, &mPosition, this, scale);
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_C, &mPosition, this, scale);
 	} else {
-		emitParticle(7);
-		emitParticle(8);
-		emitParticle(9);
+		emitParticle(PARTICLE_MS_FUMI_A);
+		emitParticle(PARTICLE_MS_FUMI_B);
+		emitParticle(PARTICLE_MS_FUMI_C);
 	}
 
 	unk78 &= ~0x100;
@@ -180,13 +180,9 @@ BOOL TMario::trampleExec(THitActor* param_1)
 
 	if (!param_1->isActorType(0x20000008)
 	    && !param_1->isActorType(0x2000000a)) {
-		u32 trampleCt = getTrampleCt();
-		// Probably an inline
-		if (SMSGetMSound()->gateCheck(MSD_SE_MA_KICK_ENEMY)) {
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, trampleCt, 0,
-			    nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActorWithInfo(
+		    MSD_SE_MA_KICK_ENEMY, &mPosition, nullptr, 0.0f, getTrampleCt(), 0,
+		    nullptr, 0, 4);
 	}
 	return true;
 }
@@ -220,8 +216,8 @@ void TMario::loserExec()
 			mYoshi->kill();
 		}
 
-		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING)) {
-			if (unk12C < 1.0f) {
+		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
+			if (mAir < 1.0f) {
 				changePlayerStatus(MARIO_STATUS_SWIM_DOWN, 0, true);
 			} else {
 				changePlayerStatus(MARIO_STATUS_SWIM_P_DOWN, 0, true);
@@ -257,7 +253,7 @@ void TMario::floorDamageExec(const TMario::TEParams& params)
 	mFloorHitActor.mPosition.z = mPosition.z + JMASCos(mFaceAngle.y);
 	damageExec(&mFloorHitActor, params.mDamage.get(), params.mDownType.get(),
 	           params.mWaterEmit.get(), params.mMinSpeed.get(),
-	           params.mMotor.get(), params.mDamage.get(),
+	           params.mMotor.get(), params.mDirty.get(),
 	           params.mInvincibleTime.get());
 }
 
@@ -268,11 +264,11 @@ void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 {
 	JGeometry::TVec3<f32> offset = pos - mPosition;
 	if (offset.isZero()) {
-		unk19C = mPosition;
+		mDamagePos = mPosition;
 		return;
 	}
 	offset.normalize();
-	unk19C = mPosition + offset * 50.0f;
+	mDamagePos = mPosition + offset * 50.0f;
 }
 
 void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
@@ -308,15 +304,12 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (onYoshi()) {
 		getOffYoshi(true);
-		// Probably an inline
-		if (gpMSound->gateCheck(MSD_SE_YV_DAMAGE)) {
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_YV_DAMAGE, &mPosition, 0, nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_YV_DAMAGE, &mPosition, 0,
+		                                nullptr, 0, 4);
 		return;
 	}
 
-	u32 animOffset1 = checkStatusFlag(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
+	u32 animOffset1 = checkStatusType(MARIO_STATUS_FLAG_JUMPING) ? 1 : 0;
 	if (onYoshi()) {
 		animOffset1 = true;
 	}
@@ -352,14 +345,14 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		if (mStatus == MARIO_STATUS_DIVE)
 			canPlayAnimation = false;
 
-		if (checkStatusFlag(MARIO_STATUS_FLAG_SWIMMING))
-			canPlayAnimation = true;
+		if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
+			canPlayAnimation = false;
 
 		if (canPlayAnimation) {
 			// I don't think this is correct, but was the closest i could get
 			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
 			                               + animOffset2 * 8];
-			if (mHolder == nullptr || mHolder->isActorType(0x40000098)) {
+			if (mHolder != nullptr && mHolder->isActorType(0x40000098)) {
 				// Knocked from a wire hang by damage?
 				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
 			} else {
@@ -367,7 +360,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			}
 		}
 	}
-	unk14C = invincibilityFrames;
+	mInvincibilityFrames = invincibilityFrames;
 	decHP(damage);
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		for (int i = 0; i < waterEmit; ++i) {
@@ -389,9 +382,9 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 	if (damageAnimType != 3) {
 		calcDamagePos(hittingActor->mPosition);
-		emitParticle(0xb, &unk19C);
-		emitParticle(0xc, &unk19C);
-		emitParticle(0xa, &unk19C);
+		emitParticle(PARTICLE_MS_DMG_B, &mDamagePos);
+		emitParticle(PARTICLE_MS_DMG_C, &mDamagePos);
+		emitParticle(PARTICLE_MS_DMG_A, &mDamagePos);
 	}
 
 	if (mHealth > 0) {
@@ -406,7 +399,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 		}
 	}
 
-	unk134 += pollutionAmount;
+	mDirty += pollutionAmount;
 	dirtyLimitCheck();
 }
 
@@ -422,7 +415,7 @@ void TMario::considerTake()
 		check = true;
 
 	if (mStatus == MARIO_STATUS_TAKE
-	    || checkStatusFlag(MARIO_STATUS_FLAG_UNK80000000))
+	    || checkStatusType(MARIO_STATUS_FLAG_UNK80000000))
 		check = true;
 
 	if (mStatus == MARIO_STATUS_PULLING || mStatus == MARIO_STATUS_PULL_JUMP
@@ -437,24 +430,24 @@ void TMario::considerTake()
 		mHolder = nullptr;
 
 	if (mHeldObject != nullptr && !check) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK7);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
 		mHeldObject = nullptr;
 	}
 
 	if (mHolder != nullptr) {
-		// Probably an inline
 		BOOL check2 = false;
-		u32 test    = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
+		// TODO: status check inline
+		u32 test = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
-		    || checkStatusFlag(MARIO_STATUS_FLAG_UNK1000)
+		    || checkStatusType(MARIO_STATUS_FLAG_UNK1000)
 		    || mStatus == MARIO_STATUS_TAKEN) {
 			check2 = true;
 		}
 
 		if (!check2) {
 			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
-			mHolder->receiveMessage(this, HIT_MESSAGE_UNK7);
+			mHolder->receiveMessage(this, HIT_MESSAGE_THROWN);
 			mHolder = nullptr;
 		}
 	}

@@ -1,0 +1,62 @@
+#ifndef JKR_DVD_FILE_H
+#define JKR_DVD_FILE_H
+
+#include <JSystem/JKernel/JKRFile.hpp>
+#include <dolphin/os.h>
+#include <dolphin/dvd.h>
+
+class JKRAramBlock;
+class JSUFileInputStream;
+class JKRDvdFile;
+
+// TODO: tww doesn't think this exists, maybe get rid of it?
+
+struct JKRDvdFileInfo : DVDFileInfo {
+	JKRDvdFile* mFile;
+};
+
+class JKRDvdFile : public JKRFile {
+public:
+	JKRDvdFile();
+	JKRDvdFile(const char* filename);
+	JKRDvdFile(s32 entrynum);
+
+	virtual ~JKRDvdFile();
+
+	void initiate();
+
+	virtual bool open(const char* filename);
+	virtual bool close();
+	virtual int readData(void* data, s32 length, s32 offset);
+	virtual int writeData(const void* data, s32 length, s32 offset);
+	virtual s32 getFileSize() const { return mDvdFileInfo.length; }
+	virtual bool open(s32 entrynum);
+	DVDFileInfo* getFileInfo() { return &mDvdFileInfo; }
+
+	int readDataAsync(void* data, s32 length, s32 offset);
+	int writeDataAsync(const void* data, s32 length, s32 offset);
+	bool check();
+	static void* load(const char* filename, JKRHeap* heap);
+
+	s32 sync();
+	static void doneProcess(s32 result, DVDFileInfo* info);
+
+	static JSUList<JKRDvdFile> sDvdList;
+
+public:
+	OSMutex mDvdMutex;
+	OSMutex mAramMutex;
+	JKRAramBlock* mAramBlock;
+	OSThread* mAramThread;
+	JSUFileInputStream* mInputStream;
+	u32 _58;
+	JKRDvdFileInfo mDvdFileInfo;
+	OSMessageQueue mAramMessageQueue;
+	OSMessage mAramMessage;
+	OSMessageQueue mDvdMessageQueue;
+	OSMessage mDvdMessage;
+	JSULink<JKRDvdFile> mLink;
+	OSThread* mDvdThread;
+};
+
+#endif

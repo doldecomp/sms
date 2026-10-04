@@ -3,7 +3,7 @@
 
 #include <Strategic/SolidStack.hpp>
 #include <dolphin/os.h>
-#include <types.h>
+#include <dolphin/types.h>
 
 class TSpineEnemy;
 template <class T> class TNerveBase;
@@ -37,6 +37,8 @@ public:
 			return mCurrent;
 		return mPrevious;
 	}
+
+	bool isNerve(Nerve nerve) const { return getLatestNerve() == nerve; }
 
 	// matching
 	void pushNerve(Nerve nerve)
@@ -161,6 +163,9 @@ public:
 
 	// fabricated
 	bool isIdle() const { return mCurrent == nullptr && mVertebrae.empty(); }
+
+	// fabricated
+	int getVertebraeCount() const { return mVertebrae.size(); }
 };
 
 #endif

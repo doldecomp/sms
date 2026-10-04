@@ -40,19 +40,19 @@ class TCoasterEnemy : public TWalkerEnemy {
 public:
 	TCoasterEnemy(const char* name)
 	    : TWalkerEnemy(name)
-	    , mPathIdx(0) { };
+	    , mPathDir(0) { };
 	virtual ~TCoasterEnemy() { }
 
 	virtual void calcRootMatrix();
 	virtual void makeCoasterGoalPath();
 	virtual void moveCoaster();
 	virtual float getGravityY() const;
-	virtual void setNormalFlyAnm();
+	virtual void setNormalFlyAnm() { }
 	virtual void setWalkAnm();
 	virtual void moveObject();
 	virtual void init(TLiveManager* manager);
 	virtual void bind();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void reset();
 
 	TCoasterEnemyParams* getSaveParam2() const
@@ -90,7 +90,7 @@ public:
 
 	virtual void init(TLiveManager* manager);
 	virtual void reset();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void setMActorAndKeeper();
 	virtual void attackToMario();
 	virtual bool isCollidMove(THitActor*);

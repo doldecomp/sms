@@ -622,10 +622,10 @@ void TBaseNPC::movementOnlyTalk_(const JDrama::TGraphics* param_1)
 		changeNerveProc_();
 }
 
-void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mActorType == 0x400001C) {
-		if (!(param_1 & 0x1))
+		if (!(cue & CUE_MOVE))
 			return;
 
 		if (mDummyConnectActor != nullptr) {
@@ -633,7 +633,7 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 			mRotation = mDummyConnectActor->mRotation;
 		}
 
-		movementOnlyTalk_(param_2);
+		movementOnlyTalk_(graphics);
 		return;
 	}
 
@@ -641,10 +641,10 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
 			return;
 
-		if (param_1 & 0x1)
-			movementOnlyTalk_(param_2);
+		if (cue & CUE_MOVE)
+			movementOnlyTalk_(graphics);
 
-		TLiveActor::performOnlyDraw(param_1, param_2);
+		TLiveActor::performOnlyDraw(cue, graphics);
 		return;
 	}
 
@@ -653,13 +653,13 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		bVar5 = false;
 	} else if (checkLiveFlag(LIVE_FLAG_UNK200)) {
 		bVar5 = false;
-	} else if ((param_1 & 0x204)
+	} else if ((cue & (CUE_CALC_VIEW | CUE_ENTRY))
 	           && checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_HIDDEN)) {
 		bVar5 = false;
-	} else if ((param_1 & 0x1) && mHolder == nullptr && !isAirborne()
+	} else if ((cue & CUE_MOVE) && mHolder == nullptr && !isAirborne()
 	           && !belongToGround() && mSpine->getTime() != 0
 	           && mActorType != 0x4000018 && isNerveMaybeDontMovement()
-	           && !checkLiveFlag(LIVE_FLAG_SINK_BOTTOM)) {
+	           && !checkLiveFlag(TBaseNPC::LIVE_FLAG_SINK_BOTTOM)) {
 		TNPCManager* manager = (TNPCManager*)mManager;
 		f32 farClip          = gpConductor->unk84.mEnemyFarClip.get();
 		if (manager != nullptr)
@@ -676,14 +676,14 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (!bVar5) {
-		offLiveFlag(LIVE_FLAG_UNK10000);
+		offLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK40000);
 		return;
 	}
 
 	gpCurrentNpc = this;
-	if (param_1 & 0x1) {
+	if (cue & CUE_MOVE) {
 		moveObject();
-		if (param_2->unk0 & 0x2) {
+		if (graphics->unk0 & 0x2) {
 			changeNerveProc_();
 			if (mHolder == nullptr) {
 				if (isNerveWalk())
@@ -696,7 +696,7 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 					            * rate,
 					        mIndividualParams->mTurnAnmMinRate.get() * rate,
 					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
-					    0);
+					    ANM_TYPE_BCK);
 				}
 			}
 
@@ -717,10 +717,10 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 				    = mPollutionAmount * mIndividualParams->mPollutionMax.get();
 		}
 
-		param_1 &= ~0x1;
+		cue &= ~CUE_MOVE;
 	}
 
-	if (param_1 & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		if (checkActionFlag(NPC_ACTION_BURNING)) {
 			if (SMSGetMSound()->gateCheck(MSD_SE_NPC_BURNING))
 				MSoundSESystem::MSoundSE::startSoundNpcActor(
@@ -764,18 +764,18 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 
 		if (r31) {
-			param_1 &= ~0x2;
+			cue &= ~CUE_CALC_ANIM;
 		}
 	}
 
-	if ((param_1 & 2) && mMultiMtxEffect != nullptr) {
+	if ((cue & CUE_CALC_ANIM) && mMultiMtxEffect != nullptr) {
 		mMultiMtxEffect->setUserArea();
 		if (mActorType == 0x4000018 && mHolder != nullptr) {
 			mMultiMtxEffect->flagOn(0x2);
 		}
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		offLiveFlag(LIVE_FLAG_UNK1000000);
 		JGeometry::TVec3<f32> diff;
 		diff.sub(mPosition, gpCamera->unk124);
@@ -787,9 +787,9 @@ void TBaseNPC::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TSpineEnemy::perform(param_1, param_2);
+	TSpineEnemy::perform(cue, graphics);
 	if (unk168 != nullptr)
-		unk168->partsPerform(param_1, param_2);
+		unk168->partsPerform(cue, graphics);
 }
 
 void TBaseNPC::setDummyConnectActor(const JDrama::TActor* param_1)

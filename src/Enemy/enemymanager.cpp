@@ -44,11 +44,11 @@ void TSharedMActorSet::init(MActorAnmData* param_1, J3DModelData* param_2,
 		unk0[i]         = new MActor(param_1);
 		unk0[i]->setModel(model, 0);
 		unk0[i]->setBck(param_3);
-		J3DFrameCtrl* ctrl = unk0[i]->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = unk0[i]->getFrameCtrl(ANM_TYPE_BCK);
 		ctrl->setFrame(coeff * ctrl->getEnd() * i);
 	}
 
-	unk8 = unk0[0]->getCurAnmIdx(0);
+	unk8 = unk0[0]->getCurAnmIdx(ANM_TYPE_BCK);
 }
 
 void TSharedMActorSet::calcAnm() { }
@@ -107,7 +107,7 @@ void TEnemyManager::load(JSUMemoryInputStream& stream)
 {
 	TLiveManager::load(stream);
 	createModelData();
-	stream.read(&unk44, 4);
+	stream >> unk44;
 }
 
 TSpineEnemy* TEnemyManager::createEnemyInstance() { return nullptr; }
@@ -133,7 +133,8 @@ void TEnemyManager::createEnemies(int count)
 		if (!enemy)
 			continue;
 
-		JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")->add(enemy);
+		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+		    ->add(enemy);
 
 		enemy->init(this);
 	}
@@ -163,7 +164,7 @@ void TEnemyManager::setSharedFlags()
 		TSpineEnemy* enemy = getObj(i);
 		enemy->offLiveFlag(LIVE_FLAG_UNK4000);
 		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
-			int idx = enemy->getMActor()->getCurAnmIdx(0);
+			int idx = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					enemy->onLiveFlag(LIVE_FLAG_UNK4000);
@@ -185,19 +186,19 @@ void TEnemyManager::updateAnmSoundShared()
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
 		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
-			int idx = enemy->getMActor()->getCurAnmIdx(0);
+			int idx = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
 					// unused (mistake)
 					J3DFrameCtrl* ctrl2
 					    = unk40[i]
 					          .getMActor(enemy->getInstanceIndex())
-					          ->getFrameCtrl(0);
+					          ->getFrameCtrl(ANM_TYPE_BCK);
 					if (enemy->mAnmSoundPath) {
 						J3DFrameCtrl* ctrl
 						    = unk40[i]
 						          .getMActor(enemy->getInstanceIndex())
-						          ->getFrameCtrl(0);
+						          ->getFrameCtrl(ANM_TYPE_BCK);
 
 						enemy->getAnmSound()->animeLoop(
 						    (Vec*)&enemy->getPosition(), ctrl->getFrame(),
@@ -223,7 +224,7 @@ void TEnemyManager::copyFromShared()
 		    || enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 			continue;
 
-		int iVar6 = enemy->getMActor()->getCurAnmIdx(0);
+		int iVar6 = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		for (int j = 0; j < unk44; ++j) {
 			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
 				continue;
@@ -259,7 +260,8 @@ void TEnemyManager::copyFromShared()
 
 void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 {
-	TTimeRec::startTimer();
+	if (unk30 & 1)
+		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 
 	int num2     = getActiveObjNum();
 	int aliveNum = 0;
@@ -269,11 +271,11 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (aliveNum <= 0) {
 		if ((unk30 & 1))
-			TTimeRec::endTimer();
+			TTimeRec::snapCPUTime(0);
 		return;
 	}
 
-	if (param_1 & 2) {
+	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
 		for (int i = 0; i < unk44; ++i)
 			for (int j = 0; j < unk40[i].unk4; ++j)
@@ -282,16 +284,16 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		updateAnmSoundShared();
 	}
 
-	if (param_1 & 4)
+	if (param_1 & CUE_CALC_VIEW)
 		copyFromShared();
 
 	if (unk30 & 1) {
-		TTimeRec::endTimer();
-		TTimeRec::startTimer(0xff, 0x00, 0x00);
+		TTimeRec::snapCPUTime(0);
+		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0x00, 0x00, 0xff));
 	}
 
 	int num = getActiveObjNum();
-	if (param_1 & 1) {
+	if (param_1 & CUE_MOVE) {
 		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
 	}
@@ -301,10 +303,10 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		if (enemy->checkLiveFlag(LIVE_FLAG_DEAD))
 			continue;
 
-		if (param_1 & 1)
+		if (param_1 & CUE_MOVE)
 			enemy->moveObject();
 
-		if (param_1 & 2) {
+		if (param_1 & CUE_CALC_ANIM) {
 			enemy->updateSquareToMario();
 			enemy->calcRootMatrix();
 			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)) {
@@ -318,14 +320,15 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 				enemy->getMActor()->matAnmFrameUpdate();
 			}
 
-			if (param_1 & 4)
+			if (param_1 & CUE_CALC_VIEW)
 				enemy->requestShadow();
 
 			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
 			                          | LIVE_FLAG_CLIPPED_OUT)) {
-				if ((param_1 & 4) && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
+				if ((param_1 & CUE_CALC_VIEW)
+				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
 					enemy->getMActor()->viewCalc();
-				if (param_1 & 0x200) {
+				if (param_1 & CUE_ENTRY) {
 					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
 					                                 enemy->mPosition);
 					enemy->getMActor()->entry();
@@ -335,33 +338,33 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (unk30 & 1)
-		TTimeRec::endTimer();
+		TTimeRec::snapCPUTime(0);
 }
 
-void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEnemyManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	changeDrawBuffer(param_1);
+	changeDrawBuffer(cue);
 	if (unk40) {
-		performShared(param_1, param_2);
-		restoreDrawBuffer(param_1);
+		performShared(cue, graphics);
+		restoreDrawBuffer(cue);
 		return;
 	}
 
 	if (unk30 & 1)
-		TTimeRec::startTimer();
+		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 
-	if (param_1 & 2) {
-		clipEnemies(param_2);
+	if (cue & CUE_CALC_ANIM) {
+		clipEnemies(graphics);
 		setFlagOutOfCube();
 	}
 
 	if (unk30 & 1) {
-		TTimeRec::endTimer();
-		TTimeRec::startTimer(0xff, 0x0, 0x0);
+		TTimeRec::snapCPUTime(0);
+		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0x00, 0x00, 0xff));
 	}
 
 	int num = getActiveObjNum();
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onLiveFlag(LIVE_FLAG_DEAD);
 	} else {
@@ -370,11 +373,11 @@ void TEnemyManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	for (int i = 0; i < num; ++i)
-		getObj(i)->testPerform(param_1, param_2);
+		getObj(i)->testPerform(cue, graphics);
 
-	restoreDrawBuffer(param_1);
+	restoreDrawBuffer(cue);
 	if (unk30 & 1)
-		TTimeRec::endTimer();
+		TTimeRec::snapCPUTime(0);
 }
 
 TSpineEnemy* TEnemyManager::getNearestEnemy(const JGeometry::TVec3<f32>& p)
@@ -473,10 +476,10 @@ void TEnemyManager::createCopyAnmMtx(int) { }
 
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 {
-	if (unk4C != enemy->getMActor()->getCurAnmIdx(0))
+	if (unk4C != enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK))
 		return false;
 
-	int f = enemy->getCurAnmFrameNo(0);
+	int f = enemy->getCurAnmFrameNo(ANM_TYPE_BCK);
 	enemy->calcRootMatrix();
 	enemy->updateAnmSound();
 	enemy->getMActor()->frameUpdate();

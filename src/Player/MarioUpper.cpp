@@ -14,8 +14,7 @@ void TMario::checkPumping()
 		return;
 	}
 
-	if ((gpMarioOriginal == this)
-	    && (gpCamera->isLButtonCameraSpecifyMode(gpCamera->mMode) != 0)
+	if ((gpMarioOriginal == this) && gpCamera->isLButtonCamera() != false
 	    && checkPumpEnable()) {
 		mUpperState   = UPPER_STATE_HOLDING_PUMP;
 		mPumpCooldown = 0;
@@ -45,8 +44,8 @@ BOOL TMario::checkPumpEnable()
 {
 	if ((mWaterGun != nullptr) && checkFlag(MARIO_FLAG_HAS_FLUDD)
 	    && gMarioAnimeData[mAnimationId].isPumpOK() && !onYoshi()
-	    && (!checkUnk368()
-	        || !((unk368 / (float)mGraffitoParams.mSinkTime.get()
+	    && (!isSinking()
+	        || !((mSinkTimer / (float)mGraffitoParams.mSinkTime.get()
 	              > mGraffitoParams.mSinkPumpLimit.get())))
 	    && mUpperState != UPPER_STATE_FIXED_ANIMATION
 	    && mUpperState != UPPER_STATE_UNK3
@@ -58,7 +57,7 @@ BOOL TMario::checkPumpEnable()
 	            TNozzleTrigger::DEAD))
 	    && !mWaterGun->isSwitchingToSprayNozzle()
 	    && !mWaterGun->isSwitchingToSecondaryNozzle()
-	    && !checkStatusFlag(MARIO_STATUS_FLAG_UNK1000)) {
+	    && !checkStatusType(MARIO_STATUS_FLAG_UNK1000)) {
 		return TRUE;
 	}
 

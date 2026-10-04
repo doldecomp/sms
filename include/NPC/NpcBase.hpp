@@ -65,7 +65,7 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -136,9 +136,9 @@ public:
 
 	JGeometry::TVec3<f32> getCursorPos() const;
 	void setDummyConnectActor(const JDrama::TActor*);
-	void setBalloonMessage(u32, long);
+	void setBalloonMessage(u32, s32);
 	const GXColor* getPtrInitPollutionColor() const;
-	void isNowMotionBlend() const;
+	bool isNowMotionBlend() const;
 	void offStopMotionBlend();
 	void onStopMotionBlend();
 	void npcWaitIn();
@@ -204,6 +204,14 @@ public:
 
 	bool isClean() const { return mPollutionAmount == 0.0f; }
 
+	enum {
+		LIVE_FLAG_DONT_TALK = VERSION_SELECT(GMSJ01(0x10000), GMSP01(0x20000)),
+		LIVE_FLAG_SINK_BOTTOM
+		= VERSION_SELECT(GMSJ01(0x800000), GMSP01(0x1000000)),
+		LIVE_FLAG_DONT_THROW
+		= VERSION_SELECT(GMSJ01(0x20000000), GMSP01(0x40000000)),
+	};
+
 private:
 	void setIndividualDifference_(JSUMemoryInputStream&);
 	void initIndividualAnm_();
@@ -235,26 +243,27 @@ private:
 	}
 	f32 getAnmOffDist_()
 	{
-		bool bVar3 = false;
-		f32 fVar1  = gpCamera->mFar;
-		u32 uVar5  = unkD0->getCurrentAnmKind();
-		f32 fVar2  = mPtrSaveNormal->mSLDanceAnmOffDist.get();
+		bool useDanceDistance = false;
+		f32 distance          = gpCamera->mFar;
+		int animationKind     = unkD0->getCurrentAnmKind();
+		f32 danceDistance     = mPtrSaveNormal->mSLDanceAnmOffDist.get();
 		if (checkActionFlag(NPC_ACTION_HAPPY | NPC_ACTION_DANCE)
-		    || mActorType == 0x400000D || uVar5 || uVar5 == 23) {
-			bVar3 = true;
+		    || mActorType == 0x400000D || animationKind == NPC_ANM_KIND_MAD
+		    || animationKind == NPC_ANM_KIND_UNK17) {
+			useDanceDistance = true;
 		}
 
-		if (!isNerveMaybeDontCalcAnim0() && !isNerveMaybeDontCalcAnim1()) {
-			fVar1 = mIndividualParams->mWaitAnmOffDist1.get();
-			if (bVar3 && fVar1 < fVar2)
-				fVar1 = fVar2;
-		} else {
-			fVar1 = mIndividualParams->mWaitAnmOffDist0.get();
-			if (bVar3 && fVar1 < fVar2)
-				fVar1 = fVar2;
+		if (isNerveMaybeDontCalcAnim0()) {
+			distance = mIndividualParams->mWaitAnmOffDist0.get();
+			if (useDanceDistance)
+				distance = danceDistance > distance ? danceDistance : distance;
+		} else if (isNerveMaybeDontCalcAnim1()) {
+			distance = mIndividualParams->mWaitAnmOffDist1.get();
+			if (useDanceDistance)
+				distance = danceDistance > distance ? danceDistance : distance;
 		}
 
-		return fVar1;
+		return distance;
 	}
 	void setNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
 	void requestNpcAnm_(EnumNpcAnmKind, EnumNpcStopMotionBlendOnOff);
@@ -422,11 +431,20 @@ public:
 
 		void doThing()
 		{
-			int iVar13 = mPtrSaveNormal->mSLGraphWanderMinFrame.get();
-			int sVar1  = mPtrSaveNormal->mSLGraphWanderMaxFrame.get();
+			int maxFrame = mPtrSaveNormal->mSLGraphWanderMaxFrame.get();
+			int minFrame = mPtrSaveNormal->mSLGraphWanderMinFrame.get();
 
 			unk0 = 0;
-			unk4 = MsRandI(sVar1, iVar13);
+			unk4 = MsRandI(minFrame, maxFrame);
+		}
+
+		void startGraphWait()
+		{
+			int maxFrame = mPtrSaveNormal->mSLGraphWaitMaxFrame.get();
+			int minFrame = mPtrSaveNormal->mSLGraphWaitMinFrame.get();
+
+			unk0 = 0;
+			unk4 = MsRandI(minFrame, maxFrame);
 		}
 
 		bool doThing2()

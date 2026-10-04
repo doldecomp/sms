@@ -5,12 +5,14 @@
 #include "MoveBG/MapObjAirport.hpp"
 #include "MoveBG/MapObjBall.hpp"
 #include "MoveBG/MapObjBase.hpp"
+#include "MoveBG/MapObjBianco.hpp"
 #include "MoveBG/MapObjBlock.hpp"
 #include "MoveBG/MapObjCloud.hpp"
 #include "MoveBG/MapObjCorona.hpp"
 #include "MoveBG/MapObjDolpic.hpp"
 #include "MoveBG/MapObjEx.hpp"
 #include "MoveBG/MapObjFence.hpp"
+#include "MoveBG/MapObjFlag.hpp"
 #include "MoveBG/MapObjFloat.hpp"
 #include "MoveBG/MapObjGeneral.hpp"
 #include "MoveBG/MapObjGrass.hpp"
@@ -27,6 +29,7 @@
 #include "MoveBG/MapObjPollution.hpp"
 #include "MoveBG/MapObjRicco.hpp"
 #include "MoveBG/MapObjSample.hpp"
+#include "MoveBG/MapObjSirena.hpp"
 #include "MoveBG/MapObjTown.hpp"
 #include "MoveBG/MapObjTrap.hpp"
 #include "MoveBG/MapObjTree.hpp"
@@ -81,9 +84,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "MapWireManager") == 0)
 		return new TMapWireManager;
 
-	// TODO:
-	// if ( strcmp( name, "MapObjFlagManager" ) == 0 )
-	//     return new TMapObjFlagManager   ( "旗管理" );
+	if (strcmp(name, "MapObjFlagManager") == 0)
+		return new TMapObjFlagManager;
 
 	if (strcmp(name, "MapObjPoleManager") == 0)
 		return new TMapObjPoleManager;
@@ -91,9 +93,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "MapObjWave") == 0)
 		return new TMapObjWave;
 
-	// TODO:
-	// if ( strcmp( name, "MapObjFlag" ) == 0 )
-	//     return new TMapObjFlag  ("旗");
+	if (strcmp(name, "MapObjFlag") == 0)
+		return new TMapObjFlag;
 
 	if (strcmp(name, "RockPlane") == 0)
 		return new TRockPlane;
@@ -219,7 +220,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TMapObjTree;
 
 	if (strcmp(name, "PalmNatume") == 0)
-		return new TMapObjTree("地形オブジェ基底");
+		return new TMapObjTree;
 
 	if (strcmp(name, "FruitTree") == 0)
 		return new TMapObjBase;
@@ -236,9 +237,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "AirportPool") == 0)
 		return new TPool;
 
-	// TODO:
-	// if (strcmp(name, "WoodBox") == 0)
-	// 	return new TWoodBox ("木箱");
+	if (strcmp(name, "WoodBox") == 0)
+		return new TWoodBox;
 
 	if (strcmp(name, "AirportEventSink") == 0)
 		return new TAirportEventSink;
@@ -279,9 +279,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "craneUpDown") == 0)
 		return new TCraneUpDown;
 
-	// TODO:
-	// if ( strcmp(name, "RiccoLog") == 0 )
-	// 	return new TWoodLog("丸太");
+	if (strcmp(name, "RiccoLog") == 0)
+		return new TWoodLog;
 
 	if (strcmp(name, "GesoSurfBoard") == 0)
 		return new TItem;
@@ -307,55 +306,44 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "RiccoSwitchShine") == 0)
 		return new TFruitLauncher;
 
-	// TODO:
-	// if ( strcmp(name, "BigWindmill") == 0 )
-	// 	return new TBigWindmill("巨大風車");
+	if (strcmp(name, "BigWindmill") == 0)
+		return new TBigWindmill;
 
-	// TODO:
-	// if ( strcmp(name, "MiniWindmill") == 0 )
-	// 	return new TBiancoMiniWindmill("風車（ビアンコ小）");
+	if (strcmp(name, "MiniWindmill") == 0)
+		return new TBiancoMiniWindmill;
 
 	if (strcmp(name, "WindmillRoof") == 0)
 		return new TMapObjBase;
 
-	// TODO:
-	// if ( strcmp(name, "MapObjRootPakkun") == 0 )
-	// 	return new TMapObjRootPakkun("ボスパックンの根");
+	if (strcmp(name, "MapObjRootPakkun") == 0)
+		return new TMapObjRootPakkun;
 
-	// TODO:
-	// if (strcmp(name, "BiaBell") == 0)
-	// 	return new TBiancoBell("ベル水車");
+	if (strcmp(name, "BiaBell") == 0)
+		return new TBiancoBell;
 
-	// TODO:
-	// if ( strcmp(name, "BiaWatermill") == 0 )
-	// 	return new TBiancoWatermill("水車（ビアンコ大）");
+	if (strcmp(name, "BiaWatermill") == 0)
+		return new TBiancoWatermill;
 
-	// TODO:
-	// if ( strcmp(name, "BellWatermill") == 0 )
-	// 	return new TBellWatermill("ベル水車");
+	if (strcmp(name, "BellWatermill") == 0)
+		return new TBellWatermill;
 
-	// TODO:
-	// if ( strcmp(name, "BiaWatermillVertical") == 0 )
-	// 	return new TBiancoWatermillVertical("水車（ビアンコ垂直）");
+	if (strcmp(name, "BiaWatermillVertical") == 0)
+		return new TBiancoWatermillVertical;
 
 	if (strcmp(name, "BiaTurnBridge") == 0)
 		return new TMapObjBase;
 
-	// TODO:
-	// if ( strcmp(name, "LeafBoat") == 0 )
-	// 	return new TLeafBoat("リーフボート");
+	if (strcmp(name, "LeafBoat") == 0)
+		return new TLeafBoat;
 
-	// TODO:
-	// if ( strcmp(name, "LeafBoatRotten") == 0 )
-	// 	return new TLeafBoatRotten("腐ったリーフボート");
+	if (strcmp(name, "LeafBoatRotten") == 0)
+		return new TLeafBoatRotten;
 
-	// TODO:
-	// if ( strcmp(name, "LampSeesawMain") == 0 )
-	// 	return new TLampSeesawMain("ランプシーソー");
+	if (strcmp(name, "LampSeesawMain") == 0)
+		return new TLampSeesawMain;
 
-	// TODO:
-	// if ( strcmp(name, "LampSeesaw") == 0 )
-	// 	return new TLampSeesaw("ランプシーソー（従）");
+	if (strcmp(name, "LampSeesaw") == 0)
+		return new TLampSeesaw;
 
 	if (strcmp(name, "SandBird") == 0)
 		return new TSandBird;
@@ -405,9 +393,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "Viking") == 0)
 		return new TViking;
 
-	// TODO:
-	// if ( strcmp(name, "SirenaGate") == 0 )
-	// 	return new TSirenaGate("シレナゲート");
+	if (strcmp(name, "SirenaGate") == 0)
+		return new TSirenaGate;
 
 	if (strcmp(name, "PinnaDoor") == 0)
 		return new TPinnaEntrance;
@@ -466,75 +453,60 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "MareEventPoint") == 0)
 		return new TMareEventPoint;
 
-	// TODO:
-	// if ( strcmp(name, "CasinoRoulette") == 0 )
-	// 	return new TCasinoRoulette("カジノルーレット");
+	if (strcmp(name, "CasinoRoulette") == 0)
+		return new TCasinoRoulette;
 
-	// TODO:
-	// if ( strcmp(name, "Roulette") == 0 )
-	// 	return new TRoulette("ルーレット");
+	if (strcmp(name, "Roulette") == 0)
+		return new TRoulette;
 
-	// TODO:
-	// if ( strcmp(name, "SlotDrum") == 0 )
-	// 	return new TSlotDrum("スロットマシーン");
+	if (strcmp(name, "SlotDrum") == 0)
+		return new TSlotDrum;
 
-	// TODO:
-	// if ( strcmp(name, "ItemSlotDrum") == 0 )
-	// 	return new TItemSlotDrum("スロットマシーン");
+	if (strcmp(name, "ItemSlotDrum") == 0)
+		return new TItemSlotDrum;
 
 	// TODO:
 	// if ( strcmp(name, "TelesaSlot") == 0 )
 	// 	return new TTelesaSlot("btelesaSlot");
 
-	// TODO:
-	// if ( strcmp(name, "CasinoPanelGate") == 0 )
-	// 	return new TCasinoPanelGate("カジノパネルゲート");
+	if (strcmp(name, "CasinoPanelGate") == 0)
+		return new TCasinoPanelGate;
 
-	// TODO:
-	// if ( strcmp(name, "WarpArea") == 0 )
-	// 	return new TWarpAreaActor("ワープエリア");
+	if (strcmp(name, "WarpArea") == 0)
+		return new TWarpAreaActor;
 
 	if (strcmp(name, "GlassBreak") == 0)
 		return new TMapObjGeneral;
 
-	// TODO:
-	// if (strcmp(name, "Closet") == 0)
-	// 	return new TCloset("クローゼット");
+	if (strcmp(name, "Closet") == 0)
+		return new TCloset;
 
-	// TODO:
-	// if (strcmp(name, "Donchou") == 0)
-	// 	return new TDonchou("パネルカーテン");
+	if (strcmp(name, "Donchou") == 0)
+		return new TDonchou;
 
-	// TODO:
-	// if ( strcmp(name, "SakuCasino") == 0 )
-	// 	return new TSakuCasino("パネル柵");
+	if (strcmp(name, "SakuCasino") == 0)
+		return new TSakuCasino;
 
-	// TODO:
-	// if ( strcmp(name, "SirenabossWall") == 0 )
-	// 	return new TSirenabossWall("ボステレサ部屋壁");
+	if (strcmp(name, "SirenabossWall") == 0)
+		return new TSirenabossWall;
 
-	// TODO:
-	// if ( strcmp(name, "SirenaCasinoRoof") == 0 )
-	// 	return new TSirenaCasinoRoof("カジノ部屋天井");
+	if (strcmp(name, "SirenaCasinoRoof") == 0)
+		return new TSirenaCasinoRoof;
 
-	// TODO:
-	// if ( strcmp(name, "ChestRevolve") == 0 )
-	// 	return new TChestRevolve("回転棚");
+	if (strcmp(name, "ChestRevolve") == 0)
+		return new TChestRevolve;
 
-	// TODO:
-	// if ( strcmp(name, "PosterTeresa") == 0 )
-	// 	return new TWaterHitPictureHideObj("オブジェ出現の絵");
+	if (strcmp(name, "PosterTeresa") == 0)
+		return new TWaterHitPictureHideObj;
 
-	// TODO:
-	// if ( strcmp(name, "PictureTeresa") == 0 )
-	// 	return new TPictureTelesa("テルサの絵");
+	if (strcmp(name, "PictureTeresa") == 0)
+		return new TPictureTelesa;
 
 	if (strcmp(name, "PanelBreak") == 0)
 		return new TMapObjGeneral;
 
-	// TODO:
-	// if ( strcmp(name, "PanelRevolve") == 0 )
-	// 	return new TPanelRevolve("回転棚");
+	if (strcmp(name, "PanelRevolve") == 0)
+		return new TPanelRevolve;
 
 	if (strcmp(name, "TelesaBlock") == 0)
 		return new TTelesaBlock;

@@ -19,7 +19,7 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 
 		if (shouldRun) {
 			J3DJoint* joint = (J3DJoint*)param_1;
-			MtxPtr currMtx  = j3dSys.mModel->mNodeMatrices[joint->mJntNo];
+			MtxPtr currMtx  = j3dSys.getModel()->getAnmMtx(joint->getJntNo());
 
 			s16 r30 = 0;
 			s16 r28 = 0;

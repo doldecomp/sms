@@ -40,7 +40,7 @@ public:
 	virtual ~TObjManager() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual JDrama::TNameRef* searchF(u16, const char*);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual void createAnmData();
 	virtual void createModelDataArray(const TModelDataLoadEntry*);

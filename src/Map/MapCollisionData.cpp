@@ -45,16 +45,16 @@ void TMapCollisionData::initAllCheckDataAndList() { }
 
 void TMapCollisionData::init(JSUMemoryInputStream& stream)
 {
-	int value;
-	stream.read(&value, 4);
+	s32 value;
+	stream >> value;
 	unk8 = value;
-	stream.read(&value, 4);
+	stream >> value;
 	unkC = value;
-	stream.read(&value, 4);
+	stream >> value;
 	unk1C = value;
-	stream.read(&value, 4);
+	stream >> value;
 	unk20 = value;
-	stream.read(&value, 4);
+	stream >> value;
 	unk24 = value;
 
 	mGridExtentX = (unk8 / 2) * 1024.0f;

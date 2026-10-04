@@ -11,7 +11,7 @@ public:
 	TMapObjPlane(const char* name);
 
 	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual BOOL hasMapCollision() const { return TRUE; }
 
@@ -54,14 +54,20 @@ public:
 
 class TRockPlane : public TMapObjPlane {
 public:
-	TRockPlane(const char* name = "岩平面");
+	TRockPlane(const char* name = "岩平面")
+	    : TMapObjPlane(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };
 
 class TSandPlane : public TMapObjPlane {
 public:
-	TSandPlane(const char* name = "砂平面");
+	TSandPlane(const char* name = "砂平面")
+	    : TMapObjPlane(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 };

@@ -29,6 +29,7 @@ Instead, introduce the relevant fields and use them, or rather even getters/sett
 
 The compiler never reorders memory stores, loads and function calls relative to one another.
 They always should be performed in source code in the exact order they appear in target assembly.
+This a good first place to focus on when matching, as it helps shape the rest of the function.
 
 ## MWCC can eliminate redundant reads, but not writes
 
@@ -54,6 +55,10 @@ Next, local variables can expand the stack even if they are always stored in a r
 
 When no obviously correct way to make stack frame size match exists, a trick should be used to correctly match the function's context: a temporary char array of required size to inflate the stack. Such hacks however should be removed or commented out after the function is matching to allow for a possible proper solution in the future.
 
+## Reading frame-size differences
+
+The frame is `8 + locals rounded up to 8 + saved GPRs × 4 rounded up to 8 + saved FPRs × 8`. A 4-byte change in locals can therefore move the frame by 8 or by 0. Each inlined call site keeps its own temporaries, sibling branches don't share them, and a loop body counts once. A frame that is too small usually means the original had more inline expansions or deeper inline chains at the same instructions. It rarely means a missing local.
+
 ## Ifs
 
 Ifs are always compiled to very simple code:
@@ -74,6 +79,33 @@ int b = thing == nullptr ? thing->field : 0;
 ## Sequential integer comparisons in a disjunction
 
 Whe MWCC sees code like `if (a == 8 || a == 9 || a == 10)` it can optimize it to be `if (a - 8 <= 2)` sometimes. When the latter pattern is encountered with enums -- it should be reversed into multiple disjuncted equality comparisons.
+
+## Assigning a `&&`/`||` chain to a bool synthesizes intermediate bools
+
+When a multi-term short-circuit expression is **assigned to a `bool` variable**, MWCC materializes its own intermediate boolean temporaries for the chain — it initializes a flag register to `0`, sets it to `1` when a sub-condition passes, and merges flags for each grouping level.
+This produces a distinctive shape: several `li rN, 0` up front, then
+`li rN, 1` at the deep success points, then `clrlwi.`/`beq` merges.
+
+```cpp
+// Target has flag-register merges (r0/r4/r3 = 0, then =1 at success, then merged).
+// This form reproduces them:
+bool same = (-e <= dx && dx <= e) && (-e <= dy && dy <= e) && (-e <= dz && dz <= e);
+if (!same) { ... }
+
+// Nested ifs do NOT — they compile to early-exit branches straight to the body,
+// with no intermediate flag bools:
+bool same = false;
+if (-e <= dx && dx <= e)
+    if (-e <= dy && dy <= e)
+        if (-e <= dz && dz <= e)
+            same = true;
+```
+
+When the target shows those `li 0`/`li 1`/merge flags for a compound predicate, spell it as a single `bool x = cond && cond && ...;` assignment (grouped to match the flag nesting), not as nested `if`s.
+
+Concrete case (`MtxUtil.cpp` `TRope::constraintTail`): nested-if near-zero test 89.3%;
+`bool same = (-e<=dx&&dx<=e) && ...;` with `<=` and inline `-JGeometry::TUtil<f32>::epsilon()`
+→ 99.8%.
 
 ## Switches
 
@@ -103,6 +135,40 @@ As MWCC inlines functions, sometimes nonsensical control flow will be encountere
 Reconstructing correct inline calls is crucial in matching code correctly. When a similar block of code reoccurs -- always consider the possibility that it's an inline, but never disregard the possibility that the original authors simply copy-pasted it. When starting on a new function, explore the inlines already available in the different classes that it uses, as well as in the current translation unit.
 
 UNUSED functions from the MAP must often be reconstructed even when they do not exist as standalone code in the final binary: their inlined bodies still determine caller codegen (register allocation, load offsets, branch layout). Treat their MAP signature and size as constraints, recover a plausible body from repeated callsite patterns, and validate by diffing the caller(s) after each inline-shape change rather than expecting a direct symbol-level match for the UNUSED function itself.
+
+### A getter that repeats before every operation is a wrapper inline
+
+m2c writes an inlined wrapper as one pointer local that is assigned again and again:
+
+```cpp
+pBuf = DSPInterface::getDSPHandle(channel->unk0);
+pBuf->setPauseFlag(1);
+pBuf = DSPInterface::getDSPHandle(channel->unk0);
+pBuf->flushChannel();
+```
+
+When the same lookup comes back before every single operation, the original source almost always called a wrapper that hides the lookup:
+
+```cpp
+DSPInterface::setPauseFlag(channel->unk0, 1);
+DSPInterface::flushChannel(channel->unk0);
+```
+
+Both forms give the same instructions, but the wrapper form reads correctly and it colours the registers correctly in long functions.
+`JAInter::StreamLib::callBack` went from 98.7% to 99.8% on this rewrite alone.
+Keep the pointer local only where the code **reads a field** through it.
+
+## Check out-of-line copies before changing an inline
+
+When MWCC declines to inline something, it emits a weak or local copy into the caller's unit, and `mario.MAP` lists it. That copy is the original body. Diff it before changing the inline. If the ROM calls an inline out of line at some sites and inlines it at others, the difference is at those call sites, not in its body.
+
+## Narrowing casts are a hint
+
+A `clrlwi`/`extsh` before a use rarely means the original had a cast. Look first for a parameter, return, local or member type that narrows the value.
+
+## Signedness and width show in the compare
+
+`cmpwi` vs `cmplwi` and `extsb`/`extsh` vs `clrlwi` give the sign and width of a value. Fix the declared type rather than adding casts.
 
 ## Reference Locals Affect Register Allocation
 
@@ -232,6 +298,135 @@ The compiler hoists constant loads (`lfs`, `lfd` from SDA/SDA2) before loops. Th
 
 If the target hoists a constant (e.g., `lfd f28, @5181@sda21`) before a loop but our build does not, it means the compiler sees a different code structure. This is usually a symptom of a deeper structural mismatch in the loop body or inlined functions, not fixable by just moving the load.
 
+## Function-local statics with non-trivial initializers: `init$NNN` is the guard
+
+When a function-local `static` has a non-trivial initializer that has to run at first call — typically a constructor call like `static JGeometry::TVec3<f32> pos(1815.0f, 1500.0f, 1550.0f);` — MWCC emits **two symbols in `.sbss`**:
+
+- The variable itself (e.g. `pos$NNN`), sized for the type (a Vec is 12 bytes).
+- A 1-byte construction guard named `init$NNN` (note the literal name `init`, regardless of what your source variable is called).
+
+The function-entry codegen is:
+
+```asm
+lbz   r0, init$NNN@sda21       ; load the guard byte
+extsb. r0, r0                  ; sign-extend with dot (sets CR)
+bne   .L_skip_init             ; already constructed → skip
+... initializer code, writes to pos$NNN ...
+li    r0, 1
+stb   r0, init$NNN@sda21       ; mark constructed
+.L_skip_init:
+```
+
+So when the target shows an `init$NNN` byte that is loaded with `lbz` + `extsb.` and tested, **don't** model it as a plain `static bool foo;` in your source — model it as the *guard* for some other static local with a real constructor. Pick the source statement that produces the matching initializer body (commonly a `JGeometry::TVec3<f32>(x, y, z)` if the init code writes three floats).
+
+Aggregate-initialized PODs (`static Vec pos = { 1.0f, 2.0f, 3.0f };`) and zero-initialized statics (`static Vec pos;`) do NOT produce a guard — they sit in `.data` / `.bss` with no first-call check. The `init$NNN` pattern only appears when MWCC needs to run constructor code at first entry.
+
+## A zero-argument call of a constructor with default arguments costs one inline pass
+
+MWCC expands inline calls in passes, and each pass permits a smaller callee
+(pass 0: no limit, pass 1: 10 statements, pass 2: 7, pass 3: 3, pass 4: none).
+A constructor written with default arguments adds one pass to that count when
+it is called with **no** arguments:
+
+```cpp
+class TGameSequence {
+	TGameSequence(u8 stage = 0, u8 scenario = 0, JDrama::TFlagT<u16> flag = 0)
+	{
+		set(stage, scenario, flag);
+	}
+};
+
+TGameSequence local;          // synthesized __ct__13TGameSequenceFv, 1 statement,
+                              // then the real ctor one pass deeper
+TGameSequence local(a, b);    // the real ctor directly, no wrapper
+```
+
+The same rule applies to a member of such a type that the enclosing
+constructor default-initialises, for example `TFlagT<u16> unkC;` in
+`JDrama::TViewObj`. The wrapper has no symbol of its own; it is always
+expanded.
+
+How to recognise it: the calls inside a constructor body stay `bl` although
+the ladder says they fit, while the same callees are expanded at that depth
+elsewhere. `TApplication::TApplication()` keeps `bl TFlagT::TFlagT(const
+TFlagT&)` and `bl TFlagT::set(u16)` for each `TGameSequence` member; with a
+plain `TGameSequence() { set(0, 0, 0); }` both are expanded and the function
+is at 36%. The default-argument form gives 100%. `inline_trace.py` shows the
+wrapper as `__ct__XFv [1 stmt]` one pass above the real constructor.
+
+## A member function called on a bare global substitutes `this`; called through an accessor it binds it
+
+When an inline member function is called on a global object written by name,
+`gpApplication.setNextArea(x)`, MWCC substitutes `this` with the constant
+address, folds the member offsets, and then CSEs `gpApplication + 0x12` into a
+callee-saved register:
+
+```
+addi r30, r5, 0x12       ; &gpApplication.mNextArea
+stb  r0, 0x12(r5)
+...
+addi r3, r30, 2          ; &mNextArea.unk2
+```
+
+When the receiver is an expression that MWCC will not repeat (an inline
+accessor call, a local pointer, or a local reference), `this` is bound to a
+temporary that holds `&gpApplication` itself, and every offset folds from it:
+
+```
+addi r31, r4, gpApplication@l
+stb  r0, 0x12(r31)
+stb  r0, 0x13(r31)
+addi r3, r31, 0x14
+```
+
+The second shape, with the global's own address kept across the call, is the
+sign that the original went through an accessor such as `SMSGetMSound()` or
+`SMSGetMarDirector()`. Nine functions of `System/` show it for
+`gpApplication`, and every other `gpApplication` site in the tree compiles to
+the same bytes through `SMSGetApplication()`, so the accessor is used
+everywhere. Expect the same of the other `SMSGet*` accessors: the bare global
+and the accessor differ only where the result feeds another inline call.
+
+The same test tells a getter from a raw field read. A getter such as
+`u8 getStage() const { return unk0; }` reads through `this`, so its return
+value is force-loaded into a compiler temporary. Two visible effects: the
+temporary keeps a 4-byte slot (a frame 4 bytes short per call is the
+symptom), and when two such calls are the arguments of one `bl`, MWCC
+evaluates them in the reverse order. `TMarDirector::currentStateFinalize`
+loads `mCurrArea.unk1` before `unk0` for `endStageEntranceDemo`, which only
+the getters reproduce. An accessor that returns a reference leaves no trace
+at all, so it can neither be proved nor disproved this way.
+
+## Default arguments vs. spelling them out changes inlining
+
+When a base/member constructor is invoked with a value that happens to be that
+constructor's own default argument, prefer the default-arg call form over
+repeating the literal. It is not just cosmetic: it can change MWCC's inline
+depth decisions.
+
+Concrete case (`BathWaterManager.cpp`): `JDrama::TViewObj`'s ctor defaults its
+name to `"<TViewObj>"`. Writing a member's base as `JDrama::TViewObj("<TViewObj>")`
+inlined the nested `TNameRef`/`TFlagT` ctors one level too deep; writing it as
+`JDrama::TViewObj()` (letting the default supply the identical string) kept those
+nested ctors as real `bl` calls, exactly like the target. This took the
+enclosing constructor from 90.6% to 100%. If a nested ctor inlines when the
+target keeps it as a call (or vice-versa), check whether the original used a
+default argument.
+
+## Unsized arrays go to `.data`, sized ones may go to `.sdata`
+
+An array declared with an explicit size that is small enough (≤ the `-sdata`
+threshold, default 8 bytes) can be placed in `.sdata` and addressed GP-relative
+(`@sda21`, giving an indexed `lwzx` load). An array declared **unsized** — e.g.
+`static const char* fileNames[]` with the size deduced from the initializer —
+is always placed in `.data` instead, and addressed absolutely (`lis/addi @ha/@l`
++ `add`/`lwz`).
+
+So if a small global array should live in `.data` (target uses `lis/addi`) but
+yours lands in `.sdata` (`@sda21`), drop the explicit array bound and let the
+initializer size it. Concrete case (`BathWaterManager.cpp`): `fileNames[2]` →
+`.sdata` (nonmatching); `fileNames[]` → `.data` (match).
+
 ## Local Symbol Mangling: `@unnamed@` vs `static`
 
 MWCC mangles symbols inside anonymous namespaces with an `@unnamed@` prefix.
@@ -249,6 +444,17 @@ When a TU is compiled with `-inline deferred` (see TU-specific flags in `configu
 ## TVec3 / Vector Codegen Patterns
 
 `JGeometry::TVec3<f32>` is a 12-byte struct with `x`, `y`, `z` float members. How you read/write it drastically affects code generation.
+
+### Use the inlines
+
+`TVec3` and related `JGeometry` types have lots of inlines, and most of the time the original code would have used those.
+When naive decompilation of the math doesn't work out, try using the inlines.
+
+### Multiplication by zero/one
+
+MWCC can optimize out multiplication by floating point one or zero written out explicitly in code, but fails to do so when the multiplication comes from an inlined function.
+This routinely occurs when an "up" vector is created and then cross-multiplied with another vector -- codegen contains trivial multiplications by zero or one.
+When decompiled naively as `1.0f * unk170.z - 0.0f * unk170.y`, MWCC will optimize the multiplications out, but if the "up" vector is properly created and the `cross` inline is used, it will fail to optimize them out, achieving the desired codegen.
 
 ### Construction: component-by-component vs constructor
 
@@ -294,3 +500,296 @@ node.mPos.set(expr_x, expr_y, expr_z);
 ```
 
 The target assembly will clearly show `lwz`/`stw` (integer move) vs `lfs`/`stfs` (float move). Choose the source pattern that matches.
+
+### Constructor with a zero component + `+=` vs direct component init
+
+When building a vector where some components are `0.0f + <expr>` and one is a
+real value, the target may show *literal* `0.0` adds on the zero components:
+```
+lfs f4, @zero ; fadds f4, f4, f0   ; component = 0.0 + src.x
+```
+This is the signature of the original writing a base vector with literal-zero
+components and then adding another vector, e.g.
+```cpp
+// point2 = (0, -unkC.y, 0) then add unk58 -> emits the "0.0 + unk58.x" adds
+JGeometry::TVec3<f32> point2(0.0f, -1.0f * unkC.y, 0.0f);
+point2 += data.unk58;
+```
+Writing the fully-fused form `TVec3(unk58.x, -unkC.y + unk58.y, unk58.z)`
+instead reads the components directly with no zero-adds and does not match.
+Concrete case (`BathWaterManager.cpp` `calcBathtub` inner-band branch): the
+`+=` form recovered the `0.0 + x`/`0.0 + z` adds; see next tip for the `-1.0f *`.
+
+### Negation as `-1.0f * x` (fmuls) vs `-x` (fneg)
+
+`-x` compiles to `fneg`. But the target sometimes shows a standalone
+`fmuls f_, f(-1.0), f(x)` (multiply by the `-1.0` SDA constant) where you'd
+expect a negation — and crucially kept as a *separate* fmuls, not fused into a
+following `fmadds`/`fnmsubs`. This happens when the original literally wrote
+`-1.0f * x` (MWCC in does not algebraically fold
+`-1.0f * x` -> `fneg x`). Prefer `-1.0f * x` over `-x` when the target shows the
+extra `-1.0` load + `fmuls`. Concrete case (`BathWaterManager.cpp`
+`calcBathtub`): `-1.0f * unkC.y` matched; `-unkC.y` gave `fneg` and did not.
+
+### Trouble in fnmsubs town
+
+Computation-heavy code commonly has code like `B - A * C` or `A * C - B`  for floating-point A, B, C. E.g. any cross product will have analogous code.
+MWCC likes to compile such code into PowerPC `fmsubs` and `fnmsubs` instructions, but they have a quirk in how they are implemented related to double to single precision conversions: technically, fnmsubs is `-float(A * C - B)`, but MWCC uses it for `B - A * C`.
+Decompilers like ghidra and m2c like to preserve this technicality and commonly emit code like `-(a * b - c * d)` in code like vector cross products.
+Rewriting it as `c * d - a * b`, opening the braces, usually helps matching it better.
+
+## Reading a source array through `void*` defeats CSE (controls loop unroll)
+
+When a loop copies the same source element to several destinations, e.g.
+```cpp
+TVec3<s16>* src = (TVec3<s16>*)getVtxPosArray();
+for (...) { a[i] = src[i]; b[i] = src[i]; c[i] = src[i]; }
+```
+MWCC's alias analysis can prove `src` (a clean typed pointer) doesn't alias the
+`new`-allocated destinations and **CSEs the `src[i]` load** — reading it once and
+reusing it for all three stores. That shrinks the loop body, and MWCC's `-O4`
+unroller then unrolls it *more* (e.g. ×8). The target often reloads `src[i]` for
+every store (no CSE) and unrolls only ×2.
+
+To reproduce the reloads (and the smaller unroll factor), read the source
+through a `void*` and cast at each use, which blocks the alias analysis:
+```cpp
+void* src = getVtxPosArray();
+for (...) {
+    a[i] = ((TVec3<s16>*)src)[i];
+    b[i] = ((TVec3<s16>*)src)[i];
+    c[i] = ((TVec3<s16>*)src)[i];
+}
+```
+Concrete case (`DrawUtil.cpp` `TTrembleModelEffect::init`): the typed-`src` form
+CSE'd + unrolled ×8 (54%); the `void*`-cast form reloaded + unrolled ×2 (100%).
+
+## `const` on an inline's pointer parameter also defeats CSE
+
+The same effect appears at an inline boundary, and there the fix is one word.
+When an inline reads a field through a pointer parameter and the caller reads
+the *same* field of the *same* object, MWCC normally merges the two into one
+load. Making the parameter point to `const` stops the merge, and both loads
+appear.
+
+```cpp
+// one load of symbol->mNameOffset, shared with the caller
+const char* getSymbolName(TSpcSymbol* symbol);
+// two loads: the inline's own, and the caller's
+const char* getSymbolName(const TSpcSymbol* symbol);
+```
+
+Concrete case (`Strategic/spcinterp.cpp` `TSpcInterp::dump`): the original loads
+`symbol->mNameOffset` twice, once inside the inlined `getSymbolName` and once as
+a `SpcTrace` argument. Adding `const` took `dump` from 98.8% to 100%, and left
+every other caller of `getSymbolName` matching.
+
+This is worth reaching for before restructuring anything: it is a smaller and
+far more plausible change than the usual alternatives (hoisting the field into a
+local, or dropping the intermediate local altogether), both of which were tried
+here and were worse.
+
+## An inline's locals are numbered in reverse when it is inlined
+
+This one explains a whole family of "the out-of-line copy and the inlined copy
+want opposite stack layouts" puzzles, so it is worth knowing the mechanism.
+
+`CParser_NewLocalDataObject` **prepends** each new local to the function's
+`locals` list, so the list is in reverse declaration order. Two consumers then
+walk that list forward:
+
+- `assign_locals_to_memory(locals)` gives out stack offsets, **increasing** —
+  so when a function is compiled normally, the **first-declared** local ends up
+  at the **highest** offset.
+- `CInline_SetupArgsExpression` recreates the callee's locals in the caller,
+  walking the packed array forward and prepending each one — which **reverses
+  the order a second time**. So in an inlined copy the **last-declared** local
+  ends up at the highest offset.
+
+The consequence: any two named locals of an inline function **swap places**
+between its out-of-line copy and every site that inlines it. No declaration
+order satisfies both. Measured on `TSpcInterp::fetchU32`: `src` first gives the
+four inline sites 100% and the out-of-line copy 99.8%; `result` first gives
+exactly the reverse.
+
+The escape is not to reorder but to **reduce the function to a single local
+that needs a stack home** — with nothing to swap, both layouts agree. A local
+whose initialiser carries a type-conversion node gets propagated into a compiler
+temporary and stops needing a home, so writing the accessor to return `void*`
+and casting at the call site is enough:
+
+```cpp
+void* getText(u32 offset);                        // was u8*
+u8* src = (u8*)mBinary->getText(mProgramCounter);  // now a temp, not a local
+u32 result;                                       // the only named local left
+```
+
+That took `fetchU32`, `fetchS32`, `execvar` and `execfunc` to 100% at once
+(`spcinterp` 62.2% -> 67.7% matched code). Note it also fixed the two call sites
+that fetch *twice*: a second named local was what pushed their temporaries out
+of step, not anything about the second fetch itself.
+
+Symptom to recognise: the out-of-line copy of a weak inline and its inline sites
+each want the same pair of slots in opposite orders, and both frames are already
+the right size.
+
+## `T x = f();` costs one more stack object than `T x; x = f();`
+
+When `f` is inlined, initialising a local from the call builds the return value
+in its own temporary and then copies it into `x` — **two** stack objects.
+Declaring first and assigning lands the inlined return straight in `x`'s slot —
+**one**. Neither spelling changes a single instruction; only the frame moves, so
+this is the cheapest knob there is when a frame is off by exactly the size of
+one object.
+
+```cpp
+ExecFunction f = chooseExecFunction(cmd);   // return temp + copy
+ExecFunction f; f = chooseExecFunction(cmd); // return lands in f
+```
+
+Both directions have paid off in `Strategic/spcinterp.cpp`:
+- `TSpcInterp::update` was 8 bytes too big holding an inlined 12-byte
+  pointer-to-member. Declare-then-assign took it to 100%. (Binding a
+  `const T&` instead is in between — it drops the copy but adds an address
+  register: 96.2%.)
+- `TSpcBinary::init` was 8 bytes too *small*. Spelling the inlined `calcKey`
+  result as a local — `u32 hash = calcKey(...); symbol->mNameHash = hash;`
+  instead of assigning the call directly — added exactly the two missing
+  objects and took it to 100%, with `calcAndStoreKeys` still size-exact
+  against the map.
+
+So: frame one object too big, look for an initialisation to split; one object
+too small, look for a call result that should have been named.
+
+## Reading a value into a local removes a bound temporary
+
+`CInline_SetupArgsExpression` binds an argument to a compiler temporary whenever
+the expression is unsafe to repeat — and a call is always unsafe. A read of an
+unmodified local is safe, so it gets substituted instead and **no temporary is
+created**. When a frame holds one 4-byte temporary too many, moving the argument
+into a local is often the whole fix:
+
+```cpp
+interp->push((int)interp->pop().typeof());   // binds a temp for the argument
+u32 type = interp->pop().typeof();           // no temp; `type` stays in a register
+interp->push((int)type);
+```
+
+Concrete case (`Strategic/spcinterp.cpp` `spcTypeof`): 96.3% to 100%.
+
+Beware the mirror image: this only helps when the local itself does not need a
+slot. If the enclosing function already has a settled set of named locals, the
+new local lands in the local region and shifts every offset above it, which
+costs more than the temporary saved. The same change in `execadd` dropped it
+from 100.0% to 96.6% for exactly that reason.
+
+## Each inline level in a call chain leaves one dead 4-byte temporary
+
+An expression such as `gpFoo->getBar()->baz()` builds one compiler temporary per
+inline level that it goes through, and each temporary keeps a stack slot even
+when the optimiser removes every instruction that touched it.
+The instruction stream is then identical to the ROM's and only the stack offsets
+disagree — the classic "our frame is 8 bytes short" symptom.
+
+Two levers add a level, and both are ordinary source that a person would write:
+
+- **Go through the global's inline accessor.**
+  `SMSGetMarDirector()->getConsole()` instead of `gpMarDirector->getConsole()`
+  adds exactly one temporary. This only works when the *next* member call is
+  itself inline; if the accessor result feeds an out-of-line `bl` at once, MWCC
+  reads the global in place and no temporary appears.
+- **Hold the chain result in a named local.**
+  `TGCConsole2* console = SMSGetMarDirector()->getConsole(); console->foo();`
+  adds one more temporary than the same expression written in one line, because
+  the local is used as the receiver of the following call.
+
+Concrete case (`System/EventWatcher.cpp` `evManiCoinDown`): the bare
+`gpMarDirector->getConsole()->startAppearStar()` gave 2 temporaries and a 0x28
+frame; the accessor gave 3 and 0x30 with the wrong layout; the accessor plus the
+`console` local gave 4 and a 100% match.
+
+Because the effect depends on what follows the accessor, do not convert a whole
+file blindly — measure each site. In the same file `evSetNextStage` is
+measurably *worse* with the accessor, which is real evidence that the original
+used the bare global there.
+
+## A by-value class parameter forces the copy through memory
+
+When a class is passed by value, MWCC materialises the copy and reads the copy
+back, even for a two-word POD:
+
+```
+lwz  r4, 0(r3)        ; source.mType stays in a register
+lwz  r0, 4(r3)
+stw  r0, 0x38(r1)     ; source.mData
+stw  r4, 0x3c(r1)     ; copy.mType
+lwz  r0, 0x38(r1)
+stw  r0, 0x40(r1)     ; copy.mData
+lwz  r0, 0x3c(r1)     ; the copy is read back from memory
+```
+
+Two stack objects, and the second field never gets forwarded through the
+register. Seeing this shape in the target is a reliable sign that the value goes
+into a by-value parameter — in `EventWatcher.cpp` that parameter is
+`getNameRefPtr(TSpcSlice)`. A named local initialised from the same call gives
+two objects as well, but forwards the first field through a register, so the two
+shapes are easy to tell apart.
+
+## Working with JSUMemoryInputStream
+
+Practice shows that most of the time in game code `operator>>` overloads were used for reading from them, and sometimes they were chained together.
+This fact was derived from stack frame padding issues in various `JDRama::TNameRef::load` overloads -- only by using `operator>>` and sometimes chaining them (e.g. `stream >> vec.x >> vec.y >> vec.z;`) does stack the stack frame size matches the original.
+However, methods like `stream.readU16()` were also occasionally used, but codegen differs a bit when it is used and so judgement must be made on a case-by-case basis.
+Doing raw `stream.read(&someInt, 4);` calls is the least likely option, because humans are lazy and wouldn't want to specify the size manually -- always prefer avoiding it.
+
+## Forcing local arrays onto the stack with unrolled loops
+
+Small local arrays (e.g. `f32 dist[3]`, `f32 m[3][2]`) as well as structures are prime candidates for MWCC's *scalar replacement of aggregates* — it promotes the elements into FP or GP registers, drops the stack storage entirely, and is then free to reorder/fuse the element computations.
+If the target keeps such an array on the stack (you see `stfs`/`lfs` of consecutive slots, computed in a strict order), your straight-line, element-by-element source will usually mismatch because yours got scalarized.
+
+Two ways to force the array back onto the stack:
+
+1. `(void)&arr;` — taking the address marks it address-taken so it must live in
+   memory. Works, but it's an obviously-fake artifact.
+   Still useful as an intermediate step in figuring out the other details of the function to then replace with a proper match.
+2. **Write the init/compute as a `for` loop that MWCC unrolls.** Iterating over
+   the array with an index the compiler can fully unroll (small constant trip
+   count) makes MWCC materialize the array on the stack and emit the element
+   stores/loads in loop order — no address-of hack, and it reads like plausible
+   original code. This also tends to fix the *ordering* of the stores, not just
+   their presence.
+
+```cpp
+// scalarized into registers + reordered (mismatch), or needs (void)&:
+f32 dist[3];
+dist[0] = unk24[0]; dist[1] = unk24[1]; dist[2] = unk24[2];
+
+// unrolled loop: array is spilled to the stack in order (match):
+f32 dist[3];
+for (int i = 0; i < 3; ++i)
+    dist[i] = unk24[i];
+```
+
+Concrete case (`DrawUtil.cpp` `TSilhouette::loadAfter`, a Cramer's-rule solve
+over `f32 atten[3]`/`dist[3]`/`m[3][2]`): element-by-element assignment needed
+three `(void)&` hacks and still only reached ~92% (residual store scheduling);
+rewriting the `dist` copy and the `m` fill as small unrolled `for` loops removed
+the hacks and took it to 99.7%. Prefer the loop form — it's both cleaner and a
+better structural match than address-of forcing.
+
+## Triviality of a type influences codegen
+
+A user-declared destructor (even an empty `~T() {}`) makes a class non-trivial, and MWCC pins non-trivial types to memory instead of promoting them into registers.
+Triviality propagates: a non-trivial member/base makes the enclosing class non-trivial too.
+
+Two symptoms of a *missing* destructor, both meaning "the target keeps this in memory but our build cached it in a register":
+
+- **Struct fields reload across calls in the target, but ours caches them.**
+  A trivial struct is scalar-replaced (fields live in registers across calls); a non-trivial one is reloaded from memory after any opaque call.
+- **The target spills a freshly-`new`'d object pointer to the stack and reloads it as `this`, but ours keeps it in a register.**
+  For `new T()` with a non-trivial `T`, the constructed object is a separate address-taken temporary with a stack home, so `this` is reloaded from the stack during construction.
+  Only visible when the constructor is inlined (out-of-line ctors call a real `bl` and never show it).
+
+Fix: give the smallest offending value/helper type an empty `~T() {}` and re-check.
+This is a global change, so re-run the baseline — one destructor can fix (or shift) many callsites at once.
+Concrete case: adding `~TMsRange<f32>()` (a field of `TSmallEnemyParams`) took several `TFooManager::load` functions from ~95% to 100%.

@@ -36,7 +36,7 @@ public:
 		/* 0xC */ JPABaseEmitter* mEmitter;
 	};
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	TMarioParticleManager(const char* = "MarioParticleManager");
 	void createEffectInfoAry(int);
@@ -69,7 +69,7 @@ public:
 class TEmitterViewObj : public JDrama::TViewObj {
 public:
 	TEmitterViewObj(JPAEmitterManager*, const char* = "<EmitterViewObj>");
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ JPAEmitterManager* unk10;
@@ -79,7 +79,7 @@ class TEmitterIndirectViewObj : public TEmitterViewObj {
 public:
 	TEmitterIndirectViewObj();
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 class TMarioEmitterCallBackBindToPosPtr

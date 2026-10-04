@@ -5,7 +5,10 @@
 
 class TStageEnemyInfo : public JDrama::TNameRef {
 public:
-	TStageEnemyInfo();
+	TStageEnemyInfo(const char* name = "<TStageEnemyInfo>")
+	    : JDrama::TNameRef(name)
+	{
+	}
 	void load(JSUMemoryInputStream&);
 
 	// fabricated

@@ -9,10 +9,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TJointModel::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TJointModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!checkFlag(1))
-		mActor->perform(param_1, param_2);
+	if (!checkFlag(FLAG_DEAD))
+		mActor->perform(cue, graphics);
 }
 
 void TJointModel::initActor(const char* name, MActorAnmData* anm_data)

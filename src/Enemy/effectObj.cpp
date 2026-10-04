@@ -12,6 +12,8 @@
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 TEffectObjManager* gpEffectObjManager;
 
@@ -31,9 +33,9 @@ TEffectObjManager* gpEffectObjManager;
 // JGadget::TAllocator<TEffectObjBase*>>::insert(JGadget::TList<TEffectObjBase*,
 // JGadget::TAllocator<TEffectObjBase*>>::iterator, TEffectObjBase* const&) {}
 
-void TSimpleEffect::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSimpleEffect::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 2)
+	if (cue & CUE_CALC_ANIM)
 		emitEffect();
 }
 
@@ -50,9 +52,8 @@ void TEffectPinnaFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A8, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 void TEffectBiancoFunsui::loadAfter()
@@ -68,9 +69,8 @@ void TEffectBiancoFunsui::emitEffect()
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A9, getUnk48(), 1, this);
 
-	if (gpMSound->gateCheck(MSD_SE_EV_ARCHED_FOUNTAIN))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
+	                                nullptr, 0, 4);
 }
 
 TEffectObjBase::TEffectObjBase(const char* name)
@@ -104,9 +104,9 @@ void TEffectObjBase::reset()
 	unk74 = 0;
 }
 
-void TEffectObjBase::perform(u32 param_1, JDrama::TGraphics*)
+void TEffectObjBase::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (unk68 == 1) {
 			unk74 = 0;
 			unk68 = 2;
@@ -130,49 +130,33 @@ void TEffectObjBase::moveObject()
 {
 	if (unk68 == 2) {
 		unk74 += 1;
-		JGeometry::TVec3<f32> local_1c;
+		Vec local_1c;
 		VECScale(&mScaling, &local_1c, unk70 / unk6C);
 
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x1F5, &mPosition, 3, this)) {
-			// TODO: making this a setUnk154AndUnk174 makes it match less
-			// because loads happen in z x y order instead of x y z, what was
-			// the real inlines?
-			f32 x = local_1c.x;
-			f32 y = local_1c.y;
-			f32 z = local_1c.z;
-			emitter->unk154.set(x, y, z);
-			emitter->unk174.set(x, y, z);
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_MAP_FIRE_C, &mPosition, 3, this)) {
+			emitter->setGlobalScale(local_1c);
 		}
 
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x1C4, &mPosition, 1, this)) {
-			f32 x = local_1c.x;
-			f32 y = local_1c.y;
-			f32 z = local_1c.z;
-			emitter->unk154.set(x, y, z);
-			emitter->unk174.set(x, y, z);
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_MAP_FIRE_A, &mPosition, 1, this)) {
+			emitter->setGlobalScale(local_1c);
 		}
 
-		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emit(0x1C5, &mPosition, 1, this)) {
-			f32 x = local_1c.x;
-			f32 y = local_1c.y;
-			f32 z = local_1c.z;
-			emitter->unk154.set(x, y, z);
-			emitter->unk174.set(x, y, z);
+		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+		        PARTICLE_MS_MAP_FIRE_B, &mPosition, 1, this)) {
+			emitter->setGlobalScale(local_1c);
 		}
 
-		if (gpMSound->gateCheck(MSD_SE_OBJ_CALM_FLAME))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_OBJ_CALM_FLAME, &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	if (unk68 == 3)
 		unk68 = 0;
 
 	for (int i = 0; i < mColCount; ++i)
-		if (mCollisions[i]->isActorType(0x80000001))
+		if (getCollision(i)->isActorType(0x80000001))
 			SMS_SendMessageToMario(this, 0xA);
 }
 
@@ -186,16 +170,14 @@ void TEffectObjBase::behaveToWater(THitActor* param_1)
 		return;
 	}
 
-	if (gpMSound->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
-		                                          &mPosition, 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
 	unk68 = 3;
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-	        0x8B, &mPosition, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	        PARTICLE_MS_MOE_FIRE_OFF, &mPosition, 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
 	}
 }
 
@@ -220,15 +202,16 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 	JDrama::TViewObj::load(stream);
 }
 
-void TEffectObjManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 0x9) {
-		JGadget::TList<TEffectObjBase*>::iterator it = unk14.begin();
-		for (; it != unk14.end(); ++it)
-			(*it)->perform(param_1, param_2);
+	if (cue & (CUE_DRAW | CUE_MOVE)) {
+		JGadget::TList<TEffectObjBase*>::iterator it  = unk14.begin();
+		JGadget::TList<TEffectObjBase*>::iterator end = unk14.end();
+		for (; it != end; ++it)
+			(*it)->perform(cue, graphics);
 
 		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
-			unk24[i]->perform(param_1, param_2);
+			unk24[i]->perform(cue, graphics);
 	}
 }
 
@@ -252,7 +235,7 @@ void TEffectModel::init(TLiveManager* param_1)
 void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
-	mRotation.y = MsRandF(0.0f, 360.0f);
+	mRotation.y = TMsRange<f32>(0.0f, 360.0f).rand();
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	offLiveFlag(LIVE_FLAG_DEAD);
@@ -334,7 +317,7 @@ void TEffectColumWater::reset()
 	mMActor->setBrk("06_enem_tobikomi");
 	mMActor->setBtk("06_enem_tobikomi");
 	mMActor->setBpk("06_enem_tobikomi");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 	mMActor->getFrameCtrl(2)->setFrame(0.0f);
@@ -344,20 +327,16 @@ void TEffectColumWater::generate(JGeometry::TVec3<f32>& param_1,
                                  JGeometry::TVec3<f32>& param_2)
 {
 	reset();
-	JGeometry::TVec3<f32> local_28 = param_2;
-	local_28.scale(1.3f);
-	mScaling = local_28;
+	mScaling = param_2 * 1.3f;
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x89, &param_1, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        COLUMWATER_JPA_MS_ENEHAMON_A, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x8A, &param_1, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        COLUMWATER_JPA_MS_ENEHAMON_B, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
 	}
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -419,7 +398,7 @@ void TEffectBombColumWater::reset()
 	mMActor->setBrk("04_tobikomi");
 	mMActor->setBtk("04_tobikomi");
 	mMActor->setBpk("04_tobikomi");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 	mMActor->getFrameCtrl(2)->setFrame(0.0f);
@@ -429,26 +408,21 @@ void TEffectBombColumWater::generate(JGeometry::TVec3<f32>& param_1,
                                      JGeometry::TVec3<f32>& param_2)
 {
 	reset();
-	JGeometry::TVec3<f32> local_28 = param_2;
-	local_28.scale(1.3f);
-	mScaling = local_28;
+	mScaling = param_2;
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x2F, &param_1, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_M_TOBIKOMI_A, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x30, &param_1, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_M_TOBIKOMI_B, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(mScaling);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x1D4, &param_1, 0, nullptr)) {
-		emitter->unk154.set(mScaling);
-		emitter->unk174.set(mScaling);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_M_TOBIKOMI_C, &param_1, 2, nullptr)) {
+		emitter->setGlobalScale(mScaling);
 	}
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -507,7 +481,7 @@ void TEffectColumSand::reset()
 	mMActor->setBck("08_sunabashira");
 	mMActor->setBrk("08_sunabashira");
 	mMActor->setBtk("08_sunabashira");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 }
@@ -517,12 +491,11 @@ void TEffectColumSand::generate(JGeometry::TVec3<f32>& param_1,
 {
 	reset();
 	mScaling  = param_2;
-	f32 fVar1 = param_2.y;
+	f32 fVar1 = param_2.x;
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0x7E, &param_1, 0, nullptr)) {
-		emitter->unk154.set(fVar1, fVar1, fVar1);
-		emitter->unk174.set(fVar1, fVar1, fVar1);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        COLUMSAND_JPA_MS_BOHA_CRASH_A, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(JGeometry::TVec3<f32>(fVar1, fVar1, fVar1));
 	}
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
@@ -583,7 +556,7 @@ void TEffectExplosion::reset()
 	mMActor->setBck("10_bomb");
 	mMActor->setBrk("10_bomb");
 	mMActor->setBtk("10_bomb");
-	mMActor->getFrameCtrl(0)->setFrame(0.0f);
+	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);
 }
@@ -593,30 +566,27 @@ void TEffectExplosion::generate(JGeometry::TVec3<f32>& param_1,
 {
 	reset();
 	mScaling  = param_2;
-	f32 fVar1 = param_2.y;
+	f32 fVar1 = param_2.x;
+	JGeometry::TVec3<f32> scale(fVar1, fVar1, fVar1);
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xC4, &param_1, 0, nullptr)) {
-		emitter->unk154.set(fVar1, fVar1, fVar1);
-		emitter->unk174.set(fVar1, fVar1, fVar1);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        EXPLOSION_JPA_MS_BOMB_SMOKE, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(scale);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xC5, &param_1, 0, nullptr)) {
-		emitter->unk154.set(fVar1, fVar1, fVar1);
-		emitter->unk174.set(fVar1, fVar1, fVar1);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        EXPLOSION_JPA_MS_BOMB_BOMB, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(scale);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xC6, &param_1, 0, nullptr)) {
-		emitter->unk154.set(fVar1, fVar1, fVar1);
-		emitter->unk174.set(fVar1, fVar1, fVar1);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        EXPLOSION_JPA_MS_BOMB_HAHEN, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(scale);
 	}
 
-	if (JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(0xA2, &param_1, 0, nullptr)) {
-		emitter->unk154.set(fVar1, fVar1, fVar1);
-		emitter->unk174.set(fVar1, fVar1, fVar1);
+	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
+	        PARTICLE_MS_POPO_BOMB_B, &param_1, 0, nullptr)) {
+		emitter->setGlobalScale(scale);
 	}
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);

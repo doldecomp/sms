@@ -4,49 +4,51 @@
 void TPerformList::forEachPerform(
     JGadget::TSingleLinkList<TPerformLink, 0>::iterator b,
     JGadget::TSingleLinkList<TPerformLink, 0>::iterator e,
-    JDrama::TGraphics* param_3, u32 param_4)
+    JDrama::TGraphics* graphics, u32 cue)
 {
 	for (JGadget::TSingleLinkList<TPerformLink, 0>::iterator it = b; it != e;
-	     ++it) {
-		it->unk4->testPerform(param_4 & it->unk8, param_3);
+	     it++) {
+		it->perform(cue, graphics);
 	}
 }
 
-void TPerformList::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPerformList::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	forEachPerform(getChildren().begin(), getChildren().end(), param_2,
-	               param_1);
+	forEachPerform(getChildren().begin(), getChildren().end(), graphics, cue);
 }
 
 void TPerformList::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	while (stream.getLength() - stream.getPosition() > 0) {
-		char acStack_6c[80];
-		stream.readString(acStack_6c, 80);
+	JDrama::TViewObj* obj;
+	char elementName[80];
 
-		JDrama::TViewObj* obj
-		    = JDrama::TNameRefGen::search<JDrama::TViewObj>(acStack_6c);
-		u32 value;
-		stream.read(&value, 4);
-		u32 uVar5 = value;
-		if (value & 1)
-			uVar5 = value | 0x3000;
+	while (stream.getLength() - stream.getPosition() > 0) {
+		stream.readString(elementName, 80);
+
+		obj = static_cast<JDrama::TViewObj*>(
+		    JDrama::TNameRefGen::search(elementName));
+
+		u32 value = stream.readU32();
+
+		if (value & CUE_MOVE)
+			value |= (CUE_MOVEMENT_GATE_A | CUE_MOVEMENT_GATE_B);
+
 		if (obj)
-			push_back(obj, uVar5);
+			push_back(obj, value);
 	}
 }
 
 void TPerformList::push_back(const char* param_1, u32 param_2)
 {
 	JDrama::TViewObj* obj
-	    = JDrama::TNameRefGen::search<JDrama::TViewObj>(param_1);
+	    = (JDrama::TViewObj*)JDrama::TNameRefGen::search(param_1);
 
-	getChildren().Push_back(new TPerformLink(obj, param_2));
+	Push_back(new TPerformLink(obj, param_2));
 }
 
 void TPerformList::push_back(JDrama::TViewObj* param_1, u32 param_2)
 {
-	getChildren().Push_back(new TPerformLink(param_1, param_2));
+	Push_back(new TPerformLink(param_1, param_2));
 }

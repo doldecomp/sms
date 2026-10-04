@@ -19,6 +19,14 @@ public:
 	virtual void stateLaunch();
 };
 
+class TNameKuriLauncherManager : public TLauncherManager {
+public:
+	TNameKuriLauncherManager(const char* name)
+	    : TLauncherManager(name)
+	{
+	}
+};
+
 class TNameKuriSaveLoadParams : public TWalkerEnemyParams {
 public:
 	TNameKuriSaveLoadParams(const char* path);
@@ -43,13 +51,21 @@ public:
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 
 	static f32 mExplosionSpeed;
 	static int mStopMinScaleFrame;
+
+	int getNextColorIdx()
+	{
+		unk60 += 1;
+		if (unk60 >= 7)
+			unk60 = 0;
+		return unk60;
+	}
 
 public:
 	/* 0x60 */ int unk60;
@@ -72,7 +88,7 @@ class TNameKuri : public TWalkerEnemy {
 public:
 	TNameKuri(const char* name = "ナメクリ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
@@ -98,6 +114,8 @@ public:
 	bool isAttackJump() const;
 	bool isHitWaterJump() const;
 	bool canJumpAttack() const;
+
+	const TNameKuriSaveLoadParams* getSaveParams() const { return unk1A4; }
 
 public:
 	/* 0x194 */ int unk194;

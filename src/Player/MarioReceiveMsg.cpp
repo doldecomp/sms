@@ -4,6 +4,7 @@
 #include <Map/MapWire.hpp>
 #include <Map/MapWireManager.hpp>
 #include <MoveBG/MapObjManager.hpp>
+#include <MoveBG/MapObjItem2.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Strategic/HitActor.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -43,23 +44,23 @@ void TMario::getGesso(THitActor* param_1)
 		emitGetEffect();
 		switch (param_1->getActorType()) {
 		case 0x400000C5:
-			mSurfGesso = gpMapObjManager->mRedGesso;
-			unk389     = 0;
+			mSurfGesso     = gpMapObjManager->mRedGesso;
+			mSurfGessoType = SURF_GESSO_TYPE_RED;
 			break;
 
 		case 0x400000C6:
-			mSurfGesso = gpMapObjManager->mYellowGesso;
-			unk389     = 1;
+			mSurfGesso     = gpMapObjManager->mYellowGesso;
+			mSurfGessoType = SURF_GESSO_TYPE_YELLOW;
 			break;
 
 		default:
 		case 0x400000C7:
-			unk389     = 2;
-			mSurfGesso = gpMapObjManager->mGreenGesso;
+			mSurfGessoType = SURF_GESSO_TYPE_GREEN;
+			mSurfGesso     = gpMapObjManager->mGreenGesso;
 			break;
 		}
 		mSurfGesso->setBck("surfgeso_run1");
-		mSurfGesso->getFrameCtrl(0)->setRate(0.5f);
+		mSurfGesso->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
 	}
 }
 
@@ -120,8 +121,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			                                nullptr, 0, 4);
 	}
 
-	// HIT_MESSAGE_UNK7 - damage trigger.
-	if (message == HIT_MESSAGE_UNK7) {
+	if (message == HIT_MESSAGE_THROWN) {
 		if (sender->checkActorType(ACTOR_TYPE_PLAYER)
 		    || sender->checkActorType(ACTOR_TYPE_UNK4000000)
 		    || sender->checkActorType(ACTOR_TYPE_ENEMY)
@@ -191,11 +191,12 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case 0x20000005:
 		case 0x20000006:
-		case 0x20000007: // collectible fruit
+		case 0x20000007: // 1-up mushroom
 			if (message == HIT_MESSAGE_ATTACK) {
-				if (*(s8*)((u8*)sender + 0x13A) == 0
-				    && !(*(s32*)((u8*)sender + 0x13C) < 120 ? true : false)) {
-					mHealth = mDeParams.mHpMax.get();
+				TMushroom1up* mushroom = static_cast<TMushroom1up*>(sender);
+				if (mushroom->unk13A == 0
+				    && !(mushroom->unk13C < 120 ? true : false)) {
+					mHealth = mDeParams.mHPMax.get();
 					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 						mWaterGun->addWater(mWaterGun->getMaxWater());
 					}
@@ -222,7 +223,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 		case 0x2000003C: // shirt/cap pickup
 			mCap->setModelActive(TMarioCap::E_CAP_MODEL_HAT);
-			mHealth = mDeParams.mHpMax.get();
+			mHealth = mDeParams.mHPMax.get();
 			emitGetEffect();
 			return TRUE;
 		case 0x2000000E: // yellow coin
@@ -234,17 +235,18 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case 0x20000010: // blue coin
 			getCoinBlue();
 			return TRUE;
-		case 0x20000013: // 1-up shroom / pickup-action
+		case 0x20000013: // shine
 			if (message == HIT_MESSAGE_ATTACK
 			    && mStatus != MARIO_STATUS_WIN_DEMO) {
-				unk384          = sender;
-				mPosition.x     = sender->mPosition.x;
-				mPosition.z     = sender->mPosition.z;
-				mFaceAngle.y    = DEG2SHORTANGLE(*(f32*)((u8*)sender + 0x11C));
+				unk384       = sender;
+				mPosition.x  = sender->mPosition.x;
+				mPosition.z  = sender->mPosition.z;
+				mFaceAngle.y = DEG2SHORTANGLE(
+				    static_cast<TMapObjBase*>(sender)->mInitialRotation.y);
 				mModelFaceAngle = mFaceAngle.y;
 				setPlayerVelocity(0.0f);
-				mHealth = mDeParams.mHpMax.get();
-				unk12C  = unk130;
+				mHealth = mDeParams.mHPMax.get();
+				mAir    = mMaxAir;
 				changePlayerStatus(MARIO_STATUS_WIN_DEMO, 0, true);
 				return TRUE;
 			}
@@ -522,7 +524,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case 0x1000000D: // glistening enemy
 			if (message == HIT_MESSAGE_UNK5) {
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD))
-					mWaterGun->mFlags |= 0x4;
+					mWaterGun->onFlag(TWaterGun::WATER_GUN_FLAG_UNK4);
 			}
 			break;
 		case 0x10000015: // poihana
@@ -607,7 +609,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsEnemyCommon.mInvincibleTime.get());
 			return TRUE;
 		}
-		break;
+		// fallthrough
 
 	case 0x08000001: // hinokuri-class
 		if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
@@ -620,9 +622,9 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsHinokuri.mInvincibleTime.get());
 			return TRUE;
 		}
-		if (message == HIT_MESSAGE_UNK3 && !isInvincible()) {
+		if (message == HIT_MESSAGE_SUPER_HIP_DROP && !isInvincible()) {
 			onFlag(MARIO_FLAG_GROUND_POUND_SIT_UP);
-			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
+			if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 				rumbleStart(0x15, 0x0A);
 			}
 			return TRUE;
@@ -685,12 +687,11 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 		break;
 
+	case 0x08000003:
+	case 0x08000004:
 	case 0x08000006:
 	case 0x08000007:
 	case 0x08000008:
-	case 0x08000010:
-	case 0x08000011:
-	case 0x08000012:
 	case 0x0800001F:
 	case 0x08000022:
 	case 0x08000023:
@@ -756,9 +757,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			           mDmgParamsHanachanBoss.mInvincibleTime.get());
 			return TRUE;
 		}
-		// fallthrough
+		break;
 
-	case 0x4000002A:
 	case 0x4000002C: { // big spinning enemy with rotation-based attack window
 		if (mInput & 0x8000) {
 			s16 attackAngle = getAttackAngle(sender);
@@ -808,8 +808,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		break;
 	}
 
+	case 0x08000002:
 	case 0x80000001:
-	case 0x80000002:
 		if (!isInvincible()) {
 			switch (message) {
 			case HIT_MESSAGE_TAKE:
@@ -819,8 +819,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					return TRUE;
 				}
 				break;
-			case HIT_MESSAGE_UNK6:
-			case HIT_MESSAGE_UNK7:
+			case HIT_MESSAGE_PUT:
+			case HIT_MESSAGE_THROWN:
 				mHolder = nullptr;
 				changePlayerStatus(MARIO_STATUS_JUMP, 0, false);
 				setPlayerVelocity(40.0f);
@@ -859,7 +859,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case 0x080000C0:
 		if (mStatus != MARIO_STATUS_WARP_IN && message == HIT_MESSAGE_TAKE) {
 			mHolder = (TTakeActor*)sender;
-			if (!checkStatusFlag(MARIO_STATUS_FLAG_JUMPING)) {
+			if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 				setAnimation(ANIM_JUMP, 1.0f);
 				s16 endFrame = getMotionFrameCtrl().getEnd();
 				getMotionFrameCtrl().setFrame((f32)endFrame);
@@ -879,10 +879,10 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		break;
 
 	case 0x40000064:
-	case 0x40000393: // fruit kick targets
-		if (unk150 <= 0) {
-			unk14E = mDeParams.mKickFreezeTime.get();
-			rumbleStart(0x15, mMotorParams.mMotorTrample.get());
+	case 0x40000393: // fruit kick targets (durian & smth else)
+		if (mFreezeImmunityTimer <= 0) {
+			mFreezeTimer = mDeParams.mKickFreezeTime.get();
+			rumbleStart(0x15, mMotorParams.mMotorWall.get());
 			calcDamagePos(sender->mPosition);
 			kickFruitEffect();
 			return TRUE;

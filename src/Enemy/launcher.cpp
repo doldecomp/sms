@@ -5,7 +5,9 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
+#include <MarioUtil/LightUtil.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
@@ -64,7 +66,7 @@ void TLauncher::init(TLiveManager* param_1)
 	offHitFlag(0x1);
 }
 
-BOOL TLauncher::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
@@ -72,11 +74,12 @@ BOOL TLauncher::receiveMessage(THitActor* param_1, u32 param_2)
 	if (mState == STATE_DIE)
 		return false;
 
-	if (param_1->getActorType() == 0x1000001) {
-		if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
-			gpMarioParticleManager->emit(0xE7, &mPosition, 0, nullptr);
-			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
-			                        0.0f, 0, 0, 4);
+	if (sender->getActorType() == 0x1000001) {
+		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+			                             &sender->mPosition, 0, nullptr);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+			                        &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 
@@ -222,11 +225,11 @@ void TCommonLauncher::init(TLiveManager* param_1)
 
 	mLaunchCooldown = mLaunchPeriod * MsRandF();
 
-	mMActor->setLightType(1);
+	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	initHitActor(0x10000014, 1, -0x7f000000, 150.0f, 100.0f, 150.0f, 100.0f);
 	offHitFlag(0x1);
 
-	JDrama::TNameRefGen::search<TIdxGroupObj>("敵グループ")
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
 
@@ -252,7 +255,7 @@ void TCommonLauncher::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 	unk164 = stream.readString();
-	stream.read(&mLaunchPeriod, 4);
+	stream >> mLaunchPeriod;
 }
 
 void TCommonLauncher::changeBck(int param_1)
@@ -339,22 +342,22 @@ void TCommonLauncher::stateDie()
 		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xD0, mtx, 0,
-		                                                  nullptr)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_GENE_DEAD,
+		                                                  mtx, 0, nullptr)) {
 			SMSSetEmitterPolColor(emitter, 6);
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xE4, mtx, 0,
-		                                                  nullptr)) {
-			emitter->setScale(mScaling);
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        PARTICLE_MS_ENM_DISAP_A, mtx, 0, nullptr)) {
+			emitter->setGlobalScale(mScaling);
 		}
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0xE6, mtx, 0,
-		                                                  nullptr)) {
-			emitter->setScale(mScaling);
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        PARTICLE_MS_ENM_DISAP_B, mtx, 0, nullptr)) {
+			emitter->setGlobalScale(mScaling);
 		}
 
 		kill();
@@ -369,21 +372,21 @@ const char** TCommonLauncher::getBasNameTable() const
 	return clauncher_bastable;
 }
 
-void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSpineEnemy::perform(param_1, param_2);
-	if ((param_1 & 2) && mMActor->checkCurBckFromIndex(1)) {
+	TSpineEnemy::perform(cue, graphics);
+	if ((cue & CUE_CALC_ANIM) && mMActor->checkCurBckFromIndex(1)) {
 		MtxPtr mtx = mMActor->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(0x12D, mtx, 1,
-		                                                  this)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_GENE_HIT,
+		                                                  mtx, 1, this)) {
 			SMSSetEmitterPolColor(emitter, 6);
-			emitter->setScale(mScaling);
+			emitter->setGlobalScale(mScaling);
 		}
 	}
 
-	if ((param_1 & 1) && mState == STATE_NORMAL && mHitPoints < 5) {
+	if ((cue & CUE_MOVE) && mState == STATE_NORMAL && mHitPoints < 5) {
 		mRegenTimer += 1;
 		if (mRegenTimer > 1200) {
 			mRegenTimer = 0;
@@ -391,7 +394,7 @@ void TCommonLauncher::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
 			if (mCollisions[i]->isActorType(0x80000001))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);

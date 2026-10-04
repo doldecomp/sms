@@ -26,11 +26,11 @@ void TMirrorActor::checkIsInMirror()
 
 	if (unk1A & 2) {
 		if (!gpMirrorModelManager->isUnk18Present() && !(unk1A & 4)) {
-			if (unk14->getShapePacket(0)->unk30 != 0)
+			if (unk14->getShapePacket(0)->isVisible())
 				SMS_HideAllShapePacket(unk14);
 			unk18 = 0;
 		} else {
-			if (unk14->getShapePacket(0)->unk30 == 0)
+			if (!unk14->getShapePacket(0)->isVisible())
 				SMS_ShowAllShapePacket(unk14);
 			unk18 = 1;
 		}
@@ -59,9 +59,9 @@ void TMirrorActor::checkIsInMirror()
 	}
 }
 
-void TMirrorActor::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		checkIsInMirror();
 		if (unk18 == 0)
 			return;
@@ -69,26 +69,24 @@ void TMirrorActor::perform(u32 param_1, JDrama::TGraphics* param_2)
 		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
 			unk14->setAnmMtx(i, unk10->getAnmMtx(i));
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
+		for (u16 i = 0; i < unk10->getModelData()->getWEvlpMtxNum(); ++i)
 			unk14->setWeightAnmMtx(i, unk10->getWeightAnmMtx(i));
 	}
 
-	if ((param_1 & 4) && unk18 != 0)
+	if ((cue & CUE_CALC_VIEW) && unk18 != 0)
 		unk14->viewCalc();
 
-	if ((param_1 & 0x200) && unk18 && !(unk1A & 2))
+	if ((cue & CUE_ENTRY) && unk18 && !(unk1A & 2))
 		unk14->entry();
 }
 
 void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 {
-	JDrama::TDrawBufObj* dbOpa
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf MirrorAlways Opa");
+	JDrama::TDrawBufObj* dbOpa = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Opa"));
 	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), 0);
-	JDrama::TDrawBufObj* dbXlu
-	    = JDrama::TNameRefGen::search<JDrama::TDrawBufObj>(
-	        "DrawBuf MirrorAlways Xlu");
+	JDrama::TDrawBufObj* dbXlu = static_cast<JDrama::TDrawBufObj*>(
+	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Xlu"));
 	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), 1);
 	model->calc();
 	model->viewCalc();
@@ -108,8 +106,8 @@ void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 	}
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* mirrorScene
-	    = JDrama::TNameRefGen::search<
-	        JDrama::TViewObjPtrListT<JDrama::TViewObj> >("鏡シーン");
+	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
+	        JDrama::TNameRefGen::search("鏡シーン"));
 	mirrorScene->getChildren().push_back(this);
 
 	if (unk1A & 2)

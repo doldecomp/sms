@@ -130,17 +130,17 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 			++needle;
 
 		u32 idx = point_name_table[needle].unk4;
-		stream.read(&local_130[idx].x, 4);
-		stream.read(&local_130[idx].y, 4);
-		stream.read(&local_130[idx].z, 4);
+		stream >> local_130[idx].x;
+		stream >> local_130[idx].y;
+		stream >> local_130[idx].z;
 
 		u32 dummy;
-		stream.read(&dummy, 4);
-		stream.read(&dummy, 4);
-		stream.read(&dummy, 4);
-		stream.read(&dummy, 4);
-		stream.read(&dummy, 4);
-		stream.read(&dummy, 4);
+		stream >> dummy;
+		stream >> dummy;
+		stream >> dummy;
+		stream >> dummy;
+		stream >> dummy;
+		stream >> dummy;
 	}
 
 	for (int i = 0; i < unk0; ++i) {

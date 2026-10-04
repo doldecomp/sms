@@ -4,6 +4,7 @@
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionData.hpp>
+#include <System/Particles.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
 #include <MSound/MSound.hpp>
@@ -286,7 +287,7 @@ BOOL TMario::roofCommonEvents()
 		if (actor != nullptr) {
 			((THitActor*)actor)->receiveMessage(this, 3);
 			if (actor->mActorType == 0x4000006a) {
-				emitParticle(0x39, &unk16C);
+				emitParticle(PARTICLE_MS_M_AMIATTACK, &mHeadPos);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
 				return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_UP, 0,
 				                          false);
@@ -352,7 +353,7 @@ BOOL TMario::moveRoof()
 	if (mInput & 0x20)
 		return changePlayerStatus(MARIO_STATUS_WAIT_ROOF, mStatusArg, false);
 
-	f32 dist = JGeometry::TVec3<f32>(mPosition - unk29C).length();
+	f32 dist = JGeometry::TVec3<f32>(mPosition - mPrevPosition).length();
 	dist *= mHangRoofParams.mAnmMult.get();
 	if (mStatusArg & 1)
 		setAnimation(ANIM_LADDER_HANG_MOVE_L, dist);
@@ -585,8 +586,8 @@ BOOL TMario::hanging()
 	mModelFaceAngle = mFaceAngle.y;
 
 	if (pulledUp == TRUE) {
-		f32 dx = mPosition.x - unk29C.x;
-		f32 dz = mPosition.z - unk29C.z;
+		f32 dx = mPosition.x - mPrevPosition.x;
+		f32 dz = mPosition.z - mPrevPosition.z;
 		f32 anmRate
 		    = MsSqrtf(dx * dx + dz * dz) * mHangingParams.mAnmRate.get();
 		if (yawDiff < 0)
@@ -726,7 +727,7 @@ BOOL TMario::wireWait()
 		}
 	}
 
-	if (mInput & 0x10000) {
+	if (mInput & 0x8000) {
 		mWireBounceVel = 5.0f;
 		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
@@ -1116,10 +1117,8 @@ BOOL TMario::wireRolling()
 	}
 
 	if (playSfx == TRUE) {
-		f32 sag = mWireSag;
-		if (gpMSound->gateCheck(sfxId))
-			MSoundSESystem::MSoundSE::startSoundActorWithInfo(
-			    sfxId, &mPosition, nullptr, sag, 0, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActorWithInfo(sfxId, &mPosition, nullptr,
+		                                        mWireSag, 0, 0, nullptr, 0, 4);
 	}
 
 	blurEffect();
@@ -1245,7 +1244,7 @@ BOOL TMario::pulling()
 	pos.z += cosF * rateH * JMASCos(backAngle)
 	         + sinF * rateV * JMASSin(backAngle);
 
-	if (((THitActor*)mHeldObject)->receiveMessage(this, 0xa) == 1) {
+	if (mHeldObject->moveRequest(pos) == 1) {
 		mPosition = pos;
 	}
 
@@ -1266,9 +1265,9 @@ BOOL TMario::pulling()
 		JGeometry::TVec3<f32> delta;
 		if ((mHeldObject->getActorType() == 0x8000006 ? true : false)
 		    || (mHeldObject->getActorType() == 0x8000008 ? true : false)) {
-			delta = pos - unk29C;
+			delta = pos - mPrevPosition;
 		} else {
-			delta = mPosition - unk29C;
+			delta = mPosition - mPrevPosition;
 		}
 
 		f32 len = delta.length();
@@ -1431,11 +1430,11 @@ BOOL TMario::fenceMove()
 		if (mIntendedMag > 0.0f) {
 			f32 hDot, vDiff, dist;
 			if (unk2C0 == nullptr) {
-				vDiff    = mPosition.y - unk29C.y;
+				vDiff    = mPosition.y - mPrevPosition.y;
 				f32 sinY = JMASSin(mFaceAngle.y);
 				f32 cosY = JMASCos(mFaceAngle.y);
 
-				JGeometry::TVec3<f32> diff = mPosition - unk29C;
+				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
 				hDot = -cosY * diff.z + sinY * diff.x;
 				dist = diff.length();
@@ -1495,11 +1494,11 @@ BOOL TMario::fencePunch()
 	setAnimation(ANIM_FENCE_PUNCH, 1.0f);
 	setAttackRadius(mAttackParamsFencePunch.mRadius.get());
 	setAttackHeight(mAttackParamsFencePunch.mHeight.get());
-	unk64 &= ~0x2;
+	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
 	mModelFaceAngle = mFaceAngle.y;
 
 	if (getMotionFrameCtrl().checkPass(5.0f)) {
-		emitParticle(0x39, &unk184);
+		emitParticle(PARTICLE_MS_M_AMIATTACK, &mRightHandPos);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);
