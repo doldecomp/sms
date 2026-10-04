@@ -128,7 +128,7 @@ void JPABaseField::loadFieldBlock(JPADataBlock* block)
 	stream >> unk51;
 	stream >> unk52;
 	stream >> unk53;
-	stream >> mMaxDistanceSq;
+	stream >> unk54;
 	stream.skip(0x2);
 	stream >> unk10;
 	stream >> unk14;
