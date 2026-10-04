@@ -244,7 +244,7 @@ static inline void writeBalloonColor(TGCConsole2* console, const char* text,
 // fabricated: one section of perform, called once.
 static inline void processBalloonTextStep(TGCConsole2* console)
 {
-	if (console->unk3D4->getAvailable() == 0
+	if (((JSUMemoryInputStream*)console->unk3D4)->getAvailable() == 0
 	    || ((JSUMemoryOutputStream*)console->unk3D8)->getAvailable() == 0) {
 		console->unk10 = 3;
 		return;
