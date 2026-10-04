@@ -156,8 +156,8 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 			if (isActorType(0x400000d0)
 			    && (abs(mVelocity.x) > mMapObjData->mPhysical->unk4->unkC
 			        || abs(mVelocity.z) > mMapObjData->mPhysical->unk4->unkC)) {
-				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition,
-				                                nullptr, nullptr, 0, 4);
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0,
+				                                nullptr, 0, 4);
 			}
 		}
 	}
@@ -206,8 +206,8 @@ void TMapObjBall::kicked()
 	THitActor* marHitActor = SMS_GetMarioHitActor();
 	marHitActor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	if (!isActorType(0x400000d0)) {
-		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition,
-		                                nullptr, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 }
 
@@ -684,8 +684,8 @@ void TResetFruit::waitingToAppear()
 		mScaling.y = 0.2f;
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mState = STATE_APPEARING;
-		SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition,
-		                                nullptr, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 }
 
@@ -724,8 +724,8 @@ void TResetFruit::touchPollution()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_OFF,
 	                                            &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition,
-	                                nullptr, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_AWAY_INTO_GRAF, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	makeObjDefault();
 	makeObjWaitingToAppear();
@@ -734,8 +734,8 @@ void TResetFruit::touchPollution()
 void TResetFruit::touchWaterSurface()
 {
 	TMapObjBase::emitColumnWater();
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition,
-	                                nullptr, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition, 0,
+	                                nullptr, 0, 4);
 	makeObjWaitingToAppear();
 }
 
@@ -835,8 +835,8 @@ void TResetFruit::waitEffect()
 	mPosition.y += mBodyRadius / 2.0f;
 	mScaling.set(mInitialScaling);
 	emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition);
-	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, nullptr,
-	                                nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0, nullptr,
+	                                0, 4);
 	startStateTimer(240);
 	sleep();
 	mState = STATE_WAIT_EFFECT;
@@ -1146,8 +1146,8 @@ void TCoverFruit::loadAfter()
 void TBigWatermelon::touchWaterSurface()
 {
 	TMapObjBase::emitColumnWater();
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition,
-	                                nullptr, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition, 0,
+	                                nullptr, 0, 4);
 	kill();
 }
 
@@ -1250,8 +1250,8 @@ void TBigWatermelon::kill()
 	TWaterEmitInfo* emitInfo = unk198;
 	emitInfo->mPos.value     = mPosition;
 	gpModelWaterManager->emitRequest(*unk198);
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK, &mPosition,
-	                                nullptr, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_WATERMELON_BLOCK, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	if (unk19C < 10) {
 		TMapObjBase* mapObj = gpItemManager->makeObjAppear(
