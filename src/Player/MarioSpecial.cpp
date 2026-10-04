@@ -1206,11 +1206,11 @@ BOOL TMario::pulling()
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 
-	if (!(unk108->mInput & 0x400)) {
+	if (!(unk108->mInput & TMarioControllerWork::B)) {
 		((THitActor*)mHeldObject)->receiveMessage(this, 8);
 		mHeldObject = nullptr;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
-		return changePlayerStatus(0xc0022f, 0, false);
+		return changePlayerStatus(MARIO_STATUS_PULL_END, 0, false);
 	}
 
 	if (mInput & 0x2) {
