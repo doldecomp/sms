@@ -117,7 +117,10 @@ public:
 
 class TOilBall : public TBEelTears {
 public:
-	TOilBall(const char* name = "油ダマ");
+	TOilBall(const char* name = "油ダマ")
+	    : TBEelTears(name)
+	{
+	}
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void calcRootMatrix();
