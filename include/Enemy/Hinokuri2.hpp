@@ -161,9 +161,9 @@ public:
 	BOOL receiveMessageLv2(THitActor*, u32);
 
 	// fabricated
-	THino2Params* getSaveParam() const
+	THino2Params* getSaveParams() const
 	{
-		return (THino2Params*)TSpineEnemy::getSaveParam();
+		return (THino2Params*)getSaveParam();
 	}
 
 	// fabricated
@@ -171,17 +171,17 @@ public:
 	{
 		switch (mLevel) {
 		case 0:
-			return getSaveParam()->mSLHitPointMaxLv0.get();
+			return ((THino2Params*)getSaveParam())->mSLHitPointMaxLv0.get();
 			break;
 		case 1:
-			return getSaveParam()->mSLHitPointMaxLv1.get();
+			return ((THino2Params*)getSaveParam())->mSLHitPointMaxLv1.get();
 			break;
 		case 2:
-			return getSaveParam()->mSLHitPointMaxLv2.get();
+			return ((THino2Params*)getSaveParam())->mSLHitPointMaxLv2.get();
 			break;
 		default:
-			if (getSaveParam())
-				return getSaveParam()->mSLHitPointMax.get();
+			if (((THino2Params*)getSaveParam()))
+				return ((THino2Params*)getSaveParam())->mSLHitPointMax.get();
 			break;
 		}
 
