@@ -7,17 +7,24 @@
 #include <Strategic/Spine.hpp>
 #include <Strategic/Binder.hpp>
 #include <Strategic/LiveManager.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <Strategic/LiveActor.hpp>
 #include <M3DUtil/M3UJoint.hpp>
+#include <M3DUtil/MActorData.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <MarioUtil/MtxUtil.hpp>
+#include <GC2D/GCConsole2.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
 class TBossWanwan;
+class TBWParams;
 class TBWLeash;
 class TBWLeashNode;
 class TRope;
+class TBossWanwanMtxCalc;
 
 class TBWHit : public THitActor {
 public:
@@ -56,8 +63,9 @@ public:
 	virtual ~TBWLeash();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
+	void pullTail(const JGeometry::TVec3<f32>& pos);
+	void invalidateAllCollisions();
 
-	/* 0xc  */ u32 unkc;
 	/* 0x10 */ TBossWanwan* mOwner;
 	/* 0x14 */ TRope* mRope;
 	/* 0x18 */ TBWLeashNode** mNodes;
@@ -109,16 +117,6 @@ public:
 	/* 0x1E8 */ TParamRT<f32> mSLShakeLengthMaxHP0;
 };
 
-class TBossWanwanMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
-public:
-	TBossWanwanMtxCalc(TBossWanwan*);
-
-	virtual void calc(u16);
-
-public:
-	/* 0x64 */ TBossWanwan* mOwner;
-};
-
 // TBossWanwan size: 0x1b8
 class TBossWanwan : public TSpineEnemy {
 public:
@@ -137,28 +135,43 @@ public:
 	f32 getUnk168() const { return unk168; }
 
 	// fabricated
+	TBWParams* getSaveParam() const { return (TBWParams*)getSaveParam(); }
+
+	bool isHeadPulled();
+	bool isMarioInSight();
+	bool isTailBurning();
+	bool isBurning();
+	void startGoldBrk();
+	void changeBck(int);
+
+	void releasePicket();
+	void takeBath();
+	void rollNextGraphNode();
+	void reverseNextGraphNode();
+	void showMessage();
+	// fabricated
 	const TNerveBase<TLiveActor>* getLatestNerve()
 	{
 		return mSpine->getLatestNerve();
 	}
 
-	/* 0x150 */ TBWPicket* mPicket;
+	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
-	/* 0x158 */ TBWLeashNode* mChainRoot;
+	/* 0x158 */ TBWPicket* mPicket;
 	/* 0x15C */ JGeometry::TVec3<f32> mPicketPullDelta; // guessed name
 	/* 0x168 */ f32 unk168;
-	/* 0x16C */ TBossWanwanMtxCalc* mMtxCalc;
+	/* 0x16C */ s32 unk16C;
 	/* 0x170 */ u32 unk170;
 	/* 0x174 */ u32 unk174;
-	/* 0x178 */ u32 unk178;
+	/* 0x178 */ f32 unk178;
 	/* 0x17C */ BOOL unk17C;
 	/* 0x180 */ u32 unk180;
 	/* 0x184 */ u32 unk184;
 	/* 0x188 */ u32 unk188;
 	/* 0x18C */ u8 msInvincible;
 	/* 0x18D */ u8 unk18D;
-	/* 0x190 */ u32 unk190;
-	/* 0x194 */ bool unk194;
+	/* 0x190 */ s32 unk190;
+	/* 0x194 */ s8 unk194;
 	/* 0x195 */ u8 unk195;
 	/* 0x198 */ u32 unk198;
 	/* 0x19C */ u32 unk19C;
@@ -170,6 +183,29 @@ public:
 	/* 0x1B4 */ u16 unk1B4;
 };
 
+class TBossWanwanMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
+public:
+	TBossWanwanMtxCalc(TBossWanwan*);
+	virtual ~TBossWanwanMtxCalc();
+	void calc(u16);
+
+	void joinAnm(int i)
+	{
+		J3DAnmTransformKey* newAnm
+		    = mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(
+		        i);
+
+		if (mNewAnm != newAnm) {
+			mOldAnm           = mNewAnm;
+			mNewAnm           = newAnm;
+			mMotionBlendRatio = 1.0f;
+		}
+	}
+
+public:
+	/* 0x64 */ TBossWanwan* mOwner;
+};
+
 class TBossWanwanManager : public TEnemyManager {
 public:
 	TBossWanwanManager(const char* name = "ボスワンワンマネージャ");
@@ -177,6 +213,8 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void createModelData();
+
+	void initJParticle();
 };
 
 DECLARE_NERVE(TNerveBWGraphWander, TLiveActor);
