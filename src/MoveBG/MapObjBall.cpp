@@ -227,80 +227,69 @@ u32 TMapObjBall::touchWater(THitActor* water)
 
 void TMapObjBall::boundByActor(THitActor* actor)
 {
-	JGeometry::TVec3<f32> offsetToActor;
-	offsetToActor.x = actor->mPosition.x - mPosition.x;
-	offsetToActor.z = actor->mPosition.z - mPosition.z;
-	offsetToActor.y = 0.0f;
+	JGeometry::TVec3<f32> offsetToActor(actor->mPosition.x - mPosition.x, 0.0f,
+	                                    actor->mPosition.z - mPosition.z);
 
-	f32 fVar1 = isActorType(0x400000d0) ? mAttackRadius + actor->mDamageRadius
-	                                    : mDamageRadius;
+	f32 radius = isActorType(0x400000d0) ? mAttackRadius + actor->mDamageRadius
+	                                     : mDamageRadius;
+	if (radius * radius
+	    < offsetToActor.x * offsetToActor.x + offsetToActor.z * offsetToActor.z)
+		return;
 
-	if (!(offsetToActor.x * offsetToActor.x + offsetToActor.z * offsetToActor.z
-	      < fVar1 * fVar1)) {
-		if (offsetToActor.x != 0.0f && offsetToActor.z != 0.0f) {
-			MsVECNormalize(offsetToActor, offsetToActor);
-		}
-		if (actor->isActorType(0x80000001)) {
-			if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
-				f32 unkC = mMapObjData->mPhysical->unk4->unkC;
-				if (abs(*gpMarioSpeedX) > unkC || abs(*gpMarioSpeedZ) > unkC) {
-					mVelocity.y += unk150;
-					if (!isActorType(0x400000d0)) {
-						SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN,
-						                                &mPosition, nullptr,
-						                                nullptr, 0, 4);
-					}
-				} else {
-					mVelocity.y += unk154;
-				}
+	if (offsetToActor.x != 0.0f && offsetToActor.z != 0.0f)
+		MsVECNormalize(offsetToActor, offsetToActor);
 
-				mVelocity.x
-				    += unk148 * *gpMarioSpeedX - offsetToActor.x * unk14C;
-				mVelocity.z
-				    += unk148 * *gpMarioSpeedZ - offsetToActor.z * unk14C;
-				actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
-			}
-		} else {
-			f32 fVar2 = mVelocity.z * offsetToActor.z
-			            + mVelocity.x * offsetToActor.x
-			            + mVelocity.y * offsetToActor.y;
-			if ((fVar2 >= 0.0f)
-			    && (abs(mVelocity.x) > mMapObjData->mPhysical->unk4->unkC)
-			    && (abs(mVelocity.z) > mMapObjData->mPhysical->unk4->unkC)) {
-				mVelocity.x -= (unk16C + 1.0f) * offsetToActor.x * fVar2;
-				mVelocity.y += unk168;
-				mVelocity.z -= (unk16C + 1.0f) * offsetToActor.z * fVar2;
-				actor->receiveMessage(this, HIT_MESSAGE_UNK10);
-				if (!isActorType(0x400000d0)) {
-					SMSGetMSound()->startSoundActor(MSD_SE_IT_DRIAN_BOUND,
-					                                &mPosition, nullptr,
-					                                nullptr, 0, 4);
-				}
+	if (actor->isActorType(0x80000001)) {
+		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
+			f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+			if (abs(*gpMarioSpeedX) > minSpeed
+			    || abs(*gpMarioSpeedZ) > minSpeed) {
+				mVelocity.y += unk150;
+				if (!isActorType(0x400000d0))
+					SMSGetMSound()->startSoundActor(
+					    MSD_SE_MA_KICK_DRIAN, &mPosition, 0, nullptr, 0, 4);
 			} else {
-				mVelocity.x -= (offsetToActor.x * unk164);
-				mVelocity.y += unk168;
-				mVelocity.z -= (offsetToActor.z * unk164);
+				mVelocity.y += unk154;
 			}
-		}
-		if (actor->isActorType(0x80000001)
-		    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) && mVelocity.y < 0.0f
-		    && gpMarioPos->y + 130.0f < mPosition.y + mBodyRadius) {
-			JGeometry::TVec3<f32> vec;
-			mVelocity.y = (-unk160) * mVelocity.y;
-			mVelocity.x += unk158 * *gpMarioSpeedX;
-			mVelocity.y += unk15C * *gpMarioSpeedY;
-			mVelocity.z += unk158 * *gpMarioSpeedZ;
 
-			if (!isActorType(0x400000d0)
-			    && gpMSound->gateCheck(MSD_SE_MA_KICK_DRIAN)) {
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_MA_KICK_DRIAN, mPosition, nullptr, nullptr, 0, 4);
-			}
+			mVelocity.x += unk148 * *gpMarioSpeedX - offsetToActor.x * unk14C;
+			mVelocity.z += unk148 * *gpMarioSpeedZ - offsetToActor.z * unk14C;
+			actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		}
-		unk194 = 10;
-		offLiveFlag(LIVE_FLAG_UNK10);
-		onLiveFlag(LIVE_FLAG_AIRBORNE);
+	} else {
+		f32 approach = getVelocity().dot(offsetToActor);
+		if (approach >= 0.0f
+		    && abs(getVelocity().x) > mMapObjData->mPhysical->unk4->unkC
+		    && abs(getVelocity().z) > mMapObjData->mPhysical->unk4->unkC) {
+			mVelocity.x -= (1.0f + unk16C) * (offsetToActor.x * approach);
+			mVelocity.y += unk168;
+			mVelocity.z -= (1.0f + unk16C) * (offsetToActor.z * approach);
+			actor->receiveMessage(this, HIT_MESSAGE_UNK10);
+			if (!isActorType(0x400000d0))
+				SMSGetMSound()->startSoundActor(MSD_SE_IT_DRIAN_BOUND,
+				                                &mPosition, 0, nullptr, 0, 4);
+		} else {
+			mVelocity.x -= offsetToActor.x * unk164;
+			mVelocity.y += unk168;
+			mVelocity.z -= offsetToActor.z * unk164;
+		}
 	}
+
+	if (actor->isActorType(0x80000001)
+	    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) && getVelocity().y < 0.0f
+	    && gpMarioPos->y + 130.0f < mPosition.y + mBodyRadius) {
+		mVelocity.y = -unk160 * getVelocity().y;
+		mVelocity.x += unk158 * *gpMarioSpeedX;
+		mVelocity.y += unk15C * *gpMarioSpeedY;
+		mVelocity.z += unk158 * *gpMarioSpeedZ;
+		if (!isActorType(0x400000d0))
+			SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
+			                                nullptr, 0, 4);
+	}
+
+	unk194 = 10;
+	offLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
 void TMapObjBall::touchActor(THitActor* actor)
