@@ -2,6 +2,7 @@
 #define MOVE_BG_MAP_OBJ_BALL_HPP
 
 #include <MoveBG/MapObjGeneral.hpp>
+#include <Player/ModelWaterManager.hpp>
 
 class TMapObjBall : public TMapObjGeneral {
 public:
@@ -29,7 +30,8 @@ public:
 
 	void boundByActor(THitActor*);
 
-public:
+	JGeometry::TVec3<f32> getVelocity() const { return mVelocity; }
+
 	/* 0x148 */ f32 unk148;
 	/* 0x14C */ f32 unk14C;
 	/* 0x150 */ f32 unk150;
@@ -49,7 +51,7 @@ public:
 	/* 0x188 */ f32 unk188;
 	/* 0x18C */ f32 unk18C;
 	/* 0x190 */ f32 unk190;
-	/* 0x194 */ u32 unk194;
+	/* 0x194 */ s32 unk194;
 };
 
 class TResetFruit : public TMapObjBall {
@@ -63,7 +65,7 @@ public:
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);
-	virtual u32 getLivingTime() const;
+	virtual u32 getLivingTime() const { return mFruitLivingTime; }
 	virtual void appearing();
 	virtual void breaking();
 	virtual void waitingToAppear();
@@ -83,23 +85,30 @@ public:
 	void makeObjLiving();
 	void makeObjWaitingToAppear();
 
-	static u32 mFruitLivingTime;
-	static u32 mScaleUpSpeed;
-	static u32 mRottingScaleSpeed;
-	static u32 mBreakingScaleSpeed;
-	static u32 mFruitWaitTimeToAppear;
-	static u32 mRottenColor;
+	enum {
+		STATE_LIVING      = 0xB,
+		STATE_ROTTING     = 0xC,
+		STATE_WAIT_EFFECT = 0xD,
+	};
 
-public:
-	/* 0x198 */ f32 unk198;
-	/* 0x19C */ GXColorS10 unk19C;
-	/* 0x1A4 */ u8 unk1A4;
+	static u32 mFruitWaitTimeToAppear;
+	static f32 mScaleUpSpeed;
+	static u32 mFruitLivingTime;
+	static f32 mBreakingScaleSpeed;
+	static f32 mRottingScaleSpeed;
+	static GXColorS10 mRottenColor;
+
+	f32 unk198;
+	GXColorS10 mFruitColor;
+	u8 unk1A4;
 };
 
 class TRandomFruit : public TResetFruit {
 public:
 	TRandomFruit(const char* name = "ランダムフルーツ");
 	virtual void initMapObj();
+
+	char mFruitName[0x20];
 };
 
 class TCoverFruit : public TMapObjBase {
@@ -117,7 +126,7 @@ public:
 
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void control() { }
+	virtual void control();
 	virtual void kill();
 	virtual void initMapObj();
 	virtual void touchActor(THitActor*);
@@ -129,6 +138,16 @@ public:
 	virtual void touchWaterSurface();
 
 	void startEvent();
+
+	enum {
+		STATE_LAUNCHED = 0xB,
+		STATE_LANDED   = 0xC,
+		STATE_GOAL     = 0xD,
+	};
+
+	TWaterEmitInfo* unk198;
+	s32 unk19C;
+	f32 unk1A0;
 };
 
 #endif
