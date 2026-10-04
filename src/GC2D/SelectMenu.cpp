@@ -345,8 +345,17 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	volatile s32 const unkArr[]
 	    = { 0x0, 0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x0, 0x7, 0x8, 0x0 };
 
-	u8* const stages[] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-		                   nullptr, nullptr, nullptr, nullptr, nullptr };
+	const u8* const stages[] = { nullptr,
+		                         nullptr,
+		                         scShineTableBiancoEtc,
+		                         scShineTableRiccoEtc,
+		                         scShineTableMammaEtc,
+		                         scShineTablePinnaEtc,
+		                         scShineTableSirenaEtc,
+		                         nullptr,
+		                         scShineTableMonteEtc,
+		                         scShineTableMareEtc,
+		                         nullptr };
 
 	s32 numCoins = TFlagManager::getInstance()->getFlag(SMS_getShineStage(stage)
 	                                                    + 0x20005);
