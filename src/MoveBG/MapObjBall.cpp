@@ -371,7 +371,7 @@ void TMapObjBall::makeObjDefault()
 	MtxPtr nodeMatrix = model->getAnmMtx(0);
 	nodeMatrix[0][3]  = mPosition.x;
 	nodeMatrix[1][3]  = mPosition.y + mBodyRadius;
-	nodeMatrix[1][3]  = mPosition.z;
+	nodeMatrix[2][3]  = mPosition.z;
 }
 
 void TMapObjBall::makeObjAppeared()
