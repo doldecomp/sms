@@ -780,6 +780,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 				emitter->createEmitter(emitterPos, 8, nullptr, nullptr);
 
 				mMenuState = DISAPPEAR_MENU;
+				break;
 			} else if (mGamePad->checkFrameMeaning(
 			               TMarioGamePad::MEANING_MENU_LEFT)) {
 				if (getPrevIndex() != -1) {
