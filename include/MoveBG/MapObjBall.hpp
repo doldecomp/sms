@@ -30,6 +30,8 @@ public:
 
 	void boundByActor(THitActor*);
 
+	JGeometry::TVec3<f32> getVelocity() const { return mVelocity; }
+
 	inline void kick();
 
 	/* 0x148 */ f32 unk148;

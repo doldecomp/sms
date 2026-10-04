@@ -34,16 +34,6 @@ f32 TResetFruit::mScaleUpSpeed          = 1.05f;
 f32 TResetFruit::mBreakingScaleSpeed    = 0.96f;
 u32 TResetFruit::mFruitWaitTimeToAppear = 360;
 
-inline f32 squaredVec(JGeometry::TVec3<f32> vec)
-{
-	return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
-}
-
-inline bool objIsNotMoving(JGeometry::TVec3<f32>& vel)
-{
-	return squaredVec(vel) <= 1 / 262144.0f;
-}
-
 void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* param1)
 {
 	if (param1->y > unk140) {
@@ -54,13 +44,11 @@ void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* param1)
 	                       &mVelocity);
 }
 
-inline f32 vecLength(JGeometry::TVec3<f32> vec) { return vec.length(); }
-
 void TMapObjBall::touchWall(JGeometry::TVec3<f32>* param1,
                             TBGWallCheckRecord* param2)
 {
-	if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE) && !isActorType(0x400000d0)) {
-		f32 velMag = vecLength(mVelocity);
+	if (!isAirborne() && !isActorType(0x400000d0)) {
+		f32 velMag = getVelocity().length();
 		mVelocity.y += unk184 * velMag;
 	}
 
@@ -78,12 +66,12 @@ void TMapObjBall::touchWall(JGeometry::TVec3<f32>* param1,
 			mVelocity.z += fVar6 * pVar1->mNormal.z;
 			if (isActorType(0x400000d0)) {
 				if (mScaling.y >= 5.0f) {
-					f32 fVar6 = abs(vecLength(mVelocity));
+					f32 fVar6 = abs(getVelocity().length());
 					SMSGetMSound()->startSoundActorWithInfo(
 					    MSD_SE_OBJ_WATERMELON_BROLL, &mPosition, nullptr, fVar6,
 					    0, 0, nullptr, 0, 0x4);
 				} else {
-					f32 fVar6 = abs(vecLength(mVelocity));
+					f32 fVar6 = abs(getVelocity().length());
 					SMSGetMSound()->startSoundActorWithInfo(
 					    MSD_SE_OBJ_WATERMELON_SROLL, &mPosition, nullptr, fVar6,
 					    0, 0, nullptr, 0, 0x4);
@@ -130,7 +118,7 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* wall)
 
 void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 {
-	f32 fVar1 = abs(vecLength(mVelocity));
+	f32 fVar1 = abs(getVelocity().length());
 	if (fVar1 > 0.05f && isActorType(0x400000d0)) {
 		if (mScaling.y >= 5.0f) {
 			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_WATERMELON_BROLL,
@@ -186,7 +174,7 @@ void TMapObjBall::put()
 
 void TMapObjBall::hold(TTakeActor* holder)
 {
-	if (vecLength(mVelocity) > 10.0f) {
+	if (getVelocity().length() > 10.0f) {
 		return;
 	}
 
@@ -194,16 +182,9 @@ void TMapObjBall::hold(TTakeActor* holder)
 	mVelocity.zero();
 }
 
-// This inline probably lives on a class higher up the inheritance chain
-inline bool isFalling(JGeometry::TVec3<f32>& vel)
-{
-	JGeometry::TVec3<f32> velCopy(vel);
-	return velCopy.y < 0.0f;
-}
-
 void TMapObjBall::kicked()
 {
-	if (!isFalling(mVelocity)) {
+	if (!(getVelocity().y < 0.0f)) {
 		return;
 	}
 
@@ -505,7 +486,7 @@ void TMapObjBall::control()
 		J3DModel* model = TLiveActor::getModel();
 		PSMTXCopy(takingMtxCopy, model->getAnmMtx(0));
 	} else {
-		if (!objIsNotMoving(mVelocity) || mGroundPlane->mActor != nullptr) {
+		if (!getVelocity().isZero() || mGroundPlane->mActor != nullptr) {
 			calcCurrentMtx();
 		}
 	}
@@ -831,7 +812,7 @@ void TResetFruit::thrown()
 void TResetFruit::hold(TTakeActor* actor)
 {
 	// Most likely a call to TMapObjBall::hold, but calling it doesn't match
-	if (!(vecLength(mVelocity) > 10.0f)) {
+	if (!(getVelocity().length() > 10.0f)) {
 		TMapObjGeneral::hold(actor);
 		mVelocity.zero();
 	}
@@ -1088,7 +1069,7 @@ void TResetFruit::control()
 			takingMtx[2][2] += unk190;
 			PSMTXCopy(takingMtx, getModel()->getAnmMtx(0));
 		} else {
-			if (!objIsNotMoving(mVelocity) || mGroundPlane->mActor != nullptr) {
+			if (!getVelocity().isZero() || mGroundPlane->mActor != nullptr) {
 				calcCurrentMtx();
 			}
 		}
@@ -1132,7 +1113,7 @@ void TResetFruit::control()
 void TResetFruit::perform(u32 param1, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->mMap == 7) {
-		if (isState(STATE_HOLDING) || !objIsNotMoving(mVelocity)) {
+		if (isState(STATE_HOLDING) || !getVelocity().isZero()) {
 			if (checkLiveFlag(LIVE_FLAG_UNK200)) {
 				offLiveFlag(LIVE_FLAG_UNK200);
 			}
@@ -1380,7 +1361,7 @@ void TBigWatermelon::touchGround(JGeometry::TVec3<f32>* ground)
 void TBigWatermelon::touchActor(THitActor* actor)
 {
 	if (!isState(STATE_APPEARING)) {
-		if (isState(STATE_NORMAL) || isFalling(mVelocity)) {
+		if (isState(STATE_NORMAL) || getVelocity().y < 0.0f) {
 			kill();
 		} else {
 			if (actor->isActorType(0x80000001)) {
@@ -1496,7 +1477,7 @@ void TBigWatermelon::control()
 		J3DModel* model = TLiveActor::getModel();
 		PSMTXCopy(takingMtxCopy, model->getAnmMtx(0));
 	} else {
-		if (!objIsNotMoving(mVelocity) || mGroundPlane->mActor != nullptr) {
+		if (!getVelocity().isZero() || mGroundPlane->mActor != nullptr) {
 			calcCurrentMtx();
 		}
 	}
