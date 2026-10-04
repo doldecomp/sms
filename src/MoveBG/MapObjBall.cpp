@@ -1140,9 +1140,9 @@ void TCoverFruit::calcRootMatrix()
 		getModel()->setBaseTRMtx(takingMtx);
 		mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
 	} else {
-		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.z,
-		               mRotation.x, mRotation.y, mPosition.y - mYOffset,
-		               mRotation.z);
+		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
+		               mPosition.y - mYOffset, mPosition.z, mRotation.x,
+		               mRotation.y, mRotation.z);
 	}
 
 	getModel()->setBaseScale(mScaling);
