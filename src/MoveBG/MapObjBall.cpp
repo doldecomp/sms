@@ -201,22 +201,14 @@ void TMapObjBall::kicked()
 
 u32 TMapObjBall::touchWater(THitActor* water)
 {
-	if (!isState(STATE_HOLDING)) {
-		if (isState(STATE_APPEARING)) {
-			return 1;
-		}
+	if (isState(STATE_HOLDING) || isState(STATE_APPEARING))
+		return 1;
 
-		JGeometry::TVec3<f32> velCopy = mVelocity;
-		const JGeometry::TVec3<f32>& waterSpeed
-		    = TMapObjBase::getWaterSpeed(water);
-
-		velCopy.x = waterSpeed.x * unk17C + velCopy.x;
-		velCopy.y = waterSpeed.y * unk17C + velCopy.y;
-		velCopy.z = waterSpeed.z * unk17C + velCopy.z;
-		mVelocity = velCopy;
-		offLiveFlag(LIVE_FLAG_UNK10);
-	}
-
+	JGeometry::TVec3<f32> vel;
+	vel.set(getVelocity());
+	vel.scaleAdd(unk17C, vel, getWaterSpeed(water));
+	setVelocity(vel);
+	offLiveFlag(LIVE_FLAG_UNK10);
 	return 1;
 }
 
@@ -841,21 +833,10 @@ void TResetFruit::touchWaterSurface()
 	makeObjWaitingToAppear();
 }
 
-inline u32 TResetFruit::touchWater(THitActor* water)
+u32 TResetFruit::touchWater(THitActor* water)
 {
-	if (!isState(STATE_HOLDING) && !isState(STATE_APPEARING)) {
-		JGeometry::TVec3<f32> velCopy = mVelocity;
-		const JGeometry::TVec3<f32>& waterSpeed
-		    = TMapObjBase::getWaterSpeed(water);
-
-		mVelocity.x = waterSpeed.x * unk17C + velCopy.x;
-		mVelocity.y = waterSpeed.y * unk17C + velCopy.y;
-		mVelocity.z = waterSpeed.z * unk17C + velCopy.z;
-		offLiveFlag(LIVE_FLAG_UNK10);
-	}
-
+	TMapObjBall::touchWater(water);
 	makeObjLiving();
-
 	return 1;
 }
 
