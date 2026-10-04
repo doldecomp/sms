@@ -37,11 +37,10 @@ public:
 
 class TDemoBossHanachanManager : public TEnemyManager {
 public:
-	TDemoBossHanachanManager(const char* name)
+	TDemoBossHanachanManager(const char* name, const char* prm_path)
 	    : TEnemyManager(name)
+	    , mSaveParams(new TDemoBossHanachanSaveParams(prm_path))
 	{
-		mSaveParams
-		    = new TDemoBossHanachanSaveParams("/enemy/sleepBossHanachan.prm");
 	}
 	virtual void clipEnemies(JDrama::TGraphics*);
 

@@ -9,9 +9,9 @@ class TSleepBossHanachan : public TDemoBossHanachan {
 public:
 	TSleepBossHanachan(const char* name = "?")
 	    : TDemoBossHanachan(name)
+	    , mShinePosition(0.0f, 0.0f, 0.0f)
+	    , unk15C(nullptr)
 	{
-		mShinePosition.set(0.0f, 0.0f, 0.0f);
-		unk15C = nullptr;
 	}
 
 	virtual void init(TLiveManager*);
@@ -28,7 +28,7 @@ public:
 class TSleepBossHanachanManager : public TDemoBossHanachanManager {
 public:
 	TSleepBossHanachanManager(const char* name = "?")
-	    : TDemoBossHanachanManager(name)
+	    : TDemoBossHanachanManager(name, "/enemy/sleepBossHanachan.prm")
 	{
 	}
 
