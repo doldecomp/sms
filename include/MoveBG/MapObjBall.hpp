@@ -87,6 +87,12 @@ public:
 	void makeObjLiving();
 	void makeObjWaitingToAppear();
 
+	enum {
+		STATE_LIVING      = 0xB,
+		STATE_ROTTING     = 0xC,
+		STATE_WAIT_EFFECT = 0xD,
+	};
+
 	void touchKillSurface();
 
 	// fabricated
@@ -138,6 +144,12 @@ public:
 	virtual void touchWaterSurface();
 
 	void startEvent();
+
+	enum {
+		STATE_LAUNCHED = 0xB,
+		STATE_LANDED   = 0xC,
+		STATE_GOAL     = 0xD,
+	};
 
 	TWaterEmitInfo* unk198;
 	s32 unk19C;
