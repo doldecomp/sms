@@ -311,7 +311,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 	for (s32 i = 0; i < 8; i++) {
 		char buf[254];
-		snprintf(buf, sizeof(buf), "/select/timg/sc_number_%d.bti", i);
+		snprintf(buf, sizeof(buf), "/select/timg/sc_number_%d.bti", i + 1);
 		mScenarioTex[i] = new JUTTexture((const ResTIMG*)JKRGetResource(buf));
 	}
 
