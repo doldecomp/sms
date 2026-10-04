@@ -1716,7 +1716,7 @@ void TMario::checkRideMovement()
 
 	const TLiveActor* groundActor = mGroundPlane->getActor();
 
-	if (wall != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
+	if (groundActor != nullptr && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)
 	    && (isTouchGround4cm()))
 		actor = groundActor;
 
