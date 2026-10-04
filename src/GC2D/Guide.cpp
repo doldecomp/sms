@@ -1,3 +1,5 @@
+#include "Player/MarioAccess.hpp"
+#include "System/FlagManager.hpp"
 #include <GC2D/Guide.hpp>
 #include <stdio.h>
 #include <string.h>
@@ -164,7 +166,102 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	unkC5 = 1;
 }
 
-void TGuide::resetObjects() { }
+void TGuide::resetObjects()
+{
+	s32 totalShineCount = 0;
+	for (u32 stage = 0; stage < 13; stage++) {
+		if (stage < 10) {
+			unk14[stage].unk0 = false;
+
+			s32 shineCount = 0;
+			if (stage != 0 && stage != 1) {
+				for (u32 shineIdx = 0; shineIdx < 8; shineIdx++) {
+					if (SMS_isGetShine(stage, shineIdx, false)) {
+						shineCount++;
+					}
+				}
+			}
+
+			unk14[stage].shineCount = shineCount < 100 ? shineCount : 99;
+			totalShineCount += shineCount;
+
+			s32 etcShineCount = 0;
+			if (stage != 0 && stage != 1) {
+				if (SMS_isGetShine(stage, 1, true)) {
+					etcShineCount++;
+				}
+				if (SMS_isGetShine(stage, 2, true)) {
+					etcShineCount++;
+				}
+			}
+
+			unk14[stage].etcShineCount = etcShineCount < 10 ? etcShineCount : 9;
+			totalShineCount += etcShineCount;
+
+			u16 coinCount
+			    = TFlagManager::getInstance()->getFlag(stage + 0x20005);
+
+			unk14[stage].coinCount
+			    = (s32)coinCount < 1000 ? (s32)coinCount : 999;
+
+			unk14[stage].etcShine = SMS_isGetShine(stage, 0, true);
+
+			if (unk14[stage].etcShine) {
+				totalShineCount++;
+			}
+
+			s32 blueCoinCount = 0;
+			if (stage != 0) {
+				for (u8 blueCoin = 0; blueCoin < 50; blueCoin++) {
+					if (TFlagManager::getInstance()->getBlueCoinFlag(
+					        scNormalStageTable[stage], blueCoin)) {
+						blueCoinCount++;
+					}
+				}
+			}
+
+			unk14[stage].blueCoinCount
+			    = blueCoinCount < 1000 ? blueCoinCount : 999;
+
+			if (TFlagManager::getInstance()->getBool(stage + 0x103A5)) {
+				unk44C[stage]->mVisible = false;
+				unk168[stage]->mVisible = false;
+			} else {
+				unk44C[stage]->mVisible = true;
+				unk168[stage]->mVisible = true;
+			}
+		}
+	}
+
+	unk14[9].unk0     = true;
+	s32 blueCoinCount = 0;
+	for (u8 blueCoin = 0u; blueCoin < 50; blueCoin++) {
+		if (TFlagManager::getInstance()->getBlueCoinFlag(scNormalStageTable[9],
+		                                                 blueCoin)) {
+			blueCoinCount++;
+		}
+	}
+	unk14[9].blueCoinCount = blueCoinCount;
+
+	s16 shineCount = 0;
+	if (TFlagManager::getInstance()->getBool(0x10056)) {
+		shineCount++;
+	}
+	if (TFlagManager::getInstance()->getBool(0x10058)) {
+		shineCount++;
+	}
+	unk14[0].shineCount = shineCount;
+	totalShineCount += shineCount;
+
+	unk14[1].shineCount
+	    = TFlagManager::getInstance()->getFlag(0x40000) - totalShineCount;
+
+	changeBotStatus(-1);
+	resetScore();
+
+	unk128[0]->getPane()->mVisible = true;
+	unk128[1]->getPane()->mVisible = true;
+}
 
 void TGuide::resetScore() { }
 
