@@ -704,7 +704,7 @@ void CPolarSubCamera::calcPosAndAt_()
 						if (fabricatedInline3()) {
 							f32 dx   = gpMarioPos->x - mCurrentTarget.unk18.x;
 							f32 dz   = gpMarioPos->z - mCurrentTarget.unk18.z;
-							f32 d  = MsSqrtf(dx * dx + dz * dz);
+							f32 d    = MsSqrtf(dx * dx + dz * dz);
 							f32 minD = mSaveEx->mSLMinCushionXZ.get();
 							f32 mD2
 							    = minD < dist * cushion ? dist * cushion : minD;
