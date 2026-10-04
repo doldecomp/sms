@@ -846,11 +846,11 @@ static void evCheckWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
 		if (i < 10) {
-			buffer[10] = '0' + i;
-			buffer[11] = 0;
+			buffer[sizeof(buffer) - 3] = '0' + i;
+			buffer[sizeof(buffer) - 2] = 0;
 		} else {
-			buffer[10] = '0' + i / 10;
-			buffer[11] = '0' + i % 10;
+			buffer[sizeof(buffer) - 3] = '0' + i / 10;
+			buffer[sizeof(buffer) - 2] = '0' + i % 10;
 		}
 		TMapObjBase* obj
 		    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buffer));
@@ -871,11 +871,11 @@ static void evRefreshWoodBox(TSpcTypedInterp<TEventWatcher>* interp,
 	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
 		if (i < 10) {
-			buffer[10] = '0' + i;
-			buffer[11] = 0;
+			buffer[sizeof(buffer) - 3] = '0' + i;
+			buffer[sizeof(buffer) - 2] = 0;
 		} else {
-			buffer[10] = '0' + i / 10;
-			buffer[11] = '0' + i % 10;
+			buffer[sizeof(buffer) - 3] = '0' + i / 10;
+			buffer[sizeof(buffer) - 2] = '0' + i % 10;
 		}
 		TMapObjBase* obj
 		    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buffer));
@@ -895,11 +895,11 @@ static void evKillWoodBox(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	char buffer[] = "ゲーム木箱00";
 	for (int i = p2; i <= p1; ++i) {
 		if (i < 10) {
-			buffer[10] = '0' + i;
-			buffer[11] = 0;
+			buffer[sizeof(buffer) - 3] = '0' + i;
+			buffer[sizeof(buffer) - 2] = 0;
 		} else {
-			buffer[10] = '0' + i / 10;
-			buffer[11] = '0' + i % 10;
+			buffer[sizeof(buffer) - 3] = '0' + i / 10;
+			buffer[sizeof(buffer) - 2] = '0' + i % 10;
 		}
 		TMapObjBase* obj
 		    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search(buffer));
