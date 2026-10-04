@@ -34,10 +34,10 @@ f32 TResetFruit::mScaleUpSpeed          = 1.05f;
 f32 TResetFruit::mBreakingScaleSpeed    = 0.96f;
 u32 TResetFruit::mFruitWaitTimeToAppear = 360;
 
-void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* param1)
+void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* pos)
 {
-	if (param1->y > unk140) {
-		param1->y = unk140;
+	if (pos->y > unk140) {
+		pos->y = unk140;
 	}
 
 	calcReflectingVelocity(unk13C, mMapObjData->mPhysical->unk4->unk4,
@@ -116,15 +116,15 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* wall)
 
 void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 {
-	f32 fVar1 = abs(getVelocity().length());
-	if (fVar1 > 0.05f && isActorType(0x400000d0)) {
+	f32 speed = abs(getVelocity().length());
+	if (speed > 0.05f && isActorType(0x400000d0)) {
 		if (mScaling.y >= 5.0f) {
 			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_WATERMELON_BROLL,
-			                                        &mPosition, nullptr, fVar1,
+			                                        &mPosition, nullptr, speed,
 			                                        0, 0, nullptr, 0, 4);
 		} else {
 			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_WATERMELON_SROLL,
-			                                        &mPosition, nullptr, fVar1,
+			                                        &mPosition, nullptr, speed,
 			                                        0, 0, nullptr, 0, 4);
 		}
 	}
@@ -153,7 +153,6 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 			mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
 			mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
 
-			f32 unkC = mMapObjData->mPhysical->unk4->unkC;
 			if (isActorType(0x400000d0)
 			    && (abs(mVelocity.x) > mMapObjData->mPhysical->unk4->unkC
 			        || abs(mVelocity.z) > mMapObjData->mPhysical->unk4->unkC)) {
@@ -677,7 +676,7 @@ void TResetFruit::waitingToAppear()
 		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 		makeObjAppeared();
 		Mtx scaleMat;
-		PSMTXScale(scaleMat, 0.2f, 0.2f, 0.2f);
+		MTXScale(scaleMat, 0.2f, 0.2f, 0.2f);
 		MtxPtr nodeMats = getModel()->getAnmMtx(0);
 		TMapObjBase::concatOnlyRotFromLeft(scaleMat, getModel()->getAnmMtx(0),
 		                                   nodeMats);
@@ -852,7 +851,7 @@ void TResetFruit::rotting() { }
 void TResetFruit::breaking()
 {
 	Mtx scaleMtx;
-	PSMTXScale(scaleMtx, 1.0f, mBreakingScaleSpeed, 1.0f);
+	MTXScale(scaleMtx, 1.0f, mBreakingScaleSpeed, 1.0f);
 	J3DModel* model = getModel();
 	MtxPtr nodeMat  = model->getAnmMtx(0);
 	TMapObjBase::concatOnlyRotFromLeft(scaleMtx, nodeMat, nodeMat);
@@ -865,15 +864,14 @@ void TResetFruit::breaking()
 
 void TResetFruit::appearing()
 {
-	MtxPtr scaleMatCopy;
-	Mtx scaleMat;
-	PSMTXScale(scaleMat, mScaleUpSpeed, mScaleUpSpeed, mScaleUpSpeed);
-	J3DModel* model2 = TLiveActor::getModel();
-	scaleMatCopy     = model2->getAnmMtx(0);
-	TMapObjBase::concatOnlyRotFromLeft(scaleMat, scaleMatCopy, scaleMatCopy);
-	mScaling.y         = mScaling.y * mScaleUpSpeed;
-	mScaledBodyRadius  = mBodyRadius * mScaling.y;
-	scaleMatCopy[1][3] = mBodyRadius * mScaling.y + mPosition.y;
+	MtxPtr mtx;
+	Mtx scaleMtx;
+	MTXScale(scaleMtx, mScaleUpSpeed, mScaleUpSpeed, mScaleUpSpeed);
+	mtx = getModel()->getAnmMtx(0);
+	concatOnlyRotFromLeft(scaleMtx, mtx, mtx);
+	mScaling.y        = mScaling.y * mScaleUpSpeed;
+	mScaledBodyRadius = mBodyRadius * mScaling.y;
+	mtx[1][3]         = mBodyRadius * mScaling.y + mPosition.y;
 	if (mScaling.y >= mInitialScaling.y) {
 		mScaling.set(mInitialScaling);
 		J3DModel* model = TLiveActor::getModel();
@@ -950,7 +948,7 @@ void TResetFruit::control()
 	}
 }
 
-void TResetFruit::perform(u32 param1, JDrama::TGraphics* graphics)
+void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpMarDirector->getCurrentMap() == 7) {
 		if (isState(STATE_HOLDING) || !getVelocity().isZero()) {
@@ -968,7 +966,7 @@ void TResetFruit::perform(u32 param1, JDrama::TGraphics* graphics)
 		}
 	}
 
-	TMapObjGeneral::perform(param1, graphics);
+	TMapObjGeneral::perform(cue, graphics);
 }
 
 void TResetFruit::killByTimer(int timer)
@@ -1174,16 +1172,16 @@ void TBigWatermelon::rebound(JGeometry::TVec3<f32>* surface)
 		surface->y = mGroundHeight;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		if (isActorType(0x400000d0)) {
-			f32 fVar1;
+			f32 volume;
 			if (mScaling.y >= 5.0f) {
-				fVar1 = abs(mGroundPlane->getNormal().y);
+				volume = abs(mGroundPlane->getNormal().y);
 				SMSGetMSound()->startSoundActorWithInfo(
-				    MSD_SE_OBJ_WATERMELON_BBUND, &mPosition, nullptr, fVar1, 0,
+				    MSD_SE_OBJ_WATERMELON_BBUND, &mPosition, nullptr, volume, 0,
 				    0, nullptr, 0, 4);
 			} else {
-				fVar1 = abs(mGroundPlane->getNormal().y);
+				volume = abs(mGroundPlane->getNormal().y);
 				SMSGetMSound()->startSoundActorWithInfo(
-				    MSD_SE_OBJ_WATERMELON_SBUND, &mPosition, nullptr, fVar1, 0,
+				    MSD_SE_OBJ_WATERMELON_SBUND, &mPosition, nullptr, volume, 0,
 				    0, nullptr, 0, 4);
 			}
 		} else {
@@ -1393,9 +1391,9 @@ BOOL TBigWatermelon::receiveMessage(THitActor* actor, u32 msg)
 void TBigWatermelon::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
-	TLiveActor* foo = static_cast<TLiveActor*>(
+	TLiveActor* shine = static_cast<TLiveActor*>(
 	    JDrama::TNameRefGen::search("シャイン（お化けスイカ用）"));
-	foo->mPosition.set(-4659.0f, 460.0f, 13620.0f);
+	shine->mPosition.set(-4659.0f, 460.0f, 13620.0f);
 }
 
 void TBigWatermelon::initMapObj()
