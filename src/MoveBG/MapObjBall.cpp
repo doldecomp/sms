@@ -1114,6 +1114,8 @@ void TRandomFruit::initMapObj()
 		snprintf(mFruitName, sizeof(mFruitName), "FruitPine");
 		break;
 	}
+	case 4:
+	case 5:
 	default: {
 		snprintf(mFruitName, sizeof(mFruitName), "FruitPine");
 		break;
