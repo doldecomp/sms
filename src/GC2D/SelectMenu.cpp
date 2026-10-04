@@ -381,201 +381,195 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][0])) {
 			mMenuScreen->search('sc_s')->show();
 		}
-
-		s8 count = 0;
-		for (s32 i = 1; i < 3; i++) {
-			if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i])) {
-				count++;
-			}
-		}
-
-		if (count == 0) {
-			mMenuScreen->search('sc_0')->add(83, 0);
-			mMenuScreen->search('r_i')->hide();
-		} else if (count == 1) {
-			mMenuScreen->search('r_s2')->hide();
-		}
-
-		// Mark for a gotten shine, but it's unused here.
-		mShineGotMark = new JUTTexture(
-		    (const ResTIMG*)JKRGetResource("/select/timg/sc_mark_1.bti"));
-
-		// Mark for an unlocked shine.
-		mShineUnlockedMark = new JUTTexture(
-		    (const ResTIMG*)JKRGetResource("/select/timg/sc_mark_0.bti"));
-
-		unk160.r = 255;
-		unk160.g = 0;
-		unk160.b = 0;
-		unk160.a = 255;
-
-		unk164.r = 255;
-		unk164.g = 255;
-		unk164.b = 0;
-		unk164.a = 255;
-
-		unk14[0] = 2;
-		unk14[1] = 0;
-		unk14[2] = 4;
-
-		mMenuScreen->search('bi_0')->hide();
-
-		mStageBannerPane = new TExPane(mMenuScreen, tags[mStage] * 0x100 + '0');
-		mStageBannerPane->getPane()->show();
-		mStageBannerText
-		    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'a');
-		mStageBannerText->getPane()->show();
-		mStageBannerShadow
-		    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
-		mStageBannerShadow->getPane()->show();
-
-		mScenarioBmg = JKRGetResource("/common/2d/scenarioname.bmg");
-
-		strncpy(mStageName->getStringPtr(),
-		        SMSGetMessageData(mScenarioBmg, tags[mStage] & 0xFFFF), 0x11);
-		mStageName->setFont((JUTFont*)gpSystemFont);
-
-		mShineUnlockStates[0] = 2;
-		mShineUnlockStates[1] = 2;
-		mShineUnlockStates[2] = 2;
-		mShineUnlockStates[3] = 2;
-		mShineUnlockStates[4] = 2;
-		mShineUnlockStates[5] = 2;
-		mShineUnlockStates[6] = 2;
-		mShineUnlockStates[7] = 2;
-
-		// Check which shines are unlocked.
-		for (s8 i = 0; i < 8; i++) {
-			u32 stage = SMS_getShineStage(mStage);
-			if (SMS_isGetShine(stage, i, false)) {
-				mShineUnlockStates[i] = 3;
-				mNumUnlockedShines    = i + 2;
-			}
-		}
-
-		if (mNumUnlockedShines > 8) {
-			mNumUnlockedShines = 8;
-		}
-
-		if (mNumUnlockedShines == 0) {
-			mNumUnlockedShines = 1;
-		}
-
-		s32 lastShineIdx = mNumUnlockedShines - 1;
-		if (lastShineIdx < 0) {
-			lastShineIdx = 0;
-		}
-		mSelectedShine = lastShineIdx;
-
-		if (mNumUnlockedShines < 8) {
-			// TODO: I tried matching this as best as I could but the compiler
-			// keeps unrolling the loops and I'm running out of ideas...
-			bzero(mShineUnlockStates + mNumUnlockedShines,
-			      8 - mNumUnlockedShines);
-		}
-
-		// Show arrows if we have more than one shine unlocked.
-		if (mNumUnlockedShines > 1) {
-			mArrowL = mMenuScreen->search('a_l0' + mNumUnlockedShines);
-			mArrowR = mMenuScreen->search('a_r0' + mNumUnlockedShines);
-
-			// Cache original arrow bounds.
-			mArrowLBounds = mArrowL->getBounds();
-			mArrowRBounds = mArrowR->getBounds();
-
-			if (mSelectedShine != 0) {
-				mArrowL->show();
-			}
-
-			if (mSelectedShine != (mNumUnlockedShines - 1)) {
-				mArrowR->show();
-			}
-		}
-
-		mShineMarks[0] = nullptr;
-		mShineMarks[1] = nullptr;
-		mShineMarks[2] = nullptr;
-		mShineMarks[3] = nullptr;
-		mShineMarks[4] = nullptr;
-		mShineMarks[5] = nullptr;
-		mShineMarks[6] = nullptr;
-		mShineMarks[7] = nullptr;
-
-		// This code displays the icons of the unlocked shines at the bottom of
-		// the screen. It handles even and odd numbers differently to centre
-		// them correctly.
-		s32 i = 0;
-		if ((mNumUnlockedShines & 1) == 1) {
-			// Odd number of shines.
-			s32 firstSlot = (7 - mNumUnlockedShines) / 2;
-			s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
-
-			for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
-				mShineMarks[i]
-				    = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
-				mShineMarks[i]->show();
-
-				if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
-					JUTTexture* mark = mShineUnlockedMark;
-					mShineMarks[i]->insert(mark, 0, 1.0f);
-					mShineMarks[i]->remove(1);
-				} else if (mShineUnlockStates[i] == 0) {
-					mShineMarks[i]->hide();
-				}
-				i++;
-			}
-		} else {
-			// Even number of shines.
-			s32 firstSlot = (8 - mNumUnlockedShines) / 2;
-			s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
-
-			for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
-				mShineMarks[i]
-				    = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
-				mShineMarks[i]->mVisible = true;
-
-				if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
-					JUTTexture* mark = mShineUnlockedMark;
-					mShineMarks[i]->insert(mark, 0, 1.0f);
-					mShineMarks[i]->remove(1);
-				} else if (mShineUnlockStates[i] == 0) {
-					mShineMarks[i]->hide();
-				}
-				i++;
-			}
-		}
-
-		mSelectedMarkCol
-		    = ((J2DPicture*)mMenuScreen->search('i_o0'))->getWhite();
-		mSelectedMarkAlpha = 255;
-		mMarkCol   = ((J2DPicture*)mMenuScreen->search('i_o2'))->getWhite();
-		mMarkAlpha = mMenuScreen->search('i_o2')->getAlpha();
-
-		((J2DPicture*)mMenuScreen->search('i_o0'))->setWhite(mMarkCol);
-		((J2DPicture*)mMenuScreen->search('i_o0'))->setAlpha(mMarkAlpha);
-
-		mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
-		mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
-
-		mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
-		mScenarioImg1->remove(1);
-		mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
-		mScenarioShadow1->remove(1);
-
-		char buf[254];
-		snprintf(buf, sizeof(buf), "/common/2d/scenarioname.bmg");
-		mScenarioBmg2 = JKRGetResource(buf);
-
-		mScenarioText1->setFont((JUTFont*)gpSystemFont);
-		mScenarioText2->setFont((JUTFont*)gpSystemFont);
-
-		s16 shineID
-		    = SMS_getShineID(SMS_getShineStage(mStage), mSelectedShine, false);
-
-		strncpy(mScenarioText1->getStringPtr(),
-		        SMSGetMessageData(mScenarioBmg2, SMS_getNormalStage(shineID)),
-		        127);
 	}
+
+	s8 count = 0;
+	for (s32 i = 1; i < 3; i++) {
+		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i])) {
+			count++;
+		}
+	}
+
+	if (count == 0) {
+		mMenuScreen->search('sc_0')->add(83, 0);
+		mMenuScreen->search('r_i')->hide();
+	} else if (count == 1) {
+		mMenuScreen->search('r_s2')->hide();
+	}
+
+	// Mark for a gotten shine, but it's unused here.
+	mShineGotMark = new JUTTexture(
+	    (const ResTIMG*)JKRGetResource("/select/timg/sc_mark_1.bti"));
+
+	// Mark for an unlocked shine.
+	mShineUnlockedMark = new JUTTexture(
+	    (const ResTIMG*)JKRGetResource("/select/timg/sc_mark_0.bti"));
+
+	unk160.r = 255;
+	unk160.g = 0;
+	unk160.b = 0;
+	unk160.a = 255;
+
+	unk164.r = 255;
+	unk164.g = 255;
+	unk164.b = 0;
+	unk164.a = 255;
+
+	unk14[0] = 2;
+	unk14[1] = 0;
+	unk14[2] = 4;
+
+	mMenuScreen->search('bi_0')->hide();
+
+	mStageBannerPane = new TExPane(mMenuScreen, tags[mStage] * 0x100 + '0');
+	mStageBannerPane->getPane()->show();
+	mStageBannerText = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'a');
+	mStageBannerText->getPane()->show();
+	mStageBannerShadow
+	    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
+	mStageBannerShadow->getPane()->show();
+
+	mScenarioBmg = JKRGetResource("/common/2d/scenarioname.bmg");
+
+	strncpy(mStageName->getStringPtr(),
+	        SMSGetMessageData(mScenarioBmg, tags[mStage] & 0xFFFF), 0x11);
+	mStageName->setFont((JUTFont*)gpSystemFont);
+
+	mShineUnlockStates[0] = 2;
+	mShineUnlockStates[1] = 2;
+	mShineUnlockStates[2] = 2;
+	mShineUnlockStates[3] = 2;
+	mShineUnlockStates[4] = 2;
+	mShineUnlockStates[5] = 2;
+	mShineUnlockStates[6] = 2;
+	mShineUnlockStates[7] = 2;
+
+	// Check which shines are unlocked.
+	for (s8 i = 0; i < 8; i++) {
+		u32 stage = SMS_getShineStage(mStage);
+		if (SMS_isGetShine(stage, i, false)) {
+			mShineUnlockStates[i] = 3;
+			mNumUnlockedShines    = i + 2;
+		}
+	}
+
+	if (mNumUnlockedShines > 8) {
+		mNumUnlockedShines = 8;
+	}
+
+	if (mNumUnlockedShines == 0) {
+		mNumUnlockedShines = 1;
+	}
+
+	s32 lastShineIdx = mNumUnlockedShines - 1;
+	if (lastShineIdx < 0) {
+		lastShineIdx = 0;
+	}
+	mSelectedShine = lastShineIdx;
+
+	if (mNumUnlockedShines < 8) {
+		// TODO: I tried matching this as best as I could but the compiler
+		// keeps unrolling the loops and I'm running out of ideas...
+		bzero(mShineUnlockStates + mNumUnlockedShines, 8 - mNumUnlockedShines);
+	}
+
+	// Show arrows if we have more than one shine unlocked.
+	if (mNumUnlockedShines > 1) {
+		mArrowL = mMenuScreen->search('a_l0' + mNumUnlockedShines);
+		mArrowR = mMenuScreen->search('a_r0' + mNumUnlockedShines);
+
+		// Cache original arrow bounds.
+		mArrowLBounds = mArrowL->getBounds();
+		mArrowRBounds = mArrowR->getBounds();
+
+		if (mSelectedShine != 0) {
+			mArrowL->show();
+		}
+
+		if (mSelectedShine != (mNumUnlockedShines - 1)) {
+			mArrowR->show();
+		}
+	}
+
+	mShineMarks[0] = nullptr;
+	mShineMarks[1] = nullptr;
+	mShineMarks[2] = nullptr;
+	mShineMarks[3] = nullptr;
+	mShineMarks[4] = nullptr;
+	mShineMarks[5] = nullptr;
+	mShineMarks[6] = nullptr;
+	mShineMarks[7] = nullptr;
+
+	// This code displays the icons of the unlocked shines at the bottom of
+	// the screen. It handles even and odd numbers differently to centre
+	// them correctly.
+	s32 i = 0;
+	if ((mNumUnlockedShines & 1) == 1) {
+		// Odd number of shines.
+		s32 firstSlot = (7 - mNumUnlockedShines) / 2;
+		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+
+		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
+			mShineMarks[i]->show();
+
+			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
+				JUTTexture* mark = mShineUnlockedMark;
+				mShineMarks[i]->insert(mark, 0, 1.0f);
+				mShineMarks[i]->remove(1);
+			} else if (mShineUnlockStates[i] == 0) {
+				mShineMarks[i]->hide();
+			}
+			i++;
+		}
+	} else {
+		// Even number of shines.
+		s32 firstSlot = (8 - mNumUnlockedShines) / 2;
+		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+
+		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
+			mShineMarks[i]->mVisible = true;
+
+			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
+				JUTTexture* mark = mShineUnlockedMark;
+				mShineMarks[i]->insert(mark, 0, 1.0f);
+				mShineMarks[i]->remove(1);
+			} else if (mShineUnlockStates[i] == 0) {
+				mShineMarks[i]->hide();
+			}
+			i++;
+		}
+	}
+
+	mSelectedMarkCol   = ((J2DPicture*)mMenuScreen->search('i_o0'))->getWhite();
+	mSelectedMarkAlpha = 255;
+	mMarkCol           = ((J2DPicture*)mMenuScreen->search('i_o2'))->getWhite();
+	mMarkAlpha         = mMenuScreen->search('i_o2')->getAlpha();
+
+	((J2DPicture*)mMenuScreen->search('i_o0'))->setWhite(mMarkCol);
+	((J2DPicture*)mMenuScreen->search('i_o0'))->setAlpha(mMarkAlpha);
+
+	mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
+	mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
+
+	mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
+	mScenarioImg1->remove(1);
+	mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
+	mScenarioShadow1->remove(1);
+
+	char buf[254];
+	snprintf(buf, sizeof(buf), "/common/2d/scenarioname.bmg");
+	mScenarioBmg2 = JKRGetResource(buf);
+
+	mScenarioText1->setFont((JUTFont*)gpSystemFont);
+	mScenarioText2->setFont((JUTFont*)gpSystemFont);
+
+	s16 shineID
+	    = SMS_getShineID(SMS_getShineStage(mStage), mSelectedShine, false);
+
+	strncpy(mScenarioText1->getStringPtr(),
+	        SMSGetMessageData(mScenarioBmg2, SMS_getNormalStage(shineID)), 127);
 }
 
 void TSelectMenu::startMove()
@@ -822,8 +816,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
 
-					mSelectShineMgr->mShines[mSelectedShine]
-					    ->mIsSelected
+					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = false;
 
 					mSelectedShine = prevIndex;
@@ -837,8 +830,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
 
-					mSelectShineMgr->mShines[mSelectedShine]
-					    ->mIsSelected
+					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = true;
 
 					if (mNumUnlockedShines > 1) {
@@ -895,8 +887,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
 
-					mSelectShineMgr->mShines[mSelectedShine]
-					    ->mIsSelected
+					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = false;
 					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
@@ -909,8 +900,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					    mScenarioBmg2, SMS_getNormalStage(shineID));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
-					mSelectShineMgr->mShines[mSelectedShine]
-					    ->mIsSelected
+					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = true;
 
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
