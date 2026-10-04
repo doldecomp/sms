@@ -6,6 +6,7 @@
 #include <Enemy/BossManta.hpp>
 #include <Enemy/BossPakkun.hpp>
 #include <Enemy/Hinokuri2.hpp>
+#include <Enemy/LimitKoopaJr.hpp>
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
@@ -92,14 +93,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "KoopaJrSubmarine" ) == 0 )
 	//     return new TKoopaJrSubmarine("クッパジュニアサブマリン");
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaJrManager" ) == 0 )
-	//     return new
-	//     TLimitKoopaJrManager("リミットクッパジュニアマネージャー");
+	if (strcmp(name, "LimitKoopaJrManager") == 0)
+		return new TLimitKoopaJrManager;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaJr" ) == 0 )
-	//     return new TLimitKoopaJr("リミットクッパジュニア");
+	if (strcmp(name, "LimitKoopaJr") == 0)
+		return new TLimitKoopaJr;
 
 	// TODO:
 	// if ( strcmp( name, "LimitKoopaManager" ) == 0 )
