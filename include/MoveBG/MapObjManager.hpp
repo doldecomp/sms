@@ -75,6 +75,8 @@ public:
 	}
 	const JGeometry::TVec3<f32>& getUnk44() { return unk44; }
 
+	SDLModelData* getSurfGessoModelData() { return mSurfGessoModelData; }
+
 public:
 	/* 0x40 */ MActorAnmData* unk40;
 	/* 0x44 */ JGeometry::TVec3<f32> unk44;
