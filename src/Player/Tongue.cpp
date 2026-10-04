@@ -405,17 +405,17 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 
 		Mtx modelMtx;
 		modelMtx[0][0] = tmp.x;
-		modelMtx[0][1] = tmp.y;
-		modelMtx[0][2] = tmp.z;
+		modelMtx[0][1] = up.x;
+		modelMtx[0][2] = dir.x;
 		modelMtx[0][3] = tip.x;
 
-		modelMtx[1][0] = up.x;
+		modelMtx[1][0] = tmp.y;
 		modelMtx[1][1] = up.y;
-		modelMtx[1][2] = up.z;
+		modelMtx[1][2] = dir.y;
 		modelMtx[1][3] = tip.y;
 
-		modelMtx[2][0] = dir.x;
-		modelMtx[2][1] = dir.y;
+		modelMtx[2][0] = tmp.z;
+		modelMtx[2][1] = up.z;
 		modelMtx[2][2] = dir.z;
 		modelMtx[2][3] = tip.z;
 
