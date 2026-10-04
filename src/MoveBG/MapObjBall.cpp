@@ -783,39 +783,35 @@ void TResetFruit::pick(THitActor* actor)
 
 void TResetFruit::kicked()
 {
-	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) && !isState(STATE_HOLDING)) {
-		if (*gpMarioSpeedY < 0.0f) {
-			return;
-		} else {
-			if (mVelocity.y <= 0.0f && checkLiveFlag2(LIVE_FLAG_AIRBORNE)
-			    && mVelocity.x * gpMarioPos->x - mPosition.x
-			               + mVelocity.z * gpMarioPos->z - mPosition.z
-			               + mVelocity.y * 0.0f
-			           > 0.0f) {
-				if (getVelocity().y == 0.0f) {
-					mVelocity.y = unk178;
-				} else {
-					mVelocity.y
-					    = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
-				}
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) || isState(STATE_HOLDING))
+		return;
 
-				mVelocity.x += unk170 * *gpMarioSpeedX;
-				mVelocity.z += unk170 * *gpMarioSpeedZ;
+	if (*gpMarioSpeedY < 0.0f)
+		return;
 
-				f32 unkC = mMapObjData->mPhysical->unk4->unkC;
-				if (abs(mVelocity.x) < unkC && abs(mVelocity.z) < unkC) {
-					mVelocity.x = MsRandF() * 2.0f - 1.0f;
-					mVelocity.z = MsRandF() * 2.0f - 1.0f;
-				}
+	JGeometry::TVec3<f32> toMario(gpMarioPos->x - mPosition.x, 0.0f,
+	                              gpMarioPos->z - mPosition.z);
+	if (getVelocity().y <= 0.0f && isAirborne()
+	    && getVelocity().dot(toMario) > 0.0f) {
+		if (getVelocity().y == 0.0f)
+			mVelocity.y = unk178;
+		else
+			mVelocity.y = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
 
-				unk194 = 10;
-				offLiveFlag(LIVE_FLAG_UNK10);
-				SMS_GetMarioHitActor()->receiveMessage(this,
-				                                       HIT_MESSAGE_ATTACK);
-				SMSGetMSound()->startSoundActor(
-				    MSD_SE_MA_KICK_DRIAN, &mPosition, nullptr, nullptr, 0, 4);
-			}
+		mVelocity.x += unk170 * *gpMarioSpeedX;
+		mVelocity.z += unk170 * *gpMarioSpeedZ;
+
+		f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+		if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
+			mVelocity.x = MsRandF() * 2.0f - 1.0f;
+			mVelocity.z = MsRandF() * 2.0f - 1.0f;
 		}
+
+		unk194 = 10;
+		offLiveFlag(LIVE_FLAG_UNK10);
+		SMS_GetMarioHitActor()->receiveMessage(this, HIT_MESSAGE_ATTACK);
+		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 }
 
