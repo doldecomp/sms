@@ -95,11 +95,8 @@ public:
 		STATE_WAIT_EFFECT = 0xD,
 	};
 
-	void touchKillSurface();
-
 	// fabricated
 	inline void hideTouchActor(THitActor*);
-	inline void unknownInline();
 
 	static u32 mFruitWaitTimeToAppear;
 	static f32 mScaleUpSpeed;

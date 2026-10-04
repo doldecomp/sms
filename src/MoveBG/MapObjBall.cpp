@@ -723,9 +723,10 @@ inline void TMapObjBall::kick()
 
 void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 {
-	if (gpMarDirector->mMap != 7 && gpMarDirector->mMap != 4) {
+	if (gpMarDirector->getCurrentMap() != 7
+	    && gpMarDirector->getCurrentMap() != 4) {
 		TMapObjGeneral::checkGroundCollision(ground);
-	} else if (gpMarDirector->mMap == 4) {
+	} else if (gpMarDirector->getCurrentMap() == 4) {
 		mGroundHeight = gpMap->checkGround(ground->x, ground->y + 200.0f,
 		                                   ground->z, &mGroundPlane);
 		mGroundHeight += 1.0f;
@@ -763,7 +764,7 @@ void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 
 void TResetFruit::waitingToAppear()
 {
-	if (gpMarDirector->mMap == 3 && unk1A4 != 0) {
+	if (gpMarDirector->getCurrentMap() == 3 && unk1A4 != 0) {
 		makeObjDead();
 	}
 
@@ -791,16 +792,12 @@ void TResetFruit::makeObjWaitingToAppear()
 	makeObjDefault();
 	makeObjDead();
 	calcRootMatrix();
-	J3DModel* model = TLiveActor::getModel();
-	model->calc();
-	mStateTimer = mFruitWaitTimeToAppear;
+	getModel()->calc();
+	startStateTimer(mFruitWaitTimeToAppear);
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	mState = STATE_WAITING_TO_APPEAR;
-	if (gpMarDirector->mMap == 3) {
-		if (unk1A4 != 0) {
-			makeObjDead();
-		}
-	}
+	if (gpMarDirector->getCurrentMap() == 3 && unk1A4 != 0)
+		makeObjDead();
 }
 
 void TResetFruit::thrown()
@@ -825,21 +822,6 @@ void TResetFruit::hold(TTakeActor* actor)
 	}
 }
 
-void TResetFruit::touchKillSurface()
-{
-	mState = STATE_LIVING;
-	makeObjDefault();
-	makeObjDead();
-	calcRootMatrix();
-	getModel()->calc();
-	mStateTimer = mFruitWaitTimeToAppear;
-	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-	mState = STATE_WAITING_TO_APPEAR;
-	if (gpMarDirector->getCurrentMap() == 3 && unk1A4 != 0) {
-		makeObjDead();
-	}
-}
-
 void TResetFruit::touchPollution()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_OFF,
@@ -848,7 +830,7 @@ void TResetFruit::touchPollution()
 	                                nullptr, nullptr, 0, 4);
 
 	makeObjDefault();
-	touchKillSurface();
+	makeObjWaitingToAppear();
 }
 
 void TResetFruit::touchWaterSurface()
@@ -856,7 +838,7 @@ void TResetFruit::touchWaterSurface()
 	TMapObjBase::emitColumnWater();
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DRINA_TO_WATER, &mPosition,
 	                                nullptr, nullptr, 0, 4);
-	touchKillSurface();
+	makeObjWaitingToAppear();
 }
 
 inline u32 TResetFruit::touchWater(THitActor* water)
@@ -897,21 +879,7 @@ void TResetFruit::touchActor(THitActor* actor)
 void TResetFruit::touchGround(JGeometry::TVec3<f32>* ground)
 {
 	if (getGroundPlane()->isDeathPlane()) {
-		mState = STATE_LIVING;
-		makeObjDefault();
-		makeObjDead();
-		calcRootMatrix();
-		J3DModel* model = TLiveActor::getModel();
-		model->calc();
-		mStateTimer = mFruitWaitTimeToAppear;
-		offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-		mState = STATE_WAITING_TO_APPEAR;
-		if (gpMarDirector->getCurrentMap() == 3) {
-			if (unk1A4 != 0) {
-				makeObjDead();
-			}
-		}
-
+		makeObjWaitingToAppear();
 		ground->set(getPosition());
 	} else {
 		TMapObjBall::touchGround(ground);
@@ -950,6 +918,35 @@ void TResetFruit::kicked()
 	}
 }
 
+void TResetFruit::living()
+{
+	TMapObjBall::control();
+	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isStateTimerEngaged()) {
+		if (mHolder != nullptr) {
+			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+			mHolder->mHeldObject = nullptr;
+			mHolder              = nullptr;
+		}
+
+		mVelocity.setAll(0.0f);
+		mState = STATE_ROTTING;
+	}
+}
+
+void TResetFruit::waitEffect()
+{
+	mPosition.y += mBodyRadius / 2.0f;
+	mScaling.set(mInitialScaling);
+	emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition);
+	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, nullptr,
+	                                nullptr, 0, 4);
+	mStateTimer = 240;
+	sleep();
+	mState = STATE_WAIT_EFFECT;
+}
+
+void TResetFruit::rotting() { }
+
 void TResetFruit::breaking()
 {
 	Mtx scaleMtx;
@@ -960,15 +957,7 @@ void TResetFruit::breaking()
 	mScaling.y *= mBreakingScaleSpeed;
 	nodeMat[1][3] = mBodyRadius * mScaling.y + mPosition.y;
 	if (mScaling.y < 0.2f) {
-		mPosition.y += mBodyRadius / 2.0f;
-		mScaling.set(mInitialScaling);
-		emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition);
-
-		SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition,
-		                                nullptr, nullptr, 0, 4);
-		mStateTimer = 240;
-		sleep();
-		mState = STATE_WAIT_EFFECT;
+		waitEffect();
 	}
 }
 
@@ -993,21 +982,6 @@ void TResetFruit::appearing()
 	}
 }
 
-void TResetFruit::unknownInline()
-{
-	TMapObjBall::control();
-	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isStateTimerEngaged()) {
-		if (mHolder != nullptr) {
-			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
-			mHolder->mHeldObject = nullptr;
-			mHolder              = nullptr;
-		}
-
-		mVelocity.setAll(0.0f);
-		mState = STATE_ROTTING;
-	}
-}
-
 void TResetFruit::control()
 {
 	switch (mState) {
@@ -1025,7 +999,8 @@ void TResetFruit::control()
 	}
 	case STATE_LIVING: {
 		offHitFlag(HIT_FLAG_NO_COLLISION);
-		if (gpMarDirector->mMap == 4 && checkLiveFlag(LIVE_FLAG_UNK10)) {
+		if (gpMarDirector->getCurrentMap() == 4
+		    && checkLiveFlag(LIVE_FLAG_UNK10)) {
 			offLiveFlag(LIVE_FLAG_UNK10);
 		}
 
@@ -1049,11 +1024,11 @@ void TResetFruit::control()
 			unk198 = 0.0f;
 		}
 
-		unknownInline();
+		living();
 		break;
 	}
 	case STATE_HOLDING: {
-		unknownInline();
+		living();
 		break;
 	}
 	case STATE_APPEARING:
@@ -1075,44 +1050,24 @@ void TResetFruit::control()
 		}
 		break;
 	}
-	case STATE_ROTTING: {
-		mPosition.y += mBodyRadius / 2.0f;
-		mScaling.set(mInitialScaling);
-		emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition);
-		SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition,
-		                                nullptr, nullptr, 0, 4);
-
-		mStateTimer = 240;
-		sleep();
-		mState = STATE_WAIT_EFFECT;
+	case STATE_ROTTING:
+		waitEffect();
 		break;
-	}
-	case STATE_WAIT_EFFECT: {
+	case STATE_WAIT_EFFECT:
 		if (!isStateTimerEngaged()) {
 			mFruitColor.r = 0xff;
 			mFruitColor.g = 0xff;
 			mFruitColor.b = 0xff;
 			awake();
-			mState = STATE_LIVING;
-			makeObjDefault();
-			makeObjDead();
-			calcRootMatrix();
-			getModel()->calc();
-			mStateTimer = mFruitWaitTimeToAppear;
-			offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-			mState = STATE_WAITING_TO_APPEAR;
-			if (gpMarDirector->mMap == 3 && unk1A4 != 0) {
-				makeObjDead();
-			}
+			makeObjWaitingToAppear();
 		}
 		break;
-	}
 	}
 }
 
 void TResetFruit::perform(u32 param1, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->mMap == 7) {
+	if (gpMarDirector->getCurrentMap() == 7) {
 		if (isState(STATE_HOLDING) || !getVelocity().isZero()) {
 			if (checkLiveFlag(LIVE_FLAG_UNK200)) {
 				offLiveFlag(LIVE_FLAG_UNK200);
