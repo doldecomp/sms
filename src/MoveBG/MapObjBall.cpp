@@ -188,7 +188,23 @@ void TMapObjBall::kicked()
 	if (getVelocity().y > 0.0f)
 		return;
 
-	kick();
+	if (getVelocity().y == 0.0f) {
+		mVelocity.y = unk178;
+	} else {
+		mVelocity.y = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
+	}
+
+	mVelocity.x += unk170 * *gpMarioSpeedX;
+	mVelocity.z += unk170 * *gpMarioSpeedZ;
+
+	f32 unkC = mMapObjData->mPhysical->unk4->unkC;
+	if (abs(mVelocity.x) < unkC && abs(mVelocity.z) < unkC) {
+		mVelocity.x = MsRandF() * 2.0f - 1.0f;
+		mVelocity.z = MsRandF() * 2.0f - 1.0f;
+	}
+
+	unk194 = 10;
+	offLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	THitActor* marHitActor = SMS_GetMarioHitActor();
@@ -628,27 +644,6 @@ TMapObjBall::TMapObjBall(const char* name)
 	mInitialScaling.x = 0.0f;
 }
 
-inline void TMapObjBall::kick()
-{
-	if (getVelocity().y == 0.0f) {
-		mVelocity.y = unk178;
-	} else {
-		mVelocity.y = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
-	}
-
-	mVelocity.x += unk170 * *gpMarioSpeedX;
-	mVelocity.z += unk170 * *gpMarioSpeedZ;
-
-	f32 unkC = mMapObjData->mPhysical->unk4->unkC;
-	if (abs(mVelocity.x) < unkC && abs(mVelocity.z) < unkC) {
-		mVelocity.x = MsRandF() * 2.0f - 1.0f;
-		mVelocity.z = MsRandF() * 2.0f - 1.0f;
-	}
-
-	unk194 = 10;
-	offLiveFlag(LIVE_FLAG_UNK10);
-}
-
 void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 {
 	if (gpMarDirector->getCurrentMap() != 7
@@ -736,17 +731,12 @@ void TResetFruit::thrown()
 
 void TResetFruit::hold(TTakeActor* actor)
 {
-	// Most likely a call to TMapObjBall::hold, but calling it doesn't match
-	if (!(getVelocity().length() > 10.0f)) {
-		TMapObjGeneral::hold(actor);
-		mVelocity.zero();
-	}
-
+	TMapObjBall::hold(actor);
 	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isStateTimerEngaged()) {
 		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-		mStateTimer = getLivingTime();
+		startStateTimer(getLivingTime());
 	}
 }
 
@@ -807,7 +797,7 @@ void TResetFruit::makeObjLiving()
 {
 	if (!isStateTimerEngaged()) {
 		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-		mStateTimer = getLivingTime();
+		startStateTimer(getLivingTime());
 	}
 
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -825,7 +815,24 @@ void TResetFruit::kicked()
 			               + mVelocity.z * gpMarioPos->z - mPosition.z
 			               + mVelocity.y * 0.0f
 			           > 0.0f) {
-				kick();
+				if (getVelocity().y == 0.0f) {
+					mVelocity.y = unk178;
+				} else {
+					mVelocity.y
+					    = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
+				}
+
+				mVelocity.x += unk170 * *gpMarioSpeedX;
+				mVelocity.z += unk170 * *gpMarioSpeedZ;
+
+				f32 unkC = mMapObjData->mPhysical->unk4->unkC;
+				if (abs(mVelocity.x) < unkC && abs(mVelocity.z) < unkC) {
+					mVelocity.x = MsRandF() * 2.0f - 1.0f;
+					mVelocity.z = MsRandF() * 2.0f - 1.0f;
+				}
+
+				unk194 = 10;
+				offLiveFlag(LIVE_FLAG_UNK10);
 				SMS_GetMarioHitActor()->receiveMessage(this,
 				                                       HIT_MESSAGE_ATTACK);
 				SMSGetMSound()->startSoundActor(
@@ -857,7 +864,7 @@ void TResetFruit::waitEffect()
 	emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition);
 	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, nullptr,
 	                                nullptr, 0, 4);
-	mStateTimer = 240;
+	startStateTimer(240);
 	sleep();
 	mState = STATE_WAIT_EFFECT;
 }
@@ -990,7 +997,7 @@ void TResetFruit::perform(u32 param1, JDrama::TGraphics* graphics)
 
 void TResetFruit::killByTimer(int timer)
 {
-	mStateTimer = timer;
+	startStateTimer(timer);
 	onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	mState = STATE_LIVING;
 }
@@ -1224,17 +1231,7 @@ void TBigWatermelon::touchActor(THitActor* actor)
 			kill();
 		} else {
 			if (actor->isActorType(0x80000001)) {
-				f32 fVar1 = mPosition.x - actor->mPosition.x;
-				f32 fVar2 = mPosition.y - actor->mPosition.y;
-				f32 fVar3 = mPosition.z - actor->mPosition.z;
-				f32 fVar4 = fVar2 * fVar2;
-				fVar4 += fVar3 * fVar3 + fVar1 * fVar1;
-				if (fVar4 <= 0.0f) {
-					fVar2 = __frsqrte(fVar4);
-					fVar4 = fVar4 * fVar2 / 2.0f
-					        * -(fVar4 * fVar2 * fVar2 - 3.0f);
-				}
-				if (fVar4 < mBodyRadius * 0.6f) {
+				if (mPosition.distance(actor->mPosition) < mBodyRadius * 0.6f) {
 					kill();
 					return;
 				}
@@ -1354,7 +1351,7 @@ void TBigWatermelon::control()
 			                          vec);
 			TMapObjBase::emitAndScale(MAPOBJ_WATERMELON_SHRINK_B, 0, &mPosition,
 			                          vec);
-			mStateTimer = 30;
+			startStateTimer(30);
 		}
 		if (TMapObjBase::animIsFinished()) {
 			makeObjDead();
@@ -1380,8 +1377,8 @@ void TBigWatermelon::startEvent()
 		gpItemManager->makeShineAppearWithDemoOffset(
 		    "シャイン（お化けスイカ用）", "スイカシャインカメラ", 0.0f, 0.0f,
 		    0.0f);
-		mStateTimer = 380;
-		mState      = 13;
+		startStateTimer(380);
+		mState = 13;
 	} else {
 		for (s32 i = 0; i < 10; ++i) {
 			TItem* item = static_cast<TItem*>(gpItemManager->makeObjAppear(
