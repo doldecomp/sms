@@ -264,7 +264,7 @@ TSelectMenu::TSelectMenu(const char* pName)
     , mCloseMenu(false)
     , unk14B(0)
     , mRcpAnmFrameRate(0.0f)
-    , mScenarioBmg(nullptr)
+    , mStageNameBmg(nullptr)
     , mScenarioBmg2(nullptr)
     , unk160()
     , unk164()
@@ -341,8 +341,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	s32 const tags[] = { 0x0,   0x0, 'bi_', 'rc_', 'mm_', 'pi_',
 		                 'sr_', 0x0, 'mo_', 'mr_', 0x0 };
 
-	// TODO: Unused but still compiled in?
-	volatile s32 const unkArr[]
+	s32 const stageNameIds[]
 	    = { 0x0, 0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x0, 0x7, 0x8, 0x0 };
 
 	const u8* const stages[] = { nullptr,
@@ -438,10 +437,11 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
 	mStageBannerShadow->getPane()->show();
 
-	mScenarioBmg = JKRGetResource("/common/2d/scenarioname.bmg");
+	mStageNameBmg = JKRGetResource("/common/2d/stagename.bmg");
 
 	strncpy(mStageName->getStringPtr(),
-	        SMSGetMessageData(mScenarioBmg, tags[mStage] & 0xFFFF), 0x11);
+	        SMSGetMessageData(mStageNameBmg, stageNameIds[mStage] & 0xFFFF),
+	        0x11);
 	mStageName->setFont((JUTFont*)gpSystemFont);
 
 	mShineUnlockStates[0] = 2;
