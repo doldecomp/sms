@@ -790,7 +790,7 @@ void TResetFruit::waitingToAppear()
 		makeObjDead();
 	}
 
-	if (!checkMapObjFlag(0x4000000) && !isWaitingToAppear() && mColCount == 0) {
+	if (!checkMapObjFlag(0x4000000) && !isStateTimerEngaged() && mColCount == 0) {
 		onMapObjFlag(0x40000);
 		makeObjAppeared();
 		Mtx scaleMat;
@@ -814,7 +814,7 @@ void TResetFruit::makeObjWaitingToAppear()
 	calcRootMatrix();
 	J3DModel* model = TLiveActor::getModel();
 	model->calc();
-	mTimeTilAppear = mFruitWaitTimeToAppear;
+	mStateTimer = mFruitWaitTimeToAppear;
 	offMapObjFlag(0x40000);
 	mState = 10;
 	if (gpMarDirector->mMap == 3) {
@@ -840,9 +840,9 @@ void TResetFruit::hold(TTakeActor* actor)
 
 	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
-	if (!checkMapObjFlag(0x4000000) && !isWaitingToAppear()) {
+	if (!checkMapObjFlag(0x4000000) && !isStateTimerEngaged()) {
 		onMapObjFlag(0x40000);
-		mTimeTilAppear = getLivingTime();
+		mStateTimer = getLivingTime();
 	}
 }
 
@@ -853,7 +853,7 @@ void TResetFruit::touchKillSurface()
 	makeObjDead();
 	calcRootMatrix();
 	getModel()->calc();
-	mTimeTilAppear = mFruitWaitTimeToAppear;
+	mStateTimer = mFruitWaitTimeToAppear;
 	offMapObjFlag(0x40000);
 	mState = 10;
 	if (gpMarDirector->getCurrentMap() == 3 && unk1A4 != 0) {
@@ -920,7 +920,7 @@ void TResetFruit::touchGround(JGeometry::TVec3<f32>* ground)
 		calcRootMatrix();
 		J3DModel* model = TLiveActor::getModel();
 		model->calc();
-		mTimeTilAppear = mFruitWaitTimeToAppear;
+		mStateTimer = mFruitWaitTimeToAppear;
 		offMapObjFlag(0x40000);
 		mState = 10;
 		if (gpMarDirector->getCurrentMap() == 3) {
@@ -937,9 +937,9 @@ void TResetFruit::touchGround(JGeometry::TVec3<f32>* ground)
 
 void TResetFruit::makeObjLiving()
 {
-	if (!isWaitingToAppear()) {
+	if (!isStateTimerEngaged()) {
 		onMapObjFlag(0x40000);
-		mTimeTilAppear = getLivingTime();
+		mStateTimer = getLivingTime();
 	}
 
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -981,7 +981,7 @@ void TResetFruit::breaking()
 		emitAndScale(229, 0, &mPosition);
 
 		gpMSound->startSoundActor(0x387d, &mPosition, nullptr, nullptr, 0, 4);
-		mTimeTilAppear = 240;
+		mStateTimer = 240;
 		sleep();
 		mState = 13;
 	}
@@ -1002,7 +1002,7 @@ void TResetFruit::appearing()
 		mScaling.set(mInitialScaling);
 		J3DModel* model = TLiveActor::getModel();
 		model->calc();
-		unk64 &= ~0x1;
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		makeObjAppeared();
 		mState = 1;
 	}
@@ -1011,7 +1011,7 @@ void TResetFruit::appearing()
 void TResetFruit::unknownInline()
 {
 	TMapObjBall::control();
-	if (!checkMapObjFlag(0x4000000) && !isWaitingToAppear()) {
+	if (!checkMapObjFlag(0x4000000) && !isStateTimerEngaged()) {
 		if (mHolder != nullptr) {
 			mHolder->receiveMessage(this, 8);
 			mHolder->mHeldObject = nullptr;
@@ -1027,7 +1027,7 @@ void TResetFruit::control()
 {
 	switch (mState) {
 	case 1: {
-		unk64 &= ~0x1;
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		for (s32 iVar6 = 0, iVar5 = 0; iVar6 < mColCount; ++iVar6, ++iVar5) {
 			THitActor* hitActor = mCollisions[iVar5];
 			TResetFruit::touchActor(hitActor);
@@ -1039,7 +1039,7 @@ void TResetFruit::control()
 		break;
 	}
 	case 11: {
-		unk64 &= ~0x1;
+		offHitFlag(HIT_FLAG_NO_COLLISION);
 		if (gpMarDirector->mMap == 4 && checkLiveFlag(LIVE_FLAG_UNK10)) {
 			offLiveFlag(LIVE_FLAG_UNK10);
 		}
@@ -1096,13 +1096,13 @@ void TResetFruit::control()
 		emitAndScale(229, 0, &mPosition);
 		gpMSound->startSoundActor(0x387d, &mPosition, nullptr, nullptr, 0, 4);
 
-		mTimeTilAppear = 240;
+		mStateTimer = 240;
 		sleep();
 		mState = 13;
 		break;
 	}
 	case 13: {
-		if (!isWaitingToAppear()) {
+		if (!isStateTimerEngaged()) {
 			mFruitColor.r = 0xff;
 			mFruitColor.g = 0xff;
 			mFruitColor.b = 0xff;
@@ -1112,7 +1112,7 @@ void TResetFruit::control()
 			makeObjDead();
 			calcRootMatrix();
 			getModel()->calc();
-			mTimeTilAppear = mFruitWaitTimeToAppear;
+			mStateTimer = mFruitWaitTimeToAppear;
 			offMapObjFlag(0x40000);
 			mState = 10;
 			if (gpMarDirector->mMap == 3 && unk1A4 != 0) {
@@ -1147,7 +1147,7 @@ void TResetFruit::perform(u32 param1, JDrama::TGraphics* graphics)
 
 void TResetFruit::killByTimer(int timer)
 {
-	mTimeTilAppear = timer;
+	mStateTimer = timer;
 	onMapObjFlag(0x40000);
 	mState = 11;
 }
@@ -1281,16 +1281,14 @@ void TCoverFruit::calcRootMatrix()
 {
 	if (mHolder != nullptr) {
 		MtxPtr takingMtx = mHolder->getTakingMtx();
-		J3DModel* model  = getModel();
-		PSMTXCopy(takingMtx, model->unk20);
+		getModel()->setBaseTRMtx(takingMtx);
 		mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
 	} else {
-		MsMtxSetXYZRPH(getModel()->unk20, mPosition.x, mPosition.z, mRotation.x,
+		MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.z, mRotation.x,
 		               mRotation.y, mPosition.y - mYOffset, mRotation.z);
 	}
 
-	J3DModel* model = getModel();
-	model->unk14    = mScaling;
+	getModel()->setBaseScale(mScaling);
 }
 
 BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
@@ -1513,11 +1511,11 @@ void TBigWatermelon::control()
 	case 12:
 		break;
 	case 13: {
-		if (!isWaitingToAppear()) {
+		if (!isStateTimerEngaged()) {
 			JGeometry::TVec3<f32> vec(1.0f, 1.0f, 1.0f);
 			TMapObjBase::emitAndScale(0x6b, 0, &mPosition, vec);
 			TMapObjBase::emitAndScale(0x6c, 0, &mPosition, vec);
-			mTimeTilAppear = 30;
+			mStateTimer = 30;
 		}
 		if (TMapObjBase::animIsFinished()) {
 			makeObjDead();
@@ -1543,7 +1541,7 @@ void TBigWatermelon::startEvent()
 		gpItemManager->makeShineAppearWithDemoOffset(
 		    "シャイン（お化けスイカ用）", "スイカシャインカメラ", 0.0f, 0.0f,
 		    0.0f);
-		mTimeTilAppear = 380;
+		mStateTimer = 380;
 		mState         = 13;
 	} else {
 		for (s32 i = 0; i < 10; ++i) {
@@ -1595,7 +1593,7 @@ void TBigWatermelon::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
 	TLiveActor* foo
-	    = JDrama::TNameRefGen::search<TLiveActor>("シャイン（お化けスイカ用）");
+	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("シャイン（お化けスイカ用）"));
 	foo->mPosition.set(-4659.0f, 460.0f, 13620.0f);
 }
 
