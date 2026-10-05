@@ -161,6 +161,18 @@ inline f32 MsAngleDiff(f32 alpha, f32 beta)
 // fabricated
 inline f32 MsAngleWrap(f32 angle) { return MsWrap(angle, 0.0f, 360.0f); }
 
+// fabricated
+inline f32 MsAngleBetween(const JGeometry::TVec3<f32>& a,
+                          const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> cross;
+	cross.cross(a, b);
+	f32 crossMag = cross.length();
+	f32 dot      = a.dot(b);
+	f32 angle    = atan2f(crossMag, dot);
+	return fabsf(angle);
+}
+
 /**
  * @brief Checks whether the point \p target is within the line of sight of
  * an \p eye looking in direction \p sight, given a sight cone \p angle and

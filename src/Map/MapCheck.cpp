@@ -1,6 +1,7 @@
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapCollisionPlane.hpp>
 #include <Map/MapData.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -324,17 +325,6 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	}
 }
 
-static f32 angle_between(const JGeometry::TVec3<f32>& a,
-                         const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> cross;
-	cross.cross(a, b);
-	f32 crossMag = cross.length();
-	f32 dot      = a.x * b.x + a.y * b.y + a.z * b.z;
-	f32 angle    = atan2f(crossMag, dot);
-	return fabsf(angle);
-}
-
 static bool bgIntersectLine(const TBGCheckData* data,
                             const JGeometry::TVec3<f32>& start,
                             const JGeometry::TVec3<f32>& end, bool front_only,
@@ -378,9 +368,9 @@ static bool bgIntersectLine(const TBGCheckData* data,
 
 	f32 angleSum = 0.0f;
 
-	angleSum += fabsf(angle_between(a, b));
-	angleSum += fabsf(angle_between(b, c));
-	angleSum += fabsf(angle_between(c, a));
+	angleSum += fabsf(MsAngleBetween(a, b));
+	angleSum += fabsf(MsAngleBetween(b, c));
+	angleSum += fabsf(MsAngleBetween(c, a));
 
 	if (fabsf(6.2831855f - angleSum) > 0.001f)
 		return false;

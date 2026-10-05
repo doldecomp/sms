@@ -28,6 +28,8 @@ public:
 	}
 
 	const ResTIMG* getUnk94() const { return unk94; }
+	// fabricated
+	const JGeometry::TVec3<f32>& getUnk98() const { return unk98; }
 
 public:
 	/* 0x30 */ Mtx unk30;
@@ -67,6 +69,11 @@ public:
 
 class TMirrorModelObj : public TMirrorModel {
 public:
+	TMirrorModelObj()
+	    : unk28(nullptr)
+	{
+	}
+
 	virtual void init(const char*);
 	virtual void calc();
 	virtual void setPlane();
