@@ -15,7 +15,7 @@ class TExPane;
 class TMarioGamePad;
 
 struct TGuideStageData {
-	/* 0x0 */ u8 unk0;
+	/* 0x0 */ bool unk0;
 	/* 0x1 */ u8 shineCount;
 	/* 0x2 */ u8 etcShineCount;
 	/* 0x3 */ u8 unk3;
