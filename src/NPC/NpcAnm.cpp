@@ -273,8 +273,8 @@ void TBaseNPC::randomizeBckAndBtpFrame_()
 
 void TBaseNPC::walkAnmRateChange_()
 {
-	f32 dVar13 = MsSqrtf(mLinearVelocity.x * mLinearVelocity.x
-	                     + mLinearVelocity.z * mLinearVelocity.z);
+	f32 dVar13 = MsSqrtf(mPositionDelta.x * mPositionDelta.x
+	                     + mPositionDelta.z * mPositionDelta.z);
 	if (dVar13 < 0.001f) {
 		switch (unkD0->getCurrentAnmKind()) {
 		case NPC_ANM_KIND_WALK:

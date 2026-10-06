@@ -569,7 +569,7 @@ void TElecCarapace::behaveToHitWall(const TBGCheckData* param_1)
 			unk184      = 0;
 			unk176      = 1;
 			unk175      = 1;
-			f32 speed   = mLinearVelocity.dot(param_1->getNormal());
+			f32 speed   = mPositionDelta.dot(param_1->getNormal());
 			mVelocity.x = -1.5f * speed * param_1->getNormal().x;
 			mVelocity.y = 3.0f;
 			mVelocity.z = -1.5f * speed * param_1->getNormal().z;

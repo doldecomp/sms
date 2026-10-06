@@ -5,10 +5,10 @@
 void TMapCollisionManager::changeCollision(u32 i)
 {
 	if (i < mEntryNum) {
-		if (unk8 != mEntries[i]) {
-			if (unk8 != nullptr)
-				unk8->remove();
-			unk8 = mEntries[i];
+		if (mActiveEntry != mEntries[i]) {
+			if (mActiveEntry != nullptr)
+				mActiveEntry->remove();
+			mActiveEntry = mEntries[i];
 		}
 	}
 }
@@ -64,16 +64,16 @@ void TMapCollisionManager::init(const char* file, u16 param_2, const char* path)
 	else
 		sprintf(fullPath, "%s%s", folder, file);
 
-	mEntries[mEntryNum]->init(fullPath, col_other(param_2) | 2, unk10);
+	mEntries[mEntryNum]->init(fullPath, col_other(param_2) | 2, mOwnerActor);
 
 	if (mEntryNum == 0) {
-		unk8 = mEntries[mEntryNum];
+		mActiveEntry = mEntries[mEntryNum];
 	} else {
-		unk8 = nullptr;
+		mActiveEntry = nullptr;
 	}
 
 	if (col_type(param_2) == 0) {
-		unk8 = mEntries[mEntryNum];
+		mActiveEntry = mEntries[mEntryNum];
 	}
 
 	mEntryNum++;
@@ -82,11 +82,11 @@ void TMapCollisionManager::init(const char* file, u16 param_2, const char* path)
 TMapCollisionManager::TMapCollisionManager(u16 param_1, const char* param_2,
                                            const TLiveActor* param_3)
 {
-	mEntries    = new TMapCollisionBase*[param_1];
-	mMaxEntries = param_1;
-	mEntryNum   = 0;
-	unk8        = nullptr;
-	mFolder     = param_2;
-	unk10       = param_3;
-	unk14       = 0;
+	mEntries     = new TMapCollisionBase*[param_1];
+	mMaxEntries  = param_1;
+	mEntryNum    = 0;
+	mActiveEntry = nullptr;
+	mFolder      = param_2;
+	mOwnerActor  = param_3;
+	unk14        = 0;
 }

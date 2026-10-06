@@ -435,7 +435,7 @@ void TChuuHana::moveObject()
 	unk194 = MsClamp(unk194 - 0.1f, 0.0f, 1.0f);
 	mMActor->setMotionBlendRatioForBck(unk194);
 
-	unk1EC = mLinearVelocity;
+	unk1EC = mPositionDelta;
 
 	if (!isAirborne()
 	    && (mGroundPlane->getActor() == nullptr
@@ -516,7 +516,7 @@ void TChuuHana::bind()
 	}
 
 	JGeometry::TVec3<f32> next(mPosition);
-	next += mLinearVelocity;
+	next += mPositionDelta;
 	next += mVelocity;
 
 	mVelocity.y -= getGravityY();
@@ -538,7 +538,7 @@ void TChuuHana::bind()
 	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y + mHeadHeight, &next.z,
 	                                 mBodyRadius);
 
-	mLinearVelocity = next - mPosition;
+	mPositionDelta = next - mPosition;
 }
 
 void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1) { }

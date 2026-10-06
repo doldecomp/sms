@@ -65,7 +65,7 @@ public:
 	void moveHeldObject()
 	{
 		JGeometry::TVec3<f32> pos = mHeldObject->getPosition();
-		pos.add(mOwner->mLinearVelocity);
+		pos.add(mOwner->mPositionDelta);
 		mHeldObject->moveRequest(pos);
 	}
 

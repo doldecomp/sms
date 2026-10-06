@@ -241,8 +241,8 @@ void TRollEnemy::setBehavior()
 	}
 
 	gpPollution->stampGround(
-	    1, mPosition.x + unk1AC * mLinearVelocity.x, mPosition.y,
-	    mPosition.z + unk1AC * mLinearVelocity.z, 32.0f * range);
+	    1, mPosition.x + unk1AC * mPositionDelta.x, mPosition.y,
+	    mPosition.z + unk1AC * mPositionDelta.z, 32.0f * range);
 }
 
 void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
@@ -468,8 +468,8 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 {
 	TRollEnemy::walkBehavior(param_1, param_2);
 
-	f32 x = mLinearVelocity.x;
-	f32 z = mLinearVelocity.z;
+	f32 x = mPositionDelta.x;
+	f32 z = mPositionDelta.z;
 	if (unk1A8) {
 		x = mVelocity.x;
 		z = mVelocity.z;

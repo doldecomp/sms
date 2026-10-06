@@ -102,7 +102,7 @@ void TKazekun::calcRootMatrix()
 	}
 }
 
-void TKazekun::bind() { mLinearVelocity.add(mVelocity); }
+void TKazekun::bind() { mPositionDelta.add(mVelocity); }
 
 void TKazekun::behaveToWater(THitActor* param_1)
 {
@@ -203,7 +203,7 @@ void TKazekun::flyAroundMario()
 	velocity.y = climb;
 	velocity.scale(1.0f + fabsf(climb));
 	velocity.scale(((TKazekunParams*)getSaveParam())->mAroundSpeed.get());
-	mLinearVelocity = velocity;
+	mPositionDelta = velocity;
 }
 
 f32 TKazekun::getAroundRate(const JGeometry::TVec3<f32>& dir) const

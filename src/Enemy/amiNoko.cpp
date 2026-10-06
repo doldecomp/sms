@@ -589,7 +589,7 @@ void TAmiNoko::bind()
 			onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
 		vec -= mPosition;
-		mLinearVelocity = vec;
+		mPositionDelta = vec;
 	} else {
 		TLiveActor::bind();
 	}
@@ -622,9 +622,9 @@ void TAmiNoko::creepToCurPathNode(f32 param_1)
 		f32 speed = MsMin(param_1, direction.length());
 		direction.normalize();
 		direction *= speed;
-		JGeometry::TVec3<f32> velocity = mLinearVelocity;
+		JGeometry::TVec3<f32> velocity = mPositionDelta;
 		velocity += direction;
-		mLinearVelocity = velocity;
+		mPositionDelta = velocity;
 	}
 #else
 	if (isBckAnm(4) || isBckAnm(7) || isBckAnm(10) || isBckAnm(13)) {
@@ -634,9 +634,9 @@ void TAmiNoko::creepToCurPathNode(f32 param_1)
 			direction.x = 1.0f;
 		VECNormalize(&direction, &direction);
 		direction *= param_1;
-		JGeometry::TVec3<f32> velocity = mLinearVelocity;
+		JGeometry::TVec3<f32> velocity = mPositionDelta;
 		velocity += direction;
-		mLinearVelocity = velocity;
+		mPositionDelta = velocity;
 	}
 #endif
 }

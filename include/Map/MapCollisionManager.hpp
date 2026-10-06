@@ -18,25 +18,48 @@ public:
 	void changeCollision(u32);
 
 	// fabricated
-	TMapCollisionBase* getUnk8() { return unk8; }
+	TMapCollisionBase* getActiveCollision() const { return mActiveEntry; }
+	void clearOwnerActor() { mOwnerActor = nullptr; }
+	void removeActiveCollision()
+	{
+		if (mActiveEntry)
+			mActiveEntry->remove();
+	}
+	void moveActiveCollisionTrans(const JGeometry::TVec3<f32>& trans)
+	{
+		if (mActiveEntry)
+			mActiveEntry->moveTrans(trans);
+	}
+	void moveActiveCollisionMtx(MtxPtr mtx)
+	{
+		if (mActiveEntry)
+			mActiveEntry->moveMtx(mtx);
+	}
+	void moveActiveCollisionSRT(const JGeometry::TVec3<f32>& trans,
+	                            const JGeometry::TVec3<f32>& rot,
+	                            const JGeometry::TVec3<f32>& scale)
+	{
+		if (mActiveEntry)
+			mActiveEntry->moveSRT(trans, rot, scale);
+	}
 
-	void setUpUnk8TRS(const JGeometry::TVec3<f32>& trans,
-	                  const JGeometry::TVec3<f32>& rot,
-	                  const JGeometry::TVec3<f32>& scale)
+	void setUpActiveCollisionTRS(const JGeometry::TVec3<f32>& trans,
+	                             const JGeometry::TVec3<f32>& rot,
+	                             const JGeometry::TVec3<f32>& scale)
 	{
 		Mtx mtx;
 		MsMtxSetTRS(mtx, trans.x, trans.y, trans.z, rot.x, rot.y, rot.z,
 		            scale.x, scale.y, scale.z);
-		unk8->setUpMtx(mtx);
+		mActiveEntry->setUpMtx(mtx);
 	}
 
-public:
+private:
 	/* 0x0 */ TMapCollisionBase** mEntries;
 	/* 0x4 */ u16 mMaxEntries;
 	/* 0x6 */ u16 mEntryNum;
-	/* 0x8 */ TMapCollisionBase* unk8;
+	/* 0x8 */ TMapCollisionBase* mActiveEntry;
 	/* 0xC */ const char* mFolder;
-	/* 0x10 */ const TLiveActor* unk10;
+	/* 0x10 */ const TLiveActor* mOwnerActor;
 	/* 0x14 */ u16 unk14;
 };
 

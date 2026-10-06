@@ -36,7 +36,7 @@ void TMapCollisionMove::setList()
 {
 	TBGCheckData* checkDataIt = mCheckDatas;
 	for (u32 i = mCheckDataNum; i != 0; --i) {
-		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getUnk8());
+		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getKind());
 		++checkDataIt;
 	}
 }
@@ -55,7 +55,7 @@ void TMapCollisionBase::setCheckData(const f32* vertices, const s16* indices,
 	param_3->setVertex(p1, p2, p3);
 
 	if (kind != 3)
-		gpMapCollisionData->addCheckDataToGrid(param_3, getUnk8());
+		gpMapCollisionData->addCheckDataToGrid(param_3, getKind());
 }
 
 void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
@@ -78,7 +78,7 @@ void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 	TBGCheckData* checkDataIt = mCheckDatas;
 	for (int i = 0; i < mCheckDataNum; ++checkDataIt, ++i) {
 		checkDataIt->updateTrans(delta);
-		gpMapCollisionData->addCheckDataToGrid(checkDataIt, mKind);
+		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getKind());
 	}
 
 	mPrevTranslation = param_1;

@@ -712,7 +712,8 @@ void THinokuri2::changeBck(int param_1)
 	J3DFrameCtrl* pJVar7 = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (pJVar7 != nullptr) {
 		if (mLevel == 0 && (param_1 - 23U <= 1 || param_1 - 26U <= 1))
-			pJVar7->setRate(((THino2Params*)getSaveParam())->mSLWalkSpeedRateLv0.get());
+			pJVar7->setRate(
+			    ((THino2Params*)getSaveParam())->mSLWalkSpeedRateLv0.get());
 		else
 			pJVar7->setRate(1.0f);
 	}
@@ -895,13 +896,12 @@ void THinokuri2::moveObject()
 		generateEnemy();
 
 	doShortCut();
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mPositionDelta.zero();
+	mRotationDelta.zero();
 	if (mMapCollisionManager != nullptr) {
 		JGeometry::TVec3<f32> aTStack_30;
 		getJointTransByIndex(0x17, &aTStack_30);
-		if (mMapCollisionManager->unk8)
-			mMapCollisionManager->unk8->moveTrans(aTStack_30);
+		mMapCollisionManager->moveActiveCollisionTrans(aTStack_30);
 	}
 
 	f32 headHitR = getSaveParams()->mSLHeadHitR.value;
@@ -928,8 +928,8 @@ void THinokuri2::moveObject()
 	control();
 	bind();
 
-	mPosition += mLinearVelocity;
-	mRotation += mAngularVelocity;
+	mPosition += mPositionDelta;
+	mRotation += mRotationDelta;
 
 	unk198
 	    += -MsClamp(MsWrap(MsAngleDiff(mRotation.y, oldRot), -180.0f, 180.0f),
@@ -1232,7 +1232,8 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 		if (self->getMActor()->curAnmEndsNext()) {
 			int uVar1 = self->mWaitTimer;
 			++uVar1;
-			int polWait = ((THino2Params*)self->getSaveParam())->mSLPolWaitCount.get();
+			int polWait
+			    = ((THino2Params*)self->getSaveParam())->mSLPolWaitCount.get();
 			if (uVar1 > polWait) {
 				self->unk180 = FALSE;
 				self->changeBck(3);
@@ -1306,7 +1307,8 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 		}
 	}
 
-	if (spine->getTime() >= ((THino2Params*)self->getSaveParam())->getSLDamageTimer()) {
+	if (spine->getTime()
+	    >= ((THino2Params*)self->getSaveParam())->getSLDamageTimer()) {
 		self->unk180 = FALSE;
 		if (self->getHitPoints() == 0) {
 			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
@@ -1415,7 +1417,8 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 	if (self->getMActor()->curAnmEndsNext()) {
 		int uVar7 = self->getUnk160();
 		++uVar7;
-		int stampCnt = ((THino2Params*)self->getSaveParam())->mSLStampCount.get();
+		int stampCnt
+		    = ((THino2Params*)self->getSaveParam())->mSLStampCount.get();
 		if (uVar7 > stampCnt) {
 			self->setUnk160(0);
 			self->resetPolInterval();

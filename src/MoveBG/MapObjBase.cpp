@@ -90,12 +90,10 @@ void TMapObjBase::removeMapCollision()
 	if (!mMapCollisionManager)
 		return;
 
-	// TODO: fakematch fix properly!!!1111
-	if (mMapCollisionManager->unk8
-	    && mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_STATIC)
-		if (mMapCollisionManager->unk8)
-			((volatile TMapCollisionManager*)mMapCollisionManager)
-			    ->unk8->remove();
+	if (mMapCollisionManager->getActiveCollision()
+	    && mMapCollisionManager->getActiveCollision()->getKind()
+	           != TMapCollisionBase::KIND_STATIC)
+		mMapCollisionManager->removeActiveCollision();
 }
 
 void TMapObjBase::setUpCurrentMapCollision()
@@ -105,11 +103,12 @@ void TMapObjBase::setUpCurrentMapCollision()
 		return;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-		mMapCollisionManager->getUnk8()->setUpMtx(getModel()->getAnmMtx(0));
+		mMapCollisionManager->getActiveCollision()->setUpMtx(
+		    getModel()->getAnmMtx(0));
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
-		colman->setUpUnk8TRS(pos, mRotation, mScaling);
+		colman->setUpActiveCollisionTRS(pos, mRotation, mScaling);
 	}
 }
 
@@ -124,9 +123,10 @@ void TMapObjBase::setUpMapCollision(u16 param_1)
 	mMapCollisionManager->changeCollision(param_1);
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-		mMapCollisionManager->getUnk8()->setUpMtx(getModel()->getAnmMtx(0));
+		mMapCollisionManager->getActiveCollision()->setUpMtx(
+		    getModel()->getAnmMtx(0));
 	} else {
-		mMapCollisionManager->setUpUnk8TRS(pos, mRotation, mScaling);
+		mMapCollisionManager->setUpActiveCollisionTRS(pos, mRotation, mScaling);
 	}
 }
 
@@ -351,28 +351,7 @@ void TMapObjBase::makeObjAppeared()
 		SMS_ShowAllShapePacket(getModel());
 
 	mPosition.y -= mYOffset;
-	if (mMapObjData->mCollision && mMapObjData->mCollision->unk4[0].unk0 != 0) {
-		f32 x = mPosition.x;
-		f32 y = mPosition.y - mYOffset;
-		f32 z = mPosition.z;
-		mMapCollisionManager->changeCollision(0);
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-			MtxPtr mtx = getModel()->getAnmMtx(0);
-
-			TMapCollisionBase* col = mMapCollisionManager->getUnk8();
-			col->setMtx(mtx);
-			col->setUp();
-		} else {
-			Mtx mtx;
-			TMapCollisionManager* manager = mMapCollisionManager;
-			MsMtxSetTRS(mtx, x, y, z, mRotation.x, mRotation.y, mRotation.z,
-			            mScaling.x, mScaling.y, mScaling.z);
-
-			TMapCollisionBase* col = manager->getUnk8();
-			col->setMtx(mtx);
-			col->setUp();
-		}
-	}
+	setUpMapCollision(0);
 	mPosition.y += mYOffset;
 	mState = STATE_NORMAL;
 }
@@ -429,12 +408,9 @@ void TMapObjBase::control()
 		move->unk8->update();
 		J3DTransformInfo info;
 		move->unk4->getTransform(1, &info);
-		mLinearVelocity.x
-		    = info.mTranslate.x + mInitialPosition.x - mPosition.x;
-		mLinearVelocity.y
-		    = info.mTranslate.y + mInitialPosition.y - mPosition.y;
-		mLinearVelocity.z
-		    = info.mTranslate.z + mInitialPosition.z - mPosition.z;
+		mPositionDelta.x = info.mTranslate.x + mInitialPosition.x - mPosition.x;
+		mPositionDelta.y = info.mTranslate.y + mInitialPosition.y - mPosition.y;
+		mPositionDelta.z = info.mTranslate.z + mInitialPosition.z - mPosition.z;
 		mRotation.x
 		    = info.mRotation.x * (360.0f / 65536.0f) + mInitialRotation.x;
 		mRotation.y
@@ -448,7 +424,8 @@ void TMapObjBase::setGroundCollision()
 {
 	if (!mMapCollisionManager)
 		return;
-	if (mMapCollisionManager->unk8->mKind != TMapCollisionBase::KIND_MOVE)
+	if (mMapCollisionManager->getActiveCollision()->getKind()
+	    != TMapCollisionBase::KIND_MOVE)
 		return;
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
@@ -461,23 +438,21 @@ void TMapObjBase::setGroundCollision()
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		if (mMapCollisionManager->unk8)
-			mMapCollisionManager->unk8->moveMtx(mtx);
+		mMapCollisionManager->moveActiveCollisionMtx(mtx);
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
-			mMapCollisionManager->unk8->offFlag(
+			mMapCollisionManager->getActiveCollision()->offFlag(
 			    TMapCollisionBase::FLAG_UNK8000);
-			mMapCollisionManager->unk8->offFlag(
+			mMapCollisionManager->getActiveCollision()->offFlag(
 			    TMapCollisionBase::FLAG_UNK4000);
-			if (mMapCollisionManager->unk8)
-				mMapCollisionManager->unk8->moveSRT(pos, mRotation, mScaling);
+			mMapCollisionManager->moveActiveCollisionSRT(pos, mRotation,
+			                                             mScaling);
 		} else {
-			mMapCollisionManager->unk8->offFlag(
+			mMapCollisionManager->getActiveCollision()->offFlag(
 			    TMapCollisionBase::FLAG_UNK4000);
-			if (mMapCollisionManager->unk8)
-				mMapCollisionManager->unk8->moveTrans(pos);
+			mMapCollisionManager->moveActiveCollisionTrans(pos);
 		}
 	}
 }

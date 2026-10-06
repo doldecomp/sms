@@ -490,9 +490,9 @@ void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	mRotation.y = MsWrap(mRotation.y + fVar5, 0.0f, 360.0f);
 
-	JGeometry::TVec3<f32> vel = mLinearVelocity;
+	JGeometry::TVec3<f32> vel = mPositionDelta;
 	vel += polarXZ(mRotation.y, march_speed);
-	mLinearVelocity = vel;
+	mPositionDelta = vel;
 
 	if (abs(fVar7 - unk12C) < 100.0f) {
 		unk128 += 1;
@@ -550,9 +550,9 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	mRotation.y = MsWrap(mRotation.y + fVar2, 0.0f, 360.0f);
 
-	JGeometry::TVec3<f32> vel = mLinearVelocity;
+	JGeometry::TVec3<f32> vel = mPositionDelta;
 	vel += polarXZ(mRotation.y, march_speed);
-	mLinearVelocity = vel;
+	mPositionDelta = vel;
 
 	if (abs(dVar9 - unk12C) < 100.0f) {
 		unk128 += 1;

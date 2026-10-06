@@ -297,7 +297,7 @@ void TMapStaticObj::initMapCollision(const char* name)
 	else
 		mCollisionManager = new TMapCollisionManager(1, "/map/map", nullptr);
 	mCollisionManager->init(name, 0, nullptr);
-	mCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation, mScaling);
 }
 
 #pragma dont_inline on

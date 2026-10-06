@@ -39,8 +39,8 @@ TLiveActor::TLiveActor(const char* name)
 	mSpine         = nullptr;
 	unk90          = nullptr;
 
-	mLinearVelocity.setAll(0.0f);
-	mAngularVelocity.setAll(0.0f);
+	mPositionDelta.setAll(0.0f);
+	mRotationDelta.setAll(0.0f);
 
 	mVelocity.set(0.0f, 0.0f, 0.0f);
 
@@ -115,10 +115,10 @@ void TLiveActor::calcRideMomentum()
 			// mRidePos is from last frame here
 			MTXMultVec(mtx, &mRidePos, &rideVelocity);
 			rideVelocity -= mPosition;
-			mLinearVelocity += rideVelocity;
+			mPositionDelta += rideVelocity;
 
 			if (unkE8 >= 2) {
-				mAngularVelocity.y
+				mRotationDelta.y
 				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
 				mGroundActorYaw = mGroundActor->mRotation.y;
 			}
@@ -190,7 +190,7 @@ void TLiveActor::bind()
 	}
 
 	JGeometry::TVec3<f32> nextPos = mPosition;
-	nextPos += mLinearVelocity;
+	nextPos += mPositionDelta;
 	nextPos += mVelocity;
 
 	// Apply gravity & air resistance
@@ -226,7 +226,7 @@ void TLiveActor::bind()
 	                                 &nextPos.z, mBodyRadius);
 
 	// We're done, this is the displacement for this frame
-	mLinearVelocity = nextPos - mPosition;
+	mPositionDelta = nextPos - mPosition;
 }
 
 void TLiveActor::control()
@@ -267,25 +267,24 @@ void TLiveActor::setGroundCollision()
 {
 	if (!mMapCollisionManager)
 		return;
-	if (!mMapCollisionManager->unk8)
-		return;
 
-	mMapCollisionManager->unk8->moveSRT(mPosition, mRotation, mScaling);
+	mMapCollisionManager->moveActiveCollisionSRT(mPosition, mRotation,
+	                                             mScaling);
 }
 
 void TLiveActor::moveObject()
 {
 	ensureTakeSituation();
 
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mPositionDelta.zero();
+	mRotationDelta.zero();
 
 	control();
 	calcRideMomentum();
 	bind();
 
-	mPosition += mLinearVelocity;
-	mRotation += mAngularVelocity;
+	mPosition += mPositionDelta;
+	mRotation += mRotationDelta;
 
 	setGroundCollision();
 	calcRidePos();

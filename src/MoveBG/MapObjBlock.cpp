@@ -378,10 +378,7 @@ void TTelesaBlock::setGroundCollision()
 	if (!mMapCollisionManager)
 		return;
 
-	if (!mMapCollisionManager->getUnk8())
-		return;
-
-	mMapCollisionManager->getUnk8()->moveSRT(mPosition, mRotation, unk140);
+	mMapCollisionManager->moveActiveCollisionSRT(mPosition, mRotation, unk140);
 }
 
 BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)

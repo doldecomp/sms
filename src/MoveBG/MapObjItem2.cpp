@@ -99,7 +99,7 @@ void TMushroom1up::control()
 		mPosition.set(pos);
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
-		mLinearVelocity.zero();
+		mPositionDelta.zero();
 		mVelocity.zero();
 		unk13C++;
 		return;
@@ -107,7 +107,7 @@ void TMushroom1up::control()
 
 	unk13C++;
 	if (unk139 == 2) {
-		mLinearVelocity.zero();
+		mPositionDelta.zero();
 		mVelocity.zero();
 		return;
 	}
@@ -139,7 +139,7 @@ void TMushroom1up::control()
 
 	VECNormalize(&diff, &diff);
 	diff.scale(3.8f);
-	mLinearVelocity.add(diff);
+	mPositionDelta.add(diff);
 }
 
 void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -164,7 +164,7 @@ void TJumpBase::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	if (mMapCollisionManager) {
-		TMapCollisionBase* base = mMapCollisionManager->unk8;
+		TMapCollisionBase* base = mMapCollisionManager->getActiveCollision();
 		base->setAllBGType(7);
 		base->setAllActor(this);
 		base->setAllData(0x2710);
@@ -187,8 +187,8 @@ BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 			if (unk138 == 0) {
 				mHolder = (TTakeActor*)sender;
 				onHitFlag(HIT_FLAG_NO_COLLISION);
-				if (mMapCollisionManager && mMapCollisionManager->unk8)
-					mMapCollisionManager->unk8->remove();
+				if (mMapCollisionManager)
+					mMapCollisionManager->removeActiveCollision();
 				return TRUE;
 			}
 		} else if (message == HIT_MESSAGE_UNK8) {
@@ -263,7 +263,7 @@ void TJumpBase::control()
 		if (unk13C == 0) {
 			offHitFlag(HIT_FLAG_NO_COLLISION);
 			if (mMapCollisionManager)
-				mMapCollisionManager->getUnk8()->setUp();
+				mMapCollisionManager->getActiveCollision()->setUp();
 
 			getMActor()->setBck("jumpbase_set");
 			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
@@ -293,8 +293,9 @@ void TJumpBase::control()
 
 	case 1:
 		if (unk13C == 0) {
-			if (mMapCollisionManager && mMapCollisionManager->getUnk8())
-				mMapCollisionManager->getUnk8()->remove();
+			if (mMapCollisionManager
+			    && mMapCollisionManager->getActiveCollision())
+				mMapCollisionManager->getActiveCollision()->remove();
 
 			getMActor()->setBck("jumpbase_shrink");
 			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);

@@ -317,9 +317,9 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 	mRotation.y = MsWrap(mRotation.y + fVar3, 0.0f, 360.0f);
 
 	if (param_1 != 5 && param_1 != 3) {
-		JGeometry::TVec3<f32> local_40 = mLinearVelocity;
+		JGeometry::TVec3<f32> local_40 = mPositionDelta;
 		local_40 += fromPolar(mRotation.y, mMarchSpeed * param_2);
-		mLinearVelocity = local_40;
+		mPositionDelta = local_40;
 	}
 
 	if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()

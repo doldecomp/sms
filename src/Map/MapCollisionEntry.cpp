@@ -16,7 +16,7 @@ void TMapCollisionBase::setVertexData(u32 param_1,
                                       const JGeometry::TVec3<f32>& param_4)
 {
 	mCheckDatas[param_1].setVertex(param_2, param_3, param_4);
-	gpMapCollisionData->addCheckDataToGrid(&mCheckDatas[param_1], getUnk8());
+	gpMapCollisionData->addCheckDataToGrid(&mCheckDatas[param_1], getKind());
 }
 
 static void* loadCollisionData(const char* param_1)

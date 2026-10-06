@@ -45,7 +45,7 @@ void TWireBinder::bind(TLiveActor* actor)
 		actor->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	actor->setLinearVelocity(unk_20 - actor->getPosition());
+	actor->setPositionDelta(unk_20 - actor->getPosition());
 }
 
 JGeometry::TVec3<f32>

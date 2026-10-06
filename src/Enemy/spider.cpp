@@ -16,7 +16,7 @@ TSpider::~TSpider() { }
 
 void TSpider::bind(TLiveActor* param_1)
 {
-	JGeometry::TVec3<f32> local_114 = param_1->mLinearVelocity;
+	JGeometry::TVec3<f32> local_114 = param_1->mPositionDelta;
 	JGeometry::TVec3<f32> local_50  = param_1->mPosition;
 	local_50 += local_114;
 
@@ -127,5 +127,5 @@ void TSpider::bind(TLiveActor* param_1)
 	JGeometry::TVec3<f32> local_118 = local_bc;
 	local_118.y += unaff_f29 - ((TSpineEnemy*)param_1)->getHeadHeight();
 
-	param_1->mLinearVelocity = local_118 - param_1->mPosition;
+	param_1->mPositionDelta = local_118 - param_1->mPosition;
 }

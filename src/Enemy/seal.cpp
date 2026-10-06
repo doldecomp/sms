@@ -48,7 +48,8 @@ void TSeal::init(TLiveManager* param_1)
 	mMapCollisionManager = new TMapCollisionManager(1, "/scene/seal", this);
 	mMapCollisionManager->init("gene_orange_col1.col", 2, nullptr);
 
-	mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
+	                                              mScaling);
 
 	mHitPoints = getMaxHitPoints();
 	mSpine->initWith(&TNerveSealSleep::theNerve());
@@ -66,8 +67,8 @@ BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
 			SMSGetMSound()->startSoundSet(MSD_SE_ERASE_SCRAWL,
 			                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (!mSpine->isNerve(&TNerveSealDie::theNerve())) {
-				if (mMapCollisionManager->getUnk8() != nullptr)
-					mMapCollisionManager->getUnk8()->remove();
+				if (mMapCollisionManager->getActiveCollision() != nullptr)
+					mMapCollisionManager->getActiveCollision()->remove();
 				const TNerveBase<TLiveActor>* nextNerve
 				    = &TNerveSealDie::theNerve();
 				mSpine->pushNerve(nextNerve);

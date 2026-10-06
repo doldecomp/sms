@@ -216,7 +216,7 @@ void TKumokun::bind()
 		return;
 	}
 
-	JGeometry::TVec3<f32> local_168 = mLinearVelocity;
+	JGeometry::TVec3<f32> local_168 = mPositionDelta;
 	JGeometry::TVec3<f32> local_104 = mVelocity;
 	local_168 += local_104;
 
@@ -272,7 +272,7 @@ void TKumokun::bind()
 	else
 		resetHitPlaneCounter();
 
-	mLinearVelocity = local_15C + local_150;
+	mPositionDelta = local_15C + local_150;
 }
 
 bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
@@ -430,7 +430,7 @@ void TKumokun::bindOnFlying()
 	bool hit = false;
 
 	JGeometry::TVec3<f32> local_74 = mPosition;
-	local_74 += mLinearVelocity;
+	local_74 += mPositionDelta;
 	local_74 += mVelocity;
 
 	const TBGCheckData* roof = checkRoofPlane(&local_74, mHeadHeight);
@@ -471,7 +471,7 @@ void TKumokun::bindOnFlying()
 		resetHitPlaneCounter();
 	}
 
-	mLinearVelocity = local_74 - mPosition;
+	mPositionDelta = local_74 - mPosition;
 }
 
 void TKumokun::moveObject()
@@ -685,7 +685,7 @@ bool TKumokun::doWalk()
 	                .get();
 
 	forward *= speed;
-	mLinearVelocity = forward;
+	mPositionDelta = forward;
 
 	bool result = true;
 	if (mHitPlaneCounter <= 30)

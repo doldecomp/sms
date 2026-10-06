@@ -135,7 +135,7 @@ void TMonumentShine::control()
 		return;
 
 	unk140 *= 0.9992f;
-	mAngularVelocity.y += unk140;
+	mRotationDelta.y += unk140;
 
 	if (unk13C > 0) {
 		unk148 = (unk140 > 0.0f) ? 1 : -1;
@@ -151,7 +151,7 @@ void TMonumentShine::control()
 					diff = 0.1f;
 				if (0.0f == diff)
 					unk144++;
-				mAngularVelocity.y += diff;
+				mRotationDelta.y += diff;
 			} else {
 				f32 diff
 				    = MsAngleDiff(mInitialRotation.y - 360.0f, mRotation.y);
@@ -159,20 +159,20 @@ void TMonumentShine::control()
 					diff = -0.1f;
 				if (0.0f == diff)
 					unk144++;
-				mAngularVelocity.y += diff;
+				mRotationDelta.y += diff;
 			}
 		} else {
 			if (unk148 > 0) {
-				mAngularVelocity.y += 0.1f;
-				while (mRotation.y + mAngularVelocity.y > 360.0f) {
+				mRotationDelta.y += 0.1f;
+				while (mRotation.y + mRotationDelta.y > 360.0f) {
 					mRotation.y -= 360.0f;
 					unk144++;
 				}
 			} else {
-				mAngularVelocity.y -= 0.1f;
+				mRotationDelta.y -= 0.1f;
 				f32 step = 360.0f;
 				f32 zero = 0.0f;
-				while (mRotation.y + mAngularVelocity.y < zero) {
+				while (mRotation.y + mRotationDelta.y < zero) {
 					mRotation.y += step;
 					unk144++;
 				}

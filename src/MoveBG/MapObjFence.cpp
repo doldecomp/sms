@@ -46,7 +46,8 @@ void TFence::initMapCollisionData()
 			mMapCollisionManager->init("fence_half_h_tool", 0, nullptr);
 	}
 
-	mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
+	                                              mScaling);
 }
 
 void TFence::initMapObj()
@@ -74,7 +75,8 @@ void TRevolvingFenceOuter::initMapCollisionData()
 		mMapCollisionManager->init("fence_revolve_outer_v_tool", 0, nullptr);
 	else
 		mMapCollisionManager->init("fence_revolve_outer_h_tool", 0, nullptr);
-	mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
+	                                              mScaling);
 	unk13C = unk138 ? TMapObjBaseManager::newAndRegisterObj(
 	                      "bambooFence_revolve_inner", mPosition, mRotation)
 	                : TMapObjBaseManager::newAndRegisterObj(
@@ -221,8 +223,7 @@ void TRevolvingFenceInner::setGroundCollision()
 	    && mPosition.z + mBodyRadius > SMS_GetYoshi()->getTranslation().z) {
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
-		if (mMapCollisionManager->unk8)
-			mMapCollisionManager->unk8->moveMtx(mtx);
+		mMapCollisionManager->moveActiveCollisionMtx(mtx);
 	}
 	TMapObjBase::setGroundCollision();
 }
@@ -253,7 +254,8 @@ void TRevolvingFenceInner::initMapObj()
 		unk140 = 1;
 	else
 		unk140 = 0;
-	mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+	mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
+	                                              mScaling);
 }
 
 void TFenceWater::draw() const { }
@@ -429,7 +431,7 @@ void TRailFence::goOnRail()
 	                                nullptr, 0, 4);
 	VECNormalize(&direction, &direction);
 	direction.scale(unk140);
-	mLinearVelocity += direction;
+	mPositionDelta += direction;
 }
 
 void TRailFence::control()

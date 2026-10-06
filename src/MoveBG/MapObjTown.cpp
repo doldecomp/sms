@@ -101,7 +101,7 @@ void TManhole::touchPlayer(THitActor*)
 		    ->setFrame(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		               + SMSGetAnmFrameRate());
 		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-		mMapCollisionManager->unk8->setAllBGType(0x400);
+		mMapCollisionManager->getActiveCollision()->setAllBGType(0x400);
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
 		                                nullptr, 0, 4);
 		unk150 = 1;
@@ -177,7 +177,7 @@ void TManhole::appeared()
 	}
 	if (unk150) {
 		if (gpMarioOriginal->mVel.y <= 0.0f) {
-			mMapCollisionManager->unk8->setAllBGType(
+			mMapCollisionManager->getActiveCollision()->setAllBGType(
 			    BG_TYPE_GROUND_POUND_TO_PASS_THROUGH);
 			unk150 = 0;
 		}
@@ -226,8 +226,7 @@ void TManhole::setGroundCollision()
 	    && mPosition.x + mBodyRadius > SMS_GetYoshi()->getTranslation().x
 	    && mPosition.z - mBodyRadius < SMS_GetYoshi()->getTranslation().z
 	    && mPosition.z + mBodyRadius > SMS_GetYoshi()->getTranslation().z) {
-		if (mMapCollisionManager->unk8)
-			mMapCollisionManager->unk8->moveTrans(mPosition);
+		mMapCollisionManager->moveActiveCollisionTrans(mPosition);
 	} else {
 		TMapObjBase::setGroundCollision();
 	}

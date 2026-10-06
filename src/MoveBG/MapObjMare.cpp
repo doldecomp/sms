@@ -735,7 +735,7 @@ void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* param_1,
         param_2.mCenter.z - wall->getNormal().z * (50.0f + param_2.mRadius));
 	*param_1 = mPosition;
 	kill();
-	mLinearVelocity.zero();
+	mPositionDelta.zero();
 }
 
 bool TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& param_1, f32 param_2,
@@ -776,7 +776,7 @@ void TMuddyBoat::bind()
 	if (height > bottom - 100.0f || ground->isIllegalData()) {
 		pos = mPosition;
 		kill();
-		mLinearVelocity.zero();
+		mPositionDelta.zero();
 		return;
 	}
 	JGeometry::TVec3<f32> center;
@@ -791,7 +791,7 @@ void TMuddyBoat::bind()
 	center.set(pos.x, mPosition.y - getObjCollisionHeightOffset(), pos.z);
 	if (bindToWall(center, unk154, &pos))
 		return;
-	mLinearVelocity = pos - mPosition;
+	mPositionDelta = pos - mPosition;
 }
 
 void TMuddyBoat::control()

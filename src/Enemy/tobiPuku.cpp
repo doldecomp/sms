@@ -454,7 +454,7 @@ void TTobiPuku::walkBehavior(int param_1, f32 param_2)
 	f32 prevY   = mPosition.y;
 	mPosition.y = unk1E0 + 10.0f * MsSin(2.0f * (f32)mSpine->getTime());
 
-	JGeometry::TVec3<f32> velocity = mLinearVelocity;
+	JGeometry::TVec3<f32> velocity = mPositionDelta;
 	velocity.y                     = prevY - mPosition.y;
 	mRotation.x                    = MsGetRotFromZaxis(velocity).x;
 }

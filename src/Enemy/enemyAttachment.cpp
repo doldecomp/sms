@@ -68,7 +68,7 @@ void TEnemyAttachment::recoverScale()
 void TEnemyAttachment::bind()
 {
 	JGeometry::TVec3<f32> local_1C = mPosition;
-	local_1C += mLinearVelocity;
+	local_1C += mPositionDelta;
 	local_1C += mVelocity;
 	recoverScale();
 	mVelocity.y -= getNowGravity();
@@ -95,12 +95,12 @@ void TEnemyAttachment::bind()
 	mPosition                      = local_1C;
 	JGeometry::TVec3<f32> local_68 = local_1C;
 	local_68 -= mPosition;
-	mLinearVelocity = local_68;
+	mPositionDelta = local_68;
 
 	setBehavior();
 	forceKill();
 
-	mPosition += mLinearVelocity;
+	mPosition += mPositionDelta;
 }
 
 void TEnemyAttachment::rebirth()

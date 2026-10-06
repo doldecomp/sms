@@ -532,8 +532,8 @@ void TBaseNPC::moveObject()
 	updateForbidCount_();
 
 	updateSquareToMario();
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mPositionDelta.zero();
+	mRotationDelta.zero();
 	const TLiveActor* groundActor
 	    = SMS_GetGroundActor(mGroundPlane, 0x400000CD);
 	if (groundActor) {
@@ -570,11 +570,11 @@ void TBaseNPC::moveObject()
 			}
 		} else {
 			if (!checkLiveFlag(LIVE_FLAG_UNK10) && isNerveWalk()
-			    && !belongToGround() && mLinearVelocity.y > 5.0f) {
-				mLinearVelocity.y = 5.0f;
+			    && !belongToGround() && mPositionDelta.y > 5.0f) {
+				mPositionDelta.y = 5.0f;
 			}
-			mPosition += mLinearVelocity;
-			mRotation += mAngularVelocity;
+			mPosition += mPositionDelta;
+			mRotation += mRotationDelta;
 		}
 		calcRidePos();
 	}

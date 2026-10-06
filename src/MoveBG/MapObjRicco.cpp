@@ -128,7 +128,7 @@ void TCraneUpDown::control()
 void TCraneUpDown::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	mMapCollisionManager->getUnk8()->setAllActor(nullptr);
+	mMapCollisionManager->getActiveCollision()->setAllActor(nullptr);
 	unk138 = TMapObjBaseManager::newAndRegisterObj("craneCargoUpDown");
 	unk138->appear();
 	if (strcmp(mName, "craneUpDown 0") == 0) {
@@ -328,15 +328,15 @@ void TFruitSwitch::pullUp()
 	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	offHitFlag(HIT_FLAG_NO_COLLISION);
 	getModel()->calc();
-	mMapCollisionManager->getUnk8()->setUpMtx(getModel()->getAnmMtx(0));
+	mMapCollisionManager->getActiveCollision()->setUpMtx(
+	    getModel()->getAnmMtx(0));
 }
 
 void TFruitSwitch::pushDown()
 {
 	startBck("riccoswitch");
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	if (mMapCollisionManager->unk8)
-		mMapCollisionManager->unk8->remove();
+	mMapCollisionManager->removeActiveCollision();
 }
 
 BOOL TFruitSwitch::receiveMessage(THitActor* sender, u32 message)

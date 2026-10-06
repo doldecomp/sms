@@ -50,8 +50,7 @@ void TRideCloud::setGroundCollision()
 		// TODO: this is used in MapObjRailBlock too, inline global?
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
-		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
-			col->moveMtx(mtx);
+		mMapCollisionManager->moveActiveCollisionMtx(mtx);
 	}
 }
 
@@ -96,7 +95,7 @@ u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 void TRideCloud::control()
 {
 	TMapObjBase::control();
-	TMapCollisionBase* col = mMapCollisionManager->unk8;
+	TMapCollisionBase* col = mMapCollisionManager->getActiveCollision();
 	if (SMS_GetMarioSpeedY() > 0.0f)
 		col->setAllBGType(0x400);
 	else

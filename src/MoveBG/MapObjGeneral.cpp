@@ -310,8 +310,8 @@ void TMapObjGeneral::recover()
 
 void TMapObjGeneral::hold(TTakeActor* actor)
 {
-	if (mMapCollisionManager && mMapCollisionManager->unk8)
-		mMapCollisionManager->unk8->remove();
+	if (mMapCollisionManager)
+		mMapCollisionManager->removeActiveCollision();
 	onHitFlag(HIT_FLAG_NO_COLLISION);
 	mHolder = actor;
 	mState  = STATE_HOLDING;
@@ -474,7 +474,7 @@ void TMapObjGeneral::checkGroundCollision(JGeometry::TVec3<f32>* param_1)
 
 void TMapObjGeneral::calcVelocity()
 {
-	if (checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+	if (isAirborne()) {
 		f32 dVar5 = getGravityY();
 		mVelocity.y -= dVar5;
 
@@ -510,7 +510,7 @@ void TMapObjGeneral::bind()
 
 	calcVelocity();
 	JGeometry::TVec3<f32> vec = getPosition();
-	vec.add(mLinearVelocity);
+	vec.add(mPositionDelta);
 	vec.add(mVelocity);
 	checkGroundCollision(&vec);
 	if (checkMapObjFlag(MAP_OBJ_FLAG_ENABLE_WALL_COLLISION))
@@ -527,7 +527,7 @@ void TMapObjGeneral::bind()
 		return;
 	}
 
-	if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+	if (!isAirborne()) {
 		JGeometry::TVec3<f32> vel     = mVelocity;
 		JGeometry::TVec3<f32> velCopy = vel;
 		if (velCopy.x == 0.0f) {
@@ -541,7 +541,7 @@ void TMapObjGeneral::bind()
 		}
 	}
 
-	mLinearVelocity = vec - mLinearVelocity;
+	mPositionDelta = vec - mPosition;
 }
 
 void TMapObjGeneral::control()

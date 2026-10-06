@@ -70,7 +70,7 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 		JGeometry::TVec3<f32> local_28;
 		unk138->unk0->unk14->getPosAndRot(unk138->unk14, &local_1C, &local_28);
 		local_1C.sub(mPosition);
-		mLinearVelocity.add(local_1C);
+		mPositionDelta.add(local_1C);
 
 		mRotation = local_28;
 		if (result)
@@ -91,7 +91,7 @@ BOOL TRailMapObj::moveToNextNode(float param_1)
 	} else {
 		VECNormalize(&local_34, &local_34);
 		local_34.scale(param_1);
-		mLinearVelocity.add(local_34);
+		mPositionDelta.add(local_34);
 		if (unk13C > 0)
 			--unk13C;
 		return false;
@@ -203,8 +203,7 @@ void TRailMapObj::setGroundCollision()
 	    && (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2) || getColNum() != 0)) {
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
-		if (TMapCollisionBase* col = mMapCollisionManager->unk8)
-			col->moveMtx(mtx);
+		mMapCollisionManager->moveActiveCollisionMtx(mtx);
 	}
 }
 
@@ -265,7 +264,7 @@ void TNormalLift::load(JSUMemoryInputStream& stream)
 
 	stream >> unk154;
 	if (unk154 > 0.0f && mMapCollisionManager) {
-		TMapCollisionBase* col = mMapCollisionManager->getUnk8();
+		TMapCollisionBase* col = mMapCollisionManager->getActiveCollision();
 		col->setAllBGType(7);
 		col->setAllActor(this);
 		col->setAllData(unk154);
@@ -490,8 +489,7 @@ void TRollBlock::setGroundCollision()
 		return;
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	if (TMapCollisionBase* col = mMapCollisionManager->getUnk8())
-		col->moveMtx(mtx);
+	mMapCollisionManager->moveActiveCollisionMtx(mtx);
 }
 
 Mtx* TRollBlock::getRootJointMtx() const

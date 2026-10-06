@@ -478,7 +478,7 @@ void TTelesa::bind()
 
 	JGeometry::TVec3<f32> nextPos = mPosition;
 	nextPos.y -= mCurrentFlyHeight + mFlyBobOffsetY;
-	nextPos += mLinearVelocity;
+	nextPos += mPositionDelta;
 	nextPos += mVelocity;
 
 	mVelocity.y -= getGravityY();
@@ -513,8 +513,8 @@ void TTelesa::bind()
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	mLinearVelocity = nextPos - mPosition;
-	mLinearVelocity.y += mCurrentFlyHeight + mFlyBobOffsetY;
+	mPositionDelta = nextPos - mPosition;
+	mPositionDelta.y += mCurrentFlyHeight + mFlyBobOffsetY;
 }
 
 BOOL TTelesa::isReachedToGoal() const

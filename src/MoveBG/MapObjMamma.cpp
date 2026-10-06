@@ -120,8 +120,8 @@ void TSandLeafBase::grow()
 
 			if (mState == STATE_NORMAL) {
 				mMapCollisionManager->changeCollision(1);
-				mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation,
-				                                   mScaling);
+				mMapCollisionManager->setUpActiveCollisionTRS(
+				    mPosition, mRotation, mScaling);
 				unk144->startControlAnim(2);
 				mState = STATE_GROWN;
 			}
@@ -145,7 +145,8 @@ void TSandLeafBase::control()
 		if (withering()) {
 			SMSRumbleMgr->stop(0x13);
 			mMapCollisionManager->changeCollision(0);
-			mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+			mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
+			                                              mScaling);
 			mStateTimer = unk140;
 			mState      = STATE_WITHERED;
 		}
@@ -260,10 +261,9 @@ void TSandBombBase::explode()
 	startControlAnim(1);
 	mScaling.y = 1.0f;
 	mMapCollisionManager->changeCollision(1);
-	mMapCollisionManager->getUnk8()->setUp();
-	if (mMapCollisionManager->getUnk8())
-		mMapCollisionManager->getUnk8()->moveSRT(mPosition, mRotation,
-		                                         mScaling);
+	mMapCollisionManager->getActiveCollision()->setUp();
+	mMapCollisionManager->moveActiveCollisionSRT(mPosition, mRotation,
+	                                             mScaling);
 
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(MAPOBJ_SANDBOMB, &mPosition, 0, nullptr);
@@ -422,10 +422,9 @@ void TSandCastle::explode()
 	startControlAnim(1);
 	mScaling.y = 1.0f;
 	mMapCollisionManager->changeCollision(1);
-	mMapCollisionManager->getUnk8()->setUp();
-	if (mMapCollisionManager->getUnk8())
-		mMapCollisionManager->getUnk8()->moveSRT(mPosition, mRotation,
-		                                         mScaling);
+	mMapCollisionManager->getActiveCollision()->setUp();
+	mMapCollisionManager->moveActiveCollisionSRT(mPosition, mRotation,
+	                                             mScaling);
 
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(MAPOBJ_SANDBOMB, &mPosition, 0, nullptr);

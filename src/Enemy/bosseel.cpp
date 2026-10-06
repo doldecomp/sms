@@ -358,7 +358,7 @@ void TBEelTears::moveObject()
 			MsVECNormalize(&push, &push);
 			push *= 5.0f;
 			velocity += push;
-			mLinearVelocity = velocity;
+			mPositionDelta = velocity;
 		}
 	}
 
@@ -658,7 +658,7 @@ void TOilBall::moveObject()
 			MsVECNormalize(&push, &push);
 			push.scale(5.0f);
 			velocity.add(push);
-			mLinearVelocity = velocity;
+			mPositionDelta = velocity;
 		}
 	}
 	TLiveActor::moveObject();

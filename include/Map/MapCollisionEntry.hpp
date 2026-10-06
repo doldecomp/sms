@@ -75,7 +75,7 @@ public:
 	}
 	void onFlag(u16 flag) { mFlags |= flag; }
 	void offFlag(u16 flag) { mFlags &= ~flag; }
-	s32 getUnk8() const { return mKind; }
+	s32 getKind() const { return mKind; }
 	u32 getUnkC() const { return mCheckDataNum; }
 	void setUpMtx(MtxPtr mtx)
 	{
@@ -83,7 +83,6 @@ public:
 		setUp();
 	}
 
-public:
 	enum {
 		KIND_STATIC = 0,
 		KIND_MOVE   = 1,
@@ -96,6 +95,7 @@ public:
 		FLAG_UNK8000     = 0x8000,
 	};
 
+protected:
 	/* 0x4 */ TBGCheckData* mCheckDatas;
 	/* 0x8 */ s32 mKind;
 	/* 0xC */ u32 mCheckDataNum;
@@ -132,7 +132,7 @@ public:
 	virtual void setUp();
 	virtual void remove() { }
 
-public:
+private:
 	/* 0x60 */ const TLiveActor* mOwnerActor;
 };
 
@@ -145,7 +145,7 @@ public:
 	virtual void setUpTrans(const JGeometry::TVec3<f32>&);
 	virtual void remove();
 
-public:
+private:
 	/* 0x60 */ u16 mEntryId;
 	/* 0x64 */ u32 mEntrySize;
 };

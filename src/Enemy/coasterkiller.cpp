@@ -64,9 +64,9 @@ void TCoasterEnemy::moveObject() { TWalkerEnemy::moveObject(); }
 void TCoasterEnemy::bind()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;
-	nextPos += mLinearVelocity;
+	nextPos += mPositionDelta;
 	nextPos += mVelocity;
-	setLinearVelocity(nextPos - mPosition);
+	setPositionDelta(nextPos - mPosition);
 }
 
 void TCoasterEnemy::reset()

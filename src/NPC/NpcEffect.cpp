@@ -266,8 +266,7 @@ void TBaseNPC::emitParticle_()
 			doEmit = true;
 			scale *= 1.5f;
 		} else if (mPosition.y <= 30.0f
-		           && (mLinearVelocity.x != 0.0f
-		               || mLinearVelocity.z != 0.0f)) {
+		           && (mPositionDelta.x != 0.0f || mPositionDelta.z != 0.0f)) {
 			dVar11 = gpMapObjWave->getWaveHeight(mPosition.x, mPosition.z);
 			if (mPosition.y <= dVar11)
 				doEmit = true;

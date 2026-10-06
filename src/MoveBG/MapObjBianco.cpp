@@ -167,8 +167,8 @@ void TBiancoWatermillVertical::setGroundCollision()
 {
 	if (unk144 || mColCount) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		if (mMapCollisionManager->getUnk8())
-			mMapCollisionManager->getUnk8()->moveMtx(mtx);
+		if (mMapCollisionManager->getActiveCollision())
+			mMapCollisionManager->getActiveCollision()->moveMtx(mtx);
 		unk144 = 0;
 	}
 }
@@ -369,9 +369,9 @@ void TLeafBoat::bind()
 	                         TBGWallCheckRecord::DONT_MOVE_XZ);
 	if (gpMap->isTouchedWallsAndMoveXZ(&walls))
 		touchWall(&position, &walls);
-	mLinearVelocity = position - mPosition;
-	f32 dx          = SMS_GetMarioPos().x - mPosition.x;
-	f32 dz          = SMS_GetMarioPos().z - mPosition.z;
+	mPositionDelta = position - mPosition;
+	f32 dx         = SMS_GetMarioPos().x - mPosition.x;
+	f32 dz         = SMS_GetMarioPos().z - mPosition.z;
 	if (SMS_GetMarioPos().y <= mPosition.y - mYOffset
 	    && mPosition.y - mYOffset - 100.0f < SMS_GetMarioPos().y
 	    && dx * dx + dz * dz < mBodyRadius * mBodyRadius)
@@ -481,7 +481,7 @@ void TLeafBoatRotten::control()
 		unk174 -= mAlphaDownSpeed;
 		unk178.a = (u8)unk174;
 		if (unk174 < mCollisionRemoveAlpha
-		    && mMapCollisionManager->getUnk8()->isSetUp())
+		    && mMapCollisionManager->getActiveCollision()->isSetUp())
 			removeMapCollision();
 		if (unk174 <= 0.0f) {
 			mScaling.set(1.0f, 1.0f, 1.0f);

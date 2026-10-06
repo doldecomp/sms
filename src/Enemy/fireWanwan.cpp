@@ -1138,8 +1138,8 @@ void TFireWanwan::moveObject()
 	updateHitPoint();
 	checkHungTail();
 
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mPositionDelta.zero();
+	mRotationDelta.zero();
 
 	control();
 
@@ -1155,8 +1155,8 @@ void TFireWanwan::moveObject()
 	checkInPond();
 	setBehavior();
 
-	mPosition += mLinearVelocity;
-	mRotation += mAngularVelocity;
+	mPosition += mPositionDelta;
+	mRotation += mRotationDelta;
 
 	if (mSprayedByWaterCooldown > 0)
 		mSprayedByWaterCooldown += 1;
@@ -1164,8 +1164,9 @@ void TFireWanwan::moveObject()
 	if (mSprayedByWaterCooldown > 30)
 		mSprayedByWaterCooldown = 0;
 
-	if (mMapCollisionManager && mMapCollisionManager->unk8)
-		mMapCollisionManager->unk8->moveSRT(mPosition, mRotation, mScaling);
+	if (mMapCollisionManager)
+		mMapCollisionManager->moveActiveCollisionSRT(mPosition, mRotation,
+		                                             mScaling);
 
 	if (!isInhibitedForceMove())
 		calcRidePos();
@@ -1564,7 +1565,7 @@ void TFireWanwan::bind()
 	mVelocity *= getSaveParam2()->mAirFric.get();
 
 	JGeometry::TVec3<f32> vel     = mVelocity;
-	JGeometry::TVec3<f32> velStep = mLinearVelocity;
+	JGeometry::TVec3<f32> velStep = mPositionDelta;
 	velStep += vel;
 
 	int stepCount = int(velStep.length() / 25.0f) + 1;
@@ -1578,13 +1579,13 @@ void TFireWanwan::bind()
 		JGeometry::TVec3<f32> stepNormal;
 		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
 
-		bVar2 &= checkLiveFlag2(LIVE_FLAG_AIRBORNE);
+		bVar2 &= isAirborne();
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;
 	}
 
-	mLinearVelocity.zero();
+	mPositionDelta.zero();
 
 	if (bVar2)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);

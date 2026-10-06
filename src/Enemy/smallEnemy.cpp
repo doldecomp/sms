@@ -252,7 +252,7 @@ void TSmallEnemy::attackToMario()
 	mVelocity.z = local_20.z;
 	local_20.scale(mBodyScale * mBodyRadius);
 	local_14 += local_20;
-	mLinearVelocity = local_14;
+	mPositionDelta = local_14;
 }
 
 void TSmallEnemy::reset()
@@ -452,8 +452,8 @@ void TSmallEnemy::moveObject()
 
 	calcEntryRadius();
 	ensureTakeSituation();
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mPositionDelta.zero();
+	mRotationDelta.zero();
 	control();
 
 	if (!isInhibitedForceMove())
@@ -482,15 +482,15 @@ void TSmallEnemy::moveObject()
 		local_74.scale(mMarchSpeed * 3.0f * unk158);
 
 		v.add(local_74);
-		mLinearVelocity = v;
+		mPositionDelta = v;
 	}
 
 	bind();
 	forceKill();
 	setBehavior();
 
-	mPosition += mLinearVelocity;
-	mRotation += mAngularVelocity;
+	mPosition += mPositionDelta;
+	mRotation += mRotationDelta;
 
 	if (mSprayedByWaterCooldown > 0)
 		++mSprayedByWaterCooldown;
@@ -498,9 +498,9 @@ void TSmallEnemy::moveObject()
 	if (mSprayedByWaterCooldown > 30)
 		mSprayedByWaterCooldown = 0;
 
-	if (mMapCollisionManager && mMapCollisionManager->getUnk8())
-		mMapCollisionManager->getUnk8()->moveSRT(mPosition, mRotation,
-		                                         mScaling);
+	if (mMapCollisionManager)
+		mMapCollisionManager->moveActiveCollisionSRT(mPosition, mRotation,
+		                                             mScaling);
 
 	if (!isInhibitedForceMove())
 		calcRidePos();
@@ -927,7 +927,7 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 	local_14.scale(mMarchSpeed * 3.0f * unk158);
 
 	result += local_14;
-	mLinearVelocity = result;
+	mPositionDelta = result;
 }
 
 void TSmallEnemy::perform(u32 cue, JDrama::TGraphics* graphics)

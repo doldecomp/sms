@@ -502,8 +502,7 @@ void TShellCup::initMapObj()
 	}
 	TMapCollisionStatic* rink = new TMapCollisionStatic;
 	rink->init("/mapObj/ShellCup_rink", 2, this);
-	MTXCopy(getModel()->getAnmMtx(0), rink->unk20);
-	rink->setUp();
+	rink->setUpMtx(getModel()->getAnmMtx(0));
 }
 
 TShellCup::TShellCup(const char* param_1)

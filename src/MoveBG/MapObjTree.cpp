@@ -189,8 +189,10 @@ void TMapObjTree::initMapObj()
 		leaf.mCollision->setUpMtx(leaf.mTransform);
 	}
 
+	// BUG: initMapCollisionData has already loaded every entry with this actor
+	// as the owner, so clearing the owner here does not change any triangle
 	if (mMapCollisionManager != nullptr)
-		mMapCollisionManager->unk10 = nullptr;
+		mMapCollisionManager->clearOwnerActor();
 }
 
 TMapObjTree::TMapObjTree(const char* name)

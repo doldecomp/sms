@@ -145,9 +145,9 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		if (graphics->unk0 & 2) {
-			mLinearVelocity.zero();
+			mPositionDelta.zero();
 			control();
-			mPosition += mLinearVelocity;
+			mPosition += mPositionDelta;
 			if (mActorType == 0x800001) {
 				SMSGetMSound()->startSeRandPlay(MSD_SE_OBJ_KAMOME_SOLO,
 				                                mInstanceIndex);
@@ -306,7 +306,7 @@ void TAnimalBase::execWalk(bool moving)
 	JGeometry::TVec3<f32> tmp;
 	// TODO: quaternions are still wrong
 	quat.rotate(JGeometry::TVec3<f32>(0.0f, 0.0f, marchSpeed), tmp);
-	mLinearVelocity = tmp;
+	mPositionDelta = tmp;
 }
 
 // UNUSED (Size: 0x5c in MAP)

@@ -89,7 +89,7 @@ void TBaseNPC::execNpcObjCollision_()
 		if (bVar2) {
 			mCollisions[i]->mPosition += local_4C;
 		} else {
-			mLinearVelocity += local_4C;
+			mPositionDelta += local_4C;
 		}
 	}
 }
@@ -114,7 +114,7 @@ void TBaseNPC::setVariableDamageRadius_()
 void TBaseNPC::bind()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;
-	nextPos += mLinearVelocity;
+	nextPos += mPositionDelta;
 	nextPos += mVelocity;
 
 	mVelocity.y -= getGravityY();
@@ -145,5 +145,5 @@ void TBaseNPC::bind()
 		                                 &nextPos.z, 150.0f);
 	}
 
-	setLinearVelocity(nextPos - mPosition);
+	setPositionDelta(nextPos - mPosition);
 }

@@ -59,7 +59,7 @@ void TJumpMushroom::load(JSUMemoryInputStream& param_1)
 	s32 data;
 	param_1 >> data;
 	if (mMapCollisionManager != nullptr)
-		mMapCollisionManager->getUnk8()->setAllData(data);
+		mMapCollisionManager->getActiveCollision()->setAllData(data);
 }
 
 f32 THangingBridgeBoard::mMarioAccelY        = 0.15f;
@@ -171,8 +171,7 @@ void THangingBridgeBoard::setGroundCollision()
 	    && mPosition.z - mBodyRadius < SMS_GetYoshi()->getTranslation().z
 	    && mPosition.z + mBodyRadius > SMS_GetYoshi()->getTranslation().z) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
-		if (mMapCollisionManager->unk8 != nullptr)
-			mMapCollisionManager->unk8->moveMtx(mtx);
+		mMapCollisionManager->moveActiveCollisionMtx(mtx);
 	} else {
 		TMapObjBase::setGroundCollision();
 	}

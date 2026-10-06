@@ -71,8 +71,21 @@ public:
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
 	virtual void setGroundCollision();
+	/**
+	 * @brief Runs the AI for the actor via it's spine. Any updates to the
+	 * actor's position or rotation should be applied here, within nerves.
+	 */
 	virtual void control();
+	/**
+	 * @brief Integrates the velocity, applies it to the current frame's
+	 * position delta and binds the movement to a range allowed by the scene's
+	 * collision geometry.
+	 */
 	virtual void bind();
+	/**
+	 * @brief Does one simulation step for the actor, gathering various sources
+	 * of motion and integrating it's velocity, position and rotation.
+	 */
 	virtual void moveObject();
 	virtual void requestShadow();
 	virtual void drawObject(JDrama::TGraphics*);
@@ -132,7 +145,7 @@ public:
 	void getNextFramePosition(JGeometry::TVec3<f32>& result)
 	{
 		result = mPosition;
-		result.add(mLinearVelocity);
+		result.add(mPositionDelta);
 		// It's not clear why we copy mVelocity to a local variable first,
 		// but it matches what TWireBinder::bind does.
 		// We can revisit later if needed.
@@ -146,9 +159,9 @@ public:
 		mVelocity.set(x, y, z);
 		offLiveFlag(LIVE_FLAG_UNK10);
 	}
-	void setLinearVelocity(const JGeometry::TVec3<f32>& v)
+	void setPositionDelta(const JGeometry::TVec3<f32>& v)
 	{
-		mLinearVelocity = v;
+		mPositionDelta = v;
 	}
 	TLodAnm* getLodAnm() { return unkD0; }
 	const char* getBas(int idx) const
@@ -169,10 +182,8 @@ public:
 	/* 0x88 */ TBinder* mBinder;
 	/* 0x8C */ TSpineBase<TLiveActor>* mSpine;
 	/* 0x90 */ TSpcTypedInterp<TLiveActor>* unk90;
-	// TODO: Analyze mLinearVelocity vs mVelocity some more
-	// and decide on better names
-	/* 0x94 */ JGeometry::TVec3<f32> mLinearVelocity;
-	/* 0xA0 */ JGeometry::TVec3<f32> mAngularVelocity;
+	/* 0x94 */ JGeometry::TVec3<f32> mPositionDelta;
+	/* 0xA0 */ JGeometry::TVec3<f32> mRotationDelta;
 	/* 0xAC */ JGeometry::TVec3<f32> mVelocity;
 	/* 0xB8 */ f32 mScaledBodyRadius;
 	/* 0xBC */ f32 mBodyRadius;

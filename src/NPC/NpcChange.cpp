@@ -632,7 +632,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 
 	mPosition.set(pos);
 	mRotation.set(unk1A0);
-	mLinearVelocity.set(0.0f, 0.0f, 0.0f);
+	mPositionDelta.set(0.0f, 0.0f, 0.0f);
 	unk124->reset();
 	unk124->reset2();
 	goToShortestNextGraphNode();

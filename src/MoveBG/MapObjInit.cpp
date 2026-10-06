@@ -10841,7 +10841,7 @@ void TMapObjBase::initUnique()
 		}
 		mMActor = mMActorKeeper->mActors[0];
 		if (mGroundPlane->isShadow())
-			mMapCollisionManager->unk8->setAllBGType(0x4000);
+			mMapCollisionManager->getActiveCollision()->setAllBGType(0x4000);
 		break;
 	case 0x4000005A:
 		for (int i = 0; i < 2; ++i) {

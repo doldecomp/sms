@@ -416,7 +416,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 	TBossGesso* gesso = (TBossGesso*)param_1;
 
 	JGeometry::TVec3<f32> local_3c = gesso->mPosition;
-	local_3c += gesso->mLinearVelocity;
+	local_3c += gesso->mPositionDelta;
 
 	if (gesso->isAirborne()) {
 		JGeometry::TVec3<f32> local_48 = gesso->mVelocity;
@@ -433,7 +433,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 		// TODO: defo an inline
 		JGeometry::TVec3<f32> local_b4 = local_3c;
 		local_b4 -= gesso->mPosition;
-		gesso->mLinearVelocity = local_b4;
+		gesso->mPositionDelta = local_b4;
 
 		if (gpMarDirector->mMap != 9
 		    && gesso->mPosition.y - local_3c.y > 0.0f) {
@@ -511,7 +511,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 		// TODO: defo an inline
 		JGeometry::TVec3<f32> local_c0 = local_3c;
 		local_c0 -= gesso->mPosition;
-		gesso->mLinearVelocity = local_c0;
+		gesso->mPositionDelta = local_c0;
 	}
 }
 
@@ -1836,7 +1836,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	}
 
 	if (self->isReachedToGoal()) {
-		self->mLinearVelocity = self->mVelocity
+		self->mPositionDelta = self->mVelocity
 		    = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}

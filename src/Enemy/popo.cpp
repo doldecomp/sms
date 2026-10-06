@@ -538,7 +538,7 @@ void TPopo::attackToMario()
 	           || mSpine->getCurrentNerve()
 	                  == &TNerveWalkerGraphWander::theNerve()) {
 		sendAttackMsgToMario();
-		JGeometry::TVec3<f32> linearVelocity(0.0f, 0.0f, 0.0f);
+		JGeometry::TVec3<f32> positionDelta(0.0f, 0.0f, 0.0f);
 		JGeometry::TVec3<f32> direction;
 		const JGeometry::TVec3<f32>& marioPos = SMS_GetMarioPos();
 		direction.set(mPosition.x - marioPos.x, mPosition.y - marioPos.y,
@@ -547,8 +547,8 @@ void TPopo::attackToMario()
 		mVelocity.x = direction.x;
 		mVelocity.z = direction.z;
 		direction *= getBodyRadius();
-		linearVelocity += direction;
-		mLinearVelocity = linearVelocity;
+		positionDelta += direction;
+		mPositionDelta = positionDelta;
 	}
 }
 

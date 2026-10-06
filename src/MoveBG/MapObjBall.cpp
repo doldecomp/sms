@@ -145,7 +145,7 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 				rebound(ground);
 			}
 
-			if (!checkLiveFlag2(LIVE_FLAG_AIRBORNE)) {
+			if (!isAirborne()) {
 				mVelocity.x += unk180 * mGroundPlane->getNormal().x;
 				mVelocity.z += unk180 * mGroundPlane->getNormal().z;
 			}

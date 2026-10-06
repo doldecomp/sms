@@ -772,7 +772,8 @@ void TBossPakkun::init(TLiveManager* manager)
 		    = new TMapCollisionManager(1, "/scene/bosspakkun", this);
 		mMapCollisionManager->init("col_body.col", 1, nullptr);
 
-		mMapCollisionManager->setUpUnk8TRS(mPosition, mRotation, mScaling);
+		mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
+		                                              mScaling);
 
 		mMtxCalc = new TBossPakkunMtxCalc(this);
 		mMActor->setCalcForBck(mMtxCalc);
@@ -1093,9 +1094,9 @@ void TBossPakkun::flyToCurPathNode(f32 flySpeed, f32 turnSpeed)
 	velocityStep -= mPosition;
 	PSVECNormalize(&velocityStep, &velocityStep);
 	velocityStep *= flySpeed;
-	JGeometry::TVec3<f32> velocity = mLinearVelocity;
+	JGeometry::TVec3<f32> velocity = mPositionDelta;
 	velocity += velocityStep;
-	mLinearVelocity = velocity;
+	mPositionDelta = velocity;
 }
 
 const char** TBossPakkun::getBasNameTable() const
@@ -1109,8 +1110,7 @@ void TBossPakkun::setGroundCollision()
 	if (!mSpine->isNerve(dieNerve) && mMapCollisionManager != nullptr) {
 		TPosition3f collisionMtx;
 		collisionMtx.set(getModel()->getAnmMtx(2));
-		if (mMapCollisionManager->unk8 != nullptr)
-			mMapCollisionManager->unk8->moveMtx(collisionMtx);
+		mMapCollisionManager->moveActiveCollisionMtx(collisionMtx);
 	}
 }
 

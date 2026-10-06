@@ -686,7 +686,7 @@ void THamuKuri::bind()
 		// NOTE: copypasta from TLiveActor::bind
 
 		JGeometry::TVec3<f32> nextPos = mPosition;
-		nextPos += mLinearVelocity;
+		nextPos += mPositionDelta;
 		nextPos += mVelocity;
 
 		{
@@ -714,7 +714,7 @@ void THamuKuri::bind()
 		gpMap->isTouchedOneWallAndMoveXZ(&nextPos.x, nextPos.y + mHeadHeight,
 		                                 &nextPos.z, mBodyRadius);
 
-		mLinearVelocity = nextPos - mPosition;
+		mPositionDelta = nextPos - mPosition;
 	} else {
 		TLiveActor::bind();
 	}
@@ -1442,7 +1442,7 @@ void THaneHamuKuri::bind()
 
 	JGeometry::TVec3<f32> local_18 = mPosition;
 	local_18.y -= unk234 + unk210;
-	local_18 += mLinearVelocity;
+	local_18 += mPositionDelta;
 	local_18 += mVelocity;
 
 	mVelocity.y -= getGravityY();
@@ -1464,8 +1464,8 @@ void THaneHamuKuri::bind()
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	mLinearVelocity = local_18 - mPosition;
-	mLinearVelocity.y += unk234 + unk210;
+	mPositionDelta = local_18 - mPosition;
+	mPositionDelta.y += unk234 + unk210;
 }
 
 BOOL THaneHamuKuri::isReachedToGoal() const
@@ -1617,7 +1617,7 @@ bool TDoroHaneKuri::isCollidMove(THitActor* param_1)
 			return false;
 
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
-			JGeometry::TVec3<f32> vel = mLinearVelocity;
+			JGeometry::TVec3<f32> vel = mPositionDelta;
 			vel.x *= -5.0f;
 			vel.z *= -5.0f;
 			mPosition.x += vel.x;
