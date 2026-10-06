@@ -1993,8 +1993,7 @@ void TMario::thinkWaterSurface()
 	} else {
 		const TBGCheckData* localBg;
 		gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z, &localBg);
-		// TODO: identify BG type 0x810B (camera-noclip variant of 0x10B)
-		if (localBg->mBGType == 0x810B ? true : false) {
+		if (localBg->isCamNoclipUnk10B()) {
 			isInWater = true;
 			onFlag(MARIO_FLAG_IN_WATER);
 		}

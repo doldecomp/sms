@@ -122,7 +122,7 @@ void TMapCollisionBase::initAllCheckData(s16 default_additional_data,
 		int bgType             = thing->mBGType;
 		BOOL useAdditionalData = thing->mFlags & HAS_ADDITIONAL_DATA;
 
-		u8* unkCit            = thing->unkC;
+		u8* soundMaterialIt   = thing->mSoundMaterials;
 		u8* unk10it           = thing->unk10;
 		s16* indexIt          = thing->mIndices;
 		s16* additionalDataIt = thing->mAdditionalDatas;
@@ -142,8 +142,8 @@ void TMapCollisionBase::initAllCheckData(s16 default_additional_data,
 			else
 				checkData->mData = default_additional_data;
 
-			checkData->unk6 = unkCit[j];
-			checkData->unk7 = unk10it[j];
+			checkData->mSoundMaterial = soundMaterialIt[j];
+			checkData->unk7           = unk10it[j];
 
 			indexIt += 3;
 

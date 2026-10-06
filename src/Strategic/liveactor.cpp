@@ -211,7 +211,7 @@ void TLiveActor::bind()
 
 		// Will we hit the ground next frame?
 		if (nextPos.y <= mGroundHeight + 0.05f) {
-			if (mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+			if (mGroundPlane->isIllegalData())
 				kill();
 			offLiveFlag(LIVE_FLAG_AIRBORNE);
 			mVelocity.set(0.0f, 0.0f, 0.0f);

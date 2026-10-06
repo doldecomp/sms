@@ -1524,7 +1524,7 @@ void TEnemyMario::reachGoal()
 
 void TEnemyMario::checkReturn()
 {
-	if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+	if (!mGroundPlane->isIllegalData())
 		return;
 
 	int nodeIndex

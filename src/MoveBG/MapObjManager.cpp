@@ -217,7 +217,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 	if (param_5) {
 		const TBGCheckData* checkData;
 		y2 = gpMap->checkGround(x, y + 5.0f, z, &checkData);
-		if (checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+		if (checkData->isIllegalData())
 			return nullptr;
 	} else {
 		y2 = y;

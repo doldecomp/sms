@@ -1127,8 +1127,8 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 				unk9E  = (wallAng - (s16)(unk9E - wallAng)) + 0x8000;
 				mVel.x = mSlideVelX = newMag * JMASSin(unk9E);
 				mVel.z = mSlideVelZ = newMag * JMASCos(unk9E);
-				u32 sndId
-				    = gpMSound->getWallSound(mWallPlane->unk6, mForwardVel);
+				u32 sndId = gpMSound->getWallSound(mWallPlane->mSoundMaterial,
+				                                   mForwardVel);
 				SMSGetMSound()->startSoundActor(sndId, &mPosition, 0, nullptr,
 				                                0, 4);
 			}

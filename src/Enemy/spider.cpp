@@ -50,7 +50,7 @@ void TSpider::bind(TLiveActor* param_1)
 		}
 	}
 
-	if (local_60->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+	if (local_60->isIllegalData()) {
 		if (unk4 <= 0) {
 			param_1->kill();
 		} else {

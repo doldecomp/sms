@@ -116,7 +116,7 @@ void TMario::checkDescent()
 	checkGroundPlane(rec.mCenter.x, mPosition.y + 30.0f, rec.mCenter.z, &floorY,
 	                 &ground);
 
-	if (ground->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+	if (ground->isIllegalData())
 		return;
 
 	if (!(mPosition.y - floorY > 160.0f))
@@ -153,7 +153,7 @@ int TMario::checkGroundAtWalking(Vec* v)
 	f32 roofY  = gpMap->checkRoof(v->x, mPosition.y + 80.0f, v->z, &roof);
 	mWallPlane = wall;
 
-	if (ground->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+	if (ground->isIllegalData())
 		return 2;
 	if (v->y + 160.0f >= roofY)
 		return 2;

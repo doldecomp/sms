@@ -702,7 +702,7 @@ void THamuKuri::bind()
 			mGroundHeight += 1.0f;
 
 			if (nextPos.y <= mGroundHeight + 0.05f) {
-				if (mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL))
+				if (mGroundPlane->isIllegalData())
 					kill();
 
 				nextPos.y = mGroundHeight + 1.0f;
@@ -927,8 +927,8 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 
 	THamuKuri* holder = (THamuKuri*)getManager()->getHolder(mInstanceIndex);
 	if (holder == nullptr) {
-		if (!mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-		    && !mGroundPlane->isPool() && !mGroundPlane->isWaterSurface()) {
+		if (!mGroundPlane->isIllegalData() && !mGroundPlane->isPool()
+		    && !mGroundPlane->isWaterSurface()) {
 			holder = this;
 		} else {
 			param_1->mPosition = SMS_GetMarioPos();

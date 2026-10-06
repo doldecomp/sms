@@ -38,6 +38,7 @@ enum BGTypeBits {
 	BG_TYPE_UNDERGROUND_SUPER_JUMP       = 0x108,
 	BG_TYPE_INDOORS                      = 0x109,
 	BG_TYPE_CLIMBABLE_FENCE              = 0x10A,
+	BG_TYPE_UNK10B                       = 0x10B,
 
 	BG_TYPE_MAP_WARP                 = 0x200,
 	BG_TYPE_MAP_WARP_PHASE_THROUGH   = 0x201,
@@ -103,6 +104,8 @@ enum BGTypeBits {
 	= BG_TYPE_UNKB | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x800B
 	BG_TYPE_CAM_NOCLIP_UNKC
 	= BG_TYPE_UNKC | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x800C
+	BG_TYPE_CAM_NOCLIP_UNK10B
+	= BG_TYPE_UNK10B | BG_PROPERTY_FLAG_CAMERA_WONT_CLIP, // 0x810B
 
 	BG_TYPE_CAM_NOCLIP_SHADED_UNK1
 	= BG_TYPE_UNK1 | BG_PROPERTY_FLAG_SHADOW
@@ -170,10 +173,7 @@ public:
 	// fabricated
 	bool checkFlag(u32 flag) const { return mFlags & flag ? true : false; }
 
-	bool isLegal() const
-	{
-		return checkFlag(BG_CHECK_FLAG_ILLEGAL) == 1 ? false : true;
-	}
+	bool isLegal() const { return isIllegalData() == 1 ? false : true; }
 
 	bool isSand() const
 	{
@@ -271,6 +271,18 @@ public:
 			return true;
 		else
 			return false;
+	}
+
+	bool isEverythingButMapObjectsThrough() const
+	{
+		return mBGType == BG_TYPE_EVERYTHING_BUT_MAP_OBJECTS_PHASE_THROUGH
+		           ? true
+		           : false;
+	}
+
+	bool isCamNoclipUnk10B() const
+	{
+		return mBGType == BG_TYPE_CAM_NOCLIP_UNK10B ? true : false;
 	}
 
 	bool isEnemyThrough() const
@@ -463,7 +475,7 @@ public:
 	/* 0x0 */ u16 mBGType;
 	/* 0x2 */ s16 mData;
 	/* 0x4 */ u16 mFlags; // see PlaneFlagBits
-	/* 0x6 */ u8 unk6;
+	/* 0x6 */ u8 mSoundMaterial;
 	/* 0x7 */ u8 unk7;
 	/* 0x8 */ f32 mMinY;
 	/* 0xC */ f32 mMaxY;

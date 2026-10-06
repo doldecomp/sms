@@ -621,7 +621,7 @@ void TMario::soundMovement()
 
 void TMario::animSound()
 {
-	mSoundFlags = mGroundPlane->unk6;
+	mSoundFlags = mGroundPlane->mSoundMaterial;
 
 	if (checkFlag(MARIO_FLAG_DIRTY)) {
 		if (mPollutionTypeStandingOn == POLLUTION_TYPE_SINK

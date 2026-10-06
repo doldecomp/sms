@@ -540,8 +540,7 @@ void TGesso::setDeadAnm()
 {
 	if (mGroundPlane->isWaterSurface())
 		onLiveFlag(LIVE_FLAG_HIDDEN);
-	else if (mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
-	         || mGessoType != TYPE_SURF)
+	else if (mGroundPlane->isIllegalData() || mGessoType != TYPE_SURF)
 		setBckAnm(3);
 	else
 		setBckAnm(15);

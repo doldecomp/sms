@@ -235,8 +235,8 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 				if (isMario()) {
 					rumbleStart(0x15, mMotorParams.mMotorWall.get());
 					gpCameraShake->startShake((EnumCamShakeMode)1, 1.0f);
-					u32 sfx
-					    = gpMSound->getWallSound(mWallPlane->unk6, mForwardVel);
+					u32 sfx = gpMSound->getWallSound(mWallPlane->mSoundMaterial,
+					                                 mForwardVel);
 					SMSGetMSound()->startSoundActor(sfx, &mPosition, 0, nullptr,
 					                                0, 4);
 				}

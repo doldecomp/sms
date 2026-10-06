@@ -314,7 +314,7 @@ void TSmallEnemy::reset()
 
 void TSmallEnemy::forceKill()
 {
-	if (!(mGroundPlane->checkFlag(BG_CHECK_FLAG_ILLEGAL)
+	if (!(mGroundPlane->isIllegalData()
 	      || (!mGroundPlane->isDeathPlane() && !mGroundPlane->isPool()
 	          && !mGroundPlane->isWaterSurface())
 	      || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10))

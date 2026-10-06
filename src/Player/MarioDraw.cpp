@@ -550,7 +550,7 @@ static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
 
-			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+			if (!checkData->isIllegalData()) {
 
 				f32 footMovement = dist - footMtx[1][3] + 10.0f;
 				if (footMovement > 15.0f) {
@@ -593,7 +593,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
-			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+			if (!checkData->isIllegalData()) {
 
 				// A lot of stuff is not matching with these copies
 				Vec currentMtxDir;
@@ -674,7 +674,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
 
-			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+			if (!checkData->isIllegalData()) {
 
 				f32 footMovement = dist - footMtx[1][3] + 10.0f;
 				if (footMovement > 15.0f) {
@@ -717,7 +717,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			const TBGCheckData* checkData;
 			f32 dist = gpMap->checkGround(footMtx[0][3], footMtx[1][3],
 			                              footMtx[2][3], &checkData);
-			if (!checkData->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {
+			if (!checkData->isIllegalData()) {
 
 				// A lot of stuff is not matching with these copies
 				Vec currentMtxDir;

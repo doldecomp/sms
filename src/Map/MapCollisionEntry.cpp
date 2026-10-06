@@ -81,8 +81,8 @@ void TMapCollisionBase::init(const char* path, u16 param_2,
 		for (s16 i = 0; i < mCollisionGroupNum; ++i) {
 			mCollisionGroups[i].mIndices
 			    = (s16*)((int)mCollisionGroups[i].mIndices + (u8*)hdr);
-			mCollisionGroups[i].unkC
-			    = (u8*)((int)mCollisionGroups[i].unkC + (u8*)hdr);
+			mCollisionGroups[i].mSoundMaterials
+			    = (u8*)((int)mCollisionGroups[i].mSoundMaterials + (u8*)hdr);
 			mCollisionGroups[i].unk10
 			    = (u8*)((int)mCollisionGroups[i].unk10 + (u8*)hdr);
 
