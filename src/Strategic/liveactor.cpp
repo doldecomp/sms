@@ -142,7 +142,7 @@ void TLiveActor::initLodAnm(const TLodAnmIndex* param_1, int param_2,
 void TLiveActor::init(TLiveManager* manager)
 {
 	if (!manager) {
-		if (TObjChara* chara = (TObjChara*)unk3C) {
+		if (TObjChara* chara = (TObjChara*)mCharacter) {
 			mMActorKeeper = new TMActorKeeper(nullptr, 1);
 			// TODO: could be TSMSSmplChara instead
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(

@@ -23,8 +23,8 @@ public:
 		mScaling.setAll(1.0f);
 		mRotation.setAll(0.0f);
 
-		unk3C = nullptr;
-		unk40 = nullptr;
+		mCharacter = nullptr;
+		mLightMap  = nullptr;
 	}
 
 	~TActor();
@@ -46,13 +46,13 @@ public:
 	const JGeometry::TVec3<f32>& getRotation() const { return mRotation; }
 	const JGeometry::TVec3<f32>& getScaling() const { return mScaling; }
 
-	void setCharacter(TCharacter* character) { unk3C = character; }
+	void setCharacter(TCharacter* character) { mCharacter = character; }
 
 public:
 	/* 0x24 */ JGeometry::TVec3<f32> mScaling;
 	/* 0x30 */ JGeometry::TVec3<f32> mRotation;
-	/* 0x3C */ TCharacter* unk3C;
-	/* 0x40 */ TViewObj* unk40;
+	/* 0x3C */ TCharacter* mCharacter;
+	/* 0x40 */ TViewObj* mLightMap;
 };
 
 } // namespace JDrama

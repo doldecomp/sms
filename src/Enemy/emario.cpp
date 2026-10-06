@@ -108,7 +108,7 @@ void TEMario::loadAfter()
 void TEMario::init(TLiveManager* manager)
 {
 	if (!manager) {
-		if (TObjChara* chara = (TObjChara*)unk3C) {
+		if (TObjChara* chara = (TObjChara*)mCharacter) {
 			mMActorKeeper                    = new TMActorKeeper(nullptr, 1);
 			mMActorKeeper->mModelLoaderFlags = 0x11300000;
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(

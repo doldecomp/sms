@@ -107,8 +107,8 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 	other->mRotation.y = MsWrap(rotY, 0.0f, 360.0f);
 	other->mRotation.z = 0.0f;
 
-	other->unk3C = unk3C;
-	other->unk124->setGraph(unk124->getGraph());
+	other->setCharacter(mCharacter);
+	other->getTracer()->setGraph(unk124->getGraph());
 	other->mGroundPlane = TMap::getIllegalCheckData();
 	other->init(mManager);
 

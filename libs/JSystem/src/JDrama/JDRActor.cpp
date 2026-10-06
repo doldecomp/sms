@@ -13,18 +13,18 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 	char str[0x50];
 	stream.readString(str, 0x50);
 
-	unk3C = static_cast<TCharacter*>(TNameRefGen::search(str));
+	mCharacter = static_cast<TCharacter*>(TNameRefGen::search(str));
 
 	TLightMap* lightMap = new TLightMap;
 
-	unk40 = lightMap;
+	mLightMap = lightMap;
 	lightMap->load(stream);
 }
 
 void JDrama::TActor::issueGXLight(u32 param_1, JDrama::TGraphics* param_2)
 {
-	if (unk40 != nullptr)
-		unk40->perform(param_1 | CUE_LIGHT, param_2);
+	if (mLightMap != nullptr)
+		mLightMap->perform(param_1 | CUE_LIGHT, param_2);
 }
 
 void JDrama::TActor::perform(u32 cue, TGraphics* graphics)

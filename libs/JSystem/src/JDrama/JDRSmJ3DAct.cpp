@@ -12,13 +12,13 @@ using namespace JDrama;
 
 void TSmJ3DAct::initModDat()
 {
-	void* modelRes = unk3C->getRes("/default.bmd");
+	void* modelRes = mCharacter->getRes("/default.bmd");
 
 	unk44 = J3DModelLoaderDataBase::load(
 	    modelRes, J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
 	unk48 = new J3DModel(unk44, 0, 1);
 
-	void* anmRes = unk3C->getRes("/default.bck");
+	void* anmRes = mCharacter->getRes("/default.bck");
 	if (anmRes) {
 		unk4C = J3DAnmLoaderDataBase::load(anmRes);
 		unk54 = J3DNewMtxCalcAnm(unk44->getFlag() & J3DMLF_MtxCalcMask,
