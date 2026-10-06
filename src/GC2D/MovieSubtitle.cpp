@@ -123,7 +123,7 @@ const TMessageLoader::EntryInfo* TMovieSubTitle::getCurEntry() const
 {
 #ifdef VERSION_GMSP01
 	if (unk20->getMessageNum() <= unk24
-	    || !TFlagManager::getInstance()->getFlag(0x90001))
+	    || !TFlagManager::getInstance()->getFlag(MSF_SUBTITLES))
 		return nullptr;
 #else
 	if (unk20->getMessageNum() <= unk24)

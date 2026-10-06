@@ -49,7 +49,7 @@ void TMonumentShine::initMapObj()
 	unk138.g = 0xFF;
 	unk138.b = 0xFF;
 
-	if (TFlagManager::getInstance()->getFlag(0x10063) != 0) {
+	if (TFlagManager::getInstance()->getFlag(MSF_SHINE_SHINE_GATE) != 0) {
 		unk138.a = 0;
 		unk13C   = 0;
 		unk149   = 1;
@@ -213,9 +213,11 @@ void TBellDolpic::initMapObj()
 	unk138.g = 0xFF;
 	unk138.b = 0xFF;
 
-	if ((unk13C == 0 && TFlagManager::getInstance()->getFlag(0x10061) != 0)
+	if ((unk13C == 0
+	     && TFlagManager::getInstance()->getFlag(MSF_SHINE_RIGHT_BELL) != 0)
 	    || (unk13C == 1
-	        && TFlagManager::getInstance()->getFlag(0x10060) != 0)) {
+	        && TFlagManager::getInstance()->getFlag(MSF_SHINE_LEFT_BELL)
+	               != 0)) {
 		unk138.a = 0;
 		unk154   = 0;
 	} else {
@@ -399,7 +401,7 @@ void TMareGate::control()
 void TMareGate::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (!TFlagManager::smInstance->getBool(0x50004)) {
+	if (!TFlagManager::smInstance->getBool(MSF_NOKI_AVAILABLE)) {
 		makeObjDead();
 	}
 }

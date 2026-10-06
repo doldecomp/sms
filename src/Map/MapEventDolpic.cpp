@@ -51,7 +51,8 @@ bool TDolpicEventBiancoGate::control()
 
 bool TDolpicEventBiancoGate::watch()
 {
-	if (TFlagManager::getInstance()->getBool(0x10384)) {
+	if (TFlagManager::getInstance()->getBool(
+	        MSF_BIANCO_POLLUTED_PIRANHA_DEFEATED)) {
 		unk20->appear();
 		unk20->setUpMapCollision(1);
 		return true;
@@ -137,7 +138,7 @@ bool TDolpicEventRiccoMammaGate::watch()
 
 		unk44 = unk38;
 
-		if (unk2C == 0x50001) {
+		if (unk2C == MSF_RICCO_UNLOCKABLE) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "マニ屋上げデモカメラ", &unk48, -1, 0.0f, false, nullptr, 0,
 			    nullptr, JDrama::TFlagT<u16>(0));
@@ -174,7 +175,7 @@ void TDolpicEventRiccoMammaGate::loadAfter()
 	if (unk30) {
 		unk28->setUp();
 		unk18 = 0;
-		if (unk2C == 0x50001)
+		if (unk2C == MSF_RICCO_UNLOCKABLE)
 			gpPollution->getCounterLayer().offLayer(0);
 		else
 			gpPollution->getCounterLayer().offLayer(1);
@@ -192,10 +193,10 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 
 	int idx;
 	if (strcmp("イベント（リコゲート）", getName()) == 0) {
-		unk2C = 0x50001; // the tanuki house
+		unk2C = MSF_RICCO_UNLOCKABLE; // the tanuki house
 		idx   = 0;
 	} else {
-		unk2C = 0x50002; // the lighthouse
+		unk2C = MSF_GELATO_UNLOCKABLE; // the lighthouse
 		idx   = 1;
 	}
 
@@ -206,7 +207,7 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 		TMapObjBase::setJointScaleY(unk20, 0.008f);
 		TMapObjBase::setJointTransY(unk20, 295.0f);
 		gpMap->getRootJointModel()->getModel()->calc();
-		if (unk2C == 0x50001) {
+		if (unk2C == MSF_RICCO_UNLOCKABLE) {
 			unk48.x = -10500.0f;
 			unk48.y = 300.0f;
 			unk48.z = 2003.0f;

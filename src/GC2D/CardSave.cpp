@@ -634,7 +634,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 			if (unk310 == PROGRESS_UNK17) {
 				unk128->hide();
-				u16 score = TFlagManager::getInstance()->getFlag(0x40000);
+				u16 score
+				    = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 				if (score < 100) {
 					unk148->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
 					unk14C->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
@@ -1832,8 +1833,8 @@ void TCardSave::execMovement_()
 
 						if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 							unk128->hide();
-							u16 score
-							    = TFlagManager::smInstance->getFlag(0x40000);
+							u16 score = TFlagManager::smInstance->getFlag(
+							    MSF_SHINE_COUNT);
 							if (score > 0x3E7)
 								score = 0x3E7;
 

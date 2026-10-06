@@ -212,7 +212,8 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 				MSStageInfo::cubeFadeRatio = 0.34f;
 				break;
 			case 8:
-				if (TFlagManager::getInstance()->getFlag(0x60003) > 0) {
+				if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT)
+				    > 0) {
 					MSStageInfo::demoBgm = MSD_BGM_CAMERA;
 					MSStageInfo::flags   = 6;
 					MSStageInfo::volOffCategory -= 0x83;

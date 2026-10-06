@@ -11,7 +11,7 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 
 void TSunGlass::startFade(int type, bool arg1)
 {
-	TFlagManager::getInstance()->getFlag(0x40000);
+	TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 
 	if (type == 2) {
 		unk1D = getShineAlpha();
@@ -98,7 +98,8 @@ u8 TSunGlass::getShineAlpha()
 	if (gpMarDirector->getCurrentMap() == 1)
 		alpha = (u8)((f32)(unk1E - unk1F)
 		             * (1.0f
-		                - (f32)TFlagManager::getInstance()->getFlag(0x40000)
+		                - (f32)TFlagManager::getInstance()->getFlag(
+		                      MSF_SHINE_COUNT)
 		                      / 120.0f));
 	return alpha;
 }

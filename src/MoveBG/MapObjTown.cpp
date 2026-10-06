@@ -578,7 +578,8 @@ void TRedCoinSwitch::control()
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;
 			mState      = 3;
-			TFlagManager::getInstance()->setBool(true, 0x50009);
+			TFlagManager::getInstance()->setBool(true,
+			                                     MSF_RED_COIN_SWITCH_PRESSED);
 		}
 		break;
 	case 3:

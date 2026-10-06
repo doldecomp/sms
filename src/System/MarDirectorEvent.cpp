@@ -153,8 +153,8 @@ void TMarDirector::fireRideYoshi(TYoshi* yoshi)
 		return;
 
 	if (SMSGetApplication()->mCurrArea.getStage() == 1
-	    && !TFlagManager::getInstance()->getBool(0x1038F)) {
-		TFlagManager::getInstance()->setBool(true, 0x1038F);
+	    && !TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
+		TFlagManager::getInstance()->setBool(true, MSF_YOSHI_UNLOCKED);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
 		unk261 = 5;
 	}
@@ -248,8 +248,10 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 		if (!checkFlag(DIRECTOR_FLAG_MOVIE_PENDING)) {
 			onFlag(DIRECTOR_FLAG_MOVIE_PENDING);
 			setNextStage(0x1, nullptr);
-			TFlagManager::getInstance()->setBool(true, 0x10389);
-			TFlagManager::getInstance()->setBool(true, 0x30004);
+			TFlagManager::getInstance()->setBool(
+			    true, MSF_BOWSER_BOAT_CUTSCENE_TRIGGERED);
+			TFlagManager::getInstance()->setBool(
+			    true, MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET);
 			SMSGetApplication()->setMovie(param_1);
 		}
 		break;

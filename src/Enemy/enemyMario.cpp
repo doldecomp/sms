@@ -359,7 +359,8 @@ void TEnemyMario::initEnemyValues()
 	mDisappearPosition.z = 0.0f;
 	mDisappearPosition.y = 0.0f;
 	mDisappearPosition.x = 0.0f;
-	int shadowMarioEvent = TFlagManager::getInstance()->getFlag(0x60003);
+	int shadowMarioEvent
+	    = TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT);
 	if (shadowMarioEvent == 0) {
 		onHitFlag(HIT_FLAG_NO_COLLISION);
 		mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);

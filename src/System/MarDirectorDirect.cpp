@@ -226,21 +226,26 @@ static int decideNextScenario(u8 param_1)
 	int result = 0;
 	switch (param_1) {
 	case 1:
-		if (TFlagManager::getInstance()->getBool(0x103AE)) {
+		if (TFlagManager::getInstance()->getBool(MSF_CORONA_VISITED)) {
 			result = 2;
 		} else if (checkDefeatShadowMarioAll()) {
 			result = 9;
-		} else if (TFlagManager::getInstance()->getBool(0x10389)) {
+		} else if (TFlagManager::getInstance()->getBool(
+		               MSF_BOWSER_BOAT_CUTSCENE_TRIGGERED)) {
 			result = 8;
-		} else if (TFlagManager::getInstance()->getBool(0x10386)
-		           && TFlagManager::getInstance()->getBool(0x10387)) {
-			if (TFlagManager::getInstance()->getFlag(0x40000) >= 10)
+		} else if (TFlagManager::getInstance()->getBool(
+		               MSF_M_PAINTED_ON_BOATHOUSE)
+		           && TFlagManager::getInstance()->getBool(
+		               MSF_M_PAINTED_ON_LIGHTHOUSE)) {
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) >= 10)
 				result = 7;
 			else
 				result = 6;
-		} else if (TFlagManager::getInstance()->getBool(0x10385)) {
+		} else if (TFlagManager::getInstance()->getBool(
+		               MSF_M_PAINTED_ON_STATUE)) {
 			result = 5;
-		} else if (TFlagManager::getInstance()->getBool(0x10384)) {
+		} else if (TFlagManager::getInstance()->getBool(
+		               MSF_BIANCO_POLLUTED_PIRANHA_DEFEATED)) {
 			result = 1;
 		} else {
 			result = 0;
@@ -375,8 +380,8 @@ int TMarDirector::changeState()
 		case 0:
 			if (unk261 == 7) {
 				TFlagManager::getInstance()->restore();
-				TFlagManager::getInstance()->setBool(true, 0x30001);
-				if (!TFlagManager::getInstance()->getFlag(0x40000)) {
+				TFlagManager::getInstance()->setBool(true, MSF_UNK30001);
+				if (!TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT)) {
 					SMSGetApplication()->mNextArea.set(0, 0, 0);
 				} else {
 					SMSGetApplication()->mNextArea.set(1, 0xff, 0);
@@ -408,8 +413,9 @@ int TMarDirector::changeState()
 	case STATE_UNK7:
 		if (SMSGetApplication()->getFader()->isFullyFadedOut()
 		    && (MSBgm::getHandle(2) == 0 || mTickCount - unk60 >= 1200)) {
-			if (TFlagManager::getInstance()->getFlag(0x20001) >= 0) {
-				TFlagManager::getInstance()->setBool(true, 0x30002);
+			if (TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT) >= 0) {
+				TFlagManager::getInstance()->setBool(
+				    true, MSF_LOST_LIFE_IN_PREV_STAGE);
 				decideNextStageOfMiss();
 				mFlags &= ~DIRECTOR_FLAG_MOVIE_PENDING;
 				moveStage();
@@ -528,8 +534,9 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 void TMarDirector::setMario()
 {
 	bool cVar4 = false;
-	if (TFlagManager::getInstance()->getBool(0x30006)) {
-		TFlagManager::getInstance()->setBool(false, 0x30006);
+	if (TFlagManager::getInstance()->getBool(MSF_GOT_SHINE_IN_PREV_STAGE)) {
+		TFlagManager::getInstance()->setBool(false,
+		                                     MSF_GOT_SHINE_IN_PREV_STAGE);
 		cVar4 = true;
 	}
 
@@ -615,7 +622,7 @@ void TMarDirector::setMario()
 			TWaterGun* gun = mario->mWaterGun;
 			gun->changeNozzle(
 			    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
-			        0x40004),
+			        MSF_SECONDARY_NOZZLE),
 			    true);
 			gpMarioOriginal->mWaterGun->changeNozzle(TWaterGun::Spray, true);
 		} break;
@@ -639,9 +646,11 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		if (currSeq.getStage() == 1
 		    && checkDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START)) {
 			if (currSeq.getScenario() == 8) {
-				switch (TFlagManager::getInstance()->getFlag(0x60003)) {
+				switch (TFlagManager::getInstance()->getFlag(
+				    MSF_SHADOW_MARIO_EVENT)) {
 				case 0:
-					if (TFlagManager::getInstance()->getFlag(0x40000) >= 0x14)
+					if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT)
+					    >= 0x14)
 						demoName = "mareopen_startcamera";
 					break;
 				case 1:
@@ -655,10 +664,12 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 					break;
 				}
 			} else {
-				if (TFlagManager::getInstance()->getBool(0x50001)) {
+				if (TFlagManager::getInstance()->getBool(
+				        MSF_RICCO_UNLOCKABLE)) {
 					demoName = "sinkricco";
 				} else {
-					if (TFlagManager::getInstance()->getBool(0x50002))
+					if (TFlagManager::getInstance()->getBool(
+					        MSF_GELATO_UNLOCKABLE))
 						demoName = "sinkmamma";
 				}
 			}
@@ -768,11 +779,11 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 
 	case STATE_UNK7:
 		SMSGetMarDirector()->getConsole()->unk94->startAppearMiss();
-		TFlagManager::getInstance()->decFlag(0x20001, 1);
+		TFlagManager::getInstance()->decFlag(MSF_LIFE_COUNT, 1);
 		unk60 = mTickCount;
 		SMSGetApplication()->getFader()->setColor(
 		    JUtility::TColor(0, 0, 0, 0xff));
-		if (TFlagManager::getInstance()->getFlag(0x20001) >= 0) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT) >= 0) {
 			MSBgm::startBGM(MSD_BGM_BOSS);
 			if (checkDemoFlag(DEMO_FLAG_HELL_DEAD))
 				SMSGetApplication()->getFader()->startWipe(2, 0.0f, 2.0f);
@@ -820,7 +831,7 @@ u8 TMarDirector::updateGameMode()
 			if (checkFlag(DIRECTOR_FLAG_GAME_OVER_PENDING)) {
 				offFlag(DIRECTOR_FLAG_GAME_OVER_PENDING);
 				r29 = STATE_UNK7;
-				TFlagManager::getInstance()->setFlag(0x40002, 0);
+				TFlagManager::getInstance()->setFlag(MSF_GOLD_COIN_COUNT, 0);
 				break;
 			}
 
@@ -832,7 +843,8 @@ u8 TMarDirector::updateGameMode()
 				console->unk94->startAppearShineGet();
 				console->unk47 = 1;
 				MSBgm::startBGM(MSD_BGM_CHUBOSS);
-				TFlagManager::getInstance()->setBool(true, 0x30006);
+				TFlagManager::getInstance()->setBool(
+				    true, MSF_GOT_SHINE_IN_PREV_STAGE);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
 				f32 fVar3     = unkDC->mRate;
 				f32 fadeInSec = 1.0f;
@@ -1042,7 +1054,7 @@ void TMarDirector::moveStage()
 	u8 sVar4 = SMS_getShineStage(SMSGetApplication()->mNextArea.getStage());
 	u8 sVar5 = SMS_getShineStage(SMSGetApplication()->mCurrArea.getStage());
 	if (sVar4 != sVar5)
-		TFlagManager::getInstance()->setFlag(0x40002, 0);
+		TFlagManager::getInstance()->setFlag(MSF_GOLD_COIN_COUNT, 0);
 
 	TGameSequence& nextArea = SMSGetApplication()->mNextArea;
 
@@ -1051,13 +1063,13 @@ void TMarDirector::moveStage()
 		case 1:
 			unkE4         = 2;
 			nextArea.unk1 = decideNextScenario(nextArea.getStage());
-			TFlagManager::getInstance()->setFlag(0x40003, 0);
+			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
 		case 13: {
 			unkE4     = 2;
 			u32 thing = 0;
-			switch (TFlagManager::getInstance()->getFlag(0x40003)) {
+			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 0:
 				thing = 0;
 				break;
@@ -1084,7 +1096,7 @@ void TMarDirector::moveStage()
 		case 0x3A: {
 			unkE4     = 2;
 			u32 thing = 0;
-			switch (TFlagManager::getInstance()->getFlag(0x40003)) {
+			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 0:
 				thing = 1;
 				break;
@@ -1099,7 +1111,7 @@ void TMarDirector::moveStage()
 		case 7: {
 			unkE4     = 2;
 			u32 thing = 0;
-			switch (TFlagManager::getInstance()->getFlag(0x40003)) {
+			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 1:
 				thing = 0;
 				break;
@@ -1124,7 +1136,7 @@ void TMarDirector::moveStage()
 		case 14: {
 			unkE4     = 2;
 			u32 thing = 0;
-			switch (TFlagManager::getInstance()->getFlag(0x40003)) {
+			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 3:
 				thing = 0;
 				break;
@@ -1155,12 +1167,12 @@ void TMarDirector::moveStage()
 		case 0x34:
 			unkE4         = 8;
 			nextArea.unk1 = 0;
-			TFlagManager::getInstance()->setFlag(0x40003, 0);
+			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
 		case 0:
 			nextArea.unk1 = 0;
-			TFlagManager::getInstance()->setFlag(0x40003, 0);
+			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
 		default:
@@ -1184,7 +1196,7 @@ void TMarDirector::moveStage()
 		int nozzle = gpMarioOriginal->mWaterGun->mSecondNozzle;
 		if (nozzle == TWaterGun::Yoshi)
 			nozzle = TWaterGun::Hover;
-		TFlagManager::getInstance()->setFlag(0x40004, nozzle);
+		TFlagManager::getInstance()->setFlag(MSF_SECONDARY_NOZZLE, nozzle);
 	}
 }
 

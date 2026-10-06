@@ -196,7 +196,8 @@ void TGuide::resetObjects()
 			extraShines = 9;
 		unk14[stage].etcShineCount = extraShines;
 		totalShines += extraShines;
-		int coins = (u16)TFlagManager::getInstance()->getFlag(0x20005 + stage);
+		int coins = (u16)TFlagManager::getInstance()->getFlag(
+		    MSF_COIN_RECORD_BASE + stage);
 		unk14[stage].coinCount = coins < 1000 ? coins : 999;
 		unk14[stage].etcShine  = SMS_isGetShine(stage, 0, true);
 		if (unk14[stage].etcShine)
@@ -211,7 +212,7 @@ void TGuide::resetObjects()
 		if (blueCoins >= 1000)
 			blueCoins = 999;
 		unk14[stage].blueCoinCount = blueCoins;
-		if (TFlagManager::getInstance()->getBool(0x103A5 + stage)) {
+		if (TFlagManager::getInstance()->getBool(MSF_VISITED_BASE + stage)) {
 			unk44C[stage]->show();
 			unk168[stage]->show();
 		} else {
@@ -227,14 +228,14 @@ void TGuide::resetObjects()
 			++blueCoins;
 	unk14[9].blueCoinCount = blueCoins;
 	s16 airportShines      = 0;
-	if (TFlagManager::getInstance()->getBool(0x10056))
+	if (TFlagManager::getInstance()->getBool(MSF_SHINE_AIRSTRIP))
 		airportShines = 1;
-	if (TFlagManager::getInstance()->getBool(0x10058))
+	if (TFlagManager::getInstance()->getBool(MSF_SHINE_AIRSTRIP_REDS))
 		++airportShines;
 	unk14[0].shineCount = airportShines;
 	totalShines += airportShines;
 	unk14[1].shineCount
-	    = TFlagManager::getInstance()->getFlag(0x40000) - totalShines;
+	    = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) - totalShines;
 	changeBotStatus(-1);
 	resetScore();
 	unk128[0]->getPane()->show();
@@ -248,7 +249,7 @@ void TGuide::resetScore()
 	for (int stage = 0; stage < 10; ++stage) {
 		if (stage == 9)
 			continue;
-		if (TFlagManager::getInstance()->getBool(0x103A5 + stage))
+		if (TFlagManager::getInstance()->getBool(MSF_VISITED_BASE + stage))
 			unkBC->search('0_mn' + (stage << 24))->show();
 		else
 			unkBC->search('0_mn' + (stage << 24))->hide();
@@ -309,14 +310,14 @@ void TGuide::resetScore()
 	unk3D0[0]         = unkBC->search('mi00');
 	unk448            = unkBC->search('clic');
 	s16 airportShines = 0;
-	if (TFlagManager::getInstance()->getBool(0x10056))
+	if (TFlagManager::getInstance()->getBool(MSF_SHINE_AIRSTRIP))
 		airportShines = 1;
-	if (TFlagManager::getInstance()->getBool(0x10058))
+	if (TFlagManager::getInstance()->getBool(MSF_SHINE_AIRSTRIP_REDS))
 		++airportShines;
 	((J2DPicture*)unkBC->search('0s_1'))
 	    ->changeTexture(unkC8[airportShines]->getTexInfo(), 0);
 	totalShines += airportShines;
-	int shines     = TFlagManager::getInstance()->getFlag(0x40000);
+	int shines     = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 	u8 plazaShines = shines - totalShines;
 	if (plazaShines > 99)
 		plazaShines = 99;
@@ -358,9 +359,10 @@ void TGuide::resetScore()
 		unkBC->search('ld_c')->show();
 		break;
 	}
-	unk47C
-	    = 255.0f
-	      * (1.0f - TFlagManager::getInstance()->getFlag(0x40000) / 30 * 0.25f);
+	unk47C = 255.0f
+	         * (1.0f
+	            - TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) / 30
+	                  * 0.25f);
 	unk478->getPane()->setAlpha(unk47C);
 }
 
@@ -722,7 +724,7 @@ void TGuide::placeMario()
 	unk430->show();
 	unk430->move(x, y);
 	for (int i = 2; i < 10; ++i) {
-		if (TFlagManager::getInstance()->getBool(0x103A5 + i))
+		if (TFlagManager::getInstance()->getBool(MSF_VISITED_BASE + i))
 			unkBC->search('01g/' + i)->show();
 		else
 			unkBC->search('01g/' + i)->hide();

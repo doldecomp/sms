@@ -84,7 +84,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk298[1] = new TExPane(unk14, 'wp_r');
 
 	u32 uVar1     = SMS_getShineStage(gpMarDirector->mMap);
-	u32 uVar9     = TFlagManager::getInstance()->getFlag(0x40003);
+	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 	void* pvVar10 = JKRGetResource("/common/2d/stagename.bmg");
 	unk2A0[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 

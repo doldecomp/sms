@@ -25,7 +25,7 @@
 // big and only used in one function. Also, dunno even if the size is correct
 inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 {
-	u32 flagCount = TFlagManager::smInstance->getFlag(0x60001U);
+	u32 flagCount = TFlagManager::smInstance->getFlag(MSF_BALLOON_COUNT);
 	u32 objCount  = gpItemManager->getObjNumWithActorType(0x40000132U);
 
 	if (unk2B8->unk38 > 2) {
@@ -42,7 +42,8 @@ inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 
 	s32 balloonCode = -1;
 	if (flagCount == objCount) {
-		TFlagManager::smInstance->setBool(true, 0x30005U);
+		TFlagManager::smInstance->setBool(
+		    true, MSF_POPPED_ALL_BALLOONS_IN_PREV_STAGE);
 		unk2B8->unk38 = 300;
 		balloonCode   = 0xE002D;
 	} else {

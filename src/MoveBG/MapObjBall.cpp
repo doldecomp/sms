@@ -1128,7 +1128,8 @@ BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
 
 	if (msg == HIT_MESSAGE_UNKB) {
 		kill();
-		TFlagManager::smInstance->setBool(true, 0x1038b);
+		TFlagManager::smInstance->setBool(true,
+		                                  MSF_SIRENA_PIPE_PINEAPPLE_EATEN);
 		return TRUE;
 	}
 
@@ -1138,7 +1139,7 @@ BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
 void TCoverFruit::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (TFlagManager::smInstance->getBool(0x1038b)) {
+	if (TFlagManager::smInstance->getBool(MSF_SIRENA_PIPE_PINEAPPLE_EATEN)) {
 		makeObjDead();
 	}
 }

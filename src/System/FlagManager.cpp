@@ -67,52 +67,52 @@ s32 TFlagManager::getFlag(u32 flag) const
 	u32 low = flag & 0xFFFF;
 	switch (flag >> 16) {
 	case 1:
-		if (flag < 0x103B4) {
+		if (flag < MSF_CARD_BOOL_END) {
 			return mCardBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 2:
-		if (flag < 0x20015) {
+		if (flag < MSF_CARD_INT_END) {
 			return mCardInts[low];
 		}
 		break;
 	case 3:
-		if (flag < 0x3001D) {
+		if (flag < MSF_GAME_BOOL_END) {
 			return mGameBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 4:
-		if (flag < 0x40005) {
+		if (flag < MSF_GAME_INT_END) {
 			return mGameInts[low];
 		}
 		break;
 	case 5:
-		if (flag < 0x50064) {
+		if (flag < MSF_STAGE_BOOL_END) {
 			return mStageBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 6:
-		if (flag < 0x60064) {
+		if (flag < MSF_STAGE_INT_END) {
 			return mStageInts[low];
 		}
 		break;
 	case 7:
-		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
+		if (flag < MSF_SAVED_OPTION_BOOL_END) {
 			return mSavedOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 8:
-		if (flag < 0x80001) {
+		if (flag < MSF_SAVED_OPTION_INT_END) {
 			return mSavedOptionInts[low];
 		}
 		break;
 	case 9:
-		if (flag < FLAG_OPTION_BOOL_END) {
+		if (flag < MSF_OPTION_BOOL_END) {
 			return mOptionBools[low >> 3] >> (low & 7) & 1;
 		}
 		break;
 	case 10:
-		if (flag < 0xA0002) {
+		if (flag < MSF_OPTION_INT_END) {
 			return mOptionInts[low];
 		}
 		break;
@@ -125,57 +125,57 @@ void TFlagManager::setFlag(u32 flag, s32 value)
 	u32 low = flag & 0xFFFF;
 	switch (flag >> 16) {
 	case 1:
-		if (flag < 0x103B4) {
+		if (flag < MSF_CARD_BOOL_END) {
 			mCardBools[low >> 3] &= ~(1 << (low & 7));
 			mCardBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 2:
-		if (flag < 0x20015) {
+		if (flag < MSF_CARD_INT_END) {
 			mCardInts[low] = value;
 		}
 		break;
 	case 3:
-		if (flag < 0x3001D) {
+		if (flag < MSF_GAME_BOOL_END) {
 			mGameBools[low >> 3] &= ~(1 << (low & 7));
 			mGameBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 4:
-		if (flag < 0x40005) {
+		if (flag < MSF_GAME_INT_END) {
 			mGameInts[low] = value;
 		}
 		break;
 	case 5:
-		if (flag < 0x50064) {
+		if (flag < MSF_STAGE_BOOL_END) {
 			mStageBools[low >> 3] &= ~(1 << (low & 7));
 			mStageBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 6:
-		if (flag < 0x60064) {
+		if (flag < MSF_STAGE_INT_END) {
 			mStageInts[low] = value;
 		}
 		break;
 	case 7:
-		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
+		if (flag < MSF_SAVED_OPTION_BOOL_END) {
 			mSavedOptionBools[low >> 3] &= ~(1 << (low & 7));
 			mSavedOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 8:
-		if (flag < 0x80001) {
+		if (flag < MSF_SAVED_OPTION_INT_END) {
 			mSavedOptionInts[low] = value;
 		}
 		break;
 	case 9:
-		if (flag < FLAG_OPTION_BOOL_END) {
+		if (flag < MSF_OPTION_BOOL_END) {
 			mOptionBools[low >> 3] &= ~(1 << (low & 7));
 			mOptionBools[low >> 3] |= (value & 1) << (low & 7);
 		}
 		break;
 	case 10:
-		if (flag < 0xA0002) {
+		if (flag < MSF_OPTION_INT_END) {
 			mOptionInts[low] = value;
 		}
 		break;
@@ -186,27 +186,27 @@ bool TFlagManager::getBool(u32 flag) const
 {
 	switch (flag >> 16) {
 	case 1:
-		if (flag < 0x103B4) {
+		if (flag < MSF_CARD_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
 	case 3:
-		if (flag < 0x3001D) {
+		if (flag < MSF_GAME_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
 	case 5:
-		if (flag < 0x50064) {
+		if (flag < MSF_STAGE_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
 	case 7:
-		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
+		if (flag < MSF_SAVED_OPTION_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
 	case 9:
-		if (flag < FLAG_OPTION_BOOL_END) {
+		if (flag < MSF_OPTION_BOOL_END) {
 			return getFlag(flag) != 0;
 		}
 		break;
@@ -218,35 +218,35 @@ void TFlagManager::setBool(bool value, u32 flag)
 {
 	switch (flag >> 16) {
 	case 1:
-		if (flag < 0x103B4) {
+		if (flag < MSF_CARD_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 2:
 		break;
 	case 3:
-		if (flag < 0x3001D) {
+		if (flag < MSF_GAME_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 4:
 		break;
 	case 5:
-		if (flag < 0x50064) {
+		if (flag < MSF_STAGE_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 6:
 		break;
 	case 7:
-		if (flag < FLAG_SAVED_OPTION_BOOL_END) {
+		if (flag < MSF_SAVED_OPTION_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
 	case 8:
 		break;
 	case 9:
-		if (flag < FLAG_OPTION_BOOL_END) {
+		if (flag < MSF_OPTION_BOOL_END) {
 			setFlag(flag, value ? 1 : 0);
 		}
 		break;
@@ -260,27 +260,27 @@ void TFlagManager::incFlag(u32 flag, s32 amount)
 	u32 low = flag & 0xFFFF;
 	switch (flag >> 16) {
 	case 2:
-		if (flag < 0x20015) {
+		if (flag < MSF_CARD_INT_END) {
 			mCardInts[low] += amount;
 		}
 		break;
 	case 4:
-		if (flag < 0x40005) {
+		if (flag < MSF_GAME_INT_END) {
 			mGameInts[low] += amount;
 		}
 		break;
 	case 6:
-		if (flag < 0x60064) {
+		if (flag < MSF_STAGE_INT_END) {
 			mStageInts[low] += amount;
 		}
 		break;
 	case 8:
-		if (flag < 0x80001) {
+		if (flag < MSF_SAVED_OPTION_INT_END) {
 			mSavedOptionInts[low] += amount;
 		}
 		break;
 	case 10:
-		if (flag < 0xA0002) {
+		if (flag < MSF_OPTION_INT_END) {
 			mOptionInts[low] += amount;
 		}
 		break;
@@ -291,9 +291,9 @@ void TFlagManager::decFlag(u32 flag, s32 amount) { incFlag(flag, -amount); }
 
 void TFlagManager::incMario(s32 amount)
 {
-	incFlag(0x20001, amount);
-	if (99 < getFlag(0x20001)) {
-		setFlag(0x20001, 99);
+	incFlag(MSF_LIFE_COUNT, amount);
+	if (99 < getFlag(MSF_LIFE_COUNT)) {
+		setFlag(MSF_LIFE_COUNT, 99);
 	}
 }
 
@@ -302,7 +302,7 @@ bool TFlagManager::getShineFlag(u8 shine) const
 	if (shine >= 120) {
 		shine = 0;
 	}
-	return getFlag(shine + 0x10000) != 0;
+	return getFlag(shine + MSF_SHINE_BASE) != 0;
 }
 
 void TFlagManager::setShineFlag(u8 shine)
@@ -310,18 +310,18 @@ void TFlagManager::setShineFlag(u8 shine)
 	if (shine >= 120) {
 		shine = 0;
 	}
-	u32 flag = 0x10000 + shine;
+	u32 flag = MSF_SHINE_BASE + shine;
 	if (getFlag(flag) == 0) {
-		incFlag(0x40000, 1);
+		incFlag(MSF_SHINE_COUNT, 1);
 		setFlag(flag, 1);
 	}
 }
 
 void TFlagManager::incGoldCoinFlag(u8 area, s32 amount)
 {
-	incFlag(0x40002, amount);
-	if (getFlag(0x40002) > getFlag(0x20005 + area)) {
-		setFlag(0x20005 + area, getFlag(0x40002));
+	incFlag(MSF_GOLD_COIN_COUNT, amount);
+	if (getFlag(MSF_GOLD_COIN_COUNT) > getFlag(MSF_COIN_RECORD_BASE + area)) {
+		setFlag(MSF_COIN_RECORD_BASE + area, getFlag(MSF_GOLD_COIN_COUNT));
 	}
 }
 
@@ -334,7 +334,7 @@ bool TFlagManager::getBlueCoinFlag(u8 area, u8 blueCoin) const
 	if (blueCoin >= 50) {
 		blueCoin = 0;
 	}
-	u32 flag = 0x10078 + (stage - 1) * 50 + blueCoin;
+	u32 flag = MSF_BLUE_COIN_BASE + (stage - 1) * 50 + blueCoin;
 	return getFlag(flag) != 0;
 }
 
@@ -348,9 +348,9 @@ void TFlagManager::setBlueCoinFlag(u8 area, u8 blueCoin)
 	if (blueCoin >= 50) {
 		blueCoin = 0;
 	}
-	u32 flag = 0x10078 + (stage - 1) * 50 + blueCoin;
+	u32 flag = MSF_BLUE_COIN_BASE + (stage - 1) * 50 + blueCoin;
 	if (getFlag(flag) == 0) {
-		incFlag(0x40001, 1);
+		incFlag(MSF_BLUE_COIN_COUNT, 1);
 		setFlag(flag, 1);
 	}
 }
@@ -364,7 +364,7 @@ bool TFlagManager::getNozzleRight(u8 area, u8 nozzle) const
 	if (nozzle >= 2) {
 		nozzle = 0;
 	}
-	u32 flag = 0x10366 + (stage - 1) * 2 + nozzle;
+	u32 flag = MSF_NOZZLE_BASE + (stage - 1) * 2 + nozzle;
 	return getFlag(flag) != 0;
 }
 
@@ -378,7 +378,7 @@ void TFlagManager::setNozzleRight(u8 area, u8 nozzle)
 	if (nozzle >= 2) {
 		nozzle = 0;
 	}
-	u32 flag = 0x10366 + (stage - 1) * 2 + nozzle;
+	u32 flag = MSF_NOZZLE_BASE + (stage - 1) * 2 + nozzle;
 	if (getFlag(flag) == 0) {
 		setFlag(flag, 1);
 	}
@@ -443,39 +443,39 @@ void TFlagManager::firstStart()
 
 void TFlagManager::correctFlag()
 {
-	if (getFlag(0x20001) < 3)
-		setFlag(0x20001, 3);
+	if (getFlag(MSF_LIFE_COUNT) < 3)
+		setFlag(MSF_LIFE_COUNT, 3);
 
-	if (getFlag(0x20002) == 0)
-		setFlag(0x20002, 3500);
+	if (getFlag(MSF_RACE_RECORD_GELATO) == 0)
+		setFlag(MSF_RACE_RECORD_GELATO, 3500);
 
-	if (getFlag(0x20003) == 0)
-		setFlag(0x20003, 3000);
+	if (getFlag(MSF_RACE_RECORD_PIANTA) == 0)
+		setFlag(MSF_RACE_RECORD_PIANTA, 3000);
 
-	if (getFlag(0x20014) == 0)
-		setFlag(0x20014, 4000);
+	if (getFlag(MSF_RACE_RECORD_NOKI) == 0)
+		setFlag(MSF_RACE_RECORD_NOKI, 4000);
 
-	if (getFlag(0x20004) == 0)
-		setFlag(0x20004, 3000);
+	if (getFlag(MSF_BOX_GAME_RECORD) == 0)
+		setFlag(MSF_BOX_GAME_RECORD, 3000);
 
-	setBool(true, 0x1039A);
-	setBool(true, 0x1039D);
+	setBool(true, MSF_FMV_OPENING_WATCHED);
+	setBool(true, MSF_AUTO_DEMO_WATCHED);
 
 	int shines = 0;
-	for (u32 flag = 0x10000; flag <= 0x10077; ++flag) {
+	for (u32 flag = MSF_SHINE_BASE; flag <= MSF_SHINE_LAST; ++flag) {
 		if (getFlag(flag) != 0) {
 			++shines;
 		}
 	}
-	setFlag(0x40000, shines);
+	setFlag(MSF_SHINE_COUNT, shines);
 
 	int blues = 0;
-	for (u32 flag = 0x10078; flag <= 0x10365; ++flag) {
+	for (u32 flag = MSF_BLUE_COIN_BASE; flag <= MSF_BLUE_COIN_LAST; ++flag) {
 		if (getFlag(flag) != 0) {
 			++blues;
 		}
 	}
-	setFlag(0x40001, blues);
+	setFlag(MSF_BLUE_COIN_COUNT, blues);
 }
 
 void TFlagManager::save(JSUMemoryOutputStream& out)
@@ -483,7 +483,7 @@ void TFlagManager::save(JSUMemoryOutputStream& out)
 	mLastSaveTimeBackup = mLastSaveTime;
 	mLastSaveTime       = OSGetTime();
 
-	incFlag(0x20000, 1);
+	incFlag(MSF_SAVE_COUNT, 1);
 
 	u32 magic = 4;
 	out.write(&magic, sizeof(magic));
@@ -494,10 +494,10 @@ void TFlagManager::save(JSUMemoryOutputStream& out)
 	u64 padding = 0;
 	out.write(&padding, sizeof(padding));
 
-	s32 saveCount = getFlag(0x20000);
+	s32 saveCount = getFlag(MSF_SAVE_COUNT);
 	out.write(&saveCount, sizeof(saveCount));
 
-	u16 shineCount = getFlag(0x40000);
+	u16 shineCount = getFlag(MSF_SHINE_COUNT);
 	out.write(&shineCount, sizeof(shineCount));
 
 	u16 padding2 = 0;
@@ -524,7 +524,7 @@ void TFlagManager::saveSuccess()
 void TFlagManager::saveFail()
 {
 	mLastSaveTime = mLastSaveTimeBackup;
-	incFlag(0x20000, -1);
+	incFlag(MSF_SAVE_COUNT, -1);
 }
 
 void TFlagManager::resetOpt()
@@ -537,28 +537,28 @@ void TFlagManager::resetOpt()
 
 void TFlagManager::correctOptFlag()
 {
-	setBool(!getBool(0x70000), 0x90000);
+	setBool(!getBool(MSF_SAVED_RUMBLE_OFF), MSF_RUMBLE);
 
 	if (OSGetSoundMode() == 0) {
-		setFlag(0xA0000, 0);
+		setFlag(MSF_SOUND_MODE, 0);
 	} else {
-		setFlag(0xA0000, getBool(0x70001) ? 2 : 1);
+		setFlag(MSF_SOUND_MODE, getBool(MSF_SAVED_SURROUND) ? 2 : 1);
 	}
 
 #ifdef VERSION_GMSP01
-	s32 language = getFlag(0x80000);
+	s32 language = getFlag(MSF_SAVED_LANGUAGE);
 	if (language == 0) {
 		u8 osLanguage = OSGetLanguage();
 		if (osLanguage >= 5)
 			osLanguage = 0;
-		setFlag(0xA0001, osLanguage);
+		setFlag(MSF_LANGUAGE, osLanguage);
 	} else {
-		setFlag(0xA0001, language - 1);
+		setFlag(MSF_LANGUAGE, language - 1);
 	}
 
-	setBool(!getBool(0x70002), 0x90001);
+	setBool(!getBool(MSF_SAVED_SUBTITLES_OFF), MSF_SUBTITLES);
 #else
-	setFlag(0xA0001, 0x100);
+	setFlag(MSF_LANGUAGE, 0x100);
 #endif
 }
 
@@ -580,25 +580,25 @@ void TFlagManager::saveOption(JSUMemoryOutputStream& out)
 {
 	u32 magic = 2;
 	out.write(&magic, sizeof(magic));
-	setBool(!getBool(0x90000), 0x70000);
-	switch (getFlag(0xA0000)) {
+	setBool(!getBool(MSF_RUMBLE), MSF_SAVED_RUMBLE_OFF);
+	switch (getFlag(MSF_SOUND_MODE)) {
 	case 0:
 		OSSetSoundMode(0);
-		setBool(false, 0x70001);
+		setBool(false, MSF_SAVED_SURROUND);
 		break;
 	case 1:
 		OSSetSoundMode(1);
-		setBool(false, 0x70001);
+		setBool(false, MSF_SAVED_SURROUND);
 		break;
 	case 2:
 		OSSetSoundMode(1);
-		setBool(true, 0x70001);
+		setBool(true, MSF_SAVED_SURROUND);
 	}
 #ifdef VERSION_GMSP01
-	setFlag(0x80000, getFlag(0xA0001) + 1);
-	setBool(!getBool(0x90001), 0x70002);
+	setFlag(MSF_SAVED_LANGUAGE, getFlag(MSF_LANGUAGE) + 1);
+	setBool(!getBool(MSF_SUBTITLES), MSF_SAVED_SUBTITLES_OFF);
 #else
-	setFlag(0x80000, 0);
+	setFlag(MSF_SAVED_LANGUAGE, 0);
 #endif
 	out.write(mSavedOptionBools, sizeof(mSavedOptionBools));
 	out.write(mSavedOptionInts, sizeof(mSavedOptionInts));

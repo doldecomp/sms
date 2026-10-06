@@ -631,7 +631,7 @@ void TBalloonKoopaJr::kill()
 	emitAndScale(MAPOBJ_BALLOONKOOPAJR, 0, &unk148);
 	emitAndScale(MAPOBJ_BALLOONKOOPAJRA, 0, &unk148);
 	emitAndScale(MAPOBJ_BALLOONKOOPAJRB, 0, &unk148);
-	TFlagManager::getInstance()->incFlag(0x60001, 1);
+	TFlagManager::getInstance()->incFlag(MSF_BALLOON_COUNT, 1);
 	SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_SLAP, &mPosition, 0,
 	                                nullptr, 0, 4);
 }

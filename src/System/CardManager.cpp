@@ -498,8 +498,8 @@ s32 TCardManager::setCardStat_(CARDFileInfo* file)
 void TCardManager::buildHeader_(HeaderData* header)
 {
 	int iVar8 = 0;
-	if (TFlagManager::getInstance()->getFlag(0xA0001) != 0x100) {
-		iVar8 = TFlagManager::getInstance()->getFlag(0xA0001);
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 0x100) {
+		iVar8 = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
 		++iVar8;
 	}
 

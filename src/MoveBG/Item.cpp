@@ -205,7 +205,7 @@ void TCoin::taken(THitActor* param_1)
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
 
-	if (TFlagManager::smInstance->getFlag(0x40002) == 100) {
+	if (TFlagManager::smInstance->getFlag(MSF_GOLD_COIN_COUNT) == 100) {
 		TShine* shine = static_cast<TShine*>(
 		    JDrama::TNameRefGen::search("シャイン（１００枚コイン用）"));
 
@@ -347,7 +347,7 @@ TCoinEmpty::TCoinEmpty(const char* name)
 
 void TCoinRed::taken(THitActor* param_1)
 {
-	TFlagManager::getInstance()->incFlag(0x60000, 1);
+	TFlagManager::getInstance()->incFlag(MSF_RED_COIN_COUNT, 1);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_RED_COIN_GET, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -675,7 +675,7 @@ void TShine::touchPlayer(THitActor* actor)
 void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, 0x50000);
+	TFlagManager::smInstance->setBool(true, MSF_SHINE_SPAWNED);
 
 	if (param_2 >= 0)
 		unk174 = param_2;
@@ -725,7 +725,7 @@ s32 TShine::appearWithTimeCallback(uintptr_t param_1, u32 param_2)
 void TShine::appearSimple(int param_1)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, 0x50000);
+	TFlagManager::smInstance->setBool(true, MSF_SHINE_SPAWNED);
 
 	unk174   = 60;
 	unk170   = param_1;
@@ -1056,14 +1056,14 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 
 	if (strcmp(unkF4, "eggYoshiEvent") == 0) {
-		if (TFlagManager::getInstance()->getFlag(0x60003) == 1) {
+		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) == 1) {
 			mState = 0xE;
 		} else {
 			makeObjDead();
 			return;
 		}
 	} else if (gpMarDirector->mMap == 1) {
-		if (!TFlagManager::getInstance()->getBool(0x1038F)) {
+		if (!TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 			makeObjDead();
 			return;
 		}
@@ -1170,10 +1170,10 @@ void TItemNozzle::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 	onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	if (strcmp(unkF4, "rocket_nozzle_item") == 0) {
-		if (TFlagManager::smInstance->getFlag(0x60003) != 3)
+		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 3)
 			makeObjDead();
 	} else if (strcmp(unkF4, "back_nozzle_item") == 0) {
-		if (TFlagManager::smInstance->getFlag(0x60003) != 2)
+		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 2)
 			makeObjDead();
 	}
 }

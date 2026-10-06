@@ -170,8 +170,8 @@ int TMovieDirector::rsetup()
 	};
 
 	void* subtitleArcBlob = SMSLoadArchive(
-	    subtitleNames[TFlagManager::getInstance()->getFlag(0xA0001)], nullptr,
-	    0, nullptr);
+	    subtitleNames[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)],
+	    nullptr, 0, nullptr);
 #else
 	void* subtitleArcBlob
 	    = SMSLoadArchive("/data/subtitle.arc", nullptr, 0, nullptr);
@@ -186,7 +186,7 @@ int TMovieDirector::rsetup()
 	case 19: {
 #ifdef VERSION_GMSP01
 		void* arcBlob = SMSLoadArchive(
-		    endsaveNames[TFlagManager::getInstance()->getFlag(0xA0001)],
+		    endsaveNames[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)],
 		    nullptr, 0, nullptr);
 #else
 		void* arcBlob
@@ -270,7 +270,7 @@ int TMovieDirector::rsetup()
 
 	THPAudioInfo audioInfo;
 	if (THPPlayerGetAudioInfo(&audioInfo) && audioInfo.sndNumTracks >= 2
-	    && TFlagManager::getInstance()->getFlag(0xA0000) == 2) {
+	    && TFlagManager::getInstance()->getFlag(MSF_SOUND_MODE) == 2) {
 		audioTrack = 1;
 	}
 
@@ -315,7 +315,7 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 		if (!(SMSGetApplication()->getMovie() == 15
 		      || SMSGetApplication()->getMovie() == 16
 		      || SMSGetApplication()->getMovie() == 17)) {
-			int flag = SMSGetApplication()->getMovie() + 0x10391;
+			int flag = SMSGetApplication()->getMovie() + MSF_FMV_WATCHED_BASE;
 			TFlagManager::getInstance()->setBool(true, flag);
 		}
 	}
@@ -344,8 +344,9 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 		SMSGetApplication()->setMovie(15);
 		nextMode = 6;
 	} else if (SMSGetApplication()->getMovie() == 15) {
-		u8 movie
-		    = TFlagManager::getInstance()->getFlag(0x40000) < 120 ? 16 : 17;
+		u8 movie = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) < 120
+		               ? 16
+		               : 17;
 		SMSGetApplication()->setMovie(movie);
 
 		nextMode = 6;
@@ -432,7 +433,7 @@ int TMovieDirector::direct()
 	switch (unk1C) {
 	case STATE_FADE_IN:
 		if (TFlagManager::getInstance()->getBool(SMSGetApplication()->getMovie()
-		                                         + 0x10391)
+		                                         + MSF_FMV_WATCHED_BASE)
 		    && unk20->checkFrameMeaning(TMarioGamePad::MEANING_START
 		                                | TMarioGamePad::MEANING_MENU_A
 		                                | TMarioGamePad::MEANING_MENU_B)) {
@@ -444,7 +445,7 @@ int TMovieDirector::direct()
 
 	case STATE_PLAYING:
 		if (TFlagManager::getInstance()->getBool(SMSGetApplication()->getMovie()
-		                                         + 0x10391)
+		                                         + MSF_FMV_WATCHED_BASE)
 		    && unk20->checkFrameMeaning(TMarioGamePad::MEANING_START
 		                                | TMarioGamePad::MEANING_MENU_A
 		                                | TMarioGamePad::MEANING_MENU_B)) {

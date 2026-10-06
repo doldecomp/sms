@@ -756,8 +756,8 @@ TSwingBoard::TSwingBoard(const char* param_1)
 void TGoalFlag::touchActor(THitActor* param_1)
 {
 	if (param_1->isActorType(0x80000001)) {
-		if (!TFlagManager::smInstance->getBool(0x50005))
-			TFlagManager::smInstance->setBool(true, 0x50005);
+		if (!TFlagManager::smInstance->getBool(MSF_RACE_GOAL_REACHED))
+			TFlagManager::smInstance->setBool(true, MSF_RACE_GOAL_REACHED);
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	} else if (param_1->isActorType(0x8000002)) {
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);

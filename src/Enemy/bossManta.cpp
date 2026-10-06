@@ -774,7 +774,7 @@ void TBossMantaManager::TMantaBattleState::update()
 
 	switch (mState) {
 	case 0:
-		if (TFlagManager::getInstance()->getBool(0x50007)) {
+		if (TFlagManager::getInstance()->getBool(MSF_MANTA_SPAWNED)) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "sirena_manta", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
 			    JDrama::TFlagT<u16>(0));

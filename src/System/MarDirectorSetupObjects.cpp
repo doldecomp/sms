@@ -53,8 +53,8 @@ void TMarDirector::decideMarioPosIdx()
 		break;
 
 	case 0:
-		if (TFlagManager::getInstance()->getBool(0x30001))
-			TFlagManager::getInstance()->setBool(false, 0x30001);
+		if (TFlagManager::getInstance()->getBool(MSF_UNK30001))
+			TFlagManager::getInstance()->setBool(false, MSF_UNK30001);
 		break;
 
 	case 2:
@@ -71,11 +71,13 @@ void TMarDirector::decideMarioPosIdx()
 	} break;
 
 	case 1:
-		if (TFlagManager::getInstance()->getBool(0x30001)) {
-			TFlagManager::getInstance()->setBool(false, 0x30001);
+		if (TFlagManager::getInstance()->getBool(MSF_UNK30001)) {
+			TFlagManager::getInstance()->setBool(false, MSF_UNK30001);
 		} else {
-			if (TFlagManager::getInstance()->getBool(0x30004)) {
-				TFlagManager::getInstance()->setBool(false, 0x30004);
+			if (TFlagManager::getInstance()->getBool(
+			        MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET)) {
+				TFlagManager::getInstance()->setBool(
+				    false, MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET);
 				unkD0 = 4;
 			} else {
 				switch (SMS_getShineStage(prevArea.getStage())) {
@@ -130,17 +132,22 @@ void TMarDirector::decideMarioPosIdx()
 bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
-	TFlagManager::getInstance()->setFlag(0x60003, 1);
+	TFlagManager::getInstance()->setFlag(MSF_SHADOW_MARIO_EVENT, 1);
 	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
 	switch (curArea.getStage()) {
 	case 1: {
-		TFlagManager::getInstance()->setBool(false, 0x3000D);
-		TFlagManager::getInstance()->setBool(false, 0x30005);
-		if (!TFlagManager::getInstance()->getBool(0x30003)) {
-			TFlagManager::getInstance()->setBool(true, 0x30003);
+		TFlagManager::getInstance()->setBool(false,
+		                                     MSF_FLUDD_THEFT_SCENARIO_WATCHED);
+		TFlagManager::getInstance()->setBool(
+		    false, MSF_POPPED_ALL_BALLOONS_IN_PREV_STAGE);
+		if (!TFlagManager::getInstance()->getBool(
+		        MSF_PLAZA_DEMO_WATCHED_SINCE_RESET)) {
+			TFlagManager::getInstance()->setBool(
+			    true, MSF_PLAZA_DEMO_WATCHED_SINCE_RESET);
 			onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 		} else {
-			TFlagManager::getInstance()->setBool(true, 0x30000);
+			TFlagManager::getInstance()->setBool(
+			    true, MSF_COURT_FMV_WATCHED_SINCE_RESET);
 		}
 
 		switch (curArea.getScenario()) {
@@ -152,28 +159,32 @@ bool TMarDirector::setupObjects()
 			break;
 
 		case 5:
-			if (!TFlagManager::getInstance()->getBool(0x10386)
-			    && TFlagManager::getInstance()->getFlag(0x40000) >= 3) {
-				TFlagManager::getInstance()->setBool(true, 0x50001);
+			if (!TFlagManager::getInstance()->getBool(
+			        MSF_M_PAINTED_ON_BOATHOUSE)
+			    && TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) >= 3) {
+				TFlagManager::getInstance()->setBool(true,
+				                                     MSF_RICCO_UNLOCKABLE);
 				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
-			if (!TFlagManager::getInstance()->getBool(0x10387)
-			    && TFlagManager::getInstance()->getFlag(0x40000) >= 5) {
-				TFlagManager::getInstance()->setBool(true, 0x50002);
+			if (!TFlagManager::getInstance()->getBool(
+			        MSF_M_PAINTED_ON_LIGHTHOUSE)
+			    && TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) >= 5) {
+				TFlagManager::getInstance()->setBool(true,
+				                                     MSF_GELATO_UNLOCKABLE);
 				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			break;
 
 		case 8: {
-			int iVar6 = TFlagManager::getInstance()->getFlag(0x40000);
+			int iVar6 = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 			int lVar9 = 0;
-			if (!TFlagManager::getInstance()->getBool(0x1038F)
+			if (!TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)
 			    && TFlagManager::getInstance()->getShineFlag(33)) {
 				lVar9 = true;
 				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 			if (lVar9 == 0 && !TFlagManager::getInstance()->getNozzleRight(1, 1)
-			    && TFlagManager::getInstance()->getBool(0x1038F)
+			    && TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)
 			    && iVar6 >= 25) {
 				lVar9 = 2;
 				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
@@ -184,17 +195,18 @@ bool TMarDirector::setupObjects()
 				lVar9 = 3;
 				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
-			TFlagManager::getInstance()->setFlag(0x60003, lVar9);
-			if (TFlagManager::getInstance()->getFlag(0x40000) >= 20
-			    && !TFlagManager::getInstance()->getFlag(0x60003)) {
+			TFlagManager::getInstance()->setFlag(MSF_SHADOW_MARIO_EVENT, lVar9);
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) >= 20
+			    && !TFlagManager::getInstance()->getFlag(
+			        MSF_SHADOW_MARIO_EVENT)) {
 				onDemoFlag(DEMO_FLAG_CAMERA_DEMO_ON_START);
 			}
 		}
 			// FALLTHROUGH!!!
 
 		case 2:
-			if (TFlagManager::getInstance()->getFlag(0x40000) >= 20)
-				TFlagManager::getInstance()->setBool(true, 0x50004);
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) >= 20)
+				TFlagManager::getInstance()->setBool(true, MSF_NOKI_AVAILABLE);
 			break;
 		}
 		break;
@@ -202,18 +214,19 @@ bool TMarDirector::setupObjects()
 	case 5:
 		switch (curArea.getScenario()) {
 		case 3:
-			TFlagManager::getInstance()->setBool(true, 0x50003);
+			TFlagManager::getInstance()->setBool(true,
+			                                     MSF_SUNFLOWERS_LEFT_TO_RESCUE);
 			break;
 		}
 		break;
 	}
 
-	u32 flag = SMS_getShineStage(curArea.getStage()) + 0x103A5;
+	u32 flag = SMS_getShineStage(curArea.getStage()) + MSF_VISITED_BASE;
 	TFlagManager::getInstance()->setBool(true, flag);
 
 	MSMainProc::setMSoundEnterStage(mMap, unk7D);
-	if (!TFlagManager::getInstance()->getBool(0x30007)) {
-		TFlagManager::getInstance()->setBool(true, 0x30007);
+	if (!TFlagManager::getInstance()->getBool(MSF_MSOUND_WAVE_LOADED)) {
+		TFlagManager::getInstance()->setBool(true, MSF_MSOUND_WAVE_LOADED);
 		gpMSound->loadWave(MS_WAVE_DEFAULT);
 	}
 	gpMSound->initSound();

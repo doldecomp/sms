@@ -342,7 +342,7 @@ void TNpcEvent::initNpcBuiltin(TSpcTypedBinary<TEventWatcher>* param_1)
 
 void TNpcEvent::initDownSunflowerNum()
 {
-	if (TFlagManager::getInstance()->getBool(0x50003))
+	if (TFlagManager::getInstance()->getBool(MSF_SUNFLOWERS_LEFT_TO_RESCUE))
 		mDownSunflowerNum = 5;
 	else
 		mDownSunflowerNum = 0;
@@ -392,7 +392,8 @@ void TNpcEvent::reviveOneSunflower()
 			gpItemManager->makeShineAppearWithDemo(
 			    "ひまわり用シャイン", "ひまわりシャインカメラ", position->x,
 			    position->y + 500.0f, position->z);
-			TFlagManager::getInstance()->setBool(false, 0x50003);
+			TFlagManager::getInstance()->setBool(false,
+			                                     MSF_SUNFLOWERS_LEFT_TO_RESCUE);
 		}
 	}
 }

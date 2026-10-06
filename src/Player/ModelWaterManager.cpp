@@ -206,7 +206,7 @@ void TModelWaterManager::loadAfter()
 	              JDrama::TNameRefGen::search("スクリーンテクスチャ"))
 	              ->getTexture();
 
-	int flag = TFlagManager::getInstance()->getFlag(0x40000);
+	int flag = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 	if (flag > 60)
 		flag = 60;
 

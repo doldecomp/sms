@@ -342,7 +342,7 @@ void TTalk2D2::setMessageID(u32 param_1, u32 param_2)
 	unk254 = nullptr;
 	unk29  = 0;
 
-	if (TFlagManager::getInstance()->getFlag(0xA0001) == 0x100)
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 0x100)
 		unk340 = 0x20;
 	else
 		unk340 = 0x40;
@@ -516,7 +516,7 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 
 		JUTFont::TWidth width;
 		gpSystemFont->getWidthEntry(code, &width);
-		if (TFlagManager::getInstance()->getFlag(0xA0001) == 0x100)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 0x100)
 			w += unk94 * (f32)width.field_0x1;
 		else
 			w += unk94 * (0.7f * (f32)width.field_0x1 + 4.0f);
@@ -578,7 +578,7 @@ bool TTalk2D2::openNormalWindow()
 
 	if (unk2DE > 2 && unk24C->checkMeaning(TMarioGamePad::MEANING_SELECT_A)) {
 		unk26C = 1;
-		if (TFlagManager::getInstance()->getFlag(0xA0001) == 0x100)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 0x100)
 			unk340 = 0x5A;
 		else
 			unk340 = 0x80;
@@ -898,7 +898,7 @@ bool TTalk2D2::eraseNormalWindow()
 		setupTextBox(unk260->getMessageData(),
 		             unk260->getMessageEntry(unk264 & 0xFFFF));
 		unk26C = 0;
-		if (TFlagManager::getInstance()->getFlag(0xA0001) == 0x100)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 0x100)
 			unk340 = 0x20;
 		else
 			unk340 = 0x40;
@@ -1279,11 +1279,14 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 		case 6: {
 			int time;
 			if (tag == 0)
-				time = TFlagManager::getInstance()->getFlag(0x20003);
+				time = TFlagManager::getInstance()->getFlag(
+				    MSF_RACE_RECORD_PIANTA);
 			else if (tag == 1)
-				time = TFlagManager::getInstance()->getFlag(0x20002);
+				time = TFlagManager::getInstance()->getFlag(
+				    MSF_RACE_RECORD_GELATO);
 			else if (tag == 6)
-				time = TFlagManager::getInstance()->getFlag(0x20014);
+				time = TFlagManager::getInstance()->getFlag(
+				    MSF_RACE_RECORD_NOKI);
 
 			if (time > 599999)
 				time = 599999;
@@ -1325,7 +1328,9 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 
 		case 2: {
 			int count
-			    = 0.01f * (TFlagManager::getInstance()->getFlag(0x20004) + 99);
+			    = 0.01f
+			      * (TFlagManager::getInstance()->getFlag(MSF_BOX_GAME_RECORD)
+			         + 99);
 			if (count < 10) {
 				snprintf(unk9C[*param_3 + *param_4 * 30]->getStringPtr(), 2,
 				         "%d", count);
@@ -1341,14 +1346,17 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 		}
 
 		case 3: {
-			int value     = TFlagManager::getInstance()->getFlag(0x40001);
+			int value
+			    = TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT);
 			int collected = 0;
 			for (int i = 0x46; i < 0x56; i++) {
-				if (TFlagManager::getInstance()->getFlag(0x10000 + i) != 0)
+				if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + i)
+				    != 0)
 					collected++;
 			}
 			for (int i = 0x6C; i <= 0x73; i++) {
-				if (TFlagManager::getInstance()->getFlag(0x10000 + i) != 0)
+				if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + i)
+				    != 0)
 					collected++;
 			}
 			value -= collected * 10;

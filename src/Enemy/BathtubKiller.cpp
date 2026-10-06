@@ -268,7 +268,7 @@ void TBathtubKiller::generateItemBathtubKiller()
 
 	TMapObjBase* item              = nullptr;
 	TBathtubKillerManager* manager = (TBathtubKillerManager*)mManager;
-	s32 shines = TFlagManager::getInstance()->getFlag(0x20001);
+	s32 shines = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 
 	if (SMS_GetMarioWaterGun()->mCurrentWater == 0) {
 		item = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
@@ -533,7 +533,7 @@ void TBathtubKillerManager::loadAfter()
 	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
 	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
 
-	unk60 = TFlagManager::getInstance()->getFlag(0x20001);
+	unk60 = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 	unk64 = nullptr;
 	unk68 = 0;
 	unk69 = 0;

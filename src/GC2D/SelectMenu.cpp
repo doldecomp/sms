@@ -357,7 +357,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		                         nullptr };
 
 	s32 numCoins = TFlagManager::getInstance()->getFlag(SMS_getShineStage(stage)
-	                                                    + 0x20005);
+	                                                    + MSF_COIN_RECORD_BASE);
 	if (numCoins > 999) {
 		numCoins = 999;
 	}

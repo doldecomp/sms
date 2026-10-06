@@ -112,7 +112,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mStagePane = mScreen->search('brek');
 
 	u32 shineStage = SMS_getShineStage(gpMarDirector->mMap);
-	s32 flag       = TFlagManager::getInstance()->getFlag(0x40003);
+	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
 #ifdef VERSION_GMSP01
 	void* stageBmg = JKRFileLoader::getGlbResource("/cmn2d/stagename.bmg");

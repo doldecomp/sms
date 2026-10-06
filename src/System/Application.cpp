@@ -305,8 +305,9 @@ void load2DResource2Aram()
 	};
 
 	if (sLoadResourceLang
-	    != (u8)TFlagManager::getInstance()->getFlag(0xA0001)) {
-		sLoadResourceLang = (u8)TFlagManager::getInstance()->getFlag(0xA0001);
+	    != (u8)TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)) {
+		sLoadResourceLang
+		    = (u8)TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
 		if (JKRFileLoader::getVolume("cmn2d") != nullptr)
 			sCmn2DArc->unmountFixed();
 
@@ -458,7 +459,7 @@ void TApplication::initialize_nlogoAfter()
 	gpCardManager->unmount();
 
 	int outputMode = 1;
-	switch (TFlagManager::getInstance()->getFlag(0xA0000)) {
+	switch (TFlagManager::getInstance()->getFlag(MSF_SOUND_MODE)) {
 	case 0:
 		outputMode = 0;
 		break;
@@ -504,9 +505,11 @@ bool TApplication::checkAdditionalMovie()
 	u8 uVar1 = SMS_getShineIDofExStage(currArea.getStage());
 	if (uVar1 != 0xFF) {
 		if (!TFlagManager::getInstance()->getShineFlag(uVar1)) {
-			if (!TFlagManager::getInstance()->getBool(0x3000D)) {
+			if (!TFlagManager::getInstance()->getBool(
+			        MSF_FLUDD_THEFT_SCENARIO_WATCHED)) {
 				mMovie = 5;
-				TFlagManager::getInstance()->setBool(true, 0x3000D);
+				TFlagManager::getInstance()->setBool(
+				    true, MSF_FLUDD_THEFT_SCENARIO_WATCHED);
 				result = true;
 			}
 		}
@@ -514,9 +517,11 @@ bool TApplication::checkAdditionalMovie()
 		switch (currArea.getStage()) {
 		case 0:
 			if (currArea.getScenario() == 0) {
-				if (!TFlagManager::getInstance()->getBool(0x30009)) {
+				if (!TFlagManager::getInstance()->getBool(
+				        MSF_PLANE_CRASH_SCENARIO_WATCHED)) {
 					mMovie = 1;
-					TFlagManager::getInstance()->setBool(true, 0x30009);
+					TFlagManager::getInstance()->setBool(
+					    true, MSF_PLANE_CRASH_SCENARIO_WATCHED);
 					result = true;
 				}
 			}
@@ -524,15 +529,19 @@ bool TApplication::checkAdditionalMovie()
 
 		case 1:
 			if (currArea.getScenario() == 0) {
-				if (!TFlagManager::getInstance()->getBool(0x3000B)) {
+				if (!TFlagManager::getInstance()->getBool(
+				        MSF_COURT_SCENARIO_WATCHED)) {
 					mMovie = 3;
-					TFlagManager::getInstance()->setBool(true, 0x3000B);
+					TFlagManager::getInstance()->setBool(
+					    true, MSF_COURT_SCENARIO_WATCHED);
 					result = true;
 				}
 			} else if (currArea.getScenario() == 1) {
-				if (!TFlagManager::getInstance()->getBool(0x3000C)) {
+				if (!TFlagManager::getInstance()->getBool(
+				        MSF_PEACH_KIDNAP_SCENARIO_WATCHED)) {
 					mMovie = 4;
-					TFlagManager::getInstance()->setBool(true, 0x3000C);
+					TFlagManager::getInstance()->setBool(
+					    true, MSF_PEACH_KIDNAP_SCENARIO_WATCHED);
 					result = true;
 				}
 			}
@@ -540,9 +549,11 @@ bool TApplication::checkAdditionalMovie()
 
 		case 8:
 			if (currArea.getScenario() == 2) {
-				if (!TFlagManager::getInstance()->getBool(0x3000D)) {
+				if (!TFlagManager::getInstance()->getBool(
+				        MSF_FLUDD_THEFT_SCENARIO_WATCHED)) {
 					mMovie = 5;
-					TFlagManager::getInstance()->setBool(true, 0x3000D);
+					TFlagManager::getInstance()->setBool(
+					    true, MSF_FLUDD_THEFT_SCENARIO_WATCHED);
 					result = true;
 				}
 			}
@@ -581,7 +592,7 @@ void TApplication::proc()
 			TMenuDirector* dir = new TMenuDirector;
 			mDirector          = dir;
 			dir->setup(mDisplay, mGamePads[0]);
-			TFlagManager::getInstance()->setFlag(0x20001, 3);
+			TFlagManager::getInstance()->setFlag(MSF_LIFE_COUNT, 3);
 			mCurrArea.set(1, 0, 0);
 		} break;
 
@@ -872,7 +883,7 @@ int TApplication::drawDVDErr()
 	u32 error = 0;
 #ifdef VERSION_GMSP01
 	u32 language;
-	language = TFlagManager::getInstance()->getFlag(0xA0001);
+	language = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
 #endif
 
 	switch (DVDGetDriveStatus()) {

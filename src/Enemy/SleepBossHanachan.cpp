@@ -65,7 +65,7 @@ const char** TSleepBossHanachan::getBasNameTable() const
 
 void TSleepBossHanachan::startFall(f32 shine_x, f32 shine_y, f32 shine_z)
 {
-	TFlagManager::getInstance()->setBool(true, 0x5000b);
+	TFlagManager::getInstance()->setBool(true, MSF_WIGGLER_FALLING);
 	mShinePosition.set(shine_x, shine_y, shine_z);
 	getMActor()->setBckFromIndex(0);
 	setCurAnmSound();

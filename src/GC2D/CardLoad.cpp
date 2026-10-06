@@ -348,7 +348,7 @@ void TCardLoad::setupTitleScreen()
 
 void TCardLoad::setupScoreScreen()
 {
-	int iVar2 = TFlagManager::getInstance()->getFlag(0x40000);
+	int iVar2 = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 	if (iVar2 < 100) {
 		unk748->changeTexture(unkC8[iVar2 / 10]->getTexInfo(), 0);
 		unk74C->changeTexture(unkC8[iVar2 % 10]->getTexInfo(), 0);
@@ -366,7 +366,8 @@ void TCardLoad::setupScoreScreen()
 	for (int i = 0; i < 7; ++i) {
 		u8 shineCount = 0;
 
-		if (TFlagManager::getInstance()->getBool(0x103A5 + local_90[i]))
+		if (TFlagManager::getInstance()->getBool(MSF_VISITED_BASE
+		                                         + local_90[i]))
 			unk584[i].unk0->show();
 		else
 			unk584[i].unk0->hide();
@@ -404,7 +405,8 @@ void TCardLoad::setupScoreScreen()
 			unk584[i].unk38->hide();
 		}
 
-		int iVar3 = TFlagManager::getInstance()->getFlag(0x20005 + local_90[i]);
+		int iVar3 = TFlagManager::getInstance()->getFlag(MSF_COIN_RECORD_BASE
+		                                                 + local_90[i]);
 		if (iVar3 > 999)
 			iVar3 = 999;
 		if (iVar3 < 100) {
@@ -428,9 +430,9 @@ void TCardLoad::setupScoreScreen()
 	}
 
 	u16 asdf = 0;
-	if (TFlagManager::getInstance()->getBool(0x10056))
+	if (TFlagManager::getInstance()->getBool(MSF_SHINE_AIRSTRIP))
 		asdf += 1;
-	if (TFlagManager::getInstance()->getBool(0x10058))
+	if (TFlagManager::getInstance()->getBool(MSF_SHINE_AIRSTRIP_REDS))
 		asdf += 1;
 	iVar8 += asdf;
 	if (asdf > 9)
@@ -438,7 +440,7 @@ void TCardLoad::setupScoreScreen()
 	const ResTIMG* pRVar4 = unkC8[asdf % 10]->getTexInfo();
 	((J2DPicture*)unk2C->search('\0n_f'))->changeTexture(pRVar4, 0);
 
-	if (TFlagManager::getInstance()->getBool(0x103a6))
+	if (TFlagManager::getInstance()->getBool(MSF_PLAZA_VISITED))
 		unk2C->search('st_7')->show();
 	else
 		unk2C->search('st_7')->hide();
@@ -450,7 +452,7 @@ void TCardLoad::setupScoreScreen()
 		unk2C->search('sh7a')->hide();
 	}
 
-	int thing = TFlagManager::getInstance()->getFlag(0x20006);
+	int thing = TFlagManager::getInstance()->getFlag(MSF_COIN_RECORD_DELFINO);
 	if (thing > 999)
 		thing = 999;
 
@@ -471,7 +473,7 @@ void TCardLoad::setupScoreScreen()
 		    ->changeTexture(unkC8[thing % 10]->getTexInfo(), 0);
 	}
 
-	int asdf2 = TFlagManager::getInstance()->getFlag(0x40000) - iVar8;
+	int asdf2 = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) - iVar8;
 	if (asdf2 > 100)
 		asdf2 = 99;
 	if (asdf2 < 0)
@@ -714,13 +716,13 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 
 			if (unkC0 / 120.0f > 45.0f) {
-				if (TFlagManager::getInstance()->getBool(0x3001C)) {
+				if (TFlagManager::getInstance()->getBool(MSF_UNK3001C)) {
 					gpMarDirector->fireStreamingMovie(9);
-					TFlagManager::getInstance()->setBool(false, 0x3001C);
+					TFlagManager::getInstance()->setBool(false, MSF_UNK3001C);
 					unkC0 = 0;
 				} else {
 					gpMarDirector->fireStreamingMovie(12);
-					TFlagManager::getInstance()->setBool(true, 0x3001C);
+					TFlagManager::getInstance()->setBool(true, MSF_UNK3001C);
 					unkC0 = 0;
 				}
 			}
@@ -2540,7 +2542,7 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK29: {
-		if (TFlagManager::getInstance()->getFlag(0x40000) < 1)
+		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) < 1)
 			gpMarDirector->setNextStage(0, nullptr);
 		else
 			gpMarDirector->setNextStage(1, nullptr);

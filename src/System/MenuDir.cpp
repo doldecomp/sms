@@ -172,8 +172,8 @@ int TMenuDirector::direct()
 		void* res;
 		OSJoinThread(&gSetupThread, &res);
 		SMSGetApplication()->getFader()->startFadeinT(0.25f);
-		if (!TFlagManager::getInstance()->getBool(0x30007)) {
-			TFlagManager::getInstance()->setBool(true, 0x30007);
+		if (!TFlagManager::getInstance()->getBool(MSF_MSOUND_WAVE_LOADED)) {
+			TFlagManager::getInstance()->setBool(true, MSF_MSOUND_WAVE_LOADED);
 			SMSGetMSound()->loadWave(MS_WAVE_DEFAULT);
 		}
 		unk50 = true;
@@ -190,7 +190,7 @@ int TMenuDirector::direct()
 				TFlagManager::getInstance()->firstStart();
 				for (u8 i = 0; i < 30; ++i)
 					TFlagManager::getInstance()->setShineFlag(i);
-				for (u32 i = 0x10366; i < 0x103B4; ++i)
+				for (u32 i = MSF_NOZZLE_BASE; i < MSF_CARD_BOOL_END; ++i)
 					TFlagManager::getInstance()->setBool(true, i);
 				TFlagManager::getInstance()->saveSuccess();
 			}

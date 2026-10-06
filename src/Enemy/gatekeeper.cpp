@@ -313,11 +313,11 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 
 	if (strcmp(mName, "ゲートキーパー（リコ）") == 0) {
 		mVariant = VARIANT_RICO_GATEKEEPER;
-		if (!TFlagManager::smInstance->getBool(0x50001))
+		if (!TFlagManager::smInstance->getBool(MSF_RICCO_UNLOCKABLE))
 			onLiveFlag(LIVE_FLAG_DEAD);
 	} else if (strcmp(mName, "ゲートキーパー（マンマ）") == 0) {
 		mVariant = VARIANT_MAMMA_GATEKEEPER;
-		if (!TFlagManager::smInstance->getBool(0x50002))
+		if (!TFlagManager::smInstance->getBool(MSF_GELATO_UNLOCKABLE))
 			onLiveFlag(LIVE_FLAG_DEAD);
 	} else {
 		u8 map = gpMarDirector->getCurrentMap();

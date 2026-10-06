@@ -430,7 +430,8 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		}
 	}
 
-	if (TFlagManager::getInstance()->getBool(0x50003) && isSunflower())
+	if (TFlagManager::getInstance()->getBool(MSF_SUNFLOWERS_LEFT_TO_RESCUE)
+	    && isSunflower())
 		sunflowerDownIn_();
 
 	if (uVar21 > 0)

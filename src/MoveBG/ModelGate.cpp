@@ -171,19 +171,23 @@ void TModelGate::loadAfter()
 	bool opened = false;
 	switch (unk71) {
 	case 0:
-		opened = TFlagManager::getInstance()->getBool(0x10385);
+		opened = TFlagManager::getInstance()->getBool(MSF_M_PAINTED_ON_STATUE);
 		break;
 	case 1:
-		opened = TFlagManager::getInstance()->getBool(0x10386);
+		opened
+		    = TFlagManager::getInstance()->getBool(MSF_M_PAINTED_ON_BOATHOUSE);
 		break;
 	case 2:
-		opened = TFlagManager::getInstance()->getBool(0x10387);
+		opened
+		    = TFlagManager::getInstance()->getBool(MSF_M_PAINTED_ON_LIGHTHOUSE);
 		break;
 	case 3:
-		opened = TFlagManager::getInstance()->getBool(0x10387);
+		opened
+		    = TFlagManager::getInstance()->getBool(MSF_M_PAINTED_ON_LIGHTHOUSE);
 		break;
 	case 4:
-		opened = TFlagManager::getInstance()->getBool(0x10387);
+		opened
+		    = TFlagManager::getInstance()->getBool(MSF_M_PAINTED_ON_LIGHTHOUSE);
 		break;
 	}
 	if (opened == true) {

@@ -32,7 +32,7 @@ bool TMapEventSirenaSink::watch()
 		gpItemManager->makeShineAppearWithDemo("シャイン（ホテル上げ用）",
 		                                       "ホテル上げシャインカメラ",
 		                                       unk68.x, unk68.y, unk68.z);
-		TFlagManager::getInstance()->setBool(true, 0x50008);
+		TFlagManager::getInstance()->setBool(true, MSF_HOTEL_RISING);
 		SMS_MarioWarpRequest(unk74, unk80);
 		gpMarioParticleManager->emit(MAP_MAP_MS_OBJUP_HOTEL_A,
 		                             &gpMapObjManager->getUnk44(), 0, nullptr);

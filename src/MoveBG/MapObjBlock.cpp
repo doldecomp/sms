@@ -389,7 +389,8 @@ BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		kill();
 		if (mMonteBlockBroken)
-			TFlagManager::getInstance()->setBool(true, 0x1038C);
+			TFlagManager::getInstance()->setBool(
+			    true, MSF_PIANTA_PIPE_SLAB_DESTROYED);
 
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SUPERBLOCK_BREAK, &mPosition,
 		                                0, nullptr, 0, 4);
@@ -404,7 +405,8 @@ void TSuperHipDropBlock::loadAfter()
 
 	if (strcmp("モンテゲートブロック", mName) == 0) {
 		mMonteBlockBroken = true;
-		if (TFlagManager::getInstance()->getBool(0x1038C)) {
+		if (TFlagManager::getInstance()->getBool(
+		        MSF_PIANTA_PIPE_SLAB_DESTROYED)) {
 			makeObjDead();
 		}
 		onLiveFlag(LIVE_FLAG_UNK8);

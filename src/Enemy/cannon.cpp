@@ -1140,7 +1140,7 @@ DEFINE_NERVE(TNerveCannonDamageDemo, TLiveActor)
 			JGeometry::TVec3<f32> scale(2.5f, 2.5f, 2.5f);
 			effect->generate(cannon->mPosition, scale);
 		}
-		TFlagManager::getInstance()->setBool(true, 0x5000C);
+		TFlagManager::getInstance()->setBool(true, MSF_MONTY_MOLE_DEFEATED);
 		spine->pushAfterCurrent(&TNerveCannonObject::theNerve());
 		return true;
 	}
