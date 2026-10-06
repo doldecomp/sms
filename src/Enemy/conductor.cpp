@@ -270,7 +270,7 @@ void TConductor::genEnemyFromPollution()
 	if (!mgr)
 		return;
 
-	JGeometry::TVec3<f32> targetPos = *gpMarioPos;
+	JGeometry::TVec3<f32> targetPos = SMS_GetMarioPos();
 	f32 r                           = MsRandF(unk84.mGenerateRadiusMin.get(),
 	                                          unk84.mGenerateRadiusMax.get());
 

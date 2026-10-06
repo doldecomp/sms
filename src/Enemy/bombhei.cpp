@@ -474,11 +474,11 @@ DEFINE_NERVE(TNerveBombHeiThrown, TLiveActor)
 	if (spine->getTime() == 0) {
 		TBombHeiSaveLoadParams* params
 		    = (TBombHeiSaveLoadParams*)self->getSaveParam();
-		f32 power = *gpMarioThrowPower;
+		f32 power = SMS_GetMarioThrowPower();
 		f32 rate  = params->mSLThrownRateXZ.get();
-		f32 c     = JMASCos(SMS_GetMarioAngleY());
-		f32 s     = JMASSin(SMS_GetMarioAngleY());
 		JGeometry::TVec3<f32> velocity;
+		f32 c      = JMASCos(SMS_GetMarioAngleY());
+		f32 s      = JMASSin(SMS_GetMarioAngleY());
 		velocity.x = rate * (power * s);
 		velocity.y = params->mSLThrownVY.get();
 		velocity.z = rate * (power * c);

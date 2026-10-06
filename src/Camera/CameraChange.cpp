@@ -348,11 +348,11 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 				break;
 			case CAMERA_MODE_FIX_H:
 			case CAMERA_MODE_DEFINITE_H:
-				mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
+				mCurrentTarget.mYaw = SMS_GetMarioAngleY() - 0x8000;
 				break;
 			case CAMERA_MODE_FIX_I:
 			case CAMERA_MODE_DEFINITE_I:
-				mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
+				mCurrentTarget.mYaw = SMS_GetMarioAngleY() - 0x8000;
 				warpPosAndAt(mCurrentTarget.unk28, mCurrentTarget.mYaw);
 			}
 		}
@@ -454,7 +454,7 @@ void CPolarSubCamera::execFrontRotate_()
 	    && SMS_GetMarioStatus() != MARIO_STATUS_HIP_DROP) {
 		unk64 &= ~CAMERA_FLAG_UNK10;
 		unk64 |= CAMERA_FLAG_UNK4;
-		unk274 = *gpMarioAngleY - 0x8000;
+		unk274 = SMS_GetMarioAngleY() - 0x8000;
 		if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
 			unk276 = mSaveEx->mYButtonRotateChase.get();
 			unk64 |= CAMERA_FLAG_UNK8;

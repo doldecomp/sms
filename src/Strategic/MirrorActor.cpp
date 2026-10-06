@@ -43,7 +43,7 @@ void TMirrorActor::checkIsInMirror()
 	if (!(unk1A & 4)) {
 		local_18.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	} else {
-		local_18.set(*gpMarioPos);
+		local_18.set(SMS_GetMarioPos());
 	}
 
 	int uVar4 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_18));

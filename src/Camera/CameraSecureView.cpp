@@ -11,7 +11,7 @@
 
 void CPolarSubCamera::calcSecureViewTarget_(s16 angle, f32* outX, f32* outZ)
 {
-	s16 base = *gpMarioAngleY - 0x8000;
+	s16 base = SMS_GetMarioAngleY() - 0x8000;
 	s16 diff = angle - base;
 
 	f32 first = CLBLinearInbetween<f32>(mCurrentParams->mSecureViewDistXMin,
@@ -40,7 +40,7 @@ void CPolarSubCamera::execSecureView_(s16 angle, Vec* out)
 	f32 pz;
 	calcSecureViewTarget_(angle, &px, &pz);
 
-	s16 diff  = ABS(*gpMarioAngleY - gpMarioOriginal->getUnk9C());
+	s16 diff  = ABS(SMS_GetMarioAngleY() - gpMarioOriginal->getUnk9C());
 	f32 ratio = SHORTANGLE2DEG(diff);
 	f32 inv;
 	if (ratio <= 1.0f)

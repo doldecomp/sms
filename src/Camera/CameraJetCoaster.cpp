@@ -178,7 +178,7 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		newTarget = mCurrentTarget.mTarget;
 
 		JGeometry::TVec3<f32> local_bc;
-		unitVecTo(mCurrentTarget.unk18, *gpMarioPos, &local_bc);
+		unitVecTo(mCurrentTarget.unk18, SMS_GetMarioPos(), &local_bc);
 
 		JGeometry::TVec3<f32> local_b0;
 		local_b0.cross(mUp, local_bc);

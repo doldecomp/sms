@@ -141,7 +141,7 @@ void TLightShadow::perform(u32 cue, JDrama::TGraphics* graphics)
 void TLightMario::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_LIGHT)
-		setLight(graphics, *gpMarioLightID);
+		setLight(graphics, SMS_GetMarioLightID());
 }
 
 void TLightMario::setLight(const JDrama::TGraphics* gfx, int index)

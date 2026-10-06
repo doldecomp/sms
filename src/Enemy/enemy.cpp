@@ -244,8 +244,8 @@ f32 TSpineEnemy::calcTurnSpeedToReach(f32 march_speed, f32 param_2) const
 void TSpineEnemy::updateSquareToMario()
 {
 	// assert?
-	(void)gpMarioPos;
-	mDistToMarioSquared = PSVECSquareDistance(&mPosition, gpMarioPos);
+	(void)&SMS_GetMarioPos();
+	mDistToMarioSquared = PSVECSquareDistance(&mPosition, &SMS_GetMarioPos());
 }
 
 BOOL TSpineEnemy::receiveMessage(THitActor* sender, u32 message)

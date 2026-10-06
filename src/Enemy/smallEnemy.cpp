@@ -795,7 +795,7 @@ bool TSmallEnemy::isMarioInWater() const
 {
 	return (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
 	        || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER))
-	       || (*gpMarioGroundPlane)->isWaterSurface()
+	       || SMS_GetMarioGroundPlane()->isWaterSurface()
 	       || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER);
 }
 

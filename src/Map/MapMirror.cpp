@@ -257,7 +257,7 @@ bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
 
 void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	JGeometry::TVec3<f32> local_44 = *gpMarioPos;
+	JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
 	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
 	if (!(unk18 != -1 ? true : false)
 	    && !gpMarioGroundPlane[0]->checkFlag(BG_CHECK_FLAG_ILLEGAL)) {

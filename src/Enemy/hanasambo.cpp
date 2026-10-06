@@ -814,7 +814,7 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 	if (self->checkCurAnmEnd(0)) {
 		spine->pushAfterCurrent(&TNerveHanaSamboWait::theNerve());
 		self->setWaitAnm();
-		if (gpMarioPos->y < 100.0f + self->mPosition.y) {
+		if (SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 			self->updateSquareToMario();
 			if (self->mDistToMarioSquared
 			    < self->unk198->mSLAttackDist.get()
@@ -840,7 +840,7 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 		self->createPollen();
 
 	if (spine->getTime() > self->unk198->mSLAttackInterval.get()
-	    && gpMarioPos->y < 100.0f + self->mPosition.y) {
+	    && SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 		self->updateSquareToMario();
 		if (self->mDistToMarioSquared
 		    < self->unk198->mSLAttackDist.get()
@@ -1143,8 +1143,8 @@ void TSamboHead::behaveToWater(THitActor* param_1)
 	JGeometry::TVec3<f32> velocity = mVelocity;
 	velocity.y                     = 0.0f;
 
-	JGeometry::TVec3<f32> jump(mPosition.x - gpMarioPos->x, 0.0f,
-	                           mPosition.z - gpMarioPos->z);
+	JGeometry::TVec3<f32> jump(mPosition.x - SMS_GetMarioPos().x, 0.0f,
+	                           mPosition.z - SMS_GetMarioPos().z);
 	MsVECNormalize(&jump, &jump);
 	jump.scale(unk194->mSLHitJumpSpXZ.get());
 	jump.y = unk194->mSLHitJumpSpY.get();
@@ -1164,8 +1164,8 @@ void TSamboHead::attackToMario()
 	sendAttackMsgToMario();
 
 	if (isAirborne()) {
-		JGeometry::TVec3<f32> velocity(mPosition.x - gpMarioPos->x, 10.0f,
-		                               mPosition.z - gpMarioPos->z);
+		JGeometry::TVec3<f32> velocity(mPosition.x - SMS_GetMarioPos().x, 10.0f,
+		                               mPosition.z - SMS_GetMarioPos().z);
 		MsVECNormalize(&velocity, &velocity);
 		velocity.scale(8.0f);
 		setVelocity(velocity);
@@ -1349,8 +1349,8 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 			self->updateSquareToMario();
 
 			JGeometry::TVec3<f32> goal = self->getUnk104().getPoint();
-			goal.set(gpMarioPos->x - self->mPosition.x, 0.0f,
-			         gpMarioPos->z - self->mPosition.z);
+			goal.set(SMS_GetMarioPos().x - self->mPosition.x, 0.0f,
+			         SMS_GetMarioPos().z - self->mPosition.z);
 			if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
 				goal.x += 1.0f;
 

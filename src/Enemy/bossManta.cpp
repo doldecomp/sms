@@ -77,9 +77,9 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 
 		JGeometry::TVec3<f32> pt
 		    = graph->indexToPoint((int)(MsRandF() * graph->getNodeNum()));
-		lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-		lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-		lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+		lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+		lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+		lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 		self->unk158 = pt;
 	}
 
@@ -98,67 +98,67 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 		if (self->unk1A4) {
 			switch (self->mGeneration) {
 			case 0:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			case 1:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			case 2:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			case 3:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			case 4:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			case 5:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			}
 		} else {
 			switch (self->mGeneration) {
 			case 0:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			case 1:
-				lerp_hack(pt.x, gpMarioPos->x, 0.8f);
-				lerp_hack(pt.y, gpMarioPos->y, 0.8f);
-				lerp_hack(pt.z, gpMarioPos->z, 0.8f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 0.8f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 0.8f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 0.8f);
 				break;
 			case 2:
-				lerp_hack(pt.x, gpMarioPos->x, 0.8f);
-				lerp_hack(pt.y, gpMarioPos->y, 0.8f);
-				lerp_hack(pt.z, gpMarioPos->z, 0.8f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 0.8f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 0.8f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 0.8f);
 				break;
 			case 3:
-				lerp_hack(pt.x, gpMarioPos->x, 0.6f);
-				lerp_hack(pt.y, gpMarioPos->y, 0.6f);
-				lerp_hack(pt.z, gpMarioPos->z, 0.6f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 0.6f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 0.6f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 0.6f);
 				break;
 			case 4:
-				lerp_hack(pt.x, gpMarioPos->x, 0.8f);
-				lerp_hack(pt.y, gpMarioPos->y, 0.8f);
-				lerp_hack(pt.z, gpMarioPos->z, 0.8f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 0.8f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 0.8f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 0.8f);
 				break;
 			case 5:
-				lerp_hack(pt.x, gpMarioPos->x, 1.0f);
-				lerp_hack(pt.y, gpMarioPos->y, 1.0f);
-				lerp_hack(pt.z, gpMarioPos->z, 1.0f);
+				lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
+				lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
+				lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
 				break;
 			}
 		}

@@ -1264,9 +1264,10 @@ void TEnemyMario::emWaitingToInviteMario()
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 	changeMontemanWaitingAnim();
 
-	f32 distanceToMario = mPosition.distance(*gpMarioPos);
+	f32 distanceToMario = mPosition.distance(SMS_GetMarioPos());
 	if (distanceToMario < mSettingParams->mSearchDist.get()
-	    && gpMarioPos->y < mPosition.y + mSettingParams->mSearchHeight.get()) {
+	    && SMS_GetMarioPos().y
+	           < mPosition.y + mSettingParams->mSearchHeight.get()) {
 		JGeometry::TVec3<f32> gatePoint;
 		mEMario->getTracer()->getGraph()->getGraphNode(8).getPoint(&gatePoint);
 		mFaceAngle.y
@@ -1546,8 +1547,8 @@ void TEnemyMario::checkReturn()
 
 void TEnemyMario::checkController(JDrama::TGraphics*)
 {
-	f32 dx           = gpMarioPos->x - mPosition.x;
-	f32 dz           = gpMarioPos->z - mPosition.z;
+	f32 dx           = SMS_GetMarioPos().x - mPosition.x;
+	f32 dz           = SMS_GetMarioPos().z - mPosition.z;
 	mAngleToMario    = matan(dz, dx);
 	mDistanceToMario = std::sqrtf(dx * dx + dz * dz);
 

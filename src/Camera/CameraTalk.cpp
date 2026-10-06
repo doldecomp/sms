@@ -9,7 +9,7 @@ void CPolarSubCamera::makeMtxForTalk(const TBaseNPC* param_1)
 {
 	killHeightPan_();
 	mCurrentTarget.unk2C = mCurrentTarget.mYaw;
-	mCurrentTarget.mYaw  = *gpMarioAngleY - 0x8000;
+	mCurrentTarget.mYaw  = SMS_GetMarioAngleY() - 0x8000;
 	mSavedModeBeforeTalk = mMode;
 
 	int r31 = CAMERA_MODE_TALK_A;

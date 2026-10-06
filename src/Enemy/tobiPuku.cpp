@@ -557,8 +557,9 @@ void TTobiPuku::hitWater()
 	JGeometry::TVec3<f32> velocity = mVelocity;
 
 	JGeometry::TVec3<f32> dir;
-	dir.set(mPosition.x - gpMarioPos->x, mPosition.y - gpMarioPos->y,
-	        mPosition.z - gpMarioPos->z);
+	dir.set(mPosition.x - SMS_GetMarioPos().x,
+	        mPosition.y - SMS_GetMarioPos().y,
+	        mPosition.z - SMS_GetMarioPos().z);
 	if (dir.x == 0.0f && dir.y == 0.0f && dir.z == 0.0f)
 		dir.x += 1.0f;
 	MsVECNormalize(&dir, &dir);
@@ -571,7 +572,7 @@ void TTobiPuku::hitWater()
 	mVelocity   = velocity;
 	unk1D0      = velocity;
 	unk1B0      = mPosition.y;
-	mRotation.y = 180.0f - 0.005493164f * *gpMarioAngleY;
+	mRotation.y = 180.0f - 0.005493164f * SMS_GetMarioAngleY();
 }
 
 void TTobiPuku::kill()
@@ -892,8 +893,8 @@ DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 
 	if (!self->isAirborne()) {
 		JGeometry::TVec3<f32> dir;
-		dir.set(self->mPosition.x - gpMarioPos->x, 0.0f,
-		        self->mPosition.z - gpMarioPos->z);
+		dir.set(self->mPosition.x - SMS_GetMarioPos().x, 0.0f,
+		        self->mPosition.z - SMS_GetMarioPos().z);
 		if (dir.x == 0.0f && dir.y == 0.0f && dir.z == 0.0f)
 			dir.x += 1.0f;
 		MsVECNormalize(&dir, &dir);

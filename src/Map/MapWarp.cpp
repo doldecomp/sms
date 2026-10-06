@@ -28,8 +28,9 @@ void TMapWarp::warp(int) { }
 void TMapWarp::watchToWarp()
 {
 	const TBGCheckData* checkData;
-	f32 fVar8 = gpMap->checkGroundExactY(gpMarioPos->x, gpMarioPos->y + 30.0f,
-	                                     gpMarioPos->z, &checkData);
+	f32 fVar8 = gpMap->checkGroundExactY(SMS_GetMarioPos().x,
+	                                     SMS_GetMarioPos().y + 30.0f,
+	                                     SMS_GetMarioPos().z, &checkData);
 
 	if (checkData->isWarp()) {
 		int warp = unk4[checkData->getData()].unk0;
@@ -42,7 +43,7 @@ void TMapWarp::watchToWarp()
 			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 			marioPos += unk4[checkData->getData()].unk8;
 			SMS_MarioWarpRequest(marioPos,
-			                     (*gpMarioAngleY * 180.0f) / 32768.0f);
+			                     (SMS_GetMarioAngleY() * 180.0f) / 32768.0f);
 		}
 	}
 

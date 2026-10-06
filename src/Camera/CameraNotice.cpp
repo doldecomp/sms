@@ -52,7 +52,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 	if (mNoticeActor != nullptr && !mNoticeActor->checkLiveFlag(LIVE_FLAG_DEAD)
 	    && !mNoticeActor->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 
-		if (mNoticeActor->mPosition.squared(*gpMarioPos)
+		if (mNoticeActor->mPosition.squared(SMS_GetMarioPos())
 		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
 			JGeometry::TVec2<f32> clipPos;
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
@@ -85,7 +85,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (mNoticeActor != nullptr && unk2A0[i] == mNoticeActor)
 			continue;
 
-		f32 dist2 = unk2A0[i]->mPosition.squared(*gpMarioPos);
+		f32 dist2 = unk2A0[i]->mPosition.squared(SMS_GetMarioPos());
 		if (dist2 >= closestDist2)
 			continue;
 
@@ -107,7 +107,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (!inClipY)
 			continue;
 
-		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(*gpMarioAngleY),
+		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(SMS_GetMarioAngleY()),
 		                 unk2A0[i]->mPosition, dist2,
 		                 mSaveNotice->mOnDegree.get(), -1.0f))
 			continue;

@@ -40,7 +40,7 @@ void CPolarSubCamera::ctrlOptionCamera_()
 		chaseOptionCamera_(gpCameraOption->unkE);
 		gpCameraOption->unkE--;
 	} else if (!(gpCameraOption->unk0 & 0x2)) {
-		probe = *gpMarioPos;
+		probe = SMS_GetMarioPos();
 		probe.y += 75.0f;
 		int cubeNo = gpCubeCamera->getInCubeNo(probe);
 		if (cubeNo >= 0) {

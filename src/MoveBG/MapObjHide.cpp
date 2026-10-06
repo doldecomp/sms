@@ -671,9 +671,10 @@ void TBreakHideObj::initMapObj()
 void TWoodBox::killNearWoodBox(f32 dX, f32 dY) const
 {
 	const TBGCheckData* groundPlane;
-	f32 resY = gpMap->checkGround(dX + gpMarioPos->x, gpMarioPos->y + 1000.0f,
-	                              dY + gpMarioPos->z, &groundPlane);
-	if (resY + 10.0f > gpMarioPos->y) {
+	f32 resY = gpMap->checkGround(dX + SMS_GetMarioPos().x,
+	                              SMS_GetMarioPos().y + 1000.0f,
+	                              dY + SMS_GetMarioPos().z, &groundPlane);
+	if (resY + 10.0f > SMS_GetMarioPos().y) {
 		const TLiveActor* actor = groundPlane->getActor();
 		if (actor != nullptr && actor != this
 		    && actor->isActorType(0x4000001C)) {

@@ -542,15 +542,14 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 	if (spine->getTime() == 0) {
 		TMameGessoSaveLoadParams* params = self->getSaveLoadParam();
 
-		f32 thrownRateXZ = params->mSLThrownRateXZ.get();
-
-		// TODO: ugly matching
-		s16 angle = *gpMarioAngleY & 0xffff;
-		JGeometry::TVec3<f32> vel(
-		    thrownRateXZ * *gpMarioThrowPower * JMASSin(angle),
-		    params->mSLThrownVY.get(),
-		    thrownRateXZ * *gpMarioThrowPower * JMASCos(angle));
-
+		f32 power = SMS_GetMarioThrowPower();
+		f32 rate  = params->mSLThrownRateXZ.get();
+		JGeometry::TVec3<f32> vel;
+		f32 c = JMASCos(SMS_GetMarioAngleY());
+		f32 s = JMASSin(SMS_GetMarioAngleY());
+		vel.x = rate * (power * s);
+		vel.y = params->mSLThrownVY.get();
+		vel.z = rate * (power * c);
 		self->setVelocity(vel);
 
 		self->mPosition.y += 2.0f;

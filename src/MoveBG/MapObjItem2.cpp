@@ -327,7 +327,7 @@ void TJumpBase::control()
 	case 5:
 		if (unk13C == 0) {
 			onLiveFlag(LIVE_FLAG_AIRBORNE);
-			int angle = *gpMarioAngleY;
+			int angle = SMS_GetMarioAngleY();
 			mVelocity
 			    = JGeometry::TVec3<f32>(JMASSin(angle), 0.0f, JMASCos(angle));
 			JGeometry::TVec3<f32> v2 = mVelocity;

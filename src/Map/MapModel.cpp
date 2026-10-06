@@ -39,7 +39,7 @@ void TMapModel::perform(u32 cue, JDrama::TGraphics* graphics)
 			C_MTXLightOrtho(proj, unk38 * 1000.0f, unk38 * -1000.0f,
 			                unk38 * -1000.0f, unk38 * 1000.0f, 0.5f, 0.5f, 0.5f,
 			                0.5f);
-			C_MTXLookAt(view, &pos, &up, gpMarioPos);
+			C_MTXLookAt(view, &pos, &up, &SMS_GetMarioPos());
 			MTXConcat(proj, view, viewProj);
 
 			mUnderpassMaterial->getTexMtx(0)->setEffectMtx(viewProj);

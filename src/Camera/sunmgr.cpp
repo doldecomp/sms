@@ -85,8 +85,8 @@ void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	// Transition to noki bay
-	f32 dx = gpMarioPos->x - unk24.x;
-	f32 dz = gpMarioPos->z - unk24.z;
+	f32 dx = SMS_GetMarioPos().x - unk24.x;
+	f32 dz = SMS_GetMarioPos().z - unk24.z;
 	if (dx * dx + dz * dz < 160000.0f && gpSunModel->isInBounds(0.3f)) {
 		gpMarDirector->setNextStage(9, nullptr);
 		MSound* sound = SMSGetMSound();

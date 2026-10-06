@@ -13,7 +13,7 @@ bool CPolarSubCamera::controlByCameraCode_(int* param_1)
 		if (mMode == CAMERA_MODE_DELFINO_B
 		    && gpCameraMario->mFramesSinceMarioStatusChange == 120) {
 			changeCamModeSpecifyFrame_(CAMERA_MODE_DELFINO, 1);
-			warpPosAndAt(mCurrentTarget.unk28, *gpMarioAngleY + 0x9C4);
+			warpPosAndAt(mCurrentTarget.unk28, SMS_GetMarioAngleY() + 0x9C4);
 		}
 		unk120->onNeutralMarioKey();
 		result = false;

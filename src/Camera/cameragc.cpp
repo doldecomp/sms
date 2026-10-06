@@ -168,7 +168,7 @@ void CPolarSubCamera::loadAfter()
 	} else {
 		mCurrentTarget.unk28
 		    = MsClamp(mSaveEx->mXRotStart.get(), unk268, unk26C);
-		mCurrentTarget.mYaw = *gpMarioAngleY - 0x8000;
+		mCurrentTarget.mYaw = SMS_GetMarioAngleY() - 0x8000;
 	}
 
 	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE) && unk2B8 != nullptr
@@ -412,14 +412,14 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 	if (!isMarioReadyGun_()) {
 		// TODO: MarioAccess inline?
 		bool groundOK             = false;
-		const TBGCheckData* plane = *gpMarioGroundPlane;
+		const TBGCheckData* plane = SMS_GetMarioGroundPlane();
 		if (plane != nullptr && plane->isThing())
 			groundOK = true;
 
 		if (groundOK && isSlopeCameraMode()) {
 			JGeometry::TVec3<f32> diff;
-			diff.set(gpMarioPos->x - mPosition.x, 0.0f,
-			         gpMarioPos->z - mPosition.z);
+			diff.set(SMS_GetMarioPos().x - mPosition.x, 0.0f,
+			         SMS_GetMarioPos().z - mPosition.z);
 			bool b = diff.isZero();
 			if (!b) {
 				f32 grLevel = SMS_GetMarioGrLevel();
@@ -436,12 +436,12 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 				JGeometry::TVec3<f32> p3 = p2;
 
 				const TBGCheckData* ground;
-				f32 height
-				    = gpMap->checkGroundIgnoreWaterSurface(
-				          p3.x,
-				          fwdDist * fakeTan(maxAng) + 10.0f + gpMarioPos->y,
-				          p3.z, &ground)
-				      - grLevel;
+				f32 height = gpMap->checkGroundIgnoreWaterSurface(
+				                 p3.x,
+				                 fwdDist * fakeTan(maxAng) + 10.0f
+				                     + SMS_GetMarioPos().y,
+				                 p3.z, &ground)
+				             - grLevel;
 				s16 angle = 0;
 				if (height > 0.0f)
 					angle = matan(fwdDist, height);
@@ -592,7 +592,7 @@ void CPolarSubCamera::calcPosAndAt_()
 				    = mCurrentTarget.mYaw + mCurrentParams->mOffsetAngleY;
 
 				if (gpCameraMario->mFrameMoveDistHorizontal >= 0.05f) {
-					s16 mAngle = *gpMarioAngleY - 0x8000;
+					s16 mAngle = SMS_GetMarioAngleY() - 0x8000;
 					f32 m      = MsClamp<f32>(
                         (f32)mCurrentParams->mMaxAddAngleY
                             * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
@@ -702,8 +702,10 @@ void CPolarSubCamera::calcPosAndAt_()
 						f32 cY = JMASCos(yAngle);
 
 						if (fabricatedInline3()) {
-							f32 dx   = gpMarioPos->x - mCurrentTarget.unk18.x;
-							f32 dz   = gpMarioPos->z - mCurrentTarget.unk18.z;
+							f32 dx
+							    = SMS_GetMarioPos().x - mCurrentTarget.unk18.x;
+							f32 dz
+							    = SMS_GetMarioPos().z - mCurrentTarget.unk18.z;
 							f32 d    = MsSqrtf(dx * dx + dz * dz);
 							f32 minD = mSaveEx->mSLMinCushionXZ.get();
 							f32 mD2

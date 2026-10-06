@@ -97,7 +97,7 @@ void TRideCloud::control()
 {
 	TMapObjBase::control();
 	TMapCollisionBase* col = mMapCollisionManager->unk8;
-	if (*gpMarioSpeedY > 0.0f)
+	if (SMS_GetMarioSpeedY() > 0.0f)
 		col->setAllBGType(0x400);
 	else
 		col->setAllBGType(0);

@@ -218,11 +218,11 @@ void TMapWire::release()
 
 	f32 stretchRatio = mStretchRate * abs(mHangPos - 0.5f);
 
-	if (*gpMarioSpeedY > 0) {
+	if (SMS_GetMarioSpeedY() > 0) {
 		JGeometry::TVec3<f32> marioVel;
-		marioVel.x       = *gpMarioSpeedX;
-		marioVel.y       = *gpMarioSpeedY;
-		marioVel.z       = *gpMarioSpeedZ;
+		marioVel.x       = SMS_GetMarioSpeedX();
+		marioVel.y       = SMS_GetMarioSpeedY();
+		marioVel.z       = SMS_GetMarioSpeedZ();
 		mBounceAmplitude = mHeightRate * marioVel.length();
 	} else {
 		mBounceAmplitude = mReleaseHeight;

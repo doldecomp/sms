@@ -1027,7 +1027,7 @@ void TBossPakkun::launchPolDrop()
 	mPolDrop->launch(launchPosition, velocity);
 }
 
-void TBossPakkun::launchTornado() { mTornado->launch(*gpMarioPos); }
+void TBossPakkun::launchTornado() { mTornado->launch(SMS_GetMarioPos()); }
 
 void TBossPakkun::killSmallEnemies()
 {
@@ -1384,7 +1384,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
 
 	JGeometry::TVec3<f32> toMario = boss->mPosition;
-	toMario -= *gpMarioPos;
+	toMario -= SMS_GetMarioPos();
 	f32 swingLength = boss->getBossPakkunParams()->mSLSwingLength.get();
 	if (toMario.squared() < swingLength * swingLength) {
 		JGeometry::TVec3<f32> facing;
@@ -1399,7 +1399,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 
 		spine->pushAfterCurrent(&TNerveBPWait::theNerve());
 		spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
-		TPathNode goal(*gpMarioPos);
+		TPathNode goal(SMS_GetMarioPos());
 		boss->unk114.push(boss->unkF4);
 		boss->unkF4 = goal;
 		spine->pushAfterCurrent(&TNerveBPPivot::theNerve());
@@ -1413,7 +1413,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 	    && boss->mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		if (gpMarDirector->mMap == 2
 		    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
-			JGeometry::TVec3<f32>* marioPos = gpMarioPos;
+			JGeometry::TVec3<f32>* marioPos = &SMS_GetMarioPos();
 			if (boss->unk188 == nullptr) {
 				boss->unk188 = static_cast<TAreaCylinderManager*>(
 				    gpConductor->search("ゲロエリアマネージャー"));
@@ -1915,12 +1915,12 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 	}
 
 	f32 range = boss->getBossPakkunParams()->mSLPollBallRange.get();
-	if (boss->inArea(*gpMarioPos)
+	if (boss->inArea(SMS_GetMarioPos())
 	    && boss->getDistToMarioSquared() < range * range) {
 		spine->pushAfterCurrent(&TNerveBPHover::theNerve());
 		spine->pushAfterCurrent(&TNerveBPFlyCannon::theNerve());
 
-		TPathNode goal(*gpMarioPos);
+		TPathNode goal(SMS_GetMarioPos());
 		boss->unk114.push(boss->unkF4);
 		boss->unkF4 = goal;
 
@@ -2017,7 +2017,7 @@ DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
 
 	if (spine->getTime()
 	    >= boss->getBossPakkunParams()->mSLWaitFrameStg0.get()) {
-		if (boss->inArea(*gpMarioPos)) {
+		if (boss->inArea(SMS_GetMarioPos())) {
 			if (!SMS_GetMarioGroundPlane()->isWaterSurface()) {
 				spine->pushAfterCurrent(&TNerveBPCannonL::theNerve());
 				return true;

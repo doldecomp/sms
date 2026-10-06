@@ -242,7 +242,8 @@ void TSandBombBase::exploding()
 	f32 dist = getDistanceXZ(*gpMarioPos);
 	if (!isFootHandOrStairs()
 	    && getMActor()->getFrameCtrl(0)->getFrame() < 80.0f
-	    && SMS_GetMarioGrLevel() > gpMarioPos->y - 30.0f && dist < unk154) {
+	    && SMS_GetMarioGrLevel() > SMS_GetMarioPos().y - 30.0f
+	    && dist < unk154) {
 		SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
 		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f),
 		               mMarioJumpRate * (unk154 - dist));

@@ -39,9 +39,9 @@ bool TMapObjGeneral::isPollutedGround(const JGeometry::TVec3<f32>& v) const
 
 inline f32 distToMario(const JGeometry::TVec3<f32>& v)
 {
-	f32 l = (v.x - gpMarioPos->x) * (v.x - gpMarioPos->x)
-	        + (v.y - gpMarioPos->y) * (v.y - gpMarioPos->y)
-	        + (v.z - gpMarioPos->z) * (v.z - gpMarioPos->z);
+	f32 l = (v.x - SMS_GetMarioPos().x) * (v.x - SMS_GetMarioPos().x)
+	        + (v.y - SMS_GetMarioPos().y) * (v.y - SMS_GetMarioPos().y)
+	        + (v.z - SMS_GetMarioPos().z) * (v.z - SMS_GetMarioPos().z);
 	return JGeometry::TUtil<f32>::sqrt(l);
 }
 
@@ -95,11 +95,11 @@ void TMapObjGeneral::put()
 	s32 preservedTimeTilAppear = getStateTimer();
 	makeObjAppeared();
 	mStateTimer = preservedTimeTilAppear;
-	mPosition.x = JMASSin(*gpMarioAngleY)
+	mPosition.x = JMASSin(SMS_GetMarioAngleY())
 	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
 	              + SMS_GetMarioPos().x;
 	mPosition.y = SMS_GetMarioPos().y;
-	mPosition.z = JMASCos(*gpMarioAngleY)
+	mPosition.z = JMASCos(SMS_GetMarioAngleY())
 	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
 	              + SMS_GetMarioPos().z;
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -108,22 +108,25 @@ void TMapObjGeneral::put()
 
 void TMapObjGeneral::thrown()
 {
-	mPosition.set(gpMarioPos->x, gpMarioPos->y, gpMarioPos->z);
-	mRotation.set(*gpMarioAngleX, *gpMarioAngleY, *gpMarioAngleZ);
+	mPosition.set(SMS_GetMarioPos().x, SMS_GetMarioPos().y,
+	              SMS_GetMarioPos().z);
+	mRotation.set(SMS_GetMarioAngleX(), SMS_GetMarioAngleY(),
+	              SMS_GetMarioAngleZ());
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 	unk138        = 0;
 	mHolder       = nullptr;
 
-	mVelocity.set(*gpMarioThrowPower
-	                      * (JMASSin((s32)*gpMarioAngleY)
-	                         * mMapObjData->mPhysical->unk4->unk2C)
-	                  + (mNormalThrowSpeedRate * *gpMarioSpeedX),
-	              mMapObjData->mPhysical->unk4->unk30,
-	              *gpMarioThrowPower
-	                      * (JMASCos((s32)*gpMarioAngleY)
-	                         * mMapObjData->mPhysical->unk4->unk2C)
-	                  + (mNormalThrowSpeedRate * *gpMarioSpeedZ));
+	f32 power = SMS_GetMarioThrowPower();
+	mVelocity.set(power
+	                      * (JMASSin(SMS_GetMarioAngleY())
+	                         * getMapObjData()->mPhysical->unk4->unk2C)
+	                  + mNormalThrowSpeedRate * SMS_GetMarioSpeedX(),
+	              getMapObjData()->mPhysical->unk4->unk30,
+	              power
+	                      * (JMASCos(SMS_GetMarioAngleY())
+	                         * getMapObjData()->mPhysical->unk4->unk2C)
+	                  + mNormalThrowSpeedRate * SMS_GetMarioSpeedZ());
 
 	offLiveFlag(LIVE_FLAG_UNK10);
 	JGeometry::TVec3<f32> vel = mVelocity;

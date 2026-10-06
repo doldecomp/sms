@@ -116,7 +116,7 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 	THitActor::perform(cue, graphics);
 	if (cue & CUE_MOVE) {
 		mPosition.y += mRiseSpeed;
-		if (mPosition.y > gpMarioPos->y + 2000.0f)
+		if (mPosition.y > SMS_GetMarioPos().y + 2000.0f)
 			mActive = false;
 	}
 	if (cue & CUE_CALC_ANIM) {
@@ -567,7 +567,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (!tears->mRecoverCollision->mRecovering) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, gpMarioPos, 0, nullptr);
+		    BOSSEELTEARS_MS_MEO_TEAR_AWAGET, &SMS_GetMarioPos(), 0, nullptr);
 		if (emitter)
 			emitter->setGlobalScale(tears->mScaling);
 		tears->kill();
@@ -917,7 +917,7 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 					mTrembleRotation.y += speed;
 					if (mTrembleRotation.y > mOwner->getBossEelParams()
 					                             .mSLToothLiveHeight.get()
-					    || mPosition.y > gpMarioPos->y + 2000.0f) {
+					    || mPosition.y > SMS_GetMarioPos().y + 2000.0f) {
 						mHitPoints = 0;
 						onHitFlag(HIT_FLAG_NO_COLLISION);
 					}
@@ -1018,9 +1018,9 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 						continue;
 
 					JGeometry::TVec3<f32> marioTarget;
-					marioTarget.set(mOwner->mPosition.x - gpMarioPos->x,
-					                mOwner->mPosition.y - gpMarioPos->y,
-					                mOwner->mPosition.z - gpMarioPos->z);
+					marioTarget.set(mOwner->mPosition.x - SMS_GetMarioPos().x,
+					                mOwner->mPosition.y - SMS_GetMarioPos().y,
+					                mOwner->mPosition.z - SMS_GetMarioPos().z);
 					MsVECNormalize(&marioTarget, &marioTarget);
 
 					f32 power = mOwner->mSaveParams->mSLBreathInPower.get();
@@ -1036,7 +1036,7 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 					if (mOwner->mMActor->checkCurBckFromIndex(17))
 						power *= 0.5f;
 					marioTarget.scale(power);
-					marioTarget.add(*gpMarioPos);
+					marioTarget.add(SMS_GetMarioPos());
 					SMS_MarioMoveRequest(marioTarget);
 				}
 			} else {
@@ -1322,9 +1322,9 @@ void TBossEelAwaCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
-		if (gpMarioPos->y < mPosition.y + 500.0f)
+		if (SMS_GetMarioPos().y < mPosition.y + 500.0f)
 			offHitFlag(HIT_FLAG_NO_COLLISION);
-		if (gpMarioPos->y > mPosition.y + mAttackHeight)
+		if (SMS_GetMarioPos().y > mPosition.y + mAttackHeight)
 			onHitFlag(HIT_FLAG_NO_COLLISION);
 
 		for (s32 i = 0; i < mColCount; ++i) {
@@ -1564,7 +1564,7 @@ void TBossEel::updateTearsCnt()
 
 	++mTearCycleTimer;
 	s32 interval = mSaveParams->mSLGenTearsTime.get();
-	f32 height   = fabsf(mPosition.y - gpMarioPos->y);
+	f32 height   = fabsf(mPosition.y - SMS_GetMarioPos().y);
 	if (height > 30000.0f)
 		interval *= 4;
 	else if (height > 15000.0f)
@@ -1604,7 +1604,7 @@ bool TBossEel::canEatMario()
 
 	MtxPtr mouthMtx
 	    = getMActor()->getModel()->getAnmMtx(mMapCollisionJointIndices[0]);
-	JGeometry::TVec3<f32> distance = *gpMarioPos;
+	JGeometry::TVec3<f32> distance = SMS_GetMarioPos();
 	distance.x -= mouthMtx[0][3];
 	distance.y -= mouthMtx[1][3];
 	distance.z -= mouthMtx[2][3];
@@ -1687,7 +1687,7 @@ void TBossEel::invalidateAllCollision()
 
 void TBossEel::collideToMario()
 {
-	JGeometry::TVec3<f32> marioTarget = *gpMarioPos;
+	JGeometry::TVec3<f32> marioTarget = SMS_GetMarioPos();
 	JGeometry::TVec3<f32> correction(0.0f, 0.0f, 0.0f);
 
 	for (s32 i = 0; i < 2; ++i) {
@@ -2010,7 +2010,7 @@ DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
 	if (spine->getTime() == 2500)
 		gpMarDirector->getConsole()->startAppearBalloon(0xE0012, true);
 
-	JGeometry::TVec3<f32> marioPosition = *gpMarioPos;
+	JGeometry::TVec3<f32> marioPosition = SMS_GetMarioPos();
 	marioPosition.y += 75.0f;
 	if (eel->mMouthCubeManager->isInCube(marioPosition, (s32)0)) {
 		spine->pushAfterCurrent(&TNerveBossEelFirstSpin::theNerve());
@@ -2324,7 +2324,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 				gpMarDirector->fireEndDemoCamera();
 			}
 
-			JGeometry::TVec3<f32> marioPosition = *gpMarioPos;
+			JGeometry::TVec3<f32> marioPosition = SMS_GetMarioPos();
 			eel->generateBubble(marioPosition);
 
 			s32 jointIndex = eel->mMActor->getModel()

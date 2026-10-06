@@ -187,11 +187,11 @@ void TMapObjBall::kicked()
 	if (getVelocity().y == 0.0f) {
 		mVelocity.y = unk178;
 	} else {
-		mVelocity.y = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
+		mVelocity.y = unk174 * SMS_GetMarioSpeedY() - unk160 * getVelocity().y;
 	}
 
-	mVelocity.x += unk170 * *gpMarioSpeedX;
-	mVelocity.z += unk170 * *gpMarioSpeedZ;
+	mVelocity.x += unk170 * SMS_GetMarioSpeedX();
+	mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
 
 	f32 unkC = mMapObjData->mPhysical->unk4->unkC;
 	if (abs(mVelocity.x) < unkC && abs(mVelocity.z) < unkC) {
@@ -241,8 +241,8 @@ void TMapObjBall::boundByActor(THitActor* actor)
 	if (actor->isActorType(0x80000001)) {
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
 			f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
-			if (abs(*gpMarioSpeedX) > minSpeed
-			    || abs(*gpMarioSpeedZ) > minSpeed) {
+			if (abs(SMS_GetMarioSpeedX()) > minSpeed
+			    || abs(SMS_GetMarioSpeedZ()) > minSpeed) {
 				mVelocity.y += unk150;
 				if (!isActorType(0x400000d0))
 					SMSGetMSound()->startSoundActor(
@@ -251,8 +251,10 @@ void TMapObjBall::boundByActor(THitActor* actor)
 				mVelocity.y += unk154;
 			}
 
-			mVelocity.x += unk148 * *gpMarioSpeedX - offsetToActor.x * unk14C;
-			mVelocity.z += unk148 * *gpMarioSpeedZ - offsetToActor.z * unk14C;
+			mVelocity.x
+			    += unk148 * SMS_GetMarioSpeedX() - offsetToActor.x * unk14C;
+			mVelocity.z
+			    += unk148 * SMS_GetMarioSpeedZ() - offsetToActor.z * unk14C;
 			actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		}
 	} else {
@@ -276,11 +278,11 @@ void TMapObjBall::boundByActor(THitActor* actor)
 
 	if (actor->isActorType(0x80000001)
 	    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) && getVelocity().y < 0.0f
-	    && gpMarioPos->y + 130.0f < mPosition.y + mBodyRadius) {
+	    && SMS_GetMarioPos().y + 130.0f < mPosition.y + mBodyRadius) {
 		mVelocity.y = -unk160 * getVelocity().y;
-		mVelocity.x += unk158 * *gpMarioSpeedX;
-		mVelocity.y += unk15C * *gpMarioSpeedY;
-		mVelocity.z += unk158 * *gpMarioSpeedZ;
+		mVelocity.x += unk158 * SMS_GetMarioSpeedX();
+		mVelocity.y += unk15C * SMS_GetMarioSpeedY();
+		mVelocity.z += unk158 * SMS_GetMarioSpeedZ();
 		if (!isActorType(0x400000d0))
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
 			                                nullptr, 0, 4);
@@ -299,7 +301,7 @@ void TMapObjBall::touchActor(THitActor* actor)
 		return;
 	} else {
 		if (actor->isActorType(0x80000001) && !isActorType(0x400000d0)
-		    && *gpMarioSpeedY != 0.0f) {
+		    && SMS_GetMarioSpeedY() != 0.0f) {
 			kicked();
 		} else {
 			boundByActor(actor);
@@ -786,20 +788,21 @@ void TResetFruit::kicked()
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) || isState(STATE_HOLDING))
 		return;
 
-	if (*gpMarioSpeedY < 0.0f)
+	if (SMS_GetMarioSpeedY() < 0.0f)
 		return;
 
-	JGeometry::TVec3<f32> toMario(gpMarioPos->x - mPosition.x, 0.0f,
-	                              gpMarioPos->z - mPosition.z);
+	JGeometry::TVec3<f32> toMario(SMS_GetMarioPos().x - mPosition.x, 0.0f,
+	                              SMS_GetMarioPos().z - mPosition.z);
 	if (getVelocity().y <= 0.0f && isAirborne()
 	    && getVelocity().dot(toMario) > 0.0f) {
 		if (getVelocity().y == 0.0f)
 			mVelocity.y = unk178;
 		else
-			mVelocity.y = unk174 * *gpMarioSpeedY - unk160 * getVelocity().y;
+			mVelocity.y
+			    = unk174 * SMS_GetMarioSpeedY() - unk160 * getVelocity().y;
 
-		mVelocity.x += unk170 * *gpMarioSpeedX;
-		mVelocity.z += unk170 * *gpMarioSpeedZ;
+		mVelocity.x += unk170 * SMS_GetMarioSpeedX();
+		mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
 
 		f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
 		if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
@@ -1229,7 +1232,8 @@ void TBigWatermelon::touchActor(THitActor* actor)
 				    && !actor->isActorType(0x400000ca)
 				    && !actor->isActorType(0x400000cc)) {
 					if (actor->isActorType(0x80000001)
-					    && !isActorType(0x400000d0) && *gpMarioSpeedY != 0.0f) {
+					    && !isActorType(0x400000d0)
+					    && SMS_GetMarioSpeedY() != 0.0f) {
 						kicked();
 					} else {
 						TMapObjBall::boundByActor(actor);
@@ -1355,7 +1359,8 @@ void TBigWatermelon::startEvent()
 	} else {
 		for (s32 i = 0; i < 10; ++i) {
 			TItem* item = static_cast<TItem*>(gpItemManager->makeObjAppear(
-			    gpMarioPos->x, gpMarioPos->y, gpMarioPos->z, 0x2000000e, true));
+			    SMS_GetMarioPos().x, SMS_GetMarioPos().y, SMS_GetMarioPos().z,
+			    0x2000000e, true));
 			if (item != nullptr) {
 				f32 randZ         = 20.0f * (MsRandF() - 0.5f);
 				f32 randY         = 20.0f * MsRandF() + 20.0f;

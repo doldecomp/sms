@@ -324,7 +324,7 @@ void TMapObjChangeStage::load(JSUMemoryInputStream& stream)
 void TMapObjChangeStageHipDrop::touchPlayer(THitActor*)
 {
 	if (SMS_IsMarioStatusHipDrop()
-	    && gpMarioPos->y + *gpMarioSpeedY < SMS_GetMarioGrLevel()) {
+	    && SMS_GetMarioPos().y + SMS_GetMarioSpeedY() < SMS_GetMarioGrLevel()) {
 		SMSGetMarDirector()->setNextStage(unk138, nullptr);
 		gpMarioParticleManager->emit(MAPOBJ_MS_EX_HAHEN, &mPosition, 0,
 		                             nullptr);

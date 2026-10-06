@@ -143,7 +143,8 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx afStack_e0;
 		PSMTXScale(afStack_e0, unk3C, unk3C, unk3C);
 		Mtx afStack_110;
-		PSMTXTrans(afStack_110, -gpMarioPos->x, 0.0f, -gpMarioPos->z);
+		PSMTXTrans(afStack_110, -SMS_GetMarioPos().x, 0.0f,
+		           -SMS_GetMarioPos().z);
 		Mtx afStack_140;
 		PSMTXTrans(afStack_140, 0.5f, 0.5f, 0.0f);
 		PSMTXConcat(afStack_e0, afStack_110, afStack_e0);
