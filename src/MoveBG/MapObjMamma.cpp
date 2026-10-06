@@ -210,7 +210,7 @@ u32 TSandBomb::touchWater(THitActor*)
 		startControlAnim(3);
 		startControlAnim(4);
 		startControlAnim(5);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 	return 1;
 }
@@ -1140,7 +1140,7 @@ void TGoalWatermelon::control()
 void TGoalWatermelon::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	unk138 = (TMapObjBase*)JDrama::TNameRefGen::search(
 	    "シャイン（お化けスイカ用）");
 	unk138->mPosition.set(unk140);

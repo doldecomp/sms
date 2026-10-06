@@ -176,7 +176,7 @@ void TRailMapObj::resetPosition()
 void TRailMapObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 }
 

@@ -245,7 +245,7 @@ void TBaseNPC::behaveToBeTaken_(THitActor* param_1)
 	mAngleYDiffWhenTaken = sVar3 - sVar2;
 
 	mInbetweenCtrl->startPosBlend();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	offLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK400000);
 	if (mActorType == 0x4000018) {
 		peachParasolOut_();
@@ -438,7 +438,7 @@ bool TBaseNPC::isNowCanTaken() const
 	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                      | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK40000
 	                      | LIVE_FLAG_SINK_BOTTOM)
-	    && !checkHitFlag(HIT_FLAG_NO_COLLISION) && isNerveCanGoToTaken()) {
+	    && !checkHitFilter(HIT_FILTER_NO_COLLISION) && isNerveCanGoToTaken()) {
 		result = true;
 	}
 	return result;
@@ -558,7 +558,7 @@ void TBaseNPC::changeNerveProc_()
 			return;
 
 		mSpine->setNext(&TNerveNPCRecoverFromSink::theNerve());
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		offLiveFlag(LIVE_FLAG_SINK_BOTTOM);
 		requestNpcAnm_(NPC_ANM_KIND_UNK1A, NPC_STOP_MOTION_BLEND_ON);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_APPEAR))
@@ -610,7 +610,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	unk1CC = 0;
 	unk1D0 = 0.0f;
 	if (cVar8 && isPollutionNpc() && !checkActionFlag(NPC_ACTION_UNK400)) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mSpine->setDefaultNext();
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
@@ -621,7 +621,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		mSpine->setDefaultNext();
 		mSpine->pushNerve(mSpine->getDefault());
 		pos.y += 2.0f;

@@ -748,7 +748,7 @@ void TBaseNPC::npcSinking()
 
 		if (!CLBChaseGeneralConstantSpecifySpeed(&mPosition.y, dVar6, dVar7)) {
 			onLiveFlag(LIVE_FLAG_SINK_BOTTOM);
-			onHitFlag(HIT_FLAG_NO_COLLISION);
+			onHitFilter(HIT_FILTER_NO_COLLISION);
 			requestNpcAnm_(NPC_ANM_KIND_UNK10, NPC_STOP_MOTION_BLEND_ON);
 		}
 	}
@@ -766,7 +766,7 @@ bool TBaseNPC::npcThrowing()
 	int uVar4   = mPtrSaveNormal->mSLThrowStartFrame.get();
 	int uVar1   = mSpine->getTime();
 	if ((uVar1 == 0 && uVar4 < 20) || uVar1 == uVar4 - 20) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		unk1DC = CLBPalFrame(30);
 	} else if (uVar1 == uVar4) {
 		mThrowCtrl->throwMario(this);

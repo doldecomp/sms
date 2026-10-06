@@ -30,7 +30,7 @@ public:
 	struct TActorData {
 		/* 0x0 */ const char* mActorName;
 		/* 0x4 */ u32 mActorType;
-		/* 0x8 */ u32 mHitFlags;
+		/* 0x8 */ u32 mHitFilter;
 		/* 0xC */ f32 mAttackRadius;
 		/* 0x10 */ f32 mAttackHeight;
 		/* 0x14 */ f32 mDamageRadius;

@@ -408,9 +408,9 @@ void TSamboFlower::init(TLiveManager* param_1)
 		mScaledBodyRadius = mBodyScale * mBodyRadius;
 	}
 
-	initHitActor(0x10000027, 1, 0x80000000, mBodyRadius, mHeadHeight,
+	initHitActor(0x10000027, 1, HIT_CATEGORY_PLAYER, mBodyRadius, mHeadHeight,
 	             mBodyRadius, mHeadHeight);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	initAnmSound();
 	mActorType = 0x10000027;
@@ -446,7 +446,7 @@ void TSamboFlower::reset()
 {
 	TSpineEnemy::reset();
 	mMActor->setBck("flower_wait");
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	offLiveFlag(LIVE_FLAG_UNK800);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -495,7 +495,7 @@ void TSamboFlower::drawObject(JDrama::TGraphics* param_1)
 	TCircleShadowRequest request;
 	request.mPosition = mPosition;
 	request.mRadiusX = request.mRadiusZ = 120.0f;
-	gpBindShadowManager->request(request, getActorType() & ACTOR_TYPE_MASK);
+	gpBindShadowManager->request(request, getActorType() & HIT_CATEGORY_MASK);
 	mMActor->setLightData(mGroundPlane, mPosition);
 	mMActor->entry();
 }
@@ -524,7 +524,7 @@ bool TSamboFlower::isBloomEnd()
 
 void TSamboFlower::hide()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mMActor->setBck("flower_fwait");
 	onLiveFlag(LIVE_FLAG_DEAD);
 }
@@ -590,7 +590,7 @@ void THanaSamboHead::checkHit()
 	}
 }
 
-void THanaSamboHead::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
+void THanaSamboHead::kill() { onHitFilter(HIT_FILTER_NO_COLLISION); }
 
 THanaSambo::THanaSambo(const char* param_1)
     : TSmallEnemy(param_1)
@@ -630,7 +630,7 @@ void THanaSambo::init(TLiveManager* param_1)
 
 	unk194 = new THanaSamboHead;
 	((TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ"))->add(unk194);
-	unk194->initHitActor(0x1000001B, 2, 0x80000000,
+	unk194->initHitActor(0x1000001B, 2, HIT_CATEGORY_PLAYER,
 	                     unk198->mSLHeadAttackRadius.get() * mBodyScale,
 	                     unk198->mSLHeadAttackHeight.get() * mBodyScale,
 	                     unk198->mSLHeadDamageRadius.get() * mBodyScale,
@@ -802,7 +802,7 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 		self->setBckAnm(6);
 		gpMarioParticleManager->emit(PARTICLE_MS_SMB_AP_ROCK, &self->mPosition,
 		                             0, nullptr);
@@ -906,7 +906,7 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 
 	if (self->checkCurAnmEnd(0)) {
 		self->initFlower();
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->setBckAnm(6);
 		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 		self->onLiveFlag(LIVE_FLAG_HIDDEN);
@@ -927,7 +927,7 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 	THanaSambo* self = (THanaSambo*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->setDeadAnm();
 	} else if (self->checkCurAnmEnd(0) || spine->getTime() > 300) {
 		static int jIndexTable[] = { 1, 3, 4, 5 };
@@ -952,7 +952,7 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		spine->reset();
 		spine->setNext(&TNerveSmallEnemyDie::theNerve());
 		spine->pushAfterCurrent(spine->getDefault());
@@ -1196,7 +1196,7 @@ void TSamboHead::initFlower()
 		unk198->reset();
 	}
 
-	unk198->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk198->offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk198->onLiveFlag(LIVE_FLAG_UNK10);
 	unk198->offLiveFlag(LIVE_FLAG_DEAD);
 	unk198->mPosition.y = mGroundHeight;
@@ -1311,7 +1311,7 @@ DEFINE_NERVE(TNerveSamboHeadAppear, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (self->unk198->unk150) {
 			self->unk198->bloom();
 			self->setBckAnm(10);
@@ -1405,7 +1405,7 @@ DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(4);
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		gpMarioParticleManager->emit(PARTICLE_MS_SMB_HD_ROCK, &self->mPosition,
 		                             0, nullptr);
 		gpMarioParticleManager->emit(PARTICLE_MS_SMB_HD_SMOKE, &self->mPosition,

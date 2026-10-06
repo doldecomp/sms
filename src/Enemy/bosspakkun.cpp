@@ -120,8 +120,8 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
     , unk88(0.0f)
 {
 	unk6C.zero();
-	initHitActor(0x800000F, 1, 0x80000000, 0.0f, 0.0f, 100.0f, 200.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x800000F, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 100.0f, 200.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	group->getChildren().push_back(this);
@@ -141,7 +141,7 @@ void TBPPolDrop::drop()
 void TBPPolDrop::move()
 {
 	if (unk80 == 0) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		return;
 	}
 
@@ -165,11 +165,11 @@ void TBPPolDrop::move()
 			if (nextPosition.y < groundHeight) {
 				drop();
 				nextPosition.y = groundHeight;
-				onHitFlag(HIT_FLAG_NO_COLLISION);
+				onHitFilter(HIT_FILTER_NO_COLLISION);
 				return;
 			}
 
-			offHitFlag(HIT_FLAG_NO_COLLISION);
+			offHitFilter(HIT_FILTER_NO_COLLISION);
 			if (gpMap->isTouchedOneWallAndMoveXZ(
 			        &nextPosition.x, nextPosition.y, &nextPosition.z, 80.0f))
 				unk80 = 0;
@@ -320,8 +320,9 @@ TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
     , unk98(0)
 {
 	mActor = mOwner->getActorKeeper()->createMActor("trunade.bmd", 0);
-	initHitActor(0x8000010, 5, 0x81000000, 150.0f, 600.0f, 100.0f, 600.0f);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x8000010, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 150.0f,
+	             600.0f, 100.0f, 600.0f);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mActor->setBtkFromIndex(2);
 	mActor->setBckFromIndex(29);
 	mActor->setBrkFromIndex(1);
@@ -330,7 +331,7 @@ TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
 
 void TBPTornado::vanish()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk98 = 2;
 
 	J3DFrameCtrl* frameCtrl = mActor->getFrameCtrl(ANM_TYPE_BRK);
@@ -456,7 +457,7 @@ void TBPTornado::launch(const JGeometry::TVec3<f32>& target)
 	mPosition = mOwner->mPosition;
 	unk7C     = mOwner->mPosition;
 	unk94     = mOwner->getBossPakkunParams()->mSLTornadoMoveInit.get();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	J3DFrameCtrl* frameCtrl = mActor->getFrameCtrl(ANM_TYPE_BRK);
 	frameCtrl->setFrame(0.0f);
@@ -467,8 +468,9 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
 {
-	initHitActor(0x8000010, 5, 0x81000000, 300.0f, 500.0f, 300.0f, 500.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x8000010, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f,
+	             500.0f, 300.0f, 500.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
@@ -557,8 +559,9 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
 {
-	initHitActor(0x8000011, 1, 0x80000000, 200.0f, 300.0f, 200.0f, 300.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x8000011, 1, HIT_CATEGORY_PLAYER, 200.0f, 300.0f, 200.0f,
+	             300.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
@@ -759,8 +762,9 @@ void TBossPakkun::init(TLiveManager* manager)
 
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
-	initHitActor(0x800000F, 1, 0x80000000, 80.0f, 300.0f, 80.0f, 300.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x800000F, 1, HIT_CATEGORY_PLAYER, 80.0f, 300.0f, 80.0f,
+	             300.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
 		mHeadHit = new TBPHeadHit(this, "ボスパックン頭部");
@@ -1117,13 +1121,13 @@ void TBossPakkun::setGroundCollision()
 void TBossPakkun::kill()
 {
 	TLiveActor::kill();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	if (mHeadHit != nullptr)
-		mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+		mHeadHit->onHitFilter(HIT_FILTER_NO_COLLISION);
 	if (mNavel != nullptr)
-		mNavel->onHitFlag(HIT_FLAG_NO_COLLISION);
+		mNavel->onHitFilter(HIT_FILTER_NO_COLLISION);
 	if (mPolDrop != nullptr)
-		mPolDrop->onHitFlag(HIT_FLAG_NO_COLLISION);
+		mPolDrop->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TBossPakkun::receiveMessage(THitActor* sender, u32)
@@ -1727,7 +1731,7 @@ DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(5);
-		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->mHeadHit->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (spine->getTime() == 30)
@@ -1737,7 +1741,7 @@ DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
 		boss->unk1BC = 1;
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		boss->mHeadHit->offHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->mHeadHit->offHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
 
@@ -1761,7 +1765,7 @@ DEFINE_NERVE(TNerveBPPreDie, TLiveActor)
 	MActor* actor     = boss->mMActor;
 	if (spine->getTime() == 0) {
 		boss->changeBck(5);
-		boss->mHeadHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+		boss->mHeadHit->onHitFilter(HIT_FILTER_NO_COLLISION);
 		boss->resetWaterMark();
 		boss->killSmallEnemies();
 		MSBgm::stopTrackBGM(1, 10);

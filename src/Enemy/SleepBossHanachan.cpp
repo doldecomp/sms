@@ -41,7 +41,7 @@ void TSleepBossHanachan::init(TLiveManager* param_1)
 	initBase(param_1, 3);
 	mSpine->initWith(&TNerveSBH_SleepContinue::theNerve());
 	initHitActor(0x08000016, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	initAnmSound();
 	getMActor()->setBckFromIndex(1);
 	setCurAnmSound();

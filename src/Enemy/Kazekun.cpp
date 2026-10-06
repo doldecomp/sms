@@ -72,9 +72,9 @@ void TKazekun::initCollision()
 	mHeadHeight       = 40.0f;
 	mBodyRadius       = 50.0f;
 	mScaledBodyRadius = 50.0f;
-	initHitActor(0x10000029, 1, 0x80000000, getBodyRadius(), getHeadHeight(),
-	             getBodyRadius(), getHeadHeight());
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x10000029, 1, HIT_CATEGORY_PLAYER, getBodyRadius(),
+	             getHeadHeight(), getBodyRadius(), getHeadHeight());
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TKazekun::initParticle()
@@ -379,7 +379,7 @@ DEFINE_NERVE(TNerveKazekunTurn, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->changeBck("kazekun_wait");
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	self->flyAroundMario();
@@ -455,7 +455,7 @@ DEFINE_NERVE(TNerveKazekunDisappear, TLiveActor)
 		self->changeBck("kazekun_vanish");
 		self->emitAppearEffect();
 		self->mVelocity = JGeometry::TVec3<f32>(0.0f);
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (self->checkCurAnmEnd(0)) {

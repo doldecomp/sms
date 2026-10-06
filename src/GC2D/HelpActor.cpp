@@ -23,7 +23,7 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 	stream >> auStack_c;
 	stream >> local_10;
 	unk6C = stream.readString();
-	initHitActor(0x40000320, 1, -0x80000000, mScaling.x * 100.0f,
+	initHitActor(0x40000320, 1, HIT_CATEGORY_PLAYER, mScaling.x * 100.0f,
 	             mScaling.y * 100.0f, 1.0f, 1.0f);
 	unk68 = local_10 + VERSION_SELECT(GMSJ01(0xE0030), GMSP01(0x33));
 }

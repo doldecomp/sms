@@ -295,7 +295,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	int num = getActiveObjNum();
 	if (param_1 & CUE_MOVE) {
 		for (int i = num; i < mObjNum; ++i)
-			getObj(i)->onHitFlag(HIT_FLAG_NO_COLLISION);
+			getObj(i)->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	for (int i = 0; i < num; ++i) {
@@ -447,8 +447,8 @@ void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
 	if (!mObjNum)
 		return;
 
-	if (!getObj(0)->checkActorType(ACTOR_TYPE_ENEMY)
-	    && !getObj(0)->checkActorType(ACTOR_TYPE_BOSS))
+	if (!getObj(0)->isHitCategory(HIT_CATEGORY_ENEMY)
+	    && !getObj(0)->isHitCategory(HIT_CATEGORY_BOSS))
 		return;
 
 	for (int i = 0; i < mObjNum; ++i) {

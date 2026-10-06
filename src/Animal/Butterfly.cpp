@@ -32,8 +32,8 @@ TButterfly::TButterfly(MActor* actor, TButterfloid* butterfloid)
 void TButterfly::init()
 {
 	initHitActor(0x10000030, 0, 0, 0.0f, 0.0f, 50.0f, 50.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_ATTACK);
 
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
@@ -79,7 +79,7 @@ void TButterfloid::init(TLiveManager* manager)
 	mManager->manageActor(this);
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 	initHitActor(0, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TButterfloid::initBoids()
@@ -91,7 +91,7 @@ void TButterfloid::initBoids()
 void TButterfloid::receiveMessageFromChild(TButterfly* child)
 {
 	child->onFlag(TRealoidActor::FLAG_UNK4);
-	child->onHitFlag(HIT_FLAG_NO_COLLISION);
+	child->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	if (++mNumEaten == unk150->getBoidNum()) {
 		TMapObjBase* obj = mItem;

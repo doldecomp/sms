@@ -239,7 +239,7 @@ void TIceBlock::control()
 		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	setDamageRadius(mScaling.x * 80.0f);
 	setDamageHeight(mScaling.y * 250.0f);
 
@@ -255,7 +255,7 @@ void TIceBlock::control()
 		                          nullptr, 0, 4);
 
 		setObjHitData(0);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		removeMapCollision();
 
 		if (mScaling.x < 0.1f)
@@ -338,7 +338,7 @@ void TJuiceBlock::kill()
 #ifdef VERSION_GMSP01
 void TJuiceBlock::touchActor(THitActor* actor)
 {
-	if (actor->checkActorType(ACTOR_TYPE_UNK40000000)
+	if (actor->isHitCategory(HIT_CATEGORY_MAP_OBJECT)
 	    && !actor->isActorType(0x400002C6))
 		kill();
 }

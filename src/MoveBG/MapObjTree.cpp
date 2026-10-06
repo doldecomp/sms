@@ -264,7 +264,7 @@ void TMapObjTreeScale::control()
 			mScaling.z = 1.0f;
 			onMapObjFlag(MAP_OBJ_FLAG_UNK100);
 			getModel()->calc();
-			offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+			offHitFilter(HIT_FILTER_NO_ATTACK);
 			setUpCurrentMapCollision();
 			mState = STATE_NORMAL;
 		}
@@ -306,8 +306,8 @@ void TMapObjTreeScale::beSmall()
 {
 	mScaling.set(mScaleMin, mScaleMin, mScaleMin);
 	sleep();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_ATTACK);
 	setObjHitData(0);
 	mDamageRadius = mAttackRadius;
 	calcEntryRadius();

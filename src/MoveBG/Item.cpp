@@ -67,7 +67,7 @@ void TItem::taken(THitActor* param_1)
 void TItem::touchPlayer(THitActor* param_1)
 {
 	if ((param_1->isActorType(0x80000001) || param_1->isActorType(0x8000083))
-	    && !checkHitFlag(HIT_FLAG_NO_COLLISION))
+	    && !checkHitFilter(HIT_FILTER_NO_COLLISION))
 		taken(param_1);
 }
 
@@ -130,7 +130,7 @@ void TItem::appearing()
 			                     mAppearedScaleSpeed * 2.0f });
 		} else {
 			makeObjAppeared();
-			onHitFlag(HIT_FLAG_NO_COLLISION);
+			onHitFilter(HIT_FILTER_NO_COLLISION);
 			offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 		}
 	} else {
@@ -144,14 +144,14 @@ void TItem::killByTimer(int param_1)
 	mStateTimer = unk150;
 
 	offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
 
 void TItem::appear()
 {
 	TMapObjGeneral::appear();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mStateTimer = unk150;
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
@@ -161,9 +161,9 @@ void TItem::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if ((cue & CUE_MOVE) && checkHitFlag(HIT_FLAG_NO_COLLISION)
+	if ((cue & CUE_MOVE) && checkHitFilter(HIT_FILTER_NO_COLLISION)
 	    && !isStateTimerEngaged()) {
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
 			onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 			mStateTimer = unk14C;
@@ -269,8 +269,8 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (isStateTimerEngaged()) {
 			--mStateTimer;
 		} else {
-			if (checkHitFlag(HIT_FLAG_NO_COLLISION)) {
-				offHitFlag(HIT_FLAG_NO_COLLISION);
+			if (checkHitFilter(HIT_FILTER_NO_COLLISION)) {
+				offHitFilter(HIT_FILTER_NO_COLLISION);
 				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
 					onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 					mStateTimer = unk14C;
@@ -603,7 +603,7 @@ void TShine::control()
 			break;
 		if (unkF8 & 0x20000000)
 			MSBgm::setTrackVolume(0, 1.0f, 10, 0);
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		mState = STATE_UNK11;
 	} break;
 
@@ -669,7 +669,7 @@ void TShine::touchPlayer(THitActor* actor)
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_SHINE, &mPosition, 0, nullptr,
 	                                0, 4);
 	getMActor()->setBck("shine_float");
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
@@ -705,7 +705,7 @@ void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 
 	mStateTimer = unk174;
 	mState      = STATE_UNKB;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 s32 TShine::appearWithTimeCallback(uintptr_t param_1, u32 param_2)
@@ -743,7 +743,7 @@ void TShine::appearSimple(int param_1)
 
 	mStateTimer = unk174;
 	mState      = STATE_UNKB;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TShine::appearWithDemo(const char* param_1)
@@ -1105,7 +1105,7 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 		return;
 
 	if ((param_1->isActorType(0x80000001) || param_1->isActorType(0x8000083))
-	    && !checkHitFlag(HIT_FLAG_NO_COLLISION))
+	    && !checkHitFilter(HIT_FILTER_NO_COLLISION))
 		taken(param_1);
 
 	int boxKind;
@@ -1126,7 +1126,7 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 
 void TItemNozzle::put()
 {
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mState = STATE_NORMAL;
 }
 
@@ -1140,7 +1140,7 @@ BOOL TItemNozzle::receiveMessage(THitActor* sender, u32 message)
 	if (message == HIT_MESSAGE_THROWN) {
 		mVelocity.set(0.0f, 20.0f, 0.0f);
 		offLiveFlag(LIVE_FLAG_UNK10);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mState = 0xB;
 		return TRUE;
 	}
@@ -1154,7 +1154,7 @@ void TItemNozzle::appearing()
 		return;
 
 	mState = STATE_NORMAL;
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TItemNozzle::control() { TMapObjGeneral::control(); }
@@ -1185,7 +1185,7 @@ void TNozzleBox::makeModelValid()
 		appear();
 	}
 	makeObjAppeared();
-	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	offHitFilter(HIT_FILTER_NO_DAMAGE);
 	SMS_ShowAllShapePacket(getModel());
 	unk15C = true;
 }
@@ -1196,7 +1196,7 @@ void TNozzleBox::makeModelInvalid()
 		mContainedNozzleItem->kill();
 		appear();
 	}
-	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	startAnim(3);
 	unk15C = false;
 }

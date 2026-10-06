@@ -189,14 +189,16 @@ public:
 	 * forceRequest to bypass culling.
 	 *
 	 * @param request Description of the shadow.
+	 * @param actor_type Type of the requesting actor.
 	 */
-	void request(const TCircleShadowRequest& request, u32);
+	void request(const TCircleShadowRequest& request, u32 actor_type);
 	/**
 	 * @brief Requests for a shadow to be drawn on this frame bypassing culling.
 	 *
 	 * @param request Description of the shadow.
+	 * @param actor_type Type of the requesting actor.
 	 */
-	void forceRequest(const TCircleShadowRequest& request, u32);
+	void forceRequest(const TCircleShadowRequest& request, u32 actor_type);
 	void calcVtx();
 
 public:

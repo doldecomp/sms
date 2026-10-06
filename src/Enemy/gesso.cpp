@@ -713,7 +713,7 @@ void TGesso::rollCheck()
 	                unk1E8->mSLSearchAngleOnObj.get(), aware)) {
 		if ((mIsRightSideUp && mPosition.y > SMS_GetMarioPos().y + 10.0f)
 		    || (!mIsRightSideUp && mPosition.y < SMS_GetMarioPos().y - 10.0f)) {
-			onHitFlag(HIT_FLAG_NO_COLLISION);
+			onHitFilter(HIT_FILTER_NO_COLLISION);
 			mState = STATE_ROLLING;
 			mSpine->pushNerve(&TNerveGessoRolling::theNerve());
 			if (mIsRightSideUp)
@@ -735,7 +735,7 @@ void TGesso::rollCheck()
 
 void TGesso::rollEnd()
 {
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mState         = STATE_BEAM_CHILLING;
 	mIsRightSideUp = !mIsRightSideUp;
 	if (mIsRightSideUp)
@@ -761,7 +761,7 @@ void TGesso::turnIn()
 {
 	setBckAnm(2);
 	mTurnAngle = 0.0f;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 bool TGesso::turning()
@@ -784,7 +784,7 @@ void TGesso::turnOut()
 {
 	mTurnAngle = 0.0f;
 	unk1C4     = !unk1C4;
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 bool TGesso::checkDropInWater()
@@ -853,9 +853,9 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 	    ->getChildren()
 	    .push_back(this);
 
-	THitActor::initHitActor(0x10000006, 1, -0x80000000, 10.0f, 10.0f, 10.0f,
-	                        10.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	THitActor::initHitActor(0x10000006, 1, HIT_CATEGORY_PLAYER, 10.0f, 10.0f,
+	                        10.0f, 10.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150       = 0;
 	mGroundPlane = TMap::getIllegalCheckData();
 }
@@ -875,7 +875,7 @@ void TGessoPolluteObj::pollute()
 	unk168 = 0;
 	mMActor->setBck("gero_run1");
 	mMActor->setBck("gero_run_loop1");
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	f32 scale  = unk164;
 	mScaling.z = scale;
 	mScaling.y = scale;
@@ -908,12 +908,12 @@ void TGessoPolluteObj::rebirth()
 	if (unk158 > 20) {
 		unk150 = 0;
 		unk158 = 0;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (mPosition.y < mGroundHeight - 30.0f) {
 		mVelocity.y = 0.0f;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
 

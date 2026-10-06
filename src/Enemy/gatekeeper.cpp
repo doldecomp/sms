@@ -71,8 +71,9 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
     , mJointIndex(joint_idx)
     , mVulnerable(0)
 {
-	initHitActor(0x10000022, 1, 0x80000000, 0.0f, 0.0f, 150.0f, 200.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x10000022, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 150.0f,
+	             200.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
@@ -275,8 +276,9 @@ TBGKObstacle::TBGKObstacle(TBiancoGateKeeper* owner, const char* name)
 {
 	mPosition = owner->mPosition;
 	mPosition.y -= 1000.0f;
-	initHitActor(0x10000022, 1, 0x80000000, 800.0f, 800.0f, 800.0f, 800.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x10000022, 1, HIT_CATEGORY_PLAYER, 800.0f, 800.0f, 800.0f,
+	             800.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
@@ -340,11 +342,12 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 			mStampScale.scale(1.4f);
 	}
 
-	initHitActor(0x10000022, 5, 0x81000000, 400.0f, 150.0f, 400.0f, 150.0f);
+	initHitActor(0x10000022, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
+	             400.0f, 150.0f, 400.0f, 150.0f);
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mSpine->initWith(&TNerveBGKSleep::theNerve());
 
@@ -380,18 +383,18 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 		mStampModel->calc();
 
 	if (checkLiveFlag(LIVE_FLAG_DEAD)) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mHead->onHitFlag(HIT_FLAG_NO_COLLISION);
-		mObstacle->onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
+		mHead->onHitFilter(HIT_FILTER_NO_COLLISION);
+		mObstacle->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
 
 void TBiancoGateKeeper::kill()
 {
 	onLiveFlag(LIVE_FLAG_DEAD);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mHead->onHitFlag(HIT_FLAG_NO_COLLISION);
-	mObstacle->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mHead->onHitFilter(HIT_FILTER_NO_COLLISION);
+	mObstacle->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBiancoGateKeeper::changeBck(int param_1)
@@ -463,7 +466,7 @@ void TBiancoGateKeeper::launchNamekuri()
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
 			enemy->onLiveFlag(LIVE_FLAG_UNK8000);
-			enemy->offHitFlag(HIT_FLAG_NO_COLLISION);
+			enemy->offHitFilter(HIT_FILTER_NO_COLLISION);
 			enemy->mSpine->pushNerve(&TNerveNameKuriDiffuse::theNerve());
 		}
 	}
@@ -753,7 +756,7 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->changeBck(0xA);
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 		self->getMActor()->setBpkFromIndex(0);
 		J3DFrameCtrl* fc = self->getMActor()->getFrameCtrl(ANM_TYPE_BPK);
 		if (fc != NULL) {

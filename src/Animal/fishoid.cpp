@@ -181,7 +181,7 @@ void TRealoid::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk154[i]->perform(cue, graphics);
 }
 
-void TFish::init() { mHitFlags |= HIT_FLAG_NO_COLLISION; }
+void TFish::init() { mHitFilter |= HIT_FILTER_NO_COLLISION; }
 
 TFishoid::TFishoid(int type, const char* name)
     : TRealoid(name)
@@ -220,7 +220,7 @@ void TFishoid::init(TLiveManager* manager)
 	mManager->manageActor(this);
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 	initHitActor(0, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TFishoid::initBoids()

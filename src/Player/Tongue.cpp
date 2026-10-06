@@ -67,8 +67,11 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	mActorTypeInMouth = 0;
 	unkD4             = 0;
 
-	initHitActor(0x08000083U, 5U, 0x70000000, 1000.0f, 500.0f, 50.0f, 500.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x08000083U, 5U,
+	             HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ITEM
+	                 | HIT_CATEGORY_ENEMY,
+	             1000.0f, 500.0f, 50.0f, 500.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TYoshiTongue::initInLoadAfter()
@@ -186,7 +189,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 				ok = 1;
 			if (type == 0x4000005A)
 				ok = 1;
-			if (type & ACTOR_TYPE_ENEMY ? true : false)
+			if (type & HIT_CATEGORY_ENEMY ? true : false)
 				ok = 1;
 		}
 
@@ -231,7 +234,7 @@ void TYoshiTongue::movement()
 	default:
 		mAttackRadius = 300.0f;
 		calcEntryRadius();
-		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		offHitFilter(HIT_FILTER_NO_ATTACK);
 		break;
 
 	case STATE_EXTENDING:

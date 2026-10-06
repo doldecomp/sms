@@ -704,7 +704,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (unk1DC > 0) {
 				unk1DC -= 1;
 				if (unk1DC == 0 && mHolder == nullptr) {
-					offHitFlag(HIT_FLAG_NO_COLLISION);
+					offHitFilter(HIT_FILTER_NO_COLLISION);
 					offLiveFlag(LIVE_FLAG_UNK10000000);
 				}
 			}

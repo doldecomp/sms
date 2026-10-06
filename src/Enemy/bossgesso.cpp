@@ -127,10 +127,10 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	initHitActor(0x8000008, 1, -0x80000000, 0.0f, 0.0f,
+	initHitActor(0x8000008, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
 	             mOwner->getSaveParams()->mSLBeakDamageRadius.get(),
 	             mOwner->getSaveParams()->mSLBeakDamageHeight.get());
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unkA4.zero();
 }
 
@@ -290,10 +290,10 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	initHitActor(0x8000009, 1, 0x1000000, 0.0f, 0.0f,
+	initHitActor(0x8000009, 1, HIT_CATEGORY_WATER, 0.0f, 0.0f,
 	             mOwner->getSaveParams()->mSLEyeDamageRadius.get(),
 	             mOwner->getSaveParams()->mSLEyeDamageHeight.get());
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
@@ -327,8 +327,9 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	initHitActor(0x8000005, 1, -0x7f000000, 300.0f, 300.0f, 300.0f, 300.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x8000005, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f,
+	             300.0f, 300.0f, 300.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
@@ -589,8 +590,9 @@ void TBossGesso::init(TLiveManager* param_1)
 	mRightEye = new TBGEyeHit(this, 4);
 	mBody     = new TBGBodyHit(this, 0);
 
-	initHitActor(0x8000005, 5, -0x7f000000, 300.0f, 300.0f, 300.0f, 300.0f);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x8000005, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f,
+	             300.0f, 300.0f, 300.0f);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mSpine->initWith(&TNerveBGWait::theNerve());
 	mMtxCalc = new TBossGessoMtxCalc(this);

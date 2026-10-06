@@ -312,7 +312,7 @@ void TWaterHitPictureHideObj::afterFinishedAnim()
 	}
 
 	removeMapCollision();
-	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	appearObjFromPoint(getObjAppearPos());
 	mState = STATE_FINISHED;
 }
@@ -392,9 +392,9 @@ BOOL TWaterHitPictureHideObj::receiveMessage(THitActor* sender, u32 message)
 	if (message == HIT_MESSAGE_UNK5
 	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
 	        || sender->isActorType(0x20000010))) {
-		offHitFlag(HIT_FLAG_NO_COLLISION);
-		offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_DAMAGE);
+		offHitFilter(HIT_FILTER_NO_ATTACK);
 		mState       = STATE_NORMAL;
 		mAllowReveal = true;
 		return TRUE;
@@ -540,7 +540,7 @@ TWaterHitPictureHideObj::TWaterHitPictureHideObj(const char* name)
 void THideObjPictureTwin::afterFinishedAnim()
 {
 	removeMapCollision();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	if (mHiddenObj != nullptr && mAllowReveal) {
 		TMapObjBase* obj = mHiddenObj;
@@ -622,7 +622,7 @@ void TBreakHideObj::kill()
 {
 	startAnim(2);
 	removeMapCollision();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 	mStateTimer = -1;
 	mState      = 2;
@@ -686,7 +686,7 @@ void TWoodBox::kill()
 {
 	startAnim(2);
 	removeMapCollision();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 	mStateTimer = -1;
 	mState      = 2;

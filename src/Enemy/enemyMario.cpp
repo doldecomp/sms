@@ -308,8 +308,8 @@ void TEnemyMario::initEnemyValues()
 	mRunAwayNodeIndex    = 0;
 	mRunAwaySpeed        = 10.0f;
 
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mEMario->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	int modelIndex = 6;
 	for (int i = 0; i < 5; ++i) {
@@ -362,11 +362,11 @@ void TEnemyMario::initEnemyValues()
 	int shadowMarioEvent
 	    = TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT);
 	if (shadowMarioEvent == 0) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
+		mEMario->onHitFilter(HIT_FILTER_NO_COLLISION);
 	} else {
-		offHitFlag(HIT_FLAG_NO_COLLISION);
-		mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
+		mEMario->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (shadowMarioEvent == 2) {
@@ -782,8 +782,8 @@ void TEnemyMario::emTurning()
 
 void TEnemyMario::emHide()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mEMario->onHitFilter(HIT_FILTER_NO_COLLISION);
 	++mEMDoingTimer;
 	if (!gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z)
 	    || mEMDoingTimer > 7200) {
@@ -797,8 +797,8 @@ void TEnemyMario::emAppear()
 {
 	if (mInvincibilityFrames == 0) {
 		changeEMDoing(EM_DOING_WAITING);
-		offHitFlag(HIT_FLAG_NO_COLLISION);
-		mEMario->offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
+		mEMario->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
 
@@ -826,8 +826,8 @@ void TEnemyMario::startDisappear(u16 doing)
 
 void TEnemyMario::emDisappear()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mEMario->onHitFilter(HIT_FILTER_NO_COLLISION);
 	offEMFlag(EM_FLAG_DISP_PENCIL);
 	offUnk114(UNK114_FLAG_VISIBLE);
 	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, false);
@@ -841,8 +841,8 @@ void TEnemyMario::emDisappearToGate()
 		onEMFlag(EM_FLAG_DISP_PENCIL);
 	}
 
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mEMario->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mEMario->onHitFilter(HIT_FILTER_NO_COLLISION);
 	runAwayMoveEffect();
 
 	if (mEMDoingTimer == 0) {

@@ -143,7 +143,7 @@ void TBombHei::changeOut()
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	genEventCoin();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mPosition = mJuiceBlock->mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TLS_CHANGE,
@@ -157,7 +157,7 @@ bool TBombHei::isHitValid(u32 param_1)
 {
 	if (param_1 == HIT_MESSAGE_UNKB) {
 		onLiveFlag(LIVE_FLAG_DEAD);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		genEventCoin();
 		return false;
 	}
@@ -215,7 +215,7 @@ void TBombHei::calcRootMatrix()
 	TSpineEnemy::calcRootMatrix();
 	if (gpMarDirector->checkFlag(0xF)) {
 		onLiveFlag(LIVE_FLAG_DEAD);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 	if (isBckAnm(0) && mMActor->getFrameCtrl(0)->checkPass(2.0f)) {
 		TEffectExplosion* effect
@@ -354,7 +354,7 @@ bool TBombHei::isDamageToCannon()
 {
 	if (mSpine->getCurrentNerve() == &TNerveBombHeiThrown::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveBombHeiExplosion::theNerve()) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
 	return false;
@@ -487,7 +487,7 @@ DEFINE_NERVE(TNerveBombHeiThrown, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 	if (spine->getTime() == 120)
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 	if (!self->isAirborne()) {
 		self->genEventCoin();
 		spine->pushAfterCurrent(&TNerveBombHeiExplosion::theNerve());
@@ -531,7 +531,7 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 	if (self->unk190 < self->unk1A0) {
 		self->unk190 *= 1.2f;
 	} else if (self->checkCurAnmEnd(0)) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);

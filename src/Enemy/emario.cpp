@@ -133,15 +133,19 @@ void TEMario::init(TLiveManager* manager)
 		                         "H_kagemario_dummy");
 	}
 
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 
 	if (!mAnmSound)
 		initAnmSound();
 
-	initHitActor(0x8000002, 0x4, 0xe5000000, 70.0f, 45.0f, 60.0f, 40.0f);
+	initHitActor(0x8000002, 0x4,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
+	                 | HIT_CATEGORY_ITEM | HIT_CATEGORY_NPC
+	                 | HIT_CATEGORY_WATER,
+	             70.0f, 45.0f, 60.0f, 40.0f);
 
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK10);
 }
 

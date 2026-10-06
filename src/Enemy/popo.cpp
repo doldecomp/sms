@@ -165,7 +165,7 @@ void TPopoCollision::checkHit()
 	}
 }
 
-void TPopoCollision::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
+void TPopoCollision::kill() { onHitFilter(HIT_FILTER_NO_COLLISION); }
 
 static int PopoRollCallback(J3DNode* param_1, int param_2)
 {
@@ -297,7 +297,7 @@ void TPopo::init(TLiveManager* param_1)
 	unk150 = 0x11;
 	unk194 = (TPopoSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
-	onHitFlag(HIT_FLAG_UNK8000000);
+	onHitFilter(HIT_CATEGORY_BOSS);
 	mMActor->setJointCallback(mCenterJntIndex, PopoRollCallback);
 	mMActorKeeper->getMActor("popoL.bmd")
 	    ->setJointCallback(mCenterJntIndex, PopoRollCallback);
@@ -313,7 +313,10 @@ void TPopo::init(TLiveManager* param_1)
 	    JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk23C);
-	unk23C->initHitActor(0x1000000D, 2, 0x98000000, 80.0f, 80.0f, 80.0f, 80.0f);
+	unk23C->initHitActor(0x1000000D, 2,
+	                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY
+	                         | HIT_CATEGORY_BOSS,
+	                     80.0f, 80.0f, 80.0f, 80.0f);
 	unk23C->kill();
 	unk23C->unk68 = this;
 }
@@ -402,8 +405,8 @@ bool TPopo::checkTrigger()
 	if (pressure < 20 && (unk1CC || unk198 > levelLimit)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_POPO_POP, &mPosition, 0,
 		                                nullptr, 0, 4);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		unk23C->offHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
+		unk23C->offHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
 
@@ -805,7 +808,7 @@ void TPopo::possessedIn()
 	mMActor->setFrameRate(0.0f, 3);
 
 	if (!mExplosionSw)
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mMActor->setBrkFromIndex(0);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
@@ -907,15 +910,15 @@ DEFINE_NERVE(TNervePopoFly, TLiveActor)
 		f32 angle = MsGetRotFromZaxisY(vel);
 		self->mRotation.set(0.0f, MsWrap(angle, 0.0f, 360.0f), 0.0f);
 		if (TPopo::mExplosionSw)
-			self->offHitFlag(HIT_FLAG_NO_COLLISION);
+			self->offHitFilter(HIT_FILTER_NO_COLLISION);
 	} else if (!self->isAirborne()) {
 		spine->pushAfterCurrent(&TNervePopoExplosion::theNerve());
 		return true;
 	}
 
 	if (spine->getTime() > 5) {
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
-		self->unk23C->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
+		self->unk23C->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 	self->flyBehavior();
 	return false;
@@ -928,7 +931,7 @@ DEFINE_NERVE(TNervePopoExplosion, TLiveActor)
 		self->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		self->getMActor()->setFrameRate(0.0f, 0);
 		self->releaseNozzle();
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->explosionEffect();
 	}

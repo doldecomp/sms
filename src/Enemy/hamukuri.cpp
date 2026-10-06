@@ -642,7 +642,7 @@ void THamuKuri::init(TLiveManager* param_1)
 	mActorType = 0x10000002;
 	unk150     = 17;
 	unk1F4     = (THamuKuriSaveLoadParams*)getSaveParam();
-	onHitFlag(0x40000000);
+	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 }
@@ -729,7 +729,7 @@ void THamuKuri::releaseCap()
 		heldObj->offLiveFlag(LIVE_FLAG_HIDDEN);
 		heldObj->mPosition   = mPosition;
 		heldObj->mPosition.y = mGroundHeight;
-		heldObj->offHitFlag(HIT_FLAG_NO_COLLISION);
+		heldObj->offHitFilter(HIT_FILTER_NO_COLLISION);
 		heldObj->makeObjDead();
 		mHeldObject = nullptr;
 	}
@@ -862,7 +862,7 @@ void THamuKuri::moveObject()
 			}
 
 			offLiveFlag(LIVE_FLAG_HIDDEN);
-			offHitFlag(HIT_FLAG_NO_COLLISION);
+			offHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 	}
 
@@ -949,7 +949,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 		holder->onLiveFlag(LIVE_FLAG_HIDDEN);
 		holder->offLiveFlag(LIVE_FLAG_DEAD);
 		holder->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-		holder->onHitFlag(HIT_FLAG_NO_COLLISION);
+		holder->onHitFilter(HIT_FILTER_NO_COLLISION);
 		getManager()->unk70 = holder;
 
 		// TODO: this is an inline
@@ -1124,7 +1124,7 @@ MtxPtr THamuKuri::getTakingMtx()
 	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
 	                               mPosition.z, &mGroundPlane);
 
-	mHeldObject->onHitFlag(HIT_FLAG_NO_COLLISION);
+	mHeldObject->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	TPosition3f mat;
 	mat.translation(mPosition.x, dVar4, mPosition.z);
@@ -1204,8 +1204,8 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 	}
 
 	u32 actorType = param_1->getActorType();
-	if ((actorType & 0xFFFF0000) == 0x40000000 && actorType >= 0x40000390
-	    && actorType <= 0x40000394) {
+	if ((actorType & HIT_CATEGORY_MASK) == HIT_CATEGORY_MAP_OBJECT
+	    && actorType >= 0x40000390 && actorType <= 0x40000394) {
 		TLiveActor* enemy         = (TLiveActor*)param_1;
 		JGeometry::TVec3<f32> vel = enemy->mVelocity;
 		if (abs(vel.y) > 2.0f && (abs(vel.x) > 2.0f || abs(vel.z) > 2.0f)) {
@@ -1611,7 +1611,7 @@ void TDoroHaneKuri::setBehavior()
 
 bool TDoroHaneKuri::isCollidMove(THitActor* param_1)
 {
-	if ((param_1->getActorType() & 0xffff0000) == 0x40000000) {
+	if (param_1->getHitCategory() == HIT_CATEGORY_MAP_OBJECT) {
 		TMapObjBase* mapObj = (TMapObjBase*)param_1;
 		if (mapObj->isHideObj(mapObj))
 			return false;
@@ -1829,7 +1829,7 @@ void TDangoHamuKuri::reset()
 BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TAKE && mHolder == nullptr && mBoss != this) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mHolder = (TLiveActor*)sender;
 		behaveToTaken(sender);
 		return true;
@@ -1839,7 +1839,7 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 	    && mHolder == sender) {
 		mHolder = nullptr;
 		behaveToRelease();
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
 
@@ -1856,7 +1856,7 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 	if (message == HIT_MESSAGE_UNKD) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
@@ -2082,7 +2082,7 @@ void TBossDangoHamuKuri::generateBody()
 		currHamu = currHamu->mNext;
 	}
 
-	newHamu->offHitFlag(HIT_FLAG_NO_COLLISION);
+	newHamu->offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 bool TBossDangoHamuKuri::isNowAttack()
@@ -2498,7 +2498,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		self->setWallDeadEffect();
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_HAMUKURI_CRUSHED,
 		                                &self->mPosition, 0, nullptr, 0, 4);
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->mHitPoints = 0;
 	} else {
 		int pTVar7 = self->getManager()->unk5C;
@@ -2532,7 +2532,7 @@ DEFINE_NERVE(TNerveHamuKuriLand, TLiveActor)
 		self->setBckAnm(5);
 
 	if (self->checkCurAnmEnd(0)) {
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 		self->unk1F0 = 0;
 		return true;
 	}

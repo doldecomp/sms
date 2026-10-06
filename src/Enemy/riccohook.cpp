@@ -10,7 +10,7 @@ THookTake::THookTake(TRiccoHook* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	initHitActor(0x400000BB, 1, -0x80000000,
+	initHitActor(0x400000BB, 1, HIT_CATEGORY_PLAYER,
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
 	             mOwner->getSaveLoadParam()->mSLHitHeight.get(),
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
@@ -82,7 +82,7 @@ void TRiccoHook::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
 	mSpine->initWith(&TNerveRHGraphWander::theNerve());
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mHookTake = new THookTake(this);
 	unk124->reset();
 	goToShortestNextGraphNode();

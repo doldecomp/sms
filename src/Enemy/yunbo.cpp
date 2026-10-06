@@ -53,7 +53,7 @@ TYumboSeed::TYumboSeed(MActor* param_1, const TYumbo& param_2)
 
 void TYumboSeed::init()
 {
-	initHitActor(0x1000002A, 1, 0x80000000, 30.0f, 30.0f, 0.0f, 0.0f);
+	initHitActor(0x1000002A, 1, HIT_CATEGORY_PLAYER, 30.0f, 30.0f, 0.0f, 0.0f);
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	group->getChildren().push_back(this);
@@ -78,7 +78,7 @@ void TYumboSeed::perform(u32 param_1, JDrama::TGraphics* param_2)
 		checkHitActors();
 		if (--unk74 == 0) {
 			unk70 |= 1;
-			onHitFlag(HIT_FLAG_NO_COLLISION);
+			onHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 	}
 	if (!(unk70 & 4))
@@ -106,8 +106,8 @@ void TYumboSeed::startToMove(const JGeometry::TVec3<f32>& param_1,
 	unk78     = param_2;
 	unk74     = param_3;
 	mScaling.set(2.0f, 2.0f, 2.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_DAMAGE);
 }
 
 TYumbo::TYumbo(const char* param_1)
@@ -170,8 +170,9 @@ void TYumbo::setMaterialToMActor(MActor* param_1, J3DMaterialTable* param_2)
 
 void TYumbo::initCollision()
 {
-	initHitActor(0x1000002A, 1, 0x80000000, 97.5f, 225.0f, 90.0f, 225.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x1000002A, 1, HIT_CATEGORY_PLAYER, 97.5f, 225.0f, 90.0f,
+	             225.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
 	                                   mPosition.z, &mGroundPlane);
 	mScaledBodyRadius = 75.0f;
@@ -229,9 +230,9 @@ void TYumbo::behaveHitAttack()
 void TYumbo::updateCollision()
 {
 	if (isFreeze() || isDead())
-		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		onHitFilter(HIT_FILTER_NO_ATTACK);
 	else
-		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		offHitFilter(HIT_FILTER_NO_ATTACK);
 }
 
 void TYumbo::updateEffect()

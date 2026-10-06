@@ -3,15 +3,18 @@
 
 #include <JSystem/JDrama/JDRActor.hpp>
 
-enum TActorTypeBits {
-	ACTOR_TYPE_UNK4000000  = 0x4000000,
-	ACTOR_TYPE_BOSS        = 0x8000000,
-	ACTOR_TYPE_ENEMY       = 0x10000000,
-	ACTOR_TYPE_UNK20000000 = 0x20000000,
-	ACTOR_TYPE_UNK40000000 = 0x40000000,
-	ACTOR_TYPE_PLAYER      = 0x80000000,
+enum THitCategory {
+	HIT_CATEGORY_ANIMAL     = 0x800000,
+	HIT_CATEGORY_WATER      = 0x1000000,
+	HIT_CATEGORY_GENERATOR  = 0x2000000,
+	HIT_CATEGORY_NPC        = 0x4000000,
+	HIT_CATEGORY_BOSS       = 0x8000000,
+	HIT_CATEGORY_ENEMY      = 0x10000000,
+	HIT_CATEGORY_ITEM       = 0x20000000,
+	HIT_CATEGORY_MAP_OBJECT = 0x40000000,
+	HIT_CATEGORY_PLAYER     = 0x80000000,
 
-	ACTOR_TYPE_MASK = 0xFFFF0000,
+	HIT_CATEGORY_MASK = 0xFFFF0000,
 };
 
 enum THitMessageType {
@@ -36,19 +39,10 @@ enum THitMessageType {
 	HIT_MESSAGE_UNK12            = 0x12,
 };
 
-enum THitFlagBits {
-	HIT_FLAG_NO_COLLISION   = 0x1,
-	HIT_FLAG_CANNOT_ATTACK  = 0x2,
-	HIT_FLAG_CANNOT_GET_HIT = 0x4,
-
-	// TODO: these are the same as TActorTypeBits! See canAttack
-	// basically, they are "hit categories" where the hit flags can
-	// filter what we can and can't hit
-	// Maybe these entire flags should be renamed to "hit filter"?
-	HIT_FLAG_UNK8000000  = 0x8000000,
-	HIT_FLAG_UNK10000000 = 0x10000000,
-	HIT_FLAG_UNK20000000 = 0x20000000,
-	HIT_FLAG_UNK40000000 = 0x40000000,
+enum THitFilterBits {
+	HIT_FILTER_NO_COLLISION = 0x1,
+	HIT_FILTER_NO_ATTACK    = 0x2,
+	HIT_FILTER_NO_DAMAGE    = 0x4,
 };
 
 class THitActor : public JDrama::TActor {
@@ -63,16 +57,17 @@ public:
 		return false;
 	}
 
-	void initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
+	void initHitActor(u32 actor_type, u16 max_collisions, int hit_filter,
 	                  f32 attack_radius, f32 attack_height, f32 damage_radius,
 	                  f32 damage_height);
 	void calcEntryRadius();
 
 	// fabricated
 	u32 getActorType() const { return mActorType; }
-	bool checkActorType(u32 flag) const
+	u32 getHitCategory() const { return mActorType & HIT_CATEGORY_MASK; }
+	bool isHitCategory(u32 category) const
 	{
-		return mActorType & flag ? true : false;
+		return mActorType & category ? true : false;
 	}
 	bool isActorType(u32 flag) const
 	{
@@ -81,15 +76,14 @@ public:
 
 	bool canAttack(THitActor* other) const
 	{
-		return checkHitFlag(other->getActorType() & ACTOR_TYPE_MASK) ? true
-		                                                             : false;
+		return checkHitFilter(other->getHitCategory()) ? true : false;
 	}
 
 	THitActor* getCollision(int i) { return mCollisions[i]; }
 	u16 getColNum() { return mColCount; }
-	bool checkHitFlag(u32 flag) const { return mHitFlags & flag; }
-	void onHitFlag(u32 flag) { mHitFlags |= flag; }
-	void offHitFlag(u32 flag) { mHitFlags &= ~flag; }
+	bool checkHitFilter(u32 flag) const { return mHitFilter & flag; }
+	void onHitFilter(u32 flag) { mHitFilter |= flag; }
+	void offHitFilter(u32 flag) { mHitFilter &= ~flag; }
 	f32 getAttackRadius() const { return mAttackRadius; }
 	f32 getAttackHeight() const { return mAttackHeight; }
 	f32 getDamageRadius() const { return mDamageRadius; }
@@ -142,7 +136,7 @@ public:
 	/* 0x58 */ f32 mDamageRadius;
 	/* 0x5C */ f32 mDamageHeight;
 	/* 0x60 */ f32 mEntryRadius;
-	/* 0x64 */ u32 mHitFlags;
+	/* 0x64 */ u32 mHitFilter;
 };
 
 #endif

@@ -78,8 +78,10 @@ void TAmenbo::kill()
 
 void TAmenbo::initCollision()
 {
-	initHitActor(0x1000002D, 2, -0x68000000, 60.0f, 120.0f, 100.0f, 150.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x1000002D, 2,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS,
+	             60.0f, 120.0f, 100.0f, 150.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mWallRadius = getSaveParam2()->mSLWallRadius.get();
 	unk1E4      = new TMapCollisionWarp;
 	unk1E4->init("/scene/amenbo/col/amenbo.col", 0x8000, nullptr);
@@ -472,7 +474,7 @@ void TAmenbo::activateJumpBase()
 		deactivateJumpBase();
 
 	unk1E4->setUpTrans(mPosition);
-	onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	onHitFilter(HIT_FILTER_NO_ATTACK);
 	mDamageRadius = 215.0f;
 	mDamageHeight = 120.0f;
 	calcEntryRadius();
@@ -485,7 +487,7 @@ void TAmenbo::deactivateJumpBase()
 		return;
 
 	unk1E4->remove();
-	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+	offHitFilter(HIT_FILTER_NO_ATTACK);
 	setDamageParams(100.0f, 150.0f);
 	offLiveFlag(LIVE_FLAG_UNK10);
 }

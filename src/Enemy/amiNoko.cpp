@@ -54,8 +54,9 @@ TAmiHit::TAmiHit(TAmiNoko* param_1, const char* param_2)
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	initHitActor(0x10000021, 1, 0x80000000, 120.0f, 240.0f, 120.0f, 240.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x10000021, 1, HIT_CATEGORY_PLAYER, 120.0f, 240.0f, 120.0f,
+	             240.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TAmiHit::receiveMessage(THitActor* param_1, u32 param_2)
@@ -766,9 +767,9 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 	TAmiNoko* self = (TAmiNoko*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(1);
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 #ifdef VERSION_GMSP01
-		self->unk208->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->unk208->onHitFilter(HIT_FILTER_NO_COLLISION);
 #endif
 	}
 	if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
@@ -795,7 +796,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 		direction -= SMS_GetMarioPos();
 		if (self->isDeadByWall() || !self->isAirborne()
 		    || direction.length() > 10000.0f) {
-			self->onHitFlag(HIT_FLAG_NO_COLLISION);
+			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			self->onLiveFlag(LIVE_FLAG_DEAD);
 			self->onLiveFlag(LIVE_FLAG_UNK8);
 			self->offLiveFlag(LIVE_FLAG_HIDDEN);

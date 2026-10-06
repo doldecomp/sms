@@ -268,7 +268,7 @@ void TPakkun::load(JSUMemoryInputStream& stream)
 void TPakkun::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
-	mActorType = ACTOR_TYPE_ENEMY | 4;
+	mActorType = HIT_CATEGORY_ENEMY | 4;
 	unk150     = 17;
 	unk1A0     = (TPakkunSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNervePakkunGenerate::theNerve());
@@ -485,9 +485,9 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model_name)
 	    JDrama::TNameRefGen::search("オブジェクトグループ"));
 	group->getChildren().push_back(this);
 
-	THitActor::initHitActor(ACTOR_TYPE_ENEMY | 6, 1, ACTOR_TYPE_PLAYER, 20.0f,
-	                        20.0f, 20.0f, 20.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	THitActor::initHitActor(HIT_CATEGORY_ENEMY | 6, 1, HIT_CATEGORY_PLAYER,
+	                        20.0f, 20.0f, 20.0f, 20.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150       = 0;
 	mGroundPlane = TMap::getIllegalCheckData();
 	mMActor->getModel()->getModelData()->getJointNodePointer(0)->setCallBack(
@@ -589,7 +589,7 @@ void TPakkunSeed::shoot()
 	mScaling.y = 0.1f;
 	mScaling.z = 0.1f;
 	unk168     = 0;
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TPakkunSeed::rebirth()
@@ -597,7 +597,7 @@ void TPakkunSeed::rebirth()
 	if (unk16C->unk199) {
 		unk150 = 0;
 		unk158 = 0;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		unk16C->seedPollute(mPosition);
 
@@ -610,12 +610,12 @@ void TPakkunSeed::rebirth()
 	if (unk158 > unk16C->unk1A0->mSLGenerateSeedTime.get() || unk16C->unk1B1) {
 		unk150 = 0;
 		unk158 = 0;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (mPosition.y < mGroundHeight - 70.0f) {
 		mVelocity.y = 0.0f;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		return;
 	}
 
@@ -810,7 +810,7 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 {
 	TPakkun* self = (TPakkun*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_HIDDEN);
 		self->unk194->appear();
 	}
@@ -944,7 +944,7 @@ DEFINE_NERVE(TNervePakkunAppear, TLiveActor)
 	TPakkun* self = (TPakkun*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(PAKKUN_ANM_SET);
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(100.0f)) { }
@@ -963,7 +963,7 @@ DEFINE_NERVE(TNervePakkunHide, TLiveActor)
 		self->setBckAnm(PAKKUN_ANM_HIDE);
 
 	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_HIDDEN);
 	}
 
@@ -1025,7 +1025,7 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 {
 	TStayPakkun* self = (TStayPakkun*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		if (!self->isBckAnm(PAKKUN_ANM_CRUSH_TO_HIDE)) {
 			self->setBckAnm(PAKKUN_ANM_HIDE);
 		}
@@ -1077,7 +1077,7 @@ DEFINE_NERVE(TNerveStayPakkunAppear, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 		self->setBckAnm(PAKKUN_ANM_SET);
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 		self->unk1B1 = 1;
 		self->unk194->kill();
 	}

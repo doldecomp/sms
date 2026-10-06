@@ -30,7 +30,7 @@ void THitActor::perform(u32 cue, JDrama::TGraphics* graphics)
 	JDrama::TActor::perform(cue, graphics);
 }
 
-void THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
+void THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_filter,
                              f32 attack_radius, f32 attack_height,
                              f32 damage_radius, f32 damage_height)
 {
@@ -41,7 +41,7 @@ void THitActor::initHitActor(u32 actor_type, u16 max_collisions, int hit_flags,
 	for (int i = 0; i < mColCapacity; ++i)
 		mCollisions[i] = nullptr;
 
-	onHitFlag(hit_flags);
+	onHitFilter(hit_filter);
 
 	mAttackRadius = attack_radius;
 	mAttackHeight = attack_height;
@@ -62,6 +62,6 @@ THitActor::THitActor(const char* name)
     , mDamageRadius(0.0f)
     , mDamageHeight(0.0f)
     , mEntryRadius(0.0f)
-    , mHitFlags(0)
+    , mHitFilter(0)
 {
 }

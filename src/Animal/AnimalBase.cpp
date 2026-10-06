@@ -55,7 +55,7 @@ void TAnimalBase::init(TLiveManager* manager)
 	mMActor = mMActorKeeper->getMActor(0);
 
 	initHitActor(mActorType, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
-	mHitFlags |= HIT_FLAG_NO_COLLISION;
+	mHitFilter |= HIT_FILTER_NO_COLLISION;
 	mBodyScale  = 1.0f;
 	mMarchSpeed = 0.0f;
 	mBodyRadius = 10.0f;

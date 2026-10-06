@@ -349,7 +349,7 @@ void TBossManta::setCollision()
 		setHitParams(r, 100.0f, r, 100.0f);
 	}
 
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossManta::startWalkAnim()
@@ -448,7 +448,7 @@ void TBossManta::init(TLiveManager* manager)
 	mHitPoints = getMaxHitPoints();
 
 	mHeadHeight = 5000.0f;
-	initHitActor(0x8000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
+	initHitActor(0x8000004, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 0.0f, 0.0f);
 	unk170.set(0.0f, 0.0f, 1.0f);
 	calcRootMatrix();
 	kill();
@@ -953,8 +953,8 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
     : THitActor(name)
     , unk68(nullptr)
 {
-	initHitActor(0x08000004, 1, 0x80000000, 0.0f, 0.0f, 0.0f, 0.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x08000004, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 0.0f, 0.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
 	    JDrama::TNameRefGen::search("オブジェクトグループ"));

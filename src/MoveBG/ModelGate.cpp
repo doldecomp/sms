@@ -43,8 +43,9 @@ void TModelGate::loadAfter()
 		"Gate",        "GateToRicco", "GateToMamma",
 		"GateToMonte", "GateToMare",  nullptr,
 	};
-	initHitActor(0x080000C0, 5, 0x80000000, 300.0f, 400.0f, 300.0f, 400.0f);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x080000C0, 5, HIT_CATEGORY_PLAYER, 300.0f, 400.0f, 300.0f,
+	             400.0f);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk70 = 0;
 	unk71 = 0;
 	for (u8 i = 0; i < 5; ++i) {
@@ -192,11 +193,11 @@ void TModelGate::loadAfter()
 	}
 	if (opened == true) {
 		unk70 |= 1;
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 	} else {
 		unk70 &= ~1;
 		unk70 |= 2;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
 
@@ -205,7 +206,7 @@ void TModelGate::startOpen()
 	unk70 |= 1;
 	unkC4 = STATE_UNK0;
 	unk78->setBpk(gateMActorNames[unk71]);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk70 |= 2;
 }
 

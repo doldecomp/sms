@@ -374,12 +374,12 @@ void TPinnaShell::control()
 	case STATE_UNK3:
 		unk6C += unk70;
 		if (unk6C >= -TShellCup::mShellDamageRot) {
-			unk88->offHitFlag(HIT_FLAG_NO_COLLISION);
+			unk88->offHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 		if (unk6C >= 0.0f) {
 			unk6C = 0.0f;
 			unk68 = STATE_UNK0;
-			unk88->onHitFlag(HIT_FLAG_NO_COLLISION);
+			unk88->onHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 		break;
 	}
@@ -409,7 +409,8 @@ TPinnaShell::TPinnaShell(const char* param_1)
     , unk88(nullptr)
     , unk8C(nullptr)
 {
-	initHitActor(0x4000013A, 1, 0x80000000, 250.0f, 400.0f, 250.0f, 200.0f);
+	initHitActor(0x4000013A, 1, HIT_CATEGORY_PLAYER, 250.0f, 400.0f, 250.0f,
+	             200.0f);
 }
 
 f32 TShellCup::mOpenRotMax     = 90.0f;
@@ -498,7 +499,7 @@ void TShellCup::initMapObj()
 		unk138[i].unk88 = new TDamageObj;
 		unk138[i].unk88->mScaling.set(2.0f, 1.2f, 2.0f);
 		unk138[i].unk88->init(0x10000036);
-		unk138[i].unk88->onHitFlag(HIT_FLAG_NO_COLLISION);
+		unk138[i].unk88->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 	TMapCollisionStatic* rink = new TMapCollisionStatic;
 	rink->init("/mapObj/ShellCup_rink", 2, this);
@@ -532,9 +533,9 @@ void TMerrygoround::control()
 		unk144[i]->mPosition.set(mtx[0][3], mtx[1][3] - 600.0f, mtx[2][3]);
 	}
 	if (SMS_IsMarioOnYoshi())
-		unk1A0->offHitFlag(HIT_FLAG_NO_COLLISION);
+		unk1A0->offHitFilter(HIT_FILTER_NO_COLLISION);
 	else
-		unk1A0->onHitFlag(HIT_FLAG_NO_COLLISION);
+		unk1A0->onHitFilter(HIT_FILTER_NO_COLLISION);
 	MtxPtr mtx = getModel()->getAnmMtx(unk1A4);
 	unk1A0->mPosition.set(mtx[0][3], mtx[1][3] - 600.0f, mtx[2][3]);
 }

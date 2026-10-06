@@ -186,7 +186,7 @@ BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 		if (message == HIT_MESSAGE_TAKE) {
 			if (unk138 == 0) {
 				mHolder = (TTakeActor*)sender;
-				onHitFlag(HIT_FLAG_NO_COLLISION);
+				onHitFilter(HIT_FILTER_NO_COLLISION);
 				if (mMapCollisionManager)
 					mMapCollisionManager->removeActiveCollision();
 				return TRUE;
@@ -261,7 +261,7 @@ void TJumpBase::control()
 
 	case 3:
 		if (unk13C == 0) {
-			offHitFlag(HIT_FLAG_NO_COLLISION);
+			offHitFilter(HIT_FILTER_NO_COLLISION);
 			if (mMapCollisionManager)
 				mMapCollisionManager->getActiveCollision()->setUp();
 

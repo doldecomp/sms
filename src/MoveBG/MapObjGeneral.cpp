@@ -133,7 +133,7 @@ void TMapObjGeneral::thrown()
 	mPosition.add(vel);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	removeMapCollision();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	startAnim(5);
 	startSound(5);
 	mState = STATE_NORMAL;
@@ -186,7 +186,7 @@ void TMapObjGeneral::sinking()
 	mPosition.y -= mMapObjData->mSink->unk0;
 
 	for (int i = 0; i < getColNum(); ++i) {
-		if (getCollision(i)->checkActorType(0x1000000)) {
+		if (getCollision(i)->isHitCategory(HIT_CATEGORY_WATER)) {
 			recover();
 			return;
 		}
@@ -256,7 +256,7 @@ void TMapObjGeneral::makeObjBuried()
 {
 	unk144 = mPosition.y;
 	mPosition.y -= mMapObjData->mHit->unkC[2].unkC;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 	mMActor = nullptr;
 	mState  = STATE_BURIED;
@@ -299,7 +299,7 @@ void TMapObjGeneral::recover()
 	startSound(8);
 	mDamageHeight = 0.0f;
 	calcEntryRadius();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	if (hasModelOrAnimData(6)) {
 		f32 tmp     = mPosition.y;
 		mPosition.y = unk144;
@@ -312,7 +312,7 @@ void TMapObjGeneral::hold(TTakeActor* actor)
 {
 	if (mMapCollisionManager)
 		mMapCollisionManager->removeActiveCollision();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mHolder = actor;
 	mState  = STATE_HOLDING;
 }
@@ -328,7 +328,7 @@ void TMapObjGeneral::ensureTakeSituation()
 
 void TMapObjGeneral::kill()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 	mStateTimer = -1;

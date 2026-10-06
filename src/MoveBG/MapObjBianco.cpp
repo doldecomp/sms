@@ -317,7 +317,7 @@ void TLeafBoat::touchActor(THitActor* param_1)
 	if (direction.x != 0.0f || direction.z != 0.0f)
 		MsVECNormalize(&direction, &direction);
 	f32 dot = direction.dot(mVelocity);
-	if (param_1->checkActorType(ACTOR_TYPE_ENEMY)) {
+	if (param_1->isHitCategory(HIT_CATEGORY_ENEMY)) {
 		mVelocity.x -= (1.0f + unk138) * (direction.x * dot);
 		mVelocity.z -= (1.0f + unk138) * (direction.z * dot);
 	} else {

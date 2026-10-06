@@ -109,7 +109,7 @@ void TPoiHanaCollision::checkHit()
 	}
 }
 
-void TPoiHanaCollision::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
+void TPoiHanaCollision::kill() { onHitFilter(HIT_FILTER_NO_COLLISION); }
 
 u8 TPoiHana::mMouthJntIndex = 6;
 u8 TPoiHana::mSleepVersion  = 1;
@@ -140,7 +140,7 @@ void TPoiHana::init(TLiveManager* param_1)
 	TWalkerEnemy::init(param_1);
 	mActorType = 0x10000015;
 	unk150     = 17;
-	onHitFlag(HIT_FLAG_UNK40000000);
+	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mGoToSleepTimer = mInstanceIndex * -250;
 	if (mSleepVersion != 0 && !unk1A0)
 		mSpine->initWith(&TNervePoihanaSleep::theNerve());
@@ -154,7 +154,7 @@ void TPoiHana::init(TLiveManager* param_1)
 	    ->getChildren()
 	    .push_back(unk1BC);
 
-	unk1BC->initHitActor(0, 2, 0x80000000,
+	unk1BC->initHitActor(0, 2, HIT_CATEGORY_PLAYER,
 	                     unk19C->mSLAttackRadius.get() * mBodyScale,
 	                     unk19C->mSLAttackHeight.get() * mBodyScale,
 	                     unk19C->mSLDamageRadius.get() * mBodyScale,
@@ -298,7 +298,7 @@ void TPoiHana::setFreezeAnm() { setBckAnm(12); }
 void TPoiHana::setDeadAnm()
 {
 	unk1BC->kill();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mHitPoints = 1;
 	if (!unk184)
 		unk18C = 3;
@@ -345,7 +345,8 @@ bool TPoiHana::isHitValid(u32 param_1)
 
 bool TPoiHana::isCollidMove(THitActor* param_1)
 {
-	if ((param_1->getActorType() & ACTOR_TYPE_MASK) == ACTOR_TYPE_UNK40000000) {
+	if ((param_1->getActorType() & HIT_CATEGORY_MASK)
+	    == HIT_CATEGORY_MAP_OBJECT) {
 		if (((TMapObjBase*)param_1)->isHideObj(param_1))
 			return false;
 
@@ -634,7 +635,7 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 			else
 				self->setBckAnm(4);
 		} else if (self->isBckAnm(2) || self->isBckAnm(13)) {
-			self->unk1BC->offHitFlag(HIT_FLAG_NO_COLLISION);
+			self->unk1BC->offHitFilter(HIT_FILTER_NO_COLLISION);
 			return true;
 		}
 	}

@@ -58,7 +58,7 @@ void TLimitKoopaJr::init(TLiveManager* param_1)
 	initHitActor(0x0800002E, 1, 0, 0.0f, 0.0f,
 	             ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageRadius.get(),
 	             damageHeight);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mSpine->initWith(&TNerveLimitKoopaJrRun::theNerve());
 	f32 scale = ((TLimitKoopaJrParams*)getSaveParam())->mSLKoopaJrScale.get();
 	mScaling.set(scale, scale, scale);

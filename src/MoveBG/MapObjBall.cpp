@@ -684,7 +684,7 @@ void TResetFruit::waitingToAppear()
 		                                   nodeMats);
 
 		mScaling.y = 0.2f;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mState = STATE_APPEARING;
 		SMSGetMSound()->startSoundActor(MSD_SE_IT_COMMON_APPEAR, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -875,7 +875,7 @@ void TResetFruit::appearing()
 		mScaling.set(mInitialScaling);
 		J3DModel* model = TLiveActor::getModel();
 		model->calc();
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		makeObjAppeared();
 		mState = STATE_NORMAL;
 	}
@@ -885,7 +885,7 @@ void TResetFruit::control()
 {
 	switch (mState) {
 	case STATE_NORMAL: {
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		for (int i = 0; i < mColCount; ++i)
 			pick(mCollisions[i]);
 
@@ -895,7 +895,7 @@ void TResetFruit::control()
 		break;
 	}
 	case STATE_LIVING: {
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (gpMarDirector->getCurrentMap() == 4
 		    && checkLiveFlag(LIVE_FLAG_UNK10)) {
 			offLiveFlag(LIVE_FLAG_UNK10);
@@ -1124,7 +1124,7 @@ void TCoverFruit::calcRootMatrix()
 BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
 {
 	if (actor->isActorType(0x8000083) && msg == HIT_MESSAGE_TAKE) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mHolder = static_cast<TTakeActor*>(actor);
 		return TRUE;
 	}

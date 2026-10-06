@@ -245,7 +245,7 @@ void TChuuHana::init(TLiveManager* param_1)
 	TWalkerEnemy::init(param_1);
 	mActorType = 0x10000016;
 	unk150     = 17;
-	offHitFlag(HIT_FLAG_UNK40000000);
+	offHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mSpine->initWith(&TNerveChuuHanaWalkOnPanel::theNerve());
 	getMActor()->setJointCallback(mBodyJntIndex, &ChuuHanaBodyCallback);
 	unk130 = 1;

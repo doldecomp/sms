@@ -36,8 +36,9 @@ void TSeal::init(TLiveManager* param_1)
 	mMActor->offMakeDL();
 
 	f32 scale = 100.0f * mScaling.x;
-	initHitActor(0x10000024, 1, 0x81000000, scale, scale, scale, scale);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x10000024, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, scale,
+	             scale, scale, scale);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
@@ -190,7 +191,7 @@ DEFINE_NERVE(TNerveSealDie, TLiveActor)
 	                                0, nullptr, 0, 4);
 
 	if (seal->getMActor()->curAnmEndsNext()) {
-		seal->onHitFlag(HIT_FLAG_NO_COLLISION);
+		seal->onHitFilter(HIT_FILTER_NO_COLLISION);
 		seal->kill();
 		spine->pushAfterCurrent(&TNerveSealSleep::theNerve());
 		return true;

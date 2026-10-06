@@ -196,15 +196,15 @@ TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
 	    .push_back(this);
 
 	TBGTentacle::TTentacleParams* pTVar3 = mOwner->getParams();
-	initHitActor(0x8000006, 1, -0x80000000, pTVar3->mAttackRadius.get(),
+	initHitActor(0x8000006, 1, HIT_CATEGORY_PLAYER, pTVar3->mAttackRadius.get(),
 	             pTVar3->mAttackHeight.get(), pTVar3->mDamageRadius.get(),
 	             pTVar3->mDamageHeight.get());
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk74.zero();
 }
 
-void TBGTakeHit::enableAttackCheck() { offHitFlag(HIT_FLAG_CANNOT_ATTACK); }
-void TBGTakeHit::disableAttackCheck() { onHitFlag(HIT_FLAG_CANNOT_ATTACK); }
+void TBGTakeHit::enableAttackCheck() { offHitFilter(HIT_FILTER_NO_ATTACK); }
+void TBGTakeHit::disableAttackCheck() { onHitFilter(HIT_FILTER_NO_ATTACK); }
 
 MtxPtr TBGTakeHit::getTakingMtx() { return unk80; }
 
@@ -382,8 +382,8 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	initHitActor(0x8000007, 1, -0x80000000, 50.0f, 50.0f, 50.0f, 50.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x8000007, 1, HIT_CATEGORY_PLAYER, 50.0f, 50.0f, 50.0f, 50.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -616,7 +616,7 @@ void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 
 bool TBGTentacle::isAttacking() const
 {
-	if (mTakeHit->checkHitFlag(HIT_FLAG_CANNOT_ATTACK))
+	if (mTakeHit->checkHitFilter(HIT_FILTER_NO_ATTACK))
 		return false;
 	if (mState == TSTATE_UNKA)
 		return false;
@@ -833,14 +833,14 @@ void TBGTentacle::changeStateAndFixNodes(int new_state)
 	}
 
 	if (mState == TSTATE_HIDE)
-		mTakeHit->onHitFlag(HIT_FLAG_NO_COLLISION);
+		mTakeHit->onHitFilter(HIT_FILTER_NO_COLLISION);
 	else
-		mTakeHit->offHitFlag(HIT_FLAG_NO_COLLISION);
+		mTakeHit->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	if (mState == TSTATE_GUARD)
 		mTakeHit->disableAttackCheck();
 
-	mTakeHit->offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	mTakeHit->offHitFilter(HIT_FILTER_NO_DAMAGE);
 }
 
 void TBGTentacle::returnToDefaultState()

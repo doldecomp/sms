@@ -473,16 +473,19 @@ void THinokuri2::init(TLiveManager* param_1)
 	enemiesGrp->getChildren().push_back(unk178);
 	enemiesGrp->getChildren().push_back(unk174);
 
-	mHead->initHitActor(0x8000001, 5, 0x41000000, mHead->getAttackRadius(),
-	                    mHead->getAttackHeight(), mHead->getDamageRadius(),
-	                    mHead->getDamageHeight());
-	mBody->initHitActor(0x8000001, 5, -0x3f000000, mHead->getAttackRadius(),
-	                    mHead->getAttackHeight(), mHead->getDamageRadius(),
-	                    mHead->getDamageHeight());
-	unk174->initHitActor(0x8000001, 5, -0x70000000, 70.0f, 120.0f, 70.0f,
-	                     120.0f);
-	unk178->initHitActor(0x8000001, 5, -0x70000000, 70.0f, 120.0f, 70.0f,
-	                     120.0f);
+	mHead->initHitActor(0x8000001, 5,
+	                    HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_WATER,
+	                    mHead->getAttackRadius(), mHead->getAttackHeight(),
+	                    mHead->getDamageRadius(), mHead->getDamageHeight());
+	mBody->initHitActor(0x8000001, 5,
+	                    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
+	                        | HIT_CATEGORY_WATER,
+	                    mHead->getAttackRadius(), mHead->getAttackHeight(),
+	                    mHead->getDamageRadius(), mHead->getDamageHeight());
+	unk174->initHitActor(0x8000001, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
+	                     70.0f, 120.0f, 70.0f, 120.0f);
+	unk178->initHitActor(0x8000001, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
+	                     70.0f, 120.0f, 70.0f, 120.0f);
 
 	validateCollisionAll();
 
@@ -576,20 +579,20 @@ void THinokuri2::resetPolInterval()
 
 void THinokuri2::invalidateCollisionAll()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mHead->onHitFlag(HIT_FLAG_NO_COLLISION);
-	mBody->onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk174->onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk178->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mHead->onHitFilter(HIT_FILTER_NO_COLLISION);
+	mBody->onHitFilter(HIT_FILTER_NO_COLLISION);
+	unk174->onHitFilter(HIT_FILTER_NO_COLLISION);
+	unk178->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void THinokuri2::validateCollisionAll()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mHead->offHitFlag(HIT_FLAG_NO_COLLISION);
-	mBody->offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk174->offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk178->offHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mHead->offHitFilter(HIT_FILTER_NO_COLLISION);
+	mBody->offHitFilter(HIT_FILTER_NO_COLLISION);
+	unk174->offHitFilter(HIT_FILTER_NO_COLLISION);
+	unk178->offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void THinokuri2::emitWaterParticle()

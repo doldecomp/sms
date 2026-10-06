@@ -122,10 +122,11 @@ public:
 			            unk68.get_float01());
 		}
 
-		initHitActor(0x4000025B, 1, 0x80000000, unk8C->dropRadius.get(),
-		             unk8C->dropRadius.get() * 2.0f, 0.0f, 0.0f);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
-		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+		initHitActor(0x4000025B, 1, HIT_CATEGORY_PLAYER,
+		             unk8C->dropRadius.get(), unk8C->dropRadius.get() * 2.0f,
+		             0.0f, 0.0f);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_DAMAGE);
 		unk78.zero();
 		unk84 = 0.0f;
 	}

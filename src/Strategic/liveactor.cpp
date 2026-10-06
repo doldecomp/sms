@@ -158,7 +158,7 @@ void TLiveActor::init(TLiveManager* manager)
 
 	initHitActor(0, 1, 0, mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 
 	if (!mAnmSound)
@@ -319,7 +319,7 @@ void TLiveActor::requestShadow()
 	}
 
 	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
-	    && !checkActorType(ACTOR_TYPE_UNK40000000)) {
+	    && !isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 		gpQuestionManager->request(mPosition, mScaledBodyRadius);
 	}
 }
@@ -454,7 +454,7 @@ void TLiveActor::initAnmSound()
 	if (mAnmSound)
 		return;
 
-	if (checkActorType(0x4000000))
+	if (isHitCategory(HIT_CATEGORY_NPC))
 		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
 	else
 		mAnmSound = new MAnmSound(SMSGetMSound());

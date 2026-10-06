@@ -25,9 +25,9 @@ void TBaseNPC::initNpcObjCollision_(const TNpcInitInfo* init_info)
 	             init_info->mAttackHeight * mScaling.y,
 	             init_info->mDamageRadius * mScaling.x,
 	             init_info->mDamageHeight * mScaling.y);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	if (uVar5 == 0)
-		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		onHitFilter(HIT_FILTER_NO_ATTACK);
 }
 
 void TBaseNPC::execNpcObjCollision_()
@@ -38,7 +38,7 @@ void TBaseNPC::execNpcObjCollision_()
 		if (isNerveWalk()) {
 			bVar2 = false;
 		} else {
-			if (!mCollisions[i]->checkActorType(0x4000000))
+			if (!mCollisions[i]->isHitCategory(HIT_CATEGORY_NPC))
 				continue;
 
 			if (!((TBaseNPC*)mCollisions[i])->isNerveWalk())

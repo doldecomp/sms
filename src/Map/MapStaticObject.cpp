@@ -339,7 +339,7 @@ void TMapStaticObj::init(const char* name)
 
 	mActorData = &actor_data_table[i];
 
-	initHitActor(mActorData->mActorType, 5, mActorData->mHitFlags,
+	initHitActor(mActorData->mActorType, 5, mActorData->mHitFilter,
 	             mActorData->mAttackRadius, mActorData->mAttackHeight,
 	             mActorData->mDamageRadius, mActorData->mDamageHeight);
 

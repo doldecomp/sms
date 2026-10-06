@@ -96,7 +96,7 @@ static const TMapObjHitDataTable billboard_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo billboard_obj_hit_info
-    = { 0x1, 0x80000000, -100.0f, billboard_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -100.0f, billboard_hit_data_table };
 
 static TMapObjData billboard_dolphin_data = {
 	"billboard_dolphin",
@@ -202,7 +202,7 @@ static const TMapObjHitDataTable HideObj_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo HideObj_obj_hit_info
-    = { 0x1, 0x80000000, -10.0f, HideObj_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -10.0f, HideObj_hit_data_table };
 
 static TMapObjData HideObj_data = {
 	"HideObj",
@@ -252,7 +252,7 @@ static const TMapObjHitDataTable FruitHitHideObj_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FruitHitHideObj_obj_hit_info
-    = { 0x1, 0x40000000, 0.0f, FruitHitHideObj_hit_data_table };
+    = { 0x1, HIT_CATEGORY_MAP_OBJECT, 0.0f, FruitHitHideObj_hit_data_table };
 
 static TMapObjData FruitHitHideObj_data = {
 	"FruitHitHideObj",
@@ -277,7 +277,7 @@ static const TMapObjHitDataTable HipDropHideObj_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo HipDropHideObj_obj_hit_info
-    = { 0x1, 0x40000000, 0.0f, HipDropHideObj_hit_data_table };
+    = { 0x1, HIT_CATEGORY_MAP_OBJECT, 0.0f, HipDropHideObj_hit_data_table };
 
 static TMapObjData HipDropHideObj_data = {
 	"HipDropHideObj",
@@ -335,7 +335,7 @@ static const TMapObjHitDataTable door_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo door_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, door_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, door_hit_data_table };
 
 static TMapObjData door_data = {
 	"door",
@@ -396,7 +396,7 @@ static const TMapObjHitDataTable manhole_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo manhole_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, manhole_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, manhole_hit_data_table };
 
 static const TMapObjCollisionData manhole_map_collision_data[] = {
 	{ "manhole", 2 },
@@ -437,7 +437,7 @@ static const TMapObjHitDataTable FruitBasket_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FruitBasket_obj_hit_info
-    = { 0x1, 0x40000000, -10.0f, FruitBasket_hit_data_table };
+    = { 0x1, HIT_CATEGORY_MAP_OBJECT, -10.0f, FruitBasket_hit_data_table };
 
 static const TMapObjCollisionData FruitBasket_map_collision_data[] = {
 	{ "Basket", 0 },
@@ -565,7 +565,7 @@ static const TMapObjHitDataTable ChangeStage_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ChangeStage_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ChangeStage_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ChangeStage_hit_data_table };
 
 static TMapObjData ChangeStage_data = {
 	"ChangeStage",
@@ -608,7 +608,7 @@ static const TMapObjHitDataTable StartDemo_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo StartDemo_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, StartDemo_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, StartDemo_hit_data_table };
 
 static TMapObjData StartDemo_data = {
 	"StartDemo",
@@ -790,7 +790,7 @@ static const TMapObjHitDataTable ArrowBoardLR_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ArrowBoardLR_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ArrowBoardLR_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ArrowBoardLR_hit_data_table };
 
 static TMapObjData ArrowBoardLR_data = {
 	"ArrowBoardLR",
@@ -815,7 +815,7 @@ static const TMapObjHitDataTable ArrowBoardUp_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ArrowBoardUp_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ArrowBoardUp_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ArrowBoardUp_hit_data_table };
 
 static TMapObjData ArrowBoardUp_data = {
 	"ArrowBoardUp",
@@ -840,7 +840,7 @@ static const TMapObjHitDataTable ArrowBoardDown_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ArrowBoardDown_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ArrowBoardDown_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ArrowBoardDown_hit_data_table };
 
 static TMapObjData ArrowBoardDown_data = {
 	"ArrowBoardDown",
@@ -969,7 +969,7 @@ static const TMapObjHitDataTable GeneralHitObj_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo GeneralHitObj_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, GeneralHitObj_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, GeneralHitObj_hit_data_table };
 
 static TMapObjData GeneralHitObj_data = {
 	"GeneralHitObj",
@@ -994,7 +994,7 @@ static const TMapObjHitDataTable item_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo item_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, item_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, item_hit_data_table };
 
 static TMapObjData bottle_large_data = {
 	"bottle_large",
@@ -1037,7 +1037,7 @@ static const TMapObjHitDataTable WaterRecoverObj_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo WaterRecoverObj_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, item_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, item_hit_data_table };
 
 static TMapObjData WaterRecoverObj_data = {
 	"WaterRecoverObj",
@@ -1123,7 +1123,7 @@ static const TMapObjHitDataTable nozzle_item_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo nozzle_item_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, nozzle_item_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, nozzle_item_hit_data_table };
 
 static TMapObjData nozzle_rocket_item_data = {
 	"rocket_nozzle_item",
@@ -1173,7 +1173,7 @@ static const TMapObjHitDataTable coin_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo coin_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, coin_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, coin_hit_data_table };
 
 static const TMapObjSoundData coin_sound_data
     = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00004842,
@@ -1283,7 +1283,7 @@ static const TMapObjHitDataTable mario_cap_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo mario_cap_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, mario_cap_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, mario_cap_hit_data_table };
 
 static TMapObjData mario_cap_data = {
 	"mario_cap",
@@ -1346,7 +1346,8 @@ static const TMapObjHitDataTable eggYoshi_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo eggYoshi_obj_hit_info
-    = { 0xA, 0xC0000000, 0.0f, eggYoshi_hit_data_table };
+    = { 0xA, HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT, 0.0f,
+	    eggYoshi_hit_data_table };
 
 static TMapObjData eggYoshi_data = {
 	"eggYoshi",
@@ -1406,7 +1407,7 @@ static const TMapObjHitDataTable NozzleBox_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo NozzleBox_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, NozzleBox_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, NozzleBox_hit_data_table };
 
 static TMapObjData NozzleBox_data = {
 	"NozzleBox",
@@ -1538,7 +1539,10 @@ static const TMapObjHitDataTable fruit_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo fruit_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, fruit_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, fruit_hit_data_table };
 
 static TMapObjPhysicalData coconut_physical_data
     = { 0.3f, 0.6f, 0.3f,  0.3f, 0.97f, 0.98f, 1.0f,
@@ -1552,7 +1556,10 @@ static const TMapObjHitDataTable coconut_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo coconut_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, coconut_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, coconut_hit_data_table };
 
 static const TMapObjSoundData fruit_sound_data
     = { 0xFFFFFFFF, 0x00003801, 0xFFFFFFFF, 0x00001807, 0x00003862,
@@ -1580,7 +1587,10 @@ static const TMapObjHitDataTable papaya_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo papaya_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, papaya_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, papaya_hit_data_table };
 
 static TMapObjData papaya_data = {
 	"FruitPapaya", 0x40000391,        "アイテムマネージャー",
@@ -1602,7 +1612,10 @@ static const TMapObjHitDataTable pine_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo pine_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, pine_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, pine_hit_data_table };
 
 static TMapObjData pine_data = {
 	"FruitPine",  0x40000392,        "アイテムマネージャー",
@@ -1662,7 +1675,10 @@ static const TMapObjHitDataTable durian_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo durian_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, durian_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, durian_hit_data_table };
 
 static const TMapObjSoundData durian_sound_data
     = { 0xFFFFFFFF, 0x00003802, 0xFFFFFFFF, 0xFFFFFFFF, 0x00003862,
@@ -1700,7 +1716,10 @@ static const TMapObjHitDataTable banana_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo banana_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, banana_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, banana_hit_data_table };
 
 static TMapObjData banana_data = {
 	"FruitBanana", 0x40000394,        "アイテムマネージャー",
@@ -1788,7 +1807,8 @@ static const TMapObjHitDataTable FenceInner_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FenceInner_obj_hit_info
-    = { 0x1, 0x90000000, -250.0f, FenceInner_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, -250.0f,
+	    FenceInner_hit_data_table };
 
 static TMapObjData fence_revolve_inner_data = {
 	"fence_revolve_inner",
@@ -2001,7 +2021,10 @@ static const TMapObjHitDataTable wood_barrel_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo wood_barrel_obj_hit_info
-    = { 0x3, 0xDC000000, 0.0f, wood_barrel_hit_data_table };
+    = { 0x3,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, wood_barrel_hit_data_table };
 
 static const TMapObjCollisionData wood_barrel_map_collision_data[] = {
 	{ "barrel", 2 },
@@ -2064,7 +2087,7 @@ static const TMapObjHitDataTable barrel_float_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo barrel_float_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, barrel_float_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, barrel_float_hit_data_table };
 
 static const TMapObjCollisionData barrel_float_map_collision_data[] = {
 	{ "barrel_float", 1 },
@@ -2105,7 +2128,7 @@ static const TMapObjHitDataTable drum_can_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo drum_can_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, drum_can_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, drum_can_hit_data_table };
 
 static const TMapObjCollisionData drum_can_map_collision_data[] = {
 	{ "drum_can", 2 },
@@ -2153,7 +2176,10 @@ static const TMapObjHitDataTable barrel_oil_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo barrel_oil_obj_hit_info
-    = { 0x1, 0x9C000000, 0.0f, barrel_oil_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, barrel_oil_hit_data_table };
 
 static TMapObjData barrel_oil_data = {
 	"barrel_oil",
@@ -2196,7 +2222,7 @@ static const TMapObjHitDataTable breakable_block_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo breakable_block_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, breakable_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, breakable_block_hit_data_table };
 
 static const TMapObjCollisionData breakable_block_map_collision_data[] = {
 	{ "breakable_block", 2 },
@@ -2224,7 +2250,7 @@ static TMapObjData breakable_block_data = {
 };
 
 static const TMapObjHitInfo supermario_block_obj_hit_info
-    = { 0x1, 0x80000000, -10.0f, breakable_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -10.0f, breakable_block_hit_data_table };
 
 static const TMapObjCollisionInfo warp_block_map_collision_info
     = { 1, 1, warp_block_map_collision_data };
@@ -2295,7 +2321,7 @@ static const TMapObjHitDataTable expand_block_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo expand_block_obj_hit_info
-    = { 0x1, 0x80000000, -10.0f, expand_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -10.0f, expand_block_hit_data_table };
 
 static TMapObjData expand_block_data = {
 	"expand_block",
@@ -2320,7 +2346,7 @@ static const TMapObjHitDataTable spread_block_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo spread_block_obj_hit_info
-    = { 0x1, 0x80000000, -10.0f, spread_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -10.0f, spread_block_hit_data_table };
 
 static TMapObjData spread_block_data = {
 	"spread_block",
@@ -2389,7 +2415,7 @@ static const TMapObjHitDataTable sand_block_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo sand_block_obj_hit_info
-    = { 0x1, 0x80000000, -10.0f, sand_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -10.0f, sand_block_hit_data_table };
 
 static const TMapObjCollisionData sand_block_map_collision_data[] = {
 	{ "SandBlock", 2 },
@@ -2533,7 +2559,7 @@ static const TMapObjHitDataTable skate_block_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo skate_block_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, skate_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, skate_block_hit_data_table };
 
 static TMapObjData skate_block_data = {
 	"skate_block",
@@ -2633,7 +2659,7 @@ static const TMapObjHitDataTable ice_block_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ice_block_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ice_block_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ice_block_hit_data_table };
 
 static const TMapObjCollisionData IceBlock_map_collision_data[] = {
 	{ "IceBlock", 1 },
@@ -2758,7 +2784,7 @@ static const TMapObjHitDataTable WoodBlockPole_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo WoodBlockPole_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, WoodBlockPole_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, WoodBlockPole_hit_data_table };
 
 static TMapObjData WoodBlockPole_data = {
 	"WoodBlockPole",
@@ -2854,7 +2880,7 @@ static const TMapObjHitDataTable palmNormal_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo palmNormal_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, palmNormal_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, palmNormal_hit_data_table };
 
 static const TMapObjCollisionData PalmNormalTree_map_collision_data[] = {
 	{ "palmNormal", 0 },
@@ -2886,7 +2912,7 @@ static const TMapObjHitDataTable palmOugi_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo palmOugi_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, palmOugi_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, palmOugi_hit_data_table };
 
 static const TMapObjCollisionData PalmOugiTree_map_collision_data[] = {
 	{ "palmOugi", 0 },
@@ -2918,7 +2944,7 @@ static const TMapObjHitDataTable palmSago_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo palmSago_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, palmSago_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, palmSago_hit_data_table };
 
 static const TMapObjCollisionData PalmSagoTree_map_collision_data[] = {
 	{ "palmSago", 0 },
@@ -2950,7 +2976,7 @@ static const TMapObjHitDataTable palmNatume_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo palmNatume_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, palmNatume_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, palmNatume_hit_data_table };
 
 static const TMapObjCollisionData PalmNatumeTree_map_collision_data[] = {
 	{ "palmNatume", 0 },
@@ -2989,7 +3015,7 @@ static const TMapObjHitDataTable palmLeaf_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo palmLeaf_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, palmLeaf_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, palmLeaf_hit_data_table };
 
 static const TMapObjCollisionData PalmLeafTree_map_collision_data[] = {
 	{ "palmLeaf", 0 },
@@ -3028,7 +3054,7 @@ static const TMapObjHitDataTable BananaTree_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo BananaTree_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, BananaTree_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, BananaTree_hit_data_table };
 
 static const TMapObjCollisionData BananaTree_map_collision_data[] = {
 	{ "BananaTree", 2 },
@@ -3060,7 +3086,7 @@ static const TMapObjHitDataTable FruitTree_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FruitTree_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, FruitTree_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, FruitTree_hit_data_table };
 
 static const TMapObjCollisionData FruitTree_map_collision_data[] = {
 	{ "fruitTree", 0 },
@@ -3092,7 +3118,8 @@ static const TMapObjHitDataTable flower_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo flower_obj_hit_info
-    = { 0x1, 0x90000000, 0.0f, flower_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 0.0f,
+	    flower_hit_data_table };
 
 static TMapObjData flower_data = {
 	"plantFlower",
@@ -3277,7 +3304,10 @@ static const TMapObjHitDataTable telegraph_pole_l_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo telegraph_pole_l_obj_hit_info
-    = { 0x1, 0x9C000000, 0.0f, telegraph_pole_l_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, telegraph_pole_l_hit_data_table };
 
 static const TMapObjSoundInfo pole_sound_info = { 0xA, &pole_sound_data };
 
@@ -3304,7 +3334,10 @@ static const TMapObjHitDataTable telegraph_pole_s_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo telegraph_pole_s_obj_hit_info
-    = { 0x1, 0x9C000000, 0.0f, telegraph_pole_s_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, telegraph_pole_s_hit_data_table };
 
 static TMapObjData telegraph_pole_s_data = {
 	"telegraph_pole_s",
@@ -3344,7 +3377,10 @@ static const TMapObjHitDataTable streetlamp_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo streetlamp_obj_hit_info
-    = { 0x3, 0x9C000000, 0.0f, streetlamp_hit_data_table };
+    = { 0x3,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, streetlamp_hit_data_table };
 
 static const TMapObjCollisionData streetlamp_map_collision_data[] = {
 	{ "dptlight", 2 },
@@ -3418,7 +3454,10 @@ static const TMapObjHitDataTable football_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo football_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, football_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, football_hit_data_table };
 
 static const TMapObjSoundData football_sound_data
     = { 0xFFFFFFFF, 0x00003801, 0xFFFFFFFF, 0x00001807, 0x00001807,
@@ -3457,7 +3496,7 @@ static const TMapObjHitDataTable football_goal_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo football_goal_obj_hit_info
-    = { 0x1, 0x40000000, 0.0f, football_goal_hit_data_table };
+    = { 0x1, HIT_CATEGORY_MAP_OBJECT, 0.0f, football_goal_hit_data_table };
 
 static const TMapObjCollisionData football_goal_map_collision_data[] = {
 	{ "soccer_goal", 2 },
@@ -3555,7 +3594,10 @@ static const TMapObjHitDataTable watermelon_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo watermelon_obj_hit_info
-    = { 0x1, 0xDC000000, 0.0f, watermelon_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY
+	        | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	    0.0f, watermelon_hit_data_table };
 
 static const TMapObjSoundData watermelon_sound_data
     = { 0xFFFFFFFF, 0x00003801, 0xFFFFFFFF, 0x0000194F, 0x00003862,
@@ -4899,7 +4941,10 @@ static const TMapObjHitDataTable lamptrap_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo lamptrap_obj_hit_info
-    = { 0x1, 0x9C000000, 0.0f, lamptrap_hit_data_table };
+    = { 0x1,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, lamptrap_hit_data_table };
 
 static const TMapObjCollisionData lamptrap_map_collision_data[] = {
 	{ "lamptrap", 1 },
@@ -5107,7 +5152,7 @@ static const TMapObjHitDataTable AirportBuoy_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo AirportBuoy_obj_hit_info
-    = { 0x1, 0x80000000, -100.0f, AirportBuoy_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -100.0f, AirportBuoy_hit_data_table };
 
 static const TMapObjCollisionData AirportBuoy_map_collision_data[] = {
 	{ "Buoy", 1 },
@@ -5215,7 +5260,8 @@ static const TMapObjHitDataTable monumentshine_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo monumentshine_obj_hit_info
-    = { 0x1, 0x81000000, -300.0f, monumentshine_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, -300.0f,
+	    monumentshine_hit_data_table };
 
 static TMapObjData monumentshine_data = {
 	"monumentshine",
@@ -5247,7 +5293,8 @@ static const TMapObjHitDataTable belldolpic_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo belldolpic_obj_hit_info
-    = { 0x1, 0x81000000, -300.0f, belldolpic_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, -300.0f,
+	    belldolpic_hit_data_table };
 
 static TMapObjData belldolpic_data = {
 	"belldolpic",
@@ -5304,7 +5351,7 @@ static const TMapObjHitDataTable DptMonteFence_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo DptMonteFence_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, DptMonteFence_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, DptMonteFence_hit_data_table };
 
 static const TMapObjCollisionData DptMonteFence_map_collision_data[] = {
 	{ "dptMonteFence", 2 },
@@ -5437,7 +5484,7 @@ static const TMapObjHitDataTable NozzleDoor_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo NozzleDoor_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, NozzleDoor_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, NozzleDoor_hit_data_table };
 
 static const TMapObjCollisionData NozzleDoor_map_collision_data[] = {
 	{ "nozzleDoor", 2 },
@@ -5494,7 +5541,8 @@ static const TMapObjHitDataTable Crane_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Crane_obj_hit_info
-    = { 0x1, 0x90000000, 600.0f, Crane_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 600.0f,
+	    Crane_hit_data_table };
 
 static const TMapObjCollisionData crane_map_collision_data[] = {
 	{ "crane", 1 },
@@ -5576,7 +5624,8 @@ static const TMapObjHitDataTable CraneUpDown_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo CraneUpDown_obj_hit_info
-    = { 0x1, 0x90000000, -500.0f, CraneUpDown_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, -500.0f,
+	    CraneUpDown_hit_data_table };
 
 static const TMapObjCollisionData crane_updown_map_collision_data[] = {
 	{ "craneUpDown", 1 },
@@ -5608,7 +5657,8 @@ static const TMapObjHitDataTable crane_cargo_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo crane_cargo_obj_hit_info
-    = { 0x1, 0x90000000, -1650.0f, crane_cargo_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, -1650.0f,
+	    crane_cargo_hit_data_table };
 
 static const TMapObjCollisionData crane_cargo_map_collision_data[] = {
 	{ "craneCargoUpDown", 1 },
@@ -5690,7 +5740,8 @@ static const TMapObjHitDataTable Submarine_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Submarine_obj_hit_info
-    = { 0x1, 0x90000000, 0.0f, Submarine_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 0.0f,
+	    Submarine_hit_data_table };
 
 static const TMapObjCollisionData submarine_map_collision_data[] = {
 	{ "submarine", 2 },
@@ -5723,7 +5774,7 @@ static const TMapObjHitDataTable ricco_ship_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ricco_ship_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ricco_ship_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ricco_ship_hit_data_table };
 
 static const TMapObjCollisionData riccoShip_map_collision_data[] = {
 	{ "riccoShip", 1 },
@@ -5780,7 +5831,7 @@ static const TMapObjHitDataTable riccoLog_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoLog_obj_hit_info
-    = { 0x1, 0x80000000, -200.0f, riccoLog_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -200.0f, riccoLog_hit_data_table };
 
 static const TMapObjCollisionData riccoLog_map_collision_data[] = {
 	{ "riccoLog", 1 },
@@ -5819,7 +5870,7 @@ static const TMapObjHitDataTable gesoSurfboard_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo gesoSurfboard_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, gesoSurfboard_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, gesoSurfboard_hit_data_table };
 
 static TMapObjData gesoSurfboard_data = {
 	"GesoSurfBoard",
@@ -5887,7 +5938,7 @@ static const TMapObjHitDataTable riccoShipLog_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoShipLog_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, riccoShipLog_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, riccoShipLog_hit_data_table };
 
 static const TMapObjCollisionData riccoShipLog_map_collision_data[] = {
 	{ "riccoShipLog", 1 },
@@ -5919,7 +5970,7 @@ static const TMapObjHitDataTable riccoShipDol_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoShipDol_obj_hit_info
-    = { 0x1, 0x80000000, -400.0f, riccoShipDol_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -400.0f, riccoShipDol_hit_data_table };
 
 static const TMapObjCollisionData riccoShipDol_map_collision_data[] = {
 	{ "riccoShipDol", 1 },
@@ -5951,7 +6002,7 @@ static const TMapObjHitDataTable riccoYachtL_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoYachtL_obj_hit_info
-    = { 0x1, 0x80000000, -600.0f, riccoYachtL_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -600.0f, riccoYachtL_hit_data_table };
 
 static const TMapObjCollisionData riccoYachtL_map_collision_data[] = {
 	{ "riccoYachtL", 1 },
@@ -5983,7 +6034,7 @@ static const TMapObjHitDataTable riccoYachtS_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoYachtS_obj_hit_info
-    = { 0x1, 0x80000000, -500.0f, riccoYachtS_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -500.0f, riccoYachtS_hit_data_table };
 
 static const TMapObjCollisionData riccoYachtS_map_collision_data[] = {
 	{ "riccoYachtS", 1 },
@@ -6015,7 +6066,7 @@ static const TMapObjHitDataTable riccoBoatL_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoBoatL_obj_hit_info
-    = { 0x1, 0x80000000, -200.0f, riccoBoatL_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -200.0f, riccoBoatL_hit_data_table };
 
 static const TMapObjCollisionData riccoBoatL_map_collision_data[] = {
 	{ "riccoBoatL", 1 },
@@ -6047,7 +6098,7 @@ static const TMapObjHitDataTable riccoBoatS_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo riccoBoatS_obj_hit_info
-    = { 0x1, 0x80000000, -200.0f, riccoBoatS_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -200.0f, riccoBoatS_hit_data_table };
 
 static const TMapObjCollisionData riccoBoatS_map_collision_data[] = {
 	{ "riccoBoatS", 1 },
@@ -6372,7 +6423,7 @@ static const TMapObjHitDataTable surfgeso_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo surfgeso_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, surfgeso_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, surfgeso_hit_data_table };
 
 static const TMapObjAnimData surfgeso_anim_data[] = {
 	{ "surfgeso.bmd", nullptr, 0, nullptr, nullptr },
@@ -6444,7 +6495,7 @@ static const TMapObjHitDataTable Windmill_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Windmill_obj_hit_info
-    = { 0x1, 0x80000000, -2500.0f, Windmill_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -2500.0f, Windmill_hit_data_table };
 
 static const TMapObjCollisionData windmill_map_collision_data[] = {
 	{ "bigWindmill", 1 },
@@ -6494,7 +6545,7 @@ static const TMapObjHitDataTable MiniWindmill_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MiniWindmill_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, MiniWindmill_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, MiniWindmill_hit_data_table };
 
 static const TMapObjCollisionData MiniWindmillL_map_collision_data[] = {
 	{ "MiniWindmillL", 2 },
@@ -6591,7 +6642,10 @@ static const TMapObjHitDataTable lamp_bianco_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo lamp_bianco_obj_hit_info
-    = { 0x3, 0x9C000000, 0.0f, lamp_bianco_hit_data_table };
+    = { 0x3,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, lamp_bianco_hit_data_table };
 
 static const TMapObjCollisionData lamp_bianco_map_collision_data[] = {
 	{ "lampBianco", 2 },
@@ -6651,7 +6705,7 @@ static const TMapObjHitDataTable WindmillBlock_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo WindmillBlock_obj_hit_info
-    = { 0x1, 0x80000000, -200.0f, WindmillBlock_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -200.0f, WindmillBlock_hit_data_table };
 
 static const TMapObjCollisionData windmill_block_map_collision_data[] = {
 	{ "bigWindmillBlock", 1 },
@@ -6719,7 +6773,7 @@ static const TMapObjHitDataTable BiaBell_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo BiaBell_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, BiaBell_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, BiaBell_hit_data_table };
 
 static TMapObjData BiaBell_data = {
 	"BiaBell",
@@ -6776,7 +6830,8 @@ static const TMapObjHitDataTable BiaWatermill01_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo BiaWatermill01_obj_hit_info
-    = { 0x1, 0x91000000, -1000.0f, BiaWatermill01_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_WATER,
+	    -1000.0f, BiaWatermill01_hit_data_table };
 
 static const TMapObjCollisionData BiaWatermill01_map_collision_data[] = {
 	{ "BiaWatermill01", 1 },
@@ -6808,7 +6863,8 @@ static const TMapObjHitDataTable BiaWatermillVertical_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo BiaWatermillVertical_obj_hit_info
-    = { 0x1, 0x91000000, 0.0f, BiaWatermillVertical_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_WATER,
+	    0.0f, BiaWatermillVertical_hit_data_table };
 
 static const TMapObjCollisionData BiaWatermillVertical_map_collision_data[] = {
 	{ "BiaWatermillVertical", 1 },
@@ -6840,7 +6896,7 @@ static const TMapObjHitDataTable BiaTurnBridge_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo BiaTurnBridge_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, BiaTurnBridge_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, BiaTurnBridge_hit_data_table };
 
 static const TMapObjCollisionData BiaTurnBridge_map_collision_data[] = {
 	{ "BiaTurnBridge", 1 },
@@ -6872,7 +6928,8 @@ static const TMapObjHitDataTable LeafBoat_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo LeafBoat_obj_hit_info
-    = { 0x1, 0xD0000000, -200.0f, LeafBoat_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ENEMY,
+	    -200.0f, LeafBoat_hit_data_table };
 
 static const TMapObjCollisionData LeafBoat_map_collision_data[] = {
 	{ "LeafBoat", 1 },
@@ -6931,7 +6988,10 @@ static const TMapObjHitDataTable LampSeesaw_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo LampSeesaw_obj_hit_info
-    = { 0x3, 0x9C000000, 0.0f, LampSeesaw_hit_data_table };
+    = { 0x3,
+	    HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS
+	        | HIT_CATEGORY_NPC,
+	    0.0f, LampSeesaw_hit_data_table };
 
 static const TMapObjCollisionData LampSeesaw_map_collision_data[] = {
 	{ "lampBianco", 1 },
@@ -7038,7 +7098,7 @@ static const TMapObjHitDataTable SandBirdBlock_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo SandBirdBlock_obj_hit_info
-    = { 0x1, 0x80000000, -500.0f, SandBirdBlock_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -500.0f, SandBirdBlock_hit_data_table };
 
 static const TMapObjCollisionData SandBirdBlock_map_collision_data[] = {
 	{ "SandBirdBlock", 1 },
@@ -7309,7 +7369,8 @@ static const TMapObjHitDataTable mirror_L_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo mirror_L_obj_hit_info
-    = { 0x1, 0x90000000, 0.0f, mirror_L_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 0.0f,
+	    mirror_L_hit_data_table };
 
 static const TMapObjCollisionData mirror_L_map_collision_data[] = {
 	{ "mirrorL", 1 },
@@ -7342,7 +7403,8 @@ static const TMapObjHitDataTable mirror_M_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo mirror_M_obj_hit_info
-    = { 0x1, 0x90000000, 0.0f, mirror_M_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 0.0f,
+	    mirror_M_hit_data_table };
 
 static const TMapObjCollisionData mirror_M_map_collision_data[] = {
 	{ "mirrorM", 1 },
@@ -7375,7 +7437,8 @@ static const TMapObjHitDataTable mirrorS_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo mirrorS_obj_hit_info
-    = { 0x1, 0x90000000, 0.0f, mirrorS_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 0.0f,
+	    mirrorS_hit_data_table };
 
 static const TMapObjCollisionData mirrorS_map_collision_data[] = {
 	{ "mirrorS", 1 },
@@ -7538,7 +7601,7 @@ static const TMapObjHitDataTable MammaSurfboard_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MammaSurfboard_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, MammaSurfboard_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, MammaSurfboard_hit_data_table };
 
 static TMapObjData MammaSurfboard00_data = {
 	"MammaSurfboard00",
@@ -7642,7 +7705,7 @@ static const TMapObjHitDataTable MammaYacht00_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MammaYacht00_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, MammaYacht00_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, MammaYacht00_hit_data_table };
 
 static const TMapObjCollisionData MammaYacht00_map_collision_data[] = {
 	{ "MammaYacht00", 0 },
@@ -8066,7 +8129,7 @@ static const TMapObjHitDataTable GoalWatermelon_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo GoalWatermelon_obj_hit_info
-    = { 0x1, 0x40000000, 0.0f, GoalWatermelon_hit_data_table };
+    = { 0x1, HIT_CATEGORY_MAP_OBJECT, 0.0f, GoalWatermelon_hit_data_table };
 
 static TMapObjData GoalWatermelon_data = {
 	"GoalWatermelon",
@@ -8098,7 +8161,7 @@ static const TMapObjHitDataTable TeethOfJuicer_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo TeethOfJuicer_obj_hit_info
-    = { 0x1, 0x40000000, 0.0f, TeethOfJuicer_hit_data_table };
+    = { 0x1, HIT_CATEGORY_MAP_OBJECT, 0.0f, TeethOfJuicer_hit_data_table };
 
 static TMapObjData TeethOfJuicer_data = {
 	"TeethOfJuicer",
@@ -8155,7 +8218,7 @@ static const TMapObjHitDataTable merry_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo merrygoround_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, merry_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, merry_hit_data_table };
 
 static const TMapObjCollisionData merrygoround_map_collision_data[] = {
 	{ "merry", 0 },
@@ -8187,7 +8250,7 @@ static const TMapObjHitDataTable merry_egg_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo merry_egg_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, merry_egg_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, merry_egg_hit_data_table };
 
 static const TMapObjCollisionData merry_egg_map_collision_data[] = {
 	{ "merry_egg", 1 },
@@ -8251,7 +8314,7 @@ static const TMapObjHitDataTable FerrisWheel_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FerrisWheel_obj_hit_info
-    = { 0x1, 0x80000000, -2800.0f, FerrisWheel_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -2800.0f, FerrisWheel_hit_data_table };
 
 static TMapObjData FerrisWheel_data = {
 	"FerrisWheel",
@@ -8283,7 +8346,7 @@ static const TMapObjHitDataTable FerrisWheelGondola_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FerrisWheelGondola_obj_hit_info
-    = { 0x1, 0x80000000, -700.0f, FerrisWheelGondola_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -700.0f, FerrisWheelGondola_hit_data_table };
 
 static TMapObjData gondola_data = {
 	"FerrisGondola",
@@ -8333,7 +8396,8 @@ static const TMapObjHitDataTable Viking_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Viking_obj_hit_info
-    = { 0x1, 0x81000000, -1000.0f, Viking_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, -1000.0f,
+	    Viking_hit_data_table };
 
 static const TMapObjCollisionData viking_map_collision_data[] = {
 	{ "viking", 1 },
@@ -8449,7 +8513,7 @@ static const TMapObjHitDataTable balloon_koopajr_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo balloon_koopajr_obj_hit_info
-    = { 0x1, 0x10000000, 0.0f, balloon_koopajr_hit_data_table };
+    = { 0x1, HIT_CATEGORY_ENEMY, 0.0f, balloon_koopajr_hit_data_table };
 
 static TMapObjData BalloonKoopaJr_data = {
 	"balloonKoopaJr",
@@ -8488,7 +8552,7 @@ static const TMapObjHitDataTable ShellCup_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ShellCup_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ShellCup_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ShellCup_hit_data_table };
 
 static TMapObjData ShellCup_data = {
 	"ShellCup",
@@ -8552,7 +8616,8 @@ static const TMapObjHitDataTable PinnaHangingBridgeBoard_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo PinnaHangingBridgeBoard_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, PinnaHangingBridgeBoard_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f,
+	    PinnaHangingBridgeBoard_hit_data_table };
 
 static const TMapObjCollisionData PinnaHangingBridgeBoard_map_collision_data[]
     = {
@@ -8635,7 +8700,7 @@ static const TMapObjHitDataTable AmiKing_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo AmiKing_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, AmiKing_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, AmiKing_hit_data_table };
 
 static TMapObjData AmiKing_data = {
 	"amiking",
@@ -9117,7 +9182,7 @@ static const TMapObjHitDataTable PictureTeresa_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo PictureTeresa_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, PictureTeresa_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, PictureTeresa_hit_data_table };
 
 static const TMapObjCollisionData PictureTeresa_map_collision_data[] = {
 	{ "PictureTeresa", 2 },
@@ -9295,7 +9360,7 @@ static const TMapObjHitDataTable Cogwheel_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Cogwheel_obj_hit_info
-    = { 0x1, 0x80000000, -800.0f, Cogwheel_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -800.0f, Cogwheel_hit_data_table };
 
 static const TMapObjCollisionData cogwheel_map_collision_data[] = {
 	{ "cogwheel_wheel", 2 },
@@ -9327,7 +9392,7 @@ static const TMapObjHitDataTable CogwheelPlate_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo CogwheelPlate_obj_hit_info
-    = { 0x1, 0x80000000, -50.0f, CogwheelPlate_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -50.0f, CogwheelPlate_hit_data_table };
 
 static const TMapObjCollisionData CogwheelPlate_map_collision_data[] = {
 	{ "cogwheel_plate", 1 },
@@ -9359,7 +9424,7 @@ static const TMapObjHitDataTable CogwheelPot_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo CogwheelPot_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, CogwheelPot_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, CogwheelPot_hit_data_table };
 
 static const TMapObjCollisionData CogwheelPot_map_collision_data[] = {
 	{ "cogwheel_pot", 1 },
@@ -9391,7 +9456,8 @@ static const TMapObjHitDataTable mare_float_house_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo mare_float_house_obj_hit_info
-    = { 0x1, 0x84000000, -800.0f, mare_float_house_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_NPC, -800.0f,
+	    mare_float_house_hit_data_table };
 
 static const TMapObjCollisionData mare_float_house_map_collision_data[] = {
 	{ "ukisima", 1 },
@@ -9462,7 +9528,7 @@ static const TMapObjHitDataTable ElasticCode_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo ElasticCode_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, ElasticCode_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, ElasticCode_hit_data_table };
 
 static TMapObjData ElasticCode_data = {
 	"ElasticCode",
@@ -9554,7 +9620,7 @@ static const TMapObjHitDataTable MuddyBoat_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MuddyBoat_obj_hit_info
-    = { 0x1, 0x80000000, -150.0f, MuddyBoat_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -150.0f, MuddyBoat_hit_data_table };
 
 static const TMapObjCollisionData MuddyBoat_map_collision_data[] = {
 	{ "MuddyBoat", 1 },
@@ -9595,7 +9661,7 @@ static const TMapObjHitDataTable Puncher_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Puncher_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, Puncher_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, Puncher_hit_data_table };
 
 static TMapObjData Puncher_data = {
 	"Puncher",
@@ -9629,7 +9695,7 @@ static const TMapObjHitDataTable HatoPop_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo HatoPop_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, HatoPop_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, HatoPop_hit_data_table };
 
 static TMapObjData HatoPop_data = {
 	"HatoPop",
@@ -9654,7 +9720,7 @@ static const TMapObjHitDataTable MareWaterJump_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MareWaterJump_obj_hit_info
-    = { 0x1, 0x80000000, -800.0f, MareWaterJump_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -800.0f, MareWaterJump_hit_data_table };
 
 static const TMapObjCollisionData MareWaterJump_map_collision_data[] = {
 	{ "mareWaterJump_tool", 1 },
@@ -9818,7 +9884,7 @@ static const TMapObjHitDataTable MonteRoot_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MonteRoot_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, MonteRoot_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, MonteRoot_hit_data_table };
 
 static TMapObjData MonteRoot_data = {
 	"MonteRoot",
@@ -9883,7 +9949,8 @@ static const TMapObjHitDataTable MonteGoalFlag_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo MonteGoalFlag_obj_hit_info
-    = { 0x1, 0x88000000, 0.0f, MonteGoalFlag_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_BOSS, 0.0f,
+	    MonteGoalFlag_hit_data_table };
 
 static TMapObjData MonteGoalFlag_data = {
 	"MonteGoalFlag",
@@ -9915,7 +9982,7 @@ static const TMapObjHitDataTable HangingBridgeBoard_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo HangingBridgeBoard_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, HangingBridgeBoard_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, HangingBridgeBoard_hit_data_table };
 
 static const TMapObjCollisionData HangingBridgeBoard_map_collision_data[] = {
 	{ "mon_bri", 1 },
@@ -9965,7 +10032,7 @@ static const TMapObjHitDataTable SwingBoard_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo SwingBoard_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, SwingBoard_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, SwingBoard_hit_data_table };
 
 static const TMapObjCollisionData SwingBoard_map_collision_data[] = {
 	{ "SwingBoard", 1 },
@@ -10003,7 +10070,7 @@ static const TMapObjHitDataTable Fluff_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Fluff_obj_hit_info
-    = { 0x1, 0x80000000, -100.0f, Fluff_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, -100.0f, Fluff_hit_data_table };
 
 static TMapObjData Fluff_data = {
 	"Fluff",
@@ -10284,7 +10351,7 @@ static const TMapObjHitDataTable Nail_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo Nail_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, Nail_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, Nail_hit_data_table };
 
 static const TMapObjCollisionData Nail_map_collision_data[] = {
 	{ "kugi", 2 },
@@ -10364,7 +10431,7 @@ static const TMapObjHitDataTable FileLoadBlock_hit_data_table[] = {
 };
 
 static const TMapObjHitInfo FileLoadBlock_obj_hit_info
-    = { 0x1, 0x80000000, 0.0f, FileLoadBlock_hit_data_table };
+    = { 0x1, HIT_CATEGORY_PLAYER, 0.0f, FileLoadBlock_hit_data_table };
 
 static TMapObjData FileLoadBlockA_data = {
 	"FileLoadBlockA",
@@ -10976,7 +11043,7 @@ void TMapObjBase::initObjCollisionData()
 {
 	if (getMapObjData()->mHit != nullptr) {
 		initHitActor(getMapObjData()->unk4, getHitObjNumMax(),
-		             getMapObjData()->mHit->unk4, 0.0f, 0.0f, 0.0f, 0.0f);
+		             getMapObjData()->mHit->mHitFilter, 0.0f, 0.0f, 0.0f, 0.0f);
 		setObjHitData(0);
 
 		const TMapObjHitDataTable* table = getMapObjData()->mHit->unkC;
@@ -11001,10 +11068,10 @@ void TMapObjBase::initObjCollisionData()
 	}
 
 	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
-		onHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		onHitFilter(HIT_FILTER_NO_ATTACK);
 
 	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
-		onHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+		onHitFilter(HIT_FILTER_NO_DAMAGE);
 }
 
 void TMapObjBase::initBckMoveData()
@@ -11170,7 +11237,7 @@ void TMapObjBase::initMapObj()
 	initUnique();
 	checkIllegalAttr();
 
-	if (mMActor && checkActorType(0x40000000))
+	if (mMActor && isHitCategory(HIT_CATEGORY_MAP_OBJECT))
 		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)

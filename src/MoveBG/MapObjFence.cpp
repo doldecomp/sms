@@ -335,7 +335,7 @@ void TFenceWater::initMapObj()
 	unk144        = new TMapObjMessenger("地形オブジェメッセンジャー");
 	unk144->unk68 = this;
 	unk144->initHitActor(getActorType(), 1, 0, 0.0f, 0.0f, 100.0f, 300.0f);
-	unk144->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk144->offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk144->mPosition.set(mPosition.x, mPosition.y - 150.0f, mPosition.z);
 	static_cast<TIdxGroupObj*>(
 	    JDrama::TNameRefGen::search("オブジェクトグループ"))

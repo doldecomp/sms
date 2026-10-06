@@ -103,8 +103,11 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 	}
 
 	if (!(mStaticHitActor.mCollisions ? true : false)) {
-		mStaticHitActor.initHitActor(0x1000001, 1, 0x5c000000, 50.0f, 80.0f,
-		                             50.0f, 80.0f);
+		mStaticHitActor.initHitActor(0x1000001, 1,
+		                             HIT_CATEGORY_MAP_OBJECT
+		                                 | HIT_CATEGORY_ENEMY
+		                                 | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+		                             50.0f, 80.0f, 50.0f, 80.0f);
 		mStaticHitActor.unk68 = -1;
 	}
 

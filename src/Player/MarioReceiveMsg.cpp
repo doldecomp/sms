@@ -95,7 +95,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		return FALSE;
 
 	// Generic "Mario hit by enemy" thump sound.
-	if (sender->checkActorType(0x20000000)) {
+	if (sender->isHitCategory(HIT_CATEGORY_ITEM)) {
 		bool playThump = true;
 		if (sender->mActorType == 0x2000000E)
 			playThump = false;
@@ -122,17 +122,17 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_THROWN) {
-		if (sender->checkActorType(ACTOR_TYPE_PLAYER)
-		    || sender->checkActorType(ACTOR_TYPE_UNK4000000)
-		    || sender->checkActorType(ACTOR_TYPE_ENEMY)
-		    || sender->checkActorType(ACTOR_TYPE_BOSS)) {
+		if (sender->isHitCategory(HIT_CATEGORY_PLAYER)
+		    || sender->isHitCategory(HIT_CATEGORY_NPC)
+		    || sender->isHitCategory(HIT_CATEGORY_ENEMY)
+		    || sender->isHitCategory(HIT_CATEGORY_BOSS)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_HANEAGARI, &mPosition, 0,
 			                                &mSound, 0, 4);
 		}
 		if (sender->mActorType == 0x10000015)
 			startVoice(MSD_SE_MV27_SPRISE_01);
 
-		if (sender->checkActorType(ACTOR_TYPE_UNK40000000)
+		if (sender->isHitCategory(HIT_CATEGORY_MAP_OBJECT)
 		    && gpMSound->getMarioVoiceID(0) != MSD_SE_MV28_SPRISE_SMALL_01) {
 			startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 		}
@@ -145,7 +145,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	// Pickups (items, coins, water bottles, nozzles).
-	if (sender->checkActorType(ACTOR_TYPE_UNK20000000)) {
+	if (sender->isHitCategory(HIT_CATEGORY_ITEM)) {
 		switch (sender->mActorType) {
 		case 0x20000001: // small water restore
 			if (message == HIT_MESSAGE_ATTACK) {
@@ -254,8 +254,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		}
 	}
 
-	// Bosses / NPC-class actors with bit 0x40000000.
-	if (sender->checkActorType(ACTOR_TYPE_UNK40000000)) {
+	if (sender->isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 		switch (sender->getActorType()) {
 		case 0x4000001D: // lamp trap iron
 			if (message == HIT_MESSAGE_UNKA && !isInvincible()) {
@@ -373,7 +372,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	// Enemy-class actors with bit 0x10000000.
-	if (sender->checkActorType(0x10000000)) {
+	if (sender->isHitCategory(HIT_CATEGORY_ENEMY)) {
 		switch (sender->getActorType()) {
 		case 0x10000003: // hamukuri (namekuri variant)
 			if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {

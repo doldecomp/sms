@@ -107,8 +107,8 @@ void TWoodBarrel::touchPlayer(THitActor* param_1)
 
 void TWoodBarrel::touchActor(THitActor* param_1)
 {
-	if (param_1->checkActorType(0x4000000)
-	    || param_1->checkActorType(0x40000000)) {
+	if (param_1->isHitCategory(HIT_CATEGORY_NPC)
+	    || param_1->isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		kill();
 	} else {

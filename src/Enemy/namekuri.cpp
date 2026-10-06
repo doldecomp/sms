@@ -286,7 +286,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	JKRHeap::getCurrentHeap()->getTotalFreeSize();
 
 	TWalkerEnemy::init(param_1);
-	onHitFlag(0x40000000);
+	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mActorType = 0x10000003;
 	unk150     = 0x3A;
 	getWalker()->setMode(1);
@@ -627,7 +627,7 @@ bool TNameKuri::isHitValid(u32 param_1)
 
 bool TNameKuri::isCollidMove(THitActor* param_1)
 {
-	if ((param_1->getActorType() & 0xffff0000) == 0x40000000) {
+	if (param_1->getHitCategory() == HIT_CATEGORY_MAP_OBJECT) {
 		if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve())
 			kill();
 		return true;

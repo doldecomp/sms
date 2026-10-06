@@ -378,10 +378,10 @@ static void evSetHide4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	if (liveActor) {
 		if (value) {
 			liveActor->onLiveFlag(LIVE_FLAG_HIDDEN);
-			liveActor->onHitFlag(HIT_FLAG_NO_COLLISION);
+			liveActor->onHitFilter(HIT_FILTER_NO_COLLISION);
 		} else {
 			liveActor->offLiveFlag(LIVE_FLAG_HIDDEN);
-			liveActor->offHitFlag(HIT_FLAG_NO_COLLISION);
+			liveActor->offHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 	}
 
@@ -400,10 +400,10 @@ static void evSetDead4LiveActor(TSpcTypedInterp<TEventWatcher>* interp,
 	if (liveActor) {
 		if (value) {
 			liveActor->onLiveFlag(LIVE_FLAG_DEAD);
-			liveActor->onHitFlag(HIT_FLAG_NO_COLLISION);
+			liveActor->onHitFilter(HIT_FILTER_NO_COLLISION);
 		} else {
 			liveActor->offLiveFlag(LIVE_FLAG_DEAD);
-			liveActor->offHitFlag(HIT_FLAG_NO_COLLISION);
+			liveActor->offHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 	}
 
@@ -1128,9 +1128,9 @@ static void evSetCollision(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	THitActor* hitActor = (THitActor*)getNameRefPtr(interp->pop());
 
 	if (!value)
-		hitActor->onHitFlag(HIT_FLAG_NO_COLLISION);
+		hitActor->onHitFilter(HIT_FILTER_NO_COLLISION);
 	else
-		hitActor->offHitFlag(HIT_FLAG_NO_COLLISION);
+		hitActor->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	interp->push();
 }

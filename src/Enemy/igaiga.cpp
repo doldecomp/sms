@@ -344,8 +344,8 @@ void TIgaiga::init(TLiveManager* param_1)
 	TWalkerEnemy::init(param_1);
 	mActorType = 0x10000017;
 	unk150     = 0x11;
-	offHitFlag(HIT_FLAG_UNK8000000 | HIT_FLAG_UNK10000000);
-	onHitFlag(HIT_FLAG_UNK40000000);
+	offHitFilter(HIT_CATEGORY_BOSS | HIT_CATEGORY_ENEMY);
+	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 
 	mSpine->initWith(&TNerveIgaigaRollOnGraph::theNerve());
 	unk1A4 = (TRollEnemySaveLoadParams*)getSaveParam();
@@ -828,8 +828,8 @@ void TGorogoro::init(TLiveManager* param_1)
 	TWalkerEnemy::init(param_1);
 	mActorType = 0x10000019;
 	unk150     = 0x31;
-	offHitFlag(HIT_FLAG_UNK8000000 | HIT_FLAG_UNK10000000
-	           | HIT_FLAG_UNK40000000);
+	offHitFilter(HIT_CATEGORY_BOSS | HIT_CATEGORY_ENEMY
+	             | HIT_CATEGORY_MAP_OBJECT);
 	mSpine->initWith(&TNerveGorogoroRollOnGraph::theNerve());
 	unk1A4 = (TRollEnemySaveLoadParams*)getSaveParam();
 
@@ -1179,7 +1179,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 	TGorogoro* self = (TGorogoro*)spine->getBody();
 
 	if (spine->getTime() < 2) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		if (self->mGroundPlane->isWaterSurface() && !self->isAirborne())
 			self->generateEffectColumWater();
@@ -1193,7 +1193,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 			self->setDeadEffect();
 		}
 	} else if (self->checkCurAnmEnd(0) || spine->getTime() > 360) {
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);

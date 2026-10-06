@@ -71,7 +71,8 @@ void TMapWireActor::init(TMapWireActorManager* manager)
 {
 	unk74 = manager;
 
-	initHitActor(0x40000098, 1, -0x80000000, TMapWireActor::mCommonAttackRadius,
+	initHitActor(0x40000098, 1, HIT_CATEGORY_PLAYER,
+	             TMapWireActor::mCommonAttackRadius,
 	             TMapWireActor::mCommonAttackHeight, 0.0f, 0.0f);
 
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
@@ -192,10 +193,10 @@ void TMapWireManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		TMapWireActorManager* mgr;
 		for (int i = 0; i < unk1C; ++i) {
 			mgr = unk24[i];
-			mgr->unk4.onHitFlag(HIT_FLAG_NO_COLLISION);
+			mgr->unk4.onHitFilter(HIT_FILTER_NO_COLLISION);
 			if (mgr->unk7C != nullptr) {
 				MtxPtr mtx = gpMarioOriginal->getTakenMtx();
-				mgr->unk4.offHitFlag(HIT_FLAG_NO_COLLISION);
+				mgr->unk4.offHitFilter(HIT_FILTER_NO_COLLISION);
 				mgr->unk4.mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 			}
 		}

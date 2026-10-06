@@ -138,7 +138,7 @@ void TRocket::init(TLiveManager* param_1)
 	unk150     = 0x11;
 	unk1A4     = (TRocketSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveRocketWait::theNerve());
-	onHitFlag(HIT_FLAG_UNK8000000);
+	onHitFilter(HIT_CATEGORY_BOSS);
 }
 
 void TRocket::calcRootMatrix()
@@ -379,7 +379,7 @@ DEFINE_NERVE(TNerveRocketFly, TLiveActor)
 
 		f32 angle = MsGetRotFromZaxisY(velocity);
 		self->mRotation.set(0.0f, MsAngleWrap(angle), 0.0f);
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (!self->isBckAnm(1))

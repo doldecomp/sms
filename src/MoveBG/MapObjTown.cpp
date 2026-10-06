@@ -307,7 +307,7 @@ u32 TMapObjBillboard::touchWater(THitActor* param_1)
 void TMapObjChangeStage::touchPlayer(THitActor*)
 {
 	gpMarDirector->setNextStage(unk138, nullptr);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mColCount = 0;
 	gpMSound->startSoundActor(MSD_SE_MA_WARP_EX, &mPosition, 0, nullptr, 0, 4);
 }
@@ -358,9 +358,9 @@ void TDamageObj::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TDamageObj::init(u32 param_1)
 {
-	initHitActor(param_1, 1, 0x80000000, 50.0f * mScaling.x,
+	initHitActor(param_1, 1, HIT_CATEGORY_PLAYER, 50.0f * mScaling.x,
 	             100.0f * mScaling.y, 0.0f, 0.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	TMapObjBase::joinToGroup("マップグループ", this);
 }
 
@@ -370,16 +370,16 @@ void TDamageObj::load(JSUMemoryInputStream& stream)
 	char name[0x20];
 	stream.readString(name, 0x20);
 	if (strcmp(name, "normal") == 0) {
-		initHitActor(0x10000036, 1, 0x80000000, 50.0f * mScaling.x,
+		initHitActor(0x10000036, 1, HIT_CATEGORY_PLAYER, 50.0f * mScaling.x,
 		             100.0f * mScaling.y, 0.0f, 0.0f);
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		TMapObjBase::joinToGroup("マップグループ", this);
 		return;
 	}
 	if (strcmp(name, "water") == 0) {
-		initHitActor(0x40000053, 1, 0x80000000, 50.0f * mScaling.x,
+		initHitActor(0x40000053, 1, HIT_CATEGORY_PLAYER, 50.0f * mScaling.x,
 		             100.0f * mScaling.y, 0.0f, 0.0f);
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 		TMapObjBase::joinToGroup("マップグループ", this);
 	}
 }
@@ -496,7 +496,7 @@ BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
 		    "オブジェスイッチ用カメラ", nullptr, -1, 0.0f, true, nullptr, 0,
 		    nullptr, JDrama::TFlagT<u16>(0));
 		mStateTimer = unk140;
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		return TRUE;
 	}
 
@@ -559,7 +559,7 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 		gpMSound->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0, nullptr,
 		                          0, 4);
 		removeMapCollision();
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mState = 2;
 		return TRUE;
 	}

@@ -260,7 +260,7 @@ void TMario::soundMovement()
 			if (mCollisions[0] != nullptr) {
 				mSoundValues.unk29 = 4;
 				mSoundValues.unk14 = mCollisions[0]->mActorType;
-				if (mCollisions[0]->checkActorType(0x04000000))
+				if (mCollisions[0]->isHitCategory(HIT_CATEGORY_NPC))
 					mSoundValues.unk28 = 1;
 				else
 					mSoundValues.unk28 = 2;

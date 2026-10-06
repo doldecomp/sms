@@ -46,8 +46,8 @@ void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
 		THitActor* candidate = list->unk4;
 		list                 = list->unk0;
 
-		if (!actor->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
-		    && !candidate->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)
+		if (!actor->checkHitFilter(HIT_FILTER_NO_ATTACK)
+		    && !candidate->checkHitFilter(HIT_FILTER_NO_DAMAGE)
 		    && actor->canAttack(candidate)
 		    && checkDistance(actor->mPosition, actor->getAttackRadius(),
 		                     actor->getAttackHeight(), candidate->mPosition,
@@ -56,8 +56,8 @@ void TObjHitCheck::checkActorsInList(THitActor* actor, TObjCheckList* list)
 			suffererIsInAttackArea(actor, candidate);
 		}
 
-		if (!candidate->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
-		    && !actor->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)
+		if (!candidate->checkHitFilter(HIT_FILTER_NO_ATTACK)
+		    && !actor->checkHitFilter(HIT_FILTER_NO_DAMAGE)
 		    && candidate->canAttack(actor)
 		    && checkDistance(candidate->mPosition, candidate->getAttackRadius(),
 		                     candidate->getAttackHeight(), actor->mPosition,
@@ -76,8 +76,8 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 		THitActor* candidate = list->unk4;
 		list                 = list->unk0;
 
-		if (candidate->checkActorType(ACTOR_TYPE_PLAYER)
-		    || candidate->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT))
+		if (candidate->isHitCategory(HIT_CATEGORY_PLAYER)
+		    || candidate->checkHitFilter(HIT_FILTER_NO_DAMAGE))
 			continue;
 
 		if (!checkDistance(
@@ -121,8 +121,8 @@ void TObjHitCheck::checkWater()
 
 void TObjHitCheck::entryActor(THitActor* actor, TObjCheckList* head)
 {
-	if (!actor->checkHitFlag(HIT_FLAG_CANNOT_ATTACK)
-	    || !actor->checkHitFlag(HIT_FLAG_CANNOT_GET_HIT)) {
+	if (!actor->checkHitFilter(HIT_FILTER_NO_ATTACK)
+	    || !actor->checkHitFilter(HIT_FILTER_NO_DAMAGE)) {
 		TObjCheckList* newList = &unk800[unk804];
 
 		newList->unk4 = actor;
@@ -153,7 +153,7 @@ void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 	     ++it) {
 		(*it)->mColCount = 0;
 
-		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
+		if ((*it)->checkHitFilter(HIT_FILTER_NO_COLLISION))
 			continue;
 
 		u32 e;
@@ -179,7 +179,7 @@ void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 	     ++it) {
 		(*it)->mColCount = 0;
 
-		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
+		if ((*it)->checkHitFilter(HIT_FILTER_NO_COLLISION))
 			continue;
 
 		u32 e;
@@ -213,7 +213,7 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
 	     ++it) {
 		(*it)->mColCount = 0;
-		if ((*it)->checkHitFlag(HIT_FLAG_NO_COLLISION))
+		if ((*it)->checkHitFilter(HIT_FILTER_NO_COLLISION))
 			continue;
 
 		if (checkDistance((*it)->mPosition, (*it)->getAttackRadius(),

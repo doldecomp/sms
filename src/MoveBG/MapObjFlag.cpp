@@ -117,7 +117,7 @@ void TMapObjFlag::init(const char* param_1)
 	static int total_use_size = 0;
 	JKRGetCurrentHeap()->getTotalFreeSize();
 	gpMapObjFlagManager->registerObj(this, param_1);
-	initHitActor(ACTOR_TYPE_UNK40000000 | 0xD, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	initHitActor(HIT_CATEGORY_MAP_OBJECT | 0xD, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void TMapObjFlag::load(JSUMemoryInputStream& stream)

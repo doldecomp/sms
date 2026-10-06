@@ -423,9 +423,12 @@ void TMario::initValues()
 	unk530 = new s16[60];
 	resetHistory();
 
-	initHitActor(0x80000001, 5, 0xFC000000, mDeParams.mTrampleRadius.get(),
-	             mDeParams.mAttackHeight.get(), mDeParams.mDamageRadius.get(),
-	             mDeParams.mDamageHeight.get());
+	initHitActor(0x80000001, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
+	                 | HIT_CATEGORY_ITEM | HIT_CATEGORY_ENEMY
+	                 | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,
+	             mDeParams.mTrampleRadius.get(), mDeParams.mAttackHeight.get(),
+	             mDeParams.mDamageRadius.get(), mDeParams.mDamageHeight.get());
 
 	unk390 = new TMBindShadowBody(this, mModel->getModel(), 1.0f);
 

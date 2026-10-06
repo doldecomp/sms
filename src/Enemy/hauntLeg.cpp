@@ -111,7 +111,7 @@ void THauntedObject::checkHit()
 	for (int i = getColNum(); i > 0; --i) { }
 }
 
-void THauntedObject::kill() { onHitFlag(HIT_FLAG_NO_COLLISION); }
+void THauntedObject::kill() { onHitFilter(HIT_FILTER_NO_COLLISION); }
 
 THauntLeg::THauntLeg(const char* param_1)
     : TWalkerEnemy(param_1)
@@ -127,7 +127,7 @@ void THauntLeg::init(TLiveManager* param_1)
 	TWalkerEnemy::init(param_1);
 	mActorType = 0x10000025;
 	unk150     = 0x3a;
-	onHitFlag(HIT_FLAG_UNK20000000 | HIT_FLAG_UNK40000000);
+	onHitFilter(HIT_CATEGORY_ITEM | HIT_CATEGORY_MAP_OBJECT);
 	getWalker()->setMode(1);
 	unk130 = 2;
 	getMActor()->setJointCallback(1, HauntLegCallback);
@@ -136,8 +136,8 @@ void THauntLeg::init(TLiveManager* param_1)
 	    ->getChildren()
 	    .push_back(unk194);
 	f32 radius = 30.0f * mBodyScale;
-	unk194->initHitActor(0x10000025, 2, 0x80000000, radius, radius, radius,
-	                     radius);
+	unk194->initHitActor(0x10000025, 2, HIT_CATEGORY_PLAYER, radius, radius,
+	                     radius, radius);
 	unk194->unk68 = this;
 }
 
@@ -247,8 +247,8 @@ bool THauntLeg::isCollidMove(THitActor* param_1)
 {
 	if (mSpine->getCurrentNerve() != &TNerveHauntLegHaunt::theNerve() && !unk198
 	    && !checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		u32 type = param_1->getActorType() & ACTOR_TYPE_MASK;
-		if (type == ACTOR_TYPE_UNK20000000 || type == ACTOR_TYPE_UNK40000000) {
+		u32 type = param_1->getActorType() & HIT_CATEGORY_MASK;
+		if (type == HIT_CATEGORY_ITEM || type == HIT_CATEGORY_MAP_OBJECT) {
 			TTakeActor* actor = (TTakeActor*)param_1;
 			if (actor->getHolder() == nullptr || actor != unk19C) {
 				unk19C = actor;

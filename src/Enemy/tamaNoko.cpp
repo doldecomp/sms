@@ -364,7 +364,7 @@ BOOL TTamaNoko::receiveMessage(THitActor* sender, u32 message)
 	if (message == HIT_MESSAGE_UNKD) {
 		mHitPoints = 0;
 		onLiveFlag(LIVE_FLAG_DEAD);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
@@ -523,7 +523,7 @@ void TTamaNoko::requestShadow()
 		}
 
 		if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT)
-		    && !checkActorType(ACTOR_TYPE_UNK40000000)) {
+		    && !isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 			gpQuestionManager->request(mPosition, mScaledBodyRadius);
 		}
 	}

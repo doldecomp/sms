@@ -97,9 +97,9 @@ void TRoulette::initMapObj()
 		attackR = 40.0f;
 		attackH = 80.0f;
 	}
-	unk150->initHitActor(0x4000019A, 2, 0x80000000, attackR, attackH, attackR,
-	                     attackH);
-	unk150->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk150->initHitActor(0x4000019A, 2, HIT_CATEGORY_PLAYER, attackR, attackH,
+	                     attackR, attackH);
+	unk150->offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TRoulette::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -1143,9 +1143,9 @@ void TWarpAreaActor::load(JSUMemoryInputStream& stream)
 	unk68 = v;
 	stream >> v;
 	unk6A = v;
-	initHitActor(0x4000019D, 1, -0x80000000, 100.0f * mScaling.x,
+	initHitActor(0x4000019D, 1, HIT_CATEGORY_PLAYER, 100.0f * mScaling.x,
 	             100.0f * mScaling.y, 0.0f, 0.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	gpConductor->registerOtherObj(this);
 }
 

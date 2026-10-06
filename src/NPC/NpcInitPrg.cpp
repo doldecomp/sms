@@ -129,7 +129,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	if (param_1 == nullptr) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		initHitActor(mActorType, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mSpine->initWith(&TNerveNPCWaitMarioApproach::theNerve());
 		mTurnSpeed = mIndividualParams->mWaitTurnSpeed.get();
 		gpConductor->registerAloneActor(this);

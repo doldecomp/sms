@@ -1176,9 +1176,10 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 
 		for (int i = 0; i < mRequestNum; i++) {
 			if (param_1 & 0x40000000) {
-				if (!(mQuads[i].mRequest->mActorType & 0x40000000))
+				if (!(mQuads[i].mRequest->mActorType & HIT_CATEGORY_MAP_OBJECT))
 					continue;
-			} else if (mQuads[i].mRequest->mActorType & 0x40000000) {
+			} else if (mQuads[i].mRequest->mActorType
+			           & HIT_CATEGORY_MAP_OBJECT) {
 				continue;
 			}
 
@@ -1254,7 +1255,7 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 }
 
 void TMBindShadowManager::request(const TCircleShadowRequest& request,
-                                  u32 param_2)
+                                  u32 actor_type)
 {
 	JGeometry::TVec3<f32> delta = request.mPosition;
 	delta -= gpCamera->unk124;
@@ -1280,7 +1281,7 @@ void TMBindShadowManager::request(const TCircleShadowRequest& request,
 
 	if (mRequestNum < 0x200) {
 		mRequests[mRequestNum]               = request;
-		mRequests[mRequestNum].mActorType    = param_2;
+		mRequests[mRequestNum].mActorType    = actor_type;
 		mRequests[mRequestNum].mCameraDistSq = dist;
 
 		if (request.mShadowType == SHADOW_TYPE_TREE) {
@@ -1301,7 +1302,7 @@ void TMBindShadowManager::request(const TCircleShadowRequest& request,
 }
 
 void TMBindShadowManager::forceRequest(const TCircleShadowRequest& request,
-                                       u32 param_2)
+                                       u32 actor_type)
 {
 	JGeometry::TVec3<f32> pos   = request.mPosition;
 	JGeometry::TVec3<f32> delta = pos;
@@ -1310,7 +1311,7 @@ void TMBindShadowManager::forceRequest(const TCircleShadowRequest& request,
 
 	if (mRequestNum < 0x200) {
 		mRequests[mRequestNum]               = request;
-		mRequests[mRequestNum].mActorType    = param_2;
+		mRequests[mRequestNum].mActorType    = actor_type;
 		mRequests[mRequestNum].mCameraDistSq = dist;
 		mRequestNum++;
 	}
@@ -1564,7 +1565,7 @@ void TMBindShadowManager::calcVtx()
 				arrays[mQuadAryNum].mBlendHead = b;
 				arrays[mQuadAryNum].mBlendTail = b;
 				arrays[mQuadAryNum].unk0       = 0x20000000;
-				if (q->mRequest->mActorType & 0x40000000)
+				if (q->mRequest->mActorType & HIT_CATEGORY_MAP_OBJECT)
 					arrays[mQuadAryNum].unk0 = 0x40000000;
 				mQuadAryNum++;
 			}
@@ -1585,8 +1586,10 @@ void TMBindShadowManager::calcVtx()
 			arrays[i].mBlendTail->mNext = arrays[j].mBlendHead;
 			arrays[i].mBlendTail        = arrays[j].mBlendTail;
 
-			if ((arrays[i].mQuadHead->mRequest->mActorType & 0x40000000)
-			    || (arrays[j].mQuadHead->mRequest->mActorType & 0x40000000))
+			if ((arrays[i].mQuadHead->mRequest->mActorType
+			     & HIT_CATEGORY_MAP_OBJECT)
+			    || (arrays[j].mQuadHead->mRequest->mActorType
+			        & HIT_CATEGORY_MAP_OBJECT))
 				arrays[i].unk0 = 0x40000000;
 
 			arrays[j].mQuadHead  = nullptr;

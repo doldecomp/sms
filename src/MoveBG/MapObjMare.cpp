@@ -629,7 +629,7 @@ void TMapObjPuncher::touchPlayer(THitActor* param_1)
 	SMS_MarioMoveRequest(marioPos);
 	SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
 	SMS_ThrowMario(localZ, unk138);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 	emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition, scale);
 	emitAndScale(PARTICLE_MS_ENM_DISAP_B, 0, &mPosition, scale);
@@ -666,7 +666,7 @@ void TMapObjPuncher::load(JSUMemoryInputStream& param_1)
 	param_1 >> value;
 	unk138 = value;
 	sleep();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TMuddyBoat::moveByWater()

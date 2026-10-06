@@ -148,7 +148,7 @@ void TBathtubKiller::init(TLiveManager* manager)
 	onLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_DEAD);
 	onLiveFlag(LIVE_FLAG_UNK8);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk194 = 0;
 	resetBathtubKiller();
 }
@@ -197,9 +197,9 @@ void TBathtubKiller::reset()
 	TSmallEnemy::reset();
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_UNK8);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	offHitFlag(HIT_FLAG_CANNOT_ATTACK);
-	offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_ATTACK);
+	offHitFilter(HIT_FILTER_NO_DAMAGE);
 	resetBathtubKiller();
 }
 
@@ -462,7 +462,7 @@ DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
 		self->setBckAnm(2);
 	}
 	if (self->unk218 <= 0)
-		self->offHitFlag(HIT_FLAG_NO_COLLISION);
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	JGeometry::TVec3<f32> vec;
 	self->mQuat.getZDir(vec);
@@ -479,7 +479,7 @@ DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setDeadBathtubKillerAnm();
 		self->generateItemBathtubKiller();
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -503,7 +503,7 @@ DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
 			TEffectExplosion* effect = (TEffectExplosion*)effectBase;
 			effect->generate(self->mPosition, self->mScaling);
 		}
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (self->checkCurAnmEnd(0)) {

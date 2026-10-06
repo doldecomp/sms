@@ -44,8 +44,9 @@ void TDebuTelesa::reset() { }
 
 void TDebuTelesa::initCollision()
 {
-	initHitActor(0x10000033, 1, 0x80000000, 10.0f, 10.0f, 10.0f, 10.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x10000033, 1, HIT_CATEGORY_PLAYER, 10.0f, 10.0f, 10.0f,
+	             10.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TDebuTelesa::calcRootMatrix()

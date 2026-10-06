@@ -90,7 +90,7 @@ TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
 {
 	mSharedParts
 	    = new TSharedParts(mOwner, jointIndex, modelData, 0, "<TSharedParts>");
-	initHitActor(0x2000002C, 3, ACTOR_TYPE_PLAYER,
+	initHitActor(0x2000002C, 3, HIT_CATEGORY_PLAYER,
 	             mOwner->mTearsParams->mSLTearsDropAttackRadius.get(),
 	             mOwner->mTearsParams->mSLTearsDropAttackHeight.get(),
 	             mOwner->mTearsParams->mSLTearsDropDamageRadius.get(),
@@ -135,7 +135,7 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBEelTearsDrop::generate(JGeometry::TVec3<f32>& position)
 {
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mActive = true;
 	TMsRange<f32> riseRange(4.0f, 6.0f);
 	mRiseSpeed = riseRange.rand();
@@ -275,7 +275,7 @@ void TBEelTears::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
 	mActorType = 0x08000003;
-	onHitFlag(HIT_FLAG_UNK8000000);
+	onHitFilter(HIT_CATEGORY_BOSS);
 	setMActorAndKeeper();
 	mTearsParams = static_cast<TBEelTearsSaveLoadParams*>(getSaveParam());
 	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
@@ -307,7 +307,7 @@ void TBEelTears::init(TLiveManager* manager)
 	mRecoverCollision->initCollision();
 
 	enemyGroup->getChildren().push_back(mRecoverCollision);
-	mRecoverCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+	mRecoverCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBEelTears::setMActorAndKeeper()
@@ -447,8 +447,8 @@ BOOL TBEelTears::receiveMessage(THitActor*, u32 message)
 
 void TBEelTears::kill()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	mRecoverCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mRecoverCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_DEAD);
 }
 
@@ -463,7 +463,7 @@ void TBEelTears::reset()
 	offLiveFlag(LIVE_FLAG_UNK200);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mGroundPlane = gpMap->getIllegalCheckData();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBEelTears::setBubble()
@@ -478,7 +478,7 @@ void TBEelTears::setBubble()
 void TBEelTears::setRecoverTears()
 {
 	mRecoverCollision->mColliding = false;
-	mRecoverCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mRecoverCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 	mRecoverCollision->mRecovering = true;
 	mRecoverCollision->mPosition   = mPosition;
 }
@@ -784,7 +784,7 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 
 	mColor.a   = 0xFF;
 	mHitPoints = mOwner->getBossEelParams().mSLToothMaxHitPoint.get();
-	initHitActor(0x08000022, 5, 0x81000000,
+	initHitActor(0x08000022, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
 	             mOwner->getBossEelParams().mSLToothAttackRadius.get(),
 	             mOwner->getBossEelParams().mSLToothAttackHeight.get(),
 	             mOwner->getBossEelParams().mSLToothDamageRadius.get(),
@@ -794,7 +794,7 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 	    JDrama::TNameRefGen::search("オブジェクトグループ"))
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossEelTooth::changeToothAlpha(u8 alpha) { mColor.a = alpha; }
@@ -919,7 +919,7 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 					                             .mSLToothLiveHeight.get()
 					    || mPosition.y > SMS_GetMarioPos().y + 2000.0f) {
 						mHitPoints = 0;
-						onHitFlag(HIT_FLAG_NO_COLLISION);
+						onHitFilter(HIT_FILTER_NO_COLLISION);
 					}
 				}
 			}
@@ -977,7 +977,7 @@ TBossEelVortex::TBossEelVortex(TBossEel* owner, const char* name)
     , mOwner(owner)
     , mInactive(true)
 {
-	initHitActor(0x8000003, 3, ACTOR_TYPE_PLAYER,
+	initHitActor(0x8000003, 3, HIT_CATEGORY_PLAYER,
 	             mOwner->getBossEelParams().mSLVortexAttackRadius.get(),
 	             mOwner->getBossEelParams().mSLVortexAttackHeight.get(),
 	             mOwner->getBossEelParams().mSLVortexDamageRadius.get(),
@@ -985,7 +985,7 @@ TBossEelVortex::TBossEelVortex(TBossEel* owner, const char* name)
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -1040,7 +1040,7 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 					SMS_MarioMoveRequest(marioTarget);
 				}
 			} else {
-				onHitFlag(HIT_FLAG_NO_COLLISION);
+				onHitFilter(HIT_FILTER_NO_COLLISION);
 			}
 		}
 	}
@@ -1059,8 +1059,8 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBossEelVortex::reset()
 {
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	onHitFlag(ACTOR_TYPE_PLAYER);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	onHitFilter(HIT_CATEGORY_PLAYER);
 	mTimer = 0;
 }
 
@@ -1276,7 +1276,7 @@ void TBossEelCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBossEelCollision::initCollision()
 {
-	initHitActor(0x08000023, 5, ACTOR_TYPE_PLAYER, mBaseAttackRadius,
+	initHitActor(0x08000023, 5, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
 	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
 }
 
@@ -1305,7 +1305,7 @@ void TBossEelAwaCollision::initCollision()
 	mBaseAttackRadius = 2000.0f;
 	mBaseDamageHeight = 2000.0f;
 	mBaseAttackHeight = 2000.0f;
-	initHitActor(0x08000003, 2, ACTOR_TYPE_PLAYER, mBaseAttackRadius,
+	initHitActor(0x08000003, 2, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
 	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
 }
 
@@ -1323,9 +1323,9 @@ void TBossEelAwaCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
 		if (SMS_GetMarioPos().y < mPosition.y + 500.0f)
-			offHitFlag(HIT_FLAG_NO_COLLISION);
+			offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (SMS_GetMarioPos().y > mPosition.y + mAttackHeight)
-			onHitFlag(HIT_FLAG_NO_COLLISION);
+			onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		for (s32 i = 0; i < mColCount; ++i) {
 			if (mCollisions[i]->isActorType(0x80000001))
@@ -1362,7 +1362,7 @@ void TBossEelTearsRecoverCollision::initCollision()
 	mBaseAttackRadius = 400.0f;
 	mBaseDamageHeight = 400.0f;
 	mBaseAttackHeight = 400.0f;
-	initHitActor(0x2000002C, 3, ACTOR_TYPE_PLAYER, mBaseAttackRadius,
+	initHitActor(0x2000002C, 3, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
 	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
 }
 
@@ -1370,7 +1370,7 @@ void TBossEelTearsRecoverCollision::behaveToMario()
 {
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	mRecovering = false;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossEelTearsRecoverCollision::perform(u32 cue,
@@ -1401,19 +1401,19 @@ void TBossEel::init(TLiveManager* manager)
 	mMActor->initNormalMotionBlend();
 	mSpine->initWith(&TNerveBossEelWaitAppear::theNerve());
 
-	initHitActor(0x08000003, 1, ACTOR_TYPE_PLAYER,
+	initHitActor(0x08000003, 1, HIT_CATEGORY_PLAYER,
 	             mSaveParams->mSLBodyAttackRadius.get(),
 	             mSaveParams->mSLBodyAttackHeight.get(),
 	             mSaveParams->mSLBodyDamageRadius.get(),
 	             mSaveParams->mSLBodyDamageHeight.get());
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	J3DModel* model = mMActor->getModel();
 	if (!model->getSkinDeform())
 		model->setSkinDeform(new J3DSkinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	mMActor->resetDL();
 
 	mHeadCollision = new THitActor("めおとウナギの頭部");
-	mHeadCollision->initHitActor(0x08000003, 2, ACTOR_TYPE_PLAYER,
+	mHeadCollision->initHitActor(0x08000003, 2, HIT_CATEGORY_PLAYER,
 	                             mSaveParams->mSLHeadAttackRadius.get(),
 	                             mSaveParams->mSLHeadAttackHeight.get(),
 	                             mSaveParams->mSLHeadDamageRadius.get(),
@@ -1421,20 +1421,20 @@ void TBossEel::init(TLiveManager* manager)
 	TIdxGroupObj* enemyGroup
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	enemyGroup->getChildren().push_back(mHeadCollision);
-	mHeadCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mHeadCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mBodyCollision = new TBossEelBodyCollision(
 	    mMActor->getModel()->getBaseTRMtx(), "体コリジョン");
 	mBodyCollision->initCollision();
 	mBodyCollision->mOwner = this;
 	enemyGroup->getChildren().push_back(mBodyCollision);
-	mBodyCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mBarrierCollision = new TBossEelBarrierCollision(
 	    mMActor->getModel()->getAnmMtx(7), "障害コリジョン");
 	mBarrierCollision->initCollision();
 	enemyGroup->getChildren().push_back(mBarrierCollision);
-	mBarrierCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mBarrierCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	JUTNameTab* jntNames = mMActor->getModel()->getModelData()->getJointName();
 
@@ -1525,7 +1525,7 @@ void TBossEel::init(TLiveManager* manager)
 	    "泡コリジョン");
 	mAwaCollision->initCollision();
 	enemyGroup->getChildren().push_back(mAwaCollision);
-	mAwaCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+	mAwaCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mVortex           = new TBossEelVortex(this, "めおとウナギ渦");
 	mMouthCubeManager = new TCubeManagerBase("コリジョンキューブ", 2);
@@ -1673,16 +1673,16 @@ void TBossEel::generateVortex()
 	mVortex->mScaling.set(mSaveParams->mSLVortexScaleXZ.get(),
 	                      mSaveParams->mSLVortexScaleY.get(),
 	                      mSaveParams->mSLVortexScaleXZ.get());
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossEel::invalidateAllCollision()
 {
-	mBodyCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
-	mBarrierCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
-	mVortex->onHitFlag(HIT_FLAG_NO_COLLISION);
-	mHeadCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
-	mAwaCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+	mBodyCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
+	mBarrierCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
+	mVortex->onHitFilter(HIT_FILTER_NO_COLLISION);
+	mHeadCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
+	mAwaCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossEel::collideToMario()
@@ -1780,9 +1780,9 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mUseObjCollision
 		    && mSpine->getCurrentNerve() != &TNerveBossEelDie::theNerve())
-			mBodyCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+			mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 		else
-			mBodyCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+			mBodyCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		mHeadCollision->mPosition = mPosition;
 		f32 bodyToHeadDistance    = mSaveParams->mSLBodyToHeadDistance.get();
@@ -1940,7 +1940,7 @@ void TBossEel::deadCheck()
 
 	if (mSpine->getCurrentNerve() != &TNerveBossEelDie::theNerve()) {
 		mSpine->setNext(&TNerveBossEelDie::theNerve());
-		mHeadCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+		mHeadCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
 
@@ -2108,7 +2108,7 @@ DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_UP, &eel->mPosition, 0,
 		                                nullptr, 0, 4);
-		eel->mBarrierCollision->offHitFlag(HIT_FLAG_NO_COLLISION);
+		eel->mBarrierCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 		eel->setBckAnm(15);
 		eel->mInDemo = true;
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x19), 1.0f);
@@ -2133,7 +2133,7 @@ DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 		eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
 	} else if (eel->checkCurAnmEnd(0)) {
 		spine->pushAfterCurrent(&TNerveBossEelOutWait::theNerve());
-		eel->mBarrierCollision->onHitFlag(HIT_FLAG_NO_COLLISION);
+		eel->mBarrierCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 		if (eel->mCollisionEnabled) {
 			eel->mCollisionEnabled = false;
 			gpMarDirector->getConsole()->startAppearBalloon(0xE0013, true);
@@ -2337,7 +2337,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 			    shineMtx[0][3], shineMtx[1][3], shineMtx[2][3]);
 
 			eel->mTeeth[6]->mHitPoints = 0;
-			eel->mTeeth[6]->onHitFlag(HIT_FLAG_NO_COLLISION);
+			eel->mTeeth[6]->onHitFilter(HIT_FILTER_NO_COLLISION);
 			eel->setBckAnm(4);
 		}
 	}

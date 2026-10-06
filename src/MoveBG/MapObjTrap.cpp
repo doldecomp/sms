@@ -27,11 +27,12 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
     : THitActor(name)
     , unk68(trap)
 {
-	initHitActor(0x4000001E, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
+	initHitActor(0x4000001E, 3, HIT_CATEGORY_PLAYER, 500.0f, 300.0f, 500.0f,
+	             300.0f);
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
 	    JDrama::TNameRefGen::search("アイテムグループ"));
 	group->getChildren().push_back(this);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TLampTrapSpikeHit::receiveMessage(THitActor* sender, u32 message)
@@ -64,7 +65,7 @@ TLampTrapSpike::TLampTrapSpike(const char* name)
 void TLampTrapSpike::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TLampTrapSpike::loadAfter()
@@ -202,11 +203,12 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
     : THitActor(name)
     , unk68(trap)
 {
-	initHitActor(0x4000001D, 3, -0x80000000, 500.0f, 300.0f, 500.0f, 300.0f);
+	initHitActor(0x4000001D, 3, HIT_CATEGORY_PLAYER, 500.0f, 300.0f, 500.0f,
+	             300.0f);
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
 	    JDrama::TNameRefGen::search("アイテムグループ"));
 	group->getChildren().push_back(this);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TLampTrapIronHit::receiveMessage(THitActor* sender, u32 message)
@@ -241,7 +243,7 @@ TLampTrapIron::TLampTrapIron(const char* name)
 void TLampTrapIron::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk140 = 0;
 	unk13C = mHitPointMax;
 }

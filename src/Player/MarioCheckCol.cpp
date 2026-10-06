@@ -287,7 +287,7 @@ void TMario::checkCollision()
 	}
 
 	for (s32 i = 0; i < (s32)mColCount; i++) {
-		if (mCollisions[i]->checkActorType(ACTOR_TYPE_UNK4000000)) {
+		if (mCollisions[i]->isHitCategory(HIT_CATEGORY_NPC)) {
 			hitNpc(mCollisions[i]);
 			continue;
 		}

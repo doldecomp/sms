@@ -326,7 +326,7 @@ void TSurfGesoObj::initMapObj()
 void TFruitSwitch::pullUp()
 {
 	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	getModel()->calc();
 	mMapCollisionManager->getActiveCollision()->setUpMtx(
 	    getModel()->getAnmMtx(0));
@@ -335,7 +335,7 @@ void TFruitSwitch::pullUp()
 void TFruitSwitch::pushDown()
 {
 	startBck("riccoswitch");
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mMapCollisionManager->removeActiveCollision();
 }
 

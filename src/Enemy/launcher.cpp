@@ -57,13 +57,13 @@ void TLauncher::init(TLiveManager* param_1)
 	}
 
 	mActorType = 0x10000014;
-	onHitFlag(0x1000000);
+	onHitFilter(HIT_CATEGORY_WATER);
 	mAttackRadius = 0.0f;
 	mAttackHeight = 0.0f;
 	mDamageRadius = 100.0f;
 	mDamageHeight = 100.0f;
 	calcEntryRadius();
-	offHitFlag(0x1);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
@@ -226,8 +226,9 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	mLaunchCooldown = mLaunchPeriod * MsRandF();
 
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
-	initHitActor(0x10000014, 1, -0x7f000000, 150.0f, 100.0f, 150.0f, 100.0f);
-	offHitFlag(0x1);
+	initHitActor(0x10000014, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
+	             150.0f, 100.0f, 150.0f, 100.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
@@ -361,7 +362,7 @@ void TCommonLauncher::stateDie()
 		}
 
 		kill();
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		resetLaunchTimer();
 		changeState(STATE_NORMAL);
 	}

@@ -56,14 +56,14 @@ u32 TMapObjBase::getSDLModelFlag() const { return 3; }
 void TMapObjBase::awake()
 {
 	offLiveFlag(LIVE_FLAG_UNK4000);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	setUpCurrentMapCollision();
 }
 
 void TMapObjBase::sleep()
 {
 	onLiveFlag(LIVE_FLAG_UNK4000);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 }
 
@@ -289,7 +289,7 @@ void TMapObjBase::makeObjDead()
 	}
 
 	unk100 = 0xffff;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 	mStateTimer = 0;
 	if (mHeldObject) {
@@ -317,7 +317,7 @@ void TMapObjBase::makeObjAppeared()
 	mVelocity.z = 0.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
 	mStateTimer = 0;
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	setObjHitData(0);
 	if (unk100 != 0)
 		unk100 = 0;
@@ -375,11 +375,11 @@ void TMapObjBase::touchPlayer(THitActor* player)
 
 void TMapObjBase::touchActor(THitActor* actor)
 {
-	if (actor->checkActorType(ACTOR_TYPE_PLAYER))
+	if (actor->isHitCategory(HIT_CATEGORY_PLAYER))
 		touchPlayer(actor);
-	else if (actor->checkActorType(ACTOR_TYPE_ENEMY))
+	else if (actor->isHitCategory(HIT_CATEGORY_ENEMY))
 		touchEnemy(actor);
-	else if (actor->checkActorType(ACTOR_TYPE_BOSS))
+	else if (actor->isHitCategory(HIT_CATEGORY_BOSS))
 		touchBoss(actor);
 }
 
@@ -632,8 +632,8 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 		stream >> value;
 		setDamageHeight(value);
 		setAttackHeight(value);
-		offHitFlag(HIT_FLAG_CANNOT_GET_HIT);
-		offHitFlag(HIT_FLAG_CANNOT_ATTACK);
+		offHitFilter(HIT_FILTER_NO_DAMAGE);
+		offHitFilter(HIT_FILTER_NO_ATTACK);
 	}
 }
 

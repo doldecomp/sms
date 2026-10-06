@@ -959,14 +959,14 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
 	if (spine->getTime() == 0) {
 		if (self->isAirborne()) {
-			self->onHitFlag(HIT_FLAG_NO_COLLISION);
+			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
 			JGeometry::TVec3<f32> velocity = self->mVelocity;
 			zero.y                         = velocity.y;
 			self->mVelocity                = zero;
 			self->setDownAirAnm();
 		} else if (self->unk1AD) {
-			self->onHitFlag(HIT_FLAG_NO_COLLISION);
+			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			self->setDownLandAnm();
 		} else {
 			self->onLiveFlag(LIVE_FLAG_UNK20000);
@@ -984,7 +984,7 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 		spine->reset();
 		spine->setNext(&TNerveSmallEnemyDie::theNerve());
 		spine->pushAfterCurrent(spine->getDefault());
-		self->onHitFlag(HIT_FLAG_NO_COLLISION);
+		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->genRandomItem();
 		return true;
 	}

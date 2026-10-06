@@ -51,7 +51,7 @@ BOOL TMario::isThrowStart()
 {
 	if (mHeldObject != nullptr && ((mInput & 0x2000) ? true : false)) {
 
-		if (mHeldObject->checkActorType(0x10000000))
+		if (mHeldObject->isHitCategory(HIT_CATEGORY_ENEMY))
 			return changePlayerStatus(MARIO_STATUS_PITCHING, 0, false);
 
 		switch (mHeldObject->getActorType()) {

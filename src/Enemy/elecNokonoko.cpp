@@ -184,7 +184,7 @@ void TElecNokonoko::init(TLiveManager* param_1)
 	actor->initDL();
 	actor->getModel()->lock();
 	unk19C = TMsRange<s32>(0, 300).rand();
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TElecNokonoko::rest()
@@ -306,7 +306,7 @@ BOOL TElecNokonoko::receiveMessage(THitActor* param_1, u32 param_2)
 	}
 
 	if (param_2 == HIT_MESSAGE_TAKE && mHolder == nullptr) {
-		onHitFlag(HIT_FLAG_NO_COLLISION);
+		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mHolder = (TTakeActor*)param_1;
 		return true;
 	}
@@ -494,8 +494,10 @@ void TElecCarapace::loadInit(TSpineEnemy* param_1, const char* param_2)
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	group->getChildren().push_back(this);
-	initHitActor(0x1000000B, 3, 0x98000000, 80.0f, 80.0f, 60.0f, 60.0f);
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	initHitActor(0x1000000B, 3,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS,
+	             80.0f, 80.0f, 60.0f, 60.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150 = 0;
 	mSpine->initWith(&TNerveElecCarapaceMove::theNerve());
 	if (TMsRange<s32>(0, 300).rand() < 150)
@@ -596,7 +598,7 @@ void TElecCarapace::appear()
 	mScaling.x = mScaling.y = mScaling.z = scale;
 	mBodyRadius                          = 50.0f;
 	unk170                               = 0;
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TElecCarapace::shoot()
@@ -618,7 +620,7 @@ void TElecCarapace::shoot()
 	unk168 = 0;
 	unk184 = 0;
 	unk175 = 0;
-	offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mSpine->initWith(&TNerveElecCarapaceMove::theNerve());
 	setGoalPath(goal);
 	setZigParameter();
@@ -666,13 +668,13 @@ void TElecCarapace::sendMessage()
 		THitActor* actor = mCollisions[i];
 		if (actor->isActorType(0x80000001)) {
 			if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9)) {
-				onHitFlag(HIT_FLAG_NO_COLLISION);
+				onHitFilter(HIT_FILTER_NO_COLLISION);
 				if (mSpine->getCurrentNerve()
 				    != &TNerveElecCarapaceWait::theNerve())
 					mSpine->pushNerve(&TNerveElecCarapaceWait::theNerve());
 			}
 		} else if (actor == unk16C) {
-			offHitFlag(HIT_FLAG_NO_COLLISION);
+			offHitFilter(HIT_FILTER_NO_COLLISION);
 		} else if (actor->isActorType(0x1000001)) {
 			// TODO: the three random angles are never used
 			TMsRange<s32> range(0, 360);
@@ -802,7 +804,7 @@ DEFINE_NERVE(TNerveElecNokonokoCollect, TLiveActor)
 	if (self->isBckAnm(0)) {
 		int frame = self->getCurAnmFrameNo(0);
 		if (frame > 20)
-			self->unk194->onHitFlag(HIT_FLAG_NO_COLLISION);
+			self->unk194->onHitFilter(HIT_FILTER_NO_COLLISION);
 		if (frame > 32) {
 			self->unk1A4 = 0;
 			self->unk194->kill();

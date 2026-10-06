@@ -312,7 +312,8 @@ void TCannon::init(TLiveManager* param_1)
 		                       ->getModelData()
 		                       ->getJointNum();
 		     ++i) { }
-		unk1A8->initHitActor(0x1000001D, 3, 0x90000000,
+		unk1A8->initHitActor(0x1000001D, 3,
+		                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
 		                     unk28C->mSLChorobeiAttackRadius.get(),
 		                     unk28C->mSLChorobeiAttackHeight.get(),
 		                     unk28C->mSLChorobeiDamageRadius.get(),
@@ -360,7 +361,7 @@ void TCannon::reset()
 	TSmallEnemy::reset();
 
 	mHitPoints = getMaxHitPoints();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk214      = 1;
 	mHeadHeight = 40.0f;
 	onLiveFlag(LIVE_FLAG_UNK10);
@@ -836,8 +837,8 @@ void TCannon::setKillerGoalPoint()
 
 void TCannon::deadCannon()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk1A8->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	unk1A8->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TCannon::startDemo() { }
@@ -1047,8 +1048,8 @@ DEFINE_NERVE(TNerveCannonClose, TLiveActor)
 	hideDist *= 3.0f;
 	hideDist *= hideDist;
 	if (cannon->mDistToMarioSquared > hideDist) {
-		cannon->offHitFlag(HIT_FLAG_NO_COLLISION);
-		cannon->unk1A8->offHitFlag(HIT_FLAG_NO_COLLISION);
+		cannon->offHitFilter(HIT_FILTER_NO_COLLISION);
+		cannon->unk1A8->offHitFilter(HIT_FILTER_NO_COLLISION);
 		spine->pushAfterCurrent(&TNerveCannonOpen::theNerve());
 		return true;
 	}

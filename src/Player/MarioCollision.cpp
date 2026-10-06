@@ -165,7 +165,7 @@ BOOL TMario::trampleExec(THitActor* param_1)
 
 	rumbleStart(0x15, mMotorParams.mMotorTrample.get());
 
-	if (param_1->checkActorType(ACTOR_TYPE_UNK4000000)) {
+	if (param_1->isHitCategory(HIT_CATEGORY_NPC)) {
 		JGeometry::TVec3<f32> scale(0.5f);
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_B, &mPosition, this, scale);
 		SMS_EasyEmitParticle(PARTICLE_MS_FUMI_C, &mPosition, this, scale);

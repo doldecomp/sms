@@ -105,8 +105,9 @@ void TOneShotGenerator::loadAfter()
 		if (mGraph == nullptr)
 			mGraph = gpConductor->getGraphByName(mGraphName);
 
-		initHitActor(0x2000001, 1, 0x80000000, 80.0f, 120.0f, 80.0f, 120.0f);
-		offHitFlag(HIT_FLAG_NO_COLLISION);
+		initHitActor(0x2000001, 1, HIT_CATEGORY_PLAYER, 80.0f, 120.0f, 80.0f,
+		             120.0f);
+		offHitFilter(HIT_FILTER_NO_COLLISION);
 
 		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
 		    JDrama::TNameRefGen::search("敵グループ"));
