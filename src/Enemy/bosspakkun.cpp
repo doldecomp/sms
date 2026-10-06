@@ -815,7 +815,7 @@ void TBossPakkun::init(TLiveManager* manager)
 	}
 
 	initAnmSound();
-	onLiveFlag(LIVE_FLAG_UNK400);
+	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	mScaledBodyRadius = 400.0f;
 
 	unk124->setGraph(gpConductor->getGraphByName("bosspakkun"));

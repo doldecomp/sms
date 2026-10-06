@@ -20,20 +20,20 @@ class TBinder;
 class TMapCollisionManager;
 
 enum {
-	LIVE_FLAG_DEAD        = 0x1,
-	LIVE_FLAG_HIDDEN      = 0x2,
-	LIVE_FLAG_CLIPPED_OUT = 0x4,
-	LIVE_FLAG_UNK8        = 0x8,
-	LIVE_FLAG_UNK10       = 0x10,
-	LIVE_FLAG_UNK20       = 0x20,
-	LIVE_FLAG_UNK40       = 0x40,
-	LIVE_FLAG_AIRBORNE    = 0x80,
-	LIVE_FLAG_UNK100      = 0x100,
-	LIVE_FLAG_UNK200      = 0x200,
-	LIVE_FLAG_UNK400      = 0x400,
-	LIVE_FLAG_UNK800      = 0x800,
-	LIVE_FLAG_UNK1000     = 0x1000,
-	LIVE_FLAG_UNK2000     = 0x2000,
+	LIVE_FLAG_DEAD         = 0x1,
+	LIVE_FLAG_HIDDEN       = 0x2,
+	LIVE_FLAG_CLIPPED_OUT  = 0x4,
+	LIVE_FLAG_UNK8         = 0x8,
+	LIVE_FLAG_UNK10        = 0x10,
+	LIVE_FLAG_UNK20        = 0x20,
+	LIVE_FLAG_UNK40        = 0x40,
+	LIVE_FLAG_AIRBORNE     = 0x80,
+	LIVE_FLAG_UNK100       = 0x100,
+	LIVE_FLAG_UNK200       = 0x200,
+	LIVE_FLAG_FORCE_SHADOW = 0x400,
+	LIVE_FLAG_UNK800       = 0x800,
+	LIVE_FLAG_UNK1000      = 0x1000,
+	LIVE_FLAG_UNK2000      = 0x2000,
 #ifdef VERSION_GMSP01
 	LIVE_FLAG_CALC_INT_FRAME = 0x4000,
 #endif
@@ -70,6 +70,11 @@ public:
 	virtual Mtx* getRootJointMtx() const;
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
+	/**
+	 * @brief Updates the collision geometry for the actor.
+	 * @note Ground here means "terrain in general", not necessarily the ground
+	 * plane. Walls and roofs are included too.
+	 */
 	virtual void setGroundCollision();
 	/**
 	 * @brief Runs the AI for the actor via it's spine. Any updates to the
@@ -85,11 +90,20 @@ public:
 	/**
 	 * @brief Does one simulation step for the actor, gathering various sources
 	 * of motion and integrating it's velocity, position and rotation.
+	 * Triggered by CUE_MOVE.
 	 */
 	virtual void moveObject();
+	/**
+	 * @brief Requests a shadow to be drawn for this actor on this frame.
+	 * Triggered by CUE_CALC_VIEW
+	 */
 	virtual void requestShadow();
-	virtual void drawObject(JDrama::TGraphics*);
-	virtual void performOnlyDraw(u32, JDrama::TGraphics*);
+	/**
+	 * @brief Draws the actor's model into it's display lists.
+	 * Triggered on CUE_ENTRY.
+	 */
+	virtual void drawObject(JDrama::TGraphics* graphics);
+	virtual void performOnlyDraw(u32 cue, JDrama::TGraphics* graphics);
 	virtual u32 getShadowType();
 	virtual void kill();
 	virtual f32 getGravityY() const;

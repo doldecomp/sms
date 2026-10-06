@@ -526,7 +526,7 @@ void TElecCarapace::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		if (!isAirborne()) {
 			request.mPosition.y       = mGroundHeight;
-			request.mNeedsGroundCheck = 0;
+			request.mNeedsGroundCheck = false;
 		}
 
 		request.mRadiusX = request.mRadiusZ = unk16C->mScaledBodyRadius;

@@ -1253,39 +1253,39 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 	GXSetDstAlpha(GX_TRUE, 0);
 }
 
-void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
+void TMBindShadowManager::request(const TCircleShadowRequest& request,
                                   u32 param_2)
 {
-	JGeometry::TVec3<f32> delta = param_1.mPosition;
+	JGeometry::TVec3<f32> delta = request.mPosition;
 	delta -= gpCamera->unk124;
 	f32 dist = delta.squared();
 
 	f32 range = 6.0f;
-	if (param_1.mShadowType == SHADOW_TYPE_TREE)
+	if (request.mShadowType == SHADOW_TYPE_TREE)
 		range = 10.0f;
-	if (param_1.mShadowType == SHADOW_TYPE_SQUARE)
+	if (request.mShadowType == SHADOW_TYPE_SQUARE)
 		range = 1.0f;
 
 	if (dist > 20000000.0f * range)
 		return;
 
-	if (param_1.mRadiusX < 0.01f || param_1.mRadiusZ < 0.01f)
+	if (request.mRadiusX < 0.01f || request.mRadiusZ < 0.01f)
 		return;
 
-	if (!gpMap->isInArea(param_1.mPosition.x, param_1.mPosition.z))
+	if (!gpMap->isInArea(request.mPosition.x, request.mPosition.z))
 		return;
 
-	if (isnan(param_1.mPosition.x) || isnan(param_1.mPosition.z))
+	if (isnan(request.mPosition.x) || isnan(request.mPosition.z))
 		return;
 
 	if (mRequestNum < 0x200) {
-		mRequests[mRequestNum]               = param_1;
+		mRequests[mRequestNum]               = request;
 		mRequests[mRequestNum].mActorType    = param_2;
 		mRequests[mRequestNum].mCameraDistSq = dist;
 
-		if (param_1.mShadowType == SHADOW_TYPE_TREE) {
+		if (request.mShadowType == SHADOW_TYPE_TREE) {
 			if (mModelShadowNum < 1) {
-				mModelShadows[mModelShadowNum].mPosition = param_1.mPosition;
+				mModelShadows[mModelShadowNum].mPosition = request.mPosition;
 				mModelShadows[mModelShadowNum].mIsFar    = false;
 				mModelShadows[mModelShadowNum].unkD      = true;
 
@@ -1300,16 +1300,16 @@ void TMBindShadowManager::request(const TCircleShadowRequest& param_1,
 	}
 }
 
-void TMBindShadowManager::forceRequest(const TCircleShadowRequest& param_1,
+void TMBindShadowManager::forceRequest(const TCircleShadowRequest& request,
                                        u32 param_2)
 {
-	JGeometry::TVec3<f32> pos   = param_1.mPosition;
+	JGeometry::TVec3<f32> pos   = request.mPosition;
 	JGeometry::TVec3<f32> delta = pos;
 	delta -= gpCamera->getUnk124();
 	f32 dist = delta.squared();
 
 	if (mRequestNum < 0x200) {
-		mRequests[mRequestNum]               = param_1;
+		mRequests[mRequestNum]               = request;
 		mRequests[mRequestNum].mActorType    = param_2;
 		mRequests[mRequestNum].mCameraDistSq = dist;
 		mRequestNum++;

@@ -490,7 +490,7 @@ void TTamaNoko::requestShadow()
 {
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8 | LIVE_FLAG_HIDDEN)) {
 		if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT)
-		    || checkLiveFlag(LIVE_FLAG_UNK400)) {
+		    || checkLiveFlag(LIVE_FLAG_FORCE_SHADOW)) {
 			TCircleShadowRequest local_2c;
 
 			JGeometry::TVec3<f32> local_38;
@@ -501,11 +501,11 @@ void TTamaNoko::requestShadow()
 				local_38.y = mGroundHeight;
 				local_38.z = actor->getModel()->getAnmMtx(1)[2][3];
 				if (!isAirborne())
-					local_2c.mNeedsGroundCheck = 0;
+					local_2c.mNeedsGroundCheck = false;
 			} else {
 				local_38 = mPosition;
 				if (!isAirborne()) {
-					local_2c.mNeedsGroundCheck = 0;
+					local_2c.mNeedsGroundCheck = false;
 					local_38.y                 = mGroundHeight;
 				}
 			}
@@ -515,7 +515,7 @@ void TTamaNoko::requestShadow()
 			local_2c.mRadiusZ    = local_2c.mRadiusX;
 			local_2c.mShadowType = getShadowType();
 			local_2c.mRotationY  = mRotation.y;
-			if (checkLiveFlag(LIVE_FLAG_UNK400)) {
+			if (checkLiveFlag(LIVE_FLAG_FORCE_SHADOW)) {
 				gpBindShadowManager->forceRequest(local_2c, getActorType());
 			} else {
 				gpBindShadowManager->request(local_2c, getActorType());

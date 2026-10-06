@@ -411,7 +411,7 @@ void TSamboFlower::init(TLiveManager* param_1)
 	initHitActor(0x10000027, 1, 0x80000000, mBodyRadius, mHeadHeight,
 	             mBodyRadius, mHeadHeight);
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	offLiveFlag(LIVE_FLAG_UNK400);
+	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	initAnmSound();
 	mActorType = 0x10000027;
 	unk150     = false;

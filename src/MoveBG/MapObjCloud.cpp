@@ -86,7 +86,7 @@ void TRideCloud::load(JSUMemoryInputStream& stream)
 	unk176.a = 0xff;
 	SMS_InitPacket_TwoTevColor(getModel(), 0, GX_TEVREG0, &unk16E, GX_TEVREG1,
 	                           &unk176);
-	offLiveFlag(LIVE_FLAG_UNK400);
+	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	onLiveFlag(LIVE_FLAG_UNK8);
 }
 

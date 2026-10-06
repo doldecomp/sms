@@ -774,10 +774,7 @@ void TSmallEnemy::kill()
 
 bool TSmallEnemy::isFindMario(float param_1)
 {
-	bool b = true;
-	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4)
-		b = false;
-	if (b)
+	if (gpMarDirector->isDemoModeNow())
 		return false;
 
 	if (isAirborne())
@@ -932,19 +929,9 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 
 void TSmallEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	// TODO: wtf is this inline???
-	bool bVar2 = true;
-	if (gpMarDirector->unk124 != 3 && gpMarDirector->unk124 != 4) {
-		bVar2 = false;
-	}
-	if (!bVar2) {
-		bVar2 = true;
-		if (gpMarDirector->unk124 != 1 && gpMarDirector->unk124 != 2)
-			bVar2 = false;
-		if (bVar2) {
-			performOnlyDraw(cue, graphics);
-			return;
-		}
+	if (!gpMarDirector->isDemoModeNow() && gpMarDirector->isTalkModeNow()) {
+		performOnlyDraw(cue, graphics);
+		return;
 	}
 
 	TSpineEnemy::perform(cue, graphics);

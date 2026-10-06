@@ -134,7 +134,7 @@ void TEMario::init(TLiveManager* manager)
 	}
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	offLiveFlag(LIVE_FLAG_UNK400);
+	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 
 	if (!mAnmSound)
 		initAnmSound();

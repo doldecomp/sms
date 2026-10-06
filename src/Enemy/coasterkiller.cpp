@@ -186,7 +186,7 @@ void TCoasterKiller::init(TLiveManager* mgr)
 	TCoasterEnemy::init(mgr);
 	mActorType = 0x0800001F;
 	unk150     = 17;
-	onLiveFlag(LIVE_FLAG_UNK400);
+	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	offLiveFlag(LIVE_FLAG_UNK800);
 
 	GXColorS10& bodyColor = getBodyColor(); // @hack, gets stack right

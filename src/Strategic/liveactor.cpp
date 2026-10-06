@@ -60,7 +60,7 @@ TLiveActor::TLiveActor(const char* name)
 	mRidePos.zero();
 
 	mGroundPlane = TMap::getIllegalCheckData();
-	if (gpMarDirector->getCurrentMap() != 8)
+	if (SMSGetMarDirector()->getCurrentMap() != 8)
 		mLiveFlag |= LIVE_FLAG_UNK2000;
 }
 
@@ -159,7 +159,7 @@ void TLiveActor::init(TLiveManager* manager)
 	initHitActor(0, 1, 0, mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 
 	onHitFlag(HIT_FLAG_NO_COLLISION);
-	offLiveFlag(LIVE_FLAG_UNK400);
+	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 
 	if (!mAnmSound)
 		initAnmSound();
@@ -296,25 +296,25 @@ void TLiveActor::requestShadow()
 		return;
 
 	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
-	    || (mLiveFlag & LIVE_FLAG_UNK400)) {
-		TCircleShadowRequest local_2c;
+	    || (mLiveFlag & LIVE_FLAG_FORCE_SHADOW)) {
+		TCircleShadowRequest shadow;
 
-		local_2c.mPosition = mPosition;
+		shadow.mPosition = mPosition;
 
 		if (!isAirborne()) {
-			local_2c.mPosition.y       = mGroundHeight;
-			local_2c.mNeedsGroundCheck = 0;
+			shadow.mPosition.y       = mGroundHeight;
+			shadow.mNeedsGroundCheck = false;
 		}
 
-		local_2c.mRadiusX = local_2c.mRadiusZ = mScaledBodyRadius;
+		shadow.mRadiusX = shadow.mRadiusZ = mScaledBodyRadius;
 
-		local_2c.mShadowType = getShadowType();
-		local_2c.mRotationY  = mRotation.y;
+		shadow.mShadowType = getShadowType();
+		shadow.mRotationY  = mRotation.y;
 
-		if (mLiveFlag & LIVE_FLAG_UNK400) {
-			gpBindShadowManager->forceRequest(local_2c, getActorType());
+		if (mLiveFlag & LIVE_FLAG_FORCE_SHADOW) {
+			gpBindShadowManager->forceRequest(shadow, getActorType());
 		} else {
-			gpBindShadowManager->request(local_2c, getActorType());
+			gpBindShadowManager->request(shadow, getActorType());
 		}
 	}
 
@@ -381,27 +381,27 @@ void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-void TLiveActor::performOnlyDraw(u32 param_1, JDrama::TGraphics* param_2)
+void TLiveActor::performOnlyDraw(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
 		return;
 	if (!mMActor)
 		return;
 
-	if (param_1 & CUE_CALC_VIEW)
+	if (cue & CUE_CALC_VIEW)
 		requestShadow();
 
 	if (!(mLiveFlag & (LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))) {
-		if (param_1 & CUE_CALC_ANIM) {
+		if (cue & CUE_CALC_ANIM) {
 			calcRootMatrix();
 			mMActor->calc();
 		}
 
-		if (param_1 & CUE_CALC_VIEW)
+		if (cue & CUE_CALC_VIEW)
 			mMActor->viewCalc();
 
-		if (param_1 & CUE_ENTRY)
-			drawObject(param_2);
+		if (cue & CUE_ENTRY)
+			drawObject(graphics);
 	}
 }
 

@@ -1566,7 +1566,7 @@ void TDoroHaneKuri::reset()
 	unk18C = 5;
 	THaneHamuKuri::reset();
 	unk198 = 0;
-	onLiveFlag(LIVE_FLAG_UNK400);
+	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 }
 
 void TDoroHaneKuri::attackToMario()
