@@ -475,9 +475,9 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model_name)
 {
 	unk160        = host;
 	mMActorKeeper = new TMActorKeeper(unk160->getManager(), 1);
-	mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+	mMActorKeeper->setModelLoaderFlags(J3DMLF_MaterialPEFull
 	                                   | J3DMLF_UseUniqueMaterials
-	                                   | (2 << J3DMLF_TevStageNumShift);
+	                                   | (2 << J3DMLF_TevStageNumShift));
 	mMActor = mMActorKeeper->createMActor(model_name, 3);
 	unk16C  = (TPakkun*)unk160;
 

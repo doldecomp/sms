@@ -147,7 +147,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	mMActorKeeper->createMActorFromNthData(0, uVar21);
 	if (param_1->unk28 == 2)
 		mMActorKeeper->createMActorFromNthData(1, 3);
-	mMActor = mMActorKeeper->mActors[0];
+	mMActor = mMActorKeeper->getMActor(0);
 
 	mBodyScale        = 1.0f;
 	mBodyRadius       = 10.0f;
@@ -267,7 +267,7 @@ inline void TBaseNPC::initBaseActionFlag_()
 	if (isMonte()) {
 		setMonteActionFlag_();
 		if (checkActionFlag(NPC_ACTION_UNK400))
-			unkD0->unk18 = sIndividualHoldArrowBck;
+			mLodAnm->setIndividualBck(sIndividualHoldArrowBck);
 	} else if (isMare()) {
 		setMareActionFlag_();
 	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO
@@ -276,12 +276,12 @@ inline void TBaseNPC::initBaseActionFlag_()
 		if (checkActionFlag(NPC_ACTION_UNK100)) {
 			switch (mActorType) {
 			case ACTOR_TYPE_NPC_KINOPIO:
-				unkD0->unk18 = sIndividualKinopioBck;
-				unkD0->unk1C = sIndividualKinopioBtp;
+				mLodAnm->setIndividualBck(sIndividualKinopioBck);
+				mLodAnm->setIndividualBtp(sIndividualKinopioBtp);
 				break;
 			case ACTOR_TYPE_NPC_KINOJII:
-				unkD0->unk18 = sIndividualKinojiiBck;
-				unkD0->unk1C = sIndividualKinojiiBtp;
+				mLodAnm->setIndividualBck(sIndividualKinojiiBck);
+				mLodAnm->setIndividualBtp(sIndividualKinojiiBtp);
 				break;
 			}
 		}
@@ -330,23 +330,23 @@ inline void TBaseNPC::initIndividualAnm_()
 	case ACTOR_TYPE_NPC_RACCOON_DOG:
 		if (strcmp(mName, cManiyaParentViewObjName) == 0) {
 			onActionFlag(NPC_ACTION_UNK800);
-			unkD0->unk18 = sIndividualParentRaccoonDogAnmBck;
+			mLodAnm->setIndividualBck(sIndividualParentRaccoonDogAnmBck);
 		} else if (strcmp(mName, cManiyaChildViewObjName) == 0) {
 			onActionFlag(NPC_ACTION_UNK800);
 			onLiveFlag(LIVE_FLAG_DONT_TALK);
-			unkD0->unk18 = sIndividualChildRaccoonDogAnmBck;
+			mLodAnm->setIndividualBck(sIndividualChildRaccoonDogAnmBck);
 		}
 		break;
 
 	case ACTOR_TYPE_NPC_MARE_MA:
 		switch ((int)(MsRandF() * 3.0f)) {
 		case 0:
-			unkD0->unk18 = sIndividualMareMA0Bck;
-			unkD0->unk1C = sIndividualMareMA0Btp;
+			mLodAnm->setIndividualBck(sIndividualMareMA0Bck);
+			mLodAnm->setIndividualBtp(sIndividualMareMA0Btp);
 			break;
 		case 1:
-			unkD0->unk18 = sIndividualMareMA1Bck;
-			unkD0->unk1C = sIndividualMareMA1Btp;
+			mLodAnm->setIndividualBck(sIndividualMareMA1Bck);
+			mLodAnm->setIndividualBtp(sIndividualMareMA1Btp);
 			break;
 		}
 		break;
@@ -354,7 +354,7 @@ inline void TBaseNPC::initIndividualAnm_()
 	case ACTOR_TYPE_NPC_MARE_WA:
 		switch ((int)(MsRandF() * 2.0f)) {
 		case 0:
-			unkD0->unk18 = sIndividualMareWA0Bck;
+			mLodAnm->setIndividualBck(sIndividualMareWA0Bck);
 			break;
 		}
 		break;
@@ -440,7 +440,7 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		unk168 = new TNpcParts(uVar21, &local_78[1], this);
 
 	if (anmInitInfo->unk4 != nullptr)
-		unkD0->unk1C = anmInitInfo->unk4;
+		mLodAnm->setIndividualBtp(anmInitInfo->unk4);
 
 	initBaseActionFlag_();
 	initIndividualAnm_();

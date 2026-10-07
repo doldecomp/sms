@@ -6,20 +6,20 @@
 class TLiveActor;
 
 struct TLodAnmIndex {
-	/* 0x0 */ int unk0[2];
-	/* 0x8 */ int unk8[2];
+	/* 0x0 */ int mBckIndex[2];
+	/* 0x8 */ int mBtpIndex[2];
 };
 
 // fabricated
 struct TAnmBckMapping {
-	int unk0;
-	int unk4;
+	int mFrom;
+	int mTo;
 };
 
 // fabricated
 struct TAnmBtpMapping {
-	int unk0;
-	int unk4;
+	int mFrom;
+	int mTo;
 };
 
 class TLodAnm {
@@ -30,17 +30,27 @@ public:
 	bool setBtpAnm_(int);
 	bool setBckAnm_(int);
 
+	// fabricated
 	int getCurrentAnmKind() const { return mCurrentAnmKind; }
+	int getCurrentLod() const { return mCurrentLod; }
+	void setIndividualBck(const TAnmBckMapping* mapping)
+	{
+		mIndividualBck = mapping;
+	}
+	void setIndividualBtp(const TAnmBtpMapping* mapping)
+	{
+		mIndividualBtp = mapping;
+	}
 
-public:
+private:
 	/* 0x0 */ TLiveActor* mOwner;
 	/* 0x4 */ const TLodAnmIndex* mLodAnmIndexTable;
-	/* 0x8 */ int unk8;
-	/* 0xC */ f32 unkC;
-	/* 0x10 */ int unk10;
+	/* 0x8 */ int mCurrentLod;
+	/* 0xC */ f32 mLodChangeDist;
+	/* 0x10 */ int mAnmKindNum;
 	/* 0x14 */ int mCurrentAnmKind; // actually EnumNpcAnmKind
-	/* 0x18 */ const TAnmBckMapping* unk18;
-	/* 0x1C */ const TAnmBtpMapping* unk1C;
+	/* 0x18 */ const TAnmBckMapping* mIndividualBck;
+	/* 0x1C */ const TAnmBtpMapping* mIndividualBtp;
 };
 
 #endif

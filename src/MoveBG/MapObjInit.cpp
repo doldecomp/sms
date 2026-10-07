@@ -10962,21 +10962,21 @@ void TMapObjBase::initUnique()
 		break;
 	case ACTOR_TYPE_WOOD_BOX:
 		for (int i = 0; i < 2; ++i) {
-			mMActor = mMActorKeeper->mActors[i];
+			mMActor = mMActorKeeper->getMActor(i);
 			setMatTable(gpMapObjManager->unk7C);
 			SMS_UnifyMaterial(getModel());
 		}
-		mMActor = mMActorKeeper->mActors[0];
+		mMActor = mMActorKeeper->getMActor(0);
 		if (mGroundPlane->isShadow())
 			mMapCollisionManager->getActiveCollision()->setAllBGType(0x4000);
 		break;
 	case ACTOR_TYPE_WOOD_BARREL:
 		for (int i = 0; i < 2; ++i) {
-			mMActor = mMActorKeeper->mActors[i];
+			mMActor = mMActorKeeper->getMActor(i);
 			setMatTable(gpMapObjManager->unk80);
 			SMS_UnifyMaterial(getModel());
 		}
-		mMActor = mMActorKeeper->mActors[0];
+		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_RICCO_SHIP:
 		setMatTable(gpMapObjManager->unk94);
@@ -11034,24 +11034,24 @@ void TMapObjBase::initUnique()
 		break;
 	case ACTOR_TYPE_NOZZLE_BOX:
 		for (int i = 0; i < 3; ++i) {
-			mMActor = mMActorKeeper->mActors[i];
+			mMActor = mMActorKeeper->getMActor(i);
 			setMatTableTex(gpMapObjManager->unk70);
 		}
-		mMActor = mMActorKeeper->mActors[0];
+		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_BRICK_BLOCK:
 		for (int i = 0; i < 2; ++i) {
-			mMActor = mMActorKeeper->mActors[i];
+			mMActor = mMActorKeeper->getMActor(i);
 			setMatTable(gpMapObjManager->unk84);
 		}
-		mMActor = mMActorKeeper->mActors[0];
+		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_WATER_MELON_BLOCK:
 		for (int i = 0; i < 2; ++i) {
-			mMActor = mMActorKeeper->mActors[i];
+			mMActor = mMActorKeeper->getMActor(i);
 			setMatTable(gpMapObjManager->unk88);
 		}
-		mMActor = mMActorKeeper->mActors[0];
+		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_WATERMELON:
 		mMActor->setLightType(LIGHT_TYPE_OBJECT);
@@ -11200,13 +11200,13 @@ void TMapObjBase::makeMActors()
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000))
-		mMActorKeeper->mModelLoaderFlags
-		    = J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
-		      | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
+		mMActorKeeper->setModelLoaderFlags(
+		    J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		    | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift));
 	else
-		mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+		mMActorKeeper->setModelLoaderFlags(J3DMLF_MaterialPEFull
 		                                   | J3DMLF_UseUniqueMaterials
-		                                   | (2 << J3DMLF_TevStageNumShift);
+		                                   | (2 << J3DMLF_TevStageNumShift));
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;

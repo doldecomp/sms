@@ -319,7 +319,7 @@ void TBaseNPC::behaveToBeTrampled_()
 	if (checkActionFlag(NPC_ACTION_BURNING | NPC_ACTION_HAPPY))
 		return;
 
-	switch (unkD0->getCurrentAnmKind()) {
+	switch (mLodAnm->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_UNK1B:
 	case NPC_ANM_KIND_UNK7: {
 		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
@@ -388,8 +388,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 			if (!isSunflowerReviving()
 			    && (isClean() || param_2 != HIT_NPC_OBJECT_KIND_UNK1)
 			    && (mActorType != ACTOR_TYPE_NPC_MONTE_ME
-			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4
-			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK6)
+			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4
+			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK6)
 			    && (mSpine->getCurrentNerve() != &TNerveNPCTalk::theNerve()
 			        || mSpine->getTime() >= 4)) {
 				if (param_2 == 1)
@@ -466,7 +466,7 @@ void TBaseNPC::changeNerveProc_()
 
 			if (!isSunflowerReviving() && isNerveCanGoToTalk()
 			    && (mActorType != ACTOR_TYPE_NPC_MONTE_ME
-			        || unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
+			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
 				bool inCameraCube = true;
 				if (gpMarDirector->mMap == 7) {

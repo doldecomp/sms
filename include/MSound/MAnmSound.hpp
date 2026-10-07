@@ -38,7 +38,7 @@ public:
 	                            JAISound** out_handle, JAIActor* actor,
 	                            u8 camera_idx);
 
-public:
+private:
 	/* 0x98 */ u8 unk98;
 };
 

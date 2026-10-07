@@ -29,7 +29,7 @@ struct JAIAnimeSoundData {
 };
 
 class JAIAnimeSound {
-public:
+protected:
 	struct Slot {
 		/* 0x0 */ u8 mIsPlaying;
 		/* 0x4 */ JAISoundHandle mSoundHandle;

@@ -62,8 +62,9 @@ public:
 	TModelDataKeeper* getModelDataKeeper() { return mModelDataKeeper; }
 
 	MActor* getMActor(int index) { return mActors[index]; }
+	void setModelLoaderFlags(u32 flags) { mModelLoaderFlags = flags; }
 
-public:
+private:
 	/* 0x0 */ TModelDataKeeper* mModelDataKeeper;
 	/* 0x4 */ u16 mModelDataNum;
 	/* 0x6 */ u16 mActorNum;

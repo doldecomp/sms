@@ -377,7 +377,7 @@ bool TBaseNPC::isPartsAnmNpc() const
 bool TBaseNPC::isNeedNeckStraight() const
 {
 	bool result = false;
-	int anmKind = unkD0->getCurrentAnmKind();
+	int anmKind = mLodAnm->getCurrentAnmKind();
 	if ((mHolder != nullptr && mHolder == gpMarioAddress) || !isClean()
 	    || mActorType == ACTOR_TYPE_NPC_MARE_MD
 	    || (mActorType == ACTOR_TYPE_NPC_RACCOON_DOG
@@ -691,7 +691,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (mHolder == nullptr) {
 				if (isNerveWalk())
 					walkAnmRateChange_();
-				if (unkD0->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
+				if (mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
 					f32 rate = SMSGetAnmFrameRate();
 					mMActor->setFrameRate(
 					    MsClamp(

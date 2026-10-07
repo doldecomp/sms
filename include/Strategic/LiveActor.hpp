@@ -177,7 +177,7 @@ public:
 	{
 		mPositionDelta = v;
 	}
-	TLodAnm* getLodAnm() { return unkD0; }
+	TLodAnm* getLodAnm() { return mLodAnm; }
 	const char* getBas(int idx) const
 	{
 		const char** basTable = getBasNameTable();
@@ -205,7 +205,7 @@ public:
 	/* 0xC4 */ const TBGCheckData* mGroundPlane;
 	/* 0xC8 */ f32 mGroundHeight;
 	/* 0xCC */ f32 mGravity;
-	/* 0xD0 */ TLodAnm* unkD0;
+	/* 0xD0 */ TLodAnm* mLodAnm;
 	/* 0xD4 */ const TLiveActor* mGroundActor;
 	/* 0xD8 */ JGeometry::TVec3<f32> mRidePos;
 	/* 0xE4 */ f32 mGroundActorYaw;

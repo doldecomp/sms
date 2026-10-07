@@ -216,7 +216,7 @@ void TNpcParts::partsFrameUpdate()
 {
 	int i = 0;
 
-	TSharedParts** it = unk0[unk60->getLodAnm()->unk8];
+	TSharedParts** it = unk0[unk60->getLodAnm()->getCurrentLod()];
 
 	for (; i < 12; i++, ++it)
 		if (*it)
@@ -227,7 +227,7 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	int i = 0;
 
-	TSharedParts** it = unk0[unk60->getLodAnm()->unk8];
+	TSharedParts** it = unk0[unk60->getLodAnm()->getCurrentLod()];
 
 	for (; i < 12; ++i, ++it) {
 		if (*it == nullptr)

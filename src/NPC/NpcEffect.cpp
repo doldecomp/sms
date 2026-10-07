@@ -248,7 +248,7 @@ void TBaseNPC::emitParticle_()
 
 	if (mNoteEffectMtxPtr != nullptr
 	    && (mActorType != ACTOR_TYPE_NPC_MARE_MD
-	        || unkD0->getCurrentAnmKind() != NPC_ANM_KIND_UNK5)) {
+	        || mLodAnm->getCurrentAnmKind() != NPC_ANM_KIND_UNK5)) {
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 		scale *= 0.75f;
 
@@ -281,7 +281,7 @@ void TBaseNPC::emitParticle_()
 		}
 	}
 
-	switch (unkD0->getCurrentAnmKind()) {
+	switch (mLodAnm->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_DIRTY:
 		emitDirtyEffect_();
 		break;

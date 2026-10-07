@@ -50,7 +50,7 @@ TLiveActor::TLiveActor(const char* name)
 	mGroundPlane         = nullptr;
 	mGroundHeight        = 0.0f;
 	mGravity             = 0.15f;
-	unkD0                = nullptr;
+	mLodAnm              = nullptr;
 	mGroundActor         = nullptr;
 	mGroundActorYaw      = 0.0f;
 	unkE8                = 1;
@@ -135,8 +135,8 @@ Mtx* TLiveActor::getRootJointMtx() const { return nullptr; }
 void TLiveActor::initLodAnm(const TLodAnmIndex* param_1, int param_2,
                             f32 param_3)
 {
-	if (!unkD0)
-		unkD0 = new TLodAnm(this, param_1, param_2, param_3);
+	if (!mLodAnm)
+		mLodAnm = new TLodAnm(this, param_1, param_2, param_3);
 }
 
 void TLiveActor::init(TLiveManager* manager)

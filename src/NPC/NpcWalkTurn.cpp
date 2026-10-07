@@ -44,7 +44,7 @@ void TBaseNPC::execWalk(bool param_1)
 	}
 
 	if (param_1) {
-		EnumNpcAnmKind uVar4 = (EnumNpcAnmKind)unkD0->getCurrentAnmKind();
+		EnumNpcAnmKind uVar4 = (EnumNpcAnmKind)mLodAnm->getCurrentAnmKind();
 
 		f32 dVar11 = mIndividualParams->mSLMinMarchSpeed.get();
 		f32 dVar12 = mIndividualParams->mMarchAccel.get();

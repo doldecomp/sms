@@ -765,10 +765,10 @@ void TShine::kill()
 
 void TShine::makeMActors()
 {
-	mMActorKeeper                    = new TMActorKeeper(mManager, 1);
-	mMActorKeeper->mModelLoaderFlags = J3DMLF_MaterialPEFull
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActorKeeper->setModelLoaderFlags(J3DMLF_MaterialPEFull
 	                                   | J3DMLF_UseUniqueMaterials
-	                                   | (2 << J3DMLF_TevStageNumShift);
+	                                   | (2 << J3DMLF_TevStageNumShift));
 	MActor* result;
 	if (TFlagManager::smInstance->getShineFlag(mEventId)
 	    && strcmp("シャイン（マニ屋用）", getName()) != 0) {

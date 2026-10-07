@@ -7,15 +7,15 @@ TLodAnm::TLodAnm(TLiveActor* param_1, const TLodAnmIndex* param_2, int param_3,
 {
 	mOwner            = param_1;
 	mLodAnmIndexTable = param_2;
-	unk8              = param_3;
-	unkC              = param_4;
-	unk10             = 0;
+	mCurrentLod       = param_3;
+	mLodChangeDist    = param_4;
+	mAnmKindNum       = 0;
 	mCurrentAnmKind   = -1;
-	unk18             = nullptr;
-	unk1C             = 0;
+	mIndividualBck    = nullptr;
+	mIndividualBtp    = 0;
 	if (param_2) {
-		while (param_2[unk10].unk0[0] >= -1)
-			++unk10;
+		while (param_2[mAnmKindNum].mBckIndex[0] >= -1)
+			++mAnmKindNum;
 	}
 }
 
@@ -34,12 +34,12 @@ bool TLodAnm::setBckAnm_(int param_1)
 	if (mLodAnmIndexTable == nullptr)
 		tmp = param_1;
 	else
-		tmp = mLodAnmIndexTable[param_1].unk0[unk8];
+		tmp = mLodAnmIndexTable[param_1].mBckIndex[mCurrentLod];
 
-	if (unk18 != nullptr)
-		for (const TAnmBckMapping* it = unk18; it->unk0 >= 0; ++it)
-			if (tmp == it->unk0) {
-				tmp = it->unk4;
+	if (mIndividualBck != nullptr)
+		for (const TAnmBckMapping* it = mIndividualBck; it->mFrom >= 0; ++it)
+			if (tmp == it->mFrom) {
+				tmp = it->mTo;
 				break;
 			}
 
@@ -62,12 +62,12 @@ bool TLodAnm::setBtpAnm_(int param_1)
 
 	int iVar3 = mOwner->getMActor()->getCurAnmIdx(ANM_TYPE_BTP);
 
-	int tmp = mLodAnmIndexTable[param_1].unk8[unk8];
+	int tmp = mLodAnmIndexTable[param_1].mBtpIndex[mCurrentLod];
 
-	if (unk1C != nullptr)
-		for (const TAnmBtpMapping* it = unk1C; it->unk0 >= 0; ++it)
-			if (tmp == it->unk0) {
-				tmp = it->unk4;
+	if (mIndividualBtp != nullptr)
+		for (const TAnmBtpMapping* it = mIndividualBtp; it->mFrom >= 0; ++it)
+			if (tmp == it->mFrom) {
+				tmp = it->mTo;
 				break;
 			}
 
