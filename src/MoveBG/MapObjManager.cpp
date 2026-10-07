@@ -126,10 +126,11 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 		                                              getMActorAnmData(), 3);
 		mGreenGesso  = SMS_MakeMActorFromSDLModelData(mSurfGessoModelData,
 		                                              getMActorAnmData(), 3);
-		TMapObjBase::initPacketMatColor(mRedGesso->mModel, GX_TEVREG1, &unkA8);
-		TMapObjBase::initPacketMatColor(mYellowGesso->mModel, GX_TEVREG1,
+		TMapObjBase::initPacketMatColor(mRedGesso->getModel(), GX_TEVREG1,
+		                                &unkA8);
+		TMapObjBase::initPacketMatColor(mYellowGesso->getModel(), GX_TEVREG1,
 		                                &unkB0);
-		TMapObjBase::initPacketMatColor(mGreenGesso->mModel, GX_TEVREG1,
+		TMapObjBase::initPacketMatColor(mGreenGesso->getModel(), GX_TEVREG1,
 		                                &unkB8);
 	}
 

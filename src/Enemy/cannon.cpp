@@ -214,7 +214,7 @@ void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
 		Mtx rot;
 		MsMtxSetRotRPH(rot, unk28, unk2C, 0.0f);
 		MTXConcat(mtx, rot, mtx);
-		unk18->mModel->setBaseTRMtx(mtx);
+		unk18->getModel()->setBaseTRMtx(mtx);
 	}
 
 	unk18->perform(param_1, param_2);

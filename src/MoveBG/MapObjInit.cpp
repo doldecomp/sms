@@ -10986,7 +10986,7 @@ void TMapObjBase::initUnique()
 		startAllAnim(mMActor, unkF4);
 		break;
 	case ACTOR_TYPE_MOYASI:
-		mMActor->initSimpleMotionBlend(0x14);
+		mMActor->initBckSimpleMotionBlend(0x14);
 		break;
 	case ACTOR_TYPE_BIG_WINDMILL_BLOCK:
 	case ACTOR_TYPE_BIG_WINDMILL:

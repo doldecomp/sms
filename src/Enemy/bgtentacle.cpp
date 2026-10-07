@@ -579,7 +579,7 @@ TBGTentacle::TBGTentacle(TBossGesso* owner, int node_num, int index)
 
 	unk2C    = keeper->createMActor("bgeso_hand.bmd", 0);
 	mMtxCalc = new TBGTentacleMtxCalc(this);
-	unk2C->setCalcForBck(mMtxCalc);
+	unk2C->setBckMtxCalc(mMtxCalc);
 	unk2C->calc();
 	unk2C->setLightType(LIGHT_TYPE_OBJECT);
 	unk80 = keeper->createMActor("bgeso_shand.bmd", 0);

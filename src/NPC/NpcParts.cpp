@@ -114,7 +114,8 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 						if (iVar6 == -1)
 							iVar6 = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame
 							            .get();
-						unk0[j][i]->getMActor()->initSimpleMotionBlend(iVar6);
+						unk0[j][i]->getMActor()->initBckSimpleMotionBlend(
+						    iVar6);
 						break;
 					}
 				}
@@ -122,7 +123,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 
 			case ACTOR_TYPE_NPC_MARE_MB:
 				if (j == 0 && i == 9)
-					unk0[j][i]->getMActor()->initSimpleMotionBlend(20);
+					unk0[j][i]->getMActor()->initBckSimpleMotionBlend(20);
 				break;
 
 			case ACTOR_TYPE_NPC_MARE_WB:
@@ -131,7 +132,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 					if (iVar6 == -1)
 						iVar6
 						    = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame.get();
-					unk0[j][i]->getMActor()->initSimpleMotionBlend(iVar6);
+					unk0[j][i]->getMActor()->initBckSimpleMotionBlend(iVar6);
 				}
 				break;
 			}

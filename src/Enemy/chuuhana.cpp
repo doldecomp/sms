@@ -249,7 +249,7 @@ void TChuuHana::init(TLiveManager* param_1)
 	mSpine->initWith(&TNerveChuuHanaWalkOnPanel::theNerve());
 	getMActor()->setJointCallback(mBodyJntIndex, &ChuuHanaBodyCallback);
 	unk130 = 1;
-	getMActor()->initNormalMotionBlend();
+	getMActor()->initBckNormalMotionBlend();
 	unk1B4 = (TChuuHanaSaveLoadParams*)getSaveParam();
 	getMActor()->getModel()->calc();
 
@@ -300,8 +300,8 @@ void TChuuHana::reset()
 void TChuuHana::setBckAnm(int param_1)
 {
 	unk194 = 1.0f;
-	getMActor()->setMotionBlendRatioForBck(unk194);
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckMotionBlendRatio(unk194);
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	TSmallEnemy::setBckAnm(param_1);
 }
 
@@ -433,7 +433,7 @@ void TChuuHana::moveObject()
 	}
 
 	unk194 = MsClamp(unk194 - 0.1f, 0.0f, 1.0f);
-	mMActor->setMotionBlendRatioForBck(unk194);
+	mMActor->setBckMotionBlendRatio(unk194);
 
 	unk1EC = mPositionDelta;
 

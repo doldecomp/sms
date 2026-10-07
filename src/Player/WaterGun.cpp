@@ -1273,7 +1273,7 @@ void TWaterGun::init()
 	mFluddModel->getModel()->setBaseTRMtx(
 	    mMario->mModel->getModel()->getAnmMtx(mMario->mJointIdChest));
 
-	mFluddModel->mModel->calc();
+	mFluddModel->getModel()->calc();
 
 	u16 handleIdx
 	    = mFluddModel->getModel()->getModelData()->getJointName()->getIndex(
@@ -1401,7 +1401,7 @@ void TWaterGun::init()
 	mFluddModel->getModel()->calc();
 
 	unk1D10 = new TMirrorActor("水鉄砲in鏡");
-	unk1D10->init(mFluddModel->mModel, 4);
+	unk1D10->init(mFluddModel->getModel(), 4);
 
 	// TODO: Definitely an inlined function
 	// Another function does the exact same thing
@@ -1448,7 +1448,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 
 MtxPtr TWaterGun::getNozzleMtx()
 {
-	return mFluddModel->mModel->getAnmMtx(unk1CD8);
+	return mFluddModel->getModel()->getAnmMtx(unk1CD8);
 }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)

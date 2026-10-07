@@ -263,7 +263,7 @@ bool CPolarSubCamera::isNowInbetween() const
 
 MtxPtr CPolarSubCamera::getToroccoMtx_() const
 {
-	return gpMarioOriginal->mTorocco->mModel->getAnmMtx(2);
+	return gpMarioOriginal->mTorocco->getModel()->getAnmMtx(2);
 }
 
 void CPolarSubCamera::setMarioLookat_()

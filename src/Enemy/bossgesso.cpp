@@ -599,7 +599,7 @@ void TBossGesso::init(TLiveManager* param_1)
 	mSpine->initWith(&TNerveBGWait::theNerve());
 	mMtxCalc = new TBossGessoMtxCalc(this);
 
-	getMActor()->setCalcForBck(mMtxCalc);
+	getMActor()->setBckMtxCalc(mMtxCalc);
 
 	getMActor()->calc();
 	getMActor()->setLightType(LIGHT_TYPE_OBJECT);
@@ -718,7 +718,7 @@ void TBossGesso::checkTakeMsg() { }
 void TBossGesso::changeBck(int param_1)
 {
 	mMtxCalc->joinAnm(param_1);
-	getMActor()->setFrameCtrlForBck(param_1);
+	getMActor()->setBckFrameCtrl(param_1);
 
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (ctrl != nullptr)

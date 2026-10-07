@@ -146,11 +146,11 @@ void TGateKeeperBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			mMultiBtk->update();
 
 		if (cue & CUE_MOVE) {
-			f32 ratio = mMActor->getMotionBlendRatioForBck();
+			f32 ratio = mMActor->getBckMotionBlendRatio();
 			ratio -= unk158;
 			if (ratio < 0.0f)
 				ratio = 0.0f;
-			mMActor->setMotionBlendRatioForBck(ratio);
+			mMActor->setBckMotionBlendRatio(ratio);
 		}
 
 		TSpineEnemy::perform(cue, graphics);
@@ -357,7 +357,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 		model->setSkinDeform(new J3DSkinDeform, (J3DDeformAttachFlag)1);
 
 	unk178 = new TBGKMtxCalc(this);
-	mMActor->setCalcForBck(unk178);
+	mMActor->setBckMtxCalc(unk178);
 	mHitPoints = 3;
 	mMActor->offMakeDL();
 

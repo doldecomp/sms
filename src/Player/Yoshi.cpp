@@ -97,7 +97,7 @@ void TYoshi::init(TMario* param_1)
 	                                          | (4 << J3DMLF_TevStageNumShift)),
 	                   0, 1);
 	mActor->setModel(yoshiModel, 0);
-	mActor->initNormalMotionBlend();
+	mActor->initBckNormalMotionBlend();
 	mActor->offMakeDL();
 
 	mJointIdxTongue
@@ -600,7 +600,7 @@ void TYoshi::thinkAnimation()
 			ratio = 1.0f;
 
 		f32 tmp = 1.0f - ratio;
-		mActor->setMotionBlendRatioForBck(tmp);
+		mActor->setBckMotionBlendRatio(tmp);
 
 		J3DAnmTransform* oldAnm = mActor->getBckOldMotionBlendAnmPtr();
 		oldAnm->setFrame(mActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame());
@@ -610,7 +610,7 @@ void TYoshi::thinkAnimation()
 		else
 			nextFrame = unkA0 + unkA4 * mMario->mForwardVel;
 	} else {
-		mActor->setMotionBlendRatioForBck(0.0f);
+		mActor->setBckMotionBlendRatio(0.0f);
 	}
 
 	mActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(nextFrame);

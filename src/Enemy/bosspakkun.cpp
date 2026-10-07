@@ -783,7 +783,7 @@ void TBossPakkun::init(TLiveManager* manager)
 		                                              mScaling);
 
 		mMtxCalc = new TBossPakkunMtxCalc(this);
-		mMActor->setCalcForBck(mMtxCalc);
+		mMActor->setBckMtxCalc(mMtxCalc);
 		mMActor->calc();
 	}
 
@@ -1053,7 +1053,7 @@ void TBossPakkun::changeBck(int index)
 
 	int previous = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mMtxCalc->joinAnm(index);
-	getMActor()->setFrameCtrlForBck(index);
+	getMActor()->setBckFrameCtrl(index);
 
 	if (index == 21) {
 		getMActor()

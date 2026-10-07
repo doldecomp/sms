@@ -108,10 +108,8 @@ public:
 	void unmarkUnk40() { unk40 = false; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(ANM_TYPE_BCK, nullptr); }
 
-	// TODO: cleanup the names of all these stupid wrappers
-
 	// fabricated
-	void setCalcForBck(J3DMtxCalc* calc)
+	void setBckMtxCalc(J3DMtxCalc* calc)
 	{
 		if (!mAnmBck)
 			return;
@@ -143,9 +141,9 @@ public:
 		return mAnmBck->getOldMotionBlendFrame();
 	}
 
-	void setFrameCtrlForBck(int param_1) { mAnmBck->setFrameCtrl(param_1); }
+	void setBckFrameCtrl(int param_1) { mAnmBck->setFrameCtrl(param_1); }
 
-	void setMotionBlendRatioForBck(f32 ratio)
+	void setBckMotionBlendRatio(f32 ratio)
 	{
 		if (!mAnmBck)
 			return;
@@ -153,7 +151,7 @@ public:
 		mAnmBck->setMotionBlendRatio(ratio);
 	}
 
-	f32 getMotionBlendRatioForBck()
+	f32 getBckMotionBlendRatio()
 	{
 		if (!mAnmBck)
 			return 0.0f;
@@ -161,7 +159,7 @@ public:
 		return mAnmBck->getMotionBlendRatio();
 	}
 
-	void initSimpleMotionBlend(int frame)
+	void initBckSimpleMotionBlend(int frame)
 	{
 		if (!mAnmBck)
 			return;
@@ -169,7 +167,7 @@ public:
 		mAnmBck->initSimpleMotionBlend(frame);
 	}
 
-	void initNormalMotionBlend()
+	void initBckNormalMotionBlend()
 	{
 		if (!mAnmBck)
 			return;
@@ -177,7 +175,7 @@ public:
 		mAnmBck->initNormalMotionBlend();
 	}
 
-	J3DAnmTransformKey* getBckAnm()
+	J3DAnmTransformKey* getCurBckAnmPtr()
 	{
 		if (!mAnmBck)
 			return nullptr;
@@ -195,7 +193,9 @@ public:
 
 	void copyBtpFrmCtrl(J3DFrameCtrl ctrl) { }
 
-public:
+	J3DMtxCalc* getMtxCalc() const { return unk8; }
+
+private:
 	/* 0x00 */ MActorAnmData* mAnmData;
 	/* 0x04 */ J3DModel* mModel;
 	/* 0x08 */ J3DMtxCalc* unk8;

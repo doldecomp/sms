@@ -1078,13 +1078,13 @@ TBossEelEye::TBossEelEye(const TLiveActor* owner, int jointIndex,
 {
 	mBlendModel = new SDLModel(modelData, modelFlags, 1);
 	mBlendModel->getModelData()->getMaterialName()->getIndex("_mat7");
-	getMActor()->initNormalMotionBlend();
+	getMActor()->initBckNormalMotionBlend();
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mAnimationMode    = 0;
 	mBlendRatio       = 1.0f;
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(0);
-	getMActor()->setMotionBlendRatioForBck(mBlendRatio);
+	getMActor()->setBckMotionBlendRatio(mBlendRatio);
 }
 
 void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -1109,7 +1109,7 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 			MTXCopy(mtx, mBlendMtx);
 
 		mBlendRatio = MsClamp(mBlendRatio - 0.01f, 0.0f, 1.0f);
-		getMActor()->setMotionBlendRatioForBck(mBlendRatio);
+		getMActor()->setBckMotionBlendRatio(mBlendRatio);
 		if (mAnimationMode == 1
 		    && getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			++mAnimationLoopCount;
@@ -1118,9 +1118,9 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 				mAnimationMode    = 0;
 				mBlendRatio       = 1.0f;
 				getMActor()->setBckOldMotionBlendAnmPtr(
-				    getMActor()->getBckAnm());
+				    getMActor()->getCurBckAnmPtr());
 				getMActor()->setBckFromIndex(0);
-				getMActor()->setMotionBlendRatioForBck(mBlendRatio);
+				getMActor()->setBckMotionBlendRatio(mBlendRatio);
 
 				TBossEelEye* paired = mPairedEye;
 				paired->mPreviousBckIndex
@@ -1128,9 +1128,9 @@ void TBossEelEye::perform(u32 cue, JDrama::TGraphics* graphics)
 				paired->mAnimationMode = 0;
 				paired->mBlendRatio    = 1.0f;
 				paired->getMActor()->setBckOldMotionBlendAnmPtr(
-				    paired->getMActor()->getBckAnm());
+				    paired->getMActor()->getCurBckAnmPtr());
 				paired->getMActor()->setBckFromIndex(0);
-				paired->getMActor()->setMotionBlendRatioForBck(
+				paired->getMActor()->setBckMotionBlendRatio(
 				    paired->mBlendRatio);
 			}
 		}
@@ -1144,9 +1144,9 @@ void TBossEelEye::setBckAnm(int index)
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mAnimationMode    = 1;
 	mBlendRatio       = 1.0f;
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(index);
-	getMActor()->setMotionBlendRatioForBck(mBlendRatio);
+	getMActor()->setBckMotionBlendRatio(mBlendRatio);
 }
 
 TBossEelHeartCoin::TBossEelHeartCoin(const TLiveActor* owner, int jointIndex,
@@ -1401,7 +1401,7 @@ void TBossEel::init(TLiveManager* manager)
 	onLiveFlag(LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10);
 	mGroundHeight = gpMap->checkGround(
 	    mPosition.x, mPosition.y + getHeadHeight(), mPosition.z, &mGroundPlane);
-	mMActor->initNormalMotionBlend();
+	mMActor->initBckNormalMotionBlend();
 	mSpine->initWith(&TNerveBossEelWaitAppear::theNerve());
 
 	initHitActor(ACTOR_TYPE_BOSS_EEL, 1, HIT_CATEGORY_PLAYER,
@@ -1825,7 +1825,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 				updateTearsCnt();
 
 			mBckBlendRatio = MsClamp(mBckBlendRatio - 0.01f, 0.0f, 1.0f);
-			mMActor->setMotionBlendRatioForBck(mBckBlendRatio);
+			mMActor->setBckMotionBlendRatio(mBckBlendRatio);
 		}
 
 		deadCheck();
@@ -1927,9 +1927,9 @@ void TBossEel::setBckAnm(int index)
 	mPreviousBckIndex = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	mCurrentBckIndex  = index;
 	mBckBlendRatio    = 1.0f;
-	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getBckAnm());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 	getMActor()->setBckFromIndex(index);
-	getMActor()->setMotionBlendRatioForBck(mBckBlendRatio);
+	getMActor()->setBckMotionBlendRatio(mBckBlendRatio);
 	getMActor()
 	    ->getFrameCtrl(ANM_TYPE_BCK)
 	    ->setRate(0.25f * SMSGetAnmFrameRate());

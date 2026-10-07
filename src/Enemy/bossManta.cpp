@@ -274,7 +274,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->getMActor()->setBckFromIndex(0);
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
-		self->getMActor()->setMotionBlendRatioForBck(0.0f);
+		self->getMActor()->setBckMotionBlendRatio(0.0f);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
@@ -354,13 +354,13 @@ void TBossManta::setCollision()
 
 void TBossManta::startWalkAnim()
 {
-	getMActor()->initNormalMotionBlend();
+	getMActor()->initBckNormalMotionBlend();
 	getMActor()->setBckFromIndex(3);
 
 	J3DAnmTransform* oldAnm
 	    = getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(4);
 	getMActor()->setBckOldMotionBlendAnmPtr(oldAnm);
-	getMActor()->setMotionBlendRatioForBck(0.5f);
+	getMActor()->setBckMotionBlendRatio(0.5f);
 
 	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
 	                              * SMSGetAnmFrameRate(),
@@ -373,7 +373,7 @@ void TBossManta::startDamageAnim()
 	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]
 	                              * SMSGetAnmFrameRate(),
 	                          ANM_TYPE_BCK);
-	getMActor()->setMotionBlendRatioForBck(0.0f);
+	getMActor()->setBckMotionBlendRatio(0.0f);
 }
 
 void TBossManta::updateAnimBlend()
@@ -392,10 +392,10 @@ void TBossManta::updateAnimBlend()
 
 		unk150 = (1.0f - b) * unk150 + b * turn;
 
-		getMActor()->setMotionBlendRatioForBck(JGeometry::TUtil<f32>::clamp(
+		getMActor()->setBckMotionBlendRatio(JGeometry::TUtil<f32>::clamp(
 		    unk150 + getEpilogueValue(), 0.0f, 1.0f));
 	} else {
-		getMActor()->setMotionBlendRatioForBck(0.0f);
+		getMActor()->setBckMotionBlendRatio(0.0f);
 	}
 }
 

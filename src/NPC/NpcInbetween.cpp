@@ -46,5 +46,5 @@ void TNpcInbetween::execMotionBlend(MActor* mactor)
 		}
 	}
 
-	mactor->setMotionBlendRatioForBck(ratio);
+	mactor->setBckMotionBlendRatio(ratio);
 }

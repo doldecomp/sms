@@ -253,7 +253,7 @@ void TMapObjBase::startAnim(u16 param_1)
 	} else {
 		MActor* actor = mMActor;
 		actor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
-		    actor->unk8);
+		    actor->getMtxCalc());
 	}
 }
 

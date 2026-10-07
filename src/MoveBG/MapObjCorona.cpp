@@ -473,13 +473,13 @@ void TBathtub::tumble(f32 param_1, f32 param_2)
 
 MtxPtr TBathtub::getTakingMtx()
 {
-	return mMActor->mModel->getAnmMtx(mMarioJntIdx);
+	return mMActor->getModel()->getAnmMtx(mMarioJntIdx);
 }
 
 // Unused
 MtxPtr TBathtub::getShineMtx()
 {
-	return mMActor->mModel->getAnmMtx(mStarJntIdx);
+	return mMActor->getModel()->getAnmMtx(mStarJntIdx);
 }
 
 // Unused
@@ -491,17 +491,17 @@ MtxPtr TBathtub::getShineEffectMtx()
 // Unused
 MtxPtr TBathtub::getWaterMtx(int index)
 {
-	return mMActor->mModel->getAnmMtx(mWaterJntIdx[index]);
+	return mMActor->getModel()->getAnmMtx(mWaterJntIdx[index]);
 }
 
 MtxPtr TBathtub::getSubmarineMtxInDemo()
 {
-	return mMActor->mModel->getAnmMtx(mSubmarineJntIdx);
+	return mMActor->getModel()->getAnmMtx(mSubmarineJntIdx);
 }
 
 MtxPtr TBathtub::getPeachMtxInDemo()
 {
-	return mMActor->mModel->getAnmMtx(mDuckJntIdx);
+	return mMActor->getModel()->getAnmMtx(mDuckJntIdx);
 }
 
 // Unused
@@ -509,7 +509,7 @@ MtxPtr TBathtub::getKoopaMtxInDemo() { return nullptr; }
 
 MtxPtr TBathtub::getKoopaJrMtxInDemo()
 {
-	return mMActor->mModel->getAnmMtx(mJuniorJntIdx);
+	return mMActor->getModel()->getAnmMtx(mJuniorJntIdx);
 }
 
 BOOL TBathtub::receiveMessage(THitActor* sender, u32 message)

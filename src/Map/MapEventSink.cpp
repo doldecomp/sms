@@ -87,7 +87,7 @@ void TMapEventSink::rising()
 	J3DTransformInfo& info = unk30->getTransformInfo();
 	info.mTranslate.y += unk3C;
 	unk30->setTransformInfo(info);
-	unk1C->mActor->mModel->calc();
+	unk1C->getActor()->getModel()->calc();
 }
 
 bool TMapEventSink::control()
@@ -134,13 +134,15 @@ void TMapEventSink::startControl()
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
-	unk1C->mActor->mModel->calc();
+	J3DModel* model = unk1C->getActor()->getModel();
+	model->calc();
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	unk5C[mRaisingBuildingIdx]->setUpTrans(JGeometry::TVec3<f32>(
-	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
+	JGeometry::TVec3<f32> trans(info.mTranslate.x, info.mTranslate.y,
+	                            info.mTranslate.z);
+	unk5C[mRaisingBuildingIdx]->setUpTrans(trans);
 }
 
 void TMapEventSink::initBuilding(int index, JSUMemoryInputStream& stream)
