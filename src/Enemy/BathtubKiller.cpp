@@ -34,6 +34,13 @@ static const char* bathtubkiller_bastable[] = {
 	nullptr,
 };
 
+// Fabricated helper for checking only the active nerve.
+template <class Nerve>
+inline bool isCurrentNerve(const TSpineBase<TLiveActor>* spine)
+{
+	return spine->getCurrentNerve() == &Nerve::theNerve();
+}
+
 TBathtubKillerPersonality::TBathtubKillerPersonality() { }
 
 void TBathtubKillerPersonality::makeFast(const TBathtubKillerParams* params)
@@ -321,9 +328,8 @@ void TBathtubKiller::killBathtubKiller()
 
 void TBathtubKiller::breakBathtubKiller()
 {
-	bool dying
-	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
-	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	bool dying = isCurrentNerve<TNerveBathtubKillerExplosion>(mSpine)
+	             || isCurrentNerve<TNerveBathtubKillerBreak>(mSpine);
 
 	if (!dying)
 		mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
@@ -331,13 +337,15 @@ void TBathtubKiller::breakBathtubKiller()
 
 void TBathtubKiller::explodeBathtubKiller()
 {
-	bool dying
-	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
-	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	bool dying = isCurrentNerve<TNerveBathtubKillerExplosion>(mSpine)
+	             || isCurrentNerve<TNerveBathtubKillerBreak>(mSpine);
 	if (!dying)
 		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
 }
 
+// TODO: recover the original inline predicate used by the direct death-state
+// checks in bind, perform, attackToMario and isCollidMove. It materializes the
+// Break comparison and leaves the Explosion base constructor out of line.
 void TBathtubKiller::bind()
 {
 	JGeometry::TVec3<f32> position = mPosition;
@@ -362,6 +370,7 @@ void TBathtubKiller::bind()
 		                                     &position.z, mBodyRadius))
 			explodeBathtubKiller();
 	}
+	// TODO: retail keeps Vec3::sub out of line here.
 	JGeometry::TVec3<f32> delta = position;
 	delta.sub(mPosition);
 	mPositionDelta = delta;
@@ -390,17 +399,17 @@ void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 		                    == &TNerveBathtubKillerBreak::theNerve();
 		if (!dying) {
 			makeNoseColor();
-			if (++mSmokeCounter >= getSaveParam2()->mSLSmokeInterval.get()) {
+			++mSmokeCounter;
+			if (mSmokeCounter >= getSaveParam2()->mSLSmokeInterval.get()) {
 				mSmokeCounter = 0;
-				mSmokeMatrix.setQuat(mQuat);
-				mSmokeMatrix.setTrans(mPosition);
+				mSmokeMatrix.setQT(mQuat, mPosition);
 				gpMarioParticleManager->emitAndBindToMtxPtr(0x1BD, mSmokeMatrix,
 				                                            1, this);
 			}
 			f32 distance = mPosition.distance(SMS_GetMarioPos());
 			SMSGetMSound()->startSoundActorWithInfo(
 			    MSD_SE_EN_KILLER_FLY, &mPosition, nullptr, distance, 0, 0,
-			    nullptr, 4, 0);
+			    nullptr, 0, 4);
 		}
 	}
 }
@@ -469,6 +478,8 @@ void TBathtubKiller::moveChasing()
 	mVelocity.scale(mPersonality.mChaseSpeed, direction);
 }
 
+// TODO: the current getZDir inline schedules its loads and stores differently
+// from retail. Keep the quaternion API until its original body is recovered.
 void TBathtubKiller::moveStraight()
 {
 	JGeometry::TVec3<f32> direction;
@@ -503,7 +514,7 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 	steer.setRotate(forward, normAxis, moveAmountY);
 	mQuat.mul(steer, mQuat);
 
-	// Y-axis rotation
+	// Level the up direction.
 	JGeometry::TVec3<f32> right;
 	right.cross(forward, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 	if (right.length() > 0.0f) {
@@ -540,22 +551,23 @@ void TBathtubKiller::calcRootMatrix()
 	getModel()->setBaseTRMtx(pos);
 }
 
-BOOL TBathtubKiller::receiveMessage(THitActor*, u32 message)
+BOOL TBathtubKiller::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 3 || message == 0 || message == 1) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP || message == HIT_MESSAGE_TRAMPLE
+	    || message == HIT_MESSAGE_HIP_DROP) {
 		breakBathtubKiller();
 		return TRUE;
 	}
-	if (message == 10) {
+	if (message == HIT_MESSAGE_BURN) {
 		explodeBathtubKiller();
 		return TRUE;
 	}
-	if (message == 13) {
+	if (message == HIT_MESSAGE_UNKD) {
 		kill();
 		return TRUE;
 	}
-	if (message == 15) {
-		jumpBehavior();
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		behaveToWater(sender);
 		return TRUE;
 	}
 	return FALSE;
@@ -568,7 +580,7 @@ void TBathtubKiller::attackToMario()
 	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
 	if (!dying && SMS_GetMarioPos().y < mPosition.y) {
 		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
-		SMS_SendMessageToMario(this, 14);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		JGeometry::TVec3<f32> direction(0.0f, 1.0f, 0.0f);
 		SMS_ThrowMario(direction, 60.0f);
 		mHitMario = 1;
@@ -590,7 +602,7 @@ bool TBathtubKiller::isCollidMove(THitActor* actor)
 	    || actor->isActorType(ACTOR_TYPE_BOSS_UNK2A)
 	    || actor->isActorType(ACTOR_TYPE_BOSS_UNK2C)) {
 		explodeBathtubKiller();
-		actor->receiveMessage(this, 14);
+		actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		return true;
 	}
 	if (actor->isActorType(ACTOR_TYPE_BATHTUB_KILLER)
@@ -641,6 +653,8 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 
 void TBathtubKiller::updateTimers()
 {
+	// TODO: the original countdown inline retains each timer address.
+	// Its name and signature are unknown; the positive-only updates agree.
 	if (mLifetimeTimer > 0)
 		--mLifetimeTimer;
 	if (mLaunchTimer > 0)
@@ -679,9 +693,14 @@ bool TBathtubKiller::isAboided()
 	f32 distanceY                  = fabsf(mario.y - position.y);
 	mario.y                        = 0.0f;
 	position.y                     = 0.0f;
-	JGeometry::TVec3<f32> direction;
-	direction.sub(mario, position);
-	f32 distance = direction.length();
+	f32 dx                         = mario.x - position.x;
+	f32 dy                         = mario.y - position.y;
+	f32 dz                         = mario.z - position.z;
+	f32 dxSquared                  = dx * dx;
+	f32 dySquared                  = dy * dy;
+	f32 dzSquared                  = dz * dz;
+	f32 distance
+	    = JGeometry::TUtil<f32>::sqrt(dzSquared + (dxSquared + dySquared));
 	if (distanceY > getSaveParam2()->mSLAboidDistanceY.get()
 	    && distance <= getSaveParam2()->mSLAboidDistance.get())
 		return true;
@@ -692,6 +711,7 @@ bool TBathtubKiller::isAboided()
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
+	JGeometry::TVec3<f32> direction(dx, dy, dz);
 	direction.normalize();
 	TDirectionCalc target(direction);
 	JGeometry::TVec3<f32> forward;
@@ -837,6 +857,8 @@ TBathtubKillerManager::TBathtubKillerManager(const char* name)
 
 void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
 {
+	// TODO: retail checks unk38 against null before and after loading, but
+	// neither check has a surviving branch or diagnostic.
 	TSmallEnemyManager::load(stream);
 	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
 }
@@ -853,7 +875,8 @@ void TBathtubKillerManager::loadAfter()
 	mFinalMushroomRequested = 0;
 	mEarlyMushroomRequests  = 0;
 
-	// TODO: the original reads unk38 here and drops the result.
+	// TODO: retail compares unk38 against null here, with no surviving
+	// diagnostic.
 	static const char* loopFilenames[1] = {
 		"/scene/map/map/ms_kp_kill_smoke.jpa",
 	};
