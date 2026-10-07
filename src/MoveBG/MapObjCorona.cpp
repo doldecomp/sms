@@ -681,7 +681,7 @@ void TBathtub::startDemo()
 	unk168[2]->startBreak(0, 2, unk16C->animSpeed1.get());
 
 	onMapObjFlag(MAP_OBJ_FLAG_UNK8);
-	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	startBck("bath_overturn1");
 	TLiveActor* mario = SMS_GetMarioLiveActor();
 	if (mario->receiveMessage(this, HIT_MESSAGE_TAKE))

@@ -98,7 +98,7 @@ void TItem::calc()
 		MtxPtr src = gpItemManager->unk40;
 
 		MtxPtr mtx;
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS))
 			mtx = getModel()->getAnmMtx(0);
 		else
 			mtx = getModel()->getBaseTRMtx();
@@ -119,7 +119,7 @@ void TItem::calc()
 		mtx[2][3] = mPosition.z;
 	}
 
-	if (isState(STATE_HOLDING) && checkMapObjFlag(MAP_OBJ_FLAG_UNK100))
+	if (isState(STATE_HOLDING) && checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS))
 		TMapObjGeneral::calcRootMatrix();
 }
 

@@ -88,7 +88,7 @@ void TManhole::touchPlayer(THitActor*)
 		               + SMSGetAnmFrameRate());
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
 		                                nullptr, 0, 4);
-		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		SMSRumbleMgr->start(0x15, 0xF, (f32*)nullptr);
 		return;
 	}
@@ -100,7 +100,7 @@ void TManhole::touchPlayer(THitActor*)
 		    ->getFrameCtrl(ANM_TYPE_BCK)
 		    ->setFrame(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		               + SMSGetAnmFrameRate());
-		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		mMapCollisionManager->getActiveCollision()->setAllBGType(0x400);
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_OPEN, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -125,7 +125,7 @@ void TManhole::touchPlayer(THitActor*)
 			mPosition.y = mInitialPosition.y - mDownHeight;
 		unk148 = 1.0f;
 		unk14C = mInitialPosition.y - mPosition.y;
-		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		return;
 	}
 
@@ -149,7 +149,7 @@ bool TManhole::animationFinished()
 		frameCtrl->setRate(0.0f);
 		calcRootMatrix();
 		getModel()->calc();
-		onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		return true;
 	}
 	f32 end = frameCtrl->getEnd();
@@ -158,7 +158,7 @@ bool TManhole::animationFinished()
 		frameCtrl->setRate(0.0f);
 		calcRootMatrix();
 		getModel()->calc();
-		onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		return true;
 	}
 	return false;
@@ -201,7 +201,7 @@ void TManhole::appeared()
 			setUpMapCollision(0);
 			unk151 = 1;
 		}
-		onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		mPosition.y = mInitialPosition.y;
 	}
 }

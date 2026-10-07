@@ -718,7 +718,7 @@ void TMuddyBoat::kill()
 	MtxPtr dst = getModel()->getBaseTRMtx();
 	MtxPtr src = getModel()->getAnmMtx(0);
 	MTXCopy(src, dst);
-	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	startAnim(1);
 	startAnim(2);
@@ -818,7 +818,7 @@ void TMuddyBoat::control()
 		if (!animIsFinished())
 			break;
 		mStateTimer = unk168;
-		onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		sleep();
 		mState = STATE_UNK3;
 		break;

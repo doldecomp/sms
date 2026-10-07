@@ -262,7 +262,7 @@ void TMapObjTreeScale::control()
 		} else {
 			mScaling.x = 1.0f;
 			mScaling.z = 1.0f;
-			onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+			onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 			getModel()->calc();
 			offHitFilter(HIT_FILTER_NO_ATTACK);
 			setUpCurrentMapCollision();
@@ -314,7 +314,7 @@ void TMapObjTreeScale::beSmall()
 	mDamageHeight = 30.0f;
 	calcEntryRadius();
 	removeMapCollision();
-	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	mActorType = ACTOR_TYPE_MAP_OBJ_TREE_SCALE;
 	mState     = STATE_SMALL;
 	SMS_HideAllShapePacket(getModel());

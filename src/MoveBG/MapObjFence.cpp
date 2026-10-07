@@ -92,14 +92,14 @@ BOOL TRevolvingFenceInner::receiveMessage(THitActor* param_1, u32 param_2)
 			                                &mPosition, 0, nullptr, 0, 4);
 			mState = STATE_UNK3;
 			startBck("fence_revolve_inner_roll_down");
-			offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+			offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 			return TRUE;
 		} else if (isState(STATE_UNK2)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE2,
 			                                &mPosition, 0, nullptr, 0, 4);
 			mState = STATE_UNK4;
 			startBck("fence_revolve_inner_roll_up");
-			offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+			offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 			return TRUE;
 		}
 	}
@@ -198,7 +198,7 @@ void TRevolvingFenceInner::controlGroundRoof()
 			mMActor->setFrameRate(0.0f, ANM_TYPE_BCK);
 			mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 			mMActor->calc();
-			onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+			onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		}
 		break;
 	case STATE_UNK4:
@@ -208,7 +208,7 @@ void TRevolvingFenceInner::controlGroundRoof()
 			mMActor->setFrameRate(0.0f, ANM_TYPE_BCK);
 			mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 			mMActor->calc();
-			onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+			onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		}
 		break;
 	}
@@ -379,7 +379,7 @@ BOOL TRailFence::receiveMessage(THitActor* param_1, u32 param_2)
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_PNCH, &mPosition,
 		                                0, nullptr, 0, 4);
 		setUpMapCollision(1);
-		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		mState = STATE_UNK2;
 		return TRUE;
 	}
@@ -401,7 +401,7 @@ void TRailFence::falling()
 		makeObjAppeared();
 		calcRootMatrix();
 		getModel()->calc();
-		onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	}
 }
 

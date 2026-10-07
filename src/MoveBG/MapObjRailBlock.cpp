@@ -200,7 +200,8 @@ void TRailMapObj::setGroundCollision()
 		return;
 
 	if (unk14A != 0
-	    && (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2) || getColNum() != 0)) {
+	    && (!checkMapObjFlag(MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT)
+	        || getColNum() != 0)) {
 		TMtx34f mtx;
 		mtx.set(getModel()->getAnmMtx(0));
 		mMapCollisionManager->moveActiveCollisionMtx(mtx);

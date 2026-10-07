@@ -173,8 +173,8 @@ u32 TRiccoWatermill::touchWater(THitActor*)
 	unk140 = 5;
 	if (isState(STATE_NORMAL))
 		unk13C->setUpMapCollision(1);
-	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-	unk13C->offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
+	unk13C->offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	if (unk13C->mPosition.y < mSubmarineMaxTransY) {
 		unk138 += mRotAccel;
 		if (unk138 > mRotSpeedMaxUp)
@@ -257,8 +257,8 @@ void TRiccoWatermill::control()
 			unk13C->mPosition.y = mSubmarineBottomTransY;
 			unk13C->setUpMapCollision(0);
 			unk138 = 0.0f;
-			unk13C->onMapObjFlag(MAP_OBJ_FLAG_UNK100);
-			onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+			unk13C->onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
+			onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 			SMSGetMSound()->startSoundActor(SMD_SE_OBJ_SUBMARINE_SET_WT,
 			                                &unk13C->mPosition, 0, nullptr, 0,
 			                                4);

@@ -599,7 +599,7 @@ void TLeanMirror::release()
 	unk198      = MsAngleBetween(up, unk180) / mGoTargetTime;
 	mStateTimer = mGoTargetTime;
 	mState      = STATE_GO_TARGET;
-	offMapObjFlag(MAP_OBJ_FLAG_UNK2);
+	offMapObjFlag(MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT);
 	SMS_MarioMoveRequest(unk1A0);
 
 	if (strcmp(unkF4, "mirrorS") == 0) {
@@ -1109,7 +1109,7 @@ void TGoalWatermelon::touchActor(THitActor* actor)
 	if (isState(STATE_NORMAL) && actor->isActorType(ACTOR_TYPE_WATERMELON)) {
 		unk13C = (TMapObjBase*)actor;
 		unk13C->getMActor()->setBck("watermelon_shrink");
-		unk13C->offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		unk13C->offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		unk13C->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "スイカゴールカメラ", &unk13C->mPosition, -1, 0.0f, true, nullptr,
