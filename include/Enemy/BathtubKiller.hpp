@@ -15,11 +15,11 @@ public:
 	void makeShine(const TBathtubKillerParams*);
 	void makeNormal(const TBathtubKillerParams*);
 
-	/* 0x00 */ f32 unk0;
-	/* 0x04 */ f32 unk4;
-	/* 0x08 */ f32 unk8;
-	/* 0x0C */ f32 unkC;
-	/* 0x10 */ s32 unk10;
+	/* 0x00 */ f32 mAccelerationQuatRate;
+	/* 0x04 */ f32 mChaseAcceleration;
+	/* 0x08 */ f32 mChaseSpeed;
+	/* 0x0C */ f32 mInitialSpeed;
+	/* 0x10 */ s32 mDeadPeriod;
 };
 
 class TBathtubKillerParams : public TSmallEnemyParams {
@@ -110,29 +110,29 @@ public:
 	}
 
 public:
-	/* 0x194 */ u8 unk194;
-	/* 0x198 */ TBathtubKillerPersonality unk198;
+	/* 0x194 */ u8 mKillerType; // 0: normal, 1: shine, 2: fast
+	/* 0x198 */ TBathtubKillerPersonality mPersonality;
 	/* 0x1AC */ JGeometry::TQuat4<f32> mQuat;
-	/* 0x1BC */ JGeometry::TVec3<f32> unk1BC;
+	/* 0x1BC */ JGeometry::TVec3<f32> mAcceleration;
 	/* 0x1C8 */ char unk1C8[4];
-	/* 0x1CC */ TBathtub* unk1CC;
+	/* 0x1CC */ TBathtub* mBathtub;
 	/* 0x1D0 */ char unk1D0[4];
-	/* 0x1D4 */ int unk1D4;
+	/* 0x1D4 */ int mSmokeCounter;
 	/* 0x1D8 */ GXColorS10 mBodyColor;
 	/* 0x1E0 */ GXColorS10 mNoseColor;
 	/* 0x1E8 */ GXColorS10 mEyesColor;
 	/* 0x1F0 */ GXColorS10 mBaseColor;
-	/* 0x1F8 */ f32 unk1F8;
-	/* 0x1FC */ f32 unk1FC;
-	/* 0x200 */ f32 unk200;
-	/* 0x204 */ f32 unk204;
-	/* 0x208 */ int unk208;
-	/* 0x20C */ int unk20C;
-	/* 0x210 */ int unk210;
-	/* 0x214 */ int unk214;
-	/* 0x218 */ int unk218;
-	/* 0x21C */ int unk21C;
-	/* 0x220 */ TPosition3f unk220;
+	/* 0x1F8 */ f32 mColorChangeRate;
+	/* 0x1FC */ f32 mColorPhase;
+	/* 0x200 */ f32 mMinChaseHeight;
+	/* 0x204 */ f32 mMaxChaseHeight;
+	/* 0x208 */ int mLifetimeTimer;
+	/* 0x20C */ int mLaunchTimer;
+	/* 0x210 */ int mChaseStraightTimer;
+	/* 0x214 */ int mNoKillerCollisionTimer;
+	/* 0x218 */ int mNoCollisionTimer;
+	/* 0x21C */ int mHitMario;
+	/* 0x220 */ TPosition3f mSmokeMatrix;
 };
 
 DECLARE_NERVE(TNerveBathtubKillerWander, TLiveActor);
@@ -156,10 +156,10 @@ public:
 	int countActiveShineKillers();
 
 public:
-	/* 0x60 */ s8 unk60;
-	/* 0x64 */ TLiveActor* unk64;
-	/* 0x68 */ u8 unk68;
-	/* 0x69 */ s8 unk69;
+	/* 0x60 */ s8 mInitialLifeCount;
+	/* 0x64 */ TLiveActor* mMushroom;
+	/* 0x68 */ u8 mFinalMushroomRequested;
+	/* 0x69 */ s8 mEarlyMushroomRequests;
 };
 
 #endif

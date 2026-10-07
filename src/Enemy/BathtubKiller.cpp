@@ -2,6 +2,7 @@
 #include <Enemy/Conductor.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <Enemy/EffectObj.hpp>
+#include <Enemy/KoopaJr.hpp>
 #include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
@@ -16,6 +17,10 @@
 #include <Player/WaterGun.hpp>
 #include <System/FlagManager.hpp>
 #include <System/Particles.hpp>
+#include <Strategic/ActorTypes.hpp>
+#include <Map/Map.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
 #include <stdlib.h>
 
 // rogue includes needed for matching sinit & bss
@@ -33,29 +38,29 @@ TBathtubKillerPersonality::TBathtubKillerPersonality() { }
 
 void TBathtubKillerPersonality::makeFast(const TBathtubKillerParams* params)
 {
-	unk0  = params->fastAccelerationQuatRate.get();
-	unk4  = params->fastChaseAcceleration.get();
-	unk8  = params->fastChaseSpeed.get();
-	unkC  = params->fastInitialSpeed.get();
-	unk10 = params->fastDeadPeriod.get();
+	mAccelerationQuatRate = params->fastAccelerationQuatRate.get();
+	mChaseAcceleration    = params->fastChaseAcceleration.get();
+	mChaseSpeed           = params->fastChaseSpeed.get();
+	mInitialSpeed         = params->fastInitialSpeed.get();
+	mDeadPeriod           = params->fastDeadPeriod.get();
 }
 
 void TBathtubKillerPersonality::makeShine(const TBathtubKillerParams* params)
 {
-	unk0  = params->shineAccelerationQuatRate.get();
-	unk4  = params->shineChaseAcceleration.get();
-	unk8  = params->shineChaseSpeed.get();
-	unkC  = params->shineInitialSpeed.get();
-	unk10 = params->shineDeadPeriod.get();
+	mAccelerationQuatRate = params->shineAccelerationQuatRate.get();
+	mChaseAcceleration    = params->shineChaseAcceleration.get();
+	mChaseSpeed           = params->shineChaseSpeed.get();
+	mInitialSpeed         = params->shineInitialSpeed.get();
+	mDeadPeriod           = params->shineDeadPeriod.get();
 }
 
 void TBathtubKillerPersonality::makeNormal(const TBathtubKillerParams* params)
 {
-	unk0  = params->mSLAccelerationQuatRate.get();
-	unk4  = params->mSLChaseAcceleration.get();
-	unk8  = params->mSLChaseSpeed.get();
-	unkC  = params->mSLInitialSpeed.get();
-	unk10 = params->mSLDeadPeriod.get();
+	mAccelerationQuatRate = params->mSLAccelerationQuatRate.get();
+	mChaseAcceleration    = params->mSLChaseAcceleration.get();
+	mChaseSpeed           = params->mSLChaseSpeed.get();
+	mInitialSpeed         = params->mSLInitialSpeed.get();
+	mDeadPeriod           = params->mSLDeadPeriod.get();
 }
 
 TBathtubKillerParams::TBathtubKillerParams(const char* prm)
@@ -136,7 +141,7 @@ TBathtubKillerParams::TBathtubKillerParams(const char* prm)
 
 TBathtubKiller::TBathtubKiller(const char* name)
     : TSmallEnemy(name)
-    , unk1CC(0)
+    , mBathtub(0)
 {
 }
 
@@ -149,7 +154,7 @@ void TBathtubKiller::init(TLiveManager* manager)
 	onLiveFlag(LIVE_FLAG_DEAD);
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	unk194 = 0;
+	mKillerType = 0;
 	resetBathtubKiller();
 }
 
@@ -207,17 +212,17 @@ void TBathtubKiller::resetBathtubKiller()
 {
 	mSpine->initWith(&TNerveBathtubKillerWander::theNerve());
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
-	unk208 = 0;
-	unk20C = 0;
-	unk210 = 0;
-	unk214 = 0;
-	unk218 = 0;
+	mLifetimeTimer          = 0;
+	mLaunchTimer            = 0;
+	mChaseStraightTimer     = 0;
+	mNoKillerCollisionTimer = 0;
+	mNoCollisionTimer       = 0;
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mVelocity.set(0.0f, 0.0f, 0.0f);
-	unk1BC.set(0.0f, 0.0f, 0.0f);
-	unk21C = 0;
-	unk1D4 = 0;
-	if (unk194 == 1) {
+	mAcceleration.set(0.0f, 0.0f, 0.0f);
+	mHitMario     = 0;
+	mSmokeCounter = 0;
+	if (mKillerType == 1) {
 		mBodyColor.r = 50;
 		mBodyColor.g = 70;
 		mBodyColor.b = 160;
@@ -225,7 +230,7 @@ void TBathtubKiller::resetBathtubKiller()
 		mNoseColor   = mBodyColor;
 		mEyesColor   = mBodyColor;
 		mBaseColor   = mBodyColor;
-		unk198.makeShine(getSaveParam2());
+		mPersonality.makeShine(getSaveParam2());
 	} else {
 		mBodyColor.r = 0;
 		mBodyColor.g = 0;
@@ -234,20 +239,20 @@ void TBathtubKiller::resetBathtubKiller()
 		mNoseColor   = mBodyColor;
 		mEyesColor   = mBodyColor;
 		mBaseColor   = mBodyColor;
-		if (unk194 == 2) {
-			unk198.makeFast(getSaveParam2());
+		if (mKillerType == 2) {
+			mPersonality.makeFast(getSaveParam2());
 		} else {
-			unk198.makeNormal(getSaveParam2());
+			mPersonality.makeNormal(getSaveParam2());
 		}
 	}
-	unk1FC = 0.0f;
-	unk1F8 = getSaveParam2()->mSLColorChangeRateDelta.get();
-	unk208 = unk198.unk10;
-	unk20C = getSaveParam2()->mSLLaunchingPeriod.get();
-	unk214 = getSaveParam2()->noCollisionAmongKillers.get();
-	unk200 = getSaveParam2()->mSLChaseMinY.get();
-	unk204 = getSaveParam2()->mSLChaseMaxY.get();
-	if (unk194 == 2) {
+	mColorPhase             = 0.0f;
+	mColorChangeRate        = getSaveParam2()->mSLColorChangeRateDelta.get();
+	mLifetimeTimer          = mPersonality.mDeadPeriod;
+	mLaunchTimer            = getSaveParam2()->mSLLaunchingPeriod.get();
+	mNoKillerCollisionTimer = getSaveParam2()->noCollisionAmongKillers.get();
+	mMinChaseHeight         = getSaveParam2()->mSLChaseMinY.get();
+	mMaxChaseHeight         = getSaveParam2()->mSLChaseMaxY.get();
+	if (mKillerType == 2) {
 		f32 random      = 4.0f * MsRandF();
 		f32 offset      = 0.0f;
 		int randomIndex = (int)random;
@@ -256,38 +261,33 @@ void TBathtubKiller::resetBathtubKiller()
 		} else if (randomIndex == 1) {
 			offset = 240.0f;
 		}
-		unk200 += offset;
-		unk204 += offset;
+		mMinChaseHeight += offset;
+		mMaxChaseHeight += offset;
 	}
 }
 
 void TBathtubKiller::generateItemBathtubKiller()
 {
-	if (unk194 != 1)
+	if (mKillerType != 1)
 		return;
 
 	TMapObjBase* item              = nullptr;
 	TBathtubKillerManager* manager = (TBathtubKillerManager*)mManager;
-	s32 shines = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
+	s32 lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 
 	if (SMS_GetMarioWaterGun()->mCurrentWater == 0) {
 		item = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
 		                                    mPosition.z,
 		                                    ACTOR_TYPE_BOTTLE_LARGE, true);
-	} else if (manager->unk60 == shines && manager->unk69 < 7) {
-		JGeometry::TVec3<f32> pos = mPosition;
-		if (!manager->unk64 || manager->unk64->checkLiveFlag(LIVE_FLAG_DEAD))
-			manager->unk64 = gpItemManager->makeObjAppear(
-			    pos.x, pos.y, pos.z, ACTOR_TYPE_MUSHROOM1UP, true);
-		manager->unk69 += 1;
-	} else if (shines <= manager->unk60 + 1) {
-		if (unk1CC->getNumGripsDead() == 3 && manager->unk68 == 0) {
-			JGeometry::TVec3<f32> pos = getPosition();
-			if (!manager->unk64
-			    || manager->unk64->checkLiveFlag(LIVE_FLAG_DEAD))
-				manager->unk64 = gpItemManager->makeObjAppear(
-				    pos.x, pos.y, pos.z, ACTOR_TYPE_MUSHROOM1UP, true);
-			manager->unk68 = 1;
+	} else if (manager->mInitialLifeCount == lives
+	           && manager->mEarlyMushroomRequests < 7) {
+		manager->generateMushroom(mPosition);
+		manager->mEarlyMushroomRequests += 1;
+	} else if (lives <= manager->mInitialLifeCount + 1) {
+		if (mBathtub->getNumGripsDead() == 3
+		    && manager->mFinalMushroomRequested == 0) {
+			manager->generateMushroom(getPosition());
+			manager->mFinalMushroomRequested = 1;
 		}
 	}
 
@@ -312,50 +312,180 @@ void TBathtubKiller::generateItemBathtubKiller()
 	}
 }
 
-void TBathtubKiller::killBathtubKiller() { }
+void TBathtubKiller::killBathtubKiller()
+{
+	mHitMario = 0;
+	onLiveFlag(LIVE_FLAG_DEAD);
+	stopAnmSound();
+}
 
 void TBathtubKiller::breakBathtubKiller()
 {
-	bool dying = mSpine->getCurrentNerve()
-	             == &TNerveBathtubKillerExplosion::theNerve();
-	if (!dying)
-		dying = mSpine->getCurrentNerve()
-		        == &TNerveBathtubKillerBreak::theNerve();
+	bool dying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
 
 	if (!dying)
 		mSpine->pushNerve(&TNerveBathtubKillerBreak::theNerve());
 }
 
-void TBathtubKiller::explodeBathtubKiller() { }
+void TBathtubKiller::explodeBathtubKiller()
+{
+	bool dying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	if (!dying)
+		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+}
 
-void TBathtubKiller::bind() { }
+void TBathtubKiller::bind()
+{
+	JGeometry::TVec3<f32> position = mPosition;
+	position.add(mPositionDelta);
+	position.add(mVelocity);
+	mVelocity.add(mAcceleration);
+	bool dying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	if (!dying) {
+		mGroundHeight = gpMap->checkGround(position.x, position.y + mHeadHeight,
+		                                   position.z, &mGroundPlane);
+		mGroundHeight += 1.0f;
+		if (position.y <= 0.05f + mGroundHeight) {
+			explodeBathtubKiller();
+			mAcceleration.set(0.0f, 0.0f, 0.0f);
+			mVelocity.set(mAcceleration);
+			position.y = mGroundHeight;
+		}
+		if (gpMap->isTouchedOneWallAndMoveXZ(&position.x,
+		                                     position.y + mHeadHeight,
+		                                     &position.z, mBodyRadius))
+			explodeBathtubKiller();
+	}
+	JGeometry::TVec3<f32> delta = position;
+	delta.sub(mPosition);
+	mPositionDelta = delta;
+}
 
 void TBathtubKiller::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	// TODO: only the bathtub lookup is reconstructed; the cue handling that
-	// follows it in the object is still missing.
 	TSmallEnemy::perform(cue, graphics);
 
-	if (unk1CC == nullptr)
-		unk1CC
+	if (mBathtub == nullptr)
+		mBathtub
 		    = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
+	if ((cue & 1) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
+		updateTimers();
+		if (mLifetimeTimer <= 0)
+			explodeBathtubKiller();
+		if (!gpMap->isInArea(mPosition.x, mPosition.z))
+			killBathtubKiller();
+		if (mBathtub->unk29A)
+			killBathtubKiller();
+	}
+	if ((cue & 2) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
+		bool dying = mSpine->getCurrentNerve()
+		                 == &TNerveBathtubKillerExplosion::theNerve()
+		             || mSpine->getCurrentNerve()
+		                    == &TNerveBathtubKillerBreak::theNerve();
+		if (!dying) {
+			makeNoseColor();
+			if (++mSmokeCounter >= getSaveParam2()->mSLSmokeInterval.get()) {
+				mSmokeCounter = 0;
+				mSmokeMatrix.setQuat(mQuat);
+				mSmokeMatrix.setTrans(mPosition);
+				gpMarioParticleManager->emitAndBindToMtxPtr(0x1BD, mSmokeMatrix,
+				                                            1, this);
+			}
+			f32 distance = mPosition.distance(SMS_GetMarioPos());
+			SMSGetMSound()->startSoundActorWithInfo(
+			    MSD_SE_EN_KILLER_FLY, &mPosition, nullptr, distance, 0, 0,
+			    nullptr, 4, 0);
+		}
+	}
 }
 
-void TBathtubKiller::makeNoseColor() { }
+void TBathtubKiller::makeNoseColor()
+{
+	if (mKillerType == 2) {
+		mColorPhase += mColorChangeRate;
+		if (mColorPhase > 1.0f) {
+			mColorPhase      = 1.0f;
+			mColorChangeRate = -getSaveParam2()->mSLColorChangeRateDelta.get();
+		}
+		if (mColorPhase < 0.0f) {
+			mColorPhase      = 0.0f;
+			mColorChangeRate = getSaveParam2()->mSLColorChangeRateDelta.get();
+		}
+		mNoseColor.r = (u8)(255.0f * mColorPhase);
+	}
+}
 
-f32 TBathtubKiller::getBathtubY() { return 0.0f; }
+f32 TBathtubKiller::getBathtubY()
+{
+	return (*mBathtub->getRootJointMtx())[1][3];
+}
 
-void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32>) { }
+void TBathtubKiller::makeInitialVelocity(JGeometry::TVec3<f32> velocity)
+{
+	f32 speed    = velocity.length();
+	f32 maxSpeed = getSaveParam2()->mSLFlyingSpeedMax.get();
+	if (speed > maxSpeed) {
+		velocity.normalize();
+		velocity.scale(maxSpeed);
+	}
+	mVelocity.set(velocity);
+	velocity.normalize();
+	JGeometry::TVec3<f32> forward;
+	mQuat.getZDir(forward);
+	JGeometry::TQuat4<f32> rotation;
+	rotation.setRotate(forward, velocity, 1.0f);
+	mQuat.mul(rotation, mQuat);
+}
 
-void TBathtubKiller::moveParabolic() { }
+void TBathtubKiller::moveParabolic()
+{
+	mAcceleration.set(0.0f, -getGravityY(), 0.0f);
+	makeVelocityQuat();
+}
 
-void TBathtubKiller::moveChasing() { }
+void TBathtubKiller::moveChasing()
+{
+	JGeometry::TVec3<f32> target = SMS_GetMarioPos();
+	f32 minY                     = mMinChaseHeight + getBathtubY();
+	f32 maxY                     = mMaxChaseHeight + getBathtubY();
+	target.y                     = 0.5f * (minY + maxY);
+	JGeometry::TVec3<f32> direction;
+	direction.sub(target, mPosition);
+	direction.normalize();
+	mAcceleration.scale(mPersonality.mChaseAcceleration, direction);
+	makeAccelerationQuat();
+	mQuat.getZDir(direction);
+	direction.normalize();
+	if (mPosition.y > maxY)
+		direction.y = 0.0f >= direction.y ? direction.y : 0.0f;
+	if (mPosition.y < minY)
+		direction.y = 0.0f >= direction.y ? 0.0f : direction.y;
+	mVelocity.scale(mPersonality.mChaseSpeed, direction);
+}
 
-void TBathtubKiller::moveStraight() { }
+void TBathtubKiller::moveStraight()
+{
+	JGeometry::TVec3<f32> direction;
+	mQuat.getZDir(direction);
+	direction.y = 0.0f;
+	direction.normalize();
+	direction.scale(mPersonality.mChaseSpeed);
+	mVelocity.set(direction);
+	makeQuat(mVelocity, mPersonality.mAccelerationQuatRate, 0.1f);
+}
 
-void TBathtubKiller::makeVelocityQuat() { }
+void TBathtubKiller::makeVelocityQuat() { makeQuat(mVelocity, 1.0f, 0.1f); }
 
-void TBathtubKiller::makeAccelerationQuat() { }
+void TBathtubKiller::makeAccelerationQuat()
+{
+	makeQuat(mAcceleration, mPersonality.mAccelerationQuatRate, 0.1f);
+}
 
 void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
                               f32 moveAmountX)
@@ -392,7 +522,10 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 	mQuat.normalize();
 }
 
-void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32) { }
+void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32)
+{
+	// TODO: dead-stripped, with no surviving callers to recover the rotation.
+}
 
 f32 TBathtubKiller::getGravityY() const
 {
@@ -407,11 +540,66 @@ void TBathtubKiller::calcRootMatrix()
 	getModel()->setBaseTRMtx(pos);
 }
 
-BOOL TBathtubKiller::receiveMessage(THitActor*, u32) { return false; }
+BOOL TBathtubKiller::receiveMessage(THitActor*, u32 message)
+{
+	if (message == 3 || message == 0 || message == 1) {
+		breakBathtubKiller();
+		return TRUE;
+	}
+	if (message == 10) {
+		explodeBathtubKiller();
+		return TRUE;
+	}
+	if (message == 13) {
+		kill();
+		return TRUE;
+	}
+	if (message == 15) {
+		jumpBehavior();
+		return TRUE;
+	}
+	return FALSE;
+}
 
-void TBathtubKiller::attackToMario() { }
+void TBathtubKiller::attackToMario()
+{
+	bool dying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	if (!dying && SMS_GetMarioPos().y < mPosition.y) {
+		mSpine->pushNerve(&TNerveBathtubKillerExplosion::theNerve());
+		SMS_SendMessageToMario(this, 14);
+		JGeometry::TVec3<f32> direction(0.0f, 1.0f, 0.0f);
+		SMS_ThrowMario(direction, 60.0f);
+		mHitMario = 1;
+	}
+}
 
-bool TBathtubKiller::isCollidMove(THitActor*) { return false; }
+bool TBathtubKiller::isCollidMove(THitActor* actor)
+{
+	bool dying
+	    = mSpine->getCurrentNerve() == &TNerveBathtubKillerExplosion::theNerve()
+	      || mSpine->getCurrentNerve() == &TNerveBathtubKillerBreak::theNerve();
+	if (dying)
+		return false;
+	if (actor->isActorType(ACTOR_TYPE_BOSS_UNK29)) {
+		explodeBathtubKiller();
+		return true;
+	}
+	if (actor->isActorType(ACTOR_TYPE_BOSS_UNK21)
+	    || actor->isActorType(ACTOR_TYPE_BOSS_UNK2A)
+	    || actor->isActorType(ACTOR_TYPE_BOSS_UNK2C)) {
+		explodeBathtubKiller();
+		actor->receiveMessage(this, 14);
+		return true;
+	}
+	if (actor->isActorType(ACTOR_TYPE_BATHTUB_KILLER)
+	    && mNoKillerCollisionTimer <= 0) {
+		explodeBathtubKiller();
+		return true;
+	}
+	return true;
+}
 
 void TBathtubKiller::behaveToWater(THitActor*) { breakBathtubKiller(); }
 
@@ -420,18 +608,30 @@ const char** TBathtubKiller::getBasNameTable() const
 	return bathtubkiller_bastable;
 }
 
-void TBathtubKiller::setNormalBathtubKillerAnm() { }
+void TBathtubKiller::setNormalBathtubKillerAnm()
+{
+	mMActor = getActorKeeper()->getMActor("bathtubkiller_model1.bmd");
+	setBckAnm(1);
+}
 
-void TBathtubKiller::setChaseBathtubKillerAnm() { }
+void TBathtubKiller::setChaseBathtubKillerAnm()
+{
+	mMActor = getActorKeeper()->getMActor("bathtubkiller_model1.bmd");
+	setBckAnm(1);
+}
 
-void TBathtubKiller::setStraightBathtubKillerAnm() { }
+void TBathtubKiller::setStraightBathtubKillerAnm()
+{
+	mMActor = getActorKeeper()->getMActor("bathtubkiller_model1.bmd");
+	setBckAnm(2);
+}
 
 void TBathtubKiller::setDeadBathtubKillerAnm()
 {
 	mMActor = getActorKeeper()->getMActor("bathtubdownkiller_model1.bmd");
 	setBckAnm(0);
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
-	unk1BC.set(0.0f, 0.0f, 0.0f);
+	mAcceleration.set(0.0f, 0.0f, 0.0f);
 	// TODO: the temporary sits 4 bytes lower than the original in both death
 	// nerves.
 	mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
@@ -439,39 +639,157 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 	mNoseColor = mBodyColor;
 }
 
-void TBathtubKiller::updateTimers() { }
+void TBathtubKiller::updateTimers()
+{
+	if (mLifetimeTimer > 0)
+		--mLifetimeTimer;
+	if (mLaunchTimer > 0)
+		--mLaunchTimer;
+	if (mChaseStraightTimer > 0)
+		--mChaseStraightTimer;
+	if (mNoKillerCollisionTimer > 0)
+		--mNoKillerCollisionTimer;
+	if (mNoCollisionTimer > 0)
+		--mNoCollisionTimer;
+}
 
-bool TBathtubKiller::isAttackable() { return false; }
+bool TBathtubKiller::isAttackable()
+{
+	if (!mBathtub->isKillerAttackable())
+		return false;
+	if (mKillerType == 2) {
+		JGeometry::TVec3<f32> mario    = SMS_GetMarioPos();
+		mario.y                        = 0.0f;
+		JGeometry::TVec3<f32> position = mPosition;
+		position.y                     = 0.0f;
+		JGeometry::TVec3<f32> bathtub  = mBathtub->mPosition;
+		bathtub.y                      = 0.0f;
+		if (position.distance(bathtub) > 100.0f + mario.distance(bathtub))
+			return false;
+	}
+	return true;
+}
 
-bool TBathtubKiller::isAboided() { return false; }
+bool TBathtubKiller::isAboided()
+{
+	if (mPosition.y > 5.0f + (mMaxChaseHeight + getBathtubY()))
+		return false;
+	JGeometry::TVec3<f32> mario    = SMS_GetMarioPos();
+	JGeometry::TVec3<f32> position = mPosition;
+	f32 distanceY                  = fabsf(mario.y - position.y);
+	mario.y                        = 0.0f;
+	position.y                     = 0.0f;
+	JGeometry::TVec3<f32> direction;
+	direction.sub(mario, position);
+	f32 distance = direction.length();
+	if (distanceY > getSaveParam2()->mSLAboidDistanceY.get()
+	    && distance <= getSaveParam2()->mSLAboidDistance.get())
+		return true;
+	if (distance > getSaveParam2()->mSLStraightDistance.get())
+		return false;
+	if (SMS_GetMarioStatus() == MARIO_STATUS_HANGING) {
+		mNoCollisionTimer = 240;
+		onHitFilter(HIT_FILTER_NO_COLLISION);
+		return true;
+	}
+	direction.normalize();
+	TDirectionCalc target(direction);
+	JGeometry::TVec3<f32> forward;
+	mQuat.getZDir(forward);
+	TDirectionCalc current(forward);
+	f32 angle = current.absDirection(target.unk0);
+	if (angle > TDirectionCalc::d2r(getSaveParam2()->aboidAngle.get()))
+		return false;
+	return true;
+}
 
-bool TBathtubKiller::canChase() { return false; }
+bool TBathtubKiller::canChase()
+{
+	if (mLaunchTimer > 0)
+		return false;
+	f32 distance = getSaveParam2()->mSLChaseDistanceY.get();
+	if (mPosition.y > mMinChaseHeight + getBathtubY() + distance)
+		return false;
+	return true;
+}
 
-void TBathtubKiller::generateExplosion() { }
+void TBathtubKiller::generateExplosion()
+{
+	TSpineEnemy* effect = gpConductor->makeOneEnemyAppear(
+	    mPosition, "エフェクト爆発マネージャー", 1);
+	if (effect)
+		static_cast<TEffectExplosion*>(effect)->generate(mPosition, mScaling);
+}
 
-DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerWander, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+	if (spine->getTime() == 0)
+		self->setNormalBathtubKillerAnm();
+	if (!self->isAttackable()) {
+		spine->pushAfterCurrent(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+	if (self->canChase()) {
+		spine->pushAfterCurrent(&TNerveBathtubKillerChase::theNerve());
+		return TRUE;
+	}
+	self->moveParabolic();
+	return FALSE;
+}
 
-DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerChase, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+	if (spine->getTime() == 0)
+		self->setChaseBathtubKillerAnm();
+	if (!self->isAttackable()) {
+		spine->pushAfterCurrent(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+	if (self->isAboided()) {
+		if (self->mKillerType == 1)
+			spine->pushAfterCurrent(
+			    &TNerveBathtubKillerChaseStraight::theNerve());
+		else
+			spine->pushAfterCurrent(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+	self->moveChasing();
+	return FALSE;
+}
 
-DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor) { return FALSE; }
+DEFINE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor)
+{
+	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
+	if (spine->getTime() == 0) {
+		self->setStraightBathtubKillerAnm();
+		self->mChaseStraightTimer
+		    = self->getSaveParam2()->mSLChaseStraightPeriod.get();
+	}
+	if (!self->isAttackable()) {
+		spine->pushAfterCurrent(&TNerveBathtubKillerStraight::theNerve());
+		return TRUE;
+	}
+	if (self->mNoCollisionTimer <= 0)
+		self->offHitFilter(HIT_FILTER_NO_COLLISION);
+	if (self->mChaseStraightTimer <= 0) {
+		spine->pushAfterCurrent(&TNerveBathtubKillerChase::theNerve());
+		return TRUE;
+	}
+	self->moveStraight();
+	return FALSE;
+}
 
 DEFINE_NERVE(TNerveBathtubKillerStraight, TLiveActor)
 {
 	TBathtubKiller* self = (TBathtubKiller*)spine->getBody();
-	if (spine->getTime() == 0) {
-		self->mMActor
-		    = self->getActorKeeper()->getMActor("bathtubkiller_model1.bmd");
-		self->setBckAnm(2);
-	}
-	if (self->unk218 <= 0)
+	if (spine->getTime() == 0)
+		self->setStraightBathtubKillerAnm();
+	if (self->mNoCollisionTimer <= 0)
 		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 
-	JGeometry::TVec3<f32> vec;
-	self->mQuat.getZDir(vec);
-	vec.normalize();
-	vec.scale(self->unk198.unk8);
-	self->mVelocity.set(vec);
-	self->makeQuat(self->mVelocity, self->unk198.unk0, 0.1f);
+	self->moveStraight();
 	return FALSE;
 }
 
@@ -485,7 +803,7 @@ DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 	}
 
 	if (self->checkCurAnmEnd(0)) {
-		self->unk21C = 0;
+		self->mHitMario = 0;
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->stopAnmSound();
 		return TRUE;
@@ -499,17 +817,12 @@ DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setDeadBathtubKillerAnm();
 
-		TSpineEnemy* effectBase = gpConductor->makeOneEnemyAppear(
-		    self->mPosition, "エフェクト爆発マネージャー", 1);
-		if (effectBase != nullptr) {
-			TEffectExplosion* effect = (TEffectExplosion*)effectBase;
-			effect->generate(self->mPosition, self->mScaling);
-		}
+		self->generateExplosion();
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
-		self->unk21C = 0;
+		self->mHitMario = 0;
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->stopAnmSound();
 		return TRUE;
@@ -535,10 +848,10 @@ void TBathtubKillerManager::loadAfter()
 	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
 	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
 
-	unk60 = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
-	unk64 = nullptr;
-	unk68 = 0;
-	unk69 = 0;
+	mInitialLifeCount = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
+	mMushroom         = nullptr;
+	mFinalMushroomRequested = 0;
+	mEarlyMushroomRequests  = 0;
 
 	// TODO: the original reads unk38 here and drops the result.
 	static const char* loopFilenames[1] = {
@@ -548,7 +861,12 @@ void TBathtubKillerManager::loadAfter()
 		SMS_LoadParticle(loopFilenames[i], 0x1BD + i);
 }
 
-void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32>) { }
+void TBathtubKillerManager::generateMushroom(JGeometry::TVec3<f32> position)
+{
+	if (!mMushroom || mMushroom->checkLiveFlag(LIVE_FLAG_DEAD))
+		mMushroom = gpItemManager->makeObjAppear(
+		    position.x, position.y, position.z, ACTOR_TYPE_MUSHROOM1UP, true);
+}
 
 int TBathtubKillerManager::countActiveKillers()
 {
@@ -560,7 +878,18 @@ int TBathtubKillerManager::countActiveKillers()
 	return count;
 }
 
-int TBathtubKillerManager::countActiveShineKillers() { return 0; }
+int TBathtubKillerManager::countActiveShineKillers()
+{
+	// TODO: dead-stripped. The variant test is inferred from the name and
+	// the 12-byte size difference from countActiveKillers.
+	int count = 0;
+	for (int i = 0; i < getActiveObjNum(); ++i) {
+		TBathtubKiller* killer = static_cast<TBathtubKiller*>(getObj(i));
+		if (!killer->checkLiveFlag(LIVE_FLAG_DEAD) && killer->mKillerType == 1)
+			++count;
+	}
+	return count;
+}
 
 void TBathtubKillerManager::createModelData()
 {
