@@ -55,7 +55,7 @@ void TLimitKoopaJr::init(TLiveManager* param_1)
 	initAnmSound();
 	f32 damageHeight
 	    = ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageHeight.get();
-	initHitActor(0x0800002E, 1, 0, 0.0f, 0.0f,
+	initHitActor(ACTOR_TYPE_LIMIT_KOOPA_JR, 1, 0, 0.0f, 0.0f,
 	             ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageRadius.get(),
 	             damageHeight);
 	offHitFilter(HIT_FILTER_NO_COLLISION);

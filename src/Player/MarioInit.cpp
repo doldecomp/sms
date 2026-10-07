@@ -423,7 +423,7 @@ void TMario::initValues()
 	unk530 = new s16[60];
 	resetHistory();
 
-	initHitActor(0x80000001, 5,
+	initHitActor(ACTOR_TYPE_MARIO, 5,
 	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
 	                 | HIT_CATEGORY_ITEM | HIT_CATEGORY_ENEMY
 	                 | HIT_CATEGORY_BOSS | HIT_CATEGORY_NPC,

@@ -62,19 +62,19 @@ inline void TBaseNPC::setMtxEffect_()
 	};
 
 	static const TMtxEffectInitInfo sMtxEffectInitData[] = {
-		{ 0x4000001, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000002, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000003, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000004, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000005, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000007, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000008, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x4000009, sWaistJointName, "Npc/MonteM", 0, 1 },
-		{ 0x400000A, sWaistJointName, "Npc/MonteW", 0, 1 },
-		{ 0x400000B, sWaistJointName, "Npc/MonteW", 0, 1 },
-		{ 0x400000C, sWaistJointName, "Npc/MonteW", 0, 1 },
-		{ 0x400000D, sWaistJointName, "Npc/MonteW", 0, 1 },
-		{ 0x4000018, sWaistJointName, "Npc/Peach", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_M, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MA, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MB, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MC, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MD, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MF, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MG, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_MH, sWaistJointName, "Npc/MonteM", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_W, sWaistJointName, "Npc/MonteW", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_WA, sWaistJointName, "Npc/MonteW", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_WB, sWaistJointName, "Npc/MonteW", 0, 1 },
+		{ ACTOR_TYPE_NPC_MONTE_WC, sWaistJointName, "Npc/MonteW", 0, 1 },
+		{ ACTOR_TYPE_NPC_PEACH, sWaistJointName, "Npc/Peach", 0, 1 },
 		{ 0, nullptr, nullptr, 0, 0 },
 	};
 
@@ -122,7 +122,7 @@ inline void TBaseNPC::initSinkNpc_()
 
 void TBaseNPC::init(TLiveManager* param_1)
 {
-	int iVar18 = mActorType - 0x4000001;
+	int iVar18 = mActorType - ACTOR_TYPE_NPC_MONTE_M;
 
 	mIndividualParams = gpConductor->unkF4->unk8[iVar18];
 
@@ -142,7 +142,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 
 	mMActorKeeper = new TMActorKeeper(param_1);
 	u32 uVar21    = 0;
-	if (mActorType == 0x400001d)
+	if (mActorType == ACTOR_TYPE_NPC_BOARD)
 		uVar21 = 3;
 	mMActorKeeper->createMActorFromNthData(0, uVar21);
 	if (param_1->unk28 == 2)
@@ -157,7 +157,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	mGravity          = mPtrSaveNormal->mGravityY.get();
 	mScaledBodyRadius = mScaling.x * mIndividualParams->mCircleShadowSize.get();
 
-	if (mActorType == 0x400001d) {
+	if (mActorType == ACTOR_TYPE_NPC_BOARD) {
 		onLiveFlag(LIVE_FLAG_UNK2000 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 		initNpcObjCollision_(pTVar3);
 		mSpine->initWith(&TNerveNPCWaitMarioApproach::theNerve());
@@ -175,10 +175,11 @@ void TBaseNPC::init(TLiveManager* param_1)
 		onLiveFlag(LIVE_FLAG_UNK2000);
 	}
 
-	if (mActorType == 0x4000006)
+	if (mActorType == ACTOR_TYPE_NPC_MONTE_ME)
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
 
-	if (isJellyFishMare() || isSunflower() || mActorType == 0x4000007) {
+	if (isJellyFishMare() || isSunflower()
+	    || mActorType == ACTOR_TYPE_NPC_MONTE_MF) {
 		onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
@@ -212,8 +213,8 @@ void TBaseNPC::init(TLiveManager* param_1)
 
 	setHappyEffectMtxPtr_(jointNameTab);
 	switch (mActorType) {
-	case 0x4000012:
-	case 0x4000009:
+	case ACTOR_TYPE_NPC_MARE_MD:
+	case ACTOR_TYPE_NPC_MONTE_MH:
 		setNoteEffectMtxPtr_(jointNameTab);
 		break;
 	}
@@ -269,15 +270,16 @@ inline void TBaseNPC::initBaseActionFlag_()
 			unkD0->unk18 = sIndividualHoldArrowBck;
 	} else if (isMare()) {
 		setMareActionFlag_();
-	} else if (mActorType == 0x4000016 || mActorType == 0x4000017) {
+	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO
+	           || mActorType == ACTOR_TYPE_NPC_KINOJII) {
 		setKinoActionFlag_();
 		if (checkActionFlag(NPC_ACTION_UNK100)) {
 			switch (mActorType) {
-			case 0x4000016:
+			case ACTOR_TYPE_NPC_KINOPIO:
 				unkD0->unk18 = sIndividualKinopioBck;
 				unkD0->unk1C = sIndividualKinopioBtp;
 				break;
-			case 0x4000017:
+			case ACTOR_TYPE_NPC_KINOJII:
 				unkD0->unk18 = sIndividualKinojiiBck;
 				unkD0->unk1C = sIndividualKinojiiBtp;
 				break;
@@ -325,7 +327,7 @@ inline void TBaseNPC::initIndividualAnm_()
 	};
 
 	switch (mActorType) {
-	case 0x4000019:
+	case ACTOR_TYPE_NPC_RACCOON_DOG:
 		if (strcmp(mName, cManiyaParentViewObjName) == 0) {
 			onActionFlag(NPC_ACTION_UNK800);
 			unkD0->unk18 = sIndividualParentRaccoonDogAnmBck;
@@ -336,7 +338,7 @@ inline void TBaseNPC::initIndividualAnm_()
 		}
 		break;
 
-	case 0x400000F:
+	case ACTOR_TYPE_NPC_MARE_MA:
 		switch ((int)(MsRandF() * 3.0f)) {
 		case 0:
 			unkD0->unk18 = sIndividualMareMA0Bck;
@@ -349,7 +351,7 @@ inline void TBaseNPC::initIndividualAnm_()
 		}
 		break;
 
-	case 0x4000014:
+	case ACTOR_TYPE_NPC_MARE_WA:
 		switch ((int)(MsRandF() * 2.0f)) {
 		case 0:
 			unkD0->unk18 = sIndividualMareWA0Bck;
@@ -361,7 +363,7 @@ inline void TBaseNPC::initIndividualAnm_()
 
 void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 {
-	int iVar15                         = mActorType - 0x4000001;
+	int iVar15                         = mActorType - ACTOR_TYPE_NPC_MONTE_M;
 	const TNpcInitInfo* initInfo       = SMSGetNpcInitData(iVar15);
 	const TNpcInitAnmInfo* anmInitInfo = SMSGetNpcInitAnmData(iVar15);
 
@@ -420,7 +422,7 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		}
 	}
 
-	if (mActorType == 0x4000018) {
+	if (mActorType == ACTOR_TYPE_NPC_PEACH) {
 		uVar21 |= 0x6;
 		if (uVar21 & 0x10) {
 			uVar21 |= 0x60;

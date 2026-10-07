@@ -67,7 +67,7 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	mActorTypeInMouth = 0;
 	unkD4             = 0;
 
-	initHitActor(0x08000083U, 5U,
+	initHitActor(ACTOR_TYPE_YOSHI_TONGUE, 5U,
 	             HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_ITEM
 	                 | HIT_CATEGORY_ENEMY,
 	             1000.0f, 500.0f, 50.0f, 500.0f);
@@ -156,7 +156,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 
 	for (s32 i = 0; i < mColCount; ++i) {
 		s32 type = mCollisions[i]->mActorType;
-		if (type == 0x10000024 || type == 0x4000000A) {
+		if (type == ACTOR_TYPE_SEAL || type == ACTOR_TYPE_BASKET_REVERSE) {
 			mState = STATE_RETRACTING;
 			return nullptr;
 		}
@@ -167,27 +167,27 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 		s32 type         = actor->mActorType;
 		int ok           = 0;
 
-		if (type == 0x40000390)
+		if (type == ACTOR_TYPE_FRUIT_COCONUT)
 			ok = 1;
-		if (type == 0x40000391)
+		if (type == ACTOR_TYPE_FRUIT_PAPAYA)
 			ok = 1;
-		if (type == 0x40000392)
+		if (type == ACTOR_TYPE_FRUIT_PINE)
 			ok = 1;
-		if (type == 0x40000393)
+		if (type == ACTOR_TYPE_FRUIT_DURIAN)
 			ok = 1;
-		if (type == 0x40000394)
+		if (type == ACTOR_TYPE_FRUIT_BANANA)
 			ok = 1;
-		if (type == 0x40000395)
+		if (type == ACTOR_TYPE_RED_PEPPER)
 			ok = 1;
-		if (type == 0x40000396)
+		if (type == ACTOR_TYPE_FRUIT_COVER_PINE)
 			ok = 1;
 
 		if (allowExtra == true) {
-			if (type == 0x20000001)
+			if (type == ACTOR_TYPE_BOTTLE_SHORT)
 				ok = 1;
-			if (type == 0x20000002)
+			if (type == ACTOR_TYPE_BOTTLE_LARGE)
 				ok = 1;
-			if (type == 0x4000005A)
+			if (type == ACTOR_TYPE_WOOD_BARREL)
 				ok = 1;
 			if (type & HIT_CATEGORY_ENEMY ? true : false)
 				ok = 1;

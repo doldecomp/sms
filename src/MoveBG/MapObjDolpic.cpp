@@ -95,7 +95,7 @@ void TMonumentShine::hitByWater(THitActor* actor)
 
 BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x01000001)) {
+	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
@@ -266,11 +266,11 @@ void TBellDolpic::touchPlayer(THitActor* actor) { ring(actor->mPosition); }
 
 BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x80000001)) {
+	if (sender->isActorType(ACTOR_TYPE_MARIO)) {
 		ring(sender->mPosition);
 	}
 
-	if (sender->isActorType(0x01000001)) {
+	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
 

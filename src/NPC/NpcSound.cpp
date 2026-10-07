@@ -567,22 +567,22 @@ const char** TBaseNPC::getBasNameTable() const
 		}
 	} else {
 		switch (mActorType) {
-		case 0x4000006:
+		case ACTOR_TYPE_NPC_MONTE_ME:
 			result = monteME_bastable;
 			break;
-		case 0x4000007:
+		case ACTOR_TYPE_NPC_MONTE_MF:
 			result = monteMF_bastable;
 			break;
-		case 0x4000008:
+		case ACTOR_TYPE_NPC_MONTE_MG:
 			result = monteMG_bastable;
 			break;
-		case 0x4000009:
+		case ACTOR_TYPE_NPC_MONTE_MH:
 			result = monteMH_bastable;
 			break;
-		case 0x400000D:
+		case ACTOR_TYPE_NPC_MONTE_WC:
 			result = monteWC_bastable;
 			break;
-		case 0x400000E:
+		case ACTOR_TYPE_NPC_MARE_M:
 			if (child) {
 				result = mareM_bas_c_table;
 				break;
@@ -590,19 +590,19 @@ const char** TBaseNPC::getBasNameTable() const
 				result = mareM_bastable;
 				break;
 			}
-		case 0x400000F:
+		case ACTOR_TYPE_NPC_MARE_MA:
 			result = mareMA_bastable;
 			break;
-		case 0x4000010:
+		case ACTOR_TYPE_NPC_MARE_MB:
 			result = mareMB_bastable;
 			break;
-		case 0x4000011:
+		case ACTOR_TYPE_NPC_MARE_MC:
 			result = mareMC_bastable;
 			break;
-		case 0x4000012:
+		case ACTOR_TYPE_NPC_MARE_MD:
 			result = mareMD_bastable;
 			break;
-		case 0x4000013:
+		case ACTOR_TYPE_NPC_MARE_W:
 			if (child) {
 				result = mareW_bas_c_table;
 				break;
@@ -610,35 +610,35 @@ const char** TBaseNPC::getBasNameTable() const
 				result = mareW_bastable;
 				break;
 			}
-		case 0x4000014:
+		case ACTOR_TYPE_NPC_MARE_WA:
 			result = mareWA_bastable;
 			break;
-		case 0x4000015:
+		case ACTOR_TYPE_NPC_MARE_WB:
 			result = mareWB_bastable;
 			break;
-		case 0x4000016:
+		case ACTOR_TYPE_NPC_KINOPIO:
 			result = kinopio_bastable;
 			break;
-		case 0x4000017:
+		case ACTOR_TYPE_NPC_KINOJII:
 			result = kinojii_bastable;
 			break;
-		case 0x4000018:
+		case ACTOR_TYPE_NPC_PEACH:
 			result = peach_bastable;
 			break;
-		case 0x4000019:
+		case ACTOR_TYPE_NPC_RACCOON_DOG:
 			result = raccoonDog_bastable;
 			break;
-		case 0x400001A:
+		case ACTOR_TYPE_NPC_SUNFLOWER_L:
 			result = sunflowerL_bastable;
 			break;
-		case 0x400001B:
+		case ACTOR_TYPE_NPC_SUNFLOWER_S:
 			result = sunflowerS_bastable;
 			break;
 		// Uncertain if this is correct
-		case 0x400001C:
+		case ACTOR_TYPE_NPC_DUMMY:
 			break;
 		// Uncertain if this is correct
-		case 0x400001D:
+		case ACTOR_TYPE_NPC_BOARD:
 			break;
 		}
 	}

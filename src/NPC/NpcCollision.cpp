@@ -11,10 +11,10 @@ void TBaseNPC::initNpcObjCollision_(const TNpcInitInfo* init_info)
 	u32 iVar4 = 0x4000000;
 	u16 uVar5 = 2;
 	switch (mActorType) {
-	case 0x4000006:
-	case 0x400001A:
-	case 0x400001B:
-	case 0x400001D:
+	case ACTOR_TYPE_NPC_MONTE_ME:
+	case ACTOR_TYPE_NPC_SUNFLOWER_L:
+	case ACTOR_TYPE_NPC_SUNFLOWER_S:
+	case ACTOR_TYPE_NPC_BOARD:
 		uVar5 = 0;
 		iVar4 = 0;
 		break;
@@ -96,8 +96,9 @@ void TBaseNPC::execNpcObjCollision_()
 
 void TBaseNPC::setVariableDamageRadius_()
 {
-	const TNpcInitInfo* initInfo = SMSGetNpcInitData(mActorType - 0x4000001);
-	f32 fVar6                    = initInfo->mDamageRadius * mScaling.x;
+	const TNpcInitInfo* initInfo
+	    = SMSGetNpcInitData(mActorType - ACTOR_TYPE_NPC_MONTE_M);
+	f32 fVar6 = initInfo->mDamageRadius * mScaling.x;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioPos().y > mPosition.y) {
 		JGeometry::TVec3<f32> diff;

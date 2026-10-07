@@ -314,7 +314,7 @@ void TPinnaShell::opened()
 	unk6C = -TShellCup::mOpenRotMax;
 	unk7C = 360;
 	if (unk80 != nullptr && !unk80->checkLiveFlag(LIVE_FLAG_DEAD)) {
-		if (unk80->isActorType(0x20000010)) {
+		if (unk80->isActorType(ACTOR_TYPE_COIN_BLUE)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0,
 			                                   nullptr, 0);
 		} else {
@@ -409,8 +409,8 @@ TPinnaShell::TPinnaShell(const char* param_1)
     , unk88(nullptr)
     , unk8C(nullptr)
 {
-	initHitActor(0x4000013A, 1, HIT_CATEGORY_PLAYER, 250.0f, 400.0f, 250.0f,
-	             200.0f);
+	initHitActor(ACTOR_TYPE_PINNA_SHELL, 1, HIT_CATEGORY_PLAYER, 250.0f, 400.0f,
+	             250.0f, 200.0f);
 }
 
 f32 TShellCup::mOpenRotMax     = 90.0f;
@@ -498,7 +498,7 @@ void TShellCup::initMapObj()
 		unk138[i].unk84->setUp();
 		unk138[i].unk88 = new TDamageObj;
 		unk138[i].unk88->mScaling.set(2.0f, 1.2f, 2.0f);
-		unk138[i].unk88->init(0x10000036);
+		unk138[i].unk88->init(ACTOR_TYPE_ENEMY_DAMAGE_OBJ);
 		unk138[i].unk88->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 	TMapCollisionStatic* rink = new TMapCollisionStatic;
@@ -661,7 +661,7 @@ void TPinnaEntrance::loadAfter()
 
 void TWaterRecoverObj::touchPlayer(THitActor* param_1)
 {
-	if (param_1->isActorType(0x80000001) && !isStateTimerEngaged()) {
+	if (param_1->isActorType(ACTOR_TYPE_MARIO) && !isStateTimerEngaged()) {
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		mStateTimer = 600;
 	}
@@ -726,7 +726,7 @@ void TAmiKing::moveObject()
 		kill();
 	} else {
 		TMapObjBase* obj = (TMapObjBase*)mGroundPlane->getActor();
-		if (obj && obj->isActorType(0x4000006A)
+		if (obj && obj->isActorType(ACTOR_TYPE_FENCE_REVOLVE_INNER)
 		    && (obj->isState(3) || obj->isState(5) || obj->isState(4)
 		        || obj->isState(6))) {
 			unk138 = 1;

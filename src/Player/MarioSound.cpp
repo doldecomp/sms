@@ -152,13 +152,13 @@ void TMario::soundMovement()
 			TTakeActor* held = mHeldObject;
 			if (held != nullptr) {
 				switch (held->mActorType) {
-				case 0x40000390:
-				case 0x40000391:
-				case 0x40000392:
-				case 0x40000393:
-				case 0x40000394:
-				case 0x40000395:
-				case 0x40000396:
+				case ACTOR_TYPE_FRUIT_COCONUT:
+				case ACTOR_TYPE_FRUIT_PAPAYA:
+				case ACTOR_TYPE_FRUIT_PINE:
+				case ACTOR_TYPE_FRUIT_DURIAN:
+				case ACTOR_TYPE_FRUIT_BANANA:
+				case ACTOR_TYPE_RED_PEPPER:
+				case ACTOR_TYPE_FRUIT_COVER_PINE:
 					if (surfType == 1) {
 						if (mSoundValues.unk04 & 0x40) {
 							SMSGetMSound()->startSoundActor(
@@ -172,13 +172,13 @@ void TMario::soundMovement()
 						mSoundValues.unk04 ^= 0x40;
 					}
 					break;
-				case 0x40000046:
-				case 0x4000005A:
-				case 0x4000005B:
-				case 0x4000005C:
-				case 0x4000005D:
-				case 0x40000064:
-				case 0x40000065:
+				case ACTOR_TYPE_PLANT_FLOWER:
+				case ACTOR_TYPE_WOOD_BARREL:
+				case ACTOR_TYPE_BARREL_FLOAT:
+				case ACTOR_TYPE_BARREL_OIL:
+				case ACTOR_TYPE_DRUM_CAN:
+				case ACTOR_TYPE_FOOTBALL:
+				case ACTOR_TYPE_FOOTBALL_GOAL:
 					if (surfType == 1) {
 						if (mSoundValues.unk04 & 0x40) {
 							SMSGetMSound()->startSoundActor(
@@ -240,14 +240,14 @@ void TMario::soundMovement()
 			mSoundValues.unk26 = 0;
 
 		switch (mSoundValues.unk14) {
-		case 0x10000015:
+		case ACTOR_TYPE_POI_HANA:
 			if (mSoundValues.unk26 == 0x3C && !onYoshi()) {
 				SMSGetMSound()->startMarioVoice(MSD_SE_MV10B_CRY_JUMP_01,
 				                                mHealth, getVoiceStatus());
 			}
 			break;
-		case 0x8000014:
-		case 0x8000015:
+		case ACTOR_TYPE_BOSS_UNK14:
+		case ACTOR_TYPE_BOSS_UNK15:
 		default:
 			if (mSoundValues.unk26 == 0x1E && !onYoshi()) {
 				SMSGetMSound()->startMarioVoice(MSD_SE_MV25A_JUMP_HUGE_01,
@@ -655,7 +655,7 @@ void TMario::animSound()
 
 	// TODO: inline
 	bool b;
-	if (mHolder && mHolder->getActorType() == 0x40000098)
+	if (mHolder && mHolder->getActorType() == ACTOR_TYPE_MAP_WIRE_ACTOR)
 		b = true;
 	else
 		b = false;

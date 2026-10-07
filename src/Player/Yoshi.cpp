@@ -732,16 +732,16 @@ void TYoshi::doEat(u32 param_1)
 	BOOL bVar1 = true;
 
 	switch (param_1) {
-	case 0x40000391:
-	case 0x40000392:
+	case ACTOR_TYPE_FRUIT_PAPAYA:
+	case ACTOR_TYPE_FRUIT_PINE:
 		r31 = 1;
 		break;
-	case 0x40000393:
-	case 0x40000395:
+	case ACTOR_TYPE_FRUIT_DURIAN:
+	case ACTOR_TYPE_RED_PEPPER:
 		r31 = 2;
 		break;
-	case 0x40000394:
-	case 0x40000390:
+	case ACTOR_TYPE_FRUIT_BANANA:
+	case ACTOR_TYPE_FRUIT_COCONUT:
 		r31 = 3;
 		break;
 	default:

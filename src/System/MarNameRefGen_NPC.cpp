@@ -9,91 +9,91 @@
 JDrama::TNameRef* TMarNameRefGen::getNameRef_NPC(const char* name) const
 {
 	if (strcmp(name, "NPCMonteM") == 0)
-		return new TBaseNPC(0x04000001U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_M);
 
 	if (strcmp(name, "NPCMonteMA") == 0)
-		return new TBaseNPC(0x04000002U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MA);
 
 	if (strcmp(name, "NPCMonteMB") == 0)
-		return new TBaseNPC(0x04000003U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MB);
 
 	if (strcmp(name, "NPCMonteMC") == 0)
-		return new TBaseNPC(0x04000004U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MC);
 
 	if (strcmp(name, "NPCMonteMD") == 0)
-		return new TBaseNPC(0x04000005U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MD);
 
 	if (strcmp(name, "NPCMonteME") == 0)
-		return new TBaseNPC(0x04000006U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_ME);
 
 	if (strcmp(name, "NPCMonteMF") == 0)
-		return new TBaseNPC(0x04000007U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MF);
 
 	if (strcmp(name, "NPCMonteMG") == 0)
-		return new TBaseNPC(0x04000008U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MG);
 
 	if (strcmp(name, "NPCMonteMH") == 0)
-		return new TBaseNPC(0x04000009U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_MH);
 
 	if (strcmp(name, "NPCMonteW") == 0)
-		return new TBaseNPC(0x0400000AU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_W);
 
 	if (strcmp(name, "NPCMonteWA") == 0)
-		return new TBaseNPC(0x0400000BU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_WA);
 
 	if (strcmp(name, "NPCMonteWB") == 0)
-		return new TBaseNPC(0x0400000CU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_WB);
 
 	if (strcmp(name, "NPCMonteWC") == 0)
-		return new TBaseNPC(0x0400000DU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MONTE_WC);
 
 	if (strcmp(name, "NPCMareM") == 0)
-		return new TBaseNPC(0x0400000EU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_M);
 
 	if (strcmp(name, "NPCMareMA") == 0)
-		return new TBaseNPC(0x0400000FU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_MA);
 
 	if (strcmp(name, "NPCMareMB") == 0)
-		return new TBaseNPC(0x04000010U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_MB);
 
 	if (strcmp(name, "NPCMareMC") == 0)
-		return new TBaseNPC(0x04000011U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_MC);
 
 	if (strcmp(name, "NPCMareMD") == 0)
-		return new TBaseNPC(0x04000012U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_MD);
 
 	if (strcmp(name, "NPCMareW") == 0)
-		return new TBaseNPC(0x04000013U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_W);
 
 	if (strcmp(name, "NPCMareWA") == 0)
-		return new TBaseNPC(0x04000014U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_WA);
 
 	if (strcmp(name, "NPCMareWB") == 0)
-		return new TBaseNPC(0x04000015U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_MARE_WB);
 
 	if (strcmp(name, "NPCKinopio") == 0)
-		return new TBaseNPC(0x04000016U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_KINOPIO);
 
 	if (strcmp(name, "NPCKinojii") == 0)
-		return new TBaseNPC(0x04000017U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_KINOJII);
 
 	if (strcmp(name, "NPCPeach") == 0)
-		return new TBaseNPC(0x04000018U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_PEACH);
 
 	if (strcmp(name, "NPCRaccoonDog") == 0)
-		return new TBaseNPC(0x04000019U);
+		return new TBaseNPC(ACTOR_TYPE_NPC_RACCOON_DOG);
 
 	if (strcmp(name, "NPCSunflowerL") == 0)
-		return new TBaseNPC(0x0400001AU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_SUNFLOWER_L);
 
 	if (strcmp(name, "NPCSunflowerS") == 0)
-		return new TBaseNPC(0x0400001BU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_SUNFLOWER_S);
 
 	if (strcmp(name, "NPCDummy") == 0)
-		return new TBaseNPC(0x0400001CU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_DUMMY);
 
 	if (strcmp(name, "NPCBoard") == 0)
-		return new TBaseNPC(0x0400001DU);
+		return new TBaseNPC(ACTOR_TYPE_NPC_BOARD);
 
 	if (strcmp(name, "MonteMManager") == 0)
 		return new TMonteMManager;

@@ -182,7 +182,7 @@ void TJumpBase::ensureTakeSituation()
 
 BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x80000001)) {
+	if (sender->isActorType(ACTOR_TYPE_MARIO)) {
 		if (message == HIT_MESSAGE_TAKE) {
 			if (unk138 == 0) {
 				mHolder = (TTakeActor*)sender;
@@ -213,7 +213,7 @@ BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 		}
 	}
 
-	if (sender->isActorType(0x1000001) && unk138 == 3) {
+	if (sender->isActorType(ACTOR_TYPE_WATER) && unk138 == 3) {
 		unk13C = 0;
 		unk138 = 1;
 		return TRUE;

@@ -164,8 +164,9 @@ void TKumokun::init(TLiveManager* live_manager)
 
 void TKumokun::initCollision()
 {
-	initHitActor(0x1000002c, 2, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 60.0f,
-	             50.0f, 65.0f, 70.0f);
+	initHitActor(ACTOR_TYPE_KUMOKUN, 2,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 60.0f, 50.0f, 65.0f,
+	             70.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mBodyRadius       = 100.0f;
 	mWallRadius       = 100.0f;

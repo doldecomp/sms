@@ -91,8 +91,8 @@ void TEffectObjBase::load(JSUMemoryInputStream& stream)
 
 void TEffectObjBase::init()
 {
-	initHitActor(0x10000005, 5, HIT_CATEGORY_PLAYER, 30.0f, 150.0f, 30.0f,
-	             150.0f);
+	initHitActor(ACTOR_TYPE_EFFECT_ENEMY, 5, HIT_CATEGORY_PLAYER, 30.0f, 150.0f,
+	             30.0f, 150.0f);
 	reset();
 }
 
@@ -157,7 +157,7 @@ void TEffectObjBase::moveObject()
 		unk68 = 0;
 
 	for (int i = 0; i < mColCount; ++i)
-		if (getCollision(i)->isActorType(0x80000001))
+		if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, 0xA);
 }
 
@@ -229,7 +229,7 @@ void TEffectModel::init(TLiveManager* param_1)
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mActorType = 0x10000020;
+	mActorType = ACTOR_TYPE_EFFECT_OBJ;
 	mRotation.zero();
 }
 
@@ -303,7 +303,7 @@ void TEffectColumWater::init(TLiveManager* param_1)
 	TEffectModel::init(param_1);
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
-	mActorType = 0x10000020;
+	mActorType = ACTOR_TYPE_EFFECT_OBJ;
 	mMActor->setBck("06_enem_tobikomi");
 	mMActor->setBrk("06_enem_tobikomi");
 	mMActor->setBtk("06_enem_tobikomi");
@@ -384,7 +384,7 @@ void TEffectBombColumWater::init(TLiveManager* param_1)
 	TEffectModel::init(param_1);
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
-	mActorType = 0x10000020;
+	mActorType = ACTOR_TYPE_EFFECT_OBJ;
 	mMActor->setBck("04_tobikomi");
 	mMActor->setBrk("04_tobikomi");
 	mMActor->setBtk("04_tobikomi");
@@ -469,7 +469,7 @@ void TEffectColumSand::init(TLiveManager* param_1)
 	TEffectModel::init(param_1);
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
-	mActorType = 0x10000020;
+	mActorType = ACTOR_TYPE_EFFECT_OBJ;
 	mMActor->setBck("08_sunabashira");
 	mMActor->setBrk("08_sunabashira");
 	mMActor->setBtk("08_sunabashira");
@@ -544,7 +544,7 @@ void TEffectExplosion::init(TLiveManager* param_1)
 	TEffectModel::init(param_1);
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
-	mActorType = 0x10000020;
+	mActorType = ACTOR_TYPE_EFFECT_OBJ;
 	mMActor->setBck("10_bomb");
 	mMActor->setBrk("10_bomb");
 	mMActor->setBtk("10_bomb");

@@ -90,7 +90,7 @@ TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
 {
 	mSharedParts
 	    = new TSharedParts(mOwner, jointIndex, modelData, 0, "<TSharedParts>");
-	initHitActor(0x2000002C, 3, HIT_CATEGORY_PLAYER,
+	initHitActor(ACTOR_TYPE_BOSS_EEL_TEARS, 3, HIT_CATEGORY_PLAYER,
 	             mOwner->mTearsParams->mSLTearsDropAttackRadius.get(),
 	             mOwner->mTearsParams->mSLTearsDropAttackHeight.get(),
 	             mOwner->mTearsParams->mSLTearsDropDamageRadius.get(),
@@ -274,7 +274,7 @@ TBEelTears::TBEelTears(const char* name)
 void TBEelTears::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
-	mActorType = 0x08000003;
+	mActorType = ACTOR_TYPE_BOSS_EEL;
 	onHitFilter(HIT_CATEGORY_BOSS);
 	setMActorAndKeeper();
 	mTearsParams = static_cast<TBEelTearsSaveLoadParams*>(getSaveParam());
@@ -342,7 +342,7 @@ void TBEelTears::moveObject()
 
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* actor = getCollision(i);
-		if (actor->isActorType(0x80000001)) {
+		if (actor->isActorType(ACTOR_TYPE_MARIO)) {
 			if (mSpine->getCurrentNerve()
 			    == &TNerveBEelTearsMoveUp::theNerve()) {
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
@@ -454,7 +454,7 @@ void TBEelTears::kill()
 
 void TBEelTears::reset()
 {
-	mActorType = 0x08000003;
+	mActorType = ACTOR_TYPE_BOSS_EEL;
 	TSpineEnemy::reset();
 	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
 	onLiveFlag(LIVE_FLAG_UNK10);
@@ -642,7 +642,7 @@ void TOilBall::moveObject()
 
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* actor = getCollision(i);
-		if (actor->isActorType(0x80000001)) {
+		if (actor->isActorType(ACTOR_TYPE_MARIO)) {
 			if (mSpine->getCurrentNerve() == &TNerveBEelTearsMoveUp::theNerve()
 			    || mSpine->getCurrentNerve()
 			           == &TNerveOilBallStay::theNerve()) {
@@ -784,7 +784,8 @@ TBossEelTooth::TBossEelTooth(u8 toothType, TBossEel* owner,
 
 	mColor.a   = 0xFF;
 	mHitPoints = mOwner->getBossEelParams().mSLToothMaxHitPoint.get();
-	initHitActor(0x08000022, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
+	initHitActor(ACTOR_TYPE_BOSS_EEL_TOOTH, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
 	             mOwner->getBossEelParams().mSLToothAttackRadius.get(),
 	             mOwner->getBossEelParams().mSLToothAttackHeight.get(),
 	             mOwner->getBossEelParams().mSLToothDamageRadius.get(),
@@ -881,7 +882,7 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 		for (s32 i = 0; i < mColCount; ++i) {
 			THitActor* collision = mCollisions[i];
 			if (mOwner->isValidToothDamage()
-			    && collision->isActorType(0x80000001) && mHitPoints > 1) {
+			    && collision->isActorType(ACTOR_TYPE_MARIO) && mHitPoints > 1) {
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			}
 		}
@@ -977,7 +978,7 @@ TBossEelVortex::TBossEelVortex(TBossEel* owner, const char* name)
     , mOwner(owner)
     , mInactive(true)
 {
-	initHitActor(0x8000003, 3, HIT_CATEGORY_PLAYER,
+	initHitActor(ACTOR_TYPE_BOSS_EEL, 3, HIT_CATEGORY_PLAYER,
 	             mOwner->getBossEelParams().mSLVortexAttackRadius.get(),
 	             mOwner->getBossEelParams().mSLVortexAttackHeight.get(),
 	             mOwner->getBossEelParams().mSLVortexDamageRadius.get(),
@@ -1014,7 +1015,7 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (mOwner->mMActor->checkCurBckFromIndex(14)
 			    || mOwner->mMActor->checkCurBckFromIndex(17)) {
 				for (s32 i = 0; i < mColCount; ++i) {
-					if (!mCollisions[i]->isActorType(0x80000001))
+					if (!mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 						continue;
 
 					JGeometry::TVec3<f32> marioTarget;
@@ -1262,7 +1263,7 @@ void TBossEelCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
 		for (s32 i = 0; i < mColCount; ++i) {
-			if (mCollisions[i]->isActorType(0x80000001))
+			if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 				behaveToMario();
 		}
 	}
@@ -1276,8 +1277,9 @@ void TBossEelCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBossEelCollision::initCollision()
 {
-	initHitActor(0x08000023, 5, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
-	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
+	initHitActor(ACTOR_TYPE_BOSS_EEL_COLLISION, 5, HIT_CATEGORY_PLAYER,
+	             mBaseAttackRadius, mBaseAttackHeight, mBaseDamageRadius,
+	             mBaseDamageHeight);
 }
 
 void TBossEelCollision::behaveToMario()
@@ -1305,7 +1307,7 @@ void TBossEelAwaCollision::initCollision()
 	mBaseAttackRadius = 2000.0f;
 	mBaseDamageHeight = 2000.0f;
 	mBaseAttackHeight = 2000.0f;
-	initHitActor(0x08000003, 2, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
+	initHitActor(ACTOR_TYPE_BOSS_EEL, 2, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
 	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
 }
 
@@ -1328,7 +1330,7 @@ void TBossEelAwaCollision::perform(u32 cue, JDrama::TGraphics* graphics)
 			onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		for (s32 i = 0; i < mColCount; ++i) {
-			if (mCollisions[i]->isActorType(0x80000001))
+			if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 				behaveToMario();
 		}
 	}
@@ -1362,8 +1364,9 @@ void TBossEelTearsRecoverCollision::initCollision()
 	mBaseAttackRadius = 400.0f;
 	mBaseDamageHeight = 400.0f;
 	mBaseAttackHeight = 400.0f;
-	initHitActor(0x2000002C, 3, HIT_CATEGORY_PLAYER, mBaseAttackRadius,
-	             mBaseAttackHeight, mBaseDamageRadius, mBaseDamageHeight);
+	initHitActor(ACTOR_TYPE_BOSS_EEL_TEARS, 3, HIT_CATEGORY_PLAYER,
+	             mBaseAttackRadius, mBaseAttackHeight, mBaseDamageRadius,
+	             mBaseDamageHeight);
 }
 
 void TBossEelTearsRecoverCollision::behaveToMario()
@@ -1379,7 +1382,7 @@ void TBossEelTearsRecoverCollision::perform(u32 cue,
 	if (cue & CUE_MOVE) {
 		calcEntryRadius();
 		for (s32 i = 0; i < mColCount; ++i) {
-			if (mCollisions[i]->isActorType(0x80000001))
+			if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 				behaveToMario();
 		}
 	}
@@ -1401,7 +1404,7 @@ void TBossEel::init(TLiveManager* manager)
 	mMActor->initNormalMotionBlend();
 	mSpine->initWith(&TNerveBossEelWaitAppear::theNerve());
 
-	initHitActor(0x08000003, 1, HIT_CATEGORY_PLAYER,
+	initHitActor(ACTOR_TYPE_BOSS_EEL, 1, HIT_CATEGORY_PLAYER,
 	             mSaveParams->mSLBodyAttackRadius.get(),
 	             mSaveParams->mSLBodyAttackHeight.get(),
 	             mSaveParams->mSLBodyDamageRadius.get(),
@@ -1413,7 +1416,7 @@ void TBossEel::init(TLiveManager* manager)
 	mMActor->resetDL();
 
 	mHeadCollision = new THitActor("めおとウナギの頭部");
-	mHeadCollision->initHitActor(0x08000003, 2, HIT_CATEGORY_PLAYER,
+	mHeadCollision->initHitActor(ACTOR_TYPE_BOSS_EEL, 2, HIT_CATEGORY_PLAYER,
 	                             mSaveParams->mSLHeadAttackRadius.get(),
 	                             mSaveParams->mSLHeadAttackHeight.get(),
 	                             mSaveParams->mSLHeadDamageRadius.get(),
@@ -1805,7 +1808,8 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mHitPoints != 0) {
 			mForceEat = false;
 			for (s32 i = 0; i < mHeadCollision->getColNum(); ++i) {
-				if (mHeadCollision->getCollision(i)->isActorType(0x80000001))
+				if (mHeadCollision->getCollision(i)->isActorType(
+				        ACTOR_TYPE_MARIO))
 					mForceEat = true;
 			}
 

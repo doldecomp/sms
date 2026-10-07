@@ -55,7 +55,7 @@ BOOL TMario::isThrowStart()
 			return changePlayerStatus(MARIO_STATUS_PITCHING, 0, false);
 
 		switch (mHeldObject->getActorType()) {
-		case 0x80000001:
+		case ACTOR_TYPE_MARIO:
 			return changePlayerStatus(MARIO_STATUS_PITCHING, 0, false);
 
 		default:

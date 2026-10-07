@@ -112,8 +112,8 @@ void TMBindShadowParts::calc(f32 param_1)
 	request.mRadiusX = radiusX;
 	request.mRadiusZ = radiusZ;
 
-	if (!mIsCircle && mBody->mActor->getActorType() != 0x80000001
-	    && mBody->mActor->getActorType() != 0x8000002) {
+	if (!mIsCircle && mBody->mActor->getActorType() != ACTOR_TYPE_MARIO
+	    && mBody->mActor->getActorType() != ACTOR_TYPE_E_MARIO) {
 		f32 rotY = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
 		if (radiusX > radiusZ)
 			rotY -= 90.0f;
@@ -136,13 +136,13 @@ TMBindShadowBody::TMBindShadowBody(THitActor* param_1, J3DModel* param_2,
     , mBodyRadius(50.0f)
 {
 	switch (param_1->getActorType()) {
-	case 0x80000001:
-	case 0x8000002:
+	case ACTOR_TYPE_MARIO:
+	case ACTOR_TYPE_E_MARIO:
 		mCircleRadius = 38.0f;
 		mPartsRadius  = 18.0f;
 		mBodyRadius   = 25.0f;
 		break;
-	case 0x8000001:
+	case ACTOR_TYPE_HINOKURI2:
 		mCircleRadius = 280.0f;
 		mPartsRadius  = 50.0f;
 		break;
@@ -194,10 +194,10 @@ bool TMBindShadowBody::isUseThisJoint(int param_1)
 {
 	const THitActor* actor = mActor;
 	switch (actor->getActorType()) {
-	case 0x80000001:
-	case 0x8000002:
+	case ACTOR_TYPE_MARIO:
+	case ACTOR_TYPE_E_MARIO:
 		return true;
-	case 0x8000001:
+	case ACTOR_TYPE_HINOKURI2:
 		if (param_1 == 0x17)
 			return false;
 		return true;
@@ -209,12 +209,12 @@ bool TMBindShadowBody::isUseThisJoint(int param_1)
 bool TMBindShadowBody::isCircleJoint(int param_1)
 {
 	switch (mActor->getActorType()) {
-	case 0x80000001:
-	case 0x8000002:
+	case ACTOR_TYPE_MARIO:
+	case ACTOR_TYPE_E_MARIO:
 		if (param_1 == 0x1a)
 			return true;
 		return false;
-	case 0x8000001:
+	case ACTOR_TYPE_HINOKURI2:
 		if (param_1 == 0x13 || param_1 == 0x17)
 			return true;
 		return false;
@@ -226,8 +226,8 @@ bool TMBindShadowBody::isCircleJoint(int param_1)
 bool TMBindShadowBody::isBodyJoint(int param_1)
 {
 	switch (mActor->getActorType()) {
-	case 0x80000001:
-	case 0x8000002:
+	case ACTOR_TYPE_MARIO:
+	case ACTOR_TYPE_E_MARIO:
 		if (param_1 == 2 || param_1 == 0xe)
 			return true;
 		return false;
@@ -1488,7 +1488,7 @@ void TMBindShadowManager::calcVtx()
 		}
 
 		f32 stretch = 1.0f;
-		if (request->mActorType == 0x80000001)
+		if (request->mActorType == ACTOR_TYPE_MARIO)
 			stretch = 1.5f;
 
 		MsMtxSetTRS(quad->mMtx, trans.x, trans.y, trans.z, rotation.x,

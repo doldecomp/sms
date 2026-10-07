@@ -99,7 +99,7 @@ bool TCameraMarioData::isMarioLeanMirror() const
 	bool result = false;
 	if (SMS_GetMarioGrPlane()) {
 		const TLiveActor* actor = SMS_GetMarioGrPlane()->getActor();
-		if (actor != nullptr && actor->getActorType() == 0x400000CF)
+		if (actor != nullptr && actor->getActorType() == ACTOR_TYPE_MIRROR_L)
 			result = true;
 	}
 	return result;

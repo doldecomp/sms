@@ -463,7 +463,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (checkLiveFlag(LIVE_FLAG_DEAD))
 			return;
 
-		if (isActorType(0x4000003B))
+		if (isActorType(ACTOR_TYPE_MAP_OBJ_TREE_SCALE))
 			return;
 
 		if (cue & CUE_MOVE) {
@@ -562,9 +562,10 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 
 u32 TMapObjBase::getShadowType()
 {
-	if (isActorType(0x40000034) || isActorType(0x40000035)
-	    || isActorType(0x40000036) || isActorType(0x40000037)
-	    || isActorType(0x40000039)) {
+	if (isActorType(ACTOR_TYPE_PALM_NORMAL) || isActorType(ACTOR_TYPE_PALM_OUGI)
+	    || isActorType(ACTOR_TYPE_PALM_SAGO)
+	    || isActorType(ACTOR_TYPE_PALM_NATUME)
+	    || isActorType(ACTOR_TYPE_BANANA_TREE)) {
 		return SHADOW_TYPE_TREE;
 	} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000)) {
 		return SHADOW_TYPE_SQUARE;

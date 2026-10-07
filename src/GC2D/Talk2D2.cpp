@@ -309,9 +309,9 @@ void TTalk2D2::setMessageID(u32 param_1, u32 param_2)
 					else
 						unk264 = 0x24;
 				}
-			} else if (npc->getActorType() == 0x04000016) {
+			} else if (npc->getActorType() == ACTOR_TYPE_NPC_KINOPIO) {
 				unk264 = 0x25;
-			} else if (npc->getActorType() == 0x04000010) {
+			} else if (npc->getActorType() == ACTOR_TYPE_NPC_MARE_MB) {
 				unk264 = 0x2B;
 			}
 		}
@@ -326,7 +326,7 @@ void TTalk2D2::setMessageID(u32 param_1, u32 param_2)
 		unk264 = param_1;
 	}
 
-	if (npc->getActorType() == 0x0400001D)
+	if (npc->getActorType() == ACTOR_TYPE_NPC_BOARD)
 		unk28 = 1;
 	else
 		unk28 = 0;

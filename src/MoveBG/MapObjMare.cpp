@@ -1029,5 +1029,5 @@ BOOL TMareEventPoint::receiveMessage(THitActor* param_1, u32 param_2)
 void TMareEventPoint::load(JSUMemoryInputStream& param_1)
 {
 	TActor::load(param_1);
-	initHitActor(0x40000236, 0, 0, 0.0f, 0.0f, 300.0f, 600.0f);
+	initHitActor(ACTOR_TYPE_MARE_EVENT_POINT, 0, 0, 0.0f, 0.0f, 300.0f, 600.0f);
 }

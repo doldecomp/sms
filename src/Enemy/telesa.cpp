@@ -165,9 +165,9 @@ void TTelesaManager::generatePetBottle(TTelesa* telesa)
 
 	if (unk61 >= 5) {
 		unk61 = 0;
-		gpItemManager->makeObjAppear(telesa->mPosition.x,
-		                             telesa->mPosition.y + 20.0f,
-		                             telesa->mPosition.z, 0x20000002, true);
+		gpItemManager->makeObjAppear(
+		    telesa->mPosition.x, telesa->mPosition.y + 20.0f,
+		    telesa->mPosition.z, ACTOR_TYPE_BOTTLE_LARGE, true);
 	}
 }
 
@@ -222,7 +222,7 @@ void TTelesa::load(JSUMemoryInputStream& stream)
 void TTelesa::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
-	mActorType = 0x1000000C;
+	mActorType = ACTOR_TYPE_TELESA;
 	unk150     = 18;
 	offHitFilter(HIT_CATEGORY_ENEMY);
 	onHitFilter(HIT_CATEGORY_BOSS);
@@ -540,7 +540,8 @@ bool TTelesa::changeByJuice()
 			return true;
 
 		mJuiceBlock = (TJuiceBlock*)gpMapObjManager->makeObjAppear(
-		    mPosition.x, mPosition.y, mPosition.z, 0x400002C4, true);
+		    mPosition.x, mPosition.y, mPosition.z, ACTOR_TYPE_TELESA_BLOCK,
+		    true);
 		if (mJuiceBlock == nullptr)
 			return false;
 
@@ -739,7 +740,7 @@ void TTelesa::setAttacker()
 
 bool TTelesa::isCollidMove(THitActor* param_1)
 {
-	return param_1->mActorType == 0x10000020 ? false : true;
+	return param_1->mActorType == ACTOR_TYPE_EFFECT_OBJ ? false : true;
 }
 
 // TODO: this FEELS real but it's 4 bytes too big!!!

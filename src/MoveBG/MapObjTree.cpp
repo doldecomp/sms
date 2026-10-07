@@ -116,8 +116,8 @@ void TMapObjTree::perform(u32 cue, JDrama::TGraphics* graphics)
 void TMapObjTree::initEach()
 {
 	switch (mActorType) {
-	case 0x40000034:
-	case 0x40000038:
+	case ACTOR_TYPE_PALM_NORMAL:
+	case ACTOR_TYPE_PALM_LEAF:
 		mMinCanopyRadius    = 20.0f;
 		mMaxCanopyRadius    = 95.0f;
 		mLeafNum            = 12;
@@ -126,7 +126,7 @@ void TMapObjTree::initEach()
 		mLeafStiffness      = 0.01f;
 		mLeafDamping        = 0.97f;
 		return;
-	case 0x40000035:
+	case ACTOR_TYPE_PALM_OUGI:
 		mMinCanopyRadius    = 20.0f;
 		mMaxCanopyRadius    = 100.0f;
 		mLeafNum            = 8;
@@ -135,7 +135,7 @@ void TMapObjTree::initEach()
 		mLeafStiffness      = 0.01f;
 		mLeafDamping        = 0.97f;
 		return;
-	case 0x40000036:
+	case ACTOR_TYPE_PALM_SAGO:
 		mMinCanopyRadius    = 50.0f;
 		mMaxCanopyRadius    = 100.0f;
 		mLeafNum            = 12;
@@ -144,7 +144,7 @@ void TMapObjTree::initEach()
 		mLeafStiffness      = 0.01f;
 		mLeafDamping        = 0.97f;
 		return;
-	case 0x40000037:
+	case ACTOR_TYPE_PALM_NATUME:
 		mMinCanopyRadius    = 95.0f;
 		mMaxCanopyRadius    = 60.0f;
 		mLeafNum            = 8;
@@ -153,7 +153,7 @@ void TMapObjTree::initEach()
 		mLeafStiffness      = 0.01f;
 		mLeafDamping        = 0.97f;
 		return;
-	case 0x40000039:
+	case ACTOR_TYPE_BANANA_TREE:
 		mMinCanopyRadius    = 70.0f;
 		mMaxCanopyRadius    = 100.0f;
 		mLeafNum            = 8;
@@ -176,7 +176,7 @@ void TMapObjTree::initMapObj()
 		// BUG: memory leak, mCollision was already allocated in ctor
 		leaf.mCollision = new TMapCollisionMove;
 		char buffer[64];
-		if (isActorType(0x40000038)) {
+		if (isActorType(ACTOR_TYPE_PALM_LEAF)) {
 			snprintf(buffer, 0x100, "/mapObj/palmLeaf%02d", i + 1);
 		} else {
 			snprintf(buffer, 0x100, "/mapObj/%sLeaf%02d", unkF4, i + 1);
@@ -213,7 +213,7 @@ TMapObjTree::TMapObjTree(const char* name)
 void TMapObjTreeScale::startScaleUp()
 {
 	awake();
-	mActorType = 0x40000039;
+	mActorType = ACTOR_TYPE_BANANA_TREE;
 	removeMapCollision();
 	mState = STATE_SCALING_UP_Y_ONLY;
 }
@@ -315,7 +315,7 @@ void TMapObjTreeScale::beSmall()
 	calcEntryRadius();
 	removeMapCollision();
 	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-	mActorType = 0x4000003B;
+	mActorType = ACTOR_TYPE_MAP_OBJ_TREE_SCALE;
 	mState     = STATE_SMALL;
 	SMS_HideAllShapePacket(getModel());
 }

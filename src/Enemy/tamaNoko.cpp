@@ -89,7 +89,8 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 						JGeometry::TVec3<f32> local_c4 = unk10->getPosition();
 						if (TMapObjBase* mapObj = gpItemManager->makeObjAppear(
 						        local_c4.x + local_88.x, local_c4.y,
-						        local_c4.z + local_88.z, 0x2000000e, true)) {
+						        local_c4.z + local_88.z, ACTOR_TYPE_COIN,
+						        true)) {
 							mapObj->mPosition.y = local_c4.y;
 							MsVECNormalize(&local_88, &local_88);
 							mapObj->mVelocity.set(local_88.x * 4.0f, 20.0f,
@@ -224,7 +225,7 @@ void TTamaNoko::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
 
-	mActorType = 0x10000018;
+	mActorType = ACTOR_TYPE_TAMA_NOKO;
 	unk150     = 0x11;
 	mSpine->initWith(&TNerveTamaNokoSleep::theNerve());
 	unk198 = (TTamaNokoSaveLoadParams*)getSaveParam();

@@ -193,7 +193,7 @@ void TRollEnemy::flagJump()
 
 bool TRollEnemy::isCollidMove(THitActor* param_1)
 {
-	if (param_1->isActorType(0x4000022B)) {
+	if (param_1->isActorType(ACTOR_TYPE_STOP_ROCK)) {
 		kill();
 		return true;
 	}
@@ -342,7 +342,7 @@ TIgaiga::TIgaiga(const char* param_1)
 void TIgaiga::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000017;
+	mActorType = ACTOR_TYPE_IGAIGA;
 	unk150     = 0x11;
 	offHitFilter(HIT_CATEGORY_BOSS | HIT_CATEGORY_ENEMY);
 	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
@@ -562,7 +562,8 @@ void TIgaiga::setMeltAnm()
 	setBckAnm(5);
 	if (TMsRange<f32>(0.0f, 1.0f).rand() < 0.2f)
 		gpItemManager->makeObjAppear(mPosition.x, mPosition.y + 20.0f,
-		                             mPosition.z, 0x20000002, true);
+		                             mPosition.z, ACTOR_TYPE_BOTTLE_LARGE,
+		                             true);
 }
 
 static const char* igaiga_bastable[] = {
@@ -826,7 +827,7 @@ TGorogoro::TGorogoro(const char* param_1)
 void TGorogoro::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000019;
+	mActorType = ACTOR_TYPE_GOROGORO;
 	unk150     = 0x31;
 	offHitFilter(HIT_CATEGORY_BOSS | HIT_CATEGORY_ENEMY
 	             | HIT_CATEGORY_MAP_OBJECT);
@@ -979,7 +980,8 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 
 	if (!checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (mGroundPlane && mGroundPlane->getActor()
-		    && mGroundPlane->getActor()->mActorType == 0x4000009A) {
+		    && mGroundPlane->getActor()->mActorType
+		           == ACTOR_TYPE_BIA_WATERMILL01) {
 			((TBiancoWatermill*)mGroundPlane->getActor())
 			    ->turnByEnemy(this, mGroundPlane);
 			TRollEnemy::walkBehavior(param_1, 0.2f * param_2);
@@ -990,7 +992,7 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 		gpMap->checkRoof(mPosition.x, mPosition.y + mHeadHeight, mPosition.z,
 		                 &roof);
 		if (roof && roof->getActor()
-		    && roof->getActor()->mActorType == 0x4000009A) {
+		    && roof->getActor()->mActorType == ACTOR_TYPE_BIA_WATERMILL01) {
 			((TBiancoWatermill*)roof->getActor())->turnByEnemy(this, roof);
 			TRollEnemy::walkBehavior(param_1, 0.3f * param_2);
 			return;
@@ -1003,7 +1005,8 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 				for (int i = 0; i < record.mResultWallsNum; ++i) {
 					const TLiveActor* actor
 					    = record.mResultWalls[i]->getActor();
-					if (actor && actor->mActorType == 0x4000009A) {
+					if (actor
+					    && actor->mActorType == ACTOR_TYPE_BIA_WATERMILL01) {
 						((TBiancoWatermill*)actor)
 						    ->turnByEnemy(this, record.mResultWalls[i]);
 					}

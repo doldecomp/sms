@@ -56,7 +56,7 @@ void TLauncher::init(TLiveManager* param_1)
 		mLaunchCooldown  = launchPeriod * MsRandF();
 	}
 
-	mActorType = 0x10000014;
+	mActorType = ACTOR_TYPE_LAUNCHER;
 	onHitFilter(HIT_CATEGORY_WATER);
 	mAttackRadius = 0.0f;
 	mAttackHeight = 0.0f;
@@ -74,7 +74,7 @@ BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 	if (mState == STATE_DIE)
 		return false;
 
-	if (sender->getActorType() == 0x1000001) {
+	if (sender->getActorType() == ACTOR_TYPE_WATER) {
 		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 			                             &sender->mPosition, 0, nullptr);
@@ -226,8 +226,9 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	mLaunchCooldown = mLaunchPeriod * MsRandF();
 
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
-	initHitActor(0x10000014, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
-	             150.0f, 100.0f, 150.0f, 100.0f);
+	initHitActor(ACTOR_TYPE_LAUNCHER, 1,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 150.0f, 100.0f,
+	             150.0f, 100.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
@@ -397,7 +398,7 @@ void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
-			if (mCollisions[i]->isActorType(0x80000001))
+			if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }

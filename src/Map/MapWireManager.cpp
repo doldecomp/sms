@@ -27,7 +27,7 @@ void TMapWireActor::checkTakingActor()
 	if (unk74->unk7C != nullptr) {
 		for (int i = 0; i < mColCount; ++i) {
 			THitActor* col = mCollisions[i];
-			if (col->isActorType(0x80000001)
+			if (col->isActorType(ACTOR_TYPE_MARIO)
 			    && col->receiveMessage(this, HIT_MESSAGE_TAKE))
 				mHeldObject = (TTakeActor*)mCollisions[i];
 		}
@@ -71,7 +71,7 @@ void TMapWireActor::init(TMapWireActorManager* manager)
 {
 	unk74 = manager;
 
-	initHitActor(0x40000098, 1, HIT_CATEGORY_PLAYER,
+	initHitActor(ACTOR_TYPE_MAP_WIRE_ACTOR, 1, HIT_CATEGORY_PLAYER,
 	             TMapWireActor::mCommonAttackRadius,
 	             TMapWireActor::mCommonAttackHeight, 0.0f, 0.0f);
 

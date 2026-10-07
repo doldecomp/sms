@@ -36,8 +36,8 @@ void TSeal::init(TLiveManager* param_1)
 	mMActor->offMakeDL();
 
 	f32 scale = 100.0f * mScaling.x;
-	initHitActor(0x10000024, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, scale,
-	             scale, scale, scale);
+	initHitActor(ACTOR_TYPE_SEAL, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
+	             scale, scale, scale, scale);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
@@ -58,7 +58,7 @@ void TSeal::init(TLiveManager* param_1)
 
 BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
@@ -95,7 +95,7 @@ void TSeal::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) && (param_1 & 1)) {
 		for (int i = 0; i < getColNum(); ++i) {
 			THitActor* actor = getCollision(i);
-			if (actor->isActorType(0x80000001))
+			if (actor->isActorType(ACTOR_TYPE_MARIO))
 				actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		}
 	}

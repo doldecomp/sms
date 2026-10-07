@@ -24,7 +24,7 @@ void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
 		jointName = monte;
 	else if (isNormalMare())
 		jointName = mare;
-	else if (mActorType == 0x4000016)
+	else if (mActorType == ACTOR_TYPE_NPC_KINOPIO)
 		jointName = kinoppio;
 	else
 		jointName = nullptr;
@@ -41,11 +41,11 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 	const char* jointName = nullptr;
 
 	switch (mActorType) {
-	case 0x4000009:
+	case ACTOR_TYPE_NPC_MONTE_MH:
 		jointName = noseJnt;
 		break;
 
-	case 0x4000012:
+	case ACTOR_TYPE_NPC_MARE_MD:
 		jointName = mouthJnt;
 		break;
 	}
@@ -69,7 +69,7 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 		pcVar5 = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
-	} else if (mActorType == 0x4000016) {
+	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO) {
 		pcVar5 = bodyJoint;
 	} else {
 		pcVar5 = nullptr;
@@ -109,8 +109,8 @@ static bool IsCheckPassFrame(J3DFrameCtrl* param_1, const f32* param_2)
 JGeometry::TVec3<f32> TBaseNPC::getEffectScale_() const
 {
 	switch (mActorType) {
-	case 0x4000016:
-	case 0x4000017:
+	case ACTOR_TYPE_NPC_KINOPIO:
+	case ACTOR_TYPE_NPC_KINOJII:
 		return JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f);
 	}
 	return mInitialScale;
@@ -132,7 +132,7 @@ void TBaseNPC::emitHappyEffect_()
 	if (isNormalMonte()) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MNT_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
-	} else if (isNormalMare() || mActorType == 0x4000016) {
+	} else if (isNormalMare() || mActorType == ACTOR_TYPE_NPC_KINOPIO) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MARE_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
 	}
@@ -155,7 +155,7 @@ inline void TBaseNPC::emitDirtyEffect_()
 			particle = PARTICLE_MS_MNT_YOGORE_B;
 		else if (isNormalMareW())
 			particle = PARTICLE_MS_MARE_YOGORE;
-		else if (mActorType == 0x4000016)
+		else if (mActorType == ACTOR_TYPE_NPC_KINOPIO)
 			particle = PARTICLE_MS_KINO_YOGORE;
 
 		if (particle != -1) {
@@ -177,7 +177,7 @@ inline void TBaseNPC::emitWashEffect_()
 	int particle = -1;
 	if (isNormalMonte())
 		particle = PARTICLE_MS_MNT_WASH;
-	else if (isNormalMare() || mActorType == 0x4000016)
+	else if (isNormalMare() || mActorType == ACTOR_TYPE_NPC_KINOPIO)
 		particle = PARTICLE_MS_MARE_WASH;
 
 	if (particle != -1) {
@@ -202,7 +202,7 @@ inline bool TBaseNPC::isPolWaitCEffectEmitTime_() const
 	} else if (isNormalMare()) {
 		static const f32 sCheckFrameMare[] = { 126.0f, 156.0f, -1.0f };
 		checkFrames                        = sCheckFrameMare;
-	} else if (mActorType == 0x4000016) {
+	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO) {
 		static const f32 sCheckFrameKino[] = { 22.0f, 44.0f, -1.0f };
 		checkFrames                        = sCheckFrameKino;
 	}
@@ -247,7 +247,7 @@ void TBaseNPC::emitParticle_()
 	}
 
 	if (mNoteEffectMtxPtr != nullptr
-	    && (mActorType != 0x4000012
+	    && (mActorType != ACTOR_TYPE_NPC_MARE_MD
 	        || unkD0->getCurrentAnmKind() != NPC_ANM_KIND_UNK5)) {
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 		scale *= 0.75f;
@@ -257,12 +257,12 @@ void TBaseNPC::emitParticle_()
 		SMS_EasyEmitParticle(PARTICLE_MS_YNB_ONPU, &unk1F0, this, scale);
 	}
 
-	if (mActorType == 0x4000007 || gpMarDirector->mMap == 4) {
+	if (mActorType == ACTOR_TYPE_NPC_MONTE_MF || gpMarDirector->mMap == 4) {
 		f32 dVar11                  = 0.0f;
 		bool doEmit                 = false;
 		JGeometry::TVec3<f32> scale = getEffectScale_();
 
-		if (mActorType == 0x4000007) {
+		if (mActorType == ACTOR_TYPE_NPC_MONTE_MF) {
 			doEmit = true;
 			scale *= 1.5f;
 		} else if (mPosition.y <= 30.0f

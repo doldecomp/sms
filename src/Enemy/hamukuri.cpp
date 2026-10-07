@@ -179,7 +179,7 @@ void THamuKuriManager::loadAfter()
 	TSmallEnemyManager::loadAfter();
 
 	TMapObjBaseManager::newAndRegisterObj("mushroom1up");
-	unk60 = 0x40000064;
+	unk60 = ACTOR_TYPE_FOOTBALL;
 	unk68 = 0;
 
 	u32 iVar1 = gpMapObjManager->getObjNumWithActorType(unk60);
@@ -295,7 +295,8 @@ void THamuKuriManager::requestSerialKill(THamuKuri* param_1)
 
 	if (trampled >= trampleBonusNum) {
 		gpItemManager->makeObjAppear(param_1->mPosition.x, param_1->mPosition.y,
-		                             param_1->mPosition.z, 0x20000005, true);
+		                             param_1->mPosition.z,
+		                             ACTOR_TYPE_MUSHROOM1UP, true);
 	}
 }
 
@@ -325,7 +326,8 @@ void THamuKuriManager::checkSerialKill()
 
 		if (rep != nullptr && count >= crashBonusNum) {
 			gpItemManager->makeObjAppear(rep->mPosition.x, rep->mPosition.y,
-			                             rep->mPosition.z, 0x20000003, true);
+			                             rep->mPosition.z, ACTOR_TYPE_ITEM_UNK3,
+			                             true);
 		}
 	}
 }
@@ -639,7 +641,7 @@ THamuKuri::THamuKuri(const char* name)
 void THamuKuri::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000002;
+	mActorType = ACTOR_TYPE_HAMU_KURI;
 	unk150     = 17;
 	unk1F4     = (THamuKuriSaveLoadParams*)getSaveParam();
 	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
@@ -909,7 +911,8 @@ void THamuKuri::selectCapHolder()
 		sendAttackMsgToMario();
 		if (getManager()->unk70 == nullptr) {
 			TMapObjBase* obj = gpItemManager->makeObjAppear(
-			    mPosition.x, mPosition.y, mPosition.z, 0x2000003C, false);
+			    mPosition.x, mPosition.y, mPosition.z, ACTOR_TYPE_MARIO_CAP,
+			    false);
 
 			if (obj) {
 				offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -994,7 +997,7 @@ void THamuKuri::setAfterDeadEffect()
 {
 	if (unk198) {
 		TMapObjBase* obj = gpItemManager->makeObjAppear(
-		    mPosition.x, mPosition.y, mPosition.z, 0x2000003c, true);
+		    mPosition.x, mPosition.y, mPosition.z, ACTOR_TYPE_MARIO_CAP, true);
 
 		if (obj) {
 			unk200.set(mPosition.x, mGroundHeight, mPosition.z);
@@ -1181,13 +1184,14 @@ bool THamuKuri::isHitValid(u32 param_1)
 
 bool THamuKuri::isCollidMove(THitActor* param_1)
 {
-	if (param_1->isActorType(0x8000013))
+	if (param_1->isActorType(ACTOR_TYPE_BOSS_UNK13))
 		if (mSpine->getCurrentNerve() == &TNerveHamuKuriBoundFreeze::theNerve())
 			param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 
-	if (param_1->isActorType(0x10000002) || param_1->isActorType(0x1000000F)
-	    || param_1->isActorType(0x10000013)
-	    || param_1->isActorType(0x10000011)) {
+	if (param_1->isActorType(ACTOR_TYPE_HAMU_KURI)
+	    || param_1->isActorType(ACTOR_TYPE_HANE_HAMU_KURI)
+	    || param_1->isActorType(ACTOR_TYPE_DORO_HAMU_KURI)
+	    || param_1->isActorType(ACTOR_TYPE_FIRE_HAMU_KURI)) {
 		THamuKuri* hamu = (THamuKuri*)param_1;
 		if (hamu->isAttackToHam()
 		    && mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()
@@ -1205,7 +1209,8 @@ bool THamuKuri::isCollidMove(THitActor* param_1)
 
 	u32 actorType = param_1->getActorType();
 	if ((actorType & HIT_CATEGORY_MASK) == HIT_CATEGORY_MAP_OBJECT
-	    && actorType >= 0x40000390 && actorType <= 0x40000394) {
+	    && actorType >= ACTOR_TYPE_FRUIT_COCONUT
+	    && actorType <= ACTOR_TYPE_FRUIT_BANANA) {
 		TLiveActor* enemy         = (TLiveActor*)param_1;
 		JGeometry::TVec3<f32> vel = enemy->mVelocity;
 		if (abs(vel.y) > 2.0f && (abs(vel.x) > 2.0f || abs(vel.z) > 2.0f)) {
@@ -1289,7 +1294,7 @@ void THaneHamuKuri::init(TLiveManager* manager)
 
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
 
-	mActorType = 0x1000000F;
+	mActorType = ACTOR_TYPE_HANE_HAMU_KURI;
 	unk22C     = (THaneHamuKuriSaveLoadParams*)getSaveParam();
 	unk188     = 0.0f;
 }
@@ -1549,7 +1554,7 @@ void TDoroHaneKuri::init(TLiveManager* param_1)
 	THaneHamuKuri::init(param_1);
 
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
-	mActorType = 0x10000037;
+	mActorType = ACTOR_TYPE_DORO_HANE_KURI;
 	unk238     = (THaneHamuKuriSaveLoadParams*)getSaveParam();
 	unk188     = 0.0f;
 
@@ -1711,7 +1716,7 @@ void TDangoHamuKuri::init(TLiveManager* param_1)
 {
 	THamuKuri::init(param_1);
 	mSpine->initWith(&TNerveDangoHamuKuriWait::theNerve());
-	mActorType = 0x10000010;
+	mActorType = ACTOR_TYPE_DANGO_HAMU_KURI;
 }
 
 void TDangoHamuKuri::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -2035,8 +2040,8 @@ void TBossDangoHamuKuri::genEventCoin()
 
 	TMapObjBase* coin;
 
-	if (mCoin->isActorType(0x2000000E)) {
-		coin = gpItemManager->makeObjAppear(0x2000000E);
+	if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+		coin = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 	} else {
 		coin = mCoin;
 		coin->appear();
@@ -2113,7 +2118,7 @@ void TFireHamuKuri::init(TLiveManager* param_1)
 {
 	THamuKuri::init(param_1);
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
-	mActorType = 0x10000011;
+	mActorType = ACTOR_TYPE_FIRE_HAMU_KURI;
 	unk20C     = (TFireHamuKuriSaveLoadParams*)getSaveParam();
 }
 
@@ -2303,7 +2308,7 @@ TDoroHamuKuri::TDoroHamuKuri(const char* name)
 void TDoroHamuKuri::init(TLiveManager* param_1)
 {
 	THamuKuri::init(param_1);
-	mActorType = 0x10000013;
+	mActorType = ACTOR_TYPE_DORO_HAMU_KURI;
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
 
 	if (mInstanceIndex == 0) {
@@ -2356,7 +2361,7 @@ bool TDoroHamuKuri::isCollidMove(THitActor* param_1)
 	if (unk198)
 		return false;
 
-	if (param_1->isActorType(0x10000013)) {
+	if (param_1->isActorType(ACTOR_TYPE_DORO_HAMU_KURI)) {
 		TDoroHamuKuri* other = (TDoroHamuKuri*)param_1;
 		if (other->isUnk198() && !other->isAirborne()) {
 			other->mVelocity = JGeometry::TVec3<f32>(0.0f, 3.0f, 0.0f);

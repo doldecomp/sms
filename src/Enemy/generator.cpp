@@ -105,8 +105,8 @@ void TOneShotGenerator::loadAfter()
 		if (mGraph == nullptr)
 			mGraph = gpConductor->getGraphByName(mGraphName);
 
-		initHitActor(0x2000001, 1, HIT_CATEGORY_PLAYER, 80.0f, 120.0f, 80.0f,
-		             120.0f);
+		initHitActor(ACTOR_TYPE_GENERATOR, 1, HIT_CATEGORY_PLAYER, 80.0f,
+		             120.0f, 80.0f, 120.0f);
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 
 		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
@@ -118,7 +118,7 @@ void TOneShotGenerator::loadAfter()
 
 BOOL TOneShotGenerator::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x1000001)) {
+	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		if (mCount != 0) {
 			TSpineEnemy* enemy = mManager->getFarOutEnemy();
 			if (enemy != nullptr) {

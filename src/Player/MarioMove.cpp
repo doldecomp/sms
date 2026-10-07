@@ -1649,10 +1649,10 @@ void TMario::checkCurrentPlane()
 
 			if ((record.mResultWalls[0]->getActor() != nullptr
 			     && record.mResultWalls[0]->getActor()->getActorType()
-			            == 0x400002BD)
+			            == ACTOR_TYPE_MOVE_BLOCK)
 			    || (record.mResultWalls[1]->getActor() != nullptr
 			        && record.mResultWalls[1]->getActor()->getActorType()
-			               == 0x400002BD)) {
+			               == ACTOR_TYPE_MOVE_BLOCK)) {
 
 				if (dist1 < 10.0f || dist2 < 10.0f) {
 					int hp = mDeParams.mHPMax.get();
@@ -2176,7 +2176,7 @@ void TMario::thinkParams()
 		}
 
 		if (mGroundPlane != nullptr && mGroundPlane->getActor() != nullptr
-		    && mGroundPlane->getActor()->getActorType() == 0x400002c7) {
+		    && mGroundPlane->getActor()->getActorType() == ACTOR_TYPE_CLOUD) {
 			emitFootPrintWithEffect(-1, 0x42);
 		}
 	}

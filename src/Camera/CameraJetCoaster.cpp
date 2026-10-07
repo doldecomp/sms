@@ -26,7 +26,8 @@
 inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 {
 	u32 flagCount = TFlagManager::smInstance->getFlag(MSF_BALLOON_COUNT);
-	u32 objCount  = gpItemManager->getObjNumWithActorType(0x40000132U);
+	u32 objCount
+	    = gpItemManager->getObjNumWithActorType(ACTOR_TYPE_BALLOON_KOOPA_JR);
 
 	if (unk2B8->unk38 > 2) {
 		unk2B8->unk38 -= 1;

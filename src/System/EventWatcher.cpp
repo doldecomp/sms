@@ -118,7 +118,7 @@ static void evGetNPCType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int result    = -1;
 	TBaseNPC* npc = (TBaseNPC*)getNameRefPtr(interp->pop());
 	if (npc)
-		result = npc->getActorType() - 0x4000001;
+		result = npc->getActorType() - ACTOR_TYPE_NPC_MONTE_M;
 	interp->push(result);
 }
 
@@ -1199,7 +1199,8 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 
 	int iVar9 = swtch->unk138;
 	for (int i = 0; i < 8; ++i) {
-		TCoinRed* coin = (TCoinRed*)gpItemManager->makeObjAppeared(0x2000000f);
+		TCoinRed* coin
+		    = (TCoinRed*)gpItemManager->makeObjAppeared(ACTOR_TYPE_COIN_RED);
 		coin->killByTimer(iVar9 - coin->unk150);
 		coin->unk158.set(coin->mPosition.x, coin->mPosition.y + 70.0f,
 		                 coin->mPosition.z);

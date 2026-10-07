@@ -158,7 +158,7 @@ void TPopoCollision::checkHit()
 {
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* other = getCollision(i);
-		if (other->isActorType(0x80000001))
+		if (other->isActorType(ACTOR_TYPE_MARIO))
 			unk68->attackToMario();
 		else
 			unk68->behaveToHitOthers(other);
@@ -286,7 +286,7 @@ void TPopo::load(JSUMemoryInputStream& param_1)
 void TPopo::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x1000000D;
+	mActorType = ACTOR_TYPE_POPO;
 
 	if (mInstanceIndex == 0) {
 		// TODO: what this loop did is unknown
@@ -313,7 +313,7 @@ void TPopo::init(TLiveManager* param_1)
 	    JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk23C);
-	unk23C->initHitActor(0x1000000D, 2,
+	unk23C->initHitActor(ACTOR_TYPE_POPO, 2,
 	                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY
 	                         | HIT_CATEGORY_BOSS,
 	                     80.0f, 80.0f, 80.0f, 80.0f);

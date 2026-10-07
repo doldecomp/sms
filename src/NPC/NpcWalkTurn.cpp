@@ -141,16 +141,16 @@ bool TBaseNPC::isNeedTurnToFirstState() const
 	bool result = false;
 
 	switch (mActorType) {
-	case 0x400001C:
-	case 0x400001D:
-	case 0x4000008:
+	case ACTOR_TYPE_NPC_DUMMY:
+	case ACTOR_TYPE_NPC_BOARD:
+	case ACTOR_TYPE_NPC_MONTE_MG:
 		break;
 
 	default:
 		const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 		if ((nerve == &TNerveNPCWaitMarioApproach::theNerve()
 		     || nerve == &TNerveNPCTurnToMario::theNerve())
-		    && (mActorType == 0x4000006
+		    && (mActorType == ACTOR_TYPE_NPC_MONTE_ME
 		        || !checkActionFlag(NPC_ACTION_UNK800 | NPC_ACTION_UNK400
 		                            | NPC_ACTION_UNK1))) {
 			result = true;
@@ -165,11 +165,11 @@ bool TBaseNPC::isTurnToMarioWhenTalk() const
 {
 	bool result = true;
 	switch (mActorType) {
-	case 0x4000007:
-	case 0x4000008:
-	case 0x400001A:
-	case 0x400001B:
-	case 0x400001D:
+	case ACTOR_TYPE_NPC_MONTE_MF:
+	case ACTOR_TYPE_NPC_MONTE_MG:
+	case ACTOR_TYPE_NPC_SUNFLOWER_L:
+	case ACTOR_TYPE_NPC_SUNFLOWER_S:
+	case ACTOR_TYPE_NPC_BOARD:
 		result = false;
 		break;
 
@@ -190,9 +190,9 @@ bool TBaseNPC::isTurnToMarioWhenApproach() const
 	bool result = true;
 
 	switch (mActorType) {
-	case 0x4000016:
-	case 0x4000017:
-	case 0x4000018:
+	case ACTOR_TYPE_NPC_KINOPIO:
+	case ACTOR_TYPE_NPC_KINOJII:
+	case ACTOR_TYPE_NPC_PEACH:
 		if (checkActionFlag(
 		        NPC_ACTION_BURNING | NPC_ACTION_UNK2000 | NPC_ACTION_UNK1000
 		        | NPC_ACTION_UNK800 | NPC_ACTION_UNK400 | NPC_ACTION_HAPPY

@@ -31,7 +31,7 @@ TButterfly::TButterfly(MActor* actor, TButterfloid* butterfloid)
 
 void TButterfly::init()
 {
-	initHitActor(0x10000030, 0, 0, 0.0f, 0.0f, 50.0f, 50.0f);
+	initHitActor(ACTOR_TYPE_BUTTERFLY, 0, 0, 0.0f, 0.0f, 50.0f, 50.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 
@@ -96,8 +96,8 @@ void TButterfloid::receiveMessageFromChild(TButterfly* child)
 	if (++mNumEaten == unk150->getBoidNum()) {
 		TMapObjBase* obj = mItem;
 		if (obj != nullptr) {
-			if (obj->isActorType(0x2000000E))
-				obj = gpItemManager->makeObjAppear(0x2000000E);
+			if (obj->isActorType(ACTOR_TYPE_COIN))
+				obj = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 
 			if (obj != nullptr) {
 				obj->appear();

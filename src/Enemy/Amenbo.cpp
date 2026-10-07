@@ -78,7 +78,7 @@ void TAmenbo::kill()
 
 void TAmenbo::initCollision()
 {
-	initHitActor(0x1000002D, 2,
+	initHitActor(ACTOR_TYPE_AMENBO, 2,
 	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS,
 	             60.0f, 120.0f, 100.0f, 150.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);

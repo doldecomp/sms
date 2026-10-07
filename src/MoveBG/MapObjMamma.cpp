@@ -532,13 +532,13 @@ void TLeanMirror::updateSpeedVec(const JGeometry::TVec3<f32>& pos, f32 rate)
 BOOL TLeanMirror::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TRAMPLE) {
-		sendMsg(0x10000016, message);
+		sendMsg(ACTOR_TYPE_CHUU_HANA, message);
 		updateSpeedVec(sender->mPosition, unk164);
 		return true;
 	}
 
 	if (message == HIT_MESSAGE_HIP_DROP) {
-		sendMsg(0x10000016, message);
+		sendMsg(ACTOR_TYPE_CHUU_HANA, message);
 		updateSpeedVec(sender->mPosition, unk168);
 		return true;
 	}
@@ -572,7 +572,7 @@ void TLeanMirror::touchPlayer(THitActor* player)
 
 void TLeanMirror::touchEnemy(THitActor* enemy)
 {
-	if (enemy->isActorType(0x10000016) && ((TChuuHana*)enemy)->unk1B0)
+	if (enemy->isActorType(ACTOR_TYPE_CHUU_HANA) && ((TChuuHana*)enemy)->unk1B0)
 		updateSpeedVec(enemy->mPosition, unk16C);
 }
 
@@ -1046,8 +1046,8 @@ void TSandBird::control()
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_ENV_SANDBIRD_WIND, 0, nullptr, 0);
 
 	for (int i = 0; i < unk13C; ++i) {
-		if (unk140[i]->isActorType(0x2000000E)
-		    || unk140[i]->isActorType(0x40000023)) {
+		if (unk140[i]->isActorType(ACTOR_TYPE_COIN)
+		    || unk140[i]->isActorType(ACTOR_TYPE_NO_DATA)) {
 			gpMarioParticleManager->emitAndBindToPosPtr(
 			    MAP_MAP_MS_SUNADORI_A, &unk140[i]->mPosition, 1, unk140[i]);
 			gpMarioParticleManager->emitAndBindToPosPtr(
@@ -1058,7 +1058,7 @@ void TSandBird::control()
 	if (!gpCamera->isDemoCamera() && !unk150) {
 		const TBGCheckData* plane = SMS_GetMarioGroundPlane();
 		if (plane->getActor() != nullptr
-		    && plane->getActor()->isActorType(0x400002C9)) {
+		    && plane->getActor()->isActorType(ACTOR_TYPE_SAND_BIRD_BLOCK)) {
 			gpMarDirector->mConsole->startAppearBalloon(0xE002F, false);
 			mStateTimer = 2400;
 			unk150      = 1;
@@ -1106,7 +1106,7 @@ void TWatermelon::control() { }
 
 void TGoalWatermelon::touchActor(THitActor* actor)
 {
-	if (isState(STATE_NORMAL) && actor->isActorType(0x400000D0)) {
+	if (isState(STATE_NORMAL) && actor->isActorType(ACTOR_TYPE_WATERMELON)) {
 		unk13C = (TMapObjBase*)actor;
 		unk13C->getMActor()->setBck("watermelon_shrink");
 		unk13C->offMapObjFlag(MAP_OBJ_FLAG_UNK100);

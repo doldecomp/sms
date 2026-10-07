@@ -35,7 +35,7 @@ TEffectEnemy::TEffectEnemy(const char* name)
 void TEffectEnemy::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
-	mActorType = 0x10000005;
+	mActorType = ACTOR_TYPE_EFFECT_ENEMY;
 }
 
 void TEffectEnemy::setMActorAndKeeper()

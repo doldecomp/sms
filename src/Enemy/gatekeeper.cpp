@@ -71,8 +71,8 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
     , mJointIndex(joint_idx)
     , mVulnerable(0)
 {
-	initHitActor(0x10000022, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 150.0f,
-	             200.0f);
+	initHitActor(ACTOR_TYPE_BIANCO_GATE_KEEPER, 1, HIT_CATEGORY_PLAYER, 0.0f,
+	             0.0f, 150.0f, 200.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
@@ -81,7 +81,7 @@ TGKHitObj::TGKHitObj(TGateKeeperBase* owner, int joint_idx, const char* name)
 
 BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mVulnerable)
 			mOwner->unk154++;
@@ -127,7 +127,7 @@ void TGateKeeperBase::kill() { onLiveFlag(LIVE_FLAG_DEAD); }
 
 BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001) {
+	if (sender->getActorType() == ACTOR_TYPE_WATER) {
 		if (mVulnerable && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 			unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
@@ -276,8 +276,8 @@ TBGKObstacle::TBGKObstacle(TBiancoGateKeeper* owner, const char* name)
 {
 	mPosition = owner->mPosition;
 	mPosition.y -= 1000.0f;
-	initHitActor(0x10000022, 1, HIT_CATEGORY_PLAYER, 800.0f, 800.0f, 800.0f,
-	             800.0f);
+	initHitActor(ACTOR_TYPE_BIANCO_GATE_KEEPER, 1, HIT_CATEGORY_PLAYER, 800.0f,
+	             800.0f, 800.0f, 800.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
@@ -342,8 +342,9 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 			mStampScale.scale(1.4f);
 	}
 
-	initHitActor(0x10000022, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER,
-	             400.0f, 150.0f, 400.0f, 150.0f);
+	initHitActor(ACTOR_TYPE_BIANCO_GATE_KEEPER, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 400.0f, 150.0f,
+	             400.0f, 150.0f);
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
@@ -679,7 +680,7 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < getColNum(); i++) {
-			if (getCollision(i)->isActorType(0x80000001))
+			if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		}
 

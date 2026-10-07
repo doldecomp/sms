@@ -115,13 +115,13 @@ DEFINE_NERVE(TNerveNPCWaitMarioApproach, TLiveActor)
 	}
 
 	u32 actorType = self->getActorType();
-	if (actorType - 0x400001C > 1) {
+	if (actorType - ACTOR_TYPE_NPC_DUMMY > 1) {
 
 		if (!self->isPeachTired()) {
 
 			if (self->isSunflowerReviving()) {
 				self->sunflowerReviving();
-			} else if (actorType == 0x4000006) {
+			} else if (actorType == ACTOR_TYPE_NPC_MONTE_ME) {
 				self->monteMESetAnmWhenFar();
 				self->execTurnToFirstState();
 			} else {
@@ -151,11 +151,11 @@ DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 	}
 
 	u32 actorType = self->getActorType();
-	if (actorType - 0x400001C > 1) {
+	if (actorType - ACTOR_TYPE_NPC_DUMMY > 1) {
 		if (!self->isPeachTired()) {
 			if (self->isSunflowerReviving()) {
 				self->sunflowerReviving();
-			} else if (actorType == 0x4000006) {
+			} else if (actorType == ACTOR_TYPE_NPC_MONTE_ME) {
 				self->monteMESetAnmWhenNear();
 				self->execTurnToFirstState();
 			} else if (self->isTurnToMarioWhenApproach()) {
@@ -259,7 +259,7 @@ DEFINE_NERVE(TNerveNPCTalk, TLiveActor)
 			self->npcTalkIn();
 		self->npcTalking();
 	} else {
-		if (self->getActorType() == 0x400001C)
+		if (self->getActorType() == ACTOR_TYPE_NPC_DUMMY)
 			return true;
 		self->npcTalkOut();
 	}

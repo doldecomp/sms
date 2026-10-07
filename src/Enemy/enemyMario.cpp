@@ -647,9 +647,11 @@ bool TEnemyMario::tryTake()
 	for (int i = 0; i < mEMario->getColNum(); ++i) {
 		THitActor* actor = mEMario->getCollision(i);
 		u32 actorType    = actor->getActorType();
-		if (actorType == 0x04000018 || actorType == 0x2000002A
-		    || actorType == 0x20000022 || actorType == 0x20000009) {
-			if (actorType == 0x04000018) {
+		if (actorType == ACTOR_TYPE_NPC_PEACH
+		    || actorType == ACTOR_TYPE_BACK_NOZZLE_ITEM
+		    || actorType == ACTOR_TYPE_ROCKET_NOZZLE_ITEM
+		    || actorType == ACTOR_TYPE_EGG_YOSHI) {
+			if (actorType == ACTOR_TYPE_NPC_PEACH) {
 				((TLiveActor*)actor)->onLiveFlag(LIVE_FLAG_UNK100000);
 				onEMFlag(EM_FLAG_ENFORCE_TAKE);
 			}

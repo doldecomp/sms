@@ -120,7 +120,8 @@ TBPPolDrop::TBPPolDrop(TBossPakkun* owner, const char* name)
     , unk88(0.0f)
 {
 	unk6C.zero();
-	initHitActor(0x800000F, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 100.0f, 200.0f);
+	initHitActor(ACTOR_TYPE_BOSS_PAKKUN, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
+	             100.0f, 200.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
@@ -216,7 +217,7 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 	if (flags & CUE_MOVE) {
 		for (s32 i = 0; i < mColCount; ++i) {
 			THitActor* collision = mCollisions[i];
-			if (!collision->isActorType(0x80000001))
+			if (!collision->isActorType(ACTOR_TYPE_MARIO))
 				continue;
 
 			collision->receiveMessage(this, HIT_MESSAGE_ATTACK);
@@ -320,8 +321,9 @@ TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
     , unk98(0)
 {
 	mActor = mOwner->getActorKeeper()->createMActor("trunade.bmd", 0);
-	initHitActor(0x8000010, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 150.0f,
-	             600.0f, 100.0f, 600.0f);
+	initHitActor(ACTOR_TYPE_BOSS_PAKKUN_ATTACK, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 150.0f, 600.0f,
+	             100.0f, 600.0f);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mActor->setBtkFromIndex(2);
 	mActor->setBckFromIndex(29);
@@ -399,7 +401,7 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 			mPosition = nextPosition;
 
 			for (s32 i = 0; i < mColCount; ++i) {
-				if (!mCollisions[i]->isActorType(0x80000001))
+				if (!mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 					continue;
 
 				static const JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
@@ -468,8 +470,9 @@ TBPHeadHit::TBPHeadHit(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
 {
-	initHitActor(0x8000010, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f,
-	             500.0f, 300.0f, 500.0f);
+	initHitActor(ACTOR_TYPE_BOSS_PAKKUN_ATTACK, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f, 500.0f,
+	             300.0f, 500.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
@@ -479,20 +482,20 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 		return mOwner->receiveMessage(sender, message);
 
 	if (mOwner->getWeakPoint() == TBossPakkun::WEAK_POINT_FLY
-	    && (sender->getActorType() == 0x1000000d
-	        || sender->getActorType() == 0x1000001)) {
+	    && (sender->getActorType() == ACTOR_TYPE_POPO
+	        || sender->getActorType() == ACTOR_TYPE_WATER)) {
 		mOwner->gotFlyingDamage();
 		return true;
 	}
 
 	if (mOwner->getWeakPoint() != TBossPakkun::WEAK_POINT_MOUTH) {
 		mOwner->showFlyMessage();
-		if (sender->getActorType() == 0x1000001)
+		if (sender->getActorType() == ACTOR_TYPE_WATER)
 			return true;
 		return false;
 	}
 
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
 		toMario -= mPosition;
@@ -511,7 +514,7 @@ BOOL TBPHeadHit::receiveMessage(THitActor* sender, u32 message)
 
 void TBPHeadHit::throwActor(THitActor* actor)
 {
-	if (actor->getActorType() != 0x80000001)
+	if (actor->getActorType() != ACTOR_TYPE_MARIO)
 		return;
 	if (!mOwner->mMActor->checkCurBckFromIndex(15))
 		return;
@@ -544,7 +547,7 @@ void TBPHeadHit::perform(u32 flags, JDrama::TGraphics* graphics)
 	    && mOwner->mWeakPoint != TBossPakkun::WEAK_POINT_NAVEL) {
 		for (int i = 0; i < mColCount; ++i) {
 			THitActor* actor = mCollisions[i];
-			if (actor->isActorType(0x80000001))
+			if (actor->isActorType(ACTOR_TYPE_MARIO))
 				throwActor(actor);
 		}
 	}
@@ -559,8 +562,8 @@ TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
     : THitActor(name)
     , mOwner(owner)
 {
-	initHitActor(0x8000011, 1, HIT_CATEGORY_PLAYER, 200.0f, 300.0f, 200.0f,
-	             300.0f);
+	initHitActor(ACTOR_TYPE_BOSS_PAKKUN_HEAD, 1, HIT_CATEGORY_PLAYER, 200.0f,
+	             300.0f, 200.0f, 300.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
@@ -569,13 +572,13 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 	if (mOwner->getLatestNerve() == &TNerveBPSleep::theNerve())
 		return mOwner->receiveMessage(sender, message);
 
-	if (sender->getActorType() == 0x1000001)
+	if (sender->getActorType() == ACTOR_TYPE_WATER)
 		return false;
 
 	if (mOwner->mWeakPoint != TBossPakkun::WEAK_POINT_NAVEL)
 		return true;
 
-	if (sender->getActorType() == 0x80000001) {
+	if (sender->getActorType() == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_HIP_DROP)
 			mOwner->gotHipDropDamage();
 		else if (message == HIT_MESSAGE_TRAMPLE)
@@ -762,8 +765,8 @@ void TBossPakkun::init(TLiveManager* manager)
 
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
-	initHitActor(0x800000F, 1, HIT_CATEGORY_PLAYER, 80.0f, 300.0f, 80.0f,
-	             300.0f);
+	initHitActor(ACTOR_TYPE_BOSS_PAKKUN, 1, HIT_CATEGORY_PLAYER, 80.0f, 300.0f,
+	             80.0f, 300.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
@@ -1136,15 +1139,15 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32)
 		return false;
 
 	if (mSpine->isNerve(&TNerveBPSleep::theNerve())
-	    && sender->getActorType() == 0x1000000d) {
+	    && sender->getActorType() == ACTOR_TYPE_POPO) {
 		mSpine->reset();
 		mSpine->setNext(&TNerveBPBreakSleep::theNerve());
 		return true;
 	}
 
 	if (mWeakPoint == WEAK_POINT_FLY
-	    && (sender->getActorType() == 0x1000000d
-	        || sender->getActorType() == 0x1000001)) {
+	    && (sender->getActorType() == ACTOR_TYPE_POPO
+	        || sender->getActorType() == ACTOR_TYPE_WATER)) {
 		if (mPosition.y - 300.0f > sender->mPosition.y)
 			return true;
 		if (mPosition.y + 1500.0f < sender->mPosition.y)
@@ -1508,7 +1511,7 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 		                   700.0f);
 		gpItemManager->makeObjAppear(
 		    boss->mPosition.x + offset.x, boss->mPosition.y + 1.0f,
-		    boss->mPosition.z + offset.z, 0x20000002, false);
+		    boss->mPosition.z + offset.z, ACTOR_TYPE_BOTTLE_LARGE, false);
 	}
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {

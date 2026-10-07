@@ -84,9 +84,9 @@ static const TMapStaticObj::TActorData actor_data_table[] = {
 	{ "fountain", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr, kMdlF_PE1,
 	  nullptr, 0x0, MSD_SE_OBJ_FOUNTAIN, 0x0, 0x0, 0x0, 0x0 },
 
-	{ "TopOfCorona", 0x40000024, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, nullptr,
-	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, "/scene/mapObj/ms_coronasmoke.jpa",
-	  0x146, 0x1, 0x0 },
+	{ "TopOfCorona", ACTOR_TYPE_TOP_OF_CORONA, 0x0, 0.0f, 0.0f, 0.0f, 0.0f,
+	  nullptr, nullptr, kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF,
+	  "/scene/mapObj/ms_coronasmoke.jpa", 0x146, 0x1, 0x0 },
 
 	{ "BiancoRiver", 0x0, 0x0, 0.0f, 0.0f, 0.0f, 0.0f, nullptr, "BiancoRiver",
 	  kMdlF_PE1, nullptr, 0x0, 0xFFFFFFFF, 0x0, 0x0, 0x0,
@@ -182,7 +182,7 @@ J3DModel* TMapStaticObj::getModel() const { return mMActor->getModel(); }
 void TMapStaticObj::calcUnique(JPABaseEmitter* emitter)
 {
 	switch (mActorType) {
-	case 0x40000024:
+	case ACTOR_TYPE_TOP_OF_CORONA:
 		if (emitter) {
 			JGeometry::TVec3<f32> scale(mEffectCoronaScale, mEffectCoronaScale,
 			                            mEffectCoronaScale);
@@ -262,7 +262,7 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 void TMapStaticObj::initUnique()
 {
 	switch (getActorType()) {
-	case 0x40000024:
+	case ACTOR_TYPE_TOP_OF_CORONA:
 		if (gpMarDirector->getCurrentMap() == 4)
 			mEffectCoronaScale = 1.8f;
 		else

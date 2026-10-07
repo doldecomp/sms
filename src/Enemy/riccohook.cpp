@@ -10,7 +10,7 @@ THookTake::THookTake(TRiccoHook* owner, const char* name)
     : TTakeActor(name)
     , mOwner(owner)
 {
-	initHitActor(0x400000BB, 1, HIT_CATEGORY_PLAYER,
+	initHitActor(ACTOR_TYPE_ELASTIC_CODE, 1, HIT_CATEGORY_PLAYER,
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
 	             mOwner->getSaveLoadParam()->mSLHitHeight.get(),
 	             mOwner->getSaveLoadParam()->mSLHitRadius.get(),
@@ -31,7 +31,7 @@ f32 THookTake::getRadiusAtY(f32 y) const
 
 BOOL THookTake::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->mActorType == 0x80000001) {
+	if (sender->mActorType == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_UNK5) {
 			mHeldObject = (TTakeActor*)sender;
 			return TRUE;

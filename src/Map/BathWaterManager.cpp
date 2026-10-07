@@ -122,7 +122,7 @@ public:
 			            unk68.get_float01());
 		}
 
-		initHitActor(0x4000025B, 1, HIT_CATEGORY_PLAYER,
+		initHitActor(ACTOR_TYPE_BATH_WATER, 1, HIT_CATEGORY_PLAYER,
 		             unk8C->dropRadius.get(), unk8C->dropRadius.get() * 2.0f,
 		             0.0f, 0.0f);
 		onHitFilter(HIT_FILTER_NO_COLLISION);

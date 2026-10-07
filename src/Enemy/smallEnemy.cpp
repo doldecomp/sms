@@ -350,8 +350,8 @@ void TSmallEnemy::genEventCoin()
 
 	if (mCoin) {
 		TCoin* coin;
-		if (mCoin->isActorType(0x2000000E)) {
-			coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
+		if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+			coin = (TCoin*)gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 		} else {
 			coin = mCoin;
 			coin->appear();
@@ -383,7 +383,7 @@ void TSmallEnemy::genEventCoin()
 
 			TCoin* coin = (TCoin*)gpItemManager->makeObjAppear(
 			    mPosition.x + local_d0.x, mPosition.y, mPosition.z + local_d0.z,
-			    0x2000000E, false);
+			    ACTOR_TYPE_COIN, false);
 			if (coin) {
 				coin->mPosition.y = mPosition.y;
 				MsVECNormalize(&local_d0, &local_d0);
@@ -420,7 +420,7 @@ void TSmallEnemy::generateItem()
 	f32 itemRate = getSaveParams()->mSLGenItemRate.get();
 	if (rand < eggRate + itemRate && !mGroundPlane->isIllegalData())
 		gpMapObjManager->makeObjAppear(mPosition.x, mGroundHeight, mPosition.z,
-		                               0x20000008, true);
+		                               ACTOR_TYPE_ITEM_UNK8, true);
 }
 
 bool TSmallEnemy::isCollidMove(THitActor* param_1)
@@ -462,7 +462,7 @@ void TSmallEnemy::moveObject()
 
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* col = getCollision(i);
-		if (col->isActorType(0x80000001)) {
+		if (col->isActorType(ACTOR_TYPE_MARIO)) {
 			attackToMario();
 			continue;
 		}
@@ -528,7 +528,8 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP
 	    || message == HIT_MESSAGE_SUPER_HIP_DROP || message == HIT_MESSAGE_UNKB
-	    || (mActorType == 0x10000021 && message == HIT_MESSAGE_PUNCH)) {
+	    || (mActorType == ACTOR_TYPE_AMI_NOKO
+	        && message == HIT_MESSAGE_PUNCH)) {
 		if (isHitValid(message)) {
 			unk184 = 0;
 			kill();
@@ -571,7 +572,8 @@ bool TSmallEnemy::changeByJuice()
 			return true;
 
 		TJuiceBlock* block = (TJuiceBlock*)gpMapObjManager->makeObjAppear(
-		    mPosition.x, mPosition.y, mPosition.z, 0x400002C6, true);
+		    mPosition.x, mPosition.y, mPosition.z, ACTOR_TYPE_JUICE_BLOCK,
+		    true);
 		mJuiceBlock = block;
 
 		if (!mJuiceBlock)

@@ -184,7 +184,7 @@ TCoasterKiller::TCoasterKiller(const char* name)
 void TCoasterKiller::init(TLiveManager* mgr)
 {
 	TCoasterEnemy::init(mgr);
-	mActorType = 0x0800001F;
+	mActorType = ACTOR_TYPE_COASTER_KILLER;
 	unk150     = 17;
 	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	offLiveFlag(LIVE_FLAG_UNK800);
@@ -282,11 +282,11 @@ bool TCoasterKiller::isCollidMove(THitActor* param_1)
 		return false;
 	}
 
-	if (param_1->isActorType(0x0800001F)) {
+	if (param_1->isActorType(ACTOR_TYPE_COASTER_KILLER)) {
 		mSpine->pushNerve(&TNerveCoasterKillerExplosion::theNerve());
 	}
 
-	if (param_1->isActorType(0x1000002B)
+	if (param_1->isActorType(ACTOR_TYPE_ROCKET)
 	    && static_cast<TRocket*>(param_1)->isAttack()) {
 		mSpine->pushNerve(&TNerveCoasterKillerExplosion::theNerve());
 	}

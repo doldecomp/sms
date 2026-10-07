@@ -54,8 +54,8 @@ TAmiHit::TAmiHit(TAmiNoko* param_1, const char* param_2)
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	initHitActor(0x10000021, 1, HIT_CATEGORY_PLAYER, 120.0f, 240.0f, 120.0f,
-	             240.0f);
+	initHitActor(ACTOR_TYPE_AMI_NOKO, 1, HIT_CATEGORY_PLAYER, 120.0f, 240.0f,
+	             120.0f, 240.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
@@ -77,7 +77,7 @@ void TAmiHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		if (!unk68->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			for (int i = 0; i < mColCount; ++i) {
-				if (getCollision(i)->isActorType(0x80000001))
+				if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
 					unk68->attackToMario();
 			}
 		}
@@ -106,7 +106,7 @@ void TAmiNoko::load(JSUMemoryInputStream& stream)
 void TAmiNoko::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000021;
+	mActorType = ACTOR_TYPE_AMI_NOKO;
 	unk150     = 0x11;
 	mSpine->initWith(&TNerveAmiNokoWalkOnFence::theNerve());
 	unk20C = (TAmiNokoSaveLoadParams*)getSaveParam();

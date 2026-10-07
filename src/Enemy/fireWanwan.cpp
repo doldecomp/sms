@@ -440,7 +440,7 @@ TFireWanwanTailHit::TFireWanwanTailHit(TFireWanwan& param_1)
 
 BOOL TFireWanwanTailHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x80000001) {
+	if (sender->getActorType() == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_TAKE) {
 			if (!mOwner->canTakenByMario())
 				return false;
@@ -525,7 +525,8 @@ void TFireWanwanTailHit::init()
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	initHitActor(0x10000028, 0, 0, 0.0f, 0.0f, 30.0f, 200.0f);
+	initHitActor(ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT, 0, 0, 0.0f, 0.0f, 30.0f,
+	             200.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 	mIsOnFire = false;
@@ -736,7 +737,7 @@ TFireWanwan::TFireWanwan(const char* name)
 void TFireWanwan::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
-	mActorType = 0x1000000E;
+	mActorType = ACTOR_TYPE_FIRE_WANWAN;
 	unk150     = 1;
 	mSpine->initWith(&TNerveFireWanwanGraphWander::theNerve());
 	TPosition3f mtx;
@@ -1348,15 +1349,15 @@ void TFireWanwan::checkHitActors()
 		if (*it == this)
 			continue;
 
-		if ((*it)->isActorType(0x80000001)) {
+		if ((*it)->isActorType(ACTOR_TYPE_MARIO)) {
 			attackToMario();
 			continue;
 		}
 
-		if ((*it)->isActorType(0x10000028))
+		if ((*it)->isActorType(ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT))
 			continue;
 
-		if ((*it)->isActorType(0x1000000E)) {
+		if ((*it)->isActorType(ACTOR_TYPE_FIRE_WANWAN)) {
 			behaveToHitOthers((*it));
 			behaveHitComrades();
 
@@ -1773,7 +1774,7 @@ bool TFireWanwan::behaveHitWallOnFlying(const TBGCheckData* check_data)
 {
 	const TLiveActor* actor = check_data->getActor();
 
-	if (actor && actor->isActorType(0x4000001C)) {
+	if (actor && actor->isActorType(ACTOR_TYPE_WOOD_BOX)) {
 		((TLiveActor*)actor)->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		return true;
 	}

@@ -18,7 +18,7 @@ void TMario::hitNormal(THitActor* actor)
 	    && actor->mPosition.y < mPosition.y) {
 		if (mStatus == MARIO_STATUS_HIP_DROP) {
 			if (actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP)) {
-				if (actor->isActorType(0x8000001)) {
+				if (actor->isActorType(ACTOR_TYPE_HINOKURI2)) {
 					changePlayerTriJump();
 					unk78 &= ~0x100;
 				}
@@ -294,71 +294,64 @@ void TMario::checkCollision()
 
 		// TODO: switch still a bit wrong!
 		switch (mCollisions[i]->getActorType()) {
-		// Other mario (enemy mario?)
-		case 0x80000001:
+		case ACTOR_TYPE_MARIO:
 			hitMario(mCollisions[i]);
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// Some item?
-		case 0x20000008:
-		case 0x2000000A:
-		case 0x2000000C:
+		case ACTOR_TYPE_ITEM_UNK8:
+		case ACTOR_TYPE_ITEM_UNKA:
+		case ACTOR_TYPE_ITEM_UNKC:
 			hitNormal(mCollisions[i]);
 			break;
 
-		// Most crap: namekuri, hamukuri, etc
-		case 0x8000001:
-		case 0x8000003:
-		case 0x8000013:
-		case 0x8000024:
-		case 0x10000001:
-		case 0x10000002:
-		case 0x10000003:
-		case 0x10000004:
-		case 0x1000000A:
-		case 0x1000000C:
-		case 0x1000000D:
-		case 0x1000000F:
-		case 0x10000010:
-		case 0x10000011:
-		case 0x10000012:
-		case 0x10000013:
-		case 0x10000017:
-		case 0x10000019:
-		case 0x1000001A:
-		case 0x1000001B:
-		case 0x1000001C:
-		case 0x1000001D:
-		case 0x1000001F:
-		case 0x10000020:
-		case 0x10000025:
-		case 0x1000002E:
-		case 0x10000031:
-		case 0x10000037:
-		case 0x4000019A:
+		case ACTOR_TYPE_HINOKURI2:
+		case ACTOR_TYPE_BOSS_EEL:
+		case ACTOR_TYPE_BOSS_UNK13:
+		case ACTOR_TYPE_BATHTUB_KILLER:
+		case ACTOR_TYPE_ENEMY_UNK1:
+		case ACTOR_TYPE_HAMU_KURI:
+		case ACTOR_TYPE_NAME_KURI:
+		case ACTOR_TYPE_PAKKUN:
+		case ACTOR_TYPE_ELEC_NOKONOKO:
+		case ACTOR_TYPE_TELESA:
+		case ACTOR_TYPE_POPO:
+		case ACTOR_TYPE_HANE_HAMU_KURI:
+		case ACTOR_TYPE_DANGO_HAMU_KURI:
+		case ACTOR_TYPE_FIRE_HAMU_KURI:
+		case ACTOR_TYPE_PUKU_PUKU:
+		case ACTOR_TYPE_DORO_HAMU_KURI:
+		case ACTOR_TYPE_IGAIGA:
+		case ACTOR_TYPE_GOROGORO:
+		case ACTOR_TYPE_HANA_SAMBO:
+		case ACTOR_TYPE_SAMBO_HEAD:
+		case ACTOR_TYPE_DPT_CANNON:
+		case ACTOR_TYPE_ENEMY_UNK1D:
+		case ACTOR_TYPE_ENEMY_UNK1F:
+		case ACTOR_TYPE_EFFECT_OBJ:
+		case ACTOR_TYPE_HAUNT_LEG:
+		case ACTOR_TYPE_ENEMY_UNK2E:
+		case ACTOR_TYPE_ENEMY_UNK31:
+		case ACTOR_TYPE_DORO_HANE_KURI:
+		case ACTOR_TYPE_CASINORULET:
 			hitNormal(mCollisions[i]);
 			break;
 
-		// ???
-		case 0x8000011:
+		case ACTOR_TYPE_BOSS_PAKKUN_HEAD:
 			hitHipDrop(mCollisions[i]);
 			break;
 
-		// Kumokun
-		case 0x1000002C:
+		case ACTOR_TYPE_KUMOKUN:
 			hitNormal(mCollisions[i]);
 			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
 				keepDistance(*mCollisions[i], 0.0f);
 			// fall through
 
-		// ???
-		case 0x10000021:
+		case ACTOR_TYPE_AMI_NOKO:
 			hitHipDrop(mCollisions[i]);
 			// fall through
 
-		// Amiking
-		case 0x10000034:
+		case ACTOR_TYPE_AMIKING:
 			if (mStatus == MARIO_STATUS_FENCE_PUNCH
 			    && 5.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 9.0f) {
@@ -371,192 +364,172 @@ void TMario::checkCollision()
 			}
 			break;
 
-		// Tama noko and something else
-		case 0x10000018:
-		case 0x1000001E:
+		case ACTOR_TYPE_TAMA_NOKO:
+		case ACTOR_TYPE_BOMB_HEI:
 			hitPickUpEnemy(mCollisions[i]);
 			break;
 
-		// Mame gesso
-		case 0x10000008:
+		case ACTOR_TYPE_MAME_GESSO:
 			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
 				keepDistance(*mCollisions[i], 0.0f);
 			else
 				hitPickUpEnemy(mCollisions[i]);
 			break;
 
-		// R1: keepDistance (cases sharing L_80161364 leaf)
-		case 0x8000022:
-		case 0x8000023:
-		case 0x10000033:
-		case 0x400001A6:
+		case ACTOR_TYPE_BOSS_EEL_TOOTH:
+		case ACTOR_TYPE_BOSS_EEL_COLLISION:
+		case ACTOR_TYPE_DEBU_TELESA:
+		case ACTOR_TYPE_SROT_RULET:
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// P: hitNormal + virt[0x19C] check + keepDist
-		case 0x10000007:
-		case 0x1000000E:
-		case 0x10000015:
-		case 0x1000002A:
-		case 0x1000002D:
+		case ACTOR_TYPE_GESSO:
+		case ACTOR_TYPE_FIRE_WANWAN:
+		case ACTOR_TYPE_POI_HANA:
+		case ACTOR_TYPE_YUMBO:
+		case ACTOR_TYPE_AMENBO:
 			hitNormal(mCollisions[i]);
 			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
 				keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// A3: hitNormal (placed between P and R2 for body emission order)
-		case 0x10000016:
+		case ACTOR_TYPE_CHUU_HANA:
 			hitNormal(mCollisions[i]);
 			break;
 
-		// ???
-		case 0x800000B:
-		case 0x800000C:
-		case 0x800000F:
-		case 0x8000010:
-		case 0x8000014:
-		case 0x8000015:
-		case 0x10000027:
-		case 0x10000035:
+		case ACTOR_TYPE_BOSS_UNKB:
+		case ACTOR_TYPE_BOSS_UNKC:
+		case ACTOR_TYPE_BOSS_PAKKUN:
+		case ACTOR_TYPE_BOSS_PAKKUN_ATTACK:
+		case ACTOR_TYPE_BOSS_UNK14:
+		case ACTOR_TYPE_BOSS_UNK15:
+		case ACTOR_TYPE_SAMBO_FLOWER:
+		case ACTOR_TYPE_ENEMY_UNK35:
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// Damaging parts of boss gesso and other stuff
-		case 0x8000002:
-		case 0x8000005:
-		case 0x8000007:
-		case 0x10000022:
+		case ACTOR_TYPE_E_MARIO:
+		case ACTOR_TYPE_BOSS_GESSO:
+		case ACTOR_TYPE_BOSS_GESSO_TAKE_HIT:
+		case ACTOR_TYPE_BIANCO_GATE_KEEPER:
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// Enemies with pull-able parts --
-		// boss gesso tentacles/nose, fire wanwans, etc
-		case 0x8000006:
-		case 0x8000008:
-		case 0x800000D:
-		case 0x8000083:
-		case 0x10000028:
+		case ACTOR_TYPE_BOSS_GESSO_TENTACLE:
+		case ACTOR_TYPE_BOSS_UNK8:
+		case ACTOR_TYPE_BOSS_UNKD:
+		case ACTOR_TYPE_YOSHI_TONGUE:
+		case ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT:
 			hitNoKeepPull(mCollisions[i]);
 			break;
 
-		// Nozzle box
-		case 0x20000068:
+		case ACTOR_TYPE_NOZZLE_BOX:
 			hitNormal(mCollisions[i]);
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// Football, balloon ball, coconut
-		case 0x40000064:
+		case ACTOR_TYPE_FOOTBALL:
 			hitPushup(mCollisions[i]);
 			break;
 
-		// ???
-		case 0x40000002:
+		case ACTOR_TYPE_MAP_OBJECT_UNK2:
 			hitBrakable(mCollisions[i]);
 			break;
 
-		// Water & oil barrels
-		case 0x4000005A:
-		case 0x4000005C:
+		case ACTOR_TYPE_WOOD_BARREL:
+		case ACTOR_TYPE_BARREL_OIL:
 			hitBarrel(mCollisions[i]);
 			break;
 
-		// Misc default-ish stuff -- just don't clip inside
-		case 0x20000009:
-		case 0x40000010:
-		case 0x4000001B:
-		case 0x40000026:
-		case 0x40000030:
-		case 0x40000046:
-		case 0x4000005D:
-		case 0x4000007E:
-		case 0x4000009E:
-		case 0x4000009F:
-		case 0x400000A0:
-		case 0x400000DB:
-		case 0x40000136:
-		case 0x40000139:
-		case 0x40000228:
-		case 0x40000233:
-		case 0x40000264:
-		case 0x40000396:
+		case ACTOR_TYPE_EGG_YOSHI:
+		case ACTOR_TYPE_MAP_OBJECT_UNK10:
+		case ACTOR_TYPE_ARROW_BOARD_LR:
+		case ACTOR_TYPE_GENERAL_HIT_OBJ:
+		case ACTOR_TYPE_MAP_OBJECT_UNK30:
+		case ACTOR_TYPE_PLANT_FLOWER:
+		case ACTOR_TYPE_DRUM_CAN:
+		case ACTOR_TYPE_DPT_WEATHERCOCK:
+		case ACTOR_TYPE_BIA_BELL:
+		case ACTOR_TYPE_BIA_WATERMILL00:
+		case ACTOR_TYPE_MINI_WINDMILL_L:
+		case ACTOR_TYPE_WATERMELON_STATIC:
+		case ACTOR_TYPE_MERRY_POLE:
+		case ACTOR_TYPE_COASTER:
+		case ACTOR_TYPE_COGWHEEL_POT:
+		case ACTOR_TYPE_EX_BOTTLE:
+		case ACTOR_TYPE_MAP_OBJ_NAIL:
+		case ACTOR_TYPE_FRUIT_COVER_PINE:
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
-		// Poles, trees, etc -- "climbable" stuff
-		case 0x4000002D:
-		case 0x4000002E:
-		case 0x4000002F:
-		case 0x40000032:
-		case 0x40000034:
-		case 0x40000035:
-		case 0x40000036:
-		case 0x40000037:
-		case 0x40000039:
-		case 0x4000003A:
-		case 0x4000003C:
-		case 0x40000047:
-		case 0x40000049:
-		case 0x400000BB:
-		case 0x40000244:
-		case 0x40000246:
+		case ACTOR_TYPE_DPTLIGHT:
+		case ACTOR_TYPE_TELEGRAPH_POLE_L:
+		case ACTOR_TYPE_POLE_NORMAL:
+		case ACTOR_TYPE_MAP_OBJECT_UNK32:
+		case ACTOR_TYPE_PALM_NORMAL:
+		case ACTOR_TYPE_PALM_OUGI:
+		case ACTOR_TYPE_PALM_SAGO:
+		case ACTOR_TYPE_PALM_NATUME:
+		case ACTOR_TYPE_BANANA_TREE:
+		case ACTOR_TYPE_FRUIT_TREE:
+		case ACTOR_TYPE_MOYASI:
+		case ACTOR_TYPE_MAP_OBJECT_UNK47:
+		case ACTOR_TYPE_FLUFF:
+		case ACTOR_TYPE_ELASTIC_CODE:
+		case ACTOR_TYPE_MONTE_ROOT:
+		case ACTOR_TYPE_MONTE_GOAL_FLAG:
 			hangPole(mCollisions[i]);
 			break;
 
-		// jump base
-		case 0x40000017:
+		case ACTOR_TYPE_JUMPBASE:
 			hitJumpBase(mCollisions[i]);
 			break;
 
-		// fruits
-		case 0x40000390:
-		case 0x40000391:
-		case 0x40000392:
-		case 0x40000394:
-		case 0x40000395:
+		case ACTOR_TYPE_FRUIT_COCONUT:
+		case ACTOR_TYPE_FRUIT_PAPAYA:
+		case ACTOR_TYPE_FRUIT_PINE:
+		case ACTOR_TYPE_FRUIT_BANANA:
+		case ACTOR_TYPE_RED_PEPPER:
 			hitWantToTake(mCollisions[i]);
 			break;
 
-		// durian fruit
-		case 0x40000393:
+		case ACTOR_TYPE_FRUIT_DURIAN:
 			hitPushup(mCollisions[i]);
 			break;
 
-		// various breakable blocks
-		case 0x400002BC:
+		case ACTOR_TYPE_BREAKABLE_BLOCK:
 			hitBrakable(mCollisions[i]);
 			break;
 
-		// empty cases
-		case 0x8000004:
-		case 0x8000012:
-		case 0x8000016:
-		case 0x8000017:
-		case 0x8000018:
-		case 0x8000019:
-		case 0x800001A:
-		case 0x800001B:
-		case 0x800001C:
-		case 0x800001D:
-		case 0x800001E:
-		case 0x800001F:
-		case 0x8000020:
-		case 0x8000021:
-		case 0x10000005:
-		case 0x10000006:
-		case 0x10000009:
-		case 0x1000000B:
-		case 0x10000014:
-		case 0x10000023:
-		case 0x10000024:
-		case 0x10000026:
-		case 0x10000032:
-		case 0x10000036:
-		case 0x40000033:
-		case 0x40000038:
-		case 0x4000003B:
-		case 0x4000005B:
-		case 0x4000022B:
+		case ACTOR_TYPE_BOSS_MANTA:
+		case ACTOR_TYPE_BOSS_UNK12:
+		case ACTOR_TYPE_SLEEP_BOSS_HANACHAN:
+		case ACTOR_TYPE_BOSS_UNK17:
+		case ACTOR_TYPE_BOSS_UNK18:
+		case ACTOR_TYPE_BOSS_UNK19:
+		case ACTOR_TYPE_BOSS_UNK1A:
+		case ACTOR_TYPE_BOSS_UNK1B:
+		case ACTOR_TYPE_BOSS_UNK1C:
+		case ACTOR_TYPE_BOSS_UNK1D:
+		case ACTOR_TYPE_BOSS_UNK1E:
+		case ACTOR_TYPE_COASTER_KILLER:
+		case ACTOR_TYPE_BOSS_UNK20:
+		case ACTOR_TYPE_BOSS_UNK21:
+		case ACTOR_TYPE_EFFECT_ENEMY:
+		case ACTOR_TYPE_POLLUTE_OBJ:
+		case ACTOR_TYPE_ENEMY_UNK9:
+		case ACTOR_TYPE_ELEC_CARAPACE:
+		case ACTOR_TYPE_LAUNCHER:
+		case ACTOR_TYPE_ENEMY_UNK23:
+		case ACTOR_TYPE_SEAL:
+		case ACTOR_TYPE_ENEMY_UNK26:
+		case ACTOR_TYPE_ENEMY_UNK32:
+		case ACTOR_TYPE_ENEMY_DAMAGE_OBJ:
+		case ACTOR_TYPE_MAP_OBJECT_UNK33:
+		case ACTOR_TYPE_PALM_LEAF:
+		case ACTOR_TYPE_MAP_OBJ_TREE_SCALE:
+		case ACTOR_TYPE_BARREL_FLOAT:
+		case ACTOR_TYPE_STOP_ROCK:
 			break;
 		}
 	}

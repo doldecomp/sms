@@ -143,7 +143,7 @@ TBathtubKiller::TBathtubKiller(const char* name)
 void TBathtubKiller::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
-	mActorType = 0x08000024;
+	mActorType = ACTOR_TYPE_BATHTUB_KILLER;
 	unk150     = 0x11;
 	onLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_DEAD);
@@ -272,12 +272,13 @@ void TBathtubKiller::generateItemBathtubKiller()
 
 	if (SMS_GetMarioWaterGun()->mCurrentWater == 0) {
 		item = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x20000002, true);
+		                                    mPosition.z,
+		                                    ACTOR_TYPE_BOTTLE_LARGE, true);
 	} else if (manager->unk60 == shines && manager->unk69 < 7) {
 		JGeometry::TVec3<f32> pos = mPosition;
 		if (!manager->unk64 || manager->unk64->checkLiveFlag(LIVE_FLAG_DEAD))
-			manager->unk64 = gpItemManager->makeObjAppear(pos.x, pos.y, pos.z,
-			                                              0x20000005, true);
+			manager->unk64 = gpItemManager->makeObjAppear(
+			    pos.x, pos.y, pos.z, ACTOR_TYPE_MUSHROOM1UP, true);
 		manager->unk69 += 1;
 	} else if (shines <= manager->unk60 + 1) {
 		if (unk1CC->getNumGripsDead() == 3 && manager->unk68 == 0) {
@@ -285,19 +286,20 @@ void TBathtubKiller::generateItemBathtubKiller()
 			if (!manager->unk64
 			    || manager->unk64->checkLiveFlag(LIVE_FLAG_DEAD))
 				manager->unk64 = gpItemManager->makeObjAppear(
-				    pos.x, pos.y, pos.z, 0x20000005, true);
+				    pos.x, pos.y, pos.z, ACTOR_TYPE_MUSHROOM1UP, true);
 			manager->unk68 = 1;
 		}
 	}
 
 	if (!item)
 		item = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x20000002, true);
+		                                    mPosition.z,
+		                                    ACTOR_TYPE_BOTTLE_LARGE, true);
 
 	if (!item)
 		return;
 
-	if (item->getActorType() == 0x20000002) {
+	if (item->getActorType() == ACTOR_TYPE_BOTTLE_LARGE) {
 		JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		    PARTICLE_MS_ENM_DISAP_A_W, &item->mPosition, 0, nullptr);
 		if (emitter)

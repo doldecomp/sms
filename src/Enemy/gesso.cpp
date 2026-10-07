@@ -243,7 +243,7 @@ static int GessoBodyCallback(J3DNode*, int);
 void TGesso::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000007;
+	mActorType = ACTOR_TYPE_GESSO;
 	unk150     = 17;
 	unk1E8     = (TGessoSaveLoadParams*)getSaveParam();
 	getMActor()->setJointCallback(mBodyJntIndex, &GessoBodyCallback);
@@ -676,7 +676,7 @@ void TGesso::genRandomItem()
 	if (isBckAnm(15)) {
 		// yeah
 		if (gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
-		                                 0x400000BC, true))
+		                                 ACTOR_TYPE_GESO_SURF_BOARD, true))
 			return;
 		else
 			return;
@@ -853,8 +853,8 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 	    ->getChildren()
 	    .push_back(this);
 
-	THitActor::initHitActor(0x10000006, 1, HIT_CATEGORY_PLAYER, 10.0f, 10.0f,
-	                        10.0f, 10.0f);
+	THitActor::initHitActor(ACTOR_TYPE_POLLUTE_OBJ, 1, HIT_CATEGORY_PLAYER,
+	                        10.0f, 10.0f, 10.0f, 10.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150       = 0;
 	mGroundPlane = TMap::getIllegalCheckData();
@@ -959,7 +959,7 @@ void TGessoPolluteObj::calcRootMatrix()
 void TGessoPolluteObj::sendMessage()
 {
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->isActorType(0x80000001)) {
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO)) {
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			kill();
 		}

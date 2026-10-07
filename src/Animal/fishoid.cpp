@@ -103,7 +103,7 @@ void TRealoidActor::checkHitActors()
 	end = mCollisions + mColCount;
 	for (; it != end; ++it) {
 		switch ((*it)->getActorType()) {
-		case 0x80000001:
+		case ACTOR_TYPE_MARIO:
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			break;
 		}
@@ -265,7 +265,7 @@ void TFishoid::loadItem(JSUMemoryInputStream& stream)
 
 	unk15C = TMapObjBaseManager::newAndRegisterObjByEventID(eventId, "");
 	if (unk15C != nullptr) {
-		if (unk15C->isActorType(0x2000000E))
+		if (unk15C->isActorType(ACTOR_TYPE_COIN))
 			unk15C = gpItemManager->newAndRegisterCoinReal();
 	}
 }

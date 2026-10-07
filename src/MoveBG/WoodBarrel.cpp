@@ -19,7 +19,7 @@ void TWoodBarrel::put()
 {
 	TMapObjGeneral::put();
 	if (mGroundPlane->getActor() != nullptr
-	    && mGroundPlane->getActor()->isActorType(0x4000007b)) {
+	    && mGroundPlane->getActor()->isActorType(ACTOR_TYPE_MAP_OBJECT_UNK7B)) {
 		kill();
 		return;
 	}
@@ -36,7 +36,7 @@ void TWoodBarrel::put()
 void TWoodBarrel::hold(TTakeActor* param_1)
 {
 	TMapObjGeneral::hold(param_1);
-	if (isActorType(0x4000005c))
+	if (isActorType(ACTOR_TYPE_BARREL_OIL))
 		startStateTimer(mBreakTime);
 }
 
@@ -130,7 +130,7 @@ BOOL TWoodBarrel::receiveMessage(THitActor* sender, u32 message)
 void TWoodBarrel::control()
 {
 	TMapObjGeneral::control();
-	if (isActorType(0x4000005c) && isState(STATE_HOLDING)
+	if (isActorType(ACTOR_TYPE_BARREL_OIL) && isState(STATE_HOLDING)
 	    && !isStateTimerEngaged())
 		kill();
 }

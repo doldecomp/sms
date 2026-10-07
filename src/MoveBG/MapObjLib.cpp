@@ -37,10 +37,14 @@
 
 bool TMapObjBase::isHideObj(THitActor* param_1)
 {
-	if (param_1->isActorType(0x40000320) || param_1->isActorType(0x40000013)
-	    || param_1->isActorType(0x40000012) || param_1->isActorType(0x40000018)
-	    || param_1->isActorType(0x40000019) || param_1->isActorType(0x4000001a)
-	    || param_1->isActorType(0x40000020) || param_1->isActorType(0x4000003b))
+	if (param_1->isActorType(ACTOR_TYPE_HELP_ACTOR)
+	    || param_1->isActorType(ACTOR_TYPE_KOOPA_JR_SIGN_M)
+	    || param_1->isActorType(ACTOR_TYPE_CHIP_SHINE)
+	    || param_1->isActorType(ACTOR_TYPE_SIGN_CIRCLE)
+	    || param_1->isActorType(ACTOR_TYPE_SIGN_CROSS)
+	    || param_1->isActorType(ACTOR_TYPE_SIGN_TRIANGLE)
+	    || param_1->isActorType(ACTOR_TYPE_STAR_SIGN)
+	    || param_1->isActorType(ACTOR_TYPE_MAP_OBJ_TREE_SCALE))
 		return true;
 
 	return false;
@@ -79,7 +83,8 @@ void TMapObjBase::checkOnManhole()
 {
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
-	if (mGroundPlane->mActor && mGroundPlane->mActor->isActorType(0x4000000b)) {
+	if (mGroundPlane->mActor
+	    && mGroundPlane->mActor->isActorType(ACTOR_TYPE_MANHOLE)) {
 		((TManhole*)mGroundPlane->mActor)->makeManholeUnuseful(this);
 	}
 }
@@ -147,8 +152,9 @@ void TMapObjBase::throwObjFromPointWithRot(TMapObjBase* param_1,
 
 bool TMapObjBase::isCoin(THitActor* param_1)
 {
-	if (param_1->isActorType(0x2000000e) || param_1->isActorType(0x2000000f)
-	    || param_1->isActorType(0x20000010))
+	if (param_1->isActorType(ACTOR_TYPE_COIN)
+	    || param_1->isActorType(ACTOR_TYPE_COIN_RED)
+	    || param_1->isActorType(ACTOR_TYPE_COIN_BLUE))
 		return true;
 
 	return false;
@@ -156,9 +162,12 @@ bool TMapObjBase::isCoin(THitActor* param_1)
 
 bool TMapObjBase::isFruit(THitActor* param_1)
 {
-	if (param_1->isActorType(0x40000390) || param_1->isActorType(0x40000391)
-	    || param_1->isActorType(0x40000392) || param_1->isActorType(0x40000393)
-	    || param_1->isActorType(0x40000394) || param_1->isActorType(0x40000395))
+	if (param_1->isActorType(ACTOR_TYPE_FRUIT_COCONUT)
+	    || param_1->isActorType(ACTOR_TYPE_FRUIT_PAPAYA)
+	    || param_1->isActorType(ACTOR_TYPE_FRUIT_PINE)
+	    || param_1->isActorType(ACTOR_TYPE_FRUIT_DURIAN)
+	    || param_1->isActorType(ACTOR_TYPE_FRUIT_BANANA)
+	    || param_1->isActorType(ACTOR_TYPE_RED_PEPPER))
 		return true;
 	return false;
 }
@@ -873,8 +882,8 @@ u32 TMapObjTurn::touchWater(THitActor*)
 		unk158 += unk15C;
 	} else if (unk168) {
 		TMapObjBase* obj;
-		if (mHiddenObj->isActorType(0x2000000E))
-			obj = gpItemManager->makeObjAppear(0x2000000E);
+		if (mHiddenObj->isActorType(ACTOR_TYPE_COIN))
+			obj = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 		else
 			obj = mHiddenObj;
 
@@ -954,8 +963,9 @@ BOOL TMapObjTurn::receiveMessage(THitActor* sender, u32 message)
 {
 	u32 result;
 	if (message == HIT_MESSAGE_UNK5
-	    && (sender->isActorType(0x2000000E) || sender->isActorType(0x2000000F)
-	        || sender->isActorType(0x20000010))) {
+	    && (sender->isActorType(ACTOR_TYPE_COIN)
+	        || sender->isActorType(ACTOR_TYPE_COIN_RED)
+	        || sender->isActorType(ACTOR_TYPE_COIN_BLUE))) {
 		unk168 = 1;
 		result = 1;
 	} else {
@@ -975,7 +985,7 @@ void TMapObjTurn::loadAfter()
 void TMapObjTurn::initMapObj()
 {
 	THideObjBase::initMapObj();
-	if (isActorType(0x4000007E)) {
+	if (isActorType(ACTOR_TYPE_DPT_WEATHERCOCK)) {
 		unk150 = 1;
 		unk15C = 0.5f;
 		unk164 = 10.0f;

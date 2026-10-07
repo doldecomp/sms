@@ -82,7 +82,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	//     return new TFruitsBoatManager(3, "フルーツの船マネージャー");
 
 	if (strcmp(name, "AnimalMew") == 0)
-		return new TAnimalBase(0x800001, "?");
+		return new TAnimalBase(ACTOR_TYPE_ANIMAL_MEW, "?");
 
 	if (strcmp(name, "MewManager") == 0)
 		return new TMewManager;

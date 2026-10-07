@@ -138,12 +138,12 @@ void TChorobei::checkHit()
 {
 	for (int i = 0; i < mColCount; i++) {
 		THitActor* actor = mCollisions[i];
-		if (actor->isActorType(0x80000001))
+		if (actor->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-		if (actor->isActorType(0x1000001E)) {
+		if (actor->isActorType(ACTOR_TYPE_BOMB_HEI)) {
 			unk68->hitHead(static_cast<TBombHei*>(actor));
 		}
-		if (actor->isActorType(0x1000001F)) {
+		if (actor->isActorType(ACTOR_TYPE_ENEMY_UNK1F)) {
 			TKiller* killer = static_cast<TKiller*>(actor);
 			if (killer->isRollFly()) {
 				unk68->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
@@ -287,7 +287,7 @@ void TCannon::loadAfter()
 void TCannon::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
-	mActorType = 0x1000001C;
+	mActorType = ACTOR_TYPE_DPT_CANNON;
 	unk150     = 17;
 	unk28C     = static_cast<TCannonSaveLoadParams*>(getSaveParam());
 	setBckAnm(3);
@@ -312,7 +312,7 @@ void TCannon::init(TLiveManager* param_1)
 		                       ->getModelData()
 		                       ->getJointNum();
 		     ++i) { }
-		unk1A8->initHitActor(0x1000001D, 3,
+		unk1A8->initHitActor(ACTOR_TYPE_ENEMY_UNK1D, 3,
 		                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
 		                     unk28C->mSLChorobeiAttackRadius.get(),
 		                     unk28C->mSLChorobeiAttackHeight.get(),
@@ -404,8 +404,8 @@ void TCannon::moveObject()
 
 BOOL TCannon::receiveMessage(THitActor* param_1, u32 param_2)
 {
-	if (param_1->mActorType == 0x40000235 && param_2 == HIT_MESSAGE_TAKE
-	    && mHolder == nullptr) {
+	if (param_1->mActorType == ACTOR_TYPE_MARE_CORK
+	    && param_2 == HIT_MESSAGE_TAKE && mHolder == nullptr) {
 		mHolder = (TTakeActor*)param_1;
 		return TRUE;
 	}

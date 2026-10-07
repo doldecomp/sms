@@ -75,7 +75,7 @@ static void getAttackModeStr(int) { }
 
 static BOOL isNozzleWater(THitActor* param_1)
 {
-	if (!param_1->isActorType(0x1000001))
+	if (!param_1->isActorType(ACTOR_TYPE_WATER))
 		return FALSE;
 
 	return gpModelWaterManager->checkParticleFlag((TWaterHitActor*)param_1,
@@ -127,7 +127,7 @@ TBGBeakHit::TBGBeakHit(TBossGesso* owner, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	initHitActor(0x8000008, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
+	initHitActor(ACTOR_TYPE_BOSS_UNK8, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
 	             mOwner->getSaveParams()->mSLBeakDamageRadius.get(),
 	             mOwner->getSaveParams()->mSLBeakDamageHeight.get());
 	offHitFilter(HIT_FILTER_NO_COLLISION);
@@ -162,7 +162,7 @@ BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 
 BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x1000001)) {
+	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		if (!isNozzleWater(sender))
 			return true;
 
@@ -181,7 +181,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 	    || mOwner->getLatestNerve() == &TNerveBGBeakDamage::theNerve())
 		return false;
 
-	if (sender->getActorType() == 0x80000001) {
+	if (sender->getActorType() == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_TAKE) {
 			TTakeActor* actor = (TTakeActor*)sender;
 			if (actor->mHeldObject != nullptr && actor->mHeldObject != this)
@@ -290,7 +290,7 @@ TBGEyeHit::TBGEyeHit(TBossGesso* owner, int joint_index, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	initHitActor(0x8000009, 1, HIT_CATEGORY_WATER, 0.0f, 0.0f,
+	initHitActor(ACTOR_TYPE_BOSS_GESSO_BEAK, 1, HIT_CATEGORY_WATER, 0.0f, 0.0f,
 	             mOwner->getSaveParams()->mSLEyeDamageRadius.get(),
 	             mOwner->getSaveParams()->mSLEyeDamageHeight.get());
 	offHitFilter(HIT_FILTER_NO_COLLISION);
@@ -301,7 +301,7 @@ BOOL TBGEyeHit::receiveMessage(THitActor* sender, u32 message)
 	if (mOwner->getAttackMode() == 3)
 		return false;
 
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		mOwner->gotEyeDamage();
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
@@ -327,14 +327,15 @@ TBGBodyHit::TBGBodyHit(TBossGesso* owner, int joint_index, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	initHitActor(0x8000005, 1, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f,
-	             300.0f, 300.0f, 300.0f);
+	initHitActor(ACTOR_TYPE_BOSS_GESSO, 1,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f, 300.0f,
+	             300.0f, 300.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 BOOL TBGBodyHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
@@ -590,8 +591,9 @@ void TBossGesso::init(TLiveManager* param_1)
 	mRightEye = new TBGEyeHit(this, 4);
 	mBody     = new TBGBodyHit(this, 0);
 
-	initHitActor(0x8000005, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f,
-	             300.0f, 300.0f, 300.0f);
+	initHitActor(ACTOR_TYPE_BOSS_GESSO, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_WATER, 300.0f, 300.0f,
+	             300.0f, 300.0f);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	mSpine->initWith(&TNerveBGWait::theNerve());
@@ -909,7 +911,7 @@ const char** TBossGesso::getBasNameTable() const { return bgeso_bastable; }
 
 BOOL TBossGesso::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);

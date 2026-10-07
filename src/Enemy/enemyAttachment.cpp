@@ -139,7 +139,7 @@ void TEnemyAttachment::moveObject()
 void TEnemyAttachment::sendMessage()
 {
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->isActorType(0x80000001)) {
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO)) {
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			continue;
 		}

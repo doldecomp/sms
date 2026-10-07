@@ -125,7 +125,7 @@ THauntLeg::THauntLeg(const char* param_1)
 void THauntLeg::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000025;
+	mActorType = ACTOR_TYPE_HAUNT_LEG;
 	unk150     = 0x3a;
 	onHitFilter(HIT_CATEGORY_ITEM | HIT_CATEGORY_MAP_OBJECT);
 	getWalker()->setMode(1);
@@ -136,8 +136,8 @@ void THauntLeg::init(TLiveManager* param_1)
 	    ->getChildren()
 	    .push_back(unk194);
 	f32 radius = 30.0f * mBodyScale;
-	unk194->initHitActor(0x10000025, 2, HIT_CATEGORY_PLAYER, radius, radius,
-	                     radius, radius);
+	unk194->initHitActor(ACTOR_TYPE_HAUNT_LEG, 2, HIT_CATEGORY_PLAYER, radius,
+	                     radius, radius, radius);
 	unk194->unk68 = this;
 }
 

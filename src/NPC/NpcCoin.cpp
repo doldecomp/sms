@@ -29,7 +29,7 @@ void TNpcCoin::execAppearCoin_()
 		unk0 = nullptr;
 	} else {
 		TMapObjBase* coin = gpItemManager->makeObjAppear(unk8.x, unk8.y, unk8.z,
-		                                                 0x2000000E, true);
+		                                                 ACTOR_TYPE_COIN, true);
 		if (coin != nullptr)
 			coin->setVelocityAndFlag10(unk14.x, unk14.y, unk14.z);
 	}

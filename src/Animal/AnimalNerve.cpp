@@ -34,7 +34,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 		J3DFrameCtrl* otherCtrl
 		    = other->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		myCtrl->setFrame(otherCtrl->getFrame());
-	} else if (actor->getActorType() != 0x800001) {
+	} else if (actor->getActorType() != ACTOR_TYPE_ANIMAL_MEW) {
 		// not the right type, skip animation setup
 	} else {
 		if (spine->getTime() == 0) {

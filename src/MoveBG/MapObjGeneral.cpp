@@ -50,7 +50,7 @@ void TMapObjGeneral::waitingToAppear()
 	if (isStateTimerEngaged())
 		return;
 
-	if (isActorType(0x4000005a)) {
+	if (isActorType(ACTOR_TYPE_WOOD_BARREL)) {
 		f32 damageRadius = getDamageRadius();
 		if (distToMario(mInitialPosition)
 		    > SMS_GetMarioDamageRadius() + damageRadius + 100.0f)
@@ -348,7 +348,7 @@ void TMapObjGeneral::appear()
 		mScaling.z = mNormalAppearingScaleUp;
 	}
 
-	if (!isActorType(0x20000010)
+	if (!isActorType(ACTOR_TYPE_COIN_BLUE)
 	    || !TFlagManager::smInstance->getBlueCoinFlag(
 	        gpMarDirector->getCurrentMap(), mEventId))
 		startSound(1);
@@ -616,7 +616,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message == HIT_MESSAGE_TAKE && isActorType(0x10000025)
+	if (message == HIT_MESSAGE_TAKE && isActorType(ACTOR_TYPE_HAUNT_LEG)
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL))) {
 		hold((TTakeActor*)sender);
 		return 1;
@@ -639,7 +639,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (isActorType(0x80000001)
+	if (isActorType(ACTOR_TYPE_MARIO)
 	    && (message == HIT_MESSAGE_TRAMPLE
 	        || message == HIT_MESSAGE_HIP_DROP)) {
 		receiveMessageFromPlayer();

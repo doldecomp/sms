@@ -139,7 +139,7 @@ void TEMario::init(TLiveManager* manager)
 	if (!mAnmSound)
 		initAnmSound();
 
-	initHitActor(0x8000002, 0x4,
+	initHitActor(ACTOR_TYPE_E_MARIO, 0x4,
 	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
 	                 | HIT_CATEGORY_ITEM | HIT_CATEGORY_NPC
 	                 | HIT_CATEGORY_WATER,
@@ -153,7 +153,7 @@ void TEMario::checkCollision()
 {
 	for (s32 i = 0; i < mColCount; ++i) {
 		switch (mCollisions[i]->mActorType) {
-		case 0x80000001: {
+		case ACTOR_TYPE_MARIO: {
 			if (JGeometry::TVec3<f32>(mPosition - mCollisions[i]->getPosition())
 			        .length()
 			    < mEnemyMario->mAttackRange) {
@@ -161,7 +161,7 @@ void TEMario::checkCollision()
 			}
 		} break;
 
-		case 0x400000bc: {
+		case ACTOR_TYPE_GESO_SURF_BOARD: {
 			if (!mEnemyMario->checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 				if (JGeometry::TVec3<f32>(mCollisions[i]->getPosition()
 				                          - mPosition)
@@ -187,7 +187,7 @@ BOOL TEMario::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	} else if (message == HIT_MESSAGE_TRAMPLE) {
 		return mEnemyMario->thinkTrample();
-	} else if (sender->getActorType() == 0x40000246) {
+	} else if (sender->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
 		mEnemyMario->reachGoal();
 	}
 	return FALSE;

@@ -1058,7 +1058,7 @@ BOOL TMario::pullJumping()
 BOOL TMario::hipAttacking()
 {
 	for (int i = 0; i < mColCount; i++) {
-		if (mCollisions[i]->isActorType(0x4000000B)) {
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MANHOLE)) {
 			if (mCollisions[i]->mPosition.distance(mPosition) > 70.0f) {
 				mPosition.x = mCollisions[i]->mPosition.x;
 				mPosition.z = mCollisions[i]->mPosition.z;
@@ -1144,7 +1144,8 @@ BOOL TMario::hipAttacking()
 
 			if (mGroundPlane->mActor != nullptr) {
 				if (!onYoshi()
-				    && mGroundPlane->mActor->mActorType == 0x4000006A) {
+				    && mGroundPlane->mActor->mActorType
+				           == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 					emitParticle(PARTICLE_MS_M_AMIATTACK, &mPosition);
 					f32 oldY    = mPosition.y;
 					mPosition.y = oldY - 160.0f;

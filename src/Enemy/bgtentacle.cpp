@@ -196,9 +196,9 @@ TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
 	    .push_back(this);
 
 	TBGTentacle::TTentacleParams* pTVar3 = mOwner->getParams();
-	initHitActor(0x8000006, 1, HIT_CATEGORY_PLAYER, pTVar3->mAttackRadius.get(),
-	             pTVar3->mAttackHeight.get(), pTVar3->mDamageRadius.get(),
-	             pTVar3->mDamageHeight.get());
+	initHitActor(ACTOR_TYPE_BOSS_GESSO_TENTACLE, 1, HIT_CATEGORY_PLAYER,
+	             pTVar3->mAttackRadius.get(), pTVar3->mAttackHeight.get(),
+	             pTVar3->mDamageRadius.get(), pTVar3->mDamageHeight.get());
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk74.zero();
 }
@@ -250,7 +250,7 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 
 BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x80000001) {
+	if (sender->getActorType() == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_TAKE) {
 			TTakeActor* casted = (TTakeActor*)sender;
 			if (casted->getHeldObject() != nullptr
@@ -351,7 +351,7 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mOwner->isAttacking()) {
 			for (int i = 0; i < mColCount; ++i) {
 				THitActor* col = mCollisions[i];
-				if (!col->isActorType(0x80000001))
+				if (!col->isActorType(ACTOR_TYPE_MARIO))
 					continue;
 
 				if (gpMarioOriginal->isRoofing())
@@ -382,7 +382,8 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	initHitActor(0x8000007, 1, HIT_CATEGORY_PLAYER, 50.0f, 50.0f, 50.0f, 50.0f);
+	initHitActor(ACTOR_TYPE_BOSS_GESSO_TAKE_HIT, 1, HIT_CATEGORY_PLAYER, 50.0f,
+	             50.0f, 50.0f, 50.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 

@@ -243,7 +243,7 @@ TChuuHana::TChuuHana(const char* param_1)
 void TChuuHana::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000016;
+	mActorType = ACTOR_TYPE_CHUU_HANA;
 	unk150     = 17;
 	offHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mSpine->initWith(&TNerveChuuHanaWalkOnPanel::theNerve());
@@ -445,7 +445,7 @@ void TChuuHana::moveObject()
 
 bool TChuuHana::isCollidMove(THitActor* param_1)
 {
-	if (param_1->isActorType(0x10000016)) {
+	if (param_1->isActorType(ACTOR_TYPE_CHUU_HANA)) {
 		TChuuHana* other = (TChuuHana*)param_1;
 		if (other->isRolling()) {
 			if (mSpine->getCurrentNerve()

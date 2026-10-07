@@ -9,7 +9,8 @@ f32 TBGCheckData::getActiveJumpPower() const
 {
 	// TODO: inlines...
 	char trash[0x4];
-	if (getActor() != nullptr && getActor()->isActorType(0x40000039))
+	if (getActor() != nullptr
+	    && getActor()->isActorType(ACTOR_TYPE_BANANA_TREE))
 		return TMapObjTree::mBananaTreeJumpPower;
 
 	return mData;

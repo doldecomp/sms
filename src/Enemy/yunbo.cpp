@@ -53,7 +53,8 @@ TYumboSeed::TYumboSeed(MActor* param_1, const TYumbo& param_2)
 
 void TYumboSeed::init()
 {
-	initHitActor(0x1000002A, 1, HIT_CATEGORY_PLAYER, 30.0f, 30.0f, 0.0f, 0.0f);
+	initHitActor(ACTOR_TYPE_YUMBO, 1, HIT_CATEGORY_PLAYER, 30.0f, 30.0f, 0.0f,
+	             0.0f);
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	group->getChildren().push_back(this);
@@ -90,7 +91,7 @@ void TYumboSeed::checkHitActors()
 	THitActor** end = mCollisions + mColCount;
 	for (THitActor** it = mCollisions; it != end; ++it) {
 		switch ((*it)->getActorType()) {
-		case 0x80000001:
+		case ACTOR_TYPE_MARIO:
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 			unk70 |= 1;
 			break;
@@ -170,7 +171,7 @@ void TYumbo::setMaterialToMActor(MActor* param_1, J3DMaterialTable* param_2)
 
 void TYumbo::initCollision()
 {
-	initHitActor(0x1000002A, 1, HIT_CATEGORY_PLAYER, 97.5f, 225.0f, 90.0f,
+	initHitActor(ACTOR_TYPE_YUMBO, 1, HIT_CATEGORY_PLAYER, 97.5f, 225.0f, 90.0f,
 	             225.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,

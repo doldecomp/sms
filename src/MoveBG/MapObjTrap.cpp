@@ -27,8 +27,8 @@ TLampTrapSpikeHit::TLampTrapSpikeHit(TLampTrapSpike* trap, const char* name)
     : THitActor(name)
     , unk68(trap)
 {
-	initHitActor(0x4000001E, 3, HIT_CATEGORY_PLAYER, 500.0f, 300.0f, 500.0f,
-	             300.0f);
+	initHitActor(ACTOR_TYPE_LAMPTRAPSPIKE, 3, HIT_CATEGORY_PLAYER, 500.0f,
+	             300.0f, 500.0f, 300.0f);
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
 	    JDrama::TNameRefGen::search("アイテムグループ"));
 	group->getChildren().push_back(this);
@@ -203,8 +203,8 @@ TLampTrapIronHit::TLampTrapIronHit(TLampTrapIron* trap, const char* name)
     : THitActor(name)
     , unk68(trap)
 {
-	initHitActor(0x4000001D, 3, HIT_CATEGORY_PLAYER, 500.0f, 300.0f, 500.0f,
-	             300.0f);
+	initHitActor(ACTOR_TYPE_LAMPTRAPIRON, 3, HIT_CATEGORY_PLAYER, 500.0f,
+	             300.0f, 500.0f, 300.0f);
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
 	    JDrama::TNameRefGen::search("アイテムグループ"));
 	group->getChildren().push_back(this);
@@ -256,7 +256,7 @@ void TLampTrapIron::loadAfter()
 
 BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x1000001)) {
+	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		if (unk13C > 0) {
 			--unk13C;
 			if (unk13C == 0) {

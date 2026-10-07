@@ -23,7 +23,8 @@ void TEggGenerator::init(TLiveManager* manager)
 	mManager->manageActor(this);
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
 	mMActor       = mMActorKeeper->createMActor("gene_egg_model1.bmd", 0);
-	initHitActor(0x2000001, 1, HIT_CATEGORY_PLAYER, 10.0f, 10.0f, 10.0f, 10.0f);
+	initHitActor(ACTOR_TYPE_GENERATOR, 1, HIT_CATEGORY_PLAYER, 10.0f, 10.0f,
+	             10.0f, 10.0f);
 	mMActor->setBckFromIndex(0);
 
 	mRotation.x = MsWrap(mRotation.x - 90.0f, 0.0f, 360.0f);

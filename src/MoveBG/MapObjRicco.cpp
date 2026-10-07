@@ -358,19 +358,24 @@ TMapObjBase* TFruitLauncher::appearFruit() const
 	f32 rnd = 100.0f * MsRandF();
 	if (rnd < 20.0f)
 		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x40000390, false);
+		                                    mPosition.z,
+		                                    ACTOR_TYPE_FRUIT_COCONUT, false);
 	else if (rnd < 40.0f)
 		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x40000391, false);
+		                                    mPosition.z,
+		                                    ACTOR_TYPE_FRUIT_PAPAYA, false);
 	else if (rnd < 60.0f)
 		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x40000392, false);
+		                                    mPosition.z, ACTOR_TYPE_FRUIT_PINE,
+		                                    false);
 	else if (rnd < 80.0f)
 		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x40000393, false);
+		                                    mPosition.z,
+		                                    ACTOR_TYPE_FRUIT_DURIAN, false);
 	else
 		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, 0x40000394, false);
+		                                    mPosition.z,
+		                                    ACTOR_TYPE_FRUIT_BANANA, false);
 }
 
 void TFruitLauncher::fireObj()

@@ -170,7 +170,7 @@ TElecNokonoko::TElecNokonoko(const char* param_1)
 void TElecNokonoko::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x1000000A;
+	mActorType = ACTOR_TYPE_ELEC_NOKONOKO;
 	unk150     = 17;
 	unk1A0     = (TElecNokonokoSaveLoadParams*)getSaveParam();
 	unk194     = new TElecCarapace;
@@ -434,7 +434,7 @@ void TElecNokonoko::genRandomItem()
 	if (checkLiveFlag(LIVE_FLAG_MELT_ON_DEATH)) {
 		TMapObjBase* item = gpItemManager->makeObjAppear(
 		    unk194->mPosition.x, unk194->mPosition.y, unk194->mPosition.z,
-		    0x2000000E, true);
+		    ACTOR_TYPE_COIN, true);
 		if (item != nullptr) {
 			item->mVelocity.set(0.0f, 20.0f, 0.0f);
 			item->offLiveFlag(LIVE_FLAG_UNK10);
@@ -494,7 +494,7 @@ void TElecCarapace::loadInit(TSpineEnemy* param_1, const char* param_2)
 	TIdxGroupObj* group
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	group->getChildren().push_back(this);
-	initHitActor(0x1000000B, 3,
+	initHitActor(ACTOR_TYPE_ELEC_CARAPACE, 3,
 	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS,
 	             80.0f, 80.0f, 60.0f, 60.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
@@ -666,7 +666,7 @@ void TElecCarapace::sendMessage()
 {
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* actor = mCollisions[i];
-		if (actor->isActorType(0x80000001)) {
+		if (actor->isActorType(ACTOR_TYPE_MARIO)) {
 			if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9)) {
 				onHitFilter(HIT_FILTER_NO_COLLISION);
 				if (mSpine->getCurrentNerve()
@@ -675,7 +675,7 @@ void TElecCarapace::sendMessage()
 			}
 		} else if (actor == unk16C) {
 			offHitFilter(HIT_FILTER_NO_COLLISION);
-		} else if (actor->isActorType(0x1000001)) {
+		} else if (actor->isActorType(ACTOR_TYPE_WATER)) {
 			// TODO: the three random angles are never used
 			TMsRange<s32> range(0, 360);
 			for (int j = 0; j < 5; ++j) {

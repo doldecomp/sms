@@ -142,8 +142,8 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 			MTXMultVec(mtx, &offset, &offset);
 
 			TMapObjBase* coin = unk0[i]->unk168;
-			if (coin->isActorType(0x2000000E))
-				coin = gpItemManager->makeObjAppear(0x2000000E);
+			if (coin->isActorType(ACTOR_TYPE_COIN))
+				coin = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 
 			if (coin) {
 				coin->appear();
@@ -408,12 +408,12 @@ void TSamboFlower::init(TLiveManager* param_1)
 		mScaledBodyRadius = mBodyScale * mBodyRadius;
 	}
 
-	initHitActor(0x10000027, 1, HIT_CATEGORY_PLAYER, mBodyRadius, mHeadHeight,
-	             mBodyRadius, mHeadHeight);
+	initHitActor(ACTOR_TYPE_SAMBO_FLOWER, 1, HIT_CATEGORY_PLAYER, mBodyRadius,
+	             mHeadHeight, mBodyRadius, mHeadHeight);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
 	initAnmSound();
-	mActorType = 0x10000027;
+	mActorType = ACTOR_TYPE_SAMBO_FLOWER;
 	unk150     = false;
 	onLiveFlag(LIVE_FLAG_DEAD);
 }
@@ -585,7 +585,7 @@ BOOL THanaSamboHead::receiveMessage(THitActor* param_1, u32 param_2)
 void THanaSamboHead::checkHit()
 {
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->isActorType(0x80000001))
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }
@@ -611,7 +611,7 @@ void THanaSambo::load(JSUMemoryInputStream& param_1)
 void THanaSambo::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
-	mActorType = 0x1000001A;
+	mActorType = ACTOR_TYPE_HANA_SAMBO;
 	unk150     = 0x11;
 	unk198     = (THanaSamboSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveHanaSamboHide::theNerve());
@@ -630,7 +630,7 @@ void THanaSambo::init(TLiveManager* param_1)
 
 	unk194 = new THanaSamboHead;
 	((TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ"))->add(unk194);
-	unk194->initHitActor(0x1000001B, 2, HIT_CATEGORY_PLAYER,
+	unk194->initHitActor(ACTOR_TYPE_SAMBO_HEAD, 2, HIT_CATEGORY_PLAYER,
 	                     unk198->mSLHeadAttackRadius.get() * mBodyScale,
 	                     unk198->mSLHeadAttackHeight.get() * mBodyScale,
 	                     unk198->mSLHeadDamageRadius.get() * mBodyScale,
@@ -1092,7 +1092,7 @@ void TSamboHead::load(JSUMemoryInputStream& param_1)
 void TSamboHead::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x1000001B;
+	mActorType = ACTOR_TYPE_SAMBO_HEAD;
 	unk150     = 0x11;
 	unk194     = (TSamboHeadSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveSamboHeadHide::theNerve());
@@ -1265,8 +1265,8 @@ void TSamboHead::genEventCoin()
 			TMapObjBase* coin;
 			if (i == 1 && mCoin) {
 				coin = mCoin;
-				if (coin->isActorType(0x2000000E))
-					coin = gpItemManager->makeObjAppear(0x2000000E);
+				if (coin->isActorType(ACTOR_TYPE_COIN))
+					coin = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 
 				if (coin) {
 					coin->appear();
@@ -1275,7 +1275,7 @@ void TSamboHead::genEventCoin()
 			} else {
 				coin = gpItemManager->makeObjAppear(
 				    mPosition.x + offset.x, mPosition.y, mPosition.z + offset.z,
-				    0x2000000E, true);
+				    ACTOR_TYPE_COIN, true);
 			}
 
 			if (coin) {

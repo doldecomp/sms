@@ -134,7 +134,7 @@ void TRocket::load(JSUMemoryInputStream& param_1)
 void TRocket::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
-	mActorType = 0x1000002B;
+	mActorType = ACTOR_TYPE_ROCKET;
 	unk150     = 0x11;
 	unk1A4     = (TRocketSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveRocketWait::theNerve());

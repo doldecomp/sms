@@ -36,8 +36,8 @@ BOOL TMapObjNail::receiveMessage(THitActor* sender, u32 message)
 		++unk150;
 		if (unk150 == 3 && mHiddenObj != nullptr) {
 			TMapObjBase* obj = mHiddenObj;
-			if (obj->isActorType(0x2000000e))
-				obj = gpItemManager->makeObjAppear(0x2000000e);
+			if (obj->isActorType(ACTOR_TYPE_COIN))
+				obj = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 			if (obj)
 				throwObjToFront(obj, 200.0f, mAppearSpeed, mAppearYSpeed);
 		}
@@ -88,7 +88,7 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 	}
 
 	unk140[unk13C] = pTVar2;
-	if (pTVar2->isActorType(0x2000000E)) {
+	if (pTVar2->isActorType(ACTOR_TYPE_COIN)) {
 		pTVar2->offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 		pTVar2->onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	}
@@ -149,13 +149,13 @@ void TJointCoin::initMapObj()
 	unk140 = new TMapObjBase*[unk13C];
 	unk144 = new u16[unk13C];
 
-	if (isActorType(0x40000232)) {
+	if (isActorType(ACTOR_TYPE_COIN_FISH)) {
 		unk138 = SMS_MakeMActorWithAnmData(
 		    "/scene/mapObj/CoinFishRail.bmd", mManager->getMActorAnmData(), 3,
 		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 		        | (1 << J3DMLF_TevStageNumShift));
 		unk138->setBck("coinfishrail");
-	} else if (isActorType(0x400000c9)) {
+	} else if (isActorType(ACTOR_TYPE_SAND_BIRD)) {
 		unk138 = SMS_MakeMActorWithAnmData(
 		    "/scene/mapObj/SandBirdRail.bmd", mManager->getMActorAnmData(), 3,
 		    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials

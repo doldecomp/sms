@@ -43,8 +43,8 @@ void TModelGate::loadAfter()
 		"Gate",        "GateToRicco", "GateToMamma",
 		"GateToMonte", "GateToMare",  nullptr,
 	};
-	initHitActor(0x080000C0, 5, HIT_CATEGORY_PLAYER, 300.0f, 400.0f, 300.0f,
-	             400.0f);
+	initHitActor(ACTOR_TYPE_MODEL_GATE, 5, HIT_CATEGORY_PLAYER, 300.0f, 400.0f,
+	             300.0f, 400.0f);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk70 = 0;
 	unk71 = 0;
@@ -254,12 +254,13 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 
 BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x80000001 && message == HIT_MESSAGE_ATTACK) {
+	if (sender->getActorType() == ACTOR_TYPE_MARIO
+	    && message == HIT_MESSAGE_ATTACK) {
 		unkC8 = 0;
 		unkC4 = STATE_UNK2;
 		return TRUE;
 	}
-	if (sender->getActorType() == 0x01000001) {
+	if (sender->getActorType() == ACTOR_TYPE_WATER) {
 		Vec pos;
 		MTXMultVec(unk7C, &sender->mPosition, &pos);
 

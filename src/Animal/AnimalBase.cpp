@@ -95,7 +95,7 @@ void TAnimalBase::initNoLoad_(TAnimalBase* other)
 {
 	other->mPosition.x = 1000.0f * (MsRandF() - 0.5f) + mPosition.x;
 	other->mPosition.z = 1000.0f * (MsRandF() - 0.5f) + mPosition.z;
-	if (mActorType == 0x800001)
+	if (mActorType == ACTOR_TYPE_ANIMAL_MEW)
 		other->mPosition.y = 1000.0f * MsRandF() + mPosition.y;
 	else
 		other->mPosition.y = mPosition.y - 250.0f * MsRandF();
@@ -132,7 +132,7 @@ void TAnimalBase::load(JSUMemoryInputStream& stream)
 void TAnimalBase::loadAfter()
 {
 	TNameRef::loadAfter();
-	if (mActorType == 0x800001)
+	if (mActorType == ACTOR_TYPE_ANIMAL_MEW)
 		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,
 		                                          &mPosition);
 }
@@ -148,7 +148,7 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			mPositionDelta.zero();
 			control();
 			mPosition += mPositionDelta;
-			if (mActorType == 0x800001) {
+			if (mActorType == ACTOR_TYPE_ANIMAL_MEW) {
 				SMSGetMSound()->startSeRandPlay(MSD_SE_OBJ_KAMOME_SOLO,
 				                                mInstanceIndex);
 			}
@@ -228,7 +228,7 @@ void TAnimalBase::resetRandomCurPathNode()
 	pos.x += 1000.0f * (MsRandF() - 0.5f);
 	pos.z += 1000.0f * (MsRandF() - 0.5f);
 
-	if (mActorType == 0x800001) {
+	if (mActorType == ACTOR_TYPE_ANIMAL_MEW) {
 		pos.y += 1000.0f * (pos.y <= 1000.0f ? MsRandF() : (MsRandF() - 0.5f));
 	} else {
 		pos.y -= 250.0f * MsRandF();

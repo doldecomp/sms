@@ -134,7 +134,7 @@ bool SMS_IsMarioOnWire()
 {
 	bool ret;
 	if (gpMarioOriginal->mHolder
-	    && gpMarioOriginal->mHolder->mActorType == 0x40000098)
+	    && gpMarioOriginal->mHolder->mActorType == ACTOR_TYPE_MAP_WIRE_ACTOR)
 		ret = true;
 	else
 		ret = false;

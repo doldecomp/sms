@@ -287,7 +287,7 @@ void TNameKuri::init(TLiveManager* param_1)
 
 	TWalkerEnemy::init(param_1);
 	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
-	mActorType = 0x10000003;
+	mActorType = ACTOR_TYPE_NAME_KURI;
 	unk150     = 0x3A;
 	getWalker()->setMode(1);
 	unk130 = 2;
@@ -514,7 +514,7 @@ void TNameKuri::setAfterDeadEffect()
 		if (SMS_GetMarioWaterGun()->getCurrentWater() * 2
 		    < SMS_GetMarioWaterGun()->getMaxWater())
 			gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
-			                             0x20000001, true);
+			                             ACTOR_TYPE_BOTTLE_SHORT, true);
 	}
 }
 

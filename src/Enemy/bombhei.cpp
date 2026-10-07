@@ -110,7 +110,7 @@ void TBombHei::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
 
-	mActorType = 0x1000001E;
+	mActorType = ACTOR_TYPE_BOMB_HEI;
 	unk150     = 0x11;
 	unk194     = (TBombHeiSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveBombHeiGenerate::theNerve());
@@ -184,7 +184,7 @@ void TBombHei::genEventCoin()
 	TBombHeiManager* manager = (TBombHeiManager*)getManager();
 	if (unk1A4 && manager->canMakeDeadCoin()) {
 		TCoin* coin = (TCoin*)gpItemManager->makeObjAppear(
-		    mPosition.x, mPosition.y, mPosition.z, 0x2000000E, true);
+		    mPosition.x, mPosition.y, mPosition.z, ACTOR_TYPE_COIN, true);
 		if (coin) {
 			coin->mPosition.y = mPosition.y;
 
@@ -237,7 +237,7 @@ void TBombHei::behaveToTaken(THitActor* param_1)
 	if (mSpine->getCurrentNerve() == &TNerveBombHeiPickUp::theNerve())
 		return;
 
-	if (param_1->isActorType(0x80000001))
+	if (param_1->isActorType(ACTOR_TYPE_MARIO))
 		unk1A4 = 1;
 
 	mSpine->pushNerve(&TNerveBombHeiPickUp::theNerve());
@@ -305,12 +305,12 @@ void TBombHei::moveObject()
 
 bool TBombHei::isCollidMove(THitActor* param_1)
 {
-	if (mSerialBomb && param_1->isActorType(0x1000001E)
+	if (mSerialBomb && param_1->isActorType(ACTOR_TYPE_BOMB_HEI)
 	    && ((TBombHei*)param_1)->isExplosion()) {
 		if (mSpine->getCurrentNerve() != &TNerveBombHeiExplosion::theNerve())
 			mSpine->pushNerve(&TNerveBombHeiExplosion::theNerve());
 	}
-	if (param_1->isActorType(0x08000013)) {
+	if (param_1->isActorType(ACTOR_TYPE_BOSS_UNK13)) {
 		if (mSpine->getCurrentNerve() == &TNerveBombHeiExplosion::theNerve())
 			param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 		if (mSpine->getCurrentNerve() == &TNerveBombHeiThrown::theNerve())

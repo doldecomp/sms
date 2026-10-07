@@ -254,19 +254,19 @@ static void evSetFruitType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		int r28;
 		switch (fVar4) {
 		case 0:
-			r28 = 0x40000394;
+			r28 = ACTOR_TYPE_FRUIT_BANANA;
 			break;
 
 		case 1:
-			r28 = 0x40000390;
+			r28 = ACTOR_TYPE_FRUIT_COCONUT;
 			break;
 
 		case 2:
-			r28 = 0x40000392;
+			r28 = ACTOR_TYPE_FRUIT_PINE;
 			break;
 
 		case 3:
-			r28 = 0x40000393;
+			r28 = ACTOR_TYPE_FRUIT_DURIAN;
 			break;
 		}
 		basket->unk150 = r28;

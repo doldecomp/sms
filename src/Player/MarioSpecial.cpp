@@ -53,7 +53,7 @@ BOOL TMario::barWait()
 		                                nullptr, 0, 4);
 	}
 
-	if (mHolder->getActorType() == 0x400000bb) {
+	if (mHolder->getActorType() == ACTOR_TYPE_ELASTIC_CODE) {
 		if (unk108->mStickV <= 0.0f) {
 			mPosition.y -= 2.0f;
 			mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
@@ -65,14 +65,14 @@ BOOL TMario::barWait()
 		}
 	}
 
-	if (mHolder->getActorType() == 0x40000039) {
+	if (mHolder->getActorType() == ACTOR_TYPE_BANANA_TREE) {
 		if (mHolderHeightDiff > 500.0f) {
 			mHolderHeightDiff = 500.0f;
 			mPosition.y       = mHolder->mPosition.y + mHolderHeightDiff;
 		}
 	}
 
-	if (mHolder->getActorType() == 0x40000246) {
+	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
 		u8 map = gpMarDirector->getCurrentMap();
 		if (map == 8) {
 			if (mHolderHeightDiff > 750.0f) {
@@ -144,14 +144,14 @@ BOOL TMario::barClimb()
 		setAnimation(ANIM_TREE_CLIMB, v * rate + 1.0f);
 	}
 
-	if (mHolder->getActorType() == 0x40000039) {
+	if (mHolder->getActorType() == ACTOR_TYPE_BANANA_TREE) {
 		if (mHolderHeightDiff > 500.0f) {
 			mHolderHeightDiff = 500.0f;
 			mPosition.y       = mHolder->mPosition.y + mHolderHeightDiff;
 		}
 	}
 
-	if (mHolder->getActorType() == 0x40000246) {
+	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
 		u8 state = gpMarDirector->mMap;
 		if (state == 8) {
 			if (mHolderHeightDiff > 750.0f) {
@@ -286,7 +286,7 @@ BOOL TMario::roofCommonEvents()
 		const TLiveActor* actor = mRoofPlane->mActor;
 		if (actor != nullptr) {
 			((THitActor*)actor)->receiveMessage(this, 3);
-			if (actor->mActorType == 0x4000006a) {
+			if (actor->mActorType == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 				emitParticle(PARTICLE_MS_M_AMIATTACK, &mHeadPos);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
 				return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_UP, 0,
@@ -1170,16 +1170,16 @@ void TMario::getCurrentPullParams(f32* outV, f32* outH)
 {
 	TPullParams* params = nullptr;
 	switch (mHeldObject->getActorType()) {
-	case 0x8000008:
+	case ACTOR_TYPE_BOSS_UNK8:
 		params = &mPullParamsBGBeak;
 		break;
-	case 0x8000006:
+	case ACTOR_TYPE_BOSS_GESSO_TENTACLE:
 		params = &mPullParamsBGTentacle;
 		break;
-	case 0x800000D:
+	case ACTOR_TYPE_BOSS_UNKD:
 		params = &mPullParamsBGFireWanWanBossTail;
 		break;
-	case 0x10000028:
+	case ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT:
 		params = &mPullParamsFireWanWanTail;
 		break;
 	}
@@ -1263,8 +1263,11 @@ BOOL TMario::pulling()
 
 	default:
 		JGeometry::TVec3<f32> delta;
-		if ((mHeldObject->getActorType() == 0x8000006 ? true : false)
-		    || (mHeldObject->getActorType() == 0x8000008 ? true : false)) {
+		if ((mHeldObject->getActorType() == ACTOR_TYPE_BOSS_GESSO_TENTACLE
+		         ? true
+		         : false)
+		    || (mHeldObject->getActorType() == ACTOR_TYPE_BOSS_UNK8 ? true
+		                                                            : false)) {
 			delta = pos - mPrevPosition;
 		} else {
 			delta = mPosition - mPrevPosition;
@@ -1503,7 +1506,7 @@ BOOL TMario::fencePunch()
 		if (unk2C0 != nullptr) {
 			((THitActor*)unk2C0)->receiveMessage(this, 3);
 			startVoice(MSD_SE_MV15_EXERT_INST_02);
-			if (unk2C0->mActorType == 0x4000006a) {
+			if (unk2C0->mActorType == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 				f32 x = unk2F4.x;
 				f32 z = unk2F4.y;
 				if (x < -120.0f)

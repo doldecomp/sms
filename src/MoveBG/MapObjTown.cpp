@@ -38,7 +38,7 @@ f32 TManhole::mVibrationDecreaseRate = 0.07f;
 
 void TDoor::touchPlayer(THitActor* param_1)
 {
-	if (param_1->isActorType(0x80000001)) {
+	if (param_1->isActorType(ACTOR_TYPE_MARIO)) {
 		u32 message = HIT_MESSAGE_UNK11;
 		if (unk138)
 			message = HIT_MESSAGE_UNK12;
@@ -292,8 +292,8 @@ u32 TMapObjBillboard::touchWater(THitActor* param_1)
 		rot.y -= 90.0f;
 		pos.y += mYOffset;
 		TMapObjBase* obj = mHiddenObj;
-		if (obj->isActorType(0x2000000E))
-			obj = gpItemManager->makeObjAppear(0x2000000E);
+		if (obj->isActorType(ACTOR_TYPE_COIN))
+			obj = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 		if (obj) {
 			TMapObjBase::throwObjFromPointWithRot(obj, pos, rot, mAppearSpeed,
 			                                      mAppearYSpeed);
@@ -370,15 +370,15 @@ void TDamageObj::load(JSUMemoryInputStream& stream)
 	char name[0x20];
 	stream.readString(name, 0x20);
 	if (strcmp(name, "normal") == 0) {
-		initHitActor(0x10000036, 1, HIT_CATEGORY_PLAYER, 50.0f * mScaling.x,
-		             100.0f * mScaling.y, 0.0f, 0.0f);
+		initHitActor(ACTOR_TYPE_ENEMY_DAMAGE_OBJ, 1, HIT_CATEGORY_PLAYER,
+		             50.0f * mScaling.x, 100.0f * mScaling.y, 0.0f, 0.0f);
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		TMapObjBase::joinToGroup("マップグループ", this);
 		return;
 	}
 	if (strcmp(name, "water") == 0) {
-		initHitActor(0x40000053, 1, HIT_CATEGORY_PLAYER, 50.0f * mScaling.x,
-		             100.0f * mScaling.y, 0.0f, 0.0f);
+		initHitActor(ACTOR_TYPE_DAMAGE_OBJ, 1, HIT_CATEGORY_PLAYER,
+		             50.0f * mScaling.x, 100.0f * mScaling.y, 0.0f, 0.0f);
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		TMapObjBase::joinToGroup("マップグループ", this);
 	}
@@ -453,7 +453,7 @@ void THideObjInfo::action(s32 param_1)
 	if (obj) {
 		TMapObjBase::throwObjFromPointWithRot(obj, mPosition, mRotation, unk48,
 		                                      unk4C);
-		if (obj->isActorType(0x2000000E))
+		if (obj->isActorType(ACTOR_TYPE_COIN))
 			((TItem*)obj)->unk14C = param_1;
 	}
 }

@@ -17,7 +17,7 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
 		THitActor* maybeBox = getObj(i);
-		if (!maybeBox->isActorType(0x20000068))
+		if (!maybeBox->isActorType(ACTOR_TYPE_NOZZLE_BOX))
 			continue;
 
 		TNozzleBox* box = (TNozzleBox*)maybeBox;
@@ -157,7 +157,7 @@ void TItemManager::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBaseManager::load(stream);
 	unk78 = new TCoinEmpty;
-	unk78->initHitActor(0x2000000E, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	unk78->initHitActor(ACTOR_TYPE_COIN, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 TItemManager::TItemManager(const char* name)

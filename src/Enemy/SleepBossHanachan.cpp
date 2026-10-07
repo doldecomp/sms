@@ -40,7 +40,7 @@ void TSleepBossHanachan::init(TLiveManager* param_1)
 {
 	initBase(param_1, 3);
 	mSpine->initWith(&TNerveSBH_SleepContinue::theNerve());
-	initHitActor(0x08000016, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
+	initHitActor(ACTOR_TYPE_SLEEP_BOSS_HANACHAN, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	initAnmSound();
 	getMActor()->setBckFromIndex(1);

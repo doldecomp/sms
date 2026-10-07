@@ -448,7 +448,8 @@ void TBossManta::init(TLiveManager* manager)
 	mHitPoints = getMaxHitPoints();
 
 	mHeadHeight = 5000.0f;
-	initHitActor(0x8000004, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 0.0f, 0.0f);
+	initHitActor(ACTOR_TYPE_BOSS_MANTA, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
+	             0.0f, 0.0f);
 	unk170.set(0.0f, 0.0f, 1.0f);
 	calcRootMatrix();
 	kill();
@@ -483,7 +484,7 @@ void TBossManta::moveObject()
 		                     getPolluteRadius());
 
 	for (int i = 0; i < mColCount; ++i)
-		if (mCollisions[i]->isActorType(0x80000001))
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 			AttackMario(this);
 }
 
@@ -953,7 +954,8 @@ TBossMantaAdditionalCollision::TBossMantaAdditionalCollision(const char* name)
     : THitActor(name)
     , unk68(nullptr)
 {
-	initHitActor(0x08000004, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 0.0f, 0.0f);
+	initHitActor(ACTOR_TYPE_BOSS_MANTA, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
+	             0.0f, 0.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
@@ -981,7 +983,7 @@ void TBossMantaAdditionalCollision::perform(u32 cue,
 
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mColCount; ++i)
-			if (mCollisions[i]->isActorType(0x80000001))
+			if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 				AttackMario(this);
 	}
 }

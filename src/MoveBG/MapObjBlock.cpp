@@ -295,10 +295,10 @@ void TBrickBlock::kill()
 
 BOOL TBrickBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->isActorType(0x80000001) && marioHeadAttack()) {
+	if (sender->isActorType(ACTOR_TYPE_MARIO) && marioHeadAttack()) {
 		kill();
 		return TRUE;
-	} else if (sender->isActorType(0x8000005)
+	} else if (sender->isActorType(ACTOR_TYPE_BOSS_GESSO)
 	           && message == HIT_MESSAGE_ATTACK) {
 		kill();
 		return TRUE;
@@ -339,7 +339,7 @@ void TJuiceBlock::kill()
 void TJuiceBlock::touchActor(THitActor* actor)
 {
 	if (actor->isHitCategory(HIT_CATEGORY_MAP_OBJECT)
-	    && !actor->isActorType(0x400002C6))
+	    && !actor->isActorType(ACTOR_TYPE_JUICE_BLOCK))
 		kill();
 }
 #endif

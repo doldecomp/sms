@@ -123,12 +123,12 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 		return;
 
 	u8 stage = SMSGetApplication()->mCurrArea.getStage();
-	if (nozzle->isActorType(0x20000022)
+	if (nozzle->isActorType(ACTOR_TYPE_ROCKET_NOZZLE_ITEM)
 	    && !TFlagManager::getInstance()->getNozzleRight(stage, 0)) {
 		TFlagManager::getInstance()->setNozzleRight(stage, 0);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
 		unk261 = 3;
-	} else if (nozzle->isActorType(0x2000002A)
+	} else if (nozzle->isActorType(ACTOR_TYPE_BACK_NOZZLE_ITEM)
 	           && !TFlagManager::getInstance()->getNozzleRight(stage, 1)) {
 		TFlagManager::getInstance()->setNozzleRight(stage, 1);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);

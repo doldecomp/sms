@@ -97,8 +97,8 @@ void TRoulette::initMapObj()
 		attackR = 40.0f;
 		attackH = 80.0f;
 	}
-	unk150->initHitActor(0x4000019A, 2, HIT_CATEGORY_PLAYER, attackR, attackH,
-	                     attackR, attackH);
+	unk150->initHitActor(ACTOR_TYPE_CASINORULET, 2, HIT_CATEGORY_PLAYER,
+	                     attackR, attackH, attackR, attackH);
 	unk150->offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
@@ -548,7 +548,7 @@ void TItemSlotDrum::generateItem()
 			MTXMultVec(m, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
 			    mPosition.x + off.x, mPosition.y, mPosition.z + off.z,
-			    0x2000000E, false);
+			    ACTOR_TYPE_COIN, false);
 			if (item != nullptr) {
 				item->mPosition += off;
 				MsVECNormalize(&off, &off);
@@ -1143,8 +1143,8 @@ void TWarpAreaActor::load(JSUMemoryInputStream& stream)
 	unk68 = v;
 	stream >> v;
 	unk6A = v;
-	initHitActor(0x4000019D, 1, HIT_CATEGORY_PLAYER, 100.0f * mScaling.x,
-	             100.0f * mScaling.y, 0.0f, 0.0f);
+	initHitActor(ACTOR_TYPE_WARP_AREA_ACTOR, 1, HIT_CATEGORY_PLAYER,
+	             100.0f * mScaling.x, 100.0f * mScaling.y, 0.0f, 0.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	gpConductor->registerOtherObj(this);
 }
@@ -1222,7 +1222,7 @@ void TPanelRevolve::control()
 void TPictureTelesa::afterFinishedAnim()
 {
 	TWaterHitPictureHideObj::afterFinishedAnim();
-	if (isActorType(0x400001A2)) {
+	if (isActorType(ACTOR_TYPE_PICTURE_TERESA)) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
 		                                   0);
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH2, &mPosition,
@@ -1233,8 +1233,8 @@ void TPictureTelesa::afterFinishedAnim()
 void TPictureTelesa::touchActor(THitActor* actor)
 {
 	TWaterHitPictureHideObj::touchActor(actor);
-	if (isActorType(0x400001A2) && !unk174 && isState(STATE_FINISHED)
-	    && !isStateTimerEngaged()) {
+	if (isActorType(ACTOR_TYPE_PICTURE_TERESA) && !unk174
+	    && isState(STATE_FINISHED) && !isStateTimerEngaged()) {
 		if (actor->mPosition.distance(mPosition) < 200.0f) {
 			startStateTimer(60);
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR,

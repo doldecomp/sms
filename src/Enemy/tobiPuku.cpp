@@ -168,7 +168,7 @@ void TTobiPukuLaunchPad::perform(u32 param_1, JDrama::TGraphics* param_2)
 void TTobiPukuLaunchPad::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
-	mActorType = 0x10000012;
+	mActorType = ACTOR_TYPE_PUKU_PUKU;
 	unk198     = (TTobiPukuLaunchPadSaveLoadParams*)getSaveParam();
 }
 
@@ -263,7 +263,7 @@ TTobiPuku::TTobiPuku(const char* param_1)
 void TTobiPuku::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000012;
+	mActorType = ACTOR_TYPE_PUKU_PUKU;
 	unk150     = 0x31;
 	unk19C     = (TTobiPukuSaveLoadParams*)getSaveParam();
 	mMActor->setJointCallback(1, TobiPukuRollCallback);
@@ -663,7 +663,7 @@ void TPukuPuku::load(JSUMemoryInputStream& param_1)
 void TPukuPuku::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000012;
+	mActorType = ACTOR_TYPE_PUKU_PUKU;
 	unk150     = 0x31;
 	unk19C     = (TTobiPukuSaveLoadParams*)getSaveParam();
 	mMActor->setJointCallback(1, TobiPukuRollCallback);

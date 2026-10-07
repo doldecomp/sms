@@ -45,7 +45,8 @@ void TItem::appeared()
 		if (mContainer != nullptr)
 			mContainer->receiveMessage(this, HIT_MESSAGE_UNK5);
 
-		if (isActorType(0x2000000f) || isActorType(0x20000010)) {
+		if (isActorType(ACTOR_TYPE_COIN_RED)
+		    || isActorType(ACTOR_TYPE_COIN_BLUE)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN_DISAPPEAR,
 			                                &mPosition, 0, nullptr, 0, 4);
 		}
@@ -66,7 +67,8 @@ void TItem::taken(THitActor* param_1)
 
 void TItem::touchPlayer(THitActor* param_1)
 {
-	if ((param_1->isActorType(0x80000001) || param_1->isActorType(0x8000083))
+	if ((param_1->isActorType(ACTOR_TYPE_MARIO)
+	     || param_1->isActorType(ACTOR_TYPE_YOSHI_TONGUE))
 	    && !checkHitFilter(HIT_FILTER_NO_COLLISION))
 		taken(param_1);
 }
@@ -230,13 +232,13 @@ void TCoin::appearWithoutSound()
 	TItem::appear();
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    MAPOBJ_MS_WATCOIN_KIRA, getModel()->getAnmMtx(0), 0, this);
-	if (isActorType(0x2000000e))
+	if (isActorType(ACTOR_TYPE_COIN))
 		offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 }
 
 void TCoin::appear()
 {
-	if (isActorType(0x20000010)) {
+	if (isActorType(ACTOR_TYPE_COIN_BLUE)) {
 		if (!TFlagManager::smInstance->getBlueCoinFlag(
 		        gpMarDirector->getCurrentMap(), mEventId))
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
@@ -851,33 +853,33 @@ void TEggYoshi::decideRandomLoveFruit()
 	u8 map = gpMarDirector->mMap;
 
 	if (map == 7 && gpMarDirector->unk7D == 1) {
-		unk14C = 0x40000392;
+		unk14C = ACTOR_TYPE_FRUIT_PINE;
 		return;
 	}
 
 	if (map == 3) {
-		unk14C = 0x40000393;
+		unk14C = ACTOR_TYPE_FRUIT_DURIAN;
 		return;
 	}
 
 	if (map == 1 && strcmp(getName(), "ヨッシーの卵（影マリオ用）") == 0) {
-		unk14C = 0x40000394;
+		unk14C = ACTOR_TYPE_FRUIT_BANANA;
 		return;
 	}
 
 	int r = 4 * MsRandF();
 	switch (r) {
 	case 0:
-		unk14C = 0x40000394;
+		unk14C = ACTOR_TYPE_FRUIT_BANANA;
 		break;
 	case 1:
-		unk14C = 0x40000391;
+		unk14C = ACTOR_TYPE_FRUIT_PAPAYA;
 		break;
 	case 2:
-		unk14C = 0x40000392;
+		unk14C = ACTOR_TYPE_FRUIT_PINE;
 		break;
 	default:
-		unk14C = 0x40000390;
+		unk14C = ACTOR_TYPE_FRUIT_COCONUT;
 		break;
 	}
 }
@@ -885,19 +887,19 @@ void TEggYoshi::decideRandomLoveFruit()
 void TEggYoshi::startBalloonAnim()
 {
 	switch (unk14C) {
-	case 0x40000394:
+	case ACTOR_TYPE_FRUIT_BANANA:
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(1.0f);
 		break;
-	case 0x40000393:
+	case ACTOR_TYPE_FRUIT_DURIAN:
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(3.0f);
 		break;
-	case 0x40000391:
+	case ACTOR_TYPE_FRUIT_PAPAYA:
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(5.0f);
 		break;
-	case 0x40000392:
+	case ACTOR_TYPE_FRUIT_PINE:
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(7.0f);
 		break;
-	case 0x40000390:
+	case ACTOR_TYPE_FRUIT_COCONUT:
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(9.0f);
 		break;
 	}
@@ -932,7 +934,7 @@ void TEggYoshi::touchActor(THitActor* other)
 	if (!isState(STATE_NORMAL) && !isState(0xD))
 		return;
 
-	if (other->isActorType(0x80000001)) {
+	if (other->isActorType(ACTOR_TYPE_MARIO)) {
 		TTakeActor* casted = static_cast<TTakeActor*>(other);
 		if (casted->getHeldObject()
 		    && TMapObjBase::isFruit(casted->getHeldObject()))
@@ -1104,16 +1106,17 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 	if (SMS_IsMarioOnYoshi())
 		return;
 
-	if ((param_1->isActorType(0x80000001) || param_1->isActorType(0x8000083))
+	if ((param_1->isActorType(ACTOR_TYPE_MARIO)
+	     || param_1->isActorType(ACTOR_TYPE_YOSHI_TONGUE))
 	    && !checkHitFilter(HIT_FILTER_NO_COLLISION))
 		taken(param_1);
 
 	int boxKind;
-	if (isActorType(0x2000001F))
+	if (isActorType(ACTOR_TYPE_WATERGUN_ITEM))
 		boxKind = 4;
-	else if (isActorType(0x20000022))
+	else if (isActorType(ACTOR_TYPE_ROCKET_NOZZLE_ITEM))
 		boxKind = 1;
-	else if (isActorType(0x2000002A))
+	else if (isActorType(ACTOR_TYPE_BACK_NOZZLE_ITEM))
 		boxKind = 5;
 	else
 		boxKind = 4;
@@ -1209,7 +1212,7 @@ void TNozzleBox::breaking()
 
 BOOL TNozzleBox::receiveMessage(THitActor* sender, u32 message)
 {
-	if (unk15C && sender->isActorType(0x80000001)
+	if (unk15C && sender->isActorType(ACTOR_TYPE_MARIO)
 	    && message == HIT_MESSAGE_TRAMPLE && !SMS_IsMarioHeadSlideAttack()) {
 		sender->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		throwObjToFront(mContainedNozzleItem, 50.0f, unk150, unk154);

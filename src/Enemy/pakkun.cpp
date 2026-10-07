@@ -268,7 +268,7 @@ void TPakkun::load(JSUMemoryInputStream& stream)
 void TPakkun::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
-	mActorType = HIT_CATEGORY_ENEMY | 4;
+	mActorType = ACTOR_TYPE_PAKKUN;
 	unk150     = 17;
 	unk1A0     = (TPakkunSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNervePakkunGenerate::theNerve());
@@ -485,7 +485,7 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model_name)
 	    JDrama::TNameRefGen::search("オブジェクトグループ"));
 	group->getChildren().push_back(this);
 
-	THitActor::initHitActor(HIT_CATEGORY_ENEMY | 6, 1, HIT_CATEGORY_PLAYER,
+	THitActor::initHitActor(ACTOR_TYPE_POLLUTE_OBJ, 1, HIT_CATEGORY_PLAYER,
 	                        20.0f, 20.0f, 20.0f, 20.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150       = 0;
@@ -705,7 +705,7 @@ void TStayPakkun::genRandomItem()
 	s32 maxWater = SMS_GetMarioWaterGun()->getMaxWater();
 	if (SMS_GetMarioWaterGun()->getCurrentWater() * 4 < maxWater) {
 		gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
-		                             0x20000002, true);
+		                             ACTOR_TYPE_BOTTLE_LARGE, true);
 	} else {
 		unk18C = 3;
 		genEventCoin();

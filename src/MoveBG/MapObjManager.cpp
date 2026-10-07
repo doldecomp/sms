@@ -203,7 +203,7 @@ bool TMapObjBaseManager::canAppear(const TMapObjBase* param_1,
 	if (param_1->isActorType(param_2)
 	    && !param_1->checkMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_RESPAWNING)
 	    && param_1->checkLiveFlag(LIVE_FLAG_DEAD)
-	    && (!param_1->isActorType(0x2000000E)
+	    && (!param_1->isActorType(ACTOR_TYPE_COIN)
 	        || param_1->getMActor() != nullptr))
 		return true;
 
@@ -375,7 +375,7 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObj(
 	if (!ret)
 		ret = newUniqueObjByName(param_1);
 
-	if (ret->isActorType(0x2000000E))
+	if (ret->isActorType(ACTOR_TYPE_COIN))
 		return ret;
 
 	ret->mPosition = param_2;
@@ -433,29 +433,29 @@ TMapObjBase* TMapObjBaseManager::newAndRegisterObjByEventID(u32 event_id,
 u32 TMapObjBaseManager::getActorTypeByEventID(u32 param_1)
 {
 	if (param_1 < 50)
-		return 0x2000000E;
+		return ACTOR_TYPE_COIN;
 
 	switch (param_1) {
 	case 100:
-		return 0x2000000E;
+		return ACTOR_TYPE_COIN;
 	case 200:
-		return 0x2000000F;
+		return ACTOR_TYPE_COIN_RED;
 	case 777:
-		return 0x20000013;
+		return ACTOR_TYPE_SHINE;
 	case 1000:
-		return 0x40000394;
+		return ACTOR_TYPE_FRUIT_BANANA;
 	case 1001:
-		return 0x40000393;
+		return ACTOR_TYPE_FRUIT_DURIAN;
 	case 1002:
-		return 0x40000391;
+		return ACTOR_TYPE_FRUIT_PAPAYA;
 	case 1003:
-		return 0x40000392;
+		return ACTOR_TYPE_FRUIT_PINE;
 	case 1004:
-		return 0x40000390;
+		return ACTOR_TYPE_FRUIT_COCONUT;
 	case 2000:
-		return 0x20000005;
+		return ACTOR_TYPE_MUSHROOM1UP;
 	case 2001:
-		return 0x20000005;
+		return ACTOR_TYPE_MUSHROOM1UP;
 	default:
 		return 0;
 	}

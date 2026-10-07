@@ -236,10 +236,10 @@ void THino2Hit::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mJointIdx != 0x10 && mJointIdx != 0x9)
 			continue;
 
-		if (col->isActorType(0x80000001)) {
+		if (col->isActorType(ACTOR_TYPE_MARIO)) {
 			col->receiveMessage(this, HIT_MESSAGE_ATTACK);
-		} else if ((col->isActorType(0x10000003)
-		            || col->isActorType(0x10000002))
+		} else if ((col->isActorType(ACTOR_TYPE_NAME_KURI)
+		            || col->isActorType(ACTOR_TYPE_HAMU_KURI))
 		           && mOwner->getMActor()->checkCurBckFromIndex(0xE)) {
 			col->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		}
@@ -249,28 +249,28 @@ void THino2Hit::perform(u32 cue, JDrama::TGraphics* graphics)
 BOOL THino2Hit::receiveMessage(THitActor* sender, u32 message)
 {
 	if (mJointIdx == 0x19) {
-		if (sender->getActorType() == 0x80000001) {
+		if (sender->getActorType() == ACTOR_TYPE_MARIO) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
-		if (sender->getActorType() == 0x1000001
+		if (sender->getActorType() == ACTOR_TYPE_WATER
 		    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
-		if (sender->getActorType() == 0x4000005a) {
+		if (sender->getActorType() == ACTOR_TYPE_WOOD_BARREL) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
 	}
 
 	if (mJointIdx == 0x13) {
-		if (sender->getActorType() == 0x1000001
+		if (sender->getActorType() == ACTOR_TYPE_WATER
 		    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
-		if (sender->getActorType() == 0x4000005a) {
+		if (sender->getActorType() == ACTOR_TYPE_WOOD_BARREL) {
 			mOwner->mJointIdxMessageCameFrom = mJointIdx;
 			return mOwner->receiveMessage(sender, message);
 		}
@@ -462,8 +462,8 @@ void THinokuri2::init(TLiveManager* param_1)
 	reset();
 	mGravity = ((THino2Params*)getSaveParam())->mSLGravityY.get();
 	initAnmSound();
-	initHitActor(0x8000001, 5, 0, mBodyRadius, mHeadHeight, mBodyRadius,
-	             mHeadHeight);
+	initHitActor(ACTOR_TYPE_HINOKURI2, 5, 0, mBodyRadius, mHeadHeight,
+	             mBodyRadius, mHeadHeight);
 	unk150 = new TMBindShadowBody(this, getModel(), 1.0f);
 
 	TIdxGroupObj* enemiesGrp
@@ -473,19 +473,21 @@ void THinokuri2::init(TLiveManager* param_1)
 	enemiesGrp->getChildren().push_back(unk178);
 	enemiesGrp->getChildren().push_back(unk174);
 
-	mHead->initHitActor(0x8000001, 5,
+	mHead->initHitActor(ACTOR_TYPE_HINOKURI2, 5,
 	                    HIT_CATEGORY_MAP_OBJECT | HIT_CATEGORY_WATER,
 	                    mHead->getAttackRadius(), mHead->getAttackHeight(),
 	                    mHead->getDamageRadius(), mHead->getDamageHeight());
-	mBody->initHitActor(0x8000001, 5,
+	mBody->initHitActor(ACTOR_TYPE_HINOKURI2, 5,
 	                    HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
 	                        | HIT_CATEGORY_WATER,
 	                    mHead->getAttackRadius(), mHead->getAttackHeight(),
 	                    mHead->getDamageRadius(), mHead->getDamageHeight());
-	unk174->initHitActor(0x8000001, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
-	                     70.0f, 120.0f, 70.0f, 120.0f);
-	unk178->initHitActor(0x8000001, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
-	                     70.0f, 120.0f, 70.0f, 120.0f);
+	unk174->initHitActor(ACTOR_TYPE_HINOKURI2, 5,
+	                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 70.0f,
+	                     120.0f, 70.0f, 120.0f);
+	unk178->initHitActor(ACTOR_TYPE_HINOKURI2, 5,
+	                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 70.0f,
+	                     120.0f, 70.0f, 120.0f);
 
 	validateCollisionAll();
 
@@ -724,11 +726,12 @@ void THinokuri2::changeBck(int param_1)
 
 BOOL THinokuri2::receiveMessageLv0(THitActor* sender, u32 message)
 {
-	if (mJointIdxMessageCameFrom == 0x13 && sender->getActorType() == 0x1000001
+	if (mJointIdxMessageCameFrom == 0x13
+	    && sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
@@ -737,7 +740,7 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* sender, u32 message)
 			mSpine->pushNerve(&TNerveHino2Freeze::theNerve());
 	}
 
-	if (sender->getActorType() == 0x80000001
+	if (sender->getActorType() == ACTOR_TYPE_MARIO
 	    && message == HIT_MESSAGE_TRAMPLE) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
@@ -754,11 +757,12 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* sender, u32 message)
 
 BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 {
-	if (mJointIdxMessageCameFrom == 0x13 && sender->getActorType() == 0x1000001
+	if (mJointIdxMessageCameFrom == 0x13
+	    && sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 
-	if (unk180 && sender->getActorType() == 0x1000001
+	if (unk180 && sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
@@ -782,7 +786,7 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (unk180 && sender->getActorType() == 0x4000005A) {
+	if (unk180 && sender->getActorType() == ACTOR_TYPE_WOOD_BARREL) {
 		if (mJointIdxMessageCameFrom != 0x19)
 			return true;
 
@@ -800,7 +804,7 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 
 BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 {
-	if (sender->getActorType() == 0x1000001
+	if (sender->getActorType() == ACTOR_TYPE_WATER
 	    && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
@@ -828,7 +832,7 @@ BOOL THinokuri2::receiveMessageLv2(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (sender->getActorType() == 0x4000005A) {
+	if (sender->getActorType() == ACTOR_TYPE_WOOD_BARREL) {
 		if (mJointIdxMessageCameFrom != 0x13)
 			return true;
 
@@ -1392,7 +1396,7 @@ DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 		self->changeBck(0xD);
 		JGeometry::TVec3<f32> local_1C = self->mPosition;
 		gpItemManager->makeObjAppear(local_1C.x, local_1C.y, local_1C.z,
-		                             0x2000000E, false);
+		                             ACTOR_TYPE_COIN, false);
 		self->invalidateCollisionAll();
 		self->emitWaterParticle();
 	}

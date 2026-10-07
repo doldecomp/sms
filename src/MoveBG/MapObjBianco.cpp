@@ -308,7 +308,7 @@ TBiancoMiniWindmill::TBiancoMiniWindmill(const char* param_1)
 
 void TLeafBoat::touchActor(THitActor* param_1)
 {
-	if (param_1->isActorType(0x80000001))
+	if (param_1->isActorType(ACTOR_TYPE_MARIO))
 		return;
 	JGeometry::TVec3<f32> direction(param_1->mPosition.x - mPosition.x, 0.0f,
 	                                param_1->mPosition.z - mPosition.z);
@@ -739,7 +739,8 @@ void TBellWatermill::control()
 		unk170 = unk174;
 		if (unk1A0) {
 			for (int i = 0; i < 5; ++i) {
-				TMapObjBase* item = gpItemManager->makeObjAppeared(0x2000000E);
+				TMapObjBase* item
+				    = gpItemManager->makeObjAppeared(ACTOR_TYPE_COIN);
 				if (item) {
 					item->mPosition.set(mPosition);
 					item->setVelocityAndFlag10(10.0f,

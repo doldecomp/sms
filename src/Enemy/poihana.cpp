@@ -102,7 +102,7 @@ void TPoiHanaCollision::checkHit()
 {
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* col = getCollision(i);
-		if (col->isActorType(0x80000001))
+		if (col->isActorType(ACTOR_TYPE_MARIO))
 			unk68->attackToMario();
 		else
 			unk68->behaveToHitOthers(col);
@@ -138,7 +138,7 @@ void TPoiHana::load(JSUMemoryInputStream& stream)
 void TPoiHana::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000015;
+	mActorType = ACTOR_TYPE_POI_HANA;
 	unk150     = 17;
 	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mGoToSleepTimer = mInstanceIndex * -250;
@@ -238,7 +238,7 @@ bool TPoiHana::isOnTrap()
 	const TLiveActor* groundActor = mGroundPlane->mActor;
 	if (groundActor == nullptr) {
 		unk198 = mGroundHeight;
-	} else if (groundActor->getActorType() == 0x400000CD) {
+	} else if (groundActor->getActorType() == ACTOR_TYPE_SAND_BOMB_BASE00) {
 		MtxPtr mtx = groundActor->getModel()->getAnmMtx(0);
 		if (mtx[1][1] >= 0.1f) {
 			if (!mIsTrapped) {
@@ -350,8 +350,8 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		if (((TMapObjBase*)param_1)->isHideObj(param_1))
 			return false;
 
-		if (param_1->getActorType() == 0x4000019A
-		    || param_1->getActorType() == 0x400000D0)
+		if (param_1->getActorType() == ACTOR_TYPE_CASINORULET
+		    || param_1->getActorType() == ACTOR_TYPE_WATERMELON)
 			return false;
 
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
@@ -492,8 +492,8 @@ void TPoiHana::genEventCoin()
 		return;
 
 	TCoin* coin;
-	if (mCoin->isActorType(0x2000000E)) {
-		coin = (TCoin*)gpItemManager->makeObjAppear(0x2000000E);
+	if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+		coin = (TCoin*)gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 	} else {
 		coin = mCoin;
 		coin->appear();

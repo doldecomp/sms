@@ -120,7 +120,7 @@ void TMameGesso::load(JSUMemoryInputStream& stream)
 void TMameGesso::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
-	mActorType = 0x10000008;
+	mActorType = ACTOR_TYPE_MAME_GESSO;
 	unk150     = 0x11;
 	mSpine->initWith(&TNerveMameGessoGraphJumpWander::theNerve());
 	unk194 = (TMameGessoSaveLoadParams*)getSaveParam();

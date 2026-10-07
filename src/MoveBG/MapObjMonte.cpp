@@ -754,11 +754,11 @@ TSwingBoard::TSwingBoard(const char* param_1)
 
 void TGoalFlag::touchActor(THitActor* param_1)
 {
-	if (param_1->isActorType(0x80000001)) {
+	if (param_1->isActorType(ACTOR_TYPE_MARIO)) {
 		if (!TFlagManager::smInstance->getBool(MSF_RACE_GOAL_REACHED))
 			TFlagManager::smInstance->setBool(true, MSF_RACE_GOAL_REACHED);
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
-	} else if (param_1->isActorType(0x8000002)) {
+	} else if (param_1->isActorType(ACTOR_TYPE_E_MARIO)) {
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	}
 }
@@ -799,7 +799,7 @@ void TFluff::move()
 		if (unk148 > 360.0f)
 			unk148 -= 360.0f;
 	}
-	if (mHeldObject != nullptr && mHeldObject->isActorType(0x80000001))
+	if (mHeldObject != nullptr && mHeldObject->isActorType(ACTOR_TYPE_MARIO))
 		SMS_GetMarioPos().y -= unk13C;
 }
 

@@ -66,7 +66,7 @@ static TMapObjData end_data = {
 
 static TMapObjData no_data = {
 	"no_data",
-	0x40000023,
+	ACTOR_TYPE_NO_DATA,
 	"地形オブジェマネージャー",
 	nullptr,
 	&no_data_anim_info,
@@ -100,7 +100,7 @@ static const TMapObjHitInfo billboard_obj_hit_info
 
 static TMapObjData billboard_dolphin_data = {
 	"billboard_dolphin",
-	0x4000000C,
+	ACTOR_TYPE_BILLBOARD_DOLPHIN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&billboard_dolphin_anim_info,
@@ -127,7 +127,7 @@ static const TMapObjAnimDataInfo billboard_sun_anim_info
 
 static TMapObjData billboard_sun_data = {
 	"billboard_sun",
-	0x4000000C,
+	ACTOR_TYPE_BILLBOARD_DOLPHIN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&billboard_sun_anim_info,
@@ -154,7 +154,7 @@ static const TMapObjAnimDataInfo billboard_restaurant_anim_info
 
 static TMapObjData billboard_restaurant_data = {
 	"billboard_restaurant",
-	0x4000000C,
+	ACTOR_TYPE_BILLBOARD_DOLPHIN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&billboard_restaurant_anim_info,
@@ -181,7 +181,7 @@ static const TMapObjAnimDataInfo billboard_fish_anim_info
 
 static TMapObjData billboard_fish_data = {
 	"billboard_fish",
-	0x4000000C,
+	ACTOR_TYPE_BILLBOARD_DOLPHIN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&billboard_fish_anim_info,
@@ -206,7 +206,7 @@ static const TMapObjHitInfo HideObj_obj_hit_info
 
 static TMapObjData HideObj_data = {
 	"HideObj",
-	0x20000011,
+	ACTOR_TYPE_HIDE_OBJ,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -231,7 +231,7 @@ static const TMapObjHitInfo WaterHitHideObj_obj_hit_info
 
 static TMapObjData WaterHitHideObj_data = {
 	"WaterHitHideObj",
-	0x20000011,
+	ACTOR_TYPE_HIDE_OBJ,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -256,7 +256,7 @@ static const TMapObjHitInfo FruitHitHideObj_obj_hit_info
 
 static TMapObjData FruitHitHideObj_data = {
 	"FruitHitHideObj",
-	0x20000011,
+	ACTOR_TYPE_HIDE_OBJ,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -281,7 +281,7 @@ static const TMapObjHitInfo HipDropHideObj_obj_hit_info
 
 static TMapObjData HipDropHideObj_data = {
 	"HipDropHideObj",
-	0x20000011,
+	ACTOR_TYPE_HIDE_OBJ,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -306,7 +306,7 @@ static const TMapObjAnimDataInfo MonteChair_anim_info
 
 static TMapObjData MonteChair_data = {
 	"monte_chair",
-	0x40000007,
+	ACTOR_TYPE_MONTE_CHAIR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&MonteChair_anim_info,
@@ -339,7 +339,7 @@ static const TMapObjHitInfo door_obj_hit_info
 
 static TMapObjData door_data = {
 	"door",
-	0x4000002C,
+	ACTOR_TYPE_DOOR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -368,7 +368,7 @@ static const TMapObjAnimDataInfo doorHotel_anim_info
 
 static TMapObjData doorHotel_data = {
 	"doorHotel",
-	0x4000002C,
+	ACTOR_TYPE_DOOR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&doorHotel_anim_info,
@@ -408,7 +408,7 @@ static const TMapObjCollisionInfo manhole_map_collision_info
 
 static TMapObjData manhole_data = {
 	"manhole",
-	0x4000000B,
+	ACTOR_TYPE_MANHOLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&manhole_anim_info,
@@ -448,7 +448,7 @@ static const TMapObjCollisionInfo FruitBasket_map_collision_info
 
 static TMapObjData FruitBasket_data = {
 	"FruitBasket",
-	0x40000014,
+	ACTOR_TYPE_FRUIT_BASKET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&FruitBasket_anim_info,
@@ -487,7 +487,7 @@ static const TMapObjCollisionInfo BasketReverse_map_collision_info
 
 static TMapObjData BasketReverse_data = {
 	"BasketReverse",
-	0x4000000A,
+	ACTOR_TYPE_BASKET_REVERSE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&BasketReverse_anim_info,
@@ -512,7 +512,7 @@ static const TMapObjHitInfo CoconutJuice_obj_hit_info
 
 static TMapObjData CoconutJuice_data = {
 	"CoconutJuice",
-	0x40000015,
+	ACTOR_TYPE_COCONUT_JUICE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -544,7 +544,7 @@ static const TMapObjCollisionInfo Pile_map_collision_info
 
 static TMapObjData Pile_data = {
 	"Pile",
-	0x40000016,
+	ACTOR_TYPE_PILE,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -569,7 +569,7 @@ static const TMapObjHitInfo ChangeStage_obj_hit_info
 
 static TMapObjData ChangeStage_data = {
 	"ChangeStage",
-	0x40000050,
+	ACTOR_TYPE_CHANGE_STAGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -587,7 +587,7 @@ static TMapObjData ChangeStage_data = {
 
 static TMapObjData ChangeStageMerrygoround_data = {
 	"ChangeStageMerrygoround",
-	0x40000050,
+	ACTOR_TYPE_CHANGE_STAGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -612,7 +612,7 @@ static const TMapObjHitInfo StartDemo_obj_hit_info
 
 static TMapObjData StartDemo_data = {
 	"StartDemo",
-	0x40000051,
+	ACTOR_TYPE_START_DEMO,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -644,7 +644,7 @@ static const TMapObjHitInfo ChipShine_obj_hit_info
 
 static TMapObjData ChipShine_data = {
 	"ChipShine",
-	0x40000012,
+	ACTOR_TYPE_CHIP_SHINE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&ChipShine_anim_info,
@@ -676,7 +676,7 @@ static const TMapObjHitInfo KoopaJrSignM_obj_hit_info
 
 static TMapObjData KoopaJrSignM_data = {
 	"KoopaJrSignM",
-	0x40000013,
+	ACTOR_TYPE_KOOPA_JR_SIGN_M,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&KoopaJrSignM_anim_info,
@@ -694,7 +694,7 @@ static TMapObjData KoopaJrSignM_data = {
 
 static TMapObjData StarSign_data = {
 	"star_sign",
-	0x40000020,
+	ACTOR_TYPE_STAR_SIGN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -719,7 +719,7 @@ static const TMapObjAnimDataInfo SignCircle_anim_info
 
 static TMapObjData SignCircle_data = {
 	"SignCircle",
-	0x40000018,
+	ACTOR_TYPE_SIGN_CIRCLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SignCircle_anim_info,
@@ -744,7 +744,7 @@ static const TMapObjAnimDataInfo SignCross_anim_info
 
 static TMapObjData SignCross_data = {
 	"SignCross",
-	0x40000019,
+	ACTOR_TYPE_SIGN_CROSS,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SignCross_anim_info,
@@ -769,7 +769,7 @@ static const TMapObjAnimDataInfo SignTriangle_anim_info
 
 static TMapObjData SignTriangle_data = {
 	"SignTriangle",
-	0x4000001A,
+	ACTOR_TYPE_SIGN_TRIANGLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SignTriangle_anim_info,
@@ -794,7 +794,7 @@ static const TMapObjHitInfo ArrowBoardLR_obj_hit_info
 
 static TMapObjData ArrowBoardLR_data = {
 	"ArrowBoardLR",
-	0x4000001B,
+	ACTOR_TYPE_ARROW_BOARD_LR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -819,7 +819,7 @@ static const TMapObjHitInfo ArrowBoardUp_obj_hit_info
 
 static TMapObjData ArrowBoardUp_data = {
 	"ArrowBoardUp",
-	0x4000001B,
+	ACTOR_TYPE_ARROW_BOARD_LR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -844,7 +844,7 @@ static const TMapObjHitInfo ArrowBoardDown_obj_hit_info
 
 static TMapObjData ArrowBoardDown_data = {
 	"ArrowBoardDown",
-	0x4000001B,
+	ACTOR_TYPE_ARROW_BOARD_LR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -862,7 +862,7 @@ static TMapObjData ArrowBoardDown_data = {
 
 static TMapObjData WaterSprayCylinder_data = {
 	"WaterSprayCylinder",
-	0x40000025,
+	ACTOR_TYPE_WATER_SPRAY_CYLINDER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -880,7 +880,7 @@ static TMapObjData WaterSprayCylinder_data = {
 
 static TMapObjData WaterSprayBox_data = {
 	"WaterSprayBox",
-	0x40000025,
+	ACTOR_TYPE_WATER_SPRAY_CYLINDER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -905,7 +905,7 @@ static const TMapObjCollisionInfo ObjSwitch_map_collision_info
 
 static TMapObjData ObjSwitch_data = {
 	"ObjSwitch",
-	0x40000021,
+	ACTOR_TYPE_OBJ_SWITCH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -930,7 +930,7 @@ static const TMapObjCollisionInfo RedCoinSwitch_map_collision_info
 
 static TMapObjData RedCoinSwitch_data = {
 	"RedCoinSwitch",
-	0x40000022,
+	ACTOR_TYPE_RED_COIN_SWITCH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -948,7 +948,7 @@ static TMapObjData RedCoinSwitch_data = {
 
 static TMapObjData bucket_data = {
 	"bucket",
-	0x4000000E,
+	ACTOR_TYPE_BUCKET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -973,7 +973,7 @@ static const TMapObjHitInfo GeneralHitObj_obj_hit_info
 
 static TMapObjData GeneralHitObj_data = {
 	"GeneralHitObj",
-	0x40000026,
+	ACTOR_TYPE_GENERAL_HIT_OBJ,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -998,7 +998,7 @@ static const TMapObjHitInfo item_obj_hit_info
 
 static TMapObjData bottle_large_data = {
 	"bottle_large",
-	0x20000002,
+	ACTOR_TYPE_BOTTLE_LARGE,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	nullptr,
@@ -1016,7 +1016,7 @@ static TMapObjData bottle_large_data = {
 
 static TMapObjData bottle_short_data = {
 	"bottle_short",
-	0x20000001,
+	ACTOR_TYPE_BOTTLE_SHORT,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	nullptr,
@@ -1041,7 +1041,7 @@ static const TMapObjHitInfo WaterRecoverObj_obj_hit_info
 
 static TMapObjData WaterRecoverObj_data = {
 	"WaterRecoverObj",
-	0x20000002,
+	ACTOR_TYPE_BOTTLE_LARGE,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&no_data_anim_info,
@@ -1059,7 +1059,7 @@ static TMapObjData WaterRecoverObj_data = {
 
 static TMapObjData watergun_item_data = {
 	"watergun_item",
-	0x2000001F,
+	ACTOR_TYPE_WATERGUN_ITEM,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	nullptr,
@@ -1084,7 +1084,7 @@ static TMapObjPhysicalInfo nozzle_normal_physical_info
 
 static TMapObjData nozzle_normal_item_data = {
 	"normal_nozzle_item",
-	0x20000026,
+	ACTOR_TYPE_NORMAL_NOZZLE_ITEM,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1102,7 +1102,7 @@ static TMapObjData nozzle_normal_item_data = {
 
 static TMapObjData yoshi_whistle_item_data = {
 	"yoshi_whistle_item",
-	0x20000025,
+	ACTOR_TYPE_YOSHI_WHISTLE_ITEM,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1127,7 +1127,7 @@ static const TMapObjHitInfo nozzle_item_obj_hit_info
 
 static TMapObjData nozzle_rocket_item_data = {
 	"rocket_nozzle_item",
-	0x20000022,
+	ACTOR_TYPE_ROCKET_NOZZLE_ITEM,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1145,7 +1145,7 @@ static TMapObjData nozzle_rocket_item_data = {
 
 static TMapObjData nozzle_back_item_data = {
 	"back_nozzle_item",
-	0x2000002A,
+	ACTOR_TYPE_BACK_NOZZLE_ITEM,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1183,7 +1183,7 @@ static const TMapObjSoundInfo coin_sound_info = { 0xA, &coin_sound_data };
 
 static TMapObjData coin_data = {
 	"coin",
-	0x2000000E,
+	ACTOR_TYPE_COIN,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	nullptr,
@@ -1201,7 +1201,7 @@ static TMapObjData coin_data = {
 
 static TMapObjData invisible_coin_data = {
 	"invisible_coin",
-	0x2000000E,
+	ACTOR_TYPE_COIN,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&no_data_anim_info,
@@ -1219,7 +1219,7 @@ static TMapObjData invisible_coin_data = {
 
 static TMapObjData coin_red_data = {
 	"coin_red",
-	0x2000000F,
+	ACTOR_TYPE_COIN_RED,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1237,7 +1237,7 @@ static TMapObjData coin_red_data = {
 
 static TMapObjData coin_blue_data = {
 	"coin_blue",
-	0x20000010,
+	ACTOR_TYPE_COIN_BLUE,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1255,7 +1255,7 @@ static TMapObjData coin_blue_data = {
 
 static TMapObjData shine_data = {
 	"shine",
-	0x20000013,
+	ACTOR_TYPE_SHINE,
 	"シャインマネージャー",
 	"アイテムグループ",
 	&no_data_anim_info,
@@ -1287,7 +1287,7 @@ static const TMapObjHitInfo mario_cap_obj_hit_info
 
 static TMapObjData mario_cap_data = {
 	"mario_cap",
-	0x2000003C,
+	ACTOR_TYPE_MARIO_CAP,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&mario_cap_anim_info,
@@ -1311,7 +1311,7 @@ static const TMapObjAnimDataInfo coin_anim_info = { 1, 1, coin_anim_data };
 
 static TMapObjData joint_coin_data = {
 	"joint_coin",
-	0x2000000E,
+	ACTOR_TYPE_COIN,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	&coin_anim_info,
@@ -1351,7 +1351,7 @@ static const TMapObjHitInfo eggYoshi_obj_hit_info
 
 static TMapObjData eggYoshi_data = {
 	"eggYoshi",
-	0x20000009,
+	ACTOR_TYPE_EGG_YOSHI,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	&eggYoshi_anim_info,
@@ -1376,7 +1376,7 @@ static TMapObjPhysicalInfo EggYoshi_physical_info
 
 static TMapObjData eggYoshiEvent_data = {
 	"eggYoshiEvent",
-	0x20000009,
+	ACTOR_TYPE_EGG_YOSHI,
 	"アイテムマネージャー",
 	"オブジェクトグループ",
 	&eggYoshi_anim_info,
@@ -1411,7 +1411,7 @@ static const TMapObjHitInfo NozzleBox_obj_hit_info
 
 static TMapObjData NozzleBox_data = {
 	"NozzleBox",
-	0x20000068,
+	ACTOR_TYPE_NOZZLE_BOX,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&NozzleBox_anim_info,
@@ -1443,7 +1443,7 @@ static const TMapObjHitInfo mushroom1up_obj_hit_info
 
 static TMapObjData mushroom1up_data = {
 	"mushroom1up",
-	0x20000005,
+	ACTOR_TYPE_MUSHROOM1UP,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&mushroom1up_anim_info,
@@ -1461,7 +1461,7 @@ static TMapObjData mushroom1up_data = {
 
 static TMapObjData mushroom1upR_data = {
 	"mushroom1upR",
-	0x20000006,
+	ACTOR_TYPE_MUSHROOM1UP_R,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&mushroom1up_anim_info,
@@ -1479,7 +1479,7 @@ static TMapObjData mushroom1upR_data = {
 
 static TMapObjData mushroom1upX_data = {
 	"mushroom1upX",
-	0x20000007,
+	ACTOR_TYPE_MUSHROOM1UP_X,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&mushroom1up_anim_info,
@@ -1518,7 +1518,7 @@ static const TMapObjCollisionInfo jumpbase_map_collision_info
 
 static TMapObjData jumpbase_data = {
 	"jumpbase",
-	0x40000017,
+	ACTOR_TYPE_JUMPBASE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&jumpbase_anim_info,
@@ -1568,11 +1568,21 @@ static const TMapObjSoundData fruit_sound_data
 static const TMapObjSoundInfo fruit_sound_info = { 0xA, &fruit_sound_data };
 
 static TMapObjData coconut_data = {
-	"FruitCoconut", 0x40000390,        "アイテムマネージャー",
-	"敵グループ",   nullptr,           &coconut_obj_hit_info,
-	nullptr,        &fruit_sound_info, &coconut_physical_info,
-	nullptr,        nullptr,           nullptr,
-	40.0f,          0x02130100,        0x00000000,
+	"FruitCoconut",
+	ACTOR_TYPE_FRUIT_COCONUT,
+	"アイテムマネージャー",
+	"敵グループ",
+	nullptr,
+	&coconut_obj_hit_info,
+	nullptr,
+	&fruit_sound_info,
+	&coconut_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	40.0f,
+	0x02130100,
+	0x00000000,
 };
 
 static TMapObjPhysicalData papaya_physical_data
@@ -1593,11 +1603,21 @@ static const TMapObjHitInfo papaya_obj_hit_info
 	    0.0f, papaya_hit_data_table };
 
 static TMapObjData papaya_data = {
-	"FruitPapaya", 0x40000391,        "アイテムマネージャー",
-	"敵グループ",  nullptr,           &papaya_obj_hit_info,
-	nullptr,       &fruit_sound_info, &papaya_physical_info,
-	nullptr,       nullptr,           nullptr,
-	40.0f,         0x02130100,        0x00000000,
+	"FruitPapaya",
+	ACTOR_TYPE_FRUIT_PAPAYA,
+	"アイテムマネージャー",
+	"敵グループ",
+	nullptr,
+	&papaya_obj_hit_info,
+	nullptr,
+	&fruit_sound_info,
+	&papaya_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	40.0f,
+	0x02130100,
+	0x00000000,
 };
 
 static TMapObjPhysicalData pine_physical_data
@@ -1618,11 +1638,21 @@ static const TMapObjHitInfo pine_obj_hit_info
 	    0.0f, pine_hit_data_table };
 
 static TMapObjData pine_data = {
-	"FruitPine",  0x40000392,        "アイテムマネージャー",
-	"敵グループ", nullptr,           &pine_obj_hit_info,
-	nullptr,      &fruit_sound_info, &pine_physical_info,
-	nullptr,      nullptr,           nullptr,
-	40.0f,        0x02130100,        0x00000000,
+	"FruitPine",
+	ACTOR_TYPE_FRUIT_PINE,
+	"アイテムマネージャー",
+	"敵グループ",
+	nullptr,
+	&pine_obj_hit_info,
+	nullptr,
+	&fruit_sound_info,
+	&pine_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	40.0f,
+	0x02130100,
+	0x00000000,
 };
 
 static const TMapObjAnimData CoverPine_anim_data[] = {
@@ -1647,7 +1677,7 @@ static const TMapObjHitInfo cover_pine_obj_hit_info
 
 static TMapObjData CoverPine_data = {
 	"FruitCoverPine",
-	0x40000396,
+	ACTOR_TYPE_FRUIT_COVER_PINE,
 	"アイテムマネージャー",
 	"敵グループ",
 	&CoverPine_anim_info,
@@ -1688,7 +1718,7 @@ static const TMapObjSoundInfo durian_sound_info = { 0xA, &durian_sound_data };
 
 static TMapObjData durian_data = {
 	"FruitDurian",
-	0x40000393,
+	ACTOR_TYPE_FRUIT_DURIAN,
 	"アイテムマネージャー",
 	"敵グループ",
 	nullptr,
@@ -1722,11 +1752,21 @@ static const TMapObjHitInfo banana_obj_hit_info
 	    0.0f, banana_hit_data_table };
 
 static TMapObjData banana_data = {
-	"FruitBanana", 0x40000394,        "アイテムマネージャー",
-	"敵グループ",  nullptr,           &banana_obj_hit_info,
-	nullptr,       &fruit_sound_info, &banana_physical_info,
-	nullptr,       nullptr,           nullptr,
-	40.0f,         0x02130100,        0x00000000,
+	"FruitBanana",
+	ACTOR_TYPE_FRUIT_BANANA,
+	"アイテムマネージャー",
+	"敵グループ",
+	nullptr,
+	&banana_obj_hit_info,
+	nullptr,
+	&fruit_sound_info,
+	&banana_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	40.0f,
+	0x02130100,
+	0x00000000,
 };
 
 static TMapObjPhysicalData red_pepper_physical_data
@@ -1737,19 +1777,39 @@ static TMapObjPhysicalInfo red_pepper_physical_info
     = { 0xD, &red_pepper_physical_data, 0x2 };
 
 static TMapObjData RedPepper_data = {
-	"RedPepper",  0x40000395,        "アイテムマネージャー",
-	"敵グループ", nullptr,           &fruit_obj_hit_info,
-	nullptr,      &fruit_sound_info, &red_pepper_physical_info,
-	nullptr,      nullptr,           nullptr,
-	40.0f,        0x02130000,        0x00000000,
+	"RedPepper",
+	ACTOR_TYPE_RED_PEPPER,
+	"アイテムマネージャー",
+	"敵グループ",
+	nullptr,
+	&fruit_obj_hit_info,
+	nullptr,
+	&fruit_sound_info,
+	&red_pepper_physical_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	40.0f,
+	0x02130000,
+	0x00000000,
 };
 
 static TMapObjData fence_normal_data = {
-	"fence_normal", 0x40000069, "地形オブジェマネージャー",
-	nullptr,        nullptr,    &no_data_obj_hit_info,
-	nullptr,        nullptr,    nullptr,
-	nullptr,        nullptr,    nullptr,
-	0.0f,           0x00000A00, 0x00000000,
+	"fence_normal",
+	ACTOR_TYPE_FENCE_NORMAL,
+	"地形オブジェマネージャー",
+	nullptr,
+	nullptr,
+	&no_data_obj_hit_info,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	0.0f,
+	0x00000A00,
+	0x00000000,
 };
 
 static const TMapObjAnimData fence3x3_anim_data[] = {
@@ -1761,7 +1821,7 @@ static const TMapObjAnimDataInfo fence3x3_anim_info
 
 static TMapObjData fence3x3_data = {
 	"fence3x3",
-	0x40000069,
+	ACTOR_TYPE_FENCE_NORMAL,
 	"地形オブジェマネージャー",
 	nullptr,
 	&fence3x3_anim_info,
@@ -1786,7 +1846,7 @@ static const TMapObjAnimDataInfo fence_revolve_outer_anim_info
 
 static TMapObjData fence_revolve_data = {
 	"fence_revolve",
-	0x40000069,
+	ACTOR_TYPE_FENCE_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&fence_revolve_outer_anim_info,
@@ -1812,7 +1872,7 @@ static const TMapObjHitInfo FenceInner_obj_hit_info
 
 static TMapObjData fence_revolve_inner_data = {
 	"fence_revolve_inner",
-	0x4000006A,
+	ACTOR_TYPE_FENCE_REVOLVE_INNER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1830,7 +1890,7 @@ static TMapObjData fence_revolve_inner_data = {
 
 static TMapObjData fenceInnerGreen_data = {
 	"fenceInnerGreen",
-	0x4000006A,
+	ACTOR_TYPE_FENCE_REVOLVE_INNER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1855,7 +1915,7 @@ static const TMapObjCollisionInfo FenceWaterV_map_collision_info
 
 static TMapObjData FenceWaterV_data = {
 	"FenceWaterV",
-	0x4000006B,
+	ACTOR_TYPE_FENCE_WATER_V,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1881,7 +1941,7 @@ static const TMapObjCollisionInfo FenceWaterH_map_collision_info
 
 static TMapObjData FenceWaterH_data = {
 	"FenceWaterH",
-	0x4000006B,
+	ACTOR_TYPE_FENCE_WATER_V,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1915,7 +1975,7 @@ static const TMapObjCollisionInfo RailFence_map_collision_info
 
 static TMapObjData RailFence_data = {
 	"RailFence",
-	0x4000006C,
+	ACTOR_TYPE_RAIL_FENCE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&RailFence_anim_info,
@@ -1933,7 +1993,7 @@ static TMapObjData RailFence_data = {
 
 static TMapObjData bambooFenceRevolveInner_data = {
 	"bambooFence_revolve_inner",
-	0x4000006A,
+	ACTOR_TYPE_FENCE_REVOLVE_INNER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1951,7 +2011,7 @@ static TMapObjData bambooFenceRevolveInner_data = {
 
 static TMapObjData bambooFenceRevolveOuter_data = {
 	"bambooFence_revolve_outer",
-	0x40000069,
+	ACTOR_TYPE_FENCE_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -1977,7 +2037,7 @@ static const TMapObjAnimDataInfo BambooRailFence_anim_info
 
 static TMapObjData bambooRailFence_data = {
 	"bambooRailFence",
-	0x4000006C,
+	ACTOR_TYPE_RAIL_FENCE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&BambooRailFence_anim_info,
@@ -2048,7 +2108,7 @@ static TMapObjHoldData wood_barrel_hold_data
 
 static TMapObjData wood_barrel_data = {
 	"wood_barrel",
-	0x4000005A,
+	ACTOR_TYPE_WOOD_BARREL,
 	"乗り物マネージャー",
 	"敵グループ",
 	&wood_barrel_anim_info,
@@ -2066,7 +2126,7 @@ static TMapObjData wood_barrel_data = {
 
 static TMapObjData wood_barrel_once_data = {
 	"wood_barrel_once",
-	0x4000005A,
+	ACTOR_TYPE_WOOD_BARREL,
 	"乗り物マネージャー",
 	"敵グループ",
 	&wood_barrel_anim_info,
@@ -2098,7 +2158,7 @@ static const TMapObjCollisionInfo barrel_float_map_collision_info
 
 static TMapObjData barrel_float_data = {
 	"barrel_float",
-	0x4000005B,
+	ACTOR_TYPE_BARREL_FLOAT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2140,7 +2200,7 @@ static const TMapObjCollisionInfo drum_can_map_collision_info
 
 static TMapObjData drum_can_data = {
 	"drum_can",
-	0x4000005D,
+	ACTOR_TYPE_DRUM_CAN,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&drum_can_anim_info,
@@ -2183,7 +2243,7 @@ static const TMapObjHitInfo barrel_oil_obj_hit_info
 
 static TMapObjData barrel_oil_data = {
 	"barrel_oil",
-	0x4000005C,
+	ACTOR_TYPE_BARREL_OIL,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&barrel_oil_anim_info,
@@ -2233,7 +2293,7 @@ static const TMapObjCollisionInfo breakable_block_map_collision_info
 
 static TMapObjData breakable_block_data = {
 	"breakable_block",
-	0x400002BC,
+	ACTOR_TYPE_BREAKABLE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2257,7 +2317,7 @@ static const TMapObjCollisionInfo warp_block_map_collision_info
 
 static TMapObjData supermario_block_data = {
 	"supermario_block",
-	0x400002BC,
+	ACTOR_TYPE_BREAKABLE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2282,7 +2342,7 @@ static const TMapObjCollisionInfo move_block_map_collision_info
 
 static TMapObjData move_block_data = {
 	"move_block",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2300,7 +2360,7 @@ static TMapObjData move_block_data = {
 
 static TMapObjData fall_slow_block_data = {
 	"fall_slow_block",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2325,7 +2385,7 @@ static const TMapObjHitInfo expand_block_obj_hit_info
 
 static TMapObjData expand_block_data = {
 	"expand_block",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2350,7 +2410,7 @@ static const TMapObjHitInfo spread_block_obj_hit_info
 
 static TMapObjData spread_block_data = {
 	"spread_block",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2385,7 +2445,7 @@ static const TMapObjCollisionInfo water_roll_block_map_collision_info
 
 static TMapObjData water_roll_block_data = {
 	"water_roll_block",
-	0x400002BE,
+	ACTOR_TYPE_WATER_ROLL_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&water_roll_block_anim_info,
@@ -2427,7 +2487,7 @@ static const TMapObjCollisionInfo sand_block_map_collision_info
 
 static TMapObjData sand_block_data = {
 	"sand_block",
-	0x400002BC,
+	ACTOR_TYPE_BREAKABLE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&sand_block_anim_info,
@@ -2448,7 +2508,7 @@ static const TMapObjCollisionInfo move_block_center_map_collision_info
 
 static TMapObjData water_power_lift_data = {
 	"water_power_lift",
-	0x400002ED,
+	ACTOR_TYPE_WATER_POWER_LIFT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2466,7 +2526,7 @@ static TMapObjData water_power_lift_data = {
 
 static TMapObjData water_power_inertial_lift_data = {
 	"water_power_inertial_lift",
-	0x400002ED,
+	ACTOR_TYPE_WATER_POWER_LIFT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2484,7 +2544,7 @@ static TMapObjData water_power_inertial_lift_data = {
 
 static TMapObjData water_power_ship_data = {
 	"water_power_ship",
-	0x400002ED,
+	ACTOR_TYPE_WATER_POWER_LIFT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2502,7 +2562,7 @@ static TMapObjData water_power_ship_data = {
 
 static TMapObjData lean_direct_block_data = {
 	"lean_direct_block",
-	0x400002BF,
+	ACTOR_TYPE_LEAN_DIRECT_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2520,7 +2580,7 @@ static TMapObjData lean_direct_block_data = {
 
 static TMapObjData lean_indirect_block_data = {
 	"lean_indirect_block",
-	0x400002BF,
+	ACTOR_TYPE_LEAN_DIRECT_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2538,7 +2598,7 @@ static TMapObjData lean_indirect_block_data = {
 
 static TMapObjData lean_block_data = {
 	"lean_block",
-	0x400002BF,
+	ACTOR_TYPE_LEAN_DIRECT_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2563,7 +2623,7 @@ static const TMapObjHitInfo skate_block_obj_hit_info
 
 static TMapObjData skate_block_data = {
 	"skate_block",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&breakable_block_anim_info,
@@ -2588,7 +2648,7 @@ static const TMapObjAnimDataInfo MoveCoin_anim_info
 
 static TMapObjData MoveCoin_data = {
 	"MoveCoin",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&MoveCoin_anim_info,
@@ -2613,7 +2673,7 @@ static const TMapObjAnimDataInfo cluster_block_anim_info
 
 static TMapObjData cluster_block_data = {
 	"cluster_block",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&cluster_block_anim_info,
@@ -2638,7 +2698,7 @@ static const TMapObjCollisionInfo NormalBlock_map_collision_info
 
 static TMapObjData NormalBlock_data = {
 	"NormalBlock",
-	0x400002C0,
+	ACTOR_TYPE_NORMAL_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2670,7 +2730,7 @@ static const TMapObjCollisionInfo IceBlock_map_collision_info
 
 static TMapObjData IceBlock_data = {
 	"IceBlock",
-	0x400002C1,
+	ACTOR_TYPE_ICE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2704,7 +2764,7 @@ static const TMapObjCollisionInfo BrickBlock_map_collision_info
 
 static TMapObjData BrickBlock_data = {
 	"BrickBlock",
-	0x400002C2,
+	ACTOR_TYPE_BRICK_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&BrickBlock_anim_info,
@@ -2738,7 +2798,7 @@ static const TMapObjCollisionInfo WaterMelonBlock_map_collision_info
 
 static TMapObjData WaterMelonBlock_data = {
 	"WaterMelonBlock",
-	0x400002C3,
+	ACTOR_TYPE_WATER_MELON_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&WaterMelonBlock_anim_info,
@@ -2763,7 +2823,7 @@ static const TMapObjCollisionInfo TelesaBlock_map_collision_info
 
 static TMapObjData TelesaBlock_data = {
 	"TelesaBlock",
-	0x400002C4,
+	ACTOR_TYPE_TELESA_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2788,7 +2848,7 @@ static const TMapObjHitInfo WoodBlockPole_obj_hit_info
 
 static TMapObjData WoodBlockPole_data = {
 	"WoodBlockPole",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2813,7 +2873,7 @@ static const TMapObjCollisionInfo JuiceBlock_map_collision_info
 
 static TMapObjData JuiceBlock_data = {
 	"JuiceBlock",
-	0x400002C6,
+	ACTOR_TYPE_JUICE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2848,7 +2908,7 @@ static const TMapObjCollisionInfo SuperHipDropBlock_map_collision_info
 
 static TMapObjData SuperHipDropBlock_data = {
 	"SuperHipDropBlock",
-	0x400002C8,
+	ACTOR_TYPE_SUPER_HIP_DROP_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SuperHipDropBlock_anim_info,
@@ -2891,7 +2951,7 @@ static const TMapObjCollisionInfo PalmNormalTree_map_collision_info
 
 static TMapObjData palmNormal_data = {
 	"palmNormal",
-	0x40000034,
+	ACTOR_TYPE_PALM_NORMAL,
 	"木マネージャー",
 	"オブジェクトグループ",
 	&PalmNormal_anim_info,
@@ -2923,7 +2983,7 @@ static const TMapObjCollisionInfo PalmOugiTree_map_collision_info
 
 static TMapObjData palmOugi_data = {
 	"palmOugi",
-	0x40000035,
+	ACTOR_TYPE_PALM_OUGI,
 	"木マネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2955,7 +3015,7 @@ static const TMapObjCollisionInfo PalmSagoTree_map_collision_info
 
 static TMapObjData palmSago_data = {
 	"palmSago",
-	0x40000036,
+	ACTOR_TYPE_PALM_SAGO,
 	"木マネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -2987,7 +3047,7 @@ static const TMapObjCollisionInfo PalmNatumeTree_map_collision_info
 
 static TMapObjData palmNatume_data = {
 	"palmNatume",
-	0x40000037,
+	ACTOR_TYPE_PALM_NATUME,
 	"木マネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -3026,7 +3086,7 @@ static const TMapObjCollisionInfo PalmLeafTree_map_collision_info
 
 static TMapObjData palmLeaf_data = {
 	"palmLeaf",
-	0x40000038,
+	ACTOR_TYPE_PALM_LEAF,
 	"木マネージャー",
 	"オブジェクトグループ",
 	&PalmLeaf_anim_info,
@@ -3065,7 +3125,7 @@ static const TMapObjCollisionInfo BananaTree_map_collision_info
 
 static TMapObjData BananaTree_data = {
 	"BananaTree",
-	0x40000039,
+	ACTOR_TYPE_BANANA_TREE,
 	"木マネージャー",
 	"オブジェクトグループ",
 	&BananaTree_anim_info,
@@ -3097,7 +3157,7 @@ static const TMapObjCollisionInfo FruitTree_map_collision_info
 
 static TMapObjData FruitTree_data = {
 	"fruitTree",
-	0x4000003A,
+	ACTOR_TYPE_FRUIT_TREE,
 	"木マネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -3123,7 +3183,7 @@ static const TMapObjHitInfo flower_obj_hit_info
 
 static TMapObjData flower_data = {
 	"plantFlower",
-	0x40000046,
+	ACTOR_TYPE_PLANT_FLOWER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -3149,7 +3209,7 @@ static const TMapObjAnimDataInfo flowerOrange_anim_info
 
 static TMapObjData flowerOrange_data = {
 	"flowerOrange",
-	0x40000048,
+	ACTOR_TYPE_FLOWER_ORANGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&flowerOrange_anim_info,
@@ -3175,7 +3235,7 @@ static const TMapObjAnimDataInfo flowerPink_anim_info
 
 static TMapObjData flowerPink_data = {
 	"flowerPink",
-	0x40000048,
+	ACTOR_TYPE_FLOWER_ORANGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&flowerPink_anim_info,
@@ -3201,7 +3261,7 @@ static const TMapObjAnimDataInfo flowerPurple_anim_info
 
 static TMapObjData flowerPurple_data = {
 	"flowerPurple",
-	0x40000048,
+	ACTOR_TYPE_FLOWER_ORANGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&flowerPurple_anim_info,
@@ -3227,7 +3287,7 @@ static const TMapObjAnimDataInfo flowerRed_anim_info
 
 static TMapObjData flowerRed_data = {
 	"flowerRed",
-	0x40000048,
+	ACTOR_TYPE_FLOWER_ORANGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&flowerRed_anim_info,
@@ -3253,7 +3313,7 @@ static const TMapObjAnimDataInfo flowerYellow_anim_info
 
 static TMapObjData flowerYellow_data = {
 	"flowerYellow",
-	0x40000048,
+	ACTOR_TYPE_FLOWER_ORANGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&flowerYellow_anim_info,
@@ -3279,7 +3339,7 @@ static const TMapObjAnimDataInfo flowerSunflower_anim_info
 
 static TMapObjData flowerSunflower_data = {
 	"flowerSunflower",
-	0x40000048,
+	ACTOR_TYPE_FLOWER_ORANGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&flowerSunflower_anim_info,
@@ -3313,7 +3373,7 @@ static const TMapObjSoundInfo pole_sound_info = { 0xA, &pole_sound_data };
 
 static TMapObjData telegraph_pole_l_data = {
 	"telegraph_pole_l",
-	0x4000002E,
+	ACTOR_TYPE_TELEGRAPH_POLE_L,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -3341,7 +3401,7 @@ static const TMapObjHitInfo telegraph_pole_s_obj_hit_info
 
 static TMapObjData telegraph_pole_s_data = {
 	"telegraph_pole_s",
-	0x4000002E,
+	ACTOR_TYPE_TELEGRAPH_POLE_L,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -3394,7 +3454,7 @@ static TMapObjSinkData streetlamp_sink_data = { 0.0f, 3.0f };
 
 static TMapObjData streetlamp_data = {
 	"dptlight",
-	0x4000002D,
+	ACTOR_TYPE_DPTLIGHT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&dptlight_anim_info,
@@ -3419,7 +3479,7 @@ static const TMapObjHitInfo PoleNormal_obj_hit_info
 
 static TMapObjData PoleNormal_data = {
 	"PoleNormal",
-	0x4000002F,
+	ACTOR_TYPE_POLE_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -3468,7 +3528,7 @@ static const TMapObjSoundInfo football_sound_info
 
 static TMapObjData football_data = {
 	"football",
-	0x40000064,
+	ACTOR_TYPE_FOOTBALL,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&football_anim_info,
@@ -3508,7 +3568,7 @@ static const TMapObjCollisionInfo football_goal_map_collision_info
 
 static TMapObjData football_goal_data = {
 	"football_goal",
-	0x40000065,
+	ACTOR_TYPE_FOOTBALL_GOAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&football_goal_anim_info,
@@ -3533,7 +3593,7 @@ static TMapObjPhysicalInfo baloonball_physical_info
 
 static TMapObjData baloonball_data = {
 	"baloonball",
-	0x40000064,
+	ACTOR_TYPE_FOOTBALL,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&football_anim_info,
@@ -3551,7 +3611,7 @@ static TMapObjData baloonball_data = {
 
 static TMapObjData coconutball_data = {
 	"coconut_ball",
-	0x40000064,
+	ACTOR_TYPE_FOOTBALL,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&football_anim_info,
@@ -3608,7 +3668,7 @@ static const TMapObjSoundInfo watermelon_sound_info
 
 static TMapObjData watermelon_data = {
 	"watermelon",
-	0x400000D0,
+	ACTOR_TYPE_WATERMELON,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&Watermelon_anim_info,
@@ -3633,7 +3693,7 @@ static const TMapObjAnimDataInfo WatermelonStatic_anim_info
 
 static TMapObjData WatermelonStatic_data = {
 	"WatermelonStatic",
-	0x400000DB,
+	ACTOR_TYPE_WATERMELON_STATIC,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&WatermelonStatic_anim_info,
@@ -3671,7 +3731,7 @@ static const TMapObjCollisionInfo cloud_map_collision_info
 
 static TMapObjData cloud_data = {
 	"cloud",
-	0x400002C7,
+	ACTOR_TYPE_CLOUD,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&cloud_anim_info,
@@ -3710,7 +3770,7 @@ static const TMapObjCollisionInfo normallift_map_collision_info
 
 static TMapObjData normallift_data = {
 	"normallift",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&normallift_anim_info,
@@ -3749,7 +3809,7 @@ static const TMapObjCollisionInfo exrollcube_map_collision_info
 
 static TMapObjData exrollcube_data = {
 	"exrollcube",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&exrollcube_anim_info,
@@ -3788,7 +3848,7 @@ static const TMapObjCollisionInfo exkickboard_map_collision_info
 
 static TMapObjData exkickboard_data = {
 	"exkickboard",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&exkickboard_anim_info,
@@ -3841,7 +3901,7 @@ static const TMapObjCollisionInfo railblock_map_collision_info
 
 static TMapObjData railblockr_data = {
 	"railblockr",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&railblockr_anim_info,
@@ -3859,7 +3919,7 @@ static TMapObjData railblockr_data = {
 
 static TMapObjData railblocky_data = {
 	"railblocky",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&railblocky_anim_info,
@@ -3877,7 +3937,7 @@ static TMapObjData railblocky_data = {
 
 static TMapObjData railblockb_data = {
 	"railblockb",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&railblockb_anim_info,
@@ -3895,7 +3955,7 @@ static TMapObjData railblockb_data = {
 
 static TMapObjData rollblockr_data = {
 	"rollblockr",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&railblockr_anim_info,
@@ -3913,7 +3973,7 @@ static TMapObjData rollblockr_data = {
 
 static TMapObjData rollblocky_data = {
 	"rollblocky",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&railblocky_anim_info,
@@ -3931,7 +3991,7 @@ static TMapObjData rollblocky_data = {
 
 static TMapObjData rollblockb_data = {
 	"rollblockb",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&railblockb_anim_info,
@@ -3970,7 +4030,7 @@ static const TMapObjCollisionInfo umaibou_map_collision_info
 
 static TMapObjData umaibou_data = {
 	"umaibou",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&umaibou_anim_info,
@@ -4009,7 +4069,7 @@ static const TMapObjCollisionInfo kamaboko_map_collision_info
 
 static TMapObjData kamaboko_data = {
 	"kamaboko",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&kamaboko_anim_info,
@@ -4053,7 +4113,7 @@ static const TMapObjCollisionInfo geta_map_collision_info
 
 static TMapObjData getag_data = {
 	"getag",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&getag_anim_info,
@@ -4071,7 +4131,7 @@ static TMapObjData getag_data = {
 
 static TMapObjData getao_data = {
 	"getao",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&getao_anim_info,
@@ -4109,7 +4169,7 @@ static const TMapObjCollisionInfo uirou_map_collision_info
 
 static TMapObjData uirou_data = {
 	"uirou",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&uirou_anim_info,
@@ -4148,7 +4208,7 @@ static const TMapObjCollisionInfo hikidashi_map_collision_info
 
 static TMapObjData hikidashi_data = {
 	"hikidashi",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&hikidashi_anim_info,
@@ -4187,7 +4247,7 @@ static const TMapObjCollisionInfo castella_map_collision_info
 
 static TMapObjData castella_data = {
 	"castella",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&castella_anim_info,
@@ -4226,7 +4286,7 @@ static const TMapObjCollisionInfo yoshiblock_map_collision_info
 
 static TMapObjData yoshiblock_data = {
 	"yoshiblock",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&yoshiblock_anim_info,
@@ -4251,7 +4311,7 @@ static const TMapObjCollisionInfo WoodBlockTriangle_map_collision_info
 
 static TMapObjData WoodBlockTriangle_data = {
 	"WoodBlockTriangle",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4276,7 +4336,7 @@ static const TMapObjCollisionInfo WoodBlockPyramid_map_collision_info
 
 static TMapObjData WoodBlockPyramid_data = {
 	"WoodBlockPyramid",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4301,7 +4361,7 @@ static const TMapObjCollisionInfo WoodBlockLong_map_collision_info
 
 static TMapObjData WoodBlockLong_data = {
 	"WoodBlockLong",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4326,7 +4386,7 @@ static const TMapObjCollisionInfo WoodBlockLarge_map_collision_info
 
 static TMapObjData WoodBlockLarge_data = {
 	"WoodBlockLarge",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4351,7 +4411,7 @@ static const TMapObjCollisionInfo WoodBlockCone_map_collision_info
 
 static TMapObjData WoodBlockCone_data = {
 	"WoodBlockCone",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4376,7 +4436,7 @@ static const TMapObjCollisionInfo WoodBlockL_map_collision_info
 
 static TMapObjData WoodBlockL_data = {
 	"WoodBlockL",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4401,7 +4461,7 @@ static const TMapObjCollisionInfo WoodBlockBridge_map_collision_info
 
 static TMapObjData WoodBlockBridge_data = {
 	"WoodBlockBridge",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4426,7 +4486,7 @@ static const TMapObjCollisionInfo WoodBlockCube_map_collision_info
 
 static TMapObjData WoodBlockCube_data = {
 	"WoodBlockCube",
-	0x400002C5,
+	ACTOR_TYPE_WOOD_BLOCK_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4458,7 +4518,7 @@ static const TMapObjCollisionInfo normalvariant0_map_collision_info
 
 static TMapObjData normalvariant0_data = {
 	"normalvariant0",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4490,7 +4550,7 @@ static const TMapObjCollisionInfo normalvariant1_map_collision_info
 
 static TMapObjData normalvariant1_data = {
 	"normalvariant1",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4522,7 +4582,7 @@ static const TMapObjCollisionInfo normalvariant2_map_collision_info
 
 static TMapObjData normalvariant2_data = {
 	"normalvariant2",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4554,7 +4614,7 @@ static const TMapObjCollisionInfo normalvariant3_map_collision_info
 
 static TMapObjData normalvariant3_data = {
 	"normalvariant3",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4586,7 +4646,7 @@ static const TMapObjCollisionInfo normalvariant4_map_collision_info
 
 static TMapObjData normalvariant4_data = {
 	"normalvariant4",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4618,7 +4678,7 @@ static const TMapObjCollisionInfo railvariant0_map_collision_info
 
 static TMapObjData railvariant0_data = {
 	"railvariant0",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4650,7 +4710,7 @@ static const TMapObjCollisionInfo railvariant1_map_collision_info
 
 static TMapObjData railvariant1_data = {
 	"railvariant1",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4682,7 +4742,7 @@ static const TMapObjCollisionInfo railvariant2_map_collision_info
 
 static TMapObjData railvariant2_data = {
 	"railvariant2",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4714,7 +4774,7 @@ static const TMapObjCollisionInfo railvariant3_map_collision_info
 
 static TMapObjData railvariant3_data = {
 	"railvariant3",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4746,7 +4806,7 @@ static const TMapObjCollisionInfo railvariant4_map_collision_info
 
 static TMapObjData railvariant4_data = {
 	"railvariant4",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4778,7 +4838,7 @@ static const TMapObjCollisionInfo rollvariant0_map_collision_info
 
 static TMapObjData rollvariant0_data = {
 	"rollvariant0",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4810,7 +4870,7 @@ static const TMapObjCollisionInfo rollvariant1_map_collision_info
 
 static TMapObjData rollvariant1_data = {
 	"rollvariant1",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4842,7 +4902,7 @@ static const TMapObjCollisionInfo rollvariant2_map_collision_info
 
 static TMapObjData rollvariant2_data = {
 	"rollvariant2",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4874,7 +4934,7 @@ static const TMapObjCollisionInfo rollvariant3_map_collision_info
 
 static TMapObjData rollvariant3_data = {
 	"rollvariant3",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4906,7 +4966,7 @@ static const TMapObjCollisionInfo rollvariant4_map_collision_info
 
 static TMapObjData rollvariant4_data = {
 	"rollvariant4",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -4955,7 +5015,7 @@ static const TMapObjCollisionInfo lamptrap_map_collision_info
 
 static TMapObjData lamptrapspike_data = {
 	"lamptrapspike",
-	0x4000001E,
+	ACTOR_TYPE_LAMPTRAPSPIKE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&lamptrapspike_anim_info,
@@ -4973,7 +5033,7 @@ static TMapObjData lamptrapspike_data = {
 
 static TMapObjData lamptrapiron_data = {
 	"lamptrapiron",
-	0x4000001D,
+	ACTOR_TYPE_LAMPTRAPIRON,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&lamptrapiron_anim_info,
@@ -4998,7 +5058,7 @@ static const TMapObjCollisionInfo airplane_map_collision_info
 
 static TMapObjData airplane_data = {
 	"airplane",
-	0x4000006E,
+	ACTOR_TYPE_AIRPLANE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5036,7 +5096,7 @@ static const TMapObjSoundData WoodBox_sound_data
 
 static TMapObjData WoodBox_data = {
 	"WoodBox",
-	0x4000001C,
+	ACTOR_TYPE_WOOD_BOX,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&WoodBox_anim_info,
@@ -5061,7 +5121,7 @@ static const TMapObjHitInfo AirportPole_obj_hit_info
 
 static TMapObjData AirportPole_data = {
 	"AirportPole",
-	0x4000002F,
+	ACTOR_TYPE_POLE_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -5106,7 +5166,7 @@ static const TMapObjCollisionInfo ice_car_map_collision_info
 
 static TMapObjData ice_car_data = {
 	"ice_car",
-	0x40000078,
+	ACTOR_TYPE_ICE_CAR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&ice_car_anim_info,
@@ -5131,7 +5191,7 @@ static const TMapObjCollisionInfo move_ice_car_map_collision_info
 
 static TMapObjData move_ice_car_data = {
 	"move_ice_car",
-	0x40000078,
+	ACTOR_TYPE_ICE_CAR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&ice_car_anim_info,
@@ -5163,7 +5223,7 @@ static const TMapObjCollisionInfo AirportBuoy_map_collision_info
 
 static TMapObjData AirportBuoy_data = {
 	"Buoy",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5181,7 +5241,7 @@ static TMapObjData AirportBuoy_data = {
 
 static TMapObjData dptCannon_data = {
 	"dptCannon",
-	0x1000001C,
+	ACTOR_TYPE_DPT_CANNON,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5207,7 +5267,7 @@ static const TMapObjCollisionInfo dptKing_map_collision_info
 
 static TMapObjData dptKing_data = {
 	"dptKing",
-	0x4000007C,
+	ACTOR_TYPE_DPT_KING,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5232,7 +5292,7 @@ static const TMapObjCollisionInfo KoopaJrSubmarine_map_collision_info
 
 static TMapObjData KoopaJrSubmarine_data = {
 	"KoopaJrSubmarine",
-	0x4000007D,
+	ACTOR_TYPE_KOOPA_JR_SUBMARINE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5265,7 +5325,7 @@ static const TMapObjHitInfo monumentshine_obj_hit_info
 
 static TMapObjData monumentshine_data = {
 	"monumentshine",
-	0x4000007C,
+	ACTOR_TYPE_DPT_KING,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&monumentshine_anim_info,
@@ -5298,7 +5358,7 @@ static const TMapObjHitInfo belldolpic_obj_hit_info
 
 static TMapObjData belldolpic_data = {
 	"belldolpic",
-	0x4000007C,
+	ACTOR_TYPE_DPT_KING,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&belldolpic_anim_info,
@@ -5330,7 +5390,7 @@ static const TMapObjHitInfo DptWeathercock_obj_hit_info
 
 static TMapObjData dptWeathercock_data = {
 	"dptWeathercock",
-	0x4000007E,
+	ACTOR_TYPE_DPT_WEATHERCOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&DptWeathercock_anim_info,
@@ -5362,7 +5422,7 @@ static const TMapObjCollisionInfo DptMonteFence_map_collision_info
 
 static TMapObjData dptMonteFence_data = {
 	"dptMonteFence",
-	0x40000080,
+	ACTOR_TYPE_DPT_MONTE_FENCE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5387,7 +5447,7 @@ static const TMapObjCollisionInfo DptCoronaFence_map_collision_info
 
 static TMapObjData dptCoronaFence_data = {
 	"dptCoronaFence",
-	0x4000007F,
+	ACTOR_TYPE_DPT_CORONA_FENCE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5412,7 +5472,7 @@ static const TMapObjHitInfo MapSmoke_obj_hit_info
 
 static TMapObjData MapSmoke_data = {
 	"MapSmoke",
-	0x4000001F,
+	ACTOR_TYPE_MAP_SMOKE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -5437,7 +5497,7 @@ static const TMapObjAnimDataInfo MareGate_anim_info
 
 static TMapObjData MareGate_data = {
 	"maregate",
-	0x40000081,
+	ACTOR_TYPE_MAREGATE,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&MareGate_anim_info,
@@ -5455,7 +5515,7 @@ static TMapObjData MareGate_data = {
 
 static TMapObjData DemoCannon_data = {
 	"demoCannon",
-	0x40000082,
+	ACTOR_TYPE_DEMO_CANNON,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5495,7 +5555,7 @@ static const TMapObjCollisionInfo NozzleDoor_map_collision_info
 
 static TMapObjData NozzleDoor_data = {
 	"nozzleDoor",
-	0x40000083,
+	ACTOR_TYPE_NOZZLE_DOOR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&NozzleDoor_anim_info,
@@ -5520,7 +5580,7 @@ static const TMapObjAnimDataInfo DokanGate_anim_info
 
 static TMapObjData DokanGate_data = {
 	"DokanGate",
-	0x40000084,
+	ACTOR_TYPE_DOKAN_GATE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&DokanGate_anim_info,
@@ -5553,7 +5613,7 @@ static const TMapObjCollisionInfo crane_map_collision_info
 
 static TMapObjData crane_data = {
 	"crane",
-	0x400000B4,
+	ACTOR_TYPE_CRANE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5578,7 +5638,7 @@ static const TMapObjCollisionInfo crane90Scene2_map_collision_info
 
 static TMapObjData crane90Scene2_data = {
 	"crane90Scene2",
-	0x400000B4,
+	ACTOR_TYPE_CRANE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5603,7 +5663,7 @@ static const TMapObjCollisionInfo crane180Scene1_map_collision_info
 
 static TMapObjData crane180Scene1_data = {
 	"crane180Scene1",
-	0x400000B4,
+	ACTOR_TYPE_CRANE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5636,7 +5696,7 @@ static const TMapObjCollisionInfo crane_updown_map_collision_info
 
 static TMapObjData craneUpDown_data = {
 	"craneUpDown",
-	0x400000B4,
+	ACTOR_TYPE_CRANE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5669,7 +5729,7 @@ static const TMapObjCollisionInfo crane_cargo_map_collision_info
 
 static TMapObjData craneCargoUpDown_data = {
 	"craneCargoUpDown",
-	0x400000B4,
+	ACTOR_TYPE_CRANE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5694,7 +5754,7 @@ static const TMapObjCollisionInfo tank_map_collision_info
 
 static TMapObjData tank_data = {
 	"tank",
-	0x400000B5,
+	ACTOR_TYPE_TANK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5719,7 +5779,7 @@ static const TMapObjCollisionInfo container_map_collision_info
 
 static TMapObjData container_data = {
 	"container",
-	0x400000B6,
+	ACTOR_TYPE_CONTAINER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5753,7 +5813,7 @@ static const TMapObjCollisionInfo submarine_map_collision_info
 
 static TMapObjData submarine_data = {
 	"submarine",
-	0x400000B7,
+	ACTOR_TYPE_SUBMARINE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5785,7 +5845,7 @@ static const TMapObjCollisionInfo riccoShip_map_collision_info
 
 static TMapObjData riccoShip_data = {
 	"riccoShip",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5810,7 +5870,7 @@ static const TMapObjHitInfo ricco_pole_obj_hit_info
 
 static TMapObjData riccoPole_data = {
 	"riccoPole",
-	0x4000002F,
+	ACTOR_TYPE_POLE_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -5842,7 +5902,7 @@ static const TMapObjCollisionInfo riccoLog_map_collision_info
 
 static TMapObjData riccoLog_data = {
 	"riccoLog",
-	0x4000000F,
+	ACTOR_TYPE_RICCO_LOG,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5874,7 +5934,7 @@ static const TMapObjHitInfo gesoSurfboard_obj_hit_info
 
 static TMapObjData gesoSurfboard_data = {
 	"GesoSurfBoard",
-	0x400000BC,
+	ACTOR_TYPE_GESO_SURF_BOARD,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&gesoSurfboard_anim_info,
@@ -5892,7 +5952,7 @@ static TMapObjData gesoSurfboard_data = {
 
 static TMapObjData gesoSurfboardStatic_data = {
 	"GesoSurfBoardStatic",
-	0x400000BC,
+	ACTOR_TYPE_GESO_SURF_BOARD,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&gesoSurfboard_anim_info,
@@ -5917,7 +5977,7 @@ static const TMapObjHitInfo riccoWatermill_obj_hit_info
 
 static TMapObjData riccoWatermill_data = {
 	"riccoWatermill",
-	0x400000BD,
+	ACTOR_TYPE_RICCO_WATERMILL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5949,7 +6009,7 @@ static const TMapObjCollisionInfo riccoShipLog_map_collision_info
 
 static TMapObjData riccoShipLog_data = {
 	"riccoShipLog",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -5981,7 +6041,7 @@ static const TMapObjCollisionInfo riccoShipDol_map_collision_info
 
 static TMapObjData riccoShipDol_data = {
 	"riccoShipDol",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6013,7 +6073,7 @@ static const TMapObjCollisionInfo riccoYachtL_map_collision_info
 
 static TMapObjData riccoYachtL_data = {
 	"riccoYachtL",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6045,7 +6105,7 @@ static const TMapObjCollisionInfo riccoYachtS_map_collision_info
 
 static TMapObjData riccoYachtS_data = {
 	"riccoYachtS",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6077,7 +6137,7 @@ static const TMapObjCollisionInfo riccoBoatL_map_collision_info
 
 static TMapObjData riccoBoatL_data = {
 	"riccoBoatL",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6109,7 +6169,7 @@ static const TMapObjCollisionInfo riccoBoatS_map_collision_info
 
 static TMapObjData riccoBoatS_data = {
 	"riccoBoatS",
-	0x400000BA,
+	ACTOR_TYPE_RICCO_SHIP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6134,7 +6194,7 @@ static const TMapObjCollisionInfo riccoBasket_map_collision_info
 
 static TMapObjData riccoBasket_data = {
 	"riccoBasket",
-	0x400000BF,
+	ACTOR_TYPE_RICCO_BASKET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6159,7 +6219,7 @@ static const TMapObjCollisionInfo riccoGangway_map_collision_info
 
 static TMapObjData riccoGangway_data = {
 	"riccoGangway",
-	0x400000C0,
+	ACTOR_TYPE_RICCO_GANGWAY,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6184,7 +6244,7 @@ static const TMapObjCollisionInfo riccoShipFish_map_collision_info
 
 static TMapObjData riccoShipFish_data = {
 	"riccoShipFish",
-	0x400000C3,
+	ACTOR_TYPE_RICCO_SHIP_FISH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6209,7 +6269,7 @@ static const TMapObjCollisionInfo riccoShipGeso_map_collision_info
 
 static TMapObjData riccoShipGeso_data = {
 	"riccoShipGeso",
-	0x400000C3,
+	ACTOR_TYPE_RICCO_SHIP_FISH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6234,7 +6294,7 @@ static const TMapObjCollisionInfo riccoSwitch_map_collision_info
 
 static TMapObjData riccoSwitch_data = {
 	"riccoSwitch",
-	0x400000C1,
+	ACTOR_TYPE_RICCO_SWITCH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6252,7 +6312,7 @@ static TMapObjData riccoSwitch_data = {
 
 static TMapObjData riccoSwitchShine_data = {
 	"riccoSwitchShine",
-	0x400000C2,
+	ACTOR_TYPE_RICCO_SWITCH_SHINE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -6277,7 +6337,7 @@ static const TMapObjCollisionInfo riccoFenceMaze_map_collision_info
 
 static TMapObjData riccoFenceMaze_data = {
 	"riccoFenceMaze",
-	0x400000C4,
+	ACTOR_TYPE_RICCO_FENCE_MAZE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6302,7 +6362,7 @@ static const TMapObjCollisionInfo riccoStand_map_collision_info
 
 static TMapObjData riccoStand_data = {
 	"riccoStand",
-	0x400000AA,
+	ACTOR_TYPE_RICCO_STAND,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6327,7 +6387,7 @@ static const TMapObjCollisionInfo riccoGrille_map_collision_info
 
 static TMapObjData riccoGrille_data = {
 	"riccoGrille",
-	0x400000AB,
+	ACTOR_TYPE_RICCO_GRILLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6352,7 +6412,7 @@ static const TMapObjCollisionInfo riccoArrow_map_collision_info
 
 static TMapObjData riccoArrow_data = {
 	"riccoArrow",
-	0x400000AC,
+	ACTOR_TYPE_RICCO_ARROW,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6377,7 +6437,7 @@ static const TMapObjCollisionInfo riccoStreetStall_map_collision_info
 
 static TMapObjData riccoStreetStall_data = {
 	"riccoStreetStall",
-	0x400000AD,
+	ACTOR_TYPE_RICCO_STREET_STALL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6402,7 +6462,7 @@ static const TMapObjCollisionInfo riccoHericopter_map_collision_info
 
 static TMapObjData riccoHericopter_data = {
 	"riccoHericopter",
-	0x400000AE,
+	ACTOR_TYPE_RICCO_HERICOPTER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6431,7 +6491,7 @@ static const TMapObjAnimData surfgeso_anim_data[] = {
 
 static TMapObjData surfgeso_red_data = {
 	"SurfGesoRed",
-	0x400000C5,
+	ACTOR_TYPE_SURF_GESO_RED,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -6449,7 +6509,7 @@ static TMapObjData surfgeso_red_data = {
 
 static TMapObjData surfgeso_yellow_data = {
 	"SurfGesoYellow",
-	0x400000C6,
+	ACTOR_TYPE_SURF_GESO_YELLOW,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -6467,7 +6527,7 @@ static TMapObjData surfgeso_yellow_data = {
 
 static TMapObjData surfgeso_green_data = {
 	"SurfGesoGreen",
-	0x400000C7,
+	ACTOR_TYPE_SURF_GESO_GREEN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -6506,7 +6566,7 @@ static const TMapObjCollisionInfo windmill_map_collision_info
 
 static TMapObjData big_windmill_data = {
 	"bigWindmill",
-	0x40000096,
+	ACTOR_TYPE_BIG_WINDMILL,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&windmill_anim_info,
@@ -6524,7 +6584,7 @@ static TMapObjData big_windmill_data = {
 
 static TMapObjData windmill_far_data = {
 	"windmill_far",
-	0x400000A7,
+	ACTOR_TYPE_WINDMILL_FAR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&windmill_anim_info,
@@ -6556,7 +6616,7 @@ static const TMapObjCollisionInfo MiniWindmillL_map_collision_info
 
 static TMapObjData MiniWindmillL_data = {
 	"MiniWindmillL",
-	0x400000A0,
+	ACTOR_TYPE_MINI_WINDMILL_L,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6581,7 +6641,7 @@ static const TMapObjCollisionInfo MiniWindmillS_map_collision_info
 
 static TMapObjData MiniWindmillS_data = {
 	"MiniWindmillS",
-	0x400000A0,
+	ACTOR_TYPE_MINI_WINDMILL_L,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6606,7 +6666,7 @@ static const TMapObjCollisionInfo windmill_roof_map_collision_info
 
 static TMapObjData WindmillRoof_data = {
 	"WindmillRoof",
-	0x400000A6,
+	ACTOR_TYPE_WINDMILL_ROOF,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6659,7 +6719,7 @@ static TMapObjSinkData lamp_bianco_sink_data = { 0.0f, 3.0f };
 
 static TMapObjData lamp_bianco_data = {
 	"lampBianco",
-	0x400000A2,
+	ACTOR_TYPE_LAMP_BIANCO,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&lamp_bianco_anim_info,
@@ -6684,7 +6744,7 @@ static const TMapObjCollisionInfo RootPakkun_map_collision_info
 
 static TMapObjData root_pakkun_data = {
 	"rootPaku",
-	0x40000097,
+	ACTOR_TYPE_ROOT_PAKU,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6716,7 +6776,7 @@ static const TMapObjCollisionInfo windmill_block_map_collision_info
 
 static TMapObjData windmill_block_data = {
 	"bigWindmillBlock",
-	0x400000A8,
+	ACTOR_TYPE_BIG_WINDMILL_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6741,7 +6801,7 @@ static const TMapObjHitInfo PolluterPakkun_obj_hit_info
 
 static TMapObjData PolluterPakkun_data = {
 	"PolluterPakkun",
-	0x40000099,
+	ACTOR_TYPE_POLLUTER_PAKKUN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6777,7 +6837,7 @@ static const TMapObjHitInfo BiaBell_obj_hit_info
 
 static TMapObjData BiaBell_data = {
 	"BiaBell",
-	0x4000009E,
+	ACTOR_TYPE_BIA_BELL,
 	"ファークリップ地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&BiaBell_anim_info,
@@ -6809,7 +6869,7 @@ static const TMapObjHitInfo BiaWatermill00_obj_hit_info
 
 static TMapObjData BiaWatermill00_data = {
 	"BiaWatermill00",
-	0x4000009F,
+	ACTOR_TYPE_BIA_WATERMILL00,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&watermill00_anim_info,
@@ -6842,7 +6902,7 @@ static const TMapObjCollisionInfo BiaWatermill01_map_collision_info
 
 static TMapObjData BiaWatermill01_data = {
 	"BiaWatermill01",
-	0x4000009A,
+	ACTOR_TYPE_BIA_WATERMILL01,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6875,7 +6935,7 @@ static const TMapObjCollisionInfo BiaWatermillVertical_map_collision_info
 
 static TMapObjData BiaWatermillVertical_data = {
 	"BiaWatermillVertical",
-	0x400000A1,
+	ACTOR_TYPE_BIA_WATERMILL_VERTICAL,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6907,7 +6967,7 @@ static const TMapObjCollisionInfo BiaTurnBridge_map_collision_info
 
 static TMapObjData BiaTurnBridge_data = {
 	"BiaTurnBridge",
-	0x4000009B,
+	ACTOR_TYPE_BIA_TURN_BRIDGE,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6940,7 +7000,7 @@ static const TMapObjCollisionInfo LeafBoat_map_collision_info
 
 static TMapObjData LeafBoat_data = {
 	"LeafBoat",
-	0x4000009C,
+	ACTOR_TYPE_LEAF_BOAT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -6958,7 +7018,7 @@ static TMapObjData LeafBoat_data = {
 
 static TMapObjData LeafBoatRotten_data = {
 	"LeafBoatRotten",
-	0x400000A5,
+	ACTOR_TYPE_LEAF_BOAT_ROTTEN,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7002,7 +7062,7 @@ static const TMapObjCollisionInfo LampSeesaw_map_collision_info
 
 static TMapObjData LampSeesaw_data = {
 	"LampSeesaw",
-	0x4000009D,
+	ACTOR_TYPE_LAMP_SEESAW,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&LampSeesaw_anim_info,
@@ -7027,7 +7087,7 @@ static const TMapObjCollisionInfo BiancoDoor_map_collision_info
 
 static TMapObjData BiancoDoor_data = {
 	"BiaDoor",
-	0x400000A3,
+	ACTOR_TYPE_BIA_DOOR,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7052,7 +7112,7 @@ static const TMapObjCollisionInfo BiaBridge_map_collision_info
 
 static TMapObjData BiaBridge_data = {
 	"BiaBridge",
-	0x400000A4,
+	ACTOR_TYPE_BIA_BRIDGE,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7077,7 +7137,7 @@ static const TMapObjAnimDataInfo SandBird_anim_info
 
 static TMapObjData SandBird_data = {
 	"SandBird",
-	0x400000C9,
+	ACTOR_TYPE_SAND_BIRD,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBird_anim_info,
@@ -7110,7 +7170,7 @@ static const TMapObjCollisionInfo SandBirdBlock_map_collision_info
 
 static TMapObjData SandBirdBlock_data = {
 	"SandBirdBlock",
-	0x400002C9,
+	ACTOR_TYPE_SAND_BIRD_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7142,7 +7202,7 @@ static const TMapObjCollisionInfo SkyIsland_map_collision_info
 
 static TMapObjData SkyIsland_data = {
 	"SkyIsland",
-	0x400002BD,
+	ACTOR_TYPE_MOVE_BLOCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SkyIsland_anim_info,
@@ -7178,7 +7238,7 @@ static const TMapObjHitInfo sand_leaf_obj_hit_info
 
 static TMapObjData SandLeaf_data = {
 	"SandLeaf",
-	0x400000CA,
+	ACTOR_TYPE_SAND_LEAF,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandLeaf_anim_info,
@@ -7211,7 +7271,7 @@ static const TMapObjCollisionInfo SandLeafBase00_map_collision_info
 
 static TMapObjData SandLeafBase00_data = {
 	"SandLeafBase00",
-	0x400000CB,
+	ACTOR_TYPE_SAND_LEAF_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandLeafBase00_anim_info,
@@ -7244,7 +7304,7 @@ static const TMapObjCollisionInfo SandLeafBase01_map_collision_info
 
 static TMapObjData SandLeafBase01_data = {
 	"SandLeafBase01",
-	0x400000CB,
+	ACTOR_TYPE_SAND_LEAF_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandLeafBase01_anim_info,
@@ -7277,7 +7337,7 @@ static const TMapObjCollisionInfo SandLeafBase02_map_collision_info
 
 static TMapObjData SandLeafBase02_data = {
 	"SandLeafBase02",
-	0x400000CB,
+	ACTOR_TYPE_SAND_LEAF_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandLeafBase02_anim_info,
@@ -7310,7 +7370,7 @@ static const TMapObjCollisionInfo SandLeafBase03_map_collision_info
 
 static TMapObjData SandLeafBase03_data = {
 	"SandLeafBase03",
-	0x400000CB,
+	ACTOR_TYPE_SAND_LEAF_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandLeafBase03_anim_info,
@@ -7348,7 +7408,7 @@ static const TMapObjHitInfo sand_bomb_obj_hit_info
 
 static TMapObjData SandBomb_data = {
 	"SandBomb",
-	0x400000CC,
+	ACTOR_TYPE_SAND_BOMB,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBomb_anim_info,
@@ -7382,7 +7442,7 @@ static const TMapObjCollisionInfo mirror_L_map_collision_info
 
 static TMapObjData MirrorL_data = {
 	"mirrorL",
-	0x400000CF,
+	ACTOR_TYPE_MIRROR_L,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7416,7 +7476,7 @@ static const TMapObjCollisionInfo mirror_M_map_collision_info
 
 static TMapObjData MirrorM_data = {
 	"mirrorM",
-	0x400000CF,
+	ACTOR_TYPE_MIRROR_L,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7450,7 +7510,7 @@ static const TMapObjCollisionInfo mirrorS_map_collision_info
 
 static TMapObjData MirrorS_data = {
 	"mirrorS",
-	0x400000CF,
+	ACTOR_TYPE_MIRROR_L,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7486,7 +7546,7 @@ static const TMapObjCollisionInfo SandCastle_map_collision_info
 
 static TMapObjData SandCastle_data = {
 	"SandCastle",
-	0x400000D3,
+	ACTOR_TYPE_SAND_CASTLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandCastle_anim_info,
@@ -7512,7 +7572,7 @@ static const TMapObjCollisionInfo MammaBlockRotate_map_collision_info
 
 static TMapObjData MammaBlockRotate_data = {
 	"MammaBlockRotate",
-	0x400000D4,
+	ACTOR_TYPE_MAMMA_BLOCK_ROTATE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7537,7 +7597,7 @@ static const TMapObjCollisionInfo SandEgg_map_collision_info
 
 static TMapObjData SandEgg_data = {
 	"SandEggNormal",
-	0x400000D5,
+	ACTOR_TYPE_SAND_EGG_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7562,7 +7622,7 @@ static const TMapObjCollisionInfo SandEggBroken_map_collision_info
 
 static TMapObjData SandEggBroken_data = {
 	"SandEggBroken",
-	0x400000D5,
+	ACTOR_TYPE_SAND_EGG_NORMAL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7580,7 +7640,7 @@ static TMapObjData SandEggBroken_data = {
 
 static TMapObjData ShiningStone_data = {
 	"ShiningStone",
-	0x400000D1,
+	ACTOR_TYPE_SHINING_STONE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7605,7 +7665,7 @@ static const TMapObjHitInfo MammaSurfboard_obj_hit_info
 
 static TMapObjData MammaSurfboard00_data = {
 	"MammaSurfboard00",
-	0x400000D6,
+	ACTOR_TYPE_MAMMA_SURFBOARD00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7623,7 +7683,7 @@ static TMapObjData MammaSurfboard00_data = {
 
 static TMapObjData MammaSurfboard01_data = {
 	"MammaSurfboard01",
-	0x400000D6,
+	ACTOR_TYPE_MAMMA_SURFBOARD00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7641,7 +7701,7 @@ static TMapObjData MammaSurfboard01_data = {
 
 static TMapObjData MammaSurfboard02_data = {
 	"MammaSurfboard02",
-	0x400000D6,
+	ACTOR_TYPE_MAMMA_SURFBOARD00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7659,7 +7719,7 @@ static TMapObjData MammaSurfboard02_data = {
 
 static TMapObjData MammaSurfboard03_data = {
 	"MammaSurfboard03",
-	0x400000D6,
+	ACTOR_TYPE_MAMMA_SURFBOARD00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7684,7 +7744,7 @@ static const TMapObjCollisionInfo MammaSurfboardStand_map_collision_info
 
 static TMapObjData MammaSurfboardStand_data = {
 	"MammaSurfboardStand",
-	0x400000D7,
+	ACTOR_TYPE_MAMMA_SURFBOARD_STAND,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7716,7 +7776,7 @@ static const TMapObjCollisionInfo MammaYacht00_map_collision_info
 
 static TMapObjData MammaYacht00_data = {
 	"MammaYacht00",
-	0x400000D8,
+	ACTOR_TYPE_MAMMA_YACHT00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7741,7 +7801,7 @@ static const TMapObjCollisionInfo MammaYacht01_map_collision_info
 
 static TMapObjData MammaYacht01_data = {
 	"MammaYacht01",
-	0x400000D8,
+	ACTOR_TYPE_MAMMA_YACHT00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7766,7 +7826,7 @@ static const TMapObjCollisionInfo MammaYacht02_map_collision_info
 
 static TMapObjData MammaYacht02_data = {
 	"MammaYacht02",
-	0x400000D8,
+	ACTOR_TYPE_MAMMA_YACHT00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -7800,7 +7860,7 @@ static const TMapObjCollisionInfo SandBombBase00_map_collision_info
 
 static TMapObjData SandBombBase00_data = {
 	"SandBombBase00",
-	0x400000CD,
+	ACTOR_TYPE_SAND_BOMB_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBase00_anim_info,
@@ -7834,7 +7894,7 @@ static const TMapObjCollisionInfo SandBombBaseMushroom_map_collision_info
 
 static TMapObjData SandBombBaseMushroom_data = {
 	"SandBombBaseMushroom",
-	0x400000CD,
+	ACTOR_TYPE_SAND_BOMB_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseMushroom_anim_info,
@@ -7868,7 +7928,7 @@ static const TMapObjCollisionInfo SandBombBasePyramid_map_collision_info
 
 static TMapObjData SandBombBasePyramid_data = {
 	"SandBombBasePyramid",
-	0x400000CD,
+	ACTOR_TYPE_SAND_BOMB_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBasePyramid_anim_info,
@@ -7902,7 +7962,7 @@ static const TMapObjCollisionInfo SandBombBaseShit_map_collision_info
 
 static TMapObjData SandBombBaseShit_data = {
 	"SandBombBaseShit",
-	0x400000CD,
+	ACTOR_TYPE_SAND_BOMB_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseShit_anim_info,
@@ -7936,7 +7996,7 @@ static const TMapObjCollisionInfo SandBombBaseStar_map_collision_info
 
 static TMapObjData SandBombBaseStar_data = {
 	"SandBombBaseStar",
-	0x400000CD,
+	ACTOR_TYPE_SAND_BOMB_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseStar_anim_info,
@@ -7970,7 +8030,7 @@ static const TMapObjCollisionInfo SandBombBaseTurtle_map_collision_info
 
 static TMapObjData SandBombBaseTurtle_data = {
 	"SandBombBaseTurtle",
-	0x400000CD,
+	ACTOR_TYPE_SAND_BOMB_BASE00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseTurtle_anim_info,
@@ -8004,7 +8064,7 @@ static const TMapObjCollisionInfo SandBombBaseFoot_map_collision_info
 
 static TMapObjData SandBombBaseFoot_data = {
 	"SandBombBaseFoot",
-	0x400000CE,
+	ACTOR_TYPE_SAND_BOMB_BASE_FOOT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseFoot_anim_info,
@@ -8038,7 +8098,7 @@ static const TMapObjCollisionInfo SandBombBaseHand_map_collision_info
 
 static TMapObjData SandBombBaseHand_data = {
 	"SandBombBaseHand",
-	0x400000CE,
+	ACTOR_TYPE_SAND_BOMB_BASE_FOOT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseHand_anim_info,
@@ -8072,7 +8132,7 @@ static const TMapObjCollisionInfo SandBombBaseStairs_map_collision_info
 
 static TMapObjData SandBombBaseStairs_data = {
 	"SandBombBaseStairs",
-	0x400000CE,
+	ACTOR_TYPE_SAND_BOMB_BASE_FOOT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&SandBombBaseStairs_anim_info,
@@ -8090,7 +8150,7 @@ static TMapObjData SandBombBaseStairs_data = {
 
 static TMapObjData coral00_data = {
 	"coral00",
-	0x400000D9,
+	ACTOR_TYPE_CORAL00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8108,7 +8168,7 @@ static TMapObjData coral00_data = {
 
 static TMapObjData coral01_data = {
 	"coral01",
-	0x400000D9,
+	ACTOR_TYPE_CORAL00,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8133,7 +8193,7 @@ static const TMapObjHitInfo GoalWatermelon_obj_hit_info
 
 static TMapObjData GoalWatermelon_data = {
 	"GoalWatermelon",
-	0x400000DA,
+	ACTOR_TYPE_GOAL_WATERMELON,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -8165,7 +8225,7 @@ static const TMapObjHitInfo TeethOfJuicer_obj_hit_info
 
 static TMapObjData TeethOfJuicer_data = {
 	"TeethOfJuicer",
-	0x400000DC,
+	ACTOR_TYPE_TEETH_OF_JUICER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&TeethOfJuicer_anim_info,
@@ -8190,7 +8250,7 @@ static const TMapObjCollisionInfo SandEggRepair_map_collision_info
 
 static TMapObjData SandEggRepair_data = {
 	"SandEggrepair",
-	0x400000DD,
+	ACTOR_TYPE_SAND_EGGREPAIR,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8229,7 +8289,7 @@ static const TMapObjCollisionInfo merrygoround_map_collision_info
 
 static TMapObjData merrygoround_data = {
 	"merry",
-	0x4000012C,
+	ACTOR_TYPE_MERRY,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&merrygoround_anim_info,
@@ -8261,7 +8321,7 @@ static const TMapObjCollisionInfo merry_egg_map_collision_info
 
 static TMapObjData merry_egg_data = {
 	"merry_egg",
-	0x40000135,
+	ACTOR_TYPE_MERRY_EGG,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8286,7 +8346,7 @@ static const TMapObjHitInfo merry_pole_obj_hit_info
 
 static TMapObjData merry_pole_data = {
 	"merry_pole",
-	0x40000136,
+	ACTOR_TYPE_MERRY_POLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -8318,7 +8378,7 @@ static const TMapObjHitInfo FerrisWheel_obj_hit_info
 
 static TMapObjData FerrisWheel_data = {
 	"FerrisWheel",
-	0x4000012D,
+	ACTOR_TYPE_FERRIS_WHEEL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&FerrisWheel_anim_info,
@@ -8350,7 +8410,7 @@ static const TMapObjHitInfo FerrisWheelGondola_obj_hit_info
 
 static TMapObjData gondola_data = {
 	"FerrisGondola",
-	0x4000012E,
+	ACTOR_TYPE_FERRIS_GONDOLA,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8375,7 +8435,7 @@ static const TMapObjAnimDataInfo FerrisLOD_anim_info
 
 static TMapObjData FerrisLOD_data = {
 	"FerrisLOD",
-	0x4000012D,
+	ACTOR_TYPE_FERRIS_WHEEL,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&FerrisLOD_anim_info,
@@ -8408,7 +8468,7 @@ static const TMapObjCollisionInfo viking_map_collision_info
 
 static TMapObjData viking_data = {
 	"viking",
-	0x4000012F,
+	ACTOR_TYPE_VIKING,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8433,7 +8493,7 @@ static const TMapObjCollisionInfo PinnaEntrance_map_collision_info
 
 static TMapObjData PinnaEntrance_data = {
 	"PinnaDoor",
-	0x40000130,
+	ACTOR_TYPE_PINNA_DOOR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8458,7 +8518,7 @@ static const TMapObjCollisionInfo PinnaEntranceOpen_map_collision_info
 
 static TMapObjData PinnaEntranceOpen_data = {
 	"PinnaDoorOpen",
-	0x40000130,
+	ACTOR_TYPE_PINNA_DOOR,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8483,7 +8543,7 @@ static const TMapObjCollisionInfo SirenaGate_map_collision_info
 
 static TMapObjData SirenaGate_data = {
 	"SirenaGate",
-	0x40000131,
+	ACTOR_TYPE_SIRENA_GATE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8517,7 +8577,7 @@ static const TMapObjHitInfo balloon_koopajr_obj_hit_info
 
 static TMapObjData BalloonKoopaJr_data = {
 	"balloonKoopaJr",
-	0x40000132,
+	ACTOR_TYPE_BALLOON_KOOPA_JR,
 	"アイテムマネージャー",
 	"アイテムグループ",
 	&balloon_koopajr_anim_info,
@@ -8556,7 +8616,7 @@ static const TMapObjHitInfo ShellCup_obj_hit_info
 
 static TMapObjData ShellCup_data = {
 	"ShellCup",
-	0x40000133,
+	ACTOR_TYPE_SHELL_CUP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&ShellCup_anim_info,
@@ -8588,7 +8648,7 @@ static const TMapObjCollisionInfo Gateshell_map_collision_info
 
 static TMapObjData Gateshell_data = {
 	"Gateshell",
-	0x40000134,
+	ACTOR_TYPE_GATESHELL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&Gateshell_anim_info,
@@ -8629,7 +8689,7 @@ static const TMapObjCollisionInfo PinnaHangingBridgeBoard_map_collision_info
 
 static TMapObjData PinnaHangingBridgeBoard_data = {
 	"PinnaHangingBridgeBoard",
-	0x40000248,
+	ACTOR_TYPE_PINNA_HANGING_BRIDGE_BOARD,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&PinnaHangingBridgeBoard_anim_info,
@@ -8654,7 +8714,7 @@ static const TMapObjAnimDataInfo GateManta_anim_info
 
 static TMapObjData GateManta_data = {
 	"GateManta",
-	0x40000137,
+	ACTOR_TYPE_GATE_MANTA,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&GateManta_anim_info,
@@ -8672,7 +8732,7 @@ static TMapObjData GateManta_data = {
 
 static TMapObjData PinnaSunFlower_data = {
 	"PinnaSunFlower",
-	0x40000138,
+	ACTOR_TYPE_PINNA_SUN_FLOWER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8704,7 +8764,7 @@ static const TMapObjHitInfo AmiKing_obj_hit_info
 
 static TMapObjData AmiKing_data = {
 	"amiking",
-	0x10000034,
+	ACTOR_TYPE_AMIKING,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&AmiKing_anim_info,
@@ -8729,7 +8789,7 @@ static const TMapObjHitInfo PinnaCoaster_obj_hit_info
 
 static TMapObjData PinnaCoaster_data = {
 	"Coaster",
-	0x40000139,
+	ACTOR_TYPE_COASTER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8754,7 +8814,7 @@ static const TMapObjCollisionInfo casinoroulette_map_collision_info
 
 static TMapObjData casinoroulette_data = {
 	"casinorulet",
-	0x4000019A,
+	ACTOR_TYPE_CASINORULET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8786,7 +8846,7 @@ static const TMapObjCollisionInfo roulette00_map_collision_info
 
 static TMapObjData roulette00_data = {
 	"rulet00",
-	0x4000019A,
+	ACTOR_TYPE_CASINORULET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&roulette_anim_info,
@@ -8811,7 +8871,7 @@ static const TMapObjCollisionInfo roulette01_map_collision_info
 
 static TMapObjData roulette01_data = {
 	"rulet01",
-	0x4000019A,
+	ACTOR_TYPE_CASINORULET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8836,7 +8896,7 @@ static const TMapObjCollisionInfo roulette02_map_collision_info
 
 static TMapObjData roulette02_data = {
 	"rulet02",
-	0x4000019A,
+	ACTOR_TYPE_CASINORULET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8861,7 +8921,7 @@ static const TMapObjHitInfo slotdrum_obj_hit_info
 
 static TMapObjData slotdrum_data = {
 	"srotdram",
-	0x4000019B,
+	ACTOR_TYPE_SROTDRAM,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8889,7 +8949,7 @@ static const TMapObjHitInfo telesaslot_obj_hit_info
 
 static TMapObjData telesaslot_data = {
 	"srotRulet",
-	0x400001A6,
+	ACTOR_TYPE_SROT_RULET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8918,7 +8978,7 @@ static const TMapObjHitInfo donchou_obj_hit_info
 
 static TMapObjData donchou_data = {
 	"Donchou",
-	0x400001A7,
+	ACTOR_TYPE_DONCHOU,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8950,7 +9010,7 @@ static const TMapObjCollisionInfo pazul_map_collision_info
 
 static TMapObjData casino_panel_gate_data = {
 	"pazul",
-	0x4000019C,
+	ACTOR_TYPE_PAZUL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8968,7 +9028,7 @@ static TMapObjData casino_panel_gate_data = {
 
 static TMapObjData SakuCasino_data = {
 	"SakuCasino",
-	0x400001A8,
+	ACTOR_TYPE_SAKU_CASINO,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -8993,7 +9053,7 @@ static const TMapObjAnimDataInfo bosswall_anim_info
 
 static TMapObjData SirenabossWall_data = {
 	"SirenabossWall",
-	0x400001A8,
+	ACTOR_TYPE_SAKU_CASINO,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&bosswall_anim_info,
@@ -9018,7 +9078,7 @@ static const TMapObjAnimDataInfo casinoroof_anim_info
 
 static TMapObjData SirenaCasinoRoof_data = {
 	"SirenaCasinoRoof",
-	0x400001A8,
+	ACTOR_TYPE_SAKU_CASINO,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&casinoroof_anim_info,
@@ -9063,7 +9123,7 @@ static const TMapObjSoundInfo GlassBreak_sound_info
 
 static TMapObjData GlassBreak_data = {
 	"GlassBreak",
-	0x4000019E,
+	ACTOR_TYPE_GLASS_BREAK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&GlassBreak_anim_info,
@@ -9094,7 +9154,7 @@ static const TMapObjHitInfo closet_obj_hit_info
 
 static TMapObjData Closet_data = {
 	"Closet",
-	0x4000019F,
+	ACTOR_TYPE_CLOSET,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&closet_anim_info,
@@ -9128,7 +9188,7 @@ static const TMapObjCollisionInfo ChestRevolve_map_collision_info
 
 static TMapObjData ChestRevolve_data = {
 	"ChestRevolve",
-	0x400001A0,
+	ACTOR_TYPE_CHEST_REVOLVE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&ChestRevolve_anim_info,
@@ -9157,7 +9217,7 @@ static const TMapObjCollisionInfo PosterTeresa_map_collision_info
 
 static TMapObjData PosterTeresa_data = {
 	"PosterTeresa",
-	0x400001A1,
+	ACTOR_TYPE_POSTER_TERESA,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9193,7 +9253,7 @@ static const TMapObjCollisionInfo PictureTeresa_map_collision_info
 
 static TMapObjData PictureTeresa_data = {
 	"PictureTeresa",
-	0x400001A2,
+	ACTOR_TYPE_PICTURE_TERESA,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9238,7 +9298,7 @@ static const TMapObjSoundInfo PanelBreak_sound_info
 
 static TMapObjData PanelBreak_data = {
 	"PanelBreak",
-	0x400001A3,
+	ACTOR_TYPE_PANEL_BREAK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&PanelBreak_anim_info,
@@ -9271,7 +9331,7 @@ static const TMapObjCollisionInfo PanelRevolve_map_collision_info
 
 static TMapObjData PanelRevolve_data = {
 	"PanelRevolve",
-	0x400001A4,
+	ACTOR_TYPE_PANEL_REVOLVE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&PanelRevolve_anim_info,
@@ -9289,7 +9349,7 @@ static TMapObjData PanelRevolve_data = {
 
 static TMapObjData SirenaBlockBreak_data = {
 	"SirenaBlockBreak",
-	0x400001A5,
+	ACTOR_TYPE_SIRENA_BLOCK_BREAK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9314,7 +9374,7 @@ static const TMapObjCollisionInfo SirenaShop_map_collision_info
 
 static TMapObjData SirenaShop_data = {
 	"SirenaShop",
-	0x400001A9,
+	ACTOR_TYPE_SIRENA_SHOP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9332,7 +9392,7 @@ static TMapObjData SirenaShop_data = {
 
 static TMapObjData StainHotel_data = {
 	"SimiHotel",
-	0x400001AA,
+	ACTOR_TYPE_SIMI_HOTEL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9371,7 +9431,7 @@ static const TMapObjCollisionInfo cogwheel_map_collision_info
 
 static TMapObjData cogwheel_data = {
 	"cogwheel",
-	0x40000226,
+	ACTOR_TYPE_COGWHEEL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&cogwheel_anim_info,
@@ -9403,7 +9463,7 @@ static const TMapObjCollisionInfo CogwheelPlate_map_collision_info
 
 static TMapObjData CogwheelPlate_data = {
 	"cogwheel_plate",
-	0x40000227,
+	ACTOR_TYPE_COGWHEEL_PLATE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9435,7 +9495,7 @@ static const TMapObjCollisionInfo CogwheelPot_map_collision_info
 
 static TMapObjData CogwheelPot_data = {
 	"cogwheel_pot",
-	0x40000228,
+	ACTOR_TYPE_COGWHEEL_POT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9468,7 +9528,7 @@ static const TMapObjCollisionInfo mare_float_house_map_collision_info
 
 static TMapObjData mare_float_house_data = {
 	"ukisima",
-	0x40000229,
+	ACTOR_TYPE_UKISIMA,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9507,7 +9567,7 @@ static const TMapObjCollisionInfo StopRock_map_collision_info
 
 static TMapObjData StopRock_data = {
 	"StopRock",
-	0x4000022B,
+	ACTOR_TYPE_STOP_ROCK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9532,7 +9592,7 @@ static const TMapObjHitInfo ElasticCode_obj_hit_info
 
 static TMapObjData ElasticCode_data = {
 	"ElasticCode",
-	0x400000BB,
+	ACTOR_TYPE_ELASTIC_CODE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9572,7 +9632,7 @@ static const TMapObjCollisionInfo GrowthTree_map_collision_info
 
 static TMapObjData GrowthTree_data = {
 	"Moyasi",
-	0x4000003C,
+	ACTOR_TYPE_MOYASI,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&GrowthTree_anim_info,
@@ -9590,7 +9650,7 @@ static TMapObjData GrowthTree_data = {
 
 static TMapObjData WireBellPurple_data = {
 	"WireBellPurple",
-	0x4000022D,
+	ACTOR_TYPE_WIRE_BELL_PURPLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9631,7 +9691,7 @@ static const TMapObjCollisionInfo MuddyBoat_map_collision_info
 
 static TMapObjData MuddyBoat_data = {
 	"MuddyBoat",
-	0x4000022E,
+	ACTOR_TYPE_MUDDY_BOAT,
 	"乗り物マネージャー",
 	"オブジェクトグループ",
 	&MuddyBoat_anim_info,
@@ -9665,7 +9725,7 @@ static const TMapObjHitInfo Puncher_obj_hit_info
 
 static TMapObjData Puncher_data = {
 	"Puncher",
-	0x4000022F,
+	ACTOR_TYPE_PUNCHER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&Puncher_anim_info,
@@ -9699,7 +9759,7 @@ static const TMapObjHitInfo HatoPop_obj_hit_info
 
 static TMapObjData HatoPop_data = {
 	"HatoPop",
-	0x4000022F,
+	ACTOR_TYPE_PUNCHER,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&HatoPop_anim_info,
@@ -9731,7 +9791,7 @@ static const TMapObjCollisionInfo MareWaterJump_map_collision_info
 
 static TMapObjData MareWaterJump_data = {
 	"mareWaterJump",
-	0x40000230,
+	ACTOR_TYPE_MARE_WATER_JUMP,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9756,7 +9816,7 @@ static const TMapObjHitInfo BumpyWall_obj_hit_info
 
 static TMapObjData BumpyWall_data = {
 	"MareEventBumpyWall",
-	0x40000231,
+	ACTOR_TYPE_MARE_EVENT_BUMPY_WALL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -9781,7 +9841,7 @@ static const TMapObjHitInfo ExBottle_obj_hit_info
 
 static TMapObjData ExBottle_data = {
 	"exBottle",
-	0x40000233,
+	ACTOR_TYPE_EX_BOTTLE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9806,7 +9866,7 @@ static const TMapObjAnimDataInfo CoinFish_anim_info
 
 static TMapObjData CoinFish_data = {
 	"CoinFish",
-	0x40000232,
+	ACTOR_TYPE_COIN_FISH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&CoinFish_anim_info,
@@ -9831,7 +9891,7 @@ static const TMapObjAnimDataInfo MareFall_anim_info
 
 static TMapObjData MareFall_data = {
 	"mareFall",
-	0x40000234,
+	ACTOR_TYPE_MARE_FALL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&MareFall_anim_info,
@@ -9856,7 +9916,7 @@ static const TMapObjCollisionInfo MareCork_map_collision_info
 
 static TMapObjData MareCork_data = {
 	"MareCork",
-	0x40000235,
+	ACTOR_TYPE_MARE_CORK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -9888,7 +9948,7 @@ static const TMapObjHitInfo MonteRoot_obj_hit_info
 
 static TMapObjData MonteRoot_data = {
 	"MonteRoot",
-	0x40000244,
+	ACTOR_TYPE_MONTE_ROOT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&MonteRoot_anim_info,
@@ -9921,7 +9981,7 @@ static const TMapObjCollisionInfo JumpMushroom_map_collision_info
 
 static TMapObjData JumpMushroom_data = {
 	"JumpMushroom",
-	0x40000245,
+	ACTOR_TYPE_JUMP_MUSHROOM,
 	"大型地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&JumpMushroom_anim_info,
@@ -9954,7 +10014,7 @@ static const TMapObjHitInfo MonteGoalFlag_obj_hit_info
 
 static TMapObjData MonteGoalFlag_data = {
 	"MonteGoalFlag",
-	0x40000246,
+	ACTOR_TYPE_MONTE_GOAL_FLAG,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&MonteGoalFlag_anim_info,
@@ -9993,7 +10053,7 @@ static const TMapObjCollisionInfo HangingBridgeBoard_map_collision_info
 
 static TMapObjData HangingBridgeBoard_data = {
 	"HangingBridgeBoard",
-	0x40000248,
+	ACTOR_TYPE_PINNA_HANGING_BRIDGE_BOARD,
 	"地形オブジェマネージャー",
 	"敵グループ",
 	&HangingBridgeBoard_anim_info,
@@ -10011,7 +10071,7 @@ static TMapObjData HangingBridgeBoard_data = {
 
 static TMapObjData HangingBridge_data = {
 	"HangingBridge",
-	0x40000247,
+	ACTOR_TYPE_HANGING_BRIDGE,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -10043,7 +10103,7 @@ static const TMapObjCollisionInfo SwingBoard_map_collision_info
 
 static TMapObjData SwingBoard_data = {
 	"SwingBoard",
-	0x40000249,
+	ACTOR_TYPE_SWING_BOARD,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -10074,7 +10134,7 @@ static const TMapObjHitInfo Fluff_obj_hit_info
 
 static TMapObjData Fluff_data = {
 	"Fluff",
-	0x40000049,
+	ACTOR_TYPE_FLUFF,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&Fluff_anim_info,
@@ -10092,7 +10152,7 @@ static TMapObjData Fluff_data = {
 
 static TMapObjData FluffManager_data = {
 	"FluffManager",
-	0x40000049,
+	ACTOR_TYPE_FLUFF,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&no_data_anim_info,
@@ -10118,7 +10178,7 @@ static const TMapObjAnimDataInfo Bathtub_anim_info
 
 static TMapObjData Bathtub_data = {
 	"bath",
-	0x40000258,
+	ACTOR_TYPE_BATH,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&Bathtub_anim_info,
@@ -10136,7 +10196,7 @@ static TMapObjData Bathtub_data = {
 
 static TMapObjData BathtubStand_data = {
 	"stand",
-	0x40000259,
+	ACTOR_TYPE_STAND,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -10169,7 +10229,7 @@ static const TMapObjAnimDataInfo BathtubStandBreaking_anim_info
 
 static TMapObjData BathtubStandBreaking_data = {
 	"stand_break",
-	0x4000025A,
+	ACTOR_TYPE_STAND_BREAK,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&BathtubStandBreaking_anim_info,
@@ -10205,7 +10265,7 @@ static const TMapObjCollisionInfo ex1_turn_lift_map_collision_info
 
 static TMapObjData ex1_turn_lift_data = {
 	"ex1_turn_lift",
-	0x40000262,
+	ACTOR_TYPE_EX1_TURN_LIFT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&ex1_turn_lift_anim_info,
@@ -10234,7 +10294,7 @@ static const TMapObjCollisionInfo z_turn_disk_map_collision_info
 
 static TMapObjData z_turn_disk_data = {
 	"zTurnDisk",
-	0x40000262,
+	ACTOR_TYPE_EX1_TURN_LIFT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -10270,7 +10330,7 @@ static const TMapObjCollisionInfo y_turn_lift_map_collision_info
 
 static TMapObjData y_turn_lift_data = {
 	"yTurnLift",
-	0x40000262,
+	ACTOR_TYPE_EX1_TURN_LIFT,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&y_turn_lift_anim_info,
@@ -10288,7 +10348,7 @@ static TMapObjData y_turn_lift_data = {
 
 static TMapObjData EXskyTumiki_data = {
 	"EXskyTumiki",
-	0x40000263,
+	ACTOR_TYPE_EX_SKY_TUMIKI,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -10306,7 +10366,7 @@ static TMapObjData EXskyTumiki_data = {
 
 static TMapObjData EXskyWindow_data = {
 	"EXskyWindow",
-	0x40000263,
+	ACTOR_TYPE_EX_SKY_TUMIKI,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -10324,7 +10384,7 @@ static TMapObjData EXskyWindow_data = {
 
 static TMapObjData EXskySenro_data = {
 	"EXskySenro",
-	0x40000263,
+	ACTOR_TYPE_EX_SKY_TUMIKI,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	nullptr,
@@ -10362,7 +10422,7 @@ static const TMapObjCollisionInfo Nail_map_collision_info
 
 static TMapObjData Nail_data = {
 	"MapObjNail",
-	0x40000264,
+	ACTOR_TYPE_MAP_OBJ_NAIL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&Nail_anim_info,
@@ -10394,7 +10454,7 @@ static const TMapObjCollisionInfo PachinkoNail_map_collision_info
 
 static TMapObjData PachinkoNail_data = {
 	"MapObjPachinkoNail",
-	0x40000265,
+	ACTOR_TYPE_MAP_OBJ_PACHINKO_NAIL,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&PachinkoNail_anim_info,
@@ -10435,7 +10495,7 @@ static const TMapObjHitInfo FileLoadBlock_obj_hit_info
 
 static TMapObjData FileLoadBlockA_data = {
 	"FileLoadBlockA",
-	0x400002EE,
+	ACTOR_TYPE_FILE_LOAD_BLOCK_A,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&FileLoadBlockA_anim_info,
@@ -10462,7 +10522,7 @@ static const TMapObjAnimDataInfo FileLoadBlockB_anim_info
 
 static TMapObjData FileLoadBlockB_data = {
 	"FileLoadBlockB",
-	0x400002EF,
+	ACTOR_TYPE_FILE_LOAD_BLOCK_B,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&FileLoadBlockB_anim_info,
@@ -10489,7 +10549,7 @@ static const TMapObjAnimDataInfo FileLoadBlockC_anim_info
 
 static TMapObjData FileLoadBlockC_data = {
 	"FileLoadBlockC",
-	0x400002F0,
+	ACTOR_TYPE_FILE_LOAD_BLOCK_C,
 	"地形オブジェマネージャー",
 	"オブジェクトグループ",
 	&FileLoadBlockC_anim_info,
@@ -10886,21 +10946,21 @@ void TMapObjBase::initUnique()
 {
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
-	case 0x2000003C:
+	case ACTOR_TYPE_MARIO_CAP:
 		mMActor->setLightType(LIGHT_TYPE_PLAYER);
 		break;
-	case 0x2000000E:
+	case ACTOR_TYPE_COIN:
 		if (mMActor) {
 			getModel()->getMatPacket(0)->setMaterialID(
 			    getModel()->getMatPacket(0)->getMaterialID()
 			    & ~J3DMatPacket::DIFF_FLAG);
 		}
 		break;
-	case 0x40000048:
+	case ACTOR_TYPE_FLOWER_ORANGE:
 		setMatTable(gpMapObjManager->unk74);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x4000001C:
+	case ACTOR_TYPE_WOOD_BOX:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk7C);
@@ -10910,7 +10970,7 @@ void TMapObjBase::initUnique()
 		if (mGroundPlane->isShadow())
 			mMapCollisionManager->getActiveCollision()->setAllBGType(0x4000);
 		break;
-	case 0x4000005A:
+	case ACTOR_TYPE_WOOD_BARREL:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk80);
@@ -10918,91 +10978,91 @@ void TMapObjBase::initUnique()
 		}
 		mMActor = mMActorKeeper->mActors[0];
 		break;
-	case 0x400000BA:
+	case ACTOR_TYPE_RICCO_SHIP:
 		setMatTable(gpMapObjManager->unk94);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x40000263:
+	case ACTOR_TYPE_EX_SKY_TUMIKI:
 		startAllAnim(mMActor, unkF4);
 		break;
-	case 0x4000003C:
+	case ACTOR_TYPE_MOYASI:
 		mMActor->initSimpleMotionBlend(0x14);
 		break;
-	case 0x400000A8:
-	case 0x40000096:
-	case 0x4000009A:
-	case 0x4000009B:
-	case 0x4000009E:
-	case 0x4000009F:
-	case 0x400000A1:
-	case 0x400000A2:
-	case 0x400000A3:
+	case ACTOR_TYPE_BIG_WINDMILL_BLOCK:
+	case ACTOR_TYPE_BIG_WINDMILL:
+	case ACTOR_TYPE_BIA_WATERMILL01:
+	case ACTOR_TYPE_BIA_TURN_BRIDGE:
+	case ACTOR_TYPE_BIA_BELL:
+	case ACTOR_TYPE_BIA_WATERMILL00:
+	case ACTOR_TYPE_BIA_WATERMILL_VERTICAL:
+	case ACTOR_TYPE_LAMP_BIANCO:
+	case ACTOR_TYPE_BIA_DOOR:
 		setMatTable(gpMapObjManager->unk8C);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x400000A0:
+	case ACTOR_TYPE_MINI_WINDMILL_L:
 		setMatTable(gpMapObjManager->unk8C);
 		break;
-	case 0x4000009C:
+	case ACTOR_TYPE_LEAF_BOAT:
 		setMatTable(gpMapObjManager->unk90);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x400000A5:
+	case ACTOR_TYPE_LEAF_BOAT_ROTTEN:
 		setMatTable(gpMapObjManager->unk90);
 		break;
-	case 0x400000CB:
-	case 0x400000CD:
-	case 0x400000CE:
+	case ACTOR_TYPE_SAND_LEAF_BASE00:
+	case ACTOR_TYPE_SAND_BOMB_BASE00:
+	case ACTOR_TYPE_SAND_BOMB_BASE_FOOT:
 		setMatTable(gpMapObjManager->unkC0);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x400000CC:
+	case ACTOR_TYPE_SAND_BOMB:
 		break;
-	case 0x400000D3:
+	case ACTOR_TYPE_SAND_CASTLE:
 		setMatTableTex(gpMapObjManager->unkC0);
 		break;
-	case 0x400000CF:
+	case ACTOR_TYPE_MIRROR_L:
 		setMatTable(gpMapObjManager->unkC4);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x20000026:
-	case 0x2000002A:
-	case 0x2000001F:
-	case 0x20000022:
+	case ACTOR_TYPE_NORMAL_NOZZLE_ITEM:
+	case ACTOR_TYPE_BACK_NOZZLE_ITEM:
+	case ACTOR_TYPE_WATERGUN_ITEM:
+	case ACTOR_TYPE_ROCKET_NOZZLE_ITEM:
 		setMatTable(gpMapObjManager->unk6C);
 		SMS_UnifyMaterial(getModel());
 		break;
-	case 0x20000068:
+	case ACTOR_TYPE_NOZZLE_BOX:
 		for (int i = 0; i < 3; ++i) {
 			mMActor = mMActorKeeper->mActors[i];
 			setMatTableTex(gpMapObjManager->unk70);
 		}
 		mMActor = mMActorKeeper->mActors[0];
 		break;
-	case 0x400002C2:
+	case ACTOR_TYPE_BRICK_BLOCK:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk84);
 		}
 		mMActor = mMActorKeeper->mActors[0];
 		break;
-	case 0x400002C3:
+	case ACTOR_TYPE_WATER_MELON_BLOCK:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->mActors[i];
 			setMatTable(gpMapObjManager->unk88);
 		}
 		mMActor = mMActorKeeper->mActors[0];
 		break;
-	case 0x400000D0:
+	case ACTOR_TYPE_WATERMELON:
 		mMActor->setLightType(LIGHT_TYPE_OBJECT);
 		break;
-	case 0x400000DB:
+	case ACTOR_TYPE_WATERMELON_STATIC:
 		mPosition.y += mScaling.y * 50.0f;
 		calcRootMatrix();
 		getModel()->calc();
 		mPosition.y -= mScaling.y * 50.0f;
 		break;
-	case 0x4000001B:
+	case ACTOR_TYPE_ARROW_BOARD_LR:
 		setMatTable(gpMapObjManager->unk78);
 		SMS_UnifyMaterial(getModel());
 		break;
@@ -11243,7 +11303,8 @@ void TMapObjBase::initMapObj()
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= LIVE_FLAG_UNK8;
 
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000) && !isActorType(0x40000084)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000)
+	    && !isActorType(ACTOR_TYPE_DOKAN_GATE)) {
 		TScreenTexture* ref = static_cast<TScreenTexture*>(
 		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = ref->getTexture()->getTexInfo();

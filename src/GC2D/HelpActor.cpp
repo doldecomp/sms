@@ -23,8 +23,8 @@ void THelpActor::load(JSUMemoryInputStream& stream)
 	stream >> auStack_c;
 	stream >> local_10;
 	unk6C = stream.readString();
-	initHitActor(0x40000320, 1, HIT_CATEGORY_PLAYER, mScaling.x * 100.0f,
-	             mScaling.y * 100.0f, 1.0f, 1.0f);
+	initHitActor(ACTOR_TYPE_HELP_ACTOR, 1, HIT_CATEGORY_PLAYER,
+	             mScaling.x * 100.0f, mScaling.y * 100.0f, 1.0f, 1.0f);
 	unk68 = local_10 + VERSION_SELECT(GMSJ01(0xE0030), GMSP01(0x33));
 }
 
@@ -41,7 +41,7 @@ int THelpActor::getHelpID()
 	if (unk70 != nullptr && check())
 		return -1;
 
-	if (mColCount != 0 && getCollision(0)->getActorType() == 0x80000001)
+	if (mColCount != 0 && getCollision(0)->getActorType() == ACTOR_TYPE_MARIO)
 		return unk68;
 
 	return -1;

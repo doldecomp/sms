@@ -83,7 +83,7 @@ TBaseNPC::TBaseNPC(u32 param_1, const char* name)
 
 	mActorType = param_1;
 
-	if (param_1 != 0x400001C) {
+	if (param_1 != ACTOR_TYPE_NPC_DUMMY) {
 		mKeepAnmCtrl = new TNpcKeepAnm;
 
 		if (isBeTrampledNpc())
@@ -99,14 +99,15 @@ void TBaseNPC::load(JSUMemoryInputStream& stream)
 	mInitialScale = mScaling;
 	unk1B8        = getFocalPoint();
 
-	if (mActorType >= 0x400001E || mActorType < 0x400001C)
+	if (mActorType >= 0x400001E || mActorType < ACTOR_TYPE_NPC_DUMMY)
 		setIndividualDifference_(stream);
 }
 
 void TBaseNPC::loadAfter()
 {
 	TSpineEnemy::loadAfter();
-	if (mActorType == 0x4000018 && gpMarDirector->getCurrentMap() == 1
+	if (mActorType == ACTOR_TYPE_NPC_PEACH
+	    && gpMarDirector->getCurrentMap() == 1
 	    && gpMarDirector->getCurrentStage() == 1) {
 		mBalloonCtrl = new TNpcBalloon;
 	}
@@ -117,11 +118,11 @@ bool TBaseNPC::isNormalMonteM() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x4000001:
-	case 0x4000002:
-	case 0x4000003:
-	case 0x4000004:
-	case 0x4000005:
+	case ACTOR_TYPE_NPC_MONTE_M:
+	case ACTOR_TYPE_NPC_MONTE_MA:
+	case ACTOR_TYPE_NPC_MONTE_MB:
+	case ACTOR_TYPE_NPC_MONTE_MC:
+	case ACTOR_TYPE_NPC_MONTE_MD:
 		result = true;
 		break;
 	}
@@ -132,9 +133,9 @@ bool TBaseNPC::isNormalMonteW() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x400000A:
-	case 0x400000B:
-	case 0x400000C:
+	case ACTOR_TYPE_NPC_MONTE_W:
+	case ACTOR_TYPE_NPC_MONTE_WA:
+	case ACTOR_TYPE_NPC_MONTE_WB:
 		result = true;
 		break;
 	}
@@ -145,10 +146,10 @@ bool TBaseNPC::isSpecialMonteM() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x4000006:
-	case 0x4000007:
-	case 0x4000008:
-	case 0x4000009:
+	case ACTOR_TYPE_NPC_MONTE_ME:
+	case ACTOR_TYPE_NPC_MONTE_MF:
+	case ACTOR_TYPE_NPC_MONTE_MG:
+	case ACTOR_TYPE_NPC_MONTE_MH:
 		result = true;
 		break;
 	}
@@ -159,7 +160,7 @@ bool TBaseNPC::isSpecialMonteW() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x400000D:
+	case ACTOR_TYPE_NPC_MONTE_WC:
 		result = true;
 		break;
 	}
@@ -170,7 +171,7 @@ bool TBaseNPC::isNormalMareM() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x400000E:
+	case ACTOR_TYPE_NPC_MARE_M:
 		result = true;
 		break;
 	}
@@ -181,7 +182,7 @@ bool TBaseNPC::isNormalMareW() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x4000013:
+	case ACTOR_TYPE_NPC_MARE_W:
 		result = true;
 		break;
 	}
@@ -192,10 +193,10 @@ bool TBaseNPC::isSpecialMareM() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x400000F:
-	case 0x4000010:
-	case 0x4000011:
-	case 0x4000012:
+	case ACTOR_TYPE_NPC_MARE_MA:
+	case ACTOR_TYPE_NPC_MARE_MB:
+	case ACTOR_TYPE_NPC_MARE_MC:
+	case ACTOR_TYPE_NPC_MARE_MD:
 		result = true;
 		break;
 	}
@@ -206,8 +207,8 @@ bool TBaseNPC::isSpecialMareW() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x4000014:
-	case 0x4000015:
+	case ACTOR_TYPE_NPC_MARE_WA:
+	case ACTOR_TYPE_NPC_MARE_WB:
 		result = true;
 		break;
 	}
@@ -218,8 +219,8 @@ bool TBaseNPC::isJellyFishMare() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x4000014:
-	case 0x400000F:
+	case ACTOR_TYPE_NPC_MARE_WA:
+	case ACTOR_TYPE_NPC_MARE_MA:
 		result = true;
 		break;
 	}
@@ -230,8 +231,8 @@ bool TBaseNPC::isSunflower() const
 {
 	bool result = false;
 	switch (mActorType) {
-	case 0x400001A:
-	case 0x400001B:
+	case ACTOR_TYPE_NPC_SUNFLOWER_L:
+	case ACTOR_TYPE_NPC_SUNFLOWER_S:
 		result = true;
 		break;
 	}
@@ -253,8 +254,8 @@ bool TBaseNPC::isSmallNpc() const
 		result = true;
 	else
 		switch (mActorType) {
-		case 0x4000016:
-		case 0x4000017:
+		case ACTOR_TYPE_NPC_KINOPIO:
+		case ACTOR_TYPE_NPC_KINOJII:
 			result = true;
 			break;
 		}
@@ -266,14 +267,14 @@ bool TBaseNPC::isPollutionNpc() const
 	bool result = false;
 
 	switch (mActorType) {
-	case 0x4000001:
-	case 0x4000002:
-	case 0x4000004:
-	case 0x400000A:
-	case 0x400000B:
-	case 0x400000E:
-	case 0x4000013:
-	case 0x4000016:
+	case ACTOR_TYPE_NPC_MONTE_M:
+	case ACTOR_TYPE_NPC_MONTE_MA:
+	case ACTOR_TYPE_NPC_MONTE_MC:
+	case ACTOR_TYPE_NPC_MONTE_W:
+	case ACTOR_TYPE_NPC_MONTE_WA:
+	case ACTOR_TYPE_NPC_MARE_M:
+	case ACTOR_TYPE_NPC_MARE_W:
+	case ACTOR_TYPE_NPC_KINOPIO:
 		result = true;
 		break;
 	}
@@ -290,8 +291,8 @@ bool TBaseNPC::isBeTrampledNpc() const
 			result = true;
 		} else {
 			switch (mActorType) {
-			case 0x4000016:
-			case 0x4000017:
+			case ACTOR_TYPE_NPC_KINOPIO:
+			case ACTOR_TYPE_NPC_KINOJII:
 				result = true;
 				break;
 			}
@@ -308,9 +309,9 @@ bool TBaseNPC::isMadNpc() const
 		result = true;
 	else {
 		switch (mActorType) {
-		case 0x4000006:
-		case 0x4000007:
-		case 0x400000D:
+		case ACTOR_TYPE_NPC_MONTE_ME:
+		case ACTOR_TYPE_NPC_MONTE_MF:
+		case ACTOR_TYPE_NPC_MONTE_WC:
 			result = true;
 			break;
 		}
@@ -322,12 +323,12 @@ bool TBaseNPC::isBehaveToWaterNpc() const
 {
 	bool result = true;
 	switch (mActorType) {
-	case 0x4000007:
-	case 0x4000008:
-	case 0x400000F:
-	case 0x4000014:
-	case 0x400001C:
-	case 0x400001D:
+	case ACTOR_TYPE_NPC_MONTE_MF:
+	case ACTOR_TYPE_NPC_MONTE_MG:
+	case ACTOR_TYPE_NPC_MARE_MA:
+	case ACTOR_TYPE_NPC_MARE_WA:
+	case ACTOR_TYPE_NPC_DUMMY:
+	case ACTOR_TYPE_NPC_BOARD:
 		result = false;
 		break;
 	}
@@ -342,13 +343,13 @@ bool TBaseNPC::isBehaveToHitNpc() const
 		result = true;
 	} else {
 		switch (mActorType) {
-		case 0x400000E:
-		case 0x4000010:
-		case 0x4000011:
-		case 0x4000013:
-		case 0x4000015:
-		case 0x4000016:
-		case 0x4000017:
+		case ACTOR_TYPE_NPC_MARE_M:
+		case ACTOR_TYPE_NPC_MARE_MB:
+		case ACTOR_TYPE_NPC_MARE_MC:
+		case ACTOR_TYPE_NPC_MARE_W:
+		case ACTOR_TYPE_NPC_MARE_WB:
+		case ACTOR_TYPE_NPC_KINOPIO:
+		case ACTOR_TYPE_NPC_KINOJII:
 			result = true;
 		}
 	}
@@ -363,9 +364,9 @@ bool TBaseNPC::isPartsAnmNpc() const
 		result = true;
 	} else {
 		switch (mActorType) {
-		case 0x4000010:
-		case 0x4000015:
-		case 0x4000018:
+		case ACTOR_TYPE_NPC_MARE_MB:
+		case ACTOR_TYPE_NPC_MARE_WB:
+		case ACTOR_TYPE_NPC_PEACH:
 			result = true;
 			break;
 		}
@@ -378,11 +379,12 @@ bool TBaseNPC::isNeedNeckStraight() const
 	bool result = false;
 	int anmKind = unkD0->getCurrentAnmKind();
 	if ((mHolder != nullptr && mHolder == gpMarioAddress) || !isClean()
-	    || mActorType == 0x4000012
-	    || (mActorType == 0x4000019 && anmKind == NPC_ANM_KIND_UNK5)
+	    || mActorType == ACTOR_TYPE_NPC_MARE_MD
+	    || (mActorType == ACTOR_TYPE_NPC_RACCOON_DOG
+	        && anmKind == NPC_ANM_KIND_UNK5)
 	    || (isMare() && anmKind == NPC_ANM_KIND_UNKC)
 	    || ((checkUnk1D8(UNK1D8_FLAG_UNK2) || anmKind == NPC_ANM_KIND_UNK5)
-	        & (mActorType == 0x4000018))) {
+	        & (mActorType == ACTOR_TYPE_NPC_PEACH))) {
 		result = true;
 	}
 	return result;
@@ -438,7 +440,7 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 	bool result = false;
 
 	switch (mActorType) {
-	case 0x400001C:
+	case ACTOR_TYPE_NPC_DUMMY:
 		break;
 
 	default:
@@ -455,7 +457,7 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 			result = true;
 		} else if (param_2 == HIT_MESSAGE_UNK10
 		           || (param_2 == HIT_MESSAGE_ATTACK
-		               && param_1->getActorType() == 0x4000005A)) {
+		               && param_1->getActorType() == ACTOR_TYPE_WOOD_BARREL)) {
 			if (mDamageParticleForbidCount == 0) {
 				SMS_EasyEmitParticle(PARTICLE_MS_DMG_A, &param_1->mPosition,
 				                     nullptr,
@@ -535,7 +537,7 @@ void TBaseNPC::moveObject()
 	mPositionDelta.zero();
 	mRotationDelta.zero();
 	const TLiveActor* groundActor
-	    = SMS_GetGroundActor(mGroundPlane, 0x400000CD);
+	    = SMS_GetGroundActor(mGroundPlane, ACTOR_TYPE_SAND_BOMB_BASE00);
 	if (groundActor) {
 		mHeadHeight = mPtrSaveNormal->mSLHeadHeightSandBomb.get();
 		behaveToSandBomb_(groundActor);
@@ -593,7 +595,7 @@ void TBaseNPC::execMotionBlend_()
 
 void TBaseNPC::calcRootMatrix()
 {
-	if (mActorType == 0x400001D) {
+	if (mActorType == ACTOR_TYPE_NPC_BOARD) {
 		TLiveActor::calcRootMatrix();
 		return;
 	}
@@ -624,7 +626,7 @@ void TBaseNPC::movementOnlyTalk_(const JDrama::TGraphics* param_1)
 
 void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (mActorType == 0x400001C) {
+	if (mActorType == ACTOR_TYPE_NPC_DUMMY) {
 		if (!(cue & CUE_MOVE))
 			return;
 
@@ -637,7 +639,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 	}
 
-	if (mActorType == 0x400001D) {
+	if (mActorType == ACTOR_TYPE_NPC_BOARD) {
 		if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
 			return;
 
@@ -658,7 +660,8 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		bVar5 = false;
 	} else if ((cue & CUE_MOVE) && mHolder == nullptr && !isAirborne()
 	           && !belongToGround() && mSpine->getTime() != 0
-	           && mActorType != 0x4000018 && isNerveMaybeDontMovement()
+	           && mActorType != ACTOR_TYPE_NPC_PEACH
+	           && isNerveMaybeDontMovement()
 	           && !checkLiveFlag(TBaseNPC::LIVE_FLAG_SINK_BOTTOM)) {
 		TNPCManager* manager = (TNPCManager*)mManager;
 		f32 farClip          = gpConductor->unk84.mEnemyFarClip.get();
@@ -709,7 +712,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 			}
 
-			if (!isJellyFishMare() && mActorType != 0x4000007)
+			if (!isJellyFishMare() && mActorType != ACTOR_TYPE_NPC_MONTE_MF)
 				setVariableDamageRadius_();
 
 			if (isPollutionNpc())
@@ -770,7 +773,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_CALC_ANIM) && mMultiMtxEffect != nullptr) {
 		mMultiMtxEffect->setUserArea();
-		if (mActorType == 0x4000018 && mHolder != nullptr) {
+		if (mActorType == ACTOR_TYPE_NPC_PEACH && mHolder != nullptr) {
 			mMultiMtxEffect->flagOn(0x2);
 		}
 	}
@@ -794,7 +797,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TBaseNPC::setDummyConnectActor(const JDrama::TActor* param_1)
 {
-	if (mActorType != 0x400001C)
+	if (mActorType != ACTOR_TYPE_NPC_DUMMY)
 		return;
 
 	mDummyConnectActor = param_1;
@@ -813,7 +816,7 @@ const GXColor* TBaseNPC::getPtrInitPollutionColor() const
 
 	if (isPollutionNpc()) {
 		result = &unk174;
-	} else if (mActorType != 0x4000006
+	} else if (mActorType != ACTOR_TYPE_NPC_MONTE_ME
 	           && (isSpecialMonte() || isSpecialMare())) {
 		result = &unk174;
 	}
