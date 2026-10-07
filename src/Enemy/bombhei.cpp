@@ -229,7 +229,7 @@ void TBombHei::calcRootMatrix()
 void TBombHei::attackToMario()
 {
 	if (mSpine->getCurrentNerve() == &TNerveBombHeiExplosion::theNerve())
-		SMS_SendMessageToMario(this, HIT_MESSAGE_UNKA);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 }
 
 void TBombHei::behaveToTaken(THitActor* param_1)

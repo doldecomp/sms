@@ -51,7 +51,7 @@ BOOL TButterfly::receiveMessage(THitActor* sender, u32 message)
 			return TRUE;
 		}
 		break;
-	case HIT_MESSAGE_UNK8:
+	case HIT_MESSAGE_DETACH:
 		if (mHolder != nullptr) {
 			mHolder = nullptr;
 			return TRUE;

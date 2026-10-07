@@ -432,7 +432,7 @@ void TMario::considerTake()
 
 	if (mHeldObject != nullptr && !check) {
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHeldObject = nullptr;
 	}
 
@@ -447,7 +447,7 @@ void TMario::considerTake()
 		}
 
 		if (!check2) {
-			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+			mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 			mHolder->receiveMessage(this, HIT_MESSAGE_THROWN);
 			mHolder = nullptr;
 		}

@@ -1444,7 +1444,7 @@ DEFINE_NERVE(TNerveHino2Stamp, TLiveActor)
 		f32 sql = ((THino2Params*)self->getSaveParam())->mSLStampQuakeLen.get();
 		sql     = sql * sql;
 		if (self->getDistToMarioSquared() < sql)
-			SMS_SendMessageToMario(self, 3);
+			SMS_SendMessageToMario(self, HIT_MESSAGE_SUPER_HIP_DROP);
 	}
 
 	return false;

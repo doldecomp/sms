@@ -390,13 +390,13 @@ BOOL TTamaNoko::receiveMessage(THitActor* sender, u32 message)
 
 bool TTamaNoko::isHitValid(u32 param_1)
 {
-	if (param_1 == 11)
+	if (param_1 == HIT_MESSAGE_UNKB)
 		return false;
 
 	if (!mIsSunkInGround || (isBckAnm(7) && getCurAnmFrameNo(0) > 80.0f))
 		return false;
 
-	if (param_1 == 1)
+	if (param_1 == HIT_MESSAGE_HIP_DROP)
 		return true;
 
 	return false;
@@ -408,7 +408,7 @@ void TTamaNoko::attackToMario()
 	    && mSpine->getCurrentNerve() != &TNerveTamaNokoSleep::theNerve()
 	    && (!mIsSunkInGround || !(SMS_GetMarioPos().y > mPosition.y + 10.0f))) {
 
-		SMS_SendMessageToMario(this, 14);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }
 

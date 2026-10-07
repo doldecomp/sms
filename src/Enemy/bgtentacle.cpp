@@ -264,7 +264,7 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 			}
 		}
 
-		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 			mHolder = nullptr;
 			if (mOwner->mState != TBGTentacle::TSTATE_AMPUTEE)
 				mOwner->returnToDefaultState();
@@ -369,7 +369,7 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mOwner->getState() != TBGTentacle::TSTATE_HELD
 		    && mOwner->getState() != TBGTentacle::TSTATE_AMPUTEE
 		    && mHolder != nullptr)
-			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+			mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 	}
 }
 
@@ -608,7 +608,7 @@ void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 	local_e0.y += 1.0f;
 
 	SMS_SendMessageToMario(param_2, HIT_MESSAGE_ATTACK);
-	SMS_SendMessageToMario(param_2, 0x7);
+	SMS_SendMessageToMario(param_2, HIT_MESSAGE_THROWN);
 
 	SMS_ThrowMario(local_e0, 60.0f);
 	mOwner->showMessage(0xE0005);
@@ -1109,7 +1109,7 @@ void TBGTentacle::decideOwnState()
 		if (mTimeInCurrentState >= amputeeTime - 240
 		    && mTakeHit->getHolder() != nullptr) {
 			TTakeActor* holder = mTakeHit->getHolder();
-			holder->receiveMessage(mTakeHit, HIT_MESSAGE_UNK8);
+			holder->receiveMessage(mTakeHit, HIT_MESSAGE_DETACH);
 		}
 		break;
 	}

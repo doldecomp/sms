@@ -368,7 +368,7 @@ bool TPopo::checkTrigger()
 		return false;
 	}
 
-	SMS_SendMessageToMario(this, HIT_MESSAGE_UNK5);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACH);
 	f32 maxScale = unk194->mSLWaterScaleMax.get();
 	u8 pressure  = gpMarioOriginal->mGamePad->mCompSPos[3];
 	if (pressure > 20) {

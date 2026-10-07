@@ -962,7 +962,7 @@ void TMapObjTurn::control()
 BOOL TMapObjTurn::receiveMessage(THitActor* sender, u32 message)
 {
 	u32 result;
-	if (message == HIT_MESSAGE_UNK5
+	if (message == HIT_MESSAGE_ATTACH
 	    && (sender->isActorType(ACTOR_TYPE_COIN)
 	        || sender->isActorType(ACTOR_TYPE_COIN_RED)
 	        || sender->isActorType(ACTOR_TYPE_COIN_BLUE))) {

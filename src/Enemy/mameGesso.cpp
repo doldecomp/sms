@@ -188,13 +188,13 @@ void TMameGesso::reset()
 
 bool TMameGesso::isHitValid(u32 param_1)
 {
-	if (param_1 == 1)
+	if (param_1 == HIT_MESSAGE_HIP_DROP)
 		unk1D1 = 0;
 	else
 		unk1D1 = 1;
 
 	if (mSpine->getCurrentNerve() == &TNerveMameGessoGraphJumpWander::theNerve()
-	    && param_1 == 1) {
+	    && param_1 == HIT_MESSAGE_HIP_DROP) {
 		unk1D0 = 1;
 		mSpine->pushNerve(&TNerveSmallEnemyDie::theNerve());
 		return false;

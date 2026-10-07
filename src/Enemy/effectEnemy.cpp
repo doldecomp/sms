@@ -90,11 +90,11 @@ void TEffectEnemy::sendAttackMsgToMario()
 {
 	switch (unk194) {
 	case 0:
-		SMS_SendMessageToMario(this, HIT_MESSAGE_UNKA);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 		kill();
 		break;
 	case 1:
-		SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 		break;
 	default:
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);

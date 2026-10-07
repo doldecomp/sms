@@ -255,7 +255,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 		switch (sender->getActorType()) {
 		case ACTOR_TYPE_LAMPTRAPIRON:
-			if (message == HIT_MESSAGE_UNKA && !isInvincible()) {
+			if (message == HIT_MESSAGE_BURN && !isInvincible()) {
 				damageExec(sender, mDmgParamsLampTrapIron.mDamage.get(),
 				           mDmgParamsLampTrapIron.mDownType.get(),
 				           mDmgParamsLampTrapIron.mWaterEmit.get(),
@@ -297,7 +297,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			}
 			break;
 		case ACTOR_TYPE_BATH_WATER:
-			if (message == HIT_MESSAGE_UNKA) {
+			if (message == HIT_MESSAGE_BURN) {
 				if (!isInvincible()) {
 					damageExec(sender, mDmgParamsFire.mDamage.get(),
 					           mDmgParamsFire.mDownType.get(),
@@ -428,7 +428,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case ACTOR_TYPE_ELEC_CARAPACE:
 		case ACTOR_TYPE_AMI_NOKO:
 		case ACTOR_TYPE_AMIKING:
-			if (message == 9 && !isInvincible()) {
+			if (message == HIT_MESSAGE_ELECTRIC_SHOCK && !isInvincible()) {
 				elecEffect();
 				changePlayerStatus(MARIO_STATUS_ELECTRIC_DAMAGE, 0, false);
 				return TRUE;
@@ -438,7 +438,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			return TRUE;
 
 		case ACTOR_TYPE_ENEMY_UNK1F:
-			if ((message == HIT_MESSAGE_UNKA || message == HIT_MESSAGE_ATTACK)
+			if ((message == HIT_MESSAGE_BURN || message == HIT_MESSAGE_ATTACK)
 			    && !isInvincible()) {
 				damageExec(sender, mDmgParamsKiller.mDamage.get(),
 				           mDmgParamsKiller.mDownType.get(),
@@ -518,7 +518,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			break;
 		case ACTOR_TYPE_ROCKET:
 		case ACTOR_TYPE_POPO:
-			if (message == HIT_MESSAGE_UNK5) {
+			if (message == HIT_MESSAGE_ATTACH) {
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 					mWaterGun->onFlag(TWaterGun::WATER_GUN_FLAG_UNK4);
 			}
@@ -572,7 +572,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 	switch (sender->mActorType) {
 	case ACTOR_TYPE_BOSS_UNK29:
-		if (message == HIT_MESSAGE_UNKA) {
+		if (message == HIT_MESSAGE_BURN) {
 			if (!isInvincible()) {
 				damageExec(sender, mDmgParamsFire.mDamage.get(),
 				           mDmgParamsFire.mDownType.get(),
@@ -650,7 +650,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				return TRUE;
 			}
 			break;
-		case HIT_MESSAGE_UNK8:
+		case HIT_MESSAGE_DETACH:
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 			} else {
@@ -665,7 +665,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_BOSS_UNKC:
 	case ACTOR_TYPE_BOSS_UNKD:
 	case ACTOR_TYPE_BOSS_UNKE:
-		if (message == HIT_MESSAGE_UNKA && !isInvincible()) {
+		if (message == HIT_MESSAGE_BURN && !isInvincible()) {
 			damageExec(sender, mDmgParamsFire.mDamage.get(),
 			           mDmgParamsFire.mDownType.get(),
 			           mDmgParamsFire.mWaterEmit.get(),
@@ -714,7 +714,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				return TRUE;
 			}
 			break;
-		case HIT_MESSAGE_UNK8:
+		case HIT_MESSAGE_DETACH:
 			if (checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
 				changePlayerStatus(MARIO_STATUS_DIVE, 0, true);
 			} else {
@@ -777,7 +777,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					return TRUE;
 				}
 				if (frontDiff < -0x6000 || frontDiff > 0x6000) {
-					if (message == 0x11) {
+					if (message == HIT_MESSAGE_UNK11) {
 						mPosition    = sender->mPosition;
 						mFaceAngle.y = frontYaw + 0x8000;
 						changePlayerStatus(MARIO_STATUS_DOOR_OPEN_L, 0, false);
@@ -845,7 +845,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_BANANA_TREE:
 	case ACTOR_TYPE_FRUIT_TREE:
 	case ACTOR_TYPE_WOOD_BARREL:
-		if (message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_DETACH) {
 			changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 			mHeldObject = nullptr;
 		}

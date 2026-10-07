@@ -616,7 +616,7 @@ bool TNameKuri::canJumpAttack() const { }
 bool TNameKuri::isHitValid(u32 param_1)
 {
 	unk198 = 1;
-	if (param_1 == 15)
+	if (param_1 == HIT_MESSAGE_SPRAYED_BY_WATER)
 		unk198 = 0;
 
 	if (checkLiveFlag(2))

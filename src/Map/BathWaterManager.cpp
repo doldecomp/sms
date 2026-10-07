@@ -178,7 +178,7 @@ public:
 					setAttackRadius(unk8C->dropRadius.get() * 2.0f);
 					mPosition.set(drop->unk0);
 					mPosition.y -= unk8C->dropRadius.get();
-					mario->receiveMessage(this, HIT_MESSAGE_UNKA);
+					mario->receiveMessage(this, HIT_MESSAGE_BURN);
 					return true;
 				}
 			}
@@ -214,7 +214,7 @@ public:
 		mPosition.set(data.getThing());
 		mPosition.y -= h;
 		setAttackHeight(h);
-		mario->receiveMessage(this, HIT_MESSAGE_UNKA);
+		mario->receiveMessage(this, HIT_MESSAGE_BURN);
 		return true;
 	}
 

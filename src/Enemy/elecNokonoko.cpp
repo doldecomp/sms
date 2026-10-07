@@ -293,7 +293,7 @@ void TElecNokonoko::calcRootMatrix()
 void TElecNokonoko::sendAttackMsgToMario()
 {
 	if (unk1A4 == 0)
-		SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 	else
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
@@ -323,7 +323,7 @@ BOOL TElecNokonoko::receiveMessage(THitActor* param_1, u32 param_2)
 			kill();
 			return true;
 		}
-		SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 		return false;
 	}
 
@@ -667,7 +667,7 @@ void TElecCarapace::sendMessage()
 	for (int i = 0; i < getColNum(); ++i) {
 		THitActor* actor = mCollisions[i];
 		if (actor->isActorType(ACTOR_TYPE_MARIO)) {
-			if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9)) {
+			if (SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK)) {
 				onHitFilter(HIT_FILTER_NO_COLLISION);
 				if (mSpine->getCurrentNerve()
 				    != &TNerveElecCarapaceWait::theNerve())
@@ -698,7 +698,7 @@ BOOL TElecCarapace::receiveMessage(THitActor* param_1, u32 param_2)
 	}
 
 	if (param_2 == HIT_MESSAGE_TRAMPLE)
-		SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 
 	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;

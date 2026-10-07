@@ -200,7 +200,7 @@ void TMario::hangPole(THitActor* actor)
 				mVel.y      = 0.0f;
 				mForwardVel = 0.0f;
 				changePlayerStatus(MARIO_STATUS_BAR_HANG, 0, false);
-				actor->receiveMessage(this, HIT_MESSAGE_UNK5);
+				actor->receiveMessage(this, HIT_MESSAGE_ATTACH);
 				mHolderHeightDiff = mPosition.y - actor->mPosition.y;
 				return;
 			}

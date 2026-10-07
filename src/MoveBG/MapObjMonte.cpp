@@ -806,7 +806,7 @@ void TFluff::move()
 void TFluff::kill()
 {
 	if (mHeldObject != nullptr) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHeldObject = nullptr;
 	}
 	mState = STATE_UNK3;

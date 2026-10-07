@@ -548,7 +548,7 @@ BOOL TLeanMirror::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message == HIT_MESSAGE_UNK8) {
+	if (message == HIT_MESSAGE_DETACH) {
 		--unk19C;
 		if (unk19C == 0)
 			release();

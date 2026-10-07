@@ -2221,7 +2221,7 @@ void TFireHamuKuri::walkBehavior(int param_1, f32 param_2)
 
 bool TFireHamuKuri::isHitValid(u32 param_1)
 {
-	if (param_1 == 11)
+	if (param_1 == HIT_MESSAGE_UNKB)
 		return true;
 
 	if (unk210)
@@ -2262,7 +2262,7 @@ void TFireHamuKuri::dieFire()
 void TFireHamuKuri::sendAttackMsgToMario()
 {
 	if (unk210)
-		SMS_SendMessageToMario(this, 10);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 	else
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }

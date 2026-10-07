@@ -301,7 +301,7 @@ void TRocket::releaseNozzle()
 
 bool TRocket::checkTrigger()
 {
-	SMS_SendMessageToMario(this, HIT_MESSAGE_UNK5);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACH);
 	if ((u8)gpMarDirector->getGamePad()->mCompSPos[3] > 20
 	    && getHitPoints() > 1)
 		--mHitPoints;

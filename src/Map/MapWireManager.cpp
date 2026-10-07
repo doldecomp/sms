@@ -58,7 +58,7 @@ void TMapWireActor::getTipPoints(JGeometry::TVec3<f32>* start,
 
 BOOL TMapWireActor::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_UNK8 && sender == mHeldObject) {
+	if (message == HIT_MESSAGE_DETACH && sender == mHeldObject) {
 		mHeldObject = nullptr;
 		unk70       = 1;
 		return true;

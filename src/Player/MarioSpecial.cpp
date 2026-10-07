@@ -285,7 +285,8 @@ BOOL TMario::roofCommonEvents()
 	if (mInput & 0x2) {
 		const TLiveActor* actor = mRoofPlane->mActor;
 		if (actor != nullptr) {
-			((THitActor*)actor)->receiveMessage(this, 3);
+			((THitActor*)actor)
+			    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 			if (actor->mActorType == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 				emitParticle(PARTICLE_MS_M_AMIATTACK, &mHeadPos);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
@@ -705,7 +706,7 @@ BOOL TMario::wireWait()
 
 	if (checkFlag(MARIO_FLAG_UNK100) == true) {
 		if (mWireSag <= 0.0f) {
-			((THitActor*)mHolder)->receiveMessage(this, 8);
+			((THitActor*)mHolder)->receiveMessage(this, HIT_MESSAGE_DETACH);
 			mHolder  = nullptr;
 			BOOL ret = changePlayerStatus(MARIO_STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
@@ -775,7 +776,7 @@ BOOL TMario::wireSWait()
 
 	if (checkFlag(MARIO_FLAG_UNK100) == true) {
 		if (mWireSag < 0.0f) {
-			((THitActor*)mHolder)->receiveMessage(this, 8);
+			((THitActor*)mHolder)->receiveMessage(this, HIT_MESSAGE_DETACH);
 			mHolder  = nullptr;
 			BOOL ret = changePlayerStatus(MARIO_STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
@@ -902,7 +903,7 @@ BOOL TMario::wireHanging()
 	}
 
 	if (mInput & 0x8000) {
-		((THitActor*)mHolder)->receiveMessage(this, HIT_MESSAGE_UNK8);
+		((THitActor*)mHolder)->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHolder = nullptr;
 
 		return startHangLanding(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN);
@@ -1200,14 +1201,14 @@ void TMario::setPullingAnm(const JGeometry::TVec3<f32>&, f32) { }
 BOOL TMario::pulling()
 {
 	if (mInput & 0x4) {
-		((THitActor*)mHeldObject)->receiveMessage(this, 8);
+		((THitActor*)mHeldObject)->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHeldObject = nullptr;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 
 	if (!(unk108->mInput & TMarioControllerWork::B)) {
-		((THitActor*)mHeldObject)->receiveMessage(this, 8);
+		((THitActor*)mHeldObject)->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHeldObject = nullptr;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(MARIO_STATUS_PULL_END, 0, false);
@@ -1504,7 +1505,8 @@ BOOL TMario::fencePunch()
 		emitParticle(PARTICLE_MS_M_AMIATTACK, &mRightHandPos);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (unk2C0 != nullptr) {
-			((THitActor*)unk2C0)->receiveMessage(this, 3);
+			((THitActor*)unk2C0)
+			    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 			startVoice(MSD_SE_MV15_EXERT_INST_02);
 			if (unk2C0->mActorType == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 				f32 x = unk2F4.x;

@@ -267,7 +267,7 @@ void TYoshiTongue::movement()
 		if (diff.length() < mRetractedLength) {
 			if (mHeldObject != nullptr) {
 				mActorTypeInMouth = mHeldObject->mActorType;
-				mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
+				mHeldObject->receiveMessage(this, HIT_MESSAGE_DETACH);
 				mHeldObject->receiveMessage(this, HIT_MESSAGE_UNKB);
 				mHeldObject = nullptr;
 			}

@@ -585,7 +585,7 @@ void TChuuHana::kill()
 	if (!checkLiveFlag(LIVE_FLAG_DEAD)) {
 		onLiveFlag(LIVE_FLAG_HIDDEN);
 		if (unk218 != nullptr) {
-			unk218->receiveMessage(this, HIT_MESSAGE_UNK8);
+			unk218->receiveMessage(this, HIT_MESSAGE_DETACH);
 			unk218 = nullptr;
 		}
 		TSmallEnemy::kill();

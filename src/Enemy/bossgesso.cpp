@@ -195,7 +195,7 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
-		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 			// TODO: inlined from TBossGesso?
 			JGeometry::TVec3<f32> delta = mPosition;
 			TBossGesso* gesso           = mOwner;
@@ -269,12 +269,12 @@ void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			f32 lenPollute
 			    = mOwner->getSaveParams()->mSLBeakLengthPollute.get();
 			if (mOwner->unk190.color.a != 0 && beakPullDist >= lenPollute) {
-				mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+				mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 			}
 
 			f32 lenLimit = mOwner->getSaveParams()->mSLBeakLengthLimit.get();
 			if (beakPullDist >= lenLimit) {
-				mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+				mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 				mOwner->gotBeakDamage();
 			}
 		}

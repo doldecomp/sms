@@ -155,7 +155,8 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 
 	case 1: {
 		if (mGroundPlane->mActor != nullptr)
-			((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
+			((THitActor*)mGroundPlane->mActor)
+			    ->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 
 		bool didTrample = false;
 

@@ -332,7 +332,7 @@ void TPoiHana::setDeadAnm()
 
 bool TPoiHana::isHitValid(u32 param_1)
 {
-	if (param_1 == 11)
+	if (param_1 == HIT_MESSAGE_UNKB)
 		return true;
 
 	if (mSpine->getCurrentNerve() == &TNervePoihanaFreeze::theNerve()) {

@@ -293,12 +293,12 @@ void TMapObjBase::makeObjDead()
 	removeMapCollision();
 	mStateTimer = 0;
 	if (mHeldObject) {
-		mHeldObject->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mHeldObject->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHeldObject = nullptr;
 	}
 
 	if (mHolder) {
-		mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHolder = nullptr;
 	}
 
@@ -591,7 +591,7 @@ void TMapObjBase::calcRootMatrix()
 
 BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_UNK5 && checkMapObjFlag(MAP_OBJ_FLAG_UNK40)) {
+	if (message == HIT_MESSAGE_ATTACH && checkMapObjFlag(MAP_OBJ_FLAG_UNK40)) {
 		mHeldObject = (TTakeActor*)sender;
 		return true;
 	}

@@ -35,7 +35,7 @@ static TSirenaRollMapObj* gpCurObject;
 
 BOOL TRouletteSw::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 1) {
+	if (message == HIT_MESSAGE_HIP_DROP) {
 		unk6C = 1;
 		return 1;
 	}

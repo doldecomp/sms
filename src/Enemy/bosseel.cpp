@@ -2267,7 +2267,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 			}
 		} else {
 			if (eel->mMActor->checkCurBckFromIndex(12)) {
-				if (SMS_SendMessageToMario(eel, HIT_MESSAGE_UNK8)) {
+				if (SMS_SendMessageToMario(eel, HIT_MESSAGE_DETACH)) {
 					eel->mHeldObject = nullptr;
 					SMS_SendMessageToMario(eel, HIT_MESSAGE_ATTACK);
 					gpMarDirector->fireEndDemoCamera();
@@ -2308,7 +2308,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 		eel->setBckAnm(3);
 		eel->invalidateAllCollision();
 		eel->mHeartCoin->generate(eel->mPosition);
-		if (SMS_SendMessageToMario(eel, 4)) {
+		if (SMS_SendMessageToMario(eel, HIT_MESSAGE_TAKE)) {
 			eel->mHeldObject
 			    = reinterpret_cast<TTakeActor*>(SMS_GetMarioHitActor());
 			SMSGetMarDirector()->fireStartDemoCamera(
@@ -2322,9 +2322,9 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 			eel->mHeartCoin->getMActor()->setBckFromIndex(8);
 
 		if (eel->checkCurAnmEnd(0)) {
-			if (SMS_SendMessageToMario(eel, 8)) {
+			if (SMS_SendMessageToMario(eel, HIT_MESSAGE_DETACH)) {
 				eel->mHeldObject = nullptr;
-				SMS_SendMessageToMario(eel, 14);
+				SMS_SendMessageToMario(eel, HIT_MESSAGE_ATTACK);
 				gpMarDirector->fireEndDemoCamera();
 			}
 

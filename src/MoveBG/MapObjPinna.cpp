@@ -783,7 +783,7 @@ void TAmiKing::bind()
 
 void TAmiKing::touchPlayer(THitActor* param_1)
 {
-	SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9);
+	SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 }
 
 void TPinnaCoaster::control()

@@ -449,7 +449,7 @@ BOOL TFireWanwanTailHit::receiveMessage(THitActor* sender, u32 message)
 			return true;
 		}
 
-		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 			behaveApart();
 			return true;
 		}
@@ -1541,7 +1541,7 @@ void TFireWanwan::attackToMario()
 		if (isFreeze()) {
 			(void)nerve;
 		} else {
-			SMS_SendMessageToMario(this, HIT_MESSAGE_UNKA);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 			mStopSearchTimer = getSaveParam2()->mStopSearchTimerMax.get();
 		}
 	}

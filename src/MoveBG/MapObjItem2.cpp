@@ -191,7 +191,7 @@ BOOL TJumpBase::receiveMessage(THitActor* sender, u32 message)
 					mMapCollisionManager->removeActiveCollision();
 				return TRUE;
 			}
-		} else if (message == HIT_MESSAGE_UNK8) {
+		} else if (message == HIT_MESSAGE_DETACH) {
 			mHolder = nullptr;
 			unk13C  = 0;
 			unk138  = 2;

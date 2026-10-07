@@ -43,7 +43,7 @@ void TItem::appeared()
 {
 	if (checkMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING) && !isStateTimerEngaged()) {
 		if (mContainer != nullptr)
-			mContainer->receiveMessage(this, HIT_MESSAGE_UNK5);
+			mContainer->receiveMessage(this, HIT_MESSAGE_ATTACH);
 
 		if (isActorType(ACTOR_TYPE_COIN_RED)
 		    || isActorType(ACTOR_TYPE_COIN_BLUE)) {
@@ -205,7 +205,7 @@ void TCoin::taken(THitActor* param_1)
 	                                4);
 
 	if (mContainer)
-		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mContainer->receiveMessage(this, HIT_MESSAGE_DETACH);
 
 	if (TFlagManager::smInstance->getFlag(MSF_GOLD_COIN_COUNT) == 100) {
 		TShine* shine = static_cast<TShine*>(
@@ -280,7 +280,7 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 			} else {
 				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
 					if (mContainer != nullptr)
-						mContainer->receiveMessage(this, HIT_MESSAGE_UNK5);
+						mContainer->receiveMessage(this, HIT_MESSAGE_ATTACH);
 					makeObjDead();
 				}
 			}
@@ -355,7 +355,7 @@ void TCoinRed::taken(THitActor* param_1)
 	                                nullptr, 0, 4);
 
 	if (mContainer)
-		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mContainer->receiveMessage(this, HIT_MESSAGE_DETACH);
 
 	TItem::taken(param_1);
 }
@@ -380,7 +380,7 @@ void TCoinBlue::taken(THitActor* param_1)
 	SMSGetMarDirector()->fireGetBlueCoin(this);
 
 	if (mContainer)
-		mContainer->receiveMessage(this, HIT_MESSAGE_UNK8);
+		mContainer->receiveMessage(this, HIT_MESSAGE_DETACH);
 
 	TItem::taken(param_1);
 }
@@ -1026,7 +1026,7 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+	if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 		mVelocity.y = 10.0f;
 		offLiveFlag(LIVE_FLAG_UNK10);
 		mState = 0xF;
@@ -1221,7 +1221,7 @@ BOOL TNozzleBox::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (message == HIT_MESSAGE_UNK5)
+	if (message == HIT_MESSAGE_ATTACH)
 		makeModelValid();
 
 	return FALSE;

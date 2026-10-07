@@ -190,7 +190,7 @@ void TLampTrapSpike::control()
 	const TBGCheckData* plane = SMS_GetMarioGrPlane();
 	if (bVar1 && plane && plane->getActor() == this
 	    && SMS_IsMarioTouchGround4cm())
-		SMS_SendMessageToMario(this, 0xA);
+		SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 }
 
 void TLampTrapSpike::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -225,7 +225,7 @@ void TLampTrapIronHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk68->unk13C > 0)
 			for (int i = 0; i < getColNum(); ++i)
 				if (getCollision(i)->isActorType(-0x7fffffff))
-					SMS_SendMessageToMario(this, 0xA);
+					SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 	}
 }
 
@@ -277,7 +277,7 @@ void TLampTrapIron::control()
 	if (unk140 <= 0) {
 		const TBGCheckData* plane = SMS_GetMarioGrPlane();
 		if (plane && plane->getActor() == this && SMS_IsMarioTouchGround4cm())
-			SMS_SendMessageToMario(this, 10);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 	} else {
 		--unk140;
 		if (unk140 == 0)

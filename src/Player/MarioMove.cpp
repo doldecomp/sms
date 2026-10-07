@@ -449,7 +449,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 				mVel.y += -unkBC + getGroundJumpPower();
 
 				if (mGroundPlane->mActor != nullptr)
-					((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
+					((THitActor*)mGroundPlane->mActor)
+					    ->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 
 				startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
 				nextStatus = MARIO_STATUS_FORCE_JUMP;
@@ -1261,7 +1262,8 @@ void TMario::checkEnforceJump()
 		changePlayerStatus(MARIO_STATUS_FORCE_JUMP, 0, 0);
 		rumbleStart(0x15, mMotorParams.mMotorWall.get());
 		if (mGroundPlane->mActor != nullptr)
-			((THitActor*)mGroundPlane->mActor)->receiveMessage(this, 0);
+			((THitActor*)mGroundPlane->mActor)
+			    ->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 	}
 }
 

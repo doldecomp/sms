@@ -168,7 +168,7 @@ void TAmiNoko::attackToMario()
 	}
 	}
 
-	if (check && SMS_SendMessageToMario(this, HIT_MESSAGE_UNK9)) {
+	if (check && SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK)) {
 		if (mSpine->getCurrentNerve() != &TNerveAmiNokoFreeze::theNerve())
 			mSpine->pushNerve(&TNerveAmiNokoFreeze::theNerve());
 	}

@@ -828,7 +828,7 @@ void TResetFruit::living()
 	TMapObjBall::control();
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isStateTimerEngaged()) {
 		if (mHolder != nullptr) {
-			mHolder->receiveMessage(this, HIT_MESSAGE_UNK8);
+			mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 			mHolder->mHeldObject = nullptr;
 			mHolder              = nullptr;
 		}

@@ -32,12 +32,12 @@ f32 THookTake::getRadiusAtY(f32 y) const
 BOOL THookTake::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->mActorType == ACTOR_TYPE_MARIO) {
-		if (message == HIT_MESSAGE_UNK5) {
+		if (message == HIT_MESSAGE_ATTACH) {
 			mHeldObject = (TTakeActor*)sender;
 			return TRUE;
 		}
 
-		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 			mHeldObject = nullptr;
 			return TRUE;
 		}

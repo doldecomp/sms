@@ -75,7 +75,7 @@ void THideObjBase::emitEffect()
 
 BOOL THideObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_UNK5
+	if (message == HIT_MESSAGE_ATTACH
 	    && (sender->isActorType(ACTOR_TYPE_COIN)
 	        || sender->isActorType(ACTOR_TYPE_COIN_RED)
 	        || sender->isActorType(ACTOR_TYPE_COIN_BLUE)))
@@ -390,7 +390,7 @@ void TWaterHitPictureHideObj::control()
 
 BOOL TWaterHitPictureHideObj::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_UNK5
+	if (message == HIT_MESSAGE_ATTACH
 	    && (sender->isActorType(ACTOR_TYPE_COIN)
 	        || sender->isActorType(ACTOR_TYPE_COIN_RED)
 	        || sender->isActorType(ACTOR_TYPE_COIN_BLUE))) {
@@ -632,7 +632,7 @@ void TBreakHideObj::kill()
 
 BOOL TBreakHideObj::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == 1) {
+	if (message == HIT_MESSAGE_HIP_DROP) {
 		if (isActorType(ACTOR_TYPE_WATER_MELON_BLOCK)) {
 			emitAndScale(0x6B, 0, &mPosition);
 			emitAndScale(0x6C, 0, &mPosition);

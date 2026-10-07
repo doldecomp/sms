@@ -158,7 +158,7 @@ void TEffectObjBase::moveObject()
 
 	for (int i = 0; i < mColCount; ++i)
 		if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
-			SMS_SendMessageToMario(this, 0xA);
+			SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 }
 
 void TEffectObjBase::behaveToWater(THitActor* param_1)
