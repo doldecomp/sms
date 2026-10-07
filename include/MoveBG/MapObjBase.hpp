@@ -13,11 +13,11 @@ class JPABaseEmitter;
 
 // fabricated
 struct TMapObjAnimData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ const char* unk4;
-	/* 0x8 */ u8 unk8;
+	/* 0x0 */ const char* mBmdFileName;
+	/* 0x4 */ const char* mAnmName;
+	/* 0x8 */ u8 mAnmType;
 	/* 0xC */ const char* unkC;
-	/* 0x10 */ const char* unk10;
+	/* 0x10 */ const char* mBasFilePath;
 };
 
 // the only real name we have, everything else is fabricated
@@ -352,38 +352,69 @@ public:
 
 public:
 	enum {
-		MAP_OBJ_FLAG_UNK1                  = 0x1,
-		MAP_OBJ_FLAG_UNK2                  = 0x2,
-		MAP_OBJ_FLAG_UNK4                  = 0x4,
-		MAP_OBJ_FLAG_UNK8                  = 0x8,
-		MAP_OBJ_FLAG_UNK10                 = 0x10,
-		MAP_OBJ_FLAG_UNK20                 = 0x20,
-		MAP_OBJ_FLAG_UNK40                 = 0x40,
-		MAP_OBJ_FLAG_UNK80                 = 0x80,
-		MAP_OBJ_FLAG_UNK100                = 0x100,
-		MAP_OBJ_FLAG_UNK200                = 0x200,
-		MAP_OBJ_FLAG_UNK400                = 0x400,
-		MAP_OBJ_FLAG_UNK800                = 0x800,
-		MAP_OBJ_FLAG_UNK1000               = 0x1000,
-		MAP_OBJ_FLAG_UNK2000               = 0x2000,
-		MAP_OBJ_FLAG_UNK4000               = 0x4000,
-		MAP_OBJ_FLAG_UNK8000               = 0x8000,
+		MOVE_COLLISION_ON_CONTACT_GRACE_TIMER = 4,
+	};
+
+	enum {
+		/// If set, frustum clipping will not be applied to the object.
+		MAP_OBJ_FLAG_NO_CLIPPING = 0x1,
+		/// Optimization: only move the collision when the object is in contact
+		/// with something and for 4 frames afterwards.
+		MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT = 0x2,
+		/// If set, the collision is scaled and rotated with the object.
+		/// Otherwise, only translation is applied.
+		MAP_OBJ_FLAG_SCALE_AND_ROTATE_COLLISION = 0x4,
+		MAP_OBJ_FLAG_UNK8                       = 0x8,
+		MAP_OBJ_FLAG_UNK10                      = 0x10,
+		MAP_OBJ_FLAG_UNK20                      = 0x20,
+		/// Allows climbing and other types of attachment to the object.
+		MAP_OBJ_FLAG_CLIMBABLE = 0x40,
+		/// If set, the object will load it's hit height from save data.
+		/// Useful for objects with customizable height like poles.
+		MAP_OBJ_FLAG_LOAD_HIT_HEIGHT = 0x80,
+		/// If set, the object is not animated. Attempting to start an animation
+		/// will turn this flag off.
+		MAP_OBJ_FLAG_NO_ANIMATIONS = 0x100,
+		/// If set, MAP_OBJ_FLAG_NO_ANIMATIONS is automatically turned on when
+		/// the current animation ends.
+		MAP_OBJ_FLAG_TURN_OFF_ANIMATIONS_AT_END = 0x200,
+		/// Enables simplified view calc mode. See SDLModel::viewCalcSimple
+		MAP_OBJ_FLAG_USE_SIMPLE_VIEW_CALC = 0x400,
+		/// If set, entry into draw buffers is performed once at load time
+		/// instead of every frame.
+		MAP_OBJ_FLAG_STATIC_DRAW = 0x800,
+		MAP_OBJ_FLAG_UNK1000     = 0x1000,
+		/// Makes the shadow square instead of round.
+		MAP_OBJ_FLAG_SQUARE_SHADOW = 0x2000,
+		MAP_OBJ_FLAG_UNK4000       = 0x4000,
+		/// Enables indirect TEV texturing for the object.
+		/// See J3DMLF_MaterialUseIndirect
+		MAP_OBJ_FLAG_INDIRECT_TEXTURE = 0x8000,
+
+		// TMapObjGeneral-only flags.
+
+		/// Makes the object check for collisions with walls while moving.
 		MAP_OBJ_FLAG_ENABLE_WALL_COLLISION = 0x10000,
+		/// Makes the object check for collisions with roofs while moving.
 		MAP_OBJ_FLAG_ENABLE_ROOF_COLLISION = 0x20000,
-		/// Disappears when state timer elapses.
+		/// The object disappears when the state timer elapses.
 		/// Also flashes when timer becomes smaller than getFlushTime().
 		MAP_OBJ_FLAG_DISAPPEARING = 0x40000,
-		MAP_OBJ_FLAG_RESPAWNING   = 0x80000,
-		MAP_OBJ_FLAG_UNK100000    = 0x100000,
-		MAP_OBJ_FLAG_UNK200000    = 0x200000,
-		MAP_OBJ_FLAG_UNK400000    = 0x400000,
-		MAP_OBJ_FLAG_UNK800000    = 0x800000,
-		MAP_OBJ_FLAG_CAN_SINK     = 0x1000000,
-		MAP_OBJ_FLAG_UNK2000000   = 0x2000000,
-		MAP_OBJ_FLAG_UNK4000000   = 0x4000000,
-		MAP_OBJ_FLAG_UNK8000000   = 0x8000000,
-		MAP_OBJ_FLAG_UNK10000000  = 0x10000000,
-		MAP_OBJ_FLAG_UNK20000000  = 0x20000000,
+		/// Object respawns after being destroyed.
+		MAP_OBJ_FLAG_RESPAWNING = 0x80000,
+		/// Allows the object to be picked up.
+		MAP_OBJ_FLAG_TAKEABLE  = 0x100000,
+		MAP_OBJ_FLAG_UNK200000 = 0x200000,
+		/// Makes the object die when it touches water.
+		MAP_OBJ_FLAG_KILLED_BY_WATER = 0x400000,
+		MAP_OBJ_FLAG_UNK800000       = 0x800000,
+		/// Object sinks when it is in pollution.
+		MAP_OBJ_FLAG_CAN_SINK    = 0x1000000,
+		MAP_OBJ_FLAG_UNK2000000  = 0x2000000,
+		MAP_OBJ_FLAG_UNK4000000  = 0x4000000,
+		MAP_OBJ_FLAG_UNK8000000  = 0x8000000,
+		MAP_OBJ_FLAG_UNK10000000 = 0x10000000,
+		MAP_OBJ_FLAG_UNK20000000 = 0x20000000,
 	};
 
 	enum {
@@ -396,7 +427,7 @@ public:
 	/* 0xFC */ u16 mState;
 	/* 0xFE */ u16 unkFE;
 	/* 0x100 */ u16 unk100;
-	/* 0x102 */ s16 unk102;
+	/* 0x102 */ s16 mMoveCollisionOnContactGraceTimer;
 	/* 0x104 */ int mStateTimer;
 	/* 0x108 */ f32 mYOffset; // TODO: offset from what to what?
 	/* 0x10C */ JGeometry::TVec3<f32> mInitialPosition;

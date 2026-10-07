@@ -745,7 +745,7 @@ TBossPakkun::TBossPakkun(const char* name)
     , unk1C4(0)
     , unk1CC(0)
 {
-	offLiveFlag(LIVE_FLAG_UNK100);
+	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	mBinder = new TWalker;
 }
 

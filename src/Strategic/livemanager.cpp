@@ -47,7 +47,7 @@ void TLiveManager::clipActorsAux(JDrama::TGraphics* param_1, float param_2,
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TLiveActor* actor = getObj(i);
-		if (!actor->checkLiveFlag(LIVE_FLAG_UNK100)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_ENABLE_CLIPPING)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
 			JGeometry::TVec3<f32> pos = actor->getPosition();

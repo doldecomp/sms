@@ -30,7 +30,7 @@ void TMapObjBase::changeObjMtx(MtxPtr mtx)
 	mPosition.y = mtx[1][3] + mYOffset;
 	mPosition.z = mtx[2][3];
 	if (mMActor) {
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)) {
 			setModelMtx(mtx);
 		} else {
 			calcRootMatrix();
@@ -159,8 +159,8 @@ void TMapObjBase::startSound(u16 param_1)
 bool TMapObjBase::hasModelOrAnimData(u16 param_1) const
 {
 	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1
-	    || (!mMapObjData->mAnim->unk4[param_1].unk4
-	        && !mMapObjData->mAnim->unk4[param_1].unk0)) {
+	    || (!mMapObjData->mAnim->unk4[param_1].mAnmName
+	        && !mMapObjData->mAnim->unk4[param_1].mBmdFileName)) {
 		return false;
 	}
 
@@ -170,7 +170,7 @@ bool TMapObjBase::hasModelOrAnimData(u16 param_1) const
 bool TMapObjBase::hasAnim(u16 param_1) const
 {
 	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1
-	    || !mMapObjData->mAnim->unk4[param_1].unk4) {
+	    || !mMapObjData->mAnim->unk4[param_1].mAnmName) {
 		return false;
 	}
 
@@ -180,7 +180,7 @@ bool TMapObjBase::hasAnim(u16 param_1) const
 bool TMapObjBase::animIsFinished() const
 {
 	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 == 0
-	    || !mMapObjData->mAnim->unk4[unkFE].unk4)
+	    || !mMapObjData->mAnim->unk4[unkFE].mAnmName)
 		return true;
 
 	if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
@@ -195,13 +195,13 @@ void TMapObjBase::startControlAnim(u16 param_1)
 {
 	startAnim(param_1);
 	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->unk0)
-		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].unk8)
+		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].mAnmType)
 		    ->setRate(0);
 }
 
 void TMapObjBase::startBck(const char* param_1)
 {
-	offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	mMActor->setBck(param_1);
 }
 
@@ -213,7 +213,7 @@ void TMapObjBase::startAnim(u16 param_1)
 	if (!mMActor) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
 		if (anim->unk0 != 0)
-			mMActor = mMActorKeeper->getMActor(anim->unk4[0].unk0);
+			mMActor = mMActorKeeper->getMActor(anim->unk4[0].mBmdFileName);
 	}
 
 	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
@@ -224,32 +224,32 @@ void TMapObjBase::startAnim(u16 param_1)
 		return;
 
 	const TMapObjAnimData* data = &anim->unk4[param_1];
-	if (data->unk8 == 0) {
+	if (data->mAnmType == 0) {
 		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
 			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
-			if (d2->unk4 != nullptr) {
-				u8 type = d2->unk8;
-				mMActor->getFrameCtrl(type)->setRate(0.0f);
-				mMActor->getFrameCtrl(type)->setFrame(0.0f);
-				mMActor->getUnk28(type)->unk0 = 0xffffffff;
-				unkFE                         = 0xffff;
+			if (d2->mAnmName != nullptr) {
+				u8 anmType = d2->mAnmType;
+				mMActor->getFrameCtrl(anmType)->setRate(0.0f);
+				mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
+				mMActor->getUnk28(anmType)->unk0 = 0xffffffff;
+				unkFE                            = 0xffff;
 			}
 		}
 		stopAnmSound();
 		if (unkFE != param_1) {
 			unkFE = param_1;
-			if (data->unk0)
-				mMActor = mMActorKeeper->getMActor(data->unk0);
+			if (data->mBmdFileName)
+				mMActor = mMActorKeeper->getMActor(data->mBmdFileName);
 		}
 	}
 
-	if (data->unk4) {
-		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-		mMActor->setAnimation(data->unk4, data->unk8);
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200))
-			offMapObjFlag(MAP_OBJ_FLAG_UNK100);
-		if (data->unk10)
-			setAnmSound(data->unk10);
+	if (data->mAnmName) {
+		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
+		mMActor->setAnimation(data->mAnmName, data->mAnmType);
+		if (checkMapObjFlag(MAP_OBJ_FLAG_TURN_OFF_ANIMATIONS_AT_END))
+			offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
+		if (data->mBasFilePath)
+			setAnmSound(data->mBasFilePath);
 	} else {
 		MActor* actor = mMActor;
 		actor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
@@ -280,12 +280,12 @@ void TMapObjBase::makeObjDead()
 	onLiveFlag(LIVE_FLAG_UNK10);
 
 	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
-	    && mMapObjData->mAnim->unk4[unkFE].unk4) {
-		u32 uVar6 = mMapObjData->mAnim->unk4[unkFE].unk8;
-		mMActor->getFrameCtrl(uVar6)->setRate(0.0f);
-		mMActor->getFrameCtrl(uVar6)->setFrame(0.0f);
-		mMActor->getUnk28(uVar6)->unk0 = 0xffffffff;
-		unkFE                          = 0xffff;
+	    && mMapObjData->mAnim->unk4[unkFE].mAnmName) {
+		u32 anmType = mMapObjData->mAnim->unk4[unkFE].mAnmType;
+		mMActor->getFrameCtrl(anmType)->setRate(0.0f);
+		mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
+		mMActor->getUnk28(anmType)->unk0 = 0xffffffff;
+		unkFE                            = 0xffff;
 	}
 
 	unk100 = 0xffff;
@@ -428,12 +428,13 @@ void TMapObjBase::setGroundCollision()
 	    != TMapCollisionBase::KIND_MOVE)
 		return;
 
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2)) {
-		if (mColCount == 0 && unk102 == 0)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT)) {
+		if (mColCount == 0 && mMoveCollisionOnContactGraceTimer == 0)
 			return;
-		--unk102;
+		--mMoveCollisionOnContactGraceTimer;
 		if (mColCount != 0)
-			unk102 = 4;
+			mMoveCollisionOnContactGraceTimer
+			    = MOVE_COLLISION_ON_CONTACT_GRACE_TIMER;
 	}
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
@@ -442,7 +443,7 @@ void TMapObjBase::setGroundCollision()
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
 		                          mPosition.z);
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4)) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_SCALE_AND_ROTATE_COLLISION)) {
 			mMapCollisionManager->getActiveCollision()->offFlag(
 			    TMapCollisionBase::FLAG_UNK8000);
 			mMapCollisionManager->getActiveCollision()->offFlag(
@@ -535,23 +536,23 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 					SMS_ShowAllShapePacket(getModel());
 			}
 		}
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100)) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)) {
 			cue &= ~CUE_CALC_ANIM;
-		} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK200)) {
+		} else if (checkMapObjFlag(MAP_OBJ_FLAG_TURN_OFF_ANIMATIONS_AT_END)) {
 			if (mMActor && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
-				onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+				onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		}
 	}
 
 	if (cue & CUE_ENTRY) {
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1000))
 			cue &= ~CUE_ENTRY;
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800))
+		if (checkMapObjFlag(MAP_OBJ_FLAG_STATIC_DRAW))
 			cue &= ~CUE_ENTRY;
 	}
 
 	if ((cue & CUE_CALC_VIEW) && mMActor
-	    && checkMapObjFlag(MAP_OBJ_FLAG_UNK400)) {
+	    && checkMapObjFlag(MAP_OBJ_FLAG_USE_SIMPLE_VIEW_CALC)) {
 		static_cast<SDLModel*>(getModel())->viewCalcSimple();
 		cue &= ~CUE_CALC_VIEW;
 		requestShadow();
@@ -567,7 +568,7 @@ u32 TMapObjBase::getShadowType()
 	    || isActorType(ACTOR_TYPE_PALM_NATUME)
 	    || isActorType(ACTOR_TYPE_BANANA_TREE)) {
 		return SHADOW_TYPE_TREE;
-	} else if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000)) {
+	} else if (checkMapObjFlag(MAP_OBJ_FLAG_SQUARE_SHADOW)) {
 		return SHADOW_TYPE_SQUARE;
 	} else {
 		return SHADOW_TYPE_CIRCLE;
@@ -591,7 +592,8 @@ void TMapObjBase::calcRootMatrix()
 
 BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_ATTACH && checkMapObjFlag(MAP_OBJ_FLAG_UNK40)) {
+	if (message == HIT_MESSAGE_ATTACH
+	    && checkMapObjFlag(MAP_OBJ_FLAG_CLIMBABLE)) {
 		mHeldObject = (TTakeActor*)sender;
 		return true;
 	}
@@ -628,7 +630,7 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 	initMapObj();
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	makeObjAppeared();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK80)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_LOAD_HIT_HEIGHT)) {
 		f32 value;
 		stream >> value;
 		setDamageHeight(value);
@@ -645,7 +647,7 @@ TMapObjBase::TMapObjBase(const char* name)
     , mState(STATE_NORMAL)
     , unkFE(0xffff)
     , unk100(0xffff)
-    , unk102(0)
+    , mMoveCollisionOnContactGraceTimer(0)
     , mStateTimer(0)
     , mYOffset(0.0f)
     , mMapObjData(nullptr)

@@ -429,7 +429,7 @@ BOOL TMapObjBall::receiveMessage(THitActor* actor, u32 msg)
 	}
 
 	if (msg == HIT_MESSAGE_TAKE) {
-		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100000)) {
+		if (checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE)) {
 			hold(static_cast<TTakeActor*>(actor));
 			return TRUE;
 		}
@@ -1029,7 +1029,7 @@ BOOL TResetFruit::receiveMessage(THitActor* actor, u32 msg)
 				res = TRUE;
 			} else {
 				if (msg == HIT_MESSAGE_TAKE
-				    && checkMapObjFlag(MAP_OBJ_FLAG_UNK100000)) {
+				    && checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE)) {
 					hold(static_cast<TTakeActor*>(actor));
 					res = TRUE;
 				} else if (actor->isActorType(ACTOR_TYPE_MARIO)
@@ -1350,7 +1350,7 @@ void TBigWatermelon::startEvent()
 {
 	if (strcmp(getName(), "スイカ（大）") == 0) {
 		mPosition.set(-4660.0f, 1300.0f, 13600.0f);
-		offMapObjFlag(MAP_OBJ_FLAG_UNK100);
+		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		onLiveFlag(LIVE_FLAG_UNK10);
 		mVelocity.zero();
 		onLiveFlag(LIVE_FLAG_UNK10);

@@ -8,8 +8,8 @@ class SDLModelData;
 class TModelDataNode {
 public:
 	TModelDataNode();
-	void registerDataAndJoinNewNode(SDLModelData* data, const char* name);
-	bool isSameName(const char* name, u16 key) const;
+	void registerDataAndJoinNewNode(SDLModelData* data, const char* file_name);
+	bool isSameName(const char* file_name, u16 key) const;
 
 	// fabricated
 	SDLModelData* getData() const { return mData; }
@@ -17,7 +17,7 @@ public:
 
 private:
 	/* 0x0 */ SDLModelData* mData;
-	/* 0x4 */ const char* mName;
+	/* 0x4 */ const char* mFileName;
 	/* 0x8 */ u16 mKey;
 	/* 0xC */ TModelDataNode* mNext;
 };
@@ -26,11 +26,11 @@ class TModelDataKeeper {
 public:
 	TModelDataKeeper(const char* folder);
 	int getModelDataNum() const;
-	SDLModelData* getDataByName(const char* name) const;
-	int getIndex(const char* name) const;
+	SDLModelData* getDataByName(const char* file_name) const;
+	int getIndex(const char* file_name) const;
 	SDLModelData* getNthData(int n) const;
-	SDLModelData* createAndKeepData(const char* name, u32 flags);
-	static SDLModelData* loadModelData(const char* name, u32 flags,
+	SDLModelData* createAndKeepData(const char* file_name, u32 flags);
+	static SDLModelData* loadModelData(const char* file_name, u32 flags,
 	                                   const char* folder);
 
 public:
@@ -44,14 +44,14 @@ class MActorAnmData;
 
 class TMActorKeeper {
 public:
-	TMActorKeeper(TLiveManager*);
-	TMActorKeeper(TLiveManager*, u16);
+	TMActorKeeper(TLiveManager* manager);
+	TMActorKeeper(TLiveManager* manager, u16 max_mactors);
 
 	void createMActorFromAllBmd(u32 flags);
 	MActor* createMActor(const char* model_data_name, u32 flags);
 	MActor* createMActorFromNthData(int n, u32 flags);
 	MActor* createMActorFromDefaultBmd(const char* folder, u32 flags);
-	MActor* getMActor(const char* name) const;
+	MActor* getMActor(const char* model_data_name) const;
 	MActor* createAndRegister(SDLModelData* model_data, u32 model_flags);
 	MActorAnmData* getMActorAnmData() const { return mActorAnmData; }
 
@@ -66,7 +66,7 @@ public:
 
 private:
 	/* 0x0 */ TModelDataKeeper* mModelDataKeeper;
-	/* 0x4 */ u16 mModelDataNum;
+	/* 0x4 */ u16 mMActorCapacity;
 	/* 0x6 */ u16 mActorNum;
 	/* 0x8 */ MActor** mActors;
 	/* 0xC */ MActorAnmData* mActorAnmData;

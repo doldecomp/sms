@@ -470,7 +470,7 @@ void TBossManta::init(TLiveManager* manager)
 	}
 
 	onLiveFlag(LIVE_FLAG_UNK8);
-	offLiveFlag(LIVE_FLAG_UNK100);
+	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	unk1A4 = 0;
 	unk150 = 0.5f;
 }

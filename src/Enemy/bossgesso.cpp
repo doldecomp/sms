@@ -623,7 +623,7 @@ void TBossGesso::init(TLiveManager* param_1)
 
 	mHitPoints = getSaveParams() ? getSaveParams()->mSLHitPointMax.get() : 1;
 
-	offLiveFlag(LIVE_FLAG_UNK100);
+	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	getMActor()->offMakeDL();
 	onLiveFlag(LIVE_FLAG_UNK8);
 	mScaledBodyRadius = 330.0f;

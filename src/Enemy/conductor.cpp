@@ -320,7 +320,7 @@ void TConductor::clipAloneActors(JDrama::TGraphics* param_1)
 
 	for (; it != e; ++it) {
 		TLiveActor* actor = *it;
-		if (!actor->checkLiveFlag(LIVE_FLAG_UNK100)) {
+		if (!actor->checkLiveFlag(LIVE_FLAG_ENABLE_CLIPPING)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else if (ViewFrustumClipCheck(param_1, &actor->mPosition, 300.0f)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);

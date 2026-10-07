@@ -211,15 +211,15 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 	}
 }
 
-void TNPCManager::makeCommonPartsModelDataKeeper_(u32 param_1,
-                                                  const char* param_2,
-                                                  TModelDataKeeper** param_3)
+void TNPCManager::makeCommonPartsModelDataKeeper_(u32 npc_type,
+                                                  const char* folder,
+                                                  TModelDataKeeper** keeper_ptr)
 {
-	unk5C = *param_3;
+	unk5C = *keeper_ptr;
 	if (unk5C == nullptr) {
-		unk5C    = new TModelDataKeeper(param_2);
-		*param_3 = unk5C;
-		makePartsModelData_(param_1, 0x10210000, unk5C);
+		unk5C       = new TModelDataKeeper(folder);
+		*keeper_ptr = unk5C;
+		makePartsModelData_(npc_type, 0x10210000, unk5C);
 	}
 }
 

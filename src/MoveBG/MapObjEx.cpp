@@ -94,9 +94,9 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 	}
 
 	unk140[unk13C]->makeObjAppeared();
-	unk140[unk13C]->onMapObjFlag(MAP_OBJ_FLAG_UNK100);
+	unk140[unk13C]->onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	unk140[unk13C]->offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-	unk140[unk13C]->offLiveFlag(LIVE_FLAG_UNK100);
+	unk140[unk13C]->offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	unk140[unk13C]->offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk144[unk13C] = i;
 	++unk13C;

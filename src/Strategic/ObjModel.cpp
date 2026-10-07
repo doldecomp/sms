@@ -9,50 +9,51 @@
 #include <stdio.h>
 #include <dolphin/types.h>
 
-bool TModelDataNode::isSameName(const char* name, u16 key) const
+bool TModelDataNode::isSameName(const char* file_name, u16 key) const
 {
-	if (key == mKey && strcmp(name, mName) == 0)
+	if (key == mKey && strcmp(file_name, mFileName) == 0)
 		return true;
 	else
 		return false;
 }
 
 void TModelDataNode::registerDataAndJoinNewNode(SDLModelData* data,
-                                                const char* name)
+                                                const char* bmd_file)
 {
-	mData = data;
-	mName = name;
-	mKey  = JDrama::TNameRef::calcKeyCode(name);
-	mNext = new TModelDataNode;
+	mData     = data;
+	mFileName = bmd_file;
+	mKey      = JDrama::TNameRef::calcKeyCode(bmd_file);
+	mNext     = new TModelDataNode;
 }
 
 TModelDataNode::TModelDataNode()
     : mData(nullptr)
-    , mName(nullptr)
+    , mFileName(nullptr)
     , mKey(0)
     , mNext(nullptr)
 {
 }
 
-SDLModelData* TModelDataKeeper::loadModelData(const char* name, u32 flags,
+SDLModelData* TModelDataKeeper::loadModelData(const char* file_name, u32 flags,
                                               const char* folder)
 {
 	char fullPath[256];
-	sprintf(fullPath, "%s/%s", folder, name);
+	sprintf(fullPath, "%s/%s", folder, file_name);
 	void* res             = JKRGetResource(fullPath);
 	J3DModelData* data    = J3DModelLoaderDataBase::load(res, flags);
 	SDLModelData* sdlData = new SDLModelData(data);
 	return sdlData;
 }
 
-SDLModelData* TModelDataKeeper::createAndKeepData(const char* name, u32 flags)
+SDLModelData* TModelDataKeeper::createAndKeepData(const char* file_name,
+                                                  u32 flags)
 {
 	TModelDataNode* node = &mHead;
 	while (node->getNext())
 		node = node->getNext();
 
-	SDLModelData* data = loadModelData(name, flags, mFolder);
-	node->registerDataAndJoinNewNode(data, name);
+	SDLModelData* data = loadModelData(file_name, flags, mFolder);
+	node->registerDataAndJoinNewNode(data, file_name);
 	return data;
 }
 
@@ -64,22 +65,22 @@ SDLModelData* TModelDataKeeper::getNthData(int n) const
 	return node->getData();
 }
 
-int TModelDataKeeper::getIndex(const char* name) const
+int TModelDataKeeper::getIndex(const char* file_name) const
 {
-	u16 key = JDrama::TNameRef::calcKeyCode(name);
+	u16 key = JDrama::TNameRef::calcKeyCode(file_name);
 
 	const TModelDataNode* node = &mHead;
 	for (u32 i = 0; node && node->getData(); ++i) {
-		if (node->isSameName(name, key))
+		if (node->isSameName(file_name, key))
 			return i;
 		node = node->getNext();
 	}
 	return -1;
 }
 
-SDLModelData* TModelDataKeeper::getDataByName(const char* name) const
+SDLModelData* TModelDataKeeper::getDataByName(const char* file_name) const
 {
-	int idx = getIndex(name);
+	int idx = getIndex(file_name);
 	if (idx < 0)
 		return nullptr;
 	return getNthData(idx);
@@ -114,12 +115,12 @@ MActor* TMActorKeeper::createAndRegister(SDLModelData* model_data,
 	return actor;
 }
 
-MActor* TMActorKeeper::getMActor(const char* name) const
+MActor* TMActorKeeper::getMActor(const char* model_data_name) const
 {
 	if (!getModelDataKeeper())
 		return mActors[0];
 
-	int index = getModelDataKeeper()->getIndex(name);
+	int index = getModelDataKeeper()->getIndex(model_data_name);
 	for (int i = 0; i < mActorNum; ++i) {
 		if (index == mActorModelDataIndices[i])
 			return mActors[i];
@@ -166,37 +167,37 @@ void TMActorKeeper::createMActorFromAllBmd(u32 flags)
 		createMActorFromNthData(i, flags);
 }
 
-TMActorKeeper::TMActorKeeper(TLiveManager* param_1, u16 param_2)
+TMActorKeeper::TMActorKeeper(TLiveManager* manager, u16 max_mactors)
 {
-	mModelDataNum          = param_2;
+	mMActorCapacity        = max_mactors;
 	mActorNum              = 0;
-	mActors                = new MActor*[param_2];
+	mActors                = new MActor*[max_mactors];
 	mActorAnmData          = nullptr;
-	mActorModelDataIndices = new u16[param_2];
+	mActorModelDataIndices = new u16[max_mactors];
 	mModelLoaderFlags      = 0;
-	memset(mActors, 0, param_2 * sizeof(mActors[0]));
+	memset(mActors, 0, max_mactors * sizeof(mActors[0]));
 	memset(mActorModelDataIndices, 0,
-	       param_2 * sizeof(mActorModelDataIndices[0]));
+	       max_mactors * sizeof(mActorModelDataIndices[0]));
 
-	if (param_1) {
-		mModelDataKeeper = param_1->getModelDataKeeper();
-		mActorAnmData    = param_1->getMActorAnmData();
+	if (manager) {
+		mModelDataKeeper = manager->getModelDataKeeper();
+		mActorAnmData    = manager->getMActorAnmData();
 	}
 }
 
-TMActorKeeper::TMActorKeeper(TLiveManager* param_1)
+TMActorKeeper::TMActorKeeper(TLiveManager* manager)
 {
-	if (param_1) {
-		mModelDataKeeper = param_1->getModelDataKeeper();
-		mActorAnmData    = param_1->getMActorAnmData();
+	if (manager) {
+		mModelDataKeeper = manager->getModelDataKeeper();
+		mActorAnmData    = manager->getMActorAnmData();
 	}
 
-	mModelDataNum          = mModelDataKeeper->getModelDataNum();
+	mMActorCapacity        = mModelDataKeeper->getModelDataNum();
 	mActorNum              = 0;
-	mActors                = new MActor*[mModelDataNum];
-	mActorModelDataIndices = new u16[mModelDataNum];
+	mActors                = new MActor*[mMActorCapacity];
+	mActorModelDataIndices = new u16[mMActorCapacity];
 	mModelLoaderFlags      = 0;
-	memset(mActors, 0, mModelDataNum * sizeof(mActors[0]));
+	memset(mActors, 0, mMActorCapacity * sizeof(mActors[0]));
 	memset(mActorModelDataIndices, 0,
-	       mModelDataNum * sizeof(mActorModelDataIndices[0]));
+	       mMActorCapacity * sizeof(mActorModelDataIndices[0]));
 }

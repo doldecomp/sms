@@ -11166,17 +11166,18 @@ void TMapObjBase::initBckMoveData()
 bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 {
 	for (int j = 0; j < i; ++j)
-		if (anim->unk4[j].unk0
-		    && strcmp(anim->unk4[i].unk0, anim->unk4[j].unk0) == 0)
+		if (anim->unk4[j].mBmdFileName
+		    && strcmp(anim->unk4[i].mBmdFileName, anim->unk4[j].mBmdFileName)
+		           == 0)
 			return true;
 	return false;
 }
 
-MActor* TMapObjBase::initMActor(const char* param_1, const char* param_2,
+MActor* TMapObjBase::initMActor(const char* bmd_file, const char* param_2,
                                 u32 param_3)
 {
 	MActor* oldActor = mMActor;
-	MActor* newActor = getActorKeeper()->createMActor(param_1, param_3);
+	MActor* newActor = getActorKeeper()->createMActor(bmd_file, param_3);
 	mMActor          = newActor;
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000)) {
 		mMActor->setLightID(0);
@@ -11199,7 +11200,7 @@ void TMapObjBase::makeMActors()
 		return;
 
 	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_INDIRECT_TEXTURE))
 		mMActorKeeper->setModelLoaderFlags(
 		    J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
 		    | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift));
@@ -11210,16 +11211,16 @@ void TMapObjBase::makeMActors()
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		mMActor = initMActor(anim->unk4[0].unk0, anim->unk4[0].unkC,
+		mMActor = initMActor(anim->unk4[0].mBmdFileName, anim->unk4[0].unkC,
 		                     getSDLModelFlag());
 
 		for (u16 i = 1; i < anim->unk0; ++i) {
-			if (anim->unk4[i].unk10 && mAnmSound == nullptr)
+			if (anim->unk4[i].mBasFilePath && mAnmSound == nullptr)
 				initAnmSound();
 
-			if (anim->unk4[i].unk0 != nullptr
+			if (anim->unk4[i].mBmdFileName != nullptr
 			    && !isAlreadyRegistered(anim, i)) {
-				initMActor(anim->unk4[i].unk0, anim->unk4[i].unkC,
+				initMActor(anim->unk4[i].mBmdFileName, anim->unk4[i].unkC,
 				           getSDLModelFlag());
 			}
 		}
@@ -11233,7 +11234,7 @@ void TMapObjBase::makeMActors()
 void TMapObjBase::initModelData()
 {
 	makeMActors();
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK800) && getMActor()) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_STATIC_DRAW) && getMActor()) {
 		mGroundHeight = gpMap->checkGround(getPosition(), &mGroundPlane);
 		if (getGroundPlane()->isShadow()
 		    && !checkMapObjFlag(MAP_OBJ_FLAG_UNK4000))
@@ -11276,9 +11277,9 @@ void TMapObjBase::initActorData()
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
 	mPosition.y += mYOffset;
 	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK1))
-		offLiveFlag(LIVE_FLAG_UNK100);
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK100000))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_NO_CLIPPING))
+		offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
+	if (checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE))
 		unkE8 = 2;
 }
 
@@ -11303,7 +11304,7 @@ void TMapObjBase::initMapObj()
 	if (getMapObjData()->unk30 == 0.0f)
 		mLiveFlag |= LIVE_FLAG_UNK8;
 
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8000)
+	if (checkMapObjFlag(MAP_OBJ_FLAG_INDIRECT_TEXTURE)
 	    && !isActorType(ACTOR_TYPE_DOKAN_GATE)) {
 		TScreenTexture* ref = static_cast<TScreenTexture*>(
 		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));

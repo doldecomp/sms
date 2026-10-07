@@ -266,7 +266,7 @@ void TMapObjGeneral::receiveMessageFromPlayer() { startAnim(4); }
 
 u32 TMapObjGeneral::touchWater(THitActor* water)
 {
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK400000)) {
+	if (checkMapObjFlag(MAP_OBJ_FLAG_KILLED_BY_WATER)) {
 		kill();
 		return 1;
 	} else {
@@ -571,7 +571,7 @@ void TMapObjGeneral::calcRootMatrix()
 			mPosition.set(src2[3][0], src2[3][1], src2[3][2]);
 		} else {
 			MtxPtr src = getTakingMtx();
-			MTXCopy(src, checkMapObjFlag(MAP_OBJ_FLAG_UNK100)
+			MTXCopy(src, checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)
 			                 ? model->getAnmMtx(0)
 			                 : model->getBaseTRMtx());
 			mPosition.set(src[3][0], src[3][1], src[3][2]);
@@ -607,7 +607,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 	if (ret)
 		return true;
 
-	if (message == HIT_MESSAGE_TAKE && checkMapObjFlag(MAP_OBJ_FLAG_UNK100000)
+	if (message == HIT_MESSAGE_TAKE && checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE)
 	    && JGeometry::TVec3<f32>(mVelocity).isZero()
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL)
 	        || isState(STATE_TOUCHING_PLAYER)

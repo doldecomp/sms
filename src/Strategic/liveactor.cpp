@@ -55,7 +55,7 @@ TLiveActor::TLiveActor(const char* name)
 	mGroundActorYaw      = 0.0f;
 	unkE8                = 1;
 	mMapCollisionManager = nullptr;
-	mLiveFlag            = LIVE_FLAG_UNK100;
+	mLiveFlag            = LIVE_FLAG_ENABLE_CLIPPING;
 
 	mRidePos.zero();
 

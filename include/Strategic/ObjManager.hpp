@@ -46,7 +46,8 @@ public:
 	virtual void createModelDataArray(const TModelDataLoadEntry*);
 
 	TModelDataKeeper* getModelDataKeeper();
-	void createModelDataArrayBase(const TModelDataLoadEntry*, const char*);
+	void createModelDataArrayBase(const TModelDataLoadEntry* entries,
+	                              const char* folder);
 	MActorAnmData* getMActorAnmData();
 	void manageObj(THitActor*);
 	void initObjArray(int);

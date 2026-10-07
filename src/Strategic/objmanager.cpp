@@ -92,7 +92,7 @@ void TObjManager::createModelDataArray(const TModelDataLoadEntry* entries)
 }
 
 void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
-                                           const char* param_2)
+                                           const char* folder)
 {
 	unk28 = 0;
 	unk2C = 0;
@@ -102,7 +102,7 @@ void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
 		++unk28;
 	}
 
-	mModelDataKeeper = new TModelDataKeeper(param_2);
+	mModelDataKeeper = new TModelDataKeeper(folder);
 	for (int i = 0; i < unk28; ++i)
 		mModelDataKeeper->createAndKeepData(entries[i].unk0, entries[i].unk4);
 }

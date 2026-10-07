@@ -16,7 +16,8 @@ public:
 	virtual J3DMaterialTable* getBmt_(bool);
 
 	void makePartsModelData_(u32, u32, TModelDataKeeper*);
-	void makeCommonPartsModelDataKeeper_(u32, const char*, TModelDataKeeper**);
+	void makeCommonPartsModelDataKeeper_(u32, const char* folder,
+	                                     TModelDataKeeper**);
 	void makeOriginalPartsModelDataKeeper_(u32, u32);
 	void changeTextureToPollution_(J3DModelData*);
 	SDLModelData* getPartsSDLModelData(const char*) const;

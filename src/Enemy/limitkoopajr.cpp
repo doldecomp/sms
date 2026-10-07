@@ -42,7 +42,7 @@ TLimitKoopaJr::TLimitKoopaJr(const char* param_1)
     , mBathtub(nullptr)
 {
 	onLiveFlag(LIVE_FLAG_UNK10);
-	offLiveFlag(LIVE_FLAG_UNK100);
+	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 }
 
 void TLimitKoopaJr::init(TLiveManager* param_1)
