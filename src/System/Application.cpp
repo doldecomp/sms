@@ -752,7 +752,7 @@ int TApplication::gameLoop()
 			GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f,
 			              1.0f);
 			GXSetScissor(0, 0, rmode.fbWidth, rmode.efbHeight);
-			Mtx afStack_1ac;
+			Mtx44 afStack_1ac;
 			C_MTXOrtho(afStack_1ac, 0.0f, (f32)rmode.efbHeight, 0.0f,
 			           (f32)rmode.fbWidth, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
@@ -965,7 +965,7 @@ int TApplication::drawDVDErr()
 		const GXRenderModeObj& rmode = mDisplay->getVideo()->mNextRenderMode;
 
 		GXSetViewport(0.0f, 0.0f, rmode.fbWidth, rmode.efbHeight, 0.0f, 1.0f);
-		Mtx afStack_260;
+		Mtx44 afStack_260;
 		C_MTXOrtho(afStack_260, 16.0f, 464.0f, 0.0f, 600.0f, -1.0f, 1.0f);
 		GXSetProjection(afStack_260, GX_ORTHOGRAPHIC);
 		MTXIdentity(afStack_260);
