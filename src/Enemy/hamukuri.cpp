@@ -418,7 +418,7 @@ void TDangoHamuKuriManager::createModelDataArray(
 	        "ハムクリマネージャー");
 
 	if (manager) {
-		unk28            = manager->unk28;
+		mModelDataNum    = manager->getModelDataNum();
 		mModelDataKeeper = manager->getModelDataKeeper();
 	} else {
 		TObjManager::createModelDataArray(param_1);

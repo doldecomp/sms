@@ -35,7 +35,7 @@ TObjManager::TObjManager(const char* name)
     , unk1C(nullptr)
     , unk20(nullptr)
     , mModelDataKeeper(nullptr)
-    , unk28(0)
+    , mModelDataNum(0)
     , unk2C(0)
     , unk30(0)
 {
@@ -94,16 +94,16 @@ void TObjManager::createModelDataArray(const TModelDataLoadEntry* entries)
 void TObjManager::createModelDataArrayBase(const TModelDataLoadEntry* entries,
                                            const char* folder)
 {
-	unk28 = 0;
-	unk2C = 0;
-	while (entries[unk28].unk0) {
-		if (entries[unk28].unk8 & 1)
+	mModelDataNum = 0;
+	unk2C         = 0;
+	while (entries[mModelDataNum].unk0) {
+		if (entries[mModelDataNum].unk8 & 1)
 			++unk2C;
-		++unk28;
+		++mModelDataNum;
 	}
 
 	mModelDataKeeper = new TModelDataKeeper(folder);
-	for (int i = 0; i < unk28; ++i)
+	for (int i = 0; i < mModelDataNum; ++i)
 		mModelDataKeeper->createAndKeepData(entries[i].unk0, entries[i].unk4);
 }
 

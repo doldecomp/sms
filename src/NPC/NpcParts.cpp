@@ -65,7 +65,7 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			param4 = unk60->getPtrInitPollutionColor();
 
 		for (int j = 0; j < 2; ++j) {
-			if (j >= unk60->getManager()->unk28)
+			if (j >= unk60->getManager()->getModelDataNum())
 				break;
 
 			const char* puVar3 = initInfo->unk4[i]->unk8[j];

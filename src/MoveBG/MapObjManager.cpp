@@ -55,8 +55,8 @@ void TMapObjManager::entryStaticDrawBufferSun(J3DModel* model)
 void TMapObjManager::loadAfter()
 {
 	TMapObjBaseManager::loadAfter();
-	unk38 = 100000.0f;
-	unk3C = 1000.0f;
+	mClipFar     = 100000.0f;
+	mActorRadius = 1000.0f;
 
 	newAndRegisterObj("NormalBlock");
 
@@ -99,19 +99,20 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 
 	initDrawBuffer();
 
-	unk68 = loadMatTable("/scene/map/map/sky.bmt");
-	unk6C = loadMatTable("/scene/mapObj/nozzleItem.bmt");
-	unk70 = loadMatTable("/scene/mapObj/nozzleBox.bmt");
-	unk74 = loadMatTable("/scene/mapObj/flower.bmt");
-	unk78 = loadMatTable("/scene/mapObj/ArrowBoard.bmt");
-	unk7C = loadMatTable("/scene/mapObj/kibako.bmt");
-	unk80 = loadMatTable("/scene/mapObj/barrel.bmt");
-	unk84 = loadMatTable("/scene/mapObj/BrickBlock.bmt");
-	unk88 = loadMatTable("/scene/mapObj/WaterMelonBlock.bmt");
+	mSkyMatTable        = loadMatTable("/scene/map/map/sky.bmt");
+	mNozzleItemMatTable = loadMatTable("/scene/mapObj/nozzleItem.bmt");
+	mNozzleBoxMatTable  = loadMatTable("/scene/mapObj/nozzleBox.bmt");
+	mFlowerMatTable     = loadMatTable("/scene/mapObj/flower.bmt");
+	mArrowBoardMatTable = loadMatTable("/scene/mapObj/ArrowBoard.bmt");
+	mWoodBoxMatTable    = loadMatTable("/scene/mapObj/kibako.bmt");
+	mBarrelMatTable     = loadMatTable("/scene/mapObj/barrel.bmt");
+	mBrickBlockMatTable = loadMatTable("/scene/mapObj/BrickBlock.bmt");
+	mWaterMelonBlockMatTable
+	    = loadMatTable("/scene/mapObj/WaterMelonBlock.bmt");
 	if (gpMarDirector->getCurrentMap() == 2)
-		unk8C = loadMatTable("/scene/mapObj/bianco.bmt");
-	unk90 = loadMatTable("/scene/mapObj/LeafBoat.bmt");
-	unk94 = loadMatTable("/scene/mapObj/riccoShip.bmt");
+		mBiancoMatTable = loadMatTable("/scene/mapObj/bianco.bmt");
+	mLeafBoatMatTable  = loadMatTable("/scene/mapObj/LeafBoat.bmt");
+	mRiccoShipMatTable = loadMatTable("/scene/mapObj/riccoShip.bmt");
 
 	if ((gpMarDirector->getCurrentMap() == 3
 	     && (gpMarDirector->unk7D == 1 || gpMarDirector->unk7D == 5))
@@ -134,17 +135,21 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 		                                &unkB8);
 	}
 
-	unkC0 = loadMatTable("/scene/mapObj/SandBombBase.bmt");
-	unkC4 = loadMatTable("/scene/mapObj/mirror.bmt");
+	mSandBombBaseMatTable = loadMatTable("/scene/mapObj/SandBombBase.bmt");
+	mMirrorMatTable       = loadMatTable("/scene/mapObj/mirror.bmt");
 
 	if (gpMarDirector->getCurrentMap() == 4)
-		unkCC = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
+		mBridgeRopeTexture
+		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
 	if (gpMarDirector->getCurrentMap() == 13)
-		unkCC = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
+		mBridgeRopeTexture
+		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
 	if (gpMarDirector->getCurrentMap() == 9)
-		unkC8 = (ResTIMG*)JKRGetResource("/scene/mapObj/cogwheel_rope.bti");
+		mCogwheelRopeTexture
+		    = (ResTIMG*)JKRGetResource("/scene/mapObj/cogwheel_rope.bti");
 	if (gpMarDirector->getCurrentMap() == 8)
-		unkCC = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
+		mBridgeRopeTexture
+		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
 }
 
 TMapObjManager::TMapObjManager(const char* name)
@@ -156,31 +161,31 @@ TMapObjManager::TMapObjManager(const char* name)
     , mDrawBufferShadowXlu(nullptr)
     , mDrawBufferAfterIndirectOpa(nullptr)
     , mDrawBufferAfterIndirectXlu(nullptr)
-    , unk68(nullptr)
-    , unk6C(nullptr)
-    , unk70(nullptr)
-    , unk74(nullptr)
-    , unk78(nullptr)
-    , unk7C(nullptr)
-    , unk80(nullptr)
-    , unk84(nullptr)
-    , unk88(nullptr)
-    , unk8C(nullptr)
-    , unk90(nullptr)
-    , unk94(nullptr)
+    , mSkyMatTable(nullptr)
+    , mNozzleItemMatTable(nullptr)
+    , mNozzleBoxMatTable(nullptr)
+    , mFlowerMatTable(nullptr)
+    , mArrowBoardMatTable(nullptr)
+    , mWoodBoxMatTable(nullptr)
+    , mBarrelMatTable(nullptr)
+    , mBrickBlockMatTable(nullptr)
+    , mWaterMelonBlockMatTable(nullptr)
+    , mBiancoMatTable(nullptr)
+    , mLeafBoatMatTable(nullptr)
+    , mRiccoShipMatTable(nullptr)
     , mSurfGessoModelData(nullptr)
     , mRedGesso(nullptr)
     , mYellowGesso(nullptr)
     , mGreenGesso(nullptr)
-    , unkC0(nullptr)
-    , unkC4(nullptr)
-    , unkC8(nullptr)
-    , unkCC(nullptr)
+    , mSandBombBaseMatTable(nullptr)
+    , mMirrorMatTable(nullptr)
+    , mCogwheelRopeTexture(nullptr)
+    , mBridgeRopeTexture(nullptr)
 {
 	gpMapObjManager = this;
-	unkD0.x = unkD0.y = unkD0.z = 0.0f;
+	unkD0.zero();
 	initKeyCode();
-	unk44.x = unk44.y = unk44.z = 0.0f;
+	unk44.zero();
 
 	unkA8.r = 0xff;
 	unkA8.g = 0xb4;
@@ -465,7 +470,7 @@ u32 TMapObjBaseManager::getActorTypeByEventID(u32 param_1)
 void TMapObjBaseManager::clipActors(JDrama::TGraphics* param_1)
 {
 	if (!(unk30 & 2))
-		clipActorsAux(param_1, unk38, unk3C);
+		clipActorsAux(param_1, mClipFar, mActorRadius);
 }
 
 void TMapObjBaseManager::createModelData()
@@ -486,13 +491,13 @@ int TMapObjBaseManager::getObjNumWithActorType(u32 param_1) const
 void TMapObjBaseManager::load(JSUMemoryInputStream& stream)
 {
 	TLiveManager::load(stream);
-	stream >> unk38;
-	stream >> unk3C;
+	stream >> mClipFar;
+	stream >> mActorRadius;
 }
 
 TMapObjBaseManager::TMapObjBaseManager(const char* name)
     : TLiveManager(name)
-    , unk38(0.0f)
-    , unk3C(0.0f)
+    , mClipFar(0.0f)
+    , mActorRadius(0.0f)
 {
 }

@@ -58,7 +58,6 @@ struct TMapObjCollisionInfo {
 // fabricated
 struct TMapObjSoundData {
 	/* 0x0 */ u32 mSoundIdTable[10];
-	/* 0x40 */ u32 unk40;
 };
 
 // fabricated

@@ -145,7 +145,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	if (mActorType == ACTOR_TYPE_NPC_BOARD)
 		uVar21 = 3;
 	mMActorKeeper->createMActorFromNthData(0, uVar21);
-	if (param_1->unk28 == 2)
+	if (param_1->getModelDataNum() == 2)
 		mMActorKeeper->createMActorFromNthData(1, 3);
 	mMActor = mMActorKeeper->getMActor(0);
 
@@ -393,7 +393,7 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		uVar20 = 0;
 
 	{
-		int uVar16           = mManager->unk28;
+		int uVar16           = mManager->getModelDataNum();
 		s16* indices         = &local_78[0].color.r;
 		const GXColor* color = getPtrInitPollutionColor();
 		for (int i = 0; i < uVar16; ++i) {

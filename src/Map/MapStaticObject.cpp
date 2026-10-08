@@ -273,7 +273,7 @@ void TMapStaticObj::initUnique()
 	if (strcmp(mActorName, "ReflectSky") == 0) {
 		TSky* sky = static_cast<TSky*>(JDrama::TNameRefGen::search("空"));
 
-		getModelData()->setMaterialTable(gpMapObjManager->getUnk68(),
+		getModelData()->setMaterialTable(gpMapObjManager->getSkyMatTable(),
 		                                 J3DMatCopyFlag_All);
 		mMActor->initDL();
 

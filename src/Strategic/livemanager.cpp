@@ -38,12 +38,12 @@ void TLiveManager::manageActor(TLiveActor* actor)
 	TObjManager::manageObj(actor);
 }
 
-void TLiveManager::clipActorsAux(JDrama::TGraphics* param_1, float param_2,
-                                 float param_3)
+void TLiveManager::clipActorsAux(JDrama::TGraphics* graphics, f32 clip_far,
+                                 f32 actor_radius)
 {
 	SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
 	                                   gpCamera->getAspect(),
-	                                   param_1->getNearPlane(), param_2);
+	                                   graphics->getNearPlane(), clip_far);
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TLiveActor* actor = getObj(i);
@@ -56,7 +56,8 @@ void TLiveManager::clipActorsAux(JDrama::TGraphics* param_1, float param_2,
 			    && SMS_IsInOtherFastCube(pos)) {
 				actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 			} else {
-				if (ViewFrustumClipCheck(param_1, &actor->mPosition, param_3))
+				if (ViewFrustumClipCheck(graphics, &actor->mPosition,
+				                         actor_radius))
 					actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 				else
 					actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);

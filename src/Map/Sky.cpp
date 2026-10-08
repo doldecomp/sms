@@ -101,9 +101,9 @@ void TSky::load(JSUMemoryInputStream& stream)
 	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 	        | (2 << J3DMLF_TevStageNumShift));
 
-	if (gpMapObjManager->unk68) {
+	if (gpMapObjManager->getSkyMatTable()) {
 		unk44->getModel()->getModelData()->setMaterialTable(
-		    gpMapObjManager->getUnk68(), J3DMatCopyFlag_All);
+		    gpMapObjManager->getSkyMatTable(), J3DMatCopyFlag_All);
 		unk44->initDL();
 	}
 

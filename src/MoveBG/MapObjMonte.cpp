@@ -396,10 +396,10 @@ void THangingBridge::initDraw() const
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
 	if (SMSGetMarDirector()->getCurrentMap() == 13) {
-		JUTTexture texture(gpMapObjManager->unkCC);
+		JUTTexture texture(gpMapObjManager->getBridgeRopeTexture());
 		texture.load(GX_TEXMAP0);
 	} else {
-		JUTTexture texture(gpMapObjManager->unkCC);
+		JUTTexture texture(gpMapObjManager->getBridgeRopeTexture());
 		texture.load(GX_TEXMAP0);
 	}
 	GXSetNumTevStages(1);
@@ -614,7 +614,7 @@ void TSwingBoard::initDraw() const
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
 
-	JUTTexture texture(gpMapObjManager->unkCC);
+	JUTTexture texture(gpMapObjManager->getBridgeRopeTexture());
 	texture.load(GX_TEXMAP0);
 
 	GXSetNumTevStages(1);
@@ -794,7 +794,7 @@ void TFluff::move()
 	mPosition.x = mInitialPosition.x + wave * (unk144 + unk140) + unk154;
 	mPosition.y += unk150 * gpMapObjManager->unkD0.y;
 	mPosition.z = mInitialPosition.z + wave * (unk140 - unk144) + unk15C;
-	if (JGeometry::TVec3<f32>(gpMapObjManager->unkD0).isZero()) {
+	if (gpMapObjManager->unkD0.isZero()) {
 		unk148 += unk14C;
 		if (unk148 > 360.0f)
 			unk148 -= 360.0f;
@@ -942,17 +942,17 @@ void TFluffManager::control()
 		}
 		break;
 	case STATE_UNK2: {
-		JGeometry::TVec3<f32> wind(gpMapObjManager->unkD0);
+		JGeometry::TVec3<f32> wind;
+		wind.set(gpMapObjManager->unkD0);
 		wind += unk148;
-		gpMapObjManager->unkD0.x = wind.x;
-		gpMapObjManager->unkD0.y = wind.y;
-		gpMapObjManager->unkD0.z = wind.z;
+		gpMapObjManager->unkD0.set(wind);
 		if (!isStateTimerEngaged())
 			mState = STATE_UNK3;
 		break;
 	}
 	case STATE_UNK3: {
-		JGeometry::TVec3<f32> wind(gpMapObjManager->unkD0);
+		JGeometry::TVec3<f32> wind;
+		wind.set(gpMapObjManager->unkD0);
 		wind.scale(unk154);
 		if (fabsf(wind.x) < mWindMin && fabsf(wind.y) < mWindMin
 		    && fabsf(wind.z) < mWindMin) {
@@ -960,9 +960,7 @@ void TFluffManager::control()
 			setUpNextFluff();
 			mState = STATE_NORMAL;
 		}
-		gpMapObjManager->unkD0.x = wind.x;
-		gpMapObjManager->unkD0.y = wind.y;
-		gpMapObjManager->unkD0.z = wind.z;
+		gpMapObjManager->unkD0.set(wind);
 		break;
 	}
 	}

@@ -141,7 +141,7 @@ void TCogwheel::initDraw() const
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
 
-	JUTTexture texture(gpMapObjManager->unkC8);
+	JUTTexture texture(gpMapObjManager->getCogwheelRopeTexture());
 	texture.load(GX_TEXMAP0);
 
 	GXSetNumTevStages(1);
@@ -538,7 +538,7 @@ void TWireBell::initDraw() const
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
 
-	JUTTexture texture(gpMapObjManager->unkC8);
+	JUTTexture texture(gpMapObjManager->getCogwheelRopeTexture());
 	texture.load(GX_TEXMAP0);
 
 	GXSetNumTevStages(1);

@@ -58,15 +58,16 @@ public:
 	THitActor* getObj(int i) { return unk18[i]; }
 	const THitActor* getObj(int i) const { return unk18[i]; }
 	TObjChara* getChara() { return unk1C; }
+	s32 getModelDataNum() const { return mModelDataNum; }
 
-public:
+protected:
 	/* 0x10 */ s32 mCapacity;
 	/* 0x14 */ s32 mObjNum;
 	/* 0x18 */ THitActor** unk18;
 	/* 0x1C */ TObjChara* unk1C;
 	/* 0x20 */ MActorAnmData* unk20;
 	/* 0x24 */ TModelDataKeeper* mModelDataKeeper;
-	/* 0x28 */ s32 unk28;
+	/* 0x28 */ s32 mModelDataNum;
 	/* 0x2C */ u32 unk2C;
 	/* 0x30 */ u32 unk30;
 };

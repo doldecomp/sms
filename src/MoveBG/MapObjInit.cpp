@@ -1,6 +1,7 @@
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjBase.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>
@@ -23,8 +24,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMapObjSoundData TMapObjGeneral::mDefaultSound = {
 	{ 0xFFFFFFFF, MSD_SE_IT_COMMON_APPEAR, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -10957,13 +10956,13 @@ void TMapObjBase::initUnique()
 		}
 		break;
 	case ACTOR_TYPE_FLOWER_ORANGE:
-		setMatTable(gpMapObjManager->unk74);
+		setMatTable(gpMapObjManager->getFlowerMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_WOOD_BOX:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->getMActor(i);
-			setMatTable(gpMapObjManager->unk7C);
+			setMatTable(gpMapObjManager->getWoodBoxMatTable());
 			SMS_UnifyMaterial(getModel());
 		}
 		mMActor = mMActorKeeper->getMActor(0);
@@ -10973,17 +10972,17 @@ void TMapObjBase::initUnique()
 	case ACTOR_TYPE_WOOD_BARREL:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->getMActor(i);
-			setMatTable(gpMapObjManager->unk80);
+			setMatTable(gpMapObjManager->getBarrelMatTable());
 			SMS_UnifyMaterial(getModel());
 		}
 		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_RICCO_SHIP:
-		setMatTable(gpMapObjManager->unk94);
+		setMatTable(gpMapObjManager->getRiccoShipMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_EX_SKY_TUMIKI:
-		startAllAnim(mMActor, mIndividualName);
+		startAllAnim(mMActor, getUnkF4());
 		break;
 	case ACTOR_TYPE_MOYASI:
 		mMActor->initBckSimpleMotionBlend(0x14);
@@ -10997,59 +10996,59 @@ void TMapObjBase::initUnique()
 	case ACTOR_TYPE_BIA_WATERMILL_VERTICAL:
 	case ACTOR_TYPE_LAMP_BIANCO:
 	case ACTOR_TYPE_BIA_DOOR:
-		setMatTable(gpMapObjManager->unk8C);
+		setMatTable(gpMapObjManager->getBiancoMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_MINI_WINDMILL_L:
-		setMatTable(gpMapObjManager->unk8C);
+		setMatTable(gpMapObjManager->getBiancoMatTable());
 		break;
 	case ACTOR_TYPE_LEAF_BOAT:
-		setMatTable(gpMapObjManager->unk90);
+		setMatTable(gpMapObjManager->getLeafBoatMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_LEAF_BOAT_ROTTEN:
-		setMatTable(gpMapObjManager->unk90);
+		setMatTable(gpMapObjManager->getLeafBoatMatTable());
 		break;
 	case ACTOR_TYPE_SAND_LEAF_BASE00:
 	case ACTOR_TYPE_SAND_BOMB_BASE00:
 	case ACTOR_TYPE_SAND_BOMB_BASE_FOOT:
-		setMatTable(gpMapObjManager->unkC0);
+		setMatTable(gpMapObjManager->getSandBombBaseMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_SAND_BOMB:
 		break;
 	case ACTOR_TYPE_SAND_CASTLE:
-		setMatTableTex(gpMapObjManager->unkC0);
+		setMatTableTex(gpMapObjManager->getSandBombBaseMatTable());
 		break;
 	case ACTOR_TYPE_MIRROR_L:
-		setMatTable(gpMapObjManager->unkC4);
+		setMatTable(gpMapObjManager->getMirrorMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_NORMAL_NOZZLE_ITEM:
 	case ACTOR_TYPE_BACK_NOZZLE_ITEM:
 	case ACTOR_TYPE_WATERGUN_ITEM:
 	case ACTOR_TYPE_ROCKET_NOZZLE_ITEM:
-		setMatTable(gpMapObjManager->unk6C);
+		setMatTable(gpMapObjManager->getNozzleItemMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_NOZZLE_BOX:
 		for (int i = 0; i < 3; ++i) {
 			mMActor = mMActorKeeper->getMActor(i);
-			setMatTableTex(gpMapObjManager->unk70);
+			setMatTableTex(gpMapObjManager->getNozzleBoxMatTable());
 		}
 		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_BRICK_BLOCK:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->getMActor(i);
-			setMatTable(gpMapObjManager->unk84);
+			setMatTable(gpMapObjManager->getBrickBlockMatTable());
 		}
 		mMActor = mMActorKeeper->getMActor(0);
 		break;
 	case ACTOR_TYPE_WATER_MELON_BLOCK:
 		for (int i = 0; i < 2; ++i) {
 			mMActor = mMActorKeeper->getMActor(i);
-			setMatTable(gpMapObjManager->unk88);
+			setMatTable(gpMapObjManager->getWaterMelonBlockMatTable());
 		}
 		mMActor = mMActorKeeper->getMActor(0);
 		break;
@@ -11063,7 +11062,7 @@ void TMapObjBase::initUnique()
 		mPosition.y -= mScaling.y * 50.0f;
 		break;
 	case ACTOR_TYPE_ARROW_BOARD_LR:
-		setMatTable(gpMapObjManager->unk78);
+		setMatTable(gpMapObjManager->getArrowBoardMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
 	}
@@ -11304,13 +11303,13 @@ void TMapObjBase::initMapObj()
 		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)
-		mLiveFlag |= LIVE_FLAG_UNK8;
+		onLiveFlag(LIVE_FLAG_UNK8);
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_INDIRECT_TEXTURE)
 	    && !isActorType(ACTOR_TYPE_DOKAN_GATE)) {
-		TScreenTexture* ref = static_cast<TScreenTexture*>(
+		TScreenTexture* scrTex = static_cast<TScreenTexture*>(
 		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
-		const ResTIMG* img = ref->getTexture()->getTexInfo();
+		const ResTIMG* img = scrTex->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
 		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	}

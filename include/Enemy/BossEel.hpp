@@ -339,7 +339,7 @@ public:
 	static bool mToothDamageAnm;
 	static f32 mTestAngY;
 
-	TBossEel(const char* name = "㼀");
+	TBossEel(const char* name = "?");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message)

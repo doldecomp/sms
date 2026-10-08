@@ -18,8 +18,9 @@ public:
 	virtual BOOL hasMapCollision() const;
 
 	const TLiveActor* getActorByFlag(u32) const;
-	void clipActorsAux(JDrama::TGraphics*, float, float);
-	void manageActor(TLiveActor*);
+	void clipActorsAux(JDrama::TGraphics* graphics, f32 clip_far,
+	                   f32 actor_radius);
+	void manageActor(TLiveActor* actor);
 
 	// fabricated
 	TLiveActor* getObj(int i) { return (TLiveActor*)TObjManager::getObj(i); }
@@ -28,7 +29,7 @@ public:
 		return (TLiveActor*)TObjManager::getObj(i);
 	}
 
-public:
+private:
 	/* 0x34 */ TSpcBinary* unk34;
 };
 

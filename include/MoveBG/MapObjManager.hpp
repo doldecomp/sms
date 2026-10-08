@@ -38,9 +38,9 @@ public:
 	TMapObjBase* makeObjAppear(f32, f32, f32, u32, bool);
 	bool canAppear(const TMapObjBase*, u32) const;
 
-public:
-	/* 0x38 */ f32 unk38;
-	/* 0x3C */ f32 unk3C;
+protected:
+	/* 0x38 */ f32 mClipFar;
+	/* 0x3C */ f32 mActorRadius;
 };
 
 class TMapObjManager;
@@ -63,7 +63,6 @@ public:
 
 	// fabricated
 	MActorAnmData* getUnk40() { return unk40; }
-	J3DMaterialTable* getUnk68() { return unk68; }
 	TMapObjBase* getObj(int i) { return (TMapObjBase*)unk18[i]; }
 	J3DDrawBuffer* getDrawBufferAfterIndirectOpa()
 	{
@@ -76,6 +75,28 @@ public:
 	const JGeometry::TVec3<f32>& getUnk44() { return unk44; }
 
 	SDLModelData* getSurfGessoModelData() { return mSurfGessoModelData; }
+	J3DMaterialTable* getSkyMatTable() { return mSkyMatTable; }
+	J3DMaterialTable* getNozzleItemMatTable() { return mNozzleItemMatTable; }
+	J3DMaterialTable* getNozzleBoxMatTable() { return mNozzleBoxMatTable; }
+	J3DMaterialTable* getFlowerMatTable() { return mFlowerMatTable; }
+	J3DMaterialTable* getArrowBoardMatTable() { return mArrowBoardMatTable; }
+	J3DMaterialTable* getWoodBoxMatTable() { return mWoodBoxMatTable; }
+	J3DMaterialTable* getBarrelMatTable() { return mBarrelMatTable; }
+	J3DMaterialTable* getBrickBlockMatTable() { return mBrickBlockMatTable; }
+	J3DMaterialTable* getWaterMelonBlockMatTable()
+	{
+		return mWaterMelonBlockMatTable;
+	}
+	J3DMaterialTable* getBiancoMatTable() { return mBiancoMatTable; }
+	J3DMaterialTable* getLeafBoatMatTable() { return mLeafBoatMatTable; }
+	J3DMaterialTable* getRiccoShipMatTable() { return mRiccoShipMatTable; }
+	J3DMaterialTable* getSandBombBaseMatTable()
+	{
+		return mSandBombBaseMatTable;
+	}
+	J3DMaterialTable* getMirrorMatTable() { return mMirrorMatTable; }
+	ResTIMG* getCogwheelRopeTexture() { return mCogwheelRopeTexture; }
+	ResTIMG* getBridgeRopeTexture() { return mBridgeRopeTexture; }
 
 public:
 	/* 0x40 */ MActorAnmData* unk40;
@@ -86,18 +107,18 @@ public:
 	/* 0x5C */ JDrama::TDrawBufObj* mDrawBufferShadowXlu;
 	/* 0x60 */ JDrama::TDrawBufObj* mDrawBufferAfterIndirectOpa;
 	/* 0x64 */ JDrama::TDrawBufObj* mDrawBufferAfterIndirectXlu;
-	/* 0x68 */ J3DMaterialTable* unk68;
-	/* 0x6C */ J3DMaterialTable* unk6C;
-	/* 0x70 */ J3DMaterialTable* unk70;
-	/* 0x74 */ J3DMaterialTable* unk74;
-	/* 0x78 */ J3DMaterialTable* unk78;
-	/* 0x7C */ J3DMaterialTable* unk7C;
-	/* 0x80 */ J3DMaterialTable* unk80;
-	/* 0x84 */ J3DMaterialTable* unk84;
-	/* 0x88 */ J3DMaterialTable* unk88;
-	/* 0x8C */ J3DMaterialTable* unk8C;
-	/* 0x90 */ J3DMaterialTable* unk90;
-	/* 0x94 */ J3DMaterialTable* unk94;
+	/* 0x68 */ J3DMaterialTable* mSkyMatTable;
+	/* 0x6C */ J3DMaterialTable* mNozzleItemMatTable;
+	/* 0x70 */ J3DMaterialTable* mNozzleBoxMatTable;
+	/* 0x74 */ J3DMaterialTable* mFlowerMatTable;
+	/* 0x78 */ J3DMaterialTable* mArrowBoardMatTable;
+	/* 0x7C */ J3DMaterialTable* mWoodBoxMatTable;
+	/* 0x80 */ J3DMaterialTable* mBarrelMatTable;
+	/* 0x84 */ J3DMaterialTable* mBrickBlockMatTable;
+	/* 0x88 */ J3DMaterialTable* mWaterMelonBlockMatTable;
+	/* 0x8C */ J3DMaterialTable* mBiancoMatTable;
+	/* 0x90 */ J3DMaterialTable* mLeafBoatMatTable;
+	/* 0x94 */ J3DMaterialTable* mRiccoShipMatTable;
 	/* 0x98 */ SDLModelData* mSurfGessoModelData;
 	/* 0x9C */ MActor* mRedGesso;
 	/* 0xA0 */ MActor* mYellowGesso;
@@ -105,11 +126,11 @@ public:
 	/* 0xA8 */ GXColorS10 unkA8;
 	/* 0xB0 */ GXColorS10 unkB0;
 	/* 0xB8 */ GXColorS10 unkB8;
-	/* 0xC0 */ J3DMaterialTable* unkC0;
-	/* 0xC4 */ J3DMaterialTable* unkC4;
-	/* 0xC8 */ ResTIMG* unkC8;
-	/* 0xCC */ ResTIMG* unkCC;
-	/* 0xD0 */ Vec unkD0;
+	/* 0xC0 */ J3DMaterialTable* mSandBombBaseMatTable;
+	/* 0xC4 */ J3DMaterialTable* mMirrorMatTable;
+	/* 0xC8 */ ResTIMG* mCogwheelRopeTexture;
+	/* 0xCC */ ResTIMG* mBridgeRopeTexture;
+	/* 0xD0 */ JGeometry::TVec3<f32> unkD0;
 };
 
 #endif
