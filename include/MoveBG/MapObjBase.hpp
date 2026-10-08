@@ -133,7 +133,7 @@ struct TMapObjData {
 	/* 0x28 */ TMapObjHoldData* mHold;
 	/* 0x2C */ TMapObjMoveData* mMove;
 	/* 0x30 */ f32 unk30;
-	/* 0x34 */ u32 unk34; // TODO: these are flags
+	/* 0x34 */ u32 mMapObjFlags;
 	/* 0x38 */ u32 unk38;
 };
 
@@ -321,9 +321,9 @@ public:
 	f32 getObjCollisionHeightOffset() const { return mYOffset; }
 
 	// fabricated
-	bool checkMapObjFlag(u32 flag) const { return unkF8 & flag; }
-	void onMapObjFlag(u32 flag) { unkF8 |= flag; }
-	void offMapObjFlag(u32 flag) { unkF8 &= ~flag; }
+	bool checkMapObjFlag(u32 flag) const { return mMapObjFlags & flag; }
+	void onMapObjFlag(u32 flag) { mMapObjFlags |= flag; }
+	void offMapObjFlag(u32 flag) { mMapObjFlags &= ~flag; }
 
 	// fabricated
 	TMapObjData* getMapObjData() { return mMapObjData; }
@@ -342,13 +342,20 @@ public:
 	int getStateTimer() { return mStateTimer; }
 
 	// Fabricated
-	const JGeometry::TVec3<f32>& getInitialScaling() { return mInitialScaling; }
 	const JGeometry::TVec3<f32>& getInitialPosition() const
 	{
 		return mInitialPosition;
 	}
+	const JGeometry::TVec3<f32>& getInitialRotation() const
+	{
+		return mInitialRotation;
+	}
+	const JGeometry::TVec3<f32>& getInitialScaling() const
+	{
+		return mInitialScaling;
+	}
 
-	const char* getUnkF4() { return unkF4; }
+	const char* getUnkF4() { return mInstanceName; }
 
 public:
 	enum {
@@ -422,8 +429,8 @@ public:
 		STATE_NORMAL = 0x1,
 	};
 
-	/* 0xF4 */ const char* unkF4;
-	/* 0xF8 */ u32 unkF8;
+	/* 0xF4 */ const char* mInstanceName;
+	/* 0xF8 */ u32 mMapObjFlags;
 	/* 0xFC */ u16 mState;
 	/* 0xFE */ u16 unkFE;
 	/* 0x100 */ u16 unk100;

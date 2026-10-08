@@ -25,12 +25,12 @@ void TPolluterBase::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 	char buffer[64];
-	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", unkF4);
+	snprintf(buffer, 64, "/scene/mapObj/%s.bmd", mInstanceName);
 	unk138 = SMS_MakeMActorWithAnmData(
 	    buffer, gpMapObjManager->getMActorAnmData(), 3,
 	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 	        | (1 << J3DMLF_TevStageNumShift));
-	makeLowerStr(unkF4, buffer);
+	makeLowerStr(mInstanceName, buffer);
 	unk138->setBck(buffer);
 	unk138->setBpk(buffer);
 	unk138->setBtp(buffer);

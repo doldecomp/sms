@@ -362,15 +362,15 @@ void TSandBombBase::initMapObj()
 	mScaling.y = mScaleMin;
 	TMapObjBase::initMapObj();
 	unk150 = 0.5f;
-	if (strcmp(unkF4, "SandBombBasePyramid") == 0) {
+	if (strcmp(mInstanceName, "SandBombBasePyramid") == 0) {
 		unk14C = 1.3f;
 		unk154 = 1200.0f;
-	} else if (strcmp(unkF4, "SandBombBaseShit") == 0) {
+	} else if (strcmp(mInstanceName, "SandBombBaseShit") == 0) {
 		unk14C = 1.3f;
 		unk154 = 1500.0f;
-	} else if (strcmp(unkF4, "SandBombBaseStar") == 0) {
+	} else if (strcmp(mInstanceName, "SandBombBaseStar") == 0) {
 		unk14C = 1.2f;
-	} else if (strcmp(unkF4, "SandBombBaseTurtle") == 0) {
+	} else if (strcmp(mInstanceName, "SandBombBaseTurtle") == 0) {
 		unk14C = 1.2f;
 	}
 	SMS_LoadParticle("/scene/mapObj/SandBomb.jpa", MAPOBJ_SANDBOMB);
@@ -602,17 +602,17 @@ void TLeanMirror::release()
 	offMapObjFlag(MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT);
 	SMS_MarioMoveRequest(unk1A0);
 
-	if (strcmp(unkF4, "mirrorS") == 0) {
+	if (strcmp(mInstanceName, "mirrorS") == 0) {
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ぐらぐら鏡Ｓカメラ", &unk17C->mPosition,
 		    mGoTargetTime + mDemoWaitTime, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
-	} else if (strcmp(unkF4, "mirrorM") == 0) {
+	} else if (strcmp(mInstanceName, "mirrorM") == 0) {
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ぐらぐら鏡Ｍカメラ", &unk17C->mPosition,
 		    mGoTargetTime + mDemoWaitTime, 0.0f, true, nullptr, 0, nullptr,
 		    JDrama::TFlagT<u16>(0));
-	} else if (strcmp(unkF4, "mirrorL") == 0) {
+	} else if (strcmp(mInstanceName, "mirrorL") == 0) {
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    "ぐらぐら鏡Ｌカメラ", &unk17C->mPosition,
 		    mGoTargetTime + mDemoWaitTime, 0.0f, true, nullptr, 0, nullptr,
@@ -741,12 +741,12 @@ void TLeanMirror::initMapObj()
 	unk170 = 0.0001f;
 	unk174 = 0.865f;
 	unk178 = 0.5f;
-	if (strcmp(unkF4, "mirrorS") == 0) {
+	if (strcmp(mInstanceName, "mirrorS") == 0) {
 		unk164 = 0.002f;
 		unk168 = 1.0f;
 		unk174 = 0.87f;
 		unk19C = 1;
-	} else if (strcmp(unkF4, "mirrorM") == 0) {
+	} else if (strcmp(mInstanceName, "mirrorM") == 0) {
 		unk164 = 0.004f;
 		unk19C = 2;
 	} else {
@@ -770,7 +770,7 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 
 	TMirrorModelObj* mirror = new TMirrorModelObj;
 	char path[0x40];
-	snprintf(path, sizeof(path), "/scene/mapObj/%sTop.bmd", unkF4);
+	snprintf(path, sizeof(path), "/scene/mapObj/%sTop.bmd", mInstanceName);
 	mirror->init(path);
 	mirror->unk28 = getModel();
 	if (gpMarDirector->unk7D != 1)

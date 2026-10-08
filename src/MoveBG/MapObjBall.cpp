@@ -1100,7 +1100,7 @@ void TRandomFruit::initMapObj()
 	}
 	}
 
-	unkF4 = mFruitName;
+	mInstanceName = mFruitName;
 	TMapObjBall::initMapObj();
 	SMS_InitPacket_OneTevColor(getModel(), 0, GX_TEVREG0, &mFruitColor);
 }

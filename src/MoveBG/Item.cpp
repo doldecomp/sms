@@ -561,7 +561,7 @@ void TShine::control()
 	case STATE_UNKB:
 		if (isStateTimerEngaged())
 			break;
-		unkF8 &= 0xF7FFFEFF;
+		offMapObjFlag(MAP_OBJ_FLAG_UNK8000000 | MAP_OBJ_FLAG_NO_ANIMATIONS);
 		mStateTimer = unk170;
 		mState      = STATE_MOVING_UP;
 		break;
@@ -603,7 +603,7 @@ void TShine::control()
 
 		if (isStateTimerEngaged())
 			break;
-		if (unkF8 & 0x20000000)
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20000000))
 			MSBgm::setTrackVolume(0, 1.0f, 10, 0);
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		mState = STATE_UNK11;
@@ -639,7 +639,7 @@ void TShine::perform(u32 cue, JDrama::TGraphics* graphics)
 
 BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 {
-	unkF8 &= 0xF7FFFFFF;
+	offMapObjFlag(MAP_OBJ_FLAG_UNK8000000);
 	mPosition.set(SMS_GetMarioPos());
 	mRotation.y = 180.0f * (f32)SMS_GetMarioAngleY() / 32768.0f;
 
@@ -1057,7 +1057,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 
-	if (strcmp(unkF4, "eggYoshiEvent") == 0) {
+	if (strcmp(mInstanceName, "eggYoshiEvent") == 0) {
 		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) == 1) {
 			mState = 0xE;
 		} else {
@@ -1172,10 +1172,10 @@ void TItemNozzle::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 	onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
-	if (strcmp(unkF4, "rocket_nozzle_item") == 0) {
+	if (strcmp(mInstanceName, "rocket_nozzle_item") == 0) {
 		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 3)
 			makeObjDead();
-	} else if (strcmp(unkF4, "back_nozzle_item") == 0) {
+	} else if (strcmp(mInstanceName, "back_nozzle_item") == 0) {
 		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 2)
 			makeObjDead();
 	}

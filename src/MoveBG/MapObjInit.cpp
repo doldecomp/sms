@@ -10983,7 +10983,7 @@ void TMapObjBase::initUnique()
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_EX_SKY_TUMIKI:
-		startAllAnim(mMActor, unkF4);
+		startAllAnim(mMActor, mInstanceName);
 		break;
 	case ACTOR_TYPE_MOYASI:
 		mMActor->initBckSimpleMotionBlend(0x14);
@@ -11257,18 +11257,18 @@ void TMapObjBase::initModelData()
 void TMapObjBase::initActorData()
 {
 	int i    = 0;
-	u16 code = JDrama::TNameRef::calcKeyCode(unkF4);
+	u16 code = JDrama::TNameRef::calcKeyCode(mInstanceName);
 	for (; sObjDataTable[i]->unk4; ++i) {
 		if (code == sObjDataTable[i]->unk38
-		    && strcmp(sObjDataTable[i]->unk0, unkF4) == 0)
+		    && strcmp(sObjDataTable[i]->unk0, mInstanceName) == 0)
 			break;
 	}
 
 	if (strcmp(mName, "地形オブジェ") == 0)
-		mName = unkF4;
+		mName = mInstanceName;
 
-	mMapObjData = sObjDataTable[i];
-	unkF8       = mMapObjData->unk34;
+	mMapObjData  = sObjDataTable[i];
+	mMapObjFlags = mMapObjData->mMapObjFlags;
 
 	mManager = static_cast<TLiveManager*>(
 	    JDrama::TNameRefGen::search(mMapObjData->unk8));

@@ -403,7 +403,7 @@ void TMapObjWaterSpray::calc()
 void TMapObjWaterSpray::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
-	if (strcmp(unkF4, "WaterSprayCylinder") == 0) {
+	if (strcmp(mInstanceName, "WaterSprayCylinder") == 0) {
 		unk138 = 0x154;
 		SMS_LoadParticle("/scene/mapObj/ms_shib_cyl1.jpa", unk138);
 	} else {

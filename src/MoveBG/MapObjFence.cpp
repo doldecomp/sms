@@ -34,7 +34,7 @@ BOOL TFence::receiveMessage(THitActor* param_1, u32 param_2)
 void TFence::initMapCollisionData()
 {
 	mMapCollisionManager = new TMapCollisionManager(1, "mapObj", this);
-	if (strcmp(unkF4, "fence3x3") != 0) {
+	if (strcmp(mInstanceName, "fence3x3") != 0) {
 		if (fabsf(mRotation.x) < 1.0f && fabsf(mRotation.z) < 1.0f)
 			mMapCollisionManager->init("fence_normal_v_tool", 0, nullptr);
 		else
@@ -52,7 +52,7 @@ void TFence::initMapCollisionData()
 
 void TFence::initMapObj()
 {
-	if (strstr(unkF4, "bamboo") != nullptr)
+	if (strstr(mInstanceName, "bamboo") != nullptr)
 		unk138 = 1;
 
 	TMapObjBase::initMapObj();

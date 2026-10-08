@@ -604,9 +604,9 @@ BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TMapObjBase::initAndRegister(const char* param_1)
+void TMapObjBase::initAndRegister(const char* instance_name)
 {
-	unkF4 = param_1;
+	mInstanceName = instance_name;
 	initMapObj();
 	if (mMapObjData->unkC) {
 		static_cast<TIdxGroupObj*>(
@@ -625,7 +625,7 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 {
 	TActor::load(stream);
 
-	unkF4 = stream.readString();
+	mInstanceName = stream.readString();
 	loadBeforeInit(stream);
 	initMapObj();
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
@@ -642,8 +642,8 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 
 TMapObjBase::TMapObjBase(const char* name)
     : TLiveActor(name)
-    , unkF4(nullptr)
-    , unkF8(0)
+    , mInstanceName(nullptr)
+    , mMapObjFlags(0)
     , mState(STATE_NORMAL)
     , unkFE(0xffff)
     , unk100(0xffff)
