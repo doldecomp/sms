@@ -152,6 +152,16 @@ inline void CLBMultTranspose33(const JGeometry::TRotation3<TMtx33f>& mtx,
 	CLBMultTranspose33(mtx, src, vec);
 }
 
+inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis, f32 angle,
+                            JGeometry::TVec3<f32>* vec)
+{
+	JGeometry::TRotation3<TMtx33f> mtxT;
+
+	mtxT.identity();
+	mtxT.setRotate(param_axis, angle);
+	CLBMultTranspose33(mtxT, *vec);
+}
+
 // fabricated
 inline s16 CLBDegToShortAngle(f32 deg)
 {

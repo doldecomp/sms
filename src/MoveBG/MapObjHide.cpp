@@ -92,7 +92,7 @@ void THideObjBase::loadAfter()
 	if (mHiddenObj != nullptr) {
 		if (mHiddenObj->isActorType(ACTOR_TYPE_COIN_BLUE)) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    gpMarDirector->getCurrentMap(), mEventId);
+			    SMSGetMarDirector()->getCurrentMap(), mEventId);
 			if (isBlueCollected)
 				mAllowReveal = false;
 		}
@@ -420,7 +420,7 @@ void TWaterHitPictureHideObj::loadAfter()
 	if (mHiddenObj != nullptr) {
 		if (mHiddenObj->isActorType(ACTOR_TYPE_COIN_BLUE)) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    gpMarDirector->getCurrentMap(), mEventId);
+			    SMSGetMarDirector()->getCurrentMap(), mEventId);
 			if (isBlueCollected) {
 				makeObjDead();
 				return;

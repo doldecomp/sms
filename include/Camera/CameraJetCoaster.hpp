@@ -13,6 +13,9 @@ public:
 	// Fabricated
 	void toggleLButtonMode() { mLButtonMode ^= 1; }
 	bool isLButtonMode() { return mLButtonMode & 1; }
+	u16 getUnk38() const { return unk38; }
+	s16 getOffsetAngleX() const { return unk4; }
+	s16 getOffsetAngleY() const { return unk6; }
 
 public:
 	/* 0x0 */ TCamSaveJetCoaster* unk0;

@@ -107,7 +107,7 @@ void TSky::load(JSUMemoryInputStream& stream)
 		unk44->initDL();
 	}
 
-	if (gpMarDirector->mMap != 15)
+	if (SMSGetMarDirector()->mMap != 15)
 		TMapObjBase::startAllAnim(unk44, "sky");
 }
 

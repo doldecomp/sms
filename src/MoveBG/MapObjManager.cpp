@@ -109,14 +109,15 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	mBrickBlockMatTable = loadMatTable("/scene/mapObj/BrickBlock.bmt");
 	mWaterMelonBlockMatTable
 	    = loadMatTable("/scene/mapObj/WaterMelonBlock.bmt");
-	if (gpMarDirector->getCurrentMap() == 2)
+	if (SMSGetMarDirector()->getCurrentMap() == 2)
 		mBiancoMatTable = loadMatTable("/scene/mapObj/bianco.bmt");
 	mLeafBoatMatTable  = loadMatTable("/scene/mapObj/LeafBoat.bmt");
 	mRiccoShipMatTable = loadMatTable("/scene/mapObj/riccoShip.bmt");
 
-	if ((gpMarDirector->getCurrentMap() == 3
-	     && (gpMarDirector->unk7D == 1 || gpMarDirector->unk7D == 5))
-	    || gpMarDirector->getCurrentMap() == 0x1E) {
+	if ((SMSGetMarDirector()->getCurrentMap() == 3
+	     && (SMSGetMarDirector()->unk7D == 1
+	         || SMSGetMarDirector()->unk7D == 5))
+	    || SMSGetMarDirector()->getCurrentMap() == 0x1E) {
 		mSurfGessoModelData = SMS_MakeSDLModelData(
 		    "/scene/mapObj/surfgeso.bmd", J3DMLF_MaterialPEFull
 		                                      | J3DMLF_UseUniqueMaterials
@@ -138,16 +139,16 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	mSandBombBaseMatTable = loadMatTable("/scene/mapObj/SandBombBase.bmt");
 	mMirrorMatTable       = loadMatTable("/scene/mapObj/mirror.bmt");
 
-	if (gpMarDirector->getCurrentMap() == 4)
+	if (SMSGetMarDirector()->getCurrentMap() == 4)
 		mBridgeRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
-	if (gpMarDirector->getCurrentMap() == 13)
+	if (SMSGetMarDirector()->getCurrentMap() == 13)
 		mBridgeRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
-	if (gpMarDirector->getCurrentMap() == 9)
+	if (SMSGetMarDirector()->getCurrentMap() == 9)
 		mCogwheelRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/cogwheel_rope.bti");
-	if (gpMarDirector->getCurrentMap() == 8)
+	if (SMSGetMarDirector()->getCurrentMap() == 8)
 		mBridgeRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
 }

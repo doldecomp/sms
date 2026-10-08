@@ -554,7 +554,7 @@ void TTobiPuku::fallStart()
 
 void TTobiPuku::hitWater()
 {
-	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> velocity = getVelocity();
 
 	JGeometry::TVec3<f32> dir;
 	dir.set(mPosition.x - SMS_GetMarioPos().x,
@@ -1071,7 +1071,7 @@ DEFINE_NERVE(TNerveTobiPukuBound, TLiveActor)
 	if (spine->getTime() == 0)
 		self->bound();
 
-	JGeometry::TVec3<f32> velocity2 = self->mVelocity;
+	JGeometry::TVec3<f32> velocity2 = self->getVelocity();
 	if (velocity2.y > 0.0f)
 		self->unk1B0 = self->mPosition.y;
 

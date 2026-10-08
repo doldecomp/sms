@@ -60,14 +60,13 @@ bool TAirportEventSink::control()
 
 // TODO: this is all fake, need to analyze a bunch of similar functions together
 // and figure out the real inlines
-inline TMarDirector* getMarDirector() { return gpMarDirector; }
 inline TPollutionManager* getPollution() { return gpPollution; }
 
 bool TAirportEventSink::watch()
 {
 	if (!mIsBuildingRecovered[0] && unk6C->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		mRaisingBuildingIdx    = 0;
-		TMarDirector* director = getMarDirector();
+		TMarDirector* director = SMSGetMarDirector();
 
 		director->fireStartDemoCamera("空港坂上げカメラ", &unk6C->mPosition, -1,
 		                              0.0f, true, nullptr, 0, nullptr,

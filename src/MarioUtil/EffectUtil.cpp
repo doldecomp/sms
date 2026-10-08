@@ -57,7 +57,7 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
                                    const JGeometry::TVec3<float>& arg1,
                                    bool arg2)
 {
-	if ((gpMarDirector->mMoveTickCount % 20) != 0)
+	if ((SMSGetMarDirector()->mMoveTickCount % 20) != 0)
 		return;
 
 	using namespace JGeometry;

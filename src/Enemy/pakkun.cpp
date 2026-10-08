@@ -501,7 +501,7 @@ void TPakkunSeed::moveObject()
 	if (!unk168) {
 		unk170 = MsWrap(unk170 + 5.0f, 0.0f, 360.0f);
 		if (mPosition.y > mGroundHeight + 20.0f) {
-			JGeometry::TVec3<f32> velocity = mVelocity;
+			JGeometry::TVec3<f32> velocity = getVelocity();
 			mRotation.x                    = MsGetRotFromZaxis(velocity).x;
 		}
 	} else {

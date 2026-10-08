@@ -25,7 +25,7 @@ BOOL TMario::winDemo()
 		}
 		gpConductor->killEnemiesWithin(mPosition, 2000.0f);
 		if (jumpProcess(0) == TRUE) {
-			gpMarDirector->fireGetStar((TShine*)unk384);
+			SMSGetMarDirector()->fireGetStar((TShine*)unk384);
 			unk384->receiveMessage(this, HIT_MESSAGE_TAKE);
 			mStatusState = 1;
 		}
@@ -45,7 +45,7 @@ BOOL TMario::readBillboard()
 	// Missing stack space
 	// volatile u32 padding[16];
 
-	TBaseNPC* talkingNpc = gpMarDirector->getTalkingNPC();
+	TBaseNPC* talkingNpc = SMSGetMarDirector()->getTalkingNPC();
 	switch (mStatusState) {
 	case 0: {
 		const JGeometry::TVec3<f32>& targetPos = talkingNpc->getPosition();
@@ -74,13 +74,14 @@ BOOL TMario::readBillboard()
 		                  mAutoDemoParams.mReadRotSp.get());
 		mFaceAngle.y = convAngle;
 		if (attackAngle == mFaceAngle.y) {
-			gpMarDirector->unk126 = 2;
+			SMSGetMarDirector()->unk126 = 2;
 			mStatusState          = 2;
 		}
 		break;
 	}
 	case 2:
-		if (gpMarDirector->unk124 == 0 || gpMarDirector->unk124 == 5) {
+		if (SMSGetMarDirector()->unk124 == 0
+		    || SMSGetMarDirector()->unk124 == 5) {
 			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		}
 		break;
@@ -189,7 +190,7 @@ BOOL TMario::warpIn()
 				nextStage = 4;
 				break;
 			}
-			gpMarDirector->setNextStage(nextStage, mHolder);
+			SMSGetMarDirector()->setNextStage(nextStage, mHolder);
 		}
 
 		onUnk114(UNK114_FLAG_VISIBLE);
@@ -255,9 +256,9 @@ bool TMario::isUnUsualStageStart()
 	// volatile u32 padding[14];
 
 	// Pinna rollercoaster
-	if ((gpMarDirector->getCurrentMap() == 0x3A)
-	    && (gpMarDirector->getCurrentStage() == 0
-	        || gpMarDirector->getCurrentStage() == 1))
+	if ((SMSGetMarDirector()->getCurrentMap() == 0x3A)
+	    && (SMSGetMarDirector()->getCurrentStage() == 0
+	        || SMSGetMarDirector()->getCurrentStage() == 1))
 		return toroccoStart();
 
 	if (SMS_isDivingMap()) {

@@ -635,10 +635,10 @@ TMapObjBall::TMapObjBall(const char* name)
 
 void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 {
-	if (gpMarDirector->getCurrentMap() != 7
-	    && gpMarDirector->getCurrentMap() != 4) {
+	if (SMSGetMarDirector()->getCurrentMap() != 7
+	    && SMSGetMarDirector()->getCurrentMap() != 4) {
 		TMapObjGeneral::checkGroundCollision(ground);
-	} else if (gpMarDirector->getCurrentMap() == 4) {
+	} else if (SMSGetMarDirector()->getCurrentMap() == 4) {
 		mGroundHeight = gpMap->checkGround(ground->x, ground->y + 200.0f,
 		                                   ground->z, &mGroundPlane);
 		mGroundHeight += 1.0f;
@@ -676,7 +676,7 @@ void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 
 void TResetFruit::waitingToAppear()
 {
-	if (gpMarDirector->getCurrentMap() == 3 && unk1A4 != 0) {
+	if (SMSGetMarDirector()->getCurrentMap() == 3 && unk1A4 != 0) {
 		makeObjDead();
 	}
 
@@ -903,7 +903,7 @@ void TResetFruit::control()
 	}
 	case STATE_LIVING: {
 		offHitFilter(HIT_FILTER_NO_COLLISION);
-		if (gpMarDirector->getCurrentMap() == 4
+		if (SMSGetMarDirector()->getCurrentMap() == 4
 		    && checkLiveFlag(LIVE_FLAG_UNK10)) {
 			offLiveFlag(LIVE_FLAG_UNK10);
 		}
@@ -956,7 +956,7 @@ void TResetFruit::control()
 
 void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->getCurrentMap() == 7) {
+	if (SMSGetMarDirector()->getCurrentMap() == 7) {
 		if (isState(STATE_HOLDING) || !getVelocity().isZero()) {
 			if (checkLiveFlag(LIVE_FLAG_UNK200)) {
 				offLiveFlag(LIVE_FLAG_UNK200);
@@ -1139,8 +1139,8 @@ BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
 
 	if (msg == HIT_MESSAGE_UNKB) {
 		kill();
-		TFlagManager::smInstance->setBool(true,
-		                                  MSF_SIRENA_PIPE_PINEAPPLE_EATEN);
+		TFlagManager::getInstance()->setBool(true,
+		                                     MSF_SIRENA_PIPE_PINEAPPLE_EATEN);
 		return TRUE;
 	}
 
@@ -1150,7 +1150,7 @@ BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
 void TCoverFruit::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (TFlagManager::smInstance->getBool(MSF_SIRENA_PIPE_PINEAPPLE_EATEN)) {
+	if (TFlagManager::getInstance()->getBool(MSF_SIRENA_PIPE_PINEAPPLE_EATEN)) {
 		makeObjDead();
 	}
 }
@@ -1358,7 +1358,7 @@ void TBigWatermelon::startEvent()
 		onLiveFlag(LIVE_FLAG_UNK10);
 		TMapObjBase::startAnim(7);
 		// getter?
-		TMarDirector* director = gpMarDirector;
+		TMarDirector* director = SMSGetMarDirector();
 		director->fireStartDemoCamera("スイカゴールカメラ", &mPosition, -1,
 		                              0.0f, true, nullptr, 0, nullptr, 0);
 		gpItemManager->makeShineAppearWithDemoOffset(

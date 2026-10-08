@@ -81,7 +81,7 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (gpMarDirector->unk124 == 0)
+	if (SMSGetMarDirector()->unk124 == 0)
 		result = 1;
 	interp->push(result);
 }
@@ -94,15 +94,16 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	// TODO: uuuh...
 	(void)interp->pop();
 
-	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
+	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
+	    && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
 		TBaseNPC* dummyNpc = static_cast<TBaseNPC*>(
 		    JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 
 		if (dummyNpc) {
-			gpMarDirector->unkA0  = dummyNpc;
-			gpMarDirector->unk126 = 1;
+			SMSGetMarDirector()->unkA0  = dummyNpc;
+			SMSGetMarDirector()->unk126 = 1;
 
 			result = 1;
 		}
@@ -117,11 +118,12 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 
 	int result = 0;
 
-	if (!gpMarDirector->isTalkOrDemoModeNow() && SMS_IsMarioTouchGround4cm()
+	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
+	    && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
-		gpMarDirector->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
-		gpMarDirector->unk126 = 1;
+		SMSGetMarDirector()->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
+		SMSGetMarDirector()->unk126 = 1;
 
 		result = 1;
 	} else {
@@ -291,7 +293,7 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (gpMarDirector->isDemoModeNow())
+	if (SMSGetMarDirector()->isDemoModeNow())
 		result = 1;
 	interp->push(result);
 }
@@ -384,9 +386,9 @@ void TNpcEvent::reviveOneSunflower()
 			"ひまわりカメラ3", "ひまわりカメラ4",
 		};
 
-		gpMarDirector->fireStartDemoCamera(sCameraNames[idx], position, -1,
-		                                   0.0f, true, &ReviveSunflowerCallBack,
-		                                   (uintptr_t)npc, nullptr, 0);
+		SMSGetMarDirector()->fireStartDemoCamera(
+		    sCameraNames[idx], position, -1, 0.0f, true,
+		    &ReviveSunflowerCallBack, (uintptr_t)npc, nullptr, 0);
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(

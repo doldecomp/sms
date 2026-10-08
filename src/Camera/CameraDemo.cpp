@@ -266,7 +266,7 @@ void CPolarSubCamera::execDeadDemoProc_()
 	}
 
 	if (SMS_CheckMarioFlag(MARIO_FLAG_GAME_OVER)
-	    && !gpMarDirector->isTalkOrDemoModeNow())
+	    && !SMSGetMarDirector()->isTalkOrDemoModeNow())
 		mDeadDemoCountdown = 16;
 }
 

@@ -302,7 +302,7 @@ void TRocket::releaseNozzle()
 bool TRocket::checkTrigger()
 {
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACH);
-	if ((u8)gpMarDirector->getGamePad()->mCompSPos[3] > 20
+	if ((u8)SMSGetMarDirector()->getGamePad()->mCompSPos[3] > 20
 	    && getHitPoints() > 1)
 		--mHitPoints;
 	if (!isBckAnm(2)) {
@@ -310,7 +310,7 @@ bool TRocket::checkTrigger()
 		                                   0);
 		setBckAnm(2);
 	}
-	if (gpMarDirector->getGamePad()->mEnabledFrameMeaning
+	if (SMSGetMarDirector()->getGamePad()->mEnabledFrameMeaning
 	    & TMarioGamePad::MEANING_R) {
 		unk190 = 2.0f;
 		expandCollision();
@@ -385,7 +385,7 @@ DEFINE_NERVE(TNerveRocketFly, TLiveActor)
 	if (!self->isBckAnm(1))
 		self->setBckAnm(1);
 
-	self->mRotation.x = MsGetRotFromZaxis(self->mVelocity).x;
+	self->mRotation.x = MsGetRotFromZaxis(self->getVelocity()).x;
 	self->flyBehavior();
 
 	return false;

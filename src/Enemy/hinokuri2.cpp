@@ -493,8 +493,8 @@ void THinokuri2::init(TLiveManager* param_1)
 
 	getMActor()->setJointCallback(0x17, &Hino2HeadCallback);
 
-	if (gpMarDirector->mMap == 1) {
-		switch (gpMarDirector->unk7D) {
+	if (SMSGetMarDirector()->mMap == 1) {
+		switch (SMSGetMarDirector()->unk7D) {
 		case 4:
 			setLevel(2);
 			break;
@@ -509,8 +509,8 @@ void THinokuri2::init(TLiveManager* param_1)
 			setLevel(1);
 			break;
 		}
-	} else if (gpMarDirector->mMap == 0) {
-		switch (gpMarDirector->unk7D) {
+	} else if (SMSGetMarDirector()->mMap == 0) {
+		switch (SMSGetMarDirector()->unk7D) {
 		case 7:
 			setLevel(2);
 			break;
@@ -899,7 +899,7 @@ void THinokuri2::moveObject()
 		unk194 = 1.0f;
 	}
 
-	if (gpMarDirector->mMoveTickCount % 600 == 0)
+	if (SMSGetMarDirector()->mMoveTickCount % 600 == 0)
 		generateEnemy();
 
 	doShortCut();
@@ -1051,7 +1051,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		}
 	}
 
-	if (gpMarDirector->unk7D >= 2 && self->unk164 <= 0) {
+	if (SMSGetMarDirector()->unk7D >= 2 && self->unk164 <= 0) {
 		if (self->getLevel() >= 1) {
 			spine->pushAfterCurrent(&TNerveHino2PrePol::theNerve());
 			return 1;

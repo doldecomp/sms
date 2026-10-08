@@ -54,7 +54,8 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->isIllegalData()
-	    && (mInstanceIndex & 0xF) == (gpMarDirector->mMoveTickCount & 0xF)) {
+	    && (mInstanceIndex & 0xF)
+	           == (SMSGetMarDirector()->mMoveTickCount & 0xF)) {
 		doShortCut();
 	}
 

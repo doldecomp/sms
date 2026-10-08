@@ -111,12 +111,12 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 
 	mStagePane = mScreen->search('brek');
 
-	u32 shineStage = SMS_getShineStage(gpMarDirector->mMap);
+	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
 #ifdef VERSION_GMSP01
 	void* stageBmg = JKRFileLoader::getGlbResource("/cmn2d/stagename.bmg");
-	if (gpMarDirector->mMap == 0x14)
+	if (SMSGetMarDirector()->mMap == 0x14)
 		shineStage = 0;
 	mStageName->setString(SMSGetMessageData(stageBmg, shineStage));
 #else
@@ -124,7 +124,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	    JKRFileLoader::getGlbResource("/common/2d/stagename.bmg"), shineStage));
 #endif
 
-	if (gpMarDirector->mMap != 0xF) {
+	if (SMSGetMarDirector()->mMap != 0xF) {
 		void* scenarioBmg = JKRFileLoader::getGlbResource(
 		    VERSION_SELECT(GMSJ01("/common/2d/scenarioname.bmg"),
 		                   GMSP01("/cmn2d/scenarioname.bmg")));
@@ -169,7 +169,7 @@ void TPauseMenu2::loadAfter()
 		mFirstItemAngle -= 360;
 	}
 
-	mGamePad = gpMarDirector->unk18[0];
+	mGamePad = SMSGetMarDirector()->unk18[0];
 }
 
 void TPauseMenu2::appearWindow()
@@ -300,7 +300,7 @@ void TPauseMenu2::disappearWindow()
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU) {
+	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {
@@ -350,7 +350,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							mSelectionConfirmed = true;
 							SMSRumbleMgr->finishPause();
 							gpMSound->pauseOff(0);
-							gpMarDirector->getConsole()->pauseOut();
+							SMSGetMarDirector()->getConsole()->pauseOut();
 							mFadeAnim = 0.0f;
 							mState    = MENU_APPEARING;
 							break;
@@ -567,7 +567,7 @@ void TPauseMenu2::setDrawStart()
 
 	mMenuPane->setAlpha(255);
 	mMenuPane->mRotation = 0.0f;
-	gpMarDirector->getConsole()->pauseIn();
+	SMSGetMarDirector()->getConsole()->pauseIn();
 	SMSRumbleMgr->startPause();
 	gpMSound->pauseOn(true);
 }
@@ -576,7 +576,7 @@ void TPauseMenu2::setDrawEnd()
 {
 	SMSRumbleMgr->finishPause();
 	gpMSound->pauseOff(0);
-	gpMarDirector->getConsole()->pauseOut();
+	SMSGetMarDirector()->getConsole()->pauseOut();
 	mFadeAnim = 0.0f;
 	mState    = MENU_DISAPPEARING;
 }

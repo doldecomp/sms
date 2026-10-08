@@ -471,8 +471,8 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 	f32 x = mPositionDelta.x;
 	f32 z = mPositionDelta.z;
 	if (unk1A8) {
-		x = mVelocity.x;
-		z = mVelocity.z;
+		x = getVelocity().x;
+		z = getVelocity().z;
 	}
 	f32 speed = JGeometry::TVec2<f32>(x, z).length();
 	unk194 += 4.0f * (speed / (mBodyRadius * unk1CC * unk1E4));

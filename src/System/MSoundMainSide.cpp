@@ -115,7 +115,7 @@ void MSMainProc::fromTHPDemo() { }
 void MSMainProc::toTalkingCameraDemo()
 {
 	u16 tmp = 0;
-	switch (gpMarDirector->mMap) {
+	switch (SMSGetMarDirector()->mMap) {
 	case 9:
 		tmp = 4;
 		break;

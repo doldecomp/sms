@@ -101,8 +101,9 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	int stage = gpMarDirector->getCurrentStage();
-	if (gpMarDirector->getCurrentMap() == 58 && (stage == 0 || stage == 1)) {
+	int stage = SMSGetMarDirector()->getCurrentStage();
+	if (SMSGetMarDirector()->getCurrentMap() == 58
+	    && (stage == 0 || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
@@ -120,7 +121,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 void CPolarSubCamera::startJetCoasterCam1()
 {
 	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
-	unk2B0->setFrame(gpMarDirector->mMoveTickCount * 0.5f);
+	unk2B0->setFrame(SMSGetMarDirector()->mMoveTickCount * 0.5f);
 }
 
 static s32 JetCoasterDemoCallBack(uintptr_t param_1, u32 param_2)
@@ -135,7 +136,7 @@ void CPolarSubCamera::loadAfter()
 {
 	JDrama::TLookAtCamera::loadAfter();
 	mInitialMode = CAMERA_MODE_FOLLOW;
-	if (gpMarDirector->getCurrentMap() == 7) {
+	if (SMSGetMarDirector()->getCurrentMap() == 7) {
 		mInitialMode = CAMERA_MODE_DELFINO;
 	} else if (SMS_isExMap()) {
 		mInitialMode = CAMERA_MODE_EX_MAP_0;
@@ -159,7 +160,7 @@ void CPolarSubCamera::loadAfter()
 
 	char acStack_54[0x40];
 	snprintf(acStack_54, 0x40, "%s%d", cStartAfterCamName,
-	         gpMarDirector->unkD0);
+	         SMSGetMarDirector()->unkD0);
 	TCameraMapTool* tool2 = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(acStack_54), acStack_54);
 	if (tool2) {
@@ -242,11 +243,12 @@ void CPolarSubCamera::loadAfter()
 
 	calcExternalData_();
 
-	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE) && gpMarDirector->unk7D == 1) {
-		gpMarDirector->fireStartDemoCamera(cJetCoasterDemoBckName, nullptr, -1,
-		                                   0.0f, true, &JetCoasterDemoCallBack,
-		                                   (uintptr_t)this, nullptr,
-		                                   JDrama::TFlagT<u16>());
+	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE)
+	    && SMSGetMarDirector()->unk7D == 1) {
+		SMSGetMarDirector()->fireStartDemoCamera(
+		    cJetCoasterDemoBckName, nullptr, -1, 0.0f, true,
+		    &JetCoasterDemoCallBack, (uintptr_t)this, nullptr,
+		    JDrama::TFlagT<u16>());
 	} else {
 		if (!JKRGetResource(cStartCamBckFileName))
 			calcInHouseNo_(true);
@@ -887,9 +889,9 @@ void CPolarSubCamera::ctrlGameCamera_()
 
 	mPreviousTarget = mCurrentTarget;
 
-	if (gpMarDirector->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
+	if (SMSGetMarDirector()->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
-			if (!gpMarDirector->isTalkModeNow())
+			if (!SMSGetMarDirector()->isTalkModeNow())
 				changeCamMode_(mInitialMode);
 		} else if (!isSimpleDemoCamera()) {
 			int code;

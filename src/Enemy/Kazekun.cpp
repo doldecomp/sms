@@ -102,7 +102,7 @@ void TKazekun::calcRootMatrix()
 	}
 }
 
-void TKazekun::bind() { mPositionDelta.add(mVelocity); }
+void TKazekun::bind() { mPositionDelta += mVelocity; }
 
 void TKazekun::behaveToWater(THitActor* param_1)
 {
@@ -254,7 +254,7 @@ bool TKazekun::doAttackPose(bool start)
 	spin.mul(spin, unk1A0);
 	unk1A0 = spin;
 
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f, mVelocity.length());
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f, getVelocity().length());
 	spin.rotate(forward, forward);
 	mVelocity = forward;
 
@@ -434,7 +434,7 @@ DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 	}
 	self->doAttack(false);
 
-	JGeometry::TVec3<f32> velocity = self->mVelocity;
+	JGeometry::TVec3<f32> velocity = self->getVelocity();
 	velocity.scale(((TKazekunParams*)self->getSaveParam())->mAirFric.get());
 	self->mVelocity = velocity;
 	if (velocity.squared() < 1.0f) {

@@ -236,8 +236,8 @@ void TBGKMtxCalc::calc(u16 param_1)
 		MTXCopy(mtx, J3DSys::mCurrentMtx);
 	} else if (param_1 == 0) {
 		MtxPtr mtx = mOwner->getMActor()->getModel()->getAnmMtx(param_1);
-		if (!gpMarDirector->isDemoModeNow()) {
-			if (!gpMarDirector->isTalkModeNow()
+		if (!SMSGetMarDirector()->isDemoModeNow()) {
+			if (!SMSGetMarDirector()->isTalkModeNow()
 			    && (mOwner->getMActor()->checkCurBckFromIndex(0xB)
 			        || mOwner->getMActor()->checkCurBckFromIndex(0x12)
 			        || mOwner->getMActor()->checkCurBckFromIndex(0xF)
@@ -315,14 +315,14 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 
 	if (strcmp(mName, "ゲートキーパー（リコ）") == 0) {
 		mVariant = VARIANT_RICO_GATEKEEPER;
-		if (!TFlagManager::smInstance->getBool(MSF_RICCO_UNLOCKABLE))
+		if (!TFlagManager::getInstance()->getBool(MSF_RICCO_UNLOCKABLE))
 			onLiveFlag(LIVE_FLAG_DEAD);
 	} else if (strcmp(mName, "ゲートキーパー（マンマ）") == 0) {
 		mVariant = VARIANT_MAMMA_GATEKEEPER;
-		if (!TFlagManager::smInstance->getBool(MSF_GELATO_UNLOCKABLE))
+		if (!TFlagManager::getInstance()->getBool(MSF_GELATO_UNLOCKABLE))
 			onLiveFlag(LIVE_FLAG_DEAD);
 	} else {
-		u8 map = gpMarDirector->getCurrentMap();
+		u8 map = SMSGetMarDirector()->getCurrentMap();
 		if (map == 0)
 			mVariant = VARIANT_AIRPORT;
 		else if (map == 1)
@@ -331,7 +331,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 			mVariant = VARIANT_GENERIC;
 	}
 
-	if (gpMarDirector->getCurrentMap() == 1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 1) {
 		mStampModel = mMActorKeeper->createMActor("stamp_keeper_model1.bmd", 3);
 		mStampModel->setBckFromIndex(0x13);
 		if (mVariant == VARIANT_DOLPIC_TOWN)
@@ -673,8 +673,8 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if (!gpMarDirector->isDemoModeNow()) {
-		if (gpMarDirector->isTalkModeNow())
+	if (!SMSGetMarDirector()->isDemoModeNow()) {
+		if (SMSGetMarDirector()->isTalkModeNow())
 			cue &= ~CUE_MOVE;
 	}
 
@@ -741,7 +741,8 @@ void TBiancoGateKeeper::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mHintTimer > 160) {
 			mHintTimer = 0;
 			mHintShown = TRUE;
-			gpMarDirector->getConsole()->startAppearBalloon(0xE002E, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE002E,
+			                                                      true);
 		}
 	}
 
@@ -766,7 +767,7 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		}
 	}
 
-	if (gpMarDirector->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentMap() == 2) {
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
@@ -808,7 +809,8 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 		if (self->unk28A < 0xFF)
 			self->unk28A++;
 		if (self->unk28A == 2)
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0047, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0047,
+			                                                      true);
 	}
 
 	if (spine->getTime() == 8) {
@@ -819,7 +821,7 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 	}
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		if (gpMarDirector->getCurrentMap() == 0)
+		if (SMSGetMarDirector()->getCurrentMap() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
 			spine->pushAfterCurrent(&TNerveBGKWait::theNerve());
@@ -926,8 +928,9 @@ DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 		} else if (actor->checkCurBckFromIndex(0x10)) {
 			self->unk288++;
 			if (self->unk288 == 2 && self->unk28A == 1
-			    && gpMarDirector->getCurrentMap() == 0)
-				gpMarDirector->getConsole()->startAppearBalloon(0xE0000, true);
+			    && SMSGetMarDirector()->getCurrentMap() == 0)
+				SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0000,
+				                                                      true);
 			if (self->unk288 > self->getSaveParams()->mSLLoop2Dive.get()) {
 				self->changeBck(0xC);
 				self->unk288 = 0;
@@ -978,7 +981,7 @@ DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 		self->changeBck(3);
 
 	if (self->curBckFinished()) {
-		if (gpMarDirector->getCurrentMap() == 0)
+		if (SMSGetMarDirector()->getCurrentMap() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
 			spine->pushAfterCurrent(&TNerveBGKWait::theNerve());

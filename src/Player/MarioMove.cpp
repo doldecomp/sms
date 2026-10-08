@@ -75,8 +75,8 @@ bool TMario::isInvincible() const
 	if (mStatus == 0x89C)
 		return true;
 
-	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
-	    || gpMarDirector->isTalkModeNow()
+	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	    || SMSGetMarDirector()->isTalkModeNow()
 	    || checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		return true;
 
@@ -156,7 +156,7 @@ void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 	mFaceAngle.y    = (s16)DEG2SHORTANGLE(angle);
 	mModelFaceAngle = mFaceAngle.y;
 	gpCamera->addMoveCameraAndMario(offset);
-	if (gpMarDirector->mMap != 7)
+	if (SMSGetMarDirector()->mMap != 7)
 		mGamePad->onNeutralMarioKey();
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, 1);
 }
@@ -1205,7 +1205,7 @@ void TMario::checkSink()
 				             * mGraffitoParams.mSinkDmgDepth.get();
 			}
 
-			if (gpMarDirector->mMoveTickCount
+			if (SMSGetMarDirector()->mMoveTickCount
 			        % mGraffitoParams.mSinkDmgTime.get()
 			    == 0) {
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorReturn.get());
@@ -1899,7 +1899,7 @@ void TMario::thinkSituation()
 		if (mAnimationId != ANIM_THROWN)
 			startSoundActor(MSD_SE_MV10B_CRY_JUMP_01);
 		gpCamera->unk64 |= CPolarSubCamera::CAMERA_FLAG_HELL_DEAD_DEMO;
-		gpMarDirector->onDemoFlag(TMarDirector::DEMO_FLAG_HELL_DEAD);
+		SMSGetMarDirector()->onDemoFlag(TMarDirector::DEMO_FLAG_HELL_DEAD);
 		return;
 	}
 
@@ -1928,7 +1928,7 @@ void TMario::thinkSituation()
 	if (mGroundPlane->isUnk300()) {
 		if (onYoshi())
 			getOffYoshi(false);
-		gpMarDirector->setNextStage(mGroundPlane->getData(), nullptr);
+		SMSGetMarDirector()->setNextStage(mGroundPlane->getData(), nullptr);
 		offUnk114(UNK114_FLAG_VISIBLE);
 		offUnk114(UNK114_FLAG_DO_OCCLUSION_PROBE);
 	}
@@ -1946,8 +1946,8 @@ void TMario::thinkSituation()
 
 	calcGroundMtx(mPosition);
 
-	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
-	    || gpMarDirector->isTalkModeNow()
+	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	    || SMSGetMarDirector()->isTalkModeNow()
 	    || checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		onFlag(MARIO_FLAG_NPC_TALKING);
 	else
@@ -2362,7 +2362,8 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_UNK8);
 
-	if (gpMarDirector->unk124 == 1 && mStatus != MARIO_STATUS_READ_BILLBOARD)
+	if (SMSGetMarDirector()->unk124 == 1
+	    && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
@@ -2371,7 +2372,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		                >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
-		    && gpMarDirector->unk124 != 1) {
+		    && SMSGetMarDirector()->unk124 != 1) {
 			mFaceAngle.y = (gpCamera->getUnk258() + 0x8000)
 			               - gpCamera->getOffsetAngleY();
 		}

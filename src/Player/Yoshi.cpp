@@ -455,7 +455,7 @@ void TYoshi::ride()
 
 	SMSGetMSound()->unk88 = 1;
 	MSBgm::setStageBgmYoshiPercussion(true);
-	gpMarDirector->fireRideYoshi(this);
+	SMSGetMarDirector()->fireRideYoshi(this);
 }
 
 void TYoshi::getOff(bool param_1)
@@ -804,8 +804,9 @@ void TYoshi::thinkHoldOut()
 
 void TYoshi::movement()
 {
-	if (!gpMarDirector->isDemoMode3() && !gpMarDirector->isDemoMode4()
-	    && !gpMarDirector->isTalkModeNow()) {
+	if (!SMSGetMarDirector()->isDemoMode3()
+	    && !SMSGetMarDirector()->isDemoMode4()
+	    && !SMSGetMarDirector()->isTalkModeNow()) {
 		if (!mMario->checkStatusType(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;
 		}

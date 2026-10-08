@@ -207,7 +207,7 @@ void TCoin::taken(THitActor* param_1)
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_DETACH);
 
-	if (TFlagManager::smInstance->getFlag(MSF_GOLD_COIN_COUNT) == 100) {
+	if (TFlagManager::getInstance()->getFlag(MSF_GOLD_COIN_COUNT) == 100) {
 		TShine* shine = static_cast<TShine*>(
 		    JDrama::TNameRefGen::search("シャイン（１００枚コイン用）"));
 
@@ -240,7 +240,7 @@ void TCoin::appear()
 {
 	if (isActorType(ACTOR_TYPE_COIN_BLUE)) {
 		if (!TFlagManager::smInstance->getBlueCoinFlag(
-		        gpMarDirector->getCurrentMap(), mEventId))
+		        SMSGetMarDirector()->getCurrentMap(), mEventId))
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 			                                   nullptr, 0);
 	} else {
@@ -265,7 +265,8 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_MOVE) && checkLiveFlag(LIVE_FLAG_UNK10)) {
 
-		if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow())
+		if (SMSGetMarDirector()->isTalkModeNow()
+		    && !SMSGetMarDirector()->isDemoModeNow())
 			return;
 
 		if (isStateTimerEngaged()) {
@@ -305,7 +306,7 @@ void TCoin::loadAfter()
 	if (!gpMirrorModelManager->isInMirror(mPosition))
 		return;
 
-	if (gpMarDirector->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentMap() == 2) {
 		const TBGCheckData* check;
 		gpMap->checkGround(mPosition, &check);
 		if (!check->isWaterSurface())
@@ -369,7 +370,7 @@ TCoinRed::TCoinRed(const char* name)
 void TCoinBlue::makeObjAppeared()
 {
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), getEventId()))
+	        SMSGetMarDirector()->getCurrentMap(), getEventId()))
 		return;
 
 	TCoin::makeObjAppeared();
@@ -398,7 +399,7 @@ void TCoinBlue::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), getEventId()))
+	        SMSGetMarDirector()->getCurrentMap(), getEventId()))
 		makeObjDead();
 }
 
@@ -677,7 +678,7 @@ void TShine::touchPlayer(THitActor* actor)
 void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, MSF_SHINE_SPAWNED);
+	TFlagManager::getInstance()->setBool(true, MSF_SHINE_SPAWNED);
 
 	if (param_2 >= 0)
 		unk174 = param_2;
@@ -715,10 +716,10 @@ s32 TShine::appearWithTimeCallback(uintptr_t param_1, u32 param_2)
 	TShine* shine = (TShine*)param_1;
 	if (param_2 == 0) {
 		shine->appearWithTime(shine->unk18C, -1, -1, -1);
-		gpMarDirector->onDemoFlag(
+		SMSGetMarDirector()->onDemoFlag(
 		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	} else if (param_2 == 1) {
-		gpMarDirector->offDemoFlag(
+		SMSGetMarDirector()->offDemoFlag(
 		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	}
 	return 0;
@@ -727,7 +728,7 @@ s32 TShine::appearWithTimeCallback(uintptr_t param_1, u32 param_2)
 void TShine::appearSimple(int param_1)
 {
 	TItem::appear();
-	TFlagManager::smInstance->setBool(true, MSF_SHINE_SPAWNED);
+	TFlagManager::getInstance()->setBool(true, MSF_SHINE_SPAWNED);
 
 	unk174   = 60;
 	unk170   = param_1;
@@ -770,7 +771,7 @@ void TShine::makeMActors()
 	                                   | J3DMLF_UseUniqueMaterials
 	                                   | (2 << J3DMLF_TevStageNumShift));
 	MActor* result;
-	if (TFlagManager::smInstance->getShineFlag(mEventId)
+	if (TFlagManager::getInstance()->getShineFlag(mEventId)
 	    && strcmp("シャイン（マニ屋用）", getName()) != 0) {
 		result = initMActor("shine_empty.bmd", nullptr, getSDLModelFlag());
 		unk1B4 = 1;
@@ -850,9 +851,9 @@ TShine::TShine(const char* name)
 
 void TEggYoshi::decideRandomLoveFruit()
 {
-	u8 map = gpMarDirector->mMap;
+	u8 map = SMSGetMarDirector()->mMap;
 
-	if (map == 7 && gpMarDirector->unk7D == 1) {
+	if (map == 7 && SMSGetMarDirector()->unk7D == 1) {
 		unk14C = ACTOR_TYPE_FRUIT_PINE;
 		return;
 	}
@@ -976,7 +977,7 @@ void TEggYoshi::control()
 		}
 		break;
 	case 0xF: {
-		JGeometry::TVec3<f32> v = mVelocity;
+		JGeometry::TVec3<f32> v = getVelocity();
 		if (v.y == 0.0f)
 			mState = 0x10;
 		break;
@@ -1034,7 +1035,7 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 	}
 
 	if (message == HIT_MESSAGE_UNK10) {
-		JGeometry::TVec3<f32> v = mVelocity;
+		JGeometry::TVec3<f32> v = getVelocity();
 		makeObjAppeared();
 		mVelocity.y = v.y;
 		offLiveFlag(LIVE_FLAG_UNK10);
@@ -1064,7 +1065,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 			makeObjDead();
 			return;
 		}
-	} else if (gpMarDirector->mMap == 1) {
+	} else if (SMSGetMarDirector()->mMap == 1) {
 		if (!TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 			makeObjDead();
 			return;
@@ -1124,7 +1125,7 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_NOZZLE, &mPosition, 0,
 	                                nullptr, 0, 4);
 	gpItemManager->resetNozzleBoxesModel(boxKind);
-	gpMarDirector->fireGetNozzle(this);
+	SMSGetMarDirector()->fireGetNozzle(this);
 }
 
 void TItemNozzle::put()
@@ -1173,10 +1174,10 @@ void TItemNozzle::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 	onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	if (strcmp(mIndividualName, "rocket_nozzle_item") == 0) {
-		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 3)
+		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) != 3)
 			makeObjDead();
 	} else if (strcmp(mIndividualName, "back_nozzle_item") == 0) {
-		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 2)
+		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) != 2)
 			makeObjDead();
 	}
 }
@@ -1230,16 +1231,16 @@ BOOL TNozzleBox::receiveMessage(THitActor* sender, u32 message)
 void TNozzleBox::touchPlayer(THitActor*)
 {
 	if (mContainedNozzleType == TWaterGun::Hover
-	    && !TFlagManager::smInstance->getNozzleRight(
-	        gpMarDirector->getCurrentMap(), 0)
-	    && !TFlagManager::smInstance->getNozzleRight(
-	        gpMarDirector->getCurrentMap(), 1)
+	    && !TFlagManager::getInstance()->getNozzleRight(
+	        SMSGetMarDirector()->getCurrentMap(), 0)
+	    && !TFlagManager::getInstance()->getNozzleRight(
+	        SMSGetMarDirector()->getCurrentMap(), 1)
 	    && !unk166) {
-		gpMarDirector->getConsole()->startAppearBalloon(0xE0057, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0057, true);
 		unk166 = true;
 	}
 	if (!unk15C && !unk166) {
-		gpMarDirector->getConsole()->startAppearBalloon(0xE0056, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0056, true);
 		unk166 = true;
 	}
 }
@@ -1293,7 +1294,8 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 		unk15E.r             = 0xFF;
 		unk15E.g             = 0;
 		unk15E.b             = 0;
-		if (TFlagManager::smInstance->getNozzleRight(gpMarDirector->mMap, 0)) {
+		if (TFlagManager::getInstance()->getNozzleRight(
+		        SMSGetMarDirector()->mMap, 0)) {
 			unk15C = true;
 			unk166 = true;
 		}
@@ -1302,7 +1304,8 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 		unk15E.r             = 0x5A;
 		unk15E.g             = 0x5A;
 		unk15E.b             = 0x78;
-		if (TFlagManager::smInstance->getNozzleRight(gpMarDirector->mMap, 1)) {
+		if (TFlagManager::getInstance()->getNozzleRight(
+		        SMSGetMarDirector()->mMap, 1)) {
 			unk15C = true;
 			unk166 = true;
 		}

@@ -844,7 +844,8 @@ void TBossMantaManager::TMantaMessageState::update()
 	switch (unk4) {
 	case 0:
 		if (((TBossManta*)unk0->getObj(0))->isSpawnState()) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE000C, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000C,
+			                                                      true);
 			unk4++;
 		}
 		break;
@@ -856,14 +857,16 @@ void TBossMantaManager::TMantaMessageState::update()
 				aliveCount++;
 		}
 		if (aliveCount > 50) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE000D, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000D,
+			                                                      true);
 			unk4++;
 		}
 		break;
 	}
 	case 2:
 		if (unk0->unk88.mState == 2) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE000E, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000E,
+			                                                      true);
 			unk4++;
 		}
 		break;

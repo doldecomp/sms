@@ -160,7 +160,7 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		unk4[2 * i + 1].unk4 = local_1d0[i];
 	}
 
-	if (gpMarDirector->mMap == 4) {
+	if (SMSGetMarDirector()->mMap == 4) {
 		unkC = 8.0f;
 	}
 }

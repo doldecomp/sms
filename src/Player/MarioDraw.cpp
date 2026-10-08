@@ -405,11 +405,11 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	Mtx transform;
 	if (param_2 == 0) {
 		if (gpMarioForCallBack->mStatus == MARIO_STATUS_READ_BILLBOARD) {
-			if (gpMarDirector->unkA0 == nullptr)
+			if (SMSGetMarDirector()->unkA0 == nullptr)
 				return 0;
 
 			JGeometry::TVec3<f32> npcFocalPoint
-			    = gpMarDirector->unkA0->getFocalPoint();
+			    = SMSGetMarDirector()->unkA0->getFocalPoint();
 			JGeometry::TVec3<f32> pos;
 			pos.x = gpMarioForCallBack->mPosition.x;
 			pos.y = gpMarioForCallBack->mPosition.y + 112.0f;
@@ -1320,8 +1320,9 @@ void TMario::initModel()
 	}
 
 	mSurfGesso = nullptr;
-	if (gpMarDirector->mMap == 58) {
-		if (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1) {
+	if (SMSGetMarDirector()->mMap == 58) {
+		if (SMSGetMarDirector()->unk7D == 0
+		    || SMSGetMarDirector()->unk7D == 1) {
 			MActorAnmData* anmData = new MActorAnmData();
 			anmData->init("/scene/map/map/Torocco", nullptr);
 			mTorocco = new MActor(anmData);
@@ -1335,7 +1336,7 @@ void TMario::initModel()
 			            J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 			        0, 1),
 			    0);
-			if (gpMarDirector->unk7D == 0) {
+			if (SMSGetMarDirector()->unk7D == 0) {
 				mRailType              = 0;
 				MActorAnmData* anmData = new MActorAnmData();
 				anmData->init("/scene/map/map/Pinna_rail", nullptr);
@@ -1360,7 +1361,7 @@ void TMario::initModel()
 				mPinaRail->getModel()->setBaseTRMtx(
 				    mTorocco->getModel()->getAnmMtx(0));
 			}
-			if (gpMarDirector->unk7D == 1) {
+			if (SMSGetMarDirector()->unk7D == 1) {
 				mRailType              = 1;
 				MActorAnmData* anmData = new MActorAnmData();
 				anmData->init("/scene/map/map/Koopa_rail", nullptr);
@@ -1793,7 +1794,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	modelData->getJointNodePointer(mJointIdChnChest)
 	    ->setCallBack(MarioWaistCtrl);
 
-	if (0x4B0 > gpMarDirector->mMoveTickCount || isUpperPumpingStyle()) {
+	if (0x4B0 > SMSGetMarDirector()->mMoveTickCount || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
 			mMultiMtxEffect->flagOff(0x1);
 		}

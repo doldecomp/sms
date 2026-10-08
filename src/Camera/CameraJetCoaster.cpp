@@ -25,32 +25,33 @@
 // big and only used in one function. Also, dunno even if the size is correct
 inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 {
-	u32 flagCount = TFlagManager::smInstance->getFlag(MSF_BALLOON_COUNT);
+	u32 flagCount = TFlagManager::getInstance()->getFlag(MSF_BALLOON_COUNT);
 	u32 objCount
 	    = gpItemManager->getObjNumWithActorType(ACTOR_TYPE_BALLOON_KOOPA_JR);
 
-	if (unk2B8->unk38 > 2) {
+	if (unk2B8->getUnk38() > 2) {
 		unk2B8->unk38 -= 1;
-		if (unk2B8->unk38 == 2) {
+		if (unk2B8->getUnk38() == 2) {
 			unk2B8->unk38 = 1;
-			gpMarDirector->setNextStage(0xE05, nullptr);
+			SMSGetMarDirector()->setNextStage(0xE05, nullptr);
 		}
 		return;
 	}
 
-	if (unk2B8->unk38 == 1)
+	if (unk2B8->getUnk38() == 1)
 		return;
 
 	s32 balloonCode = -1;
 	if (flagCount == objCount) {
-		TFlagManager::smInstance->setBool(
+		TFlagManager::getInstance()->setBool(
 		    true, MSF_POPPED_ALL_BALLOONS_IN_PREV_STAGE);
 		unk2B8->unk38 = 300;
 		balloonCode   = 0xE002D;
 	} else {
-		switch (gpMarDirector->mMoveTickCount) {
+		switch (SMSGetMarDirector()->mMoveTickCount) {
 		case 0x3C:
-			gpMarDirector->getConsole()->startAppearJetBalloon(0, objCount);
+			SMSGetMarDirector()->getConsole()->startAppearJetBalloon(0,
+			                                                         objCount);
 			break;
 		case 0x1DB:
 			balloonCode = 0xE0029;
@@ -78,7 +79,8 @@ inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 	}
 
 	if (balloonCode != -1)
-		gpMarDirector->mConsole->startAppearBalloon(balloonCode, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(balloonCode,
+		                                                      true);
 }
 
 // fabricated
@@ -90,19 +92,22 @@ static void unitVecTo(const JGeometry::TVec3<f32>& from,
 	out->normalize();
 }
 
+// TODO: 99.8%. Every instruction and register matches; the frame is 0xC0
+// short of 0x2B0. 0x14 is missing in the early temps before the
+// RotateAboutAxis copy, 0xA8 in the temps after it.
 void CPolarSubCamera::ctrlJetCoasterCamera_()
 {
-	if (gpMarDirector->getCurrentMap() == 0x3A
-	    && gpMarDirector->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentMap() == 0x3A
+	    && SMSGetMarDirector()->getCurrentStage() == 0)
 		drawJetCoasterBalloonMessage_();
 
 	bool startedLButton = false;
 	if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
-		startedLButton = true;
-		u32 soundID    = 0x4825;
+		startedLButton     = true;
+		MSoundSEId soundID = MSD_SE_SY_CAMERA_OUT;
 		unk2B8->toggleLButtonMode();
 		if (unk2B8->isLButtonMode())
-			soundID = 0x4824;
+			soundID = MSD_SE_SY_CAMERA_UP;
 		SMSGetMSound()->startSoundSystemSE(soundID, 0, nullptr, 0);
 	}
 
@@ -133,7 +138,9 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		JGeometry::TVec3<f32> toroccoAxisZ;
 		toroccoAxisX.set(toroccoMtx[0][0], toroccoMtx[1][0], toroccoMtx[2][0]);
 		toroccoAxisY.set(toroccoMtx[0][1], toroccoMtx[1][1], toroccoMtx[2][1]);
-		toroccoAxisZ.set(toroccoMtx[0][2], toroccoMtx[1][2], toroccoMtx[2][2]);
+		toroccoAxisZ.x = toroccoMtx[0][2];
+		toroccoAxisZ.y = toroccoMtx[1][2];
+		toroccoAxisZ.z = toroccoMtx[2][2];
 		mUp.set(toroccoAxisY);
 
 		mCurrentTarget.unk18.scaleAdd(-calcDistFromXRotRatio_(), newTarget,
@@ -154,14 +161,12 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		mCurrentTarget.unk18 += lookUp;
 		newTarget += lookUp;
 
-		JGeometry::TVec3<f32> offsetUp = mUp;
-		JGeometry::TRotation3<TMtx33f> rotation(toTarget, -1.570796f);
-		JGeometry::TVec3<f32> offsetUpTmp = offsetUp;
-		CLBMultTranspose33(rotation, offsetUpTmp, offsetUp);
-		offsetUp *= mCurrentParams->mOffsetLookatXZ;
+		lookUp = mUp;
+		RotateAboutAxis(toTarget, -1.570796f, &lookUp);
+		lookUp *= mCurrentParams->mOffsetLookatXZ;
 
-		mCurrentTarget.unk18 += offsetUp;
-		newTarget += offsetUp;
+		mCurrentTarget.unk18 += lookUp;
+		newTarget += lookUp;
 
 		unk254 = CLBDegToShortAngle(MsGetRotFromYaxisZ(toroccoAxisY));
 		mFovy  = mCurrentParams->mFovy;
@@ -178,15 +183,16 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 
 		newTarget = mCurrentTarget.mTarget;
 
+		JGeometry::TVec3<f32> local_b0;
 		JGeometry::TVec3<f32> local_bc;
 		unitVecTo(mCurrentTarget.unk18, SMS_GetMarioPos(), &local_bc);
 
-		JGeometry::TVec3<f32> local_b0;
-		local_b0.cross(mUp, local_bc);
+		local_b0.cross2(mUp, local_bc);
 		MsVECNormalize(&local_b0, &local_b0);
 
-		CLBRotatePosAndUp(unk2B8->unk4, unk2B8->unk6, local_b0, mUp,
-		                  SMS_GetMarioPos(), &mCurrentTarget.unk18, &mUp);
+		CLBRotatePosAndUp(unk2B8->getOffsetAngleX(), unk2B8->getOffsetAngleY(),
+		                  local_b0, mUp, SMS_GetMarioPos(),
+		                  &mCurrentTarget.unk18, &mUp);
 	}
 
 	mCurrentTarget.mPosition = mCurrentTarget.unk18;
@@ -199,21 +205,16 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 			mTarget = newTarget;
 	} else {
 		if (mPosFreezeFrames == 0) {
-			f32 chaseXZ = mCurrentParams->mPosChaseRateXZ;
-			f32 chaseY  = mCurrentParams->mPosChaseRateY;
-			CLBChaseDecrease(&mPosition.x, mCurrentTarget.mPosition.x, chaseXZ,
-			                 0.0f);
-			CLBChaseDecrease(&mPosition.y, mCurrentTarget.mPosition.y, chaseY,
-			                 0.0f);
-			CLBChaseDecrease(&mPosition.z, mCurrentTarget.mPosition.z, chaseXZ,
-			                 0.0f);
+			CLBChaseDecrease(&mPosition, mCurrentTarget.mPosition,
+			                 mCurrentParams->mPosChaseRateXZ,
+			                 mCurrentParams->mPosChaseRateY,
+			                 mCurrentParams->mPosChaseRateXZ, 0.0f);
 		}
 		if (mTargetFreezeFrames == 0) {
-			f32 chaseXZ = mCurrentParams->mAtChaseRateXZ;
-			f32 chaseY  = mCurrentParams->mAtChaseRateY;
-			CLBChaseDecrease(&mTarget.x, newTarget.x, chaseXZ, 0.0f);
-			CLBChaseDecrease(&mTarget.y, newTarget.y, chaseY, 0.0f);
-			CLBChaseDecrease(&mTarget.z, newTarget.z, chaseXZ, 0.0f);
+			CLBChaseDecrease(&mTarget, newTarget,
+			                 mCurrentParams->mAtChaseRateXZ,
+			                 mCurrentParams->mAtChaseRateY,
+			                 mCurrentParams->mAtChaseRateXZ, 0.0f);
 		}
 	}
 }

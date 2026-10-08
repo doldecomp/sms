@@ -929,11 +929,7 @@ void TGessoPolluteObj::set()
 		MtxPtr mtx = unk16C->getModel()->getAnmMtx(TGesso::mMouthJntIndex);
 
 		JGeometry::TVec3<f32> local_54 = getVelocity();
-
-		// TODO: awful things happening with the stack frame here
-		JGeometry::TVec3<f32> local_C = getVelocity();
-		if (JGeometry::TVec3<f32>(local_C).x != 0.0f
-		    || JGeometry::TVec3<f32>(local_C).z != 0.0f)
+		if (getVelocity().x != 0.0f || getVelocity().z != 0.0f)
 			MsVECNormalize(&local_54, &local_54);
 
 		mPosition.x = local_54.x * 100.0f + mtx[0][3];

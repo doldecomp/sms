@@ -171,7 +171,7 @@ bool TBaseNPC::isNerveCanGoToBlown() const
 	    || nerve == &TNerveNPCTurnToMario::theNerve()
 	    || nerve == &TNerveNPCWet::theNerve()
 	    || nerve == &TNerveNPCMareStand::theNerve())
-		if (!gpMarDirector->isThing())
+		if (!SMSGetMarDirector()->isThing())
 			result = true;
 	return result;
 }
@@ -345,7 +345,7 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (param_2 != HIT_NPC_OBJECT_KIND_WATER_SPRAY)
 			return;
 
-		if (gpMarDirector->isTalkOrDemoModeNow())
+		if (SMSGetMarDirector()->isTalkOrDemoModeNow())
 			return;
 
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
@@ -366,7 +366,7 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 	}
 
 	if (param_2 == HIT_NPC_OBJECT_KIND_WATER_SPRAY) {
-		if (!gpMarDirector->isTalkOrDemoModeNow() && isPollutionNpc()
+		if (!SMSGetMarDirector()->isTalkOrDemoModeNow() && isPollutionNpc()
 		    && mSpine->getCurrentNerve() == &TNerveNPCWet::theNerve()) {
 			if (mPollutionAmount > 0.0f) {
 				mPollutionAmount
@@ -469,7 +469,7 @@ void TBaseNPC::changeNerveProc_()
 			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
 				bool inCameraCube = true;
-				if (gpMarDirector->mMap == 7) {
+				if (SMSGetMarDirector()->mMap == 7) {
 					JGeometry::TVec3<f32> local_58 = mPosition;
 					local_58.y += 75.0f;
 					inCameraCube = SMS_IsInSameCameraCube(local_58);

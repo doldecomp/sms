@@ -181,10 +181,10 @@ void TMapEventSink::load(JSUMemoryInputStream& stream)
 		initBuilding(i, stream);
 	}
 
-	if (gpMarDirector->mMap == 0) {
+	if (SMSGetMarDirector()->mMap == 0) {
 		mCleanedDegree = 30;
 		unk38          = 200.0f;
-	} else if (gpMarDirector->mMap == 2) {
+	} else if (SMSGetMarDirector()->mMap == 2) {
 		mCleanedDegree = 30;
 	}
 }

@@ -333,7 +333,7 @@ void TMirrorModelManager::load(JSUMemoryInputStream& stream)
 		for (int i = 0; i < local_28; ++i) {
 			unk1C[i] = new TMirrorModel;
 			char acStack_130[0x100];
-			if (gpMarDirector->getCurrentMap() == 7) {
+			if (SMSGetMarDirector()->getCurrentMap() == 7) {
 				static const char* table[] = { "205", nullptr };
 				snprintf(acStack_130, 0x100, "/scene/map/mirror/mirror%s.bmd",
 				         table[i]);

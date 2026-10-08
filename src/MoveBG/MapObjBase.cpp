@@ -450,7 +450,8 @@ void TMapObjBase::setGroundCollision()
 
 void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (gpMarDirector->isTalkModeNow() && !gpMarDirector->isDemoModeNow()) {
+	if (SMSGetMarDirector()->isTalkModeNow()
+	    && !SMSGetMarDirector()->isDemoModeNow()) {
 		if (checkLiveFlag(LIVE_FLAG_DEAD))
 			return;
 

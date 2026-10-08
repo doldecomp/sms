@@ -306,7 +306,7 @@ u32 TMapObjBillboard::touchWater(THitActor* param_1)
 
 void TMapObjChangeStage::touchPlayer(THitActor*)
 {
-	gpMarDirector->setNextStage(unk138, nullptr);
+	SMSGetMarDirector()->setNextStage(unk138, nullptr);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mColCount = 0;
 	gpMSound->startSoundActor(MSD_SE_MA_WARP_EX, &mPosition, 0, nullptr, 0, 4);
@@ -553,7 +553,7 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("redcoinswitch");
-		gpMarDirector->unk18[0]->mDisabledFrames
+		SMSGetMarDirector()->unk18[0]->mDisabledFrames
 		    = (s32)(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2
 		            + 0x3C);
 		gpMSound->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0, nullptr,
@@ -610,7 +610,7 @@ void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 	else
 		unk138 *= 10;
 
-	u8 shineId = SMS_getShineIDofExStage(gpMarDirector->getCurrentMap());
+	u8 shineId = SMS_getShineIDofExStage(SMSGetMarDirector()->getCurrentMap());
 	if (shineId != 0xFF
 	    && !TFlagManager::getInstance()->getShineFlag(shineId)) {
 		makeObjDead();

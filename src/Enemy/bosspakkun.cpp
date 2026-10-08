@@ -789,9 +789,9 @@ void TBossPakkun::init(TLiveManager* manager)
 
 	if (static_cast<TBossPakkunManager*>(mManager)->unk54 != 0) {
 		mSpine->initWith(&TNerveBPWaitL::theNerve());
-	} else if (gpMarDirector->mMap == 0x37) {
+	} else if (SMSGetMarDirector()->mMap == 0x37) {
 		mSpine->initWith(&TNerveBPFall::theNerve());
-	} else if (gpMarDirector->unk7D == 4) {
+	} else if (SMSGetMarDirector()->unk7D == 4) {
 		mSpine->initWith(&TNerveBPSleep::theNerve());
 	} else {
 		mSpine->initWith(&TNerveBPWait::theNerve());
@@ -902,7 +902,7 @@ void TBossPakkun::showMessage(u32 message)
 		mask = 1 << index;
 
 	if (!(unk1C0 & mask)) {
-		TGCConsole2* console = gpMarDirector->getConsole();
+		TGCConsole2* console = SMSGetMarDirector()->getConsole();
 		console->startAppearBalloon(message, true);
 	}
 	unk1C0 |= mask;
@@ -910,8 +910,8 @@ void TBossPakkun::showMessage(u32 message)
 
 bool TBossPakkun::is2ndFightNow() const
 {
-	if (gpMarDirector->getCurrentMap() == 2
-	    && gpMarDirector->getCurrentStage() == 4)
+	if (SMSGetMarDirector()->getCurrentMap() == 2
+	    && SMSGetMarDirector()->getCurrentStage() == 4)
 		return true;
 	return false;
 }
@@ -993,7 +993,7 @@ void TBossPakkun::gotHipDropDamage()
 	} else if (!mSpine->isNerve(&TNerveBPTumbleOut::theNerve())) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_DAMAGE, &mPosition, 0,
 		                                nullptr, 0, 4);
-		if (gpMarDirector->getCurrentStage() == 4) {
+		if (SMSGetMarDirector()->getCurrentStage() == 4) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPTakeOff::theNerve());
 			mSpine->pushNerve(&TNerveBPGetUp::theNerve());
@@ -1418,8 +1418,9 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 
 	if (spine->getTime() >= boss->getBossPakkunParams()->mSLWaitFrameStg0.get()
 	    && boss->mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
-		if (gpMarDirector->mMap == 2
-		    && (gpMarDirector->unk7D == 0 || gpMarDirector->unk7D == 1)) {
+		if (SMSGetMarDirector()->mMap == 2
+		    && (SMSGetMarDirector()->unk7D == 0
+		        || SMSGetMarDirector()->unk7D == 1)) {
 			JGeometry::TVec3<f32>* marioPos = &SMS_GetMarioPos();
 			if (boss->unk188 == nullptr) {
 				boss->unk188 = static_cast<TAreaCylinderManager*>(
@@ -1436,7 +1437,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 			return true;
 		}
 
-		if (gpMarDirector->unk7D == 4) {
+		if (SMSGetMarDirector()->unk7D == 4) {
 			f32 tornadoProp = boss->getBossPakkunParams()->mSLTornadoProp.get();
 			if (boss->mTornado->unk98 != 0
 			    || rand() * (1.0f / 32768.0f) < tornadoProp) {
@@ -1523,8 +1524,8 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 		} else {
 			if (!boss->is2ndFightNow()) {
 				if (!(boss->unk1C0 & 1))
-					gpMarDirector->getConsole()->startAppearBalloon(0xE0000,
-					                                                true);
+					SMSGetMarDirector()->getConsole()->startAppearBalloon(
+					    0xE0000, true);
 				boss->unk1C0 |= 1;
 			}
 			return true;
@@ -1672,8 +1673,8 @@ DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 			if (!boss->is2ndFightNow()) {
 				boss->unk1C4 += 1;
 				if (boss->unk1C4 >= 3) {
-					gpMarDirector->getConsole()->startAppearBalloon(0xe0001,
-					                                                true);
+					SMSGetMarDirector()->getConsole()->startAppearBalloon(
+					    0xe0001, true);
 					boss->unk1C4 = 0;
 				}
 			}

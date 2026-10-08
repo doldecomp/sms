@@ -111,7 +111,8 @@ bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 		return true;
 
 	// Presumably hotel delphino floor transitions?
-	if (gpMarDirector->getCurrentMap() == 7 && unk1C != -1 && found != -1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 7 && unk1C != -1
+	    && found != -1) {
 		const char* curName = (*unk14)[unk1C].getName();
 		const char* newName = (*unk14)[found].getName();
 
@@ -140,7 +141,7 @@ inline bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 bool SMS_IsInOtherFastCube(const Vec& pos)
 {
 	bool result = false;
-	if (!gpMarDirector->isDemoModeNow()
+	if (!SMSGetMarDirector()->isDemoModeNow()
 	    && (gpCubeFastA->isInOtherCube(pos) || gpCubeFastB->isInOtherCube(pos)
 	        || gpCubeFastC->isInOtherCube(pos)))
 		result = true;

@@ -257,7 +257,8 @@ void TBaseNPC::emitParticle_()
 		SMS_EasyEmitParticle(PARTICLE_MS_YNB_ONPU, &unk1F0, this, scale);
 	}
 
-	if (mActorType == ACTOR_TYPE_NPC_MONTE_MF || gpMarDirector->mMap == 4) {
+	if (mActorType == ACTOR_TYPE_NPC_MONTE_MF
+	    || SMSGetMarDirector()->mMap == 4) {
 		f32 dVar11                  = 0.0f;
 		bool doEmit                 = false;
 		JGeometry::TVec3<f32> scale = getEffectScale_();

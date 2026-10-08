@@ -349,7 +349,7 @@ void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	mLiveFlag &= ~LIVE_FLAG_UNK200;
-	if (!gpMarDirector->isTalkModeNow()) {
+	if (!SMSGetMarDirector()->isTalkModeNow()) {
 		TMapObjBase::perform(cue, graphics);
 	} else {
 		if (cue & CUE_MOVE) {

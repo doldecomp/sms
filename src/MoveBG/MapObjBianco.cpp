@@ -312,11 +312,11 @@ void TLeafBoat::touchActor(THitActor* param_1)
 		return;
 	JGeometry::TVec3<f32> direction(param_1->mPosition.x - mPosition.x, 0.0f,
 	                                param_1->mPosition.z - mPosition.z);
-	if (direction.dot(mVelocity) < 0.0f)
+	if (direction.dot(getVelocity()) < 0.0f)
 		return;
 	if (direction.x != 0.0f || direction.z != 0.0f)
 		MsVECNormalize(&direction, &direction);
-	f32 dot = direction.dot(mVelocity);
+	f32 dot = direction.dot(getVelocity());
 	if (param_1->isHitCategory(HIT_CATEGORY_ENEMY)) {
 		mVelocity.x -= (1.0f + unk138) * (direction.x * dot);
 		mVelocity.z -= (1.0f + unk138) * (direction.z * dot);
@@ -332,12 +332,12 @@ void TLeafBoat::touchWall(JGeometry::TVec3<f32>* param_1,
 	int wallsNum = param_2->mResultWallsNum;
 	for (int i = 0; i < wallsNum; ++i) {
 		TBGCheckData* data = param_2->mResultWalls[i];
-		if (mVelocity.dot(data->getNormal()) < 0.0f) {
+		if (getVelocity().dot(data->getNormal()) < 0.0f) {
 			f32 dist
 			    = param_1->dot(data->getNormal()) + data->getPlaneDistance();
 			param_1->x += (mBodyRadius - dist) * data->getNormal().x;
 			param_1->z += (mBodyRadius - dist) * data->getNormal().z;
-			JGeometry::TVec3<f32> reflect = mVelocity;
+			JGeometry::TVec3<f32> reflect = getVelocity();
 			calcReflectingVelocity(data, 1.0f, &reflect);
 			mVelocity.x = reflect.x * unk140;
 			mVelocity.z = reflect.z * unk140;
@@ -349,13 +349,13 @@ void TLeafBoat::touchWall(JGeometry::TVec3<f32>* param_1,
 void TLeafBoat::bind()
 {
 	JGeometry::TVec3<f32> position = mPosition;
-	position.x += mVelocity.x;
-	position.z += mVelocity.z;
+	position.x += getVelocity().x;
+	position.z += getVelocity().z;
 	const TBGCheckData* ground;
 	f32 height = gpMap->checkGroundIgnoreWaterSurface(
 	    position.x, mPosition.y - mYOffset, position.z, &ground);
 	if (height > mPosition.y - mYOffset - 50.0f) {
-		JGeometry::TVec3<f32> reflection = mVelocity;
+		JGeometry::TVec3<f32> reflection = getVelocity();
 		calcReflectingVelocity(ground, 1.0f, &reflection);
 		mVelocity.x *= -1.0f;
 		mVelocity.z *= -1.0f;

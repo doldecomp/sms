@@ -980,7 +980,7 @@ bool TKumokun::isFenceSound(const TBGCheckData* wall)
 		return false;
 
 	if (wall->isFence()) {
-		if (gpMarDirector->mMap == 8)
+		if (SMSGetMarDirector()->mMap == 8)
 			return false;
 	} else {
 		return false;

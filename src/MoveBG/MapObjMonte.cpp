@@ -755,8 +755,8 @@ TSwingBoard::TSwingBoard(const char* param_1)
 void TGoalFlag::touchActor(THitActor* param_1)
 {
 	if (param_1->isActorType(ACTOR_TYPE_MARIO)) {
-		if (!TFlagManager::smInstance->getBool(MSF_RACE_GOAL_REACHED))
-			TFlagManager::smInstance->setBool(true, MSF_RACE_GOAL_REACHED);
+		if (!TFlagManager::getInstance()->getBool(MSF_RACE_GOAL_REACHED))
+			TFlagManager::getInstance()->setBool(true, MSF_RACE_GOAL_REACHED);
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	} else if (param_1->isActorType(ACTOR_TYPE_E_MARIO)) {
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
@@ -829,7 +829,7 @@ void TFluff::control()
 		break;
 	case STATE_NORMAL: {
 		mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
-		if (mVelocity.y < 0.0f
+		if (getVelocity().y < 0.0f
 		    && (mGroundHeight > mPosition.y - unk13C || mPosition.y < -1000.0f))
 			kill();
 		if (gpMap->isTouchedOneWall(mPosition.x, mPosition.y, mPosition.z,

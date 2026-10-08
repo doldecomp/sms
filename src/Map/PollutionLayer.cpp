@@ -209,7 +209,7 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 
 				static int effect_timer = 0;
 				if (effect_timer == 0) {
-					if (gpMarDirector->mMap == 5)
+					if (SMSGetMarDirector()->mMap == 5)
 						gpMarioParticleManager->emit(MAPOBJ_SANDSTEAM,
 						                             &pos[now_pos_no], 0, this);
 					else
@@ -287,7 +287,7 @@ void TPollutionLayer::initTexImage(const char* name)
 	mPollutionBmp = (u8*)JKRGetResource(fullPath);
 
 	bool cVar1 = false;
-	if (gpMarDirector->getCurrentMap() == 9)
+	if (SMSGetMarDirector()->getCurrentMap() == 9)
 		cVar1 = true;
 
 	for (int y = 0; y < mPos.getHeight(); ++y) {

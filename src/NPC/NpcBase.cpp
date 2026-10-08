@@ -107,11 +107,11 @@ void TBaseNPC::loadAfter()
 {
 	TSpineEnemy::loadAfter();
 	if (mActorType == ACTOR_TYPE_NPC_PEACH
-	    && gpMarDirector->getCurrentMap() == 1
-	    && gpMarDirector->getCurrentStage() == 1) {
+	    && SMSGetMarDirector()->getCurrentMap() == 1
+	    && SMSGetMarDirector()->getCurrentStage() == 1) {
 		mBalloonCtrl = new TNpcBalloon;
 	}
-	gpMarDirector->entryNPC(this);
+	SMSGetMarDirector()->entryNPC(this);
 }
 
 bool TBaseNPC::isNormalMonteM() const
@@ -508,7 +508,7 @@ void TBaseNPC::moveObject()
 
 	if (mBalloonCtrl != nullptr) {
 		int prev = mBalloonCtrl->unk0;
-		if (!gpMarDirector->isTalkOrDemoModeNow()
+		if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
 		    && mBalloonCtrl->updateBalloon()) {
 			if (mHolder != nullptr) {
 				switch (prev) {

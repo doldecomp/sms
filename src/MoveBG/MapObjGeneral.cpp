@@ -129,7 +129,7 @@ void TMapObjGeneral::thrown()
 	                  + mNormalThrowSpeedRate * SMS_GetMarioSpeedZ());
 
 	offLiveFlag(LIVE_FLAG_UNK10);
-	JGeometry::TVec3<f32> vel = mVelocity;
+	JGeometry::TVec3<f32> vel = getVelocity();
 	mPosition.add(vel);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	removeMapCollision();
@@ -351,7 +351,7 @@ void TMapObjGeneral::appear()
 
 	if (!isActorType(ACTOR_TYPE_COIN_BLUE)
 	    || !TFlagManager::smInstance->getBlueCoinFlag(
-	        gpMarDirector->getCurrentMap(), mEventId))
+	        SMSGetMarDirector()->getCurrentMap(), mEventId))
 		startSound(1);
 
 	appearing();

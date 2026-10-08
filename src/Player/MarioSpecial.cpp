@@ -73,7 +73,7 @@ BOOL TMario::barWait()
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
-		u8 map = gpMarDirector->getCurrentMap();
+		u8 map = SMSGetMarDirector()->getCurrentMap();
 		if (map == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
@@ -152,7 +152,7 @@ BOOL TMario::barClimb()
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
-		u8 state = gpMarDirector->mMap;
+		u8 state = SMSGetMarDirector()->mMap;
 		if (state == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;

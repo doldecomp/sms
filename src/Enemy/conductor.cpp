@@ -129,7 +129,7 @@ void TConductor::polluterExterminated() { }
 
 BOOL TConductor::isBossDefeated()
 {
-	switch (gpMarDirector->mMap) {
+	switch (SMSGetMarDirector()->mMap) {
 	case 2: {
 		TLiveManager* mgr = getManagerByName("ヒノクリ２マネージャー");
 		if (!mgr)
@@ -257,7 +257,7 @@ void TConductor::genEnemyFromPollution()
 	if (!unkF0)
 		return;
 
-	if (gpMarDirector->mMoveTickCount % unk84.mGenerateTime.get() != 1)
+	if (SMSGetMarDirector()->mMoveTickCount % unk84.mGenerateTime.get() != 1)
 		return;
 
 	TStageEnemyInfo* info = unkF0->getMatchedInfo(0x1);
@@ -366,7 +366,7 @@ JDrama::TNameRef* TConductor::searchF(u16 key, const char* name)
 
 void TConductor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_MOVE) && gpMarDirector->unk124 == 0)
+	if ((cue & CUE_MOVE) && SMSGetMarDirector()->unk124 == 0)
 		genEnemyFromPollution();
 
 	for (int i = 1; i >= 0; --i) {

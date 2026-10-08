@@ -460,7 +460,7 @@ void TEnemyMario::initEnemyValues()
 		}
 	}
 
-	mGamePad = gpMarDirector->unk18[1];
+	mGamePad = SMSGetMarDirector()->unk18[1];
 	mEMFlags = EM_FLAG_DISP_PENCIL;
 	switch (mEMario->mInitialState) {
 	case 0:
@@ -506,7 +506,7 @@ void TEnemyMario::initEnemyValues()
 		mInputReplays = nullptr;
 	}
 
-	if (gpMarDirector->mMap == 1 && gpMarDirector->unk7D == 1) {
+	if (SMSGetMarDirector()->mMap == 1 && SMSGetMarDirector()->unk7D == 1) {
 		mRunAwayInputReplays = new TMarioInputReplay*[8];
 		for (int i = 0; i < 8; ++i) {
 			if (recordFileNamesDolpic1[i] != nullptr) {
@@ -530,18 +530,18 @@ void TEnemyMario::initEnemyValues()
 		mGateReplay          = nullptr;
 	}
 
-	if (gpMarDirector->mMap == 12) {
+	if (SMSGetMarDirector()->mMap == 12) {
 		if (strcmp(mEMario->getName(), "マリオ２Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P2;
-			mGamePad    = gpMarDirector->unk18[1];
+			mGamePad    = SMSGetMarDirector()->unk18[1];
 		}
 		if (strcmp(mEMario->getName(), "マリオ３Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P3;
-			mGamePad    = gpMarDirector->unk18[2];
+			mGamePad    = SMSGetMarDirector()->unk18[2];
 		}
 		if (strcmp(mEMario->getName(), "マリオ４Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P4;
-			mGamePad    = gpMarDirector->unk18[3];
+			mGamePad    = SMSGetMarDirector()->unk18[3];
 		}
 		mEMDoing = EM_DOING_GET_PAD;
 		if (mPlayerType == TMario::PLAYER_TYPE_P2
@@ -804,8 +804,8 @@ void TEnemyMario::startDisappear(u16 doing)
 {
 	mDisappearPosition = mPosition;
 
-	u8 currentMap      = gpMarDirector->getCurrentMap();
-	u8 currentStage    = gpMarDirector->getCurrentStage();
+	u8 currentMap      = SMSGetMarDirector()->getCurrentMap();
+	u8 currentStage    = SMSGetMarDirector()->getCurrentStage();
 	bool keepBossLives = false;
 	if (currentMap == 1 && currentStage == 1) {
 		keepBossLives = true;
@@ -1066,8 +1066,8 @@ void TEnemyMario::emDownAnimation()
 	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
 	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
 
-	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
-	    || gpMarDirector->isTalkModeNow()) {
+	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	    || SMSGetMarDirector()->isTalkModeNow()) {
 		mReferencePosition = mPosition;
 		mDisappearPosition = mReferencePosition;
 		return;
@@ -1076,7 +1076,7 @@ void TEnemyMario::emDownAnimation()
 	++mEMDoingTimer;
 	mReferencePosition = mPosition;
 	mDisappearPosition = mReferencePosition;
-	if (gpMarDirector->getCurrentMap() != 1
+	if (SMSGetMarDirector()->getCurrentMap() != 1
 	    && mEMDoingTimer > mSettingParams->mDownTime.get()) {
 		mWaterCounter = mSettingParams->mWaterCtMax.get();
 		changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
@@ -1181,7 +1181,7 @@ void TEnemyMario::emRunAwayToNearestNode()
 		                                0, nullptr, 0, 4);
 		break;
 	case 300:
-		if (gpMarDirector->getCurrentMap() == 1) {
+		if (SMSGetMarDirector()->getCurrentMap() == 1) {
 			JGeometry::TVec3<f32> waitingPoint;
 			graph->getGraphNode(7).getPoint(&waitingPoint);
 			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,

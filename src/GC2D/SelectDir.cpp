@@ -239,8 +239,8 @@ int TSelectDir::direct()
 
 		if (unk20->mCloseMenu) {
 			SMSGetApplication()->mNextArea.unk1 = unk20->mSelectedShine;
-			TFlagManager::smInstance->setFlag(MSF_EPISODE,
-			                                  unk20->mSelectedShine);
+			TFlagManager::getInstance()->setFlag(MSF_EPISODE,
+			                                     unk20->mSelectedShine);
 			SMSGetApplication()->getFader()->startWipe(0xf, 1.0f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0xff, 0xff, 0xff, 0xff));

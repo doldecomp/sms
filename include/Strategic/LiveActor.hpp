@@ -166,7 +166,7 @@ public:
 		JGeometry::TVec3<f32> velocity = mVelocity;
 		result.add(velocity);
 	}
-	const JGeometry::TVec3<f32>& getVelocity() const { return mVelocity; }
+	JGeometry::TVec3<f32> getVelocity() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
 	void setVelocityAndFlag10(f32 x, f32 y, f32 z)
 	{

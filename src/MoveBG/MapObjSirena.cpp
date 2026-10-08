@@ -63,7 +63,7 @@ TRoulette::TRoulette(const char* name)
 	unk148.b = 0;
 	unk148.a = 255;
 	if (SMSGetApplication()->mCurrArea.getStage() == 14
-	    && gpMarDirector->getCurrentStage() == 1) {
+	    && SMSGetMarDirector()->getCurrentStage() == 1) {
 		unk141   = 1;
 		unk148.b = 255;
 	}
@@ -824,7 +824,7 @@ void TDonchou::loadAfter()
 {
 	TMapObjBase::loadAfter();
 	if (SMSGetApplication()->mCurrArea.getStage() == 14
-	    && gpMarDirector->getCurrentStage() == 0) {
+	    && SMSGetMarDirector()->getCurrentStage() == 0) {
 		unk144
 		    = static_cast<TSlotDrum*>(JDrama::TNameRefGen::search("srotdram"));
 		unk148 = static_cast<TItemSlotDrum*>(

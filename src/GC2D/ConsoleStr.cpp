@@ -83,12 +83,12 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk298[0] = new TExPane(unk14, 'wp_l');
 	unk298[1] = new TExPane(unk14, 'wp_r');
 
-	u32 uVar1     = SMS_getShineStage(gpMarDirector->mMap);
+	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 	void* pvVar10 = JKRGetResource("/common/2d/stagename.bmg");
 	unk2A0[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
-	if (gpMarDirector->mMap != 15) {
+	if (SMSGetMarDirector()->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
 		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
@@ -114,7 +114,7 @@ void TConsoleStr::loadAfter()
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
-		if (gpMarDirector->mState != 5) {
+		if (SMSGetMarDirector()->mState != 5) {
 			bool bVar6 = false;
 
 			switch (unk2B8) {
@@ -206,14 +206,15 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk18 += 0.5f;
 		}
 
-		if (!unk2A9 && gpMarDirector->mState != TMarDirector::STATE_UNK4) {
+		if (!unk2A9
+		    && SMSGetMarDirector()->mState != TMarDirector::STATE_UNK4) {
 			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->stopCreateParticle();
 			unk2A9 = true;
 		}
 
-		if (unk2A9 && gpMarDirector->mState == TMarDirector::STATE_UNK4) {
+		if (unk2A9 && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4) {
 			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->playCreateParticle();

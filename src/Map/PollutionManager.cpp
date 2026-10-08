@@ -30,7 +30,7 @@ void TPollutionManager::stamp(u16 stamp_type, f32 x, f32 y, f32 z, f32 size)
 
 void TPollutionManager::clean(f32 x, f32 y, f32 z, f32 size)
 {
-	if (gpMarDirector->getCurrentMap() == 1 && y < -10.0f)
+	if (SMSGetMarDirector()->getCurrentMap() == 1 && y < -10.0f)
 		return;
 
 	stamp(0, x, y, z, size);
@@ -157,8 +157,8 @@ void TPollutionManager::initPollutionInfo()
 		mJointModelNum = info->mLayerCount;
 		setDataAddress(info);
 
-		if (gpMarDirector->getCurrentMap() == 0x9
-		    && gpMarDirector->getCurrentStage() != 0x7) {
+		if (SMSGetMarDirector()->getCurrentMap() == 0x9
+		    && SMSGetMarDirector()->getCurrentStage() != 0x7) {
 			static const char* mare_name_table[] = {
 				"pollution00", "pollution01", "pollution02", "pollution03",
 				"pollution04", "pollution05", "pollution06", "pollutionA",

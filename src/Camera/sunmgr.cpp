@@ -61,7 +61,7 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 		}
 	}
 
-	if (unk14 != 0 && gpMarDirector->getCurrentMap() == 1
+	if (unk14 != 0 && SMSGetMarDirector()->getCurrentMap() == 1
 	    && TFlagManager::getInstance()->getBool(MSF_NOKI_AVAILABLE)) {
 		unk15 |= 0x1;
 		TStagePositionInfo* sunWarpPoint
@@ -88,7 +88,7 @@ void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 	f32 dx = SMS_GetMarioPos().x - unk24.x;
 	f32 dz = SMS_GetMarioPos().z - unk24.z;
 	if (dx * dx + dz * dz < 160000.0f && gpSunModel->isInBounds(0.3f)) {
-		gpMarDirector->setNextStage(9, nullptr);
+		SMSGetMarDirector()->setNextStage(9, nullptr);
 		MSound* sound = SMSGetMSound();
 		if (sound->unk7C != nullptr) {
 			sound->unk7C->setVolume(0.0f, 100, 0);

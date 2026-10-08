@@ -925,15 +925,15 @@ void TBGTentacle::moveNode()
 
 		const TBGCheckData* pTStack_b0;
 		f32 dVar16;
-		if ((gpMarDirector->getCurrentMap() == 3
-		     && gpMarDirector->getCurrentStage() == 0)
-		    || gpMarDirector->getCurrentMap() == 59) {
+		if ((SMSGetMarDirector()->getCurrentMap() == 3
+		     && SMSGetMarDirector()->getCurrentStage() == 0)
+		    || SMSGetMarDirector()->getCurrentMap() == 59) {
 			dVar16 = gpMap->checkGround(local_ac.x, local_ac.y + 200.0f,
 			                            local_ac.z, &pTStack_b0);
 		} else if (mOwner->is2ndFightNow()) {
 			dVar16 = mOwner->mPosition.y;
-		} else if (gpMarDirector->getCurrentMap() == 9
-		           && gpMarDirector->getCurrentStage() == 1) {
+		} else if (SMSGetMarDirector()->getCurrentMap() == 9
+		           && SMSGetMarDirector()->getCurrentStage() == 1) {
 			dVar16
 			    = gpMap->checkGround(local_ac.x, mOwner->mPosition.y + 500.0f,
 			                         local_ac.z, &pTStack_b0);
@@ -1123,7 +1123,7 @@ void TBGTentacle::checkDamage()
 {
 	if (mDamageCount >= mParams->mDamageCountMax.get()) {
 		if (mOwner->getAttackMode() == 6)
-			gpMarDirector->fireStreamingMovie(10);
+			SMSGetMarDirector()->fireStreamingMovie(10);
 
 		mOwner->unk1A8 = mOwner->getSaveParams()->mSLAmputeeWait.get();
 		changeStateAndFixNodes(TSTATE_AMPUTEE);

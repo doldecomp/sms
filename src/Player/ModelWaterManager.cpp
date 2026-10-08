@@ -215,8 +215,8 @@ void TModelWaterManager::loadAfter()
 
 	f32 fVar1 = flag / 60.0f;
 
-	if (gpMarDirector->getCurrentMap() == 1
-	    && gpMarDirector->getCurrentStage() == 2)
+	if (SMSGetMarDirector()->getCurrentMap() == 1
+	    && SMSGetMarDirector()->getCurrentStage() == 2)
 		fVar1 = 1.0f;
 
 	if (fVar1 < 1.0f)
@@ -1679,7 +1679,7 @@ void init_sphere_glist()
 
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
-	if (gpMarDirector->getCurrentMap() == 1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 1) {
 		static bool initialized = false;
 		if (!initialized) {
 			init_sphere_glist();

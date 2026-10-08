@@ -95,7 +95,7 @@ void TSunGlass::perform(u32 cue, JDrama::TGraphics* graphics)
 u8 TSunGlass::getShineAlpha()
 {
 	u8 alpha = 0;
-	if (gpMarDirector->getCurrentMap() == 1)
+	if (SMSGetMarDirector()->getCurrentMap() == 1)
 		alpha = (u8)((f32)(unk1E - unk1F)
 		             * (1.0f
 		                - (f32)TFlagManager::getInstance()->getFlag(
@@ -109,7 +109,7 @@ void TSunGlass::loadAfter() { unk14.a = getShineAlpha(); }
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	unk10 = gpMarDirector->unk18[1];
+	unk10 = SMSGetMarDirector()->unk18[1];
 }
 
 void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -133,7 +133,7 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 void TSunShine::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	if (gpMarDirector->getCurrentMap() == 6) {
+	if (SMSGetMarDirector()->getCurrentMap() == 6) {
 		unk14.r = 0x48;
 		unk14.g = 0x30;
 		unk14.b = 0;

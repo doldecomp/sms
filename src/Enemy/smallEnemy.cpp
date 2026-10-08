@@ -777,7 +777,7 @@ void TSmallEnemy::kill()
 
 bool TSmallEnemy::isFindMario(float param_1)
 {
-	if (gpMarDirector->isDemoModeNow())
+	if (SMSGetMarDirector()->isDemoModeNow())
 		return false;
 
 	if (isAirborne())
@@ -932,7 +932,8 @@ void TSmallEnemy::behaveToHitOthers(THitActor* param_1)
 
 void TSmallEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!gpMarDirector->isDemoModeNow() && gpMarDirector->isTalkModeNow()) {
+	if (!SMSGetMarDirector()->isDemoModeNow()
+	    && SMSGetMarDirector()->isTalkModeNow()) {
 		performOnlyDraw(cue, graphics);
 		return;
 	}

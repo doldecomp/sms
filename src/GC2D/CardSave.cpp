@@ -116,7 +116,7 @@ TCardSave::TCardSave(const char* name, bool param_2)
 void TCardSave::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	initData(gpMarDirector->unk18[0]);
+	initData(SMSGetMarDirector()->unk18[0]);
 }
 
 void TCardSave::initData(TMarioGamePad* param_1)
@@ -1833,7 +1833,7 @@ void TCardSave::execMovement_()
 
 						if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 							unk128->hide();
-							u16 score = TFlagManager::smInstance->getFlag(
+							u16 score = TFlagManager::getInstance()->getFlag(
 							    MSF_SHINE_COUNT);
 							if (score > 0x3E7)
 								score = 0x3E7;
@@ -1872,7 +1872,7 @@ void TCardSave::execMovement_()
 				if (unk2DC != 0) {
 					unk2DC = 0;
 					if (unk2DD == 0)
-						TFlagManager::smInstance->saveFail();
+						TFlagManager::getInstance()->saveFail();
 				}
 			}
 		} else {

@@ -34,20 +34,20 @@ bool SMS_isExMap()
 
 bool SMS_isMultiPlayerMap()
 {
-	return (gpMarDirector->mMap == 12 && gpMarDirector->unk7D == 0);
+	return (SMSGetMarDirector()->mMap == 12 && SMSGetMarDirector()->unk7D == 0);
 }
 
 bool SMS_isDivingMap()
 {
 	bool ret = false;
 
-	if (gpMarDirector->mMap == 0x39) {
+	if (SMSGetMarDirector()->mMap == 0x39) {
 		ret = true;
 	}
-	if (gpMarDirector->mMap == 0x2C) {
+	if (SMSGetMarDirector()->mMap == 0x2C) {
 		ret = true;
 	}
-	if (gpMarDirector->mMap == 0x10) {
+	if (SMSGetMarDirector()->mMap == 0x10) {
 		ret = true;
 	}
 
@@ -58,7 +58,7 @@ bool SMS_isOptionMap()
 {
 	bool ret = false;
 
-	if (gpMarDirector->mMap == 15) {
+	if (SMSGetMarDirector()->mMap == 15) {
 		ret = true;
 	}
 	return ret;

@@ -40,18 +40,18 @@ static void initMonte()
 	obj->init("SeaIndirect");
 	group->getChildren().push_back(obj);
 
-	if (gpMarDirector->getCurrentStage() == 0
-	    || gpMarDirector->getCurrentStage() == 2
-	    || gpMarDirector->getCurrentStage() == 5
-	    || gpMarDirector->getCurrentStage() == 6) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0
+	    || SMSGetMarDirector()->getCurrentStage() == 2
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 6) {
 		SMS_LoadParticle("/scene/map/pollution/ms_newfire_b.jpa", 0x1DC);
 		SMS_LoadParticle("/scene/map/pollution/ms_newfire_a.jpa", 0x65);
 	}
 
-	if (gpMarDirector->getCurrentStage() == 1
-	    || gpMarDirector->getCurrentStage() == 3
-	    || gpMarDirector->getCurrentStage() == 5
-	    || gpMarDirector->getCurrentStage() == 7) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    || SMSGetMarDirector()->getCurrentStage() == 3
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 7) {
 		SMS_LoadParticle("/scene/map/map/ms_monte_yuge.jpa", 0x156);
 	}
 }
@@ -62,21 +62,21 @@ static void initMare()
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
 	        JDrama::TNameRefGen::search("マップグループ"));
 
-	if (gpMarDirector->getCurrentStage() == 5) {
+	if (SMSGetMarDirector()->getCurrentStage() == 5) {
 		TMapStaticObj* gate = new TMapStaticObj("マーレ５ＥＸゲート");
 		gate->init("Mare5ExGate");
 		group->getChildren().push_back(gate);
 	}
 
-	if (gpMarDirector->getCurrentStage() == 0) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0) {
 		SMS_LoadParticle("/scene/map/map/ms_mare_objup_a.jpa",
 		                 MAP_MAP_MS_MARE_OBJUP_A);
 		SMS_LoadParticle("/scene/map/map/ms_mare_objup_b.jpa",
 		                 MAP_MAP_MS_MARE_OBJUP_B);
 	}
 
-	if (gpMarDirector->getCurrentStage() != 0
-	    && gpMarDirector->getCurrentStage() != 0) {
+	if (SMSGetMarDirector()->getCurrentStage() != 0
+	    && SMSGetMarDirector()->getCurrentStage() != 0) {
 		for (int i = 1; i < 8; ++i)
 			TMapObjBase::newAndInitBuildingCollisionWarp(i, nullptr)->setUp();
 	}
@@ -122,14 +122,14 @@ static void initStageCommon()
 	static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
 	    JDrama::TNameRefGen::search("マップグループ"));
 
-	if (gpMarDirector->getCurrentMap() == 4
-	    || gpMarDirector->getCurrentMap() == 3
-	    || gpMarDirector->getCurrentMap() == 0xD
-	    || gpMarDirector->getCurrentMap() == 9
-	    || gpMarDirector->getCurrentMap() == 5
-	    || gpMarDirector->getCurrentMap() == 6
-	    || gpMarDirector->getCurrentMap() == 0x14
-	    || gpMarDirector->getCurrentMap() <= 1) {
+	if (SMSGetMarDirector()->getCurrentMap() == 4
+	    || SMSGetMarDirector()->getCurrentMap() == 3
+	    || SMSGetMarDirector()->getCurrentMap() == 0xD
+	    || SMSGetMarDirector()->getCurrentMap() == 9
+	    || SMSGetMarDirector()->getCurrentMap() == 5
+	    || SMSGetMarDirector()->getCurrentMap() == 6
+	    || SMSGetMarDirector()->getCurrentMap() == 0x14
+	    || SMSGetMarDirector()->getCurrentMap() <= 1) {
 		TMapStaticObj* sea = new TMapStaticObj("波（遠景）");
 		sea->init("sea");
 
@@ -147,7 +147,7 @@ static void initStageCommon()
 		sceneIndirect->init();
 		group->getChildren().push_back(sceneIndirect);
 	}
-	if (gpMarDirector->mMap == 2) {
+	if (SMSGetMarDirector()->mMap == 2) {
 		TMapObjSeaIndirect* sceneIndirect
 		    = new TMapObjSeaIndirect("水中カメラインダイレクト");
 		sceneIndirect->init();
@@ -157,22 +157,22 @@ static void initStageCommon()
 
 static void initStage()
 {
-	if (gpMarDirector->getCurrentStage() > 9)
+	if (SMSGetMarDirector()->getCurrentStage() > 9)
 		return;
 
 	initStageCommon();
 
-	switch (gpMarDirector->getCurrentMap()) {
+	switch (SMSGetMarDirector()->getCurrentMap()) {
 	case 1: { // Bianco
-		if (gpMarDirector->getCurrentStage() == 5
-		    || gpMarDirector->getCurrentStage() == 9)
+		if (SMSGetMarDirector()->getCurrentStage() == 5
+		    || SMSGetMarDirector()->getCurrentStage() == 9)
 			break;
 		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
 		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
 		break;
 	}
 	case 2: // Ricco
-		if (gpMarDirector->getCurrentStage() == 0)
+		if (SMSGetMarDirector()->getCurrentStage() == 0)
 			break;
 		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
 		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
@@ -184,7 +184,7 @@ static void initStage()
 		initMonte();
 		break;
 	case 6: // Pinna
-		if (gpMarDirector->getCurrentStage() == 0)
+		if (SMSGetMarDirector()->getCurrentStage() == 0)
 			break;
 		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
 		break;
@@ -209,17 +209,17 @@ void TMap::updateDelfino()
 	if (cube != mWarp->unk8) {
 		if (cube != -1)
 			mWarp->changeModel(cube);
-		else if (gpMarDirector->getCurrentStage() != 0)
+		else if (SMSGetMarDirector()->getCurrentStage() != 0)
 			mWarp->changeModel(3);
 	}
 }
 
 void TMap::updateMonte()
 {
-	if (gpMarDirector->getCurrentStage() == 1
-	    || gpMarDirector->getCurrentStage() == 3
-	    || gpMarDirector->getCurrentStage() == 5
-	    || gpMarDirector->getCurrentStage() == 7)
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    || SMSGetMarDirector()->getCurrentStage() == 3
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 7)
 		gpMarioParticleManager->emit(MAP_MAP_MS_MONTE_YUGE,
 		                             &gpMapObjManager->unk44, 1, this);
 }
@@ -232,7 +232,7 @@ static void updateRicco()
 
 void TMap::update()
 {
-	switch (gpMarDirector->mMap) {
+	switch (SMSGetMarDirector()->mMap) {
 	case 3:
 		updateRicco();
 		break;
@@ -246,14 +246,14 @@ void TMap::update()
 		break;
 	}
 
-	if (gpMarDirector->unk124 != 0)
+	if (SMSGetMarDirector()->unk124 != 0)
 		return;
 
 	if (gpCamera->isDemoCamera())
 		return;
 
-	if (gpMarDirector->getCurrentMap() == 0x39
-	    || gpMarDirector->getCurrentMap() == 0x10)
+	if (SMSGetMarDirector()->getCurrentMap() == 0x39
+	    || SMSGetMarDirector()->getCurrentMap() == 0x10)
 		return;
 
 	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))

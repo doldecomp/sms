@@ -333,7 +333,8 @@ void TFireWanwanManager::checkBalloonHelpBoss22()
 		f32 helpRange22 = getWanwanParams()->mBoss22HelpRange.get();
 		if (diff.squared() < helpRange22 * helpRange22) {
 			mBoss22BalloonWasShown = true;
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0016, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0016,
+			                                                      true);
 		}
 	}
 }
@@ -344,7 +345,8 @@ void TFireWanwanManager::checkBalloonHelpBoss23()
 	    && getWanwanParams()->mBoss23TimerMax.get() > unk64) {
 		if (++unk64 >= getWanwanParams()->mBoss23TimerMax.get()) {
 			unk64 = getWanwanParams()->mBoss23TimerMax.get();
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0017, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0017,
+			                                                      true);
 		}
 	}
 }
@@ -352,7 +354,7 @@ void TFireWanwanManager::checkBalloonHelpBoss23()
 void TFireWanwanManager::checkBalloonHelpBoss24()
 {
 	if (mWanwanRecoversBeforeHelpBalloon == 0) {
-		gpMarDirector->getConsole()->startAppearBalloon(0xE0018, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0018, true);
 		mWanwanRecoversBeforeHelpBalloon = -1;
 	}
 }
@@ -362,8 +364,8 @@ void TFireWanwanManager::checkShineAppear()
 	if (mShineAppeared)
 		return;
 
-	if (mWanwansKilled == getActiveObjNum() && gpMarDirector->unk124 != 3
-	    && gpMarDirector->getConsole()->unk10 == 0) {
+	if (mWanwansKilled == getActiveObjNum() && SMSGetMarDirector()->unk124 != 3
+	    && SMSGetMarDirector()->getConsole()->unk10 == 0) {
 		mShineAppeared = true;
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（ボス用）", "ボスシャインカメラ",
@@ -1997,7 +1999,8 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		manager->mWanwanRecoversBeforeHelpBalloon = -1;
 
 		if (++manager->mWanwansKilled == manager->getActiveObjNum()) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE0019, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0019,
+			                                                      true);
 		}
 
 		self->stopTriggerSound();

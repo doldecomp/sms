@@ -12,7 +12,7 @@
 int SMS_GetMonteVillageAreaInMario()
 {
 	int retvar = 4;
-	if (gpMarDirector->mMap == 8) {
+	if (SMSGetMarDirector()->mMap == 8) {
 		if (gpCamera->mMode == CAMERA_MODE_LOOK_DOWN) {
 			return retvar = 1;
 		}

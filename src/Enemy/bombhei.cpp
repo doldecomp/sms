@@ -213,7 +213,7 @@ void TBombHei::setDeadAnm()
 void TBombHei::calcRootMatrix()
 {
 	TSpineEnemy::calcRootMatrix();
-	if (gpMarDirector->checkFlag(0xF)) {
+	if (SMSGetMarDirector()->checkFlag(0xF)) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 	}

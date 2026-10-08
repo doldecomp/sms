@@ -839,7 +839,7 @@ u8 TMarDirector::updateGameMode()
 				offFlag(DIRECTOR_FLAG_SHINE_GET_PENDING);
 				unk126 = 3;
 
-				TGCConsole2* console = gpMarDirector->mConsole;
+				TGCConsole2* console = SMSGetMarDirector()->getConsole();
 				console->unk94->startAppearShineGet();
 				console->unk47 = 1;
 				MSBgm::startBGM(MSD_BGM_CHUBOSS);

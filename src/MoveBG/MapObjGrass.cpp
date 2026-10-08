@@ -80,7 +80,7 @@ void TMapObjGrassGroup::drawFar() const
 
 void TMapObjGrassGroup::calc()
 {
-	if (gpMarDirector->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentMap() == 2) {
 		unk78 = 0;
 		return;
 	}

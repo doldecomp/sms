@@ -34,13 +34,13 @@ int TMarDirector::loadResource()
 	int emitterNum  = 0x100;
 	int effectNum   = 0x20;
 
-	switch (gpMarDirector->getCurrentMap()) {
+	switch (SMSGetMarDirector()->getCurrentMap()) {
 	case 33:
 		particleNum = 3000;
 		effectNum   = 120;
 		break;
 	case 5:
-		if (gpMarDirector->getCurrentStage() == 1)
+		if (SMSGetMarDirector()->getCurrentStage() == 1)
 			particleNum = 1500;
 		break;
 	case 58:
@@ -53,14 +53,14 @@ int TMarDirector::loadResource()
 	case 59:
 		break;
 	case 9:
-		if (gpMarDirector->getCurrentStage() == 0)
+		if (SMSGetMarDirector()->getCurrentStage() == 0)
 			particleNum = 1500;
 		break;
 	case 52:
 		particleNum = 3000;
 		break;
 	case 4:
-		if (gpMarDirector->getCurrentStage() == 2)
+		if (SMSGetMarDirector()->getCurrentStage() == 2)
 			particleNum = 3000;
 		break;
 	case 60:

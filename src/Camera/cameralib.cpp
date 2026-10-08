@@ -18,16 +18,6 @@ static void normalizeInner2(JGeometry::TVec3<f32>& vec)
 	normalizeInner1(vec);
 }
 
-static inline void RotateAboutAxis(const JGeometry::TVec3<f32>& param_axis,
-                                   f32 angle, JGeometry::TVec3<f32>* vec)
-{
-	JGeometry::TRotation3<TMtx33f> mtxT;
-
-	mtxT.identity();
-	mtxT.setRotate(param_axis, angle);
-	CLBMultTranspose33(mtxT, *vec);
-}
-
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
                    const f32 (*view_mtx)[4], const Vec& world_pos,
                    u32* out_depth, bool disable_z_clip)

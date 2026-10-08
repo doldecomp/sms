@@ -945,7 +945,7 @@ bool TTalk2D2::appearBoardBoxWindow()
 void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & CUE_MOVE) {
-		switch (gpMarDirector->unk124) {
+		switch (SMSGetMarDirector()->unk124) {
 		case 2:
 			switch (unk248) {
 			case STATE_UNK2:
@@ -993,7 +993,7 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & CUE_CALC_ANIM) {
-		switch (gpMarDirector->unk124) {
+		switch (SMSGetMarDirector()->unk124) {
 		case 2:
 			switch (unk248) {
 			case STATE_UNK3:
@@ -1015,7 +1015,7 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & CUE_DRAW) {
-		switch (gpMarDirector->unk124) {
+		switch (SMSGetMarDirector()->unk124) {
 		case 2: {
 			ReInitializeGX();
 			SMS_DrawInit();

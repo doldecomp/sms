@@ -51,7 +51,7 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	unkC5 = 0;
 	JDrama::TNameRef::load(stream);
 
-	JKRMemArchive* archive = setup(gpMarDirector->unkD8);
+	JKRMemArchive* archive = setup(SMSGetMarDirector()->unkD8);
 
 	unkBC = new J2DSetScreen("guide_1.blo", archive);
 	((J2DTextBox*)unkBC->search('a_ic'))->setFont(gpSystemFont);
@@ -391,7 +391,7 @@ void TGuide::startMoveCursor()
 
 void TGuide::startMoveCursor2()
 {
-	s16 stage = SMS_getShineStage(gpMarDirector->mMap);
+	s16 stage = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	unk42C    = stage;
 	resetObjects();
 	changeBotStatus(stage);
@@ -702,7 +702,7 @@ void TGuide::changeBotStatus(int stage)
 
 void TGuide::placeMario()
 {
-	if (SMS_getShineStage(gpMarDirector->mMap) != 1) {
+	if (SMS_getShineStage(SMSGetMarDirector()->mMap) != 1) {
 		unk430->hide();
 		return;
 	}
@@ -810,7 +810,7 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 			unk10 = STATE_OPENING;
 		}
 		JUTRect bounds(
-		    unk168[SMS_getShineStage(gpMarDirector->mMap)]->getBounds());
+		    unk168[SMS_getShineStage(SMSGetMarDirector()->mMap)]->getBounds());
 		unk128[0]->getPane()->move(bounds.x1 + 6, bounds.y1 - 1);
 		unk128[1]->getPane()->move(bounds.x1 + 6, bounds.y1 - 1);
 		break;

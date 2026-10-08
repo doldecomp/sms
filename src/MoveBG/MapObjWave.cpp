@@ -196,7 +196,7 @@ void TMapObjWave::updateHeightAndAlpha()
 		unk54 = unk5C;
 	}
 
-	if (gpMarDirector->mMap == 4 && -4950.0f < SMS_GetMarioPos().x
+	if (SMSGetMarDirector()->mMap == 4 && -4950.0f < SMS_GetMarioPos().x
 	    && -4340.0f > SMS_GetMarioPos().x && 7660.0f < SMS_GetMarioPos().z
 	    && 8040.0f > SMS_GetMarioPos().z) {
 		unk3C = unk34;
@@ -242,7 +242,7 @@ void TMapObjWave::updateTime()
 void TMapObjWave::movement()
 {
 	updateTime();
-	if (gpMarDirector->mMap == 4 || gpMarDirector->mMap == 6)
+	if (SMSGetMarDirector()->mMap == 4 || SMSGetMarDirector()->mMap == 6)
 		updateHeightAndAlpha();
 }
 
@@ -275,7 +275,7 @@ void TMapObjWave::load(JSUMemoryInputStream& param_1)
 	unk24 = 0.02f;
 	unk28 = 0.03f;
 
-	switch (gpMarDirector->mMap) {
+	switch (SMSGetMarDirector()->mMap) {
 	case 3:
 	case 30:
 		unk2C = 25.0f;

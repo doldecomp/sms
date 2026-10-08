@@ -69,8 +69,8 @@ void TMario::getCoin()
 	++mCoinCount;
 	emitGetCoinEffect(&mPosition);
 	incHP(1);
-	if ((TFlagManager::smInstance->getFlag(MSF_GOLD_COIN_COUNT) % 50) == 0) {
-		TFlagManager::smInstance->incMario(1);
+	if ((TFlagManager::getInstance()->getFlag(MSF_GOLD_COIN_COUNT) % 50) == 0) {
+		TFlagManager::getInstance()->incMario(1);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_1UP, 0, nullptr, 0);
 	}
 }
@@ -79,7 +79,7 @@ void TMario::getCoinRed()
 {
 	incHP(2);
 	emitGetCoinEffect(&mPosition);
-	int id = TFlagManager::smInstance->getFlag(MSF_RED_COIN_COUNT) + 70;
+	int id = TFlagManager::getInstance()->getFlag(MSF_RED_COIN_COUNT) + 70;
 	gpMarioParticleManager->emitAndBindToPosPtr(id, &mPosition, 0, this);
 }
 
@@ -198,7 +198,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 						mWaterGun->addWater(mWaterGun->getMaxWater());
 					}
-					TFlagManager::smInstance->incMario(1);
+					TFlagManager::getInstance()->incMario(1);
 					emitGetEffect();
 					return TRUE;
 				}

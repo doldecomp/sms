@@ -471,8 +471,8 @@ static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	// This function reads the global directly. The rest of the file goes
 	// through SMSGetMarDirector(), but here the accessor makes the match worse
 	// (94.8% -> 92.4%), so the original must have had the bare global.
-	gpMarDirector->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
-	                            nullptr);
+	SMSGetMarDirector()->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
+	                                  nullptr);
 
 	interp->push();
 }

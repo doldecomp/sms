@@ -216,7 +216,7 @@ static inline void updateYoshiJuiceIconState(TGCConsole2* console)
 // fabricated
 static inline void playHudMoveSound(u32 soundID)
 {
-	if (gpMarDirector->unk124 != 0)
+	if (SMSGetMarDirector()->unk124 != 0)
 		return;
 	if (gpMarioOriginal->mHealth == 0)
 		return;
@@ -387,8 +387,8 @@ static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
 // fabricated
 static inline void playLifeChangeSound(u32 sound)
 {
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK4
-	    && gpMarDirector->unk124 == 0) {
+	if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
+	    && SMSGetMarDirector()->unk124 == 0) {
 		SMSGetMSound()->startSoundSystemSE(sound, 0, nullptr, 0);
 	}
 }
@@ -420,13 +420,15 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	if (amount > 8)
 		amount = 8;
 
-	if (airMode && gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU) {
+	if (airMode
+	    && SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
 		s16 alpha = console->unk1C4->getPane()->mAlpha - 0x10;
 		if (alpha < 0)
 			alpha = 0;
 		console->unk1C4->getPane()->mAlpha = alpha;
 	} else if (console->unk1C4->getPane()->mAlpha != 0xff
-	           && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
+	           && SMSGetMarDirector()->mState
+	                  != TMarDirector::STATE_PAUSE_MENU) {
 		u16 alpha = console->unk1C4->getPane()->mAlpha + 0x10;
 		if (alpha > 0xff)
 			alpha = 0xff;
@@ -459,7 +461,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 			console->startAppearLife(1);
 			amount             = (s16)gpMarioOriginal->mAir;
 			console->unk1CC[0] = amount;
-			if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU)
+			if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
 				console->unk1C4->getPane()->mAlpha = 0;
 			console->unk18 = 4;
 		}
@@ -679,7 +681,7 @@ static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
 // fabricated
 static inline void updateMarioLifeCounter(TGCConsole2* console)
 {
-	int lives = TFlagManager::smInstance->getFlag(MSF_LIFE_COUNT);
+	int lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 	if (lives > console->unk3AC[0]) {
 		if (lives > 99)
 			lives = 99;
@@ -771,7 +773,7 @@ static inline void setBlendDigit(TBlendPane* pane, JUTTexture** textures,
 // fabricated
 static inline void updateRedCoinCounter(TGCConsole2* console)
 {
-	int redCoins = TFlagManager::smInstance->getFlag(MSF_RED_COIN_COUNT);
+	int redCoins = TFlagManager::getInstance()->getFlag(MSF_RED_COIN_COUNT);
 	if (redCoins != (int)console->unk444) {
 		if (redCoins < 0)
 			redCoins = 0;
@@ -867,7 +869,7 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 	if (flag < 0)
 		return;
 
-	int target = TFlagManager::smInstance->getFlag(flag);
+	int target = TFlagManager::getInstance()->getFlag(flag);
 	if (target > 99)
 		target = 99;
 
@@ -925,7 +927,7 @@ static inline void updateJetCounterAnimation(TGCConsole2* console)
 // fabricated
 static inline void updateCounterState(TGCConsole2* console)
 {
-	TFlagManager* flags = TFlagManager::smInstance;
+	TFlagManager* flags = TFlagManager::getInstance();
 
 	int coins = flags->getFlag(MSF_GOLD_COIN_COUNT);
 	if (coins > 999)
@@ -941,7 +943,7 @@ static inline void updateCounterState(TGCConsole2* console)
 
 	bool waitForStarHud
 	    = gpMarioOriginal->mStatus == 0xC400201
-	      && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU
+	      && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
 	      && !console->unk50 && !console->unk140->isInterpolatorAtZero();
 	if (waitForStarHud) {
 		++console->unk30;
@@ -962,11 +964,13 @@ static inline void updateCounterState(TGCConsole2* console)
 
 		int spentBlueCoins = 0;
 		for (int flag = 0x46; flag < 0x56; ++flag)
-			if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag) != 0)
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
+			    != 0)
 				++spentBlueCoins;
 
 		for (int flag = 0x6C; flag <= 0x73; ++flag)
-			if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag) != 0)
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
+			    != 0)
 				++spentBlueCoins;
 		int blueValue = console->unk168 - spentBlueCoins * 10;
 		if (blueValue < 0)
@@ -998,12 +1002,12 @@ static inline void updateCounterState(TGCConsole2* console)
 		if (console->unk8A > 0xFB) {
 			int spentBlueCoins = 0;
 			for (int flag = 0x46; flag < 0x56; ++flag)
-				if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag)
+				if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
 				    != 0)
 					++spentBlueCoins;
 
 			for (int flag = 0x6C; flag <= 0x73; ++flag)
-				if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag)
+				if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
 				    != 0)
 					++spentBlueCoins;
 			int target = blueTotal - spentBlueCoins * 10;
@@ -1070,12 +1074,12 @@ static inline void updateStarHudAutoHide(TGCConsole2* console)
 		return;
 	if (console->unk60)
 		return;
-	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU
-	    || gpMarDirector->mState == TMarDirector::STATE_CARD_SAVE)
+	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU
+	    || SMSGetMarDirector()->mState == TMarDirector::STATE_CARD_SAVE)
 		return;
 	if (console->unk50 || console->unk16C != 0 || console->unk8A != 0)
 		return;
-	if (gpMarDirector->unk124 == 2)
+	if (SMSGetMarDirector()->unk124 == 2)
 		return;
 
 	console->startDisappearStar();
@@ -1101,8 +1105,8 @@ static inline void updateLifeMeterBlink(TGCConsole2* console)
 	if ((f32)console->unk86 < rate * 2.0f) {
 		if (console->unk1CC[0] <= 3 && console->unk1CC[0] != 0
 		    && console->unk86 == (int)(1.5f * rate)
-		    && gpMarDirector->mState == TMarDirector::STATE_UNK4
-		    && gpMarDirector->unk124 == 0
+		    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
+		    && SMSGetMarDirector()->unk124 == 0
 		    && SMSGetMSound()->gateCheck(0x4800)) {
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4800, 0, nullptr, 0);
 		}
@@ -1276,7 +1280,7 @@ static inline void updateShineAppearState(TGCConsole2* console)
 	bool done = console->processAppearStar(console->unk5C);
 	done      = console->processDownCoin(console->unk5C) && done;
 	if (done) {
-		int shines = TFlagManager::smInstance->getFlag(MSF_SHINE_COUNT);
+		int shines = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 		if ((int)console->unk24 != shines)
 			console->unk24 = shines;
 		console->unk34 = 0;
@@ -1366,8 +1370,8 @@ static inline void updateTelopState(TGCConsole2* console, u32 flags)
 		console->startAppearTelop(true);
 	}
 
-	if (gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU
-	    && gpMarDirector->unk124 == 0 && console->unk55C < 0xffffffff)
+	if (SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
+	    && SMSGetMarDirector()->unk124 == 0 && console->unk55C < 0xffffffff)
 		++console->unk55C;
 }
 
@@ -1381,7 +1385,7 @@ static inline void updateWaterTankState(TGCConsole2* console)
 	}
 
 	if (console->unk46) {
-		if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU)
+		if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
 			console->unk7C = 0;
 
 		if (console->unk7C < 0x46)
@@ -1427,12 +1431,13 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 	if (console->unk3A && console->processAppearMario(console->unk70++)) {
 		if (console->unk3AC[1]) {
 			if (console->unk70 == 0xc8) {
-				int lives = TFlagManager::smInstance->getFlag(MSF_LIFE_COUNT);
+				int lives
+				    = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 				if (lives > 99)
 					lives = 99;
 				setTwoDigits(console->unk39C, console->unkE0, lives);
-				TFlagManager::smInstance->setBool(false,
-				                                  MSF_LOST_LIFE_IN_PREV_STAGE);
+				TFlagManager::getInstance()->setBool(
+				    false, MSF_LOST_LIFE_IN_PREV_STAGE);
 				console->endCameraDemo();
 				console->unk3A = 0;
 			}
@@ -1445,7 +1450,7 @@ static inline void updateMarioAppearState(TGCConsole2* console)
 	if (!console->unk3A && !console->unk3B
 	    && console->unk3A8->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
-	    && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
 		if (++console->unk70 > 0x190)
 			console->startDisappearMario();
 	}
@@ -1927,15 +1932,15 @@ void TGCConsole2::loadAfter()
 	initHiddenPaneAbove(unk3A8);
 	unk3A8->getPane()->hide();
 
-	unk168 = TFlagManager::smInstance->getFlag(MSF_BLUE_COIN_COUNT);
+	unk168 = TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT);
 
 	int spentBlueCoins = 0;
 	for (int flag = 0x46; flag < 0x56; ++flag)
-		if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag) != 0)
+		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag) != 0)
 			++spentBlueCoins;
 
 	for (int flag = 0x6C; flag <= 0x73; ++flag)
-		if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag) != 0)
+		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag) != 0)
 			++spentBlueCoins;
 
 	int blueCoinValue = unk168 - spentBlueCoins * 10;
@@ -1944,7 +1949,7 @@ void TGCConsole2::loadAfter()
 	setBlueCoinDigits(unk154, unkE0, blueCoinValue);
 	unk170 = blueCoinValue;
 
-	unk20 = TFlagManager::smInstance->getFlag(MSF_GOLD_COIN_COUNT);
+	unk20 = TFlagManager::getInstance()->getFlag(MSF_GOLD_COIN_COUNT);
 	if (unk20 > 999)
 		unk20 = 999;
 	else if (unk20 < 0)
@@ -1952,7 +1957,7 @@ void TGCConsole2::loadAfter()
 	unk6C = unk20;
 	setCounterDigits(unkD4, unkE0, unk20);
 
-	unk24 = TFlagManager::smInstance->getFlag(MSF_SHINE_COUNT);
+	unk24 = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 	if (unk24 > 999)
 		unk24 = 999;
 	else if (unk24 < 0)
@@ -1960,7 +1965,7 @@ void TGCConsole2::loadAfter()
 	unk64 = unk24;
 	setShineDigits(unk134, unkE0, unk24);
 
-	int lives = TFlagManager::smInstance->getFlag(MSF_LIFE_COUNT);
+	int lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 	if (lives > 99)
 		lives = 99;
 	unk3AC[0] = lives;
@@ -2081,7 +2086,7 @@ void TGCConsole2::startCameraDemo()
 	}
 
 	if (unk50
-	    || !TFlagManager::smInstance->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)
+	    || !TFlagManager::getInstance()->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)
 	           && unk39)
 		return;
 
@@ -2113,7 +2118,7 @@ void TGCConsole2::startCameraDemo()
 	startDisappearMario();
 	startDownLeftBot();
 
-	if (TFlagManager::smInstance->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)) {
+	if (TFlagManager::getInstance()->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)) {
 		unk108->getPane()->hide();
 		startAppearMario(true);
 	} else if (gpMarDirector->checkFlag(
@@ -2148,7 +2153,7 @@ void TGCConsole2::endCameraDemo()
 	unk50 = 0;
 
 	if (!unk2F8->isInterpolatorAtZero() && !unk45
-	    && !TFlagManager::smInstance->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)) {
+	    && !TFlagManager::getInstance()->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)) {
 		unk45 = 1;
 		unk59 = 1;
 		unk7C = 0;
@@ -2179,7 +2184,7 @@ void TGCConsole2::endCameraDemo()
 		unk426 = 0;
 	}
 
-	if (!gpMarDirector->checkFlag(TMarDirector::DIRECTOR_FLAG_SHINE_TAKEN)
+	if (!SMSGetMarDirector()->checkFlag(TMarDirector::DIRECTOR_FLAG_SHINE_TAKEN)
 	    && !unk108->getPane()->isVisible())
 		startAppearCoin();
 }
@@ -2187,7 +2192,7 @@ void TGCConsole2::endCameraDemo()
 void TGCConsole2::startAppearTank()
 {
 	if (unk45
-	    || TFlagManager::smInstance->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)) {
+	    || TFlagManager::getInstance()->getBool(MSF_LOST_LIFE_IN_PREV_STAGE)) {
 		return;
 	}
 
@@ -2656,7 +2661,7 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 		return true;
 	}
 
-	if (gpMarDirector->mState == TMarDirector::STATE_PAUSE_MENU || !unk46)
+	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU || !unk46)
 		return false;
 
 	unk3F0         = entry->unk4;
@@ -2877,7 +2882,7 @@ void TGCConsole2::startAppearMario(bool param_1)
 		unk39C[i]->getPane()->hide();
 
 	if (param_1) {
-		int lives = TFlagManager::smInstance->getFlag(MSF_LIFE_COUNT) + 1;
+		int lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT) + 1;
 		if (lives > 99)
 			lives = 99;
 
@@ -2932,8 +2937,8 @@ void TGCConsole2::setTimer(s32 param_1)
 	u32 timerValue;
 
 	if (param_1 == -1) {
-		s64 uVar3 = gpMarDirector->unkC8;
-		s64 uVar5 = OSCheckStopwatch(&gpMarDirector->unkE8);
+		s64 uVar3 = SMSGetMarDirector()->unkC8;
+		s64 uVar5 = OSCheckStopwatch(&SMSGetMarDirector()->unkE8);
 		s64 uVar9 = OSTicksToMilliseconds(uVar3);
 		s64 uVar8 = OSTicksToMilliseconds(uVar5);
 
@@ -2990,7 +2995,7 @@ void TGCConsole2::setTimer(s32 param_1)
 	}
 
 	if (timerValue != 0 && timerValue < unk518
-	    && gpMarDirector->mState != TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 
@@ -3347,8 +3352,8 @@ void TGCConsole2::checkChangeTelopArray()
 {
 	u32* oldArray = unk570;
 
-	if (gpMarDirector->mMap == 1) {
-		switch (gpMarDirector->unk7D) {
+	if (SMSGetMarDirector()->mMap == 1) {
+		switch (SMSGetMarDirector()->unk7D) {
 		case 0:
 			unk570 = scDolpicNewsDolpic0;
 			break;
@@ -3373,13 +3378,13 @@ void TGCConsole2::checkChangeTelopArray()
 			unk570 = scDolpicNewsDolpic10;
 			break;
 		case 5:
-			if (TFlagManager::smInstance->getBool(MSF_RICCO_UNLOCKABLE)) {
-				if (TFlagManager::smInstance->getBool(MSF_GELATO_UNLOCKABLE))
+			if (TFlagManager::getInstance()->getBool(MSF_RICCO_UNLOCKABLE)) {
+				if (TFlagManager::getInstance()->getBool(MSF_GELATO_UNLOCKABLE))
 					unk570 = scDolpicNewsDolpic5_1;
 				else
 					unk570 = scDolpicNewsDolpic5_2;
 			} else {
-				if (TFlagManager::smInstance->getBool(MSF_GELATO_UNLOCKABLE))
+				if (TFlagManager::getInstance()->getBool(MSF_GELATO_UNLOCKABLE))
 					unk570 = scDolpicNewsDolpic5_3;
 				else
 					unk570 = scDolpicNewsDolpic5_4;
@@ -3387,20 +3392,21 @@ void TGCConsole2::checkChangeTelopArray()
 			break;
 		case 8: {
 			int eventState
-			    = TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT);
+			    = TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT);
 			switch (eventState) {
 			case 0:
-				if (TFlagManager::smInstance->getBool(MSF_YOSHI_UNLOCKED)) {
-					if (TFlagManager::smInstance->getNozzleRight(1, 0)
-					    || TFlagManager::smInstance->getNozzleRight(1, 1))
+				if (TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
+					if (TFlagManager::getInstance()->getNozzleRight(1, 0)
+					    || TFlagManager::getInstance()->getNozzleRight(1, 1))
 						unk570 = scDolpicNewsDolpic8_6;
 					else
 						unk570 = scDolpicNewsDolpic8_4;
 				} else {
-					if (TFlagManager::smInstance->getNozzleRight(1, 0)
-					    || TFlagManager::smInstance->getNozzleRight(1, 1))
+					if (TFlagManager::getInstance()->getNozzleRight(1, 0)
+					    || TFlagManager::getInstance()->getNozzleRight(1, 1))
 						unk570 = scDolpicNewsDolpic8_5;
-					else if (TFlagManager::smInstance->getFlag(MSF_SHINE_COUNT)
+					else if (TFlagManager::getInstance()->getFlag(
+					             MSF_SHINE_COUNT)
 					         >= 20)
 						unk570 = scDolpicNewsDolpic8_7;
 					else
@@ -3408,14 +3414,14 @@ void TGCConsole2::checkChangeTelopArray()
 				}
 				break;
 			case 1:
-				if (TFlagManager::smInstance->getBool(MSF_YOSHI_UNLOCKED))
+				if (TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED))
 					unk570 = scDolpicNewsDolpic8_1;
 				else
 					unk570 = scDolpicNewsDolpic8_2;
 				break;
 			default:
-				if (TFlagManager::smInstance->getNozzleRight(1, 0)
-				    || TFlagManager::smInstance->getNozzleRight(1, 1))
+				if (TFlagManager::getInstance()->getNozzleRight(1, 0)
+				    || TFlagManager::getInstance()->getNozzleRight(1, 1))
 					unk570 = scDolpicNewsDolpic8_1;
 				else
 					unk570 = scDolpicNewsDolpic8_3;
@@ -3871,7 +3877,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		if (!unk50) {
 			if (gpCamera->isDemoCamera() || SMS_CheckMarioFlag(0x400)
 			    || (!unk3AC[1]
-			        && TFlagManager::smInstance->getBool(
+			        && TFlagManager::getInstance()->getBool(
 			            MSF_LOST_LIFE_IN_PREV_STAGE)))
 				startCameraDemo();
 		} else if (!gpCamera->isDemoCamera() && !SMS_CheckMarioFlag(0x400)) {

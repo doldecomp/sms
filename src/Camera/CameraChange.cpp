@@ -639,7 +639,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 
 	u32 status     = SMS_GetMarioStatus();
 	u32 prevStatus = gpMarioOriginal->getPreviousStatus();
-	int currentMap = gpMarDirector->getCurrentMap();
+	int currentMap = SMSGetMarDirector()->getCurrentMap();
 
 	int newMode;
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
@@ -750,7 +750,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 							} else {
 								bool exMap = false;
 								if (SMS_isExMap()) {
-									switch (gpMarDirector->getCurrentMap()) {
+									switch (
+									    SMSGetMarDirector()->getCurrentMap()) {
 									case 0x1D:
 									case 0x1E:
 										break;
@@ -781,8 +782,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 								} else {
 									bool exMap = false;
 									if (SMS_isExMap()) {
-										switch (
-										    gpMarDirector->getCurrentMap()) {
+										switch (SMSGetMarDirector()
+										            ->getCurrentMap()) {
 										case 0x1D:
 										case 0x1E:
 											break;
@@ -801,7 +802,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 							default:
 								bool exMap = false;
 								if (SMS_isExMap()) {
-									switch (gpMarDirector->getCurrentMap()) {
+									switch (
+									    SMSGetMarDirector()->getCurrentMap()) {
 									case 0x1D:
 									case 0x1E:
 										break;

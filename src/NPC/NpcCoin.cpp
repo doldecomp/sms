@@ -50,7 +50,7 @@ void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 	unk14.z    = -x * JMASSin(sangle) + unk14.z * JMASCos(sangle);
 	unk14 *= 15.0f;
 	if (unk4 == 0) {
-		if (gpMarDirector->isTalkOrDemoModeNow())
+		if (SMSGetMarDirector()->isTalkOrDemoModeNow())
 			unk4 = 1;
 		else
 			execAppearCoin_();
@@ -60,7 +60,7 @@ void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 void TNpcCoin::updateCoin()
 {
 	if (unk4 > 0) {
-		if (!gpMarDirector->isTalkOrDemoModeNow()) {
+		if (!SMSGetMarDirector()->isTalkOrDemoModeNow()) {
 			unk4 -= 1;
 			if (unk4 == 0)
 				execAppearCoin_();

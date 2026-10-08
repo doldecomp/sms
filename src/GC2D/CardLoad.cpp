@@ -104,7 +104,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	if (gpMarDirector->mMap != 15)
+	if (SMSGetMarDirector()->mMap != 15)
 		return;
 
 	JKRArchive* optionVolume = (JKRArchive*)JKRFileLoader::getVolume("option");
@@ -717,11 +717,11 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			if (unkC0 / 120.0f > 45.0f) {
 				if (TFlagManager::getInstance()->getBool(MSF_UNK3001C)) {
-					gpMarDirector->fireStreamingMovie(9);
+					SMSGetMarDirector()->fireStreamingMovie(9);
 					TFlagManager::getInstance()->setBool(false, MSF_UNK3001C);
 					unkC0 = 0;
 				} else {
-					gpMarDirector->fireStreamingMovie(12);
+					SMSGetMarDirector()->fireStreamingMovie(12);
 					TFlagManager::getInstance()->setBool(true, MSF_UNK3001C);
 					unkC0 = 0;
 				}
@@ -2543,9 +2543,9 @@ void TCardLoad::changeScene()
 
 	case PROGRESS_UNK29: {
 		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) < 1)
-			gpMarDirector->setNextStage(0, nullptr);
+			SMSGetMarDirector()->setNextStage(0, nullptr);
 		else
-			gpMarDirector->setNextStage(1, nullptr);
+			SMSGetMarDirector()->setNextStage(1, nullptr);
 		gpCardManager->unmount();
 	} break;
 

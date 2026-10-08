@@ -401,7 +401,7 @@ void TMareGate::control()
 void TMareGate::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (!TFlagManager::smInstance->getBool(MSF_NOKI_AVAILABLE)) {
+	if (!TFlagManager::getInstance()->getBool(MSF_NOKI_AVAILABLE)) {
 		makeObjDead();
 	}
 }
@@ -527,7 +527,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	if (!SMS_IsMarioDashing())
 		return;
 
-	if (gpMarDirector->mMap == 1) {
+	if (SMSGetMarDirector()->mMap == 1) {
 		startBck("nozzledoor");
 	} else {
 		makeObjDead();
