@@ -67,9 +67,9 @@ void TWoodBarrel::appeared()
 {
 	TMapObjGeneral::appeared();
 	if (SMS_IsMarioStatusHipDrop()) {
-		setDamageHeight(mMapObjData->mHit->unkC->unkC + 90.0f);
+		setDamageHeight(mMapObjData->mHit->mEntries[0].mDamageHeight + 90.0f);
 	} else {
-		setDamageHeight(mMapObjData->mHit->unkC->unkC);
+		setDamageHeight(mMapObjData->mHit->mEntries[0].mDamageHeight);
 	}
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);

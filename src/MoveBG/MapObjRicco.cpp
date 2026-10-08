@@ -300,17 +300,17 @@ TRiccoWatermill::TRiccoWatermill(const char* name)
 void TSurfGesoObj::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	if (strcmp(mInstanceName, "SurfGesoRed") == 0) {
+	if (strcmp(mIndividualName, "SurfGesoRed") == 0) {
 		unk154.r = 0xFF;
 		unk154.g = 0xB4;
 		unk154.b = 0xFF;
 		unk154.a = 0xFF;
-	} else if (strcmp(mInstanceName, "SurfGesoYellow") == 0) {
+	} else if (strcmp(mIndividualName, "SurfGesoYellow") == 0) {
 		unk154.r = 0xFF;
 		unk154.g = 0xFF;
 		unk154.b = 0x7D;
 		unk154.a = 0xFF;
-	} else if (strcmp(mInstanceName, "SurfGesoGreen") == 0) {
+	} else if (strcmp(mIndividualName, "SurfGesoGreen") == 0) {
 		unk154.r = 0xB4;
 		unk154.g = 0xFF;
 		unk154.b = 0xB4;

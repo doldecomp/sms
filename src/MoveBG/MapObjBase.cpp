@@ -72,16 +72,18 @@ void TMapObjBase::setObjHitData(u16 param_1)
 	if (!mMapObjData->mHit)
 		return;
 
-	if (mMapObjData->mHit->unk0 <= param_1)
+	if (mMapObjData->mHit->mEntryNum <= param_1)
 		return;
 
-	const TMapObjHitDataTable* table = &mMapObjData->mHit->unkC[param_1];
+	const TMapObjHitDataTable* hitData = &mMapObjData->mHit->mEntries[param_1];
 
-	if (table->unk0 >= 0.0f) {
-		f32 fVar2 = mScaling.x > mScaling.z ? mScaling.x : mScaling.z;
-		f32 fVar3 = mScaling.y;
-		setHitParams(table->unk0 * fVar2, table->unk4 * fVar3,
-		             table->unk8 * fVar2, table->unkC * fVar3);
+	if (hitData->mAttackRadius >= 0.0f) {
+		f32 radiusScale = mScaling.x > mScaling.z ? mScaling.x : mScaling.z;
+		f32 heightScale = mScaling.y;
+		setHitParams(hitData->mAttackRadius * radiusScale,
+		             hitData->mAttackHeight * heightScale,
+		             hitData->mDamageRadius * radiusScale,
+		             hitData->mDamageHeight * heightScale);
 	}
 }
 
@@ -115,7 +117,7 @@ void TMapObjBase::setUpCurrentMapCollision()
 void TMapObjBase::setUpMapCollision(u16 param_1)
 {
 	if (!mMapObjData->mCollision
-	    || !mMapObjData->mCollision->unk4[param_1].unk0)
+	    || !mMapObjData->mCollision->mEntries[param_1].mColFileNoExt)
 		return;
 
 	JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset, mPosition.z);
@@ -138,29 +140,31 @@ void TMapObjBase::soundBas(u32 param_1, f32 param_2, f32 param_3)
 	}
 }
 
-void TMapObjBase::startSound(u16 param_1)
+void TMapObjBase::startSound(u16 index)
 {
-	if (unk100 != param_1)
-		unk100 = param_1;
+	if (mActiveSoundIndex != index)
+		mActiveSoundIndex = index;
 
 	if (!mMapObjData->mSound) {
-		u32 uVar3 = TMapObjGeneral::mDefaultSound.unk0[unk100];
-		if (uVar3 != 0xffffffff)
-			SMSGetMSound()->startSoundActor(uVar3, &mPosition, 0, nullptr, 0,
+		u32 soundId
+		    = TMapObjGeneral::mDefaultSound.mSoundIdTable[mActiveSoundIndex];
+		if (soundId != 0xffffffff)
+			SMSGetMSound()->startSoundActor(soundId, &mPosition, 0, nullptr, 0,
 			                                4);
 	} else {
-		u32 uVar3 = mMapObjData->mSound->unk4->unk0[unk100];
-		if (uVar3 != 0xffffffff)
-			SMSGetMSound()->startSoundActor(uVar3, &mPosition, 0, nullptr, 0,
+		u32 soundId
+		    = mMapObjData->mSound->mData->mSoundIdTable[mActiveSoundIndex];
+		if (soundId != 0xffffffff)
+			SMSGetMSound()->startSoundActor(soundId, &mPosition, 0, nullptr, 0,
 			                                4);
 	}
 }
 
 bool TMapObjBase::hasModelOrAnimData(u16 param_1) const
 {
-	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1
-	    || (!mMapObjData->mAnim->unk4[param_1].mAnmName
-	        && !mMapObjData->mAnim->unk4[param_1].mBmdFileName)) {
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->mEntryNum <= param_1
+	    || (!mMapObjData->mAnim->mEntries[param_1].mAnmName
+	        && !mMapObjData->mAnim->mEntries[param_1].mBmdFileName)) {
 		return false;
 	}
 
@@ -169,8 +173,8 @@ bool TMapObjBase::hasModelOrAnimData(u16 param_1) const
 
 bool TMapObjBase::hasAnim(u16 param_1) const
 {
-	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 <= param_1
-	    || !mMapObjData->mAnim->unk4[param_1].mAnmName) {
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->mEntryNum <= param_1
+	    || !mMapObjData->mAnim->mEntries[param_1].mAnmName) {
 		return false;
 	}
 
@@ -179,8 +183,8 @@ bool TMapObjBase::hasAnim(u16 param_1) const
 
 bool TMapObjBase::animIsFinished() const
 {
-	if (!mMapObjData->mAnim || mMapObjData->mAnim->unk0 == 0
-	    || !mMapObjData->mAnim->unk4[unkFE].mAnmName)
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->mEntryNum == 0
+	    || !mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmName)
 		return true;
 
 	if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
@@ -194,8 +198,8 @@ void TMapObjBase::stopAnim() { }
 void TMapObjBase::startControlAnim(u16 param_1)
 {
 	startAnim(param_1);
-	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->unk0)
-		mMActor->getFrameCtrl(mMapObjData->mAnim->unk4[param_1].mAnmType)
+	if (mMapObjData->mAnim && param_1 < mMapObjData->mAnim->mEntryNum)
+		mMActor->getFrameCtrl(mMapObjData->mAnim->mEntries[param_1].mAnmType)
 		    ->setRate(0);
 }
 
@@ -205,39 +209,39 @@ void TMapObjBase::startBck(const char* param_1)
 	mMActor->setBck(param_1);
 }
 
-void TMapObjBase::startAnim(u16 param_1)
+void TMapObjBase::startAnim(u16 index)
 {
 	if (mAnmSound)
 		setAnmSound(nullptr);
 
 	if (!mMActor) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		if (anim->unk0 != 0)
-			mMActor = mMActorKeeper->getMActor(anim->unk4[0].mBmdFileName);
+		if (anim->mEntryNum != 0)
+			mMActor = mMActorKeeper->getMActor(anim->mEntries[0].mBmdFileName);
 	}
 
 	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
 	if (!anim)
 		return;
 
-	if (param_1 >= anim->unk0)
+	if (index >= anim->mEntryNum)
 		return;
 
-	const TMapObjAnimData* data = &anim->unk4[param_1];
+	const TMapObjAnimData* data = &anim->mEntries[index];
 	if (data->mAnmType == 0) {
-		if (unkFE != 0xffff && anim && anim->unk0 != 0) {
-			const TMapObjAnimData* d2 = &anim->unk4[unkFE];
+		if (mActiveAnimIndex != 0xffff && anim && anim->mEntryNum != 0) {
+			const TMapObjAnimData* d2 = &anim->mEntries[mActiveAnimIndex];
 			if (d2->mAnmName != nullptr) {
 				u8 anmType = d2->mAnmType;
 				mMActor->getFrameCtrl(anmType)->setRate(0.0f);
 				mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
 				mMActor->getUnk28(anmType)->unk0 = 0xffffffff;
-				unkFE                            = 0xffff;
+				mActiveAnimIndex                 = 0xffff;
 			}
 		}
 		stopAnmSound();
-		if (unkFE != param_1) {
-			unkFE = param_1;
+		if (mActiveAnimIndex != index) {
+			mActiveAnimIndex = index;
 			if (data->mBmdFileName)
 				mMActor = mMActorKeeper->getMActor(data->mBmdFileName);
 		}
@@ -276,19 +280,20 @@ void TMapObjBase::makeObjDefault()
 
 void TMapObjBase::makeObjDead()
 {
-	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
+	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 
-	if (unkFE != 0xffff && mMapObjData->mAnim && mMapObjData->mAnim->unk0 > 0
-	    && mMapObjData->mAnim->unk4[unkFE].mAnmName) {
-		u32 anmType = mMapObjData->mAnim->unk4[unkFE].mAnmType;
+	if (mActiveAnimIndex != 0xffff && mMapObjData->mAnim
+	    && mMapObjData->mAnim->mEntryNum > 0
+	    && mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmName) {
+		u32 anmType = mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmType;
 		mMActor->getFrameCtrl(anmType)->setRate(0.0f);
 		mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
 		mMActor->getUnk28(anmType)->unk0 = 0xffffffff;
-		unkFE                            = 0xffff;
+		mActiveAnimIndex                 = 0xffff;
 	}
 
-	unk100 = 0xffff;
+	mActiveSoundIndex = 0xffff;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 	mStateTimer = 0;
@@ -312,38 +317,23 @@ void TMapObjBase::makeObjDead()
 void TMapObjBase::makeObjAppeared()
 {
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
-	mVelocity.x = 0.0f;
-	mVelocity.y = 0.0f;
-	mVelocity.z = 0.0f;
+	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	mStateTimer = 0;
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	setObjHitData(0);
-	if (unk100 != 0)
-		unk100 = 0;
-
-	if (!mMapObjData->mSound) {
-		u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
-		if (sound != 0xffffffff)
-			SMSGetMSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
-			                                4);
-	} else {
-		u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
-		if (sound != 0xffffffff)
-			SMSGetMSound()->startSoundActor(sound, &mPosition, 0, nullptr, 0,
-			                                4);
-	}
+	startSound(0);
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	if (mMapObjData->mMove) {
-		J3DFrameCtrl* ctrl = mMapObjData->mMove->unk8;
+		J3DFrameCtrl* ctrl = mMapObjData->mMove->mFrameCtrl;
 		ctrl->setFrame((f32)ctrl->getStart());
 		ctrl->setRate(1.0f);
 
-		mMapObjData->mMove->unk8->setRate(SMSGetAnmFrameRate());
+		mMapObjData->mMove->mFrameCtrl->setRate(SMSGetAnmFrameRate());
 	}
 
 	startAnim(0);
@@ -404,10 +394,10 @@ void TMapObjBase::control()
 	if (mMapObjData->mMove) {
 		TMapObjMoveData* move = mMapObjData->mMove;
 
-		move->unk4->setFrame(move->unk8->getFrame());
-		move->unk8->update();
+		move->mBckAnm->setFrame(move->mFrameCtrl->getFrame());
+		move->mFrameCtrl->update();
 		J3DTransformInfo info;
-		move->unk4->getTransform(1, &info);
+		move->mBckAnm->getTransform(1, &info);
 		mPositionDelta.x = info.mTranslate.x + mInitialPosition.x - mPosition.x;
 		mPositionDelta.y = info.mTranslate.y + mInitialPosition.y - mPosition.y;
 		mPositionDelta.z = info.mTranslate.z + mInitialPosition.z - mPosition.z;
@@ -493,19 +483,8 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (isStateTimerEngaged())
 			--mStateTimer;
 
-		if (unk100 == 0) {
-			if (!mMapObjData->mSound) {
-				u32 sound = TMapObjGeneral::mDefaultSound.unk0[unk100];
-				if (sound != 0xffffffff)
-					SMSGetMSound()->startSoundActor(sound, &mPosition, 0,
-					                                nullptr, 0, 4);
-			} else {
-				u32 sound = mMapObjData->mSound->unk4->unk0[unk100];
-				if (sound != 0xffffffff)
-					SMSGetMSound()->startSoundActor(sound, &mPosition, 0,
-					                                nullptr, 0, 4);
-			}
-		}
+		if (mActiveSoundIndex == 0)
+			startSound(mActiveSoundIndex);
 		if (checkLiveFlag(LIVE_FLAG_DEAD))
 			dead();
 	}
@@ -606,11 +585,11 @@ BOOL TMapObjBase::receiveMessage(THitActor* sender, u32 message)
 
 void TMapObjBase::initAndRegister(const char* instance_name)
 {
-	mInstanceName = instance_name;
+	mIndividualName = instance_name;
 	initMapObj();
-	if (mMapObjData->unkC) {
+	if (mMapObjData->mIdxGroupName) {
 		static_cast<TIdxGroupObj*>(
-		    JDrama::TNameRefGen::search(mMapObjData->unkC))
+		    JDrama::TNameRefGen::search(mMapObjData->mIdxGroupName))
 		    ->push_back(this);
 	}
 }
@@ -625,7 +604,7 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 {
 	TActor::load(stream);
 
-	mInstanceName = stream.readString();
+	mIndividualName = stream.readString();
 	loadBeforeInit(stream);
 	initMapObj();
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
@@ -642,11 +621,11 @@ void TMapObjBase::load(JSUMemoryInputStream& stream)
 
 TMapObjBase::TMapObjBase(const char* name)
     : TLiveActor(name)
-    , mInstanceName(nullptr)
+    , mIndividualName(nullptr)
     , mMapObjFlags(0)
     , mState(STATE_NORMAL)
-    , unkFE(0xffff)
-    , unk100(0xffff)
+    , mActiveAnimIndex(0xffff)
+    , mActiveSoundIndex(0xffff)
     , mMoveCollisionOnContactGraceTimer(0)
     , mStateTimer(0)
     , mYOffset(0.0f)

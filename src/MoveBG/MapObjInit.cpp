@@ -10983,7 +10983,7 @@ void TMapObjBase::initUnique()
 		SMS_UnifyMaterial(getModel());
 		break;
 	case ACTOR_TYPE_EX_SKY_TUMIKI:
-		startAllAnim(mMActor, mInstanceName);
+		startAllAnim(mMActor, mIndividualName);
 		break;
 	case ACTOR_TYPE_MOYASI:
 		mMActor->initBckSimpleMotionBlend(0x14);
@@ -11076,13 +11076,14 @@ void TMapObjBase::initEventData() { }
 void TMapObjBase::initHoldData()
 {
 	if (getMapObjData()->mHold != nullptr) {
-		TMapObjHoldData* hold = getMapObjData()->mHold;
-		hold->unk8            = J3DModelLoaderDataBase::load(
-            JKRGetResource(hold->unk0),
-            J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
-		hold->unkC  = new J3DModel(hold->unk8, 0, 1);
-		u16 idx     = hold->unk8->unkB0->getIndex(hold->unk4);
-		hold->unk10 = hold->unkC->getAnmMtx(idx);
+		TMapObjHoldData* hold  = getMapObjData()->mHold;
+		hold->mTakingModelData = J3DModelLoaderDataBase::load(
+		    JKRGetResource(hold->mTakingBmdPath),
+		    J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift));
+		hold->mTakingModel = new J3DModel(hold->mTakingModelData, 0, 1);
+		u16 jointIdx       = hold->mTakingModelData->getJointName()->getIndex(
+            hold->mTakingJointName);
+		hold->mTakingMtx = hold->mTakingModel->getAnmMtx(jointIdx);
 	}
 }
 
@@ -11091,35 +11092,35 @@ void TMapObjBase::initMapCollisionData()
 	if (mMapObjData->mCollision != nullptr) {
 		const TMapObjCollisionInfo* col = mMapObjData->mCollision;
 		mMapCollisionManager
-		    = new TMapCollisionManager(col->unk2, "mapObj", this);
-		for (int i = 0; i < col->unk0; ++i)
-			if (col->unk4[i].unk0)
-				mMapCollisionManager->init(col->unk4[i].unk0, col->unk4[i].unk4,
-				                           nullptr);
+		    = new TMapCollisionManager(col->mMaxEntries, "mapObj", this);
+		for (int i = 0; i < col->mEntryNum; ++i)
+			if (col->mEntries[i].mColFileNoExt)
+				mMapCollisionManager->init(col->mEntries[i].mColFileNoExt,
+				                           col->mEntries[i].mFlags, nullptr);
 	}
 }
 
 void TMapObjBase::initObjCollisionData()
 {
 	if (getMapObjData()->mHit != nullptr) {
-		initHitActor(getMapObjData()->unk4, getHitObjNumMax(),
+		initHitActor(getMapObjData()->mActorType, getHitObjNumMax(),
 		             getMapObjData()->mHit->mHitFilter, 0.0f, 0.0f, 0.0f, 0.0f);
 		setObjHitData(0);
 
-		const TMapObjHitDataTable* table = getMapObjData()->mHit->unkC;
+		const TMapObjHitDataTable* table = getMapObjData()->mHit->mEntries;
 
-		f32 fVar2;
+		f32 radiusScaling;
 		if (mScaling.x > mScaling.z)
-			fVar2 = mScaling.x;
+			radiusScaling = mScaling.x;
 		else
-			fVar2 = mScaling.z;
+			radiusScaling = mScaling.z;
 
-		if (table->unk8 > 0.0f) {
-			mBodyRadius = table->unk8 * fVar2;
-			mHeadHeight = table->unkC * mScaling.y;
+		if (table->mDamageRadius > 0.0f) {
+			mBodyRadius = table->mDamageRadius * radiusScaling;
+			mHeadHeight = table->mDamageHeight * mScaling.y;
 		} else {
-			mBodyRadius = table->unk0 * fVar2;
-			mHeadHeight = table->unk4 * mScaling.y;
+			mBodyRadius = table->mAttackRadius * radiusScaling;
+			mHeadHeight = table->mAttackHeight * mScaling.y;
 		}
 	} else {
 		initHitActor(0, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -11139,8 +11140,8 @@ void TMapObjBase::initBckMoveData()
 	if (mMapObjData->mMove != nullptr) {
 		TMapObjMoveData* move = mMapObjData->mMove;
 
-		move->unk4 = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
-		    JKRGetResource(move->unk0));
+		move->mBckAnm = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(
+		    JKRGetResource(move->mBckFile));
 
 		J3DModelData* data         = mMActor->getModel()->getModelData();
 		J3DJoint* joint            = data->getJointNodePointer(1);
@@ -11157,17 +11158,18 @@ void TMapObjBase::initBckMoveData()
 		info.mTranslate.y = 0.0f;
 		info.mTranslate.z = 0.0f;
 		data->getJointNodePointer(0)->setTransformInfo(info);
-		move->unk8 = new J3DFrameCtrl(move->unk4->getFrameMax());
-		move->unk8->setAttribute(J3DFrameCtrl::ATTR_LOOP);
-		move->unk8->setRate(SMSGetAnmFrameRate());
+		move->mFrameCtrl = new J3DFrameCtrl(move->mBckAnm->getFrameMax());
+		move->mFrameCtrl->setAttribute(J3DFrameCtrl::ATTR_LOOP);
+		move->mFrameCtrl->setRate(SMSGetAnmFrameRate());
 	}
 }
 
 bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 {
 	for (int j = 0; j < i; ++j)
-		if (anim->unk4[j].mBmdFileName
-		    && strcmp(anim->unk4[i].mBmdFileName, anim->unk4[j].mBmdFileName)
+		if (anim->mEntries[j].mBmdFileName
+		    && strcmp(anim->mEntries[i].mBmdFileName,
+		              anim->mEntries[j].mBmdFileName)
 		           == 0)
 			return true;
 	return false;
@@ -11192,14 +11194,14 @@ MActor* TMapObjBase::initMActor(const char* bmd_file, const char* param_2,
 
 void TMapObjBase::makeMActors()
 {
-	u16 uVar6 = 1;
+	u16 maxMActors = 1;
 	if (mMapObjData->mAnim)
-		uVar6 = mMapObjData->mAnim->unk2;
+		maxMActors = mMapObjData->mAnim->mMaxMActors;
 
-	if (uVar6 == 0)
+	if (maxMActors == 0)
 		return;
 
-	mMActorKeeper = new TMActorKeeper(mManager, uVar6);
+	mMActorKeeper = new TMActorKeeper(mManager, maxMActors);
 	if (checkMapObjFlag(MAP_OBJ_FLAG_INDIRECT_TEXTURE))
 		mMActorKeeper->setModelLoaderFlags(
 		    J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
@@ -11211,22 +11213,22 @@ void TMapObjBase::makeMActors()
 
 	if (mMapObjData->mAnim) {
 		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		mMActor = initMActor(anim->unk4[0].mBmdFileName, anim->unk4[0].unkC,
-		                     getSDLModelFlag());
+		mMActor = initMActor(anim->mEntries[0].mBmdFileName,
+		                     anim->mEntries[0].unkC, getSDLModelFlag());
 
-		for (u16 i = 1; i < anim->unk0; ++i) {
-			if (anim->unk4[i].mBasFilePath && mAnmSound == nullptr)
+		for (u16 i = 1; i < anim->mEntryNum; ++i) {
+			if (anim->mEntries[i].mBasFilePath && mAnmSound == nullptr)
 				initAnmSound();
 
-			if (anim->unk4[i].mBmdFileName != nullptr
+			if (anim->mEntries[i].mBmdFileName != nullptr
 			    && !isAlreadyRegistered(anim, i)) {
-				initMActor(anim->unk4[i].mBmdFileName, anim->unk4[i].unkC,
-				           getSDLModelFlag());
+				initMActor(anim->mEntries[i].mBmdFileName,
+				           anim->mEntries[i].unkC, getSDLModelFlag());
 			}
 		}
 	} else {
 		char buffer[64];
-		snprintf(buffer, 64, "%s.bmd", mMapObjData->unk0);
+		snprintf(buffer, 64, "%s.bmd", mMapObjData->mIndividualName);
 		mMActor = initMActor(buffer, nullptr, getSDLModelFlag());
 	}
 }
@@ -11257,21 +11259,21 @@ void TMapObjBase::initModelData()
 void TMapObjBase::initActorData()
 {
 	int i    = 0;
-	u16 code = JDrama::TNameRef::calcKeyCode(mInstanceName);
-	for (; sObjDataTable[i]->unk4; ++i) {
-		if (code == sObjDataTable[i]->unk38
-		    && strcmp(sObjDataTable[i]->unk0, mInstanceName) == 0)
+	u16 code = JDrama::TNameRef::calcKeyCode(mIndividualName);
+	for (; sObjDataTable[i]->mActorType; ++i) {
+		if (code == sObjDataTable[i]->mIndividualKeycode
+		    && strcmp(sObjDataTable[i]->mIndividualName, mIndividualName) == 0)
 			break;
 	}
 
 	if (strcmp(mName, "地形オブジェ") == 0)
-		mName = mInstanceName;
+		mName = mIndividualName;
 
 	mMapObjData  = sObjDataTable[i];
 	mMapObjFlags = mMapObjData->mMapObjFlags;
 
 	mManager = static_cast<TLiveManager*>(
-	    JDrama::TNameRefGen::search(mMapObjData->unk8));
+	    JDrama::TNameRefGen::search(mMapObjData->mManagerName));
 	mManager->manageActor(this);
 	if (mMapObjData->mHit)
 		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
@@ -11319,7 +11321,7 @@ void TMapObjBase::initMapObj()
 void TMapObjGeneral::initPhysicalData()
 {
 	if (getMapObjData()->mPhysical)
-		mGravity = getMapObjData()->mPhysical->unk4->unk0;
+		mGravity = getMapObjData()->mPhysical->mData->mGravity;
 }
 
 void TMapObjGeneral::initMapObj()
@@ -11330,7 +11332,7 @@ void TMapObjGeneral::initMapObj()
 
 void TMapObjManager::initKeyCode()
 {
-	for (int i = 0; sObjDataTable[i]->unk4 != 0; ++i)
-		sObjDataTable[i]->unk38
-		    = JDrama::TNameRef::calcKeyCode(sObjDataTable[i]->unk0);
+	for (int i = 0; sObjDataTable[i]->mActorType != 0; ++i)
+		sObjDataTable[i]->mIndividualKeycode
+		    = JDrama::TNameRef::calcKeyCode(sObjDataTable[i]->mIndividualName);
 }

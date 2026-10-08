@@ -199,7 +199,7 @@ public:
 	/* 0x94 */ JGeometry::TVec3<f32> mPositionDelta;
 	/* 0xA0 */ JGeometry::TVec3<f32> mRotationDelta;
 	/* 0xAC */ JGeometry::TVec3<f32> mVelocity;
-	/* 0xB8 */ f32 mScaledBodyRadius;
+	/* 0xB8 */ f32 mScaledBodyRadius; // TODO: imprecise name
 	/* 0xBC */ f32 mBodyRadius;
 	/* 0xC0 */ f32 mHeadHeight;
 	/* 0xC4 */ const TBGCheckData* mGroundPlane;

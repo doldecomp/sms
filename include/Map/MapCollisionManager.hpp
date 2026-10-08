@@ -11,8 +11,9 @@ class TMapCollisionBase;
 
 class TMapCollisionManager {
 public:
-	TMapCollisionManager(u16, const char*, const TLiveActor*);
-	void init(const char* file, u16, const char* path);
+	TMapCollisionManager(u16 max_entries, const char* folder,
+	                     const TLiveActor* owner);
+	void init(const char* col_file, u16 flags, const char* folder);
 	void createCollision(const char*, u8);
 	void getFileName(const char*, char*);
 	void changeCollision(u32);

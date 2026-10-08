@@ -179,7 +179,7 @@ void TMapObjTree::initMapObj()
 		if (isActorType(ACTOR_TYPE_PALM_LEAF)) {
 			snprintf(buffer, 0x100, "/mapObj/palmLeaf%02d", i + 1);
 		} else {
-			snprintf(buffer, 0x100, "/mapObj/%sLeaf%02d", mInstanceName, i + 1);
+			snprintf(buffer, 0x100, "/mapObj/%sLeaf%02d", mIndividualName, i + 1);
 		}
 		leaf.mCollision->init(buffer, 0, this);
 		leaf.mCollision->setAllData(i);

@@ -1057,7 +1057,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 
-	if (strcmp(mInstanceName, "eggYoshiEvent") == 0) {
+	if (strcmp(mIndividualName, "eggYoshiEvent") == 0) {
 		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) == 1) {
 			mState = 0xE;
 		} else {
@@ -1172,10 +1172,10 @@ void TItemNozzle::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 	onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
-	if (strcmp(mInstanceName, "rocket_nozzle_item") == 0) {
+	if (strcmp(mIndividualName, "rocket_nozzle_item") == 0) {
 		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 3)
 			makeObjDead();
-	} else if (strcmp(mInstanceName, "back_nozzle_item") == 0) {
+	} else if (strcmp(mIndividualName, "back_nozzle_item") == 0) {
 		if (TFlagManager::smInstance->getFlag(MSF_SHADOW_MARIO_EVENT) != 2)
 			makeObjDead();
 	}

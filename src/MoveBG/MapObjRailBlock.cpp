@@ -183,7 +183,7 @@ void TRailMapObj::initMapObj()
 void TRailMapObj::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TActor::load(stream);
-	mInstanceName = stream.readString();
+	mIndividualName = stream.readString();
 	char buffer[256];
 	stream.readString(buffer, 256);
 	mInitialPosition = mPosition;
@@ -476,7 +476,7 @@ TRollBlock::TRollBlock(const char* name)
 void TRollBlock::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TActor::load(stream);
-	mInstanceName = stream.readString();
+	mIndividualName = stream.readString();
 	s32 local_18;
 	stream >> local_18;
 	unk13C = local_18 * 0.01f;

@@ -22,54 +22,54 @@ struct TMapObjAnimData {
 
 // the only real name we have, everything else is fabricated
 struct TMapObjAnimDataInfo {
-	/* 0x0 */ u16 unk0;
-	/* 0x2 */ u16 unk2;
-	/* 0x4 */ const TMapObjAnimData* unk4;
+	/* 0x0 */ u16 mEntryNum;
+	/* 0x2 */ u16 mMaxMActors;
+	/* 0x4 */ const TMapObjAnimData* mEntries;
 };
 
 struct TMapObjHitDataTable {
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
-	/* 0x8 */ f32 unk8;
-	/* 0xC */ f32 unkC;
+	/* 0x0 */ f32 mAttackRadius;
+	/* 0x4 */ f32 mAttackHeight;
+	/* 0x8 */ f32 mDamageRadius;
+	/* 0xC */ f32 mDamageHeight;
 };
 
 // fabricated
 struct TMapObjHitInfo {
-	/* 0x0 */ int unk0;
+	/* 0x0 */ int mEntryNum;
 	/* 0x4 */ u32 mHitFilter;
 	/* 0x8 */ f32 unk8;
-	/* 0xC */ const TMapObjHitDataTable* unkC;
+	/* 0xC */ const TMapObjHitDataTable* mEntries;
 };
 
 // fabricated
 struct TMapObjCollisionData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ u16 unk4;
+	/* 0x0 */ const char* mColFileNoExt;
+	/* 0x4 */ u16 mFlags;
 };
 
 // fabricated
 struct TMapObjCollisionInfo {
-	/* 0x0 */ u16 unk0;
-	/* 0x2 */ u16 unk2;
-	/* 0x4 */ const TMapObjCollisionData* unk4;
+	/* 0x0 */ u16 mEntryNum;
+	/* 0x2 */ u16 mMaxEntries;
+	/* 0x4 */ const TMapObjCollisionData* mEntries;
 };
 
 // fabricated
 struct TMapObjSoundData {
-	/* 0x0 */ u32 unk0[10];
+	/* 0x0 */ u32 mSoundIdTable[10];
 	/* 0x40 */ u32 unk40;
 };
 
 // fabricated
 struct TMapObjSoundInfo {
 	/* 0x0 */ u32 unk0;
-	/* 0x4 */ const TMapObjSoundData* unk4;
+	/* 0x4 */ const TMapObjSoundData* mData;
 };
 
 // fabricated
 struct TMapObjPhysicalData {
-	/* 0x0 */ f32 unk0;
+	/* 0x0 */ f32 mGravity;
 	/* 0x4 */ f32 unk4;
 	/* 0x8 */ f32 unk8;
 	/* 0xC */ f32 unkC;
@@ -87,25 +87,25 @@ struct TMapObjPhysicalData {
 // fabricated
 struct TMapObjPhysicalInfo {
 	/* 0x0 */ u32 unk0;
-	/* 0x4 */ TMapObjPhysicalData* unk4;
+	/* 0x4 */ TMapObjPhysicalData* mData;
 	/* 0x8 */ u32 mWallCheckFlags;
 };
 
 // fabricated
 struct TMapObjSinkData {
-	/* 0x0 */ f32 unk0;
-	/* 0x4 */ f32 unk4;
+	/* 0x0 */ f32 mSinkSpeed;
+	/* 0x4 */ f32 mRecoverSpeed;
 };
 
 class J3DModelData;
 
 // fabricated
 struct TMapObjHoldData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ const char* unk4;
-	/* 0x8 */ J3DModelData* unk8;
-	/* 0xC */ J3DModel* unkC;
-	/* 0x10 */ MtxPtr unk10;
+	/* 0x0 */ const char* mTakingBmdPath;
+	/* 0x4 */ const char* mTakingJointName;
+	/* 0x8 */ J3DModelData* mTakingModelData;
+	/* 0xC */ J3DModel* mTakingModel;
+	/* 0x10 */ MtxPtr mTakingMtx;
 };
 
 class J3DAnmTransform;
@@ -113,17 +113,17 @@ class J3DFrameCtrl;
 
 // fabricated
 struct TMapObjMoveData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ J3DAnmTransform* unk4;
-	/* 0x8 */ J3DFrameCtrl* unk8;
+	/* 0x0 */ const char* mBckFile;
+	/* 0x4 */ J3DAnmTransform* mBckAnm;
+	/* 0x8 */ J3DFrameCtrl* mFrameCtrl;
 };
 
 // fabricated
 struct TMapObjData {
-	/* 0x0 */ const char* unk0;
-	/* 0x4 */ u32 unk4;
-	/* 0x8 */ const char* unk8;
-	/* 0xC */ const char* unkC;
+	/* 0x0 */ const char* mIndividualName;
+	/* 0x4 */ u32 mActorType;
+	/* 0x8 */ const char* mManagerName;
+	/* 0xC */ const char* mIdxGroupName;
 	/* 0x10 */ const TMapObjAnimDataInfo* mAnim;
 	/* 0x14 */ const TMapObjHitInfo* mHit;
 	/* 0x18 */ const TMapObjCollisionInfo* mCollision;
@@ -134,7 +134,7 @@ struct TMapObjData {
 	/* 0x2C */ TMapObjMoveData* mMove;
 	/* 0x30 */ f32 unk30;
 	/* 0x34 */ u32 mMapObjFlags;
-	/* 0x38 */ u32 unk38;
+	/* 0x38 */ u32 mIndividualKeycode;
 };
 
 class TMapObjBase : public TLiveActor {
@@ -188,14 +188,14 @@ public:
 
 	void initAndRegister(const char*);
 	void moveByBck();
-	void startAnim(u16);
+	void startAnim(u16 index);
 	void startBck(const char*);
 	void startControlAnim(u16);
 	void stopAnim();
 	bool animIsFinished() const;
 	bool hasAnim(u16) const;
 	bool hasModelOrAnimData(u16) const;
-	void startSound(u16);
+	void startSound(u16 index);
 	void soundBas(u32, f32, f32);
 	void setUpMapCollision(u16);
 	void removeMapCollision();
@@ -355,7 +355,7 @@ public:
 		return mInitialScaling;
 	}
 
-	const char* getUnkF4() { return mInstanceName; }
+	const char* getUnkF4() { return mIndividualName; }
 
 public:
 	enum {
@@ -429,11 +429,11 @@ public:
 		STATE_NORMAL = 0x1,
 	};
 
-	/* 0xF4 */ const char* mInstanceName;
+	/* 0xF4 */ const char* mIndividualName;
 	/* 0xF8 */ u32 mMapObjFlags;
 	/* 0xFC */ u16 mState;
-	/* 0xFE */ u16 unkFE;
-	/* 0x100 */ u16 unk100;
+	/* 0xFE */ u16 mActiveAnimIndex;
+	/* 0x100 */ u16 mActiveSoundIndex;
 	/* 0x102 */ s16 mMoveCollisionOnContactGraceTimer;
 	/* 0x104 */ int mStateTimer;
 	/* 0x108 */ f32 mYOffset; // TODO: offset from what to what?

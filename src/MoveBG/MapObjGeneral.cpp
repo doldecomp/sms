@@ -120,12 +120,12 @@ void TMapObjGeneral::thrown()
 	f32 power = SMS_GetMarioThrowPower();
 	mVelocity.set(power
 	                      * (JMASSin(SMS_GetMarioAngleY())
-	                         * getMapObjData()->mPhysical->unk4->unk2C)
+	                         * getMapObjData()->mPhysical->mData->unk2C)
 	                  + mNormalThrowSpeedRate * SMS_GetMarioSpeedX(),
-	              getMapObjData()->mPhysical->unk4->unk30,
+	              getMapObjData()->mPhysical->mData->unk30,
 	              power
 	                      * (JMASCos(SMS_GetMarioAngleY())
-	                         * getMapObjData()->mPhysical->unk4->unk2C)
+	                         * getMapObjData()->mPhysical->mData->unk2C)
 	                  + mNormalThrowSpeedRate * SMS_GetMarioSpeedZ());
 
 	offLiveFlag(LIVE_FLAG_UNK10);
@@ -172,9 +172,9 @@ void TMapObjGeneral::recovering()
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
-		mPosition.y += mMapObjData->mSink->unk4;
+		mPosition.y += mMapObjData->mSink->mRecoverSpeed;
 		if (mHeldObject)
-			mHeldObject->mPosition.y += mMapObjData->mSink->unk4;
+			mHeldObject->mPosition.y += mMapObjData->mSink->mRecoverSpeed;
 		return;
 	}
 
@@ -183,7 +183,7 @@ void TMapObjGeneral::recovering()
 
 void TMapObjGeneral::sinking()
 {
-	mPosition.y -= mMapObjData->mSink->unk0;
+	mPosition.y -= mMapObjData->mSink->mSinkSpeed;
 
 	for (int i = 0; i < getColNum(); ++i) {
 		if (getCollision(i)->isHitCategory(HIT_CATEGORY_WATER)) {
@@ -192,7 +192,7 @@ void TMapObjGeneral::sinking()
 		}
 	}
 
-	if (mPosition.y + mMapObjData->mHit->unkC[2].unk4 < unk144) {
+	if (mPosition.y + mMapObjData->mHit->mEntries[2].mAttackHeight < unk144) {
 		if (mPosition.x != mInitialPosition.x
 		    || mPosition.z != mInitialPosition.z) {
 			makeObjDefault();
@@ -255,7 +255,7 @@ void TMapObjGeneral::makeObjRecovered()
 void TMapObjGeneral::makeObjBuried()
 {
 	unk144 = mPosition.y;
-	mPosition.y -= mMapObjData->mHit->unkC[2].unkC;
+	mPosition.y -= mMapObjData->mHit->mEntries[2].mDamageHeight;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 	mMActor = nullptr;
@@ -289,8 +289,9 @@ void TMapObjGeneral::touchPlayer(THitActor* player)
 
 void TMapObjGeneral::recover()
 {
-	gpPollution->clean(mPosition.x, unk144, mPosition.z,
-	                   (u16)(mMapObjData->mHit->unkC[2].unk0 / 6.0f));
+	gpPollution->clean(
+	    mPosition.x, unk144, mPosition.z,
+	    (u16)(mMapObjData->mHit->mEntries[2].mAttackRadius / 6.0f));
 
 	setUpMapCollision(1);
 	startAnim(6);
@@ -399,19 +400,19 @@ void TMapObjGeneral::touchWall(JGeometry::TVec3<f32>* param_1,
 	param_1->x = param_2->mCenter.x;
 	param_1->z = param_2->mCenter.z;
 	calcReflectingVelocity(param_2->mResultWalls[0],
-	                       mMapObjData->mPhysical->unk4->unk8, &mVelocity);
+	                       mMapObjData->mPhysical->mData->unk8, &mVelocity);
 }
 
 void TMapObjGeneral::checkWallCollision(JGeometry::TVec3<f32>* param_1)
 {
-	param_1->y += mMapObjData->mPhysical->unk4->unk1C;
+	param_1->y += mMapObjData->mPhysical->mData->unk1C;
 
 	TBGWallCheckRecord check(*param_1, mBodyRadius, 4,
 	                         mMapObjData->mPhysical->mWallCheckFlags);
 
 	bool touched = gpMap->isTouchedWallsAndMoveXZ(&check);
 
-	param_1->y -= mMapObjData->mPhysical->unk4->unk1C;
+	param_1->y -= mMapObjData->mPhysical->mData->unk1C;
 
 	if (touched) {
 		unk138 = check.mResultWalls[0];
@@ -437,15 +438,15 @@ void TMapObjGeneral::checkRoofCollision(JGeometry::TVec3<f32>* param_1)
 void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 {
 	if (mMapObjData->mPhysical ? true : false) {
-		mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
-		mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
+		mVelocity.x *= mMapObjData->mPhysical->mData->unk10;
+		mVelocity.z *= mMapObjData->mPhysical->mData->unk10;
 	}
 
 	if ((mMapObjData->mPhysical ? true : false)
 	    && abs(JGeometry::TVec3<f32>(mVelocity).y)
-	           > mMapObjData->mPhysical->unk4->unkC) {
+	           > mMapObjData->mPhysical->mData->unkC) {
 		param_1->y -= JGeometry::TVec3<f32>(mVelocity).y;
-		mVelocity.y *= -mMapObjData->mPhysical->unk4->unk4;
+		mVelocity.y *= -mMapObjData->mPhysical->mData->unk4;
 		if (isCoin(this)) {
 			SMSGetMSound()->startSoundActorWithInfo(
 			    MSD_SE_SY_COIN_BOUND, &mPosition, nullptr,
@@ -481,18 +482,17 @@ void TMapObjGeneral::calcVelocity()
 		mVelocity.y = MsClamp<f32>(mVelocity.y, -mBodyRadius, mBodyRadius);
 	}
 
-	const TMapObjPhysicalInfo* piVar4 = mMapObjData->mPhysical;
-	if (piVar4 ? (u8)1 : (u8)0) {
-		mVelocity.x *= mMapObjData->mPhysical->unk4->unk18;
-		mVelocity.z *= mMapObjData->mPhysical->unk4->unk18;
+	if (mMapObjData->mPhysical ? true : false) {
+		mVelocity.x *= mMapObjData->mPhysical->mData->unk18;
+		mVelocity.z *= mMapObjData->mPhysical->mData->unk18;
 
 		mVelocity.x = MsClamp<f32>(mVelocity.x, -mBodyRadius, mBodyRadius);
 		mVelocity.z = MsClamp<f32>(mVelocity.z, -mBodyRadius, mBodyRadius);
 
 		if (mGroundPlane->mNormal.y == 1.0f) {
-			if (abs(mVelocity.x) < mMapObjData->mPhysical->unk4->unkC)
+			if (abs(mVelocity.x) < mMapObjData->mPhysical->mData->unkC)
 				mVelocity.x = 0.0f;
-			if (abs(mVelocity.z) < mMapObjData->mPhysical->unk4->unkC)
+			if (abs(mVelocity.z) < mMapObjData->mPhysical->mData->unkC)
 				mVelocity.z = 0.0f;
 		}
 	}
@@ -563,18 +563,18 @@ void TMapObjGeneral::calcRootMatrix()
 			TMapObjHoldData* hold = mMapObjData->mHold;
 
 			MtxPtr src = getTakingMtx();
-			MTXCopy(src, hold->unkC->getBaseTRMtx());
-			hold->unkC->calc();
+			MTXCopy(src, hold->mTakingModel->getBaseTRMtx());
+			hold->mTakingModel->calc();
 
-			MtxPtr src2 = hold->unk10;
-			MTXCopy(src2, model->getBaseTRMtx());
-			mPosition.set(src2[3][0], src2[3][1], src2[3][2]);
+			MtxPtr takingMtx = hold->mTakingMtx;
+			MTXCopy(takingMtx, model->getBaseTRMtx());
+			mPosition.set(takingMtx[3][0], takingMtx[3][1], takingMtx[3][2]);
 		} else {
-			MtxPtr src = getTakingMtx();
-			MTXCopy(src, checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)
-			                 ? model->getAnmMtx(0)
-			                 : model->getBaseTRMtx());
-			mPosition.set(src[3][0], src[3][1], src[3][2]);
+			MtxPtr takingMtx = getTakingMtx();
+			MTXCopy(takingMtx, checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)
+			                       ? model->getAnmMtx(0)
+			                       : model->getBaseTRMtx());
+			mPosition.set(takingMtx[3][0], takingMtx[3][1], takingMtx[3][2]);
 		}
 	} else {
 		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,

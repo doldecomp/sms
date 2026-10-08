@@ -40,7 +40,7 @@ void TMapObjBall::touchRoof(JGeometry::TVec3<f32>* pos)
 		pos->y = unk140;
 	}
 
-	calcReflectingVelocity(unk13C, mMapObjData->mPhysical->unk4->unk4,
+	calcReflectingVelocity(unk13C, mMapObjData->mPhysical->mData->unk4,
 	                       &mVelocity);
 }
 
@@ -59,7 +59,8 @@ void TMapObjBall::touchWall(JGeometry::TVec3<f32>* pos,
 			f32 dist = pos->dot(wall->getNormal()) + wall->getPlaneDistance();
 			pos->x += (mBodyRadius - dist) * wall->getNormal().x;
 			pos->z += (mBodyRadius - dist) * wall->getNormal().z;
-			f32 bounce = velDot * -(-1.0f + mMapObjData->mPhysical->unk4->unk8);
+			f32 bounce
+			    = velDot * -(-1.0f + mMapObjData->mPhysical->mData->unk8);
 			mVelocity.x += bounce * wall->getNormal().x;
 			mVelocity.z += bounce * wall->getNormal().z;
 			if (isActorType(ACTOR_TYPE_WATERMELON)) {
@@ -76,8 +77,8 @@ void TMapObjBall::touchWall(JGeometry::TVec3<f32>* pos,
 				}
 			} else {
 				SMSGetMSound()->startSoundActorWithInfo(
-				    mMapObjData->mSound->unk4->unk0[4], &mPosition, &mVelocity,
-				    0.0f, 0, 0, nullptr, 0, 4);
+				    mMapObjData->mSound->mData->mSoundIdTable[4], &mPosition,
+				    &mVelocity, 0.0f, 0, 0, nullptr, 0, 4);
 			}
 		}
 	}
@@ -89,7 +90,7 @@ void TMapObjBall::touchWaterSurface() { kill(); }
 
 void TMapObjBall::rebound(JGeometry::TVec3<f32>* wall)
 {
-	calcReflectingVelocity(mGroundPlane, mMapObjData->mPhysical->unk4->unk4,
+	calcReflectingVelocity(mGroundPlane, mMapObjData->mPhysical->mData->unk4,
 	                       &mVelocity);
 	wall->y = mGroundHeight;
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -108,8 +109,8 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* wall)
 			                                        0, 0, nullptr, 0, 4);
 		}
 	} else {
-		u32 soundID = mMapObjData->mSound->unk4->unk0[4];
-		SMSGetMSound()->startSoundActorWithInfo(soundID, &mPosition, &mVelocity,
+		u32 soundId = mMapObjData->mSound->mData->mSoundIdTable[4];
+		SMSGetMSound()->startSoundActorWithInfo(soundId, &mPosition, &mVelocity,
 		                                        0.0f, 0, 0, nullptr, 0, 4);
 	}
 }
@@ -150,12 +151,13 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 				mVelocity.z += unk180 * mGroundPlane->getNormal().z;
 			}
 
-			mVelocity.x *= mMapObjData->mPhysical->unk4->unk10;
-			mVelocity.z *= mMapObjData->mPhysical->unk4->unk10;
+			mVelocity.x *= mMapObjData->mPhysical->mData->unk10;
+			mVelocity.z *= mMapObjData->mPhysical->mData->unk10;
 
 			if (isActorType(ACTOR_TYPE_WATERMELON)
-			    && (abs(mVelocity.x) > mMapObjData->mPhysical->unk4->unkC
-			        || abs(mVelocity.z) > mMapObjData->mPhysical->unk4->unkC)) {
+			    && (abs(mVelocity.x) > mMapObjData->mPhysical->mData->unkC
+			        || abs(mVelocity.z)
+			               > mMapObjData->mPhysical->mData->unkC)) {
 				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0,
 				                                nullptr, 0, 4);
 			}
@@ -193,7 +195,7 @@ void TMapObjBall::kicked()
 	mVelocity.x += unk170 * SMS_GetMarioSpeedX();
 	mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
 
-	f32 unkC = mMapObjData->mPhysical->unk4->unkC;
+	f32 unkC = mMapObjData->mPhysical->mData->unkC;
 	if (abs(mVelocity.x) < unkC && abs(mVelocity.z) < unkC) {
 		mVelocity.x = MsRandF() * 2.0f - 1.0f;
 		mVelocity.z = MsRandF() * 2.0f - 1.0f;
@@ -241,7 +243,7 @@ void TMapObjBall::boundByActor(THitActor* actor)
 
 	if (actor->isActorType(ACTOR_TYPE_MARIO)) {
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000)) {
-			f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+			f32 minSpeed = mMapObjData->mPhysical->mData->unkC;
 			if (abs(SMS_GetMarioSpeedX()) > minSpeed
 			    || abs(SMS_GetMarioSpeedZ()) > minSpeed) {
 				mVelocity.y += unk150;
@@ -261,8 +263,8 @@ void TMapObjBall::boundByActor(THitActor* actor)
 	} else {
 		f32 approach = getVelocity().dot(offsetToActor);
 		if (approach >= 0.0f
-		    && abs(getVelocity().x) > mMapObjData->mPhysical->unk4->unkC
-		    && abs(getVelocity().z) > mMapObjData->mPhysical->unk4->unkC) {
+		    && abs(getVelocity().x) > mMapObjData->mPhysical->mData->unkC
+		    && abs(getVelocity().z) > mMapObjData->mPhysical->mData->unkC) {
 			mVelocity.x -= (1.0f + unk16C) * (offsetToActor.x * approach);
 			mVelocity.y += unk168;
 			mVelocity.z -= (1.0f + unk16C) * (offsetToActor.z * approach);
@@ -318,15 +320,15 @@ void TMapObjBall::calcCurrentMtx()
 	TRotation3f rot;
 	rot.identity();
 
-	if (abs(getVelocity().x) < mMapObjData->mPhysical->unk4->unkC
-	    && abs(getVelocity().z) < mMapObjData->mPhysical->unk4->unkC
+	if (abs(getVelocity().x) < mMapObjData->mPhysical->mData->unkC
+	    && abs(getVelocity().z) < mMapObjData->mPhysical->mData->unkC
 	    && mGroundPlane->getNormal().y == 1.0f) {
 		mVelocity.x = 0.0f;
 		mVelocity.z = 0.0f;
 	}
 
-	if (abs(getVelocity().x) > mMapObjData->mPhysical->unk4->unkC
-	    || abs(getVelocity().z) > mMapObjData->mPhysical->unk4->unkC) {
+	if (abs(getVelocity().x) > mMapObjData->mPhysical->mData->unkC
+	    || abs(getVelocity().z) > mMapObjData->mPhysical->mData->unkC) {
 		JGeometry::TVec3<f32> axis;
 		getVerticalVecToTargetXZ(mPosition.x + getVelocity().x,
 		                         mPosition.z + getVelocity().z, &axis);
@@ -809,7 +811,7 @@ void TResetFruit::kicked()
 		mVelocity.x += unk170 * SMS_GetMarioSpeedX();
 		mVelocity.z += unk170 * SMS_GetMarioSpeedZ();
 
-		f32 minSpeed = mMapObjData->mPhysical->unk4->unkC;
+		f32 minSpeed = mMapObjData->mPhysical->mData->unkC;
 		if (abs(mVelocity.x) < minSpeed && abs(mVelocity.z) < minSpeed) {
 			mVelocity.x = MsRandF() * 2.0f - 1.0f;
 			mVelocity.z = MsRandF() * 2.0f - 1.0f;
@@ -1100,7 +1102,7 @@ void TRandomFruit::initMapObj()
 	}
 	}
 
-	mInstanceName = mFruitName;
+	mIndividualName = mFruitName;
 	TMapObjBall::initMapObj();
 	SMS_InitPacket_OneTevColor(getModel(), 0, GX_TEVREG0, &mFruitColor);
 }
@@ -1174,7 +1176,7 @@ void TBigWatermelon::rebound(JGeometry::TVec3<f32>* surface)
 		*surface = mPosition;
 	} else {
 		TMapObjBase::calcReflectingVelocity(
-		    mGroundPlane, mMapObjData->mPhysical->unk4->unk4, &mVelocity);
+		    mGroundPlane, mMapObjData->mPhysical->mData->unk4, &mVelocity);
 		surface->y = mGroundHeight;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		if (isActorType(ACTOR_TYPE_WATERMELON)) {
@@ -1191,9 +1193,9 @@ void TBigWatermelon::rebound(JGeometry::TVec3<f32>* surface)
 				    0, nullptr, 0, 4);
 			}
 		} else {
-			u32 soundID = mMapObjData->mSound->unk4->unk0[4];
+			u32 soundId = mMapObjData->mSound->mData->mSoundIdTable[4];
 			SMSGetMSound()->startSoundActorWithInfo(
-			    soundID, &mPosition, &mVelocity, 0.0f, 0, 0, nullptr, 0, 4);
+			    soundId, &mPosition, &mVelocity, 0.0f, 0, 0, nullptr, 0, 4);
 		}
 		if (isState(STATE_LAUNCHED)) {
 			mState = STATE_LANDED;
@@ -1222,7 +1224,7 @@ void TBigWatermelon::touchActor(THitActor* actor)
 			if (actor->isActorType(ACTOR_TYPE_POI_HANA)) {
 				if (static_cast<TPoiHana*>(actor)->isMoving()) {
 					if (!(abs(mVelocity.y)
-					      < mMapObjData->mPhysical->unk4->unkC)) {
+					      < mMapObjData->mPhysical->mData->unkC)) {
 						return;
 					}
 

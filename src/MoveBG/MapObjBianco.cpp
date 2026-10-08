@@ -116,9 +116,9 @@ void TBiancoWatermill::control()
 void TBiancoWatermill::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	if (strcmp(mInstanceName, "BiaWatermill01") == 0) {
+	if (strcmp(mIndividualName, "BiaWatermill01") == 0) {
 		mBodyRadius = 1200.0f;
-	} else if (strcmp(mInstanceName, "BiaWatermill00") == 0) {
+	} else if (strcmp(mIndividualName, "BiaWatermill00") == 0) {
 		mBodyRadius = 1200.0f;
 	}
 }

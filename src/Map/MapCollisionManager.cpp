@@ -37,34 +37,35 @@ void TMapCollisionManager::createCollision(const char* param_1, u8 param_2)
 inline u8 col_type(u16 param_1) { return param_1 & 3; }
 inline u16 col_other(u16 param_1) { return param_1 & 0xFFFC; }
 
-void TMapCollisionManager::init(const char* file, u16 param_2, const char* path)
+void TMapCollisionManager::init(const char* col_file, u16 flags,
+                                const char* folder)
 {
 	char fullPath[256];
 	char buffer[256];
-	const char* folder;
+	const char* actualFolder;
 
 	if (mFolder == nullptr)
-		mFolder = path;
+		mFolder = folder;
 
-	createCollision(file, col_type(param_2));
+	createCollision(col_file, col_type(flags));
 
 	if (mFolder) {
 		if (mFolder[0] != '/') {
 			snprintf(buffer, 256, "/%s", mFolder);
-			folder = buffer;
+			actualFolder = buffer;
 		} else {
-			folder = mFolder;
+			actualFolder = mFolder;
 		}
 	} else {
-		folder = "";
+		actualFolder = "";
 	}
 
-	if (file[0] != '/')
-		sprintf(fullPath, "%s/%s", folder, file);
+	if (col_file[0] != '/')
+		sprintf(fullPath, "%s/%s", actualFolder, col_file);
 	else
-		sprintf(fullPath, "%s%s", folder, file);
+		sprintf(fullPath, "%s%s", actualFolder, col_file);
 
-	mEntries[mEntryNum]->init(fullPath, col_other(param_2) | 2, mOwnerActor);
+	mEntries[mEntryNum]->init(fullPath, col_other(flags) | 2, mOwnerActor);
 
 	if (mEntryNum == 0) {
 		mActiveEntry = mEntries[mEntryNum];
@@ -72,21 +73,21 @@ void TMapCollisionManager::init(const char* file, u16 param_2, const char* path)
 		mActiveEntry = nullptr;
 	}
 
-	if (col_type(param_2) == 0) {
+	if (col_type(flags) == 0) {
 		mActiveEntry = mEntries[mEntryNum];
 	}
 
 	mEntryNum++;
 }
 
-TMapCollisionManager::TMapCollisionManager(u16 param_1, const char* param_2,
-                                           const TLiveActor* param_3)
+TMapCollisionManager::TMapCollisionManager(u16 max_entries, const char* folder,
+                                           const TLiveActor* owner)
 {
-	mEntries     = new TMapCollisionBase*[param_1];
-	mMaxEntries  = param_1;
+	mEntries     = new TMapCollisionBase*[max_entries];
+	mMaxEntries  = max_entries;
 	mEntryNum    = 0;
 	mActiveEntry = nullptr;
-	mFolder      = param_2;
-	mOwnerActor  = param_3;
+	mFolder      = folder;
+	mOwnerActor  = owner;
 	unk14        = 0;
 }
