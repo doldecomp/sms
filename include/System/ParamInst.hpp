@@ -54,6 +54,10 @@ public:
 	    : TParamT<JGeometry::TVec3<f32> >(parent, defaultValue, keycode, name)
 	{
 	}
+
+	// Fabricated, and probably wrong? Feels better than assigning value
+	// directly
+	void set(const JGeometry::TVec3<f32>& value) { this->value = value; }
 };
 
 #endif

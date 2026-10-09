@@ -233,51 +233,50 @@ TNozzleBase::TNozzleBase(const char* name, const char* prm_path,
 	load(mPrmPath);
 
 	// Possibly TNozzleBase::init(), but feels fake
-	unk36C = 2;
-	unk36E = 0;
-	unk372 = 0;
-	unk378 = 0.0f;
-	unk37C = 0.0f;
+	mAnimationState  = 2;
+	mGunAngle        = 0;
+	mTriggerPressure = 0;
+	unk378           = 0.0f;
+	mEmitNum         = 0.0f;
 }
 
 void TNozzleBase::init()
 {
-	unk36C = 2;
-	unk36E = 0;
-	unk372 = 0;
-	unk378 = 0.0f;
-	unk37C = 0.0f;
+	mAnimationState  = 2;
+	mGunAngle        = 0;
+	mTriggerPressure = 0;
+	unk378           = 0.0f;
+	mEmitNum         = 0.0f;
 }
 
 void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 {
-	// volatile u32 unused1[17];
-	if (mFludd->mMario == gpMarioAddress
+	// volatile u32 unused1[6];
+	if (mFludd->getMario() == gpMarioAddress
 	    && (gpCamera->isLButtonCamera() || gpCamera->isJetCoaster1stCamera())) {
-		unk36E = gpCamera->mCurrentTarget.mPitch;
+		mGunAngle = gpCamera->getCurrentTarget().mPitch;
 		return;
 	}
 
-	s16 angle;
-	if (mFludd->mMario->mStatus == MARIO_STATUS_SQUAT) {
-		// TODO: Wrong reguster used, using r3 instead of r4
-		angle = unk36E
-		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]
-		                * mRButtonMult.get());
+	s16 targetAngle;
+	if (mFludd->getMario()->isStatus(MARIO_STATUS_SQUAT)) {
+		targetAngle   = mGunAngle;
+		s16 diffAngle = mFludd->getMario()->getGamePad()->getCompSPos(0, 1)
+		                * mRButtonMult.get();
+		targetAngle += diffAngle;
 	} else {
-		angle = -mLAngleBase.get();
+		targetAngle = -mLAngleBase.get();
 	}
 
-	if (angle < mLAngleMin.get()) {
-		angle = mLAngleMin.get();
+	if (targetAngle < mLAngleMin.get()) {
+		targetAngle = mLAngleMin.get();
 	}
 
-	if (angle > mLAngleMax.get()) {
-		angle = mLAngleMax.get();
+	if (targetAngle > mLAngleMax.get()) {
+		targetAngle = mLAngleMax.get();
 	}
 
-	f32 diff = angle - unk36E;
-	unk36E += diff * mLAngleChase.get();
+	mGunAngle += (targetAngle - mGunAngle) * mLAngleChase.get();
 }
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
@@ -285,27 +284,29 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	if (mFludd->mCurrentWater <= 0) {
 		return;
 	}
-	s32 var1 = 256.0f * controllerWork.mAnalogR * 150.0f;
-
-	if (var1 > unk372) {
-		unk378 = (var1 - unk372) * 0.000015258789f;
-		unk374 = unk378;
-		unk372 += (u16)mTriggerRate.get();
-		if (var1 < unk372) {
-			unk372 = var1;
+	s32 triggerPressure = 150.0f * controllerWork.getAnalogR() * 256.0f;
+	if (triggerPressure > mTriggerPressure) {
+		unk378          = SHORTANGLE2DEG(triggerPressure - mTriggerPressure);
+		unk374          = unk378;
+		u16 triggerRate = mTriggerRate.get();
+		mTriggerPressure += triggerRate;
+		if (triggerPressure < mTriggerPressure) {
+			mTriggerPressure = triggerPressure;
 		}
 	} else {
-		unk378 = 0.0f;
-		unk372 = var1;
+		unk378           = 0.0f;
+		mTriggerPressure = triggerPressure;
 	}
 	calcGunAngle(controllerWork);
 }
 
 void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 {
-	param_2->mAlive.set(
-	    gpModelWaterManager->mWaterParticleTypes[mType.get()]->mAlive.get());
+	const TWaterParticleType* waterParticleType
+	    = gpModelWaterManager->getWaterParticleType(mType.get());
+	param_2->mAlive.set(waterParticleType->getAlive());
 
+	// volatile u32 padding2[1];
 	JGeometry::TVec3<f32> pos;
 	JGeometry::TVec3<f32> dir;
 	JGeometry::TVec3<f32> speed;
@@ -313,9 +314,9 @@ void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 
 	// TODO: This feels wrong
 	// TODO: Fix asm
-	param_2->mPos.value = pos;
-	param_2->mV.value   = speed;
-	param_2->mDir.value = dir;
+	param_2->mPos.set(pos);
+	param_2->mV.set(speed);
+	param_2->mDir.set(dir);
 
 	param_2->mDirTremble  = mDirTremble;
 	param_2->mPowTremble  = mPowTremble;
@@ -324,27 +325,24 @@ void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 	param_2->mType        = mType;
 	param_2->mHitRadius   = mHitRadius;
 	param_2->mHitHeight   = mHitHeight;
+	// volatile u32 padding[1];
 }
 
 void TNozzleBase::emit(int param_1)
 {
-	if (mFludd->mCurrentWater > 0 && unk378 != 0.0f) {
-		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
+	if (mFludd->getCurrentWater() > 0 && unk378 != 0.0f) {
+		TWaterEmitInfo* emitInfo = mFludd->getEmitInfo();
 		emitCommon(param_1, emitInfo);
 
-		f32 emitNum = mNum.get();
-		unk37C += emitNum;
+		mEmitNum += mNum.get();
 
-		s32 local37cInt = (s32)unk37C;
-		if ((s32)unk37C == 0) {
+		s32 emittedNum = (s32)mEmitNum;
+		if ((s32)mEmitNum == 0) {
 			return;
 		}
-		unk37C -= (f32)local37cInt;
+		mEmitNum -= (f32)emittedNum;
 
-		f32& refEmitPow  = emitInfo->mPow.value;
-		s32& refEmitFlag = emitInfo->mFlag.value;
-
-		emitInfo->mNum.set(local37cInt);
+		emitInfo->mNum.set(emittedNum);
 		emitInfo->mAttack = mAttack;
 
 		f32 emitPow  = mEmitPow.get();
@@ -352,9 +350,9 @@ void TNozzleBase::emit(int param_1)
 		emitInfo->mPow.set(emitPow * unk378 * emitCtrl
 		                   + emitPow * (1.0f - emitCtrl));
 
-		refEmitFlag = 0x40;
+		emitInfo->mFlag.set(0x40);
 		if (mFludd->hasFlag(TWaterGun::WATER_GUN_FLAG_UNK2)) {
-			refEmitFlag = (refEmitFlag | 0x80);
+			emitInfo->mFlag.set(emitInfo->mFlag.get() | 0x80);
 		}
 
 		s32 emittedWater = gpModelWaterManager->emitRequest(*emitInfo);
@@ -364,11 +362,11 @@ void TNozzleBase::emit(int param_1)
 			mFludd->depleteWater(emittedWater * mDecRate.get());
 
 			f32 emitReactionPow = mReactionPow.get();
-			f32 reactionPow     = refEmitPow * emitReactionPow;
+			f32 reactionPow     = mEmitPow.get() * emitReactionPow;
 
 			// TODO: This section doesn't quite match here nor in derived
 			// classes. There may be some weird inlining going on here?
-			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
+			s16 faceAngleY     = mFludd->getMario()->mFaceAngle.y;
 			f32 dirX           = emitInfo->mDir.get().x;
 			f32 dirZ           = emitInfo->mDir.get().z;
 			f32 cosAngle       = JMASCos(faceAngleY);
@@ -377,15 +375,15 @@ void TNozzleBase::emit(int param_1)
 
 			f32 velocity = reactionPow * directionScale;
 
-			mFludd->mMario->addVelocity(velocity);
+			mFludd->getMario()->addVelocity(velocity);
 
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
 
-			mFludd->mMario->mVel.x -= dirVec.x * reactionPow;
-			mFludd->mMario->mVel.z -= dirVec.z * reactionPow;
+			mFludd->getMario()->mVel.x -= dirVec.x * reactionPow;
+			mFludd->getMario()->mVel.z -= dirVec.z * reactionPow;
 
-			f32 velocityY = -dirVec.y * refEmitPow * mReactionY.get();
-			mFludd->mMario->mVel.y += velocityY;
+			f32 velocityY = -dirVec.y * mEmitPow.get() * mReactionY.get();
+			mFludd->getMario()->mVel.y += velocityY;
 		}
 	}
 }
@@ -394,28 +392,28 @@ void TNozzleBase::emit(int param_1)
 // properly
 void TNozzleBase::animation(int param_1)
 {
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 
 	if (param_1 != 2)
 		return;
 
 	if (mFludd->isSwitchingToSecondaryNozzle())
-		unk36C = 4;
+		mAnimationState = 4;
 
 	if (mFludd->isSwitchingToSprayNozzle())
-		unk36C = 3;
+		mAnimationState = 3;
 
-	switch (unk36C) {
+	switch (mAnimationState) {
 	case 0: {
 
 		// TODO: inline
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(4))
 			mactor->setBckFromIndex(4);
 
 		bool thing = false;
 
-		J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 
 		if (ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                     | J3DFrameCtrl::STATE_LOOPED_ONCE))
@@ -427,12 +425,12 @@ void TNozzleBase::animation(int param_1)
 		if (!thing)
 			return;
 
-		unk36C = 1;
+		mAnimationState = 1;
 		break;
 	}
 
 	case 1: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(2))
 			mactor->setBckFromIndex(2);
 
@@ -462,12 +460,12 @@ void TNozzleBase::animation(int param_1)
 		if (updateAnimation)
 			return;
 
-		unk36C = 2;
+		mAnimationState = 2;
 		break;
 	}
 
 	case 2: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(3))
 			mactor->setBckFromIndex(3);
 
@@ -495,12 +493,12 @@ void TNozzleBase::animation(int param_1)
 		}
 
 		if (updateAnimation == true)
-			unk36C = 0;
+			mAnimationState = 0;
 		break;
 	}
 
 	case 3: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(1))
 			mactor->setBckFromIndex(1);
 
@@ -513,7 +511,7 @@ void TNozzleBase::animation(int param_1)
 	}
 
 	case 4:
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(0))
 			mactor->setBckFromIndex(0);
 
@@ -523,7 +521,7 @@ void TNozzleBase::animation(int param_1)
 		ctrl->setRate(0.0f);
 
 		if (mFludd->mSwitchToSecondNozzleProgress >= 1.0f)
-			unk36C = 0;
+			mAnimationState = 0;
 
 		break;
 	}
@@ -531,11 +529,11 @@ void TNozzleBase::animation(int param_1)
 
 void TNozzleTrigger::init()
 {
-	unk384 = false;
-	unk385 = TNozzleTrigger::INACTIVE;
-	unk36C = 0;
-	unk386 = 0;
-	unk388 = 0.0f;
+	unk384          = false;
+	unk385          = TNozzleTrigger::INACTIVE;
+	mAnimationState = 0;
+	unk386          = 0;
+	unk388          = 0.0f;
 }
 
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
@@ -655,13 +653,13 @@ void TNozzleTrigger::emit(int param_1)
 
 		f32 pressure = triggerFill / insidePressureMax;
 
-		unk37C += pressure * (emitNum - emitNumMin) + emitNumMin;
+		mEmitNum += pressure * (emitNum - emitNumMin) + emitNumMin;
 
-		s32 local37cInt = (s32)unk37C;
-		if ((s32)unk37C == 0) {
+		s32 local37cInt = (s32)mEmitNum;
+		if ((s32)mEmitNum == 0) {
 			return;
 		}
-		unk37C -= (f32)local37cInt;
+		mEmitNum -= (f32)local37cInt;
 
 		emitInfo->mNum.set(local37cInt);
 
@@ -731,7 +729,7 @@ void TNozzleTrigger::animation(int param_1)
 	int bckSwapIn;
 	int emitMtxCount;
 
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 
 	switch (param_1) {
 	case 4:
@@ -763,20 +761,20 @@ void TNozzleTrigger::animation(int param_1)
 	}
 
 	if (mFludd->isSwitchingToSecondaryNozzle())
-		unk36C = 4;
+		mAnimationState = 4;
 
 	if (mFludd->isSwitchingToSprayNozzle())
-		unk36C = 3;
+		mAnimationState = 3;
 
-	switch (unk36C) {
+	switch (mAnimationState) {
 	case 0: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(bckIdleOut))
 			mactor->setBckFromIndex(bckIdleOut);
 
 		bool finished = false;
 
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
 			finished = true;
@@ -785,13 +783,13 @@ void TNozzleTrigger::animation(int param_1)
 			finished = true;
 
 		if (finished)
-			unk36C = 1;
+			mAnimationState = 1;
 
 		break;
 	}
 
 	case 1: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(bckIdle))
 			mactor->setBckFromIndex(bckIdle);
 
@@ -818,13 +816,13 @@ void TNozzleTrigger::animation(int param_1)
 		}
 
 		if (!updateAnimation)
-			unk36C = 2;
+			mAnimationState = 2;
 
 		break;
 	}
 
 	case 2: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(bckStart))
 			mactor->setBckFromIndex(bckStart);
 
@@ -851,13 +849,13 @@ void TNozzleTrigger::animation(int param_1)
 		}
 
 		if (updateAnimation == true)
-			unk36C = 0;
+			mAnimationState = 0;
 
 		break;
 	}
 
 	case 3: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(bckSwapOut))
 			mactor->setBckFromIndex(bckSwapOut);
 
@@ -870,7 +868,7 @@ void TNozzleTrigger::animation(int param_1)
 	}
 
 	case 4: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(bckSwapIn))
 			mactor->setBckFromIndex(bckSwapIn);
 
@@ -880,7 +878,7 @@ void TNozzleTrigger::animation(int param_1)
 		ctrl->setRate(0.0f);
 
 		if (mFludd->mSwitchToSecondNozzleProgress >= 1.0f)
-			unk36C = 0;
+			mAnimationState = 0;
 
 		break;
 	}
@@ -932,13 +930,13 @@ void TNozzleDeform::emit(int param_1)
 
 		f32 emitNum    = mNum.get();
 		f32 emitNumMin = mNumMin.get();
-		unk37C += localUnk378 * (emitNum - emitNumMin) + emitNumMin;
+		mEmitNum += localUnk378 * (emitNum - emitNumMin) + emitNumMin;
 
-		s32 local37cInt = (s32)unk37C;
-		if ((s32)unk37C == 0) {
+		s32 local37cInt = (s32)mEmitNum;
+		if ((s32)mEmitNum == 0) {
 			return;
 		}
-		unk37C -= (f32)local37cInt;
+		mEmitNum -= (f32)local37cInt;
 
 		emitInfo->mNum.set(local37cInt);
 
@@ -1043,36 +1041,36 @@ void TNozzleDeform::animation(int param)
 		return;
 
 	if (mFludd->isSwitchingToSecondaryNozzle()) {
-		if (unk36C != 4 && unk36C != 6) {
+		if (mAnimationState != 4 && mAnimationState != 6) {
 			if (mFludd->unk1CEC > 0.5f) {
-				unk36C = 4;
+				mAnimationState = 4;
 			} else {
-				unk36C = 6;
+				mAnimationState = 6;
 			}
 		}
 	} else {
 		if (mFludd->isSwitchingToSprayNozzle()) {
-			if (unk36C != 5 && unk36C != 7) {
+			if (mAnimationState != 5 && mAnimationState != 7) {
 				if (mFludd->unk1CEC > 0.5f) {
-					unk36C = 5;
+					mAnimationState = 5;
 				} else {
-					unk36C = 7;
+					mAnimationState = 7;
 				}
 			}
 		} else {
 			if (mFludd->unk1CEC > 0.0f) {
-				unk36C = 0;
-			} else if (unk36C == 0) {
-				unk36C = 2;
+				mAnimationState = 0;
+			} else if (mAnimationState == 0) {
+				mAnimationState = 2;
 			}
 		}
 	}
 
-	J3DFrameCtrl* ctrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 
-	switch (unk36C) {
+	switch (mAnimationState) {
 	case 0: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(4))
 			mactor->setBckFromIndex(4);
 
@@ -1082,12 +1080,12 @@ void TNozzleDeform::animation(int param)
 	case 1:
 		break;
 	case 2: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(7))
 			mactor->setBckFromIndex(7);
 
 		bool finished           = 0;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE)) {
 			finished = 1;
@@ -1098,12 +1096,12 @@ void TNozzleDeform::animation(int param)
 		}
 
 		if (finished) {
-			unk36C = 3;
+			mAnimationState = 3;
 		}
 		break;
 	}
 	case 3: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(5))
 			mactor->setBckFromIndex(5);
 
@@ -1126,12 +1124,12 @@ void TNozzleDeform::animation(int param)
 		}
 
 		if (!updateAnimation)
-			unk36C = 8;
+			mAnimationState = 8;
 
 		break;
 	}
 	case 8: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(6))
 			mactor->setBckFromIndex(6);
 
@@ -1152,10 +1150,10 @@ void TNozzleDeform::animation(int param)
 		}
 
 		if (updateAnimation == true)
-			unk36C = 2;
+			mAnimationState = 2;
 
 		bool finished           = false;
-		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
 			finished = true;
@@ -1164,12 +1162,12 @@ void TNozzleDeform::animation(int param)
 			finished = true;
 
 		if (finished && !(mFludd->unk1CEC == 0.0f ? true : false))
-			unk36C = 0;
+			mAnimationState = 0;
 
 		break;
 	}
 	case 4: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(1))
 			mactor->setBckFromIndex(1);
 
@@ -1179,7 +1177,7 @@ void TNozzleDeform::animation(int param)
 		break;
 	}
 	case 5: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(0))
 			mactor->setBckFromIndex(0);
 
@@ -1187,13 +1185,13 @@ void TNozzleDeform::animation(int param)
 		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		if (mFludd->mSwitchToSecondNozzleProgress <= 0.0f) {
-			unk36C          = 0;
+			mAnimationState = 0;
 			mFludd->unk1CEC = 0.0f;
 		}
 		break;
 	}
 	case 6: {
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(3))
 			mactor->setBckFromIndex(3);
 
@@ -1203,7 +1201,7 @@ void TNozzleDeform::animation(int param)
 		break;
 	}
 	case 7:
-		MActor* mactor = unk380;
+		MActor* mactor = mMActor;
 		if (!mactor->checkCurBckFromIndex(2))
 			mactor->setBckFromIndex(2);
 
@@ -1211,7 +1209,7 @@ void TNozzleDeform::animation(int param)
 		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		if (mFludd->mSwitchToSecondNozzleProgress <= 0.0f) {
-			unk36C          = 2;
+			mAnimationState = 2;
 			mFludd->unk1CEC = 0.0f;
 		}
 		break;
@@ -1339,7 +1337,7 @@ void TWaterGun::init()
 
 			MActorAnmData* nozzleData = new MActorAnmData();
 			nozzleData->init(nozzleBmdData.getPath(i), nullptr);
-			mNozzleList[i]->unk380 = new MActor(nozzleData);
+			mNozzleList[i]->mMActor = new MActor(nozzleData);
 
 			void* nozzleModelData
 			    = JKRFileLoader::getGlbResource(nozzleBmdData.getBmdPath(i));
@@ -1348,10 +1346,10 @@ void TWaterGun::init()
 			        nozzleModelData,
 			        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 			    0, 1);
-			mNozzleList[i]->unk380->setModel(nozzleModel, 0);
+			mNozzleList[i]->mMActor->setModel(nozzleModel, 0);
 
 			J3DModelData* modelData
-			    = mNozzleList[i]->unk380->getModel()->getModelData();
+			    = mNozzleList[i]->mMActor->getModel()->getModelData();
 
 			SMS_ChangeTextureAll(modelData, "H_watergun_main_dummy",
 			                     *mFluddModel->getModel()
@@ -1359,7 +1357,7 @@ void TWaterGun::init()
 			                          ->getTexture()
 			                          ->getResTIMG(1));
 
-			mNozzleList[i]->unk380->initDL();
+			mNozzleList[i]->mMActor->initDL();
 
 			// Definitely inline potential
 			if (nozzleBmdData.getFlags(i, 0) != 4) {
@@ -1378,55 +1376,55 @@ void TWaterGun::init()
 				nozzleBmdData.setJointIndex(i, 2, jointIdx);
 			}
 		} else {
-			mNozzleList[i]->unk380 = nullptr;
+			mNozzleList[i]->mMActor = nullptr;
 		}
 	}
 
 	mNozzleList[Spray]
-	    ->unk380->getModel()
+	    ->mMActor->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Spray]
-		                          ->unk380->getModel()
+		                          ->mMActor->getModel()
 		                          ->getModelData()
 		                          ->getJointName()
 		                          ->getIndex("chn_muzzle_1"))
 	    ->setCallBack(&NozzleCtrl);
 
 	mNozzleList[Hover]
-	    ->unk380->getModel()
+	    ->mMActor->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Hover]
-		                          ->unk380->getModel()
+		                          ->mMActor->getModel()
 		                          ->getModelData()
 		                          ->getJointName()
 		                          ->getIndex("jnt_nozzle_L"))
 	    ->setCallBack(&WaterGunDivingCtrlL);
 
 	mNozzleList[Hover]
-	    ->unk380->getModel()
+	    ->mMActor->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Hover]
-		                          ->unk380->getModel()
+		                          ->mMActor->getModel()
 		                          ->getModelData()
 		                          ->getJointName()
 		                          ->getIndex("jnt_nozzle_R"))
 	    ->setCallBack(&WaterGunDivingCtrlR);
 
 	mNozzleList[Turbo]
-	    ->unk380->getModel()
+	    ->mMActor->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Turbo]
-		                          ->unk380->getModel()
+		                          ->mMActor->getModel()
 		                          ->getModelData()
 		                          ->getJointName()
 		                          ->getIndex("chn_back_nozzle_prop"))
 	    ->setCallBack(&RotateCtrl);
 
 	mNozzleList[Turbo]
-	    ->unk380->getModel()
+	    ->mMActor->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Turbo]
-		                          ->unk380->getModel()
+		                          ->mMActor->getModel()
 		                          ->getModelData()
 		                          ->getJointName()
 		                          ->getIndex("jnt_back_nozzle_neck"))
@@ -1682,7 +1680,7 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 	mFluddModel->perform(cue, graphics);
 
 	if ((cue & CUE_CALC_ANIM) != 0) {
-		MActor* p2 = getCurrentNozzle()->unk380;
+		MActor* p2 = getCurrentNozzle()->getMActor();
 		if (p2 != nullptr) {
 			p2->getModel()->setBaseTRMtx(getModel()->getAnmMtx(unk1CD8));
 		}
@@ -1698,8 +1696,8 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (getCurrentNozzle()->unk380) {
-		getCurrentNozzle()->unk380->perform(cue, graphics);
+	if (getCurrentNozzle()->getMActor()) {
+		getCurrentNozzle()->getMActor()->perform(cue, graphics);
 	}
 }
 
