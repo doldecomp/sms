@@ -2,8 +2,11 @@
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleBase.hpp>
 #include <Player/NozzleDeform.hpp>
+// #include <Player/NozzleButton.hpp>
+// #include <Player/NozzleTurbo.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/Mario.hpp>
+#include <Player/MarioEffect.hpp>
 
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DSys.hpp>
@@ -33,6 +36,9 @@
 // TODO: these come from some header...
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+// rogue include needed for matching rodata: zero/unit Vec literals
+#include <Map/MapCollisionEntry.hpp>
 
 TNozzleBmdData nozzleBmdData = {
 	{
@@ -176,20 +182,63 @@ static BOOL WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 	return true;
 }
 
-// Not sure why this get's inlined aggressively
-#pragma dont_inline on
-TNozzleBase::TNozzleBase(const char* name, const char* prm, TWaterGun* fludd)
-    : mEmitParams(prm)
+TNozzleBase::TNozzleBase(const char* name, const char* prm_path,
+                         TWaterGun* fludd)
+    : TParams(prm_path)
+    , PARAM_INIT(mRocketType, 0)
+    , PARAM_INIT(mNum, 1.0f)
+    , PARAM_INIT(mAttack, 1)
+    , PARAM_INIT(mDirTremble, 0.0099999998)
+    , PARAM_INIT(mEmitPow, 40.0)
+    , PARAM_INIT(mEmitCtrl, 1.0f)
+    , PARAM_INIT(mPowTremble, 1.0f)
+    , PARAM_INIT(mSize, 40.0f)
+    , PARAM_INIT(mSizeTremble, 16.0f)
+    , PARAM_INIT(mAmountMax, 0x834)
+    , PARAM_INIT(mReactionPow, 0.0f)
+    , PARAM_INIT(mReactionY, 0.0f)
+    , PARAM_INIT(mDecRate, 0)
+    , PARAM_INIT(mTriggerRate, 0x100)
+    , PARAM_INIT(mDamageLoss, 0xfa)
+    , PARAM_INIT(mSuckRate, 0.1f)
+    , PARAM_INIT(mHitRadius, 50.0f)
+    , PARAM_INIT(mHitHeight, 80.0f)
+    , PARAM_INIT(mLAngleBase, 0x1000)
+    , PARAM_INIT(mLAngleNormal, 12000)
+    , PARAM_INIT(mLAngleSquat, 12000)
+    , PARAM_INIT(mLAngleMin, -0x2000)
+    , PARAM_INIT(mLAngleMax, 0x2000)
+    , PARAM_INIT(mLAngleChase, 0.1f)
+    , PARAM_INIT(mSizeMinPressure, 0.0f)
+    , PARAM_INIT(mSizeMaxPressure, 1.0f)
+    , PARAM_INIT(mNumMin, 1.0f)
+    , PARAM_INIT(mAttackMin, 1)
+    , PARAM_INIT(mDirTrembleMin, 0.0099999998)
+    , PARAM_INIT(mEmitPowMin, 40.0f)
+    , PARAM_INIT(mSizeMin, 40.0f)
+    , PARAM_INIT(mMotorPowMin, 5.0f)
+    , PARAM_INIT(mMotorPowMax, 25.0f)
+    , PARAM_INIT(mReactionPowMin, 0.0f)
+    , PARAM_INIT(mInsidePressureDec, 100.0f)
+    , PARAM_INIT(mInsidePressureMax, 4500.0f)
+    , PARAM_INIT(mTriggerTime, 1)
+    , PARAM_INIT(mType, 0)
+    , PARAM_INIT(mSideAngleMaxSide, 0x4000)
+    , PARAM_INIT(mSideAngleMaxFront, 0x4000)
+    , PARAM_INIT(mSideAngleMaxBack, 0x2000)
+    , PARAM_INIT(mRButtonMult, 10000.0)
+    , PARAM_INIT(mEmitPowScale, 10.0f)
     , mFludd(fludd)
 {
-	mEmitParams.load(mEmitParams.mPrmPath);
+	load(mPrmPath);
+
+	// Possibly TNozzleBase::init(), but feels fake
 	unk36C = 2;
 	unk36E = 0;
 	unk372 = 0;
 	unk378 = 0.0f;
 	unk37C = 0.0f;
 }
-#pragma dont_inline off
 
 void TNozzleBase::init()
 {
@@ -214,21 +263,21 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 		// TODO: Wrong reguster used, using r3 instead of r4
 		angle = unk36E
 		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]
-		                * mEmitParams.mRButtonMult.get());
+		                * mRButtonMult.get());
 	} else {
-		angle = -mEmitParams.mLAngleBase.get();
+		angle = -mLAngleBase.get();
 	}
 
-	if (angle < mEmitParams.mLAngleMin.get()) {
-		angle = mEmitParams.mLAngleMin.get();
+	if (angle < mLAngleMin.get()) {
+		angle = mLAngleMin.get();
 	}
 
-	if (angle > mEmitParams.mLAngleMax.get()) {
-		angle = mEmitParams.mLAngleMax.get();
+	if (angle > mLAngleMax.get()) {
+		angle = mLAngleMax.get();
 	}
 
 	f32 diff = angle - unk36E;
-	unk36E += diff * mEmitParams.mLAngleChase.get();
+	unk36E += diff * mLAngleChase.get();
 }
 
 void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
@@ -241,7 +290,7 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	if (var1 > unk372) {
 		unk378 = (var1 - unk372) * 0.000015258789f;
 		unk374 = unk378;
-		unk372 += (u16)mEmitParams.mTriggerRate.get();
+		unk372 += (u16)mTriggerRate.get();
 		if (var1 < unk372) {
 			unk372 = var1;
 		}
@@ -255,8 +304,7 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 {
 	param_2->mAlive.set(
-	    gpModelWaterManager->mWaterParticleTypes[mEmitParams.mType.get()]
-	        ->mAlive.get());
+	    gpModelWaterManager->mWaterParticleTypes[mType.get()]->mAlive.get());
 
 	JGeometry::TVec3<f32> pos;
 	JGeometry::TVec3<f32> dir;
@@ -269,13 +317,13 @@ void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 	param_2->mV.value   = speed;
 	param_2->mDir.value = dir;
 
-	param_2->mDirTremble  = mEmitParams.mDirTremble;
-	param_2->mPowTremble  = mEmitParams.mPowTremble;
-	param_2->mSize        = mEmitParams.mSize;
-	param_2->mSizeTremble = mEmitParams.mSizeTremble;
-	param_2->mType        = mEmitParams.mType;
-	param_2->mHitRadius   = mEmitParams.mHitRadius;
-	param_2->mHitHeight   = mEmitParams.mHitHeight;
+	param_2->mDirTremble  = mDirTremble;
+	param_2->mPowTremble  = mPowTremble;
+	param_2->mSize        = mSize;
+	param_2->mSizeTremble = mSizeTremble;
+	param_2->mType        = mType;
+	param_2->mHitRadius   = mHitRadius;
+	param_2->mHitHeight   = mHitHeight;
 }
 
 void TNozzleBase::emit(int param_1)
@@ -284,7 +332,7 @@ void TNozzleBase::emit(int param_1)
 		TWaterEmitInfo* emitInfo = mFludd->mEmitInfo;
 		emitCommon(param_1, emitInfo);
 
-		f32 emitNum = mEmitParams.mNum.get();
+		f32 emitNum = mNum.get();
 		unk37C += emitNum;
 
 		s32 local37cInt = (s32)unk37C;
@@ -297,10 +345,10 @@ void TNozzleBase::emit(int param_1)
 		s32& refEmitFlag = emitInfo->mFlag.value;
 
 		emitInfo->mNum.set(local37cInt);
-		emitInfo->mAttack = mEmitParams.mAttack;
+		emitInfo->mAttack = mAttack;
 
-		f32 emitPow  = mEmitParams.mEmitPow.get();
-		f32 emitCtrl = mEmitParams.mEmitCtrl.get();
+		f32 emitPow  = mEmitPow.get();
+		f32 emitCtrl = mEmitCtrl.get();
 		emitInfo->mPow.set(emitPow * unk378 * emitCtrl
 		                   + emitPow * (1.0f - emitCtrl));
 
@@ -313,9 +361,9 @@ void TNozzleBase::emit(int param_1)
 
 		mFludd->updateUnk1C88(emittedWater);
 		if (emittedWater != 0) {
-			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
+			mFludd->depleteWater(emittedWater * mDecRate.get());
 
-			f32 emitReactionPow = mEmitParams.mReactionPow.get();
+			f32 emitReactionPow = mReactionPow.get();
 			f32 reactionPow     = refEmitPow * emitReactionPow;
 
 			// TODO: This section doesn't quite match here nor in derived
@@ -336,8 +384,7 @@ void TNozzleBase::emit(int param_1)
 			mFludd->mMario->mVel.x -= dirVec.x * reactionPow;
 			mFludd->mMario->mVel.z -= dirVec.z * reactionPow;
 
-			f32 velocityY
-			    = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
+			f32 velocityY = -dirVec.y * refEmitPow * mReactionY.get();
 			mFludd->mMario->mVel.y += velocityY;
 		}
 	}
@@ -532,7 +579,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 			SMSGetMSound()->startSoundActor(soundId, mFludd->mEmitPos[0], 0,
 			                                nullptr, 0, 4);
 		}
-		unk386 = mEmitParams.mTriggerTime.get();
+		unk386 = mTriggerTime.get();
 	}
 
 	bool canSpray = true;
@@ -542,7 +589,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		canSpray = false;
 
 	if (mFludd->mMario->checkFlag(MARIO_FLAG_IN_ANY_WATER) == true
-	    && mFludd->mCurrentWater < mEmitParams.mAmountMax.get())
+	    && mFludd->mCurrentWater < mAmountMax.get())
 		canSpray = false;
 
 	if (canSpray == true) {
@@ -560,16 +607,16 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 			    MSD_SE_SY_NEWP_AIR_TAME, mFludd->mEmitPos[0], 0, nullptr, 0, 4);
 		}
 	}
-	unk388 -= mEmitParams.mInsidePressureDec.get();
+	unk388 -= mInsidePressureDec.get();
 	if (unk388 < 0.0f) {
 		unk388 = 0.0f;
 	}
 
-	if (unk388 > mEmitParams.mInsidePressureMax.get()) {
-		unk388 = mEmitParams.mInsidePressureMax.get();
+	if (unk388 > mInsidePressureMax.get()) {
+		unk388 = mInsidePressureMax.get();
 		if (!unk384 && unk385 == TNozzleTrigger::INACTIVE) {
 			unk385      = TNozzleTrigger::ACTIVE;
-			unk386      = mEmitParams.mTriggerTime.get();
+			unk386      = mTriggerTime.get();
 			u32 soundId = unk38C;
 			if (soundId != 0xffffffff) {
 				SMSGetMSound()->startSoundActor(soundId, &mFludd->mEmitPos[0],
@@ -602,9 +649,9 @@ void TNozzleTrigger::emit(int param_1)
 		emitCommon(param_1, emitInfo);
 
 		f32 triggerFill       = unk388;
-		f32 insidePressureMax = mEmitParams.mInsidePressureMax.get();
-		f32 emitNumMin        = mEmitParams.mNumMin.get();
-		f32 emitNum           = mEmitParams.mNum.get();
+		f32 insidePressureMax = mInsidePressureMax.get();
+		f32 emitNumMin        = mNumMin.get();
+		f32 emitNum           = mNum.get();
 
 		f32 pressure = triggerFill / insidePressureMax;
 
@@ -621,13 +668,13 @@ void TNozzleTrigger::emit(int param_1)
 		f32& refEmitPow  = emitInfo->mPow.value;
 		s32& refEmitFlag = emitInfo->mFlag.value;
 
-		s16 attackMin = mEmitParams.mAttackMin.get();
-		s16 attack    = mEmitParams.mAttack.get();
+		s16 attackMin = mAttackMin.get();
+		s16 attack    = mAttack.get();
 		emitInfo->mAttack.set(pressure * (f32)(attack - attackMin)
 		                      + (f32)attackMin);
 
-		f32 emitPowMin = mEmitParams.mEmitPowMin.get();
-		f32 emitPow    = mEmitParams.mEmitPow.get();
+		f32 emitPowMin = mEmitPowMin.get();
+		f32 emitPow    = mEmitPow.get();
 		emitInfo->mPow.set(pressure * (emitPow - emitPowMin) + emitPowMin);
 
 		refEmitFlag = 0x40;
@@ -639,15 +686,15 @@ void TNozzleTrigger::emit(int param_1)
 		mFludd->updateUnk1C88(emittedWater);
 
 		if (emittedWater != 0) {
-			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
+			mFludd->depleteWater(emittedWater * mDecRate.get());
 
 			if ((mFludd->mCurrentNozzle == TWaterGun::Hover)
 			    && ((SMSGetMarDirector()->mMoveTickCount & 0x7u) == 0u)) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
 
-			f32 reactionPowMin = mEmitParams.mReactionPowMin.get();
-			f32 reactionPow    = mEmitParams.mReactionPow.get();
+			f32 reactionPowMin = mReactionPowMin.get();
+			f32 reactionPow    = mReactionPow.get();
 
 			f32 reaction
 			    = pressure * (reactionPow - reactionPowMin) + reactionPowMin;
@@ -666,7 +713,7 @@ void TNozzleTrigger::emit(int param_1)
 			mFludd->mMario->addVelocity(velocity);
 
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
-			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
+			f32 accelY = -dirVec.y * refEmitPow * mReactionY.get();
 			mFludd->mMario->mVel.y += accelY;
 		}
 	}
@@ -857,7 +904,7 @@ void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 
 	TNozzleBase::movement(controllerWork);
 
-	unk378 *= mEmitParams.mEmitPowScale.get();
+	unk378 *= mEmitPowScale.get();
 
 	if (unk378 > 1.0f) {
 		unk378 = 1.0f;
@@ -883,8 +930,8 @@ void TNozzleDeform::emit(int param_1)
 
 		f32 localUnk378 = unk378;
 
-		f32 emitNum    = mEmitParams.mNum.get();
-		f32 emitNumMin = mEmitParams.mNumMin.get();
+		f32 emitNum    = mNum.get();
+		f32 emitNumMin = mNumMin.get();
 		unk37C += localUnk378 * (emitNum - emitNumMin) + emitNumMin;
 
 		s32 local37cInt = (s32)unk37C;
@@ -898,18 +945,18 @@ void TNozzleDeform::emit(int param_1)
 		f32& refEmitPow  = emitInfo->mPow.value;
 		s32& refEmitFlag = emitInfo->mFlag.value;
 
-		s16 attackMin = mEmitParams.mAttackMin.get();
-		s16 attack    = mEmitParams.mAttack.get();
+		s16 attackMin = mAttackMin.get();
+		s16 attack    = mAttack.get();
 		emitInfo->mAttack.set(localUnk378 * (f32)(attack - attackMin)
 		                      + (f32)attackMin);
 
-		f32 dirTrembleMin = mEmitParams.mDirTrembleMin.get();
-		f32 dirTremble    = mEmitParams.mDirTremble.get();
+		f32 dirTrembleMin = mDirTrembleMin.get();
+		f32 dirTremble    = mDirTremble.get();
 		emitInfo->mDirTremble.set(localUnk378 * (dirTremble - dirTrembleMin)
 		                          + dirTrembleMin);
 
-		f32 emitPowMin = mEmitParams.mEmitPowMin.get();
-		f32 emitPow    = mEmitParams.mEmitPow.get();
+		f32 emitPowMin = mEmitPowMin.get();
+		f32 emitPow    = mEmitPow.get();
 		emitInfo->mPow.set(localUnk378 * (emitPow - emitPowMin) + emitPowMin);
 
 		refEmitFlag = 0x40;
@@ -917,10 +964,10 @@ void TNozzleDeform::emit(int param_1)
 			refEmitFlag = (refEmitFlag | 0x80);
 		}
 
-		f32 sizeMinPressure = mEmitParams.mSizeMinPressure.get();
-		f32 sizeMin         = mEmitParams.mSizeMin.get();
-		f32 size            = mEmitParams.mSize.get();
-		f32 sizeMaxPressure = mEmitParams.mSizeMaxPressure.get();
+		f32 sizeMinPressure = mSizeMinPressure.get();
+		f32 sizeMin         = mSizeMin.get();
+		f32 size            = mSize.get();
+		f32 sizeMaxPressure = mSizeMaxPressure.get();
 
 		f32 emitSizeLerp;
 		if (localUnk378 < sizeMinPressure) {
@@ -941,14 +988,14 @@ void TNozzleDeform::emit(int param_1)
 		mFludd->updateUnk1C88(emittedWater);
 
 		if (emittedWater != 0) {
-			mFludd->depleteWater(emittedWater * mEmitParams.mDecRate.get());
+			mFludd->depleteWater(emittedWater * mDecRate.get());
 
 			if ((SMSGetMarDirector()->mMoveTickCount & 0x7u) == 0u) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
 
-			f32 reactionPowMin = mEmitParams.mReactionPowMin.get();
-			f32 reactionPow    = mEmitParams.mReactionPow.get();
+			f32 reactionPowMin = mReactionPowMin.get();
+			f32 reactionPow    = mReactionPow.get();
 
 			f32 reaction
 			    = localUnk378 * (reactionPow - reactionPowMin) + reactionPowMin;
@@ -967,7 +1014,7 @@ void TNozzleDeform::emit(int param_1)
 			mFludd->mMario->addVelocity(velocity);
 
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
-			f32 accelY = -dirVec.y * refEmitPow * mEmitParams.mReactionY.get();
+			f32 accelY = -dirVec.y * refEmitPow * mReactionY.get();
 			mFludd->mMario->mVel.y += accelY;
 		}
 	}
@@ -1206,16 +1253,16 @@ void TWaterGun::init()
 	mNozzleRocket.unk38C       = MSD_SE_PO_ROCKET_TRIGGER;
 	mNozzleTurbo.unk38C        = MSD_SE_PO_SNIPER_TRIGGER;
 	mNozzleDeform.mBomb.unk38C = MSD_SE_PO_SHOTGUN_TRIGGER;
-	mCurrentWater = mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
-	mIsEmitWater  = false;
-	unk1C88       = 0.0f;
-	mCurrentPressure              = 0;
-	mPreviousPressure             = 0;
-	unk1CEC                       = 1.0f;
-	unk1CF0                       = 0.1f;
-	unk1CF4                       = 0.0049999999f;
-	unk1CF8                       = 0x168;
-	unk1CFA                       = 0;
+	mCurrentWater              = mNozzleList[mCurrentNozzle]->mAmountMax.get();
+	mIsEmitWater               = false;
+	unk1C88                    = 0.0f;
+	mCurrentPressure           = 0;
+	mPreviousPressure          = 0;
+	unk1CEC                    = 1.0f;
+	unk1CF0                    = 0.1f;
+	unk1CF4                    = 0.0049999999f;
+	unk1CF8                    = 0x168;
+	unk1CFA                    = 0;
 	mSwitchToSecondNozzleProgress = 0.0f;
 	mSwitchToSecondNozzleSpeed    = 0.0f;
 	unk1D04                       = 0;
@@ -1441,8 +1488,8 @@ MtxPtr TWaterGun::getNozzleMtx()
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
-	f32 usedWater = (f32)mCurrentWater
-	                / mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
+	f32 usedWater
+	    = (f32)mCurrentWater / mNozzleList[mCurrentNozzle]->mAmountMax.get();
 	if (nozzleType == Spray) {
 		if (animate == true) {
 			mSwitchToSecondNozzleProgress = 0.0f;
@@ -1459,8 +1506,7 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 		mCurrentWater = mMario->mYoshi->unkD4;
 	} else {
 		mCurrentWater
-		    = usedWater
-		      * mNozzleList[mCurrentNozzle]->mEmitParams.mAmountMax.get();
+		    = usedWater * mNozzleList[mCurrentNozzle]->mAmountMax.get();
 	}
 }
 
@@ -1495,11 +1541,11 @@ void TWaterGun::movement()
 
 	// Yoshi nozzle
 	if (mCurrentNozzle == 3) {
-		mCurrentWater = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+		mCurrentWater = getCurrentNozzle()->mAmountMax.get();
 	}
 
 	if (SMS_isDivingMap()) {
-		mCurrentWater = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+		mCurrentWater = getCurrentNozzle()->mAmountMax.get();
 	}
 
 	if (mCurrentNozzle == 3) {
@@ -1667,11 +1713,11 @@ void TWaterGun::setAmountToRate(f32 rate)
 	// volatile u32 unused2[7]; // TODO: possibly inlined function
 	if (mCurrentNozzle == 3) {
 		TNozzleBase* currentNozzle = getCurrentNozzle();
-		s32 amountMax = currentNozzle->mEmitParams.mAmountMax.get();
-		mCurrentWater = amountMax;
+		s32 amountMax              = currentNozzle->mAmountMax.get();
+		mCurrentWater              = amountMax;
 	} else {
 		TNozzleBase* currentNozzle = getCurrentNozzle();
-		mCurrentWater = rate * currentNozzle->mEmitParams.mAmountMax.get();
+		mCurrentWater              = rate * currentNozzle->mAmountMax.get();
 	}
 }
 
@@ -1704,7 +1750,7 @@ f32 TWaterGun::getPressureMax()
 	// volatile u32 unused2[6];
 
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
-		return getCurrentNozzle()->mEmitParams.mInsidePressureMax.get();
+		return getCurrentNozzle()->mInsidePressureMax.get();
 	}
 
 	return 0.0f;
@@ -1845,13 +1891,12 @@ BOOL TWaterGun::suck()
 			mCurrentWater += suckRate;
 
 			s32 currentWater = mCurrentWater;
-			s32 maxWater     = getCurrentNozzle()->mEmitParams.mAmountMax.get();
+			s32 maxWater     = getCurrentNozzle()->mAmountMax.get();
 			if (currentWater > maxWater) {
 				mCurrentWater = maxWater;
 			}
 
-			if (!(mCurrentWater
-			      >= getCurrentNozzle()->mEmitParams.mAmountMax.get())) {
+			if (!(mCurrentWater >= getCurrentNozzle()->mAmountMax.get())) {
 				SMSGetMSound()->startSoundActor(
 				    MSD_SE_PO_SUCK_WATER_B, &getEmitPos0(), 0, nullptr, 0, 4);
 			}
@@ -1866,7 +1911,7 @@ BOOL TWaterGun::damage()
 	if (hasWater()) {
 		TNozzleBase* nozzle = getCurrentNozzle();
 
-		mCurrentWater -= nozzle->mEmitParams.mDamageLoss.value;
+		mCurrentWater -= nozzle->mDamageLoss.value;
 
 		if (mCurrentWater < 0) {
 			mCurrentWater = 0;

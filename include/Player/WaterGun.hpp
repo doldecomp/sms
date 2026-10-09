@@ -164,16 +164,11 @@ public:
 	// Fabricated
 	s32 getSuckRate()
 	{
-		return mCurrentPressure
-		       * getCurrentNozzle()->mEmitParams.mSuckRate.get();
+		return mCurrentPressure * getCurrentNozzle()->mSuckRate.get();
 	}
 
 	// Fabricated
 	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
-	const TNozzleBase::TEmitParams& getEmitParams() const
-	{
-		return getCurrentNozzle()->mEmitParams;
-	}
 
 	// Fabricated
 	TNozzleBase* getNozzle(u8 nozzle_index) const
@@ -215,19 +210,16 @@ public:
 		mIsEmitWater = emittedWater;
 		// TODO: one more inline for getting emit params
 		// rather than separate getMaxWater, getDecRate, etc. functions?
-		s16 decRate = (((const TWaterGun*)this)->getCurrentNozzle())
-		                  ->mEmitParams.mDecRate.get();
+		s16 decRate
+		    = (((const TWaterGun*)this)->getCurrentNozzle())->mDecRate.get();
 
 		unk1C88 += 10.0f
 		           * ((f32)emittedWater * (f32)decRate
-		              / mNozzleList[0]->mEmitParams.mAmountMax.get());
+		              / mNozzleList[0]->mAmountMax.get());
 	}
 
 	// Fabricated
-	s32 getMaxWater() const
-	{
-		return getCurrentNozzle()->mEmitParams.mAmountMax.get();
-	}
+	s32 getMaxWater() const { return getCurrentNozzle()->mAmountMax.get(); }
 
 	// TODO: get rid of this -- it's real name is isEmitting() and it
 	// wasn't stripped in MarioRun.cpp
@@ -266,7 +258,7 @@ public:
 	// Fabricated
 	bool checkCurrentNozzleRocketType(u32 pType) const
 	{
-		return getCurrentNozzle()->mEmitParams.mRocketType.get() == pType;
+		return getCurrentNozzle()->mRocketType.get() == pType;
 	}
 
 	// Fabricated
