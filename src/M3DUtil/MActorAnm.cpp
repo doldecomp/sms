@@ -107,7 +107,7 @@ void MActorAnmBck::updateIn()
 		joint->setMtxCalc(unk30);
 		break;
 	case MACTOR_MTX_CALC_MOTION_BLEND:
-		joint->setMtxCalc(unk34->unk8);
+		joint->setMtxCalc(unk34->getMtxCalc());
 		unk34->execSimpleMotionBlend();
 		break;
 	case MACTOR_MTX_CALC_USER:

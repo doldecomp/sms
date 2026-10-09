@@ -20,7 +20,9 @@ public:
 	f32 getMotionBlendRatio() const;
 	void execSimpleMotionBlend();
 
-public:
+	M3UMtxCalcSIAnmBlendQuat* getMtxCalc() const { return unk8; }
+
+private:
 	/* 0x0 */ u8 unk0;
 	/* 0x4 */ f32 unk4;
 	/* 0x8 */ M3UMtxCalcSIAnmBlendQuat* unk8;

@@ -6,7 +6,6 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.hpp>
 #include <JSystem/JGadget/std-list.hpp>
-#include <JSystem/JGeometry/JGVec2.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorUtil.hpp>
@@ -24,6 +23,7 @@
 #include <System/FlagManager.hpp>
 #include <System/Particles.hpp>
 #include <THPPlayer/THPPlayer.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -291,6 +291,16 @@ BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)
 	return FALSE;
 }
 
+// fabricated: the bool flag and its frame slot suggest an inline helper,
+// but its real name and home are unknown
+static inline bool isMarioJumping()
+{
+	bool ret = false;
+	if (SMS_IsMarioStatusTypeJumping())
+		ret = true;
+	return ret;
+}
+
 void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (!(unk70 & 1))
@@ -301,21 +311,21 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (textureSet != nullptr) {
 			J3DTexture* textures
 			    = unk78->getModel()->getModelData()->getTexture();
-			ResTIMG* image = textures->getResTIMG(0);
-			image->imageDataOffset
-			    = (uintptr_t)textureSet->ytexture - (uintptr_t)image;
-			image = textures->getResTIMG(1);
-			image->imageDataOffset
-			    = (uintptr_t)textureSet->utexture - (uintptr_t)image;
-			image = textures->getResTIMG(2);
-			image->imageDataOffset
-			    = (uintptr_t)textureSet->vtexture - (uintptr_t)image;
+			ResTIMG* imageY = textures->getResTIMG(0);
+			imageY->imageDataOffset
+			    = (uintptr_t)textureSet->ytexture - (uintptr_t)imageY;
+			ResTIMG* imageU = textures->getResTIMG(1);
+			imageU->imageDataOffset
+			    = (uintptr_t)textureSet->utexture - (uintptr_t)imageU;
+			ResTIMG* imageV = textures->getResTIMG(2);
+			imageV->imageDataOffset
+			    = (uintptr_t)textureSet->vtexture - (uintptr_t)imageV;
 		}
 	}
 	unk78->perform(param_1, param_2);
 	if (param_1 & 1) {
 		if (!(unk70 & 2)) {
-			if (SMS_DistanceFromMario(mPosition) < 1000.0f) {
+			if (SMS_DistanceFromMarioVec(mPosition).length() < 1000.0f) {
 				unkD0 += 0.01f;
 				if (unkD0 > 1.0f) {
 					unkD0 = 1.0f;
@@ -334,21 +344,19 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 		    && localPos.y < unk10C && unk110 < localPos.z
 		    && localPos.z < unk114) {
 			if (unkCA > 0) {
-				if (SMS_IsMarioStatusTypeJumping()
+				if (isMarioJumping() == true
 				    && SMS_GetMarioLiveActor()->receiveMessage(this,
 				                                               HIT_MESSAGE_TAKE)
 				           == TRUE)
 					mHeldObject = SMS_GetMarioLiveActor();
 			} else {
-				JGeometry::TVec2<f32> direction(SMS_GetMarioX() - mPosition.x,
-				                                SMS_GetMarioZ() - mPosition.z);
-				f32 distance = direction.length();
+				f32 dx       = SMS_GetMarioX() - mPosition.x;
+				f32 dz       = SMS_GetMarioZ() - mPosition.z;
+				f32 distance = std::sqrtf(dx * dx + dz * dz);
 				if (distance < unk100) {
-					f32 nx                    = direction.x / distance;
-					f32 nz                    = direction.y / distance;
 					JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-					pos.x += 10.0f * nx;
-					pos.z += 10.0f * nz;
+					pos.x += 10.0f * (dx / distance);
+					pos.z += 10.0f * (dz / distance);
 					SMS_MarioMoveRequest(pos);
 				}
 			}
@@ -400,10 +408,9 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 		if (unkD0 < 0.0f)
 			unkD0 = 0.0f;
 
-		J3DTevBlock* tevBlock = unk78->getModel()
-		                            ->getModelData()
-		                            ->getMaterialNodePointer(0)
-		                            ->getTevBlock();
+		J3DMaterial* tevMaterial
+		    = unk78->getModel()->getModelData()->getMaterialNodePointer(0);
+		J3DTevBlock* tevBlock = tevMaterial->getTevBlock();
 		if (unkB8 == 1) {
 			unkBA = unkB9;
 			--unkBC;
@@ -413,50 +420,50 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 				if (unkB9 >= 8)
 					unkB9 = 0;
 			}
-			SampleCtrlMaterial* material = unkC0->mMaterials[0];
-			J3DTevStageInfo& stage0      = material->unk3C[0];
-			J3DTevStageInfo& stage2      = material->unk3C[2];
-			J3DTevStageInfo& stage3      = material->unk3C[3];
-			J3DTevStageInfo& stage5      = material->unk3C[5];
-			stage0.field_0x5             = GX_TEV_ADD;
-			stage2.field_0x5             = GX_TEV_ADD;
-			stage3.field_0x5             = GX_TEV_ADD;
-			stage3.field_0x6             = GX_TB_ZERO;
-			stage3.field_0x7             = GX_CS_SCALE_1;
-			stage3.field_0x8             = GX_TRUE;
-			stage5.field_0x11            = GX_TRUE;
+			SampleCtrlMaterial* material             = unkC0->getMaterial(0);
+			material->getTevStageInfo(0)->field_0x5  = GX_TEV_ADD;
+			material->getTevStageInfo(2)->field_0x5  = GX_TEV_ADD;
+			material->getTevStageInfo(3)->field_0x5  = GX_TEV_ADD;
+			material->getTevStageInfo(3)->field_0x6  = GX_TB_ZERO;
+			material->getTevStageInfo(3)->field_0x7  = GX_CS_SCALE_1;
+			material->getTevStageInfo(3)->field_0x8  = GX_TRUE;
+			material->getTevStageInfo(5)->field_0x11 = GX_TRUE;
 			switch (unkB9) {
 			case 0:
 				break;
 			case 1:
-				stage3.field_0x5 = GX_TEV_SUB;
-				stage3.field_0x8 = GX_FALSE;
+				material->getTevStageInfo(3)->field_0x5 = GX_TEV_SUB;
+				material->getTevStageInfo(3)->field_0x8 = GX_FALSE;
 				break;
 			case 2:
-				stage0.field_0x5 = GX_TEV_COMP_R8_GT;
+				material->getTevStageInfo(0)->field_0x5 = GX_TEV_COMP_R8_GT;
 				break;
 			case 3:
-				stage3.field_0x5 = GX_TEV_COMP_R8_GT;
+				material->getTevStageInfo(3)->field_0x5 = GX_TEV_COMP_R8_GT;
 				break;
 			case 4:
-				stage3.field_0x7 = GX_CS_SCALE_2;
+				material->getTevStageInfo(3)->field_0x7 = GX_CS_SCALE_2;
 				break;
 			case 5:
-				stage5.field_0x11 = GX_FALSE;
+				material->getTevStageInfo(5)->field_0x11 = GX_FALSE;
 				break;
 			case 6:
-				stage2.field_0x5 = GX_TEV_SUB;
+				material->getTevStageInfo(2)->field_0x5 = GX_TEV_SUB;
 				break;
 			case 7:
-				stage3.field_0x5 = GX_TEV_ADD;
-				stage3.field_0x6 = GX_TB_ADDHALF;
-				stage3.field_0x8 = GX_FALSE;
+				material->getTevStageInfo(3)->field_0x5 = GX_TEV_ADD;
+				material->getTevStageInfo(3)->field_0x6 = GX_TB_ADDHALF;
+				material->getTevStageInfo(3)->field_0x8 = GX_FALSE;
 				break;
 			}
-			tevBlock->getTevStage(0)->setTevStageInfo(stage0);
-			tevBlock->getTevStage(2)->setTevStageInfo(stage2);
-			tevBlock->getTevStage(3)->setTevStageInfo(stage3);
-			tevBlock->getTevStage(5)->setTevStageInfo(stage5);
+			tevBlock->getTevStage(0)->setTevStageInfo(
+			    *material->getTevStageInfo(0));
+			tevBlock->getTevStage(2)->setTevStageInfo(
+			    *material->getTevStageInfo(2));
+			tevBlock->getTevStage(3)->setTevStageInfo(
+			    *material->getTevStageInfo(3));
+			tevBlock->getTevStage(5)->setTevStageInfo(
+			    *material->getTevStageInfo(5));
 		}
 		f32 frame = unkD0 * unk78->getFrameCtrl(ANM_TYPE_BRK)->getEnd();
 		unk78->getFrameCtrl(ANM_TYPE_BRK)->setFrame(frame);

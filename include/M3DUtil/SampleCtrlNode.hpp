@@ -24,6 +24,8 @@ public:
 	SampleCtrlMaterial(J3DMaterial* material);
 	virtual ~SampleCtrlMaterial() { }
 
+	J3DTevStageInfo* getTevStageInfo(int idx) { return &unk3C[idx]; }
+
 public:
 	/* 0x4 */ J3DMaterial* unk4;
 	/* 0x8 */ const char* unk8;

@@ -27,8 +27,9 @@ public:
 	virtual ~SampleCtrlModelData() { }
 
 	SampleCtrlJoint* getJoint(int idx) { return mJoints[idx]; }
+	SampleCtrlMaterial* getMaterial(int idx) { return mMaterials[idx]; }
 
-public:
+private:
 	/* 0x4 */ J3DModelData* unk4;
 	/* 0x8 */ SampleCtrlJoint** mJoints;
 	/* 0xC */ SampleCtrlMaterial** mMaterials;

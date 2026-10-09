@@ -318,7 +318,9 @@ public:
 		unk2A = MACTOR_MTX_CALC_USER;
 	}
 
-public:
+	void setUnk28(u16 value) { unk28 = value; }
+
+private:
 	/* 0x28 */ u16 unk28;
 	/* 0x2A */ u8 unk2A;
 	/* 0x2C */ J3DMtxCalcBasicAnm* unk2C;

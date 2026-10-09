@@ -93,7 +93,7 @@ MActor::MActor(MActorAnmData* anm_data)
 		for (int i = 0; it != e; ++it, ++i) {
 			unk10[i] = new MActorAnmBck;
 			unk10[i]->setUnk1C(anm_data->getUnk2C());
-			unk10[i]->unk28 = it->unk0;
+			unk10[i]->setUnk28(it->unk0);
 		}
 	}
 }
