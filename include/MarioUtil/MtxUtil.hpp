@@ -32,6 +32,7 @@ public:
 	void offFlag(int flag) { mFlags &= ~flag; }
 	void onFlag(int flag) { mFlags |= flag; }
 
+protected:
 	u16 mFlags;
 };
 
@@ -132,16 +133,14 @@ public:
 	// Fabricated
 	void flagOn(u32 flag)
 	{
-		for (int i = 0; i < mNumBones; ++i) {
-			mMtxEffectTbl[i]->mFlags |= flag;
-		}
+		for (int i = 0; i < mNumBones; ++i)
+			mMtxEffectTbl[i]->onFlag(flag);
 	}
 	// Fabricated
 	void flagOff(u32 flag)
 	{
-		for (int i = 0; i < mNumBones; ++i) {
-			mMtxEffectTbl[i]->mFlags &= ~flag;
-		}
+		for (int i = 0; i < mNumBones; ++i)
+			mMtxEffectTbl[i]->offFlag(flag);
 	}
 
 public:
@@ -180,7 +179,7 @@ public:
 	void moveHeadAndTail(const JGeometry::TVec3<f32>&,
 	                     const JGeometry::TVec3<f32>&);
 
-public:
+private:
 	/* 0x00 */ u16 mNumPoints;
 	/* 0x04 */ TRopePoint* mPoints;
 	/* 0x08 */ f32 unk8;

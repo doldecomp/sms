@@ -1800,7 +1800,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 		}
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CDC->mMtxEffectTbl[1]->mFlags &= ~1;
+			mWaterGun->unk1CDC->mMtxEffectTbl[1]->offFlag(1);
 		}
 
 		if (mCap != nullptr) {
@@ -1826,10 +1826,10 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0
 	    && mUpperState == UPPER_STATE_IDLE) {
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CDC->mMtxEffectTbl[1]->mFlags |= 1;
+			mWaterGun->unk1CDC->mMtxEffectTbl[1]->onFlag(1);
 		}
 	} else if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		mWaterGun->unk1CDC->mMtxEffectTbl[1]->mFlags &= ~1;
+		mWaterGun->unk1CDC->mMtxEffectTbl[1]->offFlag(1);
 	}
 
 	if ((graphics->unk0 & 2) != 0) {

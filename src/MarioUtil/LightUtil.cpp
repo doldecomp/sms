@@ -311,9 +311,9 @@ void TPlayerLightWithDBSet::makeDrawBuffer()
 		    i, 0x80, TLightCommon::mAmbAry->getAmb(ambIndex + i)->getName());
 		TLightMario* light = new TLightMario();
 		unk10[i]->setLight(light);
-		unk10[i]->mLight->mAmbIndex   = ambIndex;
-		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		unk10[i]->setAmbIndex(ambIndex);
+		unk10[i]->setLightIndex(lightIndex);
+		unk10[i]->getLight()->loadAfter();
 	}
 }
 
@@ -330,9 +330,9 @@ void TObjectLightWithDBSet::makeDrawBuffer()
 		    i, 0x100, TLightCommon::mAmbAry->getAmb(ambIndex + i)->getName());
 		TLightCommon* light = new TLightCommon();
 		unk10[i]->setLight(light);
-		unk10[i]->mLight->mAmbIndex   = ambIndex;
-		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		unk10[i]->setAmbIndex(ambIndex);
+		unk10[i]->setLightIndex(lightIndex);
+		unk10[i]->getLight()->loadAfter();
 	}
 }
 
@@ -350,9 +350,9 @@ void TMapObjectLightWithDBSet::makeDrawBuffer()
 		unk10[i]            = new TLightDrawBuffer(i, 0x100, className[i]);
 		TLightCommon* light = new TLightCommon();
 		unk10[i]->setLight(light);
-		unk10[i]->mLight->mAmbIndex   = ambIndex;
-		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		unk10[i]->setAmbIndex(ambIndex);
+		unk10[i]->setLightIndex(lightIndex);
+		unk10[i]->getLight()->loadAfter();
 	}
 }
 
@@ -370,9 +370,9 @@ void TIndirectLightWithDBSet::makeDrawBuffer()
 		unk10[i]            = new TLightDrawBuffer(i, 0x100, className[i]);
 		TLightCommon* light = new TLightCommon();
 		unk10[i]->setLight(light);
-		unk10[i]->mLight->mAmbIndex   = ambIndex;
-		unk10[i]->mLight->mLightIndex = lightIndex;
-		unk10[i]->mLight->loadAfter();
+		unk10[i]->setAmbIndex(ambIndex);
+		unk10[i]->setLightIndex(lightIndex);
+		unk10[i]->getLight()->loadAfter();
 	}
 }
 

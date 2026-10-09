@@ -36,7 +36,7 @@ public:
 		unk5C = dir;
 	}
 
-public:
+private:
 	/* 0x10 */ JUTTexture* unk10;
 	/* 0x14 */ u8 unk14;
 	/* 0x15 */ u8 unk15;
@@ -82,7 +82,7 @@ public:
 	// fabricated
 	JUTTexture* getTexture() { return unk10; }
 
-public:
+private:
 	/* 0x10 */ JUTTexture* unk10;
 };
 

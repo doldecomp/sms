@@ -66,7 +66,10 @@ public:
 		mEffectLightPos.set(x, y, z);
 	}
 
-public:
+	// fabricated
+	void setMarioLight(TLightMario* light) { mMarioLight = light; }
+
+private:
 	/* 0x10 */ TLightMario* mMarioLight;
 	/* 0x14 */ TLightWithDBSet** mLightSets;
 	/* 0x18 */ GXColor mEffectLightColor;
@@ -101,7 +104,10 @@ public:
 	static JDrama::TLightAry* mLightAry;
 	static Vec* mLightPos;
 
-public:
+	void setAmbIndex(int index) { mAmbIndex = index; }
+	void setLightIndex(int index) { mLightIndex = index; }
+
+protected:
 	/* 0x10 */ f32 mShininess;
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ f32 unk18;
@@ -128,10 +134,14 @@ public:
 		mLight->loadAfter();
 	}
 
+	TLightCommon* getLight() { return mLight; }
+	void setAmbIndex(int index) { getLight()->setAmbIndex(index); }
+	void setLightIndex(int index) { getLight()->setLightIndex(index); }
+
 	JDrama::TDrawBufObj* getOpaDbo() { return mOpaDrawBufferObject; }
 	JDrama::TDrawBufObj* getXluDbo() { return mXluDrawBufferObject; }
 
-public:
+private:
 	/* 0x10 */ TLightCommon* mLight;
 	/* 0x14 */ JDrama::TDrawBufObj* mOpaDrawBufferObject;
 	/* 0x18 */ JDrama::TDrawBufObj* mXluDrawBufferObject;
