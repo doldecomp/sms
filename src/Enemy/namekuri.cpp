@@ -333,7 +333,8 @@ void TNameKuri::calcRootMatrix()
 
 	unk1A8 = false;
 
-	if (getWalker()->unk2C->unk10 > 0.0f && unk138 != nullptr) {
+	if (getWalker()->getSpider()->getWallAttachRate() > 0.0f
+	    && unk138 != nullptr) {
 		unk1A8 = true;
 		JGeometry::TVec3<f32> local_30(0.0f, 1.0f, 0.0f);
 
@@ -362,7 +363,8 @@ void TNameKuri::calcRootMatrix()
 		anmMtx[1][3] = 0;
 		anmMtx[2][3] = 0;
 
-		f32 angle = (1.0f - getWalker()->unk2C->unk10) * 90.0f;
+		f32 angle
+		    = (1.0f - getWalker()->getSpider()->getWallAttachRate()) * 90.0f;
 
 		Mtx local_7c;
 		MsMtxSetRotX(local_7c, angle);

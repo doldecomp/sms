@@ -19,7 +19,7 @@ public:
 	void float_(TLiveActor*);
 	bool init(f32, f32, f32, f32, f32);
 
-public:
+protected:
 	/* 0x4 */ TBathtub* unk4;
 	/* 0x8 */ TBathWaterManager* unk8;
 	/* 0xC */ f32 unkC;

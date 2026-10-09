@@ -8,7 +8,7 @@ TSpider::TSpider()
     : unk4(0)
     , unk8(0)
     , unkC(0)
-    , unk10(0.0f)
+    , mWallAttachRate(0.0f)
 {
 }
 
@@ -96,9 +96,9 @@ void TSpider::bind(TLiveActor* param_1)
 
 			unaff_f29 = 0.0f;
 		}
-		unk10 -= 0.016666667f;
-		if (unk10 < 0.0f)
-			unk10 = 0.0f;
+		mWallAttachRate -= 0.016666667f;
+		if (mWallAttachRate < 0.0f)
+			mWallAttachRate = 0.0f;
 	} else {
 		JGeometry::TVec3<f32> normal = local_90.mResultWalls[0]->mNormal;
 		if (normal.dot(local_114) < 0.0f) {
@@ -113,12 +113,12 @@ void TSpider::bind(TLiveActor* param_1)
 
 			unk8 = 0x3C;
 
-			normal.scale(enemy->getWallRadius() * unk10);
+			normal.scale(enemy->getWallRadius() * mWallAttachRate);
 			local_bc -= normal;
 
-			unk10 += 1.0f / 60.0f;
-			if (unk10 > 1.0f)
-				unk10 = 1.0f;
+			mWallAttachRate += 1.0f / 60.0f;
+			if (mWallAttachRate > 1.0f)
+				mWallAttachRate = 1.0f;
 		}
 	}
 

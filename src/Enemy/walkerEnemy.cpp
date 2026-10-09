@@ -37,7 +37,7 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	TSmallEnemy::init(param_1);
 	mBinder = new TWalker;
 	getWalker()->reset();
-	getWalker()->unk18 = 150.0f;
+	getWalker()->setUnk18(150.0f);
 
 	mMarchSpeed = getSaveParam2()->unk324.rand();
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());

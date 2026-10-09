@@ -13,10 +13,14 @@ public:
 	~TWalker();
 	void reset();
 	virtual void bind(TLiveActor*);
-	void setMode(int);
-	int getUnk1C() const { return unk1C; }
+	void setMode(int mode);
 
-public:
+	// fabricated
+	int getUnk1C() const { return unk1C; }
+	void setUnk18(f32 value) { unk18 = value; }
+	TSpider* getSpider() const { return mSpider; }
+
+protected:
 	/* 0x4 */ TSolidStack<const TBGCheckData*> unk4;
 	/* 0x14 */ int unk14;
 	/* 0x18 */ f32 unk18;
@@ -24,7 +28,7 @@ public:
 	/* 0x20 */ int unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ s16 unk28;
-	/* 0x2C */ TSpider* unk2C;
+	/* 0x2C */ TSpider* mSpider;
 	/* 0x30 */ s8 unk30;
 };
 

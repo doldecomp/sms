@@ -49,7 +49,7 @@ TWalker::TWalker()
     , unk20(0)
     , unk24(0)
     , unk28(0)
-    , unk2C(0)
+    , mSpider(0)
     , unk30(1)
 {
 	reset();
@@ -68,8 +68,8 @@ void TWalker::reset()
 
 void TWalker::bind(TLiveActor* param_1)
 {
-	if (unk28 == 1 && unk2C != nullptr) {
-		unk2C->bind(param_1);
+	if (unk28 == 1 && mSpider != nullptr) {
+		mSpider->bind(param_1);
 		return;
 	}
 
@@ -244,9 +244,9 @@ void TWalker::bind(TLiveActor* param_1)
 	enemy->mPositionDelta = local_30 - enemy->mPosition;
 }
 
-void TWalker::setMode(int param_1)
+void TWalker::setMode(int mode)
 {
-	unk28 = param_1;
-	if (unk28 == 1 && unk2C == nullptr)
-		unk2C = new TSpider;
+	unk28 = mode;
+	if (unk28 == 1 && mSpider == nullptr)
+		mSpider = new TSpider;
 }

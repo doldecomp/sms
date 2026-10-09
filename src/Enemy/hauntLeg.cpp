@@ -162,7 +162,8 @@ void THauntLeg::calcRootMatrix()
 		return;
 	getModel()->setBaseScale(mScaling);
 	MtxPtr matrix = getModel()->getBaseTRMtx();
-	if (getWalker()->unk2C->unk10 > 0.0f && unk138 != nullptr) {
+	if (getWalker()->getSpider()->getWallAttachRate() > 0.0f
+	    && unk138 != nullptr) {
 		JGeometry::TVec3<f32> zAxis(0.0f, 1.0f, 0.0f);
 		JGeometry::TVec3<f32> normal = unk138->getNormal();
 		JGeometry::TVec3<f32> xAxis;
@@ -183,7 +184,9 @@ void THauntLeg::calcRootMatrix()
 		matrix[1][3] = 0.0f;
 		matrix[2][3] = 0.0f;
 		Mtx rotation;
-		MsMtxSetRotX(rotation, 90.0f * (1.0f - getWalker()->unk2C->unk10));
+		MsMtxSetRotX(
+		    rotation,
+		    90.0f * (1.0f - getWalker()->getSpider()->getWallAttachRate()));
 		MTXConcat(matrix, rotation, matrix);
 	} else {
 		JGeometry::TVec3<f32> zAxis(MsSin(mRotation.y), 0.0f,
