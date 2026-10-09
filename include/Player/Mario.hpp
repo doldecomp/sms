@@ -1309,6 +1309,9 @@ public:
 		return mPrevPosition;
 	}
 
+	// Fabricated
+	TWaterGun* const getWaterGun() { return mWaterGun; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;

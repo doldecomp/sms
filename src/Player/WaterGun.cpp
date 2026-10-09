@@ -125,18 +125,13 @@ TNozzleBmdData nozzleBmdData = {
 
 static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 {
-	// TODO: Inlined stack space
-	if (!param_2) {
-		if (gpMarioForCallBack != nullptr) {
-			s16 gunAngle = gpMarioForCallBack->mWaterGun->getCurrentNozzle()
-			                   ->getGunAngle();
-			if (gunAngle < 0) {
-				Mtx mtx;
-				// Unused stack space
-				// volatile u32 unused2[6];
-				MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
-				MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
-			}
+	if (!param_2 && gpMarioForCallBack != nullptr) {
+		Mtx mtx;
+		const TWaterGun* waterGun = gpMarioForCallBack->getWaterGun();
+		s16 gunAngle              = waterGun->getCurrentNozzle()->getGunAngle();
+		if (gunAngle < 0) {
+			MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
+			MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 		}
 	}
 	return true;
@@ -145,11 +140,11 @@ static BOOL NozzleCtrl(J3DNode* node, BOOL param_2)
 static BOOL RotateCtrl(J3DNode* node, BOOL param_2)
 {
 	if (!param_2 && gpMarioForCallBack != nullptr) {
-		s16 local1cd0 = gpMarioForCallBack->mWaterGun->unk1CD0;
 		Mtx mtx;
+		s16 angle = gpMarioForCallBack->getWaterGun()->getPropellerAngle();
 		// Unused stack space
-		// volatile u32 unused2[7];
-		MsMtxSetRotRPH(mtx, 0.005493164f * local1cd0, 0.0f, 0.0f);
+		// volatile u32 unused2[2];
+		MsMtxSetRotRPH(mtx, SHORTANGLE2DEG(angle), 0.0f, 0.0f);
 		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 	}
 	return true;
@@ -158,15 +153,11 @@ static BOOL RotateCtrl(J3DNode* node, BOOL param_2)
 static BOOL WaterGunDivingCtrlL(J3DNode* node, BOOL param_2)
 {
 	if (!param_2) {
-		// This looks very weird to me, probably because of some inline?
-		// I could imagine some s32 getNozzleSpeedY() and
-		// s16 localXXX = -getNozzleSpeedY();
-		s32 nozzleSpeedY = gpMarioForCallBack->mWaterGun->unk1CC8;
-		s16 neg          = -nozzleSpeedY;
 		Mtx mtx;
 		// Unused stack space
-		// volatile u32 unused2[7];
-		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, 0.005493164f * neg);
+		// volatile u32 unused2[2];
+		s16 angle = -gpMarioForCallBack->getWaterGun()->getHoverAngleL();
+		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
 		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 	}
 	return true;
@@ -175,15 +166,11 @@ static BOOL WaterGunDivingCtrlL(J3DNode* node, BOOL param_2)
 static BOOL WaterGunDivingCtrlR(J3DNode* node, BOOL param_2)
 {
 	if (!param_2) {
-		// This looks very weird to me, probably because of some inline?
-		// I could imagine some s32 getNozzleSpeedY() and
-		// s16 localXXX = -getNozzleSpeedY();
-		s32 nozzleSpeedY = gpMarioForCallBack->mWaterGun->unk1CCC;
-		s16 neg          = -nozzleSpeedY;
 		Mtx mtx;
 		// Unused stack space
-		// volatile u32 unused2[7];
-		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, 0.005493164f * neg);
+		// volatile u32 unused2[2];
+		s16 angle = -gpMarioForCallBack->getWaterGun()->getHoverAngleR();
+		MsMtxSetRotRPH(mtx, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
 		MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
 	}
 	return true;
@@ -1196,7 +1183,7 @@ TWaterGun::TWaterGun(TMario* mario)
     , mNozzleRocket(nullptr, "/Mario/WaterGun/NozzleTrgRocket.prm", this)
     , mNozzleUnderWater("hover_wg", "/Mario/WaterGun/NozzleDiving.prm", this)
     , mNozzleYoshiDeform("dummy_wg", "/Mario/WaterGun/NozzleYoshiMouth.prm",
-                         this)
+	                     this)
     , mNozzleHover("hover_wg", "/Mario/WaterGun/NozzleTrgHover.prm", this)
     , mNozzleTurbo("back_wg", "/Mario/WaterGun/NozzleTrgTurbo.prm", this)
     , mWatergunParams("/Mario/WaterGun.prm")
@@ -1250,10 +1237,10 @@ void TWaterGun::init()
 	unk1CC2 = 0;
 	unk1CC4 = 0;
 
-	unk1CC8 = 0.0f;
-	unk1CCC = 0.0f;
-	unk1CD0 = 0;
-	unk1CD2 = 0;
+	mHoverAngleL    = 0.0f;
+	mHoverAngleR    = 0.0f;
+	mPropellerAngle = 0;
+	unk1CD2         = 0;
 
 	// This is definitely an inlined funciton. Creating a model seems quite
 	// useful
@@ -1266,7 +1253,7 @@ void TWaterGun::init()
 	    = JKRFileLoader::getGlbResource("/mario/watergun2/body/wg_mdl1.bmd");
 	J3DModel* fluddModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(fluddModelData,
-	                                 J3DMLF_MaterialPEFull
+		                             J3DMLF_MaterialPEFull
 	                                     | (4 << J3DMLF_TevStageNumShift)),
 	    0, 1);
 	mFluddModel->setModel(fluddModel, 0);
@@ -1352,50 +1339,50 @@ void TWaterGun::init()
 	    ->unk380->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Spray]
-	                              ->unk380->getModel()
-	                              ->getModelData()
-	                              ->getJointName()
-	                              ->getIndex("chn_muzzle_1"))
+		                          ->unk380->getModel()
+		                          ->getModelData()
+		                          ->getJointName()
+		                          ->getIndex("chn_muzzle_1"))
 	    ->setCallBack(&NozzleCtrl);
 
 	mNozzleList[Hover]
 	    ->unk380->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Hover]
-	                              ->unk380->getModel()
-	                              ->getModelData()
-	                              ->getJointName()
-	                              ->getIndex("jnt_nozzle_L"))
+		                          ->unk380->getModel()
+		                          ->getModelData()
+		                          ->getJointName()
+		                          ->getIndex("jnt_nozzle_L"))
 	    ->setCallBack(&WaterGunDivingCtrlL);
 
 	mNozzleList[Hover]
 	    ->unk380->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Hover]
-	                              ->unk380->getModel()
-	                              ->getModelData()
-	                              ->getJointName()
-	                              ->getIndex("jnt_nozzle_R"))
+		                          ->unk380->getModel()
+		                          ->getModelData()
+		                          ->getJointName()
+		                          ->getIndex("jnt_nozzle_R"))
 	    ->setCallBack(&WaterGunDivingCtrlR);
 
 	mNozzleList[Turbo]
 	    ->unk380->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Turbo]
-	                              ->unk380->getModel()
-	                              ->getModelData()
-	                              ->getJointName()
-	                              ->getIndex("chn_back_nozzle_prop"))
+		                          ->unk380->getModel()
+		                          ->getModelData()
+		                          ->getJointName()
+		                          ->getIndex("chn_back_nozzle_prop"))
 	    ->setCallBack(&RotateCtrl);
 
 	mNozzleList[Turbo]
 	    ->unk380->getModel()
 	    ->getModelData()
 	    ->getJointNodePointer(mNozzleList[Turbo]
-	                              ->unk380->getModel()
-	                              ->getModelData()
-	                              ->getJointName()
-	                              ->getIndex("jnt_back_nozzle_neck"))
+		                          ->unk380->getModel()
+		                          ->getModelData()
+		                          ->getJointName()
+		                          ->getIndex("jnt_back_nozzle_neck"))
 	    ->setCallBack(&NozzleCtrl);
 
 	mFluddModel->getModel()->setBaseTRMtx(r24);
@@ -1484,8 +1471,10 @@ void TWaterGun::movement()
 		unk1CC4 = 0;
 	}
 
-	unk1CC8 += (unk1CC2 - unk1CC8) * mWatergunParams.mHoverSmooth.get();
-	unk1CCC += (unk1CC4 - unk1CCC) * mWatergunParams.mHoverSmooth.get();
+	mHoverAngleL
+	    += (unk1CC2 - mHoverAngleL) * mWatergunParams.mHoverSmooth.get();
+	mHoverAngleR
+	    += (unk1CC4 - mHoverAngleR) * mWatergunParams.mHoverSmooth.get();
 
 	rotateProp(getCurrentNozzle()->unk378);
 
@@ -1498,10 +1487,10 @@ void TWaterGun::movement()
 		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
 			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
-		unk1CD0 = unk1CD0 + unk1CD2;
+		mPropellerAngle = mPropellerAngle + unk1CD2;
 	} else {
-		unk1CD2 = 0;
-		unk1CD0 = 0;
+		unk1CD2         = 0;
+		mPropellerAngle = 0;
 	}
 
 	// Yoshi nozzle
@@ -1670,7 +1659,7 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 
 TNozzleBase* TWaterGun::getCurrentNozzle() const
 {
-	return mNozzleList[mCurrentNozzle];
+	return getNozzle(mCurrentNozzle);
 }
 
 void TWaterGun::setAmountToRate(f32 rate)
@@ -1755,10 +1744,10 @@ void TWaterGun::rotateProp(f32 rotation)
 		if (mWatergunParams.mNozzleAngleYSpeedMax.get() < unk1CD2) {
 			unk1CD2 = mWatergunParams.mNozzleAngleYSpeedMax.get();
 		}
-		unk1CD0 = unk1CD0 + unk1CD2;
+		mPropellerAngle = mPropellerAngle + unk1CD2;
 	} else {
-		unk1CD2 = 0;
-		unk1CD0 = 0;
+		unk1CD2         = 0;
+		mPropellerAngle = 0;
 	}
 }
 
