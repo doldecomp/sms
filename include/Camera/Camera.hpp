@@ -161,6 +161,10 @@ public:
 		       || isDefiniteCameraSpecifyMode(mode);
 	}
 
+	// Fabricated
+	// could be individual getters on fields instead of exposing entire struct?
+	const TTargetCamera& getCurrentTarget() const { return mCurrentTarget; }
+
 private:
 	void calcSecureViewTarget_(s16, f32*, f32*);
 	void execSecureView_(s16, Vec*);

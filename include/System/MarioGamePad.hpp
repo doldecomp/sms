@@ -57,6 +57,9 @@ struct TMarioControllerWork {
 		}
 		return false;
 	}
+
+	// Fabricated
+	f32 getAnalogR() const { return mAnalogR; }
 };
 
 class TMarioGamePad : public JUTGamePad {
@@ -210,6 +213,12 @@ public:
 	}
 
 	void invalidate(s32 frames) { mDisabledFrames = frames; }
+
+	// Fabricated
+	f32 getCompSPos(int input, int axis) const
+	{
+		return mCompSPos[input * 2 + axis];
+	}
 
 public:
 	// NOTE: surprisingly, only flat array matches

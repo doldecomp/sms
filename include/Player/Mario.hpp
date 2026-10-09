@@ -1256,6 +1256,12 @@ public:
 	u32 getStatus() const { return mStatus; }
 
 	// Fabricated
+	bool isStatus(u32 status) const { return mStatus == status; }
+
+	// Fabricated
+	const JGeometry::TVec3<f32>& getVelocity() const { return mVel; }
+
+	// Fabricated
 	bool isSleeping() const
 	{
 		bool sleepKind = true;
@@ -1311,6 +1317,8 @@ public:
 
 	// Fabricated
 	TWaterGun* const getWaterGun() { return mWaterGun; }
+
+	TMarioGamePad* const getGamePad() { return mGamePad; }
 
 public:
 	/* 0x74 */ u32 mInput;

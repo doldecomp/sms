@@ -8,12 +8,12 @@ public:
 	TNozzleTrigger(const char* name, const char* prm, TWaterGun* fludd)
 	    : TNozzleBase(name, prm, fludd)
 	{
-		unk38C = 0xffffffff;
-		unk384 = false;
-		unk385 = INACTIVE;
-		unk36C = 0;
-		unk386 = 0;
-		unk388 = 0.0f;
+		unk38C          = 0xffffffff;
+		unk384          = false;
+		unk385          = INACTIVE;
+		mAnimationState = 0;
+		unk386          = 0;
+		unk388          = 0.0f;
 	}
 
 	virtual void init();

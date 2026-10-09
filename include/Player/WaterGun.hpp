@@ -283,6 +283,12 @@ public:
 	// Fabricated
 	s16 getHoverAngleR() const { return mHoverAngleR; }
 
+	// Fabricated
+	TMario* getMario() const { return mMario; }
+
+	// Fabricated
+	TWaterEmitInfo* getEmitInfo() const { return mEmitInfo; }
+
 public:
 	enum {
 		WATER_GUN_FLAG_UNK2  = 0x2,

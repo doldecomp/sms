@@ -39,6 +39,8 @@ class TWaterParticleType : public TParams {
 public:
 	TWaterParticleType(const char* path);
 
+	f32 getAlive() const { return mAlive.get(); }
+
 public:
 	/* 0x8 */ TParamRT<f32> mExtension;
 	/* 0x1C */ TParamRT<f32> mMagnify;
@@ -140,6 +142,13 @@ public:
 	u16 getParticleCount() const { return mParticleCount; }
 
 	enum { SLOT_NUM = 256 };
+
+	// Fabricated
+	// Enum?
+	const TWaterParticleType* getWaterParticleType(int type) const
+	{
+		return mWaterParticleTypes[type];
+	}
 
 public:
 	/* 0x10 */ s16 unk10;
