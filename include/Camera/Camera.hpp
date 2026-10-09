@@ -112,6 +112,7 @@ public:
 	MtxPtr getUnk1EC() { return unk1EC; }
 	const JGeometry::TVec3<f32>& getUnk124() const { return unk124; }
 	s16 getUnk258() const { return unk258; }
+	f32 getUnk270() const { return unk270; }
 	bool isThing() const
 	{
 		return isTalkCameraSpecifyMode(mMode) && !isNowInbetween() ? true

@@ -212,7 +212,7 @@ void TModelGate::startOpen()
 
 void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 {
-	JGeometry::TVec3<f32> viewDirection;
+	Vec viewDirection;
 	JGeometry::TVec3<f32> direction;
 	JGeometry::TVec3<f32> position;
 
@@ -242,14 +242,9 @@ void TModelGate::screenBlur(JDrama::TGraphics* graphics)
 		blurRate = 0.0f;
 
 	unkE4 += unkE8 * (blurRate - unkE4);
-	u8 blurAlpha = (u8)(unkE4 * (1.0f - gpCamera->unk270));
+	u8 blurAlpha = (u8)(unkE4 * (1.0f - gpCamera->getUnk270()));
 
-	gpAfterEffect->unk15 = 2;
-	gpAfterEffect->unk1C = blurAlpha;
-	gpAfterEffect->unk50 = unkEC;
-	gpAfterEffect->unk5C = viewDirection.x;
-	gpAfterEffect->unk60 = viewDirection.y;
-	gpAfterEffect->unk64 = viewDirection.z;
+	gpAfterEffect->setDirectionalBlur(blurAlpha, viewDirection, unkEC);
 }
 
 BOOL TModelGate::receiveMessage(THitActor* sender, u32 message)

@@ -2,6 +2,7 @@
 #define MARIO_UTIL_SCREEN_UTIL_HPP
 
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/JGeometry/JGVec3.hpp>
 
 void SMS_FillScreenAlpha(u8);
 
@@ -24,6 +25,16 @@ public:
 	void calcDashBlurValue();
 
 	BOOL checkFlag(u32 flag) { return unk14 & flag ? TRUE : FALSE; }
+
+	// fabricated
+	void setDirectionalBlur(u8 alpha, const JGeometry::TVec3<f32>& dir,
+	                        f32 scale)
+	{
+		unk15 = 2;
+		unk1C = alpha;
+		unk50 = scale;
+		unk5C = dir;
+	}
 
 public:
 	/* 0x10 */ JUTTexture* unk10;
@@ -52,9 +63,7 @@ public:
 	/* 0x54 */ f32 unk54;
 	/* 0x58 */ u8 unk58;
 	/* 0x59 */ u8 unk59;
-	/* 0x5C */ f32 unk5C;
-	/* 0x60 */ f32 unk60;
-	/* 0x64 */ f32 unk64;
+	/* 0x5C */ JGeometry::TVec3<f32> unk5C;
 };
 
 class TScreenTexture;
