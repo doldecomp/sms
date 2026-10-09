@@ -115,7 +115,7 @@ TRiccoHookManager::TRiccoHookManager(const char* name)
 void TRiccoHookManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[2]
-	    = { { "riccohook.bmd", 0x10000000, 0 }, { 0 } };
+	    = { { "riccohook.bmd", J3DMLF_MaterialPEFull, 0 }, { 0 } };
 	createModelDataArray(entry);
 }
 

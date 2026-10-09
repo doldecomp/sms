@@ -33,7 +33,9 @@ public:
 	static SDLModelData* loadModelData(const char* file_name, u32 flags,
 	                                   const char* folder);
 
-public:
+	const char* getFolder() const { return mFolder; }
+
+private:
 	/* 0x0 */ const char* mFolder;
 	/* 0x4 */ TModelDataNode mHead;
 };

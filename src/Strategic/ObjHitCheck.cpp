@@ -230,39 +230,39 @@ void TObjHitCheck::checkActorsHit()
 {
 	initTable();
 
-	if (!(gpStrategy->unk50 & 0x800))
-		entryGroup(gpStrategy->unk10[3]);
-	if (!(gpStrategy->unk50 & 0x100))
-		checkAndEntryGroup(gpStrategy->unk10[7]);
-	if (!(gpStrategy->unk50 & 0x200))
-		checkAndEntryGroup(gpStrategy->unk10[8]);
-	if (!(gpStrategy->unk50 & 0x400))
-		checkAndEntryGroup(gpStrategy->unk10[9]);
-	if (!(gpStrategy->unk50 & 0x40))
-		checkAndEntryGroup(gpStrategy->unk10[6]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_OBJECT))
+		entryGroup(gpStrategy->mGroups[IDX_GROUP_OBJECT]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_ENEMY))
+		checkAndEntryGroup(gpStrategy->mGroups[IDX_GROUP_ENEMY]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_BOSS))
+		checkAndEntryGroup(gpStrategy->mGroups[IDX_GROUP_BOSS]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_NPC))
+		checkAndEntryGroup(gpStrategy->mGroups[IDX_GROUP_NPC]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_PLAYER))
+		checkAndEntryGroup(gpStrategy->mGroups[IDX_GROUP_PLAYER]);
 
-	if (!(gpStrategy->unk50 & 0x80)
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_WATER)
 	    && gpModelWaterManager->askDoWaterHitCheck())
 		checkWater();
 
-	if (!(gpStrategy->unk50 & 0x800))
-		checkGroupPlayer(gpStrategy->unk10[5]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_OBJECT))
+		checkGroupPlayer(gpStrategy->mGroups[IDX_GROUP_ITEM]);
 }
 
 void TObjHitCheck::clearHitNum()
 {
-	if (!(gpStrategy->unk50 & 0x100))
-		clearGroup(gpStrategy->unk10[7]);
-	if (!(gpStrategy->unk50 & 0x200))
-		clearGroup(gpStrategy->unk10[8]);
-	if (!(gpStrategy->unk50 & 0x400))
-		clearGroup(gpStrategy->unk10[9]);
-	if (!(gpStrategy->unk50 & 0x40))
-		clearGroup(gpStrategy->unk10[6]);
-	if (!(gpStrategy->unk50 & 0x80))
-		clearGroup(gpStrategy->unk10[10]);
-	if (!(gpStrategy->unk50 & 0x800))
-		clearGroup(gpStrategy->unk10[5]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_ENEMY))
+		clearGroup(gpStrategy->mGroups[IDX_GROUP_ENEMY]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_BOSS))
+		clearGroup(gpStrategy->mGroups[IDX_GROUP_BOSS]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_NPC))
+		clearGroup(gpStrategy->mGroups[IDX_GROUP_NPC]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_PLAYER))
+		clearGroup(gpStrategy->mGroups[IDX_GROUP_PLAYER]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_WATER))
+		clearGroup(gpStrategy->mGroups[IDX_GROUP_WATER_PARTICLE]);
+	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_OBJECT))
+		clearGroup(gpStrategy->mGroups[IDX_GROUP_ITEM]);
 }
 
 void TObjHitCheck::initTable()

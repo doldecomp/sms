@@ -353,7 +353,10 @@ TSpineEnemy* THaneHamuKuriManager::createEnemyInstance()
 void THaneHamuKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "hanekuri.bmd", 0x10250000, 0 },
+		{ "hanekuri.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (5 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -388,7 +391,10 @@ TSpineEnemy* TDoroHaneKuriManager::createEnemyInstance()
 void TDoroHaneKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "dorohane.bmd", 0x10250000, 0 },
+		{ "dorohane.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (5 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -556,7 +562,10 @@ void TFireHamuKuriManager::initSetEnemies()
 void TFireHamuKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "default.bmd", 0x10240000, 0 },
+		{ "default.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -598,7 +607,10 @@ TSpineEnemy* TDoroHamuKuriManager::createEnemyInstance()
 void TDoroHamuKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "dorokuri_model.bmd", 0x10240000, 0 },
+		{ "dorokuri_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

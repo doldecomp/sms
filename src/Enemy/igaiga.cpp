@@ -282,7 +282,10 @@ void TIgaigaManager::load(JSUMemoryInputStream& param_1)
 void TIgaigaManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "igaiga_model1.bmd", 0x11240000, 0 },
+		{ "igaiga_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -756,7 +759,10 @@ void TGorogoroManager::initSetEnemies()
 void TGorogoroManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "bosspaku_head.bmd", 0x10300000, 0 },
+		{ "bosspaku_head.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

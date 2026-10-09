@@ -89,7 +89,10 @@ void THauntLegManager::initSetEnemies()
 void THauntLegManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "hauntleg.bmd", 0x10220000, 0 },
+		{ "hauntleg.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

@@ -411,7 +411,10 @@ TCommonLauncherManager::TCommonLauncherManager(const char* name)
 void TCommonLauncherManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "generator_model1.bmd", 0x11240000, 0 },
+		{ "generator_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

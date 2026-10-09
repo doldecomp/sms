@@ -75,9 +75,8 @@ void TEnemyAttachment::bind()
 	if (mVelocity.y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
 	if (!unk168) {
-		const TBGCheckData* local_18;
 		mGroundHeight = gpMap->checkGround(local_1C.x, local_1C.y + mHeadHeight,
-		                                   local_1C.z, &local_18);
+		                                   local_1C.z, &mGroundPlane);
 		mGroundHeight += 1.0f;
 	}
 
@@ -86,16 +85,13 @@ void TEnemyAttachment::bind()
 	else
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-	JGeometry::TVec3<f32> p = local_1C;
-	p.y += mHeadHeight;
-	TBGWallCheckRecord local_48(p, mBodyRadius * 2.0f, 1, 0);
+	TBGWallCheckRecord local_48(local_1C.x, local_1C.y + mHeadHeight,
+	                            local_1C.z, 2.0f * mBodyRadius, 1, 0);
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
 		behaveToHitWall(local_48.mResultWalls[0]);
 
-	mPosition                      = local_1C;
-	JGeometry::TVec3<f32> local_68 = local_1C;
-	local_68 -= mPosition;
-	mPositionDelta = local_68;
+	mPosition      = local_1C;
+	mPositionDelta = local_1C - mPosition;
 
 	setBehavior();
 	forceKill();
@@ -242,18 +238,18 @@ void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		if (unk10->unk18->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (unk10->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk5D = false;
 			return;
 		}
 
-		unk10->unk18->getModel()->setBaseTRMtx(unk14);
-		unk10->unk18->getModel()->setBaseScale(unk50);
-		unk10->unk18->calcAnm();
+		unk10->getMActor()->getModel()->setBaseTRMtx(unk14);
+		unk10->getMActor()->getModel()->setBaseScale(unk50);
+		unk10->getMActor()->calcAnm();
 	}
 
 	if (cue & CUE_ENTRY)
-		gpPollution->stampModel(unk10->unk18->getModel());
+		gpPollution->stampModel(unk10->getMActor()->getModel());
 }
 
 void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
@@ -270,7 +266,7 @@ void TEnemyPolluteModel::generate(JGeometry::TVec3<f32>& param_1,
 	TPosition3f TStack_58;
 	TStack_58.translation(param_1.x, param_1.y, param_1.z);
 	unk14.translation(param_1.x, param_1.y, param_1.z);
-	unk10->unk18->getModel()->setBaseTRMtx(TStack_58);
+	unk10->getMActor()->getModel()->setBaseTRMtx(TStack_58);
 	unk5D = true;
 	unk5C = false;
 	setAnm();

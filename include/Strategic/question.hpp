@@ -31,7 +31,7 @@ public:
 	void makeDL(JDrama::TGraphics*) const;
 	void draw() const;
 
-public:
+private:
 	/* 0x10 */ u16 unk10;
 	/* 0x12 */ u16 unk12;
 	/* 0x14 */ f32 unk14;

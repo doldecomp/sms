@@ -292,7 +292,10 @@ TLimitKoopaJrManager::TLimitKoopaJrManager(const char* param_1)
 void TLimitKoopaJrManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "koopajr_model.bmd", 0x14240000, 0 },
+		{ "koopajr_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

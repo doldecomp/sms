@@ -16,7 +16,7 @@ public:
 
 	~TSMSSmplChara() { delete[] mPath; }
 
-public:
+private:
 	/* 0xC */ char* mPath;
 };
 

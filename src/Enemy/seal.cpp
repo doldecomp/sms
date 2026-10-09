@@ -119,7 +119,10 @@ TSealManager::TSealManager(const char* name)
 void TSealManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "gene_orange_model1.bmd", 0x11210000, 0 },
+		{ "gene_orange_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

@@ -384,8 +384,14 @@ void TCoasterKillerManager::loadAfter()
 void TCoasterKillerManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "killer_model1.bmd", 0x10230000, 0 },
-		{ "downkiller_model1.bmd", 0x10210000, 0 },
+		{ "killer_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (3 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "downkiller_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 

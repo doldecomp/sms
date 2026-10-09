@@ -331,7 +331,10 @@ void TKazekunManager::load(JSUMemoryInputStream& param_1)
 void TKazekunManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "kazekun.bmd", 0x10210000, 0 },
+		{ "kazekun.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

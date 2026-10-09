@@ -1439,14 +1439,35 @@ TBossGessoManager::TBossGessoManager(const char* name)
 void TBossGessoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "bgeso_body.bmd", 0x10300000, 0 },
-		{ "bgeso_hand.bmd", 0x10240000, 0 },
-		{ "bgeso_shand.bmd", 0x200000, 0 },
-		{ "bgeso_dirty_white.bmd", 0x10220000, 0 },
-		{ "bgeso_osenball.bmd", 0x10220000, 0 },
-		{ "bgeso_osenball_white.bmd", 0x10220000, 0 },
-		{ "bgeso_kolk.bmd", 0x10220000, 0 },
-		{ "bgeso_kolk_break.bmd", 0x10220000, 0 },
+		{ "bgeso_body.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bgeso_hand.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bgeso_shand.bmd", J3DMLF_UseUniqueMaterials, 0 },
+		{ "bgeso_dirty_white.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bgeso_osenball.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bgeso_osenball_white.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bgeso_kolk.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bgeso_kolk_break.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

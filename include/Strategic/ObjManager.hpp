@@ -3,6 +3,7 @@
 
 #include <JSystem/JDrama/JDRCharacter.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 
 class THitActor;
 class MActorAnmData;
@@ -29,7 +30,7 @@ public:
 	// fabricated
 	const char* getFolder() const { return mFolder; }
 
-public:
+protected:
 	/* 0xC */ const char* mFolder;
 };
 

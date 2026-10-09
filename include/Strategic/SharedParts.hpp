@@ -20,7 +20,7 @@ public:
 	MtxPtr getConnectedMtx() const;
 	MActor* getMActor() { return unk18; }
 
-public:
+protected:
 	/* 0x10 */ const TLiveActor* unk10;
 	/* 0x14 */ int mConnectedAnmMtxIndex;
 	/* 0x18 */ MActor* unk18;

@@ -1023,7 +1023,10 @@ void TKumokunManager::load(JSUMemoryInputStream& stream)
 void TKumokunManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "kumo_model1.bmd", 0x10210000, 0 },
+		{ "kumo_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

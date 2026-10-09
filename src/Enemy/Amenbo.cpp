@@ -533,7 +533,10 @@ void TAmenboManager::load(JSUMemoryInputStream& stream)
 void TAmenboManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "amenbo_model1.bmd", 0x10210000, 0 },
+		{ "amenbo_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

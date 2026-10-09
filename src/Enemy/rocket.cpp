@@ -98,7 +98,8 @@ void TRocketManager::initSetEnemies()
 void TRocketManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "rocket.bmd", 0x10040000, 0 },
+		{ "rocket.bmd", J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

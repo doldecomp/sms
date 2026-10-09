@@ -30,7 +30,8 @@
 void TSleepBossHanachanManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "demohanatyan_model.bmd", 0x10010000, 0 },
+		{ "demohanatyan_model.bmd",
+		  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

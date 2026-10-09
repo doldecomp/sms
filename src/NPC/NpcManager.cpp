@@ -61,7 +61,10 @@ void TBoardNpcManager::clipActors(JDrama::TGraphics* graphics)
 void TBoardNpcManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "boardNpc.bmd", 0x10220000, 0 },
+		{ "boardNpc.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -79,12 +82,30 @@ void TMareJellyFishManager::perform(u32 cue, JDrama::TGraphics* graphics) { }
 void TMareJellyFishManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "jellyFish_A.bmd", 0x11240000, 0 },
-		{ "jellyFish_B.bmd", 0x11240000, 0 },
-		{ "jellyFish_C.bmd", 0x11240000, 0 },
-		{ "jellyFish_D.bmd", 0x11240000, 0 },
-		{ "jellyFish_E.bmd", 0x11240000, 0 },
-		{ "jellyFish_F.bmd", 0x11240000, 0 },
+		{ "jellyFish_A.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "jellyFish_B.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "jellyFish_C.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "jellyFish_D.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "jellyFish_E.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "jellyFish_F.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -180,8 +201,8 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 
 		loadFlags = flags;
 		if (modelData->unk2A != 0) {
-			loadFlags &= ~(0x40000 | 0x20000 | 0x10000);
-			loadFlags |= 0x100000;
+			loadFlags &= ~(7 << J3DMLF_TevStageNumShift);
+			loadFlags |= 16 << J3DMLF_TevStageNumShift;
 		}
 
 		for (int j = 0; j < 2; ++j) {
@@ -189,7 +210,7 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 				continue;
 
 			char path[0x100];
-			snprintf(path, sizeof(path), "%s/%s", keeper->mFolder,
+			snprintf(path, sizeof(path), "%s/%s", keeper->getFolder(),
 			         modelData->unk8[j]);
 			if (JKRGetResource(path) == nullptr)
 				continue;
@@ -219,7 +240,10 @@ void TNPCManager::makeCommonPartsModelDataKeeper_(u32 npc_type,
 	if (unk5C == nullptr) {
 		unk5C       = new TModelDataKeeper(folder);
 		*keeper_ptr = unk5C;
-		makePartsModelData_(npc_type, 0x10210000, unk5C);
+		makePartsModelData_(npc_type,
+		                    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		                        | (1 << J3DMLF_TevStageNumShift),
+		                    unk5C);
 	}
 }
 
@@ -481,7 +505,10 @@ void TSunflowerLManager::load(JSUMemoryInputStream& stream)
 void TMonteMManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mom_model.bmd", 0x10300000, 1 },
+		{ "mom_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -495,7 +522,10 @@ void TMonteMManager::createModelData()
 void TMonteMAManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momA_model.bmd", 0x10300000, 1 },
+		{ "momA_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -509,7 +539,10 @@ void TMonteMAManager::createModelData()
 void TMonteMBManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momB_model.bmd", 0x10210000, 1 },
+		{ "momB_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -521,7 +554,10 @@ void TMonteMBManager::createModelData()
 void TMonteMCManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momC_model.bmd", 0x10300000, 1 },
+		{ "momC_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -535,7 +571,10 @@ void TMonteMCManager::createModelData()
 void TMonteMDManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momD_model.bmd", 0x10210000, 1 },
+		{ "momD_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -547,7 +586,8 @@ void TMonteMDManager::createModelData()
 void TMonteMEManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momE_model.bmd", 0x10010000, 0 },
+		{ "momE_model.bmd",
+		  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -557,7 +597,10 @@ void TMonteMEManager::createModelData()
 void TMonteMFManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mom_model.bmd", 0x10210000, 0 },
+		{ "mom_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -569,7 +612,10 @@ void TMonteMFManager::createModelData()
 void TMonteMGManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momC_model.bmd", 0x10210000, 0 },
+		{ "momC_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -581,7 +627,10 @@ void TMonteMGManager::createModelData()
 void TMonteMHManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "momA_model.bmd", 0x10210000, 0 },
+		{ "momA_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -593,7 +642,10 @@ void TMonteMHManager::createModelData()
 void TMonteWManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mow_model.bmd", 0x10300000, 1 },
+		{ "mow_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -607,7 +659,10 @@ void TMonteWManager::createModelData()
 void TMonteWAManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mowA_model.bmd", 0x10300000, 1 },
+		{ "mowA_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -621,7 +676,10 @@ void TMonteWAManager::createModelData()
 void TMonteWBManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mowB_model.bmd", 0x10210000, 1 },
+		{ "mowB_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -633,7 +691,10 @@ void TMonteWBManager::createModelData()
 void TMonteWCManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mow_model.bmd", 0x10210000, 0 },
+		{ "mow_model.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -645,7 +706,10 @@ void TMonteWCManager::createModelData()
 void TMareMBaseManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mareM.bmd", 0x10300000, 0 },
+		{ "mareM.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -658,7 +722,10 @@ void TMareMBaseManager::createModelData()
 void TMareWBaseManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "mareW.bmd", 0x10300000, 0 },
+		{ "mareW.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -671,7 +738,10 @@ void TMareWBaseManager::createModelData()
 void TKinopioManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "kinopio_body.bmd", 0x10300000, 1 },
+		{ "kinopio_body.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  1 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -684,7 +754,8 @@ void TKinopioManager::createModelData()
 void TKinojiiManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "kinoji_body.bmd", 0x10010000, 0 },
+		{ "kinoji_body.bmd",
+		  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -694,7 +765,8 @@ void TKinojiiManager::createModelData()
 void TPeachManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "peach_model.bmd", 0x10010000, 0 },
+		{ "peach_model.bmd",
+		  J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift), 0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -704,7 +776,10 @@ void TPeachManager::createModelData()
 void TRaccoonDogManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "tanuki.bmd", 0x10210000, 0 },
+		{ "tanuki.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -714,7 +789,8 @@ void TRaccoonDogManager::createModelData()
 void TSunflowerLManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "sunflower.bmd", 0x10020000, 0 },
+		{ "sunflower.bmd",
+		  J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift), 0 },
 		{ nullptr, 0, 0 },
 	};
 
@@ -724,7 +800,10 @@ void TSunflowerLManager::createModelData()
 void TSunflowerSManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "sunflower_s.bmd", 0x10220000, 0 },
+		{ "sunflower_s.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 

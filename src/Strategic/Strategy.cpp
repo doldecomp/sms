@@ -12,10 +12,10 @@ void TIdxGroupObj::loadSuper(JSUMemoryInputStream& stream)
 
 TStrategy::TStrategy(const char* name)
     : JDrama::TViewObj(name)
-    , unk50(0)
+    , mHitCheckOffFlags(0)
 {
-	for (s32 i = 0; i < ARRAY_COUNT(unk10); ++i)
-		unk10[i] = nullptr;
+	for (s32 i = 0; i < ARRAY_COUNT(mGroups); ++i)
+		mGroups[i] = nullptr;
 }
 
 void TStrategy::load(JSUMemoryInputStream& stream)
@@ -31,11 +31,11 @@ void TStrategy::load(JSUMemoryInputStream& stream)
 		TIdxGroupObj* ref
 		    = (TIdxGroupObj*)JDrama::TNameRef::genObject(stream, stream2);
 		if (ref) {
-			unk10[15] = ref;
+			mGroups[IDX_GROUP_LOADING] = ref;
 			ref->load(stream2);
-			unk10[15] = nullptr;
+			mGroups[IDX_GROUP_LOADING] = nullptr;
 
-			unk10[ref->unk20] = ref;
+			mGroups[ref->unk20] = ref;
 		}
 	}
 
@@ -46,8 +46,8 @@ void TStrategy::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
 	for (int i = 0; i < 16; ++i)
-		if (unk10[i])
-			unk10[i]->loadAfter();
+		if (mGroups[i])
+			mGroups[i]->loadAfter();
 }
 
 JDrama::TNameRef* TStrategy::searchF(u16 key, const char* name)
@@ -56,9 +56,9 @@ JDrama::TNameRef* TStrategy::searchF(u16 key, const char* name)
 	if (ref)
 		return ref;
 
-	for (int i = 0; i < ARRAY_COUNT(unk10); ++i) {
-		if (unk10[i]) {
-			JDrama::TNameRef* r = unk10[i]->searchF(key, name);
+	for (int i = 0; i < ARRAY_COUNT(mGroups); ++i) {
+		if (mGroups[i]) {
+			JDrama::TNameRef* r = mGroups[i]->searchF(key, name);
 			if (r)
 				return r;
 		}
@@ -71,45 +71,45 @@ void TStrategy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 
 	if ((cue & (CUE_MOVE | CUE_CALC_ANIM)) != 0) {
-		if (unk10[0] != (TIdxGroupObj*)0x0)
-			unk10[0]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_MAP] != nullptr)
+			mGroups[IDX_GROUP_MAP]->testPerform(cue, graphics);
 
-		if (unk10[3] != (TIdxGroupObj*)0x0)
-			unk10[3]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_OBJECT] != nullptr)
+			mGroups[IDX_GROUP_OBJECT]->testPerform(cue, graphics);
 
-		if (unk10[4] != (TIdxGroupObj*)0x0)
-			unk10[4]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_GRAFFITI] != nullptr)
+			mGroups[IDX_GROUP_GRAFFITI]->testPerform(cue, graphics);
 
-		if (unk10[11] != (TIdxGroupObj*)0x0)
-			unk10[11]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_INIT] != nullptr)
+			mGroups[IDX_GROUP_INIT]->testPerform(cue, graphics);
 
-		if (unk10[6] != (TIdxGroupObj*)0x0)
-			unk10[6]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_PLAYER] != nullptr)
+			mGroups[IDX_GROUP_PLAYER]->testPerform(cue, graphics);
 
-		if (unk10[9] != (TIdxGroupObj*)0x0)
-			unk10[9]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_NPC] != nullptr)
+			mGroups[IDX_GROUP_NPC]->testPerform(cue, graphics);
 	}
 
 	if ((cue & CUE_DRAW) != 0) {
-		if (unk10[0] != (TIdxGroupObj*)0x0)
-			unk10[0]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_MAP] != nullptr)
+			mGroups[IDX_GROUP_MAP]->testPerform(cue, graphics);
 
-		if (unk10[3] != (TIdxGroupObj*)0x0)
-			unk10[3]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_OBJECT] != nullptr)
+			mGroups[IDX_GROUP_OBJECT]->testPerform(cue, graphics);
 
-		if (unk10[4] != (TIdxGroupObj*)0x0)
-			unk10[4]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_GRAFFITI] != nullptr)
+			mGroups[IDX_GROUP_GRAFFITI]->testPerform(cue, graphics);
 
-		if (unk10[5] != (TIdxGroupObj*)0x0)
-			unk10[5]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_ITEM] != nullptr)
+			mGroups[IDX_GROUP_ITEM]->testPerform(cue, graphics);
 
-		if (unk10[11] != (TIdxGroupObj*)0x0)
-			unk10[11]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_INIT] != nullptr)
+			mGroups[IDX_GROUP_INIT]->testPerform(cue, graphics);
 
-		if (unk10[6] != (TIdxGroupObj*)0x0)
-			unk10[6]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_PLAYER] != nullptr)
+			mGroups[IDX_GROUP_PLAYER]->testPerform(cue, graphics);
 
-		if (unk10[9] != (TIdxGroupObj*)0x0)
-			unk10[9]->testPerform(cue, graphics);
+		if (mGroups[IDX_GROUP_NPC] != nullptr)
+			mGroups[IDX_GROUP_NPC]->testPerform(cue, graphics);
 	}
 }

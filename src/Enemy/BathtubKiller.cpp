@@ -565,8 +565,14 @@ int TBathtubKillerManager::countActiveShineKillers() { return 0; }
 void TBathtubKillerManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "bathtubkiller_model1.bmd", 0x50230000, 0 },
-		{ "bathtubdownkiller_model1.bmd", 0x50210000, 0 },
+		{ "bathtubkiller_model1.bmd",
+		  J3DMLF_MaterialColorLightOn | J3DMLF_MaterialPEFull
+		      | J3DMLF_UseUniqueMaterials | (3 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "bathtubdownkiller_model1.bmd",
+		  J3DMLF_MaterialColorLightOn | J3DMLF_MaterialPEFull
+		      | J3DMLF_UseUniqueMaterials | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

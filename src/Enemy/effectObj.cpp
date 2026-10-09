@@ -287,7 +287,10 @@ TEffectModel* TEffectColumWaterManager::createEnemyInstance()
 void TEffectColumWaterManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "06_enem_tobikomi.bmd", 0x10220000, 0 },
+		{ "06_enem_tobikomi.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -369,7 +372,10 @@ TEffectModel* TEffectBombColumWaterManager::createEnemyInstance()
 void TEffectBombColumWaterManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "04_tobikomi.bmd", 0x10220000, 0 },
+		{ "04_tobikomi.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -453,7 +459,10 @@ TEffectModel* TEffectColumSandManager::createEnemyInstance()
 void TEffectColumSandManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "08_sunabashira.bmd", 0x10240000, 0 },
+		{ "08_sunabashira.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -528,7 +537,10 @@ TEffectModel* TEffectExplosionManager::createEnemyInstance()
 void TEffectExplosionManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "10_bomb.bmd", 0x10240000, 0 },
+		{ "10_bomb.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

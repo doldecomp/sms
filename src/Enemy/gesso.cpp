@@ -169,7 +169,10 @@ void TGessoManager::initSetEnemies()
 void TGessoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "geso_model1.bmd", 0x10230000, 0 },
+		{ "geso_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (3 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

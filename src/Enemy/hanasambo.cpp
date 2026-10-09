@@ -256,7 +256,10 @@ void TSamboFlowerManager::load(JSUMemoryInputStream& param_1)
 void TSamboFlowerManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "flower.bmd", 0x10220000, 0 },
+		{ "flower.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -560,8 +563,14 @@ TSpineEnemy* THanaSamboManager::createEnemyInstance() { return new THanaSambo; }
 void THanaSamboManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "sambo.bmd", 0x10220000, 0 },
-		{ "samboD.bmd", 0x10220000, 0 },
+		{ "sambo.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "samboD.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -1065,7 +1074,10 @@ void TSamboHeadManager::load(JSUMemoryInputStream& param_1)
 void TSamboHeadManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "samboHead.bmd", 0x10220000, 0 },
+		{ "samboHead.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

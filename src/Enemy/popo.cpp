@@ -126,8 +126,10 @@ void TPopoManager::initSetEnemies()
 void TPopoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "popoH.bmd", 0x10020000, 0 },
-		{ "popoL.bmd", 0x10020000, 0 },
+		{ "popoH.bmd", J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "popoL.bmd", J3DMLF_MaterialPEFull | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

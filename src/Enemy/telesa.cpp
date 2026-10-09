@@ -136,7 +136,11 @@ void TTelesaManager::createEnemies(int param_1)
 void TTelesaManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "telesa.bmd", 0x15240000, 0 },
+		{ "telesa.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+		      | J3DMLF_MaterialUseIndirect | J3DMLF_UseUniqueMaterials
+		      | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

@@ -112,7 +112,10 @@ TSpineEnemy* TElecNokonokoManager::createEnemyInstance()
 void TElecNokonokoManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "dennoko_model1.bmd", 0x10220000, 0 },
+		{ "dennoko_model1.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

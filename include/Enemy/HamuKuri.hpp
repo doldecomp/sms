@@ -350,8 +350,7 @@ public:
 	{
 		unk198          = 1;
 		TDoroHige* hige = ((TDoroHaneKuriManager*)mManager)->unk74;
-		hige->unk1C     = this;
-		hige->unk10     = this;
+		hige->setOwner(this);
 	}
 
 public:

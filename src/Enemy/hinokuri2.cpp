@@ -112,10 +112,10 @@ THinokuri2Manager::THinokuri2Manager(const char* name)
 void THinokuri2Manager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		{ "hinokuri2_model.bmd", 0x10000000, 0 },
-		{ "hinokuri2_mask_model.bmd", 0x10000000, 0 },
-		{ "hinokuri2_mask_model_l.bmd", 0x10000000, 0 },
-		{ "hinokuri2_mask_model_r.bmd", 0x10000000, 0 },
+		{ "hinokuri2_model.bmd", J3DMLF_MaterialPEFull, 0 },
+		{ "hinokuri2_mask_model.bmd", J3DMLF_MaterialPEFull, 0 },
+		{ "hinokuri2_mask_model_l.bmd", J3DMLF_MaterialPEFull, 0 },
+		{ "hinokuri2_mask_model_r.bmd", J3DMLF_MaterialPEFull, 0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

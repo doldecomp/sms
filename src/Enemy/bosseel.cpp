@@ -199,8 +199,14 @@ void TBEelTearsManager::loadAfter()
 void TBEelTearsManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "tears.bmd", 0x11240000, 0 },
-		{ "tears_waterhit.bmd", 0x11240000, 0 },
+		{ "tears.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ "tears_waterhit.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

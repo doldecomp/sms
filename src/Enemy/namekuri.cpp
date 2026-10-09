@@ -166,7 +166,11 @@ TSmallEnemy* TNameKuriManager::createEnemyInstance() { return new TNameKuri; }
 void TNameKuriManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "name.bmd", 0x15300000, 0 },
+		{ "name.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+		      | J3DMLF_MaterialUseIndirect | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);

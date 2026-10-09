@@ -110,7 +110,9 @@ void TEMario::init(TLiveManager* manager)
 	if (!manager) {
 		if (TObjChara* chara = (TObjChara*)mCharacter) {
 			mMActorKeeper = new TMActorKeeper(nullptr, 1);
-			mMActorKeeper->setModelLoaderFlags(0x11300000);
+			mMActorKeeper->setModelLoaderFlags(
+			    J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+			    | J3DMLF_UseUniqueMaterials | (16 << J3DMLF_TevStageNumShift));
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
 			    chara->getFolder(), 0);
 			for (int i = 0;

@@ -31,7 +31,7 @@ public:
 
 	void mountArc(const char*);
 
-public:
+protected:
 	/* 0xC */ JKRArchive* mArchive;
 };
 

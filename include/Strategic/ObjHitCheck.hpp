@@ -46,7 +46,7 @@ public:
 
 	TObjCheckList* getCheckList2(u32 index) { return unk0[index].unk0; }
 
-public:
+private:
 	/* 0x0 */ TObjCheckList unk0[256];
 	/* 0x800 */ TObjCheckList* unk800;
 	/* 0x804 */ u32 unk804;

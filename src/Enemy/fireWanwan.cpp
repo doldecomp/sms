@@ -294,7 +294,10 @@ void TFireWanwanManager::load(JSUMemoryInputStream& stream)
 void TFireWanwanManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "wanwan.bmd", 0x10210000, 0 },
+		{ "wanwan.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
