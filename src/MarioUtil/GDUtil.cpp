@@ -5,14 +5,14 @@
 
 static TGDLStatic* currentTGDLStatic;
 
-static void TGDLStaticOverFlow() { currentTGDLStatic->unk11 = 1; }
+static void TGDLStaticOverFlow() { currentTGDLStatic->onOverflow(); }
 
 TGDLStatic::TGDLSentinel::~TGDLSentinel()
 {
 	TGDLStatic* gdls = unk18;
 	gdls->mDispList  = nullptr;
 	gdls->unk1C      = nullptr;
-	gdls->unk10      = 0;
+	gdls->mReady     = false;
 }
 
 TGDLStatic::~TGDLStatic() { mDispList = nullptr; }
@@ -24,8 +24,8 @@ void TGDLStatic::alloc(u32 size)
 	memset(mDispList, 0, mDispListSize);
 	GDInitGDLObj(&mDispListObj, mDispList, mDispListSize);
 	GDSetOverflowCallback(&TGDLStaticOverFlow);
-	unk10 = 0;
-	unk1C = new TGDLSentinel(this);
+	mReady = false;
+	unk1C  = new TGDLSentinel(this);
 }
 
 void TGDLStatic::make()
@@ -37,14 +37,14 @@ void TGDLStatic::make()
 
 	prev = GDGetCurrent();
 	for (;;) {
-		unk11             = 0;
+		mOverflowHappened = false;
 		currentTGDLStatic = this;
 		GDSetCurrent(&mDispListObj);
 		makeDL();
 		GDPadCurr32();
 		GDFlushCurrToMem();
-		if (unk11 == 0) {
-			unk10 = 1;
+		if (!mOverflowHappened) {
+			mReady = true;
 			break;
 		}
 

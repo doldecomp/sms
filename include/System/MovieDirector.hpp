@@ -58,7 +58,7 @@ public:
 
 	static const char* getStreamMovieName(u32);
 
-public:
+private:
 	enum {
 		STATE_FADE_IN           = 0,
 		STATE_PLAYING           = 1,

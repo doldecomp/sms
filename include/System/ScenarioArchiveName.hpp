@@ -12,7 +12,9 @@ public:
 
 	virtual void load(JSUMemoryInputStream& stream);
 
-public:
+	const char* getArcName() const { return mArcName; }
+
+private:
 	/* 0xC */ const char* mArcName;
 };
 

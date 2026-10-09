@@ -434,13 +434,14 @@ void TApplication::initialize_nlogoAfter()
 	JKRGetRootHeap()->free(spGameHeapBlock);
 
 	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
-	gpCardManager->mIcons
-	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
-	gpCardManager->mBanner
+	gpCardManager->setIcons(
+	    (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1);
 #ifdef VERSION_GMSP01
-	    = (ResTIMG*)piVar2->getResource("/card/mariobnr.bti") + 1;
+	gpCardManager->setBanner((ResTIMG*)piVar2->getResource("/card/mariobnr.bti")
+	                         + 1);
 #else
-	    = (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1;
+	gpCardManager->setBanner(
+	    (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1);
 #endif
 
 #ifndef VERSION_GMSP01
@@ -1024,7 +1025,7 @@ JKRMemArchive* TApplication::mountStageArchive()
 		    = tmp[mCurrArea.getStage()];
 		if (mCurrArea.getScenario() < scenarios.size()) {
 			const char* scenarioArcName
-			    = scenarios.getChildren()[mCurrArea.getScenario()].mArcName;
+			    = scenarios.getChildren()[mCurrArea.getScenario()].getArcName();
 
 			DVDChangeDir("/data/scene");
 			if (void* archBlob

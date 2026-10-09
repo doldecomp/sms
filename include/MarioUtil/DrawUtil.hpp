@@ -62,7 +62,7 @@ public:
 	// Fabricated
 	BOOL checkUnk8(u8 flag) { return unk8 & flag ? TRUE : FALSE; }
 
-public:
+protected:
 	/* 0x0 */ J3DModel* unk0;
 	/* 0x4 */ void* unk4;
 	/* 0x8 */ u8 unk8;

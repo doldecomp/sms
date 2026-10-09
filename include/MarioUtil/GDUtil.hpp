@@ -18,19 +18,20 @@ class TGDLStatic {
 		}
 		~TGDLSentinel();
 	};
+	friend class TGDLSentinel;
 
-public:
+private:
 	/* 0x0 */ GDLObj mDispListObj;
-	/* 0x10 */ u8 unk10;
-	/* 0x11 */ u8 unk11;
+	/* 0x10 */ bool mReady;
+	/* 0x11 */ bool mOverflowHappened;
 	/* 0x14 */ u8* mDispList;
 	/* 0x18 */ u32 mDispListSize;
 	/* 0x1C */ TGDLSentinel* unk1C;
 
 public:
 	TGDLStatic(u32 size)
-	    : unk10(0)
-	    , unk11(0)
+	    : mReady(false)
+	    , mOverflowHappened(false)
 	    , mDispList(nullptr)
 	    , mDispListSize(0)
 	    , unk1C(nullptr)
@@ -41,11 +42,13 @@ public:
 	// fabricated name; the body is proven, the name is not
 	void callDL()
 	{
-		if (!unk10)
+		if (!mReady)
 			make();
 		GXCallDisplayList(mDispListObj.start,
 		                  mDispListObj.ptr - mDispListObj.start);
 	}
+
+	void onOverflow() { mOverflowHappened = true; }
 
 	void make();
 	void alloc(u32);

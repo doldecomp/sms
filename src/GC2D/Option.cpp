@@ -634,7 +634,7 @@ void TOptionSoundUnit::updatePatternAnm()
 void TOptionSoundUnit::foreachPatternAnm(ArrayWrapper<TPatternAnmControl*>& ary,
                                          void (TPatternAnmControl::*ptmf)())
 {
-	for (TPatternAnmControl** it = ary.mData; it != ary.mData + ary.mSize; ++it)
+	for (TPatternAnmControl** it = ary.begin(); it != ary.end(); ++it)
 		((*it)->*ptmf)();
 }
 

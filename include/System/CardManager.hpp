@@ -80,6 +80,10 @@ public:
 
 	s32 cmdLoop();
 
+	// fabricated
+	void setIcons(const void* icons) { mIcons = icons; }
+	void setBanner(const void* banner) { mBanner = banner; }
+
 private:
 	void issue(s32 command);
 	s32 probe_();
@@ -99,7 +103,7 @@ private:
 	s32 writeCardSector_(CARDFileInfo* file, s32 index, TCardSector* sector,
 	                     TCriteria* criteria);
 
-public:
+private:
 	enum {
 		CMD_NONE          = 0,
 		CMD_FORMAT        = 1,

@@ -39,7 +39,7 @@ public:
 	const T& back() const { return mData[mSize - 1]; }
 	T& back() { return mData[mSize - 1]; }
 
-public:
+private:
 	/* 0x0 */ T* mData;
 	/* 0x4 */ u32 mSize;
 };

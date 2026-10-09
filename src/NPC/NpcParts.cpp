@@ -50,9 +50,9 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - ACTOR_TYPE_NPC_MONTE_M);
 
-	for (int i = 0; i < 12; ++i)
-		for (int j = 0; j < 2; ++j)
-			unk0[j][i] = nullptr;
+	TSharedParts** it = unk0[0];
+	for (int i = 0; i < sizeof(unk0) / sizeof(unk0[0][0]); ++i)
+		*it++ = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
 		if (initInfo->unk4[i] == nullptr || !(param_1 & (1 << i)))

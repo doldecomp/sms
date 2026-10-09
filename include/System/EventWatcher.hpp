@@ -13,7 +13,7 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void launchScript(const char*);
 
-public:
+private:
 	/* 0x10 */ TSpcTypedBinary<TEventWatcher>* mBinary;
 	/* 0x10 */ TSpcTypedInterp<TEventWatcher>* mInterp;
 };

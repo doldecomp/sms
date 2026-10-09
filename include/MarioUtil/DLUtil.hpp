@@ -21,7 +21,7 @@ public:
 	void createPosArrayBuffer(u16);
 	void draw();
 
-public:
+protected:
 	/* 0x4 */ u16 unk4;
 	/* 0x6 */ u16 unk6;
 	/* 0x8 */ u16 unk8;
@@ -58,7 +58,7 @@ public:
 	virtual void setEnd();
 	virtual void draw();
 
-public:
+protected:
 	/* 0x20 */ GXColor* unk20[2];
 };
 

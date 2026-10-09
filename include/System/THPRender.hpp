@@ -20,7 +20,7 @@ public:
 	void setPos(const JGeometry::TVec2<u32>& pos) { mPos = pos; }
 	void setSize(const JDrama::TSize& size) { mSize = size; }
 
-public:
+private:
 	/* 0x10 */ JGeometry::TVec2<u32> mPos;
 	/* 0x18 */ JDrama::TSize mSize;
 	/* 0x20 */ s32 frameNumber;

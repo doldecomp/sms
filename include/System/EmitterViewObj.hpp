@@ -71,7 +71,7 @@ public:
 	TEmitterViewObj(JPAEmitterManager*, const char* = "<EmitterViewObj>");
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
-public:
+protected:
 	/* 0x10 */ JPAEmitterManager* unk10;
 };
 

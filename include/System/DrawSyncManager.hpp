@@ -45,7 +45,7 @@ public:
 
 	static TDrawSyncManager* smInstance;
 
-public:
+private:
 	/* 0x0 */ JGadget::TVector<TDrawSyncTokenRange> mCallbacks;
 	/* 0x18 */ OSThread mProcessingThread;
 	/* 0x328 */ OSMessageQueue mMessageQueue;
