@@ -29,8 +29,10 @@ void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
 	else
 		jointName = nullptr;
 
-	if (jointName != nullptr)
-		mHappyEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName != nullptr) {
+		int jointIndex     = tab->getIndex(jointName);
+		mHappyEffectMtxPtr = getModel()->getAnmMtx((u16)jointIndex);
+	}
 }
 
 void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
@@ -50,23 +52,27 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 		break;
 	}
 
-	if (jointName)
-		mNoteEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName) {
+		int jointIndex    = tab->getIndex(jointName);
+		mNoteEffectMtxPtr = getModel()->getAnmMtx((u16)jointIndex);
+	}
 }
 
 void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 {
 	const char* koshiNullJoint = "koshi_null";
+	const char* koshiJoint     = "koshi";
 	const char* bodyJoint      = "jnt_body";
 	const char* leftFootJoint  = "footL_jnt";
 	const char* rightFootJoint = "footR_jnt";
-	const char* koshiJoint     = "koshi";
 
 	const char* pcVar5;
 	if (isNormalMonte()) {
-		unk200 = getModel()->getAnmMtx(tab->getIndex(leftFootJoint));
-		unk204 = getModel()->getAnmMtx(tab->getIndex(rightFootJoint));
-		pcVar5 = koshiNullJoint;
+		int jointIndex = tab->getIndex(leftFootJoint);
+		unk200         = getModel()->getAnmMtx((u16)jointIndex);
+		jointIndex     = tab->getIndex(rightFootJoint);
+		unk204         = getModel()->getAnmMtx((u16)jointIndex);
+		pcVar5         = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
 	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO) {
@@ -75,8 +81,10 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 		pcVar5 = nullptr;
 	}
 
-	if (pcVar5)
-		mPollutionEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(pcVar5));
+	if (pcVar5) {
+		int jointIndex         = tab->getIndex(pcVar5);
+		mPollutionEffectMtxPtr = getModel()->getAnmMtx((u16)jointIndex);
+	}
 }
 
 void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
@@ -91,7 +99,7 @@ void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
 		pcVar3 = "yashi_jnt";
 	}
 	mSmokeEffectMtxPtr = model->getAnmMtx(
-	    model->getModelData()->getJointName()->getIndex(pcVar3));
+	    (u16)model->getModelData()->getJointName()->getIndex(pcVar3));
 }
 
 static bool IsCheckPassFrame(J3DFrameCtrl* param_1, const f32* param_2)
