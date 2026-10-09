@@ -298,7 +298,7 @@ TToggleControl::TToggleControl(J2DScreen* screen)
 
 void TToggleControl::setupToggle(const u32* tags, int num_tags)
 {
-	mItems.set(tags, num_tags);
+	mItems.set((u32*)tags, num_tags);
 	for (const u32* it = mItems.begin(); it != mItems.end(); ++it)
 		mScreen->search(*it)->hide();
 	mCurItem = mItems.begin();

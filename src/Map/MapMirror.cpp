@@ -107,18 +107,12 @@ void TMirrorModel::initPlaneInfo()
 	u8 posComp = getVertexFormat(unk4->getModel()->getModelData(), GX_VA_POS);
 
 	if (posComp == GX_S16) {
-		S16Vec* v = (S16Vec*)unk4->getModel()
-		                ->getModelData()
-		                ->getVertexData()
-		                .getVtxPosArray();
+		S16Vec* v = (S16Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
 	} else {
-		Vec* v = (Vec*)unk4->getModel()
-		             ->getModelData()
-		             ->getVertexData()
-		             .getVtxPosArray();
+		Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 		unkC.x = v->x;
 		unkC.y = v->y;
 		unkC.z = v->z;
@@ -204,10 +198,7 @@ TMirrorModel::TMirrorModel()
 void TMirrorModelObj::setPlane()
 {
 	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
-	Vec* v     = (Vec*)unk4->getModel()
-	             ->getModelData()
-	             ->getVertexData()
-	             .getVtxPosArray();
+	Vec* v     = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 
 	JGeometry::TVec3<f32> local_18;
 	local_18.x = v->x;

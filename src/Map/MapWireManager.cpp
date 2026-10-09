@@ -19,7 +19,7 @@ f32 TMapWireActor::mCommonAttackHeight = 200.0f;
 
 void TMapWireActor::checkTakingActor()
 {
-	if (mHeldObject != nullptr && mHeldObject->mHolder != this) {
+	if (mHeldObject != nullptr && mHeldObject->getHolder() != this) {
 		mHeldObject = nullptr;
 		unk70       = 1;
 	}

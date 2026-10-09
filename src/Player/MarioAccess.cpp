@@ -133,8 +133,9 @@ bool SMS_IsMarioTouchGround4cm()
 bool SMS_IsMarioOnWire()
 {
 	bool ret;
-	if (gpMarioOriginal->mHolder
-	    && gpMarioOriginal->mHolder->mActorType == ACTOR_TYPE_MAP_WIRE_ACTOR)
+	if (gpMarioOriginal->getHolder()
+	    && gpMarioOriginal->getHolder()->mActorType
+	           == ACTOR_TYPE_MAP_WIRE_ACTOR)
 		ret = true;
 	else
 		ret = false;

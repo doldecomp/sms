@@ -136,7 +136,7 @@ public:
 
 public:
 	/* 0x0 */ J2DScreen* mScreen;
-	/* 0x4 */ ArrayWrapper<const u32> mItems;
+	/* 0x4 */ ArrayWrapper<u32> mItems;
 	/* 0xC */ const u32* mCurItem;
 };
 

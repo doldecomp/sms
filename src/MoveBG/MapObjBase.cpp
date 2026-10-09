@@ -375,7 +375,7 @@ void TMapObjBase::touchActor(THitActor* actor)
 
 void TMapObjBase::ensureTakeSituation()
 {
-	if (mHeldObject && mHeldObject->mHolder != this)
+	if (mHeldObject && mHeldObject->getHolder() != this)
 		mHeldObject = nullptr;
 
 	if (mHolder && mHolder->mHeldObject != this) {

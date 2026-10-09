@@ -903,7 +903,7 @@ BOOL TBossGesso::tentacleHeld() const
 
 void TBossGesso::tentacleAttack() { }
 
-BOOL TBossGesso::beakHeld() const { return !!mBeak->mHolder; }
+BOOL TBossGesso::beakHeld() const { return !!mBeak->getHolder(); }
 
 void TBossGesso::tentacleWait() { }
 
@@ -1207,7 +1207,7 @@ void TBossGesso::moveObject()
 		else
 			bVar4 = false;
 
-		if (bVar4 || mBeak->mHolder != nullptr)
+		if (bVar4 || mBeak->getHolder() != nullptr)
 			mSpine->pushNerve(&TNerveBGTug::theNerve());
 	}
 
@@ -1534,7 +1534,7 @@ DEFINE_NERVE(TNerveBGEyeDamage, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->changeBck(5);
 
-		if (self->mBeak->mHolder == nullptr && self->mAttackMode != 2) {
+		if (self->mBeak->getHolder() == nullptr && self->mAttackMode != 2) {
 			self->changeAttackMode(TBossGesso::ASTATE_UNISON);
 			self->changeAllTentacleState(1);
 		}
@@ -1723,7 +1723,7 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 0, nullptr);
 
-	if (self->mBeak->mHolder != nullptr) {
+	if (self->mBeak->getHolder() != nullptr) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 		delta -= self->mPosition;
 		f32 lim = self->getSaveParams()->mSLBeakLengthDamage.get();

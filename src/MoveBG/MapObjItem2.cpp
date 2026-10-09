@@ -174,7 +174,7 @@ void TJumpBase::initMapObj()
 
 void TJumpBase::ensureTakeSituation()
 {
-	if (mHeldObject && mHeldObject->mHolder != this)
+	if (mHeldObject && mHeldObject->getHolder() != this)
 		mHeldObject = nullptr;
 	if (mHolder && mHolder->mHeldObject != this)
 		mHolder = nullptr;

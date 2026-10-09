@@ -423,7 +423,7 @@ void TMario::considerTake()
 	    || mStatus == MARIO_STATUS_OIL_PULLING)
 		check = true;
 
-	if (mHeldObject != nullptr && mHeldObject->mHolder != this) {
+	if (mHeldObject != nullptr && mHeldObject->getHolder() != this) {
 		mHeldObject = nullptr;
 	}
 

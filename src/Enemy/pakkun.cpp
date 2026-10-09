@@ -815,7 +815,7 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 		self->unk194->appear();
 	}
 
-	if (self->mHolder != nullptr)
+	if (self->getHolder() != nullptr)
 		return false;
 
 	TPakkunSeed* seed = self->unk194;

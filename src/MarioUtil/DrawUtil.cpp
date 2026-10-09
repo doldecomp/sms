@@ -215,7 +215,7 @@ void TTrembleModelEffect::init(J3DModel* model)
 	}
 
 	if (found == 1) {
-		unk4  = unk0->getModelData()->getVertexData().getVtxPosArray();
+		unk4  = unk0->getModelData()->getVtxPosArray();
 		u32 n = unk0->getModelData()->getVertexData().getVtxNum();
 		unk9  = 0;
 		switch (unk8 & 2) {
@@ -226,7 +226,7 @@ void TTrembleModelEffect::init(J3DModel* model)
 			unk20     = new JGeometry::TVec3<s16>[n];
 			unk24     = 0;
 			unk26     = 0;
-			void* src = model->getModelData()->getVertexData().getVtxPosArray();
+			void* src = model->getModelData()->getVtxPosArray();
 			for (u32 i = 0; i < n; ++i) {
 				unk14[i]    = ((JGeometry::TVec3<s16>*)src)[i];
 				unk18[0][i] = ((JGeometry::TVec3<s16>*)src)[i];
@@ -242,7 +242,7 @@ void TTrembleModelEffect::init(J3DModel* model)
 			unk34     = new JGeometry::TVec3<f32>[n];
 			unk38     = 0.0f;
 			unk3C     = 0.0f;
-			void* src = model->getModelData()->getVertexData().getVtxPosArray();
+			void* src = model->getModelData()->getVtxPosArray();
 			for (u32 i = 0; i < n; ++i) {
 				unk28[i]    = ((JGeometry::TVec3<f32>*)src)[i];
 				unk2C[0][i] = ((JGeometry::TVec3<f32>*)src)[i];
