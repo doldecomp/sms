@@ -108,9 +108,9 @@ void TMirrorModel::initPlaneInfo()
 
 	if (posComp == GX_S16) {
 		S16Vec* v = (S16Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
-		unkC.x = v->x;
-		unkC.y = v->y;
-		unkC.z = v->z;
+		unkC.x    = v->x;
+		unkC.y    = v->y;
+		unkC.z    = v->z;
 	} else {
 		Vec* v = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 		unkC.x = v->x;

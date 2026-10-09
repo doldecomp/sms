@@ -75,7 +75,7 @@ BOOL TMario::readBillboard()
 		mFaceAngle.y = convAngle;
 		if (attackAngle == mFaceAngle.y) {
 			SMSGetMarDirector()->unk126 = 2;
-			mStatusState          = 2;
+			mStatusState                = 2;
 		}
 		break;
 	}

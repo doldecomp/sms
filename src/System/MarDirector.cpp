@@ -69,10 +69,10 @@ extern u8* gpSetupThreadStack;
 u32 TMarDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad** param_2,
                         u8 param_3, u8 param_4)
 {
-	unkC0 = param_1;
+	unkC0     = param_1;
 	mGamePads = param_2;
-	mMap  = param_3;
-	unk7D = param_4;
+	mMap      = param_3;
+	unk7D     = param_4;
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
 	               (void*)(gpSetupThreadStack + 0x10000), 0x10000, 0x11, 0);
 	OSResumeThread(&gSetupThread);
