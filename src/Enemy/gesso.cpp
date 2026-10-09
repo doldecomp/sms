@@ -1025,7 +1025,7 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 			self->setVelocity(self->unk1DC);
 		}
 	} else if (self->unkF4.unk0 == (THitActor*)gpMarioAddress) {
-		self->walkToCurPathNode(0.0f, self->mTurnSpeed, 0.0f);
+		self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 	}
 
 	return false;

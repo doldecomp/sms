@@ -137,7 +137,7 @@ void TMapWireActorManager::doActorToWire()
 		return;
 	}
 
-	if (unk4.mHeldObject != nullptr) {
+	if (unk4.getHeldObject() != nullptr) {
 		if (unk7C != nullptr)
 			unk7C->setFootPointsAtHanged(gpMarioOriginal->getTakenMtx());
 		if (previousWire != nullptr) {

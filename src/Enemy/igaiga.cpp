@@ -1184,7 +1184,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 	if (spine->getTime() < 2) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 
-		if (self->mGroundPlane->isWaterSurface() && !self->isAirborne())
+		if (self->getGroundPlane()->isWaterSurface() && !self->isAirborne())
 			self->generateEffectColumWater();
 
 		if (self->checkLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH)) {

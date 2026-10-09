@@ -1074,14 +1074,15 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		self->changeBck(0x18);
 
 	if (self->getCurrentBck() == 0x18) {
-		self->walkToCurPathNode(self->mMarchSpeed, self->mTurnSpeed, 0.0f);
+		self->walkToCurPathNode(self->getMarchSpeed(), self->getTurnSpeed(),
+		                        0.0f);
 	}
 
 	int frame = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 	if (self->getLevel() != 0 && !self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
 	    && !self->isAirborne() && (frame == 0x24 || frame == 0x55)) {
 		f32 ws = ((THino2Params*)self->getSaveParam())->mSLWalkShake.get();
-		if (!(ws * ws < self->mDistToMarioSquared))
+		if (!(ws * ws < self->getDistToMarioSquared()))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 0.8f);
 
 		JGeometry::TVec3<f32> TStack_3C;
@@ -1140,7 +1141,7 @@ DEFINE_NERVE(TNerveHino2Landing, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->changeBck(0xE);
 		f32 js = ((THino2Params*)self->getSaveParam())->mSLJumpShake.get();
-		if (!(js * js < self->mDistToMarioSquared))
+		if (!(js * js < self->getDistToMarioSquared()))
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
 	}
 
@@ -1158,7 +1159,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
-	JGeometry::TVec3<f32> posDiff = self->unk104.getPoint();
+	JGeometry::TVec3<f32> posDiff = self->getUnkF4().getPoint();
 
 	posDiff -= self->mPosition;
 
@@ -1170,7 +1171,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 		self->changeBck(0x15);
 	}
 
-	f32 turnSpeed = self->mTurnSpeed;
+	f32 turnSpeed = self->getTurnSpeed();
 	f32 turn;
 	if (angleDiff > 0.0f)
 		turn = MsMin(angleDiff, turnSpeed);
@@ -1179,7 +1180,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 
 	self->mRotation.y = MsWrap(self->mRotation.y + turn, 0.0f, 360.0f);
 
-	if (fabsf(turn) < self->mTurnSpeed * 0.5f)
+	if (fabsf(turn) < turnSpeed * 0.5f)
 		return true;
 
 	return false;
@@ -1353,7 +1354,7 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 	if (self->getMActor()->curAnmEndsNext()) {
 		if (self->mCurrentBck == 0x13) {
 			f32 js = ((THino2Params*)self->getSaveParam())->mSLJumpShake.get();
-			if (!(js * js < self->mDistToMarioSquared))
+			if (!(js * js < self->getDistToMarioSquared()))
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
 			self->changeBck(0x14);
 		}

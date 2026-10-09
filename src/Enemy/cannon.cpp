@@ -894,7 +894,7 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 	TCannon* cannon = static_cast<TCannon*>(spine->getBody());
 	cannon->updateSquareToMario();
 	f32 initialBombDist = cannon->unk28C->mSLBombDist.get();
-	f32 distSquared     = cannon->mDistToMarioSquared;
+	f32 distSquared     = cannon->getDistToMarioSquared();
 	if (spine->getTime() == 0) {
 		if (distSquared < initialBombDist * initialBombDist)
 			cannon->setGoalPath((THitActor*)gpMarioAddress);
@@ -994,7 +994,7 @@ DEFINE_NERVE(TNerveCannonForceBombShoot, TLiveActor)
 	TCannon* cannon = static_cast<TCannon*>(spine->getBody());
 	if (spine->getTime() == 0) {
 		f32 dist = cannon->unk28C->mSLBombDist.get();
-		if (cannon->mDistToMarioSquared < 2.0f * (dist * dist))
+		if (cannon->getDistToMarioSquared() < 2.0f * (dist * dist))
 			cannon->unk1A8->setBckAnm(17);
 		else
 			return true;
@@ -1047,7 +1047,7 @@ DEFINE_NERVE(TNerveCannonClose, TLiveActor)
 	f32 hideDist = cannon->unk28C->mSLHideDist.get();
 	hideDist *= 3.0f;
 	hideDist *= hideDist;
-	if (cannon->mDistToMarioSquared > hideDist) {
+	if (cannon->getDistToMarioSquared() > hideDist) {
 		cannon->offHitFilter(HIT_FILTER_NO_COLLISION);
 		cannon->unk1A8->offHitFilter(HIT_FILTER_NO_COLLISION);
 		spine->pushAfterCurrent(&TNerveCannonOpen::theNerve());

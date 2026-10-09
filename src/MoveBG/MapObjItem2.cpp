@@ -176,7 +176,7 @@ void TJumpBase::ensureTakeSituation()
 {
 	if (mHeldObject && mHeldObject->getHolder() != this)
 		mHeldObject = nullptr;
-	if (mHolder && mHolder->mHeldObject != this)
+	if (mHolder && mHolder->getHeldObject() != this)
 		mHolder = nullptr;
 }
 

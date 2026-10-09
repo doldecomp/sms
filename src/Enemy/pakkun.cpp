@@ -1067,7 +1067,7 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 		}
 	}
 
-	self->walkToCurPathNode(0.0f, self->mTurnSpeed * 3.0f, 0.0f);
+	self->walkToCurPathNode(0.0f, self->getTurnSpeed() * 3.0f, 0.0f);
 	return false;
 }
 

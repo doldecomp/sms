@@ -516,7 +516,7 @@ void TBPHeadHit::throwActor(THitActor* actor)
 {
 	if (actor->getActorType() != ACTOR_TYPE_MARIO)
 		return;
-	if (!mOwner->mMActor->checkCurBckFromIndex(15))
+	if (!mOwner->getMActor()->checkCurBckFromIndex(15))
 		return;
 
 	static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
@@ -656,7 +656,7 @@ void TBossPakkunMtxCalc::calcHeadDir(u16 jointIndex)
 	f32 headRotation = mOwner->unk184;
 	f32 headAngle    = MsGetRotFromZaxisY(headAxis);
 	f32 desiredAngle;
-	if (mOwner->mMActor->checkCurBckFromIndex(25)) {
+	if (mOwner->getMActor()->checkCurBckFromIndex(25)) {
 		desiredAngle
 		    = MsWrap(headRotation + MsGetRotFromZaxisY(toMario), 0.0f, 360.0f);
 	} else {
@@ -1417,7 +1417,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 		boss->changeBck(25);
 
 	if (spine->getTime() >= boss->getBossPakkunParams()->mSLWaitFrameStg0.get()
-	    && boss->mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
+	    && boss->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		if (SMSGetMarDirector()->mMap == 2
 		    && (SMSGetMarDirector()->unk7D == 0
 		        || SMSGetMarDirector()->unk7D == 1)) {
@@ -1472,7 +1472,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0)
 		boss->changeBck(21);
@@ -1493,7 +1493,7 @@ DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(21);
 
@@ -1543,7 +1543,7 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 DEFINE_NERVE(TNerveBPTornado, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->changeBck(24);
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
@@ -1613,7 +1613,7 @@ DEFINE_NERVE(TNerveBPSwallow, TLiveActor)
 DEFINE_NERVE(TNerveBPTumbleIn, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(3);
 
@@ -1660,7 +1660,7 @@ DEFINE_NERVE(TNerveBPTumble, TLiveActor)
 DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->changeBck(14);
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x10), 1.0f);
@@ -1697,7 +1697,7 @@ DEFINE_NERVE(TNerveBPTumbleOut, TLiveActor)
 DEFINE_NERVE(TNerveBPGetUp, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->changeBck(14);
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x10), 1.0f);
@@ -1715,7 +1715,7 @@ DEFINE_NERVE(TNerveBPGetUp, TLiveActor)
 DEFINE_NERVE(TNerveBPSwing, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(15);
 	if (spine->getTime() == 0) {
@@ -1731,7 +1731,7 @@ DEFINE_NERVE(TNerveBPSwing, TLiveActor)
 DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(5);
@@ -1755,7 +1755,7 @@ DEFINE_NERVE(TNerveBPStompReact, TLiveActor)
 DEFINE_NERVE(TNerveBPJumpReact, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(17);
 	if (actor->curAnmEndsNext(0, nullptr))
@@ -1766,7 +1766,7 @@ DEFINE_NERVE(TNerveBPJumpReact, TLiveActor)
 DEFINE_NERVE(TNerveBPPreDie, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->changeBck(5);
 		boss->mHeadHit->onHitFilter(HIT_FILTER_NO_COLLISION);
@@ -1785,7 +1785,7 @@ DEFINE_NERVE(TNerveBPPreDie, TLiveActor)
 DEFINE_NERVE(TNerveBPDie, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->unk98->modBgm(0, 1);
@@ -1811,7 +1811,7 @@ DEFINE_NERVE(TNerveBPDie, TLiveActor)
 DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->onLiveFlag(LIVE_FLAG_UNK10);
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -1859,14 +1859,14 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 	}
 
 	boss->flyToCurPathNode(boss->getBossPakkunParams()->mSLFlySpeed.get(),
-	                       boss->mTurnSpeed);
+	                       boss->getTurnSpeed());
 	return false;
 }
 
 DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(11);
 
@@ -1891,7 +1891,7 @@ DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 DEFINE_NERVE(TNerveBPFlyCannon, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(12);
 	if (spine->getTime() == 168)
@@ -1948,7 +1948,7 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 DEFINE_NERVE(TNerveBPFall, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->offLiveFlag(LIVE_FLAG_UNK10);
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -2008,7 +2008,7 @@ DEFINE_NERVE(TNerveBPBreakSleep, TLiveActor)
 		boss->changeBck(14);
 		MSBgm::stopTrackBGMs(7, 10);
 	}
-	if (boss->mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (boss->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBPTakeOff::theNerve());
 		return true;
 	}
@@ -2018,7 +2018,7 @@ DEFINE_NERVE(TNerveBPBreakSleep, TLiveActor)
 DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0)
 		actor->setBck("bosspaku_wait");
@@ -2044,7 +2044,7 @@ DEFINE_NERVE(TNerveBPWaitL, TLiveActor)
 DEFINE_NERVE(TNerveBPCannonL, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0)
 		actor->setBck("bosspaku_pollut_start");

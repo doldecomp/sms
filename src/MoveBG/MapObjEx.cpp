@@ -68,10 +68,12 @@ void TJointCoin::control()
 		u16 idx          = unk144[i];
 
 		MtxPtr mtx = getModel()->getAnmMtx(idx);
-		if (obj->mMActor)
+		if (obj->getMActor())
 			obj->getModel()->setAnmMtx(0, mtx);
 
-		obj->mPosition.set(mtx[0][3], mtx[1][3] + obj->mYOffset, mtx[2][3]);
+		obj->mPosition.set(mtx[0][3],
+		                   mtx[1][3] + obj->getObjCollisionHeightOffset(),
+		                   mtx[2][3]);
 	}
 
 	TMapObjBase::control();

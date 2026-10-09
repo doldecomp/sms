@@ -778,7 +778,7 @@ DEFINE_NERVE(TNerveElecNokonokoShoot, TLiveActor)
 		if (self->getMActor()->getFrameCtrl(0)->checkPass(60.0f))
 			self->unk194->appear();
 		if (self->getCurAnmFrameNo(0) < 62.0f)
-			self->walkToCurPathNode(0.0f, self->mTurnSpeed, 0.0f);
+			self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 		if (self->getMActor()->getFrameCtrl(0)->checkPass(62.0f))
 			self->shootIn();
 		if (self->checkCurAnmEnd(0)) {
@@ -816,7 +816,7 @@ DEFINE_NERVE(TNerveElecNokonokoCollect, TLiveActor)
 		spine->pushAfterCurrent(&TNerveElecNokonokoRebirth::theNerve());
 		return true;
 	}
-	self->walkToCurPathNode(0.0f, self->mTurnSpeed, 0.0f);
+	self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 	return false;
 }
 
@@ -840,7 +840,7 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 	if (0.0f == self->mPosition.x - self->unk194->mPosition.x
 	    && 0.0f == self->mPosition.z - self->unk194->mPosition.z)
 		self->mPosition.x += 1.0f;
-	self->walkToCurPathNode(0.0f, self->mTurnSpeed, 0.0f);
+	self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 	if (spine->getTime() > 500)
 		return true;
 	return false;
@@ -854,13 +854,13 @@ DEFINE_NERVE(TNerveElecNokonokoFreeze, TLiveActor)
 			self->setBckAnm(3);
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_DNK_SHIBIRE_B,
-			    self->mMActor->getModel()->getAnmMtx(0), 0, nullptr);
+			    self->getMActor()->getModel()->getAnmMtx(0), 0, nullptr);
 		} else {
 			self->setBckAnm(7);
 		}
 	}
 	if (self->isBckAnm(3) && self->getCurAnmFrameNo(0) < 25.0f) {
-		MtxPtr jointMtx = self->mMActor->getModel()->getAnmMtx(8);
+		MtxPtr jointMtx = self->getMActor()->getModel()->getAnmMtx(8);
 		self->unk1A8.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    PARTICLE_MS_DNK_HIBANA, &self->unk1A8, 1, self);

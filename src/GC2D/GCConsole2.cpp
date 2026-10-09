@@ -218,7 +218,7 @@ static inline void playHudMoveSound(u32 soundID)
 {
 	if (SMSGetMarDirector()->unk124 != 0)
 		return;
-	if (gpMarioOriginal->mHealth == 0)
+	if (gpMarioOriginal->getHealth() == 0)
 		return;
 	if ((s16)gpMarioOriginal->mAir == 0)
 		return;
@@ -406,7 +406,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 	case 3:
 	case 7:
 		airMode = false;
-		amount  = gpMarioOriginal->mHealth;
+		amount  = gpMarioOriginal->getHealth();
 		break;
 	case 4:
 	case 5:
@@ -524,7 +524,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 					console->unk18 = 6;
 			} else if (console->unk1CC[0] != console->unk1C) {
 				console->startAppearLife(1);
-				amount             = gpMarioOriginal->mHealth;
+				amount             = gpMarioOriginal->getHealth();
 				console->unk1CC[0] = amount;
 				console->resetLife(amount);
 				console->unk18 = 1;
@@ -535,10 +535,10 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		if (console->unk84 > 0x78) {
 			if (console->unk1C4->update()) {
 				console->unk4C = 0;
-				if (gpMarioOriginal->mHealth == 8) {
+				if (gpMarioOriginal->getHealth() == 8) {
 					console->unk18 = 0;
 				} else {
-					amount             = gpMarioOriginal->mHealth;
+					amount             = gpMarioOriginal->getHealth();
 					console->unk1CC[0] = amount;
 					console->startInsertLife(0);
 					console->resetLife(amount);
@@ -553,7 +553,7 @@ static inline void updateLifeMeterState(TGCConsole2* console)
 		if (console->unk50) {
 			if (console->unk1C4->update())
 				console->unk4C = 0;
-		} else if (gpMarioOriginal->mHealth != 8) {
+		} else if (gpMarioOriginal->getHealth() != 8) {
 			console->startInsertLife(0);
 			console->unk18 = 7;
 		} else if (gpMarioOriginal->isUnderWater() || SMS_isDivingMap()) {
@@ -1907,7 +1907,7 @@ void TGCConsole2::loadAfter()
 	unk2EC[1] = JUtility::TColor(0x64DCFF00);
 	unk2EC[2] = JUtility::TColor(0x00B4F000);
 
-	s16 health = gpMarioOriginal->mHealth;
+	s16 health = gpMarioOriginal->getHealth();
 	if (health < 0)
 		health = 0;
 
@@ -2276,7 +2276,7 @@ void TGCConsole2::startInsertLife(int param_1)
 		for (int i = 1; i < 9; ++i) {
 			((J2DPicture*)unk17C[i * 2])->mWhite = 0xFFFFFFFF;
 			((J2DPicture*)unk17C[i * 2])->mBlack = 0;
-			if (gpMarioOriginal->mHealth + 1 > i)
+			if (gpMarioOriginal->getHealth() + 1 > i)
 				unk17C[i * 2]->show();
 			else
 				unk17C[i * 2]->hide();
@@ -2342,7 +2342,7 @@ bool TGCConsole2::startAppearLife(int param_1)
 		for (int i = 0; i < 9; ++i) {
 			((J2DPicture*)unk17C[i * 2])->mWhite = 0xFFFFFFFF;
 			((J2DPicture*)unk17C[i * 2])->mBlack = 0;
-			if (gpMarioOriginal->mHealth + 1 > i)
+			if (gpMarioOriginal->getHealth() + 1 > i)
 				unk17C[i * 2]->show();
 			else
 				unk17C[i * 2]->hide();

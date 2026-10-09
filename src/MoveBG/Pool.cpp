@@ -88,10 +88,10 @@ TPool::TPool(const char* name)
 
 f32 TPoolManager::getWaterLevel(const TBGCheckData* param_1) const
 {
-	if (param_1 == nullptr || param_1->mActor == nullptr)
+	if (param_1 == nullptr || param_1->getActor() == nullptr)
 		return param_1->mMinY + 100.0f;
 
-	int idx = param_1->mActor->mInstanceIndex;
+	int idx = param_1->getActor()->getInstanceIndex();
 	if (idx == 0xff ? true : false)
 		return 99999.0f;
 	return ((const TPool*)getObj(idx))->getWaterLevel();
@@ -99,10 +99,10 @@ f32 TPoolManager::getWaterLevel(const TBGCheckData* param_1) const
 
 bool TPoolManager::subWaterLevel(const TBGCheckData* param_1)
 {
-	if (param_1 == nullptr || param_1->mActor == nullptr)
+	if (param_1 == nullptr || param_1->getActor() == nullptr)
 		return true;
 
-	int idx = param_1->mActor->mInstanceIndex;
+	int idx = param_1->getActor()->getInstanceIndex();
 	if (idx == 0xff ? true : false)
 		return true;
 

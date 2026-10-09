@@ -675,8 +675,8 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 
 	if (self->mThrowTimer == 4) {
 		SMSRumbleMgr->start(0x15, 0xf, (float*)nullptr);
-		MtxPtr mtx
-		    = self->mMActor->getModel()->getAnmMtx(TPoiHana::mMouthJntIndex);
+		MtxPtr mtx = self->getMActor()->getModel()->getAnmMtx(
+		    TPoiHana::mMouthJntIndex);
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_DMG_B, mtx, 0,
 		                                            nullptr);
 		gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_M_AMIATTACK,

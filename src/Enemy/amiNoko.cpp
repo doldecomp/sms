@@ -697,7 +697,7 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 		}
 	}
 
-	JGeometry::TVec3<f32> pos = self->unkF4.getPoint();
+	JGeometry::TVec3<f32> pos = self->getUnkF4().getPoint();
 	pos -= self->mPosition;
 	if (pos.length() < 1.5f && self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(3) || self->isBckAnm(6)) {
@@ -734,7 +734,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 		}
 	}
 
-	JGeometry::TVec3<f32> pos = self->unkF4.getPoint();
+	JGeometry::TVec3<f32> pos = self->getUnkF4().getPoint();
 	pos -= self->mPosition;
 	if (pos.x == 0.0f && pos.y == 0.0f && pos.z == 0.0f)
 		pos.x = 1.0f;

@@ -882,7 +882,7 @@ DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
 	if (spine->getTime() == 0) {
 		if (self->isAirborne()) {
-			if (self->mPosition.y - self->mGroundHeight > 50.0f) {
+			if (self->mPosition.y - self->getGroundHeight() > 50.0f) {
 				self->setAttackAnm();
 				self->hitWater();
 			}
@@ -1133,8 +1133,8 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 	MsVECNormalize(&dir, &dir);
 	self->unk1D0.x *= 0.99f;
 	self->unk1D0.z *= 0.99f;
-	self->mPosition.x += dir.x * self->mMarchSpeed - self->unk1D0.x;
-	self->mPosition.z += dir.z * self->mMarchSpeed - self->unk1D0.z;
+	self->mPosition.x += dir.x * self->getMarchSpeed() - self->unk1D0.x;
+	self->mPosition.z += dir.z * self->getMarchSpeed() - self->unk1D0.z;
 	self->unk1EC = MsClamp(self->unk1EC + 1.0f, 0.0f, 180.0f);
 	return false;
 }

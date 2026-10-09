@@ -816,7 +816,7 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 		self->setWaitAnm();
 		if (SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 			self->updateSquareToMario();
-			if (self->mDistToMarioSquared
+			if (self->getDistToMarioSquared()
 			    < self->unk198->mSLAttackDist.get()
 			          * self->unk198->mSLAttackDist.get())
 				spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
@@ -842,7 +842,7 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	if (spine->getTime() > self->unk198->mSLAttackInterval.get()
 	    && SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 		self->updateSquareToMario();
-		if (self->mDistToMarioSquared
+		if (self->getDistToMarioSquared()
 		    < self->unk198->mSLAttackDist.get()
 		          * self->unk198->mSLAttackDist.get()) {
 			spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
@@ -851,7 +851,7 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	}
 
 	self->updateSquareToMario();
-	if (self->mDistToMarioSquared
+	if (self->getDistToMarioSquared()
 	    > self->unk198->mSLHideDist.get() * self->unk198->mSLHideDist.get()) {
 		spine->pushAfterCurrent(&TNerveHanaSamboHide::theNerve());
 		return true;
@@ -913,8 +913,9 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	}
 
 	self->updateSquareToMario();
-	if (self->mDistToMarioSquared < self->unk198->mSLAppearDist.get()
-	                                    * self->unk198->mSLAppearDist.get()) {
+	if (self->getDistToMarioSquared()
+	    < self->unk198->mSLAppearDist.get()
+	          * self->unk198->mSLAppearDist.get()) {
 		spine->pushAfterCurrent(&TNerveHanaSamboAppear::theNerve());
 		return true;
 	}
@@ -1383,7 +1384,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 		}
 	}
 
-	if (self->mPosition.y > 30.0f + self->mGroundHeight) {
+	if (self->mPosition.y > 30.0f + self->getGroundHeight()) {
 		f32 limit                      = self->unk194->mSLJumpAngY.get();
 		JGeometry::TVec3<f32> velocity = self->mVelocity;
 		self->unk1AC = MsClamp(MsGetRotFromZaxis(velocity).x, -limit, limit);
@@ -1416,7 +1417,7 @@ DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 		self->initFlower();
 	} else if (self->isFindMario(1.0f)) {
 		self->updateSquareToMario();
-		if (self->mDistToMarioSquared
+		if (self->getDistToMarioSquared()
 		    < self->unk194->mSLAppearDist.get()
 		          * self->unk194->mSLAppearDist.get()) {
 			spine->pushAfterCurrent(&TNerveSamboHeadAppear::theNerve());
@@ -1463,7 +1464,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 
 	if (self->isBckAnm(6)) {
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		self->mPosition.y = 1.0f + self->mGroundHeight;
+		self->mPosition.y = 1.0f + self->getGroundHeight();
 		self->setVelocity(self->unk1A0);
 	}
 
@@ -1477,7 +1478,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 		self->unk1A0.z *= rate;
 		self->unk1A0.y = 0.0f;
 		self->setVelocity(self->unk1A0);
-		self->mPosition.y = self->mGroundHeight;
+		self->mPosition.y = self->getGroundHeight();
 		self->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		self->setBckAnm(12);
 		spine->setNext(&TNerveSamboHeadAttack::theNerve());

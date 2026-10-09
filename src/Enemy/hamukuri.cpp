@@ -1790,7 +1790,7 @@ void TDangoHamuKuri::setRunAnm()
 void TDangoHamuKuri::calcRootMatrix()
 {
 	getModel()->setBaseScale(mScaling);
-	if (mHolder && mHolder->mHeldObject == this) {
+	if (mHolder && mHolder->getHeldObject() == this) {
 		MtxPtr takingMtx = mHolder->getTakingMtx();
 		if (takingMtx) {
 			if (unk230) {
@@ -2689,7 +2689,7 @@ DEFINE_NERVE(TNerveDoroHaneRise, TLiveActor)
 {
 	TDoroHaneKuri* self = (TDoroHaneKuri*)spine->getBody();
 
-	if (self->mPosition.y < self->mGroundHeight + 800.0f)
+	if (self->mPosition.y < self->getGroundHeight() + 800.0f)
 		self->unk234 += MsClamp(self->mSpine->getTime() * 0.01f, 0.01f, 5.0f);
 
 	self->mScaling.x = self->mScaling.z

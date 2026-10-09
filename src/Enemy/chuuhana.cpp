@@ -797,9 +797,9 @@ DEFINE_NERVE(TNerveChuuHanaWalkOnPanel, TLiveActor)
 	}
 
 	if (self->unk218 == nullptr) {
-		if (self->mGroundPlane->getActor() != nullptr) {
-			self->unk1F8 = self->mGroundPlane->getActor()->mPosition;
-			self->unk218 = (THitActor*)self->mGroundPlane->getActor();
+		if (self->getGroundPlane()->getActor() != nullptr) {
+			self->unk1F8 = self->getGroundPlane()->getActor()->mPosition;
+			self->unk218 = (THitActor*)self->getGroundPlane()->getActor();
 		}
 	} else {
 		self->walkBehavior(2, 1.0f);
@@ -824,8 +824,8 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 		self->setSafeGoal();
 
 	if (self->unk214 && self->getCurAnmFrameNo(0) > 80.0f) {
-		if (self->mGroundPlane->getActor() != nullptr) {
-			THitActor* actor = (THitActor*)self->mGroundPlane->getActor();
+		if (self->getGroundPlane()->getActor() != nullptr) {
+			THitActor* actor = (THitActor*)self->getGroundPlane()->getActor();
 			actor->receiveMessage(self, HIT_MESSAGE_SUPER_HIP_DROP);
 		}
 		self->unk214 = 0;
@@ -871,7 +871,7 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 	if (TChuuHana::mAttackVersion)
 		*self->unk21C = 1;
 
-	if (!TChuuHana::mNewSw && self->mGroundPlane->getActor() == nullptr) {
+	if (!TChuuHana::mNewSw && self->getGroundPlane()->getActor() == nullptr) {
 		spine->pushAfterCurrent(&TNerveChuuHanaFall::theNerve());
 		return true;
 	}

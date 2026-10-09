@@ -378,7 +378,7 @@ void TMapObjBase::ensureTakeSituation()
 	if (mHeldObject && mHeldObject->getHolder() != this)
 		mHeldObject = nullptr;
 
-	if (mHolder && mHolder->mHeldObject != this) {
+	if (mHolder && mHolder->getHeldObject() != this) {
 		if (mPosition.y != mGroundHeight)
 			offLiveFlag(LIVE_FLAG_UNK10);
 

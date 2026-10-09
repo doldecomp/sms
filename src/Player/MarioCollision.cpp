@@ -427,7 +427,7 @@ void TMario::considerTake()
 		mHeldObject = nullptr;
 	}
 
-	if (mHolder != nullptr && mHolder->mHeldObject != this)
+	if (mHolder != nullptr && mHolder->getHeldObject() != this)
 		mHolder = nullptr;
 
 	if (mHeldObject != nullptr && !check) {

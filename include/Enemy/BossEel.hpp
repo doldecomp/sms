@@ -3,8 +3,10 @@
 
 #include <Enemy/Enemy.hpp>
 #include <Enemy/EnemyManager.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
 #include <dolphin/gx/GXStruct.h>
 
@@ -105,6 +107,14 @@ public:
 	void deadEffect();
 	void setRecoverTears();
 	void setBubble();
+
+	TBEelTearsSaveLoadParams* getTearsParams() { return mTearsParams; }
+
+	void changeMActor(const char* name, int bck)
+	{
+		mMActor = mMActorKeeper->getMActor(name);
+		mMActor->setBckFromIndex(bck);
+	}
 
 public:
 	/* 0x150 */ JGeometry::TVec3<f32> mInitialPosition;

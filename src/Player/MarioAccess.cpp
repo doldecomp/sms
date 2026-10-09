@@ -96,7 +96,7 @@ bool SMS_IsMarioHeadSlideAttack()
 	}
 }
 
-s16 SMS_GetMarioHP() { return gpMarioOriginal->mHealth; }
+s16 SMS_GetMarioHP() { return gpMarioOriginal->getHealth(); }
 
 f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
 
@@ -184,7 +184,7 @@ u32 SMS_GetMarioStatus() { return gpMarioOriginal->mStatus; }
 
 const TBGCheckData* SMS_GetMarioGrPlane()
 {
-	return gpMarioOriginal->mGroundPlane;
+	return gpMarioOriginal->getGroundPlane();
 }
 
 const TBGCheckData* SMS_GetMarioWlPlane()

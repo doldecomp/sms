@@ -594,7 +594,7 @@ DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 		self->entryObjCollision();
 		self->generateEffectColumWater();
 		self->unk1E0 = 0.0f;
-		self->unk1E4 = self->mGroundHeight;
+		self->unk1E4 = self->getGroundHeight();
 		self->unk1E8 = 80.0f;
 	}
 
@@ -641,7 +641,7 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 		int wait = self->getGroundPlane()->isWaterSurface()
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();
-		if (spine->getTime() > wait + self->mInstanceIndex * 10) {
+		if (spine->getTime() > wait + self->getInstanceIndex() * 10) {
 			spine->pushAfterCurrent(
 			    &TNerveMameGessoGraphJumpWander::theNerve());
 			return true;

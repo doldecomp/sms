@@ -77,8 +77,9 @@ void TFerrisWheel::control()
 		TMapObjBase* gondola = unk13C[i];
 		MtxPtr mtx           = getModel()->getAnmMtx(i + 1);
 		MTXCopy(mtx, gondola->getModel()->getAnmMtx(0));
-		gondola->mPosition.set(mtx[0][3], mtx[1][3] + gondola->mYOffset,
-		                       mtx[2][3]);
+		gondola->mPosition.set(
+		    mtx[0][3], mtx[1][3] + gondola->getObjCollisionHeightOffset(),
+		    mtx[2][3]);
 	}
 }
 

@@ -91,10 +91,10 @@ TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
 	mSharedParts
 	    = new TSharedParts(mOwner, jointIndex, modelData, 0, "<TSharedParts>");
 	initHitActor(ACTOR_TYPE_BOSS_EEL_TEARS, 3, HIT_CATEGORY_PLAYER,
-	             mOwner->mTearsParams->mSLTearsDropAttackRadius.get(),
-	             mOwner->mTearsParams->mSLTearsDropAttackHeight.get(),
-	             mOwner->mTearsParams->mSLTearsDropDamageRadius.get(),
-	             mOwner->mTearsParams->mSLTearsDropDamageHeight.get());
+	             mOwner->getTearsParams()->mSLTearsDropAttackRadius.get(),
+	             mOwner->getTearsParams()->mSLTearsDropAttackHeight.get(),
+	             mOwner->getTearsParams()->mSLTearsDropDamageRadius.get(),
+	             mOwner->getTearsParams()->mSLTearsDropDamageHeight.get());
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
@@ -126,7 +126,7 @@ void TBEelTearsDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 		MsMtxSetXYZRPH(ptr, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 		               mRotation.y, mRotation.z);
 		mSharedParts->getMActor()->getModel()->setBaseTRMtx(ptr);
-		f32 scale = mOwner->mTearsParams->mSLTearsDropScaleLow.get();
+		f32 scale = mOwner->getTearsParams()->mSLTearsDropScaleLow.get();
 		mScaling.set(scale, scale, scale);
 		mSharedParts->getMActor()->getModel()->setBaseScale(mScaling);
 	}
@@ -144,7 +144,7 @@ void TBEelTearsDrop::generate(JGeometry::TVec3<f32>& position)
 	TMsRange<f32> unused(1.0f, 1.5f);
 	unused.rand();
 
-	f32 scale = mOwner->mTearsParams->mTearsDropScaleRange.rand();
+	f32 scale = mOwner->getTearsParams()->mTearsDropScaleRange.rand();
 	mScaling.set(scale, scale, scale);
 }
 
@@ -507,8 +507,7 @@ DEFINE_NERVE(TNerveBEelTearsGenerate, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
-		tears->mMActor->setBckFromIndex(2);
+		tears->changeMActor("tears.bmd", 2);
 	}
 
 	if (tears->checkCurAnmEnd(0)) {
@@ -522,10 +521,9 @@ DEFINE_NERVE(TNerveBEelTearsMoveUp, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
-		tears->mMActor->setBckFromIndex(1);
+		tears->changeMActor("tears.bmd", 1);
 	}
-	tears->mPosition.y += tears->mTearsParams->mSLTearsUpSpeed.get();
+	tears->mPosition.y += tears->getTearsParams()->mSLTearsUpSpeed.get();
 	return false;
 }
 
@@ -535,19 +533,18 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
-		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
-		tears->mMActor->setBckFromIndex(3);
+		tears->changeMActor("tears_waterhit.bmd", 3);
 	}
 
 	--tears->mStateTimer;
-	f32 frameRate = tears->mTearsParams->mSLHitAnmFrameRate.get();
+	f32 frameRate = tears->getTearsParams()->mSLHitAnmFrameRate.get();
 	if (tears->mStateTimer < 0) {
-		MActor* actor = tears->mMActor;
+		MActor* actor = tears->getMActor();
 		actor->setFrameRate(-frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		if (tears->getCurAnmFrameNo(ANM_TYPE_BCK) < 1.0f)
 			return true;
 	} else {
-		MActor* actor = tears->mMActor;
+		MActor* actor = tears->getMActor();
 		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
@@ -558,7 +555,8 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 	}
 
 	if (tears->mHighPoly)
-		tears->mPosition.y += tears->mTearsParams->mSLTearsDamageUpSpeed.get();
+		tears->mPosition.y
+		    += tears->getTearsParams()->mSLTearsDamageUpSpeed.get();
 	return false;
 }
 
@@ -584,7 +582,7 @@ DEFINE_NERVE(TNerveBEelTearsMarioRecover, TLiveActor)
 		return true;
 	}
 	if (tears->mRecoverCollision->mColliding) {
-		tears->mPosition.y += tears->mTearsParams->mSLTearsUpSpeed.get();
+		tears->mPosition.y += tears->getTearsParams()->mSLTearsUpSpeed.get();
 		tears->mRecoverCollision->mPosition.y = tears->mPosition.y;
 	}
 	return false;
@@ -596,10 +594,9 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
-		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
-		tears->mMActor->setBckFromIndex(3);
-		MActor* actor = tears->mMActor;
-		f32 frameRate = tears->mTearsParams->mSLHitAnmFrameRate.get();
+		tears->changeMActor("tears_waterhit.bmd", 3);
+		MActor* actor = tears->getMActor();
+		f32 frameRate = tears->getTearsParams()->mSLHitAnmFrameRate.get();
 		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
@@ -672,8 +669,7 @@ DEFINE_NERVE(TNerveOilBallStay, TLiveActor)
 	if (oilBall->getMActor()->checkCurBckFromIndex(3)
 	    || (oilBall->checkCurAnmEnd(0)
 	        && !oilBall->getMActor()->checkCurBckFromIndex(1))) {
-		oilBall->mMActor = oilBall->mMActorKeeper->getMActor("tears.bmd");
-		oilBall->mMActor->setBckFromIndex(1);
+		oilBall->changeMActor("tears.bmd", 1);
 	}
 	return false;
 }
@@ -1012,8 +1008,8 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		++mTimer;
 		if (mTimer > 30) {
-			if (mOwner->mMActor->checkCurBckFromIndex(14)
-			    || mOwner->mMActor->checkCurBckFromIndex(17)) {
+			if (mOwner->getMActor()->checkCurBckFromIndex(14)
+			    || mOwner->getMActor()->checkCurBckFromIndex(17)) {
 				for (s32 i = 0; i < mColCount; ++i) {
 					if (!mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 						continue;
@@ -1034,7 +1030,7 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 
 					power *= wave;
 					SMSRumbleMgr->start(8, &mPosition);
-					if (mOwner->mMActor->checkCurBckFromIndex(17))
+					if (mOwner->getMActor()->checkCurBckFromIndex(17))
 						power *= 0.5f;
 					marioTarget.scale(power);
 					marioTarget.add(SMS_GetMarioPos());
@@ -1047,12 +1043,12 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		mPosition.x = mOwner->mMActor->getModel()->getAnmMtx(
+		mPosition.x = mOwner->getMActor()->getModel()->getAnmMtx(
 		    mOwner->mMapCollisionJointIndices[2])[0][3];
-		mPosition.y = mOwner->mMActor->getModel()->getAnmMtx(
+		mPosition.y = mOwner->getMActor()->getModel()->getAnmMtx(
 		                  mOwner->mMapCollisionJointIndices[2])[1][3]
 		              + 1000.0f;
-		mPosition.z = mOwner->mMActor->getModel()->getAnmMtx(
+		mPosition.z = mOwner->getMActor()->getModel()->getAnmMtx(
 		    mOwner->mMapCollisionJointIndices[2])[2][3];
 	}
 	THitActor::perform(cue, graphics);
@@ -1170,13 +1166,15 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	u32 calcAnim = cue & CUE_CALC_ANIM;
 	if (calcAnim) {
-		s32 jointIndex = mOwner->mMActor->getModel()
+		s32 jointIndex = mOwner->getMActor()
+		                     ->getModel()
 		                     ->getModelData()
 		                     ->getJointName()
 		                     ->getIndex("ha7");
-		MtxPtr jointMtx = mOwner->mMActor->getModel()->getAnmMtx(jointIndex);
-		if (mOwner->mMActor->checkCurBckFromIndex(3)
-		    && mOwner->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		MtxPtr jointMtx
+		    = mOwner->getMActor()->getModel()->getAnmMtx(jointIndex);
+		if (mOwner->getMActor()->checkCurBckFromIndex(3)
+		    && mOwner->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		           < 700.0f) {
 			mPosition.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
 		}
@@ -2025,7 +2023,7 @@ DEFINE_NERVE(TNerveBossEelWaitAppear, TLiveActor)
 
 void ExecSpinNerve_Sub(TBossEel* eel)
 {
-	f32 spinSpeed = eel->mTurnSpeed;
+	f32 spinSpeed = eel->getTurnSpeed();
 	CLBChaseGeneralConstantSpecifySpeed(&spinSpeed,
 	                                    eel->mSaveParams->mSLSpinMaxSpeed.get(),
 	                                    eel->mSaveParams->mSLSpinAccel.get());
@@ -2116,14 +2114,15 @@ DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
 		eel->setBckAnm(15);
 		eel->mInDemo = true;
 		gpCameraShake->startShake(static_cast<EnumCamShakeMode>(0x19), 1.0f);
-		f32 duration = eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2;
+		f32 duration
+		    = eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2;
 		eel->mAppearAcceleration
 		    = (eel->mSaveParams->mSLAppearMoveDistY.get() / duration)
 		      / duration;
 		testHeight = 0.0f;
 	}
 
-	s32 duration = eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2;
+	s32 duration = eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2;
 	if (spine->getTime() < duration) {
 		eel->mAppearOffset
 		    += eel->mSaveParams->mSLAppearMoveDistY.get() / duration;
@@ -2208,13 +2207,13 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 
 	eel->mAppearOffset
 	    -= eel->mSaveParams->mSLAppearMoveDistY.get()
-	       / (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2);
+	       / (eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2);
 	if (eel->mAppearOffset < 0.0f) {
 		eel->mAppearOffset = 0.0f;
 		if (eel->checkCurAnmEnd(0)) {
 			eel->mInDemo = false;
 			spine->pushAfterCurrent(&TNerveBossEelSecondSpin::theNerve());
-			if (eel->mMActor->checkCurBckFromIndex(6))
+			if (eel->getMActor()->checkCurBckFromIndex(6))
 				spine->pushAfterCurrent(
 				    &TNerveBossEelSleepOnBottom::theNerve());
 			return true;
@@ -2246,7 +2245,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 		eel->setBckAnm(17);
 
 	if (eel->checkCurAnmEnd(0)) {
-		if (eel->mMActor->checkCurBckFromIndex(17)) {
+		if (eel->getMActor()->checkCurBckFromIndex(17)) {
 			if (eel->canEatMario()) {
 				eel->setBckAnm(12);
 				if (SMS_SendMessageToMario(eel, HIT_MESSAGE_TAKE)) {
@@ -2267,7 +2266,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 					emitter->setGlobalScale(eel->mScaling);
 			}
 		} else {
-			if (eel->mMActor->checkCurBckFromIndex(12)) {
+			if (eel->getMActor()->checkCurBckFromIndex(12)) {
 				if (SMS_SendMessageToMario(eel, HIT_MESSAGE_DETACH)) {
 					eel->mHeldObject = nullptr;
 					SMS_SendMessageToMario(eel, HIT_MESSAGE_ATTACK);
@@ -2282,8 +2281,8 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 		}
 	}
 
-	if (eel->mMActor->checkCurBckFromIndex(12)) {
-		if (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 250.0f)
+	if (eel->getMActor()->checkCurBckFromIndex(12)) {
+		if (eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 250.0f)
 			SMSRumbleMgr->start(8, &eel->mPosition);
 		else
 			SMSRumbleMgr->start(20, 10, static_cast<f32*>(nullptr));
@@ -2318,8 +2317,8 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 		}
 	}
 
-	if (eel->mMActor->checkCurBckFromIndex(3)) {
-		if (eel->mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(650.0f))
+	if (eel->getMActor()->checkCurBckFromIndex(3)) {
+		if (eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(650.0f))
 			eel->mHeartCoin->getMActor()->setBckFromIndex(8);
 
 		if (eel->checkCurAnmEnd(0)) {
@@ -2332,11 +2331,13 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 			JGeometry::TVec3<f32> marioPosition = SMS_GetMarioPos();
 			eel->generateBubble(marioPosition);
 
-			s32 jointIndex = eel->mMActor->getModel()
+			s32 jointIndex = eel->getMActor()
+			                     ->getModel()
 			                     ->getModelData()
 			                     ->getJointName()
 			                     ->getIndex("ha7");
-			MtxPtr shineMtx = eel->mMActor->getModel()->getAnmMtx(jointIndex);
+			MtxPtr shineMtx
+			    = eel->getMActor()->getModel()->getAnmMtx(jointIndex);
 			gpItemManager->makeShineAppearWithDemo(
 			    "シャイン（ボス用）", "めおとウナギシャインカメラ",
 			    shineMtx[0][3], shineMtx[1][3], shineMtx[2][3]);
@@ -2358,7 +2359,7 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 		eel->setBckAnm(13);
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1B, 1.0f);
 	} else if (eel->checkCurAnmEnd(0)) {
-		if (eel->mMActor->checkCurBckFromIndex(13)) {
+		if (eel->getMActor()->checkCurBckFromIndex(13)) {
 			eel->setBckAnm(14);
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1C, 1.0f);
 			eel->generateVortex();
@@ -2373,7 +2374,7 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 			}
 
 			if (spine->getTime() > openFrames) {
-				if (eel->mMActor->checkCurBckFromIndex(2))
+				if (eel->getMActor()->checkCurBckFromIndex(2))
 					return true;
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1D, 1.0f);
 				eel->setBckAnm(2);
@@ -2381,7 +2382,7 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 		}
 	}
 
-	if (eel->mMActor->checkCurBckFromIndex(14))
+	if (eel->getMActor()->checkCurBckFromIndex(14))
 		eel->mRotation.y += TBossEel::mOpenRollSpeed;
 	return false;
 }

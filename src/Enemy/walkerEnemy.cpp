@@ -293,7 +293,7 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 
 	self->updateSquareToMario();
 
-	if (self->mDistToMarioSquared > giveUpLength2)
+	if (self->getDistToMarioSquared() > giveUpLength2)
 		return true;
 
 	self->walkBehavior(1, 2.0f);

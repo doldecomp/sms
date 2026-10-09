@@ -184,7 +184,8 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 	if (sender->getActorType() == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_TAKE) {
 			TTakeActor* actor = (TTakeActor*)sender;
-			if (actor->mHeldObject != nullptr && actor->mHeldObject != this)
+			if (actor->getHeldObject() != nullptr
+			    && actor->getHeldObject() != this)
 				return false;
 
 			mHolder = actor;

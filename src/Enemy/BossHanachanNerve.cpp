@@ -34,7 +34,7 @@ DEFINE_NERVE(TNerveBossHanachanTumble, TLiveActor)
 		hanachan->considerSetAnm(BOSS_HANACHAN_NERVE_ANM_UNK0);
 	}
 	hanachan->execSlip();
-	if (hanachan->mMarchSpeed == 0.0f
+	if (hanachan->getMarchSpeed() == 0.0f
 	    && hanachan->isTumbleCompletelyAllBody()) {
 		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0007, true);
 		spine->pushAfterCurrent(&TNerveBossHanachanDown::theNerve());
@@ -73,7 +73,7 @@ DEFINE_NERVE(TNerveBossHanachanDamage, TLiveActor)
 	TBossHanachan* hanachan = (TBossHanachan*)spine->getBody();
 	hanachan->considerSetAnm(BOSS_HANACHAN_NERVE_ANM_UNK3);
 	hanachan->execSlip();
-	if (hanachan->mMarchSpeed == 0.0f
+	if (hanachan->getMarchSpeed() == 0.0f
 	    && spine->getTime() >= hanachan->unk1C0->mSLDamageFrames.get()) {
 		hanachan->setAnmTimerWhenGetUp();
 		spine->pushAfterCurrent(&TNerveBossHanachanGetUp::theNerve());

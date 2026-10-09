@@ -164,7 +164,7 @@ void TCogwheel::draw() const
 {
 	initDraw();
 	f32 yBot = unk154.y;
-	f32 dy   = unk150->mPosition.y - unk150->mYOffset;
+	f32 dy   = unk150->mPosition.y - unk150->getObjCollisionHeightOffset();
 	f32 yTop = 600.0f + dy;
 	f32 x1   = unk154.x + mRopeWidthX;
 	f32 x0   = unk154.x - mRopeWidthX;
@@ -190,7 +190,7 @@ void TCogwheel::draw() const
 	GXPosition3f32(x0, yBot, z1);
 	GXTexCoord2f32(3.0f, vBot);
 	GXEnd();
-	dy   = unk164->mPosition.y - unk164->mYOffset;
+	dy   = unk164->mPosition.y - unk164->getObjCollisionHeightOffset();
 	yTop = 1200.0f + dy;
 	x1   = unk168.x + mRopeWidthX;
 	x0   = unk168.x - mRopeWidthX;
@@ -265,7 +265,8 @@ void TCogwheel::control()
 	if (unk13C > unk14C - unk174 && unk138 > 0.0f) {
 		rebound();
 	}
-	unk150->mPosition.y = mPosition.y - unk13C + unk150->mYOffset;
+	unk150->mPosition.y
+	    = mPosition.y - unk13C + unk150->getObjCollisionHeightOffset();
 	unk164->mPosition.y = mPosition.y - (unk14C - unk13C);
 	if (fabsf(unk138) > mMinSpeed) {
 		SMSGetMSound()->startSoundActorWithInfo(
