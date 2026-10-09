@@ -64,19 +64,19 @@ void TEMario::load(JSUMemoryInputStream& stream)
 
 	// "Mario 2 P"
 	if (strcmp(mName, "マリオ２Ｐ") == 0) {
-		mEnemyMario->setGamePad(SMSGetMarDirector()->unk18[1]);
+		mEnemyMario->setGamePad(SMSGetMarDirector()->getGamePad(1));
 		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P2;
 	}
 
 	// "Mario 3 P"
 	if (strcmp(mName, "マリオ３Ｐ") == 0) {
-		mEnemyMario->setGamePad(SMSGetMarDirector()->unk18[2]);
+		mEnemyMario->setGamePad(SMSGetMarDirector()->getGamePad(2));
 		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P3;
 	}
 
 	// "Mario 4 P
 	if (strcmp(mName, "マリオ４Ｐ") == 0) {
-		mEnemyMario->setGamePad(SMSGetMarDirector()->unk18[3]);
+		mEnemyMario->setGamePad(SMSGetMarDirector()->getGamePad(3));
 		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P4;
 	}
 

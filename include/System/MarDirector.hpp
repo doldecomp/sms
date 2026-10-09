@@ -174,7 +174,7 @@ public:
 	}
 
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
-	TMarioGamePad* getGamePad(int i = 0) { return unk18[i]; }
+	TMarioGamePad* getGamePad(int i = 0) { return mGamePads[i]; }
 
 public:
 	enum {
@@ -221,7 +221,7 @@ public:
 		TRANSITION_FLAG_RESET_HANDLED                = 0x10,
 	};
 
-	/* 0x18 */ TMarioGamePad** unk18;
+	/* 0x18 */ TMarioGamePad** mGamePads;
 	/* 0x1C */ TPerformList* mPerformListGX;
 	/* 0x20 */ TPerformList* mPerformListSilhouette;
 	/* 0x24 */ TPerformList* mPerformListGXPost;

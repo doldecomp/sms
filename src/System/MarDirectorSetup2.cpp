@@ -57,9 +57,9 @@ void TMarDirector::setup2()
 	}
 
 	static_cast<TMario*>(JDrama::TNameRefGen::search("マリオ"))
-	    ->setGamePad(unk18[0]);
+	    ->setGamePad(mGamePads[0]);
 	static_cast<CPolarSubCamera*>(JDrama::TNameRefGen::search("camera 1"))
-	    ->setGamePad(unk18[0]);
+	    ->setGamePad(mGamePads[0]);
 
 	unk84 = static_cast<TTalkCursor*>(
 	    JDrama::TNameRefGen::search("会話カーソル"));
@@ -80,20 +80,20 @@ void TMarDirector::setup2()
 	unk78 = static_cast<TGuide*>(JDrama::TNameRefGen::search("ガイド画面"));
 	unkAC = static_cast<TPauseMenu2*>(
 	    JDrama::TNameRefGen::search("ポーズメニュー"));
-	unkAC->mGamePad = unk18[0];
+	unkAC->mGamePad = mGamePads[0];
 	unkB0 = static_cast<TTalk2D2*>(JDrama::TNameRefGen::search("会話表示"));
-	unkB0->unk24C = unk18[0];
+	unkB0->unk24C = mGamePads[0];
 	unk70
 	    = static_cast<TCardLoad*>(JDrama::TNameRefGen::search("データロード"));
 
-	unk70->unk38 = unk18[0];
-	unk78->unkC0 = unk18[0];
+	unk70->unk38 = mGamePads[0];
+	unk78->unkC0 = mGamePads[0];
 
-	unk18[0]->mFlags = 0;
+	mGamePads[0]->mFlags = 0;
 	if (mMap == 15) {
 		unkAC->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unkB0->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
-		unk18[0]->onFlag(TMarioGamePad::PAD_FLAG_NO_B);
+		mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_NO_B);
 	} else {
 		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
@@ -159,7 +159,7 @@ TMarDirector::~TMarDirector()
 	if (JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("scene"))
 		arch->unmountFixed();
 
-	unk18[0]->offFlag(TMarioGamePad::PAD_FLAG_NO_B);
+	mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_NO_B);
 	if (mMap == 1 || (mMap == 0 && unk7D == 0)) {
 		THPPlayerStop();
 		THPPlayerClose();

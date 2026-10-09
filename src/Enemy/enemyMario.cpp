@@ -460,7 +460,7 @@ void TEnemyMario::initEnemyValues()
 		}
 	}
 
-	mGamePad = SMSGetMarDirector()->unk18[1];
+	mGamePad = SMSGetMarDirector()->getGamePad(1);
 	mEMFlags = EM_FLAG_DISP_PENCIL;
 	switch (mEMario->mInitialState) {
 	case 0:
@@ -533,15 +533,15 @@ void TEnemyMario::initEnemyValues()
 	if (SMSGetMarDirector()->mMap == 12) {
 		if (strcmp(mEMario->getName(), "マリオ２Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P2;
-			mGamePad    = SMSGetMarDirector()->unk18[1];
+			mGamePad    = SMSGetMarDirector()->getGamePad(1);
 		}
 		if (strcmp(mEMario->getName(), "マリオ３Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P3;
-			mGamePad    = SMSGetMarDirector()->unk18[2];
+			mGamePad    = SMSGetMarDirector()->getGamePad(2);
 		}
 		if (strcmp(mEMario->getName(), "マリオ４Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P4;
-			mGamePad    = SMSGetMarDirector()->unk18[3];
+			mGamePad    = SMSGetMarDirector()->getGamePad(3);
 		}
 		mEMDoing = EM_DOING_GET_PAD;
 		if (mPlayerType == TMario::PLAYER_TYPE_P2

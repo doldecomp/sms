@@ -109,7 +109,7 @@ void TSunGlass::loadAfter() { unk14.a = getShineAlpha(); }
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	unk10 = SMSGetMarDirector()->unk18[1];
+	unk10 = SMSGetMarDirector()->getGamePad(1);
 }
 
 void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)

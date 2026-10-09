@@ -553,7 +553,7 @@ BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("redcoinswitch");
-		SMSGetMarDirector()->unk18[0]->mDisabledFrames
+		SMSGetMarDirector()->getGamePad()->mDisabledFrames
 		    = (s32)(getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2
 		            + 0x3C);
 		gpMSound->startSoundActor(MSD_SE_OBJ_AP_BUTTON, &mPosition, 0, nullptr,

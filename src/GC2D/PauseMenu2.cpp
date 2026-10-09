@@ -169,7 +169,7 @@ void TPauseMenu2::loadAfter()
 		mFirstItemAngle -= 360;
 	}
 
-	mGamePad = SMSGetMarDirector()->unk18[0];
+	mGamePad = SMSGetMarDirector()->getGamePad();
 }
 
 void TPauseMenu2::appearWindow()

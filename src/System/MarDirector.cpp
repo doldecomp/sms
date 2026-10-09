@@ -12,7 +12,7 @@ void* gpSceneCmnDat;
 int gpSceneCmnDatSize;
 
 TMarDirector::TMarDirector()
-    : unk18(nullptr)
+    : mGamePads(nullptr)
     , mPerformListGX(nullptr)
     , mPerformListSilhouette(nullptr)
     , mPerformListGXPost(nullptr)
@@ -70,7 +70,7 @@ u32 TMarDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad** param_2,
                         u8 param_3, u8 param_4)
 {
 	unkC0 = param_1;
-	unk18 = param_2;
+	mGamePads = param_2;
 	mMap  = param_3;
 	unk7D = param_4;
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
