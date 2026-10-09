@@ -74,9 +74,10 @@ static void* AudioDecoder(void* arg)
 
 static void* AudioDecoderForOnMemory(void* arg)
 {
-	s32 frame;
 	s32 readSize;
 	THPReadBuffer readBuffer;
+	s32 size;
+	s32 frame;
 
 	frame          = 0;
 	readSize       = ActivePlayer.initReadSize;
@@ -97,7 +98,7 @@ static void* AudioDecoderForOnMemory(void* arg)
 				OSSuspendThread(&AudioDecodeThread);
 			}
 		} else {
-			s32 size = *(s32*)readBuffer.ptr;
+			size = *(s32*)readBuffer.ptr;
 			readBuffer.ptr += readSize;
 			readSize = size;
 		}
