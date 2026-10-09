@@ -170,10 +170,15 @@ public:
 
 	// Fabricated
 	TNozzleBase* getNozzle(u8 index) { return mNozzleList[index]; }
-	TNozzleBase* getCurrentNozzle() { return mNozzleList[mCurrentNozzle]; }
 	const TNozzleBase::TEmitParams& getEmitParams() const
 	{
 		return getCurrentNozzle()->mEmitParams;
+	}
+
+	// Fabricated
+	TNozzleBase* getNozzle(u8 nozzle_index) const
+	{
+		return mNozzleList[nozzle_index];
 	}
 
 	// Fabricated
@@ -279,6 +284,13 @@ public:
 	// Fabricated (maybe should be indexed?)
 	const JGeometry::TVec3<f32>& getEmitPos0() const { return mEmitPos[0]; }
 
+	// Fabricated
+	s16 getPropellerAngle() const { return mPropellerAngle; }
+	// Fabricated
+	s16 getHoverAngleL() const { return mHoverAngleL; }
+	// Fabricated
+	s16 getHoverAngleR() const { return mHoverAngleR; }
+
 public:
 	enum {
 		WATER_GUN_FLAG_UNK2  = 0x2,
@@ -310,9 +322,9 @@ public:
 	/* 0x1CC2 */ s16 unk1CC2;
 	/* 0x1CC4 */ s16 unk1CC4;
 	/* 0x1CC6 */ s16 unk1CC6;
-	/* 0x1CC8 */ f32 unk1CC8; // mNozzleSpeedY
-	/* 0x1CCC */ f32 unk1CCC; // mNozzleSpeedZ
-	/* 0x1CD0 */ s16 unk1CD0;
+	/* 0x1CC8 */ f32 mHoverAngleL;
+	/* 0x1CCC */ f32 mHoverAngleR;
+	/* 0x1CD0 */ s16 mPropellerAngle;
 	/* 0x1CD2 */ s16 unk1CD2;
 	/* 0x1CD4 */ MActor* mFluddModel;
 	/* 0x1CD8 */ u8 unk1CD8; // mCurFluddTransformIdx
