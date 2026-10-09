@@ -528,17 +528,9 @@ void TMapObjGeneral::bind()
 	}
 
 	if (!isAirborne()) {
-		JGeometry::TVec3<f32> vel     = mVelocity;
-		JGeometry::TVec3<f32> velCopy = vel;
-		if (velCopy.x == 0.0f) {
-			JGeometry::TVec3<f32> velCopy2 = vel;
-			if (velCopy2.y == 0.0f) {
-				JGeometry::TVec3<f32> velCopy3 = vel;
-				if (velCopy3.z == 0.0f) {
-					onLiveFlag(LIVE_FLAG_UNK10);
-				}
-			}
-		}
+		if (getVelocity().x == 0.0f && getVelocity().y == 0.0f
+		    && getVelocity().z == 0.0f)
+			onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
 	mPositionDelta = vec - mPosition;

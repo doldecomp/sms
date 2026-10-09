@@ -68,12 +68,12 @@ void TWalker::reset()
 
 void TWalker::bind(TLiveActor* param_1)
 {
-	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
-
 	if (unk28 == 1 && unk2C != nullptr) {
-		unk2C->bind(enemy);
+		unk2C->bind(param_1);
 		return;
 	}
+
+	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
 
 	JGeometry::TVec3<f32> lv       = enemy->mPositionDelta;
 	JGeometry::TVec3<f32> local_30 = enemy->mPosition;
@@ -181,10 +181,12 @@ void TWalker::bind(TLiveActor* param_1)
 			JGeometry::TVec3<f32> normal = pTVar14->getNormal();
 			JGeometry::TVec3<f32> local_94;
 			local_94.cross(normal, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+			local_94.y = 0.0f;
 			local_94.normalize();
 			if (unk14 == 0) {
-				JGeometry::TVec3<f32> lv = enemy->mPositionDelta;
-				if (lv.dot(local_94) > 0.0f) {
+				JGeometry::TVec3<f32> local_a0 = lv;
+				local_a0.y                     = 0.0f;
+				if (local_a0.dot(local_94) > 0.0f) {
 					unk14 = 2;
 				} else {
 					local_94.negate();
@@ -193,7 +195,7 @@ void TWalker::bind(TLiveActor* param_1)
 
 				f32 dVar18
 				    = calcFarthestVertex(pTVar14, enemy->mPosition, local_94);
-				JGeometry::TVec3<f32> local_a0
+				local_a0
 				    = enemy->mPosition
 				      + local_94 * (enemy->getWallRadius() * 2.0f + dVar18);
 
@@ -224,31 +226,22 @@ void TWalker::bind(TLiveActor* param_1)
 			    = calcFarthestVertex(pTVar14, enemy->mPosition, local_94);
 			f32 fVar4 = (enemy->getWallRadius()) * 2.0f + dVar18;
 			if (enemy->unk114.empty()) {
-				JGeometry::TVec3<f32> local_130 = local_94 * fVar4;
-				JGeometry::TVec3<f32> local_124
-				    = pTVar14->getNormal() * enemy->getWallRadius();
-
-				JGeometry::TVec3<f32> local_254 = enemy->mPosition - local_124;
-				JGeometry::TVec3<f32> local_13c = local_254 + local_130;
+				TPathNode node(enemy->mPosition
+				               - normal * enemy->getWallRadius()
+				               + local_94 * fVar4);
 				enemy->unk114.push(enemy->unkF4);
-				enemy->unkF4.unk0 = nullptr;
-				enemy->unkF4.unk4 = local_13c;
+				enemy->unkF4 = node;
 			} else {
-				JGeometry::TVec3<f32> tmp2 = local_94 * fVar4;
-				JGeometry::TVec3<f32> tmp1
-				    = pTVar14->getNormal() * enemy->getWallRadius();
-				JGeometry::TVec3<f32> thing     = enemy->mPosition - tmp1;
-				JGeometry::TVec3<f32> local_278 = thing + tmp2;
-
-				enemy->unkF4.unk0 = nullptr;
-				enemy->unkF4.unk4 = local_278;
+				enemy->unkF4 = TPathNode(enemy->mPosition
+				                         - normal * enemy->getWallRadius()
+				                         + local_94 * fVar4);
 			}
 		}
 	}
 
-	JGeometry::TVec3<f32> local_218 = local_70.mCenter;
-	local_218.y                     = local_30.y;
-	enemy->mPositionDelta           = local_218 - enemy->mPosition;
+	local_30.x            = local_70.mCenter.x;
+	local_30.z            = local_70.mCenter.z;
+	enemy->mPositionDelta = local_30 - enemy->mPosition;
 }
 
 void TWalker::setMode(int param_1)

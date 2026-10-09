@@ -817,7 +817,8 @@ u8 TMarDirector::updateGameMode()
 					break;
 				}
 
-				if (mGamePads[0]->checkFrameMeaning(TMarioGamePad::MEANING_START)) {
+				if (mGamePads[0]->checkFrameMeaning(
+				        TMarioGamePad::MEANING_START)) {
 					if (gpMarioOriginal->checkActionThing3()) {
 						r29 = STATE_PAUSE_MENU;
 						break;
