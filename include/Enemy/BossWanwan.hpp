@@ -26,6 +26,9 @@ class TBWLeashNode;
 class TRope;
 class TBossWanwanMtxCalc;
 
+// fabricated
+template <class T> T Wrap(T t, T l, T r);
+
 class TBWHit : public THitActor {
 public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -80,9 +83,8 @@ public:
 	void calcTemperature();
 
 private:
-	// THitActor ends at 0x68
 	TBWLeash* mLeash; // +0x68
-	f32 unk0;         // +0x6C
+	MActor* mMActor;  // +0x6C
 	f32 mTemperature; // +0x70
 	int mIndex;       // +0x74
 };
@@ -137,18 +139,18 @@ public:
 	// fabricated
 	TBWParams* getSaveParam() const { return (TBWParams*)getSaveParam(); }
 
+	// UNUSED
 	bool isHeadPulled();
 	bool isMarioInSight();
 	bool isTailBurning();
 	bool isBurning();
 	void startGoldBrk();
-	void changeBck(int);
-
 	void releasePicket();
 	void takeBath();
 	void rollNextGraphNode();
 	void reverseNextGraphNode();
 	void showMessage();
+
 	// fabricated
 	const TNerveBase<TLiveActor>* getLatestNerve()
 	{

@@ -117,7 +117,69 @@ void TBossWanwan::control() { }
 
 void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
-void TBossWanwan::slideToCurPathNode(float speed, float deltaTime) { }
+// fabricated
+template <class T> T Wrap(T t, T l, T r)
+{
+	if (l >= r)
+		return l;
+
+	while (t >= r)
+		t -= r - l;
+	while (t < l)
+		t += r - l;
+
+	return t;
+}
+
+void TBossWanwan::slideToCurPathNode(float speed, float deltaTime)
+{
+	JGeometry::TVec3<f32> pos
+	    = unkF4.unk0 != nullptr ? unkF4.unk0->mPosition : unkF4.unk4; // inline?
+
+	pos.sub(mPosition);
+
+	f32 dist = PSVECMag(&pos);
+
+	f32 targetAngle;
+	if (pos.z == 0.0f) {
+		if (pos.x >= 0.0f) {
+			targetAngle = 90.0f;
+		} else {
+			targetAngle = -90.0f;
+		}
+	} else if (pos.z >= 0.0f) {
+		s16 angle   = matan(pos.z, pos.x);
+		targetAngle = (f32)angle * (180.0f / 32768.0f);
+	} else {
+		s16 angle   = matan(-pos.z, pos.x);
+		targetAngle = 180.0f - (f32)angle * (180.0f / 32768.0f);
+	}
+
+	targetAngle = MsWrap<f32>(targetAngle, 0.0f, 360.0f); // the "real" MsWrap
+
+	// TODO: fix this fabricated func
+	f32 rotY = Wrap(mRotation.y, targetAngle - 180.0f,
+	                targetAngle + 180.0f); // the actually out-of-line one
+	f32 diff = targetAngle - rotY;
+
+	if (diff > 0.0f) {
+		diff = (diff > deltaTime) ? deltaTime : diff;
+	} else {
+		diff = (diff > -deltaTime) ? diff : -deltaTime;
+	}
+
+	mRotation.y
+	    = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f); // the "real" MsWrap
+
+	JGeometry::TVec3<f32> vel = mLinearVelocity;
+
+	if (dist > 0.0f) {
+		pos.scale(speed / dist);
+	}
+
+	vel.add(pos);
+	mLinearVelocity = vel;
+}
 
 void TBossWanwan::calcRootMatrix()
 {
@@ -126,12 +188,6 @@ void TBossWanwan::calcRootMatrix()
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x,
 	               mPosition.y + 500.0f, mPosition.z, mRotation.x, mRotation.y,
 	               mRotation.z);
-}
-
-void TBossWanwan::changeBck(int anmIdx)
-{
-	mMtxCalc->joinAnm(anmIdx);
-	mMActor->mAnmBck->setFrameCtrl(anmIdx);
 }
 
 BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
@@ -455,12 +511,59 @@ void TBWLeashNode::calcTemperature()
 
 void TBWLeashNode::calcMatrix()
 {
-	/* Too difficult for now
-	f32 ivar4 = this->mLeash->unk4 + 2;
-	if (mIndex < (this->mLeash->unk4 - 1)) {
-	    f32 var = ivar4 + (mIndex + 1) * 0x2c + 0xc;
+	TRope* rope        = mLeash->mRope;
+	TRopePoint* points = rope->mPoints;
+	MtxPtr mtx         = mMActor->getModel()->getBaseTRMtx();
+
+	JGeometry::TVec3<f32> pos = points[mIndex].unkC;
+	JGeometry::TVec3<f32> dir;
+
+	if (mIndex < rope->mNumPoints - 1) {
+		dir = points[mIndex + 1].unkC;
+		dir -= pos;
+
+	} else {
+		dir = points[mIndex - 1].unkC;
+		dir -= pos;
+		dir.negate();
 	}
-	*/
+
+	PSVECNormalize(&dir, &dir);
+
+	JGeometry::TVec3<f32> n(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> side;
+
+	side.cross2(n, dir);
+	PSVECNormalize(&side, &side);
+
+	n.cross2(dir, side);
+	PSVECNormalize(&n, &n);
+
+	mtx[0][2] = dir.x;
+	mtx[1][2] = dir.y;
+	mtx[2][2] = dir.z;
+
+	if (mIndex & 1) {
+		mtx[0][0] = side.x;
+		mtx[1][0] = side.y;
+		mtx[2][0] = side.z;
+		mtx[0][1] = n.x;
+		mtx[1][1] = n.y;
+		mtx[2][1] = n.z;
+	} else {
+		mtx[0][0] = n.x;
+		mtx[1][0] = n.y;
+		mtx[2][0] = n.z;
+		mtx[0][1] = side.x;
+		mtx[1][1] = side.y;
+		mtx[2][1] = side.z;
+	}
+
+	mtx[0][3] = pos.x;
+	mtx[1][3] = pos.y + 30.0f;
+	mtx[2][3] = pos.z;
+
+	mPosition = pos;
 }
 
 void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics) { }
@@ -594,9 +697,10 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 	if (spine->getTime() == 0) {
 
 		// TODO: setFrameCtrl and getAnmPtr are getting
-		// out-of-line even though inlining is necessary since they are defined
-		// in a template class
-		boss->changeBck(0);
+		// out-of-line even though inlining is necessary since they are
+		// defined in a template class
+		boss->mMtxCalc->joinAnm(0);
+		boss->mMActor->mAnmBck->setFrameCtrl(0);
 		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
 		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
 
