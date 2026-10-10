@@ -263,10 +263,11 @@ private:
 				if (mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
 					f32 rate = SMSGetAnmFrameRate();
 					mMActor->setFrameRate(
-					    MsClamp(mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
-					                * rate,
-					            mIndividualParams->mTurnAnmMinRate.get() * rate,
-					            mIndividualParams->mTurnAnmMaxRate.get() * rate),
+					    MsClamp(
+					        mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
+					            * rate,
+					        mIndividualParams->mTurnAnmMinRate.get() * rate,
+					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
 					    ANM_TYPE_BCK);
 				}
 			}
@@ -307,7 +308,8 @@ private:
 			}
 		} else if (mHolder == nullptr) {
 			if (!isAirborne() && !belongToGround()
-			    && (isNerveMaybeDontCalcAnim0() || isNerveMaybeDontCalcAnim1())) {
+			    && (isNerveMaybeDontCalcAnim0()
+			        || isNerveMaybeDontCalcAnim1())) {
 				f32 offDist = getAnmOffDist_();
 				JGeometry::TVec3<f32> diff;
 				diff.sub(mPosition, gpCamera->unk124);
@@ -332,10 +334,10 @@ private:
 			result = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
 		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
-		           && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
-		                             | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200
-		                             | LIVE_FLAG_DONT_TALK | LIVE_FLAG_SINK_BOTTOM
-		                             | LIVE_FLAG_UNK400000)
+		           && !checkLiveFlag(
+		               LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+		               | LIVE_FLAG_UNK200 | LIVE_FLAG_DONT_TALK
+		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
 			if (!isSunflowerReviving() && isNerveCanGoToTalk()
@@ -366,7 +368,8 @@ private:
 
 					f32 fVar3;
 					if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
-					    || isSunflower() || mActorType == ACTOR_TYPE_NPC_BOARD) {
+					    || isSunflower()
+					    || mActorType == ACTOR_TYPE_NPC_BOARD) {
 						fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
 					} else {
 						fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
@@ -377,7 +380,8 @@ private:
 					    && MsIsInSight(
 					        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
 					        mPosition, fVar2,
-					        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(), 0.0f))
+					        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(),
+					        0.0f))
 						result = true;
 				}
 			}

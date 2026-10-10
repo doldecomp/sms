@@ -35,8 +35,8 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
                             bool param_3)
 {
 	interp->verifyArgNum(2, &arg_num);
-	int nerveId   = interp->pop().getDataInt();
-	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
+	int nerveId                         = interp->pop().getDataInt();
+	TBaseNPC* npc                       = (TBaseNPC*)interp->pop().getDataInt();
 	int result                          = 0;
 	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(nerveId);
 	if (param_3) {
