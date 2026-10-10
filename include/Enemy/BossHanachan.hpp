@@ -3,6 +3,7 @@
 
 #include <Strategic/Nerve.hpp>
 #include <Enemy/Enemy.hpp>
+#include <Enemy/EnemyManager.hpp>
 #include <Enemy/BossHanachanAnm.hpp>
 
 class TLiveActor;
@@ -70,6 +71,20 @@ public:
 	/* 0x1B8 */ s32 unk1B8;
 	/* 0x1BC */ TBossHanachanCommonSaveParams* unk1BC;
 	/* 0x1C0 */ TBossHanachanChangeSaveParams* unk1C0;
+};
+
+class TBossHanachanManager : public TEnemyManager {
+public:
+	TBossHanachanManager(const char* name = "?");
+
+	virtual void loadAfter();
+	virtual void createModelData();
+	virtual BOOL hasMapCollision() const;
+	virtual void clipEnemies(JDrama::TGraphics*);
+
+public:
+	/* 0x54 */ TBossHanachanCommonSaveParams* unk54;
+	/* 0x58 */ TBossHanachanChangeSaveParams* unk58[3];
 };
 
 DECLARE_NERVE(TNerveSBH_Fall, TLiveActor);

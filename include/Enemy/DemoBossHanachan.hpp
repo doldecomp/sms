@@ -17,20 +17,13 @@ class TDemoBossHanachanSaveParams;
 
 class TDemoBossHanachan : public TSpineEnemy {
 public:
-	TDemoBossHanachan(); // TODO: constructor not in mario.MAP for this TU
+	TDemoBossHanachan(const char* name = "?")
+	    : TSpineEnemy(name)
+	{
+	}
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	void initBase(TLiveManager*, u32);
-};
-
-class TDemoBossHanachanManager : public TEnemyManager {
-public:
-	TDemoBossHanachanManager(); // TODO: constructor not in mario.MAP for this
-	                            // TU
-	virtual void clipEnemies(JDrama::TGraphics*);
-
-public:
-	/* 0x54 */ TDemoBossHanachanSaveParams* mSaveParams;
 };
 
 class TDemoBossHanachanSaveParams : public TParams {
@@ -40,6 +33,19 @@ public:
 public:
 	/* 0x8  */ TParamRT<f32> mSLViewClipFar;
 	/* 0x1C */ TParamRT<f32> mSLViewClipRadius;
+};
+
+class TDemoBossHanachanManager : public TEnemyManager {
+public:
+	TDemoBossHanachanManager(const char* name, const char* prm_path)
+	    : TEnemyManager(name)
+	    , mSaveParams(new TDemoBossHanachanSaveParams(prm_path))
+	{
+	}
+	virtual void clipEnemies(JDrama::TGraphics*);
+
+public:
+	/* 0x54 */ TDemoBossHanachanSaveParams* mSaveParams;
 };
 
 #endif // ENEMY_DEMOBOSSHANACHAN_HPP
