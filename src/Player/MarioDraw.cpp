@@ -521,28 +521,24 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	return 1;
 }
 
+// fabricated
+static inline BOOL isFootAdjustable()
+{
+	if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
+	        == MARIO_STATUS_TYPE_WAITING
+	    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
+	    && gpMarioForCallBack->onYoshi() == 0
+	    && !gpMarioForCallBack->isSleeping())
+		return TRUE;
+	return FALSE;
+}
+
 static int MarioFootPosRCtrl(J3DNode* param_1, int param_2)
 {
 	// volatile u32 padding[9];
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (isFootAdjustable()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdChnFootR);
@@ -570,23 +566,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (isFootAdjustable()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootR);
@@ -595,22 +575,18 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			                              footMtx[2][3], &checkData);
 			if (!checkData->isIllegalData()) {
 
-				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir;
-				currentMtxDir.x = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z = J3DSys::mCurrentMtx[2][0];
+				Vec currentMtxDir = (Vec) { J3DSys::mCurrentMtx[0][0],
+					                        J3DSys::mCurrentMtx[1][0],
+					                        J3DSys::mCurrentMtx[2][0] };
+				Vec normalDir     = (Vec) { -checkData->getNormal().x,
+					                        -checkData->getNormal().y,
+					                        -checkData->getNormal().z };
 
-				Vec normalDir;
-				normalDir.x = -checkData->getNormal().x;
-				normalDir.y = -checkData->getNormal().y;
-				normalDir.z = -checkData->getNormal().z;
-
-				Vec currentNormalCross1;
 				Vec currentNormalCross2;
+				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
 				                  &currentNormalCross1);
-				PSVECCrossProduct(&normalDir, &currentMtxDir,
+				PSVECCrossProduct(&normalDir, &currentNormalCross1,
 				                  &currentNormalCross2);
 				PSVECNormalize(&currentNormalCross1, &currentNormalCross1);
 				PSVECNormalize(&currentNormalCross2, &currentNormalCross2);
@@ -633,7 +609,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
@@ -650,23 +626,7 @@ static int MarioFootPosLCtrl(J3DNode* param_1, int param_2)
 	// volatile u32 padding[9];
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (isFootAdjustable()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdChnFootL);
@@ -694,23 +654,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 
-		BOOL check2;
-		bool check;
-
-		// Definitely some inline shenanigans
-		// And this is wrong
-		if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
-		        == MARIO_STATUS_TYPE_WAITING
-		    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
-		    && gpMarioForCallBack->onYoshi() == 0) {
-
-			check2 = !(gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEPY
-			           && gpMarioForCallBack->mStatus != MARIO_STATUS_SLEEP)
-			             ? TRUE
-			             : FALSE;
-		}
-
-		if (check2) {
+		if (isFootAdjustable()) {
 
 			MtxPtr footMtx = gpMarioForCallBack->mModel->getModel()->getAnmMtx(
 			    gpMarioForCallBack->mJointIdFootL);
@@ -719,22 +663,18 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			                              footMtx[2][3], &checkData);
 			if (!checkData->isIllegalData()) {
 
-				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir;
-				currentMtxDir.x = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z = J3DSys::mCurrentMtx[2][0];
+				Vec currentMtxDir = (Vec) { J3DSys::mCurrentMtx[0][0],
+					                        J3DSys::mCurrentMtx[1][0],
+					                        J3DSys::mCurrentMtx[2][0] };
+				Vec normalDir     = (Vec) { -checkData->getNormal().x,
+					                        -checkData->getNormal().y,
+					                        -checkData->getNormal().z };
 
-				Vec normalDir;
-				normalDir.x = -checkData->getNormal().x;
-				normalDir.y = -checkData->getNormal().y;
-				normalDir.z = -checkData->getNormal().z;
-
-				Vec currentNormalCross1;
 				Vec currentNormalCross2;
+				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
 				                  &currentNormalCross1);
-				PSVECCrossProduct(&normalDir, &currentMtxDir,
+				PSVECCrossProduct(&normalDir, &currentNormalCross1,
 				                  &currentNormalCross2);
 				PSVECNormalize(&currentNormalCross1, &currentNormalCross1);
 				PSVECNormalize(&currentNormalCross2, &currentNormalCross2);
@@ -757,7 +697,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
