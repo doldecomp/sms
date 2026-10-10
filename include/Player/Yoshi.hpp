@@ -145,17 +145,12 @@ public:
 // TODO: dumb hack, but why is it not getting inlined in the original?!
 inline BOOL TYoshi::onYoshi()
 {
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	(void)0;
-	return mState == STATE_MOUNTED ? TRUE : FALSE;
+	BOOL result;
+	if (mState == STATE_MOUNTED)
+		result = TRUE;
+	else
+		result = FALSE;
+	return result;
 }
 
 #endif

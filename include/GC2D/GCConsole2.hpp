@@ -23,6 +23,8 @@ class TMessageLoader;
 class TBathtub;
 class TBossEel;
 class TConsoleStr;
+class JSUMemoryInputStream;
+class JSUMemoryOutputStream;
 
 class TGCConsole2 : public JDrama::TViewObj {
 public:
@@ -40,7 +42,7 @@ public:
 	void startInsertLife(int);
 	void resetLife(int);
 	bool startAppearLife(int);
-	void startDisappearLife(int);
+	bool startDisappearLife(int);
 	void startDownLeftBot();
 	void startUpLeftBot();
 	void startAppearTelop(bool);
@@ -86,6 +88,11 @@ public:
 	inline void drawJuice(J2DOrthoGraph&, u32);
 	inline void drawWater(J2DOrthoGraph&);
 
+	// fabricated
+	inline void performMovement();
+	// fabricated
+	inline void performCalcAnim();
+
 	static JUTPoint cDownTopPoint;
 	static JUTPoint cDownMidPoint;
 	static JUTPoint cDownBotPoint;
@@ -103,9 +110,9 @@ public:
 	/* 0x1C */ s16 unk1C;
 	/* 0x20 */ s32 unk20;
 	/* 0x24 */ s32 unk24;
-	/* 0x28 */ u32 unk28;
-	/* 0x2C */ u32 unk2C;
-	/* 0x30 */ u32 unk30;
+	/* 0x28 */ s32 unk28;
+	/* 0x2C */ s32 unk2C;
+	/* 0x30 */ s32 unk30;
 	/* 0x34 */ u8 unk34;
 	/* 0x35 */ u8 unk35;
 	/* 0x36 */ u8 unk36;
@@ -141,23 +148,23 @@ public:
 	/* 0x59 */ u8 unk59;
 	/* 0x5A */ u8 unk5A;
 	/* 0x5C */ u32 unk5C;
-	/* 0x60 */ u8 unk60;
-	/* 0x64 */ u32 unk64;
-	/* 0x68 */ u8 unk68;
+	/* 0x60 */ s8 unk60;
+	/* 0x64 */ s32 unk64;
+	/* 0x68 */ s8 unk68;
 	/* 0x6C */ s32 unk6C;
 	/* 0x70 */ u16 unk70;
-	/* 0x72 */ u8 unk72;
+	/* 0x72 */ s8 unk72;
 	/* 0x73 */ u8 unk73;
 	/* 0x74 */ u16 unk74;
-	/* 0x76 */ u8 unk76;
+	/* 0x76 */ s8 unk76;
 	/* 0x77 */ u8 unk77;
 	/* 0x78 */ u16 unk78;
-	/* 0x7A */ char unk7A[2];
+	/* 0x7A */ u8 unk7A;
 	/* 0x7C */ s16 unk7C;
 	/* 0x80 */ u32 unk80;
 	/* 0x84 */ u16 unk84;
 	/* 0x86 */ u16 unk86;
-	/* 0x88 */ u8 unk88;
+	/* 0x88 */ s8 unk88;
 	/* 0x8A */ u16 unk8A;
 	/* 0x8C */ int unk8C;
 	/* 0x90 */ THelpActor** unk90;
@@ -195,7 +202,7 @@ public:
 	/* 0x154 */ TBoundPane* unk154[3];
 	/* 0x160 */ TExPane* unk160;
 	/* 0x164 */ JPABaseEmitter* unk164;
-	/* 0x168 */ u32 unk168;
+	/* 0x168 */ s32 unk168;
 	/* 0x16C */ u16 unk16C;
 	/* 0x16E */ char unk16E[2];
 	/* 0x170 */ s32 unk170;
@@ -227,7 +234,7 @@ public:
 	/* 0x2F8 */ TExPane* unk2F8;
 	/* 0x2FC */ JUTRect unk2FC;
 	/* 0x30C */ u8 unk30C;
-	/* 0x310 */ u32 unk310;
+	/* 0x310 */ s32 unk310;
 	/* 0x314 */ J2DPane* unk314[4];
 	/* 0x324 */ J2DPane* unk324;
 	/* 0x328 */ J2DPicture* unk328;
@@ -247,9 +254,9 @@ public:
 	/* 0x3BC */ JUTRect unk3BC;
 	/* 0x3CC */ s16 unk3CC;
 	/* 0x3D0 */ TMessageLoader* unk3D0;
-	/* 0x3D4 */ JSUInputStream* unk3D4;
-	/* 0x3D8 */ JSUOutputStream* unk3D8;
-	/* 0x3DC */ JSUOutputStream* unk3DC;
+	/* 0x3D4 */ JSUMemoryInputStream* unk3D4;
+	/* 0x3D8 */ JSUMemoryOutputStream* unk3D8;
+	/* 0x3DC */ JSUMemoryOutputStream* unk3DC;
 	/* 0x3E0 */ u32 unk3E0;
 	/* 0x3E4 */ int unk3E4;
 	/* 0x3E8 */ s16 unk3E8;
@@ -273,7 +280,7 @@ public:
 	/* 0x434 */ TBoundPane* unk434;
 	/* 0x438 */ TBoundPane* unk438;
 	/* 0x43C */ TBoundPane* unk43C[2];
-	/* 0x444 */ u32 unk444;
+	/* 0x444 */ s32 unk444;
 	/* 0x448 */ u8 unk448;
 	/* 0x44C */ TExPane* unk44C;
 	/* 0x450 */ TBoundPane* unk450;
@@ -303,8 +310,8 @@ public:
 	/* 0x554 */ s32 mTelopTextWidth;
 	/* 0x558 */ u8 unk558;
 	/* 0x55C */ u32 unk55C;
-	/* 0x560 */ u16 unk560;
-	/* 0x562 */ u16 unk562;
+	/* 0x560 */ s16 unk560;
+	/* 0x562 */ s16 unk562;
 	/* 0x564 */ f32 unk564;
 	/* 0x568 */ f32 unk568;
 	/* 0x56C */ u8 unk56C;
