@@ -1085,7 +1085,7 @@ void TTalk2D2::setupBoardTextBox(const void* param_1, JMSMesgEntry* param_2)
 
 		switch (code) {
 		case 0x0A:
-			out << 0x0A;
+			out << u8(0x0A);
 			lineIdx++;
 			break;
 
@@ -1116,7 +1116,7 @@ void TTalk2D2::setupBoardTextBox(const void* param_1, JMSMesgEntry* param_2)
 		if (next == 0) {
 			unk26A = 1;
 			stream.skip(1);
-			out << 0;
+			out << u8(0);
 		}
 	}
 

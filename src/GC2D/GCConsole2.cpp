@@ -58,14 +58,6 @@ JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
 
 // fabricated
-// TODO: the ROM copies the value to a new stack slot for each stream, as
-// JSUOutputStream::operator<<(u8) does. The real u16 write is unknown.
-static inline void writeU16(JSUOutputStream* stream, u16 value)
-{
-	stream->write(&value, sizeof(u16));
-}
-
-// fabricated
 static inline void syncPaneBounds(TBoundPane* pane)
 {
 	pane->unk4 = pane->getPane()->mBounds;
@@ -3689,8 +3681,8 @@ void TGCConsole2::performCalcAnim()
 							unk3DC->write(buffer, 0x2B);
 						}
 
-						writeU16(unk3D8, code);
-						writeU16(unk3DC, code);
+						*unk3D8 << code;
+						*unk3DC << code;
 
 						if (colored) {
 							snprintf(
