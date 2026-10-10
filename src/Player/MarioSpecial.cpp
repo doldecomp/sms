@@ -21,7 +21,7 @@ void TMario::barJumpSetting() { }
 BOOL TMario::barWait()
 {
 	if (mHolder == nullptr)
-		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
+		return changePlayerStatus(MARIO_STATUS_LAND_SAFE_DOWN, 0, false);
 
 	if (mInput & 0x2) {
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
@@ -34,7 +34,7 @@ BOOL TMario::barWait()
 	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
 	mPosition.z = mHolder->mPosition.z;
 
-	if ((mInput & 0x10000) || mHolderHeightDiff > 100.0f) {
+	if ((mInput & 0x8000) || mHolderHeightDiff <= 100.0f) {
 		setPlayerVelocity(-2.0f);
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
 		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
@@ -45,7 +45,7 @@ BOOL TMario::barWait()
 		return changePlayerStatus(MARIO_STATUS_BAR_CLIMB, 0, false);
 
 	if (unk108->mStickV < -16.0f) {
-		mVel.y += unk108->mStickV * 0.001953125f;
+		mVel.y += unk108->mStickV / 512.0f;
 		mPosition.y += mVel.y;
 		mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 		treeSlipEffect();
@@ -1351,11 +1351,11 @@ BOOL TMario::fenceMove()
 			s16 camDelta = mFaceAngle.y - gpCamera->unk258;
 			f32 normX, normZ;
 			if (camDelta > -0x4000 && camDelta < 0x4000) {
-				normZ = wall->mNormal.z;
-				normX = -wall->mNormal.x;
+				normZ = wall->getNormal().x;
+				normX = -wall->getNormal().z;
 			} else {
-				normX = wall->mNormal.x;
-				normZ = -wall->mNormal.z;
+				normX = wall->getNormal().z;
+				normZ = -wall->getNormal().x;
 			}
 
 			f32 stickH = 0.015625f * unk108->mStickH;
@@ -1434,16 +1434,18 @@ BOOL TMario::fenceMove()
 		if (mIntendedMag > 0.0f) {
 			f32 hDot, vDiff, dist;
 			if (unk2C0 == nullptr) {
-				vDiff    = mPosition.y - mPrevPosition.y;
-				f32 sinY = JMASSin(mFaceAngle.y);
-				f32 cosY = JMASCos(mFaceAngle.y);
+				vDiff = mPosition.y - mPrevPosition.y;
+				JGeometry::TVec3<f32> front(JMASSin(mFaceAngle.y), 0.0f,
+				                            JMASCos(mFaceAngle.y));
+				JGeometry::TVec3<f32> side;
+				side.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), front);
 
 				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
-				hDot = -cosY * diff.z + sinY * diff.x;
+				hDot = side.dot(diff);
 				dist = diff.length();
 			} else {
-				vDiff = unk300.y - unk2F4.y;
+				vDiff = unk2F4.y - unk300.y;
 				hDot  = unk2F4.x - unk300.x;
 				if ((s16)((182.04445f * unk30C) - (f32)mFaceAngle.y) != 0)
 					hDot = -hDot;

@@ -1586,7 +1586,8 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		return;
 	}
 
-	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
+	// Swimming
+	if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
 		J3DTransformInfo ti;
 		ti.mScale.x     = 1.0f;
 		ti.mScale.y     = 1.0f;
@@ -1604,7 +1605,6 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		return;
 	}
 
-	// Swimming
 	if (mHolder != nullptr && mHolder->getTakingMtx() != nullptr) {
 		MTXCopy(mHolder->getTakingMtx(), mtx);
 		return;
