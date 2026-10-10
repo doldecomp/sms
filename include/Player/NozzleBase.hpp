@@ -9,6 +9,15 @@ class TWaterGun;
 
 class TNozzleBase : public TParams {
 public:
+	// Fabricated
+	enum AnimationState {
+		ANIM_STATE_SHOOT_START  = 0,
+		ANIM_STATE_SHOOTING     = 1,
+		ANIM_STATE_SHOOT_END    = 2,
+		ANIM_STATE_CHANGE_START = 3,
+		ANIM_STATE_CHANGE_END   = 4,
+	};
+
 	/* 0x008 */ TParamRT<u8> mRocketType;
 	/* 0x01C */ TParamRT<f32> mNum;
 	/* 0x030 */ TParamRT<s16> mAttack;
@@ -63,6 +72,12 @@ public:
 	virtual void emitCommon(int, TWaterEmitInfo*);
 	virtual void emit(int);
 	virtual void animation(int);
+
+	// Unused
+	bool isAnmEnd() const;
+
+	// Fabricated
+	f32 getUnk378() { return unk378; }
 
 	void calcGunAngle(const TMarioControllerWork&);
 	MActor* getMActor() { return mMActor; }

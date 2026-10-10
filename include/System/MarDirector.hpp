@@ -176,6 +176,9 @@ public:
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
 	TMarioGamePad* getGamePad(int i = 0) { return mGamePads[i]; }
 
+	// Fabricated
+	int getMoveTickCount() const { return mMoveTickCount; }
+
 public:
 	enum {
 		STATE_UNK0       = 0,

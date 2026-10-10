@@ -118,19 +118,18 @@ public:
 	bool isEmitting()
 	{
 		// TODO: more inlines!
-		const TWaterGun* self = this;
-
 		if (mCurrentWater == 0)
 			return false;
 
-		if (self->getCurrentNozzle()->getNozzleKind() == 1) {
-			TNozzleTrigger* trig = (TNozzleTrigger*)self->getCurrentNozzle();
-			if (trig->unk385 == TNozzleTrigger::ACTIVE)
+		if (getCurrentNozzle()->getNozzleKind() == 1) {
+			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+			if (triggerNozzle->getSprayState()
+			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
 				return true;
 			return false;
 		}
 
-		if (self->getCurrentNozzle()->unk378 > 0.0f)
+		if (getCurrentNozzle()->getUnk378() > 0.0f)
 			return true;
 
 		return false;
@@ -146,9 +145,9 @@ public:
 	J3DModel* getModel() { return mFluddModel->getModel(); }
 
 	// Fabricated
-	inline bool hasFlag(u16 flag)
+	inline BOOL hasFlag(u16 flag)
 	{
-		bool hasFlag;
+		BOOL hasFlag;
 		if ((mFlags & flag) != 0) {
 			hasFlag = true;
 		} else {
@@ -210,12 +209,10 @@ public:
 		mIsEmitWater = emittedWater;
 		// TODO: one more inline for getting emit params
 		// rather than separate getMaxWater, getDecRate, etc. functions?
-		s16 decRate
-		    = (((const TWaterGun*)this)->getCurrentNozzle())->mDecRate.get();
-
-		unk1C88 += 10.0f
-		           * ((f32)emittedWater * (f32)decRate
-		              / mNozzleList[0]->mAmountMax.get());
+		f32 decRate = getCurrentNozzle()->mDecRate.get();
+		unk1C88
+		    += 10.0f
+		       * (emittedWater * decRate / mNozzleList[0]->mAmountMax.get());
 	}
 
 	// Fabricated
@@ -231,7 +228,8 @@ public:
 
 		if (getCurrentNozzle()->getNozzleKind() == 1) {
 			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
-			if (triggerNozzle->unk385 == TNozzleTrigger::ACTIVE)
+			if (triggerNozzle->mSprayState
+			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
 				return true;
 
 			return false;
@@ -244,7 +242,7 @@ public:
 	}
 
 	// Fabricated
-	bool isSwitchingToSprayNozzle()
+	bool isSwitchingToPrimaryNozzle()
 	{
 		return mSwitchToSecondNozzleSpeed < 0.0f ? true : false;
 	}
@@ -267,10 +265,10 @@ public:
 		return getCurrentNozzle()->getNozzleKind() == pNozzleKind;
 	}
 
-	// Fabricated
+	// Fabricated and fairly certainly fake
 	bool checkCurrentNozzleTriggerSprayState(s32 pState) const
 	{
-		return ((TNozzleTrigger*)getCurrentNozzle())->unk385 == pState;
+		return ((TNozzleTrigger*)getCurrentNozzle())->mSprayState == pState;
 	}
 
 	// Fabricated (maybe should be indexed?)
@@ -287,7 +285,13 @@ public:
 	TMario* getMario() const { return mMario; }
 
 	// Fabricated
+	int getCurrentNozzleType() const { return mCurrentNozzle; }
+
+	// Fabricated
 	TWaterEmitInfo* getEmitInfo() const { return mEmitInfo; }
+
+	// Fabricated
+	f32 getSwitchProgress() const { return mSwitchToSecondNozzleProgress; }
 
 public:
 	enum {
