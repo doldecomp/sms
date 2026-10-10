@@ -70,8 +70,7 @@ public:
 	virtual void drawSelf(int, int);
 	virtual void drawSelf(int, int, Mtx*);
 
-	// Possibly inline
-	const JUTRect& getContentsBounds() const { return mContentsBounds; }
+	JUTRect getContentsBounds() const { return mContentsBounds; }
 
 protected:
 	/* 0xEC */ JUTRect mContentsBounds;

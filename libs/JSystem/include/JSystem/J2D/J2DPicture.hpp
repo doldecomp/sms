@@ -3,6 +3,7 @@
 
 #include <JSystem/J2D/J2DPane.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
+#include <JSystem/JUtility/JUTTexture.hpp>
 
 class J2DMaterial;
 class JUTPalette;
@@ -68,6 +69,12 @@ public:
 	JUTTexture* getTexture(u8 idx) const
 	{
 		return idx < mTextureNum ? mTextures[idx] : nullptr;
+	}
+
+	void load(GXTexMapID id, u8 idx)
+	{
+		if (idx < mTextureNum)
+			mTextures[idx]->load(id);
 	}
 
 	void setCornerColor(JUtility::TColor c0, JUtility::TColor c1,

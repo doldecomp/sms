@@ -78,41 +78,6 @@ static inline void detachPaneFromParent(J2DPane* pane)
 }
 
 // fabricated
-static inline void drawGaugeQuadF32(const JUTRect& rect, int top, int bottom,
-                                    f32 topTex, f32 bottomTex)
-{
-	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-	GXPosition2f32((f32)rect.x1, (f32)top);
-	GXTexCoord2f32(0.0f, topTex);
-	GXPosition2f32((f32)rect.x2, (f32)top);
-	GXTexCoord2f32(1.0f, topTex);
-	GXPosition2f32((f32)rect.x2, (f32)bottom);
-	GXTexCoord2f32(1.0f, bottomTex);
-	GXPosition2f32((f32)rect.x1, (f32)bottom);
-	GXTexCoord2f32(0.0f, bottomTex);
-	GXEnd();
-}
-
-// fabricated
-static inline u32 getPressureFlashColor(u8 frame)
-{
-	u32 color = 0xff3f3f00;
-
-	if (frame < 10) {
-		color += ((u32)(s16)(s32)((f32)frame * -6.3f)) << 8;
-		color += ((u32)(s32)((f32)frame * 19.2f)) << 16;
-	} else if (frame < 15) {
-		color = 0xffff0000;
-	} else if (frame < 25) {
-		u8 fade = 25 - frame;
-		color += ((u32)(s16)(s32)((f32)fade * -6.3f)) << 8;
-		color += ((u32)(s32)((f32)fade * 19.2f)) << 16;
-	}
-
-	return color;
-}
-
-// fabricated
 static inline bool isMountedYoshi(TMario* mario)
 {
 	TYoshi* yoshi = mario->mYoshi;
@@ -199,9 +164,27 @@ static inline void detachBoundPaneFromParent(TBoundPane* pane)
 }
 
 // fabricated
+static inline int getHiddenOffsetY(TExPane* pane)
+{
+	return -(pane->mInitialBounds.y2 + 1);
+}
+
+// fabricated
+static inline int getHiddenOffsetY(TBoundPane* pane)
+{
+	return -(pane->unk4.y2 + 1);
+}
+
+// fabricated
+static inline int getBelowScreenOffsetY(TExPane* pane)
+{
+	return 465 - pane->getInitialBounds().y1;
+}
+
+// fabricated
 static inline void initHiddenPaneAbove(TExPane* pane)
 {
-	pane->updatePaneOffset(1, 0, -(pane->mInitialBounds.y2 + 1));
+	pane->updatePaneOffset(1, 0, getHiddenOffsetY(pane));
 	pane->update();
 }
 
@@ -231,7 +214,7 @@ static inline void setTwoDigits(TBoundPane** panes, JUTTexture** textures,
 // fabricated
 template <class Pane>
 static inline void setCounterDigits(Pane** panes, JUTTexture** textures,
-                                    int value)
+                                    const s32& value)
 {
 	if (value < 100) {
 		setDigitPane(panes[0], textures, (int)(value * 0.1f));
@@ -269,7 +252,7 @@ static inline void setBlueCoinDigits(Pane** panes, JUTTexture** textures,
 // fabricated
 template <class Pane>
 static inline void setShineDigits(Pane** panes, JUTTexture** textures,
-                                  int value)
+                                  const s32& value)
 {
 	if (value < 100) {
 		setDigitPane(panes[0], textures, (int)(value * 0.1f));
@@ -400,9 +383,7 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 {
 	pane->update();
 
-	if (pane->unk24) {
-		isFinished = false;
-	} else {
+	if (!pane->unk24) {
 		bool paneFinished = false;
 		if (pane->unk14.x1 == 0 && pane->unk14.y1 == 0)
 			paneFinished = true;
@@ -412,6 +393,8 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 			                      TGCConsole2::cCoinBotPoint);
 			isFinished = false;
 		}
+	} else {
+		isFinished = false;
 	}
 }
 
@@ -438,6 +421,7 @@ static inline void drawWaterOrJuice(TGCConsole2* console, J2DOrthoGraph& graph)
 			                              + ((u32)console->unkAA.b << 8)
 			                              + console->unkAA.a);
 			break;
+		case 0:
 		default:
 			console->drawJuice(graph, 0);
 			break;
@@ -451,13 +435,6 @@ static const s32 scNozzleSoundList[] = {
 	0x88B0, 0x88B1, 0x88B2, 0x88B3, 0x88B4, 0x88B5,
 	0x88B6, 0x88B7, 0x88B8, 0x88B9, 0x88BA, -1,
 };
-
-// TODO: three dead .data objects the original TU still emits, recovered from
-// the ROM. They are never read, so which function's statics they were is
-// unknown; they are placed here only to keep the .data layout right.
-static f32 scUnusedScale1[] = { 1.0f, 1.0f, 1.0f };
-static f32 scUnusedScale2[] = { 1.0f, 1.0f, 1.0f };
-static int scUnusedTable[]  = { 0, 2, 1, 3 };
 
 static u32 scDolpicNewsDolpic0[]   = { 0x000E0000, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic1[]   = { 0x000E0001, 0xFFFFFFFF };
@@ -808,25 +785,25 @@ void TGCConsole2::loadAfter()
 	unk94 = static_cast<TConsoleStr*>(
 	    JDrama::TNameRefGen::search("コンソール文字"));
 
-	JUTRect waterBounds(unk2F8->getPane()->mBounds);
+	JUTRect bounds(unk2F8->getPane()->mBounds);
 
-	unk2A0[0]->add(waterBounds.x1, waterBounds.y1);
-	unk270->getPane()->add(waterBounds.x1, waterBounds.y1);
+	unk2A0[0]->add(bounds.x1, bounds.y1);
+	unk270->getPane()->add(bounds.x1, bounds.y1);
 	syncPaneBounds(unk270);
-	unk26C->getPane()->add(waterBounds.x1, waterBounds.y1);
+	unk26C->getPane()->add(bounds.x1, bounds.y1);
 	syncPaneBounds(unk26C);
-	unk328->add(waterBounds.x1, waterBounds.y1);
+	unk328->add(bounds.x1, bounds.y1);
 
 	for (int i = 0; i < 3; ++i) {
 		unk2BC[i] = unk2A0[i]->mBounds;
-		unk2BC[i].add(waterBounds.x1, waterBounds.y1);
+		unk2BC[i].add(bounds.x1, bounds.y1);
 	}
 
 	unk2A0[0]->show();
 	detachPaneFromParent(unk2A0[0]);
 	detachBoundPaneFromParent(unk270);
 	for (int i = 0; i < 4; ++i) {
-		unk278[i]->getPane()->add(waterBounds.x1, waterBounds.y1);
+		unk278[i]->getPane()->add(bounds.x1, bounds.y1);
 		syncPaneBounds(unk278[i]);
 		detachBoundPaneFromParent(unk278[i]);
 	}
@@ -864,20 +841,20 @@ void TGCConsole2::loadAfter()
 
 	unk168 = TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT);
 
-	int spentBlueCoins = 0;
+	int blueCoins = 0;
 	for (int flag = 0x46; flag < 0x56; ++flag)
 		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag) != 0)
-			++spentBlueCoins;
+			++blueCoins;
 
 	for (int flag = 0x6C; flag <= 0x73; ++flag)
 		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag) != 0)
-			++spentBlueCoins;
+			++blueCoins;
 
-	int blueCoinValue = unk168 - spentBlueCoins * 10;
-	if (blueCoinValue < 0)
-		blueCoinValue = 0;
-	setBlueCoinDigits(unk154, unkE0, blueCoinValue);
-	unk170 = blueCoinValue;
+	blueCoins = unk168 - blueCoins * 10;
+	if (blueCoins < 0)
+		blueCoins = 0;
+	setBlueCoinDigits(unk154, unkE0, blueCoins);
+	unk170 = blueCoins;
 
 	unk20 = TFlagManager::getInstance()->getFlag(MSF_GOLD_COIN_COUNT);
 	if (unk20 > 999)
@@ -911,23 +888,21 @@ void TGCConsole2::loadAfter()
 	unk520->getPane()->hide();
 	unk524->getPane()->show();
 	unk528->hide();
-	unk52C->hide();
-
 	unk528->setFont(gpSystemFont);
-	unk52C->setFont(gpSystemFont);
+	JUTRect textBounds(unk528->mBounds);
+	unk528->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
 
-	int fontHeight = gpSystemFont->getHeight();
-	unk528->setFontSize(fontHeight, unk528->mBounds.getHeight());
-	unk52C->setFontSize(fontHeight, unk52C->mBounds.getHeight());
+	unk52C->hide();
+	unk52C->setFont(gpSystemFont);
+	unk52C->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
 
 	JUTRect telopBounds(unk524->getPane()->mBounds);
-	JUTRect telopPaneBounds(unk520->getPane()->mBounds);
-	telopBounds.add(telopPaneBounds.x1, telopPaneBounds.y1 - 3);
+	bounds = unk520->getPane()->mBounds;
+	telopBounds.add(bounds.x1, bounds.y1 - 3);
 	unk544.set(telopBounds.x1 + 8, telopBounds.y1 + 8, telopBounds.x2 - 8,
 	           telopBounds.y2 - 8);
 
-	unk534 = unk528->mBounds;
-	unk534.add(unk544.x2, unk544.y1 + unk528->mBounds.getHeight());
+	unk534.add(unk544.x2, unk544.y1 + unk528->getHeight());
 
 	unk544.resize(unk544.getWidth() * (16.0f / 15.0f), unk544.getHeight());
 	unk544.add(0, -16);
@@ -971,8 +946,7 @@ void TGCConsole2::loadAfter()
 	unk144 = gpEmitterManager4D2->unkC8[0][0];
 	unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 
-	TNozzleBase* nozzle = gpMarioOriginal->mWaterGun->getCurrentNozzle();
-	unk28               = nozzle->mEmitParams.mAmountMax.get();
+	unk28 = gpMarioOriginal->mWaterGun->getMaxWater();
 
 	unkBC = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
 	unkC0 = static_cast<TBossEel*>(JDrama::TNameRefGen::search("めおとウナギ"));
@@ -1146,8 +1120,7 @@ void TGCConsole2::startDisappearTank()
 	unk4B = 1;
 	unk5A = 1;
 
-	int offset = 465 - unk2F8->mInitialBounds.y1;
-	offset += 60;
+	int offset = getBelowScreenOffsetY(unk2F8) + 60;
 	unk2F8->updatePaneOffset(40, 0, offset);
 
 	JUTPoint start(0, 0);
@@ -1170,8 +1143,7 @@ void TGCConsole2::startAppearCoin()
 	unk88 = 0;
 
 	unk108->getPane()->show();
-	unk108->setPaneOffset(unk98, 0, unk26A, 0,
-	                      -(unk108->mInitialBounds.y2 + 1));
+	unk108->setPaneOffset(unk98, 0, unk26A, 0, getHiddenOffsetY(unk108));
 
 	unkC8->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -1192,10 +1164,10 @@ void TGCConsole2::startDisappearCoin()
 	if (unk140->isInterpolatorAtZero())
 		unk140->updatePaneOffset(
 		    40, 0,
-		    -(unk140->mInitialBounds.y2 + unk128->getPane()->getHeight() + 1));
+		    -(unk140->mInitialBounds.y2 + 1 + unk128->getPane()->getHeight()));
 
-	int offset = -(unk108->mInitialBounds.y2 + 1);
-	unk108->updatePaneOffset(40, 0, offset - unkC8->getPane()->getHeight());
+	unk108->updatePaneOffset(
+	    40, 0, getHiddenOffsetY(unk108) - unkC8->getPane()->getHeight());
 
 	unk124->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
 }
@@ -1310,13 +1282,11 @@ bool TGCConsole2::startDisappearLife(int param_1)
 		return false;
 
 	unk4C = 1;
-	// TODO: the ROM reads unk1C4->unk4.y2 again for each point, as if the
-	// negated offset came from an inline and not from a local.
-	int offset = -(unk1C4->unk4.y2 + 1);
 	unk1C4->setPanePosition(
 	    40, JUTPoint(0, 0),
-	    JUTPoint(0, (offset - unk174->getPane()->getHeight()) >> 1),
-	    JUTPoint(0, offset - unk174->getPane()->getHeight()));
+	    JUTPoint(0, (getHiddenOffsetY(unk1C4) - unk174->getPane()->getHeight())
+	                    >> 1),
+	    JUTPoint(0, getHiddenOffsetY(unk1C4) - unk174->getPane()->getHeight()));
 	unk84 = param_1;
 	return true;
 }
@@ -1332,17 +1302,17 @@ void TGCConsole2::startDownLeftBot()
 	unk5A = 1;
 
 	if (unk44C->getPane()->isVisible() && unk44C->isInterpolatorAtZero()) {
-		unk44C->updatePaneOffset(20, 0, 525 - unk44C->getInitialBounds().y1);
+		unk44C->updatePaneOffset(20, 0, getBelowScreenOffsetY(unk44C) + 60);
 		unk51C = 1;
 	}
 
 	if (unk428->getPane()->isVisible()) {
-		unk428->updatePaneOffset(20, 0, 525 - unk428->getInitialBounds().y1);
+		unk428->updatePaneOffset(20, 0, getBelowScreenOffsetY(unk428) + 60);
 		unk448 = 1;
 	}
 
 	if (unk3FC->getPane()->isVisible()) {
-		unk3FC->updatePaneOffset(20, 0, 525 - unk3FC->getInitialBounds().y1);
+		unk3FC->updatePaneOffset(20, 0, getBelowScreenOffsetY(unk3FC) + 60);
 		unk426 = 1;
 	}
 }
@@ -1401,7 +1371,7 @@ void TGCConsole2::startDisappearTelop()
 
 void TGCConsole2::startDisappearTimer()
 {
-	unk44C->updatePaneOffset(40, 0, 525 - unk44C->getInitialBounds().y1);
+	unk44C->updatePaneOffset(40, 0, getBelowScreenOffsetY(unk44C) + 60);
 	unk3F = 1;
 	unk5A = 1;
 }
@@ -1531,9 +1501,15 @@ void TGCConsole2::startAppearRedCoin()
 		unk43C[i]->getPane()->hide();
 }
 
+// fabricated
+static inline void closeBalloon(TGCConsole2* console)
+{
+	console->startDisappearBalloon(console->unk3E0, true);
+}
+
 void TGCConsole2::pauseIn()
 {
-	startDisappearBalloon(unk3E0, true);
+	closeBalloon(this);
 	startAppearMario(false);
 	startAppearStar();
 	startDisappearTelop();
@@ -1569,8 +1545,6 @@ void TGCConsole2::pauseOut()
 	unk5A = 0;
 }
 
-// TODO: figure out inlining without pragmas
-#pragma dont_inline on
 bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 {
 	if (!param_2 && unk3F4 == 0xffffffff && (param_1 != unk3E0 || unk3E4 != 0))
@@ -1581,7 +1555,6 @@ bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 	unk10 = 4;
 	return true;
 }
-#pragma dont_inline off
 
 bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 {
@@ -1592,18 +1565,12 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 		return false;
 
 	if (unk10 != 0) {
-		if (unk3F4 != 0xffffffff)
-			return false;
-
-		unk3F4 = messageID;
-		// The ROM compares unk3E0 with itself here, so the middle term is
-		// always true. Probably a copy-paste slip in the original source.
-		if (unk3F4 != 0xffffffff || (unk3E0 == unk3E0 && unk3E4 == 0)) {
-			unk3B8->hide();
-			unk48 = 0;
-			unk10 = 4;
+		if (unk3F4 == 0xffffffff) {
+			unk3F4 = messageID;
+			startDisappearBalloon(unk3E0, false);
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU || !unk46)
@@ -1613,8 +1580,6 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	unk3B0->mAlpha = 0;
 	unk3B0->show();
 
-	// TODO: the ROM copies the contents rect twice here, as if
-	// J2DWindow::getContentsBounds() returned a JUTRect by value.
 	JUTRect contents(unk3B0->getContentsBounds());
 	unk3B0->resize(unk3BC.getWidth(),
 	               unk3BC.getHeight() - contents.getHeight());
@@ -1626,9 +1591,10 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	const u8* messageText = unk3D0->getMessageData() + entry->unk0;
 	unk3D4->setBuffer(messageText, 0x400);
 
-	unk3E0 = messageID;
-	unk3F8 = autoClose;
-	unk3E4 = (s32)(strlen((const char*)messageText) * unk3EC + unk3E8);
+	unk3E0     = messageID;
+	size_t len = strlen((const char*)messageText);
+	unk3F8     = autoClose;
+	unk3E4     = (s32)(len * unk3EC + unk3E8);
 
 	if (unk3E0 == 0x000E002F)
 		unk3E4 = 0x96;
@@ -1649,9 +1615,8 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 
 void TGCConsole2::startDisappearStar()
 {
-	int offset = -(unk140->mInitialBounds.y2 + 1);
-	unk140->updatePaneOffset(40, 0, offset + unk26A);
-	unk160->updatePaneOffset(40, 0, -(unk160->mInitialBounds.y2 + 1));
+	unk140->updatePaneOffset(40, 0, getHiddenOffsetY(unk140) + unk26A);
+	unk160->updatePaneOffset(40, 0, getHiddenOffsetY(unk160));
 	unk108->updatePaneOffset(40, 0, unk26A);
 
 	unk144->setStatus(JPABaseEmitter::STATUS_STOP_EMIT);
@@ -1676,7 +1641,7 @@ void TGCConsole2::startAppearStar()
 		unk35 = 0;
 	}
 
-	unk140->setPaneOffset(40, 0, 0, 0, -(unk140->mInitialBounds.y2 + 1));
+	unk140->setPaneOffset(40, 0, 0, 0, getHiddenOffsetY(unk140));
 	unk140->getPane()->show();
 	unk128->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -1685,7 +1650,7 @@ void TGCConsole2::startAppearStar()
 	for (int i = 0; i < 3; ++i)
 		unk134[i]->getPane()->hide();
 
-	unk160->setPaneOffset(40, 0, 0, 0, -(unk160->mInitialBounds.y2 + 1));
+	unk160->setPaneOffset(40, 0, 0, 0, getHiddenOffsetY(unk160));
 	unk160->getPane()->show();
 	unk148->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -1736,19 +1701,14 @@ void TGCConsole2::drawWaterBack()
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	JUTTexture* backgroundTexture;
-	if (((J2DPicture*)unk26C->getPane())->mTextureNum > 0)
-		backgroundTexture = ((J2DPicture*)unk26C->getPane())->mTextures[0];
-	else
-		backgroundTexture = nullptr;
-	backgroundTexture->load(GX_TEXMAP0);
+	((J2DPicture*)unk26C->getPane())->getTexture(0)->load(GX_TEXMAP0);
 	GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0,
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
-	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
+	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(0x0000ff78));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(0x0000ff00));
 
@@ -1758,7 +1718,16 @@ void TGCConsole2::drawWaterBack()
 		f32 hiddenRatio = 1.0f - pressure / pressureMax;
 		int fillTop     = bounds.y1 + (int)(hiddenRatio * bounds.getHeight());
 
-		drawGaugeQuadF32(bounds, bounds.y1, fillTop, 0.0f, hiddenRatio);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32(bounds.x1, bounds.y1);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition2f32(bounds.x2, bounds.y1);
+		GXTexCoord2f32(1.0f, 0.0f);
+		GXPosition2f32(bounds.x2, fillTop);
+		GXTexCoord2f32(1.0f, hiddenRatio);
+		GXPosition2f32(bounds.x1, fillTop);
+		GXTexCoord2f32(0.0f, hiddenRatio);
+		GXEnd();
 
 		if (!unk50 && pressure != 0.0f && !unk48) {
 			unk14 = 1;
@@ -1769,10 +1738,23 @@ void TGCConsole2::drawWaterBack()
 			if (unk49)
 				unk49 = 0;
 
-			if (unk30C >= 25)
+			u32 color = 0xff3f3f00;
+			if (unk30C < 10) {
+				s16 green = unk30C * -6.3f;
+				s32 blue  = unk30C * 19.2f;
+				color += green << 8;
+				color += blue << 16;
+			} else if ((int)unk30C < 15) {
+				color = 0xffff0000;
+			} else if ((int)unk30C < 25) {
+				int fade  = 25 - unk30C;
+				s16 green = fade * -6.3f;
+				s32 blue  = fade * 19.2f;
+				color += green << 8;
+				color += blue << 16;
+			} else {
 				unk30C = 0;
-
-			u32 color = getPressureFlashColor(unk30C);
+			}
 			GXSetTevColor(GX_TEVREG0, JUtility::TColor(color + 0xc8));
 			GXSetTevColor(GX_TEVREG1, JUtility::TColor(color));
 			++unk30C;
@@ -1783,18 +1765,34 @@ void TGCConsole2::drawWaterBack()
 			GXSetTevColor(GX_TEVREG1, JUtility::TColor(0xff3f3f00));
 		}
 
-		drawGaugeQuadF32(bounds, fillTop, bounds.y2, hiddenRatio, 1.0f);
-	} else if (unk48) {
-		if (unk30C != 0) {
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32(bounds.x1, fillTop);
+		GXTexCoord2f32(0.0f, hiddenRatio);
+		GXPosition2f32(bounds.x2, fillTop);
+		GXTexCoord2f32(1.0f, hiddenRatio);
+		GXPosition2f32(bounds.x2, bounds.y2);
+		GXTexCoord2f32(1.0f, 1.0f);
+		GXPosition2f32(bounds.x1, bounds.y2);
+		GXTexCoord2f32(0.0f, 1.0f);
+		GXEnd();
+	} else {
+		if (unk48 && unk30C != 0) {
 			unk274->setPanePosition(90, JUTPoint(0, 0), JUTPoint(0, -100),
 			                        JUTPoint(0, 0));
 			unk30C = 0;
 			unk49  = 1;
 		}
 
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
-	} else {
-		drawGaugeQuadF32(bounds, bounds.y1, bounds.y2, 0.0f, 1.0f);
+		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		GXPosition2f32(bounds.x1, bounds.y1);
+		GXTexCoord2f32(0.0f, 0.0f);
+		GXPosition2f32(bounds.x2, bounds.y1);
+		GXTexCoord2f32(1.0f, 0.0f);
+		GXPosition2f32(bounds.x2, bounds.y2);
+		GXTexCoord2f32(1.0f, 1.0f);
+		GXPosition2f32(bounds.x1, bounds.y2);
+		GXTexCoord2f32(0.0f, 1.0f);
+		GXEnd();
 	}
 
 	if (unk334[unk330]->isVisible())
@@ -1806,7 +1804,7 @@ void TGCConsole2::startDisappearMario()
 	if (!unk3A8->getPane()->isVisible() || unk3B)
 		return;
 
-	unk3A8->updatePaneOffset(50, 0, -(unk3A8->getInitialBounds().y2 + 1));
+	unk3A8->updatePaneOffset(50, 0, getHiddenOffsetY(unk3A8));
 	unk3B = 1;
 }
 
@@ -1816,7 +1814,7 @@ void TGCConsole2::startAppearMario(bool param_1)
 		return;
 
 	unk3A8->getPane()->show();
-	unk3A8->setPaneOffset(50, 0, 0, 0, -(unk3A8->getInitialBounds().y2 + 1));
+	unk3A8->setPaneOffset(50, 0, 0, 0, getHiddenOffsetY(unk3A8));
 
 	unk38C->setPanePosition(50, cDownTopPoint, cDownMidPoint, cDownMidPoint);
 
@@ -1884,8 +1882,6 @@ void TGCConsole2::changeNum(TBlendPane* pane, int num, int frames)
 
 void TGCConsole2::setTimer(s32 param_1)
 {
-	// TODO: Needs regswaps but should otherwise be equivalent
-
 	u32 timerValue;
 
 	if (param_1 == -1) {
@@ -1903,6 +1899,8 @@ void TGCConsole2::setTimer(s32 param_1)
 				timerValue = unk514 - timerValue;
 			}
 		}
+	} else {
+		timerValue = param_1;
 	}
 
 	// Cap at 5999.99 seconds (99:59.99)
@@ -1930,7 +1928,7 @@ void TGCConsole2::setTimer(s32 param_1)
 		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
 	} else {
 		if (timerValue < 1000
-		    && ((J2DPicture*)unk458[9]->getPane())->mWhite != unk508) {
+		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != unk508) {
 			for (int i = 6; i <= 9; i++) {
 				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
 			}
@@ -1951,7 +1949,7 @@ void TGCConsole2::setTimer(s32 param_1)
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 
-	unk4FC = param_1;
+	unk4FC = timerValue;
 }
 
 void TGCConsole2::startMoveTimer(int param_1)
@@ -2047,7 +2045,7 @@ bool TGCConsole2::processAppearStar(int param_1)
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28) {
 			if (i == 2) {
-				if ((!unk50 && shines >= 100) || (unk50 && shines > 100))
+				if ((!unk50 && shines >= 100) || (shines > 100 && unk50))
 					unk134[i]->getPane()->show();
 			} else {
 				unk134[i]->getPane()->show();
@@ -2068,14 +2066,14 @@ bool TGCConsole2::processAppearStar(int param_1)
 		if (TFlagManager::smInstance->getFlag(MSF_SHINE_BASE + flag) != 0)
 			++blueCoins;
 
-	int blueCoinValue = unk168 - blueCoins * 10;
-	if (blueCoinValue < 0)
-		blueCoinValue = 0;
+	blueCoins = unk168 - blueCoins * 10;
+	if (blueCoins < 0)
+		blueCoins = 0;
 
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28) {
 			if (i == 2) {
-				if (blueCoinValue >= 100)
+				if (blueCoins >= 100)
 					unk154[i]->getPane()->show();
 			} else {
 				unk154[i]->getPane()->show();
@@ -2098,13 +2096,13 @@ bool TGCConsole2::processAppearStar(int param_1)
 		updateDownPaneState(unk154[i], isFinished);
 	}
 
-	JUTRect bounds(unk12C->getPane()->mGlobalBounds);
+	JUTRect bounds = unk12C->getPane()->mGlobalBounds;
 	unk144->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
-	JUTRect bounds2(unk14C->getPane()->mGlobalBounds);
-	unk164->setGlobalTranslation(bounds2.x1 + bounds2.getWidth() * 0.5f,
-	                             bounds2.y1 + bounds2.getHeight() * 0.5f, 0.0f);
+	bounds = unk14C->getPane()->mGlobalBounds;
+	unk164->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
+	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
 	return isFinished;
 }
@@ -2331,14 +2329,14 @@ void TGCConsole2::checkChangeTelopArray()
 		case 5:
 			if (TFlagManager::getInstance()->getBool(MSF_RICCO_UNLOCKABLE)) {
 				if (TFlagManager::getInstance()->getBool(MSF_GELATO_UNLOCKABLE))
-					unk570 = scDolpicNewsDolpic5_1;
+					unk570 = scDolpicNewsDolpic5_4;
 				else
 					unk570 = scDolpicNewsDolpic5_2;
 			} else {
 				if (TFlagManager::getInstance()->getBool(MSF_GELATO_UNLOCKABLE))
 					unk570 = scDolpicNewsDolpic5_3;
 				else
-					unk570 = scDolpicNewsDolpic5_4;
+					unk570 = scDolpicNewsDolpic5_1;
 			}
 			break;
 		case 8: {
@@ -2579,8 +2577,7 @@ bool TGCConsole2::processDisappearBalloon()
 	JUTRect bounds = unk3B0->getBounds();
 	int height     = bounds.getHeight();
 
-	JUTRect contents  = unk3B0->getContentsBounds();
-	int contentHeight = contents.getHeight();
+	int contentHeight = unk3B0->getContentsBounds().getHeight();
 
 	if (contentHeight > 0) {
 		int nextHeight = height - unk3CC;
@@ -2636,10 +2633,8 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 	                GX_TRUE, GX_TEVPREV);
 
-	if (unk32C->mTextureNum > 0)
-		unk32C->mTextures[0]->load(GX_TEXMAP0);
-	if (unk328->mTextureNum > 0)
-		unk328->mTextures[0]->load(GX_TEXMAP1);
+	unk32C->load(GX_TEXMAP0, 0);
+	unk328->load(GX_TEXMAP1, 0);
 
 	u8 selected = 0x17;
 	for (u8 i = 0x16; (u8)i != 0; --i) {
@@ -2748,10 +2743,8 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                GX_TRUE, GX_TEVPREV);
 		GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1,
 		                GX_TRUE, GX_TEVPREV);
-		if (unk2AC[layer]->mTextureNum > 0)
-			unk2AC[layer]->mTextures[0]->load(GX_TEXMAP0);
-		if (unk2A0[layer]->mTextureNum > 0)
-			unk2A0[layer]->mTextures[0]->load(GX_TEXMAP1);
+		unk2AC[layer]->load(GX_TEXMAP0, 0);
+		unk2A0[layer]->load(GX_TEXMAP1, 0);
 
 		MTXTrans(mtx, 0.0f, unk2B8 * (1.0f - height[layer - 1]), 0.0f);
 		GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX2x4);
@@ -2773,18 +2766,16 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                  GX_FALSE, GX_PTIDENTITY);
 		GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
 
-		int top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
-		int bottom = top + unk2BC[layer].getHeight();
-		int left   = unk2BC[layer].x1;
-		int right  = unk2BC[layer].x2;
+		f32 top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
+		f32 bottom = top + unk2A0[layer]->getHeight();
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-		GXPosition2f32((f32)left, (f32)top);
+		GXPosition2f32(unk2BC[layer].x1, top);
 		GXTexCoord2s8(0, 0);
-		GXPosition2f32((f32)right, (f32)top);
+		GXPosition2f32(unk2BC[layer].x2, top);
 		GXTexCoord2s8(1, 0);
-		GXPosition2f32((f32)right, (f32)bottom);
+		GXPosition2f32(unk2BC[layer].x2, bottom);
 		GXTexCoord2s8(1, 1);
-		GXPosition2f32((f32)left, (f32)bottom);
+		GXPosition2f32(unk2BC[layer].x1, bottom);
 		GXTexCoord2s8(0, 1);
 		GXEnd();
 	}
@@ -2793,9 +2784,9 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 
 	JUTRect bounds = unk2A0[0]->getBounds();
 	f32 hidden     = 47.0f * (1.0f - unk2B8) - 0.5f;
-	int y          = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
-	y += 1;
-	if (y < 0)
+	int top        = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
+	int y          = ++top;
+	if (top < 0)
 		y = 0;
 
 	JUTTexture* texture = unk2A0[0]->mTextures[0];
@@ -2870,9 +2861,9 @@ void TGCConsole2::performMovement()
 		if (unkB4 == 0) {
 			startAppearCoin();
 			startAppearMario(false);
-			unkB0->search('ROOT')->mAlpha = 0;
+			unkB0->search('ROOT')->setAlpha(0);
 		} else {
-			unkB0->search('ROOT')->mAlpha = 0xff;
+			unkB0->search('ROOT')->setAlpha(0xff);
 		}
 
 		++unkB4;
@@ -2906,7 +2897,8 @@ void TGCConsole2::performMovement()
 
 	if (airMode
 	    && SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
-		s16 alpha = unk1C4->getPane()->mAlpha - 0x10;
+		s16 alpha = unk1C4->getPane()->mAlpha;
+		alpha -= 0x10;
 		if (alpha < 0)
 			alpha = 0;
 		unk1C4->getPane()->mAlpha = alpha;
@@ -3048,7 +3040,8 @@ void TGCConsole2::performMovement()
 			startInsertLife(1);
 			unk18 = 8;
 		} else {
-			unk1CC[0] = 8;
+			amount    = 8;
+			unk1CC[0] = amount;
 			unk18     = 0;
 		}
 		break;
@@ -3067,7 +3060,7 @@ void TGCConsole2::performMovement()
 			++unk1CC[0];
 			unk17C[unk1CC[0] * 2]->show();
 			playLifeChangeSound(0x4801);
-		} else if (unk1CC[0] > amount) {
+		} else if (unk1CC[0] != amount) {
 			playLifeChangeSound(0x4823);
 			unk17C[unk1CC[0] * 2]->hide();
 			unk17C[unk1CC[0] * 2]->setBounds(
@@ -3167,7 +3160,7 @@ void TGCConsole2::performMovement()
 			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
 			    != 0)
 				++spentBlueCoins;
-		for (int flag = 0x6C; flag <= 0x73; ++flag)
+		for (int flag = 0x6C; flag < 0x74; ++flag)
 			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
 			    != 0)
 				++spentBlueCoins;
@@ -3269,7 +3262,7 @@ void TGCConsole2::performMovement()
 				if (value % 10 == 0)
 					changeNum(unk134[0], value / 10, 10);
 
-				changeNum(unk134[1], value % 10, 10);
+				changeNum(unk134[1], value - value / 10 * 10, 10);
 			} else {
 				if (value % 100 == 0) {
 					changeNum(unk134[0], value / 100, 10);
@@ -3313,7 +3306,7 @@ void TGCConsole2::performMovement()
 	}
 
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
-	s32 currentWater    = waterGun->mCurrentWater;
+	s32 currentWater    = waterGun->getCurrentWater();
 	s32 maxWater        = waterGun->getMaxWater();
 	int currentNozzle   = waterGun->mCurrentNozzle;
 
@@ -3418,14 +3411,14 @@ void TGCConsole2::performMovement()
 				                                             0);
 			}
 
-			f32 diff = (f32)unk86 - rate;
-			diff     = diff >= 0.0f ? diff : -diff;
+			f32 diff  = (f32)unk86 - rate;
+			f32 ratio = (diff >= 0.0f ? diff : -diff) / rate;
 
 			f32 mul = 3.0f;
 			if (amount <= 3)
 				mul = 5.0f;
 
-			u8 offset = mul * (int)(0.5f + diff / rate);
+			u8 offset = mul * (int)(0.5f + ratio);
 			for (int i = 0; i < 9; ++i) {
 				if (unk17C[i * 2]->isVisible()) {
 					unk17C[i * 2]->setBounds(
@@ -3728,8 +3721,7 @@ void TGCConsole2::performCalcAnim()
 		if (processDisappearBalloon()) {
 			unk3B0->hide();
 			unk3B0->resize(0, unk3BC.getHeight());
-			JUTRect contents(unk3B0->getContentsBounds());
-			unk3B0->add(0, -contents.getHeight());
+			unk3B0->add(0, -unk3B0->getContentsBounds().getHeight());
 		} else {
 			done = false;
 		}
@@ -3948,7 +3940,7 @@ void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
 		performCalcAnim();
 
 	if (flags & 8) {
-		J2DOrthoGraph graph(graphics->mViewportRect);
+		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 
 		if (unk46 || unk45)
