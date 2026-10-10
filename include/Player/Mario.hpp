@@ -1330,6 +1330,9 @@ public:
 	// Fabricated
 	f32 getUnk568() const { return unk568; }
 
+	// Fabricated
+	TYoshi* const getYoshi() { return mYoshi; }
+
 public:
 	/* 0x74 */ u32 mInput;
 	/* 0x78 */ u32 unk78;

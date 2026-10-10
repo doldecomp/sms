@@ -206,7 +206,7 @@ public:
 	// Fabricated
 	void updateUnk1C88(u8 emittedWater)
 	{
-		mIsEmitWater = emittedWater;
+		mEmittedWaterCount = emittedWater;
 		// TODO: one more inline for getting emit params
 		// rather than separate getMaxWater, getDecRate, etc. functions?
 		f32 decRate = getCurrentNozzle()->mDecRate.get();
@@ -293,6 +293,9 @@ public:
 	// Fabricated
 	f32 getSwitchProgress() const { return mSwitchToSecondNozzleProgress; }
 
+	// Fabricated
+	u8 getEmittedWaterCount() const { return mEmittedWaterCount; }
+
 public:
 	enum {
 		WATER_GUN_FLAG_UNK2  = 0x2,
@@ -312,7 +315,7 @@ public:
 	/* 0x1C80 */ s32 mCurrentWater;
 	/* 0x1C84 */ u8 mCurrentNozzle;
 	/* 0x1C85 */ u8 mSecondNozzle;
-	/* 0x1C86 */ u8 mIsEmitWater;
+	/* 0x1C86 */ u8 mEmittedWaterCount;
 	/* 0x1C87 */ u8 unk1C87;
 	/* 0x1C88 */ f32 unk1C88;
 	/* 0x1C8C */ u8 mCurrentPressure;

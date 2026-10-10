@@ -672,7 +672,7 @@ void TMapObjPuncher::load(JSUMemoryInputStream& param_1)
 
 void TMuddyBoat::moveByWater()
 {
-	if (SMS_GetMarioWaterGun()->mIsEmitWater != 0) {
+	if (SMS_GetMarioWaterGun()->mEmittedWaterCount != 0) {
 		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		JGeometry::TVec3<f32> dir(-emitMtx[0][0], 0.0f, -emitMtx[2][0]);
 		MsVECNormalize(&dir, &dir);

@@ -2337,8 +2337,8 @@ void TMario::gunExec()
 	    && mStatus != MARIO_STATUS_TOROCCO)
 		mWaterGun->changeBackup();
 
-	if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Spray
-	    && mWaterGun->mIsEmitWater != 0) {
+	if ((int)mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
+	    && mWaterGun->getEmittedWaterCount() != 0) {
 		JGeometry::TVec3<f32> local_34;
 		local_34.x = JMASSin(mFaceAngle.y);
 		local_34.y = 0.0f;

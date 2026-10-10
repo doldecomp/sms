@@ -42,8 +42,8 @@ void TMario::hitNormal(THitActor* actor)
 		actor->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 	}
 
-	TWaterGun* wg = mWaterGun;
-	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
+	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
+	    && mWaterGun->getEmittedWaterCount() != 0) {
 		TModelWaterManager::mStaticHitActor.mPosition = mPosition;
 		TModelWaterManager::mStaticHitActor.mPosition.y += 80.0f;
 		TModelWaterManager::mStaticHitActor.unk68 = 0;
