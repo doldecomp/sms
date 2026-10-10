@@ -163,12 +163,12 @@ void TMapObjGeneral::recovering()
 	if (hasModelOrAnimData(6)) {
 		J3DModel* model = getModel();
 		MtxPtr mat      = model->getAnmMtx(0);
-		f32 fVar1       = mat[3][1] - unk144;
+		f32 fVar1       = mat[1][3] - unk144;
 		mDamageHeight += fVar1;
 		calcEntryRadius();
 		if (mHeldObject)
 			mHeldObject->mPosition.y += fVar1;
-		unk144 = mat[3][1];
+		unk144 = mat[1][3];
 		if (!animIsFinished())
 			return;
 	} else if (mPosition.y < unk144) {
@@ -554,24 +554,23 @@ void TMapObjGeneral::calcRootMatrix()
 		if (mMapObjData->mHold) {
 			TMapObjHoldData* hold = mMapObjData->mHold;
 
-			MtxPtr src = getTakingMtx();
+			MtxPtr src = mHolder->getTakingMtx();
 			MTXCopy(src, hold->mTakingModel->getBaseTRMtx());
 			hold->mTakingModel->calc();
 
 			MtxPtr takingMtx = hold->mTakingMtx;
 			MTXCopy(takingMtx, model->getBaseTRMtx());
-			mPosition.set(takingMtx[3][0], takingMtx[3][1], takingMtx[3][2]);
+			mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
 		} else {
-			MtxPtr takingMtx = getTakingMtx();
+			MtxPtr takingMtx = mHolder->getTakingMtx();
 			MTXCopy(takingMtx, checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)
 			                       ? model->getAnmMtx(0)
 			                       : model->getBaseTRMtx());
-			mPosition.set(takingMtx[3][0], takingMtx[3][1], takingMtx[3][2]);
+			mPosition.set(takingMtx[0][3], takingMtx[1][3], takingMtx[2][3]);
 		}
 	} else {
-		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
-		                          mPosition.z);
-		MsMtxSetXYZRPH(model->getBaseTRMtx(), pos.x, pos.y, pos.z, mRotation.x,
+		MsMtxSetXYZRPH(model->getBaseTRMtx(), mPosition.x,
+		               mPosition.y - mYOffset, mPosition.z, mRotation.x,
 		               mRotation.y, mRotation.z);
 	}
 	model->setBaseScale(mScaling);
