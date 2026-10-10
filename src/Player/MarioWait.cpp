@@ -330,10 +330,7 @@ BOOL TMario::squating()
 		}
 	}
 
-	if (((const TWaterGun*)mWaterGun)
-	            ->getCurrentNozzle()
-	            ->mEmitParams.mRocketType.get()
-	        == 1
+	if (mWaterGun->getCurrentNozzle()->mRocketType.get() == 1
 	    && mWaterGun->isEmitting()) {
 		unk314
 		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();

@@ -1318,7 +1318,17 @@ public:
 	// Fabricated
 	TWaterGun* const getWaterGun() { return mWaterGun; }
 
+	// Fabricated
 	TMarioGamePad* const getGamePad() { return mGamePad; }
+
+	// Fabricated and probably fake
+	s16 getFaceAngleY() const { return mFaceAngle.y; }
+
+	// Fabricated
+	f32 getUnk564() const { return unk564; }
+
+	// Fabricated
+	f32 getUnk568() const { return unk568; }
 
 public:
 	/* 0x74 */ u32 mInput;
