@@ -680,178 +680,111 @@ void TNozzleTrigger::emit(int param_1)
 	}
 }
 
-void TNozzleTrigger::animation(int param_1)
+void TNozzleTrigger::animation(int nozzleType)
 {
-	// TODO: stack size likely influenced by inlined temporaries in original.
-	// volatile u32 unused[38];
-
-	int bckIdleOut;
-	int bckIdle;
-	int bckStart;
-	int bckSwapOut;
-	int bckSwapIn;
+	// Clip indices follow each trigger nozzle model animation data.
+	int bckShootStart;
+	int bckShooting;
+	int bckShootEnd;
+	int bckChangeStart;
+	int bckChangeEnd;
 	int emitMtxCount;
 
 	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 
-	switch (param_1) {
-	case 4:
-		bckIdleOut   = 4;
-		bckIdle      = 2;
-		bckStart     = 3;
-		bckSwapOut   = 1;
-		bckSwapIn    = 0;
-		emitMtxCount = 2;
+	switch (nozzleType) {
+	case TWaterGun::Hover:
+		bckShootStart  = 4;
+		bckShooting    = 2;
+		bckShootEnd    = 3;
+		bckChangeStart = 1;
+		bckChangeEnd   = 0;
+		emitMtxCount   = 2;
 		break;
-	case 1:
-		bckIdleOut   = 4;
-		bckIdle      = 2;
-		bckStart     = 3;
-		bckSwapOut   = 1;
-		bckSwapIn    = 0;
-		emitMtxCount = 1;
+	case TWaterGun::Rocket:
+		bckShootStart  = 4;
+		bckShooting    = 2;
+		bckShootEnd    = 3;
+		bckChangeStart = 1;
+		bckChangeEnd   = 0;
+		emitMtxCount   = 1;
 		break;
-	case 5:
-		bckIdleOut   = 4;
-		bckIdle      = 2;
-		bckStart     = 3;
-		bckSwapOut   = 1;
-		bckSwapIn    = 0;
-		emitMtxCount = 1;
+	case TWaterGun::Turbo:
+		bckShootStart  = 4;
+		bckShooting    = 2;
+		bckShootEnd    = 3;
+		bckChangeStart = 1;
+		bckChangeEnd   = 0;
+		emitMtxCount   = 1;
 		break;
 	default:
 		return;
 	}
 
 	if (mFludd->isSwitchingToSecondaryNozzle())
-		mAnimationState = 4;
+		mAnimationState = ANIM_STATE_CHANGE_END;
 
 	if (mFludd->isSwitchingToPrimaryNozzle())
-		mAnimationState = 3;
+		mAnimationState = ANIM_STATE_CHANGE_START;
 
 	switch (mAnimationState) {
-	case 0: {
-		MActor* mactor = mMActor;
-		if (!mactor->checkCurBckFromIndex(bckIdleOut))
-			mactor->setBckFromIndex(bckIdleOut);
+	case ANIM_STATE_SHOOT_START: {
+		mMActor->setBck(bckShootStart);
 
-		bool finished = false;
-
-		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
-		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
-		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			finished = true;
-
-		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
-			finished = true;
-
-		if (finished)
-			mAnimationState = 1;
+		if (isAnmEnd())
+			mAnimationState = ANIM_STATE_SHOOTING;
 
 		break;
 	}
 
-	case 1: {
-		MActor* mactor = mMActor;
-		if (!mactor->checkCurBckFromIndex(bckIdle))
-			mactor->setBckFromIndex(bckIdle);
+	case ANIM_STATE_SHOOTING: {
+		mMActor->setBck(bckShooting);
 
-		u8 updateAnimation;
-		TWaterGun* fludd = mFludd;
-		if (fludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else {
-			if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind() == 1) {
-				if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
-				        ->mSprayState
-				    == SPRAY_STATE_ACTIVE) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			} else {
-				if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			}
-		}
-
-		if (!updateAnimation)
-			mAnimationState = 2;
+		if (!mFludd->isEmitting())
+			mAnimationState = ANIM_STATE_SHOOT_END;
 
 		break;
 	}
 
-	case 2: {
-		MActor* mactor = mMActor;
-		if (!mactor->checkCurBckFromIndex(bckStart))
-			mactor->setBckFromIndex(bckStart);
+	case ANIM_STATE_SHOOT_END: {
+		mMActor->setBck(bckShootEnd);
 
-		u8 updateAnimation;
-		TWaterGun* fludd = mFludd;
-		if (fludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else {
-			if (fludd->getNozzle(fludd->mCurrentNozzle)->getNozzleKind() == 1) {
-				if (((TNozzleTrigger*)fludd->getNozzle(fludd->mCurrentNozzle))
-				        ->mSprayState
-				    == SPRAY_STATE_ACTIVE) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			} else {
-				if (fludd->getNozzle(fludd->mCurrentNozzle)->unk378 > 0.0f) {
-					updateAnimation = true;
-				} else {
-					updateAnimation = false;
-				}
-			}
-		}
-
-		if (updateAnimation == true)
-			mAnimationState = 0;
+		if (mFludd->isEmitting() == true)
+			mAnimationState = ANIM_STATE_SHOOT_START;
 
 		break;
 	}
 
-	case 3: {
-		MActor* mactor = mMActor;
-		if (!mactor->checkCurBckFromIndex(bckSwapOut))
-			mactor->setBckFromIndex(bckSwapOut);
+	case ANIM_STATE_CHANGE_START: {
+		mMActor->setBck(bckChangeStart);
 
-		// Use external tween value
-		ctrl->setFrame(
-		    -(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f) - 1.0f)
-		    * ctrl->getEnd());
+		ctrl->setFrame(-(2.0f * (mFludd->getSwitchProgress() - 0.5f) - 1.0f)
+		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		break;
 	}
 
-	case 4: {
-		MActor* mactor = mMActor;
-		if (!mactor->checkCurBckFromIndex(bckSwapIn))
-			mactor->setBckFromIndex(bckSwapIn);
+	case ANIM_STATE_CHANGE_END: {
+		mMActor->setBck(bckChangeEnd);
 
-		// Use external tween value
-		ctrl->setFrame(2.0f * (mFludd->mSwitchToSecondNozzleProgress - 0.5f)
+		ctrl->setFrame(2.0f * (mFludd->getSwitchProgress() - 0.5f)
 		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 
-		if (mFludd->mSwitchToSecondNozzleProgress >= 1.0f)
-			mAnimationState = 0;
+		if (mFludd->getSwitchProgress() >= 1.0f)
+			mAnimationState = ANIM_STATE_SHOOT_START;
 
 		break;
 	}
 	}
 
-	if (mFludd->mIsEmitWater != 0) {
-		for (int i = 0; i < emitMtxCount; ++i) {
-			if (mFludd->getEmitMtx(i) != nullptr) {
+	if (mFludd->getEmittedWaterCount() != 0) {
+		for (int emitterIndex = 0; emitterIndex < emitMtxCount;
+		     ++emitterIndex) {
+			if (mFludd->getEmitMtx(emitterIndex) != nullptr) {
 				gpMarioParticleManager->emitAndBindToMtxPtr(
-				    0x10D, mFludd->getEmitMtx(i), 1, &this[i]);
+				    0x10D, mFludd->getEmitMtx(emitterIndex), 1,
+				    &this[emitterIndex]); // Wth?
 			}
 		}
 	}
@@ -1175,7 +1108,7 @@ void TNozzleDeform::animation(int param)
 		break;
 	}
 
-	if (mFludd->mIsEmitWater != 0) {
+	if (mFludd->mEmittedWaterCount != 0) {
 		if (mFludd->getEmitMtx(0) != nullptr) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
 			    0x10D, mFludd->getEmitMtx(0), 1, this);
@@ -1211,16 +1144,16 @@ void TWaterGun::init()
 	mNozzleRocket.mSoundId       = MSD_SE_PO_ROCKET_TRIGGER;
 	mNozzleTurbo.mSoundId        = MSD_SE_PO_SNIPER_TRIGGER;
 	mNozzleDeform.mBomb.mSoundId = MSD_SE_PO_SHOTGUN_TRIGGER;
-	mCurrentWater     = mNozzleList[mCurrentNozzle]->mAmountMax.get();
-	mIsEmitWater      = false;
-	unk1C88           = 0.0f;
-	mCurrentPressure  = 0;
-	mPreviousPressure = 0;
-	unk1CEC           = 1.0f;
-	unk1CF0           = 0.1f;
-	unk1CF4           = 0.0049999999f;
-	unk1CF8           = 0x168;
-	unk1CFA           = 0;
+	mCurrentWater      = mNozzleList[mCurrentNozzle]->mAmountMax.get();
+	mEmittedWaterCount = 0;
+	unk1C88            = 0.0f;
+	mCurrentPressure   = 0;
+	mPreviousPressure  = 0;
+	unk1CEC            = 1.0f;
+	unk1CF0            = 0.1f;
+	unk1CF4            = 0.0049999999f;
+	unk1CF8            = 0x168;
+	unk1CFA            = 0;
 	mSwitchToSecondNozzleProgress = 0.0f;
 	mSwitchToSecondNozzleSpeed    = 0.0f;
 	unk1D04                       = 0;
@@ -1416,11 +1349,10 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
 	MtxPtr result = nullptr;
 	if (mMario->onYoshi()) {
-		result = mMario->mYoshi->getTongueMtx();
+		result = mMario->getYoshi()->getTongueMtx();
 	} else {
 		// This entire block is likely an inlined function.
 		s32 flag = nozzleBmdData.getFlags(mCurrentNozzle, jointIndex);
-
 		switch (flag) {
 		case 0:
 		case 1:
@@ -1429,7 +1361,7 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 			    nozzleBmdData.getJointIndex(mCurrentNozzle, jointIndex));
 			break;
 		case 3:
-			result = mMario->mYoshi->getTongueMtx();
+			result = mMario->getYoshi()->getTongueMtx();
 			break;
 		default:
 			break;
@@ -1830,7 +1762,7 @@ void TWaterGun::emit()
 			break;
 
 		case Hover:
-			if (mIsEmitWater)
+			if (mEmittedWaterCount)
 				SMSGetMSound()->startSoundActor(MSD_SE_PO_HOVER, &getEmitPos0(),
 				                                0, nullptr, 0, 4);
 			break;

@@ -655,7 +655,7 @@ void TSwingBoard::draw() const
 
 void TSwingBoard::swing()
 {
-	if (marioIsOn() && SMS_GetMarioWaterGun()->mIsEmitWater != 0) {
+	if (marioIsOn() && SMS_GetMarioWaterGun()->getEmittedWaterCount() != 0) {
 		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		JGeometry::TVec3<f32> direction(-emitMtx[0][0], 0.0f, -emitMtx[2][0]);
 		MtxPtr mtx = getModel()->getAnmMtx(0);
