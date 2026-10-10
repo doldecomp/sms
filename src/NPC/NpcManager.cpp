@@ -301,11 +301,11 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 	f32 farClip  = *unk58;
 
 	if (SMSGetMarDirector()->mMap == 1) {
-		CPolarSubCamera* cam = gpCamera;
-
-		// TODO: figure out these inlines. fabricatedInline3 matches in camera
-		// itself but not here for some reason...
-		if (gpCamera->isDemoCamera() || !gpCamera->fabricatedInline3())
+		if (gpCamera->isDemoCamera()
+		    || gpCamera->mMode == CAMERA_MODE_UNDER_GROUND
+		    || (gpCamera->mPrevMode == CAMERA_MODE_UNDER_GROUND
+		        && (gpCamera->isNowInbetween()
+		            || gpCamera->mMode == CAMERA_MODE_JUMP_CODE)))
 			if (farClip < 15000.0f)
 				farClip = 15000.0f;
 	}

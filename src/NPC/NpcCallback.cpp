@@ -13,9 +13,11 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 		if (gpCurrentNpc == nullptr)
 			return FALSE;
 
-		bool shouldRun = gpCurrentNpc->mNeckJointIndex != -1
-		                 && !gpCurrentNpc->checkLiveFlag2(
-		                     LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT);
+		bool shouldRun = false;
+		if (gpCurrentNpc->mNeckJointIndex != -1
+		    && !gpCurrentNpc->checkLiveFlag(LIVE_FLAG_HIDDEN
+		                                    | LIVE_FLAG_CLIPPED_OUT))
+			shouldRun = true;
 
 		if (shouldRun) {
 			J3DJoint* joint = (J3DJoint*)param_1;

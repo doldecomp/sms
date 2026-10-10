@@ -46,7 +46,7 @@ public:
 	virtual f32 getPhaseShift() const { return 0.0f; }
 	virtual BOOL isReachedToGoal() const
 	{
-		return unk104.getPoint().distance(mPosition) < 100.0f ? TRUE : FALSE;
+		return (unk104.getPoint() - mPosition).length() < 100.0f ? TRUE : FALSE;
 	}
 
 	void calcEnemyRootMatrix();

@@ -685,40 +685,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	gpCurrentNpc = this;
 	if (cue & CUE_MOVE) {
-		moveObject();
-		if (graphics->unk0 & 0x2) {
-			changeNerveProc_();
-			if (mHolder == nullptr) {
-				if (isNerveWalk())
-					walkAnmRateChange_();
-				if (mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
-					f32 rate = SMSGetAnmFrameRate();
-					mMActor->setFrameRate(
-					    MsClamp(
-					        mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
-					            * rate,
-					        mIndividualParams->mTurnAnmMinRate.get() * rate,
-					        mIndividualParams->mTurnAnmMaxRate.get() * rate),
-					    ANM_TYPE_BCK);
-				}
-			}
-
-			mInbetweenCtrl->execPosInbetween(&mPosition);
-			if (unk1DC > 0) {
-				unk1DC -= 1;
-				if (unk1DC == 0 && mHolder == nullptr) {
-					offHitFilter(HIT_FILTER_NO_COLLISION);
-					offLiveFlag(LIVE_FLAG_UNK10000000);
-				}
-			}
-
-			if (!isJellyFishMare() && mActorType != ACTOR_TYPE_NPC_MONTE_MF)
-				setVariableDamageRadius_();
-
-			if (isPollutionNpc())
-				unk174.a
-				    = mPollutionAmount * mIndividualParams->mPollutionMax.get();
-		}
+		movement_(graphics);
 
 		cue &= ~CUE_MOVE;
 	}
@@ -734,39 +701,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 		                   | LIVE_FLAG_CLIPPED_OUT))
 			emitParticle_();
 
-		bool r31 = false;
-
-		bool bVar12 = checkLiveFlag2(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
-		                             | LIVE_FLAG_DEAD);
-		bool bVar6  = checkLiveFlag2(LIVE_FLAG_UNK1000000);
-
-		if (bVar12) {
-			r31 = true;
-			updateAnmSound();
-			execMotionBlend_();
-			mMActor->frameUpdate();
-			if (unk168 != nullptr && isPartsAnmNpc()) {
-				unk168->partsFrameUpdate();
-			}
-		} else if (mHolder == nullptr) {
-			if (!isAirborne() && !belongToGround()
-			    && (isNerveMaybeDontCalcAnim0()
-			        || isNerveMaybeDontCalcAnim1())) {
-				JGeometry::TVec3<f32> diff;
-				diff.sub(mPosition, gpCamera->unk124);
-				if (CLBSquared(getAnmOffDist_()) < diff.squared() && !bVar6
-				    && mSpine->getTime() > 2) {
-					r31 = true;
-					execMotionBlend_();
-				}
-			}
-		}
-
-		if (bVar6 && !r31 && mMultiMtxEffect != nullptr) {
-			mMultiMtxEffect->flagOn(0x2);
-		}
-
-		if (r31) {
+		if (checkAnmOff_()) {
 			cue &= ~CUE_CALC_ANIM;
 		}
 	}

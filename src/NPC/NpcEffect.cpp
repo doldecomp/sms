@@ -90,8 +90,8 @@ void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
 		model  = getModel();
 		pcVar3 = "yashi_jnt";
 	}
-	mSmokeEffectMtxPtr = model->getAnmMtx(
-	    model->getModelData()->getJointName()->getIndex(pcVar3));
+	u16 idx = model->getModelData()->getJointName()->getIndex(pcVar3);
+	mSmokeEffectMtxPtr = model->getAnmMtx(idx);
 }
 
 static bool IsCheckPassFrame(J3DFrameCtrl* param_1, const f32* param_2)

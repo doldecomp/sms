@@ -8,6 +8,16 @@
 #include <NPC/NpcAnmKind.hpp>
 #include <NPC/NpcSave.hpp>
 #include <Camera/Camera.hpp>
+#include <Strategic/Spine.hpp>
+#include <Camera/CubeManagerBase.hpp>
+#include <Camera/cameralib.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
+#include <NPC/NpcInbetween.hpp>
+#include <NPC/NpcParts.hpp>
+#include <Player/MarioAccess.hpp>
+#include <System/MarDirector.hpp>
 
 struct TNpcInitInfo;
 class SDLModel;
@@ -79,6 +89,16 @@ public:
 	bool isNeedTurnToFirstState() const;
 	bool isTurnToMarioWhenTalk() const;
 	bool isTurnToMarioWhenApproach() const;
+	// fabricated
+	const TNerveBase<TLiveActor>* getLatestNerve() const
+	{
+		return mSpine->getLatestNerve();
+	}
+	// fabricated
+	const TNerveBase<TLiveActor>* getCurrentNerve() const
+	{
+		return mSpine->getCurrentNerve();
+	}
 	bool isNerveWalk() const;
 	bool isNerveMaybeDontMovement() const;
 	bool isNerveMaybeDontCalcAnim0() const;
@@ -231,6 +251,140 @@ private:
 	void changeNerveProc_();
 	void execMotionBlend_();
 	void movementOnlyTalk_(const JDrama::TGraphics*);
+	// fabricated
+	void movement_(const JDrama::TGraphics* graphics)
+	{
+		moveObject();
+		if (graphics->unk0 & 0x2) {
+			changeNerveProc_();
+			if (mHolder == nullptr) {
+				if (isNerveWalk())
+					walkAnmRateChange_();
+				if (mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4) {
+					f32 rate = SMSGetAnmFrameRate();
+					mMActor->setFrameRate(
+					    MsClamp(mTurnSpeed * mIndividualParams->mTurnAnmRate.get()
+					                * rate,
+					            mIndividualParams->mTurnAnmMinRate.get() * rate,
+					            mIndividualParams->mTurnAnmMaxRate.get() * rate),
+					    ANM_TYPE_BCK);
+				}
+			}
+
+			mInbetweenCtrl->execPosInbetween(&mPosition);
+			if (unk1DC > 0) {
+				unk1DC -= 1;
+				if (unk1DC == 0 && mHolder == nullptr) {
+					offHitFilter(HIT_FILTER_NO_COLLISION);
+					offLiveFlag(LIVE_FLAG_UNK10000000);
+				}
+			}
+
+			if (!isJellyFishMare() && mActorType != ACTOR_TYPE_NPC_MONTE_MF)
+				setVariableDamageRadius_();
+
+			if (isPollutionNpc())
+				unk174.a
+				    = mPollutionAmount * mIndividualParams->mPollutionMax.get();
+		}
+	}
+	// fabricated
+	bool checkAnmOff_()
+	{
+		bool r31 = false;
+
+		bool bVar12 = checkLiveFlag2(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+		                             | LIVE_FLAG_DEAD);
+		bool bVar6  = checkLiveFlag2(LIVE_FLAG_UNK1000000);
+
+		if (bVar12) {
+			r31 = true;
+			updateAnmSound();
+			execMotionBlend_();
+			mMActor->frameUpdate();
+			if (unk168 != nullptr && isPartsAnmNpc()) {
+				unk168->partsFrameUpdate();
+			}
+		} else if (mHolder == nullptr) {
+			if (!isAirborne() && !belongToGround()
+			    && (isNerveMaybeDontCalcAnim0() || isNerveMaybeDontCalcAnim1())) {
+				f32 offDist = getAnmOffDist_();
+				JGeometry::TVec3<f32> diff;
+				diff.sub(mPosition, gpCamera->unk124);
+				if (diff.squared() > CLBSquared(offDist) && !bVar6
+				    && mSpine->getTime() > 2) {
+					r31 = true;
+					execMotionBlend_();
+				}
+			}
+		}
+
+		if (bVar6 && !r31 && mMultiMtxEffect != nullptr) {
+			mMultiMtxEffect->flagOn(0x2);
+		}
+		return r31;
+	}
+	// fabricated
+	bool isTalkable_()
+	{
+		bool result = false;
+		if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+			result = true;
+		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
+		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
+		           && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
+		                             | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200
+		                             | LIVE_FLAG_DONT_TALK | LIVE_FLAG_SINK_BOTTOM
+		                             | LIVE_FLAG_UNK400000)
+		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
+
+			if (!isSunflowerReviving() && isNerveCanGoToTalk()
+			    && (mActorType != ACTOR_TYPE_NPC_MONTE_ME
+			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
+			    && !SMS_IsMarioOpeningDoor()) {
+				bool inCameraCube = true;
+				if (SMSGetMarDirector()->mMap == 7) {
+					JGeometry::TVec3<f32> local_58 = mPosition;
+					local_58.y += 75.0f;
+					inCameraCube = SMS_IsInSameCameraCube(local_58);
+				}
+
+				if (inCameraCube) {
+					f32 fVar2;
+					f32 fVar1;
+					if (mThrowCtrl != nullptr) {
+						fVar2 = mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
+						fVar1 = mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
+					} else {
+						if (mActorType == ACTOR_TYPE_NPC_SUNFLOWER_L) {
+							fVar2 = mPtrSaveNormal->mSLSunflowerLTalkDist.get();
+						} else {
+							fVar2 = mPtrSaveNormal->mTalkAcceptDist.get();
+						}
+						fVar1 = mPtrSaveNormal->mTalkAcceptHeight.get();
+					}
+
+					f32 fVar3;
+					if ((checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_UNK1))
+					    || isSunflower() || mActorType == ACTOR_TYPE_NPC_BOARD) {
+						fVar3 = mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
+					} else {
+						fVar3 = mPtrSaveNormal->mTalkAcceptDegree.get();
+					}
+
+					if (abs(SMS_GetMarioPos().y - mPosition.y) < fVar1
+					    && isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
+					    && MsIsInSight(
+					        SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
+					        mPosition, fVar2,
+					        mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(), 0.0f))
+						result = true;
+				}
+			}
+		}
+
+		return result;
+	}
 	void updateForbidCount_()
 	{
 		(void)0;

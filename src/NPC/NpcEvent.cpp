@@ -37,14 +37,15 @@ static void CheckNerve4Npc_(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num,
 	interp->verifyArgNum(2, &arg_num);
 	int nerveId   = interp->pop().getDataInt();
 	TBaseNPC* npc = (TBaseNPC*)interp->pop().getDataInt();
-	const TNerveBase<TLiveActor>* expected = NerveGetByIndex(nerveId);
-	const TNerveBase<TLiveActor>* actual   = param_3
-	                                             ? npc->mSpine->getLatestNerve()
-	                                             : npc->mSpine->getCurrentNerve();
-
-	TSpcSlice result;
-	if (actual == expected)
-		result.setDataInt(1);
+	int result                          = 0;
+	const TNerveBase<TLiveActor>* nerve = NerveGetByIndex(nerveId);
+	if (param_3) {
+		if (npc->getLatestNerve() == nerve)
+			result = 1;
+	} else {
+		if (npc->getCurrentNerve() == nerve)
+			result = 1;
+	}
 	interp->push(result);
 }
 

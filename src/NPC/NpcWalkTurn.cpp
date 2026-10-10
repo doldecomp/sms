@@ -28,16 +28,15 @@ void TBaseNPC::execWalk(bool param_1)
 		if (checkActionFlag(NPC_ACTION_RUN))
 			fVar1 = 6.0f;
 
-		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
+		SMS_GoRotate(mPosition, getUnkF4().getPoint(), fVar1, &mRotation.y);
 
 		// TODO: vector math is borked
-		JGeometry::TVec3<f32> local_54 = unkF4.getPoint();
+		JGeometry::TVec3<f32> local_54 = getUnkF4().getPoint();
 		local_54 -= mPosition;
-		JGeometry::TVec3<f32> copy;
-		copy.set(local_54);
+		JGeometry::TVec3<f32> copy = local_54;
 
 		f32 angle = MsGetRotFromZaxisY(copy);
-		if (MsWrap(mRotation.y - angle, 0.0f, 360.0f) < 0.001f)
+		if (MsWrap(abs(mRotation.y - angle), 0.0f, 360.0f) < 0.001f)
 			offUnk1DA(UNK1DA_FLAG_UNK1);
 
 		return;
@@ -85,7 +84,7 @@ bool TBaseNPC::execUTurn()
 	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
 	local_24 -= mPosition;
 	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
-	if (targetYaw == mRotation.y)
+	if (mRotation.y == targetYaw)
 		return true;
 
 	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))

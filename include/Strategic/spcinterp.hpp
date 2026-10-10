@@ -432,8 +432,8 @@ public:
 	// result of an opcode in the frame's temporary area instead of giving it a
 	// named local slot.
 	void push(const TSpcSlice& slice) { mProcessStack.push(slice); }
-	void push(int v) { mProcessStack.push(TSpcSlice(v)); }
-	void push(f32 v) { mProcessStack.push(TSpcSlice(v)); }
+	void push(int v) { push(TSpcSlice(v)); }
+	void push(f32 v) { push(TSpcSlice(v)); }
 	// Unlike the other scalar overloads this one builds the slice with the
 	// default constructor and setDataString, not with TSpcSlice(const char*).
 	// The callers show it: the null test inside setDataString survives even
@@ -443,7 +443,7 @@ public:
 	{
 		TSpcSlice slice;
 		slice.setDataString(v);
-		mProcessStack.push(slice);
+		push(slice);
 	}
 	void push() { push(TSpcSlice()); }
 	TSpcSlice pop() { return mProcessStack.pop(); }
