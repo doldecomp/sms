@@ -40,10 +40,16 @@ void TRealoidActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk70->perform(cue, graphics);
 }
 
+// TODO: translation stack slot still differs by four bytes.
 void TRealoidActor::calcRootMatrix(TBoid* boid)
 {
 	if (mFlags & FLAG_UNK2_OR_UNK4)
 		return;
+
+	JGeometry::TVec3<f32> trans;
+	JGeometry::TVec3<f32> up;
+	JGeometry::TVec3<f32> dir;
+	JGeometry::TVec3<f32> n;
 
 	mPosition = boid->mPosition;
 
@@ -60,13 +66,12 @@ void TRealoidActor::calcRootMatrix(TBoid* boid)
 
 	mPosition = boid->mPosition;
 
-	JGeometry::TVec3<f32> trans = boid->mPosition;
+	trans = boid->mPosition;
 
-	MtxPtr root = unk70->getModel()->getBaseTRMtx();
+	TPosition3f& root = (TPosition3f&)*unk70->getModel()->getBaseTRMtx();
 
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	JGeometry::TVec3<f32> dir = boid->mHeading;
-	JGeometry::TVec3<f32> n;
+	up.set(0.0f, 1.0f, 0.0f);
+	dir = boid->mHeading;
 
 	n.cross(up, dir);
 	VECNormalize(&n, &n);
@@ -77,18 +82,12 @@ void TRealoidActor::calcRootMatrix(TBoid* boid)
 	dir.cross(n, up);
 	VECNormalize(&dir, &dir);
 
-	root[0][0] = -dir.x;
-	root[1][0] = -dir.y;
-	root[2][0] = -dir.z;
-	root[0][1] = up.x;
-	root[1][1] = up.y;
-	root[2][1] = up.z;
-	root[0][2] = n.x;
-	root[1][2] = n.y;
-	root[2][2] = n.z;
-	root[0][3] = trans.x;
-	root[1][3] = trans.y;
-	root[2][3] = trans.z;
+	root.ref(0, 0) = -dir.x;
+	root.ref(1, 0) = -dir.y;
+	root.ref(2, 0) = -dir.z;
+	root.setYDir(up);
+	root.setZDir(n);
+	root.setTrans(trans);
 }
 
 void TRealoidActor::checkHitActors()
@@ -137,11 +136,11 @@ void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,
 
 	unk150->setUnk38(mPosition);
 
-	unk150->setGraph(unk124->getGraph(), mPosition);
+	unk150->setGraph(getTracer()->getGraph(), mPosition);
 
 	unk154 = new TRealoidActor*[count];
 
-	TMActorKeeper* keeper     = mMActorKeeper;
+	TMActorKeeper* keeper     = getActorKeeper();
 	JGeometry::TVec3<f32> pos = mPosition;
 	for (int i = 0; i < count; ++i) {
 		MActor* actor   = keeper->createMActor(name, 3);
@@ -159,11 +158,12 @@ void TRealoid::clipBoids(JDrama::TGraphics* graphics)
 	                                   graphics->getNearPlane(), 10000.0f);
 
 	for (int i = 0; i < unk150->getBoidNum(); ++i) {
-		JGeometry::TVec3<f32> pos = unk150->getBoid(i)->mPosition;
+		TBoid* boid               = unk150->getBoid(i);
+		JGeometry::TVec3<f32> pos = boid->mPosition;
 		if (ViewFrustumClipCheck(graphics, &pos, 100.0f))
-			unk154[i]->offFlag(TRealoidActor::FLAG_CLIPPED_OUT);
+			getRealoid(i)->offFlag(TRealoidActor::FLAG_CLIPPED_OUT);
 		else
-			unk154[i]->onFlag(TRealoidActor::FLAG_CLIPPED_OUT);
+			getRealoid(i)->onFlag(TRealoidActor::FLAG_CLIPPED_OUT);
 	}
 }
 
@@ -177,7 +177,7 @@ void TRealoid::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk154[i]->calcRootMatrix(unk150->getBoid(i));
 	}
 
-	for (int i = 0; i < unk150->getBoidNum(); ++i)
+	for (int i = 0; i < unk150->mNumBoids; ++i)
 		unk154[i]->perform(cue, graphics);
 }
 
@@ -190,6 +190,7 @@ TFishoid::TFishoid(int type, const char* name)
 	unk15C = nullptr;
 }
 
+// TODO: nonmatching stack frame (0x88 bytes; target 0xb8).
 void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TRealoid::perform(cue, graphics);
@@ -209,8 +210,9 @@ void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 void TFishoid::performItem(u32 cue, JDrama::TGraphics*)
 {
 	if (unk15C != nullptr && (cue & CUE_MOVE)) {
+		TBoidLeader* leader = unk150;
 		unk15C->mPosition
-		    = unk150->getBoid(unk150->getBoidNum() - 1)->mPosition;
+		    = leader->getBoid(leader->getBoidNum() - 1)->mPosition;
 	}
 }
 

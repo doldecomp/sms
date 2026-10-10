@@ -16,6 +16,7 @@
 #include <JSystem/JDrama/JDRGraphics.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 #include <System/Application.hpp>
 #include <System/DummyStrings.hpp>
 
@@ -40,6 +41,7 @@ TSelectShineManager::TSelectShineManager(const char* name)
 {
 }
 
+// TODO: Inlined vector copies, frame size, and register allocation differ.
 void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
                                    JPAEmitterManager* emitter_manager)
 {
@@ -83,22 +85,23 @@ void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
 	mShineNum  = shine_num;
 	mSelected  = selected;
 	mRingAngle = mSelected * -40;
+	u8* state  = states;
+	s16 angle;
 	for (int i = 0; i < 8; ++i) {
 		JGeometry::TVec3<f32> pos = getPosition(mRingAngle + i * 40);
-		s16 angle                 = getAngle(pos);
-		if (states[i] == 3) {
+		angle                     = getAngle(pos);
+		if (*state == 3) {
 			mShines[i] = new TSelectShine(
 			    modelData, anmColor, emitter_manager, pos, angle, 0,
-			    (s32)(4000.0f * (rand() * (1.0f / 32768.0f))) / 1000.0f, 0.01f,
-			    10.0f);
-		} else if (states[i] == 1 || states[i] == 2) {
+			    (s32)(4000.0f * MsRandF()) / 1000.0f, 0.01f, 10.0f);
+		} else if (*state == 1 || *state == 2) {
 			mShines[i] = new TSelectShine(
 			    emptyModelData, emptyAnmColor, emitter_manager, pos, angle, 1,
-			    (s32)(4000.0f * (rand() * (1.0f / 32768.0f))) / 1000.0f, 0.01f,
-			    10.0f);
+			    (s32)(4000.0f * MsRandF()) / 1000.0f, 0.01f, 10.0f);
 		} else {
 			mShines[i] = nullptr;
 		}
+		++state;
 	}
 
 	TSelectShine* shine = mShines[mSelected];
@@ -116,8 +119,8 @@ s16 TSelectShineManager::getAngle(const JGeometry::TVec3<f32>& pos)
 	JGeometry::TVec2<f32> dir(300.0f, 1300.0f);
 	dir = dir - JGeometry::TVec2<f32>(pos.x, pos.z);
 	JGeometry::TVec2<f32> forward(0.0f, 1.0f);
-	s16 angle
-	    = 57.295776f * fabsf(atan2f(dir.cross(forward), dir.dot(forward)));
+	f32 cross = dir.cross(forward);
+	s16 angle = 57.295776f * fabsf(atan2f(cross, dir.dot(forward)));
 	if (pos.x > cCenter.x)
 		angle *= -1;
 	return angle;
@@ -196,17 +199,20 @@ void TSelectShineManager::startDecrease(int step)
 // TODO: fabricated, get rid of this
 inline void TSelectShineManager::updateShine(int i)
 {
-	JGeometry::TVec3<f32> pos = getPosition(mRingAngle + i * 40);
-	mShines[i]->mPos          = pos;
-	s16 angle           = getAngle(mShines[i]->mPos + mShines[i]->mOffset);
-	TSelectShine* shine = mShines[i];
-	MtxPtr mtx          = shine->mModel->getBaseTRMtx();
+	// Copy as the pre-merge TVec3::operator= did (Vec struct copy).
+	JGeometry::TVec3<f32> pos     = getPosition(mRingAngle + i * 40);
+	*(Vec*)&mShines[i]->mPos      = *(Vec*)&pos;
+	JGeometry::TVec3<f32> realPos = mShines[i]->mPos + mShines[i]->mOffset;
+	s16 angle                     = getAngle(realPos);
+	TSelectShine* shine           = mShines[i];
+	MtxPtr mtx                    = shine->mModel->getBaseTRMtx();
 	Mtx rot;
 	MTXRotRad(rot, 'y', 0.017453292f * (angle - shine->mAngleY));
 	MTXConcat(mtx, rot, mtx);
 	shine->mAngleY = angle;
 }
 
+// TODO: Vector-copy chains and frame layout differ from the target.
 void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & 1) {
@@ -322,21 +328,23 @@ TSelectShine::TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
 	}
 }
 
+// TODO: Frame-only mismatch; inline stack layout differs.
 void TSelectShine::move()
 {
 	f32 height;
+	f32 scale = 0.9f;
 	if (mBobPhase < 1.0f) {
 		height
-		    = makeNewPosition(mBobPhase, 0.0f, mBobHeight * 0.9f, mBobHeight);
+		    = makeNewPosition(mBobPhase, 0.0f, mBobHeight * scale, mBobHeight);
 	} else if (mBobPhase < 2.0f) {
 		height = makeNewPosition(mBobPhase - 1.0f, mBobHeight,
-		                         mBobHeight * 0.9f, 0.0f);
+		                         mBobHeight * scale, 0.0f);
 	} else if (mBobPhase < 3.0f) {
-		height = makeNewPosition(mBobPhase - 2.0f, 0.0f, -mBobHeight * 0.9f,
+		height = makeNewPosition(mBobPhase - 2.0f, 0.0f, -mBobHeight * scale,
 		                         -mBobHeight);
 	} else if (mBobPhase < 4.0f) {
 		height = makeNewPosition(mBobPhase - 3.0f, -mBobHeight,
-		                         -mBobHeight * 0.9f, 0.0f);
+		                         -mBobHeight * scale, 0.0f);
 	}
 	mOffset.y = height;
 
@@ -344,9 +352,10 @@ void TSelectShine::move()
 	JGeometry::TVec3<f32> pos = mPos + mOffset;
 	mtx[0][3]                 = pos.x;
 	mtx[1][3]                 = pos.y;
-	mtx[2][3]                 = pos.z;
+	f32 depth                 = pos.z;
+	mtx[2][3]                 = depth;
 
-	s16 frame = -0.05f * mtx[2][3];
+	s16 frame = -0.05f * depth;
 	if (frame < 30)
 		frame = 30;
 
@@ -406,6 +415,7 @@ void TSelectShine::move()
 
 f32 TSelectShine::makeNewPosition(f32 t, f32 p0, f32 p1, f32 p2)
 {
-	f32 s = 1.0f - t;
-	return p0 * (s * s) + p1 * (2.0f * s * t) + p2 * (t * t);
+	f32 s  = 1.0f - t;
+	f32 ss = s * s;
+	return p0 * ss + p1 * (2.0f * s * t) + p2 * (t * t);
 }

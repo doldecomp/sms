@@ -39,11 +39,12 @@ void TNpcCoin::execAppearCoin_()
 		                                             &unk8, 0, nullptr, 0, 4);
 }
 
+// TODO: frame-only mismatch: 0x50 bytes here, 0x60 in the original.
 void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 {
 	unk4 = param_3;
 	unk8.set(param_1);
-	unk14.set(0.0f, MsSin(75), MsCos(75));
+	unk14.set(0.0f, JMASSin(75 * (65536 / 360)), JMASCos(75 * (65536 / 360)));
 	s16 sangle = CLBDegToShortAngle(param_2);
 	f32 x      = unk14.x;
 	unk14.x    = x * JMASCos(sangle) + unk14.z * JMASSin(sangle);

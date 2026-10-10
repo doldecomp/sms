@@ -133,6 +133,7 @@ TMapObjGrassGroup::TMapObjGrassGroup()
 
 void TMapObjGrassManager::initDrawNear() const
 {
+	// TODO: nonmatching matrix and color stack slots; frame size matches.
 	Mtx viewItm;
 	MTXInverse(j3dSys.getViewMtx(), viewItm);
 	JGeometry::TVec3<f32> vec(viewItm[0][0], viewItm[1][0], viewItm[2][0]);
@@ -142,9 +143,11 @@ void TMapObjGrassManager::initDrawNear() const
 	mDrawVec.y = vec.y;
 	mDrawVec.z = vec.z;
 
-	mDrawVecS16.x = vec.x;
-	mDrawVecS16.y = vec.y;
-	mDrawVecS16.z = vec.z;
+	JGeometry::TVec3<s16> vecS16;
+	vecS16.set(vec.x, vec.y, vec.z);
+	mDrawVecS16.x = vecS16.x;
+	mDrawVecS16.y = vecS16.y;
+	mDrawVecS16.z = vecS16.z;
 
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);

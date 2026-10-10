@@ -28,6 +28,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 void THideObjBase::appearObj(f32 y_offset)
 {
@@ -90,14 +91,16 @@ void THideObjBase::loadAfter()
 	mHiddenObj
 	    = TMapObjBaseManager::newAndRegisterObjByEventID(mEventId, getName());
 	if (mHiddenObj != nullptr) {
-		if (mHiddenObj->isActorType(ACTOR_TYPE_COIN_BLUE)) {
+		bool isBlueCoin = mHiddenObj->isActorType(ACTOR_TYPE_COIN_BLUE);
+		if (isBlueCoin) {
 			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
 			    SMSGetMarDirector()->getCurrentMap(), mEventId);
 			if (isBlueCollected)
 				mAllowReveal = false;
 		}
 
-		if (mHiddenObj->isActorType(ACTOR_TYPE_SHINE)) {
+		bool isShine = mHiddenObj->isActorType(ACTOR_TYPE_SHINE);
+		if (isShine) {
 			size_t nameLen       = strlen(mName);
 			mHiddenShineDemoName = new char[nameLen + 0x13];
 			const char* name2    = mName;
@@ -190,17 +193,20 @@ void TFruitBasket::countFruit(THitActor* param_1)
 	if (mHiddenObj != nullptr) {
 		appearObj(0.0f);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition, 0,
-		                                nullptr, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_IT_SOCCER_GOAL))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_IT_SOCCER_GOAL, getPosition(), 0, nullptr, 0, 4);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0, nullptr,
 		                                   0);
 	} else {
 		if (unk150 == 0) {
-			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_BASKET_BOUND, &mPosition,
-			                                0, nullptr, 0, 4);
+			if (SMSGetMSound()->gateCheck(MSD_SE_OBJ_BASKET_BOUND))
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_OBJ_BASKET_BOUND, getPosition(), 0, nullptr, 0, 4);
 		} else if (param_1->isActorType(unk150)) {
-			SMSGetMSound()->startSoundActor(MSD_SE_IT_SOCCER_GOAL, &mPosition,
-			                                0, nullptr, 0, 4);
+			if (SMSGetMSound()->gateCheck(MSD_SE_IT_SOCCER_GOAL))
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_IT_SOCCER_GOAL, getPosition(), 0, nullptr, 0, 4);
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_FGM_SOCCER_GOAL, 0,
 			                                   nullptr, 0);
 		} else {
@@ -213,9 +219,10 @@ void TFruitBasket::countFruit(THitActor* param_1)
 
 void TFruitBasket::touchFruit(THitActor* param_1)
 {
-	if (fabsf(mRotation.x) < 45.0f) {
+	f32 rotationX = mRotation.x;
+	if (fabsf(rotationX) < 45.0f) {
 		// Upwards facing basket -- check that the fruit's on top of us
-		if (((TLiveActor*)param_1)->getGroundPlane()->getActor() != this)
+		if (((TLiveActor*)param_1)->mGroundPlane->getActor() != this)
 			return;
 	} else {
 		// Basket lying on it's side -- check that the fruit rolled inside
@@ -306,8 +313,9 @@ THipDropHideObj::THipDropHideObj(const char* name)
 void TWaterHitPictureHideObj::afterFinishedAnim()
 {
 	if (isActorType(ACTOR_TYPE_POSTER_TERESA)) {
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_POSTER_RIP2, &mPosition, 0,
-		                                nullptr, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_OBJ_POSTER_RIP2))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_OBJ_POSTER_RIP2, getPosition(), 0, nullptr, 0, 4);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
 		                                   0);
 	}
@@ -339,13 +347,14 @@ u32 TWaterHitPictureHideObj::touchWater(THitActor* param_1)
 	const JGeometry::TVec3<f32>& waterSpeed = getWaterSpeed(param_1);
 
 	MtxPtr rootMtx = getModel()->getAnmMtx(0);
-	if ((rootMtx[0][2] * waterSpeed.x + rootMtx[1][2] * waterSpeed.y
-	     + rootMtx[2][2] * waterSpeed.z)
-	    > 0.0f)
+	JGeometry::TVec3<f32> direction;
+	direction.set(rootMtx[0][2], rootMtx[1][2], rootMtx[2][2]);
+	if (direction.dot(waterSpeed) > 0.0f)
 		return 0;
 
-	int id = getWaterID(param_1);
-	if (gpModelWaterManager->checkFlagBottom4Bits(id, 0x1)) {
+	int id          = getWaterID(param_1);
+	bool shouldEmit = gpModelWaterManager->checkFlagBottom4Bits(id, 0x1);
+	if (shouldEmit) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 		                             &param_1->mPosition, 0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
@@ -584,7 +593,7 @@ void THideObjPictureTwin::afterFinishedAnim()
 void THideObjPictureTwin::loadAfter()
 {
 	TWaterHitPictureHideObj::loadAfter();
-	const char* wrapName = strstr(mName, "ふたご落書きＡ");
+	char* wrapName = strstr(mName, "ふたご落書きＡ");
 	if (wrapName != nullptr) {
 		size_t len = strlen("ふたご落書きＡ");
 		char buffer[4];
@@ -593,7 +602,7 @@ void THideObjPictureTwin::loadAfter()
 		buffer[2] = mName[len + 2];
 		buffer[3] = mName[len + 3];
 
-		char buffer2[0x4C];
+		char buffer2[0x40];
 		snprintf(buffer2, 0x40, "ふたご落書きＢ００");
 		buffer2[len]     = buffer[0];
 		buffer2[len + 1] = buffer[1];
@@ -632,7 +641,8 @@ void TBreakHideObj::kill()
 
 BOOL TBreakHideObj::receiveMessage(THitActor* sender, u32 message)
 {
-	if (message == HIT_MESSAGE_HIP_DROP) {
+	bool hipDrop = message == HIT_MESSAGE_HIP_DROP;
+	if (hipDrop) {
 		if (isActorType(ACTOR_TYPE_WATER_MELON_BLOCK)) {
 			emitAndScale(0x6B, 0, &mPosition);
 			emitAndScale(0x6C, 0, &mPosition);
@@ -677,10 +687,10 @@ void TWoodBox::killNearWoodBox(f32 dX, f32 dY) const
 	                              SMS_GetMarioPos().y + 1000.0f,
 	                              dY + SMS_GetMarioPos().z, &groundPlane);
 	if (resY + 10.0f > SMS_GetMarioPos().y) {
-		const TLiveActor* actor = groundPlane->getActor();
-		if (actor != nullptr && actor != this
-		    && actor->isActorType(ACTOR_TYPE_WOOD_BOX)) {
-			((TBreakHideObj*)actor)->kill();
+		if (groundPlane->getActor() != nullptr
+		    && groundPlane->getActor() != this
+		    && groundPlane->getActor()->isActorType(ACTOR_TYPE_WOOD_BOX)) {
+			((TBreakHideObj*)groundPlane->getActor())->kill();
 		}
 	}
 }
@@ -693,8 +703,9 @@ void TWoodBox::kill()
 	mStateTimer = -1;
 	mState      = 2;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_IT_BARREL_CRASH, &mPosition, 0,
-	                                nullptr, 0, 4);
+	if (SMSGetMSound()->gateCheck(MSD_SE_IT_BARREL_CRASH))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_IT_BARREL_CRASH, getPosition(), 0, nullptr, 0, 4);
 
 	killNearWoodBox(-50.0f, -50.0f);
 	killNearWoodBox(50.0f, -50.0f);

@@ -269,13 +269,13 @@ bool TYumbo::isFindOutMario() const
 
 bool TYumbo::isWantToAppear() const
 {
-	f32 height = ((TYumboParams*)getSaveParam())->getSLGiveUpHeight();
-	if (height <= abs(SMS_GetMarioPos().y - mPosition.y))
+	f32 height = getSaveParams()->getSLGiveUpHeight();
+	if (height <= fabs(SMS_GetMarioPos().y - mPosition.y))
 		return true;
 	JGeometry::TVec3<f32> diff = SMS_GetMarioPos();
 	diff -= mPosition;
 	diff.y     = 0.0f;
-	f32 length = ((TYumboParams*)getSaveParam())->getSLGiveUpLength();
+	f32 length = getSaveParams()->getSLGiveUpLength();
 	return length * length < diff.squared();
 }
 
@@ -306,9 +306,9 @@ void TYumbo::shotSeeds()
 	dir.y += 200.0f * (0.5f + MsRandF());
 	dir.setLength(((TYumboParams*)getSaveParam())->mShootSpeed.get());
 
-	f32 angle = MsGetRotFromZaxisY(dir);
+	f32 angle = -(0.017453294f * MsGetRotFromZaxisY(dir));
 	JGeometry::TQuat4<f32> yaw;
-	yaw.setEulerY(-(0.017453294f * angle));
+	yaw.setEulerY(angle);
 	yaw.rotate(dir, dir);
 
 	JGeometry::TQuat4<f32> spin;
@@ -529,8 +529,10 @@ DEFINE_NERVE(TNerveYumboFreeze, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(11);
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_TWINKLE,
-		                                &self->mPosition, 0, nullptr, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_EN_COMMON_TWINKLE))
+			MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_EN_COMMON_TWINKLE,
+			                                          self->getPosition(), 0,
+			                                          nullptr, 0, 4);
 	}
 
 	TYumboParams* params = (TYumboParams*)self->getSaveParam();

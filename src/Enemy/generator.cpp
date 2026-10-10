@@ -20,17 +20,18 @@ TGenerator::TGenerator(const char* name)
 	mTimer       = 0;
 }
 
+// TODO: nonmatching scale and count stack offsets.
 void TGenerator::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	stream >> mPos.x >> mPos.y >> mPos.z;
-	stream >> mRot.x >> mRot.y >> mRot.z;
+	stream >> mPos.x >> mPos.y >> mPos.z >> mRot.x >> mRot.y >> mRot.z;
 
 	JGeometry::TVec3<f32> scale;
 	stream >> scale.x >> scale.y >> scale.z;
 	stream.readString();
 
+	s32 timer;
 	s32 count = stream.readS32();
 	for (int i = 0; i < count; ++i) {
 		s32 dummy;
@@ -43,8 +44,8 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 
 	stream >> mInterval;
 
-	s32 timer = mInterval;
-	mTimer    = timer * MsRandF();
+	timer  = mInterval;
+	mTimer = timer * MsRandF();
 
 	gpConductor->registerGenerator(this);
 }
@@ -66,7 +67,8 @@ void TGenerator::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (mGraph == nullptr)
 					mGraph = gpConductor->getGraphByName(mGraphName);
 
-				enemy->getTracer()->setGraph(mGraph);
+				TGraphTracer* tracer = enemy->getTracer();
+				tracer->setGraph(mGraph);
 
 				JGeometry::TVec3<f32> rot(0.0f, 0.0f, 0.0f);
 				JGeometry::TVec3<f32> vel(0.0f, 4.0f, 0.0f);
@@ -122,7 +124,8 @@ BOOL TOneShotGenerator::receiveMessage(THitActor* sender, u32 message)
 		if (mCount != 0) {
 			TSpineEnemy* enemy = mManager->getFarOutEnemy();
 			if (enemy != nullptr) {
-				enemy->getTracer()->setGraph(mGraph);
+				TGraphTracer* tracer = enemy->getTracer();
+				tracer->setGraph(mGraph);
 
 				JGeometry::TVec3<f32> rot(0.0f, 0.0f, 0.0f);
 				JGeometry::TVec3<f32> vel(0.0f, 4.0f, 0.0f);

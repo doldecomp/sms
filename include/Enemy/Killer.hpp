@@ -22,6 +22,10 @@ public:
 	void calcChaseParam();
 	void fly();
 
+	static f32 mTestSp;
+	static s32 mInvalidTime;
+	static f32 mTestMarioSpMax;
+
 public:
 	/* 0x194 */ f32 unk194;
 	/* 0x198 */ s32 unk198;
@@ -59,6 +63,16 @@ public:
 
 	void setColorType();
 	bool isRollFly();
+
+	static u8 mSerialBomb;
+	static u8 mTrampleDie;
+
+	/* 0x1B4 */ char unk1B4[0x210 - 0x1B4];
+};
+
+class TKillerManager : public TSmallEnemyManager {
+public:
+	TKillerManager(const char* name = "キラーマネージャー");
 };
 
 #endif

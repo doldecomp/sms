@@ -38,17 +38,35 @@
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
+// fabricated: shared script-directory loader; boundary matches finder cleanup.
+static void loadEventWatchers(TMarDirector* director, const char* directory)
+{
+	JKRFileFinder* finder = JKRFileLoader::findFirstFile(directory);
+	if (finder) {
+		JKRFileLoader::changeDirectory(directory);
+		do {
+			if (strstr(finder->mBase.mFileName, ".sb")) {
+				director->registerEventWatcher(new TEventWatcher(
+				    "<EventWatcher>", finder->mBase.mFileName));
+			}
+		} while (finder->findNextFile());
+		delete finder;
+		JKRFileLoader::changeDirectory("/");
+	}
+}
+
 void TMarDirector::decideMarioPosIdx()
 {
-	unkD0 = 0;
-	unkD1 = 0;
-	unkE4 = 1;
+	TApplication* application = SMSGetApplication();
+	unkD0                     = 0;
+	unkD1                     = 0;
+	unkE4                     = 1;
 
-	const TGameSequence& prevArea = SMSGetApplication()->mPrevArea;
-	switch (SMSGetApplication()->mCurrArea.getStage()) {
+	const TGameSequence& prevArea = application->mPrevArea;
+	switch (application->mCurrArea.getStage()) {
 	case 15:
 		unkE4 = 14;
-		SMSGetApplication()->getFader()->setColor(
+		application->getFader()->setColor(
 		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
 
@@ -115,7 +133,7 @@ void TMarDirector::decideMarioPosIdx()
 					unkD0 = 7;
 					unkD1 = 2;
 					unkE4 = 0xe;
-					SMSGetApplication()->getFader()->setColor(
+					application->getFader()->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
@@ -131,6 +149,7 @@ void TMarDirector::decideMarioPosIdx()
 
 bool TMarDirector::setupObjects()
 {
+	// TODO: stack layout (0x9d8 vs 0xb28) and local relocations still differ.
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(MSF_SHADOW_MARIO_EVENT, 1);
 	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
@@ -256,13 +275,13 @@ bool TMarDirector::setupObjects()
 	}
 
 	gameObjs->insert(gpMarioParticleManager);
-	gameObjs->insert(new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f,
-	                                        (u16)SMSGetGameRenderHeight(), 0.0f,
-	                                        (u16)SMSGetGameRenderWidth()));
+	gameObjs->insert(new JDrama::TOrthoProj(
+	    -1.0f, 1.0f, 0.0f, (u16)SMSGetGameRenderHeight(), 0.0f,
+	    (u16)SMSGetGameRenderWidth(), "ブラーカメラ"));
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* measurementGroup
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("計測グループ");
-	gameObjs->insert(measurementGroup);
+	root->insert(measurementGroup);
 
 	measurementGroup->insert(
 	    new TSnapTimeObj(0xFFFFFFFF, "Mirror Draw SnapTime"));
@@ -324,42 +343,19 @@ bool TMarDirector::setupObjects()
 		JDrama::TLookAtCamera* cam = static_cast<JDrama::TLookAtCamera*>(
 		    JDrama::TNameRefGen::search("camera 1"));
 #ifdef VERSION_GMSP01
-		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.91346145f
 		               / (u16)SMSGetGameRenderHeight();
 #else
-		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
+		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.91346145f
 		               / (u16)SMSGetGameVideoHeight();
 #endif
 	}
 
 	unk80 = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("イベントグループ");
-	gameObjs->insert(unk80);
+	root->insert(unk80);
 
-	JKRFileFinder* finder = JKRFileLoader::findFirstFile("/common/sp");
-	if (finder) {
-		JKRFileLoader::changeDirectory("/common/sp");
-		do {
-			if (strstr(finder->mBase.mFileName, ".sb")) {
-				registerEventWatcher(new TEventWatcher(
-				    "<EventWatcher>", finder->mBase.mFileName));
-			}
-		} while (finder->findNextFile());
-		delete finder;
-		JKRFileLoader::changeDirectory("/");
-	}
-
-	finder = JKRFileLoader::findFirstFile("/scene/map/sp");
-	if (finder) {
-		JKRFileLoader::changeDirectory("/scene/map/sp");
-		do {
-			if (strstr(finder->mBase.mFileName, ".sb")) {
-				registerEventWatcher(new TEventWatcher(
-				    "<EventWatcher>", finder->mBase.mFileName));
-			}
-		} while (finder->findNextFile());
-		delete finder;
-		JKRFileLoader::changeDirectory("/");
-	}
+	loadEventWatchers(this, "/common/sp");
+	loadEventWatchers(this, "/scene/map/sp");
 
 	TParams::finalize();
 

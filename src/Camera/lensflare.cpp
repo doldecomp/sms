@@ -29,9 +29,11 @@ TLensFlare::TLensFlare(const char* name)
     , unk44(1.75f)
     , unk48(75.0f)
 {
-	if (gpSunMgr->isThing())
+	if (gpSunMgr->isThing() != false)
 		return;
 
+	// TODO: nonmatching .rodata offset: retail strips the duplicate volume
+	// strings from SunModel.hpp (mario.MAP: @1633, @1634).
 	char buf[0x100];
 	snprintf(buf, 0x100, "%s/%s", cSunVolumeName, "sun_lensfx.bmd");
 
@@ -57,10 +59,11 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		if (!gpSunModel->isInBounds(unk44)) {
 			unk28 = 0.0f;
 		} else {
-			f32 hiddenCount = gpSunModel->calcHiddenRatio();
+			f32 hiddenCount  = gpSunModel->calcHiddenRatio();
+			f32 visibleRatio = 1.0f - hiddenCount;
 
-			unk28 = CLBEaseOutInbetween<f32>(unk48 * (1.0f - hiddenCount),
-			                                 255.0f, gpSunModel->getUnk194());
+			unk28 = CLBEaseOutInbetween<f32>(unk48 * visibleRatio, 255.0f,
+			                                 gpSunModel->getUnk194());
 		}
 
 		f32 chase;
@@ -82,10 +85,9 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		JGeometry::TVec3<f32> sunWorldPos = gpSunModel->unk198;
+		// TODO: nonmatching camera/vector inline boundaries and stack frame.
+		Vec sunWorldPos = gpSunModel->unk198;
 
-		// TODO: a mystery is happening here with the args, but it's definitely
-		// this inline (maybe one more inlining layer?)
 		JGeometry::TVec3<f32> near9grid[9];
 		S16Vec euler;
 		CLBCalcNearNinePos(near9grid, &euler, gpCamera->unk124,
@@ -95,25 +97,28 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 
 		f32 tx = unk3C * -gpSunModel->unkF8[0].x;
 		f32 ty = unk3C * -gpSunModel->unkF8[0].y;
-		f32 lx = near9grid[4].x + (near9grid[5].x - near9grid[4].x) * tx
-		         + (near9grid[1].x - near9grid[4].x) * ty;
-		f32 ly = near9grid[4].y + (near9grid[5].y - near9grid[4].y) * tx
-		         + (near9grid[1].y - near9grid[4].y) * ty;
-		f32 lz = near9grid[4].z + (near9grid[5].z - near9grid[4].z) * tx
-		         + (near9grid[1].z - near9grid[4].z) * ty;
+		JGeometry::TVec3<f32> right;
+		right.sub(near9grid[5], near9grid[4]);
+		right.scale(tx);
+		JGeometry::TVec3<f32> up;
+		up.sub(near9grid[1], near9grid[4]);
+		up.scale(ty);
+		JGeometry::TVec3<f32> lensPos;
+		lensPos.add(near9grid[4], right);
+		lensPos.add(up);
 
 		JGeometry::TVec3<f32> finalPos;
 		finalPos.set(sunWorldPos);
 
-		JGeometry::TVec3<f32> dir(lx - finalPos.x, ly - finalPos.y,
-		                          lz - finalPos.z);
+		JGeometry::TVec3<f32> dir;
+		dir.sub(lensPos, finalPos);
 
 		JGeometry::TVec3<f32> rot = MsGetRotFromZaxis(dir);
+		s16 angleX                = CLBDegToShortAngle(rot.x);
+		s16 angleY                = CLBDegToShortAngle(rot.y);
 		Mtx mtx;
-		// Wrong! Need a different inline wrapper!
-		MsMtxSetTRS(mtx, sunWorldPos.x, sunWorldPos.y, sunWorldPos.z,
-		            CLBDegToShortAngle(rot.x), CLBDegToShortAngle(rot.y), 0,
-		            unk18.x, unk18.y, unk18.z);
+		MsMtxSetTRS(mtx, sunWorldPos.x, sunWorldPos.y, sunWorldPos.z, angleX,
+		            angleY, 0, unk18.x, unk18.y, unk18.z);
 		unk14->setBaseTRMtx(mtx);
 		unk14->calc();
 	}

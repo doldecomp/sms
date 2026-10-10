@@ -7,9 +7,9 @@ void SMS_InitChangeNpcColor(const MActor* param1,
                             const TColorChangeInfo* param2, s16 param3,
                             const GXColor* param4)
 {
-	J3DModel* model = param1->getModel();
-	s32 matIdx
-	    = model->getModelData()->getMaterialName()->getIndex(param2->unk4);
+	J3DModel* model               = param1->getModel();
+	const J3DModelData* modelData = model->getModelData();
+	s32 matIdx = modelData->getMaterialName()->getIndex(param2->unk4);
 	switch (param2->unk0) {
 	case 0:
 		if (param2->unk8 != nullptr) {

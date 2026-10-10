@@ -48,10 +48,15 @@
 #include <System/ParamInst.hpp>
 #include <System/Particles.hpp>
 #include <System/Params.hpp>
+#include <macros.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+u8 TSamboHead::mBodyJntIndex;
+
+static TSamboHead* gpCurSamboHead;
 
 static const char* sambo_bastable[] = {
 	"/scene/sambo/bas/sambo_down.bas",
@@ -102,6 +107,7 @@ void TSamboFlowerCoinUnit::add(TSamboFlower* param_1)
 	}
 }
 
+// TODO: nonmatching frame (0x108 instead of 0x120) and spawn-loop registers.
 void TSamboFlowerCoinUnit::checkGenCoin()
 {
 	if (!unk18)
@@ -127,19 +133,19 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 	}
 
 	if (total > 0) {
-		Mtx mtx;
 		int spawned = 0;
 		for (int i = 0; i < unk10; ++i) {
 			if (!unk0[i]->unk168)
 				continue;
 
-			f32 rate = (f32)spawned / (f32)total;
-
 			JGeometry::TVec3<f32> offset(0.0f, 0.0f,
 			                             unk0[i]->unk16C->mSLCoinCircleR.get());
+			f32 rate = (f32)spawned / (f32)total;
 
-			MsMtxSetRotY(mtx, 360.0f * rate);
-			MTXMultVec(mtx, &offset, &offset);
+			Mtx mtx;
+			MtxPtr matrix = mtx;
+			MsMtxSetRotY(matrix, 360.0f * rate);
+			MTXMultVec(matrix, &offset, &offset);
 
 			TMapObjBase* coin = unk0[i]->unk168;
 			if (coin->isActorType(ACTOR_TYPE_COIN))
@@ -148,16 +154,15 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 			if (coin) {
 				coin->appear();
 
-				JGeometry::TVec3<f32> pos = unk4;
-				pos += offset;
-				coin->mPosition = pos;
+				coin->mPosition = unk4 + offset;
 
 				MsVECNormalize(&offset, &offset);
 
 				TSamboFlowerSaveLoadParams* prm = unk0[i]->unk16C;
-				coin->mVelocity.set(offset.x * prm->mSLCoinVelocityXZ.get(),
-				                    8.0f * rate + prm->mSLCoinVelocityY.get(),
-				                    offset.z * prm->mSLCoinVelocityXZ.get());
+				f32 velY                        = prm->mSLCoinVelocityY.get();
+				f32 velXZ                       = prm->mSLCoinVelocityXZ.get();
+				coin->mVelocity.set(offset.x * velXZ, 8.0f * rate + velY,
+				                    offset.z * velXZ);
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
 				spawned++;
 			}
@@ -270,6 +275,7 @@ TSpineEnemy* TSamboFlowerManager::createEnemyInstance()
 	return new TSamboFlower;
 }
 
+// TODO: nonmatching TSamboLeaf constructor this slot (0x94 instead of 0x88).
 void TSamboFlowerManager::loadAfter()
 {
 	void* leafRes
@@ -293,7 +299,7 @@ void TSamboFlowerManager::loadAfter()
 	for (int i = 0; i < unk58; i++)
 		counts[i] = 0;
 
-	for (int i = 0; i < getObjNum(); i++) {
+	for (int i = 0; i < mObjNum; i++) {
 		if (strstr(getObj(i)->getName(), "フラワー（コイン用）")) {
 			TSamboFlower* flower = (TSamboFlower*)getObj(i);
 			if (flower->unk158 < unk58)
@@ -317,7 +323,7 @@ void TSamboFlowerManager::loadAfter()
 		}
 	}
 
-	for (int i = 0; i < getObjNum(); i++) {
+	for (int i = 0; i < mObjNum; i++) {
 		if (strstr(getObj(i)->getName(), "フラワー（コイン用）")) {
 			TSamboFlower* flower = (TSamboFlower*)getObj(i);
 			if (flower->unk158 < unk58)
@@ -476,10 +482,13 @@ void TSamboFlower::moveObject()
 					        getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd());
 					getMActor()->setFrameRate(-SMSGetAnmFrameRate(),
 					                          ANM_TYPE_BCK);
-				} else if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
-				           < 1.0f) {
-					unk154 = 0;
-					getMActor()->setBck("flower_wait");
+				} else {
+					f32 frame
+					    = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
+					if (frame < 1.0f) {
+						unk154 = 0;
+						getMActor()->setBck("flower_wait");
+					}
 				}
 			}
 		}
@@ -617,6 +626,8 @@ void THanaSambo::load(JSUMemoryInputStream& param_1)
 	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 }
 
+// TODO: nonmatching frame (0xE0 instead of 0xE8) and list-insertion stack
+// slots.
 void THanaSambo::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
@@ -638,12 +649,17 @@ void THanaSambo::init(TLiveManager* param_1)
 	}
 
 	unk194 = new THanaSamboHead;
-	((TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ"))->add(unk194);
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+	    ->getChildren()
+	    .push_back(unk194);
+
+	f32 attackRadius = unk198->mSLHeadAttackRadius.get();
+	f32 attackHeight = unk198->mSLHeadAttackHeight.get();
+	f32 damageRadius = unk198->mSLHeadDamageRadius.get();
+	f32 damageHeight = unk198->mSLHeadDamageHeight.get();
 	unk194->initHitActor(ACTOR_TYPE_SAMBO_HEAD, 2, HIT_CATEGORY_PLAYER,
-	                     unk198->mSLHeadAttackRadius.get() * mBodyScale,
-	                     unk198->mSLHeadAttackHeight.get() * mBodyScale,
-	                     unk198->mSLHeadDamageRadius.get() * mBodyScale,
-	                     unk198->mSLHeadDamageHeight.get() * mBodyScale);
+	                     attackRadius * mBodyScale, attackHeight * mBodyScale,
+	                     damageRadius * mBodyScale, damageHeight * mBodyScale);
 	unk194->unk68 = this;
 }
 
@@ -825,9 +841,9 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 		self->setWaitAnm();
 		if (SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 			self->updateSquareToMario();
-			if (self->getDistToMarioSquared()
-			    < self->unk198->mSLAttackDist.get()
-			          * self->unk198->mSLAttackDist.get())
+			f32 attackDist = self->unk198->mSLAttackDist.get();
+			attackDist *= self->unk198->mSLAttackDist.get();
+			if (self->getDistToMarioSquared() < attackDist)
 				spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
 		}
 		return true;
@@ -837,6 +853,7 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 	return false;
 }
 
+// TODO: frame-only mismatch (0x60 instead of 0x80); no fabricated padding.
 DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 {
 	THanaSambo* self = (THanaSambo*)spine->getBody();
@@ -851,17 +868,18 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	if (spine->getTime() > self->unk198->mSLAttackInterval.get()
 	    && SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 		self->updateSquareToMario();
-		if (self->getDistToMarioSquared()
-		    < self->unk198->mSLAttackDist.get()
-		          * self->unk198->mSLAttackDist.get()) {
+		f32 attackDist = self->unk198->mSLAttackDist.get();
+		attackDist *= attackDist;
+		if (self->getDistToMarioSquared() < attackDist) {
 			spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
 			return true;
 		}
 	}
 
 	self->updateSquareToMario();
-	if (self->getDistToMarioSquared()
-	    > self->unk198->mSLHideDist.get() * self->unk198->mSLHideDist.get()) {
+	f32 hideDist = self->unk198->mSLHideDist.get();
+	hideDist *= hideDist;
+	if (self->getDistToMarioSquared() > hideDist) {
 		spine->pushAfterCurrent(&TNerveHanaSamboHide::theNerve());
 		return true;
 	}
@@ -879,8 +897,10 @@ DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 	} else if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(3)) {
 			self->createPollen();
-			SMSGetMSound()->startSoundActor(MSD_SE_EN_SAMBO_ATTACK,
-			                                &self->mPosition, 0, nullptr, 0, 4);
+			if (SMSGetMSound()->gateCheck(MSD_SE_EN_SAMBO_ATTACK))
+				MSoundSESystem::MSoundSE::startSoundActor(
+				    MSD_SE_EN_SAMBO_ATTACK, self->getPosition(), 0, nullptr, 0,
+				    4);
 
 			self->setBckAnm(1);
 		} else if (self->isBckAnm(1)) {
@@ -922,9 +942,9 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	}
 
 	self->updateSquareToMario();
-	if (self->getDistToMarioSquared()
-	    < self->unk198->mSLAppearDist.get()
-	          * self->unk198->mSLAppearDist.get()) {
+	f32 appearDist = self->unk198->mSLAppearDist.get();
+	appearDist *= self->unk198->mSLAppearDist.get();
+	if (self->getDistToMarioSquared() < appearDist) {
 		spine->pushAfterCurrent(&TNerveHanaSamboAppear::theNerve());
 		return true;
 	}
@@ -993,10 +1013,7 @@ DEFINE_NERVE(TNerveHanaSamboFreeze, TLiveActor)
 	return false;
 }
 
-u8 TSamboHead::mBodyJntIndex;
-
-static TSamboHead* gpCurSamboHead;
-
+// TODO: nonmatching frame (0x168 instead of 0x148), FPRs and basis-load order.
 static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
@@ -1004,8 +1021,10 @@ static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 			return true;
 
 		J3DJoint* joint = (J3DJoint*)param_1;
-		MtxPtr anmMtx
-		    = gpCurSamboHead->getModel()->getAnmMtx(joint->getJntNo());
+		TPosition3f* anmMtx
+		    = (TPosition3f*)gpCurSamboHead->getModel()->getAnmMtx(
+		        joint->getJntNo());
+		Mtx rotMtx;
 
 		JGeometry::TVec3<f32> velocity = gpCurSamboHead->mVelocity;
 		if (0.0f == velocity.x && 0.0f == velocity.z)
@@ -1015,27 +1034,26 @@ static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 		VECCrossProduct(&up, &velocity, &side);
 
-		JGeometry::TVec3<f32> zAxis(anmMtx[0][2], anmMtx[1][2], anmMtx[2][2]);
-		JGeometry::TVec3<f32> yAxis(anmMtx[0][1], anmMtx[1][1], anmMtx[2][1]);
-		JGeometry::TVec3<f32> xAxis(anmMtx[0][0], anmMtx[1][0], anmMtx[2][0]);
+		f32 angle = gpCurSamboHead->unk1AC;
+		JGeometry::TVec3<f32> zAxis;
+		JGeometry::TVec3<f32> xAxis;
+		JGeometry::TVec3<f32> yAxis;
+		anmMtx->getZDir(zAxis);
+		anmMtx->getXDir(xAxis);
+		anmMtx->getYDir(yAxis);
+		JGeometry::TVec3<f32> axis;
 
-		f32 rateZ = 0.0f;
-		if (0.0f != zAxis.squared())
-			rateZ = side.dot(zAxis) / zAxis.squared();
+		f32 lenZ  = zAxis.squared();
+		f32 rateZ = 0.0f == lenZ ? 0.0f : side.dot(zAxis) / lenZ;
+		f32 lenY  = yAxis.squared();
+		f32 rateY = 0.0f == lenY ? 0.0f : side.dot(yAxis) / lenY;
+		f32 lenX  = xAxis.squared();
+		f32 rateX = 0.0f == lenX ? 0.0f : side.dot(xAxis) / lenX;
 
-		f32 rateY = 0.0f;
-		if (0.0f != yAxis.squared())
-			rateY = side.dot(yAxis) / yAxis.squared();
+		axis.set(rateX, rateY, rateZ);
 
-		f32 rateX = 0.0f;
-		if (0.0f != xAxis.squared())
-			rateX = side.dot(xAxis) / xAxis.squared();
-
-		JGeometry::TVec3<f32> axis(rateX, rateY, rateZ);
-
-		Mtx rotMtx;
-		MTXRotAxisRad(rotMtx, &axis, 0.017453292f * gpCurSamboHead->unk1AC);
-		MTXConcat(anmMtx, rotMtx, anmMtx);
+		MTXRotAxisRad(rotMtx, &axis, DEG_TO_RAD(angle));
+		MTXConcat(anmMtx->mMtx, rotMtx, anmMtx->mMtx);
 		MTXConcat(J3DSys::mCurrentMtx, rotMtx, J3DSys::mCurrentMtx);
 	}
 	return true;
@@ -1153,11 +1171,11 @@ void TSamboHead::behaveToWater(THitActor* param_1)
 	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
 
-	JGeometry::TVec3<f32> velocity = mVelocity;
+	JGeometry::TVec3<f32> velocity = getVelocityRef();
 	velocity.y                     = 0.0f;
 
-	JGeometry::TVec3<f32> jump(mPosition.x - SMS_GetMarioPos().x, 0.0f,
-	                           mPosition.z - SMS_GetMarioPos().z);
+	JGeometry::TVec3<f32> jump(getPosition().x - SMS_GetMarioPos().x, 0.0f,
+	                           getPosition().z - SMS_GetMarioPos().z);
 	MsVECNormalize(&jump, &jump);
 	jump.scale(unk194->mSLHitJumpSpXZ.get());
 	jump.y = unk194->mSLHitJumpSpY.get();
@@ -1177,8 +1195,11 @@ void TSamboHead::attackToMario()
 	sendAttackMsgToMario();
 
 	if (isAirborne()) {
-		JGeometry::TVec3<f32> velocity(mPosition.x - SMS_GetMarioPos().x, 10.0f,
-		                               mPosition.z - SMS_GetMarioPos().z);
+		JGeometry::TVec3<f32> direction(mPosition.x - SMS_GetMarioPos().x,
+		                                10.0f,
+		                                mPosition.z - SMS_GetMarioPos().z);
+		JGeometry::TVec3<f32> velocity;
+		velocity.set(direction);
 		MsVECNormalize(&velocity, &velocity);
 		velocity.scale(8.0f);
 		setVelocity(velocity);

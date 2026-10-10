@@ -100,8 +100,8 @@ f32 MSBgmXFade::scExp[18] = {
 
 void MSBgmXFade::xFadeBgm(f32 param_1)
 {
-	// TODO: some stupid trick with casting the second param?
-	u8 tmp = getTiming(param_1, nullptr);
+	u32 timing[2];
+	u8 tmp = getTiming(param_1, timing);
 
 	bool b = tmp >= 1 && tmp <= 16;
 	if (b) {
@@ -114,20 +114,22 @@ void MSBgmXFade::xFadeBgm(f32 param_1)
 void MSBgmXFade::xFadeBgmForce(f32 param_1)
 {
 	u8 tmp = getTimingForce(param_1);
-	if (tmp != 0xff) {
+	bool b = tmp != 0xff;
+	if (b) {
 		MSBgm::setTrackVolume(0, scExp[17 - tmp], 0, 0);
 		MSBgm::setTrackVolume(1, scExp[tmp], 0, 0);
 		unk0 = param_1;
 	}
 }
 
+// TODO: UNUSED size is 0x94, not 0x60; param_2 behavior is unrecovered.
 u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 {
 	f32 f1 = unk0;
 	for (u8 i = 0; i < 18; ++i) {
 		if (param_1 > scTiming[i] && f1 <= scTiming[i])
 			return i;
-		if (param_1 < scTiming[i] && scTiming[i] >= f1)
+		if (param_1 < scTiming[i] && unk0 >= scTiming[i])
 			return i;
 	}
 

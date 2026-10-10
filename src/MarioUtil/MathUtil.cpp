@@ -194,21 +194,23 @@ static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
                                        f32* out)
 {
 	if (axis.y == 1.0f) {
-		*out = 90.0f;
+		*out = -90.0f;
 		return;
 	} else if (axis.y == -1.0f) {
-		*out = -90.0f;
+		*out = 90.0f;
 		return;
 	}
 
-	f32 a = 1.0f - axis.y * axis.y;
+	f32 y = axis.y;
+	f32 a = 1.0f - y * y;
 
 	// TODO: it smells to me like this entire function is not real but a result
 	// of MWCC optimizing out stuff for once
 
-	*out = -(matan(MsSqrtf(a), axis.y) * (360.0f / 65536.0f));
+	*out = -(matan(MsSqrtf(a), y) * (360.0f / 65536.0f));
 }
 
+// TODO: frame-only mismatch: 0x48 bytes here versus 0x58 in retail.
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> result;

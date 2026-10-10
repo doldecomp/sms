@@ -26,7 +26,9 @@ public:
 		mPosition = where_to;
 		return true;
 	}
-	virtual f32 getRadiusAtY(f32) const;
+	// inline: the map has only a weak copy, emitted with the weak vtable in
+	// System/MarNameRefGen_MapObj.cpp
+	virtual f32 getRadiusAtY(f32) const { return mDamageRadius; }
 
 	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
 	bool isHolding() const { return mHeldObject != nullptr ? true : false; }

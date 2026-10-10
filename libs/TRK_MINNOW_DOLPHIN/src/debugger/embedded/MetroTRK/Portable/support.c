@@ -67,8 +67,11 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 					error
 					    = TRKReadBuffer1_ui8(replyBuffer, (u8*)&replyIOResult);
 
-				if (error == DS_NoError)
-					error = TRKReadBuffer1_ui16(replyBuffer, &replyLength);
+				if (error == DS_NoError) {
+					DSError readError
+					    = TRKReadBuffer1_ui16(replyBuffer, &replyLength);
+					error = readError;
+				}
 
 				if (read && error == DS_NoError) {
 					if (replyBuffer->length != replyLength + 5) {

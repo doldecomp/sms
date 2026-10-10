@@ -59,7 +59,7 @@ void TMushroom1up::makeObjAppeared()
 	emitter = gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_B, &mPosition,
 	                                       0, nullptr);
 	if (emitter)
-		emitter->setGlobalScale(mScaling);
+		emitter->setGlobalScale(getScaling());
 }
 
 void TMushroom1up::initMapObj()
@@ -81,6 +81,7 @@ void TMushroom1up::load(JSUMemoryInputStream& stream)
 	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_UNK10);
 }
 
+// TODO: stack slots/frame and .sdata relocations differ; no padding added.
 void TMushroom1up::control()
 {
 	TMapObjBase::control();
@@ -93,10 +94,11 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		pos.x += 1.5f * (50.0f * MsCos(5.0f * t));
+		s16 angle                 = DEG2SHORTANGLE(5.0f * t);
 		pos.y += 200.0f;
-		pos.z += 1.5f * (50.0f * MsSin(5.0f * t));
-		mPosition.set(pos);
+		pos.x += 1.5f * (50.0f * JMASCos(angle));
+		pos.z += 1.5f * (50.0f * JMASSin(angle));
+		mPosition = pos;
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
 		mPositionDelta.zero();
@@ -240,6 +242,7 @@ void TJumpBase::calcRootMatrix()
 	TMapObjBase::calcRootMatrix();
 }
 
+// TODO: object, saved-state and string-base registers differ.
 void TJumpBase::control()
 {
 	int prevState = unk138;
@@ -293,9 +296,8 @@ void TJumpBase::control()
 
 	case 1:
 		if (unk13C == 0) {
-			if (mMapCollisionManager
-			    && mMapCollisionManager->getActiveCollision())
-				mMapCollisionManager->getActiveCollision()->remove();
+			if (mMapCollisionManager)
+				mMapCollisionManager->removeActiveCollision();
 
 			getMActor()->setBck("jumpbase_shrink");
 			J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
@@ -328,11 +330,10 @@ void TJumpBase::control()
 	case 5:
 		if (unk13C == 0) {
 			onLiveFlag(LIVE_FLAG_AIRBORNE);
-			int angle = SMS_GetMarioAngleY();
 			mVelocity
-			    = JGeometry::TVec3<f32>(JMASSin(angle), 0.0f, JMASCos(angle));
-			JGeometry::TVec3<f32> v2 = mVelocity;
-			mPosition += v2;
+			    = JGeometry::TVec3<f32>(JMASSin(SMS_GetMarioAngleY()), 0.0f,
+			                            JMASCos(SMS_GetMarioAngleY()));
+			mPosition += JGeometry::TVec3<f32>(mVelocity);
 			offLiveFlag(LIVE_FLAG_UNK10);
 		}
 		if (!isAirborne()) {

@@ -53,7 +53,6 @@ static const GXColorS10 cTelesaColor[2] = {
 };
 
 static const GXColor cTelesaColorStart = { 0, 0, 0, 0 };
-static const GXColor cTelesaColorEnd   = { 255, 255, 255, 255 };
 
 TTelesaSaveLoadParams::TTelesaSaveLoadParams(const char* path)
     : TWalkerEnemyParams(path)
@@ -117,7 +116,7 @@ void TTelesaManager::createEnemies(int param_1)
 	                     ->getMaterialName()
 	                     ->getIndex("_mat_body");
 
-	for (int i = 0; i < mObjNum; ++i) {
+	for (int i = 0; i < getObjNum(); ++i) {
 		TTelesa* telesa          = (TTelesa*)unk18[i];
 		telesa->mTelesaFadeColor = cTelesaColorStart;
 		for (u16 i = 0; i < 4; ++i) {
@@ -149,8 +148,8 @@ void TTelesaManager::createModelData()
 void TTelesaManager::telesaForceKill()
 {
 	bool anyKilled = false;
-	for (int i = 0; i < mObjNum; ++i) {
-		TTelesa* telesa = (TTelesa*)unk18[i];
+	for (int i = 0; i < getObjNum(); ++i) {
+		TTelesa* telesa = (TTelesa*)getObj(i);
 		if (!telesa->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			telesa->kill();
 			anyKilled = true;
@@ -219,10 +218,11 @@ void TTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	mDampenedGroundHeight = mPosition.y;
+	mDampenedGroundHeight = getPosition().y;
 	setTypeNormal();
 }
 
+// TODO: frame-only instruction mismatch: retail uses 0xc0, ours uses 0xb0.
 void TTelesa::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
@@ -288,10 +288,10 @@ void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
 			if (cue & CUE_CALC_ANIM) {
-				const TBGCheckData* pTStack_5c;
-				f32 ground = gpMap->checkGround(mPosition.x, mPosition.y,
-				                                mPosition.z, &pTStack_5c);
 				Mtx afStack_58;
+				const TBGCheckData* pTStack_5c;
+				f32 ground        = gpMap->checkGround(mPosition.x, mPosition.y,
+				                                       mPosition.z, &pTStack_5c);
 				MtxPtr afStackPtr = afStack_58;
 				MsMtxSetXYZRPH(afStackPtr, mPosition.x, ground, mPosition.z,
 				               mRotation.x, mRotation.y, mRotation.z);
@@ -356,8 +356,8 @@ void TTelesa::attackToMario()
 	    || !(mPosition.y + mAttackHeight - 50.0f < SMS_GetMarioPos().y)) {
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		if (unk184) {
-			if (mSpine->getCurrentNerve()
-			    != &TNerveWalkerPostAttack::theNerve())
+			const TNerveBase<TLiveActor>* nerve = mSpine->getCurrentNerve();
+			if (nerve != &TNerveWalkerPostAttack::theNerve())
 				; // huh???
 		}
 	}
@@ -380,7 +380,7 @@ void TTelesa::behaveToWater(THitActor* param_1)
 			fVar1 = unk194->mSLTelesaPowerByWater.get();
 			mPosition.y += 30.0f;
 		}
-		mVelocity = local_20 * fVar1;
+		mVelocity.assignCopy(local_20 * fVar1);
 
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
@@ -438,28 +438,29 @@ void TTelesa::calcRootMatrix()
 {
 	if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 		for (u16 i = 0;
-		     i < mMActor->getModel()->getModelData()->getMaterialNum(); ++i) {
+		     i < getMActor()->getModel()->getModelData()->getMaterialNum();
+		     ++i) {
 			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
-			mMActor->getModel()
+			getMActor()
+			    ->getModel()
 			    ->getModelData()
 			    ->getMaterialNodePointer(i)
-			    ->getTexGenBlock()
 			    ->getTexMtx(2)
 			    ->setEffectMtx(afStack_94);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_TLS_YODARE_L, mMActor->getModel()->getAnmMtx(4), 1,
-		        this)) {
+		        PARTICLE_MS_TLS_YODARE_L, getMActor()->getModel()->getAnmMtx(4),
+		        1, this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(
-		        PARTICLE_MS_TLS_YODARE_S, mMActor->getModel()->getAnmMtx(3), 1,
-		        this)) {
+		        PARTICLE_MS_TLS_YODARE_S, getMActor()->getModel()->getAnmMtx(3),
+		        1, this)) {
 			emitter->setGlobalAlpha(mTelesaFadeColor.a);
 		}
 	}
@@ -538,7 +539,7 @@ BOOL TTelesa::isReachedToGoal() const
 
 bool TTelesa::changeByJuice()
 {
-	if (checkUnk150(0x40)) {
+	if (checkUnk150(0x40) != 0) {
 
 		if (mJuiceBlock != nullptr)
 			return true;
@@ -588,7 +589,7 @@ void TTelesa::changeOut()
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_TELSA_RECOVER, &mPosition, 0,
 	                                nullptr, 0, 4);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
-	mPosition = mJuiceBlock->mPosition;
+	mPosition = mJuiceBlock->getPosition();
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
@@ -688,7 +689,8 @@ void TTelesa::initAttacker(THitActor* param_1)
 	unk184 = 1;
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
-	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
+	TLiveActor& actor = *(TLiveActor*)param_1;
+	MtxPtr mtx        = actor.getModel()->getAnmMtx(5);
 	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
@@ -717,7 +719,8 @@ void TTelesa::initItemAttacker(THitActor* param_1)
 	setTypeNormal();
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 	mDampenedGroundHeight = SMS_GetMarioGrLevel() - 50.0f;
-	mRotation             = param_1->mRotation;
+	TLiveActor& actor     = *(TLiveActor*)param_1;
+	mRotation             = actor.mRotation;
 
 	setFlyParam(1.0f);
 	unk150 &= ~0x40;
@@ -761,12 +764,13 @@ void TTelesa::setAttackPoint()
 {
 	JGeometry::TVec3<f32> pos = mPosition;
 
-	f32 dx = SMS_GetMarioPos().x - mPosition.x;
-	f32 dz = SMS_GetMarioPos().z - mPosition.z;
-	f32 r  = TMsRange<f32>(0.7f, 1.6f).rand();
+	JGeometry::TVec2<f32> delta;
+	delta.x = SMS_GetMarioPos().x - mPosition.x;
+	delta.y = SMS_GetMarioPos().z - mPosition.z;
+	f32 r   = TMsRange<f32>(0.7f, 1.6f).rand();
 
-	pos.x += dx * r;
-	pos.z += dz * r;
+	pos.x += delta.x * r;
+	pos.z += delta.y * r;
 
 	setGoalPath(TPathNode(pos));
 }
@@ -944,13 +948,15 @@ TMarioModokiTelesa::TMarioModokiTelesa(const char* name)
 {
 }
 
+// TODO: instructions match; strict diff flags the anonymous jump-table name.
 void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 
 	stream >> mImitationIndex;
 
-	SDLModelData* modelToUse = ((TTelesaManager*)mManager)->mModokiTelesaModel;
+	TTelesaManager* manager  = (TTelesaManager*)getManager();
+	SDLModelData* modelToUse = manager->mModokiTelesaModel;
 	switch (mImitationIndex) {
 		// NOTE: IMITATION_INDEX_NOT_IMITATING=0 stands for no model change
 
@@ -1018,7 +1024,7 @@ void TMarioModokiTelesa::load(JSUMemoryInputStream& stream)
 
 	mImitatedBmd = new TSharedParts(this, 0, modelToUse, 3);
 	reset();
-	mDampenedGroundHeight = mPosition.y;
+	mDampenedGroundHeight = getPosition().y;
 	setTypeNormal();
 }
 
@@ -1037,12 +1043,11 @@ void TMarioModokiTelesa::imitateAnm()
 
 DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 {
-	TTelesa* self = (TTelesa*)spine->getBody();
+	TSharedParts* imitatedItem = ((TTelesa*)spine->getBody())->mImitatedBmd;
+	TTelesa* self              = (TTelesa*)spine->getBody();
 
-	TSharedParts* imitatedItem = self->mImitatedBmd;
-
-	if (SMSGetApplication()->mCurrArea.getStage() != 7
-	    && SMSGetApplication()->mCurrArea.getStage() != 14) {
+	u8 stage = SMSGetApplication()->mCurrArea.getStage();
+	if (stage != 7 && stage != 14) {
 		if (spine->getTime() == 0 && imitatedItem != nullptr) {
 			((TMarioModokiTelesa*)self)->imitateAnm();
 			imitatedItem->getMActor()->setBckFromIndex(0);
@@ -1069,15 +1074,13 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 		}
 	}
 
-	TTelesaSaveLoadParams* params
-	    = (TTelesaSaveLoadParams*)self->getSaveParam();
-
-	f32 searchAware = params->mSLSearchAware.get();
+	f32 searchAware = self->getSaveParams()->getSLSearchAware();
 
 	if (!self->checkLiveFlag(LIVE_FLAG_DEAD)) {
 		// TODO: this is an inline
 
-		if (self->resetBaseGround()
+		bool reset = self->resetBaseGround();
+		if (reset
 		    || self->isInSight(SMS_GetMarioPos(), 0.0f, 0.0f, searchAware)) {
 			gpMarioParticleManager->emitAndBindToPosPtr(
 			    PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr);
@@ -1163,10 +1166,13 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 				self->offHitFilter(HIT_CATEGORY_ENEMY);
 				return true;
 			}
-		} else if (self->resetBaseGround() || self->isBckAnm(5))
-			self->setBckAnm(3);
-		else
-			self->setBckAnm(4);
+		} else {
+			bool reset = self->resetBaseGround();
+			if (reset || self->isBckAnm(5))
+				self->setBckAnm(3);
+			else
+				self->setBckAnm(4);
+		}
 	}
 
 	self->reduceFlyForce();
@@ -1175,6 +1181,8 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 	return false;
 }
 
+// TODO: frame-only mismatch: retail uses 0xf8, ours 0xe0.
+// The inlined attack-point helpers' local homes remain unresolved.
 DEFINE_NERVE(TNerveTelesaAttackMario, TLiveActor)
 {
 	TTelesa* self = (TTelesa*)spine->getBody();
@@ -1245,9 +1253,9 @@ void TKageMarioModoki::init(TLiveManager* manager)
 
 	TScreenTexture* tex = static_cast<TScreenTexture*>(
 	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
-	const ResTIMG* img = tex->getTexture()->getTexInfo();
-	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
-	                     "H_kagemario_dummy", *img);
+	const ResTIMG* img      = tex->getTexture()->getTexInfo();
+	J3DModelData* modelData = getMActor()->getModel()->getModelData();
+	SMS_ChangeTextureAll(modelData, "H_kagemario_dummy", *img);
 }
 
 DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
@@ -1263,7 +1271,8 @@ DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        PARTICLE_MS_TLS_CHANGE, &self->mPosition, 0, nullptr)) {
-			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
+			JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
+			emitter->setGlobalScale(scale);
 		}
 
 		self->onLiveFlag(LIVE_FLAG_DEAD);
@@ -1273,7 +1282,7 @@ DEFINE_NERVE(TNerveKageMarioModokiWait, TLiveActor)
 
 		if (telesa) {
 			telesa->reset();
-			telesa->unk124->unk0 = self->unk124->unk0;
+			telesa->getTracer()->init(self->unk124->getGraph());
 		}
 
 		return true;

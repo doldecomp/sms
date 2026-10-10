@@ -50,26 +50,29 @@ void TWoodBarrel::breaking()
 	}
 }
 
+// TODO: nonmatching .sdata2 literal order.
 void TWoodBarrel::kill()
 {
 	TMapObjGeneral::kill();
-	JGeometry::TVec3<f32> vec = mPosition;
+	JGeometry::TVec3<f32> vec = getPosition();
 	vec.y += 100.0f;
 	unk148->mPos.value = vec;
 	gpModelWaterManager->emitRequest(*unk148);
-	if (mHolder) {
+	if (getHolder() != nullptr) {
 		mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
 		mHolder = nullptr;
 	}
 }
 
+// TODO: nonmatching .sdata2 order from header-emitted 0.0f.
 void TWoodBarrel::appeared()
 {
 	TMapObjGeneral::appeared();
 	if (SMS_IsMarioStatusHipDrop()) {
-		setDamageHeight(mMapObjData->mHit->mEntries[0].mDamageHeight + 90.0f);
+		setDamageHeight(getMapObjData()->mHit->mEntries[0].mDamageHeight
+		                + 90.0f);
 	} else {
-		setDamageHeight(mMapObjData->mHit->mEntries[0].mDamageHeight);
+		setDamageHeight(getMapObjData()->mHit->mEntries[0].mDamageHeight);
 	}
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
@@ -82,8 +85,9 @@ void TWoodBarrel::appear()
 	makeObjAppeared();
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ENM_DISAP_A_W,
 	                                            &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0, nullptr,
-	                                0, 4);
+	if (SMSGetMSound()->gateCheck(MSD_SE_SMOKE_EFFECT))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_SMOKE_EFFECT, getPosition(), 0, nullptr, 0, 4);
 }
 
 void TWoodBarrel::touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*)

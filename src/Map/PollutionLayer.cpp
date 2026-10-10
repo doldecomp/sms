@@ -74,13 +74,23 @@ void TPollutionLayerWave::draw() const
 		for (f32 x = mMinX; x < mMaxX - mInterval; x += mInterval) {
 			f32 zNext = z + mInterval;
 
+			JGeometry::TVec3<f32> position;
+			JGeometry::TVec2<f32> texCoord;
+
 			f32 h1 = gpMapObjWave->getWaveHeight(x, z);
-			GXPosition3f32(x, h1 - 10.0f, z);
-			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (z - mMinZ));
+			position.set(x, h1 - 10.0f, z);
+			GXPosition3f32(position.x, position.y, position.z);
+			texCoord.x = position.x;
+			texCoord.y = invZSize * (position.z - mMinZ);
+			texCoord.x = invXSize * (texCoord.x - mMinX);
+			GXTexCoord2f32(texCoord.x, texCoord.y);
 
 			f32 h2 = gpMapObjWave->getWaveHeight(x, zNext);
-			GXPosition3f32(x, h2 - 10.0f, zNext);
-			GXTexCoord2f32(invXSize * (x - mMinX), invZSize * (zNext - mMinZ));
+			position.set(x, h2 - 10.0f, zNext);
+			GXPosition3f32(position.x, position.y, position.z);
+			texCoord.y = invZSize * (position.z - mMinZ);
+			texCoord.x = invXSize * (position.x - mMinX);
+			GXTexCoord2f32(texCoord.x, texCoord.y);
 		}
 		GXEnd();
 	}
@@ -167,6 +177,8 @@ void TPollutionLayer::stampModel(J3DModel* model)
 void TPollutionLayer::appearItem(f32, f32, f32) { }
 #pragma dont_inline off
 
+// TODO: nonmatching offset-table references; their .data offsets differ
+// because the object retains anonymous data that the retail linker stripped.
 void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 {
 	static int effect_counter = 1;
@@ -178,7 +190,8 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 		static JGeometry::TVec3<f32> pos[10];
 		static int now_pos_no = 0;
 
-		pos[now_pos_no].set(x, y, z);
+		JGeometry::TVec3<f32> position(x, y, z);
+		pos[now_pos_no].set(position);
 
 		static int x_offset_table[] = { -1, 0, 2, 4, 1, -1, -2, 0, 3, -3 };
 		static int z_offset_table[] = { -1, -1, 0, 2, -2, -3, 0, 3, 0, 1 };
@@ -200,7 +213,7 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 		               pos[now_pos_no].z)) {
 			int texT = getTexPosT(pos[now_pos_no].z);
 			int texS = getTexPosS(pos[now_pos_no].x);
-			if (mPollutionMap[mPos.index(texS, texT)] > 100) {
+			if (mPollutionMap[getPos().index(texS, texT)] > 100) {
 				if (unkA8 <= 0)
 					unkA8 = TPollutionManager::mFlushTime;
 
@@ -209,7 +222,7 @@ void TPollutionLayer::cleaned(f32 x, f32 y, f32 z, f32 s)
 
 				static int effect_timer = 0;
 				if (effect_timer == 0) {
-					if (SMSGetMarDirector()->mMap == 5)
+					if (SMSGetMarDirector()->getCurrentMap() == 5)
 						gpMarioParticleManager->emit(MAPOBJ_SANDSTEAM,
 						                             &pos[now_pos_no], 0, this);
 					else
@@ -275,11 +288,14 @@ void TPollutionLayer::perform(u32 cue, JDrama::TGraphics* graphics)
 	TJointModel::perform(cue, graphics);
 }
 
+// TODO: fabricated BMP reader; the original inline boundary is unknown.
 static inline u8 readBmpPixel(const u8* bmp, int x, int y, int w, int h)
 {
-	return bmp[0x436 + x + w * (h - 1 - y)];
+	return (bmp + w * (h - 1 - y) + 0x436)[x];
 }
 
+// TODO: frame-only mismatch (0x168 instead of 0x1d8).
+// Recover the remaining original inlines rather than adding stack padding.
 void TPollutionLayer::initTexImage(const char* name)
 {
 	char fullPath[256];
@@ -344,8 +360,8 @@ void TPollutionLayer::initLayerInfo(const TPollutionLayerInfo* param_1)
 
 void TPollutionLayer::initPollutionTex(const char* depth_tex_name)
 {
-	const TPollutionLayerInfo* info
-	    = ((TPollutionManager*)mManager)->getLayerInfo(mIndexInParent);
+	TPollutionManager* manager      = (TPollutionManager*)mManager;
+	const TPollutionLayerInfo* info = manager->getLayerInfo(mIndexInParent);
 	initLayerInfo(info);
 	mPos.init(this, info->mVerticalOffset, info->mTexelSize, info->mHeightMap,
 	          info->mLog2Width, info->mLog2Height);
@@ -379,8 +395,8 @@ void TPollutionLayer::initJointModel(TJointModelManager* param_1,
 	if (mActor->checkAnmFileExist(param_2, ANM_TYPE_BRK))
 		mActor->setBrk(param_2);
 
-	for (int i = 0; i < mChildrenNum; ++i)
-		((TPollutionObj*)mChildren[i])->initAreaInfo(this);
+	for (int i = 0; i < getChildrenNum(); ++i)
+		getObj(i)->initAreaInfo(this);
 }
 
 TPollutionLayer::TPollutionLayer()

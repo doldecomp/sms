@@ -212,7 +212,8 @@ void TNPCManager::makePartsModelData_(u32 npc_type, u32 flags,
 			char path[0x100];
 			snprintf(path, sizeof(path), "%s/%s", keeper->getFolder(),
 			         modelData->unk8[j]);
-			if (JKRGetResource(path) == nullptr)
+			void* resource = JKRGetResource(path);
+			if (resource == nullptr)
 				continue;
 
 			SDLModelData* sdlModel
@@ -310,22 +311,24 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 				farClip = 15000.0f;
 	}
 
-	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->mAspect,
-	                                   nearClip, farClip);
+	SetViewFrustumClipCheckPerspective(
+	    gpCamera->getFovy(), gpCamera->getAspect(), nearClip, farClip);
 
-	for (int i = 0, e = mObjNum; i < e; ++i) {
-		TBaseNPC* actor = (TBaseNPC*)unk18[i];
+	int e;
+	TBaseNPC* actor;
+	int i;
 
-		JGeometry::TVec3<f32> checkPos = actor->mPosition;
+	e = getObjNum();
+	for (i = 0; i < e; ++i) {
+		actor = (TBaseNPC*)getObj(i);
+
+		JGeometry::TVec3<f32> checkPos = actor->getPosition();
 		checkPos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
 		    && SMS_IsInOtherFastCube(checkPos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			continue;
-		}
-
-		if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
+		} else if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
@@ -337,7 +340,7 @@ void TNPCManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_ENTRY) {
 		for (int i = 0, e = mObjNum; i < e; ++i) {
-			TBaseNPC* npc = (TBaseNPC*)unk18[i];
+			TBaseNPC* npc = (TBaseNPC*)getObj(i);
 			npc->onLiveFlag(LIVE_FLAG_UNK1000000);
 		}
 	}

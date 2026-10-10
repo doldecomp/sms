@@ -60,50 +60,50 @@ static int PakkunSeedCallback(J3DNode* node, int type)
             joint->getJntNo());
 
 		Mtx rotation;
-		MsMtxSetRotZ(rotation, gpCurPakkunSeed->unk170);
+		MtxPtr rotationMtx = rotation;
+		MsMtxSetRotZ(rotationMtx, gpCurPakkunSeed->unk170);
 
-		MTXConcat(anmMtx, rotation, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, rotation, J3DSys::mCurrentMtx);
+		MTXConcat(anmMtx, rotationMtx, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rotationMtx, J3DSys::mCurrentMtx);
 	}
 
 	return true;
 }
+// TODO: frame-only mismatch (0x90 bytes; target 0xb8).
 static int PakkunRootCallback(J3DNode* node, int type)
 {
 	if (type == 0) {
-		TPakkun* pakkun = gpCurPakkun;
-		if (pakkun != nullptr) {
-			u8 maxHitPoints = pakkun->getMaxHitPoints();
-			if (gpCurPakkun->mHitPoints == maxHitPoints) {
-				return true;
-			}
-
-			J3DJoint* joint = (J3DJoint*)node;
-			MtxPtr anmMtx   = gpCurPakkun->getMActor()->getModel()->getAnmMtx(
-                joint->getJntNo());
-
-			TPosition3f scaling;
-			scaling.setTrans(0.0f, 0.0f, 0.0f);
-
-			f32 scale  = gpCurPakkun->unk1B8;
-			f32 scaleY = scale;
-			f32 scaleZ = scale;
-			if (scale > 1.0f) {
-				scaleY *= 1.5f;
-				scaleZ *= 1.5f;
-			}
-
-			scaling.setScale(scale, scaleY, scaleZ);
-			MTXConcat(anmMtx, scaling, anmMtx);
-
-			scaling.setScale(scale, scale, scale);
-			MTXConcat(J3DSys::mCurrentMtx, scaling, J3DSys::mCurrentMtx);
+		if (gpCurPakkun == nullptr
+		    || gpCurPakkun->mHitPoints == (u8)gpCurPakkun->getMaxHitPoints()) {
+			return true;
 		}
+
+		J3DJoint* joint = (J3DJoint*)node;
+		MtxPtr anmMtx   = gpCurPakkun->getMActor()->getModel()->getAnmMtx(
+            joint->getJntNo());
+
+		TPosition3f scaling;
+		scaling.setTrans(0.0f, 0.0f, 0.0f);
+
+		f32 scale  = gpCurPakkun->unk1B8;
+		f32 scaleY = scale;
+		f32 scaleZ = scale;
+		if (scale > 1.0f) {
+			scaleY *= 1.5f;
+			scaleZ *= 1.5f;
+		}
+
+		scaling.setScale(scale, scaleY, scaleZ);
+		MTXConcat(anmMtx, scaling, anmMtx);
+
+		scaling.setScale(scale, scale, scale);
+		MTXConcat(J3DSys::mCurrentMtx, scaling, J3DSys::mCurrentMtx);
 	}
 
 	return true;
 }
 
+// TODO: frame-only mismatch (0x70 bytes; target 0x90).
 static int PakkunRootCallback2(J3DNode* node, int type)
 {
 	if (type == 0) {
@@ -117,7 +117,8 @@ static int PakkunRootCallback2(J3DNode* node, int type)
 		TPosition3f scaling;
 		scaling.setTrans(0.0f, 0.0f, 0.0f);
 
-		f32 scale = 1.0f / gpCurPakkun->unk1B8;
+		f32 scale = gpCurPakkun->unk1B8;
+		scale     = 1.0f / scale;
 		scaling.setScale(scale, scale, scale);
 		MTXConcat(anmMtx, scaling, anmMtx);
 		MTXConcat(J3DSys::mCurrentMtx, scaling, J3DSys::mCurrentMtx);
@@ -210,8 +211,8 @@ void TPakkunManager::clipEnemies(JDrama::TGraphics* graphics)
 	                                   gpCamera->getAspect(),
 	                                   graphics->getNearPlane(), farClip);
 
-	for (int i = 0; i < mObjNum; ++i) {
-		TPakkun* pakkun = (TPakkun*)unk18[i];
+	for (int i = 0; i < getObjNum(); ++i) {
+		TPakkun* pakkun = (TPakkun*)getObj(i);
 		if (pakkun->unk199) {
 			pakkun->updateSquareToMario();
 			if (pakkun->getDistToMarioSquared() < farClip * farClip)
@@ -261,10 +262,12 @@ void TPakkun::load(JSUMemoryInputStream& stream)
 {
 	TSmallEnemy::load(stream);
 	reset();
-	TPathNode marioNode((THitActor*)gpMarioAddress);
+	THitActor* mario = (THitActor*)gpMarioAddress;
+	TPathNode marioNode(mario);
 	setGoalPath(marioNode);
 }
 
+// TODO: frame-only mismatch (0xa0 bytes; target 0xb8).
 void TPakkun::init(TLiveManager* manager)
 {
 	TSmallEnemy::init(manager);
@@ -296,8 +299,8 @@ void TPakkun::init(TLiveManager* manager)
 		                     "H_ma_rak_dummy", *mask);
 	}
 
-	for (u16 i = 0; i < mMActor->getModel()->getModelData()->getMaterialNum();
-	     ++i) {
+	for (u16 i = 0;
+	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
 		SMS_InitPacket_OneTevKColor(mMActor->getModel(), i, GX_KCOLOR0,
 		                            &unk1B2);
 	}
@@ -326,7 +329,10 @@ void TPakkun::setDeadAnm()
 }
 
 // UNUSED
-bool TPakkun::isHideEnd() const { return false; }
+bool TPakkun::isHideEnd() const
+{
+	return unk194->isState(PAKKUN_SEED_STATE_HIDE);
+}
 
 void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -345,21 +351,22 @@ void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (cue & CUE_CALC_ANIM) {
 					mMActor->frameUpdate();
 				}
-			} else {
-				if (cue & CUE_CALC_ANIM) {
-					calcRootMatrix();
-					updateAnmSound();
-					mMActor->calcAnm();
-				}
-				if (checkLiveFlag(LIVE_FLAG_HIDDEN)) {
-					return;
-				}
-				if (cue & CUE_CALC_VIEW) {
-					mMActor->viewCalc();
-				}
-				if (cue & CUE_ENTRY) {
-					drawObject(graphics);
-				}
+				return;
+			}
+
+			if (cue & CUE_CALC_ANIM) {
+				calcRootMatrix();
+				updateAnmSound();
+				getMActor()->calcAnm();
+			}
+			if (checkLiveFlag(LIVE_FLAG_HIDDEN)) {
+				return;
+			}
+			if (cue & CUE_CALC_VIEW) {
+				mMActor->viewCalc();
+			}
+			if (cue & CUE_ENTRY) {
+				drawObject(graphics);
 			}
 		}
 	}
@@ -408,10 +415,8 @@ void TPakkun::onShootLiner(JGeometry::TVec3<f32>& direction)
 void TPakkun::onShootCurve(JGeometry::TVec3<f32>& goal)
 {
 	setGoalPath(TPathNode(goal));
-	f32 speed   = unk1A0->mSLSeedSpeedC.get();
-	f32 gravity = unk1A0->mSLSeedGravityC.get();
-	JGeometry::TVec3<f32> velocity
-	    = calcVelocityToJumpToY(goal, speed, gravity);
+	JGeometry::TVec3<f32> velocity = calcVelocityToJumpToY(
+	    goal, unk1A0->mSLSeedSpeedC.get(), unk1A0->mSLSeedGravityC.get());
 	unk198 = 1;
 	unk194->setVelocity(velocity);
 	unk194->mRotation.set(TPakkunManager::mTestFlyAngX, 0.0f, 0.0f);
@@ -471,6 +476,7 @@ TPakkunSeed::TPakkunSeed(const char* name)
 {
 }
 
+// TODO: frame-only mismatch: list iterator stack slots differ.
 void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model_name)
 {
 	unk160        = host;
@@ -490,8 +496,11 @@ void TPakkunSeed::loadInit(TSpineEnemy* host, const char* model_name)
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150       = 0;
 	mGroundPlane = TMap::getIllegalCheckData();
-	mMActor->getModel()->getModelData()->getJointNodePointer(0)->setCallBack(
-	    PakkunSeedCallback);
+	getMActor()
+	    ->getModel()
+	    ->getModelData()
+	    ->getJointNodePointer(0)
+	    ->setCallBack(PakkunSeedCallback);
 }
 
 void TPakkunSeed::moveObject()
@@ -501,8 +510,8 @@ void TPakkunSeed::moveObject()
 	if (!unk168) {
 		unk170 = MsWrap(unk170 + 5.0f, 0.0f, 360.0f);
 		if (mPosition.y > mGroundHeight + 20.0f) {
-			JGeometry::TVec3<f32> velocity = getVelocity();
-			mRotation.x                    = MsGetRotFromZaxis(velocity).x;
+			mRotation.x
+			    = MsGetRotFromZaxis(JGeometry::TVec3<f32>(getVelocityRef())).x;
 		}
 	} else {
 		unk170 = MsClamp(unk170 + 5.0f, 0.0f, 360.0f);
@@ -531,8 +540,10 @@ void TPakkunSeed::behaveToHitWall(const TBGCheckData* ground)
 
 void TPakkunSeed::calcRootMatrix()
 {
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_PAKKUN_SEED_FLY, &mPosition, 0,
-	                                nullptr, 0, 4);
+	// TODO: MSound::startSoundActor is fabricated; use the gated sound API.
+	if (SMSGetMSound()->gateCheck(MSD_SE_EN_PAKKUN_SEED_FLY))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_EN_PAKKUN_SEED_FLY, getPosition(), 0, nullptr, 0, 4);
 
 	TEnemyAttachment::calcRootMatrix();
 	gpCurPakkunSeed = this;
@@ -592,6 +603,8 @@ void TPakkunSeed::shoot()
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
+// TODO: frame is 0x58 bytes (target 0x78); pollution multiply operands and
+// .sdata2 order also differ.
 void TPakkunSeed::rebirth()
 {
 	if (unk16C->unk199) {
@@ -619,7 +632,7 @@ void TPakkunSeed::rebirth()
 		return;
 	}
 
-	if (!mGroundPlane->isWaterSurface()) {
+	if (!getGroundPlane()->isWaterSurface()) {
 		unk16C->createPakkunSmoke(mPosition);
 		return;
 	}
@@ -656,9 +669,11 @@ void TPakkunSeed::seedSet()
 
 void TPakkunSeed::forceKill()
 {
-	if (!mGroundPlane->isPool() && !mGroundPlane->isIllegalData()
-	    && gpMap->isInArea(mPosition.x, mPosition.z))
-		return;
+	if (!mGroundPlane->isPool()) {
+		bool illegalData = mGroundPlane->isIllegalData();
+		if (!illegalData && gpMap->isInArea(mPosition.x, mPosition.z))
+			return;
+	}
 
 	kill();
 	if (!unk16C->unk199 && unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
@@ -702,7 +717,8 @@ void TStayPakkun::genRandomItem()
 	manager->unk64->mPos.value = unk1A4;
 	gpModelWaterManager->emitRequest(*manager->unk64);
 
-	s32 maxWater = SMS_GetMarioWaterGun()->getMaxWater();
+	const TWaterGun* waterGun = SMS_GetMarioWaterGun();
+	s32 maxWater = waterGun->getCurrentNozzle()->mEmitParams.mAmountMax.get();
 	if (SMS_GetMarioWaterGun()->getCurrentWater() * 4 < maxWater) {
 		gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
 		                             ACTOR_TYPE_BOTTLE_LARGE, true);
@@ -760,8 +776,9 @@ bool TStayPakkun::isHitValid(u32 message)
 		mSpine->setNext(&TNerveStayPakkunHide::theNerve());
 		unk1BC = 1;
 
+		f32 range = getSaveParam()->getSLPolluteRange();
 		gpPollution->clean(mPosition.x, mGroundHeight, mPosition.z,
-		                   32.0f * getSaveParam()->getSLPolluteRange());
+		                   32.0f * range);
 		if (unk194->isState(PAKKUN_SEED_STATE_HIDE))
 			unk194->kill();
 		setBckAnm(PAKKUN_ANM_CRUSH_TO_HIDE);
@@ -806,6 +823,7 @@ TPakkunSaveLoadParams* TStayPakkun::getSaveParam() const
 	return ((TPakkunManager*)mManager)->unk60;
 }
 
+// TODO: frame-only mismatch (0x68 bytes; target 0x80).
 DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 {
 	TPakkun* self = (TPakkun*)spine->getBody();
@@ -818,21 +836,19 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 	if (self->getHolder() != nullptr)
 		return false;
 
-	TPakkunSeed* seed = self->unk194;
-
-	if (seed->isState(PAKKUN_SEED_STATE_APPEAR)) {
-		seed->seedSet();
+	if (self->unk194->isState(PAKKUN_SEED_STATE_APPEAR)) {
+		self->unk194->seedSet();
 
 		if (spine->getTime() % 5 == 0) {
 			self->updateSquareToMario();
-			if (self->getDistToMarioSquared()
-			    < self->unk1A0->mSLGenerateSeedDist.get()
-			          * self->unk1A0->mSLGenerateSeedDist.get())
+			f32 generateDist = self->unk1A0->mSLGenerateSeedDist.get();
+			generateDist *= generateDist;
+			if (self->getDistToMarioSquared() < generateDist)
 				self->unk194->unk150 = PAKKUN_SEED_STATE_SET;
 		}
 	}
 
-	if (self->unk194->isState(PAKKUN_SEED_STATE_HIDE)) {
+	if (self->isHideEnd()) {
 		self->mPosition   = self->unk194->getPosition();
 		self->mPosition.y = self->unk194->getGroundHeight();
 		spine->pushAfterCurrent(&TNervePakkunAppear::theNerve());
@@ -843,70 +859,83 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 	return false;
 }
 
+// fabricated: mirrors the distance helper in mameGesso.cpp and
+// walkerEnemy.cpp; the copy/subtract/length sequence is present at all sites.
+static inline f32 dist(const JGeometry::TVec3<f32>& a,
+                       const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> diff = a;
+	diff.sub(b);
+	return diff.length();
+}
+
+// TODO: inline slots and curve-shot parameter loads differ;
+// frame is 0x2d8 bytes (target 0x2d0).
 DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 {
 	TPakkun* self = (TPakkun*)spine->getBody();
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	s32 waitTime  = ((TSmallEnemyParams*)self->getSaveParam())->getSLWaitTime();
+	s32 waitTime  = self->getSaveParams()->mSLWaitTime.get();
 	s32 readyTime = self->unk1A0->mSLReadyTime.get();
 
 	if (self->unk194->isState(PAKKUN_SEED_STATE_HIDE)
 	    && self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && (spine->getTime() >= readyTime || spine->getTime() >= waitTime
 	        || self->unk1B1)) {
-		f32 goalDistance = self->unk104.getPoint().distance(self->mPosition);
+		const JGeometry::TVec3<f32>& goalPos = self->unk104.getPoint();
+		f32 goalDistance                     = dist(goalPos, self->mPosition);
 		f32 shootRange   = self->unk1A0->mSLShootRange.get();
 		f32 distanceRate = 1.0f;
 		if (self->unk199) {
 			distanceRate = 3.0f;
 		}
 		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
+		JGeometry::TVec3<f32> goal;
 
 		if (goalDistance < shootRange * distanceRate || self->unk199) {
-			if (fabsf(marioPos.y - self->mPosition.y)
-			        < ((TSmallEnemyParams*)self->getSaveParam())
-			                  ->getSLSearchHeight()
-			              * distanceRate
-			    && self->isInSight(marioPos,
-			                       ((TSmallEnemyParams*)self->getSaveParam())
-			                               ->getSLSearchLength()
-			                           * distanceRate,
-			                       ((TSmallEnemyParams*)self->getSaveParam())
-			                               ->getSLSearchAngle()
-			                           * distanceRate,
-			                       ((TSmallEnemyParams*)self->getSaveParam())
-			                               ->getSLSearchAware()
-			                           * distanceRate)) {
-				spine->pushAfterCurrent(&TNervePakkunStay::theNerve());
-				spine->pushAfterCurrent(&TNervePakkunShoot::theNerve());
-				self->unk1B1 = 0;
+			f32 searchHeight = ((TSmallEnemyParams*)self->getSaveParam())
+			                       ->getSLSearchHeight();
+			if (fabsf(SMS_GetMarioPos().y - self->mPosition.y)
+			    < searchHeight * distanceRate) {
+				f32 searchLength = ((TSmallEnemyParams*)self->getSaveParam())
+				                       ->getSLSearchLength();
+				f32 searchAngle = ((TSmallEnemyParams*)self->getSaveParam())
+				                      ->getSLSearchAngle();
+				f32 searchAware = ((TSmallEnemyParams*)self->getSaveParam())
+				                      ->getSLSearchAware();
+				if (self->isInSight(marioPos, searchLength * distanceRate,
+				                    searchAngle * distanceRate,
+				                    searchAware * distanceRate)) {
+					spine->pushAfterCurrent(&TNervePakkunStay::theNerve());
+					spine->pushAfterCurrent(&TNervePakkunShoot::theNerve());
+					self->unk1B1 = 0;
 
-				if (!self->unk1B0 || self->unk199) {
-					JGeometry::TVec3<f32> direction(
-					    SMS_GetMarioPos().x - self->mPosition.x,
-					    SMS_GetMarioPos().y - self->mPosition.y,
-					    SMS_GetMarioPos().z - self->mPosition.z);
-					self->onShootLiner(direction);
-				} else {
-					self->unk1B0               = 0;
-					JGeometry::TVec3<f32> goal = self->unk104.getPoint();
-					self->onShootCurve(goal);
+					if (!self->unk1B0 || self->unk199) {
+						JGeometry::TVec3<f32> direction(
+						    SMS_GetMarioPos().x - self->mPosition.x,
+						    SMS_GetMarioPos().y - self->mPosition.y,
+						    SMS_GetMarioPos().z - self->mPosition.z);
+						self->onShootLiner(direction);
+					} else {
+						self->unk1B0 = 0;
+						goal         = self->getUnk104().getPoint();
+						self->onShootCurve(goal);
+					}
+					return true;
 				}
-				return true;
 			}
 		} else if (spine->getTime() >= waitTime) {
 			spine->pushAfterCurrent(&TNervePakkunHide::theNerve());
 			spine->pushAfterCurrent(&TNervePakkunShoot::theNerve());
 
-			int angle                  = (int)MsRandF(0.0f, 36000.0f);
-			JGeometry::TVec3<f32> goal = self->unk104.getPoint();
-			if (goal.distance(self->mPosition)
+			int angle = TMsRange<f32>(0.0f, 36000.0f).rand();
+			goal      = self->getUnk104().getPoint();
+			if (dist(self->unk104.getPoint(), self->mPosition)
 			    > self->unk1A0->mSLLimitMove.get()) {
-				goal.x = SMS_GetMarioPos().x - self->mPosition.x;
-				goal.y = 0.0f;
-				goal.z = SMS_GetMarioPos().z - self->mPosition.z;
+				goal.set(SMS_GetMarioPos().x - self->mPosition.x, 0.0f,
+				         SMS_GetMarioPos().z - self->mPosition.z);
 				if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
 					goal.x += 1.0f;
 				MsVECNormalize(&goal, &goal);
@@ -928,9 +957,9 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 
 	self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 	if (self->unk199 && !self->isFindMario(1.0f)) {
-		f32 giveUpLength
-		    = ((TSmallEnemyParams*)self->getSaveParam())->getSLGiveUpLength();
-		if (self->unk104.getPoint().distance(self->mPosition) > giveUpLength) {
+		f32 giveUpLength = self->getSaveParams()->mSLGiveUpLength.get();
+		const JGeometry::TVec3<f32>& giveUpGoalPos = self->unk104.getPoint();
+		if (dist(giveUpGoalPos, self->mPosition) > giveUpLength) {
 			spine->pushAfterCurrent(&TNerveStayPakkunHide::theNerve());
 			return true;
 		}
@@ -947,7 +976,9 @@ DEFINE_NERVE(TNervePakkunAppear, TLiveActor)
 		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(100.0f)) { }
+	// TODO: frame-100 body is gone; clipping guard inferred from Stay appear.
+	if (self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(100.0f)
+	    && !self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) { }
 	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNervePakkunStay::theNerve());
 		return true;
@@ -1067,7 +1098,7 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 		}
 	}
 
-	self->walkToCurPathNode(0.0f, self->getTurnSpeed() * 3.0f, 0.0f);
+	self->walkToCurPathNode(0.0f, self->mTurnSpeed * 3.0f, 0.0f);
 	return false;
 }
 

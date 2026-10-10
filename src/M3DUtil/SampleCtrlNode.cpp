@@ -34,10 +34,11 @@ SampleCtrlMaterial::SampleCtrlMaterial(J3DMaterial* material)
 		unk18[i].mAmbSrc    = material->getColorChan(i)->getAmbSrc();
 		unk18[i].mLightMask = material->getColorChan(i)->getLightMask();
 		unk18[i].mDiffuseFn = material->getColorChan(i)->getDiffuseFn();
-		unk18[i].mAttnFn    = material->getColorChan(i)->getAttnFn();
+		unk18[i].mAttnFn
+		    = material->getColorBlock()->getColorChan(i)->getAttnFn();
 	}
 
-	unk38 = *material->getTevOrder(0);
+	unk38 = *material->getTevBlock()->getTevOrder(0);
 
 	u8 stageNum = material->getTevStageNum();
 	for (u8 i = 0; i < stageNum; ++i) {

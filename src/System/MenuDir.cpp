@@ -66,6 +66,8 @@ void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	OSResumeThread(&gSetupThread);
 }
 
+// TODO: nonmatching inline stack layout.
+// Current frame is 0x298; the target uses 0x2f0. No padding added.
 int TMenuDirector::rsetup()
 {
 	void* arcBlob      = SMSLoadArchive("/data/title.arc", nullptr, 0, nullptr);
@@ -85,7 +87,8 @@ int TMenuDirector::rsetup()
 	if (!unk3C)
 		return 1;
 
-	group2d->getChildren().push_back(new TMenuBase(unk3C));
+	JDrama::TViewObj* menuBase = new TMenuBase(unk3C);
+	group2d->getChildren().push_back(menuBase);
 
 	unk20 = unk3C->search('lisA');
 	unk20->hide();
@@ -123,7 +126,7 @@ int TMenuDirector::rsetup()
 			char acStack_40[22];
 			if (message)
 				snprintf(acStack_40, 22, "%02d %s", i, message);
-			else if (i == 17 || i == 18)
+			else if (!(i != 17 && i != 18))
 				snprintf(acStack_40, 22, "show movie %d", i == 17 ? 1 : 2);
 			else
 				snprintf(acStack_40, 22, "%02d No Data            ", i);
@@ -164,6 +167,8 @@ int TMenuDirector::rsetup()
 	return 0;
 }
 
+// TODO: nonmatching next-area copy/inline stack layout.
+// Current frame is 0x88; the target uses 0x128. No padding added.
 int TMenuDirector::direct()
 {
 	if (!unk50) {
@@ -263,7 +268,7 @@ int TMenuDirector::direct()
 					if (i == 9)
 						snprintf(box->getStringPtr(), 22, "ボス");
 				}
-			} else if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12) {
+			} else if (!(unk40->unk2C != 0x11 && unk40->unk2C != 0x12)) {
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)

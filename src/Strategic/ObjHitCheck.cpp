@@ -93,31 +93,32 @@ TObjHitCheck::checkWaterWithActorsInList(const JGeometry::TVec3<f32>& pos,
 	return nullptr;
 }
 
-#pragma dont_inline on
 void TObjHitCheck::checkWater()
 {
+	const JGeometry::TVec3<f32>* pos;
+	const JGeometry::TVec3<f32>* particlePositions
+	    = gpModelWaterManager->mParticlePositionSOA;
+	THitActor** particleHitActors = gpModelWaterManager->unk2514;
 	f32 fVar2 = TModelWaterManager::mStaticHitActor.getEntryRadius();
 
-	const JGeometry::TVec3<f32>* particlePositions
-	    = gpModelWaterManager->getParticlePositions();
-	THitActor** particleHitActors = gpModelWaterManager->getParticleUnk2514();
-
 	for (int i = 0; i < gpModelWaterManager->getParticleCount(); ++i) {
-		if (!gpModelWaterManager->checkFlagBottom4Bits(i, 0x1))
+		bool shouldCheck = gpModelWaterManager->checkFlagBottom4Bits(i, 0x1);
+		if (!shouldCheck)
 			continue;
 
-		const JGeometry::TVec3<f32>& pos = particlePositions[i];
+		pos = &particlePositions[i];
 
 		u32 e;
-		u32 j = getTableIndex(pos, fVar2, &e);
+		u32 j = getTableIndex(*pos, fVar2, &e);
 
-		TObjCheckList& list = unk0[j];
+		TObjCheckList* list = getCheckList(j);
 
-		if (j != e)
-			particleHitActors[i] = checkWaterWithActorsInList(pos, list.unk0);
+		if (j != e) {
+			THitActor* hit = checkWaterWithActorsInList(*pos, list->getNext());
+			particleHitActors[i] = hit;
+		}
 	}
 }
-#pragma dont_inline off
 
 void TObjHitCheck::entryActor(THitActor* actor, TObjCheckList* head)
 {
@@ -136,7 +137,10 @@ void TObjHitCheck::entryActor(THitActor* actor, TObjCheckList* head)
 u32 TObjHitCheck::getTableIndex(const JGeometry::TVec3<f32>& pos,
                                 f32 entry_radius, u32* out)
 {
-	f32 fVar1 = abs(pos.x) + abs(pos.y) + abs(pos.z);
+	f32 y     = abs(pos.y);
+	f32 x     = abs(pos.x);
+	f32 z     = abs(pos.z);
+	f32 fVar1 = x + y + z;
 
 	u32 i = (fVar1 - entry_radius) * (10.f / 700.f);
 	*out  = (fVar1 + entry_radius) * (10.f / 700.f);
@@ -148,16 +152,16 @@ u32 TObjHitCheck::getTableIndex(const JGeometry::TVec3<f32>& pos,
 
 void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
-	     ++it) {
+	JGadget::TList_pointer<THitActor*>& children = *group;
+	TIdxGroupObj::iterator end                   = children.end();
+	for (TIdxGroupObj::iterator it = children.begin(); it != end; ++it) {
 		(*it)->mColCount = 0;
 
 		if ((*it)->checkHitFilter(HIT_FILTER_NO_COLLISION))
 			continue;
 
 		u32 e;
-		u32 i = getTableIndex((*it)->mPosition, (*it)->mEntryRadius, &e);
+		u32 i = getTableIndex((*it)->mPosition, (*it)->getEntryRadius(), &e);
 
 		while (i != e) {
 			checkActorsInList(*it, unk0[i].unk0);
@@ -174,9 +178,9 @@ void TObjHitCheck::checkAndEntryGroup(TIdxGroupObj* group)
 
 void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
-	     ++it) {
+	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
+	TIdxGroupObj::iterator end                   = children.end();
+	for (TIdxGroupObj::iterator it = children.begin(); it != end; ++it) {
 		(*it)->mColCount = 0;
 
 		if ((*it)->checkHitFilter(HIT_FILTER_NO_COLLISION))
@@ -198,20 +202,20 @@ void TObjHitCheck::entryGroup(TIdxGroupObj* group)
 
 void TObjHitCheck::clearGroup(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
+	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
+	TIdxGroupObj::iterator end                   = children.end();
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
-	     ++it)
+	for (TIdxGroupObj::iterator it = children.begin(); it != end; ++it)
 		(*it)->mColCount = 0;
 }
 
 void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 {
-	TIdxGroupObj::iterator end = group->getChildren().end();
-	THitActor* mario           = (THitActor*)gpMarioAddress;
+	JGadget::TList_pointer<THitActor*>& children = group->getChildren();
+	TIdxGroupObj::iterator end                   = children.end();
+	THitActor* mario                             = (THitActor*)gpMarioAddress;
 
-	for (TIdxGroupObj::iterator it = group->getChildren().begin(); it != end;
-	     ++it) {
+	for (TIdxGroupObj::iterator it = children.begin(); it != end; ++it) {
 		(*it)->mColCount = 0;
 		if ((*it)->checkHitFilter(HIT_FILTER_NO_COLLISION))
 			continue;
@@ -226,6 +230,7 @@ void TObjHitCheck::checkGroupPlayer(TIdxGroupObj* group)
 
 void TObjHitCheck::checkGroup(TIdxGroupObj* group) { }
 
+// TODO: frame-only mismatch (0xb8 vs. 0xd8), including iterator stack slots.
 void TObjHitCheck::checkActorsHit()
 {
 	initTable();
@@ -249,6 +254,7 @@ void TObjHitCheck::checkActorsHit()
 		checkGroupPlayer(gpStrategy->mGroups[IDX_GROUP_ITEM]);
 }
 
+// TODO: frame-only mismatch (0x1f8 vs. 0x228), including iterator stack slots.
 void TObjHitCheck::clearHitNum()
 {
 	if (!gpStrategy->isHitCheckOff(HIT_CHECK_OFF_ENEMY))

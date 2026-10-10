@@ -33,21 +33,11 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: this definitely means that the no memory msg & zeros are from a
-// different header than mtx calc types
-
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/DummyStrings.hpp>
 
 // NOTE: has to be here for proper rodata order
 #include <Map/MapCollisionEntry.hpp>
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
+#include <M3DUtil/InfectiousStrings.hpp>
 
 int TSmallEnemyManager::mBlockWaitTime   = 400;
 f32 TSmallEnemyManager::mBlockMoveSpeed  = 2.0f;
@@ -243,15 +233,16 @@ void TSmallEnemy::attackToMario()
 {
 	sendAttackMsgToMario();
 
-	// TODO: wtf
 	JGeometry::TVec3<f32> local_14(0, 0, 0);
 
-	JGeometry::TVec3<f32> local_20;
-	local_20.sub(mPosition, SMS_GetMarioPos());
+	JGeometry::TVec3<f32> local_20(mPosition.x - SMS_GetMarioPos().x,
+	                               mPosition.y - SMS_GetMarioPos().y,
+	                               mPosition.z - SMS_GetMarioPos().z);
 	MsVECNormalize(&local_20, &local_20);
 	mVelocity.x = local_20.x;
 	mVelocity.z = local_20.z;
-	local_20.scale(mBodyScale * mBodyRadius);
+
+	local_20.scale(getBodyRadius(), local_20);
 	local_14 += local_20;
 	mPositionDelta = local_14;
 }
@@ -267,8 +258,8 @@ void TSmallEnemy::reset()
 	unk190 = unk154 = mBodyScale;
 
 	mBodyRadius       = getSaveParams()->mSLBodyRadius.get();
-	mWallRadius       = getSaveParams()->mSLWallRadius.get();
-	mHeadHeight       = getSaveParams()->mSLHeadHeight.get();
+	mWallRadius       = getSaveParam()->mSLWallRadius.get();
+	mHeadHeight       = getSaveParam()->mSLHeadHeight.get();
 	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
 
 	mHitPoints = getMaxHitPoints();
@@ -299,12 +290,8 @@ void TSmallEnemy::reset()
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
 	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 
-	attackRadius *= mBodyScale;
-	attackHeight *= mBodyScale;
-	damageRadius *= mBodyScale;
-	damageHeight *= mBodyScale;
-
-	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+	setHitParams(attackRadius * mBodyScale, attackHeight * mBodyScale,
+	             damageRadius * mBodyScale, damageHeight * mBodyScale);
 
 	unk164 = 0;
 
@@ -343,6 +330,8 @@ void TSmallEnemy::genRandomItem()
 		generateItem();
 }
 
+// TODO: Last matrix store and first vector store are scheduled in reverse
+// order.
 void TSmallEnemy::genEventCoin()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK20000))
@@ -367,7 +356,7 @@ void TSmallEnemy::genEventCoin()
 
 	if (unk18C > 0) {
 		for (int i = 0; i < unk18C; ++i) {
-			Mtx44 local_c0;
+			TMtx34f local_c0;
 
 			f32 angle = 360.0f / unk18C * i + mRotation.y;
 			MsMtxSetRotY(local_c0, angle);
@@ -405,7 +394,7 @@ void TSmallEnemy::setAfterDeadEffect()
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_ENM_DISAP_B, &mPosition, 0, nullptr)) {
-		emitter->setGlobalScale(mScaling);
+		emitter->setGlobalScale(getScaling());
 	}
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
@@ -414,7 +403,8 @@ void TSmallEnemy::setAfterDeadEffect()
 
 void TSmallEnemy::generateItem()
 {
-	f32 rand = TMsRange<f32>(0.0f, 100.0f).rand();
+	TMsRange<f32> range(0.0f, 100.0f);
+	f32 rand = range.rand();
 	(void)rand; // TODO: due to rand being incorrect
 	f32 eggRate  = getSaveParams()->mSLGenEggRate.get();
 	f32 itemRate = getSaveParams()->mSLGenItemRate.get();
@@ -439,19 +429,17 @@ void TSmallEnemy::moveObject()
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	f32 attackRadius = getSaveParams()->getSLAttackRadius();
-	f32 attackHeight = getSaveParams()->getSLAttackHeight();
-	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	TSmallEnemyParams* params = static_cast<TSmallEnemyParams*>(getSaveParam());
+	f32 attackRadius          = params->getSLAttackRadius();
+	f32 attackHeight
+	    = static_cast<TSmallEnemyParams*>(getSaveParam())->getSLAttackHeight();
+	f32 damageRadius
+	    = static_cast<TSmallEnemyParams*>(getSaveParam())->getSLDamageRadius();
+	f32 damageHeight
+	    = static_cast<TSmallEnemyParams*>(getSaveParam())->getSLDamageHeight();
 
-	f32 scale = mBodyScale;
-
-	mAttackRadius = attackRadius * scale;
-	mAttackHeight = attackHeight * scale;
-	mDamageRadius = damageRadius * scale;
-	mDamageHeight = damageHeight * scale;
-
-	calcEntryRadius();
+	setHitParams(attackRadius * mBodyScale, attackHeight * mBodyScale,
+	             damageRadius * mBodyScale, damageHeight * mBodyScale);
 	ensureTakeSituation();
 	mPositionDelta.zero();
 	mRotationDelta.zero();
@@ -460,30 +448,14 @@ void TSmallEnemy::moveObject()
 	if (!isInhibitedForceMove())
 		calcRideMomentum();
 
-	for (int i = 0; i < getColNum(); ++i) {
-		THitActor* col = getCollision(i);
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* col = mCollisions[i];
 		if (col->isActorType(ACTOR_TYPE_MARIO)) {
 			attackToMario();
 			continue;
 		}
 
-		if (!isCollidMove(col))
-			continue;
-
-		JGeometry::TVec3<f32> v;
-		v.zero();
-
-		JGeometry::TVec3<f32> local_74(mPosition.x - col->mPosition.x,
-		                               mPosition.y - col->mPosition.y,
-		                               mPosition.z - col->mPosition.z);
-		if (local_74.x == 0.0f && local_74.y == 0.0f && local_74.z == 0.0f)
-			local_74.x += 1;
-
-		MsVECNormalize(&local_74, &local_74);
-		local_74.scale(mMarchSpeed * 3.0f * unk158);
-
-		v.add(local_74);
-		mPositionDelta = v;
+		behaveToHitOthers(col);
 	}
 
 	bind();
@@ -581,7 +553,8 @@ bool TSmallEnemy::changeByJuice()
 
 		mJuiceBlock->mScaling.set(0.1f, 0.1f, 0.1f);
 		mJuiceBlock->unk140.set(0.0f, 0.0f, 0.0f);
-		mJuiceBlock->mRotation.set(0.0f, mRotation.y, 0.0f);
+		mJuiceBlock->mRotation.set(
+		    JGeometry::TVec3<f32>(0.0f, mRotation.y, 0.0f));
 
 		mJuiceBlock->unk14C = this;
 		mJuiceBlock->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -625,11 +598,11 @@ int TSmallEnemy::getChangeBlockTime()
 	return TSmallEnemyManager::mChangeBlockTime;
 }
 
+// TODO: frame-only mismatch (0x130 bytes here, 0x138 in the original).
 bool TSmallEnemy::changeMove()
 {
-	if (mSpine->getTime() <= TSmallEnemyManager::mBlockWaitTime * 0.2f) {
-		f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
-
+	f32 time = TSmallEnemyManager::mBlockWaitTime * 0.2f;
+	if (mSpine->getTime() <= time) {
 		mJuiceBlock->mPosition.y
 		    = mPosition.y
 		      + TSmallEnemyManager::mBlockWaitMoveY * 2.0f
@@ -647,6 +620,7 @@ bool TSmallEnemy::changeMove()
 				}
 			}
 
+			const TBGCheckData* local_2C;
 			switch (unk185) {
 			case 1:
 				return false;
@@ -665,11 +639,10 @@ bool TSmallEnemy::changeMove()
 				        &mJuiceBlock->mPosition.z, mBodyRadius * 20.0f))
 					return true;
 
-				JGeometry::TVec3<f32> local_74 = mJuiceBlock->mPosition;
+				Vec local_74 = mJuiceBlock->getPosition();
 				local_74.x += local_38.x * 300.0f;
 				local_74.z += local_38.z * 300.0f;
 
-				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkGround(local_74.x, local_74.y + mHeadHeight,
 				                           local_74.z, &local_2C);
 				if (d > mJuiceBlock->mPosition.y)
@@ -679,12 +652,11 @@ bool TSmallEnemy::changeMove()
 
 			case 3: {
 				mJuiceBlock->mPosition.y += TSmallEnemyManager::mBlockMoveSpeed;
-				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkRoof(mJuiceBlock->mPosition.x,
 				                         mJuiceBlock->mPosition.y + mHeadHeight,
 				                         mJuiceBlock->mPosition.z, &local_2C);
 				if (local_2C && mJuiceBlock->mPosition.y + mHeadHeight > d
-				    && local_2C->mActor != mJuiceBlock)
+				    && local_2C->getActor() != mJuiceBlock)
 					return true;
 				break;
 			}
@@ -735,7 +707,7 @@ void TSmallEnemy::changeOut()
 	                                nullptr, 0, 4);
 
 	kill();
-	mPosition = mJuiceBlock->mPosition;
+	mPosition = mJuiceBlock->getPosition();
 
 	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -783,11 +755,7 @@ bool TSmallEnemy::isFindMario(float param_1)
 	if (isAirborne())
 		return false;
 
-	bool result = false;
-
-	if (!isMarioInWater() && isFindMarioFromParam(param_1))
-		result = true;
-
+	bool result = !isMarioInWater() && isFindMarioFromParam(param_1);
 	return result;
 }
 
@@ -814,8 +782,11 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 		f32 searchAngle  = prms->mSLSearchAngle.get();
 		f32 searchAware  = prms->mSLSearchAware.get();
 
-		if (isInSight(marioPos, searchLength * param_1, searchAngle * param_1,
-		              searchAware * param_1))
+		searchLength *= param_1;
+		searchAngle *= param_1;
+		searchAware *= param_1;
+
+		if (isInSight(marioPos, searchLength, searchAngle, searchAware))
 			return true;
 		else
 			return false;
@@ -839,8 +810,9 @@ void TSmallEnemy::generateEffectColumWater()
 
 	enemy->generate(mPosition, mScaling);
 
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_TOBIPUKU_TOWATER, &mPosition, 0,
-	                                nullptr, 0, 4);
+	if (SMSGetMSound()->gateCheck(MSD_SE_EN_TOBIPUKU_TOWATER))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_EN_TOBIPUKU_TOWATER, getPosition(), 0, nullptr, 0, 4);
 }
 
 void TSmallEnemy::setBckAnm(int index)
@@ -853,16 +825,13 @@ void TSmallEnemy::setBckAnm(int index)
 void TSmallEnemy::expandCollision()
 {
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
-	f32 attackHeight = getSaveParams()->getSLAttackHeight();
-	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 attackHeight = getSaveParams()->mSLAttackHeight.get();
+	f32 damageRadius = getSaveParams()->mSLDamageRadius.get();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
 
-	attackRadius *= unk190 / unk154;
-	attackHeight *= unk190 / unk154;
-	damageRadius *= unk190 / unk154;
-	damageHeight *= unk190 / unk154;
-
-	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+	f32 scale = unk190 / unk154;
+	setHitParams(attackRadius * scale, attackHeight * scale,
+	             damageRadius * scale, damageHeight * scale);
 }
 
 bool TSmallEnemy::isEaten()
@@ -871,7 +840,9 @@ bool TSmallEnemy::isEaten()
 		MtxPtr mtx = mHolder->getTakingMtx();
 		if (mtx) {
 			getModel()->setBaseTRMtx(mtx);
-			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			mPosition.set(((TMtx34f*)mtx)->ref(0, 3),
+			              ((TMtx34f*)mtx)->ref(1, 3),
+			              ((TMtx34f*)mtx)->ref(2, 3));
 
 			return true;
 		}
@@ -1007,7 +978,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
-	int freezeTime = self->getSaveParams()->getSLFreezeWait();
+	int freezeTime = self->getSaveParams()->mSLFreezeWait.get();
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
@@ -1017,6 +988,8 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 		return false;
 }
 
+// TODO: checkLiveFlag2's boolean ternary differs from the integer target;
+// changing it regresses TBaseNPC::perform.
 DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 {
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
@@ -1028,8 +1001,10 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 
 		self->jumpBehavior();
 
-		JGeometry::TVec3<f32> v = self->getVelocity();
-		v.y = self->getSaveParams()->getSLJumpForce() * self->getBodyScale();
+		JGeometry::TVec3<f32> v = self->getVelocityRef();
+		f32 jumpForce           = self->getSaveParams()->getSLJumpForce();
+		f32 scale               = self->getBodyScale();
+		v.y                     = jumpForce * scale;
 		self->setVelocity(v);
 
 		self->onLiveFlag(LIVE_FLAG_UNK8000);
@@ -1047,24 +1022,27 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
+		if ((self->checkLiveFlag(LIVE_FLAG_UNK8000) ? 1 : 0)
 		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
 			return true;
 
 		self->setWaitAnm();
 		self->jumpBehavior();
 
-		JGeometry::TVec3<f32> v = self->mVelocity;
-		v.y                     = self->getSaveParams()->mSLJumpForce.get();
+		JGeometry::TVec3<f32> v = self->getVelocityRef();
+		f32 jumpForce           = self->getSaveParams()->getSLJumpForce();
+		v.y                     = jumpForce;
 		self->mVelocity         = v;
 
 		self->onLiveFlag(LIVE_FLAG_UNK8000);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-		self->mRotation.y += TMsRange<f32>(30.0f, 100.0f).rand();
+		TMsRange<f32> range(30.0f, 100.0f);
+		self->mRotation.y += range.rand();
 	}
 
-	self->mRotation.y += TMsRange<f32>(4.0f, 10.0f).rand();
+	TMsRange<f32> range(4.0f, 10.0f);
+	self->mRotation.y += range.rand();
 
 	if (!self->isAirborne() || spine->getTime() > 360) {
 		self->endHitWaterJump();

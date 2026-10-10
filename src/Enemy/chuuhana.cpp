@@ -156,7 +156,7 @@ static BOOL ChuuHanaBodyCallback(J3DNode* param_1, BOOL param_2)
 		if (gpCurChuuHana == nullptr || !gpCurChuuHana->isRolling())
 			return TRUE;
 
-		MtxPtr mtx = gpCurChuuHana->getModel()->getAnmMtx(
+		TPosition3f* mtx = (TPosition3f*)gpCurChuuHana->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 		TPosition3f scale;
 		scale.setTrans(0.0f, 0.0f, 0.0f);
@@ -173,9 +173,17 @@ static BOOL ChuuHanaBodyCallback(J3DNode* param_1, BOOL param_2)
 		VECCrossProduct(&up, &axis, &side);
 
 		f32 angle = gpCurChuuHana->unk210;
-		JGeometry::TVec3<f32> zDir(mtx[0][2], mtx[1][2], mtx[2][2]);
-		JGeometry::TVec3<f32> xDir(mtx[0][0], mtx[1][0], mtx[2][0]);
-		JGeometry::TVec3<f32> yDir(mtx[0][1], mtx[1][1], mtx[2][1]);
+		JGeometry::TVec3<f32> zDir;
+		JGeometry::TVec3<f32> xDir;
+		JGeometry::TVec3<f32> yDir;
+		mtx->getZDir(zDir);
+		// TODO: diagnostic expansion of the direction getters; not retained.
+		xDir.x = mtx->at(0, 0);
+		xDir.y = mtx->at(1, 0);
+		xDir.z = mtx->at(2, 0);
+		yDir.x = mtx->at(0, 1);
+		yDir.y = mtx->at(1, 1);
+		yDir.z = mtx->at(2, 1);
 		JGeometry::TVec3<f32> local;
 
 		f32 lenZ   = zDir.squared();
@@ -187,8 +195,8 @@ static BOOL ChuuHanaBodyCallback(J3DNode* param_1, BOOL param_2)
 		local.set(localX, localY, localZ);
 
 		MTXRotAxisRad(rot, &local, DEG_TO_RAD(angle));
-		MTXConcat(mtx, rot, mtx);
-		MTXConcat(mtx, scale, mtx);
+		MTXConcat(mtx->mMtx, rot, mtx->mMtx);
+		MTXConcat(mtx->mMtx, scale, mtx->mMtx);
 		MTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
 		MTXConcat(J3DSys::mCurrentMtx, scale, J3DSys::mCurrentMtx);
 	}
@@ -370,7 +378,9 @@ void TChuuHana::attackToMario()
 		           == &TNerveChuuHanaAttack::theNerve()) {
 			if (SMS_IsMarioTouchGround4cm()) {
 				SMS_SendMessageToMario(this, HIT_MESSAGE_THROWN);
-				JGeometry::TVec3<f32> toMario = mPosition - SMS_GetMarioPos();
+				// TODO: subtraction temporary's stack slot and .sdata2 order.
+				JGeometry::TVec3<f32> toMario
+				    = getPosition() - SMS_GetMarioPos();
 
 				Mtx rot;
 				MsMtxSetRotRPH(rot, 0.0f, MsGetRotFromZaxisY(toMario), 0.0f);
@@ -445,6 +455,7 @@ void TChuuHana::moveObject()
 
 bool TChuuHana::isCollidMove(THitActor* param_1)
 {
+	// TODO: frame-only; inlined setSafeGoal aggregate slots are 4 bytes low.
 	if (param_1->isActorType(ACTOR_TYPE_CHUU_HANA)) {
 		TChuuHana* other = (TChuuHana*)param_1;
 		if (other->isRolling()) {
@@ -453,9 +464,8 @@ bool TChuuHana::isCollidMove(THitActor* param_1)
 				forceRoll();
 		} else if (unk1B2 == 0) {
 			if (mSpine->getCurrentNerve() != &TNerveChuuHanaAttack::theNerve()
-			    && other->mInstanceIndex > mInstanceIndex) {
-				TMsRange<s32> chance(0, 100);
-				if (chance.rand() % 4 == 0)
+			    && other->mInstanceIndex > getInstanceIndex()) {
+				if (TMsRange<s32>(0, 100).rand() % 4 == 0)
 					setSafeGoal();
 			}
 		}
@@ -541,7 +551,19 @@ void TChuuHana::bind()
 	mPositionDelta = next - mPosition;
 }
 
-void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1) { }
+f32 TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1)
+{
+	// TODO: recover the remaining velocity/component-copy inline boundaries.
+	JGeometry::TVec3<f32> velocity        = getVelocity();
+	JGeometry::TVec3<f32> currentVelocity = getVelocity();
+	f32 horizontalSpeed
+	    = JGeometry::TUtil<f32>::sqrt(currentVelocity.x * currentVelocity.x
+	                                  + currentVelocity.z * currentVelocity.z);
+	VECAdd(&velocity, &param_1, &velocity);
+	velocity.y = 0.0f;
+	setVelocity(velocity);
+	return horizontalSpeed;
+}
 
 BOOL TChuuHana::receiveMessage(THitActor* sender, u32 message)
 {
@@ -636,6 +658,7 @@ void TChuuHana::checkOnPanel()
 
 bool TChuuHana::willFall(s32 param_1)
 {
+	// TODO: stack layout and the 250.0f constant's .sdata2 offset differ.
 	int index  = mInstanceIndex;
 	f32 radius = mSmallMirrorR;
 	if (index > 0)
@@ -647,7 +670,9 @@ bool TChuuHana::willFall(s32 param_1)
 
 	if (unk218 != nullptr) {
 		JGeometry::TVec3<f32> diff;
-		diff.sub(mPosition, unk218->mPosition);
+		f32 dx = mPosition.x - unk218->mPosition.x;
+		diff.set(dx, mPosition.y - unk218->mPosition.y,
+		         mPosition.z - unk218->mPosition.z);
 		if (diff.length() > radius) {
 			setSafeGoal();
 			return true;
@@ -682,16 +707,34 @@ void TChuuHana::setSafeGoal()
 {
 	unk1A4 = mCheckOnPanelTime;
 
+	int nodeNum = getTracer()->getGraph()->getNodeNum();
+	TMsRange<s32> nodeRange(0, nodeNum);
+	int nodeIndex = nodeRange.rand();
 	JGeometry::TVec3<f32> point;
-	TMsRange<s32> nodeRange(0, getTracer()->getGraph()->getNodeNum());
-	getTracer()->getGraph()->getGraphNode(nodeRange.rand()).getPoint(&point);
+	getTracer()->getGraph()->getGraphNode(nodeIndex).getPoint(&point);
 	TPathNode pathPoint(point);
 	setGoalPath(pathPoint);
 
 	unk1B2 = 1;
 }
 
-void TChuuHana::rolling() { }
+void TChuuHana::rolling()
+{
+	// TODO: recover the remaining velocity-copy inline boundaries.
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	unk204.x += 0.2f * (velocity.x - unk204.x);
+	unk204.z += 0.2f * (velocity.z - unk204.z);
+
+	unk1B8 = 2.0f
+	         * (JGeometry::TUtil<f32>::sqrt(unk204.x * unk204.x
+	                                        + unk204.z * unk204.z)
+	            / mBodyRadius);
+	unk210 += unk1B8;
+	if (unk210 > 360.0f)
+		unk210 -= 360.0f;
+	if (unk210 < 0.0f)
+		unk210 += 360.0f;
+}
 
 void TChuuHana::rollStart()
 {
@@ -705,11 +748,10 @@ void TChuuHana::checkStretchType()
 
 	f32 stretch = unk1A8;
 	if (mSpine->getCurrentNerve() == &TNerveChuuHanaKeepBalance::theNerve()) {
-		int index         = mInstanceIndex;
 		f32 reverseHeight = unk1B4->mSLReverseHeightS.get();
-		if (index > 0)
+		if ((int)getInstanceIndex() > 0)
 			reverseHeight = unk1B4->mSLReverseHeightM.get();
-		if (index > 2)
+		if ((int)getInstanceIndex() > 2)
 			reverseHeight = unk1B4->mSLReverseHeightL.get();
 
 		if (stretch > reverseHeight) {
@@ -721,11 +763,10 @@ void TChuuHana::checkStretchType()
 		}
 	}
 
-	int index         = mInstanceIndex;
 	f32 stretchHeight = unk1B4->mSLStretchHeightS.get();
-	if (index > 0)
+	if ((int)getInstanceIndex() > 0)
 		stretchHeight = unk1B4->mSLStretchHeightM.get();
-	if (index > 2)
+	if ((int)getInstanceIndex() > 2)
 		stretchHeight = unk1B4->mSLStretchHeightL.get();
 
 	if (stretch > stretchHeight) {
@@ -737,9 +778,9 @@ void TChuuHana::checkStretchType()
 	}
 
 	f32 mediumHeight = unk1B4->mSLMediumStretchHeightS.get();
-	if (index > 0)
+	if ((int)getInstanceIndex() > 0)
 		mediumHeight = unk1B4->mSLMediumStretchHeightM.get();
-	if (index > 2)
+	if ((int)getInstanceIndex() > 2)
 		mediumHeight = unk1B4->mSLMediumStretchHeightL.get();
 
 	if (stretch > mediumHeight) {
@@ -751,9 +792,9 @@ void TChuuHana::checkStretchType()
 	}
 
 	f32 smallHeight = unk1B4->mSLSmallStretchHeightS.get();
-	if (index > 0)
+	if ((int)getInstanceIndex() > 0)
 		smallHeight = unk1B4->mSLSmallStretchHeightM.get();
-	if (index > 2)
+	if ((int)getInstanceIndex() > 2)
 		smallHeight = unk1B4->mSLSmallStretchHeightL.get();
 
 	if (stretch > smallHeight) {
@@ -836,7 +877,7 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 			spine->pushAfterCurrent(&TNerveChuuHanaRoll::theNerve());
 		} else {
 			spine->reset();
-			spine->setDefaultNext();
+			spine->setNext(spine->getDefault());
 			spine->pushAfterCurrent(spine->getDefault());
 		}
 		return true;
@@ -849,8 +890,8 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 	TChuuHana* self = (TChuuHana*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(2);
-		self->mPosition.x -= 10.0f * self->unk1EC.x;
-		self->mPosition.z -= 10.0f * self->unk1EC.z;
+		self->mPosition.x = self->getPosition().x - 10.0f * self->unk1EC.x;
+		self->mPosition.z = self->getPosition().z - 10.0f * self->unk1EC.z;
 	} else if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(2)) {
 			self->setBckAnm(1);
@@ -871,7 +912,7 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 	if (TChuuHana::mAttackVersion)
 		*self->unk21C = 1;
 
-	if (!TChuuHana::mNewSw && self->getGroundPlane()->getActor() == nullptr) {
+	if (!TChuuHana::mNewSw && self->mGroundPlane->getActor() == nullptr) {
 		spine->pushAfterCurrent(&TNerveChuuHanaFall::theNerve());
 		return true;
 	}

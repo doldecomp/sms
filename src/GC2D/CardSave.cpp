@@ -140,7 +140,10 @@ void TCardSave::initData(TMarioGamePad* param_1)
 			snprintf(acStack_48, 0x28, "/game_6/timg/coin_number_%d.bti", i);
 		}
 
-		unk1C[i] = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
+		// TODO: retail keeps a separate constructor this pointer here.
+		JUTTexture* texture
+		    = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
+		unk1C[i] = texture;
 	}
 	unk48 = new TExPane(unk14, 0x775f30);
 	unk4C = unk48->getPane()->getBounds();
@@ -318,6 +321,7 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 	        param_2);
 }
 
+// TODO: nonmatching GPR allocation; frame and instruction shapes match.
 s8 TCardSave::waitForStop(TEProgress param_1)
 {
 	s8 result = -1;
@@ -361,7 +365,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 
 	case 2:
 		if (unk270->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
-			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
+			                                   nullptr, 0);
 
 			unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
 			                       unk4C.getHeight());
@@ -411,6 +416,8 @@ void TCardSave::endWaitForChoice()
 	unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(), unkE4.getHeight());
 }
 
+// TODO: nonmatching frame (0x378 vs 0x428), reset interpolator, and
+// emitter argument setup. updateCenteredSize reads size instead of offset.
 s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 {
 	s8 result = -1;
@@ -522,12 +529,11 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->mGlobalBounds;
-				JGeometry::TVec3<f32> pos;
-				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
-				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
-				pos.z = 0.0f;
-				gpEmitterManager4D2->createEmitter(pos, 0x1FA, nullptr,
-				                                   nullptr);
+				gpEmitterManager4D2->createEmitter(
+				    JGeometry::TVec3<f32>(bounds.x1 + bounds.getWidth() * 0.5f,
+				                          bounds.y1 + bounds.getHeight() * 0.5f,
+				                          0.0f),
+				    0x1FA, nullptr, nullptr);
 
 				unk44 = gpEmitterManager4D2->unkC8[0][0];
 				unk44->setRotation(0, 0, DEG2SHORTANGLE(12));
@@ -595,6 +601,8 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 	return result;
 }
 
+// TODO: nonmatching frame (0x3e8 vs 0x498) and reset interpolator.
+// TExPane::updateCenteredSize reads size instead of offset.
 s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
                               s8 param_3)
 {
@@ -646,8 +654,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 					score -= 100;
 					unk140->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
 					unk144->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk134->show();
 					unk138->hide();
+					unk134->show();
 				}
 			} else {
 				if (getBookmarkInfo().unk0 == 1) {
@@ -747,12 +755,11 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->getGlobalBounds();
-				JGeometry::TVec3<f32> pos;
-				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
-				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
-				pos.z = 0.0f;
-				gpEmitterManager4D2->createEmitter(pos, 0x1FA, nullptr,
-				                                   nullptr);
+				gpEmitterManager4D2->createEmitter(
+				    JGeometry::TVec3<f32>(bounds.x1 + bounds.getWidth() * 0.5f,
+				                          bounds.y1 + bounds.getHeight() * 0.5f,
+				                          0.0f),
+				    0x1FA, nullptr, nullptr);
 
 				unk44 = gpEmitterManager4D2->unkC8[0][0];
 				unk44->setRotation(0, 0, DEG2SHORTANGLE(12));
@@ -841,8 +848,8 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 	s8 result = -1;
 	switch (unk10) {
 	case 0:
-		setMessage(unk174, 0x200, getCurMessageID());
-		setMessage(unk178, 0x200, getCurMessageID());
+		setMessage(unk174, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk178, 0x200, (u16)cMessageID[unk310]);
 		unk178->hide();
 		unk160->getPane()->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
@@ -872,6 +879,8 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 	return result;
 }
 
+// TODO: nonmatching frame-only instructions (0x158 vs 0x168); inline
+// temporary ownership is unresolved.
 s8 TCardSave::drawMessageBM(TEProgress param_1)
 {
 
@@ -894,9 +903,8 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 		unk150->hide();
 		unkFC->getPane()->hide();
 		unk100->getPane()->hide();
-		unk154[0]->hide();
-		unk154[1]->hide();
-		unk154[2]->hide();
+		for (int i = 0; i < 3; ++i)
+			unk154[i]->hide();
 
 		unkE0->getPane()->show();
 		unkE0->setCenteredSize(20, unkE4.getWidth(), unkE4.getHeight(), 0, 0);
@@ -1006,20 +1014,33 @@ s8 TCardSave::waitForAnyKey(TEProgress param_1)
 s8 TCardSave::waitForSelectOver()
 {
 	s8 result = -1;
+	TExPane* pane;
 
 	switch (unk10) {
-	case 0:
+	case 0: {
 		unk240->getPane()->show();
-		unk240->setCenteredSize(20, unk244.getWidth(), unk244.getHeight(), 0,
-		                        0);
-		unk264[0]->hide();
-		unk254[0][0]->hide();
-		unk254[0][1]->hide();
-		unk264[1]->hide();
-		unk254[1][0]->hide();
-		unk254[1][1]->hide();
+		s32 width;
+		s32 height = unk244.getHeight();
+		width      = unk244.getWidth();
+		pane       = unk240;
+		pane->setPaneSize(20, width, height, 0, 0);
+		s32 initialX;
+		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
+		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
+		pane->setPaneOffset(20,
+		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
+		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
+		                    initialX, initialY);
+		int i = 0;
+		while (i < 2) {
+			unk264[i]->hide();
+			unk254[i][0]->hide();
+			unk254[i][1]->hide();
+			++i;
+		}
 		unk10 = 1;
 		break;
+	}
 
 	case 1:
 		if (unk240->update()) {
@@ -1056,15 +1077,25 @@ s8 TCardSave::waitForSelectOver()
 		break;
 	}
 
-	case 4:
-		unk240->setCenteredSize(20, 0, 0, unk244.getWidth(),
-		                        unk244.getHeight());
+	case 4: {
+		s32 width;
+		s32 height = unk244.getHeight();
+		width      = unk244.getWidth();
+		pane       = unk240;
+		pane->setPaneSize(20, 0, 0, width, height);
+		s32 initialX;
+		s32 initialY = (pane->mInitialBounds.getHeight() - height) * 0.5f;
+		initialX     = (pane->mInitialBounds.getWidth() - width) * 0.5f;
+		pane->setPaneOffset(20, pane->mInitialBounds.getWidth() * 0.5f,
+		                    pane->mInitialBounds.getHeight() * 0.5f, initialX,
+		                    initialY);
 		unk264[0]->hide();
 		unk264[1]->hide();
 		unk254[unk2E9][0]->hide();
 		unk254[unk2E9][1]->hide();
 		unk10 = 3;
 		break;
+	}
 
 	case 3:
 		if (unk240->update()) {
@@ -1086,9 +1117,11 @@ s8 TCardSave::waitForSelectOver()
 	return result;
 }
 
+// TODO: nonmatching message ID register allocation (r30 instead of r24).
 s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 {
 	s8 result = -1;
+	TExPane* pane;
 
 	switch (unk10) {
 	case 0: {
@@ -1116,8 +1149,18 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 
 		unk194->hide();
 		unk17C->getPane()->show();
-		unk17C->setCenteredSize(20, unk180.getWidth(), unk180.getHeight(), 0,
-		                        0);
+		s32 width;
+		s32 height = unk180.getHeight();
+		width      = unk180.getWidth();
+		pane       = unk17C;
+		pane->setPaneSize(20, width, height, 0, 0);
+		s32 initialX;
+		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
+		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
+		pane->setPaneOffset(20,
+		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
+		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
+		                    initialX, initialY);
 
 		unk198[0][1]->hide();
 		unk1A8[0][0]->hide();
@@ -1173,10 +1216,19 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		break;
 	}
 
-	case 4:
+	case 4: {
 		unk194->hide();
-		unk17C->setCenteredSize(20, 0, 0, unk180.getWidth(),
-		                        unk180.getHeight());
+		s32 width;
+		s32 height = unk180.getHeight();
+		width      = unk180.getWidth();
+		pane       = unk17C;
+		pane->setPaneSize(20, 0, 0, width, height);
+		s32 initialX;
+		s32 initialY = (pane->mInitialBounds.getHeight() - height) * 0.5f;
+		initialX     = (pane->mInitialBounds.getWidth() - width) * 0.5f;
+		pane->setPaneOffset(20, pane->mInitialBounds.getWidth() * 0.5f,
+		                    pane->mInitialBounds.getHeight() * 0.5f, initialX,
+		                    initialY);
 
 		unk198[0][1]->hide();
 		unk198[1][1]->hide();
@@ -1185,6 +1237,7 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 
 		unk10 = 3;
 		break;
+	}
 
 	case 3:
 		if (unk17C->update()) {
@@ -1206,34 +1259,40 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 	return result;
 }
 
+// TODO: text-box receivers and reduced score use r26 instead of r25.
 s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
                              TEProgress param_3)
 {
 	s8 result = -1;
 
 	switch (unk10) {
-	case 0:
+	case 0: {
 		unk1BC->getPane()->show();
-		unk1BC->setCenteredSize(20, unk1C0.getWidth(), unk1C0.getHeight(), 0,
-		                        0);
+		s32 width;
+		s32 height    = unk1C0.getHeight();
+		width         = unk1C0.getWidth();
+		TExPane* pane = unk1BC;
+		pane->setPaneSize(20, width, height, 0, 0);
+		s32 initialX;
+		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
+		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
+		pane->setPaneOffset(20,
+		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
+		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
+		                    initialX, initialY);
 
 		unk204->hide();
 		setMessage(unk200, 0x200, 0x21);
 		setMessage(unk204, 0x200, 0x21);
 
-		unk1E8[0][1]->hide();
-		unk1D0[0][0]->hide();
-		unk1D0[0][1]->hide();
-		unk1E8[1][1]->hide();
-		unk1D0[1][0]->hide();
-		unk1D0[1][1]->hide();
-		unk1E8[2][1]->hide();
-		unk1D0[2][0]->hide();
-		unk1D0[2][1]->hide();
+		for (int i = 0; i < 3; ++i) {
+			unk1E8[i][1]->hide();
+			for (int j = 0; j < 2; ++j)
+				unk1D0[i][j]->hide();
+		}
 
-		unk230[0]->hide();
-		unk230[1]->hide();
-		unk230[2]->hide();
+		for (int i = 0; i < 3; ++i)
+			unk230[i]->hide();
 		unk20C->hide();
 		unk210->hide();
 		unk214->hide();
@@ -1241,17 +1300,17 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 
 		unk10 = 1;
 		break;
+	}
 
 	case 1:
 		if (unk1BC->update()) {
 			unk10  = 2;
 			unk2E9 = 0;
 
-			unk1E8[0][1]->show();
-			unk1E8[1][1]->show();
-			unk1E8[2][1]->show();
-			unk1D0[0][0]->show();
-			unk1D0[0][1]->show();
+			for (int i = 0; i < 3; ++i)
+				unk1E8[i][1]->show();
+			for (int i = 0; i < 2; ++i)
+				unk1D0[0][i]->show();
 			unk204->show();
 
 			unk230[unk2EA]->show();
@@ -1325,19 +1384,26 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		break;
 	}
 
-	case 4:
-		unk1BC->setCenteredSize(20, 0, 0, unk1C0.getWidth(),
-		                        unk1C0.getHeight());
+	case 4: {
+		s32 width;
+		s32 height    = unk1C0.getHeight();
+		width         = unk1C0.getWidth();
+		TExPane* pane = unk1BC;
+		pane->setPaneSize(20, 0, 0, width, height);
+		s32 initialX;
+		s32 initialY = (pane->mInitialBounds.getHeight() - height) * 0.5f;
+		initialX     = (pane->mInitialBounds.getWidth() - width) * 0.5f;
+		pane->setPaneOffset(20, pane->mInitialBounds.getWidth() * 0.5f,
+		                    pane->mInitialBounds.getHeight() * 0.5f, initialX,
+		                    initialY);
 
-		unk1E8[0][1]->hide();
-		unk1E8[1][1]->hide();
-		unk1E8[2][1]->hide();
+		for (int i = 0; i < 3; ++i)
+			unk1E8[i][1]->hide();
 		unk1D0[unk2E9][0]->hide();
 		unk1D0[unk2E9][1]->hide();
 
-		unk230[0]->hide();
-		unk230[1]->hide();
-		unk230[2]->hide();
+		for (int i = 0; i < 3; ++i)
+			unk230[i]->hide();
 		unk204->hide();
 		unk20C->hide();
 		unk210->hide();
@@ -1346,6 +1412,7 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 
 		unk10 = 3;
 		break;
+	}
 
 	case 3:
 		if (unk1BC->update()) {
@@ -1369,32 +1436,43 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 	return result;
 }
 
+// TODO: closing-animation width and height use r26/r25 instead of r25/r26.
 s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 {
 	s8 result = -1;
 
 	switch (unk10) {
-	case 0:
+	case 0: {
 		setMessage(unk12C, 0x200, getCurMessageID());
-		setMessage(unk130, 0x200, getCurMessageID());
+		{
+			u16 messageID = getCurMessageID();
+			setMessage(unk130, 0x200, messageID);
+		}
 
 		unkF8->hide();
-		unk128->hide();
-		unk134->hide();
-		unk138->hide();
-		unk128->hide();
-		unk134->hide();
-		unk138->hide();
-		unk128->hide();
-		unk134->hide();
-		unk138->hide();
+		for (int i = 0; i < 3; ++i) {
+			unk128->hide();
+			unk134->hide();
+			unk138->hide();
+		}
 		unkFC->getPane()->hide();
 		unk100->getPane()->hide();
 
 		unkE0->getPane()->show();
-		unkE0->setCenteredSize(20, unkE4.getWidth(), unkE4.getHeight(), 0, 0);
+		s32 height    = unkE4.getHeight();
+		s32 width     = unkE4.getWidth();
+		TExPane* pane = unkE0;
+		pane->setPaneSize(20, width, height, 0, 0);
+		s32 initialX;
+		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
+		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
+		pane->setPaneOffset(20,
+		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
+		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
+		                    initialX, initialY);
 		unk10 = 1;
 		break;
+	}
 
 	case 1:
 		if (unkE0->update()) {
@@ -1478,13 +1556,27 @@ void TCardSave::selectBookmarks(TEProgress, TEProgress, TEProgress, TEProgress)
 {
 }
 
-void TCardSave::changePattern(J2DPicture*, s16, u32) { }
+void TCardSave::changePattern(J2DPicture* picture, s16 period, u32 frame)
+{
+	if (frame % period == 0) {
+		if ((frame / period) % 2 == 0) {
+			picture->setBlendKonstColor(0.0f, 1.0f, 0.0f, 0.0f);
+			picture->setBlendKonstAlpha(0.0f, 1.0f, 0.0f, 0.0f);
+		} else {
+			picture->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
+			picture->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+		}
+	}
+}
 
+// TODO: nonmatching frame (0x4e0 vs 0x5e8) and GPR allocation. Investigate
+// JUTRect dimension inlines in the shared setCenteredSize helper.
 void TCardSave::execMovement_()
 {
 
 	TEProgress prevState = unk310;
 	s32 prevMode         = unk10;
+	s32 status;
 
 	unk270->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 
@@ -1606,7 +1698,7 @@ void TCardSave::execMovement_()
 		break;
 
 	case PROGRESS_UNK8: {
-		s32 status = gpCardManager->getLastStatus();
+		status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_BUSY)
 			break;
 
@@ -2064,7 +2156,8 @@ void TCardSave::execIssueGX_(JDrama::TGraphics* param_1)
 	{
 		J2DOrthoGraph graph(param_1->getViewport());
 		graph.setup2D();
-		unk14->draw(0, 0, &graph);
+		const J2DGrafContext* context = &graph;
+		unk14->draw(0, 0, context);
 	}
 
 	param_1->setScissor(scissorRect);

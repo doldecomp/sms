@@ -1,6 +1,8 @@
 #ifndef ENEMY_KOOPAJR_HPP
 #define ENEMY_KOOPAJR_HPP
 
+#include <Enemy/Enemy.hpp>
+#include <Enemy/EnemyManager.hpp>
 #include <JSystem/JGeometry/JGVec3.hpp>
 #include <dolphin/types.h>
 
@@ -22,6 +24,38 @@ public:
 
 public:
 	/* 0x0 */ f32 unk0;
+};
+
+// fabricated: declaration only, layout unknown
+class TKoopaJr : public TSpineEnemy {
+public:
+	TKoopaJr(const char*);
+
+public:
+	// TODO: unknown layout, size from getNameRef_BossEnemy's operator new
+	/* 0x150 */ u8 unk150[0x20];
+};
+
+// fabricated: declaration only, layout unknown beyond TEnemyManager
+class TKoopaJrManager : public TEnemyManager {
+public:
+	TKoopaJrManager(const char*);
+};
+
+// fabricated: declaration only, layout unknown
+class TKoopaJrSubmarine : public TSpineEnemy {
+public:
+	TKoopaJrSubmarine(const char*);
+
+public:
+	// TODO: unknown layout, size from getNameRef_BossEnemy's operator new
+	/* 0x150 */ u8 unk150[0x5C];
+};
+
+// fabricated: declaration only, layout unknown beyond TEnemyManager
+class TKoopaJrSubmarineManager : public TEnemyManager {
+public:
+	TKoopaJrSubmarineManager(const char*);
 };
 
 #endif

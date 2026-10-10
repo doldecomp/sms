@@ -206,7 +206,7 @@ struct PacketUserData_TwoTevColorAndOneTevKColor {
 	const GXColor* unk14;
 };
 
-static void ShapePacketCallBackFunc(J3DCallBackPacket* packet, int draw)
+static bool ShapePacketCallBackFunc(J3DCallBackPacket* packet, int draw)
 {
 	void* data = (void*)packet->getUserArea();
 	if (draw == 0) {
@@ -293,6 +293,8 @@ static void ShapePacketCallBackFunc(J3DCallBackPacket* packet, int draw)
 		}
 		}
 	}
+
+	return true;
 }
 
 static J3DShapePacket* InitPacket_Sub(J3DModel* model, u16 mat_idx)
@@ -313,7 +315,7 @@ void SMS_InitPacket_MatColor(J3DModel* param_1, u16 param_2,
 	userData->unk8 = param_4;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_OneTevColor(J3DModel* param_1, u16 param_2,
@@ -328,7 +330,7 @@ void SMS_InitPacket_OneTevColor(J3DModel* param_1, u16 param_2,
 	userData->unk8 = param_4;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_TwoTevColor(J3DModel* param_1, u16 param_2,
@@ -346,7 +348,7 @@ void SMS_InitPacket_TwoTevColor(J3DModel* param_1, u16 param_2,
 	userData->unk10 = param_6;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_ThreeTevColor(J3DModel* param_1, u16 param_2,
@@ -367,7 +369,7 @@ void SMS_InitPacket_ThreeTevColor(J3DModel* param_1, u16 param_2,
 	userData->unk18 = param_8;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_CallDL(J3DModel* param_1, u16 param_2, u8* param_3,
@@ -382,7 +384,7 @@ void SMS_InitPacket_CallDL(J3DModel* param_1, u16 param_2, u8* param_3,
 	userData->unk8 = param_4;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
@@ -399,7 +401,7 @@ void SMS_InitPacket_Fog(J3DModel* param_1, u16 param_2)
 	userData->unk4               = fog;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_OneTevKColor(J3DModel* param_1, u16 param_2,
@@ -414,7 +416,7 @@ void SMS_InitPacket_OneTevKColor(J3DModel* param_1, u16 param_2,
 	userData->unk8 = param_4;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_TwoTevKColor(J3DModel* param_1, u16 param_2,
@@ -432,7 +434,7 @@ void SMS_InitPacket_TwoTevKColor(J3DModel* param_1, u16 param_2,
 	userData->unk10 = param_6;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_OneTevKColorAndFog(J3DModel* param_1, u16 param_2,
@@ -467,7 +469,7 @@ void SMS_InitPacket_OneTevKColorAndFog(J3DModel* param_1, u16 param_2,
 	userData->unk14 = fog;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_OneTevColorAndOneTevKColor(J3DModel* param_1, u16 param_2,
@@ -486,7 +488,7 @@ void SMS_InitPacket_OneTevColorAndOneTevKColor(J3DModel* param_1, u16 param_2,
 	userData->unkC = param_5;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_InitPacket_TwoTevColorAndOneTevKColor(J3DModel* param_1, u16 param_2,
@@ -509,7 +511,7 @@ void SMS_InitPacket_TwoTevColorAndOneTevKColor(J3DModel* param_1, u16 param_2,
 	userData->unk14 = param_7;
 
 	packet->setUserArea((uintptr_t)userData);
-	packet->setCallback(&ShapePacketCallBackFunc);
+	packet->setCallback((J3DCallBackPacket::CallbackT)&ShapePacketCallBackFunc);
 }
 
 void SMS_HideAllShapePacket(J3DModel* model)

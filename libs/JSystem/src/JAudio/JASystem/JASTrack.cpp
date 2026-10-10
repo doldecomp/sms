@@ -1405,41 +1405,33 @@ u16 TTrack::readRegDirect(u8 reg)
 
 void TTrack::writeRegDirect(u8 reg, u16 value)
 {
-	u16 top;
-	u16 uVar1;
-	u8 r30 = reg;
 	u16 r4;
 
 	switch (reg) {
 	case 0:
 	case 1:
 	case 2:
-		value &= 0xff;
-		r4 = Player::extend8to16(value & 0xff);
+		value = value & 0xff;
+		r4    = Player::extend8to16(value & 0xff);
 		break;
 
 	case 32:
 	case 33:
 		return;
 
-	case 34: {
-		top                    = value >> 8;
-		uVar1                  = Player::extend8to16(top);
-		mRegisterParam.unk0[0] = top;
-		mRegisterParam.setFlag(uVar1);
-
+	case 34:
+		writeRegDirect(0, value >> 8);
 		r4    = value;
 		value = value & 0xff;
-		r30   = 1;
+		reg   = 1;
 		break;
-	}
 
 	default:
 		r4 = value;
 		break;
 	}
 
-	mRegisterParam.unk0[r30] = value;
+	mRegisterParam.unk0[reg] = value;
 	mRegisterParam.setFlag(r4);
 }
 

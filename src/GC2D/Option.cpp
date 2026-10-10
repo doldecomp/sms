@@ -15,14 +15,11 @@
 #include <GC2D/ExPane.hpp>
 #include <Camera/CameraOption.hpp>
 #include <Player/MarioAccess.hpp>
+#include <System/DummyStrings.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-// TODO: get rid of this
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 namespace {
 
@@ -132,7 +129,7 @@ void TArrowControl::updateAlpha()
 	    JGeometry::TUtil<s32>::clamp(iVar3 * 8 + mPane->getAlpha(), 0, 255));
 }
 
-// incorrect
+// TODO: movementOption inlines this but retains the JUTRect constructor call.
 void TArrowControl::updateScale()
 {
 	int move = calcMoveX(mPhase);
@@ -572,8 +569,9 @@ void TOptionSoundUnit::initSurroundAnm()
 {
 	TPatternAnmControl** ary = mSurroundAnimations;
 
-	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
+	ary[0]                  = new TPatternAnmControl(mScreen);
+	TPatternAnmControl* anm = ary[0];
+	anm->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
@@ -648,8 +646,8 @@ void TOptionSoundUnit::toggle()
 void TOptionSoundUnit::adjust()
 {
 	adjustView();
-	const FabricatedSoundSettings& setting
-	    = cSoundSettings[mSelectionText->getNumber()];
+	int number                             = mSelectionText->getNumber();
+	const FabricatedSoundSettings& setting = cSoundSettings[number];
 	JAIGlobalParameter::setParamSoundOutputMode(setting.mOutputMode);
 }
 
@@ -937,9 +935,10 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
-	bool result = true;
+	TOptionRumbleUnit::RumbleType current = mRumbleOption->getValue();
+	bool result                           = true;
 
-	if (mInitialRumbleValue == mRumbleOption->getValue()
+	if (current == mInitialRumbleValue
 	    && mInitialSoundValue == mSoundOption->getValue())
 		result = false;
 
@@ -948,6 +947,7 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
-	mInitialRumbleValue = mRumbleOption->getValue();
-	mInitialSoundValue  = mSoundOption->getValue();
+	TOptionRumbleUnit::RumbleType value = mRumbleOption->getValue();
+	mInitialRumbleValue                 = value;
+	mInitialSoundValue                  = mSoundOption->getValue();
 }

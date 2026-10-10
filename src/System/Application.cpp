@@ -187,15 +187,19 @@ void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path)
 	}
 }
 
+// TODO: out-of-line frame is 0x48 rather than 0x58; inlined switch now matches.
 void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block)
 {
 	if (block.mIsCompressed) {
-		JKRAram::aramToMainRam(
-		    block.mBlock, (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
-		    EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr, -1, nullptr);
+		TMarDirector* director = SMSGetMarDirector();
+		void* buffer           = director->getUnkD4();
+		JKRAram::aramToMainRam(block.mBlock, static_cast<u8*>(buffer), 0, 0,
+		                       EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr, -1,
+		                       nullptr);
 	} else {
-		JKRAram::aramToMainRam(block.mBlock,
-		                       (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
+		TMarDirector* director = SMSGetMarDirector();
+		void* buffer           = director->getUnkD4();
+		JKRAram::aramToMainRam(block.mBlock, static_cast<u8*>(buffer), 0, 0,
 		                       EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
 	}
 	archive->mountFixed(SMSGetMarDirector()->getUnkD4(), MBF_0);
@@ -404,13 +408,15 @@ void TApplication::initialize_bootAfter()
 	OSResumeThread(&gSetupThread);
 }
 
+// TODO: option-stream constructor stack home still differs.
 void TApplication::initialize_nlogoAfter()
 {
 	JKRMemArchive* arch = (JKRMemArchive*)JKRFileLoader::getVolume("nintendo");
 	arch->unmountFixed();
 	delete arch;
 
-	JKRGetRootHeap()->becomeCurrentHeap();
+	JKRHeap* heap = JKRGetRootHeap();
+	heap->becomeCurrentHeap();
 
 	JKRMemArchive* piVar2 = new JKRMemArchive(arcBufCmn, 0, MBF_0);
 
@@ -418,9 +424,11 @@ void TApplication::initialize_nlogoAfter()
 		JDrama::TNameRefGen::instance
 		    = new (JKRGetSystemHeap(), 0) TMarNameRefGen;
 
-		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
+		JKRHeap* heap = JKRGetRootHeap();
+		u32 lVar3     = heap->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
-		JDrama::TNameRefGen::getInstance()->load(stream);
+		JSUMemoryInputStream& input = stream;
+		JDrama::TNameRefGen::getInstance()->load(input);
 		unk30 = static_cast<
 		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
 		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
@@ -431,17 +439,17 @@ void TApplication::initialize_nlogoAfter()
 
 	gpRomFont = nullptr;
 	((JKRExpHeap*)mHeap)->destroy();
-	JKRGetRootHeap()->free(spGameHeapBlock);
+	JKRHeap* rootHeap = JKRGetRootHeap();
+	rootHeap->free(spGameHeapBlock);
 
-	JKRMemArchive* this_00 = new JKRMemArchive(arcBufMario, 0, MBF_0);
-	gpCardManager->setIcons(
-	    (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1);
+	new JKRMemArchive(arcBufMario, 0, MBF_0);
+	gpCardManager->mIcons
+	    = (ResTIMG*)piVar2->getResource("/card/mario_icon.bti") + 1;
+	gpCardManager->mBanner
 #ifdef VERSION_GMSP01
-	gpCardManager->setBanner((ResTIMG*)piVar2->getResource("/card/mariobnr.bti")
-	                         + 1);
+	    = (ResTIMG*)piVar2->getResource("/card/mariobnr.bti") + 1;
 #else
-	gpCardManager->setBanner(
-	    (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1);
+	    = (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1;
 #endif
 
 #ifndef VERSION_GMSP01
@@ -696,6 +704,7 @@ void TApplication::proc()
 	}
 }
 
+// TODO: stack slots and callee-saved registers still differ.
 int TApplication::gameLoop()
 {
 	u32 nextState = APP_STATE_DEFAULT;
@@ -746,7 +755,7 @@ int TApplication::gameLoop()
 			}
 
 			JDrama::TGraphics graphics;
-			graphics.unkFE = 0;
+			graphics.unk0 = 0;
 
 			const GXRenderModeObj& rmode
 			    = mDisplay->getVideo()->mNextRenderMode;
@@ -758,9 +767,12 @@ int TApplication::gameLoop()
 			           (f32)rmode.fbWidth, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
 			mFader->update();
-			mFader->draw(JDrama::TRect(0, 0, rmode.fbWidth, rmode.efbHeight));
-			if (gpMSound != nullptr)
-				gpMSound->mainLoop();
+			getFader()->draw(
+			    JDrama::TRect(0, 0, rmode.fbWidth, rmode.efbHeight));
+			if (gpMSound != nullptr) {
+				MSound* sound = SMSGetMSound();
+				sound->mainLoop();
+			}
 		}
 
 		TTimeRec::snapCPUTime(0);
@@ -769,13 +781,13 @@ int TApplication::gameLoop()
 		mDisplay->endRendering();
 
 		if (TTimeRec::_instance)
-			TTimeRec::_instance->flip();
+			TTimeRec::instance()->flip();
 
 		JDrama::TVideo* video = mDisplay->unk60;
 		if (video->mCurFrameBuffer) {
 			JUTDirectPrint::getManager()->changeFrameBuffer(
-			    (void*)video->mCurFrameBuffer, video->mCurRenderMode.fbWidth,
-			    video->mCurRenderMode.xfbHeight);
+			    const_cast<void*>(video->mCurFrameBuffer),
+			    video->mCurRenderMode.fbWidth, video->mCurRenderMode.xfbHeight);
 			JUTAssertion::flushMessage();
 		}
 	}
@@ -878,6 +890,7 @@ static const char* sDvdErrMsgs[][6] = {
 };
 #endif
 
+// TODO: color-conversion stack slots and switch-table relocations still differ.
 int TApplication::drawDVDErr()
 {
 	char message[512];
@@ -1006,8 +1019,12 @@ int TApplication::drawDVDErr()
 		if (gpSystemFont != nullptr)
 			font = gpSystemFont;
 		J2DPrint print(font, 0);
-		print.unk44  = (GXColor) { 0xff, 0xff, 0, 0xff };
-		print.unk48  = (GXColor) { 0xff, 0xff, 0, 0xff };
+		GXColor colors[2] = {
+			{ 0xff, 0xff, 0, 0xff },
+			{ 0xff, 0xff, 0, 0xff },
+		};
+		print.unk44  = colors[0];
+		print.unk48  = colors[1];
 		f32 msgWidth = print.getWidth(message);
 		print.print(0.5f * (600.0f - msgWidth), 230, message);
 	}
@@ -1015,12 +1032,13 @@ int TApplication::drawDVDErr()
 	return error;
 }
 
+// TODO: pointer-vector size reload and 0xa0 frame differ from the 0xb8 target.
 JKRMemArchive* TApplication::mountStageArchive()
 {
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+	if (mCurrArea.getStage() < unk30->size()) {
 		TNameRefAryT<TScenarioArchiveName>& scenarios
 		    = tmp[mCurrArea.getStage()];
 		if (mCurrArea.getScenario() < scenarios.size()) {

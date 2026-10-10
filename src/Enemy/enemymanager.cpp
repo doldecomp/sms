@@ -18,6 +18,8 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+bool TEnemyManager::mIsCopyAnmMtx = true;
+
 TSpineEnemyParams::TSpineEnemyParams(const char* path)
     : TParams(path)
     , PARAM_INIT(mSLHeadHeight, 120.0f)
@@ -119,25 +121,27 @@ void TEnemyManager::createEnemies(int count)
 	if (count + getObjNum() > getCapacity())
 		count = getCapacity() - getObjNum();
 
-	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.get())
-		count = unk38->mSLInstanceNum.get() - getObjNum();
-
-	if (count < 0)
-		return;
-
-	for (int i = 0; i < count; ++i) {
-		// TODO: createEnemy() but size won't match :(
-
-		TSpineEnemy* enemy = createEnemyInstance();
-
-		if (!enemy)
-			continue;
-
-		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
-		    ->add(enemy);
-
-		enemy->init(this);
+	if (unk38 != nullptr) {
+		u8 limit = unk38->mSLInstanceNum.get();
+		if (count + getObjNum() > limit)
+			count = limit - getObjNum();
 	}
+
+	if (count >= 0)
+		for (int i = 0; i < count; ++i) {
+			// TODO: createEnemy() but size won't match :(
+
+			TSpineEnemy* enemy = createEnemyInstance();
+
+			if (!enemy)
+				continue;
+
+			static_cast<TIdxGroupObj*>(
+			    JDrama::TNameRefGen::search("敵グループ"))
+			    ->add(enemy);
+
+			enemy->init(this);
+		}
 }
 
 void TEnemyManager::clipEnemies(JDrama::TGraphics* graphics)
@@ -213,6 +217,7 @@ void TEnemyManager::updateAnmSoundShared()
 
 void TEnemyManager::copyFromShared()
 {
+	Mtx afStack_58;
 	Mtx afStack_88;
 	MTXCopy(j3dSys.getViewMtx(), afStack_88);
 
@@ -226,7 +231,7 @@ void TEnemyManager::copyFromShared()
 
 		int iVar6 = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		for (int j = 0; j < unk44; ++j) {
-			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
+			if (iVar6 >= 0 && iVar6 != unk40[j].getIdx())
 				continue;
 
 			J3DModel* model
@@ -234,7 +239,6 @@ void TEnemyManager::copyFromShared()
 			MtxPtr src = enemy->getModel()->getBaseTRMtx();
 			MTXScaleApply(src, src, enemy->mScaling.x, enemy->mScaling.y,
 			              enemy->mScaling.z);
-			Mtx afStack_58;
 			MTXConcat(afStack_88, src, afStack_58);
 			j3dSys.setViewMtx(afStack_58);
 
@@ -277,9 +281,13 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
-		for (int i = 0; i < unk44; ++i)
-			for (int j = 0; j < unk40[i].unk4; ++j)
-				unk40[i].unk0[j]->calcAnm();
+		int j;
+		TSharedMActorSet* set;
+		for (int i = 0; i < unk44; ++i) {
+			set = &unk40[i];
+			for (j = 0; j < set->unk4; ++j)
+				set->unk0[j]->calcAnm();
+		}
 		setSharedFlags();
 		updateAnmSoundShared();
 	}
@@ -472,6 +480,7 @@ int TEnemyManager::countLivingEnemy() const
 	return result;
 }
 
+// TODO: UNUSED (0x15c in mario.MAP); no surviving inline body recovered.
 void TEnemyManager::createCopyAnmMtx(int) { }
 
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
@@ -485,7 +494,6 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 	enemy->getMActor()->frameUpdate();
 
 	Mtx afStack_5C;
-	MtxPtr wtf = afStack_5C;
 	MtxPtr mtx = enemy->getMActor()->getModel()->getBaseTRMtx();
 
 	const JGeometry::TVec3<f32>& v = enemy->mScaling;
@@ -501,7 +509,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	for (int i = 0; i < unk50; ++i) {
 		MTXConcat(mtx, unk48[f][i], afStack_5C);
-		enemy->getMActor()->getModel()->setAnmMtx(i, wtf);
+		enemy->getMActor()->getModel()->setAnmMtx(i, afStack_5C);
 	}
 
 	if (enemy->getMActor()->getModel()->getModelData()->getWEvlpMtxNum())

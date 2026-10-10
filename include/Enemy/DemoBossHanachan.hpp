@@ -17,7 +17,13 @@ class TDemoBossHanachanSaveParams;
 
 class TDemoBossHanachan : public TSpineEnemy {
 public:
-	TDemoBossHanachan(); // TODO: constructor not in mario.MAP for this TU
+	// not in mario.MAP: always inlined, e.g. into
+	// TMarNameRefGen::getNameRef_BossEnemy via TSleepBossHanachan
+	TDemoBossHanachan(const char* name)
+	    : TSpineEnemy(name)
+	{
+	}
+
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	void initBase(TLiveManager*, u32);
@@ -25,8 +31,13 @@ public:
 
 class TDemoBossHanachanManager : public TEnemyManager {
 public:
-	TDemoBossHanachanManager(); // TODO: constructor not in mario.MAP for this
-	                            // TU
+	// not in mario.MAP: always inlined, e.g. into
+	// TMarNameRefGen::getNameRef_BossEnemy via TSleepBossHanachanManager
+	TDemoBossHanachanManager(const char* name)
+	    : TEnemyManager(name)
+	{
+	}
+
 	virtual void clipEnemies(JDrama::TGraphics*);
 
 public:

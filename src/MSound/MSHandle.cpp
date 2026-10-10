@@ -63,16 +63,10 @@ static u32 get_thing(u32 param_1)
 	u32 uVar1 = param_1 >> 30;
 	u32 uVar2 = param_1 >> 12 & 0xF;
 
-	if (uVar1 == 0)
-		return uVar2;
-
-	if (uVar1 == 2)
-		return 0x10;
-
-	if (uVar1 == 3)
-		return 0x11;
-
-	return 0xffffffff;
+	return uVar1 == 0   ? uVar2
+	       : uVar1 == 2 ? 0x10
+	       : uVar1 == 3 ? 0x11
+	                    : 0xffffffff;
 }
 
 f32 MSHandle::MSACos(f32 param_1)
@@ -151,7 +145,6 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 		fVar4 = fVar2 * fVar4;
 	}
 
-	f32 fVar1;
 	if (param_2 < cPan_HiSence_Dist) {
 		fVar4 *= param_2 / cPan_HiSence_Dist;
 	} else {
@@ -162,8 +155,8 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 
 	fVar4 += fVar2;
 
-	f32 r = fVar4 > 1.0f ? 1.0f : fVar4;
-	return r < 0.0f ? 0.0f : r;
+	fVar4 = fVar4 > 1.0f ? 1.0f : fVar4;
+	return fVar4 < 0.0f ? 0.0f : fVar4;
 }
 
 void MSHandle::setSeDistanceDolby(u8 moveTime)
@@ -190,9 +183,9 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 		dVar2 = 1.0f;
 	}
 
-	if (dist < cPan_HiSence_Dist) {
-		dVar2 = dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
-	}
+	dVar2 = dist < cPan_HiSence_Dist
+	            ? dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f
+	            : dVar2;
 
 	f32 r = dVar2 > 1.0f ? 1.0f : dVar2;
 	return r < 0.0f ? 0.0f : r;
@@ -210,7 +203,8 @@ void MSHandle::setSeDistanceVolume(u8 moveTime)
 	f32 volume;
 	if (!(swBit & JAISeSwBit_NoDistanceVolume)) {
 		// TODO: inline?
-		u32 tmp = getSwBit() >> JAISeSwBit_DistanceVolumeCurveShift & 0x7;
+		u8 tmp = (getSwBit() & JAISeSwBit_DistanceVolumeCurveMask)
+		         >> JAISeSwBit_DistanceVolumeCurveShift;
 		volume = setDistanceVolumeCommon(smSeCategory[get_thing(mSoundID)].unk4,
 		                                 tmp);
 	} else {
@@ -224,8 +218,8 @@ f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 moveTime)
 {
 	f32 fVar1         = unk1C->unk18;
 	f32 maxVolumeDist = JAIGlobalParameter::getParamMaxVolumeDistance();
-	u32 uVar1         = get_thing(mSoundID);
-	return calcVolume(fVar1, volume, maxVolumeDist, moveTime, uVar1);
+	return calcVolume(fVar1, volume, maxVolumeDist, moveTime,
+	                  get_thing(mSoundID));
 }
 
 f32 MSHandle::calcVolume(f32 param_1, f32 param_2, f32 param_3, u8 param_4,

@@ -97,8 +97,8 @@ void TConeBeam::calcVertices(int count)
 
 	if (mBGCheckData == nullptr) {
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 s = mScale * MsSin(i * (360.0f / mVtxCount)) / 2.0f;
-			f32 c = mScale * MsCos(i * (360.0f / mVtxCount)) / 2.0f;
+			f32 s = 0.5f * (mScale * MsSin((360.0f / mVtxCount) * i));
+			f32 c = 0.5f * (mScale * MsCos((360.0f / mVtxCount) * i));
 
 			JGeometry::TVec3<f32> local_11c;
 			local_11c.zero();

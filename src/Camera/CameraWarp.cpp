@@ -26,15 +26,18 @@ void CPolarSubCamera::warpPosAndAt(const Vec& pos, const Vec& at)
 	}
 }
 
+// TODO: frame-only mismatch: getUsualLookat return slot is 0x1c vs 0x20.
 void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 {
 	if (mMode < CAMERA_MODE_REPRODUCE_DEMO) {
 		mCurrentParams->copySaveParam(*mSaveKindParam[mMode]);
 
+		Vec pos;
 		JGeometry::TVec3<f32> usualLookat;
 		usualLookat.set(getUsualLookat());
 
-		if (isLButtonCameraSpecifyMode(mMode))
+		bool isLButtonCam = isLButtonCamera();
+		if (isLButtonCam)
 			mCurrentTarget.unk28 = MsClamp<f32>(ratio, 0.0f, 1.0f);
 		else
 			mCurrentTarget.unk28 = MsClamp<f32>(ratio, unk268, unk26C);
@@ -42,7 +45,6 @@ void CPolarSubCamera::warpPosAndAt(f32 ratio, s16 yAngle)
 		mCurrentTarget.mPitch = calcAngleXFromXRotRatio_();
 		mCurrentTarget.mYaw   = yAngle;
 
-		Vec pos;
 		CLBPolarToCross(usualLookat, &pos, calcDistFromXRotRatio_(),
 		                mCurrentTarget.mPitch, mCurrentTarget.mYaw);
 

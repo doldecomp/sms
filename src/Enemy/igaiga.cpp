@@ -119,6 +119,7 @@ void TRollEnemy::reset()
 	getTracer()->mCurrIdx = 0;
 }
 
+// TODO: nonmatching stack frame (0x40 instead of 0x48).
 void TRollEnemy::walkBehavior(int param_1, f32 param_2)
 {
 	if (!unk1A8)
@@ -134,7 +135,11 @@ void TRollEnemy::walkBehavior(int param_1, f32 param_2)
 			unk1A8 = false;
 			if (unk1A0 > unk1B0) {
 				bound();
-				mVelocity = JGeometry::TVec3<f32>(0.0f, unk1A0, 0.0f);
+				JGeometry::TVec3<f32> velocity;
+				velocity.x = 0.0f;
+				velocity.y = unk1A0;
+				velocity.z = 0.0f;
+				mVelocity  = velocity;
 				onLiveFlag(LIVE_FLAG_AIRBORNE);
 				mPosition.y += 5.0f;
 				unk1A0 = 0.0f;
@@ -161,9 +166,9 @@ void TRollEnemy::behaveToWater(THitActor* param_1)
 		mScaling.x = mScaling.y = mScaling.z *= rate;
 
 		f32 attackRadius = getSaveParams()->getSLAttackRadius();
-		f32 attackHeight = getSaveParams()->getSLAttackHeight();
-		f32 damageRadius = getSaveParams()->getSLDamageRadius();
-		f32 damageHeight = getSaveParams()->getSLDamageHeight();
+		f32 attackHeight = getSaveParams()->mSLAttackHeight.get();
+		f32 damageRadius = getSaveParams()->mSLDamageRadius.get();
+		f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
 		f32 scale        = mBodyScale / unk154;
 		setHitParams(attackRadius * scale, attackHeight * scale,
 		             damageRadius * scale, damageHeight * scale);
@@ -175,14 +180,18 @@ void TRollEnemy::attackToMario()
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
+// TODO: frame matches, but vector stack slots are still nonmatching.
 void TRollEnemy::flagJump()
 {
 	JGeometry::TVec3<f32> point;
-	getTracer()->getCurrent().getPoint(&point);
+	const TGraphNode& node = getTracer()->getGraph()->getGraphNode(
+	    getTracer()->getCurGraphIndex());
+	node.getPoint(&point);
 
 	mPosition.y += 30.0f;
 
-	f32 jumpSpeed = getTracer()->unkC;
+	TGraphTracer* tracer = getTracer();
+	f32 jumpSpeed        = tracer->unkC;
 	JGeometry::TVec3<f32> velocity
 	    = calcVelocityToJumpToY(point, jumpSpeed, getGravityY());
 
@@ -213,6 +222,7 @@ bool TRollEnemy::isReachedToGoalXZ()
 	return false;
 }
 
+// TODO: nonmatching stamp argument scheduling.
 void TRollEnemy::setBehavior()
 {
 	if (mPosition.y > mGroundHeight + 50.0f)
@@ -235,14 +245,15 @@ void TRollEnemy::setBehavior()
 			s32 min   = getSaveParams()->getSLPolluteRMin();
 			s32 max   = getSaveParams()->getSLPolluteRMax();
 			s32 cycle = getSaveParams()->getSLPolluteCycle();
-			f32 angle = 180.0f * (f32)(mSpine->getTime() % cycle) / (f32)cycle;
-			range = (f32)min + mBodyScale * ((f32)(max - min) * MsSin(angle));
+			range     = 180.0f * (f32)(mSpine->getTime() % cycle) / (f32)cycle;
+			range     = MsSin(range);
+			range     = (f32)min + mBodyScale * ((f32)(max - min) * range);
 		}
 	}
 
-	gpPollution->stampGround(
-	    1, mPosition.x + unk1AC * mPositionDelta.x, mPosition.y,
-	    mPosition.z + unk1AC * mPositionDelta.z, 32.0f * range);
+	f32 z = mPosition.z + unk1AC * mPositionDelta.z;
+	gpPollution->stampGround(1, mPosition.x + unk1AC * mPositionDelta.x,
+	                         mPosition.y, z, 32.0f * range);
 }
 
 void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
@@ -293,9 +304,10 @@ void TIgaigaManager::createModelData()
 
 TSmallEnemy* TIgaigaManager::createEnemyInstance() { return new TIgaiga; }
 
+// TODO: nonmatching stack frame (0x20 instead of 0x98).
 void TIgaigaManager::initSetEnemies()
 {
-	unk60 = new TIgaigaPolluteModelManager;
+	unk60 = new TIgaigaPolluteModelManager("イガイガモデル汚染");
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -311,6 +323,7 @@ void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& param_1,
 	unk60->generatePolluteModel(param_1, param_2);
 }
 
+// TODO: nonmatching stack frame (0x68 instead of 0x70).
 static BOOL RollEnemyBodyCallback(J3DNode* param_1, BOOL param_2)
 {
 	if (param_2 == 0) {
@@ -318,14 +331,16 @@ static BOOL RollEnemyBodyCallback(J3DNode* param_1, BOOL param_2)
 			return TRUE;
 
 		Mtx rot;
-		MtxPtr mtx = gpCurRollEnemy->getModel()->getAnmMtx(
-		    ((J3DJoint*)param_1)->getJntNo());
-		MsMtxSetRotX(rot, gpCurRollEnemy->unk194);
+		MtxPtr rotation;
+		int jntNo  = ((J3DJoint*)param_1)->getJntNo();
+		MtxPtr mtx = gpCurRollEnemy->getModel()->getAnmMtx(jntNo);
+		rotation   = (MtxPtr)rot;
+		MsMtxSetRotX(rotation, gpCurRollEnemy->unk194);
 
 		mtx[1][3] += TRollEnemy::mTransYOffset;
 
-		MTXConcat(mtx, rot, mtx);
-		MTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
+		MTXConcat(mtx, rotation, mtx);
+		MTXConcat(J3DSys::mCurrentMtx, rotation, J3DSys::mCurrentMtx);
 	}
 	return TRUE;
 }
@@ -389,8 +404,10 @@ bool TIgaiga::isRolling()
 void TIgaiga::behaveToWater(THitActor* param_1)
 {
 	mSprayedByWaterCooldown = 0;
-	if (unk1E4 < unk1A4->mSLExpandMax.get())
-		unk1E4 *= unk1A4->mSLExpandRate.get();
+	if (unk1E4 < unk1A4->mSLExpandMax.get()) {
+		f32 rate = unk1A4->mSLExpandRate.get();
+		unk1E4 *= rate;
+	}
 	unk165 = true;
 	if (mSpine->getCurrentNerve() != &TNerveIgaigaWaterHit::theNerve())
 		mSpine->pushNerve(&TNerveIgaigaWaterHit::theNerve());
@@ -424,6 +441,7 @@ void TIgaiga::kill()
 	TSmallEnemy::kill();
 }
 
+// TODO: nonmatching graph-point stack slot and graph-lookup registers.
 void TIgaiga::moveObject()
 {
 	TWalkerEnemy::moveObject();
@@ -432,7 +450,7 @@ void TIgaiga::moveObject()
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
 	f32 baseScale    = unk154 * unk1CC;
 	mBodyScale = MsClamp(unk1E4 * baseScale, baseScale, 3.0f * mBodyScale);
 	f32 scale  = mBodyScale / unk154;
@@ -443,9 +461,15 @@ void TIgaiga::moveObject()
 	             damageRadius * scale, damageHeight * scale);
 	mMarchSpeed = unk1A4->mSLMarchSpeedLow.get();
 	mTurnSpeed  = unk1A4->mSLTurnSpeedLow.get();
-	if (getTracer()->getCurrent().checkFlag(0x40)) {
+	if (getTracer()
+	        ->getGraph()
+	        ->getGraphNode(getTracer()->getCurGraphIndex())
+	        .checkFlag(0x40)) {
 		JGeometry::TVec3<f32> point;
-		getTracer()->getCurrent().getPoint(&point);
+		getTracer()
+		    ->getGraph()
+		    ->getGraphNode(getTracer()->getCurGraphIndex())
+		    .getPoint(&point);
 		if (mPosition.y < point.y + 50.0f) {
 			kill();
 			unk1BC = true;
@@ -467,6 +491,7 @@ void TIgaiga::boundSE()
 	    abs(getGroundPlane()->getNormal().y), 0, 0, nullptr, 0, 4);
 }
 
+// TODO: velocity-copy boundary and stack frame remain nonmatching.
 void TIgaiga::walkBehavior(int param_1, f32 param_2)
 {
 	TRollEnemy::walkBehavior(param_1, param_2);
@@ -474,11 +499,13 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 	f32 x = mPositionDelta.x;
 	f32 z = mPositionDelta.z;
 	if (unk1A8) {
-		x = getVelocity().x;
-		z = getVelocity().z;
+		JGeometry::TVec3<f32> velocity = mVelocity;
+		x                              = velocity.x;
+		z                              = velocity.z;
 	}
-	f32 speed = JGeometry::TVec2<f32>(x, z).length();
-	unk194 += 4.0f * (speed / (mBodyRadius * unk1CC * unk1E4));
+	unk194 += 4.0f
+	          * (JGeometry::TUtil<f32>::sqrt(x * x + z * z)
+	             / (mBodyRadius * unk1CC * unk1E4));
 
 	if (unk1B4) {
 		++unk1B4;
@@ -486,9 +513,10 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 			unk1B4 = 0;
 	}
 
-	if (!isAirborne() && mGroundPlane && mGroundPlane->getActor())
-		((TLiveActor*)mGroundPlane->getActor())
-		    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	if (!isAirborne() && mGroundPlane && mGroundPlane->getActor()) {
+		TLiveActor* actor = (TLiveActor*)mGroundPlane->getActor();
+		actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	}
 	if (unk138 && unk138->getActor())
 		((TLiveActor*)unk138->getActor())
 		    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
@@ -554,7 +582,7 @@ void TIgaiga::setMeltAnm()
 
 	waterExplosion();
 
-	JGeometry::TVec3<f32> scale = getScaling() * 0.5f;
+	JGeometry::TVec3<f32> scale = JGeometry::TVec3<f32>(getScaling()) /= 2.0f;
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 	        PARTICLE_MS_POPO_BOMB_A, &unk1C0, 0, nullptr))
 		emitter->setGlobalScale(scale);
@@ -598,7 +626,9 @@ void TIgaiga::rollMove()
 	if (isReachedToGoalXZ()) {
 		if (jumpToNextGraphNode() >= 0)
 			flagJump();
-		if (getTracer()->getCurrent().checkFlag(0x40))
+		const TGraphNode& node = getTracer()->getGraph()->getGraphNode(
+		    getTracer()->getCurGraphIndex());
+		if (node.checkFlag(0x40))
 			return;
 		goToRandomNextGraphNode();
 	}
@@ -653,7 +683,9 @@ DEFINE_NERVE(TNerveIgaigaWaterHit, TLiveActor)
 	if (self->unk1E4 >= self->unk1A4->mSLExpandMax.get()) {
 		if (self->unk1E8 > 20) {
 			self->onLiveFlag(LIVE_FLAG_UNK10000);
-			spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
+			const TNerveBase<TLiveActor>* nerve
+			    = &TNerveSmallEnemyDie::theNerve();
+			spine->pushAfterCurrent(nerve);
 			return TRUE;
 		}
 		++self->unk1E8;
@@ -734,10 +766,11 @@ void TGorogoroManager::loadAfter()
 
 TSmallEnemy* TGorogoroManager::createEnemyInstance() { return new TGorogoro; }
 
+// TODO: nonmatching graph-loop registers and graphlist relocation.
 void TGorogoroManager::initSetEnemies()
 {
-	unk6C = new TGorogoroPolluteModelManager;
-	unk6C->init((TLiveActor*)unk18[0]);
+	unk6C = new TGorogoroPolluteModelManager("ゴロゴロモデル汚染");
+	unk6C->init(getObj(0));
 
 	static const char* graphlist[] = { "gorogoro0", "gorogoro1" };
 	for (int i = 0; i < mObjNum; ++i) {
@@ -746,7 +779,7 @@ void TGorogoroManager::initSetEnemies()
 			graph = gpConductor->getGraphByName(graphlist[0]);
 
 		if (!graph->isDummy()) {
-			TGorogoro* gorogoro = (TGorogoro*)unk18[i];
+			TGorogoro* gorogoro = (TGorogoro*)getObj(i);
 			JGeometry::TVec3<f32> point;
 			graph->getGraphNode(0).getPoint(&point);
 			gorogoro->getTracer()->init(graph);

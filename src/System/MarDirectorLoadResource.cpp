@@ -134,6 +134,7 @@ void TMarDirector::initLoadParticle()
 
 void TMarDirector::loadParticle()
 {
+	// TODO: frame-only mismatch: 0x28 bytes instead of the original 0x40.
 	void* pvVar1 = new (-0x20) char[0x200000];
 	SMSLoadArchive("/data/particle.arc", pvVar1, 0x200000, nullptr);
 	JKRMemArchive* this_00 = new (-0x20) JKRMemArchive;
@@ -272,9 +273,8 @@ void TMarDirector::loadParticle()
 	this_00->unmountFixed();
 
 	if (mMap == 4 && unk7D == 2) {
-		void* hanachanJpaArch = SMSLoadArchive("/data/bosshanachanJpa.arc",
-		                                       pvVar1, 0x200000, nullptr);
-		this_00->mountFixed(hanachanJpaArch, MBF_0);
+		SMSLoadArchive("/data/bosshanachanJpa.arc", pvVar1, 0x200000, nullptr);
+		this_00->mountFixed(pvVar1, MBF_0);
 		this_00->becomeCurrent("/");
 		TBossHanachan::staticLoadParticle();
 		this_00->unmountFixed();

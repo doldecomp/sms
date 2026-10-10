@@ -98,8 +98,9 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+		MSound* sound = SMSGetMSound();
+		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
+		                     0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -279,7 +280,8 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 
 		unk154 = unk154 - 1;
 
-		unk138.a = (u8)(unk154 * 100 / 1000);
+		int alpha = unk154 * 100 / 1000;
+		unk138.a  = (u8)alpha;
 
 		if (unk154 == 0) {
 			if (unk13C == 0) {
@@ -394,8 +396,8 @@ void TMareGate::control()
 	TMapObjBase::control();
 
 	MSound* sound = SMSGetMSound();
-	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
-	                       &sound->unk7C, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
+	                                &sound->unk7C, 0, 4);
 }
 
 void TMareGate::loadAfter()
@@ -405,6 +407,8 @@ void TMareGate::loadAfter()
 		makeObjDead();
 	}
 }
+
+// TODO: TWeathercock is UNUSED in mario.MAP; no surviving body is known.
 
 // TDemoCannon
 
@@ -422,6 +426,7 @@ void TDemoCannon::initMapObj()
 {
 	TMapObjBase::initMapObj();
 
+	TDemoCannon* self = this;
 	mMActor->setBck("democannon_dpt");
 	J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 	frameCtrl->setFrame(frameCtrl->getEnd());
@@ -433,15 +438,15 @@ void TDemoCannon::initMapObj()
 
 	JUTNameTab* jointName = mMActor->getModel()->getModelData()->getJointName();
 
-	TSharedParts* parts = new TSharedParts(this, jointName->getIndex("nullA"),
+	TSharedParts* parts = new TSharedParts(self, jointName->getIndex("nullA"),
 	                                       sdlData, 3, "<TSharedParts>");
 	unk138              = parts;
 
 	res = JKRFileLoader::getGlbResource("/scene/mapObj/demoCannon_mario.bmd");
-	SDLModelData* sdlData2 = new SDLModelData(J3DModelLoaderDataBase::load(
+	sdlData = new SDLModelData(J3DModelLoaderDataBase::load(
 	    res, J3DMLF_MaterialPEFull | (1 << J3DMLF_TevStageNumShift)));
 
-	parts  = new TSharedParts(this, 0, sdlData2, 3, "<TSharedParts>");
+	parts  = new TSharedParts(self, 0, sdlData, 3, "<TSharedParts>");
 	unk13C = parts;
 }
 
@@ -527,7 +532,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	if (!SMS_IsMarioDashing())
 		return;
 
-	if (SMSGetMarDirector()->mMap == 1) {
+	if (gpMarDirector->mMap == 1) {
 		startBck("nozzledoor");
 	} else {
 		makeObjDead();
@@ -541,7 +546,8 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 
 	JGeometry::TVec3<f32> scale(1.3f);
 
-	unk138.set(mPosition.x, mPosition.y + 100.0f, mPosition.z);
+	unk138.set(
+	    JGeometry::TVec3<f32>(mPosition.x, mPosition.y + 100.0f, mPosition.z));
 
 	emitAndScale(24, 0, &unk138, scale);
 	emitAndScale(25, 0, &unk138, scale);

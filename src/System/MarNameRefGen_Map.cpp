@@ -1,3 +1,6 @@
+// PCH strings precede the paths referenced by cSunVolumeName and
+// cSunsetVolumeName in the retail .rodata pool.
+#include <M3DUtil/InfectiousStrings.hpp>
 
 #include "Camera/SunMgr.hpp"
 #include "Camera/SunModel.hpp"
@@ -11,9 +14,6 @@
 #include "Map/Sky.hpp"
 #include "Map/StickyStainManager.hpp"
 #include <System/MarNameRefGen.hpp>
-
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Map(const char* name) const
 {

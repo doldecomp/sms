@@ -87,14 +87,18 @@ float expf(float x)
 	x_fract = x - (float)(int_x);
 
 	// Horner expansion
-	estimate = __exp_to_x[7];
-	estimate = x_fract * estimate + __exp_to_x[6];
-	estimate = x_fract * estimate + __exp_to_x[5];
-	estimate = x_fract * estimate + __exp_to_x[4];
-	estimate = x_fract * estimate + __exp_to_x[3];
-	estimate = x_fract * estimate + __exp_to_x[2];
-	estimate = x_fract * estimate + __exp_to_x[1];
-	estimate = x_fract * estimate + __exp_to_x[0];
+	estimate = ((((((x_fract * __exp_to_x[7] + __exp_to_x[6]) * x_fract
+	                + __exp_to_x[5])
+	                   * x_fract
+	               + __exp_to_x[4])
+	                  * x_fract
+	              + __exp_to_x[3])
+	                 * x_fract
+	             + __exp_to_x[2])
+	                * x_fract
+	            + __exp_to_x[1])
+	               * x_fract
+	           + __exp_to_x[0];
 	finalVal = x_fract * estimate;
 
 	return __two_to_log2e_m1_tI[int_x_index]
@@ -108,166 +112,103 @@ inline float __log2f(float x)
 	// inferred by presence of this var's mangled name
 	static const float __log2e_m1[2] = { 0.41015625f, 0.03253879088896f };
 
+	int hi_bits;
 	float unkConsts[2] = { -0.72135162353515625f, 0.4808933f };
 
 	float frac, r;
-	int exp, index;
-	int hi_bits, lo_bits;
 	int bits = *(int*)&x;
+	int exp, index;
+	int lo_bits;
+	int mantissa;
 
-	exp   = ((unsigned int)bits >> 23) - 0x80;
-	index = ((unsigned int)bits >> 16) & 0x7F;
+	exp      = ((unsigned int)bits >> 23) - 0x80;
+	mantissa = bits;
+	mantissa &= 0x7FFFFF;
+	index = mantissa >> 16;
 
 	if ((unsigned short)bits != 0) {
 		hi_bits = (bits & 0x7F0000) | 0x3F800000;
-		lo_bits = (bits & 0x7FFFFF) | 0x3F800000;
+		lo_bits = mantissa | 0x3F800000;
 
 		if (bits & 0x8000) {
 			index++;
 			hi_bits += 0x10000;
 		}
 
-		frac = (*(float*)&lo_bits - *(float*)&hi_bits) * __one_over_F[index];
+		r    = *(float*)&lo_bits;
+		frac = r - *(float*)&hi_bits;
+		frac *= __one_over_F[index];
 
-		r = 1.375f + (float)exp
-		    + (__log2_F[index]
-		       + (frac
-		          + ((__log2e_m1[0] * frac)
-		             + ((__log2e_m1[1] * frac)
-		                + (frac * frac
-		                   * ((frac * unkConsts[1]) + unkConsts[0]))))));
+		return 1.375f + (float)exp
+		       + (__log2_F[index]
+		          + (frac
+		             + ((__log2e_m1[0] * frac)
+		                + ((__log2e_m1[1] * frac)
+		                   + (frac * frac
+		                      * ((frac * unkConsts[1]) + unkConsts[0]))))));
 	} else {
-		r = 1.375f + (float)exp + __log2_F[index];
+		return 1.375f + (float)exp + __log2_F[index];
 	}
-
-	return r;
 }
 
-// fabricated
+// fabricated: repeated powf paths have separate exponent-bit stack locals.
 inline float __exp2f(float f)
 {
-	// assumed presence due to how powf tends to work, also seems like theres
-	// stack padding
-	float p;
+	int n;
+	float frac;
 
-	p = __two_to_x[8];
-	p = f * p + __two_to_x[7];
-	p = f * p + __two_to_x[6];
-	p = f * p + __two_to_x[5];
-	p = f * p + __two_to_x[4];
-	p = f * p + __two_to_x[3];
-	p = f * p + __two_to_x[2];
-	p = f * p + __two_to_x[1];
-	p = f * p + __two_to_x[0];
+	n    = (int)f;
+	frac = f - (float)n;
 
-	float fp = f * p;
-	return 0.75f + (0.25f + fp);
+	if (n > 128)
+		return __INFINITY;
+	if (n < -127)
+		return 0.0f;
+
+	n = n + 127;
+	n = n << 23;
+
+	float fp = frac
+	           * ((((((((frac * __two_to_x[8] + __two_to_x[7]) * frac
+	                    + __two_to_x[6])
+	                       * frac
+	                   + __two_to_x[5])
+	                      * frac
+	                  + __two_to_x[4])
+	                     * frac
+	                 + __two_to_x[3])
+	                    * frac
+	                + __two_to_x[2])
+	                   * frac
+	               + __two_to_x[1])
+	                  * frac
+	              + __two_to_x[0]);
+	return *(float*)&n * (0.75f + (0.25f + fp));
 }
 
 #pragma cplusplus off
 
 float powf(float x, float y)
 {
-	// TODO: work on improving acc, im lazy right now so this is half assed
-	int ix, iy, n;
-	float logx, t, f, r;
-	int cx, cy;
-
 	/* x > 0 */
-	if (x > 0.0f) {
-		logx = __log2f(x);
-		t    = y * logx;
-
-		n = (int)t;
-		f = t - (float)n;
-
-		if (n > 128)
-			return __INFINITY;
-		if (n < -127)
-			return 0.0f;
-
-		n = n + 127;
-		n = n << 23;
-		return *(float*)&n * __exp2f(f);
-	}
+	if (x > 0.0f)
+		return __exp2f(y * __log2f(x));
 
 	/* x < 0 */
 	if (x < 0.0f) {
-		iy = (int)y;
-		if ((y - (float)iy) != 0.0f)
+		int iy = (int)y;
+		if (y - (float)(int)y)
 			return __NAN;
-		if (((int)y % 2) != 0) {
-			logx = __log2f(-x);
-			t    = y * logx;
+		if ((iy % 2) != 0)
+			return -__exp2f(y * __log2f(-x));
 
-			n = (int)t;
-			f = t - (float)n;
-
-			if (n > 128)
-				r = __INFINITY;
-			else if (n < -127)
-				r = 0.0f;
-			else {
-				n = n + 127;
-				n = n << 23;
-				r = *(float*)&n * __exp2f(f);
-			}
-			return -r;
-		}
-
-		logx = __log2f(-x);
-		t    = y * logx;
-
-		n = (int)t;
-		f = t - (float)n;
-
-		if (n > 128)
-			return __INFINITY;
-		if (n < -127)
-			return 0.0f;
-
-		n = n + 127;
-		n = n << 23;
-		return *(float*)&n * __exp2f(f);
+		return __exp2f(y * __log2f(-x));
 	}
 
-	/* x classification */
-	{
-		float xc = x;
-		ix       = *(int*)&xc & 0x7F800000;
-		switch (ix) {
-		case 0x7F800000:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cx = 4; /* normal */
-			break;
-		}
-	}
-	if (cx == 1)
-		return x; /* NaN */
+	if (fpclassify(x) == FP_NAN)
+		return x;
 
-	/* y classification */
-	{
-		float yc = y;
-		iy       = *(int*)&yc & 0x7F800000;
-		switch (iy) {
-		case 0x7F800000:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cy = 4; /* normal */
-			break;
-		}
-	}
-
-	switch (cy) {
+	switch (fpclassify(y)) {
 	case 3:
 		return 1.0f;
 	case 1:

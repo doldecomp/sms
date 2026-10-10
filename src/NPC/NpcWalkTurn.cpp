@@ -8,15 +8,21 @@
 bool TBaseNPC::isCanWalk() const
 {
 	bool result = true;
-	// TODO: TVec3::sub should use set internally I guess?
-	if ((unkF4.getPoint() - mPosition).squared() < CLBSquared(2.5625f))
+	JGeometry::TVec3<f32> point(unkF4.getPoint(),
+	                            JGeometry::TVec3<f32>::ASSIGN_COPY);
+	// TODO: vector construction still leaves an extra copy when inlined.
+	JGeometry::TVec3<f32> diff(JGeometry::TVec3<f32>(point.x - mPosition.x,
+	                                                 0.0f,
+	                                                 point.z - mPosition.z),
+	                           JGeometry::TVec3<f32>::ASSIGN_COPY);
+	if (diff.squared() < CLBSquared<f32>(10.0f))
 		result = false;
 	return result;
 }
 
 void TBaseNPC::execWalk(bool param_1)
 {
-	if (mWalkForbidCount != 0 || SMSGetMarDirector()->isThing() || !isClean()
+	if (mWalkForbidCount != 0 || gpMarDirector->isThing() || !isClean()
 	    || checkActionFlag(NPC_ACTION_HAPPY)) {
 		mMarchSpeed = 0.0f;
 		mTurnSpeed  = 0.0f;
@@ -28,14 +34,19 @@ void TBaseNPC::execWalk(bool param_1)
 		if (checkActionFlag(NPC_ACTION_RUN))
 			fVar1 = 6.0f;
 
-		SMS_GoRotate(mPosition, getUnkF4().getPoint(), fVar1, &mRotation.y);
+		SMS_GoRotate(mPosition, unkF4.getPoint(), fVar1, &mRotation.y);
 
 		// TODO: vector math is borked
-		JGeometry::TVec3<f32> local_54 = getUnkF4().getPoint();
+		JGeometry::TVec3<f32> local_54(unkF4.getPoint(),
+		                               JGeometry::TVec3<f32>::ASSIGN_COPY);
 		local_54 -= mPosition;
-		JGeometry::TVec3<f32> copy = local_54;
+		JGeometry::TVec3<f32> copy(local_54,
+		                           JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> copy2(copy, JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> copy3;
+		copy3.set(copy2);
 
-		f32 angle = MsGetRotFromZaxisY(copy);
+		f32 angle = MsGetRotFromZaxisY(copy3);
 		if (MsWrap(abs(mRotation.y - angle), 0.0f, 360.0f) < 0.001f)
 			offUnk1DA(UNK1DA_FLAG_UNK1);
 
@@ -79,11 +90,14 @@ void TBaseNPC::execWalk(bool param_1)
 		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
 }
 
+// TODO: frame-only mismatch: 0x50 frame / 0x30 return slot here, 0x60 / 0x48
+// in retail; the displacement vector already occupies the correct 0x3c slot.
 bool TBaseNPC::execUTurn()
 {
 	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
 	local_24 -= mPosition;
-	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
+	const JGeometry::TVec3<f32>& local_30 = MsGetRotFromZaxis(local_24);
+	f32 targetYaw                         = local_30.y;
 	if (mRotation.y == targetYaw)
 		return true;
 
@@ -134,7 +148,8 @@ bool TBaseNPC::execTurnToFirstState()
 
 bool TBaseNPC::isNeedTurnToFirstState() const
 {
-	if (!isClean() || checkActionFlag(NPC_ACTION_HAPPY))
+	bool clean = isClean();
+	if (!clean || checkActionFlag(NPC_ACTION_HAPPY))
 		return false;
 
 	bool result = false;

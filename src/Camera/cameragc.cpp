@@ -101,9 +101,9 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	int stage = SMSGetMarDirector()->getCurrentStage();
+	u8 stage = SMSGetMarDirector()->getCurrentStage();
 	if (SMSGetMarDirector()->getCurrentMap() == 58
-	    && (stage == 0 || stage == 1)) {
+	    && !(stage != 0 && stage != 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
@@ -432,10 +432,15 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 				MsVECNormalize(&diff, &norm);
 				norm *= fwdDist;
 
-				JGeometry::TVec3<f32> sample = SMS_GetMarioPos();
+				// Copies spelled out as the old TVec3 copy-ctor body; the
+				// current `: Vec(other)` ctor codegens differently here.
+				JGeometry::TVec3<f32> sample;
+				*(Vec*)&sample = *(Vec*)&SMS_GetMarioPos();
 				sample += norm;
-				JGeometry::TVec3<f32> p2 = sample;
-				JGeometry::TVec3<f32> p3 = p2;
+				JGeometry::TVec3<f32> p2;
+				*(Vec*)&p2 = *(Vec*)&sample;
+				JGeometry::TVec3<f32> p3;
+				*(Vec*)&p3 = *(Vec*)&p2;
 
 				const TBGCheckData* ground;
 				f32 height = gpMap->checkGroundIgnoreWaterSurface(
@@ -470,13 +475,12 @@ void CPolarSubCamera::calcPosAndAt_()
 
 	if (!(unk64 & CAMERA_FLAG_UNK80)) {
 		if (unk284 > 0) {
-			s32 acf   = mCurrentParams->mAutoChaseCompleteFrame;
-			s32 acs   = mCurrentParams->mAutoChaseStartFrame;
-			s32 delta = (acf - unk284) + 1;
-			if (delta <= acs)
+			s32 acf = mCurrentParams->mAutoChaseCompleteFrame;
+			s32 acs = mCurrentParams->mAutoChaseStartFrame;
+			if ((acf - unk284) + 1 <= acs)
 				unk288 = 0.0f;
 			else
-				unk288 = CLBCalcRatio<s32>(acs, acf, delta);
+				unk288 = CLBCalcRatio<s32>(acs, acf, (acf - unk284) + 1);
 		} else {
 			unk288 = 1.0f;
 		}
@@ -594,11 +598,12 @@ void CPolarSubCamera::calcPosAndAt_()
 				    = mCurrentTarget.mYaw + mCurrentParams->mOffsetAngleY;
 
 				if (gpCameraMario->mFrameMoveDistHorizontal >= 0.05f) {
-					s16 mAngle = SMS_GetMarioAngleY() - 0x8000;
-					f32 m      = MsClamp<f32>(
-                        (f32)mCurrentParams->mMaxAddAngleY
-                            * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
-                        -32766.998f, 32766.998f);
+					s16 mAngle = SMS_GetMarioAngleY();
+					mAngle -= 0x8000;
+					f32 m = MsClamp<f32>(
+					    (f32)mCurrentParams->mMaxAddAngleY
+					        * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
+					    -32766.998f, 32766.998f);
 
 					if ((s16)(mAngle - yAngle) < 0)
 						m = -m;

@@ -46,12 +46,27 @@ public:
 	}
 };
 
+// fabricated: copy the default the way TVec3's copy constructor did before
+// f836185e (TWaterEmitInfo's constructor only matches with it)
+template <>
+inline TParamT<JGeometry::TVec3<f32> >::TParamT(
+    TParams* params, JGeometry::TVec3<f32> defaultValue, u16 code,
+    const char* paramName)
+    : TBaseParam(params, code, paramName)
+    , value(defaultValue, JGeometry::TVec3<f32>::ASSIGN_COPY)
+{
+}
+
 class TParamVec : public TParamT<JGeometry::TVec3<f32> > {
 public:
 	// fabricated AND wrong
 	TParamVec(TParams* parent, JGeometry::TVec3<f32> defaultValue, u16 keycode,
 	          const char* name)
-	    : TParamT<JGeometry::TVec3<f32> >(parent, defaultValue, keycode, name)
+	    : TParamT<JGeometry::TVec3<f32> >(
+	          parent,
+	          JGeometry::TVec3<f32>(defaultValue,
+	                                JGeometry::TVec3<f32>::ASSIGN_COPY),
+	          keycode, name)
 	{
 	}
 };

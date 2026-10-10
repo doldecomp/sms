@@ -84,12 +84,10 @@ s32 TCardSector::read(CARDFileInfo* file, s32 index,
 	s32 errc = CARDRead(file, this, sizeof(TCardSector),
 	                    index * sizeof(TCardSector));
 	if (errc == CARD_RESULT_READY) {
-		s32 writeCount   = mWriteCount;
-		const void* data = &mHeader;
 		criteria->set(isCheckSumValid()
 		                  ? TCardManager::TCriteria::STATE_VALID
 		                  : TCardManager::TCriteria::STATE_CHECKSUM_BAD,
-		              writeCount, data);
+		              getWriteCount(), getData());
 	}
 	return errc;
 }
@@ -172,7 +170,9 @@ void TCardManager::copyTo(TCardManager::TCriteria* param_1,
 		param_2->unk0 = 0;
 		JSUMemoryInputStream stream(param_1[sector].getPreviewBytes(), 0x1C);
 
-		param_2->unk4  = stream.readU32();
+		u32 val4;
+		stream.read(&val4, sizeof(val4));
+		param_2->unk4  = val4;
 		param_2->unk8  = stream.readU64();
 		param_2->unk10 = stream.readU64();
 		param_2->unk18 = stream.readU32();
@@ -437,6 +437,7 @@ s32 TCardManager::createFile_()
 	return result;
 }
 
+// TODO: frame-only mismatch; 0x80-byte frame instead of 0x90.
 s32 TCardManager::filledInitData_(CARDFileInfo* file)
 {
 	TCardSector* sector = (TCardSector*)mSector;
@@ -581,8 +582,8 @@ s32 TCardManager::getBookmarkInfos_()
 					    != TCriteria::STATE_UNREAD)
 						continue;
 
-					result = ((TCardSector*)mSector)
-					             ->read(&info, i, &mSectorCriteria[i]);
+					TCardSector* sector = (TCardSector*)mSector;
+					result = sector->read(&info, i, &mSectorCriteria[i]);
 					if (result != CARD_RESULT_READY)
 						break;
 				}
@@ -614,11 +615,11 @@ s32 TCardManager::readBlock_(u32 index)
 
 	u32 crit_idx = index * 2 + 1;
 
-	if (mSectorCriteria[crit_idx].mState == TCriteria::STATE_UNREAD)
+	if (mSectorCriteria[crit_idx].getState() == TCriteria::STATE_UNREAD)
 		result = sector->read(&info, crit_idx, mSectorCriteria + crit_idx);
 
 	if (result == CARD_RESULT_READY)
-		if (mSectorCriteria[crit_idx + 1].mState == TCriteria::STATE_UNREAD)
+		if (mSectorCriteria[crit_idx + 1].getState() == TCriteria::STATE_UNREAD)
 			result = sector->read(&info, crit_idx + 1,
 			                      mSectorCriteria + (crit_idx + 1));
 
@@ -648,7 +649,7 @@ s32 TCardManager::readOptionBlock_()
 	s32 result = open_(&info);
 	if (result == CARD_RESULT_READY) {
 		TCardSector* sector = (TCardSector*)mSector;
-		if (mSectorCriteria[0].mState == TCriteria::STATE_EMPTY) {
+		if (mSectorCriteria[0].getState() == TCriteria::STATE_EMPTY) {
 			sector->clearData();
 			sector->setCheckSum(0);
 		} else {

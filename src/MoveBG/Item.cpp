@@ -45,8 +45,8 @@ void TItem::appeared()
 		if (mContainer != nullptr)
 			mContainer->receiveMessage(this, HIT_MESSAGE_ATTACH);
 
-		if (isActorType(ACTOR_TYPE_COIN_RED)
-		    || isActorType(ACTOR_TYPE_COIN_BLUE)) {
+		bool isRedCoin = isActorType(ACTOR_TYPE_COIN_RED);
+		if (isRedCoin || isActorType(ACTOR_TYPE_COIN_BLUE)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN_DISAPPEAR,
 			                                &mPosition, 0, nullptr, 0, 4);
 		}
@@ -95,27 +95,25 @@ void TItem::calcRootMatrix()
 void TItem::calc()
 {
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isState(STATE_HOLDING)) {
-		MtxPtr src = gpItemManager->unk40;
+		TMtx34f* src = &gpItemManager->unk40;
 
-		MtxPtr mtx;
-		if (checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS))
-			mtx = getModel()->getAnmMtx(0);
-		else
-			mtx = getModel()->getBaseTRMtx();
+		MtxPtr mtx = checkMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS)
+		                 ? getModel()->getAnmMtx(0)
+		                 : getModel()->getBaseTRMtx();
 
-		mtx[0][0] = src[0][0];
-		mtx[0][1] = src[0][1];
-		mtx[0][2] = src[0][2];
+		mtx[0][0] = src->at(0, 0);
+		mtx[0][1] = src->at(0, 1);
+		mtx[0][2] = src->at(0, 2);
 		mtx[0][3] = mPosition.x;
 
-		mtx[1][0] = src[1][0];
-		mtx[1][1] = src[1][1];
-		mtx[1][2] = src[1][2];
+		mtx[1][0] = src->at(1, 0);
+		mtx[1][1] = src->at(1, 1);
+		mtx[1][2] = src->at(1, 2);
 		mtx[1][3] = mPosition.y;
 
-		mtx[2][0] = src[2][0];
-		mtx[2][1] = src[2][1];
-		mtx[2][2] = src[2][2];
+		mtx[2][0] = src->at(2, 0);
+		mtx[2][1] = src->at(2, 1);
+		mtx[2][2] = src->at(2, 2);
 		mtx[2][3] = mPosition.z;
 	}
 
@@ -154,7 +152,7 @@ void TItem::appear()
 {
 	TMapObjGeneral::appear();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mStateTimer = unk150;
+	startStateTimer(unk150);
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
 
@@ -168,7 +166,7 @@ void TItem::perform(u32 cue, JDrama::TGraphics* graphics)
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
 			onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-			mStateTimer = unk14C;
+			startStateTimer(unk14C);
 		}
 	}
 
@@ -232,7 +230,8 @@ void TCoin::appearWithoutSound()
 	TItem::appear();
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    MAPOBJ_MS_WATCOIN_KIRA, getModel()->getAnmMtx(0), 0, this);
-	if (isActorType(ACTOR_TYPE_COIN))
+	bool isCoin = isActorType(ACTOR_TYPE_COIN);
+	if (isCoin)
 		offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 }
 
@@ -258,6 +257,8 @@ void TCoin::makeObjAppeared()
 		unk154->unk1A &= ~1;
 }
 
+// TODO: Instructions match; StageUtil.hpp emits extra GC2D tables that shift
+// the 60.0f constant's .sdata2 relocation.
 void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -293,7 +294,7 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	} else {
 		if ((cue & CUE_CALC_VIEW) && getMActor() == nullptr) {
-			gpQuestionManager->request(mPosition, 60.0f);
+			gpQuestionManager->request(getPosition(), 60.0f);
 		}
 
 		TItem::perform(cue, graphics);
@@ -313,7 +314,8 @@ void TCoin::loadAfter()
 			return;
 	}
 
-	unk154 = new TMirrorActor("コインin鏡");
+	TMirrorActor* actor = new TMirrorActor("コインin鏡");
+	unk154              = actor;
 	unk154->init(getModel(), 0x18);
 }
 
@@ -378,7 +380,8 @@ void TCoinBlue::makeObjAppeared()
 
 void TCoinBlue::taken(THitActor* param_1)
 {
-	SMSGetMarDirector()->fireGetBlueCoin(this);
+	TMarDirector* director = SMSGetMarDirector();
+	director->fireGetBlueCoin(this);
 
 	if (mContainer)
 		mContainer->receiveMessage(this, HIT_MESSAGE_DETACH);
@@ -398,8 +401,9 @@ void TCoinBlue::loadBeforeInit(JSUMemoryInputStream& stream)
 void TCoinBlue::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
+	u32 eventId = getEventId();
 	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        SMSGetMarDirector()->getCurrentMap(), getEventId()))
+	        SMSGetMarDirector()->getCurrentMap(), eventId))
 		makeObjDead();
 }
 
@@ -535,6 +539,7 @@ void TShine::movingDown()
 	mState      = STATE_UNKF;
 }
 
+// TODO: nonmatching stack frame and effect-light color inline.
 void TShine::control()
 {
 	if (!isState(0x10))
@@ -554,7 +559,10 @@ void TShine::control()
 		J3DModel* model      = getMActor()->getModel();
 		MtxPtr mtx           = model->getAnmMtx(2);
 		const GXColor& color = (GXColor) { 0xff, 0xff, 0xff, 0xff };
-		JGeometry::TVec3<f32> trans(mtx[0][3], mtx[1][3], mtx[2][3]);
+		JGeometry::TVec3<f32> trans;
+		trans.x = mtx[0][3];
+		trans.y = mtx[1][3];
+		trans.z = mtx[2][3];
 		gpLightManager->setEffectLightColor(color);
 		gpLightManager->setEffectLightPos(trans);
 	} break;
@@ -675,6 +683,7 @@ void TShine::touchPlayer(THitActor* actor)
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
+// TODO: a 0x18-byte frame difference and .sdata2 relocations remain.
 void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 {
 	TItem::appear();
@@ -696,7 +705,7 @@ void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 	unk17C.y = yDelta / (f32)unk168;
 	unk17C.z = (mInitialPosition.z - mPosition.z) / (f32)unk168;
 
-	unk15C = getDistanceXZ(mInitialPosition);
+	unk15C = getDistanceXZ(getInitialPosition());
 	if (unk15C == 0.0f)
 		unk15C = 1000.0f;
 	if (yDelta > 0.0f)
@@ -725,6 +734,8 @@ s32 TShine::appearWithTimeCallback(uintptr_t param_1, u32 param_2)
 	return 0;
 }
 
+// TODO: Instructions match; StageUtil.hpp emits unrelated GC2D tables that
+// shift the 0.0f and 2.0f relocations.
 void TShine::appearSimple(int param_1)
 {
 	TItem::appear();
@@ -739,23 +750,25 @@ void TShine::appearSimple(int param_1)
 	unk160   = 0.0f;
 	mUpSpeed = 2.0f;
 
-	mInitialPosition = mPosition;
+	mInitialPosition = getPosition();
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
 	                                0, 4);
 
-	mStateTimer = unk174;
-	mState      = STATE_UNKB;
+	startStateTimer(unk174);
+	mState = STATE_UNKB;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TShine::appearWithDemo(const char* param_1)
 {
-	unk18C = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1))
-	             ->mDemoLengthFrames;
-	SMSGetMarDirector()->fireStartDemoCamera(
-	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback,
-	    (uintptr_t)this, nullptr, JDrama::TFlagT<u16>());
+	TCameraMapTool* tool
+	    = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1));
+	unk18C                 = tool->mDemoLengthFrames;
+	TMarDirector* director = SMSGetMarDirector();
+	director->fireStartDemoCamera(param_1, &mPosition, -1, 0.0f, true,
+	                              appearWithTimeCallback, (uintptr_t)this,
+	                              nullptr, JDrama::TFlagT<u16>());
 }
 
 void TShine::kill()
@@ -767,9 +780,9 @@ void TShine::kill()
 void TShine::makeMActors()
 {
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActorKeeper->setModelLoaderFlags(J3DMLF_MaterialPEFull
-	                                   | J3DMLF_UseUniqueMaterials
-	                                   | (2 << J3DMLF_TevStageNumShift));
+	getActorKeeper()->setModelLoaderFlags(J3DMLF_MaterialPEFull
+	                                      | J3DMLF_UseUniqueMaterials
+	                                      | (2 << J3DMLF_TevStageNumShift));
 	MActor* result;
 	if (TFlagManager::getInstance()->getShineFlag(mEventId)
 	    && strcmp("シャイン（マニ屋用）", getName()) != 0) {
@@ -802,6 +815,8 @@ void TShine::loadAfter()
 	}
 }
 
+// TODO: Instructions match; StageUtil.hpp emits unrelated GC2D tables that
+// shift the "normal" and "quickly" .sdata2 relocations.
 void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 {
 	char name[0x20];
@@ -819,10 +834,8 @@ void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 		eventId = 120;
 	setEventId(eventId);
 
-	s32 v;
-	stream >> v;
-	eventId = v;
-	if (v + 1 >= 2)
+	eventId = stream.readS32();
+	if (eventId + 1 >= 2)
 		eventId = -1;
 	unk190 = eventId + 1;
 }
@@ -906,6 +919,8 @@ void TEggYoshi::startBalloonAnim()
 	}
 }
 
+// TODO: nonmatching frame (0x38 vs 0x48) and StageUtil.hpp's unrelated
+// stage-table prefix in .sdata2.
 void TEggYoshi::touchFruit(THitActor* fruit)
 {
 	if (isState(0xE) || isState(STATE_HOLDING))
@@ -914,11 +929,12 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
-		mRotation.y = (360.0f / 65536.0f)
-		              * matan(fruit->mPosition.z - mPosition.z,
-		                      fruit->mPosition.x - mPosition.x);
-		mState = 0xB;
-		unk150 = fruit;
+		JGeometry::TVec3<f32> diff;
+		diff.sub(fruit->mPosition, mPosition);
+		s16 angle   = matan(diff.z, diff.x);
+		mRotation.y = SHORTANGLE2DEG(angle);
+		mState      = 0xB;
+		unk150      = fruit;
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr,
 		                                   0);
 	} else if (animIsFinished()) {
@@ -938,14 +954,18 @@ void TEggYoshi::touchActor(THitActor* other)
 	if (other->isActorType(ACTOR_TYPE_MARIO)) {
 		TTakeActor* casted = static_cast<TTakeActor*>(other);
 		if (casted->getHeldObject()
-		    && TMapObjBase::isFruit(casted->getHeldObject()))
-			touchFruit(casted->getHeldObject());
+		    && TMapObjBase::isFruit(casted->getHeldObject())) {
+			TTakeActor* fruit = casted->getHeldObject();
+			touchFruit(fruit);
+		}
 	}
 
 	if (TMapObjBase::isFruit(other))
 		touchFruit(other);
 }
 
+// TODO: Instructions match; StageUtil.hpp's GC2D tables shift the constants
+// and jump table in .sdata2 and .data.
 void TEggYoshi::control()
 {
 	TMapObjBase::control();
@@ -963,7 +983,7 @@ void TEggYoshi::control()
 			startAnim(3);
 			TYoshi* yoshi = SMS_GetYoshi();
 			if (!yoshi->isHatched()) {
-				JGeometry::TVec3<f32> pos = mPosition;
+				JGeometry::TVec3<f32> pos = getPosition();
 				yoshi->appearFromEgg(pos, mRotation.y, this);
 				yoshi->setEggYoshiPtr(this);
 			}
@@ -976,12 +996,10 @@ void TEggYoshi::control()
 			mState = STATE_DEAD;
 		}
 		break;
-	case 0xF: {
-		JGeometry::TVec3<f32> v = getVelocity();
-		if (v.y == 0.0f)
+	case 0xF:
+		if (JGeometry::TVec3<f32>(mVelocity).y == 0.0f)
 			mState = 0x10;
 		break;
-	}
 	case 0x0:
 	case 0x1:
 	case 0x2:
@@ -1020,6 +1038,8 @@ void TEggYoshi::startFruit()
 		receiveMessage(nullptr, HIT_MESSAGE_UNK10);
 }
 
+// TODO: frame is 0x30 instead of 0x38; StageUtil.hpp's GC2D tables also
+// shift the throw and balloon constants in .sdata2.
 BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TAKE) {
@@ -1122,8 +1142,9 @@ void TItemNozzle::touchPlayer(THitActor* param_1)
 	else
 		boxKind = 4;
 
-	SMSGetMSound()->startSoundActor(MSD_SE_SY_GET_NOZZLE, &mPosition, 0,
-	                                nullptr, 0, 4);
+	if (SMSGetMSound()->gateCheck(MSD_SE_SY_GET_NOZZLE))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_SY_GET_NOZZLE, getPosition(), 0, nullptr, 0, 4);
 	gpItemManager->resetNozzleBoxesModel(boxKind);
 	SMSGetMarDirector()->fireGetNozzle(this);
 }

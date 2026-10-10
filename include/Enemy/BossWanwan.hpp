@@ -1,9 +1,27 @@
 #ifndef ENEMY_BOSS_WANWAN_HPP
 #define ENEMY_BOSS_WANWAN_HPP
 
+#include <Enemy/Enemy.hpp>
+#include <Enemy/EnemyManager.hpp>
 #include <Strategic/Nerve.hpp>
 
 class TLiveActor;
+
+// fabricated: declaration only, layout unknown
+class TBossWanwan : public TSpineEnemy {
+public:
+	TBossWanwan(const char*);
+
+public:
+	// TODO: unknown layout, size from getNameRef_BossEnemy's operator new
+	/* 0x150 */ u8 unk150[0x68];
+};
+
+// fabricated: declaration only, layout unknown beyond TEnemyManager
+class TBossWanwanManager : public TEnemyManager {
+public:
+	TBossWanwanManager(const char*);
+};
 
 DECLARE_NERVE(TNerveBWGraphWander, TLiveActor);
 DECLARE_NERVE(TNerveBWRoll, TLiveActor);

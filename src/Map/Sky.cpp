@@ -14,15 +14,19 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+// TODO: frame-only mismatch: draw color temporary slots are 8 bytes low.
 void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	Mtx local_EC;
+	Mtx local_BC;
+	Mtx local_8C;
+	Mtx afStack_dc;
+
 	if (cue & CUE_CALC_ANIM) {
 		MtxPtr mtx = gpCamera->unk1EC;
 
-		Mtx local_EC;
 		MTXInverse(mtx, local_EC);
 
-		Mtx local_BC;
 		MTXIdentity(local_BC);
 
 		local_BC[0][3] = -local_EC[0][0] * mtx[0][3]
@@ -36,9 +40,8 @@ void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 		                 - local_EC[2][2] * mtx[2][3];
 
 		if (SMSGetMarDirector()->getCurrentMap() == 15) {
-			Mtx local_8C;
-			f32 fVar2 = sinf(unk48 * 0.017453294f);
-			f32 fVar3 = cosf(unk48 * 0.017453294f);
+			f32 fVar2 = sin(unk48 * 0.017453294f);
+			f32 fVar3 = cos(unk48 * 0.017453294f);
 
 			local_8C[0][0] = fVar3;
 			local_8C[0][1] = 0.0f;
@@ -58,7 +61,7 @@ void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk48 += unk4C;
 			unk48 = MsWrap<f32>(unk48, 0.0f, 360.0f);
 		}
-		unk44->getModel()->setBaseTRMtx(local_BC);
+		MTXCopy(local_BC, unk44->getModel()->getBaseTRMtx());
 	}
 	unk44->perform(cue, graphics);
 	if ((cue & CUE_DRAW) != 0) {
@@ -76,7 +79,6 @@ void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 		GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0x0, 0x12, 0xEE, 0x80 });
 		GXSetNumTexGens(0);
 		GXSetCurrentMtx(GX_PNMTX0);
-		Mtx afStack_dc;
 		MTXScale(afStack_dc, 100000.0f, 100000.0f, 100000.0f);
 		GXLoadPosMtxImm(afStack_dc, GX_PNMTX0);
 		GXLoadNrmMtxImm(afStack_dc, GX_PNMTX0);
@@ -101,13 +103,13 @@ void TSky::load(JSUMemoryInputStream& stream)
 	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 	        | (2 << J3DMLF_TevStageNumShift));
 
-	if (gpMapObjManager->getSkyMatTable()) {
+	if (gpMapObjManager->getSkyMatTable() != nullptr) {
 		unk44->getModel()->getModelData()->setMaterialTable(
 		    gpMapObjManager->getSkyMatTable(), J3DMatCopyFlag_All);
 		unk44->initDL();
 	}
 
-	if (SMSGetMarDirector()->mMap != 15)
+	if (SMSGetMarDirector()->getCurrentMap() != 15)
 		TMapObjBase::startAllAnim(unk44, "sky");
 }
 

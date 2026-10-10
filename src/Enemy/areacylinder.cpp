@@ -9,6 +9,7 @@ TAreaCylinder::TAreaCylinder(const char* name)
 	mRadius = 0.0f;
 }
 
+// TODO: nonmatching stream-read and registration stack offsets.
 void TAreaCylinder::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
@@ -41,9 +42,7 @@ void TAreaCylinder::load(JSUMemoryInputStream& stream)
 
 	mgr->registerCylinder(this);
 
-	s32 rate;
-	stream >> rate;
-	mProbability = (f32)rate / 100.0f;
+	mProbability = stream.readS32() / 100.0f;
 }
 
 void TAreaCylinder::perform(u32, JDrama::TGraphics*) { }

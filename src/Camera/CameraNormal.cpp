@@ -57,7 +57,7 @@ void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 	TStagePositionInfo* info = (TStagePositionInfo*)gpPositionHolder->searchF(
 	    JDrama::TNameRef::calcKeyCode(name), name);
 	if (info != nullptr) {
-		*result = info->unkC;
+		*result = info->getPosition();
 	} else {
 		result->x = 0.0f;
 		result->y = 0.0f;

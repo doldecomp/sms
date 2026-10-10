@@ -118,7 +118,7 @@ public:
 	void setGoal();
 	bool willFall(s32);
 	void checkOnPanel();
-	void margeVelocity(JGeometry::TVec3<f32>&);
+	f32 margeVelocity(JGeometry::TVec3<f32>&);
 	void forceRoll();
 	bool isRolling();
 	static s32 mCheckOnPanelTimeRoll;

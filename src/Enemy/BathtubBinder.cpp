@@ -40,6 +40,7 @@ void TBathtubBinder::bind(TLiveActor* param_1)
 		float_(param_1);
 }
 
+// TODO: constrain_ inlines sqrt where the target keeps three calls.
 void TBathtubBinder::float_(TLiveActor* param_1)
 {
 	if (unk8 == nullptr)
@@ -50,9 +51,8 @@ void TBathtubBinder::float_(TLiveActor* param_1)
 	               param_1->mRotation.z);
 	JGeometry::TVec3<f32> forward(mtx[0][2], mtx[1][2], mtx[2][2]);
 
-	JGeometry::TVec3<f32> front(forward.x * unkC + param_1->mPosition.x,
-	                            param_1->mPosition.y,
-	                            forward.z * unkC + param_1->mPosition.z);
+	JGeometry::TVec3<f32> front;
+	front.scaleAdd(unkC, param_1->mPosition, forward);
 	constrain_(front, unk10);
 	front.y = unk20 + unk8->getWaterHeight(front.x, front.z);
 

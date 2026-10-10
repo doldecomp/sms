@@ -216,7 +216,7 @@ void TMario::getSlopeNormalAccele(f32* arg0, f32* arg1)
 	}
 
 	if (mGroundPlane->isWetGround()) {
-		if (mGroundPlane->mNormal.y > 0.99f) {
+		if (mGroundPlane->getNormal().y > 0.99f) {
 			*arg0 = mSlipParamsWaterGround.mSlopeAcceleUp.get();
 			*arg1 = mSlipParamsWaterGround.mSlopeAcceleDown.get();
 		} else {
@@ -260,8 +260,14 @@ void TMario::getSlopeSlideAccele(f32* arg0, f32* arg1)
 		}
 		return;
 	}
-	*arg0 = mSlipParamsNormal.mSlideAcceleUp.get();
-	*arg1 = mSlipParamsNormal.mSlideAcceleDown.get();
+	{
+		f32 up = mSlipParamsNormal.mSlideAcceleUp.get();
+		*arg0  = up;
+	}
+	{
+		f32 down = mSlipParamsNormal.mSlideAcceleDown.get();
+		*arg1    = down;
+	}
 }
 
 f32 TMario::getChangeAngleSpeed()
@@ -275,7 +281,7 @@ f32 TMario::getChangeAngleSpeed()
 		} else if (mGroundPlane->isUnk2()) {
 			angSp = (f32)mSlipParams45.mSlideAngleYSp.get();
 		} else if (mGroundPlane->isWetGround()) {
-			if (mGroundPlane->mNormal.y > 0.99f) {
+			if (mGroundPlane->getNormal().y > 0.99f) {
 				angSp = (f32)mSlipParamsWaterGround.mSlideAngleYSp.get();
 			} else {
 				angSp = (f32)mSlipParamsWaterSlope.mSlideAngleYSp.get();
@@ -318,22 +324,21 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 	const TBGCheckData* ground = mGroundPlane;
 
 	s16 dirAng = matan(ground->getNormal().z, ground->getNormal().x);
+	f32 slopeUp;
+	f32 slopeDown;
 
 	f32 mag = MsSqrtf(ground->getNormal().x * ground->getNormal().x
 	                  + ground->getNormal().z * ground->getNormal().z);
 
 	s16 angDiff = mSlopeAngle - mFaceAngle.y;
-	f32 slopeUp;
-	f32 slopeDown;
 	getSlopeSlideAccele(&slopeUp, &slopeDown);
-	f32 acc;
 	if (angDiff > -0x4000 && angDiff < 0x4000)
-		acc = slopeUp * mag + baseAcc;
+		baseAcc += slopeUp * mag;
 	else
-		acc = slopeDown * mag + baseAcc;
+		baseAcc += slopeDown * mag;
 
-	mSlideVelX += acc * JMASSin(dirAng);
-	mSlideVelZ += acc * JMASCos(dirAng);
+	mSlideVelX += baseAcc * JMASSin(dirAng);
+	mSlideVelZ += baseAcc * JMASCos(dirAng);
 	mSlideVelX *= friction;
 	mSlideVelZ *= friction;
 	unk9E = matan(mSlideVelZ, mSlideVelX);
@@ -405,19 +410,20 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		if (mStatus == MARIO_STATUS_CATCH) {
 			if (mStatusState == 1)
 				slipFr = mDeParams.mWasOnWaterSlip.get();
-			if (checkFlag(MARIO_FLAG_IN_ANY_WATER))
+			bool inWater = checkFlag(MARIO_FLAG_IN_ANY_WATER) != 0;
+			if (inWater)
 				slipFr = mDeParams.mInWaterSlip.get();
 		}
 	}
 
-	f32 mult   = (0.02f * (mIntendedMag * 0.03125f * cs)) + slipFr;
+	f32 mult   = (0.02f * (mIntendedMag / 32.0f * cs)) + slipFr;
 	f32 oldMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 
 	mSlideVelX
-	    += sn * (mSlideVelZ * (mIntendedMag * 0.03125f)) * getSlideStickMult();
-	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag * 0.03125f)) * getSlideStickMult())
-	    - mSlideVelZ);
+	    += sn * (mSlideVelZ * (mIntendedMag / 32.0f)) * getSlideStickMult();
+	mSlideVelZ
+	    = -((sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
+	        - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 	if (oldMag > 0.0f && newMag > 0.0f) {
@@ -552,10 +558,10 @@ void TMario::doSurfing()
 	const TBGCheckData* below;
 	gpMap->checkGround(mPosition.x, mPosition.y - mVel.y, mPosition.z, &below);
 
+	f32 powMax;
 	f32 rotMin;
 	f32 rotMax;
 	f32 powMin;
-	f32 powMax;
 
 	if (below->isWaterSurface()) {
 		rotMin = getSurfingParamsWater()->mRotMin.get();
@@ -591,8 +597,8 @@ void TMario::doSurfing()
 	if (mForwardVel > powMax)
 		mForwardVel = powMax;
 
-	s16 rotSp
-	    = (((want - powMin) / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
+	f32 tmp      = want - powMin;
+	s16 rotSp    = ((tmp / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 	slopeProcess();
@@ -601,6 +607,7 @@ void TMario::doSurfing()
 		surfingEffect();
 }
 
+// TODO: recover the BOOL return type in Mario.hpp before using this helper.
 void TMario::doBraking(f32) { }
 
 void TMario::changePlayerWaiting() { }
@@ -818,6 +825,7 @@ BOOL TMario::turnning()
 	if (!isRunningTurnning())
 		return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 
+	// TODO: recover doBraking's BOOL signature; frame is 0x20, target 0x28.
 	BOOL zeroed = false;
 	f32 v       = FConverge(mForwardVel, 0.0f, 4.0f, 4.0f);
 	mForwardVel = v;
@@ -891,9 +899,10 @@ inline BOOL TMario::braking()
 	if (!(mInput & 0x10) && (mInput & 0xF))
 		return checkAllMotions();
 
-	// TODO: inline
+	f32 brake = 4.0f;
+	// TODO: recover doBraking's BOOL signature in Mario.hpp.
 	BOOL zeroed = 0;
-	f32 tmp     = FConverge(mForwardVel, 0.0f, 4.0f, 4.0f);
+	f32 tmp     = FConverge(mForwardVel, 0.0f, brake, brake);
 	mForwardVel = tmp;
 	if (tmp == 0.0f)
 		zeroed = 1;
@@ -1029,7 +1038,8 @@ BOOL TMario::walkEnd()
 		break;
 	}
 
-	f32 rate = 0.25f * mForwardVel;
+	f32 rate = 0.25f;
+	rate     = mForwardVel * rate;
 	if (rate < 0.1f)
 		rate = 0.1f;
 	setAnimation(ANIM_RUN1, rate);

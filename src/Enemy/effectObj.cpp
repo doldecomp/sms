@@ -133,20 +133,21 @@ void TEffectObjBase::moveObject()
 		unk74 += 1;
 		Vec local_1c;
 		VECScale(&mScaling, &local_1c, unk70 / unk6C);
+		Vec& scale = local_1c;
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_C, &mPosition, 3, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale(scale);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_A, &mPosition, 1, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale(scale);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_B, &mPosition, 1, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale(scale);
 		}
 
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
@@ -252,14 +253,15 @@ void TEffectModel::moveObject()
 	}
 }
 
+// TODO: instructions match; the angle-scale .sdata2 relocation still differs.
 void TEffectModel::calcRootMatrix()
 {
 	TPosition3f mtx;
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
 	mtx.translation(mPosition.x, mPosition.y, mPosition.z);
-	mMActor->getModel()->setBaseTRMtx(mtx);
-	mMActor->getModel()->setBaseScale(mScaling);
+	getMActor()->getModel()->setBaseTRMtx(mtx);
+	getMActor()->getModel()->setBaseScale(mScaling);
 }
 
 TEffectColumWaterManager::TEffectColumWaterManager(const char* name)
@@ -485,12 +487,13 @@ void TEffectColumSand::init(TLiveManager* param_1)
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
+// TODO: instructions match; duplicate weak-inline constants shift .sdata2.
 void TEffectColumSand::reset()
 {
 	TEffectModel::reset();
-	mMActor->setBck("08_sunabashira");
-	mMActor->setBrk("08_sunabashira");
-	mMActor->setBtk("08_sunabashira");
+	getMActor()->setBck("08_sunabashira");
+	getMActor()->setBrk("08_sunabashira");
+	getMActor()->setBtk("08_sunabashira");
 	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);

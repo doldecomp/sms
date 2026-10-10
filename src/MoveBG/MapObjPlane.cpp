@@ -89,7 +89,7 @@ void TMapObjPlane::draw()
 			GXPosition3f32(worldX, heightAt(x, z + 1), nextWorldZ);
 			GXNormal3f32(normalAt(x, z + 1).x, normalAt(x, z + 1).y,
 			             normalAt(x, z + 1).z);
-			GXPosition2f32(getTexPos(x), getTexPos(z + 1));
+			GXTexCoord2f32(getTexPos(x), getTexPos(z + 1));
 		}
 		GXEnd();
 	}
@@ -116,49 +116,57 @@ void TMapObjPlane::updateCheckData(int x, int z)
 	mCollision->getCheckData(x, z, 1)->setVertex(local_58, local_4c, local_40);
 }
 
+// fabricated: recover the repeated triangle-normal inline boundary in calcNrm.
+static inline void calcPlaneNormal(JGeometry::TVec3<f32>& normal,
+                                   const JGeometry::TVec3<f32>& first,
+                                   const JGeometry::TVec3<f32>& second,
+                                   const JGeometry::TVec3<f32>& center)
+{
+	JGeometry::TVec3<f32> edge1;
+	JGeometry::TVec3<f32> edge2;
+	edge2.sub(second, center);
+	edge1.sub(first, second);
+	normal.cross(edge1, edge2);
+	normal.normalize();
+}
+
 void TMapObjPlane::calcNrm(int x, int z)
 {
 	if (x < 0 || mExtents <= x || z < 0 || mExtents <= z)
 		return;
 
-	f32 fVar1 = unkFC;
-	f32 fVar7 = -unkFC;
-
 	f32 h00 = heightAt(x, z);
-	f32 h0N = heightAt(x, MsWrap(z - 1, 0, mExtents));
-	f32 h0P = heightAt(x, MsWrap(z + 1, 0, mExtents));
-	f32 hN0 = heightAt(MsWrap(x - 1, 0, mExtents), z);
-	f32 hP0 = heightAt(MsWrap(x + 1, 0, mExtents), z);
+	JGeometry::TVec3<f32> center(0.0f, h00, 0.0f);
 
-	// TODO: figure out the inlines here. Definitely some subtracting and
-	// cross producting is occurring.
+	f32 h0N   = heightAt(x, MsWrap(z - 1, 0, mExtents));
+	f32 fVar1 = unkFC;
+	JGeometry::TVec3<f32> north(0.0f, h0N, -unkFC);
+
+	f32 h0P = heightAt(x, MsWrap(z + 1, 0, mExtents));
+	JGeometry::TVec3<f32> south(0.0f, h0P, fVar1);
+
+	f32 hN0 = heightAt(MsWrap(x - 1, 0, mExtents), z);
+	JGeometry::TVec3<f32> west(-unkFC, hN0, 0.0f);
+
+	f32 hP0 = heightAt(MsWrap(x + 1, 0, mExtents), z);
+	JGeometry::TVec3<f32> east(unkFC, hP0, 0.0f);
 
 	JGeometry::TVec3<f32> local_9c;
-	local_9c.x = (h0N - hN0) * 0.0f - (fVar7 - 0.0f) * (hN0 - h00);
-	local_9c.y = (fVar7 - 0.0f) * (fVar7 - 0.0f) - (0.0f - fVar7) * 0.0f;
-	local_9c.z = (0.0f - fVar7) * (hN0 - h00) - (h0N - hN0) * (fVar7 - 0.0f);
-	local_9c.normalize();
+	calcPlaneNormal(local_9c, north, west, center);
 
 	JGeometry::TVec3<f32> local_a8;
-	local_a8.x = (hP0 - h0N) * (fVar7 - 0.0f) - (0.0f - fVar7) * (h0N - h00);
-	local_a8.z = (fVar1 - 0.0f) * (h0N - h00) - (hP0 - h0N) * 0.0f;
-	local_a8.y = (0.0f - fVar7) * 0.0f - (fVar1 - 0.0f) * (fVar7 - 0.0f);
-	local_a8.normalize();
+	calcPlaneNormal(local_a8, east, north, center);
 
 	JGeometry::TVec3<f32> local_b4;
-	local_b4.x = (hN0 - h0P) * (fVar1 - 0.0f) - (0.0f - fVar1) * (h0P - h00);
-	local_b4.z = (fVar7 - 0.0f) * (h0P - h00) - (hN0 - h0P) * 0.0f;
-	local_b4.y = (0.0f - fVar1) * 0.0f - (fVar7 - 0.0f) * (fVar1 - 0.0f);
-	local_b4.normalize();
+	calcPlaneNormal(local_b4, west, south, center);
 
 	JGeometry::TVec3<f32> local_c0;
-	local_c0.x = (h0P - hP0) * 0.0f - h0N * (hP0 - h00);
-	local_c0.y = h0N * h0N - (0.0f - fVar1) * 0.0f;
-	local_c0.z = (0.0f - fVar1) * (hP0 - h00) - (h0P - hP0) * h0N;
-	local_c0.normalize();
+	calcPlaneNormal(local_c0, south, east, center);
 
-	mNormalMap[x + z * mExtents] = local_9c + local_a8 + local_b4 + local_c0;
-	mNormalMap[x + z * mExtents].scale(0.25f);
+	// TODO: JGVec3's fabricated operators omit intermediate value copies.
+	JGeometry::TVec3<f32>& normal = mNormalMap[x + z * mExtents];
+	normal                        = local_9c + local_a8 + local_b4 + local_c0;
+	normal.scale(0.25f);
 }
 
 void TMapObjPlane::movement() { }
@@ -174,10 +182,14 @@ void TMapObjPlane::depress(f32 x, f32 z, f32 rate)
 	f32 xrem = x_ - x_00;
 	f32 zrem = z_ - z_00;
 
-	heightAt(x_00, z_00) -= rate * ((1.0f - xrem) + (1.0f - zrem));
-	heightAt(x_00 + 1, z_00) -= rate * (xrem + (1.0f - zrem));
-	heightAt(x_00, z_00 + 1) -= rate * ((1.0f - xrem) + zrem);
-	heightAt(x_00 + 1, z_00 + 1) -= rate * (xrem + zrem);
+	heightAt(x_00, z_00)
+	    = heightAt(x_00, z_00) - rate * ((1.0f - xrem) + (1.0f - zrem));
+	f32& h10 = heightAt(x_00 + 1, z_00);
+	h10      = h10 - rate * (xrem + (1.0f - zrem));
+	f32& h01 = heightAt(x_00, z_00 + 1);
+	h01      = h01 - rate * ((1.0f - xrem) + zrem);
+	f32& h11 = heightAt(x_00 + 1, z_00 + 1);
+	h11      = h11 - rate * (xrem + zrem);
 
 	calcNrm(x_00, z_00 - 1);
 	calcNrm(x_00 + 1, z_00 - 1);
@@ -227,13 +239,20 @@ void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
 	}
 }
 
+// fabricated: shared BMP dimension decode recovers the target's load order.
+static inline int readBmpInt(const u8* bmp, int offset)
+{
+	int byte0 = bmp[offset];
+	int byte1 = bmp[offset + 1];
+	int byte2 = bmp[offset + 2];
+	int byte3 = bmp[offset + 3];
+	return (byte3 << 24) + (byte2 << 16) + (byte1 << 8) + byte0;
+}
+
 void TMapObjPlane::makeMountain()
 {
-	int width = (unk118[0x15] << 24) + (unk118[0x14] << 16)
-	            + (unk118[0x13] << 8) + unk118[0x12];
-
-	int height = (unk118[0x19] << 24) + (unk118[0x18] << 16)
-	             + (unk118[0x17] << 8) + unk118[0x16];
+	int width  = readBmpInt(unk118, 0x12);
+	int height = readBmpInt(unk118, 0x16);
 
 	for (int z = 0; z < mExtents; z = z + 1) {
 		for (int x = 0; x < mExtents; x = x + 1) {

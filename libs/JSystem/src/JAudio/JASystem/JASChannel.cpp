@@ -289,9 +289,13 @@ namespace Driver {
 	static void updateAutoMixer(TChannel* channel, f32 volume, f32 pan,
 	                            f32 fxmix, f32 dolby)
 	{
-		channel->unk20->mDSPHandle->setAutoMixer(
-		    volume * 32767.5f, pan * 127.5f, dolby * 127.5f, fxmix * 127.5f,
-		    channel->unkA8[1].mWhole);
+		u16 mixerVolume = volume * 32767.5f;
+		u8 mixerPan     = pan * 127.5f;
+		u8 mixerDolby   = dolby * 127.5f;
+		u8 mixerFxmix   = fxmix * 127.5f;
+		channel->unk20->mDSPHandle->setAutoMixer(mixerVolume, mixerPan,
+		                                         mixerDolby, mixerFxmix,
+		                                         channel->unkA8[1].mWhole);
 	}
 
 	static void updateMixer(TChannel* channel, f32 volume, f32 pan, f32 fxmix,
@@ -588,7 +592,12 @@ void TChannel::directReleaseOsc(u32 index, u16 release)
 f32 TChannel::bankOscToOfs(u32 index)
 {
 	JUT_ASSERT(index < 4);
-	return unk38[index]->isOsc() ? unk38[index]->getOffset() : 1.0f;
+	f32 offset;
+	if (unk38[index]->isOsc())
+		offset = unk38[index]->getOffset();
+	else
+		offset = 1.0f;
+	return offset;
 }
 
 void TChannel::effectOsc(u32 index, f32 effect)
@@ -807,8 +816,8 @@ BOOL TChannel::playLogicalChannel()
 	if (!checkLogicalChannel())
 		return FALSE;
 
-	unk20->mCallback   = &Driver::updatecallDSPChannel;
-	unk20->mCBInterval = 1;
+	unk20->mCallback = &Driver::updatecallDSPChannel;
+	unk20->setCBInterval(1);
 
 	DSPInterface::DSPBuffer* buf = unk20->mDSPHandle;
 

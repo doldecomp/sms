@@ -150,15 +150,19 @@ void TPoiHana::init(TLiveManager* param_1)
 	unk19C = (TPoihanaSaveLoadParams*)getSaveParam();
 	unk1BC = new TPoiHanaCollision;
 
+	// TODO: nonmatching list-insertion stack slots (off by 4 bytes).
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk1BC);
 
-	unk1BC->initHitActor(0, 2, HIT_CATEGORY_PLAYER,
-	                     unk19C->mSLAttackRadius.get() * mBodyScale,
-	                     unk19C->mSLAttackHeight.get() * mBodyScale,
-	                     unk19C->mSLDamageRadius.get() * mBodyScale,
-	                     unk19C->mSLDamageHeight.get() * mBodyScale);
+	f32 attackRadius = unk19C->mSLAttackRadius.get();
+	f32 attackHeight = unk19C->mSLAttackHeight.get();
+	f32 damageRadius = unk19C->mSLDamageRadius.get();
+	f32 damageHeight = unk19C->mSLDamageHeight.get();
+
+	unk1BC->initHitActor(0, 2, HIT_CATEGORY_PLAYER, attackRadius * mBodyScale,
+	                     attackHeight * mBodyScale, damageRadius * mBodyScale,
+	                     damageHeight * mBodyScale);
 
 	unk1BC->unk68 = this;
 
@@ -232,10 +236,9 @@ void TPoiHana::bind()
 	TLiveActor::bind();
 }
 
-// TODO: off by 4 bytes
 bool TPoiHana::isOnTrap()
 {
-	const TLiveActor* groundActor = mGroundPlane->mActor;
+	const TLiveActor* groundActor = getGroundPlane()->getActor();
 	if (groundActor == nullptr) {
 		unk198 = mGroundHeight;
 	} else if (groundActor->getActorType() == ACTOR_TYPE_SAND_BOMB_BASE00) {
@@ -243,7 +246,7 @@ bool TPoiHana::isOnTrap()
 		if (mtx[1][1] >= 0.1f) {
 			if (!mIsTrapped) {
 				unk1A8 = false;
-				if (mGroundHeight > unk198) {
+				if (getGroundHeight() > unk198) {
 					unk1A8      = true;
 					mHeadHeight = 350.0f;
 				}
@@ -345,8 +348,9 @@ bool TPoiHana::isHitValid(u32 param_1)
 
 bool TPoiHana::isCollidMove(THitActor* param_1)
 {
-	if ((param_1->getActorType() & HIT_CATEGORY_MASK)
-	    == HIT_CATEGORY_MAP_OBJECT) {
+	JGeometry::TVec3<f32> vel;
+	u32 category = param_1->getHitCategory();
+	if (category == HIT_CATEGORY_MAP_OBJECT) {
 		if (((TMapObjBase*)param_1)->isHideObj(param_1))
 			return false;
 
@@ -356,7 +360,7 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
-			JGeometry::TVec3<f32> vel = mPositionDelta;
+			vel = mPositionDelta;
 			vel.x *= -2.0f;
 			vel.y *= 5.0f;
 			vel.z *= -2.0f;
@@ -368,7 +372,9 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		return true;
 	}
 
-	if (!((TLiveActor*)param_1)->isAirborne() && !isAirborne())
+	TLiveActor* actor = (TLiveActor*)param_1;
+	bool airborne     = actor->isAirborne();
+	if (!airborne && !isAirborne())
 		return true;
 
 	return false;
@@ -381,8 +387,9 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
 		if (checkCurAnmEnd(0)) {
-			if (mGoToSleepTimer
-			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
+			int threshold = unk19C->mSLWakeFrame.get();
+			threshold += getInstanceIndex() * 100;
+			if (mGoToSleepTimer > threshold) {
 				mGoToSleepTimer = 0;
 
 				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
@@ -627,10 +634,7 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 			self->setBckAnm(4);
 			self->mIsTrapped = false;
 		} else if (self->isBckAnm(4)) {
-			TPoihanaSaveLoadParams* params
-			    = (TPoihanaSaveLoadParams*)self->getSaveParam();
-
-			if (spine->getTime() > params->mSLFreezeWait.get())
+			if (spine->getTime() > self->getSaveParams()->getSLFreezeWait())
 				self->setBckAnm(2);
 			else
 				self->setBckAnm(4);
@@ -689,6 +693,8 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 	return false;
 }
 
+// TODO: nonmatching stack layout: 0x150 frame instead of 0x158; inline
+// subtraction temporaries and range/vector slots differ. No padding locals.
 DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 {
 	TPoiHana* self = (TPoiHana*)spine->getBody();
@@ -699,25 +705,26 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				TMsRange<f32> rangeXZ(self->unk19C->mSLTrapJumpMinSpXZ.get(),
-				                      self->unk19C->mSLTrapJumpMaxSpXZ.get());
-				TMsRange<f32> rangeY(self->unk19C->mSLTrapJumpMinSpY.get(),
-				                     self->unk19C->mSLTrapJumpMaxSpY.get());
+				f32 trapJumpMaxSpXZ = self->unk19C->mSLTrapJumpMaxSpXZ.get();
+				f32 trapJumpMaxSpY  = self->unk19C->mSLTrapJumpMaxSpY.get();
+				f32 trapJumpMinSpY  = self->unk19C->mSLTrapJumpMinSpY.get();
+				f32 trapJumpMinSpXZ = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				TMsRange<f32> trapJumpSpXZ(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				TMsRange<f32> trapJumpSpY(trapJumpMinSpY, trapJumpMaxSpY);
 
 				JGeometry::TVec3<f32> local_48;
-				const TLiveActor* groundActor
-				    = self->getGroundPlane()->getActor();
-				if (groundActor)
-					local_48 = self->mPosition - groundActor->mPosition;
+				if (self->getGroundPlane()->getActor())
+					local_48 = self->mPosition
+					           - self->getGroundPlane()->getActor()->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
 				if (local_48.x == local_48.y == local_48.z)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				local_48.x *= rangeXZ.rand();
-				local_48.y = rangeY.rand();
-				local_48.z *= rangeXZ.rand();
+				local_48.x *= trapJumpSpXZ.rand();
+				local_48.y = trapJumpSpY.rand();
+				local_48.z *= trapJumpSpXZ.rand();
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;

@@ -252,20 +252,22 @@ public:
 			                        data.unk18.at(2, 1));
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
-			f32 outerR = data.unk40 + radius;
-			f32 innerR = data.unk3C - radius;
-			f32 distSq = delta.squared();
-			f32 proj   = m.dot(delta);
+			JGeometry::TVec3<f32> n;
+			JGeometry::TVec3<f32> point;
+			f32 outerR  = data.unk40 + radius;
+			f32 innerR  = data.unk3C - radius;
+			f32 outerR2 = outerR * outerR;
+			f32 innerR2 = innerR * innerR;
+			f32 distSq  = delta.squared();
+			f32 proj    = m.dot(delta);
 
-			if (distSq <= outerR * outerR) {
+			if (distSq <= outerR2) {
 				if (proj < 0.0f) {
-					if (distSq >= innerR * innerR) {
+					if (distSq >= innerR2) {
 						f32 dist = JGeometry::TUtil<f32>::sqrt(distSq);
 						f32 pen  = dist - innerR;
 						f32 inv  = -1.0f / dist;
-						JGeometry::TVec3<f32> n;
 						n.scale(inv, delta);
-						JGeometry::TVec3<f32> point;
 						point.scale(pen, n);
 						unk18.extend(point);
 
@@ -273,20 +275,18 @@ public:
 						if (c < 0.0f)
 							c = 0.0f;
 
-						JGeometry::TVec3<f32> point2;
-						point2.scale(c, n);
-						point2 += data.unk58;
-						unk30.extend(point2);
+						point.scale(c, n);
+						point += data.unk58;
+						unk30.extend(point);
 					} else {
 						f32 f = radius + (data.mPos.y - data.unk44);
 						if (unk0.y < f) {
 							f32 pen = f - unk0.y;
-							JGeometry::TVec3<f32> point(0.0f, pen, 0.0f);
+							point.set(0.0f, pen, 0.0f);
 							unk18.extend(point);
-							JGeometry::TVec3<f32> point2(0.0f, -1.0f * unkC.y,
-							                             0.0f);
-							point2 += data.unk58;
-							unk30.extend(point2);
+							point.set(0.0f, -1.0f * unkC.y, 0.0f);
+							point += data.unk58;
+							unk30.extend(point);
 						} else {
 							count++;
 							accum.add(unk0);
@@ -299,18 +299,15 @@ public:
 				unk30.extend(grav1);
 			} else {
 				if (proj > 0.0f && proj < radius + data.unk48
-				    && distSq > innerR * innerR && distSq < outerR * outerR) {
-					JGeometry::TVec3<f32> point;
-					point.scale((radius + data.unk48) - proj, m);
+				    && distSq > innerR2 && distSq < outerR2) {
+					point.scale((radius + data.unk48) + -proj, m);
 					unk18.extend(point);
 
-					JGeometry::TVec3<f32> r;
-					r.scale(1.5f * -m.dot(unkC), m);
-					JGeometry::TVec3<f32> thing;
-					thing.set(delta);
-					thing.setLength(0.01f * radius);
-					r.add(thing);
-					unk30.extend(r);
+					point.scale(1.5f * -m.dot(unkC), m);
+					n.set(delta);
+					n.setLength(0.01f * radius);
+					point.add(n);
+					unk30.extend(point);
 					unk30.extend(grav2);
 				} else {
 					unk30.extend(grav2);
@@ -482,7 +479,18 @@ public:
 	/* 0x8C */ TBathWaterParams* unk8C;
 };
 
-static void initScreen2D(s16, s16) { }
+static void initScreen2D(s16 width, s16 height)
+{
+	Mtx44 ortho;
+	TPosition3f mtx;
+	mtx.identity();
+	C_MTXOrtho(ortho, 0.0f, (f32)height, 0.0f, (f32)width, -1.0f, 1.0f);
+	GXSetProjection(ortho, GX_ORTHOGRAPHIC);
+	GXSetViewport(0.0f, 0.0f, (f32)width, (f32)height, 0.0f, 1.0f);
+	GXSetScissor(0, 0, width, height);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
+}
 
 static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 {
@@ -504,18 +512,19 @@ static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 namespace {
 void clearEFB_alpha(s16 x, s16 y, s16 wd, s16 ht, u8 alpha)
 {
-	Mtx44 m;
 	Mtx pmtx;
+	Mtx44 m;
 
 	if (wd <= 0)
 		wd = SMSGetGameRenderWidth();
 	if (ht <= 0)
 		ht = SMSGetGameRenderHeight();
 
-	f32 fx      = x;
-	f32 fwd     = wd;
-	f32 fy      = y;
-	f32 fht     = ht;
+	f32 fx, fy, fwd, fht;
+	fx          = x;
+	fwd         = wd;
+	fy          = y;
+	fht         = ht;
 	f32 fright  = fx + fwd;
 	f32 fbottom = fy + fht;
 
@@ -582,9 +591,10 @@ static void draw_mist(u16 x, u16 y, u16 wd, u16 ht, void* buffer)
 	GXColor tev_color = { 0x03, 0x03, 0x03, 0x00 };
 	u8 vFilter[7]     = { 0x15, 0x00, 0x00, 0x16, 0x00, 0x00, 0x15 };
 
-	f32 f_left   = x;
+	f32 f_left = x;
+	f32 f_top;
 	f32 f_wd     = wd;
-	f32 f_top    = y;
+	f_top        = y;
 	f32 f_ht     = ht;
 	f32 f_right  = f_left + f_wd;
 	f32 f_bottom = f_top + f_ht;
@@ -863,9 +873,10 @@ public:
 		for (int i = 0; i < num; ++i) {
 			TBathWaterParams* p = params[i];
 			if (p->isVisible.get()) {
-				f32 size = p->texScale.get() * p->dropRadius.get();
-				f32 rx = r0 * size, ry = r1 * size, rz = r2 * size;
+				f32 size = p->texScale.get();
+				size *= p->dropRadius.get();
 				f32 ux = u0 * size, uy = u1 * size, uz = u2 * size;
+				f32 rx = r0 * size, ry = r1 * size, rz = r2 * size;
 				GXBegin(GX_QUADS, GX_VTXFMT0, (waters[i]->unk74 * 4) & 0xfffc);
 				for (TBathWater::TDrop* d = waters[i]->unk88;
 				     d < waters[i]->unk88 + waters[i]->unk74; ++d) {
@@ -935,15 +946,7 @@ public:
 
 		s16 w2 = SMSGetGameRenderWidth();
 		s16 h2 = SMSGetGameRenderHeight();
-		TPosition3f mtx;
-		mtx.identity();
-		Mtx44 ortho;
-		C_MTXOrtho(ortho, 0.0f, (f32)h2, 0.0f, (f32)w2, -1.0f, 1.0f);
-		GXSetProjection(ortho, GX_ORTHOGRAPHIC);
-		GXSetViewport(0.0f, 0.0f, (f32)w2, (f32)h2, 0.0f, 1.0f);
-		GXSetScissor(0, 0, w2, h2);
-		GXLoadPosMtxImm(mtx, GX_PNMTX0);
-		GXSetCurrentMtx(GX_PNMTX0);
+		initScreen2D(w2, h2);
 		GXSetCullMode(GX_CULL_BACK);
 		GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
@@ -1600,10 +1603,11 @@ void TBathWaterMeshRenderer::makeNormalMap()
 			f32 b  = unk20[r < unk800AC - 1 ? r + 1 : r][c].y;
 			f32 a2 = unk20[r][c > 0 ? c - 1 : 0].y;
 			f32 b2 = unk20[r][c < unk800AC - 1 ? c + 1 : c].y;
+			f32 z  = b2 - a2;
 
 			unk30020[r][c].x = scale * (b - a);
 			unk30020[r][c].y = scale * scale;
-			unk30020[r][c].z = scale * (b2 - a2);
+			unk30020[r][c].z = z * scale;
 			unk30020[r][c].normalize();
 		}
 	}
@@ -1810,8 +1814,7 @@ void TBathWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		unk30 = unk28[unk18->displaysMesh.get()];
-		unk1C += 1;
-		if (!(unk1C & 3)) {
+		if (!(++unk1C & 3)) {
 			for (int actor = 0; actor < 2; ++actor) {
 				TBathWater* bw           = unk20[actor];
 				const TBathtubData& data = unk24->getBathtubData();

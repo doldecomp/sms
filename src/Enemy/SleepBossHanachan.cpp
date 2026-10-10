@@ -27,6 +27,11 @@
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
 
+static const char* sleepBossHanachan_bastable[2] = {
+	"/scene/sleepBossHanachan/bas/demohanatyan_fall.bas",
+	nullptr,
+};
+
 void TSleepBossHanachanManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
@@ -54,11 +59,6 @@ void TSleepBossHanachan::init(TLiveManager* param_1)
 
 void TSleepBossHanachan::calcRootMatrix() { }
 
-static const char* sleepBossHanachan_bastable[2] = {
-	"/scene/sleepBossHanachan/bas/demohanatyan_fall.bas",
-	nullptr,
-};
-
 const char** TSleepBossHanachan::getBasNameTable() const
 {
 	return sleepBossHanachan_bastable;
@@ -68,17 +68,20 @@ void TSleepBossHanachan::startFall(f32 shine_x, f32 shine_y, f32 shine_z)
 {
 	TFlagManager::getInstance()->setBool(true, MSF_WIGGLER_FALLING);
 	mShinePosition.set(shine_x, shine_y, shine_z);
-	getMActor()->setBckFromIndex(0);
+	MActor* actor = getMActor();
+	actor->setBckFromIndex(0);
 	setCurAnmSound();
 	mSpine->setNext(&TNerveSBH_Fall::theNerve());
 }
 
 DEFINE_NERVE(TNerveSBH_SleepContinue, TLiveActor) { return false; }
 
+// TODO: frame-only position slots are 4 bytes low.
 DEFINE_NERVE(TNerveSBH_Fall, TLiveActor)
 {
 	TSleepBossHanachan* self = (TSleepBossHanachan*)spine->getBody();
-	if (self->getMActor()->curAnmEndsNext()) {
+	bool anmEndsNext         = self->getMActor()->curAnmEndsNext();
+	if (anmEndsNext) {
 		JGeometry::TVec3<f32> pos = self->mShinePosition;
 		TShine* shine             = gpItemManager->makeShineAppearWithDemo(
             "シャイン（ボス用）", "ボスシャインカメラ", pos.x, pos.y, pos.z);

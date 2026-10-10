@@ -51,11 +51,12 @@ void TRevivalPolluter::pollute() { }
 
 void TRevivalPolluter::registerPolluteTex()
 {
-	// TODO: inlines make me cry
-	TPollutionLayer* layer = gpPollution->getLayer(mLayerIndex);
+	ResTIMG* texture = mRevivalStampTex;
+	s16 height       = gpPollution->getLayer(mLayerIndex)->getTexHeight();
+	s16 width        = gpPollution->getLayer(mLayerIndex)->getTexWidth();
+
 	unk8 = gpPollution->getCounterLayer().registerRevivalTexStamp(
-	    mLayerIndex, 0, 0, layer->mPos.mWidth, layer->mPos.mHeight,
-	    mStampInterval, mRevivalStampTex);
+	    mLayerIndex, 0, 0, width, height, mStampInterval, texture);
 }
 
 void TRevivalPolluter::loadInfo(JSUMemoryInputStream& stream)
@@ -92,6 +93,7 @@ void TMapObjRevivalPollution::perform(u32 cue, JDrama::TGraphics*)
 
 void TMapObjRevivalPollution::loadAfter()
 {
+	// TODO: registerPolluteTex inline GPR allocation differs.
 	JDrama::TViewObj::loadAfter();
 
 	for (int i = 0; i < unk10; ++i)

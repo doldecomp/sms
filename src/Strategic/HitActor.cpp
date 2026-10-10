@@ -4,19 +4,23 @@
 void THitActor::calcEntryRadius()
 {
 	f32 rad;
-	if (mAttackRadius > mDamageRadius)
-		rad = mAttackRadius;
+	f32 attackRadius = getAttackRadius();
+	if (attackRadius > getDamageRadius())
+		rad = getAttackRadius();
 	else
-		rad = mDamageRadius;
+		rad = getDamageRadius();
 
 	f32 height;
-	if (mAttackHeight > mDamageHeight)
-		height = mAttackHeight;
+	if (getAttackHeight() > getDamageHeight())
+		height = getAttackHeight();
 	else
-		height = mDamageHeight;
+		height = getDamageHeight();
 
-	f32 dist = rad * rad + height * height;
+	JGeometry::TVec2<f32> extent(rad, height);
+	f32 dist = extent.squared();
 	if (dist > 0.0f) {
+		// TODO: recover the unrefined sqrt inline; std::sqrtf adds Newton
+		// steps.
 		volatile f32 y = dist * __frsqrte(dist);
 		dist           = y;
 		mEntryRadius   = 1.4142135f * dist;

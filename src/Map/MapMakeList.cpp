@@ -143,15 +143,16 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
                                     int* param_3, int* param_4, int* param_5,
                                     int* param_6)
 {
-	f32 minX = MsMin(param_1->mPoint1.x,
-	                 MsMin(param_1->mPoint2.x, param_1->mPoint3.x));
-	f32 minZ = MsMin(param_1->mPoint1.z,
-	                 MsMin(param_1->mPoint3.z, param_1->mPoint2.z));
+	// TODO: nonmatching frame is 0xd0 bytes; the target reserves 0xe0.
+	f32 minX = MsMin(param_1->getPoint1().x,
+	                 MsMin(param_1->getPoint2().x, param_1->getPoint3().x));
+	f32 minZ = MsMin(param_1->getPoint1().z,
+	                 MsMin(param_1->getPoint2().z, param_1->getPoint3().z));
 
-	f32 maxX = MsMax(param_1->mPoint1.x,
-	                 MsMax(param_1->mPoint2.x, param_1->mPoint3.x));
-	f32 maxZ = MsMax(param_1->mPoint1.z,
-	                 MsMax(param_1->mPoint2.z, param_1->mPoint3.z));
+	f32 maxX = MsMax(param_1->getPoint1().x,
+	                 MsMax(param_1->getPoint2().x, param_1->getPoint3().x));
+	f32 maxZ = MsMax(param_1->getPoint1().z,
+	                 MsMax(param_1->getPoint2().z, param_1->getPoint3().z));
 
 	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX
 	    || minZ > mGridExtentY)
@@ -185,10 +186,11 @@ bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
 
 void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 {
+	// TODO: nonmatching frame is 0xd0 bytes; the target reserves 0x108.
 	int iVar7 = param_1->getPlaneType();
 	int local_ac;
-	int local_b4;
 	int local_b0;
+	int local_b4;
 	int local_b8;
 	if (getGridArea(param_1, iVar7, &local_ac, &local_b4, &local_b0,
 	                &local_b8)) {
@@ -197,17 +199,17 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 				if (kind == TMapCollisionBase::KIND_MOVE) {
 					addCheckDataToList(i, j, kind, iVar7, param_1);
 				} else if (iVar7 != 2) {
-					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
-					int iVar2 = (i * 1024.0f) - mGridExtentY;
-					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
-					int iVar4 = j * 1024.0f - mGridExtentX;
+					f32 iVar1 = (int)((i + 1) * 1024.0f - mGridExtentY);
+					f32 iVar3 = (int)((j + 1) * 1024.0f - mGridExtentX);
+					f32 iVar2 = (int)(i * 1024.0f - mGridExtentY);
+					f32 iVar4 = (int)(j * 1024.0f - mGridExtentX);
 					if (polygonIsInGrid(iVar4, iVar2, iVar3, iVar1, param_1))
 						addCheckDataToList(i, j, kind, iVar7, param_1);
 				} else {
-					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
-					int iVar2 = (i * 1024.0f) - mGridExtentY;
-					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
-					int iVar4 = j * 1024.0f - mGridExtentX;
+					f32 iVar1 = (int)((i + 1) * 1024.0f - mGridExtentY);
+					f32 iVar3 = (int)((j + 1) * 1024.0f - mGridExtentX);
+					f32 iVar2 = (int)(i * 1024.0f - mGridExtentY);
+					f32 iVar4 = (int)(j * 1024.0f - mGridExtentX);
 					if (polygonIsInGrid(iVar4 - 80.0f, iVar2 - 80.0f,
 					                    iVar3 + 80.0f, iVar1 + 80.0f, param_1))
 						addCheckDataToList(i, j, kind, iVar7, param_1);
@@ -235,18 +237,17 @@ void TMapCollisionData::updateCheckListNode(s32 param_1, s32 param_2,
 	TBGCheckListWarp* r   = &unk30[param_1];
 	TBGCheckListWarp* end = &unk30[param_3 + param_2];
 
-	// TODO: I think this is a fakematch.
+	// Retarget links into the old range by its byte displacement.
 	u32 offset = ((u32)l - (u32)r);
 
 	for (int i = param_1; i < param_1 + param_2; ++i) {
 		TBGCheckListWarp* warp2 = &unk30[i];
-		TBGCheckListWarp* warp3 = (TBGCheckListWarp*)warp2->getNext();
-		if (l <= warp3 && warp3 < end)
-			warp2->setNext((TBGCheckListWarp*)((char*)warp3 - offset));
+		if (l <= warp2->getNext() && warp2->getNext() < end)
+			warp2->setNext((TBGCheckList*)((u32)warp2->getNext() - offset));
 
-		TBGCheckListWarp* warp4 = warp2->getPreNode();
-		if (l <= warp4 && warp4 < end)
-			warp2->setPreNode((TBGCheckListWarp*)((char*)warp4 - offset));
+		if (l <= warp2->getPreNode() && warp2->getPreNode() < end)
+			warp2->setPreNode(
+			    (TBGCheckList*)((u32)warp2->getPreNode() - offset));
 	}
 
 	for (int i = param_1; i < param_1 + param_2; ++i) {

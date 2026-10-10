@@ -4,14 +4,16 @@
 static bool checkLinesCollision(f32 x0, f32 z0, f32 x1, f32 z1, f32 x2, f32 z2,
                                 f32 x3, f32 z3)
 {
-	f32 c0 = (z1 - z0) * (x2 - x1) - (x1 - x0) * (z2 - z1);
-	f32 c1 = (z1 - z0) * (x3 - x1) - (x1 - x0) * (z3 - z1);
+	JGeometry::TVec2<f32> direction(x1 - x0, z1 - z0);
+	f32 c0 = direction.y * (x2 - x1) - direction.x * (z2 - z1);
+	f32 c1 = direction.y * (x3 - x1) - direction.x * (z3 - z1);
 
 	if ((c0 >= 0.0f && c1 >= 0.0f) || (c0 < 0.0f && c1 < 0.0f))
 		return false;
 
-	f32 d0 = (z3 - z2) * (x0 - x3) - (x3 - x2) * (z0 - z3);
-	f32 d1 = (z3 - z2) * (x1 - x3) - (x3 - x2) * (z1 - z3);
+	direction.set(x3 - x2, z3 - z2);
+	f32 d0 = direction.y * (x0 - x3) - direction.x * (z0 - z3);
+	f32 d1 = direction.y * (x1 - x3) - direction.x * (z1 - z3);
 	if ((d0 >= 0.0f && d1 >= 0.0f) || (d0 < 0.0f && d1 < 0.0f))
 		return false;
 

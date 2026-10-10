@@ -1,3 +1,6 @@
+// MtxCalcTypeName's string pool precedes the J3D inline constants.
+#include <M3DUtil/InfectiousStrings.hpp>
+
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjBase.hpp>
@@ -10943,6 +10946,7 @@ void TMapObjBase::setMatTableTex(J3DMaterialTable* table)
 
 void TMapObjBase::initUnique()
 {
+	// TODO: frame-only mismatch: 0x180 bytes here, 0x2D8 in the original.
 	// TODO: I hate switches, someone fix this please...
 	switch (getActorType()) {
 	case ACTOR_TYPE_MARIO_CAP:
@@ -10981,9 +10985,11 @@ void TMapObjBase::initUnique()
 		setMatTable(gpMapObjManager->getRiccoShipMatTable());
 		SMS_UnifyMaterial(getModel());
 		break;
-	case ACTOR_TYPE_EX_SKY_TUMIKI:
-		startAllAnim(mMActor, getUnkF4());
+	case ACTOR_TYPE_EX_SKY_TUMIKI: {
+		const char* animName = getUnkF4();
+		startAllAnim(mMActor, animName);
 		break;
+	}
 	case ACTOR_TYPE_MOYASI:
 		mMActor->initBckSimpleMotionBlend(0x14);
 		break;
@@ -11127,10 +11133,10 @@ void TMapObjBase::initObjCollisionData()
 		mHeadHeight = 0.0f;
 	}
 
-	if (mAttackRadius == 0.0f || mAttackHeight == 0.0f)
+	if (getAttackRadius() == 0.0f || getAttackHeight() == 0.0f)
 		onHitFilter(HIT_FILTER_NO_ATTACK);
 
-	if (mDamageRadius == 0.0f || mDamageHeight == 0.0f)
+	if (getDamageRadius() == 0.0f || getDamageHeight() == 0.0f)
 		onHitFilter(HIT_FILTER_NO_DAMAGE);
 }
 
@@ -11177,16 +11183,19 @@ bool isAlreadyRegistered(const TMapObjAnimDataInfo* anim, int i)
 MActor* TMapObjBase::initMActor(const char* bmd_file, const char* param_2,
                                 u32 param_3)
 {
-	MActor* oldActor = mMActor;
+	MActor* oldActor = getMActor();
 	MActor* newActor = getActorKeeper()->createMActor(bmd_file, param_3);
 	mMActor          = newActor;
+	if (param_2 != nullptr) {
+		// TODO: recover the body of this eliminated, possibly debug-only check.
+	}
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000)) {
 		mMActor->setLightID(0);
-		mMActor->unmarkUnk40();
+		getMActor()->unmarkUnk40();
 	}
 	calcRootMatrix();
-	mMActor->calc();
-	mMActor->viewCalc();
+	getMActor()->calc();
+	getMActor()->viewCalc();
 	mMActor = oldActor;
 	return newActor;
 }
@@ -11257,6 +11266,7 @@ void TMapObjBase::initModelData()
 
 void TMapObjBase::initActorData()
 {
+	// TODO: nonmatching key/table-slot register allocation (r27/r28).
 	int i    = 0;
 	u16 code = JDrama::TNameRef::calcKeyCode(mIndividualName);
 	for (; sObjDataTable[i]->mActorType; ++i) {
@@ -11269,14 +11279,14 @@ void TMapObjBase::initActorData()
 		mName = mIndividualName;
 
 	mMapObjData  = sObjDataTable[i];
-	mMapObjFlags = mMapObjData->mMapObjFlags;
+	mMapObjFlags = getMapObjData()->mMapObjFlags;
 
 	mManager = static_cast<TLiveManager*>(
-	    JDrama::TNameRefGen::search(mMapObjData->mManagerName));
+	    JDrama::TNameRefGen::search(getMapObjData()->mManagerName));
 	mManager->manageActor(this);
-	if (mMapObjData->mHit)
-		mYOffset = mScaling.y * mMapObjData->mHit->unk8;
-	mPosition.y += mYOffset;
+	if (getMapObjData()->mHit)
+		mYOffset = mScaling.y * getMapObjData()->mHit->unk8;
+	mPosition.y += getObjCollisionHeightOffset();
 	mScaledBodyRadius = mMapObjData->unk30 * mScaling.x;
 	if (checkMapObjFlag(MAP_OBJ_FLAG_NO_CLIPPING))
 		offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
@@ -11286,6 +11296,7 @@ void TMapObjBase::initActorData()
 
 void TMapObjBase::initMapObj()
 {
+	// TODO: frame-only mismatch: 0x80 bytes here, 0x88 in the original.
 	mInitialPosition = mPosition;
 	mInitialRotation = mRotation;
 	mInitialScaling  = mScaling;
@@ -11311,7 +11322,7 @@ void TMapObjBase::initMapObj()
 		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = scrTex->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
+		getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
 	}
 
 	makeObjDead();

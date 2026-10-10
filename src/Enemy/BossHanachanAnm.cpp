@@ -155,10 +155,14 @@ void TBossHanachan::copyFrameFromOldAnmToNewAnm_()
 		unk150[i]->copyFrameFromOldAnmToNewAnm_();
 }
 
+// TODO: nonmatching: frame is 0x110 instead of 0x118; inline-temporary
+// stack ownership remains unresolved.
 void TBossHanachan::changeAnmRateAndFrameUpdate_()
 {
 	bool doRate = true;
 	f32 rate    = SMSGetAnmFrameRate();
+	int i;
+	MActor* loopMactor;
 	if (mSpine->getLatestNerve() == &TNerveBossHanachanTumble::theNerve()) {
 		offHeadAndBodyNonstopMotionBlend_();
 		unk170->changeTumbleAnmRate_();
@@ -246,8 +250,8 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 		mactor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
 	unk170->updateAnmSound();
 	mactor->frameUpdate();
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
-		MActor* loopMactor = unk150[i]->getMActor();
+	for (i = 0; i < ARRAY_COUNT(unk150); ++i) {
+		loopMactor = unk150[i]->getMActor();
 		if (doRate)
 			loopMactor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
 		unk150[i]->updateAnmSound();

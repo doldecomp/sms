@@ -18,14 +18,15 @@ bool TWireBinder::reset(const JGeometry::TVec3<f32>& param_1)
 
 	TMapWire* wire = gpMapWireManager->getWire(mWireNumber);
 
-	local24 = wire->getStartPoint();
-	local30 = wire->getEndPoint();
+	local24 = wire->mStartPoint;
+	local30 = wire->mEndPoint;
 	local30 -= local24;
 
 	mDir.normalize(local30);
 	return true;
 }
 
+// TODO: stack-slot mismatch in the velocity copy and subtraction temporary.
 void TWireBinder::bind(TLiveActor* actor)
 {
 	JGeometry::TVec3<f32> unk_14;
@@ -35,7 +36,7 @@ void TWireBinder::bind(TLiveActor* actor)
 	getPoint(&unk_20, unk_14);
 
 	if (isnan(unk_20.x) || isnan(unk_20.y) || isnan(unk_20.z))
-		unk_20.set(actor->getPosition());
+		unk_20.set(actor->mPosition);
 
 	f32 fVar = 0.05f + unk_20.y;
 
@@ -45,7 +46,7 @@ void TWireBinder::bind(TLiveActor* actor)
 		actor->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	actor->setPositionDelta(unk_20 - actor->getPosition());
+	actor->setPositionDelta(unk_20 - actor->mPosition);
 }
 
 JGeometry::TVec3<f32>
@@ -54,21 +55,19 @@ TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
 {
 	f32 posInWire = getRangePos(param_1);
 
-	f32 fVar1;
 	f32 fVar2;
 
 	if (posInWire <= 0.01f && param_2 < 0.0f
 	    || 0.99f <= posInWire && 0.0f < param_2) {
-		fVar1 = posInWire - 0.01f * param_2;
-		fVar2 = posInWire;
+		fVar2     = posInWire;
+		posInWire = posInWire - 0.01f * param_2;
 	} else {
-		fVar1 = posInWire;
 		fVar2 = posInWire + 0.01f * param_2;
 	}
 
 	JGeometry::TVec3<f32> vec1;
 	JGeometry::TVec3<f32> vec2;
-	getPoint(&vec1, fVar1);
+	getPoint(&vec1, posInWire);
 	getPoint(&vec2, fVar2);
 
 	vec2 -= vec1;
@@ -108,7 +107,10 @@ bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& param_1,
                             f32 param_2) const
 {
 	f32 posInWire = getRangePos(param_1);
-	return fabsf(posInWire - getEndRangePos(param_2)) < 0.015f;
+	f32 targetPos = 0.0f < param_2 ? 1.0f : 0.0f;
+	f32 fVar      = posInWire - targetPos;
+
+	return fabsf(fVar) < 0.015f;
 }
 
 void TWireBinder::getStartRangePos(f32) { }

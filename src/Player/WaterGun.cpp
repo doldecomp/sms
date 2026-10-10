@@ -34,6 +34,8 @@
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
+// TODO: Retail .rodata has @2694 and @2696 before these asset paths.
+// Recover their original consumer; the path relocation addends still differ.
 TNozzleBmdData nozzleBmdData = {
 	{
 	    {
@@ -225,9 +227,9 @@ void TNozzleBase::calcGunAngle(const TMarioControllerWork& work)
 	s16 angle;
 	if (mFludd->mMario->mStatus == MARIO_STATUS_SQUAT) {
 		// TODO: Wrong reguster used, using r3 instead of r4
-		angle = unk36E
-		        + (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]
-		                * mEmitParams.mRButtonMult.get());
+		angle = unk36E;
+		angle += (s16)(mFludd->mMario->mGamePad->mCompSPos[0 * 2 + 1]
+		               * mEmitParams.mRButtonMult.get());
 	} else {
 		angle = -mEmitParams.mLAngleBase.get();
 	}
@@ -940,8 +942,8 @@ void TNozzleDeform::emit(int param_1)
 			emitSizeLerp = 0.0f;
 		} else {
 			if (localUnk378 < sizeMaxPressure) {
-				emitSizeLerp = (sizeMinPressure - localUnk378)
-				               / (sizeMaxPressure - localUnk378);
+				emitSizeLerp = (localUnk378 - sizeMinPressure)
+				               / (sizeMaxPressure - sizeMinPressure);
 			} else {
 				emitSizeLerp = 1.0f;
 			}
@@ -974,8 +976,8 @@ void TNozzleDeform::emit(int param_1)
 			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
 
 			f32 velocity = reaction;
-			velocity *= directionScale;
 			velocity *= refEmitPow;
+			velocity *= directionScale;
 
 			mFludd->mMario->addVelocity(velocity);
 
@@ -989,9 +991,6 @@ void TNozzleDeform::emit(int param_1)
 
 void TNozzleDeform::animation(int param)
 {
-	volatile u8 stackPad[0x118];
-	(void)stackPad;
-
 	bool check = 0;
 	if (param == 0)
 		check = 1;
@@ -1073,23 +1072,7 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(5))
 			mactor->setBckFromIndex(5);
 
-		bool updateAnimation = false;
-		if (mFludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else if (mFludd->getNozzle(mFludd->mCurrentNozzle)->getNozzleKind()
-		           == 1) {
-			if (((TNozzleTrigger*)mFludd->getNozzle(mFludd->mCurrentNozzle))
-			        ->unk385
-			    == TNozzleTrigger::ACTIVE)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		} else {
-			if (mFludd->getNozzle(mFludd->mCurrentNozzle)->unk378 > 0.0f)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		}
+		bool updateAnimation = mFludd->isEmitting();
 
 		if (!updateAnimation)
 			unk36C = 8;
@@ -1101,35 +1084,21 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(6))
 			mactor->setBckFromIndex(6);
 
-		bool updateAnimation = false;
-		if (mFludd->mCurrentWater == 0) {
-			updateAnimation = false;
-		} else if (mFludd->getCurrentNozzle()->getNozzleKind() == 1) {
-			if (((TNozzleTrigger*)mFludd->getCurrentNozzle())->unk385
-			    == TNozzleTrigger::ACTIVE)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		} else {
-			if (mFludd->getCurrentNozzle()->unk378 > 0.0f)
-				updateAnimation = true;
-			else
-				updateAnimation = false;
-		}
+		bool updateAnimation = mFludd->isEmitting();
 
 		if (updateAnimation == true)
 			unk36C = 2;
 
-		bool finished           = false;
+		check                   = false;
 		J3DFrameCtrl* frameCtrl = unk380->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			finished = true;
+			check = true;
 
 		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
-			finished = true;
+			check = true;
 
-		if (finished && !(mFludd->unk1CEC == 0.0f ? true : false))
+		if (check && !(mFludd->unk1CEC == 0.0f ? true : false))
 			unk36C = 0;
 
 		break;

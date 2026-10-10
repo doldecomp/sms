@@ -103,6 +103,7 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 extern void marker();
 
+// TODO: frame-only mismatch: 0x2e8 bytes here versus 0x370 in retail.
 void TMarDirector::initECDisp(
     TPerformList* param_1,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*
@@ -114,8 +115,10 @@ void TMarDirector::initECDisp(
 	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
 	scene->insert(stageDisp);
 
+	JDrama::TNameRef* root
+	    = JDrama::TNameRefGen::getInstance()->getRootNameRef();
 	JDrama::TViewObj* composite3
-	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("合成3"));
+	    = static_cast<JDrama::TViewObj*>(root->search("合成3"));
 	JDrama::TViewObj* specularSheen = static_cast<JDrama::TViewObj*>(
 	    JDrama::TNameRefGen::search("スペキュラシーン"));
 

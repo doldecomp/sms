@@ -15,7 +15,7 @@
 void TMario::hitNormal(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
-	    && actor->mPosition.y < mPosition.y) {
+	    && actor->getPosition().y < mPosition.y) {
 		if (mStatus == MARIO_STATUS_HIP_DROP) {
 			if (actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP)) {
 				if (actor->isActorType(ACTOR_TYPE_HINOKURI2)) {
@@ -31,7 +31,8 @@ void TMario::hitNormal(THitActor* actor)
 		}
 	}
 
-	if (checkFlag(MARIO_FLAG_UNK200) && actor->mPosition.y > mPosition.y) {
+	if (checkFlag(MARIO_FLAG_UNK200)
+	    && actor->getPosition().y > getPosition().y) {
 		actor->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 		return;
 	}
@@ -44,18 +45,19 @@ void TMario::hitNormal(THitActor* actor)
 
 	TWaterGun* wg = mWaterGun;
 	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
-		TModelWaterManager::mStaticHitActor.mPosition = mPosition;
-		TModelWaterManager::mStaticHitActor.mPosition.y += 80.0f;
-		TModelWaterManager::mStaticHitActor.unk68 = 0;
-		actor->receiveMessage(&TModelWaterManager::mStaticHitActor,
-		                      HIT_MESSAGE_SPRAYED_BY_WATER);
+		TWaterHitActor* waterActor;
+		(waterActor = &TModelWaterManager::mStaticHitActor)->mPosition
+		    = getPosition();
+		waterActor->mPosition.y += 80.0f;
+		waterActor->unk68 = 0;
+		actor->receiveMessage(waterActor, HIT_MESSAGE_SPRAYED_BY_WATER);
 	}
 }
 
 // TODO: wrong size! maybe we return the receiveMessage result?
 void TMario::hitHipDrop(THitActor* actor)
 {
-	if (mStatus == MARIO_STATUS_HIP_DROP && mStatusState == 2
+	if (getStatus() == MARIO_STATUS_HIP_DROP && mStatusState == 2
 	    && actor->mPosition.y < mPosition.y) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
@@ -83,7 +85,7 @@ void TMario::hitNpc(THitActor* actor)
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkStatusType(MARIO_FLAG_HELMET)
 	    && checkStatusType(MARIO_STATUS_FLAG_JUMPING)
-	    && mStatus != MARIO_STATUS_HIP_DROP && mVel.y < 0.0f
+	    && getStatus() != MARIO_STATUS_HIP_DROP && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
 	    && ((TBaseNPC*)actor)->isBeTrampledNpc()) {
 		if (trampleExec(actor) == TRUE)
@@ -117,7 +119,7 @@ void TMario::hitBarrel(THitActor* actor)
 	hitWantToTake(actor);
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
-	    && mStatus == MARIO_STATUS_HIP_DROP) {
+	    && getStatus() == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			TWaterGun* wg     = mWaterGun;
@@ -139,7 +141,7 @@ void TMario::hitBrakable(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
-	    && mStatus == MARIO_STATUS_HIP_DROP) {
+	    && getStatus() == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
 }
@@ -169,17 +171,19 @@ void TMario::hangPole(THitActor* actor)
 		}
 
 		if (inHangStatus == 1) {
-			f32 dz   = actor->mPosition.z - mPosition.z;
-			f32 dx   = actor->mPosition.x - mPosition.x;
-			f32 dist = std::sqrtf(dx * dx + dz * dz);
+			f32 dz   = actor->mPosition.x - mPosition.x;
+			f32 dx   = actor->mPosition.z - mPosition.z;
+			f32 dist = std::sqrtf(dz * dz + dx * dx);
 			if (dist == 0.0f)
 				dist = 1.0f;
 
-			f32 a = JMASSin(mFaceAngle.y) * (dx / dist)
-			        + JMASCos(mFaceAngle.y) * (dz / dist);
-
 			f32 b = 50.0f + actor->getDamageRadius()
 			        + mBarParams.mCatchRadius.get();
+			JGeometry::TVec2<f32> delta;
+			delta.set(dz / dist, dx / dist);
+			f32 facingY = JMASSin(mFaceAngle.y);
+			f32 facingX = JMASCos(mFaceAngle.y);
+			f32 a       = facingY * delta.x + facingX * delta.y;
 
 			bool canCatch = true;
 			if (mPrevStatus & MARIO_STATUS_FLAG_UNK100000)
@@ -228,8 +232,9 @@ void TMario::hitSurfingBoard(THitActor*) { }
 // As in we pull but don't "keep" the object, cuz it's a tentacle/tail?
 void TMario::hitNoKeepPull(THitActor* actor)
 {
-	if (mStatus != MARIO_STATUS_PULLING && mStatus != MARIO_STATUS_PULL_JUMP
-	    && canTake(actor) && actor->receiveMessage(this, HIT_MESSAGE_TAKE)) {
+	if (getStatus() != MARIO_STATUS_PULLING
+	    && getStatus() != MARIO_STATUS_PULL_JUMP && canTake(actor)
+	    && actor->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 		changePlayerStatus(MARIO_STATUS_PULLING, 0, false);
 		setAnimation(ANIM_HOLD, 1.0f);
 		mHeldObject = (TTakeActor*)actor;
@@ -287,22 +292,22 @@ void TMario::checkCollision()
 	}
 
 	for (s32 i = 0; i < (s32)mColCount; i++) {
-		if (mCollisions[i]->isHitCategory(HIT_CATEGORY_NPC)) {
-			hitNpc(mCollisions[i]);
+		u32 type = getCollision(i)->getActorType();
+		if (type & HIT_CATEGORY_NPC ? true : false) {
+			hitNpc(getCollision(i));
 			continue;
 		}
 
-		// TODO: switch still a bit wrong!
-		switch (mCollisions[i]->getActorType()) {
+		switch (type) {
 		case ACTOR_TYPE_MARIO:
-			hitMario(mCollisions[i]);
-			keepDistance(*mCollisions[i], 0.0f);
+			hitMario(getCollision(i));
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_ITEM_UNK8:
 		case ACTOR_TYPE_ITEM_UNKA:
 		case ACTOR_TYPE_ITEM_UNKC:
-			hitNormal(mCollisions[i]);
+			hitNormal(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_HINOKURI2:
@@ -334,17 +339,17 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_ENEMY_UNK31:
 		case ACTOR_TYPE_DORO_HANE_KURI:
 		case ACTOR_TYPE_CASINORULET:
-			hitNormal(mCollisions[i]);
+			hitNormal(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_BOSS_PAKKUN_HEAD:
-			hitHipDrop(mCollisions[i]);
+			hitHipDrop(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_KUMOKUN:
-			hitNormal(mCollisions[i]);
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
-				keepDistance(*mCollisions[i], 0.0f);
+			hitNormal(getCollision(i));
+			if (((TSmallEnemy*)getCollision(i))->doKeepDistance())
+				keepDistance(*getCollision(i), 0.0f);
 			// fall through
 
 		case ACTOR_TYPE_AMI_NOKO:
@@ -355,32 +360,34 @@ void TMario::checkCollision()
 			if (mStatus == MARIO_STATUS_FENCE_PUNCH
 			    && 5.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 9.0f) {
-				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
+				getCollision(i)->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
 			if (mStatus == MARIO_STATUS_KICK_ROOF
 			    && 9.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 13.0f) {
-				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
+				getCollision(i)->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
 			break;
 
 		case ACTOR_TYPE_TAMA_NOKO:
 		case ACTOR_TYPE_BOMB_HEI:
-			hitPickUpEnemy(mCollisions[i]);
+			hitPickUpEnemy(getCollision(i));
 			break;
 
-		case ACTOR_TYPE_MAME_GESSO:
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
-				keepDistance(*mCollisions[i], 0.0f);
+		case ACTOR_TYPE_MAME_GESSO: {
+			TSmallEnemy* enemy = (TSmallEnemy*)getCollision(i);
+			if (enemy->doKeepDistance())
+				keepDistance(*getCollision(i), 0.0f);
 			else
-				hitPickUpEnemy(mCollisions[i]);
+				hitPickUpEnemy(getCollision(i));
 			break;
+		}
 
 		case ACTOR_TYPE_BOSS_EEL_TOOTH:
 		case ACTOR_TYPE_BOSS_EEL_COLLISION:
 		case ACTOR_TYPE_DEBU_TELESA:
 		case ACTOR_TYPE_SROT_RULET:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_GESSO:
@@ -388,13 +395,13 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_POI_HANA:
 		case ACTOR_TYPE_YUMBO:
 		case ACTOR_TYPE_AMENBO:
-			hitNormal(mCollisions[i]);
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
-				keepDistance(*mCollisions[i], 0.0f);
+			hitNormal(getCollision(i));
+			if (((TSmallEnemy*)getCollision(i))->doKeepDistance())
+				keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_CHUU_HANA:
-			hitNormal(mCollisions[i]);
+			hitNormal(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_BOSS_UNKB:
@@ -405,14 +412,14 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_BOSS_UNK15:
 		case ACTOR_TYPE_SAMBO_FLOWER:
 		case ACTOR_TYPE_ENEMY_UNK35:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_E_MARIO:
 		case ACTOR_TYPE_BOSS_GESSO:
 		case ACTOR_TYPE_BOSS_GESSO_TAKE_HIT:
 		case ACTOR_TYPE_BIANCO_GATE_KEEPER:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_BOSS_GESSO_TENTACLE:
@@ -420,25 +427,25 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_BOSS_UNKD:
 		case ACTOR_TYPE_YOSHI_TONGUE:
 		case ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT:
-			hitNoKeepPull(mCollisions[i]);
+			hitNoKeepPull(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_NOZZLE_BOX:
-			hitNormal(mCollisions[i]);
-			keepDistance(*mCollisions[i], 0.0f);
+			hitNormal(getCollision(i));
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_FOOTBALL:
-			hitPushup(mCollisions[i]);
+			hitPushup(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_MAP_OBJECT_UNK2:
-			hitBrakable(mCollisions[i]);
+			hitBrakable(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_WOOD_BARREL:
 		case ACTOR_TYPE_BARREL_OIL:
-			hitBarrel(mCollisions[i]);
+			hitBarrel(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_EGG_YOSHI:
@@ -459,7 +466,7 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_EX_BOTTLE:
 		case ACTOR_TYPE_MAP_OBJ_NAIL:
 		case ACTOR_TYPE_FRUIT_COVER_PINE:
-			keepDistance(*mCollisions[i], 0.0f);
+			keepDistance(*getCollision(i), 0.0f);
 			break;
 
 		case ACTOR_TYPE_DPTLIGHT:
@@ -478,11 +485,11 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_ELASTIC_CODE:
 		case ACTOR_TYPE_MONTE_ROOT:
 		case ACTOR_TYPE_MONTE_GOAL_FLAG:
-			hangPole(mCollisions[i]);
+			hangPole(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_JUMPBASE:
-			hitJumpBase(mCollisions[i]);
+			hitJumpBase(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_FRUIT_COCONUT:
@@ -490,15 +497,15 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_FRUIT_PINE:
 		case ACTOR_TYPE_FRUIT_BANANA:
 		case ACTOR_TYPE_RED_PEPPER:
-			hitWantToTake(mCollisions[i]);
+			hitWantToTake(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_FRUIT_DURIAN:
-			hitPushup(mCollisions[i]);
+			hitPushup(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_BREAKABLE_BLOCK:
-			hitBrakable(mCollisions[i]);
+			hitBrakable(getCollision(i));
 			break;
 
 		case ACTOR_TYPE_BOSS_MANTA:
