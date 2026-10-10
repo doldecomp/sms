@@ -29,6 +29,7 @@ struct TMarioControllerWork {
 	/* 0x1C */ f32 mAnalogR;
 	/* 0x20 */ f32 mAnalogL;
 
+	// Fabricated and definitely fake
 	bool isAHit() const
 	{
 		if (mFrameInput & A) {
@@ -36,6 +37,8 @@ struct TMarioControllerWork {
 		}
 		return false;
 	}
+
+	// Fabricated and definitely fake
 	bool isBHit() const
 	{
 		if (mFrameInput & B) {
@@ -43,6 +46,8 @@ struct TMarioControllerWork {
 		}
 		return false;
 	}
+
+	// Fabricated and definitely fake
 	bool isAPressed() const
 	{
 		if (mInput & A) {
@@ -50,6 +55,8 @@ struct TMarioControllerWork {
 		}
 		return false;
 	}
+
+	// Fabricated and definitely fake
 	bool isBPressed() const
 	{
 		if (mInput & B) {
@@ -210,6 +217,12 @@ public:
 	}
 
 	void invalidate(s32 frames) { mDisabledFrames = frames; }
+
+	// Fabricated
+	f32 getCompSPos(int input, int axis) const
+	{
+		return mCompSPos[input * 2 + axis];
+	}
 
 public:
 	// NOTE: surprisingly, only flat array matches

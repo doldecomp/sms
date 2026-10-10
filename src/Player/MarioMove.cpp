@@ -45,10 +45,7 @@ f32 TMario::getJumpSlideControl() const
 bool TMario::canSquat() const
 {
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
-	    && ((const TWaterGun*)mWaterGun)
-	               ->getCurrentNozzle()
-	               ->mEmitParams.mRocketType.get()
-	           != 1
+	    && mWaterGun->getCurrentNozzle()->mRocketType.get() != 1
 	    && (int)mWaterGun->mCurrentNozzle != 5 && (mInput & 0x200))
 		return true;
 	else
@@ -1439,8 +1436,8 @@ void TMario::checkController(JDrama::TGraphics*)
 					if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)
 					    && ((TNozzleTrigger*)((const TWaterGun*)mWaterGun)
 					            ->getCurrentNozzle())
-					               ->unk385
-					           == TNozzleTrigger::ACTIVE) {
+					               ->mSprayState
+					           == TNozzleTrigger::SPRAY_STATE_ACTIVE) {
 						onFlag(MARIO_FLAG_FLUDD_EMITTING);
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
 						if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
@@ -1479,7 +1476,7 @@ void TMario::checkController(JDrama::TGraphics*)
 			// TODO: wrong??? Correct offset is 0x714 which is way past
 			// the end of a TNozzleTrigger???
 			((TNozzleTrigger*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
-			    ->unk388
+			    ->mInsidePressure
 			    = propRot;
 		}
 	}
@@ -2340,8 +2337,8 @@ void TMario::gunExec()
 	    && mStatus != MARIO_STATUS_TOROCCO)
 		mWaterGun->changeBackup();
 
-	if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Spray
-	    && mWaterGun->mIsEmitWater != 0) {
+	if ((int)mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
+	    && mWaterGun->getEmittedWaterCount() != 0) {
 		JGeometry::TVec3<f32> local_34;
 		local_34.x = JMASSin(mFaceAngle.y);
 		local_34.y = 0.0f;

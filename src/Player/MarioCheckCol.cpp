@@ -42,8 +42,8 @@ void TMario::hitNormal(THitActor* actor)
 		actor->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 	}
 
-	TWaterGun* wg = mWaterGun;
-	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
+	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
+	    && mWaterGun->getEmittedWaterCount() != 0) {
 		TModelWaterManager::mStaticHitActor.mPosition = mPosition;
 		TModelWaterManager::mStaticHitActor.mPosition.y += 80.0f;
 		TModelWaterManager::mStaticHitActor.unk68 = 0;
@@ -123,7 +123,7 @@ void TMario::hitBarrel(THitActor* actor)
 			TWaterGun* wg     = mWaterGun;
 			wg->mCurrentWater = (s32)((const TWaterGun*)wg)
 			                        ->getCurrentNozzle()
-			                        ->mEmitParams.mAmountMax.get();
+			                        ->mAmountMax.get();
 		}
 	}
 }
@@ -270,8 +270,7 @@ void TMario::checkCollision()
 					unk3E8              = mWaterGun->mSecondNozzle;
 					const TWaterGun* wg = mWaterGun;
 					unk3EC              = (f32)(wg->mCurrentWater
-                                   / wg->getCurrentNozzle()
-                                         ->mEmitParams.mAmountMax.get());
+                                   / wg->getCurrentNozzle()->mAmountMax.get());
 				}
 				mYoshi->ride();
 				onFlag(MARIO_FLAG_HAS_FLUDD);

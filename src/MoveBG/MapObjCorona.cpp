@@ -733,8 +733,8 @@ bool TBathtub::allowsTumble() const
 	if (fludd != nullptr) {
 		TNozzleTrigger* nozzle
 		    = static_cast<TNozzleTrigger*>(fludd->getCurrentNozzle());
-		if (nozzle != nullptr && nozzle->getNozzleKind() == 1
-		    && nozzle->unk388 > 0.0f)
+		if (nozzle != nullptr && nozzle->getNozzleKind() == TWaterGun::Rocket
+		    && nozzle->mInsidePressure > 0.0f)
 			return false;
 	}
 	return manager->countActiveKillers() == 0;
