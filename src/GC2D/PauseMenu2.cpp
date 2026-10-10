@@ -93,7 +93,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 		mMenuItems[i] = (J2DPicture*)mScreen->search('tx_1' + i);
 
 		if (mNumItems == 2) {
-			mMenuItems[i]->add(0, VERSION_SELECT(GMSJ01(14), GMSP01(20)));
+			mMenuItems[i]->add(0, 20);
 		}
 		mMenuItems[i]->mVisible = false;
 	}
@@ -231,7 +231,7 @@ void TPauseMenu2::appearWindow()
 				rect.reform(hx, hy, -hx, -hy);
 
 				mMenuItems[i]->setBounds(rect);
-			} else if (mFadeAnim <= 46.0f) {
+			} else if (mFadeAnim >= 46.0f) {
 				// Fade in animation complete; set state to open.
 				if (mState != MENU_OPEN) {
 					mState = MENU_OPEN;
@@ -271,8 +271,8 @@ void TPauseMenu2::disappearWindow()
 		for (s32 i = 0; i < 5; i++) {
 			JUTRect rect = mPauseLetters[i]->getBounds();
 
-			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
-			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.025f * -rect.x1 + 0.01f * rect.getWidth(),
+			         0.025f * -rect.y1 + 0.01f * rect.getHeight());
 
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 
@@ -282,8 +282,8 @@ void TPauseMenu2::disappearWindow()
 		// ... and now shrink the menu items in the same manner.
 		for (s32 i = 0; i < mNumItems; i++) {
 			JUTRect rect = mMenuItems[i]->getBounds();
-			rect.add(0.25f * -rect.y1 + 0.01f * rect.getWidth(),
-			         0.25f * -rect.x1 + 0.01f * rect.getHeight());
+			rect.add(0.025f * -rect.x1 + 0.01f * rect.getWidth(),
+			         0.025f * -rect.y1 + 0.01f * rect.getHeight());
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 			mMenuItems[i]->setBounds(rect);
 		}
@@ -348,11 +348,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						switch (curSelectedItem) {
 						case 0:
 							mSelectionConfirmed = true;
-							SMSRumbleMgr->finishPause();
-							gpMSound->pauseOff(0);
-							SMSGetMarDirector()->getConsole()->pauseOut();
-							mFadeAnim = 0.0f;
-							mState    = MENU_APPEARING;
+							setDrawEnd();
 							break;
 						case 2:
 							mSelectionConfirmed = true;
@@ -470,7 +466,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					} else if (mBounceAnim < 35.0f) {
 						s32 hw = mBounceAnim - 35.0f;
 						s32 hh = 0.5f * (mBounceAnim - 35.0f);
-						animItemBounds.reform(-hw, -hh, hw, hh);
+						animItemBounds.reform(hw, hh, -hw, -hh);
 						mMenuItems[mSelectedItem]->setBounds(animItemBounds);
 
 						s32 colorShift = (35.0f - mBounceAnim) * 10.0f;
@@ -479,7 +475,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 					} else {
 						// Loop animation.
 						mBounceAnim = -0.5f;
-						unkFC       = -unkFC;
+						unkFC *= -1;
 					}
 
 					mBounceAnim += 0.5f;
@@ -588,9 +584,11 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		if (picture->isVisible()) {
 			picture->hide();
 		}
-	} else if (!(anim >= 20.0f) && !picture->isVisible()) {
-		picture->show();
-		picture->setAlpha(0);
+	} else if (!(anim >= 20.0f)) {
+		if (!picture->isVisible()) {
+			picture->show();
+			picture->setAlpha(0);
+		}
 
 		if (anim == 2.0f) {
 			JUTRect rect = picture->getGlobalBounds();
