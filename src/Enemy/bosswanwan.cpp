@@ -113,7 +113,61 @@ void TBossWanwan::kill() { return; }
 
 void TBossWanwan::init(TLiveManager* tlivemanager) { }
 
-void TBossWanwan::control() { }
+void TBossWanwan::control()
+{
+	TLiveActor::control();
+
+	bool limitReached = false;
+	if (this->mPicket->mHolder != nullptr) {
+		f32 limit = getSaveParam()->mSLPullLimit.get();
+		if (mPicketPullDelta.squared() >= limit) {
+			limitReached = true;
+		}
+	}
+
+	if (this->unk17C != 0 || limitReached) {
+		mLinearVelocity += mPicketPullDelta;
+
+		JGeometry::TVec3<f32> pos       = mPosition;
+		JGeometry::TVec3<f32> targetPos = this->mLeash->mRope->mPoints[3].unkC;
+
+		pos -= targetPos;
+
+		// probable inline
+		f32 targetAngle;
+		if (pos.z == 0.0f) {
+			pos.z = pos.x < 0.0f ? -90.0f : 90.0f;
+		} else if (pos.z >= 0.0f) {
+			s16 angle = matan(pos.z, pos.x);
+			pos.z     = (f32)angle * (180.0f / 32768.0f);
+		} else {
+			s16 angle = matan(-pos.z, pos.x);
+			pos.z     = 180.0f - (f32)(angle * (180.0f / 32768.0f));
+		}
+
+		targetAngle
+		    = MsWrap<f32>(targetAngle, 0.0f, 360.0f); // the "real" MsWrap
+
+		// TODO: fix this fabricated func
+		f32 rotY = Wrap(mRotation.y, targetAngle - 180.0f,
+		                targetAngle + 180.0f); // the actually out-of-line one
+
+		f32 maxStep = mTurnSpeed * 4.0f;
+		f32 diff    = targetAngle - rotY;
+
+		if (diff > 0.0f) {
+			diff = (diff > maxStep) ? maxStep : diff;
+		} else {
+			diff = (diff > -maxStep) ? diff : -maxStep;
+		}
+
+		mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f,
+		                          360.0f); // the "real" MsWrap
+	}
+
+	mPicketPullDelta.zero();
+	this->updateSquareToMario();
+}
 
 void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
@@ -131,7 +185,7 @@ template <class T> T Wrap(T t, T l, T r)
 	return t;
 }
 
-void TBossWanwan::slideToCurPathNode(float speed, float deltaTime)
+void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 {
 	JGeometry::TVec3<f32> pos
 	    = unkF4.unk0 != nullptr ? unkF4.unk0->mPosition : unkF4.unk4; // inline?
@@ -141,6 +195,8 @@ void TBossWanwan::slideToCurPathNode(float speed, float deltaTime)
 	f32 dist = PSVECMag(&pos);
 
 	f32 targetAngle;
+
+	// inline?
 	if (pos.z == 0.0f) {
 		if (pos.x >= 0.0f) {
 			targetAngle = 90.0f;
@@ -163,9 +219,9 @@ void TBossWanwan::slideToCurPathNode(float speed, float deltaTime)
 	f32 diff = targetAngle - rotY;
 
 	if (diff > 0.0f) {
-		diff = (diff > deltaTime) ? deltaTime : diff;
+		diff = (diff > turnSpeed) ? turnSpeed : diff;
 	} else {
-		diff = (diff > -deltaTime) ? diff : -deltaTime;
+		diff = (diff > -turnSpeed) ? diff : -turnSpeed;
 	}
 
 	mRotation.y
