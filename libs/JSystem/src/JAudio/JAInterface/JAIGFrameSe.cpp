@@ -26,7 +26,6 @@ void JAIBasic::checkNextFrameSe()
 	u8 j;
 	u8 bVar7;
 	u8 bVar18;
-	u8 maxPlaying;
 	JAISound::FabricatedPositionInfo* pi;
 
 	f32 fVar6
@@ -166,8 +165,8 @@ void JAIBasic::checkNextFrameSe()
 			}
 		}
 
-		maxPlaying = unk0->mCategoryInfoTable[mSoundScene][i].mMaxPlaying;
-		for (j = 0; j < maxPlaying; ++j) {
+		bVar18 = unk0->mCategoryInfoTable[mSoundScene][i].mMaxPlaying;
+		for (j = 0; j < bVar18; ++j) {
 			snd   = unk0->mSeTrack[i][j].mSound;
 			bVar7 = 0;
 			if (snd == nullptr) {
@@ -184,34 +183,34 @@ void JAIBasic::checkNextFrameSe()
 				unk0->mSeTrack[i][j].mSound = nullptr;
 				bVar7                       = 1;
 			} else {
-				for (k = 0; k < maxPlaying; ++k) {
+				for (k = 0; k < bVar18; ++k) {
 					if (unk0->mSeTrack[i][j].mSound == candidates[k].sound) {
 						candidates[k].sound = nullptr;
-						k                   = maxPlaying;
+						k                   = bVar18;
 					}
 				}
 			}
 
 			if (bVar7 == 1) {
-				for (k = 0; k < maxPlaying; ++k) {
+				for (k = 0; k < bVar18; ++k) {
 					snd = candidates[k].sound;
 					if (snd != nullptr && snd->mState != SOUNDSTATE_Started) {
-						for (l = 0; l < maxPlaying; ++l) {
+						for (l = 0; l < bVar18; ++l) {
 							if (unk0->mSeTrack[i][l].mSound
 							    && snd == unk0->mSeTrack[i][l].mSound) {
 								bVar7 = 0;
-								l     = maxPlaying;
+								l     = bVar18;
 							}
 						}
 
 						if (bVar7 == 1) {
 							unk0->mSeTrack[i][j].mSound = snd;
 							candidates[k].sound         = nullptr;
-							k                           = maxPlaying + 1;
+							k                           = bVar18 + 1;
 						}
 					}
 				}
-				if (k == maxPlaying) {
+				if (k == bVar18) {
 					unk0->mSeTrack[i][j].mSound = nullptr;
 				}
 			}

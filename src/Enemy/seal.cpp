@@ -27,6 +27,7 @@ TSeal::TSeal(const char* name)
 	onLiveFlag(LIVE_FLAG_UNK10);
 }
 
+// TODO: list/matrix stack slots and r30/r31 allocation still differ.
 void TSeal::init(TLiveManager* param_1)
 {
 	mManager = param_1;
@@ -40,9 +41,10 @@ void TSeal::init(TLiveManager* param_1)
 	             scale, scale, scale, scale);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
-	    ->getChildren()
-	    .push_back(this);
+	TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "敵グループ"));
+	group->getChildren().push_back(this);
 
 	mRotation.x = MsWrap(mRotation.x + 270.0f, 0.0f, 360.0f);
 

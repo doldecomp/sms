@@ -84,6 +84,10 @@ public:
 	void setIcons(const void* icons) { mIcons = icons; }
 	void setBanner(const void* banner) { mBanner = banner; }
 
+	// fabricated: TApplication::initialize_nlogoAfter stores mIcons/mBanner
+	// directly; the setters change its codegen
+	friend class TApplication;
+
 private:
 	void issue(s32 command);
 	s32 probe_();

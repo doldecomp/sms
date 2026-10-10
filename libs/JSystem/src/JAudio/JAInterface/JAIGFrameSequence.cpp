@@ -224,8 +224,8 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 		}
 	}
 
-	if (sound != nullptr)
-		sound->incPlayGameFrameCounter();
+	if (JAISound* snd = sound)
+		snd->incPlayGameFrameCounter();
 
 	if (r30 == 0)
 		return;
@@ -501,7 +501,8 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			r30 ^= 0x100;
 	}
 
-	if (r30 & 0x800000) {
+	bool updateTrackInterrupt = r30 & 0x800000;
+	if (updateTrackInterrupt) {
 		r30 ^= 0x800000;
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			u8* sw = &seqParam->mTrackInterruptSwitch[j];

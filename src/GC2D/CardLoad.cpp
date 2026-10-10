@@ -104,7 +104,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	if (SMSGetMarDirector()->mMap != 15)
+	if (gpMarDirector->mMap != 15)
 		return;
 
 	JKRArchive* optionVolume = (JKRArchive*)JKRFileLoader::getVolume("option");
@@ -717,11 +717,11 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			if (unkC0 / 120.0f > 45.0f) {
 				if (TFlagManager::getInstance()->getBool(MSF_UNK3001C)) {
-					SMSGetMarDirector()->fireStreamingMovie(9);
+					gpMarDirector->fireStreamingMovie(9);
 					TFlagManager::getInstance()->setBool(false, MSF_UNK3001C);
 					unkC0 = 0;
 				} else {
-					SMSGetMarDirector()->fireStreamingMovie(12);
+					gpMarDirector->fireStreamingMovie(12);
 					TFlagManager::getInstance()->setBool(true, MSF_UNK3001C);
 					unkC0 = 0;
 				}
@@ -939,8 +939,6 @@ bool TCardLoad::titleDraw()
 		++unk258;
 	} break;
 
-	case 5:
-	case 6:
 	case 7:
 		break;
 	}
@@ -1208,7 +1206,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 					unk510->hide();
 					unk504[0]->changeTexture(unkC8[score / 100]->getTexInfo(),
 					                         0);
-					score -= int(score * 0.01f) * 100;
+					score = score - int(score * 0.01f) * 100;
 					unk504[1]->changeTexture(unkC8[score / 10]->getTexInfo(),
 					                         0);
 					unk504[2]->changeTexture(unkC8[score % 10]->getTexInfo(),
@@ -1787,7 +1785,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 					} else {
 						unk308[i]->changeTexture(
 						    unkC8[score / 100]->getTexInfo(), 0);
-						score -= int(score * 0.01f) * 100;
+						score = score - int(score * 0.01f) * 100;
 						unk314[i]->changeTexture(
 						    unkC8[score / 10]->getTexInfo(), 0);
 						unk320[i]->changeTexture(
@@ -2543,9 +2541,9 @@ void TCardLoad::changeScene()
 
 	case PROGRESS_UNK29: {
 		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) < 1)
-			SMSGetMarDirector()->setNextStage(0, nullptr);
+			gpMarDirector->setNextStage(0, nullptr);
 		else
-			SMSGetMarDirector()->setNextStage(1, nullptr);
+			gpMarDirector->setNextStage(1, nullptr);
 		gpCardManager->unmount();
 	} break;
 

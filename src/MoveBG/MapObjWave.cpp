@@ -128,11 +128,11 @@ void TMapObjWave::noWave()
 
 s32 TMapObjWave::getAlpha(f32 param_1, f32 param_2) const
 {
-	f32 absZ = fabsf(param_1);
-	f32 absX = fabsf(param_2);
-	if (absX > absZ)
-		return (s32)(unk54 * (1.0f - unk18 * absX));
-	return (s32)(unk54 * (1.0f - unk18 * absZ));
+	param_1 = fabsf(param_1);
+	param_2 = fabsf(param_2);
+	if (param_2 > param_1)
+		return (s32)(unk54 * (1.0f - unk18 * param_2));
+	return (s32)(unk54 * (1.0f - unk18 * param_1));
 }
 
 void TMapObjWave::draw()
@@ -170,8 +170,9 @@ void TMapObjWave::updateHeightAndAlpha()
 	gpMap->checkGroundExactY(SMS_GetMarioPos().x, 10.0f, SMS_GetMarioPos().z,
 	                         &ground2);
 
-	if (SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
-	    || ground2->isWaterSurface() || ground->isWaterSurface()) {
+	bool inShallowWater = SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER);
+	if (inShallowWater || ground2->isWaterSurface()
+	    || ground->isWaterSurface()) {
 		f32 height = gpMap->checkGroundIgnoreWaterSurface(
 		    SMS_GetMarioPos().x, 0.0f, SMS_GetMarioPos().z, &ground2);
 		f32 height2 = unk4C + height;
@@ -196,9 +197,9 @@ void TMapObjWave::updateHeightAndAlpha()
 		unk54 = unk5C;
 	}
 
-	if (SMSGetMarDirector()->mMap == 4 && -4950.0f < SMS_GetMarioPos().x
-	    && -4340.0f > SMS_GetMarioPos().x && 7660.0f < SMS_GetMarioPos().z
-	    && 8040.0f > SMS_GetMarioPos().z) {
+	if (SMSGetMarDirector()->getCurrentMap() == 4
+	    && -4950.0f < SMS_GetMarioPos().x && -4340.0f > SMS_GetMarioPos().x
+	    && 7660.0f < SMS_GetMarioPos().z && 8040.0f > SMS_GetMarioPos().z) {
 		unk3C = unk34;
 		unk40 = unk38;
 		unk54 = unk5C;
@@ -206,7 +207,9 @@ void TMapObjWave::updateHeightAndAlpha()
 
 	int cubeNo = gpCubeStream->getInCubeNo(SMS_GetMarioPos());
 	if (cubeNo != -1) {
-		if (unk44 < ((TCubeStreamInfo&)(*gpCubeStream->unk14)[cubeNo]).unk3C)
+		TCubeStreamInfo& cube = static_cast<TCubeStreamInfo&>(
+		    gpCubeStream->unk14->getChildren()[cubeNo]);
+		if (unk44 < cube.unk3C)
 			unk44 += unk48;
 	} else if (unk44 > 0.0f) {
 		unk44 -= unk48;
@@ -275,7 +278,7 @@ void TMapObjWave::load(JSUMemoryInputStream& param_1)
 	unk24 = 0.02f;
 	unk28 = 0.03f;
 
-	switch (SMSGetMarDirector()->mMap) {
+	switch (SMSGetMarDirector()->getCurrentMap()) {
 	case 3:
 	case 30:
 		unk2C = 25.0f;

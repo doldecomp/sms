@@ -90,7 +90,8 @@ TChorobei::TChorobei(TCannon* param_1, int param_2, const char* param_3)
 	if (unk74)
 		return;
 
-	unk74 = new MAnmSound(SMSGetMSound());
+	MAnmSound* anmSound = new MAnmSound(SMSGetMSound());
+	unk74               = anmSound;
 	unk74->initAnmSound(nullptr, 1, 0.0f);
 }
 
@@ -106,8 +107,8 @@ void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 & CUE_CALC_ANIM) {
 		if (unk74 != nullptr && unk78 != nullptr) {
 			J3DFrameCtrl* ctrl = unk6C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
-			unk74->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0,
-			                 4);
+			f32 rate           = ctrl->getRate();
+			unk74->animeLoop(&mPosition, ctrl->getFrame(), rate, 0, 4);
 		}
 
 		Mtx mtx;
@@ -141,12 +142,15 @@ void TChorobei::checkHit()
 		if (actor->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		if (actor->isActorType(ACTOR_TYPE_BOMB_HEI)) {
-			unk68->hitHead(static_cast<TBombHei*>(actor));
+			TBombHei* bombHei = static_cast<TBombHei*>(actor);
+			unk68->hitHead(bombHei);
 		}
 		if (actor->isActorType(ACTOR_TYPE_ENEMY_UNK1F)) {
 			TKiller* killer = static_cast<TKiller*>(actor);
 			if (killer->isRollFly()) {
-				unk68->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
+				const TNerveBase<TLiveActor>* nerve
+				    = &TNerveCannonDamage::theNerve();
+				unk68->mSpine->pushNerve(nerve);
 				killer->kill();
 			}
 		}
@@ -187,12 +191,14 @@ TCannonDom::TCannonDom(TLiveActor* param_1, int param_2, SDLModelData* param_3,
     , unk2C(0.0f)
     , unk30(0.0f)
 {
-	unk30 = TMsRange<f32>(0.0f, 360.0f).rand();
+	TMsRange<f32> range(0.0f, 360.0f);
+	unk30 = range.rand();
 
 	if (unk1C)
 		return;
 
-	unk1C = new MAnmSound(SMSGetMSound());
+	MAnmSound* anmSound = new MAnmSound(SMSGetMSound());
+	unk1C               = anmSound;
 	unk1C->initAnmSound(nullptr, 1, 0.0f);
 }
 
@@ -205,8 +211,9 @@ void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (param_1 == CUE_CALC_ANIM) {
 		if (unk1C != nullptr && unk20 != nullptr) {
 			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
-			unk1C->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(),
-			                 ctrl->getRate(), 0, 4);
+			f32 rate           = ctrl->getRate();
+			unk1C->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(), rate, 0,
+			                 4);
 		}
 
 		MtxPtr mtx = getConnectedMtx();
@@ -284,6 +291,7 @@ void TCannon::loadAfter()
 	}
 }
 
+// TODO: nonmatching stack frame (0x190 instead of 0x1a0).
 void TCannon::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
@@ -312,14 +320,16 @@ void TCannon::init(TLiveManager* param_1)
 		                       ->getModelData()
 		                       ->getJointNum();
 		     ++i) { }
-		unk1A8->initHitActor(ACTOR_TYPE_ENEMY_UNK1D, 3,
-		                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
-		                     unk28C->mSLChorobeiAttackRadius.get(),
-		                     unk28C->mSLChorobeiAttackHeight.get(),
-		                     unk28C->mSLChorobeiDamageRadius.get(),
-		                     unk28C->mSLChorobeiDamageHeight.get());
+		f32 attackRadius = unk28C->mSLChorobeiAttackRadius.get();
+		f32 attackHeight = unk28C->mSLChorobeiAttackHeight.get();
+		f32 damageRadius = unk28C->mSLChorobeiDamageRadius.get();
+		f32 damageHeight = unk28C->mSLChorobeiDamageHeight.get();
+		unk1A8->initHitActor(
+		    ACTOR_TYPE_ENEMY_UNK1D, 3, HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY,
+		    attackRadius, attackHeight, damageRadius, damageHeight);
 		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
-		    ->add(unk1A8);
+		    ->getChildren()
+		    .push_back(unk1A8);
 
 		static const char* sCannonDomPartsJointTable[] = {
 			"nullC",
@@ -346,10 +356,10 @@ void TCannon::init(TLiveManager* param_1)
 		unk1B8        = new TCannonDom(this, jointIndex, modelData, 3);
 		unk1B8->unk24 = 1;
 	}
-	void* marioResource      = JKRGetResource("/scene/cannon/hodai_mario.bmd");
-	SDLModelData* marioModel = new SDLModelData(
-	    J3DModelLoaderDataBase::load(marioResource, 0x10010000));
-	unk1BC = new TSharedParts(this, 0, marioModel, 3);
+	resource = JKRGetResource("/scene/cannon/hodai_mario.bmd");
+	modelData
+	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10010000));
+	unk1BC = new TSharedParts(this, 0, modelData, 3);
 	for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i) { }
 
 	unk258 = new TMapCollisionMove;
@@ -374,6 +384,7 @@ void TCannon::reset()
 	}
 }
 
+// TODO: frame-only mismatch; velocity and attachment stack slots differ.
 void TCannon::moveObject()
 {
 	TSmallEnemy::moveObject();
@@ -391,7 +402,7 @@ void TCannon::moveObject()
 
 	unk1A8->checkHit();
 
-	JGeometry::TVec3<f32> vel = mVelocity;
+	JGeometry::TVec3<f32> vel = getVelocityRef();
 	mPosition.y += vel.y;
 	mVelocity.y -= getGravityY();
 	if (mPosition.y < unk23C.y) {
@@ -546,11 +557,15 @@ void TCannon::calcRootMatrix()
 		MtxPtr mtx = mHolder->getTakingMtx();
 		if (mSpine->getCurrentNerve() == &TNerveCannonObject::theNerve()) {
 			getModel()->setBaseTRMtx(mtx);
-			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			mPosition.set(((TMtx34f*)mtx)->ref(0, 3),
+			              ((TMtx34f*)mtx)->ref(1, 3),
+			              ((TMtx34f*)mtx)->ref(2, 3));
 		} else {
 			if (SMSGetMarDirector()->isDemoModeNow())
 				mRotation.y = -80.0f;
-			mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			mPosition.set(((TMtx34f*)mtx)->ref(0, 3),
+			              ((TMtx34f*)mtx)->ref(1, 3),
+			              ((TMtx34f*)mtx)->ref(2, 3));
 			MsMtxSetXYZRPH(getMActor()->getModel()->getBaseTRMtx(), mPosition.x,
 			               mPosition.y, mPosition.z, mRotation.x, mRotation.y,
 			               mRotation.z);
@@ -565,8 +580,8 @@ void TCannon::calcRootMatrix()
 	           ->getFrameCtrl(ANM_TYPE_BCK)
 	           ->checkPass(2.0f)) {
 		for (int i = 0; i < ARRAY_COUNT(unk1AC); i++) {
-			MtxPtr mtx = unk1AC[i]->getConnectedMtx();
-			unk294.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+			TMtx34f* mtx = (TMtx34f*)unk1AC[i]->getConnectedMtx();
+			unk294.set(mtx->ref(0, 3), mtx->ref(1, 3), mtx->ref(2, 3));
 			unk1AC[i]->setBckAnm(2);
 			gpMarioParticleManager->emit(PARTICLE_MS_HIPDROP_C, &unk294, 0,
 			                             nullptr);
@@ -591,6 +606,7 @@ MtxPtr TCannon::getTakingMtx()
 	return unk1E4;
 }
 
+// TODO: frame-only mismatch; the range stack slots are 4 bytes too low.
 void TCannon::bombSet()
 {
 	TMsRange<f32> range(0.0f, 1.0f);
@@ -616,7 +632,8 @@ void TCannon::bombSet()
 		unk1A4 = actor;
 		if (actor) {
 			actor->reset();
-			actor->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
+			MActor* mActor = actor->getMActor();
+			mActor->setFrameRate(0.0f, ANM_TYPE_BCK);
 		}
 	}
 	if (unk1A4) {
@@ -641,8 +658,9 @@ void TCannon::bombShoot()
 	MsVECNormalize(&dir, &dir);
 
 	TMsRange<f32> range(-30.0f, 30.0f);
+	f32 angle = range.rand();
 	Mtx mtx;
-	MsMtxSetRotRPH(mtx, 0.0f, mRotation.y + range.rand(), 0.0f);
+	MsMtxSetRotRPH(mtx, 0.0f, mRotation.y + angle, 0.0f);
 
 	f32 speed = unk28C->mSLThrowXZSpeed.get();
 	dir.y     = speed;
@@ -674,8 +692,10 @@ void TCannon::bombScaleUp()
 
 void TCannon::hitHead(TBombHei* param_1)
 {
-	if (mSpine->getCurrentNerve() != &TNerveCannonDamage::theNerve()
-	    && param_1->isDamageToCannon()) {
+	if (mSpine->getCurrentNerve() == &TNerveCannonDamage::theNerve())
+		return;
+
+	if (param_1->isDamageToCannon()) {
 		mSpine->pushNerve(&TNerveCannonDamage::theNerve());
 		param_1->kill();
 	}
@@ -686,9 +706,7 @@ void TCannon::updateAttachPos()
 	if (!unk1A0)
 		return;
 
-	JGeometry::TVec3<f32> pos = unk194;
-	pos += unk1A8->mPosition;
-	unk1A0->mPosition = pos;
+	unk1A0->mPosition = unk194 + unk1A8->mPosition;
 	unk1A0->offLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	if (mSpine->getCurrentNerve() == &TNerveCannonClose::theNerve()) {
@@ -702,6 +720,7 @@ void TCannon::updateAttachPos()
 	}
 }
 
+// TODO: nonmatching stack frame and local stack layout.
 void TCannon::killerShoot()
 {
 	if (unk239) {
@@ -713,9 +732,12 @@ void TCannon::killerShoot()
 		unk1E0 = unk1AC[unk214]->getMActor()->getModel()->getBaseTRMtx();
 		unk1E0 = unk1AC[unk214]->getMActor()->getModel()->getAnmMtx(1);
 		TPosition3f mtx;
-		mtx.translation(0.0f, -60.0f, 150.0f);
-		MTXConcat(unk1E0, mtx, mtx);
-		mtx.getTrans(killer->mPosition);
+		mtx.translation(JGeometry::TVec3<f32>(0.0f, -60.0f, 150.0f));
+		MtxPtr ptr = mtx;
+		MTXConcat(unk1E0, ptr, ptr);
+		killer->mPosition.set(ptr[0][3], ptr[1][3], ptr[2][3]);
+		JGeometry::TVec3<f32> velocity;
+		f32 angle;
 		f32 speedX                 = SMS_GetMarioSpeedX();
 		f32 speedZ                 = SMS_GetMarioSpeedZ();
 		JGeometry::TVec3<f32> goal = SMS_GetMarioPos();
@@ -731,14 +753,15 @@ void TCannon::killerShoot()
 			goal.z += 2.0f * fabsf(range.rand());
 			break;
 		}
-		JGeometry::TVec3<f32> velocity
+		velocity
 		    = killer->calcVelocityToJumpToY(goal, 5.0f, killer->getGravityY());
-		JGeometry::TVec3<f32> delta = goal;
-		delta -= mPosition;
+		JGeometry::TVec3<f32> delta = goal - mPosition;
 		f32 time = fabsf(MsVECMag2(&delta) / (velocity.x * mVelocityRate));
+		JGeometry::TVec3<f32> predicted;
 		killer->unk1A5 = 0;
-		f32 rate       = mVelocityRate;
-		if (TMsRange<s32>(0, 100).rand() % 5 == 0) {
+		TMsRange<s32> killerRange(0, 100);
+		f32 rate = mVelocityRate;
+		if (killerRange.rand() % 5 == 0) {
 			killer->unk1A5 = 1;
 		} else {
 			if (SMS_GetMarioSpeedX() > 2.0f)
@@ -746,14 +769,13 @@ void TCannon::killerShoot()
 			if (SMS_GetMarioSpeedX() < -2.0f)
 				rate = 0.68f;
 		}
-		JGeometry::TVec3<f32> predicted(goal.x + mSearchRate * (speedX * time),
-		                                goal.y,
-		                                goal.z + mSearchRate * (speedZ * time));
+		predicted.set(goal.x + mSearchRate * (speedX * time), goal.y,
+		              goal.z + mSearchRate * (speedZ * time));
 		velocity = killer->calcVelocityToJumpToY(predicted, 5.0f,
 		                                         killer->getGravityY());
 		velocity.scale(rate);
-		killer->mRotation.set(
-		    0.0f, MsWrap(MsGetRotFromZaxisY(velocity), 0.0f, 360.0f), 0.0f);
+		angle = MsAngleWrap(MsGetRotFromZaxisY(velocity));
+		killer->mRotation.set(0.0f, angle, 0.0f);
 		killer->mScaling.set(0.1f, 0.1f, 0.1f);
 		if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK1) {
 			velocity.x *= 0.2f;
@@ -765,7 +787,7 @@ void TCannon::killerShoot()
 		killer->unk1A8 = velocity;
 		killer->setVelocity(velocity);
 		killer->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		JGeometry::TVec3<f32> marioDelta = SMS_DistanceFromMarioVec(mPosition);
+		JGeometry::TVec3<f32> marioDelta = SMS_GetMarioPos() - mPosition;
 		goal.x += marioDelta.x;
 		goal.z += marioDelta.z;
 		killer->setGoalPath(TPathNode(goal));
@@ -781,9 +803,11 @@ void TCannon::killerShoot()
 		igaiga->reset();
 		unk1E0 = unk1AC[unk214]->getMActor()->getModel()->getAnmMtx(1);
 		TPosition3f mtx;
-		mtx.translation(0.0f, -60.0f, 150.0f);
-		MTXConcat(unk1E0, mtx, mtx);
-		mtx.getTrans(igaiga->mPosition);
+		mtx.translation(JGeometry::TVec3<f32>(0.0f, -60.0f, 150.0f));
+		MtxPtr ptr = mtx;
+		MTXConcat(unk1E0, ptr, ptr);
+		igaiga->mPosition.set(ptr[0][3], ptr[1][3], ptr[2][3]);
+		JGeometry::TVec3<f32> goal;
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitWithRotate(
 		    PARTICLE_MS_IGA_FUMI_AIR, &igaiga->mPosition, 0,
 		    DEG2SHORTANGLE(igaiga->mRotation.y), 0, 0, nullptr);
@@ -792,7 +816,6 @@ void TCannon::killerShoot()
 			scale.mul(mScaling);
 			emitter->setGlobalScale(scale);
 		}
-		JGeometry::TVec3<f32> goal;
 		igaiga->getTracer()->getGraph()->getFirstGraphNode().getPoint(&goal);
 		unk248 = goal;
 		JGeometry::TVec3<f32> velocity
@@ -824,10 +847,14 @@ void TCannon::damage()
 void TCannon::setKillerGoalPoint()
 {
 	if (unk239) {
-		s16 angle                  = TMsRange<f32>(0.0f, 360000.0f).rand();
-		JGeometry::TVec3<f32> goal = SMS_GetMarioPos();
-		goal.x += 500.0f * JMASCos(angle);
-		goal.z += 500.0f * JMASSin(angle);
+		TMsRange<f32> range(0.0f, 360000.0f);
+		f32 value = range.rand();
+		s16 angle = value;
+		JGeometry::TVec3<f32> goal(SMS_GetMarioPos(),
+		                           JGeometry::TVec3<f32>::ASSIGN_COPY);
+		f32 radius = 500.0f;
+		goal.x += radius * JMASCos(angle);
+		goal.z += radius * JMASSin(angle);
 		setGoalPath(TPathNode(goal));
 	} else {
 		setGoalPath(TPathNode(unk248));
@@ -889,14 +916,16 @@ DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 	return false;
 }
 
+// TODO: nonmatching stack layout and callee-saved register allocation.
 DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 {
 	TCannon* cannon = static_cast<TCannon*>(spine->getBody());
 	cannon->updateSquareToMario();
 	f32 initialBombDist = cannon->unk28C->mSLBombDist.get();
-	f32 distSquared     = cannon->getDistToMarioSquared();
+	initialBombDist *= initialBombDist;
+	f32 distSquared = cannon->getDistToMarioSquared();
 	if (spine->getTime() == 0) {
-		if (distSquared < initialBombDist * initialBombDist)
+		if (distSquared < initialBombDist)
 			cannon->setGoalPath((THitActor*)gpMarioAddress);
 		cannon->unk1A8->setBckAnm(19);
 	}
@@ -935,9 +964,8 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 	}
 	if (SMSGetApplication()->mCurrArea.getStage() == 5
 	    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK1) {
-		JGeometry::TVec3<f32> delta
-		    = SMS_DistanceFromMarioVec(cannon->mPosition);
-		cannon->mRotation.y = MsGetRotFromZaxis(delta).y;
+		JGeometry::TVec3<f32> delta = SMS_GetMarioPos() - cannon->mPosition;
+		cannon->mRotation.y         = MsGetRotFromZaxis(delta).y;
 	} else {
 		cannon->turnToGoal();
 	}

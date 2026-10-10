@@ -17,6 +17,8 @@
 bool SMS_isMultiPlayerMap();
 
 // TODO: stuff from other rogue includes
+bool SMS_isMultiPlayerMap();
+
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
@@ -351,12 +353,13 @@ void TMario::loadAfter()
 
 	initParticle();
 
-	if (isMario())
-		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), true);
-	else
-		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition,
-		                              mModel->getModel()->getAnmMtx(1), false);
+	if (isMario()) {
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(1);
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition, mtx, true);
+	} else {
+		MtxPtr mtx = mModel->getModel()->getAnmMtx(1);
+		SMSGetMSound()->setPlayerInfo(&mPosition, &mPrevPosition, mtx, false);
+	}
 
 	finalDrawInitialize();
 	initMirrorModel();

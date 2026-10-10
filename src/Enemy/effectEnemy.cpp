@@ -106,8 +106,9 @@ void TEffectEnemy::setDeadAnm()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_OFF,
 	                                            &mPosition, 0, nullptr);
-	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
-	                                nullptr, 0, 4);
+	if (SMSGetMSound()->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_BS_WANWAN_TO_COOL, getPosition(), 0, nullptr, 0, 4);
 	onLiveFlag(LIVE_FLAG_UNK20000);
 }
 

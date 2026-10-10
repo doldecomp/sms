@@ -40,6 +40,11 @@
 #include "MoveBG/WoodBarrel.hpp"
 #include <System/MarNameRefGen.hpp>
 
+// rogue include: the PCH strings at the start of .rodata
+// TODO: the retail .rodata also has a zero and a one Vec constant right after
+// them, from an inline that is not identified yet.
+#include <M3DUtil/InfectiousStrings.hpp>
+
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
 	if (strcmp(name, "MapObjBase") == 0)

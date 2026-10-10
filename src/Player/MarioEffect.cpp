@@ -67,7 +67,7 @@ void TMarioEffect::setJumpIntoWaterEffect()
 {
 	f32 absVelY = unk68->mVel.y;
 	if (absVelY < 0.0f)
-		absVelY = -absVelY;
+		absVelY = -unk68->mVel.y;
 
 	if (absVelY < unk68->mWaterEffectParams.mJumpIntoMdlEffectSpY.get())
 		return;
@@ -75,15 +75,20 @@ void TMarioEffect::setJumpIntoWaterEffect()
 	if (unk68->mFloorPosition.z - unk68->mFloorPosition.y < 50.0f)
 		return;
 
-	int idx = getThing();
+	int idx = -1;
+	if (unk6C[0] == 0)
+		idx = 0;
+	if (unk6C[1] == 0)
+		idx = 1;
 	if (idx < 0)
 		return;
 
 	Mtx localMtx;
 	MTXCopy(unk68->unk220, localMtx);
 
-	f32 minY = unk68->mWaterEffectParams.mJumpIntoMinY.get();
-	f32 maxY = unk68->mWaterEffectParams.mJumpIntoMaxY.get();
+	TMario* mario = unk68;
+	f32 minY      = mario->mWaterEffectParams.mJumpIntoMinY.get();
+	f32 maxY      = mario->mWaterEffectParams.mJumpIntoMaxY.get();
 
 	f32 ratio;
 	if (absVelY < minY)
@@ -122,7 +127,11 @@ void TMarioEffect::setJumpIntoWaterEffect()
 
 void TMarioEffect::setJumpIntoWaterEffectSmall()
 {
-	int idx = getThing();
+	int idx = -1;
+	for (int i = 0; i < 2; ++i) {
+		if (unk6C[i] == 0)
+			idx = i;
+	}
 	if (idx < 0)
 		return;
 
@@ -142,7 +151,7 @@ void TMarioEffect::setJumpIntoWaterEffectSmall()
 	unk74[idx]->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
 	unk74[idx]->getFrameCtrl(ANM_TYPE_BRK)->setRate(SMSGetAnmFrameRate());
 
-	unk74[idx]->getModel()->setBaseTRMtx(localMtx);
+	MTXCopy(localMtx, unk74[idx]->getModel()->getBaseTRMtx());
 
 	unk74[idx]->getModel()->getShapePacket(1)->hide();
 	unk74[idx]->getModel()->getShapePacket(2)->hide();

@@ -99,6 +99,7 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 
 // Their original include structure was complete nonsense,
 // so this shall live here for now to avoid circular includes.
+// TODO: replay guard/register allocation and replacement actor slot differ.
 template <typename T>
 bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
                                         u32 param_3, f32 param_4, u32 param_5,
@@ -113,7 +114,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 	f32 f31 = JALCalc::getDist(&unkAC, (Vec*)param_2);
 
 	if (unk5C[unk5A] == nullptr) {
-		f32 f29 = param_4;
+		f32 f29 = dVar9;
 		u32 r31 = param_1;
 
 		switch (param_1) {
@@ -153,9 +154,10 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		MSSetSoundMember* candidate;
 
 		u32 bVar1 = unk1D.get();
-		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.get();
+		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.unk0;
+		bVar1 += uVar5;
 		u32 uVar7 = unk5C[unk5A]->getPlayGameFrameCounter();
-		if (uVar7 < bVar1 + uVar5) {
+		if (uVar7 < bVar1) {
 			bVar2 = false;
 		} else {
 			if (unk24.get() == 1 && uVar7 < unk1F.get() && f31 < unk20.get()) {
@@ -174,7 +176,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		if (!bVar2)
 			return true;
 
-		f32 f29 = param_4;
+		f32 f29 = dVar9;
 		u32 r26 = param_1;
 		switch (param_1) {
 		case MSD_SE_ERASE_SCRAWL:
@@ -214,47 +216,47 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 			JAISound* sound = unk5C[unk5A];
 			if (sound != nullptr) {
 				u32 uVar7 = sound->getPlayGameFrameCounter();
-				f32 f30   = 1.0f;
-				f32 f29   = 1.0f;
+				f32 f30;
+				f32 f29;
+				f30 = f29 = 1.0f;
 
 				f32 f1 = unk2C.get();
 				if ((f32)uVar7 < (f32)unk28.get() && f31 < f1) {
 					JALCalc::linearTransform(uVar7, unk1D.get(), unk28.get(),
 					                         unk38.get(), 0.0f, false);
-					f30 = JALCalc::linearTransform(uVar7, unk1D.get(),
-					                               unk28.get(), unk30.get(),
-					                               1.0f, false);
-					f29 = JALCalc::linearTransform(uVar7, unk1D.get(),
-					                               unk28.get(), 1.0f,
-					                               unk34.get(), false);
+					f1  = unk28.get();
+					f30 = JALCalc::linearTransform(uVar7, unk1D.get(), f1,
+					                               unk30.get(), 1.0f, false);
+					f1  = unk28.get();
+					f32 pitchStart = 1.0f;
+					f29            = JALCalc::linearTransform(
+                        uVar7, unk1D.get(), f1, pitchStart, unk34.get(), false);
 				}
 
-				f32 f28 = 1.0f;
-				f32 f27 = 1.0f;
+				f32 f28;
+				f32 f27;
+				f28 = f27 = 1.0f;
 				if ((f32)uVar7 < (f32)unk3C.get() && f31 < unk40.get()) {
 					unk58 = 1;
 					JALCalc::linearTransform((f32)unk54, 0.0f, unk44.get(),
 					                         0.0f, unk50.get(), false);
-					f27 = JALCalc::linearTransform((f32)unk54, 0.0f,
-					                               unk44.get(), 1.0f,
-					                               unk48.get(), false);
-					f28 = JALCalc::linearTransform((f32)unk54, 0.0f,
-					                               unk44.get(), 1.0f,
-					                               unk4C.get(), false);
+					f27 = JALCalc::linearTransform(
+					    (f32)unk54, 0.0f, unk44.get(), 1.0f, unk48.unk0, false);
+					f28 = JALCalc::linearTransform(
+					    (f32)unk54, 0.0f, unk44.get(), 1.0f, unk4C.unk0, false);
 				} else {
 					unk58 = 0;
 					unk54 = 0;
 				}
-				JAISound* snd = unk5C[unk59];
-				snd->setVolume(f30 * f27, 3, 0);
-				snd->setPitch(f29 * f28, 3, 0);
-			} else {
-				// Huh.
-				if (unk5C[unk59] != nullptr)
-					unk5C[unk59]->setPortData(13, 1);
-				unk58 = 0;
-				unk54 = 0;
+				sound = unk5C[unk59];
+				sound->setVolume(f30 * f27, 3, 0);
+				sound->setPitch(f29 * f28, 3, 0);
 			}
+		} else {
+			if (unk5C[unk59] != nullptr)
+				unk5C[unk59]->setPortData(13, 1);
+			unk58 = 0;
+			unk54 = 0;
 		}
 	}
 

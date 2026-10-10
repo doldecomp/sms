@@ -6,6 +6,7 @@
 #include <System/MarDirector.hpp>
 #include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
+#include <System/DummyStrings.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
@@ -19,9 +20,6 @@
 #include <stdio.h>
 
 extern JPAEmitterManager* gpEmitterManager4D2;
-
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 JUTPoint TConsoleStr::cShineGetRight1(150, -50);
 JUTPoint TConsoleStr::cShineGetLeft1(-21, 7);
@@ -91,7 +89,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	if (SMSGetMarDirector()->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
-		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
+		s16 uVar2 = SMS_getShineID(uVar1, (u8)uVar9, false);
 
 		const void* puVar15;
 		if (pvVar10 == nullptr || uVar2 == -1)
@@ -106,13 +104,15 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 void TConsoleStr::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	unk2AC[0] = nullptr;
-	unk2AC[1] = nullptr;
-	unk2AC[2] = nullptr;
+	for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
+		unk2AC[i] = nullptr;
 }
 
+// TODO: nonmatching stack slots and trail-loop register allocation remain.
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	int i;
+
 	if (cue & CUE_MOVE) {
 		if (SMSGetMarDirector()->mState != 5) {
 			bool bVar6 = false;
@@ -159,7 +159,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (unk2BC == STATE_UNK2) {
 				bool uVar13 = true;
 
-				for (int i = 0; i < 2; ++i) {
+				for (i = 0; i < 2; ++i) {
 					uVar13 &= unk290[i]->update();
 					unk2A0[i]->setAlpha(0xff
 					                    - unk290[i]->getPane()->getAlpha());
@@ -172,7 +172,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			} else if (unk2BC == STATE_UNK8) {
 				bool uVar13 = true;
 
-				for (int i = 0; i < 2; ++i)
+				for (i = 0; i < 2; ++i)
 					uVar13 &= unk290[i]->update();
 
 				if (uVar13) {
@@ -181,7 +181,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 			} else if (unk2BC == STATE_UNK5) {
 				bool uVar13 = true;
-				for (int i = 0; i < 2; ++i)
+				for (i = 0; i < 2; ++i)
 					uVar13 &= unk298[i]->update();
 				if (uVar13) {
 					unk2BC = STATE_UNK6;
@@ -208,14 +208,14 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (!unk2A9
 		    && SMSGetMarDirector()->mState != TMarDirector::STATE_UNK4) {
-			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
+			for (i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->stopCreateParticle();
 			unk2A9 = true;
 		}
 
 		if (unk2A9 && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4) {
-			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
+			for (i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->playCreateParticle();
 			unk2A9 = false;
@@ -229,7 +229,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 		local_1a0.setup2D();
 
 		if (unk2B8 == 1 && unk18 > 60.0f) {
-			for (int i = 0; i < 3; ++i) {
+			for (i = 0; i < 3; ++i) {
 				int local_b0[3] = { 4, 10, 20 };
 
 				u8 alpha         = unk28[i]->getPane()->getAlpha();
@@ -237,18 +237,20 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				JUTRect local_a0 = unk28[i]->getPane()->getBounds();
 
 				for (int j = 0; j < 3; ++j) {
-					int iVar9       = local_b0[j];
-					JUTPoint& point = unk34[i][iVar9];
-					if (point.x != 0) {
+					int iVar9  = local_b0[j];
+					int& point = unk34[i][iVar9].x;
+					int& y     = unk34[i][iVar9].y;
+					// Retail repeats the x test at 802326BC and 802326C0.
+					if (point != 0 || point != 0) {
 						trailAlpha = 0.7f * trailAlpha;
 						unk28[i]->getPane()->setAlpha(trailAlpha);
+						int height = local_a0.getHeight() - iVar9 * 3;
 						unk28[i]->getPane()->resize(
-						    local_a0.getWidth() - iVar9 * 3,
-						    local_a0.getHeight() - iVar9 * 3);
+						    local_a0.getWidth() - iVar9 * 3, height);
 
 						JUTRect local_90 = unk28[i]->getPane()->getBounds();
 						((J2DPicture*)unk28[i]->getPane())
-						    ->draw(point.x, point.y, local_90.getWidth(),
+						    ->draw(point, y, local_90.getWidth(),
 						           local_90.getHeight(), false, false, false);
 					}
 				}
@@ -404,6 +406,8 @@ bool TConsoleStr::processReady(int param_1)
 	return result;
 }
 
+// TODO: retail copies pane bounds before update without a visible consumer;
+// its stack frame and some register assignments still differ.
 bool TConsoleStr::processGo(float param_1)
 {
 	bool result = false;
@@ -419,7 +423,9 @@ bool TConsoleStr::processGo(float param_1)
 
 		for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
 			if (unk28[i]->update()) {
-				if (unk28[i]->unk14.x1 != 0 || unk28[i]->unk14.y1 != 0)
+				bool paneFinished
+				    = unk28[i]->unk14.x1 == 0 && unk28[i]->unk14.y1 == 0;
+				if (!paneFinished)
 					unk28[i]->setPanePosition(0x1E, JUTPoint(0, -40),
 					                          JUTPoint(0, -40), JUTPoint(0, 0));
 			}
@@ -471,8 +477,8 @@ bool TConsoleStr::processGo(float param_1)
 		} else if (param_1 == 175.0f) {
 			for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
 				JUTRect bounds = unk28[i]->getPane()->getBounds();
-				unk28[i]->getPane()->resize(bounds.getWidth() - 80,
-				                            bounds.getHeight() - 80);
+				int height     = bounds.getHeight() - 80;
+				unk28[i]->getPane()->resize(bounds.getWidth() - 80, height);
 			}
 		} else {
 			for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
@@ -524,14 +530,16 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 < i * 6 + 40) {
-			u16 alpha = unk244[i]->getPane()->getAlpha() + 7;
+			u16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha += 7;
 			if (alpha > 0xff)
 				alpha = 0xff;
 			unk244[i]->getPane()->setAlpha(alpha);
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = unk244[i]->getPane()->getAlpha() - 7;
+			s16 alpha = unk244[i]->getPane()->getAlpha();
+			alpha -= 7;
 			if (alpha < 0)
 				alpha = 0;
 			unk244[i]->getPane()->setAlpha(alpha);
@@ -552,6 +560,7 @@ bool TConsoleStr::processShineGet(int param_1)
 	return result;
 }
 
+// TODO: nonmatching frame and pane-center conversion scheduling.
 bool TConsoleStr::processMiss(int param_1)
 {
 	bool result = true;
@@ -565,11 +574,11 @@ bool TConsoleStr::processMiss(int param_1)
 
 		if (param_1 == i * 10 + 1) {
 			JUTRect local_9c = unk268[i]->getPane()->getBounds();
-			JGeometry::TVec3<f32> local_a8(
-			    local_9c.x1 + local_9c.getWidth() * 0.5f,
-			    local_9c.y1 + local_9c.getHeight() * 0.5f, 0.0f);
-			gpEmitterManager4D2->createEmitter(local_a8, 0x1F9, nullptr,
-			                                   nullptr);
+			gpEmitterManager4D2->createEmitter(
+			    JGeometry::TVec3<f32>(local_9c.x1 + local_9c.getWidth() * 0.5f,
+			                          local_9c.y1 + local_9c.getHeight() * 0.5f,
+			                          0.0f),
+			    0x1F9, nullptr, nullptr);
 		}
 
 		if (param_1 == i * 10 + 60) {
@@ -643,6 +652,7 @@ bool TConsoleStr::processScenario(int)
 	return false;
 }
 
+// TODO: nonmatching stack slots and deferred-wipe register allocation remain.
 void TConsoleStr::startCloseWipe(bool param_1)
 {
 	if (param_1) {
@@ -661,7 +671,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk290[1]->setPaneOffset(0x2D, 0, h - local_74.y1, 0,
 		                         465 - unk290[1]->getInitialBounds().y1);
 		unk290[1]->setPaneSize(0x2D, local_74.getWidth(),
-		                       465 - unk290[1]->getInitialBounds().y1 + h,
+		                       465 - unk290[1]->mInitialBounds.y1 + h,
 		                       local_74.getWidth(), 0);
 		unk290[1]->setPaneAlpha(0x2D, 255, 0);
 
@@ -686,6 +696,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 	}
 }
 
+// TODO: nonmatching .sdata2 offsets from extra StageUtil tables.
 void TConsoleStr::startOpenWipe()
 {
 	unk2A8 = 0;
@@ -695,13 +706,11 @@ void TConsoleStr::startOpenWipe()
 	unk290[1]->getPane()->hide();
 	unk298[1]->getPane()->show();
 
-	// TODO: TExPane::setPaneAlpha is wrong
-
-	JUTRect local_3c = unk298[0]->getPane()->getBounds();
+	JUTRect local_3c = unk298[0]->getPane()->mBounds;
 	unk298[0]->setPaneOffset(0x1E, -local_3c.getWidth(), 0, 0, 0);
 	unk298[0]->setPaneAlpha(30, 100, 255);
 
-	local_3c = unk298[1]->getPane()->getBounds();
+	local_3c = unk298[1]->getPane()->mBounds;
 	unk298[1]->setPaneOffset(0x1E, local_3c.getWidth(), 0, 0, 0);
 	unk298[1]->setPaneAlpha(30, 100, 255);
 }

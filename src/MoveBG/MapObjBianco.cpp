@@ -34,6 +34,7 @@ static f32 sSubZ   = 150.0f;
 static f32 sSpeed  = 0.05f;
 static f32 sAngleAdd;
 
+// TODO: position-copy load order differs (Y/Z loads are swapped).
 void TBigWindmill::control()
 {
 	TMapObjBase::control();
@@ -47,10 +48,14 @@ void TBigWindmill::control()
 	for (int i = 0; i < ARRAY_COUNT(unk138); ++i) {
 		MtxPtr mtx = unk138[i]->getModel()->getAnmMtx(0);
 		mtx[0][3]  = mPosition.x + sRadius * cosf(0.017453294f * angle);
-		mtx[1][3]
-		    = mPosition.y + sRadius * sinf(0.017453294f * angle) - mYOffset;
+		mtx[1][3]  = mPosition.y + sRadius * sinf(0.017453294f * angle)
+		            - getObjCollisionHeightOffset();
 		mtx[2][3] = mPosition.z - sSubZ;
-		unk138[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		Vec position;
+		position.x = mtx[0][3];
+		position.y = mtx[1][3];
+		position.z = mtx[2][3];
+		unk138[i]->mPosition.set(position);
 		angle += 90.0f;
 		if (angle > 360.0f)
 			angle -= 360.0f;
@@ -187,16 +192,17 @@ void TBiancoWatermillVertical::control()
 		}
 	}
 	mRotation.y += unk138;
-	mRotation.y     = MsWrap(mRotation.y, 0.0f, 360.0f);
+	f32 wheelAngle  = MsWrap(mRotation.y, 0.0f, 360.0f);
+	mRotation.y     = wheelAngle;
 	f32 bridgeSpeed = unk138 * mBridgeRotRate;
 	unk140->mRotation.y += bridgeSpeed;
 	unk140->mRotation.y = MsWrap(unk140->mRotation.y, 0.0f, 360.0f);
 	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_BI_STEPMILL_WIND,
 	                                        &mPosition, nullptr, fabsf(unk138),
-	                                        0, 0, &unk148, 0, 4);
+	                                        0, 0, &unk148[0], 0, 4);
 	SMSGetMSound()->startSoundActorWithInfo(
 	    MSD_SE_OBJ_BI_STEPMILL_MOVE, &unk140->mPosition, nullptr,
-	    fabsf(bridgeSpeed), 0, 0, &unk14C, 0, 4);
+	    fabsf(bridgeSpeed), 0, 0, &unk148[1], 0, 4);
 }
 
 void TBiancoWatermillVertical::loadAfter()
@@ -225,9 +231,9 @@ TBiancoWatermillVertical::TBiancoWatermillVertical(const char* param_1)
     , unk13C(0.0f)
     , unk140(nullptr)
     , unk144(0)
-    , unk148(nullptr)
-    , unk14C(nullptr)
 {
+	for (int i = 0; i < 2; ++i)
+		unk148[i] = nullptr;
 }
 
 f32 TBiancoMiniWindmill::mRotWaterAccel = 0.01f;
@@ -243,16 +249,17 @@ u32 TBiancoMiniWindmill::touchWater(THitActor* param_1)
 	if (waterPos.y < mPosition.y + sMessengerPosY - 300.0f)
 		return 1;
 	const JGeometry::TVec3<f32>& waterSpeed = getWaterSpeed(param_1);
-	MtxPtr mtx                              = getModel()->getAnmMtx(0);
-	if (waterSpeed.x * mtx[0][2] + waterSpeed.y * mtx[1][2]
-	        + waterSpeed.z * mtx[2][2]
-	    > 0.0f)
+	JGeometry::TVec3<f32> direction;
+	JGeometry::TVec3<f32> point;
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	direction.set(mtx[0][2], mtx[1][2], mtx[2][2]);
+	f32 dot = waterSpeed.dot(direction);
+	if (dot > 0.0f)
 		return 0;
 	unk154 += mRotWaterAccel;
 	if (unk154 > mRotSpeedMax) {
 		unk154 = mRotSpeedMax;
-		JGeometry::TVec3<f32> point(mPosition.x, 550.0f + unk15C->mPosition.y,
-		                            mPosition.z);
+		point.set(mPosition.x, 550.0f + unk15C->mPosition.y, mPosition.z);
 		mAppearSpeed = 0.0f;
 		appearObjFromPoint(point);
 	}
@@ -268,8 +275,8 @@ void TBiancoMiniWindmill::calc()
 	MTXConcat(getModel()->getAnmMtx(0), mtxP, mtxP);
 	MtxPtr srcMtx = getModel()->getAnmMtx(1);
 	for (int i = 0; i < 3; ++i)
-		mtx.ref(i, 3) = srcMtx[i][3];
-	MTXCopy(mtxP, getModel()->getAnmMtx(1));
+		mtxP[i][3] = srcMtx[i][3];
+	getModel()->setAnmMtx(1, mtxP);
 	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_BI_COINMILL, &mPosition,
 	                                        nullptr, fabsf(unk154), 0, 0,
 	                                        &unk160, 0, 4);
@@ -308,16 +315,16 @@ TBiancoMiniWindmill::TBiancoMiniWindmill(const char* param_1)
 
 void TLeafBoat::touchActor(THitActor* param_1)
 {
-	if (param_1->isActorType(ACTOR_TYPE_MARIO))
+	if (bool isMario = param_1->isActorType(ACTOR_TYPE_MARIO))
 		return;
 	JGeometry::TVec3<f32> direction(param_1->mPosition.x - mPosition.x, 0.0f,
 	                                param_1->mPosition.z - mPosition.z);
-	if (direction.dot(getVelocity()) < 0.0f)
+	if (direction.dot(JGeometry::TVec3<f32>(mVelocity)) < 0.0f)
 		return;
 	if (direction.x != 0.0f || direction.z != 0.0f)
 		MsVECNormalize(&direction, &direction);
-	f32 dot = direction.dot(getVelocity());
-	if (param_1->isHitCategory(HIT_CATEGORY_ENEMY)) {
+	f32 dot = direction.dot(JGeometry::TVec3<f32>(mVelocity));
+	if (bool isEnemy = param_1->isHitCategory(HIT_CATEGORY_ENEMY)) {
 		mVelocity.x -= (1.0f + unk138) * (direction.x * dot);
 		mVelocity.z -= (1.0f + unk138) * (direction.z * dot);
 	} else {
@@ -326,13 +333,15 @@ void TLeafBoat::touchActor(THitActor* param_1)
 	}
 }
 
+// TODO: vector stack slots are 4 bytes low; wall-pointer allocation differs.
 void TLeafBoat::touchWall(JGeometry::TVec3<f32>* param_1,
                           TBGWallCheckRecord* param_2)
 {
 	int wallsNum = param_2->mResultWallsNum;
 	for (int i = 0; i < wallsNum; ++i) {
 		TBGCheckData* data = param_2->mResultWalls[i];
-		if (getVelocity().dot(data->getNormal()) < 0.0f) {
+		f32 dot            = getVelocity().dot(data->getNormal());
+		if (dot < 0.0f) {
 			f32 dist
 			    = param_1->dot(data->getNormal()) + data->getPlaneDistance();
 			param_1->x += (mBodyRadius - dist) * data->getNormal().x;
@@ -346,6 +355,7 @@ void TLeafBoat::touchWall(JGeometry::TVec3<f32>* param_1,
 	}
 }
 
+// TODO: vector stack layout differs (frame 0xc8 instead of 0xe8).
 void TLeafBoat::bind()
 {
 	JGeometry::TVec3<f32> position = mPosition;
@@ -372,12 +382,14 @@ void TLeafBoat::bind()
 	mPositionDelta = position - mPosition;
 	f32 dx         = SMS_GetMarioPos().x - mPosition.x;
 	f32 dz         = SMS_GetMarioPos().z - mPosition.z;
+	f32 radius     = mBodyRadius;
 	if (SMS_GetMarioPos().y <= mPosition.y - mYOffset
 	    && mPosition.y - mYOffset - 100.0f < SMS_GetMarioPos().y
-	    && dx * dx + dz * dz < mBodyRadius * mBodyRadius)
+	    && dx * dx + dz * dz < radius * radius)
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
+// TODO: frame-only mismatch: 0x70 instead of 0xa0; matrix at 0x20, not 0x4c.
 void TLeafBoat::control()
 {
 	TMapObjBase::control();
@@ -385,7 +397,7 @@ void TLeafBoat::control()
 		mVelocity.y -= unk154;
 	if (marioIsOn()) {
 		mVelocity.y -= unk150;
-		if (SMS_GetMarioWaterGun()->mIsEmitWater > 0) {
+		if ((int)SMS_GetMarioWaterGun()->mIsEmitWater > 0) {
 			MtxPtr mtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 			mVelocity.x -= mtx[0][0] * unk144;
 			mVelocity.z -= mtx[2][0] * unk144;
@@ -413,7 +425,7 @@ void TLeafBoat::calc()
 {
 	if (unk144 != 0.0f) {
 		if (unk160 > 8) {
-			if (fabsf(mVelocity.x) + fabsf(mVelocity.z) > 0.1f) {
+			if (fabsf(getVelocityRef().x) + fabsf(getVelocityRef().z) > 0.1f) {
 				unk164.set(mPosition.x, mPosition.y - mYOffset, mPosition.z);
 				JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 				emitAndBindScale(PARTICLE_MS_M_HAMON_B, 3, &unk164, scale);
@@ -467,7 +479,7 @@ void TLeafBoatRotten::control()
 	case STATE_NORMAL:
 		break;
 	case STATE_UNK2: {
-		f32 ratio = (f32)mStateTimer / unk170;
+		f32 ratio = (f32)getStateTimer() / unk170;
 		unk178.r  = (u8)((255 - mRottenColor.r) * ratio + mRottenColor.r);
 		unk178.g  = (u8)((255 - mRottenColor.g) * ratio + mRottenColor.g);
 		unk178.b  = (u8)((255 - mRottenColor.b) * ratio + mRottenColor.b);
@@ -532,7 +544,7 @@ void TLampSeesaw::load(JSUMemoryInputStream& param_1)
 	f32 height;
 	TMapObjBase::load(param_1);
 	param_1 >> height;
-	unk13C = mInitialPosition.y - height;
+	unk13C = getInitialPosition().y - height;
 	param_1 >> unk140;
 	unk140 *= 0.0001f;
 }
@@ -553,7 +565,7 @@ void TLampSeesawMain::pushDown(f32 param_1)
 void TLampSeesawMain::move()
 {
 	if (mPosition.y + unk144 < unk13C
-	    || unk138->mPosition.y - unk144 < unk138->unk13C) {
+	    || unk138->unk13C > unk138->mPosition.y - unk144) {
 		if (fabsf(unk144) < unk150)
 			unk144 = 0.0f;
 		else
@@ -572,6 +584,7 @@ void TLampSeesawMain::touchPlayer(THitActor* param_1)
 	}
 }
 
+// TODO: bound-comparison FPRs/branch direction and frame (0x28, target 0x48).
 void TLampSeesawMain::control()
 {
 	TMapObjBase::control();
@@ -618,7 +631,9 @@ void TLampSeesawMain::loadAfter()
 	buffer2[len + 2] = buffer[2];
 	buffer2[len + 3] = buffer[3];
 
-	unk138 = static_cast<TLampSeesaw*>(JDrama::TNameRefGen::search(buffer2));
+	TLampSeesaw* hitActor
+	    = static_cast<TLampSeesaw*>(JDrama::TNameRefGen::search(buffer2));
+	unk138         = hitActor;
 	unk138->unk138 = this;
 }
 
@@ -629,6 +644,12 @@ TLampSeesawMain::TLampSeesawMain(const char* param_1)
     , unk14C(0.8f)
     , unk150(0.5f)
 {
+}
+
+// TODO: fabricated; MapObjMamma uses this animation-controller boundary too.
+static inline J3DFrameCtrl* getAnmFrameCtrl(TLiveActor* actor, int type)
+{
+	return actor->getMActor()->getFrameCtrl(type);
 }
 
 void TBiancoBell::stopToRing() { }
@@ -649,12 +670,12 @@ void TBiancoBell::ring()
 
 void TBiancoBell::ringSingle()
 {
-	if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame() == 0.0f
-	    || getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
-	               + getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getRate()
-	           >= getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() - 1.0f) {
+	if (getAnmFrameCtrl(this, ANM_TYPE_BCK)->getFrame() == 0.0f
+	    || getAnmFrameCtrl(this, ANM_TYPE_BCK)->getFrame()
+	               + getAnmFrameCtrl(this, ANM_TYPE_BCK)->getRate()
+	           >= getAnmFrameCtrl(this, ANM_TYPE_BCK)->getEnd() - 1.0f) {
 		startAnim(4);
-		getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
+		getAnmFrameCtrl(this, ANM_TYPE_BCK)->setRate(SMSGetAnmFrameRate());
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_BI_BELL, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
@@ -705,6 +726,7 @@ u32 TBellWatermill::touchWater(THitActor* param_1)
 	return 1;
 }
 
+// TODO: matrix trig-table reloads differ; frame is 0x168 instead of 0x1c0.
 void TBellWatermill::control()
 {
 	TMapObjBase::control();
@@ -751,16 +773,17 @@ void TBellWatermill::control()
 			unk1A0 = 0;
 		}
 	}
-	mPosition.y = unk170 + mInitialPosition.y + mYOffset;
+	mPosition.y = unk170 + mInitialPosition.y + getObjCollisionHeightOffset();
 	unk190      = 0;
 	mRotation.z = unk154;
 	Mtx mtx;
+	MtxPtr mtxP = mtx;
 	MsMtxSetRotZ(mtx, mRotation.z);
 	if (mRotation.y != 0.0f) {
 		MsMtxSetRotZ(mtx, mRotation.z);
 		Mtx yRot;
 		MsMtxSetRotY(yRot, mRotation.y);
-		MTXConcat(yRot, mtx, mtx);
+		MTXConcat(yRot, mtxP, mtxP);
 	} else {
 		MsMtxSetRotZ(mtx, mRotation.z);
 	}

@@ -62,6 +62,7 @@ TBGTentacleMtxCalc::TBGTentacleMtxCalc(TBGTentacle* owner)
 {
 }
 
+// TODO: sampled-point live ranges and frame layout remain nonmatching.
 void TBGTentacleMtxCalc::calc(u16 param_1)
 {
 	int uVar9 = mOwner->getUnk2C()->getModel()->getModelData()->getJointNum();
@@ -85,12 +86,15 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		JGeometry::TVec3<f32> vec1(mtx1[0][3], mtx1[1][3], mtx1[2][3]);
 
 		MtxPtr mtx2 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
-		JGeometry::TVec3<f32> vec2(mtx2[0][3], mtx2[1][3], mtx2[2][3]);
+		JGeometry::TVec3<f32> vec2;
+		vec2.x = mtx2[0][3];
+		vec2.y = mtx2[1][3];
+		vec2.z = mtx2[2][3];
 
-		vec2 -= vec1;
+		JGeometry::TVec3<f32> vec3 = vec2 - vec1;
 
-		if (!vec2.isZero()) {
-			VECNormalize(&vec2, &local_68);
+		if (!vec3.isZero()) {
+			VECNormalize(&vec3, &local_68);
 		} else {
 			local_68.set(1.0f, 0.0f, 0.0f);
 		}
@@ -155,7 +159,8 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	}
 
 	if (abs(fVar1) > 0.01f) {
-		fVar1 *= __frsqrte(fVar1);
+		// TODO: the target uses a sqrt approximation without refinement.
+		fVar1 = JGeometry::TUtil<f32>::sqrt(fVar1);
 	}
 
 	f32 fVar13 = MsClamp(fVar1, 0.7f, 1.2f);
@@ -216,6 +221,8 @@ static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
+// TODO: frame is 0xE8 instead of 0x110; vector slots and the
+// stretch/magnitude FPR assignment still differ.
 BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 {
 	JGeometry::TVec3<f32> local_EC = where_to;
@@ -231,14 +238,15 @@ BOOL TBGTakeHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	if (delta.length() > totalLenLimit) {
 		unk74 = fromPolar(
 		    gpMarioOriginal->getIntendedYaw(),
-		    gpMarioOriginal->getIntendedMag()
+		    gpMarioOriginal->mIntendedMag
 		        * mOwner->mOwner->getSaveParams()->getSLTentacleStretch());
 
-		JGeometry::TVec3<f32> local_44 = mOwner->getOwner()->getPosition();
+		ten                            = mOwner;
+		JGeometry::TVec3<f32> local_44 = ten->getOwner()->getPosition();
 		local_44 -= local_EC;
 
 		if (local_44.dot(unk74) < 0.0f)
-			mOwner->incDamage();
+			ten->incDamage();
 
 		mOwner->getLastNode()->setPosition(local_EC);
 		return false;
@@ -286,6 +294,27 @@ BOOL TBGTakeHit::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
+// TODO: fabricated holder-drag inline; preserves the node TVec3::add call.
+// The original helper's name and owning declaration are unknown.
+static inline void moveTentacleHolder(TBGTakeHit* hit)
+{
+	JGeometry::TVec3<f32> local_8c = hit->mOwner->getLastNode()->getVelocity();
+	local_8c.y                     = 0.0f;
+	local_8c.scale(0.1f);
+
+	if (!hit->unk74.isZero()) {
+		hit->mOwner->getLastNode()->addVelocity(hit->unk74);
+		local_8c += hit->unk74;
+	}
+
+	local_8c += hit->mHolder->getPosition();
+	gpMap->isTouchedOneWallAndMoveXZ(&local_8c.x, local_8c.y, &local_8c.z,
+	                                 150.0f);
+	hit->mHolder->moveRequest(local_8c);
+	hit->unk74.zero();
+}
+
+// TODO: vector live ranges and frame remain nonmatching.
 void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -305,9 +334,8 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			vec2.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), vec1);
 			vec2.normalize();
 
-			JGeometry::TVec3<f32> vec3;
-			vec3.cross(vec2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
-			vec3.normalize();
+			vec1.cross2(vec2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+			vec1.normalize();
 
 			unk80.mMtx[0][0] = vec2.x;
 			unk80.mMtx[1][0] = vec2.y;
@@ -317,35 +345,20 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk80.mMtx[1][1] = 1.0f;
 			unk80.mMtx[2][1] = 0.0f;
 
-			unk80.mMtx[0][2] = vec3.x;
-			unk80.mMtx[1][2] = vec3.y;
-			unk80.mMtx[2][2] = vec3.z;
+			unk80.mMtx[0][2] = vec1.x;
+			unk80.mMtx[1][2] = vec1.y;
+			unk80.mMtx[2][2] = vec1.z;
 
-			vec3.scale(mDamageRadius);
+			vec1.scale(mDamageRadius);
 
-			JGeometry::TVec3<f32> tip(mtx[0][3], mtx[1][3], mtx[2][3]);
-			tip += vec3;
+			vec1.add(JGeometry::TVec3<f32>(mtx[0][3], mtx[1][3], mtx[2][3]),
+			         vec1);
 
-			unk80.mMtx[0][3] = tip.x;
-			unk80.mMtx[1][3] = tip.y;
-			unk80.mMtx[2][3] = tip.z;
+			unk80.mMtx[0][3] = vec1.x;
+			unk80.mMtx[1][3] = vec1.y;
+			unk80.mMtx[2][3] = vec1.z;
 
-			JGeometry::TVec3<f32> local_8c
-			    = mOwner->getLastNode()->getVelocity();
-			local_8c.y = 0.0f;
-			local_8c.scale(0.1f);
-
-			if (!unk74.isZero()) {
-				// TODO: one more inlining layer?!
-				mOwner->getLastNode()->addVelocity(unk74);
-				local_8c += unk74;
-			}
-
-			local_8c += mHolder->getPosition();
-			gpMap->isTouchedOneWallAndMoveXZ(&local_8c.x, local_8c.y,
-			                                 &local_8c.z, 150.0f);
-			mHolder->moveRequest(local_8c);
-			unk74.zero();
+			moveTentacleHolder(this);
 		}
 
 		if (mOwner->isAttacking()) {
@@ -368,8 +381,10 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mOwner->getState() != TBGTentacle::TSTATE_HELD
 		    && mOwner->getState() != TBGTentacle::TSTATE_AMPUTEE
-		    && mHolder != nullptr)
-			mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
+		    && mHolder != nullptr) {
+			TTakeActor* holder = mHolder;
+			holder->receiveMessage(this, HIT_MESSAGE_DETACH);
+		}
 	}
 }
 
@@ -387,6 +402,8 @@ TBGAttackHit::TBGAttackHit(TBGTentacle* owner, f32 pos_on_spline,
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
+// TODO: frame-only: the second throw vector is at 0x78 instead of 0x7C.
+// The 0xE8 frame, spline-result and first throw-vector slots match.
 void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
@@ -399,10 +416,10 @@ void TBGAttackHit::perform(u32 cue, JDrama::TGraphics* graphics)
 					continue;
 
 				// TODO: this is an inline, see TBGTakeHit::perform
-				if (mOwner->mOwner->getAttackMode() == 7)
+				if (mOwner->getOwner()->getAttackMode() == 7)
 					mOwner->throwMario(col, this);
-				else if (mOwner->mOwner->getAttackMode() == 4)
-					mOwner->throwMario(col, mOwner->mOwner);
+				else if (mOwner->getOwner()->getAttackMode() == 4)
+					mOwner->throwMario(col, mOwner->getOwner());
 				else
 					col->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
@@ -457,15 +474,9 @@ void TBGTentacle::TNode::calcVelocity(TBGTentacle* param_1,
 		}
 	} else {
 		if (fVar5 < nodeLen) {
-			f32 m = nodeLen - fVar5;
-			if (m > speedMax)
-				m = speedMax;
-			fVar5 += m;
+			fVar5 += MsMin(nodeLen - fVar5, speedMax);
 		} else {
-			f32 m = fVar5 - nodeLen;
-			if (m > speedMax)
-				m = speedMax;
-			fVar5 -= m;
+			fVar5 -= MsMin(fVar5 - nodeLen, speedMax);
 		}
 
 		local_8C.scale(fVar5);
@@ -601,7 +612,7 @@ void TBGTentacle::incDamage()
 void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 {
 	JGeometry::TVec3<f32> local_e0 = param_1->getPosition();
-	local_e0 -= param_2->getPosition();
+	local_e0 -= param_2->mPosition;
 
 	local_e0.normalize();
 	local_e0.scale(2.0f);
@@ -611,21 +622,22 @@ void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 	SMS_SendMessageToMario(param_2, HIT_MESSAGE_THROWN);
 
 	SMS_ThrowMario(local_e0, 60.0f);
-	mOwner->showMessage(0xE0005);
-	mOwner->stopIfRoll();
+	TBossGesso* bossGesso = getOwner();
+	bossGesso->showMessage(0xE0005);
+	getOwner()->stopIfRoll();
 }
 
 bool TBGTentacle::isAttacking() const
 {
 	if (mTakeHit->checkHitFilter(HIT_FILTER_NO_ATTACK))
 		return false;
-	if (mState == TSTATE_UNKA)
+	if (getState() == TSTATE_UNKA)
 		return false;
-	if (mState == TSTATE_AMPUTEE)
+	if (getState() == TSTATE_AMPUTEE)
 		return false;
-	if (mState == TSTATE_HIDE)
+	if (getState() == TSTATE_HIDE)
 		return false;
-	if (mState == TSTATE_ATTACK
+	if (getState() == TSTATE_ATTACK
 	    || mOwner->getAttackMode() == TBossGesso::ASTATE_ROLL)
 		return true;
 	return false;
@@ -668,9 +680,9 @@ void TBGTentacle::beatNode(int index, const JGeometry::TVec3<f32>& param_2)
 
 	f32 fVar1;
 	if (mState == TSTATE_AMPUTEE)
-		fVar1 = mParams->mDamageReflectProp.get();
+		fVar1 = getParams()->mDamageReflectProp.get();
 	else
-		fVar1 = mParams->mReflectProp.get();
+		fVar1 = getParams()->mReflectProp.get();
 
 	for (int i = index + 1; i < mNodeNum; ++i) {
 		mNodes[i].calcVelocity(this, &mNodes[i - 1], fVar1);
@@ -693,11 +705,13 @@ void TBGTentacle::beatNode(int index, const JGeometry::TVec3<f32>& param_2)
 	}
 }
 
+// TODO: vector-inline ordering and stack layout remain nonmatching.
 void TBGTentacle::setAttackTarget()
 {
 	unk84 = SMS_GetMarioPos();
 
-	if (mOwner->getAttackMode() == 2) {
+	TBossGesso* bossGesso = mOwner;
+	if (bossGesso->getAttackMode() == 2) {
 		int iVar9;
 		switch (mIndex) {
 		case 0:
@@ -718,7 +732,7 @@ void TBGTentacle::setAttackTarget()
 		}
 
 		JGeometry::TVec3<f32> local_148 = unk84;
-		local_148 -= mOwner->mPosition;
+		local_148 -= bossGesso->getPosition();
 
 		JGeometry::TVec3<f32> local_3c;
 		local_3c.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), local_148);
@@ -751,7 +765,8 @@ void TBGTentacle::setAttackTarget()
 	}
 
 	J3DFrameCtrl* ctrl = unk80->getFrameCtrl(0);
-	ctrl->setRate(mOwner->getAttackSpeed() * SMSGetAnmFrameRate());
+	TBossGesso* owner  = mOwner;
+	ctrl->setRate(owner->getAttackSpeed() * SMSGetAnmFrameRate());
 	unk4C = 0;
 }
 
@@ -852,10 +867,11 @@ void TBGTentacle::returnToDefaultState()
 		changeStateAndFixNodes(TSTATE_WAIT);
 }
 
+// TODO: frame is 0x1D8 instead of 0x278; vector inline slots still differ.
 void TBGTentacle::moveNode()
 {
-	f32 fVar1 = mParams->mVibrationSpeed.get();
 	f32 fVar2 = mParams->mVibrationForce.get();
+	f32 fVar1 = mParams->mVibrationSpeed.get();
 
 	if (mState == TSTATE_AMPUTEE) {
 		fVar2 *= mParams->mDamagePropF.get();
@@ -913,7 +929,7 @@ void TBGTentacle::moveNode()
 	for (int i = 0; i < mNodeNum; ++i) {
 		mNodes[i].calcPosition(this);
 
-		if (i <= 1 && mOwner->getAttackMode() == 6)
+		if ((i == 0 || i == 1) && mOwner->getAttackMode() == 6)
 			continue;
 
 		TNode* node = &mNodes[i];
@@ -946,9 +962,10 @@ void TBGTentacle::moveNode()
 			                         local_ac.z, &pTStack_b0);
 		}
 
-		if (local_ac.y < dVar16 + 20.0f) {
+		dVar16 += 20.0f;
+		if (local_ac.y < dVar16) {
 			mNodes[i].setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-			local_ac.y = dVar16 + 20.0f;
+			local_ac.y = dVar16;
 		}
 
 		if (mState == TSTATE_STUN && local_ac.y < mOwner->mPosition.y) {
@@ -962,8 +979,7 @@ void TBGTentacle::moveNode()
 			local_c8 -= local_ac;
 
 			f32 thing = bossGesso->mBodyScale * bossGesso->mBodyRadius;
-			// TODO: common subexpression eliminator doesn't want to merge
-			// the `squared`  calls here =(
+			// TODO: the target reuses the squared length during normalization.
 			if (local_c8.length() < thing) {
 				local_c8.normalize();
 				local_c8.scale(thing);
@@ -978,6 +994,8 @@ void TBGTentacle::moveNode()
 		mSpline->setPoint(i, mNodes[i].getPosition());
 }
 
+// TODO: frame is 0x170 instead of 0x1C0; the guard anchor's stack slot
+// and component-store scheduling remain nonmatching. No padding retained.
 void TBGTentacle::moveConstraint()
 {
 	switch (mState) {
@@ -1077,7 +1095,7 @@ void TBGTentacle::decideOwnState()
 
 	case TSTATE_STUN: {
 		JGeometry::TVec3<f32> delta = getLastNode()->getPosition();
-		delta -= mOwner->getPosition();
+		delta -= getOwner()->getPosition();
 		f32 rot = MsGetRotFromZaxisY(delta);
 		if (abs(MsAngleDiff(mOwner->getRotation().y, rot)) > 45.0f) {
 			changeStateAndFixNodes(TSTATE_REST);
@@ -1121,11 +1139,11 @@ void TBGTentacle::decideOwnState()
 
 void TBGTentacle::checkDamage()
 {
-	if (mDamageCount >= mParams->mDamageCountMax.get()) {
-		if (mOwner->getAttackMode() == 6)
+	if (mDamageCount >= getParams()->mDamageCountMax.get()) {
+		if (getOwner()->getAttackMode() == 6)
 			SMSGetMarDirector()->fireStreamingMovie(10);
 
-		mOwner->unk1A8 = mOwner->getSaveParams()->mSLAmputeeWait.get();
+		getOwner()->unk1A8 = getOwner()->getSaveParams()->mSLAmputeeWait.get();
 		changeStateAndFixNodes(TSTATE_AMPUTEE);
 	}
 }
@@ -1164,10 +1182,10 @@ void TBGTentacle::calcAtkParticleAndSE()
 		}
 	}
 
-	f32 fVar2 = mOwner->getSaveParams()->mSLBlurScale.value;
+	f32 fVar2 = getOwner()->getSaveParams()->mSLBlurScale.get();
 	int iVar5 = unk80->checkCurBckFromIndex(23)
 	                ? 7
-	                : mOwner->getSaveParams()->mSLBlurJoint.get();
+	                : getOwner()->getSaveParams()->mSLBlurJoint.get();
 
 	MTXCopy(unk80->getModel()->getAnmMtx(3), unk50);
 	MTXScaleApply(unk50, unk50, fVar2, fVar2, fVar2);
@@ -1177,7 +1195,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 	unk50[1][3] = mtx[1][3];
 	unk50[2][3] = mtx[2][3];
 
-	if (mState != TSTATE_UNKA && mState != TSTATE_SYNCBODY) {
+	if (getState() != TSTATE_UNKA && getState() != TSTATE_SYNCBODY) {
 		if (unk80->checkCurBckFromIndex(24)) {
 			if (unk80->checkBckPass(115.0f))
 				gpMarioParticleManager->emitAndBindToSRTMtxPtr(0x92, unk50, 0,
@@ -1200,7 +1218,7 @@ void TBGTentacle::calcAtkParticleAndSE()
 	f32 atkSoundTime = mParams->mAtkSoundTime.get();
 	s16 endFrame     = unk80->getFrameCtrl(0)->getEnd();
 	if (unk80->checkBckPass(endFrame - atkSoundTime)) {
-		if (mState != TSTATE_UNKA) {
+		if (getState() != TSTATE_UNKA) {
 			SMSGetMSound()->startSoundActor(
 			    MSD_SE_BS_GESO_ATK, &mTakeHit->mPosition, 0, nullptr, 0, 4);
 
@@ -1256,13 +1274,15 @@ void TBGTentacle::decideAtkColExists()
 	}
 }
 
+// TODO: frame-only; named vector/matrix slots are 4 bytes high and the
+// rotation return slot is 8 bytes low, despite matching the 0x150 frame.
 void TBGTentacle::calcAttackGuideAnm()
 {
 	if (mState != TSTATE_ATTACK && mState != TSTATE_SYNCBODY
 	    && mState != TSTATE_UNKA)
 		return;
 
-	JGeometry::TVec3<f32> local_30 = getFirstNode()->getPosition();
+	Vec local_30                   = getFirstNode()->getPosition();
 	JGeometry::TVec3<f32> local_3c = unk84;
 	local_3c -= local_30;
 	JGeometry::TVec3<f32> local_b4 = MsGetRotFromZaxis(local_3c);
@@ -1366,11 +1386,12 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 		    mMtxCalc);
 
 	if (cue & CUE_ENTRY) {
-		unk2C->setLightData(mOwner->getGroundPlane(), mOwner->getPosition());
+		unk2C->setLightData(getOwner()->getGroundPlane(),
+		                    mOwner->getPosition());
 
 		if (mState == TSTATE_AMPUTEE) {
 			if (mTimeInCurrentState
-			        >= mOwner->getSaveParams()->getSLAmputeeTime() - 240
+			        >= getOwner()->getSaveParams()->getSLAmputeeTime() - 240
 			    && mTimeInCurrentState % 6 >= 3) {
 				cue &= ~CUE_ENTRY;
 			}
@@ -1379,7 +1400,7 @@ void TBGTentacle::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if ((cue & CUE_MOVE) && mState == TSTATE_AMPUTEE
 	    && mTimeInCurrentState
-	           < mOwner->getSaveParams()->getSLAmputeeTime() - 240) {
+	           < getOwner()->getSaveParams()->getSLAmputeeTime() - 240) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_GESO_TAKEN_HAND,
 		                                &mTakeHit->mPosition, 0, nullptr, 0, 4);
 	}

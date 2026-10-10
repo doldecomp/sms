@@ -217,6 +217,7 @@ static const u32 scTalkSoundList[]
 	    MSD_SE_NPC_VM_FMARIO_PSHOT,  MSD_SE_NPC_VM_MTMAN_NORMAL,
 	    MSD_SE_NPC_VM_MTMAN_LOST };
 
+// TODO: frame-only mismatch (0x1D0 instead of 0x1E8); no stack padding.
 void TTalk2D2::loadAfter()
 {
 	JDrama::TNameRef::loadAfter();
@@ -231,8 +232,9 @@ void TTalk2D2::loadAfter()
 	for (f32 t = 0.01f; t <= 1.0f; t += 0.01f) {
 		f32 x, y;
 		makeLine(&x, &y, t, p0, p1, p2);
-		length += JGeometry::TVec2<f32>(x, y).distance(
-		    JGeometry::TVec2<f32>(prevX, prevY));
+		f32 dx = x - prevX;
+		f32 dy = y - prevY;
+		length += JGeometry::TUtil<f32>::sqrt(dx * dx + dy * dy);
 		prevX = x;
 		prevY = y;
 	}
@@ -279,13 +281,14 @@ void TTalk2D2::loadAfter()
 	}
 }
 
+// TODO: frame-only mismatch (0x50 instead of 0x58); no stack padding.
 void TTalk2D2::setMessageID(u32 param_1, u32 param_2)
 {
 	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
 	if (npc->checkActionFlag(TBaseNPC::NPC_ACTION_HAPPY)) {
 		if (npc->isMonte()) {
-			if (npc->isMonteW()) {
+			if (npc->isNormalMonteW() || npc->isSpecialMonteW()) {
 				if (npc->isChild())
 					unk264 = 0x2C;
 				else
@@ -298,7 +301,7 @@ void TTalk2D2::setMessageID(u32 param_1, u32 param_2)
 			}
 		} else {
 			if (npc->isMare()) {
-				if (npc->isMareW()) {
+				if (npc->isNormalMareW() || npc->isSpecialMareW()) {
 					if (npc->isChild())
 						unk264 = 0x2D;
 					else
@@ -383,7 +386,7 @@ void TTalk2D2::setMessageID(u32 param_1, u32 param_2)
 		}
 	}
 
-	if (getTalkMode() == STATE_UNK1) {
+	if (unk248 == STATE_UNK1) {
 		unk248 = STATE_UNK3;
 		unk90->setAlpha(0xFF);
 	}
@@ -403,7 +406,8 @@ void TTalk2D2::forceCloseTalk()
 
 	SMSGetMarDirector()->getConsole()->startAppearTelop(false);
 
-	if (unk248 == STATE_UNK1)
+	u32 talkMode = getTalkMode();
+	if (talkMode == STATE_UNK1)
 		unk248 = STATE_UNK0;
 	else
 		unk248 = STATE_UNK6;
@@ -482,6 +486,7 @@ void TTalk2D2::openTalkWindow(TBaseNPC* param_1)
 	SMSRumbleMgr->startPause();
 }
 
+// TODO: Lead-byte handling, register allocation and scheduling still differ.
 void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 {
 	f32 w       = 0.0f;
@@ -527,18 +532,27 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 		if (curX > 0.0f)
 			ang *= -1.0f;
 
-		JGeometry::TVec2<f32> sum(posX + curX, posY + curY);
-		JGeometry::TVec2<f32> pos = sum * -0.5f;
+		JGeometry::TVec2<f32> sum;
+		sum.add(JGeometry::TVec2<f32>(posX, posY),
+		        JGeometry::TVec2<f32>(curX, curY));
+		JGeometry::TVec2<f32> pos(-0.5f * sum.x, -0.5f * sum.y);
+		f32 cosTheta = cosf(ang);
+		f32 sinTheta = sinf(ang);
+		JGeometry::TVec2<f32> xDir(cosTheta, -sinTheta);
+		JGeometry::TVec2<f32> yDir(sinTheta, cosTheta);
 		JGeometry::TVec2<f32> rotated(posX, posY);
-		rotated.rotate(ang);
+		rotated.set(rotated.dot(xDir), rotated.dot(yDir));
 		pos += rotated;
-		pos += sum * 0.5f;
+		JGeometry::TVec2<f32> half(0.5f * sum.x, 0.5f * sum.y);
+		pos += half;
 		int ix = (int)(pos.x + (pos.x > 0.0f ? 0.5f : -0.5f));
 		int iy = (int)(pos.y + (pos.y > 0.0f ? 0.5f : -0.5f));
 		unk9C[idx]->move((s16)ix, -0x25 - (s16)iy);
 		unk9C[idx]->setBasePosition(J2DBasePosition_4);
-		unk9C[idx]->mRotation = 180.0f * ang / 3.1415927f;
-		unk30[param_1]->mPaneTree.appendChild(&unk9C[idx]->mPaneTree);
+		unk9C[idx]->mRotation  = 180.0f * ang / 3.1415927f;
+		JSUTree<J2DPane>* tree = &unk9C[idx]->mPaneTree;
+		J2DPane* parent        = unk30[param_1];
+		parent->mPaneTree.append(tree);
 		if (w > 1.1f) {
 			if (unk228[param_1] > charIdx)
 				unk228[param_1] = charIdx;
@@ -644,7 +658,7 @@ bool TTalk2D2::openNormalWindow()
 
 void TTalk2D2::moveBoardWindow()
 {
-	int alpha = unk1C->getAlpha();
+	s32 alpha = unk1C->getAlpha();
 
 	if (alpha < 0xFF) {
 		alpha += 4;
@@ -942,10 +956,11 @@ bool TTalk2D2::appearBoardBoxWindow()
 	return result;
 }
 
+// TODO: checkBoardControler is still auto-inlined; frame and scheduling differ.
 void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & CUE_MOVE) {
-		switch (SMSGetMarDirector()->unk124) {
+		switch (gpMarDirector->unk124) {
 		case 2:
 			switch (unk248) {
 			case STATE_UNK2:
@@ -967,14 +982,20 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 					checkControler();
 				}
 				break;
-			case STATE_UNK6:
-				if (unk28 != 0 ? closeBoardWindow() : closeNormalWindow()) {
+			case STATE_UNK6: {
+				bool result;
+				if (unk28 != 0)
+					result = closeBoardWindow();
+				else
+					result = closeNormalWindow();
+				if (result) {
 					if (unk270 & 1)
 						unk248 = STATE_UNK0;
 					else
 						unk248 = STATE_UNK1;
 				}
 				break;
+			}
 			case STATE_UNK7:
 				if (unk28 != 0 ? eraseBoardWindow() : eraseNormalWindow()) {
 					if (unk28 != 0)
@@ -993,9 +1014,11 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & CUE_CALC_ANIM) {
-		switch (SMSGetMarDirector()->unk124) {
+		switch (gpMarDirector->unk124) {
 		case 2:
 			switch (unk248) {
+			case STATE_UNK2:
+				break;
 			case STATE_UNK3:
 				unk251--;
 				if ((s8)unk251 < 0) {
@@ -1003,19 +1026,47 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 					unk248 = STATE_UNK4;
 				}
 				break;
-			case STATE_UNK7:
-				if (eraseNormalWindow()) {
+			case STATE_UNK7: {
+				// Unlike eraseNormalWindow, advance the state before setting
+				// alpha.
+				s16 alpha = unk90->getAlpha();
+				alpha -= 0x10;
+				if (alpha < 0) {
+					alpha = 0xFF;
+					for (int i = 0; i < ARRAY_COUNT(unk234); ++i) {
+						unk234[i] = i + 1.0f;
+						unk3C[i]->hide();
+						unk224[i] = 0;
+						unk6C[i]->hide();
+					}
+					for (int i = 0; i < ARRAY_COUNT(unk9C); ++i) {
+						if (unk9C[i] != nullptr)
+							unk9C[i]->hide();
+					}
+					setupTextBox(unk260->getMessageData(),
+					             unk260->getMessageEntry(unk264 & 0xFFFF));
+					unk26C = 0;
+					if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+					    == 0x100)
+						unk340 = 0x20;
+					else
+						unk340 = 0x40;
 					unk27C = -1;
+					unk27C = -1; // Both stores are present in the original.
+					unk2DE = 0;
+					unk2DC = 0;
 					unk248 = STATE_UNK4;
 				}
+				unk90->setAlpha(alpha);
 				break;
+			}
 			}
 			break;
 		}
 	}
 
 	if (param_1 & CUE_DRAW) {
-		switch (SMSGetMarDirector()->unk124) {
+		switch (gpMarDirector->unk124) {
 		case 2: {
 			ReInitializeGX();
 			SMS_DrawInit();
@@ -1024,18 +1075,16 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 			ortho.setup2D();
 
 			if (unk250 != 0) {
-				unk3C[0]->show();
-				unk3C[1]->show();
-				unk3C[2]->show();
+				for (int i = 0; i < ARRAY_COUNT(unk3C); ++i)
+					unk3C[i]->show();
 				J2DPane* pane = unk2C->search('ROOT');
 				pane->setAlpha(0);
 				unk2C->draw(0, 0, &ortho);
 				pane->setAlpha(0xFF);
 				ortho.setup2D();
 				unk250 = 0;
-				unk3C[0]->hide();
-				unk3C[1]->hide();
-				unk3C[2]->hide();
+				for (int i = 0; i < ARRAY_COUNT(unk3C); ++i)
+					unk3C[i]->hide();
 			}
 
 			switch (unk248) {
@@ -1123,6 +1172,7 @@ void TTalk2D2::setupBoardTextBox(const void* param_1, JMSMesgEntry* param_2)
 	unk278 += stream.getPosition();
 }
 
+// TODO: Recover the paired font-color setter; frame is 0x98, not 0xA0.
 void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 {
 	if (unk28 != 0) {
@@ -1143,8 +1193,7 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 	while (lineIdx < 3) {
 		char* dest = unk9C[charIdx + lineIdx * 30]->getStringPtr();
 
-		s8 code;
-		stream >> code;
+		s8 code = stream.readU8();
 
 		switch (code) {
 		case 0x0A:
@@ -1181,12 +1230,13 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 				dest[1] = 0;
 			}
 
-			unk9C[charIdx + lineIdx * 30]->mCharColor = unk27C;
-			unk9C[charIdx + lineIdx * 30]->mGradColor = unk27C;
-			unk9C[charIdx + lineIdx * 30]->setBlackWhite(unk27C & 0xFFFFFF00,
-			                                             unk27C);
+			int idx             = charIdx + lineIdx * 30;
+			J2DTextBox* textBox = unk9C[idx];
+			textBox->mCharColor = unk27C;
+			textBox->mGradColor = unk27C;
+			unk9C[idx]->setBlackWhite(unk27C & 0xFFFFFF00, unk27C);
 			unk281[unk2DE] = unk280;
-			unk2DE         = charIdx + lineIdx * 30;
+			unk2DE         = idx;
 			charIdx++;
 			break;
 		}
@@ -1223,7 +1273,7 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
                            int* param_3, int* param_4)
 {
-	int size  = param_1.readU8();
+	u8 size   = param_1.readU8();
 	int group = param_1.readU8();
 	u16 tag   = param_1.readU16();
 
@@ -1250,7 +1300,8 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 				unk20C[1]->hide();
 				unk20C[0]->show();
 			}
-			snprintf(unk218[0], size - 4 < 17 ? size - 4 : 17, "%s",
+			int length = size - 4 < 17 ? size - 4 : 17;
+			snprintf(unk218[0], length, "%s",
 			         (const char*)param_1.getCurrent());
 			param_1.skip(size - 5);
 			return;
@@ -1262,7 +1313,8 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 				unk20C[0]->hide();
 				unk20C[1]->show();
 			}
-			snprintf(unk218[1], size - 4 < 17 ? size - 4 : 17, "%s",
+			int length = size - 4 < 17 ? size - 4 : 17;
+			snprintf(unk218[1], length, "%s",
 			         (const char*)param_1.getCurrent());
 			param_1.skip(size - 5);
 			return;
@@ -1315,9 +1367,13 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 			snprintf(unk9C[*param_3 + *param_4 * 30 + 7]->getStringPtr(), 2,
 			         "%d", hundredth % 10);
 
+			// TODO: Missing J2DTextBox paired font-color inline; nonmatching.
 			for (int i = 0; i < 8; i++) {
-				unk9C[*param_3 + *param_4 * 30 + i]->mCharColor = unk27C;
-				unk9C[*param_3 + *param_4 * 30 + i]->mGradColor = unk27C;
+				JUtility::TColor charColor(unk27C);
+				JUtility::TColor gradColor(unk27C);
+				J2DTextBox* box = unk9C[*param_3 + *param_4 * 30 + i];
+				box->mCharColor = charColor;
+				box->mGradColor = gradColor;
 				unk9C[*param_3 + *param_4 * 30 + i]->setBlackWhite(
 				    unk27C & 0xFFFFFF00, unk27C);
 				unk281[i + *param_3 + *param_4 * 30] = unk280;
@@ -1328,9 +1384,9 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 
 		case 2: {
 			int count
-			    = 0.01f
-			      * (TFlagManager::getInstance()->getFlag(MSF_BOX_GAME_RECORD)
-			         + 99);
+			    = TFlagManager::getInstance()->getFlag(MSF_BOX_GAME_RECORD)
+			      + 99;
+			count = 0.01f * count;
 			if (count < 10) {
 				snprintf(unk9C[*param_3 + *param_4 * 30]->getStringPtr(), 2,
 				         "%d", count);
@@ -1377,9 +1433,9 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 		}
 
 		case 4: {
-			int max;
-			int kind;
 			TFruitBasketEvent* basket;
+			int kind;
+			int max;
 			switch (param_1.readU8()) {
 			case 0:
 				basket = (TFruitBasketEvent*)JDrama::TNameRefGen::search(
@@ -1408,11 +1464,11 @@ void TTalk2D2::setTagParam(JSUMemoryInputStream& param_1, J2DTextBox& param_2,
 			}
 
 			if (basket != nullptr) {
-				max -= basket->getFruitNum(kind);
-				if (max < 0 || max > 9)
-					max = 0;
+				int remaining = max - basket->getFruitNum(kind);
+				if (remaining < 0 || remaining > 9)
+					remaining = 0;
 				snprintf(unk9C[*param_3 + *param_4 * 30]->getStringPtr(), 2,
-				         "%d", max);
+				         "%d", remaining);
 				snprintf(unk9C[*param_3 + *param_4 * 30 + 1]->getStringPtr(), 2,
 				         " ");
 				*param_3 += 2;

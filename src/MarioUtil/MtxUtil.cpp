@@ -12,7 +12,7 @@
 void MtxToQuat(MtxPtr m, Quaternion* quat)
 {
 	f32 q[4];
-	f32 s = m[0][0] + m[1][1] + m[2][2] + 1.0f;
+	f32 s = (m[0][0] + m[1][1]) - -m[2][2] + 1.0f;
 	if (s >= 1.0f) {
 		f32 root = 2.0f * MsSqrtf(s);
 		q[3]     = 0.25f * root;
@@ -53,14 +53,16 @@ TMtxTimeLag::TDeParams::TDeParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+// TODO: Reset quaternion is at sp+0x9c instead of sp+0xa8; the frame matches.
+// Anonymous .rodata and .sdata2 constant relocations also differ.
 void TMtxTimeLag::calc(MtxPtr mtx)
 {
 	if (checkFlag(2)) {
 		offFlag(2);
+		Vec v2;
 		Vec v = { 0.0f, 0.0f, 0.0f };
 		unk08 = v;
 
-		Vec v2;
 		v2.x  = mtx[0][3];
 		v2.y  = mtx[1][3];
 		v2.z  = mtx[2][3];
@@ -72,6 +74,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		MtxToQuat(mtx, &q);
 		unk30 = q;
 	} else {
+		Quaternion tmp;
 		Vec trans;
 
 		trans.x = mtx[0][3];
@@ -107,6 +110,7 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		if (unk14.z > trans.z + posLimit)
 			unk14.z = trans.z + posLimit;
 
+		Mtx rot;
 		f32 len0 = MsSqrtf(mtx[0][0] * mtx[0][0] + mtx[1][0] * mtx[1][0]
 		                   + mtx[2][0] * mtx[2][0]);
 		f32 len1 = MsSqrtf(mtx[0][1] * mtx[0][1] + mtx[1][1] * mtx[1][1]
@@ -114,7 +118,6 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		f32 len2 = MsSqrtf(mtx[0][2] * mtx[0][2] + mtx[1][2] * mtx[1][2]
 		                   + mtx[2][2] * mtx[2][2]);
 
-		Mtx rot;
 		f32 inv0  = 1.0f / len0;
 		f32 inv1  = 1.0f / len1;
 		f32 inv2  = 1.0f / len2;
@@ -128,22 +131,21 @@ void TMtxTimeLag::calc(MtxPtr mtx)
 		rot[1][2] = mtx[1][2] * inv2;
 		rot[2][2] = mtx[2][2] * inv2;
 
-		Quaternion tmp;
 		MtxToQuat(rot, &tmp);
 
 		Quaternion newQuat;
-		newQuat.x = tmp.x;
-		newQuat.y = tmp.y;
-		newQuat.z = tmp.z;
-		newQuat.w = tmp.w;
-
-		f32 dot = unk30.x * newQuat.x + unk30.y * newQuat.y
-		          + unk30.z * newQuat.z + unk30.w * newQuat.w;
+		f32 dot = unk30.x * tmp.x + unk30.y * tmp.y + unk30.z * tmp.z
+		          + unk30.w * tmp.w;
 		if (dot < 0.0f) {
-			newQuat.x = -newQuat.x;
-			newQuat.y = -newQuat.y;
-			newQuat.z = -newQuat.z;
-			newQuat.w = -newQuat.w;
+			newQuat.x = -tmp.x;
+			newQuat.y = -tmp.y;
+			newQuat.z = -tmp.z;
+			newQuat.w = -tmp.w;
+		} else {
+			newQuat.x = tmp.x;
+			newQuat.y = tmp.y;
+			newQuat.z = tmp.z;
+			newQuat.w = tmp.w;
 		}
 
 		f32 quatAccel = mParams.mQuatAccel.get();
@@ -189,15 +191,23 @@ int TMtxTimeLagCallBack(J3DNode* node, int param)
 	return 1;
 }
 
+// TODO: Instructions match; reset-vector relocation remains 12 bytes early
+// because the retail .rodata includes an additional unused zero Vec (@1490).
 void TMtxSwingRZ::calcLocalXY(MtxPtr mtx, Vec* vecX, Vec* vecY)
 {
+	Vec vec;
+	Vec trans;
+	Vec diff;
+	Vec point;
+	Vec corr;
+	Vec zAxis;
+
 	if (checkFlag(2)) {
 		offFlag(2);
 
 		Vec v = { 0.0f, 0.0f, 0.0f };
 		unk14 = v;
 
-		Vec vec;
 		vec.x = mtx[0][3];
 		vec.y = mtx[1][3] - mParams.mL.get();
 		vec.z = mtx[2][3];
@@ -212,32 +222,29 @@ void TMtxSwingRZ::calcLocalXY(MtxPtr mtx, Vec* vecX, Vec* vecY)
 		vecY->z = mtx[2][1];
 	} else {
 		VECAdd(&unk14, (Vec*)&mParams.mAcc.get(), &unk14);
-		VECScale(&unk14, &unk14, mParams.mBrake.get());
+		const f32& brake = mParams.mBrake.get();
+		VECScale(&unk14, &unk14, brake);
 		VECAdd(&unk14, &unk08, &unk08);
 
-		Vec trans;
 		trans.x = mtx[0][3];
 		trans.y = mtx[1][3];
 		trans.z = mtx[2][3];
 
-		Vec diff;
 		diff.x = unk08.x - trans.x;
 		diff.y = unk08.y - trans.y;
 		diff.z = unk08.z - trans.z;
 		VECNormalize(&diff, &diff);
-		VECScale(&diff, &diff, mParams.mL.get());
+		const f32& length = mParams.mL.get();
+		VECScale(&diff, &diff, length);
 
-		Vec point;
 		point.x = trans.x + diff.x;
 		point.y = trans.y + diff.y;
 		point.z = trans.z + diff.z;
 
-		Vec corr;
 		VECSubtract(&point, &unk08, &corr);
 		VECAdd(&unk14, &corr, &unk14);
 		unk08 = point;
 
-		Vec zAxis;
 		zAxis.x = mtx[0][2];
 		zAxis.y = mtx[1][2];
 		zAxis.z = mtx[2][2];
@@ -298,6 +305,8 @@ int TMtxSwingRZReverseXZCallBack(J3DNode* node, int param)
 	return 1;
 }
 
+// TODO: Reverse-XZ construction calls TVec3's copy constructor instead of
+// emitting the two trivial copies; the frame is 0x130 rather than 0x160.
 void TMultiMtxEffect::setup(J3DModel* model, const char* prmLocation)
 {
 	mModel        = model;
@@ -344,8 +353,7 @@ void TMultiMtxEffect::setup(J3DModel* model, const char* prmLocation)
 		}
 		}
 	}
-	for (int i = 0; i < mNumBones; ++i)
-		mMtxEffectTbl[i]->onFlag(2);
+	flagOn(2);
 }
 
 void TMultiMtxEffect::setUserArea()
@@ -361,6 +369,7 @@ void TMultiMtxEffect::add() { }
 
 void TMultiMtxEffect::remove() { }
 
+// TODO: Basis registers and stack layout still differ.
 void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
                          const JGeometry::TVec3<f32>& upDir,
                          const JGeometry::TVec3<f32>& end)
@@ -369,7 +378,8 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 
 	JGeometry::TVec3<f32> dir = end - start;
 	f32 mag                   = VECMag(dir);
-	dir.scale(1.0f / mag);
+	f32 invMag                = 1.0f / mag;
+	dir.scale(invMag);
 
 	JGeometry::TVec3<f32> up = upDir;
 	up.normalize();
@@ -378,26 +388,27 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 	for (u16 i = 0; i < jointNum; ++i) {
 		f32 t = (f32)i / (f32)(jointNum - 1);
 
-		JGeometry::TVec3<f32> a = dir * t;
-		JGeometry::TVec3<f32> b = up * (1.0f - t);
-		JGeometry::TVec3<f32> c = b + a;
+		JGeometry::TVec3<f32> c
+		    = JGeometry::TVec3<f32>(up * (1.0f - t)) + dir * t;
 		c.normalize();
 
 		MtxPtr jm = model->getAnmMtx(i);
+		Vec axis  = c;
 
-		f32 dist = (f32)i * (mag / (f32)(jointNum - 1));
+		f32 jointDivisor = (f32)(jointNum - 1);
+		f32 dist         = (f32)i * (mag / jointDivisor);
 
 		JGeometry::TVec3<f32> zAxis(jm[0][2], jm[1][2], jm[2][2]);
 		JGeometry::TVec3<f32> side;
-		side.cross(zAxis, c);
+		side.cross2(zAxis, axis);
 		JGeometry::TVec3<f32> fwd;
-		fwd.cross(c, side);
+		fwd.cross2(axis, side);
 		side.normalize();
 		fwd.normalize();
 
-		jm[0][0] = c.x;
-		jm[1][0] = c.y;
-		jm[2][0] = c.z;
+		jm[0][0] = axis.x;
+		jm[1][0] = axis.y;
+		jm[2][0] = axis.z;
 		jm[0][1] = side.x;
 		jm[1][1] = side.y;
 		jm[2][1] = side.z;
@@ -429,7 +440,7 @@ void SMS_GetLightPerspectiveForEffectMtx(Mtx44 mtx)
 	mtx[3][3] = 1.0f;
 }
 
-TRopePoint::TRopePoint() { }
+inline TRopePoint::TRopePoint() { }
 
 TRope::TRope(u16 count, const JGeometry::TVec3<f32>& pos, f32 p1, f32 p2,
              f32 p3, f32 p4)
@@ -502,7 +513,16 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 		TRopePoint& cur  = mPoints[i];
 		TRopePoint& prev = mPoints[i - 1];
 
-		if (!cur.unkC.epsilonEquals(prev.unkC)) {
+		bool same
+		    = (-JGeometry::TUtil<f32>::epsilon() <= prev.unkC.x - cur.unkC.x
+		       && prev.unkC.x - cur.unkC.x <= JGeometry::TUtil<f32>::epsilon())
+		      && (-JGeometry::TUtil<f32>::epsilon() <= prev.unkC.y - cur.unkC.y
+		          && prev.unkC.y - cur.unkC.y
+		                 <= JGeometry::TUtil<f32>::epsilon())
+		      && (-JGeometry::TUtil<f32>::epsilon() <= prev.unkC.z - cur.unkC.z
+		          && prev.unkC.z - cur.unkC.z
+		                 <= JGeometry::TUtil<f32>::epsilon());
+		if (!same) {
 			JGeometry::TVec3<f32> delta = prev.unkC;
 			delta -= cur.unkC;
 			VECNormalize(&delta, &delta);

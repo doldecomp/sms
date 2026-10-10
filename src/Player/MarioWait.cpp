@@ -23,7 +23,8 @@ BOOL TMario::startTalking()
 
 bool TMario::canSleep()
 {
-	if (checkFlag(MARIO_FLAG_IN_SHALLOW_WATER | MARIO_FLAG_IN_WATER))
+	bool inWater = checkFlag(MARIO_FLAG_IN_SHALLOW_WATER | MARIO_FLAG_IN_WATER);
+	if (inWater)
 		return false;
 
 	f32 dist   = mDeParams.mSleepingCheckDist.get();
@@ -76,7 +77,21 @@ BOOL TMario::canPut()
 	return 1;
 }
 
-void TMario::checkPutStart() { }
+void TMario::checkPutStart()
+{
+	if (mHeldObject != nullptr && (mInput & 0x2000 ? true : false)) {
+		switch (getHeldObject()->getActorType()) {
+		case ACTOR_TYPE_MARIO:
+			changePlayerStatus(MARIO_STATUS_PITCHING, 0, false);
+			break;
+
+		default:
+			if (canPut())
+				changePlayerStatus(MARIO_STATUS_PUTTING, 0, false);
+			break;
+		}
+	}
+}
 
 BOOL TMario::waitingCommonEvents()
 {
@@ -94,17 +109,19 @@ BOOL TMario::waitingCommonEvents()
 		return changePlayerStatus(0xc000227, 0, false);
 
 	if (mInput & 0x1) {
-		s16 diff      = mIntendedYaw - mFaceAngle.y;
-		s16 rotSp     = mDeParams.mWaitingRotSp.get();
-		s16 converged = IConverge(diff, 0, rotSp, rotSp);
-		mFaceAngle.y  = mIntendedYaw - converged;
-		if (mIntendedMag > mControllerParams.mStartToWalkLevel.get()) {
+		s16 diff             = mIntendedYaw - mFaceAngle.y;
+		s16 rotSp            = mDeParams.mWaitingRotSp.get();
+		int converged        = IConverge(diff, 0, rotSp, rotSp);
+		mFaceAngle.y         = mIntendedYaw - converged;
+		f32 intendedMag      = mIntendedMag;
+		f32 startToWalkLevel = mControllerParams.mStartToWalkLevel.get();
+		if (intendedMag > startToWalkLevel) {
 			emitSmoke(mFaceAngle.y);
 			return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 		}
 	}
 
-	if (checkFlag(MARIO_FLAG_IS_PERFORMING))
+	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING))
 		return changePlayerStatus(MARIO_STATUS_RUN, 0, false);
 
 	if (canSquat()) {
@@ -112,12 +129,13 @@ BOOL TMario::waitingCommonEvents()
 		return changePlayerStatus(MARIO_STATUS_SQUAT, 0, false);
 	}
 
-	if (mInput & 0x10000)
+	if (mInput & 0x8000)
 		return changePlayerStatus(MARIO_STATUS_TAKE_POSE, 0, false);
 
 	if (rocketCheck()) {
-		unk314
+		f32 rocketHeight
 		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		unk314 = rocketHeight;
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
@@ -130,11 +148,15 @@ void TMario::stopCommon(int anim_id, int status_on_end)
 {
 	waitProcess();
 	setAnimation(anim_id, 1.0f);
-	if (onYoshi() && mYoshi->mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		changePlayerStatus(status_on_end, 0, false);
-	} else if (isLast1AnimeFrame()) {
-		changePlayerStatus(status_on_end, 0, false);
+	if (onYoshi()) {
+		BOOL anmEndsNext = mYoshi->mActor->curAnmEndsNext();
+		if (anmEndsNext) {
+			changePlayerStatus(status_on_end, 0, false);
+			return;
+		}
 	}
+	if (isLast1AnimeFrame())
+		changePlayerStatus(status_on_end, 0, false);
 }
 
 void TMario::changeMontemanWaitingAnim()
@@ -151,7 +173,8 @@ BOOL TMario::waiting()
 
 	if (isMario() && isUpperState(UPPER_STATE_IDLE) && canSleep()
 	    && mAnimationId == ANIM_WAIT && isAnimeLoopOrStop()
-	    && mGroundPlane != nullptr && mGroundPlane->getNormal().y > 0.99f) {
+	    && getGroundPlane() != nullptr
+	    && getGroundPlane()->getNormal().y > 0.99f) {
 		mStatusTimer += 1;
 		if (mStatusTimer >= 10)
 			return changePlayerStatus(MARIO_STATUS_SLEEPY, 0, false);
@@ -159,7 +182,7 @@ BOOL TMario::waiting()
 
 	if (mStatusState & 0x2) {
 		setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
-	} else if (SMSGetMarDirector()->unk124 == 3) {
+	} else if (SMSGetMarDirector()->isDemoMode3()) {
 		setAnimation(ANIM_T_WAIT, 1.0f);
 	} else if (isSinking()) {
 		setAnimation(ANIM_SINKING, 1.0f);
@@ -168,7 +191,8 @@ BOOL TMario::waiting()
 	               || checkFlag(MARIO_FLAG_UNK_20))
 	           && !(mStatusState & 0x1)) {
 		setAnimation(ANIM_HOT_WAIT, 1.0f);
-		if (mModel->getFrameCtrl(0).checkPass(138.0f))
+		J3DFrameCtrl& frameCtrl = mModel->getFrameCtrl(0);
+		if (frameCtrl.checkPass(138.0f))
 			emitSweat(mFaceAngle.y - 0x4000);
 		if (isLast1AnimeFrame())
 			mStatusState |= 0x1;
@@ -563,19 +587,7 @@ BOOL TMario::waitMain()
 	checkEnforceJump();
 	checkReturn();
 	setNormalAttackArea();
-
-	if (mHeldObject != nullptr && (mInput & 0x2000 ? true : false)) {
-		switch (mHeldObject->getActorType()) {
-		case ACTOR_TYPE_MARIO:
-			changePlayerStatus(MARIO_STATUS_PITCHING, 0, false);
-			break;
-
-		default:
-			if (canPut())
-				changePlayerStatus(MARIO_STATUS_PUTTING, 0, false);
-			break;
-		}
-	}
+	checkPutStart();
 
 	switch (mStatus) {
 	case MARIO_STATUS_WAIT:

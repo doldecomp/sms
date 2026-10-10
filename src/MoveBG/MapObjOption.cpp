@@ -35,21 +35,22 @@ void TFileLoadBlock::pushed()
 	SMSRumbleMgr->start(0x15, sRumbleTime, (float*)nullptr);
 	gpMarioParticleManager->emit(MAP_MAP_MS_M_FILEBLOCK, &unk144, 0, nullptr);
 	gpMarioParticleManager->emit(PARTICLE_MS_M_AMIATTACK, &unk144, 0, nullptr);
-	mStateTimer         = 120;
-	unk13C->mStateTimer = 120;
-	unk140->mStateTimer = 120;
+	mStateTimer = 120;
+	unk13C->startStateTimer(120);
+	unk140->startStateTimer(120);
 }
 
 void TFileLoadBlock::touchPlayer(THitActor* param_1)
 {
-	if (isState(STATE_NORMAL) && marioHeadAttack() && !isStateTimerEngaged())
+	bool state = isState(STATE_NORMAL);
+	if (state && marioHeadAttack() && !isStateTimerEngaged())
 		pushed();
 }
 
 BOOL TFileLoadBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	if (isState(STATE_NORMAL) && message == HIT_MESSAGE_PUSH_UP
-	    && !isStateTimerEngaged()) {
+	bool state = isState(STATE_NORMAL);
+	if (state && message == HIT_MESSAGE_PUSH_UP && !isStateTimerEngaged()) {
 		pushed();
 		return true;
 	}

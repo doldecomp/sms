@@ -7,7 +7,13 @@ class TMirrorActor;
 
 class TSleepBossHanachan : public TDemoBossHanachan {
 public:
-	TSleepBossHanachan(const char* name = "?");
+	// not in mario.MAP: inlined into TMarNameRefGen::getNameRef_BossEnemy
+	TSleepBossHanachan(const char* name = "?")
+	    : TDemoBossHanachan(name)
+	{
+		mShinePosition.set(0.0f, 0.0f, 0.0f);
+		unk15C = nullptr;
+	}
 
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();
@@ -22,7 +28,13 @@ public:
 
 class TSleepBossHanachanManager : public TDemoBossHanachanManager {
 public:
-	TSleepBossHanachanManager(const char* name = "?");
+	// not in mario.MAP: inlined into TMarNameRefGen::getNameRef_BossEnemy
+	TSleepBossHanachanManager(const char* name = "?")
+	    : TDemoBossHanachanManager(name)
+	{
+		mSaveParams
+		    = new TDemoBossHanachanSaveParams("/enemy/sleepBossHanachan.prm");
+	}
 
 	virtual void createModelData();
 };

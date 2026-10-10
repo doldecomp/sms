@@ -269,7 +269,8 @@ void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
 		                      "出力モードが不正です。\n");
 		break;
 	}
-	JAIBasic::getInterface()->mSoundOutputMode = value;
+	JAIBasic* interface         = JAIBasic::getInterface();
+	interface->mSoundOutputMode = value;
 	JASystem::Driver::setOutputMode(r31);
 	JAInter::StreamLib::setOutputMode(r30);
 }

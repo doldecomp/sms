@@ -6,17 +6,18 @@
 #include <Strategic/LiveActor.hpp>
 #include <Map/MapData.hpp>
 
+// TODO: frame-only mismatch: the sqrt scratch slot differs.
 static f32 calcFarthestVertex(const TBGCheckData* param_1,
                               const JGeometry::TVec3<f32>& param_2,
                               const JGeometry::TVec3<f32>& param_3)
 {
 	JGeometry::TVec3<f32> diffs[3];
-	diffs[0].set(param_1->mPoint1.x - param_2.x, 0.0f,
-	             param_1->mPoint1.z - param_2.z);
-	diffs[1].set(param_1->mPoint2.x - param_2.x, 0.0f,
-	             param_1->mPoint2.z - param_2.z);
-	diffs[2].set(param_1->mPoint3.x - param_2.x, 0.0f,
-	             param_1->mPoint3.z - param_2.z);
+	diffs[0].set(param_1->getPoint1().x - param_2.x, 0.0f,
+	             param_1->getPoint1().z - param_2.z);
+	diffs[1].set(param_1->getPoint2().x - param_2.x, 0.0f,
+	             param_1->getPoint2().z - param_2.z);
+	diffs[2].set(param_1->getPoint3().x - param_2.x, 0.0f,
+	             param_1->getPoint3().z - param_2.z);
 
 	int bVar8 = 1;
 	f32 f7    = 0.0;
@@ -25,8 +26,11 @@ static f32 calcFarthestVertex(const TBGCheckData* param_1,
 			if (bVar8) {
 				bVar8 = false;
 				f7    = diffs[i].squared();
-			} else if (f7 < diffs[i].squared())
-				f7 = diffs[i].squared();
+			} else {
+				f32 dist = diffs[i].squared();
+				if (f7 < dist)
+					f7 = dist;
+			}
 		}
 	}
 
@@ -66,6 +70,7 @@ void TWalker::reset()
 	unk4.clear();
 }
 
+// TODO: vector inlines and frame still differ (0x338 here, 0x360 in retail).
 void TWalker::bind(TLiveActor* param_1)
 {
 	if (unk28 == 1 && mSpider != nullptr) {
@@ -73,8 +78,7 @@ void TWalker::bind(TLiveActor* param_1)
 		return;
 	}
 
-	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
-
+	TSpineEnemy* enemy             = (TSpineEnemy*)param_1;
 	JGeometry::TVec3<f32> lv       = enemy->mPositionDelta;
 	JGeometry::TVec3<f32> local_30 = enemy->mPosition;
 	local_30 += lv;
@@ -226,15 +230,16 @@ void TWalker::bind(TLiveActor* param_1)
 			    = calcFarthestVertex(pTVar14, enemy->mPosition, local_94);
 			f32 fVar4 = (enemy->getWallRadius()) * 2.0f + dVar18;
 			if (enemy->unk114.empty()) {
-				TPathNode node(enemy->mPosition
-				               - normal * enemy->getWallRadius()
-				               + local_94 * fVar4);
+				TPathNode local_13c(enemy->mPosition
+				                    - normal * enemy->getWallRadius()
+				                    + local_94 * fVar4);
 				enemy->unk114.push(enemy->unkF4);
-				enemy->unkF4 = node;
+				enemy->unkF4 = local_13c;
 			} else {
-				enemy->unkF4 = TPathNode(enemy->mPosition
-				                         - normal * enemy->getWallRadius()
-				                         + local_94 * fVar4);
+				TPathNode local_278(enemy->mPosition
+				                    - normal * enemy->getWallRadius()
+				                    + local_94 * fVar4);
+				enemy->unkF4 = local_278;
 			}
 		}
 	}

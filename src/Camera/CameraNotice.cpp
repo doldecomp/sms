@@ -14,8 +14,7 @@
 #include <JSystem/JMath.hpp>
 #include <Enemy/Enemy.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/DummyStrings.hpp>
 
 static const char* sNoticeActorManagerName[] = {
 	"ヒノクリマネージャー",
@@ -55,11 +54,11 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (mNoticeActor->mPosition.squared(SMS_GetMarioPos())
 		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
 			JGeometry::TVec2<f32> clipPos;
+			f32 clipMax = mSaveNotice->mOffClipRatio.get();
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
 			              nullptr, false);
 
 			// TODO: inline
-			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
 			f32 clipMin  = -clipMax;
 			bool inClipX = false;
 			bool inClipY = false;
@@ -69,7 +68,8 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax)
 				inClipY = true;
 
-			if (inClipY)
+			bool isInside = inClipX && inClipY;
+			if (isInside)
 				return mNoticeActor;
 		}
 	}
@@ -90,11 +90,11 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			continue;
 
 		JGeometry::TVec2<f32> clipPos;
+		f32 clipMax = mSaveNotice->mOnClipRatio.get();
 		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->mPosition, nullptr,
 		              false);
 
 		// TODO: inline
-		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
 		f32 clipMin  = -clipMax;
 		bool inClipX = false;
 		bool inClipY = false;
@@ -104,10 +104,11 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax) {
 			inClipY = true;
 		}
-		if (!inClipY)
+		bool isInside = inClipX && inClipY;
+		if (!isInside)
 			continue;
 
-		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(SMS_GetMarioAngleY()),
+		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(SMS_GetMarioAngleY()),
 		                 unk2A0[i]->mPosition, dist2,
 		                 mSaveNotice->mOnDegree.get(), -1.0f))
 			continue;
@@ -147,26 +148,23 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 
 void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 {
-	Vec mPos     = gpCameraMario->unk0;
-	f32 dz2      = CLBSquared<f32>(mPos.z - target.z);
-	f32 dx2      = CLBSquared<f32>(mPos.x - target.x);
-	f32 dist2    = dx2 + dz2;
-	f32 farClip2 = CLBSquared<f32>(mSaveNotice->mRotateMinDistXZ.get());
-	f32 near2    = CLBSquared<f32>(mSaveNotice->mRotateFastMinDistXZ.get());
+	// TODO: nonmatching frame and signed absolute-value expansion remain.
+	Vec mPos  = gpCameraMario->unk0;
+	f32 dist2 = CLBSquared<f32>(mPos.x - target.x)
+	            + CLBSquared<f32>(mPos.z - target.z);
+	f32 near2    = CLBSquared<f32>(mSaveNotice->mRotateMinDistXZ.get());
+	f32 farClip2 = CLBSquared<f32>(mSaveNotice->mRotateFastMinDistXZ.get());
 
 	if (dist2 > near2) {
 		JGeometry::TVec3<f32> diff(mPos.x - target.x, mPos.y - target.y,
 		                           mPos.z - target.z);
 		MsVECNormalize(&diff, &diff);
-		// TODO: many inlines from cameralib maybe?
-		f32 dx       = diff.x * 500.0f + mPos.x;
-		f32 dz       = diff.z * 500.0f + mPos.z;
-		s16 ang      = matan(dz - mCurrentTarget.mTarget.z,
-		                     dx - mCurrentTarget.mTarget.x);
-		int absAngle = ang - mCurrentTarget.mYaw >= 0
-		                   ? ang - mCurrentTarget.mYaw
-		                   : -(ang - mCurrentTarget.mYaw);
-		f32 ratio    = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
+		JGeometry::TVec3<f32> point;
+		point.scaleAdd(500.0f, mPos, diff);
+		s16 ang = matan(point.z - mCurrentTarget.mTarget.z,
+		                point.x - mCurrentTarget.mTarget.x);
+		f32 ratio
+		    = (2.0f / 65536.0f) * CLBAbs<int>((s16)(mCurrentTarget.mYaw - ang));
 
 		f32 chase;
 		if (dist2 > farClip2) {
@@ -178,8 +176,7 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		    1.0f, mSaveNotice->mRotateMagnifXmax.get(), mCurrentTarget.unk28);
 		f32 speed
 		    = unk288
-		      * (chase
-		         * (ratio * ((f32)mSaveNotice->mRotateYSpeed.get() * base)));
+		      * (base * (chase * (ratio * mSaveNotice->mRotateYSpeed.get())));
 		if (speed > 32766.998f)
 			speed = 32766.998f;
 		s16 delta = CLBRoundf<s16>(speed);
@@ -199,9 +196,11 @@ void CPolarSubCamera::getNozzleTopPos_(JGeometry::TVec3<f32>* out) const
 		out->z     = mtx[2][3];
 
 		JGeometry::TVec3<f32> dir(mtx[0][1], mtx[1][1], mtx[2][1]);
-		dir.normalize();
-		dir *= 30.0f;
-		*out += dir;
+		JGeometry::TVec3<f32> offset;
+		offset.set(dir);
+		offset.normalize();
+		offset *= 30.0f;
+		*out += offset;
 	}
 }
 

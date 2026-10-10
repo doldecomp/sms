@@ -11,7 +11,7 @@ static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TCameraOption* gpCameraOption;
-const char* cLoadCamName = "ロードカメラ";
+const char* cLoadCamName = "左サイドカメラ";
 
 void CPolarSubCamera::chaseOptionCamera_(f32 param_1)
 {
@@ -104,8 +104,9 @@ TCameraOption::TCameraOption(JGeometry::TVec3<f32> param1,
 	if (tool != nullptr) {
 		JGeometry::TVec3<f32> origin;
 		tool->calcPosAndAt(&origin, &unk24);
-		s16 a = CLBRoundf<s16>(DEG2SHORTANGLE(tool->getYaw()));
-		s16 b = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
+		f32 yaw = tool->getYaw();
+		s16 a   = CLBRoundf<s16>(DEG2SHORTANGLE(yaw));
+		s16 b   = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
 		CLBPolarToCross(origin, &unk30, 1000.0f, b, a);
 	}
 }

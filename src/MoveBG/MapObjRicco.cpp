@@ -323,26 +323,44 @@ void TSurfGesoObj::initMapObj()
 	mMActor->setBck("surfgeso_run1");
 }
 
-void TFruitSwitch::pullUp()
+// TODO: fabricated; frame lookup boundary follows MapObjMamma.cpp.
+static inline J3DFrameCtrl* getAnmFrameCtrl(TLiveActor* actor, int type)
 {
-	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
-	offHitFilter(HIT_FILTER_NO_COLLISION);
-	getModel()->calc();
-	mMapCollisionManager->getActiveCollision()->setUpMtx(
-	    getModel()->getAnmMtx(0));
+	return actor->getMActor()->getFrameCtrl(type);
 }
 
+// TODO: fabricated; both helper levels preserve fireObj's getMActor call.
+static inline void setAnmFrame(TLiveActor* actor, int type, f32 frame)
+{
+	getAnmFrameCtrl(actor, type)->setFrame(frame);
+}
+
+void TFruitSwitch::pullUp()
+{
+	setAnmFrame(this, ANM_TYPE_BCK, 0.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	getModel()->calc();
+	MtxPtr mtx = getModel()->getAnmMtx(0);
+	mMapCollisionManager->getActiveCollision()->setUpMtx(mtx);
+}
+
+// TODO: UNUSED body is 0x64; mario.MAP records 0x60.
 void TFruitSwitch::pushDown()
 {
 	startBck("riccoswitch");
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mMapCollisionManager->removeActiveCollision();
+	TMapCollisionBase* collision = mMapCollisionManager->getActiveCollision();
+	if (collision)
+		collision->remove();
 }
 
 BOOL TFruitSwitch::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
-		pushDown();
+		// TODO: sharing pushDown here gives a 0x28 frame instead of 0x20.
+		startBck("riccoswitch");
+		onHitFilter(HIT_FILTER_NO_COLLISION);
+		mMapCollisionManager->removeActiveCollision();
 		unk138->fireObj();
 		return true;
 	}
@@ -356,26 +374,28 @@ int TFruitLauncher::mFruitLiveTime = 4800;
 TMapObjBase* TFruitLauncher::appearFruit() const
 {
 	f32 rnd = 100.0f * MsRandF();
+	TMapObjBase* fruit;
 	if (rnd < 20.0f)
-		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z,
-		                                    ACTOR_TYPE_FRUIT_COCONUT, false);
+		fruit = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
+		                                     mPosition.z,
+		                                     ACTOR_TYPE_FRUIT_COCONUT, false);
 	else if (rnd < 40.0f)
-		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z,
-		                                    ACTOR_TYPE_FRUIT_PAPAYA, false);
+		fruit = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
+		                                     mPosition.z,
+		                                     ACTOR_TYPE_FRUIT_PAPAYA, false);
 	else if (rnd < 60.0f)
-		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z, ACTOR_TYPE_FRUIT_PINE,
-		                                    false);
+		fruit = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
+		                                     mPosition.z, ACTOR_TYPE_FRUIT_PINE,
+		                                     false);
 	else if (rnd < 80.0f)
-		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z,
-		                                    ACTOR_TYPE_FRUIT_DURIAN, false);
+		fruit = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
+		                                     mPosition.z,
+		                                     ACTOR_TYPE_FRUIT_DURIAN, false);
 	else
-		return gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
-		                                    mPosition.z,
-		                                    ACTOR_TYPE_FRUIT_BANANA, false);
+		fruit = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
+		                                     mPosition.z,
+		                                     ACTOR_TYPE_FRUIT_BANANA, false);
+	return fruit;
 }
 
 void TFruitLauncher::fireObj()

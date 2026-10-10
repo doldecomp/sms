@@ -15,6 +15,13 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// dummy: emits @2602 and @2604
+static void dummy(Vec* v)
+{
+	*v = (Vec) { 0.0f, 0.0f, 0.0f };
+	*v = (Vec) { 1.0f, 1.0f, 1.0f };
+}
+
 static const char* DebuTelesa_bastable[] = {
 	"/scene/DebuTelesa/bas/debuTelesa_wait.bas",
 };
@@ -66,8 +73,9 @@ BOOL TDebuTelesa::receiveMessage(THitActor* sender, u32 message)
 		return false;
 
 	case HIT_MESSAGE_UNKB:
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_DB_TELSA_EATEN, &mPosition, 0,
-		                                nullptr, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_EN_DB_TELSA_EATEN))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_DB_TELSA_EATEN, getPosition(), 0, nullptr, 0, 4);
 		break;
 	}
 

@@ -69,6 +69,10 @@ public:
 	// fabricated
 	void setMarioLight(TLightMario* light) { mMarioLight = light; }
 
+	// fabricated: TMarNameRefGen::getNameRef stores mMarioLight directly;
+	// the setter changes its codegen
+	friend class TMarNameRefGen;
+
 private:
 	/* 0x10 */ TLightMario* mMarioLight;
 	/* 0x14 */ TLightWithDBSet** mLightSets;

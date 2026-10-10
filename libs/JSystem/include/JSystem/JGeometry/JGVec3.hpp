@@ -99,6 +99,19 @@ public:
 	{
 	}
 
+	// fabricated: the copy constructor's body before f836185e (assignment in
+	// the body instead of a base initializer). A few call sites only match
+	// with it.
+	enum EAssignCopy { ASSIGN_COPY };
+	TVec3(const TVec3& other, EAssignCopy) { *(Vec*)this = *(Vec*)&other; }
+
+	// fabricated: operator='s body before f836185e, for the same reason
+	TVec3& assignCopy(const TVec3& other)
+	{
+		*(Vec*)this = *(Vec*)&other;
+		return *this;
+	}
+
 	TVec3& operator=(const TVec3& other)
 	{
 		// NOTE: yes, this has to use lwz/stw and not lfs/stf.

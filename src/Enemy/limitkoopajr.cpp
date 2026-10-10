@@ -45,6 +45,7 @@ TLimitKoopaJr::TLimitKoopaJr(const char* param_1)
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 }
 
+// TODO: nonmatching stack frame (0x50 bytes; target is 0x78).
 void TLimitKoopaJr::init(TLiveManager* param_1)
 {
 	mManager = param_1;
@@ -54,7 +55,7 @@ void TLimitKoopaJr::init(TLiveManager* param_1)
 	mMActor->setLightType(1);
 	initAnmSound();
 	f32 damageHeight
-	    = ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageHeight.get();
+	    = ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageHeight.value;
 	initHitActor(ACTOR_TYPE_LIMIT_KOOPA_JR, 1, 0, 0.0f, 0.0f,
 	             ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageRadius.get(),
 	             damageHeight);
@@ -213,9 +214,9 @@ void TLimitKoopaJr::makeDirection(JGeometry::TVec3<f32> param_1)
 {
 	param_1.normalize();
 	TDirectionCalc direction(param_1);
-	f32 rotationSpeed = TDirectionCalc::d2r(
-	    ((TLimitKoopaJrParams*)getSaveParam())->mSLRotationSpeed.get());
-	unk178.unk0 = unk178.calcTurnDirection(direction.unk0, rotationSpeed);
+	TLimitKoopaJrParams* params = (TLimitKoopaJrParams*)getSaveParam();
+	f32 rotationSpeed = TDirectionCalc::d2r(params->mSLRotationSpeed.get());
+	unk178.unk0       = unk178.calcTurnDirection(direction.unk0, rotationSpeed);
 }
 
 DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
@@ -224,7 +225,8 @@ DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
 	if (spine->getTime() == 0) {
 		actor->setAnimationIndex(2);
 	}
-	if (!actor->canRun()) {
+	bool canRun = actor->canRun();
+	if (!canRun) {
 		spine->pushAfterCurrent(&TNerveLimitKoopaJrWait::theNerve());
 		return true;
 	}
@@ -232,6 +234,7 @@ DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
 	return false;
 }
 
+// TODO: frame-only mismatch (0xa8 bytes; target is 0xb0).
 DEFINE_NERVE(TNerveLimitKoopaJrWait, TLiveActor)
 {
 	TLimitKoopaJr* actor = (TLimitKoopaJr*)spine->getBody();

@@ -87,8 +87,9 @@ BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 			mOwner->unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+		MSound* sound = SMSGetMSound();
+		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
+		                     0.0f, 0, 0, 4);
 		return true;
 	}
 	return mOwner->receiveMessage(sender, message);
@@ -132,8 +133,9 @@ BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 			unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+		MSound* sound = SMSGetMSound();
+		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
+		                     0.0f, 0, 0, 4);
 		return true;
 	}
 	return false;
@@ -230,6 +232,7 @@ void TBGKMtxCalc::setAnm(int param_1)
 	        param_1));
 }
 
+// TODO: nonmatching stack layout; target frame is 0x148 bytes.
 void TBGKMtxCalc::calc(u16 param_1)
 {
 	M3UMtxCalcSIAnmBlendQuat::calc(param_1);
@@ -265,8 +268,9 @@ void TBGKMtxCalc::calc(u16 param_1)
 				else
 					turn = MsMax(-3.0f, delta);
 
-				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
-				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
+				turn += cur;
+				turn -= mOwner->mRotation.y;
+				mOwner->unk180 = MsWrap(turn, 0.0f, 360.0f);
 			}
 		}
 
@@ -359,8 +363,10 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveBGKSleep::theNerve());
 
 	J3DModel* model = mMActor->getModel();
-	if (model->getSkinDeform() == NULL)
-		model->setSkinDeform(new J3DSkinDeform, (J3DDeformAttachFlag)1);
+	if (model->getSkinDeform() == NULL) {
+		J3DSkinDeform* skinDeform = new J3DSkinDeform;
+		model->setSkinDeform(skinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	}
 
 	unk178 = new TBGKMtxCalc(this);
 	mMActor->setBckMtxCalc(unk178);
@@ -369,7 +375,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(2, getModel()->getModelData());
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i <= 1; i++)
 		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
 
 	mObstacle = new TBGKObstacle(this, "TBGKObstacle");
@@ -455,14 +461,16 @@ void TBiancoGateKeeper::launchNamekuri()
 			if (enemy == NULL)
 				break;
 
-			JGeometry::TVec3<f32> pos = mPosition;
+			JGeometry::TVec3<f32> pos = getPosition();
 			pos.y += 100.0f;
 			JGeometry::TVec3<f32> rot = mRotation;
 			JGeometry::TVec3<f32> scale;
 			scale.set(1.0f, 1.0f, 1.0f);
 			s16 angle = (s16)(182.04445f * (36.0f * (f32)i));
 			JGeometry::TVec3<f32> vel;
-			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
+			vel.x = 4.0f * JMASSin(angle);
+			vel.y = 12.0f;
+			vel.z = 4.0f * JMASCos(angle);
 
 			enemy->reset();
 			enemy->mPosition  = pos;
@@ -481,9 +489,10 @@ void TBiancoGateKeeper::launchNamekuri()
 
 f32 TBiancoGateKeeper::getRumblePow()
 {
+	f32 dist;
 	JGeometry::TVec3<f32> diff = mPosition;
 	diff -= SMS_GetMarioPos();
-	f32 dist = diff.length();
+	dist = diff.length();
 	if (dist == 0.0f)
 		return 1.0f;
 	f32 pow = 2000.0f / dist;
@@ -505,7 +514,8 @@ void TBiancoGateKeeper::deathRumble()
 	if (SMS_IsMarioTouchGround4cm()) {
 		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
-			f32 t        = 1.0f - fc->getFrame() / (f32)fc->getEnd();
+			f32 t        = fc->getFrame() / (f32)fc->getEnd();
+			t            = 1.0f - t;
 			mRumblePower = t * getRumblePow();
 			SMSRumbleMgr->start(8, &mRumblePower);
 		}
@@ -515,12 +525,11 @@ void TBiancoGateKeeper::deathRumble()
 BOOL TBiancoGateKeeper::curBckFinished() const
 {
 	J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
-	BOOL done;
 	if (fc == NULL)
 		return true;
 
-	if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
-	    || fc->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
+	bool completed = fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE);
+	if (completed || fc->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
 	    || 0.1f + fc->getFrame() >= (f32)fc->getEnd())
 		return true;
 	else
@@ -997,6 +1006,7 @@ DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 	return false;
 }
 
+// TODO: nonmatching frame (target 0xB0) and retry-counter reload.
 DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();

@@ -178,9 +178,10 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 	CMemBlock* newUsedBlock = nullptr;
 
 	for (CMemBlock* block = mHead; block; block = block->mNext) {
-		// this bastard is the problem
-		void* content = block->getContent();
-		u32 offset = ALIGN_NEXT((uintptr_t)content, align) - (uintptr_t)content;
+		// TODO: alignment mask/content register allocation remains nonmatching.
+		void* content        = block->getContent();
+		void* alignedContent = (void*)ALIGN_NEXT((uintptr_t)content, align);
+		u32 offset           = (uintptr_t)alignedContent - (uintptr_t)content;
 
 		if (block->mAllocatedSpace < size + offset) {
 			continue;

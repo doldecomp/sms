@@ -54,7 +54,7 @@ void SMSSetupGCLogoRenderMode(GXRenderModeObj* rmo)
 void SMSSetupGCLogoRenderingInfo(JDrama::TDisplay* param_1)
 {
 	SMSSetupGCLogoRenderMode(&param_1->getRenderMode());
-	param_1->offFlag(0x8);
+	param_1->unk64 = param_1->unk64.get() & ~0x8;
 }
 
 void SMSSetupTitleRenderMode(GXRenderModeObj* rmo)
@@ -97,7 +97,7 @@ void SMSSetupTitleRenderMode(GXRenderModeObj* rmo)
 void SMSSetupTitleRenderingInfo(JDrama::TDisplay* param_1)
 {
 	SMSSetupTitleRenderMode(&param_1->getRenderMode());
-	param_1->offFlag(0x8);
+	param_1->unk64.set(param_1->unk64.get() & ~0x8);
 }
 
 void SMSSetupGameRenderingInfo(JDrama::TDisplay* param_1, bool param_2)
@@ -187,5 +187,5 @@ void SMSSetupMovieRenderingInfo(JDrama::TDisplay* param_1)
 	JDrama::CalcRenderModeVIYOrigin(&rmo);
 	JDrama::CopyRenderModeSamplePattern(&rmo, SMSAASamplePattern_non);
 	JDrama::CopyRenderModeVFilter(&rmo, SMSVFilter_non);
-	param_1->offFlag(0x8);
+	param_1->unk64.set(param_1->unk64.get() & ~0x8);
 }

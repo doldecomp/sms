@@ -118,9 +118,10 @@ void TLiveActor::calcRideMomentum()
 			mPositionDelta += rideVelocity;
 
 			if (unkE8 >= 2) {
-				mRotationDelta.y
-				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
-				mGroundActorYaw = mGroundActor->mRotation.y;
+				f32 angleDiff
+				    = MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
+				mRotationDelta.y = angleDiff + mRotationDelta.y;
+				mGroundActorYaw  = mGroundActor->mRotation.y;
 			}
 		}
 	} else {
@@ -454,10 +455,15 @@ void TLiveActor::initAnmSound()
 	if (mAnmSound)
 		return;
 
-	if (isHitCategory(HIT_CATEGORY_NPC))
-		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
-	else
-		mAnmSound = new MAnmSound(SMSGetMSound());
+	MAnmSoundNPC* npcAnmSound;
+	MAnmSound* anmSound;
+	if (isHitCategory(HIT_CATEGORY_NPC)) {
+		npcAnmSound = new MAnmSoundNPC(SMSGetMSound());
+		mAnmSound   = npcAnmSound;
+	} else {
+		anmSound  = new MAnmSound(SMSGetMSound());
+		mAnmSound = anmSound;
+	}
 
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }

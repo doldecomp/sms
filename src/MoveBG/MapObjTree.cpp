@@ -93,8 +93,8 @@ int TMapObjTree::controlLeaf(int index)
 
 	// BUG: they probably meant to compare both angle and velocity here, but
 	// forgot to change it after copy-pasting?
-	if (abs(leaf.mAngle) < mLeafTouchImpulse
-	    && abs(leaf.mAngle) < mLeafTouchImpulse)
+	f32 absAngle = abs(leaf.mAngle);
+	if (absAngle < mLeafTouchImpulse && abs(leaf.mAngle) < mLeafTouchImpulse)
 		return 1;
 	return 0;
 }
@@ -175,8 +175,9 @@ void TMapObjTree::initMapObj()
 		TMapObjLeaf& leaf = mLeaves[i];
 		// BUG: memory leak, mCollision was already allocated in ctor
 		leaf.mCollision = new TMapCollisionMove;
+		bool isPalmLeaf = isActorType(ACTOR_TYPE_PALM_LEAF);
 		char buffer[64];
-		if (isActorType(ACTOR_TYPE_PALM_LEAF)) {
+		if (isPalmLeaf) {
 			snprintf(buffer, 0x100, "/mapObj/palmLeaf%02d", i + 1);
 		} else {
 			snprintf(buffer, 0x100, "/mapObj/%sLeaf%02d", mIndividualName,
@@ -224,7 +225,8 @@ u32 TMapObjTreeScale::touchWater(THitActor* water)
 	if (mScaling.x == 1.0f)
 		return TMapObjGeneral::touchWater(water);
 
-	if (isState(STATE_SMALL))
+	bool small = isState(STATE_SMALL);
+	if (small)
 		startScaleUp();
 
 	return 1;
@@ -249,7 +251,7 @@ void TMapObjTreeScale::control()
 			mState = STATE_SCALING_UP;
 		break;
 
-	case STATE_SCALING_UP:
+	case STATE_SCALING_UP: {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_TREE_APPEAR, &mPosition, 0,
 		                                nullptr, 0, 4);
 		if (mScaling.y < 1.0f)
@@ -257,7 +259,8 @@ void TMapObjTreeScale::control()
 		else
 			mScaling.y = 1.0f;
 
-		if (mScaling.x < 1.0f) {
+		f32 scaleXZ = mScaling.x;
+		if (scaleXZ < 1.0f) {
 			mScaling.x += mScaleSpeedXZ;
 			mScaling.z += mScaleSpeedXZ;
 		} else {
@@ -270,6 +273,7 @@ void TMapObjTreeScale::control()
 			mState = STATE_NORMAL;
 		}
 		break;
+	}
 
 	default:
 		TMapObjGeneral::control();
@@ -286,10 +290,11 @@ void TMapObjTreeScale::control()
 		}
 
 		if (mParticleEmitTimer > sWaitTime) {
-			// circular buffer of particle positions
-			mParticlePositions[mNextFreeParticlePos].set(
+			JGeometry::TVec3<f32> position(
 			    mPosition.x + 400.0f * MsRandF() - 200.0f, mPosition.y,
 			    mPosition.z + 400.0f * MsRandF() - 200.0f);
+			// circular buffer of particle positions
+			mParticlePositions[mNextFreeParticlePos].set(position);
 
 			gpMarioParticleManager->emit(
 			    PARTICLE_MS_RAKU_KIE, &mParticlePositions[mNextFreeParticlePos],

@@ -223,9 +223,12 @@ BOOL THPPlayerClose()
 u32 THPPlayerCalcNeedMemory()
 {
 	if (ActivePlayer.open) {
-		u32 size = ActivePlayer.onMemory
-		               ? ALIGN_NEXT(ActivePlayer.header.movieDataSize, 32)
-		               : ALIGN_NEXT(ActivePlayer.header.bufsize, 32) * 10;
+		u32 size;
+		if (ActivePlayer.onMemory) {
+			size = ALIGN_NEXT(ActivePlayer.header.movieDataSize, 32);
+		} else {
+			size = ALIGN_NEXT(ActivePlayer.header.bufsize, 32) * 10;
+		}
 
 		size += ALIGN_NEXT(ActivePlayer.videoInfo.xSize
 		                       * ActivePlayer.videoInfo.ySize,
@@ -348,16 +351,17 @@ void PrepareReady(BOOL msg)
 BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 {
 	u8* threadData;
+	u32 offset;
 	if (ActivePlayer.open && ActivePlayer.state == 0) {
 		if (frame > 0) {
 			if (ActivePlayer.header.offsetDataOffsets == 0)
 				return FALSE;
 
 			if (ActivePlayer.header.numFrames > frame) {
+				offset
+				    = ActivePlayer.header.offsetDataOffsets + (frame - 1) * 4;
 				if (DVDReadPrio(&ActivePlayer.fileInfo, WorkBuffer, 0x20,
-				                ActivePlayer.header.offsetDataOffsets
-				                    + (frame - 1) * 4,
-				                2)
+				                offset, 2)
 				    < 0)
 					return FALSE;
 
@@ -381,7 +385,8 @@ BOOL THPPlayerPrepare(s32 frame, u8 flag, s32 audioTrack)
 			ActivePlayer.curAudioTrack = audioTrack;
 		}
 
-		ActivePlayer.playFlag         = flag & 1;
+		flag &= 1;
+		ActivePlayer.playFlag         = flag;
 		ActivePlayer.videoDecodeCount = 0;
 
 		if (ActivePlayer.onMemory) {

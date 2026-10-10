@@ -27,11 +27,11 @@ void TMario::playerRefrection(int param_1)
 void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
                           f32 param_3)
 {
-	f32 dz = mPosition.z - target.z;
-	f32 dx = mPosition.x - target.x;
-
 	f32 thresh = param_3 + (param_2 + unk15C);
-	f32 dist   = MsSqrtf(dx * dx + dz * dz);
+	f32 dx;
+	f32 dz   = mPosition.z - target.z;
+	dx       = mPosition.x - target.x;
+	f32 dist = MsSqrtf(dx * dx + dz * dz);
 
 	if (dist == 0.0f)
 		dist = dx = 1.0f;
@@ -69,17 +69,20 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	newPos.z = target.z + thresh * JMASCos(angle);
 
 	checkWallPlane(&newPos, 60.0f, unk15C);
-	f32 floorY;
 	const TBGCheckData* ground;
+	f32 floorY;
 	checkGroundPlane(newPos.x, newPos.y, newPos.z, &floorY, &ground);
 	if (!ground->isLegal())
 		return;
 
 	JGeometry::TVec3<f32> diff = newPos - mPosition;
 
-	f32 step = diff.length();
-	if (step > 0.0f) {
-		if (50.0f < step)
+	// TODO: target reuses the squared length for normalization; this build
+	// recomputes it.
+	f32 length = diff.length();
+	f32 step   = length;
+	if (length > 0.0f) {
+		if (50.0f < length)
 			step = 50.0f;
 
 		diff.normalize();
@@ -97,22 +100,22 @@ void TMario::checkDescent()
 {
 	bool active   = false;
 	f32 descentSp = mHangingParams.mDescentSp.get();
-	if (mHeldObject == nullptr && !onYoshi())
+	if (getHeldObject() == nullptr && !onYoshi())
 		active = true;
 
-	if (active != true)
+	if ((s32)active != true)
 		return;
 
 	if (!(mForwardVel < descentSp))
 		return;
 
-	TBGWallCheckRecord rec(mPosition.x, mPosition.y - 10.0f, mPosition.z,
-	                       descentSp, 1, 0);
+	TBGWallCheckRecord rec(getPosition().x, getPosition().y - 10.0f,
+	                       getPosition().z, descentSp, 1, 0);
 	if (!gpMap->isTouchedWallsAndMoveXZ(&rec))
 		return;
 
-	f32 floorY;
 	const TBGCheckData* ground;
+	f32 floorY;
 	checkGroundPlane(rec.mCenter.x, mPosition.y + 30.0f, rec.mCenter.z, &floorY,
 	                 &ground);
 
@@ -141,15 +144,15 @@ int TMario::checkGroundAtWalking(Vec* v)
 	checkWallPlane(v, 30.0f, 0.5f * unk15C);
 	TBGCheckData* wall = checkWallPlane(v, 60.0f, unk15C);
 
-	f32 floorY;
+	const TBGCheckData* roof;
 	const TBGCheckData* ground;
+	f32 floorY;
 	if (checkStatusType(0x10000)) {
 		floorY = gpMap->checkGround(v->x, v->y + 30.0f, v->z, &ground);
 	} else {
 		checkGroundPlane(v->x, v->y + 30.0f, v->z, &floorY, &ground);
 	}
 
-	const TBGCheckData* roof;
 	f32 roofY  = gpMap->checkRoof(v->x, mPosition.y + 80.0f, v->z, &roof);
 	mWallPlane = wall;
 
@@ -266,7 +269,8 @@ int TMario::barProcess()
 
 	if (passable1 == true && passable2 == true) {
 		mPosition.x = mHolder->mPosition.x;
-		mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
+		f32 holderY = mHolder->mPosition.y;
+		mPosition.y = holderY + mHolderHeightDiff;
 		mPosition.z = mHolder->mPosition.z;
 	} else {
 		mPosition = pos;
@@ -294,20 +298,25 @@ int TMario::barProcess()
 BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
                          const Vec& curr)
 {
+	BOOL isLow;
+	const TBGCheckData* ground;
+	JGeometry::TVec3<f32> newPos;
+
 	if (mVel.y > 0.0f)
 		return false;
 
-	if ((curr.x - prev.x) * mVel.x + (curr.z - prev.z) * mVel.z > 0.0f)
+	f32 dz = curr.z - prev.z;
+	f32 dx = curr.x - prev.x;
+	if (dx * mVel.x + dz * mVel.z > 0.0f)
 		return false;
 
-	JGeometry::TVec3<f32> newPos;
 	newPos.x = curr.x - 60.0f * wall->getNormal().x;
 	newPos.z = curr.z - 60.0f * wall->getNormal().z;
 
-	const TBGCheckData* ground;
 	checkGroundPlane(newPos.x, curr.y + 160.0f, newPos.z, &newPos.y, &ground);
 
-	if (newPos.y - curr.y <= 100.0f)
+	isLow = newPos.y - curr.y <= 100.0f;
+	if (isLow)
 		return false;
 
 	if (mFloorPosition.x < newPos.y + 160.0f)
@@ -326,6 +335,12 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	mSlopeAngle      = matan(ground->getNormal().z, ground->getNormal().x);
 	mFaceAngle.y     = matan(wall->getNormal().z, wall->getNormal().x) + 0x8000;
 	return true;
+}
+
+// TODO: fabricated helper; both hang guards materialize this eligibility test.
+static inline BOOL canHang(TMario* mario)
+{
+	return mario->getHeldObject() == nullptr && !mario->onYoshi();
 }
 
 int TMario::checkGroundAtJumping(const Vec& target, int param_2)
@@ -389,13 +404,10 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 				if (checkFlag(MARIO_FLAG_VISIBLE))
 					onFlag(MARIO_FLAG_UNK200);
 
-				if (param_2 & 0x2) {
-					BOOL canHang = (mHeldObject == nullptr && !onYoshi());
-					if (canHang && mRoofPlane->isFence())
-						roofCode = 4;
-					else
-						roofCode = 0;
-				}
+				if ((param_2 & 0x2) && canHang(this) && mRoofPlane->isFence())
+					roofCode = 4;
+				else
+					roofCode = 0;
 			}
 		}
 	}
@@ -417,19 +429,17 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 		wall2Passable = true;
 	}
 
-	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0) {
-		BOOL canHang = (mHeldObject == nullptr && !onYoshi());
-		if (canHang == 1) {
-			mWallPlane = wall2;
-			if (hangonCheck(wall2, target, pos))
-				wallCode = 3;
-			else
-				wallCode = 0;
-		}
+	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0
+	    && canHang(this) == 1) {
+		mWallPlane = wall2;
+		if (hangonCheck(wall2, target, pos))
+			wallCode = 3;
+		else
+			wallCode = 0;
 	} else if (wall1Passable == 0 || wall2Passable == 0) {
-		mWallPlane = wall1 != nullptr ? wall1 : wall2;
-		s16 diff   = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
-		           - (mFaceAngle.y + 0x8000);
+		mWallPlane                          = wall1 != nullptr ? wall1 : wall2;
+		const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
+		s16 diff   = matan(normal.z, normal.x) - (mFaceAngle.y + 0x8000);
 		s16 maxAng = mJumpParams.mClashAngle.get();
 		if (-maxAng < diff && diff < maxAng)
 			wallCode = 2;
@@ -464,7 +474,8 @@ BOOL TMario::isFallCancel()
 void TMario::fallProcess()
 {
 	if (mStatus == MARIO_STATUS_DIVE) {
-		mVel.y -= mDivingParams.mGravity.get();
+		f32 gravity = mDivingParams.mGravity.get();
+		mVel.y -= gravity;
 		if (mVel.y < -75.0f)
 			mVel.y = -75.0f;
 	} else {
@@ -473,9 +484,11 @@ void TMario::fallProcess()
 		} else if ((mStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
 		            || mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 		           && mVel.y < 0.0f) {
-			mVel.y -= mJumpParams.mSpinJumpGravity.get();
+			f32 gravity = mJumpParams.mSpinJumpGravity.get();
+			mVel.y -= gravity;
 		} else {
-			mVel.y -= mJumpParams.mGravity.get();
+			f32 gravity = mJumpParams.mGravity.get();
+			mVel.y -= gravity;
 		}
 		if (onYoshi()) {
 			mYoshi->thinkHoldOut();
@@ -488,17 +501,17 @@ void TMario::fallProcess()
 int TMario::jumpProcess(int param_1)
 {
 	int result = 0;
-	f32 speed  = std::sqrtf(mVel.x * mVel.x + mVel.z * mVel.z);
+	Vec next;
+	f32 horizontalSpeed = std::sqrtf(mVel.x * mVel.x + mVel.z * mVel.z);
 
-	if (speed > mJumpParams.mJumpingMax.get()) {
-		mVel.x = mVel.x * (mJumpParams.mJumpingMax.get() / speed);
-		mVel.z = mVel.z * (mJumpParams.mJumpingMax.get() / speed);
+	if (horizontalSpeed > mJumpParams.mJumpingMax.get()) {
+		mVel.x = mVel.x * (mJumpParams.mJumpingMax.get() / horizontalSpeed);
+		mVel.z = mVel.z * (mJumpParams.mJumpingMax.get() / horizontalSpeed);
 	}
 
-	Vec next;
-	next.x  = mPosition.x + 0.25f * mVel.x;
-	next.y  = mPosition.y + 0.25f * mVel.y;
-	next.z  = mPosition.z + 0.25f * mVel.z;
+	next.x  = getPosition().x + 0.25f * mVel.x;
+	next.y  = getPosition().y + 0.25f * mVel.y;
+	next.z  = getPosition().z + 0.25f * mVel.z;
 	int ret = checkGroundAtJumping(next, param_1);
 	if (ret != 0)
 		result = ret;

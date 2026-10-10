@@ -66,7 +66,6 @@ TElecNokonokoSaveLoadParams::TElecNokonokoSaveLoadParams(const char* param_1)
 }
 
 bool TElecNokonoko::mReflectSw = true;
-u8 TElecNokonoko::mCarapaceJntIndex;
 
 static const char* dennoko_bastable[] = {
 	"/scene/dennoko/bas/dennoko_catch1.bas",
@@ -244,6 +243,7 @@ void TElecNokonoko::attackToMario()
 	mSpine->pushNerve(&TNerveElecNokonokoAttack::theNerve());
 }
 
+// TODO: Instructions match; .sdata2 order differs due to unused sqrt data.
 void TElecNokonoko::calcRootMatrix()
 {
 	TSpineEnemy::calcRootMatrix();
@@ -259,17 +259,17 @@ void TElecNokonoko::calcRootMatrix()
 			        PARTICLE_MS_DNK_BIRI, mMActor->getModel()->getAnmMtx(7), 1,
 			        this);
 			if (emitter)
-				emitter->setGlobalScale(mScaling);
+				emitter->setGlobalScale(getScaling());
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_DNK_SPARK_L, mMActor->getModel()->getAnmMtx(7), 1,
 			    this);
 			if (emitter)
-				emitter->setGlobalScale(mScaling);
+				emitter->setGlobalScale(getScaling());
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 			    PARTICLE_MS_DNK_SPARK_R, mMActor->getModel()->getAnmMtx(7), 1,
 			    this);
 			if (emitter)
-				emitter->setGlobalScale(mScaling);
+				emitter->setGlobalScale(getScaling());
 		}
 	}
 	if (mCurrentBckAnm == 2) {
@@ -277,18 +277,18 @@ void TElecNokonoko::calcRootMatrix()
 		    PARTICLE_MS_DNK_SHIBIRE_A, mMActor->getModel()->getAnmMtx(0), 1,
 		    this);
 		if (emitter)
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		MtxPtr mtx = mMActor->getModel()->getAnmMtx(8);
 		unk1A8.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    PARTICLE_MS_DNK_HIBANA, &unk1A8, 1, this);
 		if (emitter)
-			emitter->setGlobalScale(mScaling);
+			emitter->setGlobalScale(getScaling());
 		if (mMActor->getFrameCtrl(0)->checkPass(72.0f)) {
 			emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 			    PARTICLE_MS_BOMB_LIMIT, &unk1A8, 1, this);
 			if (emitter)
-				emitter->setGlobalScale(mScaling);
+				emitter->setGlobalScale(getScaling());
 		}
 	}
 }
@@ -308,14 +308,14 @@ BOOL TElecNokonoko::receiveMessage(THitActor* param_1, u32 param_2)
 		kill();
 	}
 
-	if (param_2 == HIT_MESSAGE_TAKE && mHolder == nullptr) {
+	if (param_2 == HIT_MESSAGE_TAKE && getHolder() == nullptr) {
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mHolder = (TTakeActor*)param_1;
 		return true;
 	}
 
 	if ((param_2 == HIT_MESSAGE_PUT || param_2 == HIT_MESSAGE_THROWN)
-	    && mHolder == param_1) {
+	    && getHolder() == param_1) {
 		mHolder = nullptr;
 		return true;
 	}
@@ -341,6 +341,7 @@ BOOL TElecNokonoko::receiveMessage(THitActor* param_1, u32 param_2)
 	return false;
 }
 
+// TODO: frame-only mismatch: 0x60 instead of 0x50; vector at 0x44, not 0x30.
 bool TElecNokonoko::isResignationAttack()
 {
 	f32 shootRange = unk1A0->mSLCarapaceShootRange.get();
@@ -354,7 +355,8 @@ bool TElecNokonoko::isResignationAttack()
 
 void TElecNokonoko::behaveToFindMario()
 {
-	mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
+	const TNerveBase<TLiveActor>* nerve = &TNerveWalkerGraphWander::theNerve();
+	mSpine->pushAfterCurrent(nerve);
 	mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 	mSpine->pushAfterCurrent(&TNerveElecNokonokoTurn::theNerve());
 	setGoalPath((THitActor*)gpMarioAddress);
@@ -490,6 +492,7 @@ TElecCarapace::TElecCarapace(const char* param_1)
 {
 }
 
+// TODO: Instructions match; .sdata2 includes dead-stripped duplicate sqrt data.
 void TElecCarapace::loadInit(TSpineEnemy* param_1, const char* param_2)
 {
 	TEnemyAttachment::loadInit(param_1, param_2);
@@ -503,7 +506,8 @@ void TElecCarapace::loadInit(TSpineEnemy* param_1, const char* param_2)
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk150 = 0;
 	mSpine->initWith(&TNerveElecCarapaceMove::theNerve());
-	if (TMsRange<s32>(0, 300).rand() < 150)
+	s32 random = TMsRange<s32>(0, 300).rand();
+	if (random < 150)
 		unk174 = 0;
 	mHeadHeight = 80.0f;
 }
@@ -604,6 +608,8 @@ void TElecCarapace::appear()
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
+// TODO: getPoint inline expansion and vector temporary stack slots still
+// differ.
 void TElecCarapace::shoot()
 {
 	unk180 = 0;
@@ -629,10 +635,19 @@ void TElecCarapace::shoot()
 	setZigParameter();
 }
 
+// TODO: fabricated; recover the distance inline shared by enemy code.
+static inline f32 dist(const JGeometry::TVec3<f32>& a,
+                       const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> tmp = a;
+	tmp -= b;
+	return tmp.length();
+}
+
 void TElecCarapace::setZigParameter()
 {
 	f32 factor = TMsRange<f32>(3.0f, 5.0f).rand();
-	unk178     = factor * (unk104.getPoint() - mPosition).length();
+	unk178     = factor * dist(getUnk104().getPoint(), mPosition);
 	unk17C     = TMsRange<f32>(20.0f, 30.0f).rand();
 }
 
@@ -642,25 +657,30 @@ void TElecCarapace::bind()
 	TEnemyAttachment::bind();
 }
 
+// TODO: Instructions match; unused weak sqrt data shifts the rotation constant
+// from the retail .sdata2 offset 0x44 to 0x48.
 void TElecCarapace::calcRootMatrix()
 {
 	MsMtxSetXYZRPH(mMActor->getModel()->getBaseTRMtx(), mPosition.x,
 	               mPosition.y, mPosition.z, mRotation.x, mRotation.y + unk188,
 	               mRotation.z);
-	mMActor->getModel()->setBaseScale(mScaling);
-	SMSGetMSound()->startSoundActor(MSD_SE_EN_DENNOKO_SPARK2, &mPosition, 0,
-	                                nullptr, 0, 4);
+	getMActor()->getModel()->setBaseScale(mScaling);
+	if (SMSGetMSound()->gateCheck(MSD_SE_EN_DENNOKO_SPARK2))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_EN_DENNOKO_SPARK2, getPosition(), 0, nullptr, 0, 4);
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_DNK_BIRI, mMActor->getModel()->getAnmMtx(2), 1, this);
+	    PARTICLE_MS_DNK_BIRI, getMActor()->getModel()->getAnmMtx(2), 1, this);
 	if (emitter)
 		emitter->setGlobalScale(unk16C->mScaling);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_DNK_SPARK_L, mMActor->getModel()->getAnmMtx(2), 1, this);
+	    PARTICLE_MS_DNK_SPARK_L, getMActor()->getModel()->getAnmMtx(2), 1,
+	    this);
 	if (emitter)
 		emitter->setGlobalScale(unk16C->mScaling);
 	emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    PARTICLE_MS_DNK_SPARK_R, mMActor->getModel()->getAnmMtx(2), 1, this);
+	    PARTICLE_MS_DNK_SPARK_R, getMActor()->getModel()->getAnmMtx(2), 1,
+	    this);
 	if (emitter)
 		emitter->setGlobalScale(unk16C->mScaling);
 }
@@ -708,6 +728,7 @@ BOOL TElecCarapace::receiveMessage(THitActor* param_1, u32 param_2)
 	return false;
 }
 
+// TODO: Instructions match; dead-stripped sqrt data shifts .sdata2 references.
 void TElecCarapace::reflect(THitActor* param_1)
 {
 	if (unk170 == param_1)
@@ -722,7 +743,8 @@ void TElecCarapace::reflect(THitActor* param_1)
 		direction.x += 1.0f;
 	MsVECNormalize(&direction, &direction);
 	JGeometry::TVec3<f32> normal(0.0f, 0.0f, 0.0f);
-	if (fabsf(direction.z / direction.x) > 1.0f) {
+	f32 ratio = direction.z / direction.x;
+	if (fabsf(ratio) > 1.0f) {
 		if (param_1->mPosition.z > mPosition.z)
 			normal.z = 1.0f;
 		else
@@ -828,21 +850,27 @@ DEFINE_NERVE(TNerveElecNokonokoTurn, TLiveActor)
 	TElecNokonoko* self = (TElecNokonoko*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(16);
-		self->setGoalPath((THitActor*)gpMarioAddress);
+		TPathNode goal((THitActor*)gpMarioAddress);
+		self->setGoalPath(goal);
 	}
-	if (self->isBckAnm(15)
-	    && MsIsInSight(self->mPosition, self->mRotation.y, SMS_GetMarioPos(),
-	                   self->getSaveParams()->getSLSearchLength(), 60.0f, 0.0f))
-		self->setBckAnm(14);
+	if (self->isBckAnm(15)) {
+		f32 searchLength = self->getSaveParams()->getSLSearchLength();
+		if (MsIsInSight(self->mPosition, self->mRotation.y, SMS_GetMarioPos(),
+		                searchLength, 60.0f, 0.0f))
+			self->setBckAnm(14);
+	}
 	if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(16))
 			self->setBckAnm(15);
 		else if (self->isBckAnm(14))
 			return true;
 	}
-	if (0.0f == self->mPosition.x - self->unk194->mPosition.x
-	    && 0.0f == self->mPosition.z - self->unk194->mPosition.z)
-		self->mPosition.x += 1.0f;
+	f32 dx = self->mPosition.x - self->unk194->mPosition.x;
+	if (0.0f == dx) {
+		f32 dz = self->mPosition.z - self->unk194->mPosition.z;
+		if (0.0f == dz)
+			self->mPosition.x += 1.0f;
+	}
 	self->walkToCurPathNode(0.0f, self->getTurnSpeed(), 0.0f);
 	if (spine->getTime() > 500)
 		return true;
@@ -867,8 +895,10 @@ DEFINE_NERVE(TNerveElecNokonokoFreeze, TLiveActor)
 		self->unk1A8.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
 		    PARTICLE_MS_DNK_HIBANA, &self->unk1A8, 1, self);
-		if (emitter != nullptr)
-			emitter->setGlobalScale(self->mScaling);
+		if (emitter != nullptr) {
+			emitter->setGlobalDynamicsScale(self->getScaling());
+			emitter->setGlobalParticleScale(self->getScaling());
+		}
 	}
 	if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(7)) {
@@ -951,6 +981,38 @@ DEFINE_NERVE(TNerveElecCarapaceMove, TLiveActor)
 	return false;
 }
 
+// @todo: preserve elecNokonoko.cpp's .sdata2 order @3652 through @5355.
+// The UNUSED sqrt constant @3664 otherwise displaces Turn's @3879 and @3880.
+void order_sdata2(f32* constants, f64* conversion)
+{
+	constants[0]  = 64.0f;
+	constants[1]  = 100.0f;
+	constants[2]  = 3.0f;
+	constants[3]  = 88.0f;
+	constants[4]  = 25.0f;
+	constants[5]  = 60.0f;
+	constants[6]  = 1.0f;
+	constants[7]  = 62.0f;
+	constants[8]  = -1.0f;
+	constants[9]  = -7.0f;
+	constants[10] = 2.0f;
+	constants[11] = 182.044449f;
+	constants[12] = 5.0f;
+	constants[13] = 3.05175781e-05f;
+	constants[14] = 20.0f;
+	constants[15] = 30.0f;
+	conversion[0] = 4503601774854144.0;
+	constants[16] = 50.0f;
+	constants[17] = -1.5f;
+	constants[18] = 80.0f;
+	constants[19] = 58.0f;
+	constants[20] = 72.0f;
+	constants[21] = 140.0f;
+	constants[22] = 300.0f;
+	constants[23] = 500.0f;
+	constants[24] = 180.0f;
+}
+
 DEFINE_NERVE(TNerveElecCarapaceWait, TLiveActor)
 {
 	if (spine->getTime() > 60)
@@ -958,6 +1020,8 @@ DEFINE_NERVE(TNerveElecCarapaceWait, TLiveActor)
 	return false;
 }
 
+// TODO: frame/slots still differ (0x98 instead of 0xC0).
+// No unexplained padding retained.
 DEFINE_NERVE(TNerveElecCarapaceReturn, TLiveActor)
 {
 	TElecCarapace* self = (TElecCarapace*)spine->getBody();
@@ -981,7 +1045,7 @@ DEFINE_NERVE(TNerveElecCarapaceReturn, TLiveActor)
 	if (self->unk188 > 360.0f)
 		self->unk188 -= 360.0f;
 	self->mPosition += self->unk18C;
-	JGeometry::TVec3<f32> hostPos = self->unk16C->mPosition;
+	Vec hostPos = self->unk16C->mPosition;
 	if (self->unk18C.x > 0.0f) {
 		if (self->mPosition.x > hostPos.x)
 			self->mPosition.x = hostPos.x;

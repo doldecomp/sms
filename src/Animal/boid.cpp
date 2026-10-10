@@ -37,6 +37,7 @@ TBoidLeader::TBoidLeader(int num, const char* name)
 	mFlags |= FLAG_SIMULATE;
 }
 
+// TODO: Nonmatching vector-operator temporaries and stack layout.
 void TBoidLeader::calcBoids()
 {
 	TBoid* i;
@@ -63,8 +64,8 @@ void TBoidLeader::calcBoids()
 
 				f32 radius = mNeighborRadius;
 				if (d2 < radius * radius) {
-					i->mSeparationForce += d / d2 * radius;
-					j->mSeparationForce -= d / d2 * radius;
+					i->mSeparationForce += d / d2 * mNeighborRadius;
+					j->mSeparationForce -= d / d2 * mNeighborRadius;
 
 					i->mAlignmentForce += j->mHeading;
 					j->mAlignmentForce += i->mHeading;
@@ -108,10 +109,9 @@ void TBoidLeader::calcBoids()
 
 				f32 targetYaw = MsGetRotFromZaxisY(force);
 				f32 diff      = MsAngleDiff(targetYaw, b->mRotation.y);
-				if (diff < -0.01f)
-					diff = -mYawSpeed;
-				else if (diff > 0.01f)
-					diff = mYawSpeed;
+				diff          = diff < -0.01f  ? -mYawSpeed
+				                : diff > 0.01f ? mYawSpeed
+				                               : diff;
 
 				f32 newYaw = b->mRotation.y + diff;
 				while (newYaw >= 360.0f)
@@ -183,7 +183,7 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 		force.set(mGoal.getPoint());
 		force += mGoalOffset;
 		force -= pos;
-		f32 len = force.length();
+		f32 len = JGeometry::TUtil<f32>::sqrt(force.squared());
 		if (0.0f < len) {
 			force /= len;
 			force *= mGoalStrength;
@@ -196,6 +196,7 @@ TBoidLeader::calcGoalForce(const JGeometry::TVec3<f32>& pos) const
 
 JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 {
+	JGeometry::TVec3<f32> away;
 	JGeometry::TVec3<f32> force = boid->mSeparationForce;
 	force += boid->mAlignmentForce * mAlignmentStrength;
 	force += boid->mCohesionForce;
@@ -210,7 +211,7 @@ JGeometry::TVec3<f32> TBoidLeader::calcForces(const TBoid* boid) const
 	if (0.0f < mFleeRadius) {
 		f32 tmp = mFleeRadius;
 
-		JGeometry::TVec3<f32> away = boid->mPosition;
+		away = boid->mPosition;
 		away -= mFleeTarget.getPoint();
 		f32 d2 = away.squared();
 		if (0.0f < d2 && d2 < tmp * tmp) {

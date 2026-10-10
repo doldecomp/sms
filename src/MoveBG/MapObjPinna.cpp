@@ -21,6 +21,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <MoveBG/ItemManager.hpp>
 #include <MoveBG/Item.hpp>
+#include <MoveBG/MapObjFence.hpp>
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjPinna.hpp>
 #include <Player/MarioAccess.hpp>
@@ -53,6 +54,20 @@ s32 TFerrisWheel::becomeCalmlyCallback(uintptr_t param_1, u32 param_2)
 	return 0;
 }
 
+// TODO: fabricated; matches the frame-step idiom in MapObjMamma and the FPRs.
+static inline void addAnmFrame(TLiveActor* actor, int type, f32 speed)
+{
+	actor->getMActor()->getFrameCtrl(type)->setFrame(
+	    speed + actor->getMActor()->getFrameCtrl(type)->getFrame());
+}
+
+// TODO: fabricated; binding the sound owner matches r30 at 0x801AE4F0.
+static inline void startFerrisWheelSound(MSound* sound, const Vec* position)
+{
+	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, position, 0,
+	                       &sound->unk80, 0, 4);
+}
+
 void TFerrisWheel::control()
 {
 	TMapObjBase::control();
@@ -67,12 +82,10 @@ void TFerrisWheel::control()
 	if (unk140 > VERSION_SELECT(GMSJ01(SMSGetAnmFrameRate()),
 	                            GMSP01(rotate_frame_rate))
 	                 / 4.0f) {
-		MSound* sound = SMSGetMSound();
-		sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
-		                       &sound->unk80, 0, 4);
+		startFerrisWheelSound(SMSGetMSound(), &mPosition);
 	}
-	J3DFrameCtrl* frameCtrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
-	frameCtrl->setFrame(frameCtrl->getFrame() + unk140);
+	// TODO: frame-only mismatch: the stack frame is 0x10 short.
+	addAnmFrame(this, ANM_TYPE_BCK, unk140);
 	for (int i = 0; i < unk138; ++i) {
 		TMapObjBase* gondola = unk13C[i];
 		MtxPtr mtx           = getModel()->getAnmMtx(i + 1);
@@ -118,10 +131,11 @@ TFerrisWheel::TFerrisWheel(const char* param_1)
 
 void THorizontalViking::updateTrans()
 {
-	f32 sin     = sinf(3.14f * (unk148 / 180.0f));
+	f32 sin     = ::sin(3.14f * (unk148 / 180.0f));
 	mPosition.x = unk138 * sin + mInitialPosition.x;
-	f32 cos     = cosf(3.14f * (unk148 / 180.0f));
-	mPosition.y = mYOffset + (unk138 * (1.0f - cos) + mInitialPosition.y);
+	mPosition.y = getObjCollisionHeightOffset()
+	              + (unk138 * (1.0f - cosf(3.14f * (unk148 / 180.0f)))
+	                 + mInitialPosition.y);
 }
 
 void THorizontalViking::moveNormal()
@@ -428,7 +442,8 @@ void TShellCup::control()
 
 void TShellCup::attachCoin(TCoin* coin, int index)
 {
-	if (!coin->checkLiveFlag(LIVE_FLAG_DEAD)) {
+	bool dead = coin->checkLiveFlag(LIVE_FLAG_DEAD);
+	if (!dead) {
 		coin->mPosition.set(unk138[index].mPosition);
 	}
 }
@@ -468,8 +483,9 @@ void TShellCup::loadAfter()
 	unk49C = gpItemManager->newAndRegisterCoinReal();
 	unk4A0 = gpItemManager->newAndRegisterCoinReal();
 	unk498->setEventId(2);
+	u32 eventId = unk498->getEventId();
 	if (!TFlagManager::getInstance()->getBlueCoinFlag(
-	        SMSGetMarDirector()->getCurrentMap(), unk498->getEventId())) {
+	        SMSGetMarDirector()->getCurrentMap(), eventId)) {
 		unk498->makeObjAppeared();
 		unk138[0].unk80 = unk498;
 	}
@@ -517,14 +533,16 @@ TShellCup::TShellCup(const char* param_1)
 
 f32 TMerrygoround::mRotSpeed = 0.1f;
 
+// TODO: .sdata2 offsets differ due to the duplicate weak sqrt's 3.0f.
 void TMerrygoround::control()
 {
 	TMapObjBase::control();
 	mRotation.y += mRotSpeed;
 	if (mRotation.y > 360.0f)
 		mRotation.y -= 360.0f;
+	MtxPtr mtx;
 	for (int i = 0; i < ARRAY_COUNT(unk138); ++i) {
-		MtxPtr mtx = getModel()->getAnmMtx(unk140[i]);
+		mtx = getModel()->getAnmMtx(unk140[i]);
 		unk138[i]->setModelMtx(mtx);
 		unk138[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	}
@@ -537,7 +555,7 @@ void TMerrygoround::control()
 		unk1A0->offHitFilter(HIT_FILTER_NO_COLLISION);
 	else
 		unk1A0->onHitFilter(HIT_FILTER_NO_COLLISION);
-	MtxPtr mtx = getModel()->getAnmMtx(unk1A4);
+	mtx = getModel()->getAnmMtx(unk1A4);
 	unk1A0->mPosition.set(mtx[0][3], mtx[1][3] - 600.0f, mtx[2][3]);
 }
 
@@ -549,8 +567,8 @@ void TMerrygoround::initMapObj()
 	int eggCount  = 0;
 	int poleCount = 0;
 	for (u16 i = 1; i < getModel()->getModelData()->getJointNum(); ++i) {
-		const char* name
-		    = getModel()->getModelData()->getJointName()->getName(i);
+		JUTNameTab* jointNames = getModel()->getModelData()->getJointName();
+		const char* name       = jointNames->getName(i);
 		if (strstr(name, "egg")) {
 			unk140[eggCount] = i;
 			eggCount++;
@@ -633,8 +651,9 @@ void TBalloonKoopaJr::kill()
 	emitAndScale(MAPOBJ_BALLOONKOOPAJRA, 0, &unk148);
 	emitAndScale(MAPOBJ_BALLOONKOOPAJRB, 0, &unk148);
 	TFlagManager::getInstance()->incFlag(MSF_BALLOON_COUNT, 1);
-	SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_SLAP, &mPosition, 0,
-	                                nullptr, 0, 4);
+	if (SMSGetMSound()->gateCheck(MSD_SE_BS_BSPAKU_SLAP))
+		MSoundSESystem::MSoundSE::startSoundActor(
+		    MSD_SE_BS_BSPAKU_SLAP, getPosition(), 0, nullptr, 0, 4);
 }
 
 void TBalloonKoopaJr::load(JSUMemoryInputStream& param_1)
@@ -687,6 +706,18 @@ void TAmiKing::initMapObj()
 	     ++i) { }
 }
 
+// TODO: fabricated; preserves the boolean merge at 0x801AC280-0x801AC290.
+static inline bool isFenceRotating(TMapObjBase* obj)
+{
+	if (obj->isState(TRevolvingFenceInner::STATE_UNK3)
+	    || obj->isState(TRevolvingFenceInner::STATE_UNK5)
+	    || obj->isState(TRevolvingFenceInner::STATE_UNK4)
+	    || obj->isState(TRevolvingFenceInner::STATE_UNK6))
+		return true;
+	return false;
+}
+
+// TODO: frame is 0x90 instead of 0xd8; mState needs a reload after state 3.
 void TAmiKing::moveObject()
 {
 	TLiveActor::moveObject();
@@ -727,9 +758,8 @@ void TAmiKing::moveObject()
 		kill();
 	} else {
 		TMapObjBase* obj = (TMapObjBase*)mGroundPlane->getActor();
-		if (obj && obj->isActorType(ACTOR_TYPE_FENCE_REVOLVE_INNER)
-		    && (obj->isState(3) || obj->isState(5) || obj->isState(4)
-		        || obj->isState(6))) {
+		if (obj && obj->getActorType() == ACTOR_TYPE_FENCE_REVOLVE_INNER
+		    && isFenceRotating(obj)) {
 			unk138 = 1;
 			setVelocityAndFlag10(5.0f, 10.0f, -10.0f);
 			mMActor->setBck("amiking_flying1_start");
@@ -764,11 +794,13 @@ void TAmiKing::calcRootMatrix()
 		    PARTICLE_MS_POI_ZZZ, &unk13C, 1, this);
 		if (emitter)
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_AMIKING_SPARK, &mPosition, 0,
-		                                nullptr, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_EN_AMIKING_SPARK))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_AMIKING_SPARK, getPosition(), 0, nullptr, 0, 4);
 	} else {
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_AMIKING_FLY, &mPosition, 0,
-		                                nullptr, 0, 4);
+		if (SMSGetMSound()->gateCheck(MSD_SE_EN_AMIKING_FLY))
+			MSoundSESystem::MSoundSE::startSoundActor(
+			    MSD_SE_EN_AMIKING_FLY, getPosition(), 0, nullptr, 0, 4);
 	}
 }
 
@@ -787,6 +819,7 @@ void TAmiKing::touchPlayer(THitActor* param_1)
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 }
 
+// TODO: vector temporary slots differ (0x50/0x5c vs 0x54/0x64).
 void TPinnaCoaster::control()
 {
 	TMapObjBase::control();
@@ -797,7 +830,7 @@ void TPinnaCoaster::control()
 	getMActor()->calc();
 
 	MtxPtr mtx = getModel()->getAnmMtx(0);
-	mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	mPosition.set(JGeometry::TVec3<f32>(mtx[0][3], mtx[1][3], mtx[2][3]));
 
 	f32 speed = JGeometry::TVec3<f32>(mPosition - unk140).length();
 	if (switchSnd)
@@ -828,4 +861,21 @@ TPinnaCoaster::TPinnaCoaster(const char* param_1)
     , unk138(nullptr)
 {
 	unk140.zero();
+}
+
+// @todo: .sdata2 prefix @3272 through @3545; the duplicate weak sqrt
+// emits 3.0f before this prefix. Remove this anchor when that is resolved.
+void order_sdata2(f32* constants)
+{
+	constants[0]  = 182.044449f;
+	constants[1]  = 0.25f;
+	constants[2]  = 0.5f;
+	constants[3]  = 200.0f;
+	constants[4]  = 2.0f;
+	constants[5]  = 4.0f;
+	constants[6]  = 5.0f;
+	constants[7]  = 10.0f;
+	constants[8]  = -10.0f;
+	constants[9]  = 90.0f;
+	constants[10] = 1.0f;
 }

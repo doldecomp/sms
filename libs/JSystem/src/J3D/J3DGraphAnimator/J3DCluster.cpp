@@ -97,8 +97,9 @@ void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 			for (u16 j = 0; j < keyNum; j++) {
 				J3DClusterKey* clusterKey = &keys[j];
 
-				int flag = clusterKey->mPosFlag[i];
-				f32* src = &vtxPosSrc[(clusterKey->mPosFlag[i] & ~0xE000) * 3];
+				int flag   = clusterKey->mPosFlag[i];
+				int srcIdx = clusterKey->mPosFlag[i] & ~0xE000;
+				f32* src   = &vtxPosSrc[srcIdx * 3];
 
 				Vec deform;
 				deform.x = src[0];
@@ -132,13 +133,14 @@ void J3DDeformer::deform(J3DModel* model, u16 idx, f32* weightList)
 					J3DClusterKey* clusterKey = &keys[j];
 
 					int flag = clusterKey->mNrmFlag[i];
-					f32* src
-					    = &vtxNrmSrc[(clusterKey->mNrmFlag[i] & ~0xE000) * 3];
 
 					Vec deform;
-					deform.x = src[0];
-					deform.y = src[1];
-					deform.z = src[2];
+					deform.x
+					    = vtxNrmSrc[(clusterKey->mNrmFlag[i] & ~0xE000) * 3];
+					deform.y = vtxNrmSrc[(clusterKey->mNrmFlag[i] & ~0xE000) * 3
+					                     + 1];
+					deform.z = vtxNrmSrc[(clusterKey->mNrmFlag[i] & ~0xE000) * 3
+					                     + 2];
 
 					if (flag & 0x8000)
 						deform.x = -deform.x;
@@ -329,10 +331,12 @@ void J3DSkinDeform::initMtxIndexArray(J3DModelData* modelData)
 
 				u16 useMtxIdxBuf[10];
 				for (s32 k = 0; k < vtxCount; k++) {
-					u8* vtx     = &dl[3 + vtxSize * k];
-					u8 pnmtxIdx = ((u32)(*(u8*)&vtx[pnmtxIdxOffs])) / 3;
-					u16 posIdx  = *(u16*)&vtx[posOffs];
-					u16 nrmIdx  = *(u16*)&vtx[nrmOffs];
+					u8* vtx = dl + vtxSize * k;
+					// Skip the command byte and vertex count.
+					u8 pnmtxIdx
+					    = ((u32)(*(u8*)((vtx += 3) + pnmtxIdxOffs))) / 3;
+					u16 posIdx = *(u16*)&vtx[posOffs];
+					u16 nrmIdx = *(u16*)&vtx[nrmOffs];
 
 					u16 useMtxIdx = shapeMtx->getUseMtxIndex(pnmtxIdx);
 					if (useMtxIdx == 0xFFFF) {

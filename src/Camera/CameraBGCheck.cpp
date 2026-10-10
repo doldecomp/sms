@@ -8,6 +8,8 @@
 #include <MarioUtil/MapUtil.hpp>
 #include <JSystem/JMath.hpp>
 
+#define ABS(x) ((x) >= 0 ? (x) : -(x))
+
 void CPolarSubCamera::calcInHouseNoSub_()
 {
 	if (unk2CA != -1) {
@@ -37,26 +39,29 @@ void CPolarSubCamera::calcInHouseNo_(bool param_1)
 			return;
 		}
 
-		JGeometry::TVec3<f32> local_120[18];
-		S16Vec SStack_134[9];
+		JGeometry::TVec3<f32> local_120[2][9];
+		JGeometry::TVec3<f32> local_12C;
+		S16Vec SStack_134;
 
-		CLBCalcNearNinePos(local_120, SStack_134, unk124, unk148,
+		CLBCalcNearNinePos(local_120[0], &SStack_134, unk124, unk148,
 		                   getFinalAngleZ(), mNear, mFovy, mAspect);
 
 		f32 fVar1 = unk2C4;
-		for (int i = 0; i < 9; ++i) {
-			local_120[9 + i].scaleAdd(fVar1, local_120[i], unk25C);
+		for (int j = 1; j < 2; ++j) {
+			for (int i = 0; i != 9; ++i) {
+				local_120[j][i].scaleAdd(fVar1, local_120[0][i], unk25C);
+			}
 		}
 
+		f32 fVar2;
 		f32 tmp = unk2C0;
 		for (int i = 0; i < 9; ++i) {
 			for (int j = 0; j < 2; ++j) {
-				f32 fVar2 = 0.0f;
+				fVar2 = 0.0f;
 				for (int k = 0; k < 2; ++k) {
-					JGeometry::TVec3<f32> local_12C(local_120[j * 9 + i].x,
-					                                local_120[j * 9 + i].y
-					                                    - fVar2 + -78.0f,
-					                                local_120[j * 9 + i].z);
+					local_12C.set(local_120[j][i].x,
+					              local_120[j][i].y - fVar2 + -78.0f,
+					              local_120[j][i].z);
 					const TBGCheckData* local_138;
 					gpMap->checkGroundIgnoreWaterSurface(local_12C, &local_138);
 					if (local_138 && local_138->isOob()) {
@@ -87,9 +92,11 @@ bool CPolarSubCamera::isNeedGroundCheck_()
 	} else if (mMode != CAMERA_MODE_SLIDER
 	           && (isNormalCameraSpecifyMode(mMode)
 	               || isTowerCameraSpecifyMode(mMode))) {
-		f32 a = mCurrentParams->mDistMin * JMASSin(mCurrentParams->mXAngleMin);
+		f32 a = mCurrentParams->mDistMin;
+		a *= JMASSin(mCurrentParams->mXAngleMin);
 		f32 b = mCurrentParams->mDistMax * JMASSin(mCurrentParams->mXAngleMax);
-		f32 distY = mPosition.y - mTarget.y;
+		f32 distY = mPosition.y;
+		distY -= mTarget.y;
 		if (a > b)
 			b = a;
 		if (distY > 1.25f * b) {
@@ -152,25 +159,28 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 			for (int i = 0; i < n; ++i) {
 				TBGCheckData* wall = record.mResultWalls[i];
 				if (should_clip_fabricated(wall)) {
-					JGeometry::TVec3<f32> posArg = mCurrentTarget.mPosition;
-					JGeometry::TVec3<f32> posCam = posArg;
+					// 0: scaled camera position; 1: full check position.
+					Vec pos[2];
+					pos[1] = mCurrentTarget.mPosition;
+					pos[0] = pos[1];
 
-					f32 sd = posCam.dot(wall->getNormal())
+					f32 sd = pos[0].x * wall->getNormal().x
+					         + pos[0].y * wall->getNormal().y
+					         + pos[0].z * wall->getNormal().z
 					         + wall->getPlaneDistance();
-					f32 absSd = sd >= 0.0f ? sd : -sd;
-					if (absSd < radius) {
+					if (ABS(sd) < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
 						             * mSaveEx->mSLWallRevisionRatio.get();
-						posCam.x += pushSd * wall->getNormal().x;
-						posCam.z += pushSd * wall->getNormal().z;
-						mCurrentTarget.mPosition.x = posCam.x;
-						mCurrentTarget.mPosition.z = posCam.z;
+						pos[0].x += pushSd * wall->getNormal().x;
+						pos[0].z += pushSd * wall->getNormal().z;
+						mCurrentTarget.mPosition.x = pos[0].x;
+						mCurrentTarget.mPosition.z = pos[0].z;
 						f32 pushArg                = radius - sd;
-						posArg.x += pushArg * wall->getNormal().x;
-						posArg.z += pushArg * wall->getNormal().z;
-						param_1->x = posArg.x;
-						param_1->z = posArg.z;
+						pos[1].x += pushArg * wall->getNormal().x;
+						pos[1].z += pushArg * wall->getNormal().z;
+						param_1->x = pos[1].x;
+						param_1->z = pos[1].z;
 					}
 				}
 			}
@@ -190,18 +200,17 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 		roofHeight = -512.5f;
 		skipCheck  = true;
 	} else {
-		roofHeight = gpMap->checkRoof(param_1.x,
-		                              mPreviousTarget.mPosition.y
-		                                  - mSaveEx->mSLRoofChangeY.get(),
-		                              param_1.z, &roof);
+		const f32& roofChg = mSaveEx->mSLRoofChangeY.get();
+		roofHeight         = gpMap->checkRoof(
+            param_1.x, mPreviousTarget.mPosition.y - roofChg, param_1.z, &roof);
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {
-		if (mCurrentTarget.mPosition.y
-		    > roofHeight - mSaveEx->mSLRoofHeight.get()) {
-			mCurrentTarget.mPosition.y
-			    = roofHeight - mSaveEx->mSLRoofHeight.get();
-			moved = true;
+		f32 currentY  = mCurrentTarget.mPosition.y;
+		f32 roofLimit = roofHeight - mSaveEx->mSLRoofHeight.get();
+		if (currentY > roofLimit) {
+			mCurrentTarget.mPosition.y = roofLimit;
+			moved                      = true;
 		}
 	}
 	return moved;

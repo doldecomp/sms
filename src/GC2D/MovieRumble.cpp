@@ -4,11 +4,8 @@
 #include <MarioUtil/RumbleType.hpp>
 #include <MarioUtil/ToolData.hpp>
 #include <System/THPRender.hpp>
+#include <System/DummyStrings.hpp>
 #include <stdio.h>
-
-// TODO: removeme
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TMovieRumble::TMovieRumble(const TTHPRender* param_1)
     : unk10(param_1)
@@ -49,12 +46,16 @@ void TMovieRumble::movement()
 
 void TMovieRumble::checkRumbleOn()
 {
-	if (unk24 != -1 && unk1C <= unk10->getFrameNumber()) {
-		SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
-		unk28 = true;
+	if (unk24 != -1) {
+		int frame = unk10->getFrameNumber();
+		if (unk1C <= frame) {
+			SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
+			unk28 = true;
+		}
 	}
 }
 
+// TODO: fakematch; perform must call checkRumbleOff out of line.
 #pragma dont_inline on
 void TMovieRumble::checkRumbleOff()
 {
@@ -65,14 +66,14 @@ void TMovieRumble::checkRumbleOff()
 		unk28 = false;
 	}
 }
-#pragma dont_inline off
+#pragma dont_inline off // TODO: scope the checkRumbleOff workaround.
 
 void TMovieRumble::readCurInfo()
 {
-	int group = unk18;
+	Koga::ToolData* toolData = unk14;
+	int group                = unk18;
 
-	if (isValid() && unk14->isIndexValid(group)) {
-		Koga::ToolData* toolData = unk14;
+	if (isValid() && toolData->isIndexValid(group)) {
 		toolData->GetValue(group, "start_frame", unk1C);
 		toolData->GetValue(group, "end_frame", unk20);
 		const char* type;

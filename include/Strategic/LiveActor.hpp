@@ -167,6 +167,9 @@ public:
 		result.add(velocity);
 	}
 	JGeometry::TVec3<f32> getVelocity() const { return mVelocity; }
+	// fabricated: const-reference twin of getVelocity(); some call sites only
+	// match through a reference-returning inline
+	const JGeometry::TVec3<f32>& getVelocityRef() const { return mVelocity; }
 	void setVelocity(const JGeometry::TVec3<f32>& v) { mVelocity = v; }
 	void setVelocityAndFlag10(f32 x, f32 y, f32 z)
 	{

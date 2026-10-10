@@ -33,7 +33,11 @@ public:
 	void advanceReadIdx() { mReadIdx = getLoopIdx(mReadIdx + 1); }
 
 	// fabricated
-	void* read() { return mData[getLoopIdx(mReadIdx + 1)]; }
+	void* read()
+	{
+		int index = getLoopIdx(mReadIdx + 1);
+		return mData[index];
+	}
 
 	// fabricated
 	void push(void* value)

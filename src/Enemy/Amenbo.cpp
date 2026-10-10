@@ -62,8 +62,9 @@ void TAmenbo::init(TLiveManager* manager)
 	mSearchDisableCooldown = 0;
 	mOutOfWaterDeathTimer  = 0;
 	for (int i = 0; i < 4; ++i) {
-		unk1EC[i].mJointIdx
-		    = getModel()->getModelData()->getMaterialName()->getIndex(
+		EffectOnJoint* effect = &unk1EC[i];
+		effect->mJointIdx
+		    = getModel()->getModelData()->getJointName()->getIndex(
 		        cJointNames[i]);
 	}
 }
@@ -98,9 +99,9 @@ void TAmenbo::bind()
 		return;
 
 	JGeometry::TVec3<f32> local_14 = mPosition;
+	local_14.y += mHeadHeight;
 	local_14 += mPositionDelta;
 	local_14 += mVelocity;
-	local_14.y += mHeadHeight;
 
 	mVelocity.y -= getGravityY();
 
@@ -140,10 +141,12 @@ void TAmenbo::bind()
 void TAmenbo::control()
 {
 	if (mWaterGunHitCooldown > 0)
-		mWaterGunHitCooldown--;
+		mWaterGunHitCooldown = mWaterGunHitCooldown - 1;
 
-	if (mSearchDisableCooldown > 0)
-		mSearchDisableCooldown--;
+	if (mSearchDisableCooldown > 0) {
+		int cooldown           = mSearchDisableCooldown - 1;
+		mSearchDisableCooldown = cooldown;
+	}
 
 	updateCollision();
 
@@ -174,7 +177,7 @@ void TAmenbo::checkMarioWaterIn()
 	JGeometry::TVec3<f32> local_60;
 
 	if (!isOverTerritory(&local_60) && mSearchDisableCooldown <= 0) {
-		if (isFreeze() && isChangedBlock()) {
+		if (isFreeze() && !isChangedBlock()) {
 			decideTargetOnFingingMario();
 			mSpine->reset();
 			mSpine->setNext(&TNerveAmenboTurn::theNerve());
@@ -246,11 +249,16 @@ void TAmenbo::forceKill()
 
 bool TAmenbo::isCollidMove(THitActor* param_1) { return param_1 != this; }
 
-bool TAmenbo::doKeepDistance() { return !isAttacking(); }
+bool TAmenbo::doKeepDistance()
+{
+	BOOL attacking = isAttacking();
+	return !attacking;
+}
 
 void TAmenbo::attackToMario()
 {
-	if (isAttacking())
+	BOOL attacking = isAttacking();
+	if (attacking)
 		sendAttackMsgToMario();
 }
 
@@ -279,7 +287,8 @@ void TAmenbo::updateRipple()
 		    = gpMarioParticleManager->emitAndBindToPosPtr(
 		        AMENBO_JPA_MS_AME_HAMON, &effect->mPos, 1, effect)) {
 			JGeometry::TVec3<f32> scale(3.0f, 3.0f, 3.0f);
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalDynamicsScale(scale);
+			emitter->setGlobalParticleScale(scale);
 		}
 	}
 }
@@ -339,7 +348,8 @@ void TAmenbo::doAdjustTarget()
 
 void TAmenbo::doChangeWaitAnm()
 {
-	if (checkCurAnmEnd(ANM_TYPE_BCK)) {
+	bool ended = checkCurAnmEnd(ANM_TYPE_BCK);
+	if (ended) {
 		if (mMActor->checkCurAnm("amenbo_wait1_start", ANM_TYPE_BCK))
 			changeBck("amenbo_wait1_loop", 1.0f);
 		else if (mMActor->checkCurAnm("amenbo_wait1_loop", ANM_TYPE_BCK))
@@ -436,7 +446,7 @@ bool TAmenbo::isOverTerritory(JGeometry::TVec3<f32>* param_1) const
 	*param_1 -= mPosition;
 	param_1->y = 0.0f;
 	f32 range  = getSaveParam2()->mTerritoryRange.get();
-	return param_1->squared() < range * range;
+	return range * range < param_1->squared();
 }
 
 bool TAmenbo::isAttacking() const
@@ -464,8 +474,8 @@ bool TAmenbo::isChangedBlock() const
 
 bool TAmenbo::isWaterFromWaterGun(THitActor* param_1)
 {
-	return gpModelWaterManager->getParticleFlag((TWaterHitActor*)param_1)
-	       & 0x40;
+	TWaterHitActor* hit = (TWaterHitActor*)param_1;
+	return gpModelWaterManager->getParticleFlag(hit) & 0x40;
 }
 
 void TAmenbo::activateJumpBase()
@@ -600,6 +610,7 @@ DEFINE_NERVE(TNerveAmenboPreAttack, TLiveActor)
 	return false;
 }
 
+// TODO: frame and animation-end boolean conversion remain nonmatching.
 DEFINE_NERVE(TNerveAmenboWalk, TLiveActor)
 {
 	TAmenbo* self = (TAmenbo*)spine->getBody();

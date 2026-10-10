@@ -51,9 +51,11 @@ void MAnmSound::startAnimSound(void* interface, u32 id,
 			break;
 
 		case 7: {
-			u32 bVar2 = actor->mGroundNumber >> 24;
-			u32 a     = bVar2 & 0xF;
-			u8 b      = bVar2 >> 4;
+			u32 a;
+			u32 ground = actor->mGroundNumber;
+			u32 bVar2  = ground >> 24;
+			a          = (ground & 0x0F000000) >> 24;
+			u8 b       = bVar2 >> 4;
 			MSGMSound->startMarioVoice(id, a, b);
 			return;
 		}
@@ -73,13 +75,19 @@ void MAnmSound::setSpeedModifySound(JAISound* sound,
 		JAIAnimeSound::setSpeedModifySound(sound, frame_data, speed);
 }
 
+// TODO: fabricated distance boundary; keeps sqrtf out of line in the NPC call.
+static f32 vec_dist(const Vec& pos, const Vec& mario)
+{
+	f32 dy = std::powf(pos.y - mario.y, 2.0f);
+	f32 dx = std::powf(pos.x - mario.x, 2.0f);
+	f32 dz = std::powf(pos.z - mario.z, 2.0f);
+	return std::sqrtf(dx + dy + dz);
+}
+
 f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
 {
 	if (MSGMSound->cameraLooksAtMario()) {
-		const Vec* mario = MSGMSound->unkAC[0].mPosition;
-		return std::sqrtf(std::powf(pos.x - mario->x, 2.0f)
-		                  + std::powf(pos.y - mario->y, 2.0f)
-		                  + std::powf(pos.z - mario->z, 2.0f));
+		return vec_dist(pos, *MSGMSound->unkAC[0].mPosition);
 	}
 
 	return 0.0f;
@@ -92,8 +100,9 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 	if (MSGMSound->gateCheck(sound_id)) {
 		JAIAnimeSoundData* ptr = mData;
 
-		if (ptr->mEntries[mDataCounter].unk10 & 0xFFFF0000) {
-			if (ptr->mEntries[mDataCounter].unk10 & 0xFF000000) {
+		u32 flags = ptr->mEntries[mDataCounter].unk10 & 0xFFFF0000;
+		if (flags) {
+			if (flags & 0xFF000000) {
 				u32 uVar5 = mLoopCount;
 				u32 uVar6 = (ptr->mEntries[mDataCounter].unk10 >> 24) + 1;
 				if (uVar5 != 0) {
@@ -103,10 +112,9 @@ void MAnmSoundNPC::startAnimSound(void* interface, u32 sound_id,
 				}
 			}
 
-			if (ptr->mEntries[mDataCounter].unk10 & 0xFF0000) {
-				u8 b = ptr->mEntries[mDataCounter].unk10 >> 16;
-				b += 1;
-				b *= JAIConst::random.get_ufloat_1();
+			if (flags & 0xFF0000) {
+				u8 b = JAIConst::random.get_uint8(
+				    ((ptr->mEntries[mDataCounter].unk10 & 0xFF0000) >> 16) + 1);
 				if (b != 0)
 					return;
 			}

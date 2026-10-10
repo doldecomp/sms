@@ -435,9 +435,7 @@ void TFlagManager::restore()
 void TFlagManager::firstStart()
 {
 	resetCard();
-	memcpy(mSavedCardBools, mCardBools, sizeof(mCardBools));
-	memcpy(mSavedCardInts, mCardInts, sizeof(mCardInts));
-	mSavedLastSaveTime = mLastSaveTime;
+	saveSuccess();
 	correctFlag();
 }
 

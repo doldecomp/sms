@@ -14,13 +14,16 @@ TSpider::TSpider()
 
 TSpider::~TSpider() { }
 
+// TODO: frame-only mismatch (0x130 here, 0x158 in retail); no stack padding.
 void TSpider::bind(TLiveActor* param_1)
 {
 	TSpineEnemy* enemy = (TSpineEnemy*)param_1;
 
 	JGeometry::TVec3<f32> local_114 = enemy->mPositionDelta;
 	JGeometry::TVec3<f32> local_50  = enemy->mPosition;
-	local_50 += local_114;
+	local_50.add(local_114);
+	f32 linearY = local_114.y;
+	f32 linearZ = local_114.z;
 
 	if (enemy->isAirborne()) {
 		JGeometry::TVec3<f32> local_5C = enemy->mVelocity;
@@ -33,15 +36,17 @@ void TSpider::bind(TLiveActor* param_1)
 		enemy->mVelocity = local_5C;
 	}
 
+	f32 someY = local_50.y;
+	f32 someZ = local_50.z;
 	const TBGCheckData* local_60;
-	f32 fVar3 = gpMap->checkGround(
-	    local_50.x, local_50.y + enemy->getHeadHeight(), local_50.z, &local_60);
+	f32 fVar3 = gpMap->checkGround(local_50.x, someY + enemy->getHeadHeight(),
+	                               someZ, &local_60);
 	fVar3 += 1.0f;
 
-	if (enemy->mPosition.y - local_50.y > 0.0f) {
+	if (enemy->mPosition.y - someY > 0.0f) {
 		const TBGCheckData* local_64;
 		f32 dVar7 = gpMap->checkGround(
-		    local_50.x, enemy->mPosition.y + enemy->getHeadHeight(), local_50.z,
+		    local_50.x, enemy->mPosition.y + enemy->getHeadHeight(), someZ,
 		    &local_64);
 		dVar7 += 1.0f;
 		if (dVar7 > fVar3) {
@@ -65,6 +70,7 @@ void TSpider::bind(TLiveActor* param_1)
 	if (local_50.y <= fVar3) {
 		local_50.y       = fVar3;
 		enemy->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
+
 		enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		enemy->offLiveFlag(LIVE_FLAG_UNK8000);
 	} else {
@@ -80,7 +86,7 @@ void TSpider::bind(TLiveActor* param_1)
 	JGeometry::TVec3<f32> local_bc;
 	f32 unaff_f29;
 
-	bool b   = gpMap->isTouchedWallsAndMoveXZ(&local_90);
+	BOOL b   = gpMap->isTouchedWallsAndMoveXZ(&local_90);
 	local_bc = local_90.mCenter;
 	if (!b) {
 		if (unk8 > 0) {
@@ -101,7 +107,8 @@ void TSpider::bind(TLiveActor* param_1)
 			mWallAttachRate = 0.0f;
 	} else {
 		JGeometry::TVec3<f32> normal = local_90.mResultWalls[0]->mNormal;
-		if (normal.dot(local_114) < 0.0f) {
+		if (normal.x * local_114.x + normal.y * linearY + normal.z * linearZ
+		    < 0.0f) {
 			unaff_f29 = enemy->getMarchSpeed();
 			enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
 			enemy->offLiveFlag(LIVE_FLAG_UNK8000);

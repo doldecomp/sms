@@ -20,10 +20,13 @@ bool TModelDataNode::isSameName(const char* file_name, u16 key) const
 void TModelDataNode::registerDataAndJoinNewNode(SDLModelData* data,
                                                 const char* bmd_file)
 {
+	JUT_ASSERT(data);
+	JUT_ASSERT(bmd_file);
 	mData     = data;
 	mFileName = bmd_file;
 	mKey      = JDrama::TNameRef::calcKeyCode(bmd_file);
 	mNext     = new TModelDataNode;
+	JUT_ASSERT(mNext);
 }
 
 TModelDataNode::TModelDataNode()
@@ -37,9 +40,12 @@ TModelDataNode::TModelDataNode()
 SDLModelData* TModelDataKeeper::loadModelData(const char* file_name, u32 flags,
                                               const char* folder)
 {
+	JUT_ASSERT(file_name);
+	JUT_ASSERT(folder);
 	char fullPath[256];
 	sprintf(fullPath, "%s/%s", folder, file_name);
-	void* res             = JKRGetResource(fullPath);
+	void* res = JKRGetResource(fullPath);
+	JUT_ASSERT(res);
 	J3DModelData* data    = J3DModelLoaderDataBase::load(res, flags);
 	SDLModelData* sdlData = new SDLModelData(data);
 	return sdlData;
@@ -49,7 +55,7 @@ SDLModelData* TModelDataKeeper::createAndKeepData(const char* file_name,
                                                   u32 flags)
 {
 	TModelDataNode* node = &mHead;
-	while (node->getNext())
+	while (node->getNext() != nullptr)
 		node = node->getNext();
 
 	SDLModelData* data = loadModelData(file_name, flags, mFolder);
@@ -70,8 +76,9 @@ int TModelDataKeeper::getIndex(const char* file_name) const
 	u16 key = JDrama::TNameRef::calcKeyCode(file_name);
 
 	const TModelDataNode* node = &mHead;
-	for (u32 i = 0; node && node->getData(); ++i) {
-		if (node->isSameName(file_name, key))
+	for (u32 i = 0; node && node->getData() != nullptr; ++i) {
+		bool sameName = node->isSameName(file_name, key);
+		if (sameName)
 			return i;
 		node = node->getNext();
 	}
@@ -120,7 +127,7 @@ MActor* TMActorKeeper::getMActor(const char* model_data_name) const
 	if (!getModelDataKeeper())
 		return mActors[0];
 
-	int index = getModelDataKeeper()->getIndex(model_data_name);
+	int index = mModelDataKeeper->getIndex(model_data_name);
 	for (int i = 0; i < mActorNum; ++i) {
 		if (index == mActorModelDataIndices[i])
 			return mActors[i];
@@ -149,20 +156,20 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
-
-	int index = keeper->getIndex(model_data_name);
-
+	int index                = keeper->getIndex(model_data_name);
 	if (index < 0) {
 		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
 		index = keeper->getIndex(model_data_name);
 	}
 
-	return createMActorFromNthData(index, flags);
+	mActorModelDataIndices[mActorNum] = index;
+	SDLModelData* data                = keeper->getNthData(index);
+	return createAndRegister(data, flags);
 }
 
 void TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
-	int num = mModelDataKeeper->getModelDataNum();
+	int num = getModelDataKeeper()->getModelDataNum();
 	for (int i = 0; i < num; ++i)
 		createMActorFromNthData(i, flags);
 }
@@ -192,7 +199,8 @@ TMActorKeeper::TMActorKeeper(TLiveManager* manager)
 		mActorAnmData    = manager->getMActorAnmData();
 	}
 
-	mMActorCapacity        = mModelDataKeeper->getModelDataNum();
+	int modelDataNum       = mModelDataKeeper->getModelDataNum();
+	mMActorCapacity        = modelDataNum;
 	mActorNum              = 0;
 	mActors                = new MActor*[mMActorCapacity];
 	mActorModelDataIndices = new u16[mMActorCapacity];

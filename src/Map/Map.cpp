@@ -1,3 +1,4 @@
+#include <M3DUtil/InfectiousStrings.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/MapModel.hpp>
@@ -26,15 +27,28 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMap* gpMap;
 
+static void initOption()
+{
+	TMapObjOptionWall* wall = new TMapObjOptionWall("オプション用壁");
+	wall->init();
+	TMapObjBase::joinToGroup("マップグループ", wall);
+}
+
+// TODO: UNUSED size is 0x58; mario.MAP records 0x48.
+static void initSirena()
+{
+	SMS_LoadParticle("/scene/mapObj/SandSteam.jpa", MAPOBJ_SANDSTEAM);
+}
+
+// TODO: frame-only mismatch: 0x98-byte frame versus retail's 0xE8.
 static void initMonte()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search("マップグループ"));
+	        JDrama::TNameRefGen::search("インダイレクトシーン"));
 
 	TMapStaticObj* obj = new TMapStaticObj("水インダイレクト");
 	obj->init("SeaIndirect");
@@ -83,19 +97,19 @@ static void initMare()
 
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init1stEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init2ndEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init3rdEvent();
 		group->getChildren().push_back(event);
 	}
@@ -113,6 +127,33 @@ static void initPinnaParco()
 	TMapObjBase::joinToGroup("鏡シーン", mapModelActor);
 }
 #pragma dont_inline off
+
+// TODO: UNUSED size is 0x48; mario.MAP records 0x58.
+static void initPinnaBeach()
+{
+	if (SMSGetMarDirector()->getCurrentStage() == 0)
+		return;
+	TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+}
+
+// TODO: UNUSED size is 0x70; mario.MAP records 0x64.
+static void initBianco()
+{
+	if (SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 9)
+		return;
+	TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+	TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+}
+
+// TODO: UNUSED size is 0x64; mario.MAP records 0x6C.
+static void initDolpic()
+{
+	if (SMSGetMarDirector()->getCurrentStage() == 0)
+		return;
+	TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+	TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+}
 
 static void initStageCommon()
 {
@@ -133,9 +174,9 @@ static void initStageCommon()
 		TMapStaticObj* sea = new TMapStaticObj("波（遠景）");
 		sea->init("sea");
 
-		TMapStaticObj* indirect = new TMapStaticObj("インダイレクト波");
-		indirect->init("SeaIndirect");
-		group->getChildren().push_back(indirect);
+		sea = new TMapStaticObj("インダイレクト波");
+		sea->init("SeaIndirect");
+		group->getChildren().push_back(sea);
 
 		TMapObjWaterFilter* filter
 		    = new TMapObjWaterFilter("水中カメラフィルタ");
@@ -163,19 +204,11 @@ static void initStage()
 	initStageCommon();
 
 	switch (SMSGetMarDirector()->getCurrentMap()) {
-	case 1: { // Bianco
-		if (SMSGetMarDirector()->getCurrentStage() == 5
-		    || SMSGetMarDirector()->getCurrentStage() == 9)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
-		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	case 1: // Bianco
+		initBianco();
 		break;
-	}
 	case 2: // Ricco
-		if (SMSGetMarDirector()->getCurrentStage() == 0)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
-		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+		initDolpic();
 		break;
 	case 9: // Mare
 		initMare();
@@ -184,33 +217,29 @@ static void initStage()
 		initMonte();
 		break;
 	case 6: // Pinna
-		if (SMSGetMarDirector()->getCurrentStage() == 0)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+		initPinnaBeach();
 		break;
 	case 5: // Sirena
-		SMS_LoadParticle("/scene/mapObj/SandSteam.jpa", 0x6A);
+		initSirena();
 		break;
 	case 13: // Pinna Parco
 		initPinnaParco();
 		break;
-	case 15: { // Option
-		TMapObjOptionWall* wall = new TMapObjOptionWall("オプション用壁");
-		wall->init();
-		TMapObjBase::joinToGroup("マップグループ", wall);
+	case 15: // Option
+		initOption();
 		break;
-	}
 	}
 }
 
 void TMap::updateDelfino()
 {
-	int cube = gpCubeArea->unk1C;
-	if (cube != mWarp->unk8) {
+	TMapWarp* warp = mWarp;
+	int cube       = gpCubeArea->unk1C;
+	if (cube != warp->unk8) {
 		if (cube != -1)
-			mWarp->changeModel(cube);
+			warp->changeModel(cube);
 		else if (SMSGetMarDirector()->getCurrentStage() != 0)
-			mWarp->changeModel(3);
+			warp->changeModel(3);
 	}
 }
 
@@ -230,6 +259,7 @@ static void updateRicco()
 	SMSGetMSound()->startSoundActor(0x3000, &pos, 0, nullptr, 0, 4);
 }
 
+// TODO: frame-only mismatch: 0x70-byte frame versus retail's 0x110.
 void TMap::update()
 {
 	switch (SMSGetMarDirector()->mMap) {
@@ -246,17 +276,12 @@ void TMap::update()
 		break;
 	}
 
-	if (SMSGetMarDirector()->unk124 != 0)
-		return;
-
-	if (gpCamera->isDemoCamera())
+	if (SMSGetMarDirector()->unk124 != 0 || gpCamera->isDemoCamera())
 		return;
 
 	if (SMSGetMarDirector()->getCurrentMap() == 0x39
-	    || SMSGetMarDirector()->getCurrentMap() == 0x10)
-		return;
-
-	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
+	    || SMSGetMarDirector()->getCurrentMap() == 0x10
+	    || SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
 		return;
 
 	const JGeometry::TVec3<f32>& camPos = gpCamera->getUnk124();
@@ -296,6 +321,11 @@ const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
 	return mCollisionData->intersectLine(param_1, param_2, param_3, param_4);
 }
 
+bool TMap::isTouchedOneWall(const JGeometry::TVec3<f32>& pos, f32 radius) const
+{
+	return isTouchedOneWall(pos.x, pos.y, pos.z, radius);
+}
+
 bool TMap::isTouchedOneWall(f32 x, f32 y, f32 z, f32 radius) const
 {
 	return isTouchedOneWallAndMoveXZ(&x, y, &z, radius);
@@ -305,8 +335,7 @@ bool TMap::isTouchedOneWallAndMoveXZ(f32* x, f32 y, f32* z, f32 radius) const
 {
 	TBGWallCheckRecord record(*x, y, *z, radius, 1, 0);
 
-	int r = mCollisionData->checkWalls(&record);
-	if (r != 0 ? true : false) {
+	if (bool r = isTouchedWallsAndMoveXZ(&record)) {
 		*x = record.mCenter.x;
 		*z = record.mCenter.z;
 		return true;
@@ -363,6 +392,12 @@ f32 TMap::checkGroundExactY(f32 x, f32 y, f32 z,
                             const TBGCheckData** result) const
 {
 	return mCollisionData->checkGround(x, y - -78.0f, z, 0, result);
+}
+
+f32 TMap::checkGroundExactY(const JGeometry::TVec3<f32>& pos,
+                            const TBGCheckData** result) const
+{
+	return checkGroundExactY(pos.x, pos.y, pos.z, result);
 }
 
 f32 TMap::checkGround(const JGeometry::TVec3<f32>& pos,
@@ -433,4 +468,4 @@ TMap::TMap(const char* name)
 	gpMap = this;
 }
 
-TMap::~TMap() { }
+inline TMap::~TMap() { }

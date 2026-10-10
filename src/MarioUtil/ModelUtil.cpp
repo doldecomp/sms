@@ -46,17 +46,21 @@ void TMultiBtk::update()
 	}
 }
 
+void SMS_DumpJ3DModel(J3DModel*) { }
+
+// TODO: .sdata2 mismatch; this TU needs the retail PCH in the build config.
 void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
                                JGeometry::TVec3<f32>* pos, f32* arg2)
 {
+	const TLiveActor* actor;
 	const TBGCheckData* checkData;
-	f32 temp_f1
+	f32 groundY
 	    = gpMap->checkGround(pos->x, 100.0f + pos->y, pos->z, &checkData);
 
-	if (checkData->mActor != nullptr && ((pos->y - temp_f1) < 50.0f)) {
-		if (riding_info->unk0 == nullptr
-		    || riding_info->unk0 != checkData->mActor) {
-			riding_info->unk0 = checkData->mActor;
+	if (checkData->getActor() != nullptr && ((pos->y - groundY) < 50.0f)) {
+		actor = checkData->getActor();
+		if (riding_info->unk0 == nullptr || riding_info->unk0 != actor) {
+			riding_info->unk0 = actor;
 			SMS_RideMoveCalcLocalPos(riding_info, *pos);
 		} else {
 			TMtx34f mtx;

@@ -78,15 +78,20 @@ void TRocketManager::loadAfter() { JDrama::TNameRef::loadAfter(); }
 
 TSpineEnemy* TRocketManager::createEnemyInstance() { return new TRocket; }
 
+// TODO: .sdata2 differs: the emitted identity33 duplicate adds 1.0f before
+// "main".
 void TRocketManager::initSetEnemies()
 {
+	TGraphWeb* graph;
 	for (int i = 0; i < mObjNum; ++i) {
-		TGraphWeb* graph = gpConductor->getGraphByName("main");
-		TRocket* rocket  = (TRocket*)getObj(i);
+		graph           = gpConductor->getGraphByName("main");
+		TRocket* rocket = (TRocket*)getObj(i);
 		if (rocket->checkLiveFlag(LIVE_FLAG_DEAD) && !graph->isDummy()) {
+			TMsRange<s32> nodeRange(0, graph->getNodeNum());
+			int nodeIndex          = nodeRange.rand();
+			const TGraphNode* node = &graph->getGraphNode(nodeIndex);
 			JGeometry::TVec3<f32> position;
-			graph->getGraphNode(TMsRange<s32>(0, graph->getNodeNum()).rand())
-			    .getPoint(&position);
+			node->getPoint(&position);
 			rocket->mPosition = position;
 			rocket->mPosition.y += 5.0f;
 			rocket->onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -218,8 +223,9 @@ void TRocket::reset()
 
 void TRocket::attackToMario()
 {
-	if (mSpine->getCurrentNerve() == &TNerveRocketWait::theNerve()
-	    && ((TRocketManager*)mManager)->unk60)
+	const TNerveBase<TLiveActor>* waitNerve    = &TNerveRocketWait::theNerve();
+	const TNerveBase<TLiveActor>* currentNerve = mSpine->getCurrentNerve();
+	if (currentNerve == waitNerve && ((TRocketManager*)getManager())->unk60)
 		mSpine->pushNerve(&TNerveRocketPossessedNozzle::theNerve());
 }
 
@@ -234,19 +240,22 @@ void TRocket::bind()
 		TBGWallCheckRecord record(mPosition.x, mPosition.y, mPosition.z,
 		                          getWallRadius(), 1, 0);
 		if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
-			const TLiveActor* actor = record.mResultWalls[0]->getActor();
-			if (actor)
-				((TLiveActor*)actor)->receiveMessage(this, HIT_MESSAGE_ATTACK);
+			if (record.mResultWalls[0]->getActor() != nullptr) {
+				TLiveActor* actor
+				    = (TLiveActor*)record.mResultWalls[0]->getActor();
+				actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+			}
 			kill();
 			return;
 		}
 		if (mSpine->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
 			TLiveActor::bind();
 			if (!isAirborne()) {
-				const TLiveActor* actor = getGroundPlane()->getActor();
-				if (actor)
-					((TLiveActor*)actor)
-					    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
+				if (getGroundPlane()->getActor() != nullptr) {
+					TLiveActor* actor
+					    = (TLiveActor*)getGroundPlane()->getActor();
+					actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+				}
 				kill();
 			}
 		}
@@ -255,10 +264,15 @@ void TRocket::bind()
 	}
 }
 
+// TODO: nonmatching direction reads and 0x98 stack frame (currently 0x50).
 void TRocket::setDeadAnm()
 {
-	TRocketManager* manager    = (TRocketManager*)mManager;
-	manager->unk68->mPos.value = mPosition;
+	TRocketManager* manager = (TRocketManager*)mManager;
+	// Copy through Vec* (the old TVec3 copy-constructor body) so the local
+	// stays on the stack instead of being forwarded by the base-init copy.
+	JGeometry::TVec3<f32> position;
+	*(Vec*)&position           = *(Vec*)&mPosition;
+	manager->unk68->mPos.value = position;
 	gpModelWaterManager->emitRequest(*manager->unk68);
 	if (unk1A0)
 		releaseNozzle();
@@ -361,6 +375,7 @@ DEFINE_NERVE(TNerveRocketPossessedNozzle, TLiveActor)
 	return false;
 }
 
+// TODO: nonmatching 0x70 stack frame (target 0xb8) and yaw result register.
 DEFINE_NERVE(TNerveRocketFly, TLiveActor)
 {
 	TRocket* self = (TRocket*)spine->getBody();
@@ -386,7 +401,8 @@ DEFINE_NERVE(TNerveRocketFly, TLiveActor)
 	if (!self->isBckAnm(1))
 		self->setBckAnm(1);
 
-	self->mRotation.x = MsGetRotFromZaxis(self->getVelocity()).x;
+	self->mRotation.x
+	    = MsGetRotFromZaxis(JGeometry::TVec3<f32>(self->mVelocity)).x;
 	self->flyBehavior();
 
 	return false;

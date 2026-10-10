@@ -23,6 +23,8 @@
 #include <dolphin/gx.h>
 #include <math.h>
 
+#include <System/DummyStrings.hpp>
+
 TMBindShadowParts::TMBindShadowParts(J3DModel* param_1, u8 param_2,
                                      TMBindShadowBody* param_3, f32 param_4)
     : mMinRadius(0.01f)
@@ -47,6 +49,13 @@ TMBindShadowParts::TMBindShadowParts(J3DModel* param_1, u8 param_2,
 	mMinRadius = param_4;
 }
 
+// fabricated name: inline return matches the retail angle-conversion window.
+static inline f32 calcShadowAngle(f32 z, f32 x)
+{
+	return matan(z, x) * (360.0f / 65536.0f);
+}
+
+// TODO: frame-only mismatch: 0xB8 rather than retail's 0x128.
 void TMBindShadowParts::calc(f32 param_1)
 {
 	if (!unk14)
@@ -66,18 +75,19 @@ void TMBindShadowParts::calc(f32 param_1)
 	f32 x1, z1, x2, z2;
 	x1 = mJointMtx[0][3] - lightX * h1;
 	z1 = mJointMtx[2][3] - lightZ * h1;
-	x2 = mChildMtx[0][3] - lightX * h2;
-	z2 = mChildMtx[2][3] - lightZ * h2;
+	JGeometry::TVec3<f32> childPos;
+	childPos.x = mChildMtx[0][3] - lightX * h2;
+	childPos.y = y2;
+	childPos.z = mChildMtx[2][3] - lightZ * h2;
+	x2         = childPos.x;
+	z2         = childPos.z;
 	JGeometry::TVec3<f32> center;
-	center.set(0.5f * (x1 + x2), 0.5f * (y1 + y2), 0.5f * (z1 + z2));
-	f32 cx = center.x;
-	f32 cy = center.y;
-	f32 cz = center.z;
+	center.set(0.5f * (x1 + x2), 0.5f * (y1 + childPos.y), 0.5f * (z1 + z2));
 
 	f32 radiusX;
 	f32 radiusZ;
-	radiusZ = fabsf(cz - z2);
-	radiusX = fabsf(cx - x2);
+	radiusX = fabsf(center.x - x2);
+	radiusZ = fabsf(center.z - z2);
 
 	if (mIsBody)
 		mMinRadius = mBody->mBodyRadius;
@@ -108,13 +118,13 @@ void TMBindShadowParts::calc(f32 param_1)
 	}
 
 	TCircleShadowRequest request;
-	request.mPosition.set(cx, cy, cz);
+	request.mPosition.set(center.x, center.y, center.z);
 	request.mRadiusX = radiusX;
 	request.mRadiusZ = radiusZ;
 
 	if (!mIsCircle && mBody->mActor->getActorType() != ACTOR_TYPE_MARIO
 	    && mBody->mActor->getActorType() != ACTOR_TYPE_E_MARIO) {
-		f32 rotY = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
+		f32 rotY = calcShadowAngle(z2 - z1, x2 - x1);
 		if (radiusX > radiusZ)
 			rotY -= 90.0f;
 		request.mRotationY = rotY;
@@ -240,7 +250,7 @@ void TMBindShadowBody::entryDrawShadow()
 {
 	f32 eps = JGeometry::TUtil<f32>::epsilon();
 
-	if (SMS_GetMarioPos().epsilonEquals(mActor->mPosition, eps)) {
+	if (mActor->mPosition.epsilonEquals(SMS_GetMarioPos(), eps)) {
 		if (!gpBindShadowManager->unk65) {
 			gpBindShadowManager->unk65 = true;
 			calc();
@@ -396,7 +406,7 @@ void TMBindShadowManager::reset()
 
 void TMBindShadowManager::initEntry(TMBindShadowBody* param_1)
 {
-	mBodyList.push_back(param_1);
+	mBodyList.insert(mBodyList.end(), param_1);
 }
 
 void TMBindShadowManager::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -509,7 +519,6 @@ static inline void loadPosMtxImm(MtxPtr mtx)
 void TMBindShadowManager::drawShadowVolume(bool param_1,
                                            TAlphaShadowQuad* param_2)
 {
-	f32 height = 50.0f;
 	if (param_2->mRequest->mShadowType == SHADOW_TYPE_SQUARE) {
 		if (param_2->mSquareOutline == nullptr) {
 			SMS_SettingDrawShape(mModelDatas[2]->getModelData(), 0);
@@ -517,6 +526,7 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		} else {
 			int topIndices[9]    = { 2, 1, 0, 3, 2, 0, 4, 3, 0 };
 			int bottomIndices[9] = { 0, 1, 2, 0, 2, 3, 0, 3, 4 };
+			f32 height           = 50.0f;
 
 			GXClearVtxDesc();
 			GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1332,29 +1342,28 @@ void TMBindShadowManager::calcVtx()
 	for (i = 0; i < mRequestNum; i++) {
 		request = &mRequests[i];
 
-		JGeometry::TVec3<f32> oldPos = request->mPosition;
+		JGeometry::TVec3<f32> oldPos(request->mPosition,
+		                             JGeometry::TVec3<f32>::ASSIGN_COPY);
 
 		if (request->mShadowType == SHADOW_TYPE_SQUARE) {
-			JGeometry::TVec3<f32> foot = request->mPosition;
-			JGeometry::TVec3<f32> head = foot;
+			JGeometry::TVec3<f32> foot(request->mPosition,
+			                           JGeometry::TVec3<f32>::ASSIGN_COPY);
+			JGeometry::TVec3<f32> head(foot,
+			                           JGeometry::TVec3<f32>::ASSIGN_COPY);
 			head.y += mSquareShadowHeight;
 
 			const JGeometry::TVec3<f32>& light = gpBindShadowManager->mLightDir;
 
 			f32 h1 = foot.y - foot.y;
 			f32 h2 = head.y - foot.y;
-			JGeometry::TVec3<f32> projectedFoot;
-			projectedFoot.set(foot.x - light.x * h1, foot.y,
-			                  foot.z - light.z * h1);
-			JGeometry::TVec3<f32> projectedHead;
-			projectedHead.set(head.x - light.x * h2, foot.y,
-			                  head.z - light.z * h2);
-			request->mPosition.set(0.5f * (projectedHead.x + projectedFoot.x),
-			                       0.5f * (projectedFoot.y + projectedHead.y),
-			                       0.5f * (projectedHead.z + projectedFoot.z));
+			request->mPosition.set(
+			    0.5f * ((head.x - light.x * h2) + (foot.x - light.x * h1)),
+			    0.5f * (foot.y + foot.y),
+			    0.5f * ((head.z - light.z * h2) + (foot.z - light.z * h1)));
 		}
 
-		JGeometry::TVec3<f32> pos = request->mPosition;
+		JGeometry::TVec3<f32> pos(request->mPosition,
+		                          JGeometry::TVec3<f32>::ASSIGN_COPY);
 
 		f32 y;
 		f32 groundY = y = pos.y;
@@ -1380,12 +1389,14 @@ void TMBindShadowManager::calcVtx()
 		if (request->mRadiusX < request->mRadiusZ)
 			radius = request->mRadiusZ;
 
+		JGeometry::TVec3<f32> rotation(90.0f, request->mRotationY, 0.0f);
+
 		f32 treeScale = 1.0f;
-		f32 sx        = 0.08f * request->mRadiusX;
+		f32 sxValue   = 0.08f * request->mRadiusX;
+		f32 sx        = sxValue;
 		f32 sy        = 0.08f * request->mRadiusZ;
 		f32 sz        = 0.08f * (radius * shrink);
 
-		JGeometry::TVec3<f32> rotation(90.0f, request->mRotationY, 0.0f);
 		JGeometry::TVec3<f32> scale(sx * treeScale, sy * treeScale,
 		                            treeScale * sz);
 
@@ -1399,7 +1410,8 @@ void TMBindShadowManager::calcVtx()
 			request->mRadiusX = 1.0f;
 		}
 
-		JGeometry::TVec3<f32> trans = request->mPosition;
+		JGeometry::TVec3<f32> trans(request->mPosition,
+		                            JGeometry::TVec3<f32>::ASSIGN_COPY);
 
 		request->mRadiusX *= 0.8f;
 		request->mRadiusZ *= 0.8f;
@@ -1418,15 +1430,17 @@ void TMBindShadowManager::calcVtx()
 		    && fabsf(groundY - request->mPosition.y) < 1.0f) {
 			bool done = false;
 
-			trans      = oldPos;
-			rotation.x = 0.0f;
-			scale.x    = 1.0f;
-			scale.y    = 1.0f;
-			scale.z    = 1.0f;
+			// Copy as the pre-merge TVec3::operator= did (Vec struct copy).
+			*(Vec*)&trans = *(Vec*)&oldPos;
+			rotation.x    = 0.0f;
+			scale.x       = 1.0f;
+			scale.y       = 1.0f;
+			scale.z       = 1.0f;
 
 			if (oldPos.x >= pos.x && !(oldPos.z < pos.z)) {
-				JGeometry::TVec3<f32> base = oldPos;
-				done                       = true;
+				JGeometry::TVec3<f32> base(oldPos,
+				                           JGeometry::TVec3<f32>::ASSIGN_COPY);
+				done = true;
 
 				f32 dx = pos.x;
 				f32 dz = pos.z;
@@ -1461,7 +1475,8 @@ void TMBindShadowManager::calcVtx()
 			}
 
 			if (!done) {
-				JGeometry::TVec3<f32> base = oldPos;
+				JGeometry::TVec3<f32> base(oldPos,
+				                           JGeometry::TVec3<f32>::ASSIGN_COPY);
 
 				f32 dx = pos.x - base.x;
 				f32 dz = pos.z - base.z;
@@ -1514,8 +1529,8 @@ void TMBindShadowManager::calcVtx()
 	if (mTestSw)
 		return;
 
-	TAlphaShadowQuad* quads       = mQuads;
 	TAlphaShadowBlendQuad* blends = mBlendQuads;
+	TAlphaShadowQuad* quads       = mQuads;
 	TAlphaShadowQuadAry* arrays   = mQuadArys;
 
 	for (int i = 0; i < mQuadAryNum; i++) {

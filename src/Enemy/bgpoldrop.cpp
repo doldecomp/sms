@@ -38,18 +38,20 @@ void TBGPolDrop::move()
 		                               &checkData);
 		dVar3 += 1.0f;
 
-		if (checkData->isIllegalData()) {
+		bool illegalData = checkData->isIllegalData();
+		if (illegalData) {
 			unk58 = 0;
 			return;
 		}
 
-		if (local_14.y < dVar3) {
+		f32 nextY = local_14.y;
+		if (nextY < dVar3) {
 			unk58      = 2;
 			local_14.y = dVar3;
 			unk44.zero();
 			if (!unk50->checkCurBckFromIndex(12)) {
 				unk50->setBckFromIndex(12);
-				unk50->setBckFromIndex(13);
+				unk54->setBckFromIndex(13);
 			}
 
 			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_A, &local_14,

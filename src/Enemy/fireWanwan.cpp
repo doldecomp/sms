@@ -1111,7 +1111,10 @@ void TFireWanwan::calcRootMatrix()
 		return;
 	{
 		MtxPtr mtx = getModel()->getBaseTRMtx();
-		JGeometry::TVec3<f32> v1(mtx[0][1], mtx[1][1], mtx[2][1]);
+		JGeometry::TVec3<f32> v1;
+		v1.x = mtx[0][1];
+		v1.y = mtx[1][1];
+		v1.z = mtx[2][1];
 		JGeometry::TVec3<f32> v2(mtx[0][2], mtx[1][2], mtx[2][2]);
 		v1.normalize();
 		v2.normalize();
@@ -1234,7 +1237,10 @@ void TFireWanwan::updatePollute()
 
 	mPolluteTimer = getSaveParam2()->mPolluteTimerMax.get();
 	MtxPtr mtx    = getModel()->getBaseTRMtx();
-	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
+	JGeometry::TVec3<f32> v1;
+	v1.x = mtx[0][0];
+	v1.y = mtx[1][0];
+	v1.z = mtx[2][0];
 	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, mPosition, v1);
 
 	f32 radius = 375.0f;
@@ -1261,8 +1267,10 @@ void TFireWanwan::updateHitPoint()
 
 void TFireWanwan::emitEffects()
 {
+	JGeometry::TVec3<f32> local_2c;
 	MtxPtr mtx = getModel()->getAnmMtx(mCenterJointIdx);
-	unk1F0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	local_2c.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	unk1F0.set(local_2c);
 
 	if (mHitPoints != 0 && unk194->mIsOnFire) {
 		SMS_EasyEmitParticle(FIREWANWAN_JPA_MS_CAN_YUGAMI, &unk1F0, this,
@@ -1572,10 +1580,10 @@ void TFireWanwan::bind()
 
 	JGeometry::TVec3<f32> vel     = mVelocity;
 	JGeometry::TVec3<f32> velStep = mPositionDelta;
-	velStep += vel;
+	vel += velStep;
 
-	int stepCount = int(velStep.length() / 25.0f) + 1;
-	velStep *= 1.0f / stepCount;
+	int stepCount = int(vel.length() / 25.0f) + 1;
+	vel *= 1.0f / stepCount;
 
 	JGeometry::TVec3<f32> totalNormal(0.0f, 0.0f, 0.0f);
 	int iVar12 = 0;
@@ -1583,9 +1591,10 @@ void TFireWanwan::bind()
 	for (int i = 0; i < stepCount; ++i) {
 		JGeometry::TVec3<f32> boundStep;
 		JGeometry::TVec3<f32> stepNormal;
-		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
+		int collisionNum = bindBody(&boundStep, &stepNormal, vel);
 
 		bVar2 &= isAirborne();
+		iVar12 += collisionNum;
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;
@@ -1633,12 +1642,14 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 	bound_step->zero();
 	normal_sum->zero();
 
-	JGeometry::TVec3<f32> currPos = mPosition;
+	JGeometry::TVec3<f32> currPos(mPosition,
+	                              JGeometry::TVec3<f32>::ASSIGN_COPY);
 
 	bool bVar8 = true;
 
 	for (int i = 0; i < 8; ++i) {
-		JGeometry::TVec3<f32> point = currPos;
+		JGeometry::TVec3<f32> point(currPos,
+		                            JGeometry::TVec3<f32>::ASSIGN_COPY);
 
 		{
 			// Give a man a hammer...
@@ -1654,7 +1665,8 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 		bindPoint(&boundPointStep, point, step, fVar1, &checkRecord);
 		bVar8 &= isAirborne();
 
-		JGeometry::TVec3<f32> pointCorrection = boundPointStep - step;
+		JGeometry::TVec3<f32> pointCorrection(
+		    boundPointStep - step, JGeometry::TVec3<f32>::ASSIGN_COPY);
 		currPos += pointCorrection;
 
 		for (int i = 0; i < checkRecord.mResultWallsNum; ++i)
@@ -1662,9 +1674,10 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 
 		collisionNum += checkRecord.mResultWallsNum;
 	}
-	JGeometry::TVec3<f32> totalCorrection = currPos - mPosition;
+	JGeometry::TVec3<f32> totalCorrection(currPos - mPosition,
+	                                      JGeometry::TVec3<f32>::ASSIGN_COPY);
 
-	*bound_step = totalCorrection + step;
+	bound_step->assignCopy(totalCorrection + step);
 
 	if (bVar8)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -1679,10 +1692,11 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
                             const JGeometry::TVec3<f32>& param_3, f32 radius,
                             TBGWallCheckRecord* out_record)
 {
+	const TBGCheckData* local_30;
+	const TBGCheckData* local_34;
+
 	JGeometry::TVec3<f32> actualPoint = point;
 	actualPoint += param_3;
-
-	const TBGCheckData* local_30;
 
 	if (checkLiveFlag(LIVE_FLAG_UNK1000))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
@@ -1698,7 +1712,6 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 	if (point.y > actualPoint.y && !local_30->isIllegalData()) {
 		if (!local_30->isEnemyThrough()) {
 			f32 dVar9;
-			const TBGCheckData* local_34;
 			if (checkLiveFlag(LIVE_FLAG_UNK1000))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
@@ -2044,7 +2057,8 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 	JGeometry::TVec3<f32> vec = self->mPosition;
 	vec -= SMS_GetMarioPos();
 
-	self->mRotation.y = MsGetRotFromZaxisY(vec);
+	f32 rot           = MsGetRotFromZaxisY(vec);
+	self->mRotation.y = rot;
 	if (self->isReadyToFly()) {
 		spine->pushAfterCurrent(&TNerveFireWanwanFly::theNerve());
 		return true;
@@ -2056,9 +2070,10 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 // TODO: fake
 static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
-	return JGeometry::TVec3<f32>(radius * JMASSin(theta * (65536.0f / 360.0f)),
+	JGeometry::TVec3<f32> result(radius * JMASSin(theta * (65536.0f / 360.0f)),
 	                             0.0f,
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
+	return result;
 }
 
 DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)

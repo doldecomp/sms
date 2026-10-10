@@ -109,13 +109,16 @@ void TSunGlass::loadAfter() { unk14.a = getShineAlpha(); }
 void TSunGlass::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	unk10 = SMSGetMarDirector()->getGamePad(1);
+	TMarioGamePad* gamePad = SMSGetMarDirector()->getGamePad(1);
+	unk10                  = gamePad;
 }
 
 void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & CUE_DRAW)
-		draw(graphics->getViewport(), unk14);
+	if (cue & CUE_DRAW) {
+		const JDrama::TRect& rect = graphics->getViewport();
+		draw(rect, unk14);
+	}
 
 	if (cue & CUE_MOVE) {
 		unk14.a = gpSunMgr->getAddColor();
@@ -133,10 +136,7 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 void TSunShine::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	if (SMSGetMarDirector()->getCurrentMap() == 6) {
-		unk14.r = 0x48;
-		unk14.g = 0x30;
-		unk14.b = 0;
-		unk14.a = 0xFF;
-	}
+	u8 map = SMSGetMarDirector()->getCurrentMap();
+	if (map == 6)
+		unk14.set(0x48, 0x30, 0, 0xFF);
 }

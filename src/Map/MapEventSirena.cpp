@@ -15,20 +15,23 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+// dummy: emits @2585 and @2587 in .rodata.
 static void dummy(Vec* v)
 {
 	*v = (Vec) { 0.0f, 0.0f, 0.0f };
 	*v = (Vec) { 1.0f, 1.0f, 1.0f };
 }
 
+// TODO: frame-only mismatch: camera flag copy at 0x3c instead of 0x44.
 bool TMapEventSirenaSink::watch()
 {
 	if (unk64) {
 		gpPollution->getLayer(0)->startDecay();
-		mRaisingBuildingIdx = 0;
-		SMSGetMarDirector()->fireStartDemoCamera(
-		    "ホテル上げカメラ", &unk68, -1, 0.0f, true, nullptr, 0, nullptr,
-		    JDrama::TFlagT<u16>(0));
+		mRaisingBuildingIdx      = 0;
+		JDrama::TFlagT<u16> flag = 0;
+		SMSGetMarDirector()->fireStartDemoCamera("ホテル上げカメラ", &unk68, -1,
+		                                         0.0f, true, nullptr, 0,
+		                                         nullptr, flag);
 		gpItemManager->makeShineAppearWithDemo("シャイン（ホテル上げ用）",
 		                                       "ホテル上げシャインカメラ",
 		                                       unk68.x, unk68.y, unk68.z);

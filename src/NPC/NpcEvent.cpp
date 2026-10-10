@@ -54,9 +54,7 @@ static void evGetAddressFromViewObjName(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	const char* name = interp->pop().getDataString();
-	JDrama::TViewObj* viewObj
-	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search(name));
-	interp->push((int)viewObj);
+	interp->push((int)JDrama::TNameRefGen::search(name));
 }
 
 static void evCheckCurNerve4Npc(TSpcTypedInterp<TEventWatcher>* interp,
@@ -87,34 +85,10 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
-static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
-                                        u32 arg_num)
-{
-	interp->verifyArgNum(1, &arg_num);
-	int result = 0;
-	// TODO: uuuh...
-	(void)interp->pop();
-
-	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
-	    && SMS_IsMarioTouchGround4cm()
-	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
-
-		TBaseNPC* dummyNpc = static_cast<TBaseNPC*>(
-		    JDrama::TNameRefGen::search("ダミーＮＰＣ"));
-
-		if (dummyNpc) {
-			SMSGetMarDirector()->unkA0  = dummyNpc;
-			SMSGetMarDirector()->unk126 = 1;
-
-			result = 1;
-		}
-	}
-	interp->push(result);
-}
-
 static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
+	// TODO: frame-only mismatch (0x78 vs. 0x90); pop stack slots differ.
 	interp->verifyArgNum(1, &arg_num);
 
 	int result = 0;
@@ -131,6 +105,32 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 		interp->pop();
 	}
 
+	interp->push(TSpcSlice(result));
+}
+
+static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
+                                        u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+	int result = 0;
+	// This command ignores its operand and always selects the dummy NPC.
+	// TODO: pop materialization and stack frame (0x70 vs. 0x90) differ.
+	(void)interp->pop().mData.asInt;
+
+	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
+	    && SMS_IsMarioTouchGround4cm()
+	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
+
+		TBaseNPC* dummyNpc = static_cast<TBaseNPC*>(
+		    JDrama::TNameRefGen::search("ダミーＮＰＣ"));
+
+		if (dummyNpc) {
+			SMSGetMarDirector()->unkA0  = dummyNpc;
+			SMSGetMarDirector()->unk126 = 1;
+
+			result = 1;
+		}
+	}
 	interp->push(result);
 }
 
@@ -242,15 +242,15 @@ static void evGetFruitNum(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		break;
 	}
 
-	int num = basket->getFruitNum(iVar3);
-	interp->push(num);
+	fVar4 = basket->getFruitNum(iVar3);
+	interp->push(fVar4);
 }
 
 static void evSetFruitType(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(3, &arg_num);
-	int fVar5                 = interp->pop().getDataInt();
-	int fVar4                 = interp->pop().getDataInt();
+	s32 fVar5                 = interp->pop().getDataInt();
+	s32 fVar4                 = interp->pop().getDataInt();
 	TFruitBasketEvent* basket = (TFruitBasketEvent*)interp->pop().getDataInt();
 
 	if (fVar5 != 0) {
@@ -294,7 +294,7 @@ static void evIsDemoMode(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (SMSGetMarDirector()->isDemoModeNow())
+	if (SMSGetMarDirector()->isDemoModeNow() != 0)
 		result = 1;
 	interp->push(result);
 }
@@ -304,13 +304,15 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(1, &arg_num);
 	int fVar1 = interp->pop().getDataInt();
+	bool liveFlag;
 
 	char buffer[32];
 	snprintf(buffer, 32, "モンテ%d", fVar1);
 	TBaseNPC* npc = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(buffer));
 
+	liveFlag = npc->checkLiveFlag(LIVE_FLAG_UNK400000);
 	int b;
-	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->isClean())
+	if (!liveFlag && npc->isClean())
 		b = true;
 	else
 		b = false;
@@ -320,27 +322,36 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 
 void TNpcEvent::initNpcBuiltin(TSpcTypedBinary<TEventWatcher>* param_1)
 {
-	// clang-format off
-  param_1->bindSystemDataToSymbol("getAddressFromViewObjName", (u32)&evGetAddressFromViewObjName);
-  param_1->bindSystemDataToSymbol("checkCurNerve4Npc", (u32)&evCheckCurNerve4Npc);
-  param_1->bindSystemDataToSymbol("checkLatestNerve4Npc", (u32)&evCheckLatestNerve4Npc);
-  param_1->bindSystemDataToSymbol("isNpcSinkBottom", (u32)&evIsNpcSinkBottom);
-  param_1->bindSystemDataToSymbol("isGameModeNormal", (u32)&evIsGameModeNormal);
-  param_1->bindSystemDataToSymbol("__forceStartTalk", (u32)&ev__ForceStartTalk);
-  param_1->bindSystemDataToSymbol("__forceStartTalkExceptNpc", (u32)&ev__ForceStartTalkExceptNpc);
-  param_1->bindSystemDataToSymbol("connectDummyNpc", (u32)&evConnectDummyNpc);
-  param_1->bindSystemDataToSymbol("onTalkToDummyNpc", (u32)&evOnTalkToDummyNpc);
-  param_1->bindSystemDataToSymbol("setNpcBalloonMessage", (u32)&evSetNpcBalloonMessage);
-  param_1->bindSystemDataToSymbol("setNpcTalkForbidCount", (u32)&evSetNpcTalkForbidCount);
-  param_1->bindSystemDataToSymbol("npcDanceOn", (u32)&evNpcDanceOn);
-  param_1->bindSystemDataToSymbol("npcDanceOffHappyOn", (u32)&evNpcDanceOffHappyOn);
-  param_1->bindSystemDataToSymbol("resetFruitNum", (u32)&evResetFruitNum);
-  param_1->bindSystemDataToSymbol("getFruitNum", (u32)&evGetFruitNum);
-  param_1->bindSystemDataToSymbol("setFruitType", (u32)&evSetFruitType);
-  param_1->bindSystemDataToSymbol("fireStartDemoCamera", (u32)&evFireStartDemoCamera);
-  param_1->bindSystemDataToSymbol("isDemoMode", (u32)&evIsDemoMode);
-  param_1->bindSystemDataToSymbol("checkMonteClear", (u32)&evCheckMonteClear);
-	// clang-format on
+	param_1->bindSystemDataToSymbol("getAddressFromViewObjName",
+	                                (u32)&evGetAddressFromViewObjName);
+	param_1->bindSystemDataToSymbol("checkCurNerve4Npc",
+	                                (u32)&evCheckCurNerve4Npc);
+	param_1->bindSystemDataToSymbol("checkLatestNerve4Npc",
+	                                (u32)&evCheckLatestNerve4Npc);
+	param_1->bindSystemDataToSymbol("isNpcSinkBottom", (u32)&evIsNpcSinkBottom);
+	param_1->bindSystemDataToSymbol("isGameModeNormal",
+	                                (u32)&evIsGameModeNormal);
+	param_1->bindSystemDataToSymbol("__forceStartTalk",
+	                                (u32)&ev__ForceStartTalk);
+	param_1->bindSystemDataToSymbol("__forceStartTalkExceptNpc",
+	                                (u32)&ev__ForceStartTalkExceptNpc);
+	param_1->bindSystemDataToSymbol("connectDummyNpc", (u32)&evConnectDummyNpc);
+	param_1->bindSystemDataToSymbol("onTalkToDummyNpc",
+	                                (u32)&evOnTalkToDummyNpc);
+	param_1->bindSystemDataToSymbol("setNpcBalloonMessage",
+	                                (u32)&evSetNpcBalloonMessage);
+	param_1->bindSystemDataToSymbol("setNpcTalkForbidCount",
+	                                (u32)&evSetNpcTalkForbidCount);
+	param_1->bindSystemDataToSymbol("npcDanceOn", (u32)&evNpcDanceOn);
+	param_1->bindSystemDataToSymbol("npcDanceOffHappyOn",
+	                                (u32)&evNpcDanceOffHappyOn);
+	param_1->bindSystemDataToSymbol("resetFruitNum", (u32)&evResetFruitNum);
+	param_1->bindSystemDataToSymbol("getFruitNum", (u32)&evGetFruitNum);
+	param_1->bindSystemDataToSymbol("setFruitType", (u32)&evSetFruitType);
+	param_1->bindSystemDataToSymbol("fireStartDemoCamera",
+	                                (u32)&evFireStartDemoCamera);
+	param_1->bindSystemDataToSymbol("isDemoMode", (u32)&evIsDemoMode);
+	param_1->bindSystemDataToSymbol("checkMonteClear", (u32)&evCheckMonteClear);
 }
 
 void TNpcEvent::initDownSunflowerNum()
@@ -369,6 +380,7 @@ static s32 ReviveSunflowerCallBack(uintptr_t param_1, u32 param_2)
 
 void TNpcEvent::reviveOneSunflower()
 {
+	// TODO: strict diff rejects sCameraNames' generated suffix.
 	if (mDownSunflowerNum > 0) {
 		static const char* sViewObjName = "ひまわり";
 
@@ -379,22 +391,24 @@ void TNpcEvent::reviveOneSunflower()
 
 		TBaseNPC* npc
 		    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(acStack_50));
+		const JGeometry::TVec3<f32>& position = npc->unk1B8;
+		TMarDirector* director                = SMSGetMarDirector();
 		--mDownSunflowerNum;
-		JGeometry::TVec3<f32>* position = &npc->unk1B8;
 
 		static const char* sCameraNames[] = {
 			"ひまわりカメラ0", "ひまわりカメラ1", "ひまわりカメラ2",
 			"ひまわりカメラ3", "ひまわりカメラ4",
 		};
 
-		SMSGetMarDirector()->fireStartDemoCamera(
-		    sCameraNames[idx], position, -1, 0.0f, true,
-		    &ReviveSunflowerCallBack, (uintptr_t)npc, nullptr, 0);
+		JDrama::TFlagT<u16> flag;
+		director->fireStartDemoCamera(sCameraNames[idx], &position, -1, 0.0f,
+		                              true, &ReviveSunflowerCallBack,
+		                              (uintptr_t)npc, nullptr, flag);
 
 		if (mDownSunflowerNum == 0) {
 			gpItemManager->makeShineAppearWithDemo(
-			    "ひまわり用シャイン", "ひまわりシャインカメラ", position->x,
-			    position->y + 500.0f, position->z);
+			    "ひまわり用シャイン", "ひまわりシャインカメラ", position.x,
+			    position.y + 500.0f, position.z);
 			TFlagManager::getInstance()->setBool(false,
 			                                     MSF_SUNFLOWERS_LEFT_TO_RESCUE);
 		}

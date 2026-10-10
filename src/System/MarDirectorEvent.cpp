@@ -21,6 +21,10 @@ const char* cCameraBckNameShineGetOutside
     = "/common/camera/camera_demo_shine_get_outside";
 const char* cCameraBckNameGate = "/common/camera/camera_demo_gate_in";
 
+// mario.MAP: local @3076, .rodata + 0x160, 9 bytes, alignment 4.
+// TODO: recover the original consumer of this surviving literal.
+static const char rodata_3076[] ATTRIBUTE_ALIGN(4) = "ニコママ";
+
 void TMarDirector::entryNPC(TBaseNPC* npc) { unk88.push_back(npc); }
 
 void isNearMapObj(const JDrama::TActor&, const char*, f32) { }
@@ -109,8 +113,9 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 	if (!coin)
 		return;
 
-	TFlagManager::getInstance()->setBlueCoinFlag(
-	    SMSGetApplication()->mCurrArea.getStage(), coin->getEventId());
+	u8 stage    = SMSGetApplication()->mCurrArea.getStage();
+	u32 eventId = coin->getEventId();
+	TFlagManager::getInstance()->setBlueCoinFlag(stage, eventId);
 	onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
 	unk261 = 1;
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition,
@@ -241,11 +246,13 @@ void TMarDirector::fireEndDemoCamera()
 	onFlag(DIRECTOR_FLAG_END_DEMO_PENDING);
 }
 
+// TODO: nonmatching jump-table references; header data precedes the table.
 void TMarDirector::fireStreamingMovie(u8 param_1)
 {
 	switch (param_1) {
-	case 0:
-		if (!checkFlag(DIRECTOR_FLAG_MOVIE_PENDING)) {
+	case 0: {
+		BOOL moviePending = checkFlag(DIRECTOR_FLAG_MOVIE_PENDING);
+		if (!moviePending) {
 			onFlag(DIRECTOR_FLAG_MOVIE_PENDING);
 			setNextStage(0x1, nullptr);
 			TFlagManager::getInstance()->setBool(
@@ -255,6 +262,7 @@ void TMarDirector::fireStreamingMovie(u8 param_1)
 			SMSGetApplication()->setMovie(param_1);
 		}
 		break;
+	}
 
 	case 10:
 		if (!checkFlag(DIRECTOR_FLAG_MOVIE_PENDING)) {

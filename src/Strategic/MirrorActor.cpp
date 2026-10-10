@@ -17,6 +17,8 @@
 
 void TMirrorActor::isInMirror() const { }
 
+// TODO: active mirror read may need a missing reference-return inline in
+// TMirrorModelManager.
 void TMirrorActor::checkIsInMirror()
 {
 	if (unk1A & 1) {
@@ -41,7 +43,8 @@ void TMirrorActor::checkIsInMirror()
 	MtxPtr mtx = unk10->getAnmMtx(0);
 	JGeometry::TVec3<f32> local_18;
 	if (!(unk1A & 4)) {
-		local_18.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		local_18.set(((TMtx34f*)mtx)->ref(0, 3), ((TMtx34f*)mtx)->ref(1, 3),
+		             ((TMtx34f*)mtx)->ref(2, 3));
 	} else {
 		local_18.set(SMS_GetMarioPos());
 	}
@@ -59,6 +62,7 @@ void TMirrorActor::checkIsInMirror()
 	}
 }
 
+// TODO: matrix-copy inline boundaries and stack frame remain nonmatching.
 void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
@@ -66,11 +70,15 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk18 == 0)
 			return;
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
-			unk14->setAnmMtx(i, unk10->getAnmMtx(i));
+		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i) {
+			MtxPtr src = unk10->getAnmMtx(i);
+			MTXCopy(src, unk14->getAnmMtx(i));
+		}
 
-		for (u16 i = 0; i < unk10->getModelData()->getWEvlpMtxNum(); ++i)
-			unk14->setWeightAnmMtx(i, unk10->getWeightAnmMtx(i));
+		for (u16 i = 0; i < unk10->getModelData()->getWEvlpMtxNum(); ++i) {
+			MtxPtr src = unk10->getWeightAnmMtx(i);
+			MTXCopy(src, unk14->getWeightAnmMtx(i));
+		}
 	}
 
 	if ((cue & CUE_CALC_VIEW) && unk18 != 0)
@@ -85,22 +93,26 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 	JDrama::TDrawBufObj* dbOpa = static_cast<JDrama::TDrawBufObj*>(
 	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Opa"));
 	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), 0);
-	JDrama::TDrawBufObj* dbXlu = static_cast<JDrama::TDrawBufObj*>(
+	dbOpa = static_cast<JDrama::TDrawBufObj*>(
 	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Xlu"));
-	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), 1);
+	J3DDrawBuffer* drawBuffer = dbOpa->getDrawBuffer();
+	j3dSys.setDrawBuffer(drawBuffer, 1);
 	model->calc();
 	model->viewCalc();
 	model->entry();
 }
 
+// TODO: frame-only; list-insertion iterator slots remain 4-8 bytes low.
 void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 {
 	unk1A = param_2;
 	unk10 = param_1;
 
-	if (unk1A & 8)
-		unk14 = new SDLModel(((SDLModel*)param_1)->getSDLModelData(), 3, 1);
-	else {
+	if (unk1A & 8) {
+		SDLModel* model
+		    = new SDLModel(((SDLModel*)param_1)->getSDLModelData(), 3, 1);
+		unk14 = model;
+	} else {
 		J3DModelData* modelData = unk10->getModelData();
 		unk14                   = new J3DModel(modelData, 0, 1);
 	}

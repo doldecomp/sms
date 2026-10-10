@@ -32,7 +32,7 @@ void TEggGenerator::init(TLiveManager* manager)
 
 void TEggGenerator::control()
 {
-	if (VECSquareDistance(&mPosition, &gpMarioOriginal->mPosition)
+	if (VECSquareDistance(&mPosition, gpMarioOriginal->getPosition())
 	    < 250000.0f) {
 		if (!gpMarioOriginal->mYoshi->isHatched())
 			mMActor->setBckFromIndex(0);

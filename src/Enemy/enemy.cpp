@@ -81,6 +81,7 @@ void TSpineEnemy::load(JSUMemoryInputStream& stream)
 	init(mgr);
 }
 
+// TODO: nonmatching FPR allocation and frame (0x120 instead of 0x128).
 void TSpineEnemy::calcEnemyRootMatrix()
 {
 	J3DModel* pJVar13 = getModel();
@@ -92,13 +93,13 @@ void TSpineEnemy::calcEnemyRootMatrix()
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 	} else {
 		if (unk130 >= 2 && !isAirborne() && unk138 != nullptr) {
-			JGeometry::TVec3<f32> v2 = unk138->getNormal();
+			JGeometry::TVec3<f32> v3(0.0f, 1.0f, 0.0f);
+			Vec v2 = unk138->getNormal();
 
-			JGeometry::TVec3<f32> v1;
-			v1.cross(v2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+			JGeometry::TVec3<f32> v1(v2);
+			v1.cross2(v1, v3);
 			v1.normalize();
 
-			JGeometry::TVec3<f32> v3;
 			v3.cross(v1, v2);
 			v3.normalize();
 
@@ -116,14 +117,14 @@ void TSpineEnemy::calcEnemyRootMatrix()
 			mtx[2][3] = 0.0f;
 		} else {
 			if (unk130 >= 1 && !mGroundPlane->isIllegalData()) {
-				JGeometry::TVec3<f32> v1(MsSin(mRotation.y), 0.0f,
+				JGeometry::TVec3<f32> v3(MsSin(mRotation.y), 0.0f,
 				                         MsCos(mRotation.y));
 
-				JGeometry::TVec3<f32> v2 = mGroundPlane->getNormal();
-				v1.cross(v2, v1);
+				Vec v2 = mGroundPlane->getNormal();
+				JGeometry::TVec3<f32> v1(v2);
+				v1.cross2(v1, v3);
 				v1.normalize();
 
-				JGeometry::TVec3<f32> v3;
 				v3.cross(v1, v2);
 				v3.normalize();
 
@@ -150,10 +151,11 @@ void TSpineEnemy::calcEnemyRootMatrix()
 	mtx[2][3] = mPosition.z;
 }
 
+// TODO: frame-only mismatch (0x28 instead of 0x30); inline cause unknown.
 void TSpineEnemy::calcRootMatrix()
 {
 	if (mHolder && mHolder->getHeldObject() == this) {
-		MtxPtr src = getTakingMtx();
+		MtxPtr src = mHolder->getTakingMtx();
 		if (src) {
 			getModel()->setBaseTRMtx(src);
 			mPosition.set(src[0][3], src[1][3], src[2][3]);
@@ -175,7 +177,7 @@ void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 	offLiveFlag(LIVE_FLAG_UNK8);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
-	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mHitPoints = getMaxHitPoints();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mVelocity = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
 	onLiveFlag(LIVE_FLAG_UNK8000);
@@ -271,11 +273,11 @@ BOOL TSpineEnemy::isInSight(const JGeometry::TVec3<f32>& pos, f32 length,
 void TSpineEnemy::setGoalPathFromGraph()
 {
 	JGeometry::TVec3<f32> local_48;
-	unk124->getCurrent().getPoint(&local_48);
+	const TGraphNode& node = getTracer()->getGraph()->getGraphNode(
+	    getTracer()->getCurGraphIndex());
+	node.getPoint(&local_48);
 	TPathNode local_3c(local_48);
-	unkF4  = local_3c;
-	unk104 = local_3c;
-	unk114.clear();
+	setGoalPath(local_3c);
 }
 
 void TSpineEnemy::goToInitialVisibleNode(f32, f32) { }
@@ -294,7 +296,7 @@ int TSpineEnemy::goToShortestNextGraphNode()
 		unk124->moveTo(unk124->unk0->getShortestNextIndex(
 		    unk124->mCurrIdx, unk124->mPrevIdx, -1));
 
-	if (unk124->mCurrIdx < 0)
+	if (unk124->getCurGraphIndex() < 0)
 		return -1;
 
 	setGoalPathFromGraph();
@@ -304,13 +306,18 @@ int TSpineEnemy::goToShortestNextGraphNode()
 }
 #pragma dont_inline off
 
+// TODO: frame-only; inlined goal locals are 0xc too low (frame size matches).
 int TSpineEnemy::jumpToNextGraphNode()
 {
-	if (unk124->mCurrIdx < 0 || !unk124->getCurrent().checkFlag(0x1))
+	if (getTracer()->getCurGraphIndex() < 0
+	    || !getTracer()
+	            ->getGraph()
+	            ->getGraphNode(getTracer()->getCurGraphIndex())
+	            .checkFlag(0x1))
 		return -1;
 
-	int idx = unk124->unk0->getNeighborNodeIndexByFlag(unk124->mCurrIdx,
-	                                                   unk124->mPrevIdx, 2);
+	int idx = getTracer()->getGraph()->getNeighborNodeIndexByFlag(
+	    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(), 2);
 	if (idx >= 0) {
 		unk124->moveTo(idx);
 		setGoalPathFromGraph();
@@ -322,47 +329,55 @@ int TSpineEnemy::jumpToNextGraphNode()
 	return -1;
 }
 
+// TODO: frame-only; inlined goal locals are 0x14 too low (frame size matches).
 void TSpineEnemy::goToRandomNextGraphNode()
 {
-	if (unk124->getCurGraphIndex() < 0)
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	if (getTracer()->getCurGraphIndex() < 0)
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	else
-		unk124->moveTo(unk124->unk0->getRandomNextIndex(
-		    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1));
+		unk124->moveTo(getTracer()->getGraph()->getRandomNextIndex(
+		    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(), -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
 	unk12C = 0.0f;
 }
 
+// TODO: frame-only; inlined goal locals are 0x10 too low (frame size matches).
 void TSpineEnemy::goToRandomEscapeGraphNode()
 {
-	if (unk124->getCurGraphIndex() < 0)
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+	if (getTracer()->getCurGraphIndex() < 0)
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	else
-		unk124->moveTo(unk124->unk0->getEscapeFromMarioIndex(
-		    unk124->getCurGraphIndex(), -1, mPosition, -1));
+		unk124->moveTo(getTracer()->getGraph()->getEscapeFromMarioIndex(
+		    getTracer()->getCurGraphIndex(), -1, mPosition, -1));
 
 	setGoalPathFromGraph();
 	unk128 = 0;
 	unk12C = 0.0f;
 }
 
+// TODO: frame-only; inlined goal locals are 0x30/0x1c too low.
 void TSpineEnemy::goToExclusiveNextGraphNode()
 {
-	if (mManager == nullptr) {
+	if (getManager() == nullptr) {
 		goToRandomNextGraphNode();
 	} else {
-		if (unk124->mCurrIdx < 0) {
-			unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+		if (getTracer()->getCurGraphIndex() < 0) {
+			unk124->setTo(
+			    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 		} else {
-			int idx = unk124->unk0->getRandomNextIndex(
-			    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1);
-			for (int i = 0; i < mManager->getObjNum(); ++i) {
-				TSpineEnemy* enemy = (TSpineEnemy*)mManager->getObj(i);
-				if (this != enemy && idx == enemy->unk124->mCurrIdx)
-					idx = unk124->unk0->getRandomNextIndex(
-					    unk124->getCurGraphIndex(), idx, -1);
+			int idx = getTracer()->getGraph()->getRandomNextIndex(
+			    getTracer()->getCurGraphIndex(), getTracer()->getPrevIndex(),
+			    -1);
+			for (int i = 0; i < getManager()->getObjNum(); ++i) {
+				TSpineEnemy* enemy = ((TEnemyManager*)getManager())->getObj(i);
+				if (this != enemy
+				    && idx == enemy->getTracer()->getCurGraphIndex())
+					idx = getTracer()->getGraph()->getRandomNextIndex(
+					    getTracer()->getCurGraphIndex(), idx, -1);
 			}
 			unk124->moveTo(idx);
 		}
@@ -399,14 +414,16 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
+// TODO: frame-only; direction locals are 0x4 too high, goal locals 0xc too low.
 void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 {
-	int currIdx = unk124->mCurrIdx;
-	int prevIdx = unk124->mPrevIdx;
+	int prevIdx = getTracer()->getPrevIndex();
+	int currIdx = getTracer()->getCurGraphIndex();
 	if (currIdx < 0) {
-		unk124->setTo(unk124->unk0->findNearestNodeIndex(mPosition, -1));
+		unk124->setTo(
+		    getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1));
 	} else {
-		TGraphWeb* web                 = unk124->unk0;
+		TGraphWeb* web                 = getTracer()->getGraph();
 		JGeometry::TVec3<f32> local_3c = polarXZ(mRotation.y, 1.0f);
 
 		int idx = web->getRandomButDirLimited(currIdx, prevIdx, local_3c,
@@ -419,11 +436,20 @@ void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 	unk12C = 0.0f;
 }
 
-void TSpineEnemy::updateStayCount(f32) { }
+void TSpineEnemy::updateStayCount(f32 distance)
+{
+	if (abs(distance - unk12C) < 100.0f) {
+		unk128 += 1;
+	} else {
+		unk128 = 0;
+		unk12C = distance;
+	}
+}
 
 BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
-	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
+	const JGeometry::TVec3<f32>& point = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> tmp          = point;
 	tmp -= mPosition;
 
 	f32 rot = MsAngleDiff(MsGetRotFromZaxisY(tmp), mRotation.y);
@@ -447,59 +473,40 @@ BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 	return uVar2;
 }
 
+// TODO: nonmatching FPR allocation and inline stack slots; tmp.z is reloaded.
 void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
                                     f32 param_3)
 {
-	JGeometry::TVec3<f32> tmp = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> tmp = unkF4.getPoint();
 	tmp -= mPosition;
 
 	f32 fVar7 = tmp.length();
 	f32 angle = MsWrap(param_3 + MsGetRotFromZaxisY(tmp), 0.0f, 360.0f);
 	f32 fVar2 = MsAngleDiff(angle, mRotation.y);
 
-	// TODO: identical to a piece of code below, what is this?
-	f32 fVar3;
-	if (turn_speed >= 90.0f) {
-		fVar3 = 0.0f;
-	} else {
-		f32 s = MsSin(turn_speed);
-		if (fVar3 == 0.0f) {
-			fVar3 = 100000.0f;
-		} else {
-			fVar3 = march_speed * MsSin(90.0f - turn_speed * 0.5f) / s;
-		}
-	}
-
-	// TODO: tons of thi stuff should actually be inlines
-	f32 fVar5 = fVar2;
-	if (fVar7 > fVar3 * 2.0f) {
+	if (fVar7 > calcMinimumTurnRadius(march_speed, turn_speed) * 2.0f) {
 		if (fVar2 > 0.0f) {
-			fVar5 = MsMin(fVar2, turn_speed);
+			fVar2 = MsMin(fVar2, turn_speed);
 		} else {
-			fVar5 = MsMax(fVar2, -turn_speed);
+			fVar2 = MsMax(fVar2, -turn_speed);
 		}
 	} else {
 		f32 fVar3 = calcTurnSpeedToReach(march_speed, fVar7 * 0.5f);
 
 		if (fVar2 > 0.0f) {
-			fVar5 = MsMin(fVar2, fVar3);
+			fVar2 = MsMin(fVar2, fVar3);
 		} else {
-			fVar5 = MsMax(fVar2, -fVar3);
+			fVar2 = MsMax(fVar2, -fVar3);
 		}
 	}
 
-	mRotation.y = MsWrap(mRotation.y + fVar5, 0.0f, 360.0f);
+	mRotation.y = MsWrap(mRotation.y + fVar2, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> vel = mPositionDelta;
 	vel += polarXZ(mRotation.y, march_speed);
 	mPositionDelta = vel;
 
-	if (abs(fVar7 - unk12C) < 100.0f) {
-		unk128 += 1;
-	} else {
-		unk128 = 0;
-		unk12C = fVar7;
-	}
+	updateStayCount(fVar7);
 }
 
 void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
@@ -554,12 +561,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	vel += polarXZ(mRotation.y, march_speed);
 	mPositionDelta = vel;
 
-	if (abs(dVar9 - unk12C) < 100.0f) {
-		unk128 += 1;
-	} else {
-		unk128 = 0;
-		unk12C = dVar9;
-	}
+	updateStayCount(dVar9);
 }
 
 void TSpineEnemy::doShortCut()
@@ -573,7 +575,8 @@ void TSpineEnemy::doShortCut()
 		return;
 	}
 
-	TPathNode node = unk114.pop();
+	TPathNode node;
+	node = unk114.pop();
 
 	JGeometry::TVec3<f32> local_28 = node.getPoint() - mPosition;
 	if (local_28.x == 0.0f && local_28.y == 0.0f && local_28.z == 0.0f)
@@ -624,7 +627,7 @@ void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TEnemyManager* mgr = (TEnemyManager*)getManager();
 
-	if (mgr != nullptr) {
+	if (getManager() != nullptr) {
 		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
 		    && TEnemyManager::mIsCopyAnmMtx && mgr->unk4C >= 0) {

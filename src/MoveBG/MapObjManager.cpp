@@ -68,26 +68,34 @@ void TMapObjManager::loadAfter()
 void TMapObjManager::initDrawBuffer()
 {
 	mDrawBufferSunOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj SunOpa"));
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "DrawBuf StaticMapObj SunOpa"));
 	mDrawBufferSunXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj SunXlu"));
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "DrawBuf StaticMapObj SunXlu"));
 	mDrawBufferShadowOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj ShadowOpa"));
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "DrawBuf StaticMapObj ShadowOpa"));
 	mDrawBufferShadowXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search("DrawBuf StaticMapObj ShadowXlu"));
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "DrawBuf StaticMapObj ShadowXlu"));
 	mDrawBufferAfterIndirectOpa = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search("DrawBuf AfterIndirect Opa"));
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "DrawBuf AfterIndirect Opa"));
 	mDrawBufferAfterIndirectXlu = static_cast<JDrama::TDrawBufObj*>(
-	    JDrama::TNameRefGen::search("DrawBuf AfterIndirect Xlu"));
+	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
+	        "DrawBuf AfterIndirect Xlu"));
 }
 
 J3DMaterialTable* TMapObjManager::loadMatTable(const char* name)
 {
 	void* res = JKRGetResource(name);
+	J3DMaterialTable* ret;
 	if (res)
-		return J3DModelLoaderDataBase::loadMaterialTable(res);
+		ret = J3DModelLoaderDataBase::loadMaterialTable(res);
 	else
-		return nullptr;
+		ret = nullptr;
+	return ret;
 }
 
 void TMapObjManager::load(JSUMemoryInputStream& stream)
@@ -115,8 +123,8 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	mRiccoShipMatTable = loadMatTable("/scene/mapObj/riccoShip.bmt");
 
 	if ((SMSGetMarDirector()->getCurrentMap() == 3
-	     && (SMSGetMarDirector()->unk7D == 1
-	         || SMSGetMarDirector()->unk7D == 5))
+	     && (SMSGetMarDirector()->getCurrentStage() == 1
+	         || SMSGetMarDirector()->getCurrentStage() == 5))
 	    || SMSGetMarDirector()->getCurrentMap() == 0x1E) {
 		mSurfGessoModelData = SMS_MakeSDLModelData(
 		    "/scene/mapObj/surfgeso.bmd", J3DMLF_MaterialPEFull
@@ -231,7 +239,7 @@ TMapObjBase* TMapObjBaseManager::makeObjAppear(f32 x, f32 y, f32 z, u32 param_4,
 	}
 
 	for (int i = 0; i < getObjNum(); ++i) {
-		TMapObjBase* obj = (TMapObjBase*)getObj(i);
+		TMapObjBase* obj = (TMapObjBase*)TObjManager::getObj(i);
 
 		if (canAppear(obj, param_4)) {
 			obj->mPosition.set(x, y2, z);

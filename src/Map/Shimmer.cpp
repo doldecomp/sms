@@ -21,9 +21,9 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TShimmer::near() { }
+void TShimmer::near() { mPosition.set(0.0f, 0.0f, 9600.0f); }
 
-void TShimmer::far() { }
+void TShimmer::far() { mPosition.set(0.0f, 0.0f, 0.0f); }
 
 void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -40,9 +40,9 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		    && !gpMarioOriginal->getGroundPlane()->isShadow()
 		    && !gpMarioOriginal->getGroundPlane()->isIndoors()
 		    && !gpMarioOriginal->getGroundPlane()->isPool()) {
-			mPosition.set(0.0f, 0.0f, 9600.0f);
+			near();
 		} else {
-			mPosition.set(0.0f, 0.0f, 0.0f);
+			far();
 		}
 
 		Mtx44 effectMtx;
@@ -54,6 +54,9 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		    ->getTexMtx(1)
 		    ->setEffectMtx(effectMtx);
 
+		Mtx afStack_80;
+		Mtx afStack_b0;
+		Mtx afStack_e0;
 		MtxPtr viewMtx = graphics->mViewMtx;
 
 		J3DTransformInfo info;
@@ -63,14 +66,11 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 		info.mRotation.x  = 0.0f;
 		info.mRotation.y  = 0.0f;
 		info.mRotation.z  = 0.0f;
-		info.mTranslate.x = mPosition.x;
-		info.mTranslate.y = mPosition.y;
-		info.mTranslate.z = mPosition.z;
-		Mtx afStack_b0;
+		info.mTranslate.x = getPosition().x;
+		info.mTranslate.y = getPosition().y;
+		info.mTranslate.z = getPosition().z;
 		J3DGetTranslateRotateMtx(info, afStack_b0);
-		Mtx afStack_e0;
 		MTXScale(afStack_e0, mScaling.x, mScaling.y, mScaling.z);
-		Mtx afStack_80;
 		MTXInverse(viewMtx, afStack_80);
 		MTXConcat(afStack_80, afStack_b0, afStack_80);
 		MTXConcat(afStack_80, afStack_e0, afStack_80);
@@ -80,8 +80,12 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_ENTRY) {
-		if (SMSGetMarDirector()->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
-			unk48->entry();
+		if (gpMarDirector->mMap != 2) {
+			f32 cameraY = gpCamera->getUnk124().y;
+			if (cameraY < 0.0f)
+				return;
+		}
+		unk48->entry();
 	}
 }
 

@@ -609,6 +609,7 @@ void rotTypeYJiggle(f32 sin, f32 cos, Mtx& out)
 	out[2][3] = 0.0f;
 }
 
+// TODO: Nonmatching stack layout.
 void JPADrawExecDirectional::exec(const JPADrawContext* dc,
                                   JPABaseParticle* particle)
 {
@@ -634,13 +635,14 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 		return;
 	local_BC.normalize();
 
-	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_BC);
-	if (f29_f30_f31.isZero())
+	JGeometry::TVec3<f32> cross;
+	cross.cross(params->unk0, local_BC);
+	if (cross.isZero())
 		return;
-	f29_f30_f31.normalize();
+	JGeometry::TVec3<f32> f29_f30_f31;
+	f29_f30_f31.normalize(cross);
 
-	params->unk0.cross(local_BC, f29_f30_f31);
+	params->unk0.cross2(local_BC, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_80;
@@ -661,17 +663,20 @@ void JPADrawExecDirectional::exec(const JPADrawContext* dc,
 
 	MTXMultVecArray(local_80, offs, offs, ARRAY_COUNT(offs));
 
-	JGeometry::TVec3<f32> pt;
-	particle->getGlobalPosition(pt);
+	particle->getGlobalPosition(f29_f30_f31);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-	GXPosition3f32(offs[0].x + pt.x, offs[0].y + pt.y, offs[0].z + pt.z);
+	GXPosition3f32(offs[0].x + f29_f30_f31.x, offs[0].y + f29_f30_f31.y,
+	               offs[0].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(offs[1].x + pt.x, offs[1].y + pt.y, offs[1].z + pt.z);
+	GXPosition3f32(offs[1].x + f29_f30_f31.x, offs[1].y + f29_f30_f31.y,
+	               offs[1].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(offs[2].x + pt.x, offs[2].y + pt.y, offs[2].z + pt.z);
+	GXPosition3f32(offs[2].x + f29_f30_f31.x, offs[2].y + f29_f30_f31.y,
+	               offs[2].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(offs[3].x + pt.x, offs[3].y + pt.y, offs[3].z + pt.z);
+	GXPosition3f32(offs[3].x + f29_f30_f31.x, offs[3].y + f29_f30_f31.y,
+	               offs[3].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
 	GXEnd();
 }
@@ -707,13 +712,14 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 		return;
 	local_E4.normalize();
 
-	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_E4);
-	if (f29_f30_f31.isZero())
+	JGeometry::TVec3<f32> cross;
+	cross.cross(params->unk0, local_E4);
+	if (cross.isZero())
 		return;
-	f29_f30_f31.normalize();
+	JGeometry::TVec3<f32> f29_f30_f31;
+	f29_f30_f31.normalize(cross);
 
-	params->unk0.cross(local_E4, f29_f30_f31);
+	params->unk0.cross2(local_E4, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_a8;
@@ -751,6 +757,7 @@ void JPADrawExecRotDirectional::exec(const JPADrawContext* dc,
 	GXEnd();
 }
 
+// TODO: Nonmatching stack layout; cross-product inline storage differs.
 void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
                                        JPABaseParticle* particle)
 {
@@ -784,13 +791,14 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 		return;
 	local_BC.normalize();
 
-	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_BC);
-	if (f29_f30_f31.isZero())
+	JGeometry::TVec3<f32> cross;
+	cross.cross(params->unk0, local_BC);
+	if (cross.isZero())
 		return;
-	f29_f30_f31.normalize();
+	JGeometry::TVec3<f32> f29_f30_f31;
+	f29_f30_f31.normalize(cross);
 
-	params->unk0.cross(local_BC, f29_f30_f31);
+	params->unk0.cross2(local_BC, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_80;
@@ -811,29 +819,37 @@ void JPADrawExecDirectionalCross::exec(const JPADrawContext* dc,
 
 	MTXMultVecArray(local_80, offs, offs, ARRAY_COUNT(offs));
 
-	JGeometry::TVec3<f32> pt;
-	particle->getGlobalPosition(pt);
+	particle->getGlobalPosition(f29_f30_f31);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 8);
-	GXPosition3f32(offs[0].x + pt.x, offs[0].y + pt.y, offs[0].z + pt.z);
+	GXPosition3f32(offs[0].x + f29_f30_f31.x, offs[0].y + f29_f30_f31.y,
+	               offs[0].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(offs[1].x + pt.x, offs[1].y + pt.y, offs[1].z + pt.z);
+	GXPosition3f32(offs[1].x + f29_f30_f31.x, offs[1].y + f29_f30_f31.y,
+	               offs[1].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(offs[2].x + pt.x, offs[2].y + pt.y, offs[2].z + pt.z);
+	GXPosition3f32(offs[2].x + f29_f30_f31.x, offs[2].y + f29_f30_f31.y,
+	               offs[2].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(offs[3].x + pt.x, offs[3].y + pt.y, offs[3].z + pt.z);
+	GXPosition3f32(offs[3].x + f29_f30_f31.x, offs[3].y + f29_f30_f31.y,
+	               offs[3].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
-	GXPosition3f32(offs[4].x + pt.x, offs[4].y + pt.y, offs[4].z + pt.z);
+	GXPosition3f32(offs[4].x + f29_f30_f31.x, offs[4].y + f29_f30_f31.y,
+	               offs[4].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(offs[5].x + pt.x, offs[5].y + pt.y, offs[5].z + pt.z);
+	GXPosition3f32(offs[5].x + f29_f30_f31.x, offs[5].y + f29_f30_f31.y,
+	               offs[5].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(offs[6].x + pt.x, offs[6].y + pt.y, offs[6].z + pt.z);
+	GXPosition3f32(offs[6].x + f29_f30_f31.x, offs[6].y + f29_f30_f31.y,
+	               offs[6].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(offs[7].x + pt.x, offs[7].y + pt.y, offs[7].z + pt.z);
+	GXPosition3f32(offs[7].x + f29_f30_f31.x, offs[7].y + f29_f30_f31.y,
+	               offs[7].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
 	GXEnd();
 }
 
+// TODO: Nonmatching stack layout.
 void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
                                           JPABaseParticle* particle)
 {
@@ -850,6 +866,7 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	f32 x1 = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 	f32 y1 = -params->mScaleY * (dc->pcb->unk4.y - dc->pcb->unkC.y);
 
+	Mtx local_180;
 	JGeometry::TVec3<f32> offs[8];
 	offs[0].set(x0, y0, 0.0f);
 	offs[1].set(x1, y0, 0.0f);
@@ -864,7 +881,6 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	offs[7].set((offs[1].x + offs[0].x) * 0.5f, y1,
 	            (offs[1].x - offs[0].x) * 0.5f);
 
-	Mtx local_180;
 	dc->pcb->mRotTypeFunc(sin, cos, local_180);
 
 	JGeometry::TVec3<f32> local_BC;
@@ -873,13 +889,14 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 		return;
 	local_BC.normalize();
 
-	JGeometry::TVec3<f32> f29_f30_f31;
-	f29_f30_f31.cross(params->unk0, local_BC);
-	if (f29_f30_f31.isZero())
+	JGeometry::TVec3<f32> cross;
+	cross.cross(params->unk0, local_BC);
+	if (cross.isZero())
 		return;
-	f29_f30_f31.normalize();
+	JGeometry::TVec3<f32> f29_f30_f31;
+	f29_f30_f31.normalize(cross);
 
-	params->unk0.cross(local_BC, f29_f30_f31);
+	params->unk0.cross2(local_BC, f29_f30_f31);
 	params->unk0.normalize();
 
 	Mtx local_d8;
@@ -902,25 +919,32 @@ void JPADrawExecRotDirectionalCross::exec(const JPADrawContext* dc,
 	MTXConcat(local_d8, local_180, local_a8);
 	MTXMultVecArray(local_a8, offs, offs, ARRAY_COUNT(offs));
 
-	JGeometry::TVec3<f32> pt;
-	particle->getGlobalPosition(pt);
+	particle->getGlobalPosition(f29_f30_f31);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 8);
-	GXPosition3f32(offs[0].x + pt.x, offs[0].y + pt.y, offs[0].z + pt.z);
+	GXPosition3f32(offs[0].x + f29_f30_f31.x, offs[0].y + f29_f30_f31.y,
+	               offs[0].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(offs[1].x + pt.x, offs[1].y + pt.y, offs[1].z + pt.z);
+	GXPosition3f32(offs[1].x + f29_f30_f31.x, offs[1].y + f29_f30_f31.y,
+	               offs[1].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(offs[2].x + pt.x, offs[2].y + pt.y, offs[2].z + pt.z);
+	GXPosition3f32(offs[2].x + f29_f30_f31.x, offs[2].y + f29_f30_f31.y,
+	               offs[2].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(offs[3].x + pt.x, offs[3].y + pt.y, offs[3].z + pt.z);
+	GXPosition3f32(offs[3].x + f29_f30_f31.x, offs[3].y + f29_f30_f31.y,
+	               offs[3].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
-	GXPosition3f32(offs[4].x + pt.x, offs[4].y + pt.y, offs[4].z + pt.z);
+	GXPosition3f32(offs[4].x + f29_f30_f31.x, offs[4].y + f29_f30_f31.y,
+	               offs[4].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[0].x, dc->pcb->mTexCoords[0].y);
-	GXPosition3f32(offs[5].x + pt.x, offs[5].y + pt.y, offs[5].z + pt.z);
+	GXPosition3f32(offs[5].x + f29_f30_f31.x, offs[5].y + f29_f30_f31.y,
+	               offs[5].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[1].x, dc->pcb->mTexCoords[1].y);
-	GXPosition3f32(offs[6].x + pt.x, offs[6].y + pt.y, offs[6].z + pt.z);
+	GXPosition3f32(offs[6].x + f29_f30_f31.x, offs[6].y + f29_f30_f31.y,
+	               offs[6].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[2].x, dc->pcb->mTexCoords[2].y);
-	GXPosition3f32(offs[7].x + pt.x, offs[7].y + pt.y, offs[7].z + pt.z);
+	GXPosition3f32(offs[7].x + f29_f30_f31.x, offs[7].y + f29_f30_f31.y,
+	               offs[7].z + f29_f30_f31.z);
 	GXTexCoord2f32(dc->pcb->mTexCoords[3].x, dc->pcb->mTexCoords[3].y);
 	GXEnd();
 }
@@ -938,12 +962,15 @@ void JPADrawExecDirBillBoard::exec(const JPADrawContext* dc,
 	JGeometry::TVec3<f32> dir(dc->pcb->mViewMtx[2][0], dc->pcb->mViewMtx[2][1],
 	                          dc->pcb->mViewMtx[2][2]);
 
-	local_9C.cross(local_9C, dir);
+	local_9C.cross2(local_9C, dir);
 	if (local_9C.isZero())
 		return;
 	local_9C.normalize();
 
 	MTXMultVecSR(dc->pcb->mViewMtx, &local_9C, &local_9C);
+
+	f32 x = local_9C.x;
+	f32 y = local_9C.y;
 
 	f32 scaleX = params->mScaleX;
 	f32 scaleY = params->mScaleY;
@@ -958,9 +985,6 @@ void JPADrawExecDirBillBoard::exec(const JPADrawContext* dc,
 	offs[1].set(x1, scaleY);
 	offs[2].set(x1, -y1);
 	offs[3].set(-scaleX, -y1);
-
-	f32 x = local_9C.x;
-	f32 y = local_9C.y;
 
 	offs[0].set(x * offs[0].x - y * offs[0].y, x * offs[0].y + y * offs[0].x);
 	offs[1].set(x * offs[1].x - y * offs[1].y, x * offs[1].y + y * offs[1].x);
@@ -1211,8 +1235,8 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 
 	typedef JSULink<JPABaseParticle>* (*NxtFunc)(JSULink<JPABaseParticle>*);
 
-	NxtFunc getNext;
 	JSULink<JPABaseParticle>* start;
+	NxtFunc getNext;
 
 	f32 fVar2_0;
 	f32 fVar2;
@@ -1231,6 +1255,8 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 	JGeometry::TRotation3<JGeometry::TMatrix33<JGeometry::SMatrix33R<f32> > >
 	    mtx;
 	JGeometry::TVec3<f32> pt0;
+	JGeometry::TVec3<f32> v1;
+	JGeometry::TVec3<f32> v2;
 	JGeometry::TVec3<f32> local_BC;
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, elems * 2);
@@ -1246,8 +1272,8 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		f32 x = -params->mScaleX * (dc->pcb->unk4.x + dc->pcb->unkC.x);
 		f32 y = +params->mScaleX * (dc->pcb->unk4.x - dc->pcb->unkC.x);
 
-		JGeometry::TVec3<f32> v1(x * cos, 0.0f, x * sin);
-		JGeometry::TVec3<f32> v2(y * cos, 0.0f, y * sin);
+		v1.set(x * cos, 0.0f, x * sin);
+		v2.set(y * cos, 0.0f, y * sin);
 
 		particle->getGlobalPosition(pt0);
 
@@ -1260,11 +1286,11 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		JGeometry::TVec3<f32> f29_f30_f31;
 		f29_f30_f31.cross(params->unk0, local_BC);
 		if (f29_f30_f31.isZero())
-			f29_f30_f31.set(0.0f, 1.0f, 0.0f);
+			f29_f30_f31.set(1.0f, 0.0f, 0.0f);
 		else
 			f29_f30_f31.normalize();
 
-		params->unk0.cross(local_BC, f29_f30_f31);
+		params->unk0.cross2(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
 		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);
@@ -1309,11 +1335,11 @@ void JPADrawExecStripeCross::exec(const JPADrawContext* dc)
 		JGeometry::TVec3<f32> f29_f30_f31;
 		f29_f30_f31.cross(params->unk0, local_BC);
 		if (f29_f30_f31.isZero())
-			f29_f30_f31.set(0.0f, 1.0f, 0.0f);
+			f29_f30_f31.set(1.0f, 0.0f, 0.0f);
 		else
 			f29_f30_f31.normalize();
 
-		params->unk0.cross(local_BC, f29_f30_f31);
+		params->unk0.cross2(local_BC, f29_f30_f31);
 		params->unk0.normalize();
 
 		mtx.setXYZDir(f29_f30_f31, local_BC, params->unk0);

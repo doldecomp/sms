@@ -136,6 +136,15 @@ static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
 }
 
+// TODO: fabricated; recover the distance inline, as in walkerEnemy.cpp.
+static inline f32 dist(const JGeometry::TVec3<f32>& a,
+                       const JGeometry::TVec3<f32>& b)
+{
+	JGeometry::TVec3<f32> tmp = a;
+	tmp.sub(b);
+	return tmp.length();
+}
+
 DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 {
 	TRiccoHook* self = (TRiccoHook*)spine->getBody();
@@ -147,7 +156,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
+	if (dist(self->unk104.getPoint(), self->mPosition) < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {

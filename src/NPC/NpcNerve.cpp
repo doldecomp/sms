@@ -163,10 +163,13 @@ DEFINE_NERVE(TNerveNPCTurnToMario, TLiveActor)
 				             self->getTurnSpeed(), &self->mRotation.y);
 
 				// TODO: wtf?
-				JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
+				JGeometry::TVec3<f32> axis(SMS_GetMarioPos(),
+				                           JGeometry::TVec3<f32>::ASSIGN_COPY);
 				axis -= self->mPosition;
-				JGeometry::TVec3<f32> copy  = axis;
-				JGeometry::TVec3<f32> copy2 = copy;
+				JGeometry::TVec3<f32> copy(axis,
+				                           JGeometry::TVec3<f32>::ASSIGN_COPY);
+				JGeometry::TVec3<f32> copy2(copy,
+				                            JGeometry::TVec3<f32>::ASSIGN_COPY);
 				JGeometry::TVec3<f32> copy3;
 				copy3.set(copy2);
 
@@ -259,7 +262,8 @@ DEFINE_NERVE(TNerveNPCTalk, TLiveActor)
 			self->npcTalkIn();
 		self->npcTalking();
 	} else {
-		if (self->getActorType() == ACTOR_TYPE_NPC_DUMMY)
+		u32 actorType = self->getActorType();
+		if (actorType == ACTOR_TYPE_NPC_DUMMY)
 			return true;
 		self->npcTalkOut();
 	}
