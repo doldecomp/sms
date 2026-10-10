@@ -3,6 +3,7 @@
 
 #include <Enemy/SmallEnemy.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/Spine.hpp>
 
 class TBathtubKillerParams;
 class TBathtub;
@@ -63,6 +64,12 @@ public:
 
 class TBathtubKiller : public TSmallEnemy {
 public:
+	enum KillerType {
+		KILLER_NORMAL = 0,
+		KILLER_SHINE  = 1,
+		KILLER_FAST   = 2,
+	};
+
 	TBathtubKiller(const char* name = "バスタブキラー");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -102,6 +109,8 @@ public:
 	bool isAboided();
 	bool canChase();
 	void generateExplosion();
+	// Fabricated name for the shared current-nerve death check.
+	bool isDying() const;
 
 	// fabricated
 	TBathtubKillerParams* getSaveParam2() const
@@ -110,7 +119,7 @@ public:
 	}
 
 public:
-	/* 0x194 */ u8 mKillerType; // 0: normal, 1: shine, 2: fast
+	/* 0x194 */ u8 mKillerType;
 	/* 0x198 */ TBathtubKillerPersonality mPersonality;
 	/* 0x1AC */ JGeometry::TQuat4<f32> mQuat;
 	/* 0x1BC */ JGeometry::TVec3<f32> mAcceleration;
@@ -141,6 +150,16 @@ DECLARE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor);
 DECLARE_NERVE(TNerveBathtubKillerStraight, TLiveActor);
 DECLARE_NERVE(TNerveBathtubKillerBreak, TLiveActor);
 DECLARE_NERVE(TNerveBathtubKillerExplosion, TLiveActor);
+
+// TODO: the original name of this shared inline is unknown. It checks only
+// the current nerve, unlike TSpineBase::isNerve's fallback to the previous one.
+inline bool TBathtubKiller::isDying() const
+{
+	return mSpine->getCurrentNerve()
+	           == &TNerveBathtubKillerExplosion::theNerve()
+	       || mSpine->getCurrentNerve()
+	              == &TNerveBathtubKillerBreak::theNerve();
+}
 
 class TBathtubKillerManager : public TSmallEnemyManager {
 public:
