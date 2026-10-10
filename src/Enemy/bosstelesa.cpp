@@ -299,7 +299,7 @@ void TBubble::appendEnemy()
 	}
 
 	if (enemy && enemy->receiveMessage(this, HIT_MESSAGE_TAKE)) {
-		enemy->onHitFlag(HIT_FLAG_UNK8000000);
+		enemy->onHitFilter(HIT_CATEGORY_BOSS);
 		mHeldObject = enemy;
 		JGeometry::TVec3<f32> velocity;
 		velocity.set(0.0f, 1.0f, -1.0f);
@@ -313,7 +313,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 {
 	TBubble* bubble = (TBubble*)spine->getBody();
 	if (spine->getTime() == 0) {
-		bubble->offHitFlag(HIT_FLAG_NO_COLLISION);
+		bubble->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 		if (!bubble->unk1D0) {
 			bubble->setBckAnm(8);
@@ -327,7 +327,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 		frameCtrl->setFrame(frameRange.rand());
 		bubble->onLiveFlag(LIVE_FLAG_UNK8);
 	} else if (bubble->checkCurAnmEnd(0)) {
-		bubble->offHitFlag(HIT_FLAG_NO_COLLISION);
+		bubble->offHitFilter(HIT_FILTER_NO_COLLISION);
 		bubble->setBckAnm(10);
 	}
 
@@ -375,7 +375,7 @@ DEFINE_NERVE(TNerveBubbleSplit, TLiveActor)
 {
 	TBubble* bubble = (TBubble*)spine->getBody();
 	if (spine->getTime() == 0) {
-		bubble->onHitFlag(HIT_FLAG_NO_COLLISION);
+		bubble->onHitFilter(HIT_FILTER_NO_COLLISION);
 		bubble->split();
 	}
 
@@ -493,7 +493,7 @@ void TBossTelesaKillSmallEnemy::checkHit()
 
 	for (int i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
-		if (actor->checkActorType(ACTOR_TYPE_ENEMY)) {
+		if (actor->isHitCategory(HIT_CATEGORY_ENEMY)) {
 			if (actor->isActorType(0x10000013))
 				((THamuKuri*)actor)->selectCapHolder();
 			((TLiveActor*)actor)->kill();
@@ -533,7 +533,6 @@ void TTelesaSlot::initMapObj()
 	}
 }
 
-#pragma dont_inline on
 void TTelesaSlot::randomReset()
 {
 	TMsRange<s32> indexRange(0, 8);
@@ -543,7 +542,6 @@ void TTelesaSlot::randomReset()
 		unk198[i] = false;
 	}
 }
-#pragma dont_inline off
 
 void TTelesaSlot::calcRootMatrix()
 {
@@ -620,9 +618,8 @@ void TTelesaSlot::moveObject()
 
 			for (int j = 0; j < unk148; ++j) {
 				if (unk198[j]) {
-					TBossTelesa* owner = unk1A0;
-					TBossTelesaSaveLoadParams* params
-					    = (TBossTelesaSaveLoadParams*)owner->unk15C;
+					TBossTelesa* owner                = unk1A0;
+					TBossTelesaSaveLoadParams* params = owner->unk15C;
 					f32 rate = params->mSLSlotHitCollectRate.get();
 
 					TMsRange<f32> collectRange(0.0f, 1.0f);
@@ -642,33 +639,8 @@ void TTelesaSlot::moveObject()
 			if (unk138[2] != 0.0f)
 				allStopped = false;
 
-			if (allStopped) {
-				TBossTelesa* owner = unk1A0;
-				TTelesaSlot* slot  = (TTelesaSlot*)owner->unk184;
-
-				if (slot->getSlotResult() == 2 || slot->getSlotResult() == 0) {
-					owner->unk374.x = 0.0f;
-					owner->unk374.y = 0.0f;
-					owner->unk374.z = 0.0f;
-					gpMarioParticleManager->emit(
-					    SCENE_BTELESA_JPA_MS_BTLS_FUBUKI, &owner->unk374, 0,
-					    nullptr);
-
-					if (slot->getSlotResult() == 2) {
-						SMSGetMSound()->startSoundActor(
-						    MSD_SE_BS_TELESA_FANFALE_1, &owner->mPosition, 0,
-						    nullptr, 0, 4);
-					} else {
-						SMSGetMSound()->startSoundActor(
-						    MSD_SE_BS_TELESA_FANFALE_2, &owner->mPosition, 0,
-						    nullptr, 0, 4);
-					}
-				} else {
-					SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FANFALE_3,
-					                                &owner->mPosition, 0,
-					                                nullptr, 0, 4);
-				}
-			}
+			if (allStopped)
+				unk1A0->fanfale();
 		}
 	}
 }
@@ -694,7 +666,6 @@ void TTelesaSlot::moveStart()
 
 u32 TTelesaSlot::touchWater(THitActor*) { return FALSE; }
 
-#pragma dont_inline on
 void TTelesaSlot::forceStopSlot(int idx)
 {
 	f32 collectRate;
@@ -702,8 +673,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 	if (!unk19C)
 		return;
 
-	TBossTelesaSaveLoadParams* params
-	    = (TBossTelesaSaveLoadParams*)unk1A0->unk15C;
+	TBossTelesaSaveLoadParams* params = unk1A0->unk15C;
 	collectRate = params->mSLSlotFirstHitCollectRate.get();
 
 	if (SMS_GetMarioHP() == 1)
@@ -733,7 +703,6 @@ void TTelesaSlot::forceStopSlot(int idx)
 
 	unk19C = 0;
 }
-#pragma dont_inline off
 
 bool TTelesaSlot::isRollDrum()
 {
@@ -861,7 +830,7 @@ void TBossTelesa::init(TLiveManager* manager)
 	mMActor       = mMActorKeeper->createMActor("btelesa.bmd", 3);
 
 	onLiveFlag(LIVE_FLAG_DEAD);
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	TSpineEnemyParams* params = getSaveParam();
 	if (params) {
@@ -877,15 +846,15 @@ void TBossTelesa::init(TLiveManager* manager)
 	mGroundPlane = TMap::getIllegalCheckData();
 	setGoalPath((THitActor*)gpMarioAddress);
 	initAnmSound();
-	unk15C     = getSaveParam();
+	unk15C     = static_cast<TBossTelesaSaveLoadParams*>(getSaveParam());
 	mActorType = 0x08000013;
-	onHitFlag(0xD0000000);
+	onHitFilter(0xD0000000);
 	mSpine->initWith(&TNerveBossTelesaFallDemo::theNerve());
 	onLiveFlag(LIVE_FLAG_UNK8);
 
 	mMActor->setLightType(1);
-	mMActor->unk40 = 1;
-	mMActor->initNormalMotionBlend();
+	mMActor->markUnk40();
+	mMActor->initBckNormalMotionBlend();
 
 	J3DModel* model = mMActor->getModel();
 	if (!model->getSkinDeform())
@@ -938,7 +907,7 @@ void TBossTelesa::init(TLiveManager* manager)
 	unk16C->initHitActor(0x08000013, 5, 0xD1000000, 350.0f, 550.0f, 300.0f,
 	                     500.0f);
 	((TBossTelesaBody*)unk16C)->unk68 = this;
-	unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk16C->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	unk170 = new TBossTelesaTongue("ボステレサ舌コリジョン");
 	enemyGroup
@@ -947,7 +916,7 @@ void TBossTelesa::init(TLiveManager* manager)
 	unk170->initHitActor(0x08000013, 5, 0xC0000000, 180.0f, 350.0f, 180.0f,
 	                     350.0f);
 	((TBossTelesaTongue*)unk170)->unk68 = this;
-	unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk170->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	unk174 = new TBossTelesaKillSmallEnemy("ボステレサ雑魚敵死コリジョン");
 	enemyGroup
@@ -955,17 +924,15 @@ void TBossTelesa::init(TLiveManager* manager)
 	enemyGroup->getChildren().push_back(unk174);
 	unk174->initHitActor(0x1000000C, 5, 0x10000000, 400.0f, 300.0f, 400.0f,
 	                     300.0f);
-	unk174->offHitFlag(HIT_FLAG_NO_COLLISION);
+	unk174->offHitFilter(HIT_FILTER_NO_COLLISION);
 	((TBossTelesaKillSmallEnemy*)unk174)->unk68 = this;
 
 	mMActor->setLightType(3);
 
-	JDrama::TViewObj* screenTex = static_cast<JDrama::TViewObj*>(
+	TScreenTexture* screenTex = static_cast<TScreenTexture*>(
 	    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
-	void* dataOwner  = *(void**)((u8*)screenTex + 0x10);
-	ResTIMG* texture = *(ResTIMG**)((u8*)dataOwner + 0x20);
-	SMS_ChangeTextureAll(mMActor->mModel->getModelData(), "H_ma_rak_dummy",
-	                     *texture);
+	SMS_ChangeTextureAll(mMActor->getModel()->getModelData(), "H_ma_rak_dummy",
+	                     *screenTex->getTexture()->getTexInfo());
 
 	unk358 = SMS_GetMarioHP();
 }
@@ -1038,27 +1005,27 @@ void TBossTelesa::loadAfter()
 		unk2F8[i]->makeObjDead();
 
 	unk320[0]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 0"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 0"));
 	unk320[1]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 1"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 1"));
 	unk320[2]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 2"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 2"));
 	unk320[3]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 3"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 3"));
 	unk320[4]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 4"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 4"));
 	unk320[5]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 5"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 5"));
 	unk320[6]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 6"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 6"));
 	unk320[7]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 7"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 7"));
 	unk320[8]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 8"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 8"));
 	unk320[9]
-	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("コイン 9"));
+	    = static_cast<TMapObjBase*>(JDrama::TNameRefGen::search("コイン 9"));
 	for (int i = 0; i < 10; ++i)
-		((TMapObjBase*)unk320[i])->makeObjDead();
+		unk320[i]->makeObjDead();
 
 	TTelesaSlot* slot = (TTelesaSlot*)unk184;
 	slot->unk1E4[0]   = 0.0f;
@@ -1138,14 +1105,14 @@ void TBossTelesa::loadAfter()
 void TBossTelesa::reset()
 {
 	TSpineEnemy::reset();
-	onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
 	onLiveFlag(LIVE_FLAG_UNK8);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 
 	unk18C = 0;
 
-	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
+	TBossTelesaSaveLoadParams* params = unk15C;
 	setHitParams(params->mSLAttackRadius.get(), params->mSLAttackHeight.get(),
 	             params->mSLDamageRadius.get(), params->mSLDamageHeight.get());
 
@@ -1160,7 +1127,7 @@ void TBossTelesa::moveObject()
 		return;
 
 	JGeometry::TVec3<f32> cameraPos;
-	cameraPos.set(gpCamera->unk124);
+	cameraPos.set(gpCamera->getUnk124());
 	JGeometry::TVec3<f32> marioDiff = *gpMarioPos;
 	marioDiff.sub(cameraPos);
 	f32 cameraDist = marioDiff.length();
@@ -1179,8 +1146,7 @@ void TBossTelesa::moveObject()
 	}
 
 	if (mSpine->getCurrentNerve() == &TNerveBossTelesaFallDemo::theNerve()) {
-		if (unk178[0] && unk178[1]
-		    && unk178[0]->mPosition.y > unk178[1]->mPosition.y + 5.0f) {
+		if (unk178[0]->mPosition.y > unk178[1]->mPosition.y + 5.0f) {
 			unk184->mPosition = unk178[0]->mPosition;
 			unk184->mPosition.y += 300.0f;
 		}
@@ -1191,11 +1157,10 @@ void TBossTelesa::moveObject()
 		mMActor->getFrameCtrl(3)->setFrame(0.0f);
 	}
 
-	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()) {
+	if (isInDamage()) {
 		u8 maxHp       = getMaxHitPoints();
 		u8 targetAlpha = mNormalAlpha + (maxHp - mHitPoints) * 30;
-		if (targetAlpha > 0xFE)
-			targetAlpha = 0xFE;
+		targetAlpha    = MsClamp<u8>(targetAlpha, 0, 0xFE);
 
 		if ((mMActor->checkCurBckFromIndex(7)
 		     && mMActor->getFrameCtrl(0)->getFrame() > 50.0f)
@@ -1208,7 +1173,7 @@ void TBossTelesa::moveObject()
 	}
 
 	JGeometry::TVec3<f32> cameraDiff = *gpMarioPos;
-	cameraDiff.sub(gpCamera->unk124);
+	cameraDiff.sub(gpCamera->getUnk124());
 	unk19C = unk178[0]->mPosition;
 	unk19C.x += 0.67f * cameraDiff.x;
 	unk19C.z += 0.67f * cameraDiff.z;
@@ -1236,8 +1201,8 @@ void TBossTelesa::moveObject()
 		break;
 	}
 
-	mLinearVelocity.zero();
-	mAngularVelocity.zero();
+	mPositionDelta.zero();
+	mRotationDelta.zero();
 	control();
 
 	for (int i = 0; i < mColCount; ++i) {
@@ -1246,12 +1211,12 @@ void TBossTelesa::moveObject()
 	}
 
 	bind();
-	mPosition += mLinearVelocity;
-	mRotation += mAngularVelocity;
+	mPosition += mPositionDelta;
+	mRotation += mRotationDelta;
 	mPosition.y = mGroundHeight + 300.0f;
 
 	unk168 = MsClamp(unk168 - 0.05f, 0.0f, 1.0f);
-	mMActor->setMotionBlendRatioForBck(unk168);
+	mMActor->setBckMotionBlendRatio(unk168);
 
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		unk16C->mPosition = mPosition;
@@ -1280,11 +1245,13 @@ void TBossTelesa::kill()
 
 MtxPtr TBossTelesa::getTakingMtx()
 {
-	unk278.set(unk178[0]->mMActor->mModel->getAnmMtx(1));
+	unk278.set(unk178[0]->mMActor->getModel()->getAnmMtx(1));
 	unk278.mMtx[1][3] = unk178[0]->mPosition.y - 120.0f;
 	return unk278.mMtx;
 }
 
+// TODO: reconstruct the rest of this UNUSED body (map size 0x1d8).
+// The counter reset alone is unverified.
 void TBossTelesa::prepareGenerate() { unk35C = 0; }
 
 void TBossTelesa::calcRootMatrix()
@@ -1299,10 +1266,7 @@ void TBossTelesa::calcRootMatrix()
 
 	TPosition3f translateMtx;
 	translateMtx.translation(
-	    mPosition.x,
-	    mPosition.y
-	        + ((TBossTelesaSaveLoadParams*)unk15C)->mSLTransYOffset.get()
-	        + offsetY,
+	    mPosition.x, mPosition.y + unk15C->mSLTransYOffset.get() + offsetY,
 	    mPosition.z);
 
 	Mtx rotateMtx;
@@ -1413,8 +1377,8 @@ void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
 		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
 		    && unk350) {
 			mMActor->offMakeDL();
-			SMS_AddDamageFogEffect(mMActor->mModel->getModelData(), mPosition,
-			                       gfx);
+			SMS_AddDamageFogEffect(mMActor->getModel()->getModelData(),
+			                       mPosition, gfx);
 		}
 	}
 
@@ -1542,36 +1506,33 @@ void TBossTelesa::damageRecover()
 	f32 zero = 0.0f;
 
 	for (int i = 0; i < 20; ++i) {
-		TLiveActor* actor = unk2A8[i];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			if (actor->mHolder == nullptr)
-				SMS_SendMessageToMario(actor, HIT_MESSAGE_UNK8);
+		if (!unk2A8[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			if (unk2A8[i]->mHolder == nullptr)
+				SMS_SendMessageToMario(unk2A8[i], HIT_MESSAGE_DETACH);
 
-			((TMapObjBase*)actor)->makeObjDead();
+			unk2A8[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
-			                             &actor->mPosition, 0, nullptr);
-			actor->mPosition.set(zero, zero, zero);
+			                             &unk2A8[i]->mPosition, 0, nullptr);
+			unk2A8[i]->mPosition.set(zero, zero, zero);
 		}
 	}
 
 	for (int i = 0; i < 10; ++i) {
-		TLiveActor* actor = unk2F8[i];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			if (actor->mHolder == nullptr)
-				SMS_SendMessageToMario(actor, HIT_MESSAGE_UNK8);
+		if (!unk2F8[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			if (unk2F8[i]->mHolder == nullptr)
+				SMS_SendMessageToMario(unk2F8[i], HIT_MESSAGE_DETACH);
 
-			((TMapObjBase*)actor)->makeObjDead();
+			unk2F8[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
-			                             &actor->mPosition, 0, nullptr);
-			actor->mPosition.set(zero, zero, zero);
+			                             &unk2F8[i]->mPosition, 0, nullptr);
+			unk2F8[i]->mPosition.set(zero, zero, zero);
 		}
 
-		actor = unk320[i];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			((TMapObjBase*)actor)->makeObjDead();
+		if (!unk320[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
+			unk320[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
-			                             &actor->mPosition, 0, nullptr);
-			actor->mPosition.set(zero, zero, zero);
+			                             &unk320[i]->mPosition, 0, nullptr);
+			unk320[i]->mPosition.set(zero, zero, zero);
 		}
 	}
 
@@ -1610,7 +1571,7 @@ bool TBossTelesa::rouletteFall()
 		if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE))
 			mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
 	} else {
-		if (SMS_SendMessageToMario(this, HIT_MESSAGE_UNK8)) {
+		if (SMS_SendMessageToMario(this, HIT_MESSAGE_DETACH)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_SET,
 			                                &mPosition, 0, nullptr, 0, 4);
 			mHeldObject = nullptr;
@@ -1658,6 +1619,8 @@ bool TBossTelesa::slotFall()
 	return FALSE;
 }
 
+// TODO: reconstruct the UNUSED body (map size 0x2c). No surviving retail
+// call site has been identified.
 void TBossTelesa::openWaterPlace() { }
 
 void TBossTelesa::flashItem(int result)
@@ -1725,16 +1688,16 @@ void TBossTelesa::flashItem(int result)
 
 void TBossTelesa::onAllCollision()
 {
-	offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
-	unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	unk16C->offHitFilter(HIT_FILTER_NO_COLLISION);
+	unk170->offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TBossTelesa::offAllCollision()
 {
-	onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk16C->onHitFlag(HIT_FLAG_NO_COLLISION);
-	unk170->onHitFlag(HIT_FLAG_NO_COLLISION);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	unk16C->onHitFilter(HIT_FILTER_NO_COLLISION);
+	unk170->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 const char** TBossTelesa::getBasNameTable() const { return btelesa_bastable; }
@@ -1749,11 +1712,10 @@ void TBossTelesa::genAttacker()
 		return;
 	}
 
-	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
-	s32 count                         = params->mSLNumGenBubble.get();
-	MtxPtr rootMtx                    = mMActor->mModel->getAnmMtx(5);
-	f32 angleStep                     = 180.0f / count;
-	f32 angleOffset                   = count * 0.5f;
+	s32 count       = unk15C->mSLNumGenBubble.get();
+	MtxPtr rootMtx  = mMActor->getModel()->getAnmMtx(5);
+	f32 angleStep   = 180.0f / count;
+	f32 angleOffset = angleStep * count * 0.5f;
 
 	for (int i = 0; i < count; ++i) {
 		TBubble* bubble = (TBubble*)gpConductor->makeOneEnemyAppear(
@@ -1762,24 +1724,21 @@ void TBossTelesa::genAttacker()
 			return;
 
 		Mtx rot;
-		Vec velocity;
-		velocity.x = 0.0f;
-		velocity.y = 0.0f;
-		velocity.z = -50.0f;
+		JGeometry::TVec3<f32> velocity;
+		velocity.set(0.0f, 0.0f, -50.0f);
 		MsMtxSetRotRPH(rot, mRotation.x,
 		               mRotation.y - angleOffset + angleStep * i, mRotation.z);
 		MTXMultVec(rot, &velocity, &velocity);
 		MsVECNormalize(&velocity, &velocity);
 
 		velocity.y = 2.0f;
-		f32 speed  = params->mSL1stBubbleSp.get();
+		f32 speed  = unk15C->mSL1stBubbleSp.get();
 		velocity.x *= speed;
 		velocity.z *= speed;
 
-		bubble->mPosition.x = rootMtx[0][3];
-		bubble->mPosition.y = rootMtx[1][3] - 50.0f;
-		bubble->mPosition.z = rootMtx[2][3];
-		bubble->mVelocity   = velocity;
+		bubble->mPosition.set(rootMtx[0][3], rootMtx[1][3] - 50.0f,
+		                      rootMtx[2][3]);
+		bubble->mVelocity = velocity;
 		bubble->mPosition.y += 10.0f;
 		bubble->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
@@ -1788,8 +1747,7 @@ void TBossTelesa::genAttacker()
 		if (itemRoll < mItemGenRate) {
 			bubble->appendItem();
 		} else {
-			TMsRange<f32> enemyRange(0.0f, 1.0f);
-			f32 enemyRoll = enemyRange.rand();
+			f32 enemyRoll = itemRange.rand();
 			if (enemyRoll < mEnemyGenRate)
 				bubble->appendEnemy();
 		}
@@ -1798,19 +1756,24 @@ void TBossTelesa::genAttacker()
 
 void TBossTelesa::setBckAnm(int index)
 {
-	unk164 = mMActor->getCurAnmIdx(0);
+	unk164 = getMActor()->getCurAnmIdx(0);
 	unk160 = index;
 	unk168 = 1.0f;
 
-	mMActor->setBckOldMotionBlendAnmPtr(mMActor->getCurBckAnmPtr());
+	getMActor()->setBckOldMotionBlendAnmPtr(getMActor()->getCurBckAnmPtr());
 
-	mMActor->setBckFromIndex(index);
-	mMActor->setMotionBlendRatioForBck(unk168);
+	getMActor()->setBckFromIndex(index);
+	getMActor()->setBckMotionBlendRatio(unk168);
 
 	setAnmSound(getBas(index));
 }
 
-bool TBossTelesa::isInDamage() { return unk35B != 0; }
+bool TBossTelesa::isInDamage()
+{
+	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve())
+		return true;
+	return false;
+}
 
 void TBossTelesa::rouletteStart()
 {
@@ -1829,14 +1792,13 @@ void TBossTelesa::rouletteStart()
 			direction = -direction;
 
 		f32 speed         = speedRange.rand();
-		unk178[i]->unk144 = direction * (speed + hpSpeed);
+		unk178[i]->unk144 = direction * (hpSpeed + speed);
 
 		speed             = speedRange.rand();
-		unk184->unk1E4[i] = direction * (speed + hpSpeed);
+		unk184->unk1E4[i] = direction * (hpSpeed + speed);
 	}
 
-	for (int i = 0; i < 3; ++i)
-		unk178[i]->setRollSp(unk184->unk1E4[i]);
+	rollRouletteCircle();
 
 	SMSRumbleMgr->start(0x14, 0xf, (f32*)nullptr);
 	gpCameraShake->startShake(CAM_SHAKE_MODE_UNK23, 1.0f);
@@ -1851,12 +1813,18 @@ void TBossTelesa::slotStart()
 
 void TBossTelesa::slotStop()
 {
-	if (unk184)
-		unk184->forceStopSlot(0);
+	unk178[0]->unk144 = 0.0f;
+	unk184->unk1E4[0] = 0.0f;
+	unk178[1]->unk144 = 0.0f;
+	unk184->unk1E4[1] = 0.0f;
+	unk178[2]->unk144 = 0.0f;
+	unk184->unk1E4[2] = 0.0f;
+	rollRouletteCircle();
 }
 
 int TBossTelesa::checkSlotResult()
 {
+	// TODO: verify this UNUSED body (map size 0x4c).
 	return unk184 ? unk184->getSlotResult() : -1;
 }
 
@@ -1883,9 +1851,9 @@ void TBossTelesa::generateSlotItem()
 	}
 	unk1A8 = result;
 
-	TBossTelesaSaveLoadParams* params = (TBossTelesaSaveLoadParams*)unk15C;
+	TBossTelesaSaveLoadParams* params = unk15C;
 	s32 slotItemNum                   = params->mSLSlotItemNum.get();
-	MtxPtr rootMtx                    = mMActor->mModel->getAnmMtx(5);
+	MtxPtr rootMtx                    = mMActor->getModel()->getAnmMtx(5);
 	f32 angleStep                     = 120.0f / slotItemNum;
 	f32 angleOffset                   = angleStep * slotItemNum * 0.5f;
 
@@ -1961,7 +1929,7 @@ void TBossTelesa::generateSlotItem()
 				unk1AC[unk274] = unk2A8[i];
 			}
 
-			unk1AC[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+			unk1AC[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
 			unk1AC[i]->mScaling.set(1.5f, 1.5f, 1.5f);
 			unk1AC[unk274]->mPosition.x = rootMtx[0][3] + dir.x;
 			unk1AC[unk274]->mPosition.y = rootMtx[1][3] - 50.0f;
@@ -2091,7 +2059,16 @@ void TBossTelesa::generateSlotItem()
 	}
 }
 
-void TBossTelesa::fruitCollisionOn() { unk370 = 0; }
+void TBossTelesa::fruitCollisionOn()
+{
+	for (int i = 0; i < unk274; ++i) {
+		TLiveActor* actor = unk1AC[i];
+		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && !actor->isActorType(0x2000000E)
+		    && !actor->isActorType(0x20000002))
+			actor->offHitFilter(HIT_FILTER_NO_COLLISION);
+	}
+}
 
 bool TBossTelesa::checkSlot()
 {
@@ -2106,6 +2083,8 @@ bool TBossTelesa::checkSlot()
 
 bool TBossTelesa::checkAllItemDead()
 {
+	if (unk1A8 == -1)
+		return true;
 	for (int i = 0; i < unk274; ++i)
 		if (!unk1AC[i]->checkLiveFlag(LIVE_FLAG_DEAD))
 			return false;
@@ -2118,12 +2097,12 @@ void TBossTelesa::forceAllItemKill()
 
 	for (int i = 0; i < unk274; ++i) {
 		if (unk1AC[i]->mHolder) {
-			SMS_SendMessageToMario(unk1AC[i], HIT_MESSAGE_UNK8);
+			SMS_SendMessageToMario(unk1AC[i], HIT_MESSAGE_DETACH);
 			unk1AC[i]->mHolder = nullptr;
 		}
 
 		unk1AC[i]->mPosition.set(zero, zero, zero);
-		unk1AC[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+		unk1AC[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		if (!unk1AC[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			unk1AC[i]->kill();
@@ -2135,11 +2114,23 @@ void TBossTelesa::forceAllItemKill()
 
 void TBossTelesa::rollRouletteCircle()
 {
-	if (unk184)
-		unk184->moveStart();
+	for (int i = 0; i < 3; ++i)
+		unk178[i]->setRollSp(unk184->unk1E4[i]);
 }
 
-bool TBossTelesa::isForceRestart() { return unk35A != 0; }
+bool TBossTelesa::isForceRestart()
+{
+	// TODO: verify this UNUSED body (map size 0x54). This predicate is
+	// reconstructed from slotFall, but its original helper boundary is unknown.
+	int rolling = 0;
+	if (unk178[0]->unk13C != 0.0f)
+		rolling = 1;
+	if (unk178[1]->unk13C != 0.0f)
+		++rolling;
+	if (unk178[2]->unk13C != 0.0f)
+		++rolling;
+	return rolling != 3;
+}
 
 void TBossTelesa::forceHide()
 {
@@ -2165,7 +2156,26 @@ void TBossTelesa::forceHide()
 	mSpine->setNext(&TNerveBossTelesaHide::theNerve());
 }
 
-void TBossTelesa::fanfale() { }
+void TBossTelesa::fanfale()
+{
+	TTelesaSlot* slot = unk184;
+	if (slot->getSlotResult() == 2 || slot->getSlotResult() == 0) {
+		unk374.set(0.0f, 0.0f, 0.0f);
+		gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_FUBUKI, &unk374,
+		                             0, nullptr);
+
+		if (slot->getSlotResult() == 2) {
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FANFALE_1,
+			                                &mPosition, 0, nullptr, 0, 4);
+		} else {
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FANFALE_2,
+			                                &mPosition, 0, nullptr, 0, 4);
+		}
+	} else {
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FANFALE_3, &mPosition,
+		                                0, nullptr, 0, 4);
+	}
+}
 
 DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 {
@@ -2180,47 +2190,17 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		if (boss->mHitPoints != 0) {
 			if (boss->unk350) {
 				boss->mMActor->setBrkFromIndex(1);
-				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-				boss->unk160 = 2;
-				boss->unk168 = 1.0f;
-
-				boss->getMActor()->setBckOldMotionBlendAnmPtr(
-				    boss->getMActor()->getCurBckAnmPtr());
-
-				boss->mMActor->setBckFromIndex(2);
-				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-				boss->setAnmSound(boss->getBas(2));
+				boss->setBckAnm(2);
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1F, 1.0f);
 			} else {
-				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-				boss->unk160 = 5;
-				boss->unk168 = 1.0f;
-
-				boss->getMActor()->setBckOldMotionBlendAnmPtr(
-				    boss->getMActor()->getCurBckAnmPtr());
-
-				boss->mMActor->setBckFromIndex(5);
-				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-				boss->setAnmSound(boss->getBas(5));
+				boss->setBckAnm(5);
 				boss->mMActor->setBrkFromIndex(0);
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK20, 1.0f);
 			}
 		} else {
 			MSBgm::stopBGM(0x8001000D, 10);
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK21, 1.0f);
-			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-			boss->unk160 = 3;
-			boss->unk168 = 1.0f;
-
-			boss->getMActor()->setBckOldMotionBlendAnmPtr(
-			    boss->getMActor()->getCurBckAnmPtr());
-
-			boss->mMActor->setBckFromIndex(3);
-			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-			boss->setAnmSound(boss->getBas(3));
+			boss->setBckAnm(3);
 			boss->mMActor->setBrkFromIndex(1);
 			boss->unk184->mScaling.set(0.0f, 0.0f, 0.0f);
 
@@ -2252,14 +2232,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				}
 
 				boss->forceAllItemKill();
-				boss->unk178[0]->unk144 = 0.0f;
-				boss->unk184->unk1E4[0] = 0.0f;
-				boss->unk178[1]->unk144 = 0.0f;
-				boss->unk184->unk1E4[1] = 0.0f;
-				boss->unk178[2]->unk144 = 0.0f;
-				boss->unk184->unk1E4[2] = 0.0f;
-				for (int i = 0; i < 3; ++i)
-					boss->unk178[i]->setRollSp(boss->unk184->unk1E4[i]);
+				boss->slotStop();
 			}
 
 			if (boss->unk388 > 240) {
@@ -2285,48 +2258,18 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	if (boss->checkCurAnmEnd(0)) {
 		if (boss->mMActor->checkCurBckFromIndex(5)) {
 			boss->mMActor->setBrkFromIndex(2);
-			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-			boss->unk160 = 7;
-			boss->unk168 = 1.0f;
-
-			boss->getMActor()->setBckOldMotionBlendAnmPtr(
-			    boss->getMActor()->getCurBckAnmPtr());
-
-			boss->mMActor->setBckFromIndex(7);
-			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-			boss->setAnmSound(boss->getBas(7));
+			boss->setBckAnm(7);
 		} else if (boss->mMActor->checkCurBckFromIndex(7)) {
-			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-			boss->unk160 = 6;
-			boss->unk168 = 1.0f;
-
-			boss->getMActor()->setBckOldMotionBlendAnmPtr(
-			    boss->getMActor()->getCurBckAnmPtr());
-
-			boss->mMActor->setBckFromIndex(6);
-			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-			boss->setAnmSound(boss->getBas(6));
+			boss->setBckAnm(6);
 		} else {
 			SMS_ResetDamageFogEffect(boss->mMActor->getModel()->getModelData());
 
 			if (boss->mMActor->checkCurBckFromIndex(6)) {
-				boss->offHitFlag(HIT_FLAG_NO_COLLISION);
-				boss->unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
-				boss->unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
+				boss->offHitFilter(HIT_FILTER_NO_COLLISION);
+				boss->unk16C->offHitFilter(HIT_FILTER_NO_COLLISION);
+				boss->unk170->offHitFilter(HIT_FILTER_NO_COLLISION);
 
-				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-				boss->unk160 = 15;
-				boss->unk168 = 1.0f;
-
-				boss->getMActor()->setBckOldMotionBlendAnmPtr(
-				    boss->getMActor()->getCurBckAnmPtr());
-
-				boss->mMActor->setBckFromIndex(15);
-				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-				boss->setAnmSound(boss->getBas(15));
+				boss->setBckAnm(15);
 				boss->mMActor->setBtpFromIndex(2);
 				spine->pushAfterCurrent(
 				    &TNerveBossTelesaPrepareSlot::theNerve());
@@ -2344,17 +2287,7 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0 || !boss->mMActor->checkCurBckFromIndex(14)) {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 14;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(14);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(14));
+		boss->setBckAnm(14);
 	} else {
 		if (boss->mMActor->getFrameCtrl(0)->checkPass(40.0f))
 			boss->genAttacker();
@@ -2369,17 +2302,7 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (!boss->mMActor->checkCurBckFromIndex(4)) {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 4;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(4);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(4));
+		boss->setBckAnm(4);
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2429,17 +2352,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		if (!boss->mMActor->checkCurBckFromIndex(0)) {
-			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-			boss->unk160 = 0;
-			boss->unk168 = 1.0f;
-
-			boss->getMActor()->setBckOldMotionBlendAnmPtr(
-			    boss->getMActor()->getCurBckAnmPtr());
-
-			boss->mMActor->setBckFromIndex(0);
-			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-			boss->setAnmSound(boss->getBas(0));
+			boss->setBckAnm(0);
 
 			if (!boss->unk384) {
 				boss->unk384 = 1;
@@ -2448,23 +2361,13 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 
 			boss->unk184->mScaling.set(1.0f, 1.0f, 1.0f);
 			boss->unk184->randomReset();
-			boss->offHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
+			boss->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->unk16C->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->unk170->offHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 	} else if (boss->checkCurAnmEnd(0)
 	           && !boss->mMActor->checkCurBckFromIndex(15)) {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 15;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(15);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(15));
+		boss->setBckAnm(15);
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2480,17 +2383,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		int interval = TBossTelesa::mTelesaGenerateInterval
 		               + (maxHp - boss->mHitPoints) * 100;
 		if (spine->getTime() % interval == 1) {
-			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-			boss->unk160 = 14;
-			boss->unk168 = 1.0f;
-
-			boss->getMActor()->setBckOldMotionBlendAnmPtr(
-			    boss->getMActor()->getCurBckAnmPtr());
-
-			boss->mMActor->setBckFromIndex(14);
-			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-			boss->setAnmSound(boss->getBas(14));
+			boss->setBckAnm(14);
 		}
 	}
 
@@ -2502,17 +2395,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 11;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(11);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(11));
+		boss->setBckAnm(11);
 	}
 
 	if (boss->mMActor->checkCurBckFromIndex(11)) {
@@ -2521,17 +2404,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 		}
 
 		if (boss->checkCurAnmEnd(0)) {
-			boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-			boss->unk160 = 15;
-			boss->unk168 = 1.0f;
-
-			boss->getMActor()->setBckOldMotionBlendAnmPtr(
-			    boss->getMActor()->getCurBckAnmPtr());
-
-			boss->mMActor->setBckFromIndex(15);
-			boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-			boss->setAnmSound(boss->getBas(15));
+			boss->setBckAnm(15);
 			boss->mMActor->setBtpFromIndex(2);
 			boss->unk184->forceStopSlot(1);
 		}
@@ -2549,27 +2422,11 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (!boss->mMActor->checkCurBckFromIndex(14)
 	    && boss->unk364 < TBossTelesa::mBaseHoseiPosY - 200.0f) {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 14;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(14);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(14));
+		boss->setBckAnm(14);
 	} else if (boss->checkCurAnmEnd(0) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
 		boss->unk368 = 0;
-		for (int i = 0; i < boss->unk274; ++i) {
-			TLiveActor* actor = boss->unk1AC[i];
-			if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-			    && actor->mActorType != 0x2000000E
-			    && actor->mActorType != 0x20000002)
-				actor->offHitFlag(HIT_FLAG_NO_COLLISION);
-		}
+		boss->fruitCollisionOn();
 		return TRUE;
 	} else if (spine->getTime() > 200) {
 		boss->unk364 -= 100.0f;
@@ -2581,17 +2438,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 15;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(15);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(15));
+		boss->setBckAnm(15);
 		boss->mMActor->setBtpFromIndex(2);
 	}
 
@@ -2599,33 +2446,12 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 		boss->unk36C++;
 		if (boss->checkCurAnmEnd(0)) {
 			if (boss->mMActor->checkCurBckFromIndex(1)) {
-				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-				boss->unk160 = 12;
-				boss->unk168 = 1.0f;
-
-				boss->getMActor()->setBckOldMotionBlendAnmPtr(
-				    boss->getMActor()->getCurBckAnmPtr());
-
-				boss->mMActor->setBckFromIndex(12);
-				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-				boss->setAnmSound(boss->getBas(12));
+				boss->setBckAnm(12);
 				boss->mMActor->setBtpFromIndex(1);
 			} else if (boss->mMActor->checkCurBckFromIndex(12)) {
-				TBossTelesaSaveLoadParams* params
-				    = (TBossTelesaSaveLoadParams*)boss->unk15C;
+				TBossTelesaSaveLoadParams* params = boss->unk15C;
 				if (boss->unk36C > params->mSLSpicyTime.get()) {
-					boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-					boss->unk160 = 13;
-					boss->unk168 = 1.0f;
-
-					boss->getMActor()->setBckOldMotionBlendAnmPtr(
-					    boss->getMActor()->getCurBckAnmPtr());
-
-					boss->mMActor->setBckFromIndex(13);
-					boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-					boss->setAnmSound(boss->getBas(13));
+					boss->setBckAnm(13);
 				}
 			} else {
 				boss->unk36C = 0;
@@ -2639,17 +2465,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 				boss->unk34C.a = alpha;
 
-				boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-				boss->unk160 = 15;
-				boss->unk168 = 1.0f;
-
-				boss->getMActor()->setBckOldMotionBlendAnmPtr(
-				    boss->getMActor()->getCurBckAnmPtr());
-
-				boss->mMActor->setBckFromIndex(15);
-				boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-				boss->setAnmSound(boss->getBas(15));
+				boss->setBckAnm(15);
 				boss->mMActor->setBtpFromIndex(2);
 			}
 		}
@@ -2657,9 +2473,8 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 	boss->unk368++;
 
-	TBossTelesaSaveLoadParams* params
-	    = (TBossTelesaSaveLoadParams*)boss->unk15C;
-	int waitTime = params->mSLStopSlotTime0.get();
+	TBossTelesaSaveLoadParams* params = boss->unk15C;
+	int waitTime                      = params->mSLStopSlotTime0.get();
 	if (boss->mHitPoints == 2)
 		waitTime = params->mSLStopSlotTime1.get();
 	if (boss->mHitPoints == 1)
@@ -2672,20 +2487,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 		boss->flashItem(waitTime - boss->unk368);
 
 	if (boss->mMActor->checkCurBckFromIndex(15)) {
-		BOOL done;
-		if (boss->unk1A8 == -1) {
-			done = TRUE;
-		} else {
-			done = TRUE;
-			for (int i = 0; i < boss->unk274; ++i) {
-				if (!(boss->unk1AC[i]->checkLiveFlag(LIVE_FLAG_DEAD))) {
-					done = FALSE;
-					break;
-				}
-			}
-		}
-
-		if (done || boss->unk368 > waitTime) {
+		if (boss->checkAllItemDead() || boss->unk368 > waitTime) {
 			boss->unk368 = 0;
 			boss->forceAllItemKill();
 
@@ -2724,17 +2526,7 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 			return TRUE;
 		}
 	} else {
-		boss->unk164 = boss->mMActor->getCurAnmIdx(0);
-		boss->unk160 = 16;
-		boss->unk168 = 1.0f;
-
-		boss->getMActor()->setBckOldMotionBlendAnmPtr(
-		    boss->getMActor()->getCurBckAnmPtr());
-
-		boss->mMActor->setBckFromIndex(16);
-		boss->mMActor->setMotionBlendRatioForBck(boss->unk168);
-
-		boss->setAnmSound(boss->getBas(16));
+		boss->setBckAnm(16);
 
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_THANKYOU,
 		                                &boss->mPosition, 0, nullptr, 0, 4);
@@ -2759,9 +2551,9 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 		diff.sub(*gpMarioPos);
 
 		if (boss->slotFall()) {
-			boss->offHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->unk16C->offHitFlag(HIT_FLAG_NO_COLLISION);
-			boss->unk170->offHitFlag(HIT_FLAG_NO_COLLISION);
+			boss->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->unk16C->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->unk170->offHitFilter(HIT_FILTER_NO_COLLISION);
 			spine->reset();
 			spine->setNext(&TNerveBossTelesaHideWait::theNerve());
 			spine->pushAfterCurrent(&TNerveBossTelesaHideWait::theNerve());

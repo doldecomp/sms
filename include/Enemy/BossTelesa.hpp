@@ -151,7 +151,7 @@ public:
 	/* 0x151 */ u8 unk151[0x3];
 	/* 0x154 */ TTelesaSlot* unk154;
 	/* 0x158 */ void* unk158;
-	/* 0x15C */ void* unk15C;
+	/* 0x15C */ TBossTelesaSaveLoadParams* unk15C;
 	/* 0x160 */ s32 unk160;
 	/* 0x164 */ s32 unk164;
 	/* 0x168 */ f32 unk168;
@@ -170,7 +170,7 @@ public:
 	/* 0x278 */ JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > unk278;
 	/* 0x2A8 */ TMapObjBase* unk2A8[20];
 	/* 0x2F8 */ TMapObjBase* unk2F8[10];
-	/* 0x320 */ TLiveActor* unk320[10];
+	/* 0x320 */ TMapObjBase* unk320[10];
 	/* 0x348 */ GXColor unk348;
 	/* 0x34C */ GXColor unk34C;
 	/* 0x350 */ u8 unk350;
