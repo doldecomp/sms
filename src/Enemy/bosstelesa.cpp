@@ -1261,9 +1261,20 @@ MtxPtr TBossTelesa::getTakingMtx()
 	return mTakingMtx.mMtx;
 }
 
-// TODO: reconstruct the rest of this UNUSED body (map size 0x1d8).
-// The counter reset alone is unverified.
-void TBossTelesa::prepareGenerate() { mFruitHitCount = 0; }
+// TODO: the Appear nerve proves an inline layer here (it calls
+// randomReset out of line), but this body compiles to 0x150 against the
+// map's 0x1d8, so part of the original is still missing.
+void TBossTelesa::prepareGenerate()
+{
+	if (!unk384) {
+		unk384 = 1;
+		MSBgm::startBGM(MSD_BGM_MAP_SELECT);
+	}
+
+	mSlot->mScaling.set(1.0f, 1.0f, 1.0f);
+	mSlot->randomReset();
+	onAllCollision();
+}
 
 void TBossTelesa::calcRootMatrix()
 {
@@ -2364,16 +2375,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 		if (!boss->mMActor->checkCurBckFromIndex(0)) {
 			boss->setBckAnm(0);
 
-			if (!boss->unk384) {
-				boss->unk384 = 1;
-				MSBgm::startBGM(MSD_BGM_MAP_SELECT);
-			}
-
-			boss->mSlot->mScaling.set(1.0f, 1.0f, 1.0f);
-			boss->mSlot->randomReset();
-			boss->offHitFilter(HIT_FILTER_NO_COLLISION);
-			boss->mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
-			boss->mTongueCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->prepareGenerate();
 		}
 	} else if (boss->checkCurAnmEnd(0)
 	           && !boss->mMActor->checkCurBckFromIndex(15)) {
