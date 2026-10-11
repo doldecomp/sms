@@ -324,9 +324,9 @@ static void makeWorldToPollutionMtx(f32 scale, f32 x, f32 z, TPosition3f* mtx)
 	mtx->zero();
 
 	mtx->mMtx[0][0] = scale;
-	mtx->mMtx[0][3] = -z * scale;
+	mtx->mMtx[0][3] = -x * scale;
 	mtx->mMtx[1][2] = scale;
-	mtx->mMtx[1][3] = -x * scale;
+	mtx->mMtx[1][3] = -z * scale;
 }
 
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
