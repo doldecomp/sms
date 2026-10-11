@@ -344,14 +344,12 @@ Game-tunable parameters use `TParamRT<T>` fields initialized via the `PARAM_INIT
 
 - `// fabricated` — the code is not from the original binary; it was invented/guessed to make things compile. May be incorrect.
 - `// TODO:` — known issues, suspected inaccuracies, or incomplete understanding.
-- UNUSED functions have a size in the map. If our body compiles to a different size, the guess is wrong: leave the function empty rather than commit it with a size TODO.
+- `// Tiny size mismatch` / `// TODO: incorrect size` — for functions which were completely inlined and not emitted to the original binary, but are present in the symbol map as UNUSED symbols and their size is available. That size can be compared against the size in our code using tools/decomp-diff.py and if it's different, then the guess for the function's contents is not correct yet.
 - `// correct but X is incorrect` — the function itself matches, but a called function does not.
 - `// rogue includes needed for matching sinit & bss` — includes added purely for BSS/static-init ordering.
 - `#pragma dont_inline on/off` — forces the compiler to not inline a function (required for matching in specific cases).
 
-Leave notes that help the next person understand the code or, later, mod the game.
-Don't leave notes about match state: match percentages, frame sizes, map sizes and "TODO: match this" are removed in review.
-objdiff already shows them, and the numbers go out of date.
+Agents don't leave notes or comments in the code. The only exception is the `// fabricated` marker.
 
 ### Style
 
@@ -469,7 +467,8 @@ Code:
 - Keep a new fabricated inline in the `.cpp` that needs it, marked `// fabricated`, until more call sites support it. Don't add it to a shared header.
 - No `volatile` padding, `_pad` fields, `(void)&local` or casts whose only purpose is codegen.
 - Use the spellings the game uses: `SMSGetMSound()->startSoundActor(...)`, `SMS_GetMarioPos()`, `-=` and `+=` on vectors, `stream >> value` in `load`, `MTX*`/`VEC*` macros, `ARRAY_COUNT`, and `BOOL` with `TRUE`/`FALSE` when `bool` doesn't match.
-- Use the enums for sounds, particles (`Particle.hpp`), hit messages and cues instead of numbers.
+- Use the enums for sounds, particles, hit messages and cues instead of numbers.
+- `Particles.hpp` has four particle enums; pick the one that matches the emit call's last argument. Name new entries from the modders' [particle table](https://docs.google.com/spreadsheets/d/1RHqHd_xbO0Cjc8UsXytDLGoCua0ZP_IQ/edit?gid=72346018#gid=72346018).
 - Name enums `EState` with values `STATE_WAITING`: no `typedef`, no `enum class`, and use `STATE_UNK*` when the meaning is unknown.
 - Don't pass defaulted arguments at call sites. Defaults go only in the header, and actor constructors default their name to the Japanese class name.
 - Don't declare destructors or constructors the compiler generates.
