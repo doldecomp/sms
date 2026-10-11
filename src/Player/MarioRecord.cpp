@@ -1,5 +1,9 @@
 #include <Player/MarioRecord.hpp>
 
+template <typename T> void TRecordValueManager<T>::record(T) { }
+
+template <typename T> void TRecordValueManager<T>::recordReset() { }
+
 template <typename T> bool TRecordValueManager<T>::get(T* outValue)
 {
 	*outValue = *mCurrentValuePtr;
@@ -20,6 +24,15 @@ template <typename T> void TRecordValueManager<T>::reset()
 	mCurrentValuePtr    = mFirstValuePtr;
 	mElapsedFrames      = 0;
 	mUnk14              = 0;
+}
+
+void TMarioInputRecord::init() { }
+
+void TMarioInputRecord::reset() { }
+
+void TMarioInputRecord::record(f32 magnitude, s16 yaw, u32 buttons, u8 param_4,
+                               u8 param_5)
+{
 }
 
 void TMarioInputReplay::init(u8* iData)

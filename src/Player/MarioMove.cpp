@@ -455,7 +455,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 			}
 		}
 
-		if (unk370 > mDeParams.mFeelDeep.get() ? true : false)
+		if (isFeelDeep())
 			startVoice(MSD_SE_MV19_JMP_PT_01);
 		else
 			startVoice(MSD_SE_MV21_JUMP_SMALL_01);
