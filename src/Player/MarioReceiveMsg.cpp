@@ -690,7 +690,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_COASTER_KILLER:
 	case ACTOR_TYPE_BOSS_EEL_TOOTH:
 	case ACTOR_TYPE_BOSS_EEL_COLLISION:
-	case ACTOR_TYPE_BOSS_UNK27:
+	case ACTOR_TYPE_TIN_KOOPA_FLAME:
 	case ACTOR_TYPE_HANE_HAMU_KURI:
 	case ACTOR_TYPE_ENEMY_UNK35:
 		switch (message) {

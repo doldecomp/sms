@@ -8,6 +8,7 @@
 #include <Enemy/Hinokuri2.hpp>
 #include <Enemy/LimitKoopaJr.hpp>
 #include <Enemy/SleepBossHanachan.hpp>
+#include <Enemy/TinKoopa.hpp>
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
@@ -61,13 +62,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BossGessoManager") == 0)
 		return new TBossGessoManager;
 
-	// TODO:
-	// if ( strcmp( name, "TinKoopa" ) == 0 )
-	//     return new TTinKoopa("メカクッパ");
+	if (strcmp(name, "TinKoopa") == 0)
+		return new TTinKoopa("メカクッパ");
 
-	// TODO:
-	// if ( strcmp( name, "TinKoopaManager" ) == 0 )
-	//     return new TTinKoopaManager("メカクッパマネージャ");
+	if (strcmp(name, "TinKoopaManager") == 0)
+		return new TTinKoopaManager("メカクッパマネージャ");
 
 	if (strcmp(name, "CoasterKillerManager") == 0)
 		return new TCoasterKillerManager;
