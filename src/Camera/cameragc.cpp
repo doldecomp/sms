@@ -710,10 +710,9 @@ void CPolarSubCamera::calcPosAndAt_()
 							    = SMS_GetMarioPos().z - mCurrentTarget.unk18.z;
 							f32 d    = MsSqrtf(dx * dx + dz * dz);
 							f32 minD = mSaveEx->mSLMinCushionXZ.get();
-							f32 mD2
-							    = minD < dist * cushion ? dist * cushion : minD;
-							if (d < mD2) {
-								f32 add = mD2 - d;
+							minD     = MsMin(minD, dist * cushion);
+							if (d < minD) {
+								f32 add = minD - d;
 								mCurrentTarget.unk18.x += sY * add;
 								mCurrentTarget.unk18.z += cY * add;
 							}
