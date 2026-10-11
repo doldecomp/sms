@@ -653,9 +653,92 @@ void TBathtub::control()
 		removeCollisions_();
 }
 
-void TBathtub::calcBathtubData() { }
+void TBathtub::calcBathtubData()
+{
+	Mtx& mtx = *getRootJointMtx();
+	mBathtubData.unk18.setXDir(mtx[0][0], mtx[1][0], mtx[2][0]);
+	mBathtubData.unk18.setYDir(mtx[0][1], mtx[1][1], mtx[2][1]);
+	mBathtubData.unk18.setZDir(mtx[0][2], mtx[1][2], mtx[2][2]);
+	mBathtubData.mPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-void TBathtub::setupCollisions_() { }
+	f32 upY  = mBathtubData.unk18.at(1, 1);
+	f32 tilt = JGeometry::TUtil<f32>::sqrt(1.0f - upY * upY);
+	f32 depth
+	    = unk16C->watermark.get() >= tilt ? unk16C->watermark.get() : tilt;
+	mBathtubData.unk44   = mBathtubData.unk3C * depth;
+	mBathtubData.unk48   = unk16C->outerHeight.get();
+	mBathtubData.unk0C.x = mBathtubData.unk18.at(0, 1);
+	mBathtubData.unk0C.y = mBathtubData.unk18.at(1, 1);
+	mBathtubData.unk0C.z = mBathtubData.unk18.at(2, 1);
+	mBathtubData.unk58.zero();
+
+	TKoopa* koopa = static_cast<TKoopa*>(JDrama::TNameRefGen::search("クッパ"));
+	if (koopa->effectsTumble() || unk24C > 0) {
+		JGeometry::TVec3<f32> axis;
+		axis.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), mBathtubData.unk0C);
+		axis.normalize();
+		if (!axis.isZero()) {
+			JGeometry::TQuat4<f32> rotation;
+			rotation.setRotate(axis, unk16C->maxAngle.get()
+			                             * (2.0f * 3.1415927f) / 360.0f);
+			rotation.rotate(mBathtubData.unk0C, mBathtubData.unk0C);
+			mBathtubData.unk58.set(0.0f, unk16C->shake.get(), 0.0f);
+		}
+	} else {
+		mBathtubData.unk0C.set(0.0f, 1.0f, 0.0f);
+	}
+
+	if (unk250 < unk254 / 2 && unk258 > 0)
+		mBathtubData.unk64 = true;
+	else
+		mBathtubData.unk64 = false;
+	mBathtubData.unk65 = unk29A;
+	unk1F4             = mBathtubData.getThing();
+}
+
+void TBathtub::setupCollisions_()
+{
+	JGeometry::TVec3<f32> delta;
+	delta.sub(SMS_GetMarioPos(), mBathtubData.mPos);
+	JGeometry::TVec3<f32> local;
+	mBathtubData.unk18.mult(delta, local);
+
+	if (SMS_GetMarioPos().y < 300.0f
+	    || local.x * local.x + local.z * local.z < 0.01f) {
+		removeCollisions_();
+		for (int i = 0; i < 5; ++i)
+			unk168[i]->unk24B = 0;
+		return;
+	}
+
+	f32 angle = atan2f(local.x, local.z);
+	if (angle < 0.0f)
+		angle += 2.0f * 3.1415927f;
+
+	f32 segment = angle * (30.0f / (2.0f * 3.1415927f));
+	if (segment < 0.0f)
+		segment += 30.0f;
+	int first = ((int)(segment + 0.5f - 1.0f) + 30) % 30;
+
+	int i;
+	for (i = 0; i < 2; ++i) {
+		int index = (i + first) % 30;
+		TPosition3f rotation;
+		rotation.setEularY((index + 1) * (2.0f * 3.1415927f) / 30.0f
+		                   - 3.1415927f);
+		rotation.zeroTrans();
+		TPosition3f mtx;
+		mtx.concat(*(TPosition3f*)getModel()->getBaseTRMtx(), rotation);
+		unk164[index]->moveMtx(mtx);
+		unk164[index]->setUp();
+	}
+	for (; i < 30; ++i)
+		unk164[(i + first) % 30]->remove();
+
+	for (int i = 0; i < 5; ++i)
+		unk168[i]->unk24B = 0;
+	unk168[((int)(5.0f * angle / (2.0f * 3.1415927f)) + 10) % 5]->unk24B = 1;
+}
 
 namespace {
 
