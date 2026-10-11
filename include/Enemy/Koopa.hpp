@@ -11,6 +11,7 @@ public:
 	void stagger(bool);
 	void getDown();
 	bool allowsLaunch() const;
+	bool effectsTumble() const;
 };
 
 #endif
