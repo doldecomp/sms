@@ -789,9 +789,7 @@ DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 	}
 
 	if (self->checkCurAnmEnd(0)) {
-		self->mHitMario = 0;
-		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->stopAnmSound();
+		self->killBathtubKiller();
 		return TRUE;
 	}
 	return FALSE;
@@ -808,9 +806,7 @@ DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
 	}
 
 	if (self->checkCurAnmEnd(0)) {
-		self->mHitMario = 0;
-		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->stopAnmSound();
+		self->killBathtubKiller();
 		return TRUE;
 	}
 	return FALSE;
