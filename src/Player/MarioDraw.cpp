@@ -815,7 +815,7 @@ MtxPtr TMario::getTakingMtx() { return getRootAnmMtx()[mJointIdHandR]; }
 
 MtxPtr TMario::getTakenMtx() { return mModel->unk8->getBaseTRMtx(); }
 
-MtxPtr TMario::getRailMtx() const { return mTorocco->getModel()->getAnmMtx(0); }
+MtxPtr TMario::getRailMtx() const { }
 
 f32 TMario::getCurrentFrame(int idx)
 {
@@ -1321,7 +1321,8 @@ void TMario::initModel()
 				MTXIdentity(pinnaMtx);
 				mPinaRail->getModel()->setBaseTRMtx(pinnaMtx);
 				mPinaRail->calcAnm();
-				mPinaRail->getModel()->setBaseTRMtx(getRailMtx());
+				mTorocco->getModel()->setBaseTRMtx(
+				    mPinaRail->getModel()->getAnmMtx(0));
 			}
 			if (SMSGetMarDirector()->unk7D == 1) {
 				mRailType              = 1;
@@ -1345,7 +1346,8 @@ void TMario::initModel()
 				MTXIdentity(koopaMtx);
 				mKoopaRail->getModel()->setBaseTRMtx(koopaMtx);
 				mKoopaRail->calcAnm();
-				mKoopaRail->getModel()->setBaseTRMtx(getRailMtx());
+				mTorocco->getModel()->setBaseTRMtx(
+				    mKoopaRail->getModel()->getAnmMtx(0));
 			}
 			onFlag(MARIO_FLAG_HAS_FLUDD);
 			mTorocco->calcAnm();
