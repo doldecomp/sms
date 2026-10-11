@@ -348,8 +348,8 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 		}
 
 		if (spine->getTime() == 80) {
-			bubble->unk1D1    = 0;
-			bubble->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+			bubble->unk1D1 = 0;
+			bubble->mVelocity.set(0.0f, 0.0f, 0.0f);
 		}
 	}
 
@@ -1906,45 +1906,39 @@ void TBossTelesa::generateSlotItem()
 			MTXMultVec(rot, &dir, &dir);
 			MsVECNormalize(&dir, &normalizedDir);
 
-			Vec velocity;
 			TMsRange<f32> fruitSpeedRange(6.0f, 10.0f);
 
 			if (i == 0 || i == 4) {
 				mRedPeppers[i]->makeObjAppeared();
 				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
-
-				velocity.x = normalizedDir.x * fruitSpeedRange.rand();
-				velocity.y = -2.0f;
-				velocity.z = normalizedDir.z * fruitSpeedRange.rand();
-				if (i == 0) {
-					velocity.x
-					    = normalizedDir.x * fruitSpeedRange.rand() * 2.0f;
-					velocity.z
-					    = normalizedDir.z * fruitSpeedRange.rand() * 2.0f;
-				}
-
-				mRedPeppers[i]->mVelocity = velocity;
+				mRedPeppers[i]->mVelocity.set(
+				    normalizedDir.x * fruitSpeedRange.rand(), -2.0f,
+				    normalizedDir.z * fruitSpeedRange.rand());
 				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				if (i == 0) {
+					mRedPeppers[i]->mVelocity.set(
+					    normalizedDir.x * fruitSpeedRange.rand() * 2.0f, -2.0f,
+					    normalizedDir.z * fruitSpeedRange.rand() * 2.0f);
+					mRedPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				}
 				mRedPeppers[i]->mRotation.set(0.0f, 90.0f, 0.0f);
 				mSpitObjs[mSpitObjNum] = mRedPeppers[i];
 			} else {
 				mFruits[i]->makeObjAppeared();
 				mFruits[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 
-				velocity.x = normalizedDir.x * fruitSpeedRange.rand();
-				velocity.y = -2.0f;
-				velocity.z = normalizedDir.z * fruitSpeedRange.rand();
-
-				mFruits[i]->mVelocity = velocity;
+				mFruits[i]->mVelocity.set(
+				    normalizedDir.x * fruitSpeedRange.rand(), -2.0f,
+				    normalizedDir.z * fruitSpeedRange.rand());
 				mFruits[i]->offLiveFlag(LIVE_FLAG_UNK10);
 				mSpitObjs[mSpitObjNum] = mFruits[i];
 			}
 
 			mSpitObjs[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
 			mSpitObjs[i]->mScaling.set(1.5f, 1.5f, 1.5f);
-			mSpitObjs[mSpitObjNum]->mPosition.x = rootMtx[0][3] + dir.x;
-			mSpitObjs[mSpitObjNum]->mPosition.y = rootMtx[1][3] - 50.0f;
-			mSpitObjs[mSpitObjNum]->mPosition.z = rootMtx[2][3] + dir.z;
+			mSpitObjs[mSpitObjNum]->mPosition.set(rootMtx[0][3] + dir.x,
+			                                      rootMtx[1][3] - 50.0f,
+			                                      rootMtx[2][3] + dir.z);
 			mSpitObjNum++;
 		}
 	} else if (unk1A8 == 0) {
