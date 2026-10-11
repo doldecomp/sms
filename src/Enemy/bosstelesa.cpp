@@ -1516,8 +1516,6 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 
 void TBossTelesa::damageRecover()
 {
-	f32 zero = 0.0f;
-
 	for (int i = 0; i < 20; ++i) {
 		if (!mFruits[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			if (mFruits[i]->mHolder == nullptr)
@@ -1526,7 +1524,7 @@ void TBossTelesa::damageRecover()
 			mFruits[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &mFruits[i]->mPosition, 0, nullptr);
-			mFruits[i]->mPosition.set(zero, zero, zero);
+			mFruits[i]->mPosition.set(0.0f, 0.0f, 0.0f);
 		}
 	}
 
@@ -1538,14 +1536,14 @@ void TBossTelesa::damageRecover()
 			mRedPeppers[i]->makeObjDead();
 			gpMarioParticleManager->emit(
 			    PARTICLE_MS_TLS_CHANGE, &mRedPeppers[i]->mPosition, 0, nullptr);
-			mRedPeppers[i]->mPosition.set(zero, zero, zero);
+			mRedPeppers[i]->mPosition.set(0.0f, 0.0f, 0.0f);
 		}
 
 		if (!mCoins[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			mCoins[i]->makeObjDead();
 			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
 			                             &mCoins[i]->mPosition, 0, nullptr);
-			mCoins[i]->mPosition.set(zero, zero, zero);
+			mCoins[i]->mPosition.set(0.0f, 0.0f, 0.0f);
 		}
 	}
 
@@ -2107,15 +2105,13 @@ bool TBossTelesa::checkAllItemDead()
 
 void TBossTelesa::forceAllItemKill()
 {
-	f32 zero = 0.0f;
-
 	for (int i = 0; i < mSpitObjNum; ++i) {
 		if (mSpitObjs[i]->mHolder) {
 			SMS_SendMessageToMario(mSpitObjs[i], HIT_MESSAGE_DETACH);
 			mSpitObjs[i]->mHolder = nullptr;
 		}
 
-		mSpitObjs[i]->mPosition.set(zero, zero, zero);
+		mSpitObjs[i]->mPosition.set(0.0f, 0.0f, 0.0f);
 		mSpitObjs[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		if (!mSpitObjs[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
