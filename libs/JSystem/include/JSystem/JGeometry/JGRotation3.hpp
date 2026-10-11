@@ -306,10 +306,10 @@ public:
 
 		this->ref(1, 0) = 0.0f;
 		this->ref(1, 1) = c;
-		this->ref(1, 2) = s;
+		this->ref(1, 2) = -s;
 
 		this->ref(2, 0) = 0.0f;
-		this->ref(2, 1) = -s;
+		this->ref(2, 1) = s;
 		this->ref(2, 2) = c;
 	}
 
