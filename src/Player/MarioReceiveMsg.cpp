@@ -629,7 +629,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_BOSS_GESSO:
 		break;
 
-	case ACTOR_TYPE_BOSS_UNK13:
+	case ACTOR_TYPE_BOSS_TELESA:
 		switch (message) {
 		case HIT_MESSAGE_TAKE:
 			if (mHeldObject == nullptr && mHolder == nullptr) {
