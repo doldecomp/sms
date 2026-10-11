@@ -316,7 +316,7 @@ bool TBombHei::isCollidMove(THitActor* param_1)
 		if (mSpine->getCurrentNerve() != &TNerveBombHeiExplosion::theNerve())
 			mSpine->pushNerve(&TNerveBombHeiExplosion::theNerve());
 	}
-	if (param_1->isActorType(ACTOR_TYPE_BOSS_UNK13)) {
+	if (param_1->isActorType(ACTOR_TYPE_BOSS_TELESA)) {
 		if (mSpine->getCurrentNerve() == &TNerveBombHeiExplosion::theNerve())
 			param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 		if (mSpine->getCurrentNerve() == &TNerveBombHeiThrown::theNerve())

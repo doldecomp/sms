@@ -36,6 +36,7 @@ public:
 };
 
 class TBossTelesa;
+class TTelesaManager;
 class TBossTelesaBody;
 class TBossTelesaTongue;
 class TBossTelesaKillSmallEnemy;
@@ -175,7 +176,7 @@ public:
 	/* 0x34C */ GXColor unk34C;
 	/* 0x350 */ u8 unk350;
 	/* 0x351 */ u8 unk351[0x3];
-	/* 0x354 */ TObjManager* unk354;
+	/* 0x354 */ TTelesaManager* unk354;
 	/* 0x358 */ u16 unk358;
 	/* 0x35A */ u8 unk35A;
 	/* 0x35B */ u8 unk35B;

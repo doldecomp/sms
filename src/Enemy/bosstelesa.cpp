@@ -108,7 +108,10 @@ TSmallEnemy* TBubbleManager::createEnemyInstance()
 void TBubbleManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "btelesa_osenbubbles_ind.bmd", 0x11020000, 0 },
+		{ "btelesa_osenbubbles_ind.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		      | (2 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -126,7 +129,7 @@ TBubble::TBubble(const char* name)
 void TBubble::init(TLiveManager* manager)
 {
 	TWalkerEnemy::init(manager);
-	mActorType = 0x10000020;
+	mActorType = ACTOR_TYPE_EFFECT_OBJ;
 	unk150     = 0x11;
 	unk194     = (TBubbleSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveBubbleLive::theNerve());
@@ -216,10 +219,11 @@ void TBubble::behaveToWater(THitActor*)
 	if (mSpine->getCurrentNerve() == &TNerveBubbleLive::theNerve()
 	    && mMActor->checkCurBckFromIndex(10)) {
 		kill();
-		TMapObjBase* item = gpItemManager->makeObjAppear(
-		    mPosition.x, mPosition.y + 50.0f, mPosition.z, 0x20000002, true);
+		TItem* item = (TItem*)gpItemManager->makeObjAppear(
+		    mPosition.x, mPosition.y + 50.0f, mPosition.z,
+		    ACTOR_TYPE_BOTTLE_LARGE, true);
 		if (item)
-			((TItem*)item)->killByTimer(0x4B0);
+			item->killByTimer(0x4B0);
 	}
 }
 
@@ -254,7 +258,7 @@ void TBubble::appendItem()
 {
 	unk198            = nullptr;
 	TMapObjBase* item = gpItemManager->makeObjAppear(
-	    mPosition.x, mPosition.y, mPosition.z, 0x20000008, true);
+	    mPosition.x, mPosition.y, mPosition.z, ACTOR_TYPE_ITEM_UNK8, true);
 	if (item && item->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 		item->appear();
 		item->mPosition = mPosition;
@@ -434,7 +438,11 @@ TSpineEnemy* TBossTelesaManager::createEnemyInstance()
 void TBossTelesaManager::createModelData()
 {
 	static TModelDataLoadEntry entry[] = {
-		{ "btelesa.bmd", 0x15300000, 0 },
+		{ "btelesa.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
+		      | J3DMLF_MaterialUseIndirect | J3DMLF_UseUniqueMaterials
+		      | (16 << J3DMLF_TevStageNumShift),
+		  0 },
 		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
@@ -460,7 +468,7 @@ void TBossTelesaBody::checkHit()
 
 	for (int i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
-		if (actor->isActorType(0x80000001))
+		if (actor->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 		else
 			unk68->checkHitObject(actor);
@@ -471,9 +479,9 @@ void TBossTelesaTongue::checkHit()
 {
 	for (int i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
-		if (actor->isActorType(0x80000001))
+		if (actor->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
-		else if (actor->isActorType(0x40000395))
+		else if (actor->isActorType(ACTOR_TYPE_RED_PEPPER))
 			unk68->setSpicy((TLiveActor*)actor);
 		else if (mPosition.y + 100.0f < actor->mPosition.y)
 			unk68->checkHitObject(actor);
@@ -494,7 +502,7 @@ void TBossTelesaKillSmallEnemy::checkHit()
 	for (int i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
 		if (actor->isHitCategory(HIT_CATEGORY_ENEMY)) {
-			if (actor->isActorType(0x10000013))
+			if (actor->isActorType(ACTOR_TYPE_DORO_HAMU_KURI))
 				((THamuKuri*)actor)->selectCapHolder();
 			((TLiveActor*)actor)->kill();
 		}
@@ -841,14 +849,16 @@ void TBossTelesa::init(TLiveManager* manager)
 		mHitPoints        = getMaxHitPoints();
 	}
 
-	initHitActor(0, 5, 0x98000000, mBodyRadius, mHeadHeight, mBodyRadius,
-	             mHeadHeight);
+	initHitActor(0, 5,
+	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS,
+	             mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 	mGroundPlane = TMap::getIllegalCheckData();
 	setGoalPath((THitActor*)gpMarioAddress);
 	initAnmSound();
 	unk15C     = static_cast<TBossTelesaSaveLoadParams*>(getSaveParam());
-	mActorType = 0x08000013;
-	onHitFilter(0xD0000000);
+	mActorType = ACTOR_TYPE_BOSS_TELESA;
+	onHitFilter(HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
+	            | HIT_CATEGORY_ENEMY);
 	mSpine->initWith(&TNerveBossTelesaFallDemo::theNerve());
 	onLiveFlag(LIVE_FLAG_UNK8);
 
@@ -888,7 +898,7 @@ void TBossTelesa::init(TLiveManager* manager)
 
 	for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 		TMapObjBase* actor = gpMapObjManager->getObj(i);
-		if (actor->isActorType(0x4000019A)) {
+		if (actor->isActorType(ACTOR_TYPE_CASINORULET)) {
 			unk154    = nullptr;
 			unk158    = nullptr;
 			mPosition = actor->mPosition;
@@ -901,31 +911,34 @@ void TBossTelesa::init(TLiveManager* manager)
 	}
 
 	unk16C = new TBossTelesaBody("ボステレサ体コリジョン");
-	TIdxGroupObj* enemyGroup
-	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
-	enemyGroup->getChildren().push_back(unk16C);
-	unk16C->initHitActor(0x08000013, 5, 0xD1000000, 350.0f, 550.0f, 300.0f,
-	                     500.0f);
-	((TBossTelesaBody*)unk16C)->unk68 = this;
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+	    ->getChildren()
+	    .push_back(unk16C);
+	unk16C->initHitActor(ACTOR_TYPE_BOSS_TELESA, 5,
+	                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
+	                         | HIT_CATEGORY_ENEMY | HIT_CATEGORY_WATER,
+	                     350.0f, 550.0f, 300.0f, 500.0f);
+	unk16C->unk68 = this;
 	unk16C->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	unk170 = new TBossTelesaTongue("ボステレサ舌コリジョン");
-	enemyGroup
-	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
-	enemyGroup->getChildren().push_back(unk170);
-	unk170->initHitActor(0x08000013, 5, 0xC0000000, 180.0f, 350.0f, 180.0f,
-	                     350.0f);
-	((TBossTelesaTongue*)unk170)->unk68 = this;
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+	    ->getChildren()
+	    .push_back(unk170);
+	unk170->initHitActor(ACTOR_TYPE_BOSS_TELESA, 5,
+	                     HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT, 180.0f,
+	                     350.0f, 180.0f, 350.0f);
+	unk170->unk68 = this;
 	unk170->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 	unk174 = new TBossTelesaKillSmallEnemy("ボステレサ雑魚敵死コリジョン");
-	enemyGroup
-	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
-	enemyGroup->getChildren().push_back(unk174);
-	unk174->initHitActor(0x1000000C, 5, 0x10000000, 400.0f, 300.0f, 400.0f,
-	                     300.0f);
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+	    ->getChildren()
+	    .push_back(unk174);
+	unk174->initHitActor(ACTOR_TYPE_TELESA, 5, HIT_CATEGORY_ENEMY, 400.0f,
+	                     300.0f, 400.0f, 300.0f);
 	unk174->offHitFilter(HIT_FILTER_NO_COLLISION);
-	((TBossTelesaKillSmallEnemy*)unk174)->unk68 = this;
+	unk174->unk68 = this;
 
 	mMActor->setLightType(3);
 
@@ -939,7 +952,7 @@ void TBossTelesa::init(TLiveManager* manager)
 
 void TBossTelesa::loadAfter()
 {
-	u32 rouletteType = 0x4000019A;
+	u32 rouletteType = ACTOR_TYPE_CASINORULET;
 	if ((u32)gpMapObjManager->getObjNumWithActorType(rouletteType) != 0) {
 		int found = 0;
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
@@ -951,7 +964,7 @@ void TBossTelesa::loadAfter()
 		}
 	}
 
-	u32 slotType = 0x400001A6;
+	u32 slotType = ACTOR_TYPE_SROT_RULET;
 	if ((u32)gpMapObjManager->getObjNumWithActorType(slotType) != 0) {
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
@@ -977,7 +990,7 @@ void TBossTelesa::loadAfter()
 		    = TMapObjBaseManager::newAndRegisterObj("FruitDurian");
 
 	for (int i = 0; i < 20; ++i) {
-		unk2A8[i]->onMapObjFlag(0x04000000);
+		unk2A8[i]->onMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK4000000);
 		unk2A8[i]->makeObjDead();
 	}
 
@@ -1027,12 +1040,12 @@ void TBossTelesa::loadAfter()
 	for (int i = 0; i < 10; ++i)
 		unk320[i]->makeObjDead();
 
-	TTelesaSlot* slot = (TTelesaSlot*)unk184;
+	TTelesaSlot* slot = unk184;
 	slot->unk1E4[0]   = 0.0f;
 	slot->unk1E4[1]   = 0.0f;
 	slot->unk1E4[2]   = 0.0f;
 
-	unk354 = static_cast<TObjManager*>(
+	unk354 = static_cast<TTelesaManager*>(
 	    JDrama::TNameRefGen::search("テレサマネージャー"));
 
 	for (int i = 0; i < 5; ++i)
@@ -1084,10 +1097,10 @@ void TBossTelesa::loadAfter()
 	                 SCENE_BTELESA_JPA_MS_BTLS_SPICY_C);
 
 	void* res = JKRFileLoader::getGlbResource("/scene/btelesa/srot_waku.bmd");
-	SDLModelData* data
-	    = new SDLModelData(J3DModelLoaderDataBase::load(res, 0x10220000));
-	unk188
-	    = new TSharedParts((TLiveActor*)unk184, 0, data, 3, "<TSharedParts>");
+	SDLModelData* data = new SDLModelData(J3DModelLoaderDataBase::load(
+	    res, J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+	             | (2 << J3DMLF_TevStageNumShift)));
+	unk188             = new TSharedParts(unk184, 0, data, 3, "<TSharedParts>");
 
 	TLiveActor* gesso0
 	    = static_cast<TLiveActor*>(JDrama::TNameRefGen::search("ゲッソー 0"));
@@ -1206,7 +1219,7 @@ void TBossTelesa::moveObject()
 	control();
 
 	for (int i = 0; i < mColCount; ++i) {
-		if (mCollisions[i]->isActorType(0x80000001))
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 
@@ -1274,7 +1287,7 @@ void TBossTelesa::calcRootMatrix()
 	MTXConcat(translateMtx, rotateMtx, translateMtx);
 	MTXCopy(translateMtx, mMActor->getModel()->getBaseTRMtx());
 
-	TTelesaSlot* slot = (TTelesaSlot*)unk184;
+	TTelesaSlot* slot = unk184;
 	if (slot) {
 		slot->mRotation = mRotation;
 
@@ -1399,7 +1412,7 @@ BOOL TBossTelesa::receiveMessage(THitActor*, u32) { return FALSE; }
 BOOL TBossTelesa::checkMessage(THitActor* actor, u32 message)
 {
 	if (message == HIT_MESSAGE_TRAMPLE) {
-		if (!actor->isActorType(0x80000001)) {
+		if (!actor->isActorType(ACTOR_TYPE_MARIO)) {
 			if (mSpine->getCurrentNerve()
 			    == &TNerveBossTelesaPrepareSlot::theNerve())
 				mSpine->pushNerve(&TNerveBossTelesaSpit::theNerve());
@@ -1419,48 +1432,50 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 {
 	unk380 = -1;
 
-	if ((actor->getActorType() & 0xFFFF0000) != 0x40000000)
+	if (actor->getHitCategory() != HIT_CATEGORY_MAP_OBJECT)
 		return;
 	if (mSpine->getCurrentNerve() != &TNerveBossTelesaPrepareSlot::theNerve())
 		return;
 
 	switch (actor->getActorType()) {
-	case 0x40000390:
+	case ACTOR_TYPE_FRUIT_COCONUT:
 		unk348.r = 0xE6;
 		unk348.g = 0x64;
 		unk348.b = 0xB4;
 		unk380   = SCENE_BTELESA_JPA_MS_BTLS_FHIT_PE;
 		kill();
 		break;
-	case 0x40000391:
-	case 0x40000392:
+	case ACTOR_TYPE_FRUIT_PAPAYA:
+	case ACTOR_TYPE_FRUIT_PINE:
 		unk348.r = 0xE6;
 		unk348.g = 0xB4;
 		unk348.b = 0;
 		unk380   = SCENE_BTELESA_JPA_MS_BTLS_FHIT_OR;
 		kill();
 		break;
-	case 0x40000393:
+	case ACTOR_TYPE_FRUIT_DURIAN:
 		unk348.r = 0x96;
 		unk348.g = 0x32;
 		unk348.b = 0xE6;
 		unk380   = SCENE_BTELESA_JPA_MS_BTLS_FHIT_GR;
 		kill();
 		break;
-	case 0x40000395:
+	case ACTOR_TYPE_RED_PEPPER:
 		break;
 	default:
 		return;
 	}
 
-	if (!unk350 && !actor->isActorType(0x40000395)) {
+	if (!unk350 && !actor->isActorType(ACTOR_TYPE_RED_PEPPER)) {
 		if (unk35A) {
 			unk35A = 0;
-			gpMarDirector->mConsole->startAppearBalloon(0xE000F, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000F,
+			                                                      true);
 		}
 		unk35C++;
 		if (unk35C > 2)
-			gpMarDirector->mConsole->startAppearBalloon(0xE0010, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0010,
+			                                                      true);
 	} else {
 		unk35C = 0;
 	}
@@ -1495,7 +1510,7 @@ void TBossTelesa::setSpicy(TLiveActor* actor)
 
 	if (unk35B) {
 		unk35B = 0;
-		gpMarDirector->mConsole->startAppearBalloon(0xE0011, true);
+		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0011, true);
 	}
 
 	actor->kill();
@@ -1556,8 +1571,8 @@ void TBossTelesa::tongueHitWater()
 
 bool TBossTelesa::rouletteFall()
 {
-	TRoulette* roulette0 = (TRoulette*)unk178[0];
-	TRoulette* roulette1 = (TRoulette*)unk178[1];
+	TRoulette* roulette0 = unk178[0];
+	TRoulette* roulette1 = unk178[1];
 
 	if (roulette0->mPosition.y > roulette1->mPosition.y) {
 		roulette0->mPosition.y -= 1.0f;
@@ -1808,7 +1823,7 @@ void TBossTelesa::slotStart()
 {
 	unk18C = 1;
 	unk184->moveStart();
-	((TTelesaManager*)unk354)->telesaForceKill();
+	unk354->telesaForceKill();
 }
 
 void TBossTelesa::slotStop()
@@ -1841,7 +1856,7 @@ void TBossTelesa::generateSlotItem()
 	unk368 = 0;
 	unk274 = 0;
 
-	TTelesaSlot* slot = (TTelesaSlot*)unk184;
+	TTelesaSlot* slot = unk184;
 	s32 result        = slot->getResultFromAng(slot->unk13C[0]);
 	for (int i = 1; i < 3; ++i) {
 		if (slot->getResultFromAng(slot->unk13C[i]) != result) {
@@ -1971,7 +1986,8 @@ void TBossTelesa::generateSlotItem()
 			velocity.y = dir.y;
 			velocity.z = dir.z * speed * itemSpeedRange.rand();
 
-			TItem* item = (TItem*)gpItemManager->makeObjAppeared(0x2000000E);
+			TItem* item
+			    = (TItem*)gpItemManager->makeObjAppeared(ACTOR_TYPE_COIN);
 			item->mPosition.x = rootMtx[0][3];
 			item->mPosition.y = rootMtx[1][3] - 250.0f;
 			item->mPosition.z = rootMtx[2][3];
@@ -2064,8 +2080,8 @@ void TBossTelesa::fruitCollisionOn()
 	for (int i = 0; i < unk274; ++i) {
 		TLiveActor* actor = unk1AC[i];
 		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && !actor->isActorType(0x2000000E)
-		    && !actor->isActorType(0x20000002))
+		    && !actor->isActorType(ACTOR_TYPE_COIN)
+		    && !actor->isActorType(ACTOR_TYPE_BOTTLE_LARGE))
 			actor->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
@@ -2198,7 +2214,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK20, 1.0f);
 			}
 		} else {
-			MSBgm::stopBGM(0x8001000D, 10);
+			MSBgm::stopBGM(MSD_BGM_MAP_SELECT, 10);
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK21, 1.0f);
 			boss->setBckAnm(3);
 			boss->mMActor->setBrkFromIndex(1);
@@ -2336,8 +2352,7 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 		JGeometry::TVec3<f32> pos = boss->mPosition;
 		pos.sub(*gpMarioPos);
 
-		if (spine->getTime() > 400
-		    && ((TBossTelesaKillSmallEnemy*)boss->unk174)->unk6C == 0) {
+		if (spine->getTime() > 400 && boss->unk174->unk6C == 0) {
 			spine->pushAfterCurrent(&TNerveBossTelesaAppear::theNerve());
 			boss->offLiveFlag(LIVE_FLAG_HIDDEN);
 			return TRUE;
@@ -2356,7 +2371,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 
 			if (!boss->unk384) {
 				boss->unk384 = 1;
-				MSBgm::startBGM(0x8001000D);
+				MSBgm::startBGM(MSD_BGM_MAP_SELECT);
 			}
 
 			boss->unk184->mScaling.set(1.0f, 1.0f, 1.0f);

@@ -1196,7 +1196,7 @@ bool THamuKuri::isHitValid(u32 param_1)
 
 bool THamuKuri::isCollidMove(THitActor* param_1)
 {
-	if (param_1->isActorType(ACTOR_TYPE_BOSS_UNK13))
+	if (param_1->isActorType(ACTOR_TYPE_BOSS_TELESA))
 		if (mSpine->getCurrentNerve() == &TNerveHamuKuriBoundFreeze::theNerve())
 			param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 
