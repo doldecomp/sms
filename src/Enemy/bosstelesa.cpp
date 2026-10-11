@@ -1978,10 +1978,9 @@ void TBossTelesa::generateSlotItem()
 
 			TItem* item
 			    = (TItem*)gpItemManager->makeObjAppeared(ACTOR_TYPE_COIN);
-			item->mPosition.x = rootMtx[0][3];
-			item->mPosition.y = rootMtx[1][3] - 250.0f;
-			item->mPosition.z = rootMtx[2][3];
-			item->mVelocity   = velocity;
+			item->mPosition.set(rootMtx[0][3], rootMtx[1][3] - 250.0f,
+			                    rootMtx[2][3]);
+			item->mVelocity.set(velocity);
 			item->offLiveFlag(LIVE_FLAG_UNK10);
 			item->mScaling.set(0.0f, 0.0f, 0.0f);
 			item->killByTimer(0x3C0);
@@ -2016,7 +2015,7 @@ void TBossTelesa::generateSlotItem()
 
 		for (int i = 0; i < count; ++i) {
 			if (unk1A8 == 3) {
-				if ((i & 1) == 0)
+				if (i % 2 == 0)
 					randomKind++;
 				if (randomKind > maxKind)
 					randomKind = 1;
@@ -2045,17 +2044,16 @@ void TBossTelesa::generateSlotItem()
 			MsVECNormalize(&dir, &dir);
 			dir.y = 2.0f;
 
-			Vec velocity;
+			JGeometry::TVec3<f32> velocity;
 			TMsRange<f32> enemySpeedRange(0.5f, 1.0f);
 			f32 speed  = unk15C->mSL1stBubbleSp.get();
 			velocity.x = dir.x * speed * enemySpeedRange.rand();
 			velocity.y = dir.y * (2.0f + enemySpeedRange.rand());
 			velocity.z = dir.z * speed * enemySpeedRange.rand();
 
-			enemy->mPosition.x = rootMtx[0][3];
-			enemy->mPosition.y = rootMtx[1][3] - 250.0f;
-			enemy->mPosition.z = rootMtx[2][3];
-			enemy->mVelocity   = velocity;
+			enemy->mPosition.set(rootMtx[0][3], rootMtx[1][3] - 250.0f,
+			                     rootMtx[2][3]);
+			enemy->mVelocity = velocity;
 			enemy->mPosition.y += 10.0f;
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			MTXCopy(rootMtx, enemy->mMActor->getModel()->getBaseTRMtx());
