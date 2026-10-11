@@ -251,7 +251,6 @@ MtxPtr TBubble::getTakingMtx() { return mMActor->getModel()->getBaseTRMtx(); }
 
 const char** TBubble::getBasNameTable() const { return btelesa_bastable; }
 
-// The map places appendItem and appendEnemy between the two nerve definitions.
 DEFINE_NERVE_INSTANCE(TNerveBubbleLive)
 
 void TBubble::appendItem()
@@ -792,12 +791,10 @@ int TTelesaSlot::getResultFromAng(f32 ang)
 	return 2;
 }
 
-// TODO: reconstruct the UNUSED body (map size 0x19c). No retail call site
-// remains in this TU.
+// UNUSED
 void TTelesaSlot::calcObjCollision() { }
 
-// TODO: reconstruct the UNUSED body (map size 0x58). No retail call site
-// remains in this TU.
+// UNUSED
 void TTelesaSlot::entryObjCollision() { }
 
 TBossTelesa::TBossTelesa(const char* name)
@@ -1259,9 +1256,8 @@ MtxPtr TBossTelesa::getTakingMtx()
 	return mTakingMtx.mMtx;
 }
 
-// TODO: reconstruct the rest of this UNUSED body (map size 0x1d8).
-// The counter reset alone is unverified.
-void TBossTelesa::prepareGenerate() { mFruitHitCount = 0; }
+// UNUSED
+void TBossTelesa::prepareGenerate() { }
 
 void TBossTelesa::calcRootMatrix()
 {
@@ -1628,8 +1624,7 @@ bool TBossTelesa::slotFall()
 	return FALSE;
 }
 
-// TODO: reconstruct the UNUSED body (map size 0x2c). No surviving retail
-// call site has been identified.
+// UNUSED
 void TBossTelesa::openWaterPlace() { }
 
 void TBossTelesa::flashItem(int result)
@@ -1831,11 +1826,8 @@ void TBossTelesa::slotStop()
 	rollRouletteCircle();
 }
 
-int TBossTelesa::checkSlotResult()
-{
-	// TODO: verify this UNUSED body (map size 0x4c).
-	return mSlot ? mSlot->getSlotResult() : -1;
-}
+// UNUSED
+int TBossTelesa::checkSlotResult() { return 0; }
 
 void TBossTelesa::generateSlotItem()
 {
@@ -2118,19 +2110,8 @@ void TBossTelesa::rollRouletteCircle()
 		mRoulettes[i]->setRollSp(mSlot->unk1E4[i]);
 }
 
-bool TBossTelesa::isForceRestart()
-{
-	// TODO: verify this UNUSED body (map size 0x54). This predicate is
-	// reconstructed from slotFall, but its original helper boundary is unknown.
-	int rolling = 0;
-	if (mRoulettes[0]->unk13C != 0.0f)
-		rolling = 1;
-	if (mRoulettes[1]->unk13C != 0.0f)
-		++rolling;
-	if (mRoulettes[2]->unk13C != 0.0f)
-		++rolling;
-	return rolling != 3;
-}
+// UNUSED
+bool TBossTelesa::isForceRestart() { return false; }
 
 void TBossTelesa::forceHide()
 {
