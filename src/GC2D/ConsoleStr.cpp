@@ -419,7 +419,7 @@ bool TConsoleStr::processGo(float param_1)
 
 		for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
 			if (unk28[i]->update()) {
-				if (unk28[i]->unk14.x1 != 0 || unk28[i]->unk14.y1 != 0)
+				if (unk28[i]->unk14.x != 0 || unk28[i]->unk14.y != 0)
 					unk28[i]->setPanePosition(0x1E, JUTPoint(0, -40),
 					                          JUTPoint(0, -40), JUTPoint(0, 0));
 			}
