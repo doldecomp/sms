@@ -114,7 +114,7 @@ public:
 	bool checkSlot();
 	void fruitCollisionOn();
 	void generateSlotItem();
-	bool checkSlotResult();
+	int checkSlotResult();
 	void slotStop();
 	void slotStart();
 	void rouletteStart();

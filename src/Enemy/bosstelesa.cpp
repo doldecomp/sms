@@ -1842,11 +1842,10 @@ void TBossTelesa::slotStop()
 	rollRouletteCircle();
 }
 
-// TODO: PrepareSlot shows this inline returns a bool. The map size is 0x4c,
-// which means getSlotResult stayed out of line here; ours inlines it.
-bool TBossTelesa::checkSlotResult()
+int TBossTelesa::checkSlotResult()
 {
-	return mSlot->getSlotResult() == 0 ? true : false;
+	// TODO: verify this UNUSED body (map size 0x4c).
+	return mSlot ? mSlot->getSlotResult() : -1;
 }
 
 void TBossTelesa::generateSlotItem()
@@ -2490,7 +2489,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 	if (boss->mHitPoints == 1)
 		waitTime = params->mSLStopSlotTime2.get();
 
-	if (boss->checkSlotResult())
+	if (boss->mSlot->getSlotResult() == 0)
 		waitTime = waitTime * 0.5f;
 
 	if (boss->unk368 > waitTime - 120)
