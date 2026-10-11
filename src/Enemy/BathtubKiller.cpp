@@ -286,7 +286,7 @@ void TBathtubKiller::generateItemBathtubKiller()
 	} else if (lives <= manager->mInitialLifeCount + 1) {
 		if (mBathtub->getNumGripsDead() == 3
 		    && manager->mFinalMushroomRequested == 0) {
-			manager->generateMushroom(getPosition());
+			manager->generateMushroom(mPosition);
 			manager->mFinalMushroomRequested = 1;
 		}
 	}

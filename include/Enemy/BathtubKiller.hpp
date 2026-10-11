@@ -62,6 +62,13 @@ public:
 	/* 0x554 */ TParamRT<s32> noCollisionAmongKillers;
 };
 
+DECLARE_NERVE(TNerveBathtubKillerWander, TLiveActor);
+DECLARE_NERVE(TNerveBathtubKillerChase, TLiveActor);
+DECLARE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor);
+DECLARE_NERVE(TNerveBathtubKillerStraight, TLiveActor);
+DECLARE_NERVE(TNerveBathtubKillerBreak, TLiveActor);
+DECLARE_NERVE(TNerveBathtubKillerExplosion, TLiveActor);
+
 class TBathtubKiller : public TSmallEnemy {
 public:
 	enum KillerType {
@@ -110,7 +117,21 @@ public:
 	bool canChase();
 	void generateExplosion();
 	// fabricated
-	bool isDying() const;
+	bool isExplosionNerve() const
+	{
+		return mSpine->getCurrentNerve()
+		       == &TNerveBathtubKillerExplosion::theNerve();
+	}
+
+	// fabricated
+	bool isBreakNerve() const
+	{
+		return mSpine->getCurrentNerve()
+		       == &TNerveBathtubKillerBreak::theNerve();
+	}
+
+	// fabricated
+	bool isDying() const { return isExplosionNerve() || isBreakNerve(); }
 
 	// fabricated
 	TBathtubKillerParams* getSaveParam2() const
@@ -143,21 +164,6 @@ public:
 	/* 0x21C */ int mHitMario;
 	/* 0x220 */ TPosition3f mSmokeMatrix;
 };
-
-DECLARE_NERVE(TNerveBathtubKillerWander, TLiveActor);
-DECLARE_NERVE(TNerveBathtubKillerChase, TLiveActor);
-DECLARE_NERVE(TNerveBathtubKillerChaseStraight, TLiveActor);
-DECLARE_NERVE(TNerveBathtubKillerStraight, TLiveActor);
-DECLARE_NERVE(TNerveBathtubKillerBreak, TLiveActor);
-DECLARE_NERVE(TNerveBathtubKillerExplosion, TLiveActor);
-
-inline bool TBathtubKiller::isDying() const
-{
-	return mSpine->getCurrentNerve()
-	           == &TNerveBathtubKillerExplosion::theNerve()
-	       || mSpine->getCurrentNerve()
-	              == &TNerveBathtubKillerBreak::theNerve();
-}
 
 class TBathtubKillerManager : public TSmallEnemyManager {
 public:
