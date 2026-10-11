@@ -32,7 +32,6 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	// TODO: frame-only mismatch (0xa0 bytes vs. 0xb0 in retail).
 	u32 local_24[4];
 	stream >> local_24[0] >> local_24[1] >> local_24[2] >> local_24[3] >> unk20;
 

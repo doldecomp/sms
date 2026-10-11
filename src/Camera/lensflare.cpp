@@ -29,11 +29,9 @@ TLensFlare::TLensFlare(const char* name)
     , unk44(1.75f)
     , unk48(75.0f)
 {
-	if (gpSunMgr->isThing() != false)
+	if (gpSunMgr->isThing())
 		return;
 
-	// TODO: nonmatching .rodata offset: retail strips the duplicate volume
-	// strings from SunModel.hpp (mario.MAP: @1633, @1634).
 	char buf[0x100];
 	snprintf(buf, 0x100, "%s/%s", cSunVolumeName, "sun_lensfx.bmd");
 
@@ -85,7 +83,6 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		// TODO: nonmatching camera/vector inline boundaries and stack frame.
 		Vec sunWorldPos = gpSunModel->unk198;
 
 		// TODO: a mystery is happening here with the args, but it's definitely
