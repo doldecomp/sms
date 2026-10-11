@@ -14,10 +14,8 @@
 #include <Camera/cameralib.hpp>
 #include <Camera/SunModel.hpp>
 #include <System/Resolution.hpp>
+#include <System/DummyStrings.hpp>
 #include <stdio.h>
-
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TLensGlow::TLensGlow(bool param_1, const char* name)
     : JDrama::TViewObj(name)
@@ -51,20 +49,24 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 		unk6C = 10.0f;
 	}
 
-	char buf[0x100];
-	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.bmd");
-	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf),
+	union {
+		u64 alignment;
+		char data[0x100];
+	} buf;
+	snprintf(buf.data, sizeof(buf.data), "%s/%s", base, "glow.bmd");
+	unk10 = J3DModelLoaderDataBase::load(JKRGetResource(buf.data),
 	                                     J3DMLF_MaterialPEFull
 	                                         | (2 << J3DMLF_TevStageNumShift));
 	unk14 = new J3DModel(unk10, 0, 1);
 
-	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.btk");
-	unk18
-	    = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(JKRGetResource(buf));
+	snprintf(buf.data, sizeof(buf.data), "%s/%s", base, "glow.btk");
+	unk18 = (J3DAnmTextureSRTKey*)J3DAnmLoaderDataBase::load(
+	    JKRGetResource(buf.data));
 	unk18->searchUpdateMaterialID(unk10);
 
-	snprintf(buf, sizeof(buf), "%s/%s", base, "glow.brk");
-	unk30 = (J3DAnmTevRegKey*)J3DAnmLoaderDataBase::load(JKRGetResource(buf));
+	snprintf(buf.data, sizeof(buf.data), "%s/%s", base, "glow.brk");
+	unk30 = (J3DAnmTevRegKey*)J3DAnmLoaderDataBase::load(
+	    JKRGetResource(buf.data));
 	unk30->searchUpdateMaterialID(unk10);
 
 	u16 i;
@@ -94,6 +96,7 @@ TLensGlow::TLensGlow(bool param_1, const char* name)
 
 void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	// TODO: nonmatching stack frame and inline register allocation.
 	bool inBounds = false;
 	if (gpCameraMario->isMarioIndoor()) {
 		inBounds = false;
@@ -150,13 +153,14 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 					if (*it1)
 						avg += *it2;
 
-				f32 avgx = avg.x * (1.0f / (f32)thing);
-				f32 avgy = avg.y * (1.0f / (f32)thing);
+				f32 avgx       = avg.x * (1.0f / (f32)thing);
+				f32 avgy       = avg.y * (1.0f / (f32)thing);
+				f32 blendRatio = dispRatio * 2.0f;
 
 				f32 tx = CLBLinearInbetween(avgx, gpSunModel->unkF8[0].x,
-				                            dispRatio * 2.0f);
+				                            blendRatio);
 				f32 ty = CLBLinearInbetween(avgy, gpSunModel->unkF8[0].y,
-				                            dispRatio * 2.0f);
+				                            blendRatio);
 
 				u16 w  = SMSGetGameRenderWidth();
 				u16 h  = SMSGetGameRenderHeight();
@@ -189,8 +193,9 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & CUE_ENTRY) != 0 && inBounds) {
+		u16 i;
 		int matCount = unk10->getMaterialNum();
-		for (u16 i = 0; i < matCount; ++i) {
+		for (i = 0; i < matCount; ++i) {
 			J3DGXColorS10 c;
 			c         = *unk10->getMaterialNodePointer(i)->getTevColor(0);
 			c.color.a = (s16)unk48;

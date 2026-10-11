@@ -169,7 +169,7 @@ void TSunModel::calcDispRatioAndScreenPos_()
 
 	it1 = unkB4;
 	it2 = unkF8;
-	for (i = 0; i < 17; ++i) {
+	for (i = 17; i != 0; --i) {
 		CLBScreenFPosToSPos(it1, *it2);
 		++it1;
 		++it2;
@@ -182,11 +182,7 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 	if (gpCameraMario->isMarioIndoor()) {
 		sunInBounds = false;
 	} else {
-		f32 bounds  = unk1A8;
-		sunInBounds = -bounds <= unkF8[0].x && unkF8[0].x <= bounds
-		                      && -bounds <= unkF8[0].y && unkF8[0].y <= bounds
-		                  ? true
-		                  : false;
+		sunInBounds = isInBounds(unk1A8);
 	}
 
 	if (cue & CUE_MOVE) {
@@ -216,8 +212,8 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 			if (unkF8[0].squared() > 2.0f) {
 				unkB0 = 0.0f;
 			} else {
-				unkB0 = CLBLinearInbetween<f32>(
-				    0.0f, (f32)unk80, 0.5f * (2.0f - distSq) * unk194);
+				f32 ratio = 0.5f * (2.0f - distSq) * unk194;
+				unkB0     = CLBLinearInbetween<f32>(0.0f, (f32)unk80, ratio);
 			}
 		}
 
