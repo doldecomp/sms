@@ -344,12 +344,14 @@ Game-tunable parameters use `TParamRT<T>` fields initialized via the `PARAM_INIT
 
 - `// fabricated` — the code is not from the original binary; it was invented/guessed to make things compile. May be incorrect.
 - `// TODO:` — known issues, suspected inaccuracies, or incomplete understanding.
-- `// Tiny size mismatch` / `// TODO: incorrect size` — for functions which were completely inlined and not emitted to the original binary, but are present in the symbol map as UNUSED symbols and their size is available. That size can be compared against the size in our code using tools/decomp-diff.py and if it's different, then the guess for the function's contents is not correct yet.
+- UNUSED functions have a size in the map. If our body compiles to a different size, the guess is wrong: leave the function empty rather than commit it with a size TODO.
 - `// correct but X is incorrect` — the function itself matches, but a called function does not.
 - `// rogue includes needed for matching sinit & bss` — includes added purely for BSS/static-init ordering.
 - `#pragma dont_inline on/off` — forces the compiler to not inline a function (required for matching in specific cases).
 
-Don't be afraid to leave notes that would be useful to the next person trying to match the code, figure it out, or in the far future, write mods for the game.
+Leave notes that help the next person understand the code or, later, mod the game.
+Don't leave notes about match state: match percentages, frame sizes, map sizes and "TODO: match this" are removed in review.
+objdiff already shows them, and the numbers go out of date.
 
 ### Style
 
@@ -459,6 +461,27 @@ UNUSED functions must still be reconstructed in the source because:
 - Keep existing `TODO` comments unless the change resolves them.
 - One unit per PR; leave out edits that don't change the object.
 - If the bot reports broken matches in units you didn't touch, the branch is behind main. Merge main.
+
+Code:
+- Before writing an expression out, look for the inline it might be: an UNUSED function in the same TU, or an existing helper such as `isActorType`, `getMActor()`, `getBas`, `offAllCollision`, `MsWrap`, `MsAngleDiff`, `MsSqrtf`, `JGeometry::TUtil<f32>::sqrt`, `TMsRange`, `operator-`, `.length()` or `.squared()`.
+- Call accessors instead of caching members in locals or taking a field's address; CSE merges repeated calls (`getMActor()` twice, `cue & CUE_CALC_ANIM` twice).
+- An inline is likely real when it improves several functions at once. One that only fixes a frame size is a local minimum; leave it out.
+- Keep a new fabricated inline in the `.cpp` that needs it, marked `// fabricated`, until more call sites support it. Don't add it to a shared header.
+- No `volatile` padding, `_pad` fields, `(void)&local` or casts whose only purpose is codegen.
+- Use the spellings the game uses: `SMSGetMSound()->startSoundActor(...)`, `SMS_GetMarioPos()`, `-=` and `+=` on vectors, `stream >> value` in `load`, `MTX*`/`VEC*` macros, `ARRAY_COUNT`, and `BOOL` with `TRUE`/`FALSE` when `bool` doesn't match.
+- Use the enums for sounds, particles (`Particle.hpp`), hit messages and cues instead of numbers.
+- Name enums `EState` with values `STATE_WAITING`: no `typedef`, no `enum class`, and use `STATE_UNK*` when the meaning is unknown.
+- Don't pass defaulted arguments at call sites. Defaults go only in the header, and actor constructors default their name to the Japanese class name.
+- Don't declare destructors or constructors the compiler generates.
+- Put classes in the header named after their file, not in an unrelated one.
+- Decode Shift-JIS strings into readable Japanese literals.
+
+Headers:
+- Give every field a `/* 0x50 */` offset comment, and don't add type-name comments after fields that already have the type.
+
+Pull requests:
+- Keep a PR small enough to review: one TU, polished. A large number of PRs is not the goal; their quality is.
+- Rebase on main and re-read this file before opening a PR; it gains rules after reviews.
 
 ### Pre-PR checklist
 
