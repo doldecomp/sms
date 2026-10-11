@@ -114,8 +114,8 @@ void TMarDirector::setup2()
 
 	JDrama::TGraphics graphics;
 	graphics.unk0 = 0;
-	unk40->perform(CUE_ALL, &graphics);
-	unk38->perform(CUE_ALL, &graphics);
+	mPerformListDrawInit->perform(CUE_ALL, &graphics);
+	mPerformListPollutionCountObj->perform(CUE_ALL, &graphics);
 	GXSetDrawDone();
 	GXWaitDrawDone();
 

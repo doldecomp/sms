@@ -404,8 +404,9 @@ bool TMarDirector::setupObjects()
 	    ->getDrawBuffer()
 	    ->setMatAnmSort();
 	gpLightManager->addChildGroupObj(drawBufferGroup);
-	unk40->push_back(drawInit, CUE_DRAW);
-	initECTGft(unk38, unk3C, perfEventGroup, root);
+	mPerformListDrawInit->push_back(drawInit, CUE_DRAW);
+	initECTGft(mPerformListPollutionCountObj, mPerformListPollutionCountLayer,
+	           perfEventGroup, root);
 	initECTMir(mPerformListGX, perfEventGroup);
 
 	JDrama::TEfbCtrlTex* normalSceneDrawStage
@@ -455,9 +456,9 @@ bool TMarDirector::setupObjects()
 	    JDrama::TNameRefGen::search("PerformList Silhouette"));
 	mPerformListGXPost = static_cast<TPerformList*>(
 	    JDrama::TNameRefGen::search("PerformList GX Post"));
-	mShinePfLstMov = static_cast<TPerformList*>(
+	mPerformListShineMovement = static_cast<TPerformList*>(
 	    JDrama::TNameRefGen::search("Shine PfLst Mov"));
-	mShinePfLstAnm = static_cast<TPerformList*>(
+	mPerformListShineCalcAnim = static_cast<TPerformList*>(
 	    JDrama::TNameRefGen::search("Shine PfLst Anm"));
 
 	initECDisp(mPerformListGXPost, perfEventGroup, root);
@@ -499,7 +500,7 @@ bool TMarDirector::setupObjects()
 	mPerformListCalcAnim->push_back(targetArrow, CUE_CALC_ANIM);
 	setupPerformList_console();
 	mPerformListGXPost->push_back(drawInit, CUE_DRAW_STAGE_END);
-	preEntry(unk34);
+	preEntry(mPerformListPreEntry);
 	setup2();
 	JKRHeap::getCurrentHeap()->getTotalFreeSize();
 

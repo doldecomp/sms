@@ -139,33 +139,34 @@ int TMarDirector::direct()
 			if (mMoveTickCount & 2)
 				movementCue &= ~CUE_MOVEMENT_GATE_B;
 			if (checkDemoFlag(DEMO_FLAG_SHINE_GET_STOP_THE_WORLD))
-				mShinePfLstMov->perform(movementCue, &local_140);
+				mPerformListShineMovement->perform(movementCue, &local_140);
 			else
 				mPerformListMovement->perform(movementCue, &local_140);
 
 			u32 someCue = 0;
 			if (!checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK))
 				someCue |= CUE_CALC_ANIM;
-			u32 unk30Cue = ~someCue;
-			unk30->perform(unk30Cue, &local_140);
+			u32 consoleCue = ~someCue;
+			mPerformListConsole->perform(consoleCue, &local_140);
 			movement();
 			if (!(blacklistedCues & CUE_CALC_ANIM)) {
 				if (checkDemoFlag(DEMO_FLAG_SHINE_GET_STOP_THE_WORLD))
-					mShinePfLstAnm->perform(~blacklistedCues, &local_140);
+					mPerformListShineCalcAnim->perform(~blacklistedCues,
+					                                   &local_140);
 				else
 					mPerformListCalcAnim->perform(~blacklistedCues, &local_140);
 			}
 
 			if (checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK)) {
 				local_140.unk0 = 0;
-				unk34->perform(CUE_ALL, &local_140);
+				mPerformListPreEntry->perform(CUE_ALL, &local_140);
 				break;
 			}
 		} else {
 			local_140.unk0 = 0;
-			unk40->perform(CUE_ALL, &local_140);
-			unk38->perform(CUE_ALL, &local_140);
-			unk3C->perform(CUE_ALL, &local_140);
+			mPerformListDrawInit->perform(CUE_ALL, &local_140);
+			mPerformListPollutionCountObj->perform(CUE_ALL, &local_140);
+			mPerformListPollutionCountLayer->perform(CUE_ALL, &local_140);
 			mPerformListGX->perform(CUE_ALL, &local_140);
 			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
