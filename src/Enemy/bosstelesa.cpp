@@ -1136,9 +1136,8 @@ void TBossTelesa::moveObject()
 
 	JGeometry::TVec3<f32> cameraPos;
 	cameraPos.set(gpCamera->getUnk124());
-	JGeometry::TVec3<f32> marioDiff = *gpMarioPos;
-	marioDiff.sub(cameraPos);
-	f32 cameraDist = marioDiff.length();
+	JGeometry::TVec3<f32> marioDiff = *gpMarioPos - cameraPos;
+	f32 cameraDist                  = marioDiff.length();
 
 	if (cameraDist < mCameraMoveLimit) {
 		mCameraOffsetY += mCameraMoveSp * (gpMarioPos->y - gpCamera->unk148.y);
@@ -1180,9 +1179,8 @@ void TBossTelesa::moveObject()
 		}
 	}
 
-	JGeometry::TVec3<f32> cameraDiff = *gpMarioPos;
-	cameraDiff.sub(gpCamera->getUnk124());
-	unk19C = mRoulettes[0]->mPosition;
+	JGeometry::TVec3<f32> cameraDiff = *gpMarioPos - cameraPos;
+	unk19C                           = mRoulettes[0]->mPosition;
 	unk19C.x += 0.67f * cameraDiff.x;
 	unk19C.z += 0.67f * cameraDiff.z;
 
@@ -2355,8 +2353,7 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 		s16 endFrame = boss->mMActor->getFrameCtrl(5)->getEnd();
 		boss->mMActor->getFrameCtrl(5)->setFrame((f32)endFrame);
 	} else {
-		JGeometry::TVec3<f32> pos = boss->mPosition;
-		pos.sub(*gpMarioPos);
+		JGeometry::TVec3<f32> pos = boss->mPosition - *gpMarioPos;
 
 		if (spine->getTime() > 400
 		    && boss->mKillSmallEnemyCollision->unk6C == 0) {
@@ -2560,8 +2557,7 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 	}
 
 	if (boss->rouletteFall()) {
-		JGeometry::TVec3<f32> diff = boss->mPosition;
-		diff.sub(*gpMarioPos);
+		JGeometry::TVec3<f32> diff = boss->mPosition - *gpMarioPos;
 
 		if (boss->slotFall()) {
 			boss->offHitFilter(HIT_FILTER_NO_COLLISION);
