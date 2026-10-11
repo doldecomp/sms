@@ -85,6 +85,23 @@ extern TNozzleBmdData nozzleBmdData;
 
 class TWaterGun {
 public:
+	// TODO: UNUSED parameter class; member layout is unknown.
+	class TDeParams {
+	public:
+		TDeParams();
+	};
+
+	// TODO: UNUSED methods; return types still need reconstruction.
+	void endDashEffect();
+	void startDashEffect();
+	void getMarioUpperStatus();
+	void getWillBeEmitted();
+	void getWaterGunAnmID(int);
+	void setEmitPt();
+	void finalDrawInitialize();
+	void entryAll();
+	void createGunBody();
+
 	enum TNozzleType {
 		Spray            = 0,
 		Rocket           = 1,

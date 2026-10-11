@@ -117,6 +117,10 @@ void TMario::emitSweatSometimes()
 		emitSweat(angle);
 }
 
+void TMario::emitSweatSometimes(s16) { }
+
+void TMario::emitRecover() { }
+
 void TMario::emitGetEffect()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_ITEMGET1_A, &unk160,
@@ -136,6 +140,9 @@ void TMario::emitGetCoinEffect(JGeometry::TVec3<f32>* pos)
 	gpMarioParticleManager->emit(PARTICLE_MS_COINGET_A, pos, 0, nullptr);
 	gpMarioParticleManager->emit(PARTICLE_MS_COINGET_B, pos, 0, nullptr);
 }
+
+// TODO: UNUSED stub.
+void TMario::strongTouchDownEffectDisp() { }
 
 void TMario::strongTouchDownEffect()
 {
@@ -170,6 +177,8 @@ void TMario::rippleEffect()
 		}
 	}
 }
+
+void TMario::rippleEffectSmall() { }
 
 void TMario::inOutWaterEffect(f32 waterY)
 {
@@ -290,6 +299,8 @@ void TMario::swimmingBubbleEffect()
 		}
 	}
 }
+
+void TMario::smallRippleEffect(JGeometry::TVec3<f32>*) { }
 
 void TMario::runningRippleEffect()
 {
@@ -584,6 +595,8 @@ void TMario::emitRotateShootEffect()
 	                                            &mCenterPos, 1, this);
 }
 
+void TMario::setFootPrint(const JGeometry::TVec3<f32>&, int) { }
+
 void TMario::emitFootPrintWithEffect(int effectId, int printId)
 {
 	int foot   = 2;
@@ -644,6 +657,8 @@ void TMario::emitFootPrintWithEffect(int effectId, int printId)
 	}
 }
 
+void TMario::emitFootPrint(int) { }
+
 void TMario::emitDirtyFootPrint()
 {
 	emitFootPrintWithEffect(MAP_POLLUTION_MS_M_ASHIOS, -1);
@@ -670,6 +685,8 @@ void TMario::meltInWaterEffect()
 		}
 	}
 }
+
+void TMario::rocketEffectNozzle() { }
 
 void TMario::rocketEffectStart()
 {

@@ -2,8 +2,8 @@
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleBase.hpp>
 #include <Player/NozzleDeform.hpp>
-// #include <Player/NozzleButton.hpp>
-// #include <Player/NozzleTurbo.hpp>
+#include <Player/NozzleButton.hpp>
+#include <Player/NozzleTurbo.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioEffect.hpp>
@@ -790,6 +790,20 @@ void TNozzleTrigger::animation(int nozzleType)
 	}
 }
 
+TNozzleButton::TNozzleButton(const char* name, const char* prm,
+                             TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+{
+}
+
+void TNozzleButton::init() { }
+
+void TNozzleButton::movement(const TMarioControllerWork&) { }
+
+void TNozzleButton::animation(int) { }
+
+void TNozzleButton::emit(int) { }
+
 void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 {
 	if (!mFludd->hasWater()) {
@@ -1116,6 +1130,15 @@ void TNozzleDeform::animation(int param)
 	}
 }
 
+TNozzleTurbo::TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+{
+}
+
+void TNozzleTurbo::movement(const TMarioControllerWork&) { }
+
+void TNozzleTurbo::animation(int) { }
+
 TWaterGun::TWaterGun(TMario* mario)
     : mNozzleDeform("normal_wg", "/Mario/WaterGun/NozzleDeform.prm", this)
     , mNozzleRocket(nullptr, "/Mario/WaterGun/NozzleTrgRocket.prm", this)
@@ -1341,7 +1364,15 @@ void TWaterGun::init()
 	}
 }
 
+void TWaterGun::createGunBody() { }
+
 void TWaterGun::initInLoadAfter() { }
+
+void TWaterGun::entryAll() { }
+
+void TWaterGun::finalDrawInitialize() { }
+
+TWaterGun::TDeParams::TDeParams() { }
 
 // TODO: Do i really need to explcitly say this?
 #pragma dont_inline on
@@ -1375,6 +1406,10 @@ MtxPtr TWaterGun::getNozzleMtx()
 {
 	return mFluddModel->getModel()->getAnmMtx(unk1CD8);
 }
+
+void TWaterGun::setEmitPt() { }
+
+void TWaterGun::getWaterGunAnmID(int) { }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
@@ -1646,6 +1681,8 @@ f32 TWaterGun::getPressureMax()
 	return 0.0f;
 }
 
+void TWaterGun::getWillBeEmitted() { }
+
 // TODO: Figure out why inline happens
 #pragma dont_inline on
 void TWaterGun::getEmitPosDirSpeed(int index, JGeometry::TVec3<f32>* pos,
@@ -1686,6 +1723,8 @@ void TWaterGun::rotateProp(f32 rotation)
 		mPropellerAngle = 0;
 	}
 }
+
+void TWaterGun::getMarioUpperStatus() { }
 
 void TWaterGun::triggerPressureMovement(
     const TMarioControllerWork& controllerWork)
@@ -1827,3 +1866,6 @@ void TWaterGun::changeBackup()
 		mSwitchToSecondNozzleSpeed = -mWatergunParams.mChangeSpeed.get();
 	}
 }
+void TWaterGun::startDashEffect() { }
+
+void TWaterGun::endDashEffect() { }
