@@ -834,7 +834,7 @@ void TBossTelesa::init(TLiveManager* manager)
 {
 	mManager = manager;
 	manager->manageActor(this);
-	mMActorKeeper = new TMActorKeeper(manager, 1);
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
 	mMActor       = mMActorKeeper->createMActor("btelesa.bmd", 3);
 
 	onLiveFlag(LIVE_FLAG_DEAD);
@@ -871,37 +871,29 @@ void TBossTelesa::init(TLiveManager* manager)
 		model->setSkinDeform(new J3DSkinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	mMActor->resetDL();
 
-	unk348.r = 0xFF;
-	unk348.g = 0xFF;
-	unk348.b = 0xFF;
-	unk348.a = 0xFF;
+	unk348.r = unk348.g = unk348.b = unk348.a = 0xFF;
+	unk34C.r = unk34C.g = unk34C.b = unk34C.a = mNormalAlpha;
 
-	unk34C.r = mNormalAlpha;
-	unk34C.g = mNormalAlpha;
-	unk34C.b = mNormalAlpha;
-	unk34C.a = mNormalAlpha;
-
-	J3DModelData* modelData = model->getModelData();
-	for (u16 i = 0; i < modelData->getMaterialNum(); ++i) {
-		s32 bodyMatIndex
-		    = getModel()->getModelData()->getMaterialName()->getIndex(
-		        "_mat_body");
-		if (i == bodyMatIndex) {
-			SMS_InitPacket_TwoTevKColor(model, i, GX_KCOLOR0, &unk34C,
-			                            GX_KCOLOR1, &unk348);
+	for (int i = 0;
+	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
+		if (i
+		    == getModel()->getModelData()->getMaterialName()->getIndex(
+		        "_mat_body")) {
+			SMS_InitPacket_TwoTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
+			                            &unk34C, GX_KCOLOR1, &unk348);
 		} else {
-			SMS_InitPacket_OneTevKColor(model, i, GX_KCOLOR0, &unk34C);
+			SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
+			                            &unk34C);
 		}
 	}
 
 	reset();
 
 	for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
-		TMapObjBase* actor = gpMapObjManager->getObj(i);
-		if (actor->isActorType(ACTOR_TYPE_CASINORULET)) {
+		if (gpMapObjManager->getObj(i)->isActorType(ACTOR_TYPE_CASINORULET)) {
 			unk154    = nullptr;
 			unk158    = nullptr;
-			mPosition = actor->mPosition;
+			mPosition = gpMapObjManager->getObj(i)->mPosition;
 		}
 	}
 
