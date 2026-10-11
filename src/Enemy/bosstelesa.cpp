@@ -2170,19 +2170,19 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 
 		if (boss->mHitPoints != 0) {
 			if (boss->mIsSpicy) {
-				boss->mMActor->setBrkFromIndex(1);
+				boss->getMActor()->setBrkFromIndex(1);
 				boss->setBckAnm(2);
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1F, 1.0f);
 			} else {
 				boss->setBckAnm(5);
-				boss->mMActor->setBrkFromIndex(0);
+				boss->getMActor()->setBrkFromIndex(0);
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK20, 1.0f);
 			}
 		} else {
 			MSBgm::stopBGM(MSD_BGM_MAP_SELECT, 10);
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK21, 1.0f);
 			boss->setBckAnm(3);
-			boss->mMActor->setBrkFromIndex(1);
+			boss->getMActor()->setBrkFromIndex(1);
 			boss->mSlot->mScaling.set(0.0f, 0.0f, 0.0f);
 
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DOWN,
@@ -2193,7 +2193,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	if (boss->mHitPoints == 0) {
 		if (boss->checkCurAnmEnd(0)) {
 			if (boss->unk388 == 0) {
-				MtxPtr mtx = boss->mMActor->getModel()->getAnmMtx(1);
+				MtxPtr mtx = boss->getMActor()->getModel()->getAnmMtx(1);
 				boss->mEffectPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 				gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_DOWN,
@@ -2239,21 +2239,22 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	}
 
 	if (boss->checkCurAnmEnd(0)) {
-		if (boss->mMActor->checkCurBckFromIndex(5)) {
-			boss->mMActor->setBrkFromIndex(2);
+		if (boss->getMActor()->checkCurBckFromIndex(5)) {
+			boss->getMActor()->setBrkFromIndex(2);
 			boss->setBckAnm(7);
-		} else if (boss->mMActor->checkCurBckFromIndex(7)) {
+		} else if (boss->getMActor()->checkCurBckFromIndex(7)) {
 			boss->setBckAnm(6);
 		} else {
-			SMS_ResetDamageFogEffect(boss->mMActor->getModel()->getModelData());
+			SMS_ResetDamageFogEffect(
+			    boss->getMActor()->getModel()->getModelData());
 
-			if (boss->mMActor->checkCurBckFromIndex(6)) {
+			if (boss->getMActor()->checkCurBckFromIndex(6)) {
 				boss->offHitFilter(HIT_FILTER_NO_COLLISION);
 				boss->mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 				boss->mTongueCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 
 				boss->setBckAnm(15);
-				boss->mMActor->setBtpFromIndex(2);
+				boss->getMActor()->setBtpFromIndex(2);
 				spine->pushAfterCurrent(
 				    &TNerveBossTelesaPrepareSlot::theNerve());
 			} else {
@@ -2269,10 +2270,10 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
-	if (spine->getTime() == 0 || !boss->mMActor->checkCurBckFromIndex(14)) {
+	if (spine->getTime() == 0 || !boss->getMActor()->checkCurBckFromIndex(14)) {
 		boss->setBckAnm(14);
 	} else {
-		if (boss->mMActor->getFrameCtrl(0)->checkPass(40.0f))
+		if (boss->getMActor()->getFrameCtrl(0)->checkPass(40.0f))
 			boss->genAttacker();
 	}
 
@@ -2284,9 +2285,9 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
-	if (!boss->mMActor->checkCurBckFromIndex(4)) {
+	if (!boss->getMActor()->checkCurBckFromIndex(4)) {
 		boss->setBckAnm(4);
-		boss->mMActor->setBtpFromIndex(2);
+		boss->getMActor()->setBtpFromIndex(2);
 	}
 
 	if (boss->checkCurAnmEnd(0)) {
@@ -2312,9 +2313,9 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 		boss->unk34C.a = alpha;
 
 		boss->mSlot->mScaling.set(0.0f, 0.0f, 0.0f);
-		boss->mMActor->setBrkFromIndex(2);
-		s16 endFrame = boss->mMActor->getFrameCtrl(5)->getEnd();
-		boss->mMActor->getFrameCtrl(5)->setFrame((f32)endFrame);
+		boss->getMActor()->setBrkFromIndex(2);
+		s16 endFrame = boss->getMActor()->getFrameCtrl(5)->getEnd();
+		boss->getMActor()->getFrameCtrl(5)->setFrame((f32)endFrame);
 	} else {
 		JGeometry::TVec3<f32> pos = boss->mPosition - *gpMarioPos;
 
@@ -2333,7 +2334,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
-		if (!boss->mMActor->checkCurBckFromIndex(0)) {
+		if (!boss->getMActor()->checkCurBckFromIndex(0)) {
 			boss->setBckAnm(0);
 
 			if (!boss->unk384) {
@@ -2348,13 +2349,13 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->mTongueCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 	} else if (boss->checkCurAnmEnd(0)
-	           && !boss->mMActor->checkCurBckFromIndex(15)) {
+	           && !boss->getMActor()->checkCurBckFromIndex(15)) {
 		boss->setBckAnm(15);
-		boss->mMActor->setBtpFromIndex(2);
+		boss->getMActor()->setBtpFromIndex(2);
 	}
 
-	if (boss->mMActor->checkCurBckFromIndex(0)
-	    && boss->mMActor->getFrameCtrl(0)->checkPass(78.0f)) {
+	if (boss->getMActor()->checkCurBckFromIndex(0)
+	    && boss->getMActor()->getFrameCtrl(0)->checkPass(78.0f)) {
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK22, 1.0f);
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_LAND,
 		                                &boss->mPosition, 0, nullptr, 0, 4);
@@ -2380,14 +2381,14 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 		boss->setBckAnm(11);
 	}
 
-	if (boss->mMActor->checkCurBckFromIndex(11)) {
-		if (boss->mMActor->getFrameCtrl(0)->checkPass(53.0f)) {
+	if (boss->getMActor()->checkCurBckFromIndex(11)) {
+		if (boss->getMActor()->getFrameCtrl(0)->checkPass(53.0f)) {
 			boss->slotStart();
 		}
 
 		if (boss->checkCurAnmEnd(0)) {
 			boss->setBckAnm(15);
-			boss->mMActor->setBtpFromIndex(2);
+			boss->getMActor()->setBtpFromIndex(2);
 			boss->mSlot->forceStopSlot(1);
 		}
 	}
@@ -2402,7 +2403,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
-	if (!boss->mMActor->checkCurBckFromIndex(14)
+	if (!boss->getMActor()->checkCurBckFromIndex(14)
 	    && boss->mHoseiPosY < TBossTelesa::mBaseHoseiPosY - 200.0f) {
 		boss->setBckAnm(14);
 	} else if (boss->checkCurAnmEnd(0) && spine->getTime() > 600) {
@@ -2421,16 +2422,16 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->setBckAnm(15);
-		boss->mMActor->setBtpFromIndex(2);
+		boss->getMActor()->setBtpFromIndex(2);
 	}
 
 	if (boss->mIsSpicy) {
 		boss->mSpicyTimer++;
 		if (boss->checkCurAnmEnd(0)) {
-			if (boss->mMActor->checkCurBckFromIndex(1)) {
+			if (boss->getMActor()->checkCurBckFromIndex(1)) {
 				boss->setBckAnm(12);
-				boss->mMActor->setBtpFromIndex(1);
-			} else if (boss->mMActor->checkCurBckFromIndex(12)) {
+				boss->getMActor()->setBtpFromIndex(1);
+			} else if (boss->getMActor()->checkCurBckFromIndex(12)) {
 				TBossTelesaSaveLoadParams* params = boss->unk15C;
 				if (boss->mSpicyTimer > params->mSLSpicyTime.get()) {
 					boss->setBckAnm(13);
@@ -2448,7 +2449,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->unk34C.a = alpha;
 
 				boss->setBckAnm(15);
-				boss->mMActor->setBtpFromIndex(2);
+				boss->getMActor()->setBtpFromIndex(2);
 			}
 		}
 	}
@@ -2468,7 +2469,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 	if (boss->unk368 > waitTime - 120)
 		boss->flashItem(waitTime - boss->unk368);
 
-	if (boss->mMActor->checkCurBckFromIndex(15)) {
+	if (boss->getMActor()->checkCurBckFromIndex(15)) {
 		if (boss->checkAllItemDead() || boss->unk368 > waitTime) {
 			boss->unk368 = 0;
 			boss->forceAllItemKill();
@@ -2495,7 +2496,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
-	if (boss->mMActor->checkCurBckFromIndex(16)) {
+	if (boss->getMActor()->checkCurBckFromIndex(16)) {
 		if (boss->checkCurAnmEnd(0)) {
 			boss->mIsSpicy = 0;
 
@@ -2524,7 +2525,7 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 		boss->onLiveFlag(LIVE_FLAG_HIDDEN);
 		if (SMS_SendMessageToMario(boss, HIT_MESSAGE_TAKE))
 			boss->mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
-		boss->mMActor->setFrameRate(0.0f, 0);
+		boss->getMActor()->setFrameRate(0.0f, 0);
 		boss->mSlot->mScaling.set(0.0f, 0.0f, 0.0f);
 	}
 
