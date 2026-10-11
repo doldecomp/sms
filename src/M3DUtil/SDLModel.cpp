@@ -19,8 +19,8 @@ public:
 
 	void setDrawBufs()
 	{
-		unk0[0] = j3dSys.getDrawBuffer(0);
-		unk0[1] = j3dSys.getDrawBuffer(1);
+		for (int i = 0; i < ARRAY_COUNT(unk0); ++i)
+			unk0[i] = j3dSys.getDrawBuffer(i);
 	}
 
 	bool checkDrawBufs()
@@ -50,7 +50,7 @@ void SDLModelData::entrySameMat(J3DMaterial* material, SDLDrawBufToken* token)
 
 	if (head != nullptr) {
 		j3dSys.setModel(head);
-		j3dSys.setTexture(unk0->getTexture());
+		j3dSys.setTexture(getModelData()->getTexture());
 
 		J3DMatPacket* matPacket = head->getMatPacket(material->getIndex());
 		matPacket->drawClear();
@@ -132,7 +132,7 @@ void SDLModelData::entrySDLModels()
 
 	typedef JGadget::TList<SDLDrawBufToken*>::iterator I;
 	for (I it = mDbTokenList.begin(), e = mDbTokenList.end(); it != e; it++) {
-		recursiveEntry(unk0->getRootNode(), *it);
+		recursiveEntry(getModelData()->getRootNode(), *it);
 
 		SDLModel* model = (*it)->mHead;
 		while (model != nullptr) {
@@ -331,5 +331,6 @@ void SDLModel::viewCalcSimple()
 	MtxPtr mA = gpCamera->getUnk1EC();
 	for (int i = 0; i < mModelData->getDrawMtxNum(); ++i)
 		MTXConcat(mA, mNodeMatrices[i], getDrawMtx(i));
-	DCStoreRange(getDrawMtxPtr(), mModelData->getDrawMtxNum() * sizeof(Mtx));
+	DCStoreRange(getDrawMtxPtr(),
+	             getModelData()->getDrawMtxNum() * sizeof(Mtx));
 }

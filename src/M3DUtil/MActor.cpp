@@ -115,8 +115,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 		unk30[i]         = 0x32;
 		unk2C[i]         = 0x32;
 		for (u8 j = 0; j < mat->getTexGenBlock()->getTexGenNum(); ++j) {
-			if (mat->getTexGenBlock()->getTexMtx(j)
-			    && mat->getTexGenBlock()->getTexMtx(j)->getInfo()) {
+			if (mat->getTexMtx(j) && mat->getTexMtx(j)->getTexMtxInfo().mInfo) {
 				unk30[i] = i;
 			}
 		}
@@ -399,7 +398,7 @@ void MActor::entry()
 void MActor::frameUpdate()
 {
 	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
 			mAnmByType[i]->getFrameCtrl()->update();
 
 	if (unk10)
@@ -459,9 +458,9 @@ bool MActor::checkAnmFileExist(const char* name, int type)
 
 J3DFrameCtrl* MActor::getFrameCtrl(int type)
 {
-	if (!mAnmByType[type])
+	if (!getUnk28(type))
 		return nullptr;
-	return mAnmByType[type]->getFrameCtrl();
+	return getUnk28(type)->getFrameCtrl();
 }
 
 BOOL MActor::checkBckPass(f32 pass_frame)
@@ -618,37 +617,37 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BLK] && 0 <= mAnmByType[ANM_TYPE_BLK]->getCurIdx())
 		mAnmByType[ANM_TYPE_BLK]->updateIn();
 }
 
 void MActor::updateOut()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
 	updateOutSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BLK] && 0 <= mAnmByType[ANM_TYPE_BLK]->getCurIdx())
 		mAnmByType[ANM_TYPE_BLK]->updateOut();
 }
 
 void MActor::entryIn()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
 			mAnmByType[i]->updateIn();
 }
 
 void MActor::entryOut()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
 			mAnmByType[i]->updateOut();
 }
 
