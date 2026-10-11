@@ -49,7 +49,7 @@ void TCameraMarioData::calcAndSetMarioData()
 		mFramesSinceMarioStatusChange += 1;
 	}
 
-	s16 angleMin = SMS_GetMarioWaterGun()->getEmitParams().mLAngleMin.get();
+	s16 angleMin = SMS_GetMarioWaterGun()->getCurrentNozzle()->mLAngleMin.get();
 	s16 angle    = ((const TWaterGun*)SMS_GetMarioWaterGun())
 	                ->getCurrentNozzle()
 	                ->getGunAngle();

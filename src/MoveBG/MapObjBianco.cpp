@@ -385,7 +385,7 @@ void TLeafBoat::control()
 		mVelocity.y -= unk154;
 	if (marioIsOn()) {
 		mVelocity.y -= unk150;
-		if (SMS_GetMarioWaterGun()->mIsEmitWater > 0) {
+		if (SMS_GetMarioWaterGun()->getEmittedWaterCount() > 0) {
 			MtxPtr mtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 			mVelocity.x -= mtx[0][0] * unk144;
 			mVelocity.z -= mtx[2][0] * unk144;
