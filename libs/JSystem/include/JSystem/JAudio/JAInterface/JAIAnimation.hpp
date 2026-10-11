@@ -54,7 +54,8 @@ protected:
 
 public:
 	JAIAnimeSound();
-	~JAIAnimeSound();
+	// TODO: the original __dt__9MAnmSoundFv is 0x60 bytes; this gives 0x5c
+	~JAIAnimeSound() { }
 
 	virtual void startAnimSound(void* interface, u32 id,
 	                            JAISoundHandle* out_handle, JAIActor* actor,
