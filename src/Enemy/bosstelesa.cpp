@@ -502,7 +502,7 @@ void TBossTelesaKillSmallEnemy::checkHit()
 	for (int i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
 		if (actor->isHitCategory(HIT_CATEGORY_ENEMY)) {
-			if (actor->isActorType(ACTOR_TYPE_DORO_HAMU_KURI))
+			if (actor->getActorType() == ACTOR_TYPE_DORO_HAMU_KURI)
 				((THamuKuri*)actor)->selectCapHolder();
 			((TLiveActor*)actor)->kill();
 		}
@@ -2097,13 +2097,18 @@ bool TBossTelesa::checkAllItemDead()
 
 void TBossTelesa::forceAllItemKill()
 {
+	JGeometry::TVec3<f32> origin;
+	origin.x = 0.0f;
+	origin.y = 0.0f;
+	origin.z = 0.0f;
+
 	for (int i = 0; i < mSpitObjNum; ++i) {
 		if (mSpitObjs[i]->mHolder) {
 			SMS_SendMessageToMario(mSpitObjs[i], HIT_MESSAGE_DETACH);
 			mSpitObjs[i]->mHolder = nullptr;
 		}
 
-		mSpitObjs[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+		mSpitObjs[i]->mPosition.set(origin);
 		mSpitObjs[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		if (!mSpitObjs[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
@@ -2155,7 +2160,8 @@ void TBossTelesa::forceHide()
 	}
 
 	mSpine->reset();
-	mSpine->setNext(&TNerveBossTelesaHide::theNerve());
+	const TNerveBase<TLiveActor>* next = &TNerveBossTelesaHide::theNerve();
+	mSpine->setNext(next);
 }
 
 void TBossTelesa::fanfale()
