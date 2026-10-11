@@ -286,8 +286,8 @@ void TNozzleBase::movement(const TMarioControllerWork& controllerWork)
 	}
 	s32 triggerPressure = 150.0f * controllerWork.mAnalogR * 256.0f;
 	if (triggerPressure > mTriggerPressure) {
-		unk378          = SHORTANGLE2DEG(triggerPressure - mTriggerPressure);
-		unk374          = unk378;
+		unk378 = (triggerPressure - mTriggerPressure) * (1.0f / 65536.0f);
+		unk374 = unk378;
 		u16 triggerRate = mTriggerRate.get();
 		mTriggerPressure += triggerRate;
 		if (triggerPressure < mTriggerPressure) {
@@ -347,7 +347,8 @@ void TNozzleBase::emit(int param_1)
 
 		// This is a complete fake match...
 		// But idk why it would take a ref here?
-		s32& flagRef = emitInfo->mFlag.value;
+		f32& refEmitPow = emitInfo->mPow.value;
+		s32& flagRef    = emitInfo->mFlag.value;
 
 		emitInfo->mNum.set(emittedNum);
 		emitInfo->mAttack = mAttack;
@@ -371,15 +372,14 @@ void TNozzleBase::emit(int param_1)
 			// classes. There may be some weird inlining going on here?
 			TMario* mario                    = mFludd->getMario();
 			const JGeometry::TVec3<f32>& dir = emitInfo->mDir.get();
-			f32 reactionPow = mEmitPow.get() * mReactionPow.get();
-			f32 fdot        = dir.x * JMASSin(mario->getFaceAngleY())
-			           - dir.z * JMASCos(mario->getFaceAngleY());
-			f32 backwardComponent = -fdot;
-			mario->addVelocity(backwardComponent * mReactionPow.get());
+			f32 backwardComponent = -dir.x * JMASSin(mario->mFaceAngle.y)
+			                        - dir.z * JMASCos(mario->mFaceAngle.y);
+			f32 reactionPow = refEmitPow * mReactionPow.get();
+			mario->addVelocity(backwardComponent * reactionPow);
 
 			mFludd->getMario()->mVel.x -= dir.x * reactionPow;
 			mFludd->getMario()->mVel.z -= dir.z * reactionPow;
-			f32 velocityY = -dir.y * mEmitPow.get() * mReactionY.get();
+			f32 velocityY = -dir.y * refEmitPow * mReactionY.get();
 			mFludd->getMario()->mVel.y += velocityY;
 		}
 	}
