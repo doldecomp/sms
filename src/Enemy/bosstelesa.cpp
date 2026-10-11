@@ -1862,14 +1862,13 @@ void TBossTelesa::generateSlotItem()
 	}
 	unk1A8 = result;
 
-	TBossTelesaSaveLoadParams* params = unk15C;
-	s32 slotItemNum                   = params->mSLSlotItemNum.get();
-	MtxPtr rootMtx                    = mMActor->getModel()->getAnmMtx(5);
-	f32 angleStep                     = 120.0f / slotItemNum;
-	f32 angleOffset                   = angleStep * slotItemNum * 0.5f;
+	s32 slotItemNum = unk15C->mSLSlotItemNum.get();
+	MtxPtr rootMtx  = mMActor->getModel()->getAnmMtx(5);
+	f32 angleStep   = 120.0f / slotItemNum;
+	f32 angleOffset = angleStep * slotItemNum * 0.5f;
 
 	if (unk1A8 == 2) {
-		s32 numFruit = params->mSLSlotFruitNum.get();
+		s32 numFruit = unk15C->mSLSlotFruitNum.get();
 		if (numFruit > 20)
 			numFruit = 20;
 
@@ -1942,17 +1941,18 @@ void TBossTelesa::generateSlotItem()
 			mSpitObjNum++;
 		}
 	} else if (unk1A8 == 0) {
-		s32 numItems = params->mSLSlotFruitNum.get();
+		s32 numItems = unk15C->mSLSlotFruitNum.get();
 		if (numItems > 10)
 			numItems = 10;
+
+		f32 itemAngleStep   = 120.0f / numItems;
+		f32 itemAngleOffset = itemAngleStep * numItems * 0.5f;
 
 		if (unk370)
 			unk370--;
 		else
 			unk370 = 0;
 
-		f32 itemAngleStep   = 120.0f / numItems;
-		f32 itemAngleOffset = itemAngleStep * numItems * 0.5f;
 		for (int i = 0; i < numItems; ++i) {
 			if (i >= 10)
 				return;
@@ -1969,9 +1969,9 @@ void TBossTelesa::generateSlotItem()
 			MsVECNormalize(&dir, &dir);
 			dir.y = 10.0f;
 
-			Vec velocity;
+			JGeometry::TVec3<f32> velocity;
 			TMsRange<f32> itemSpeedRange(0.8f, 3.5f);
-			f32 speed  = params->mSL1stBubbleSp.get();
+			f32 speed  = unk15C->mSL1stBubbleSp.get();
 			velocity.x = dir.x * speed * itemSpeedRange.rand();
 			velocity.y = dir.y;
 			velocity.z = dir.z * speed * itemSpeedRange.rand();
@@ -2047,7 +2047,7 @@ void TBossTelesa::generateSlotItem()
 
 			Vec velocity;
 			TMsRange<f32> enemySpeedRange(0.5f, 1.0f);
-			f32 speed  = params->mSL1stBubbleSp.get();
+			f32 speed  = unk15C->mSL1stBubbleSp.get();
 			velocity.x = dir.x * speed * enemySpeedRange.rand();
 			velocity.y = dir.y * (2.0f + enemySpeedRange.rand());
 			velocity.z = dir.z * speed * enemySpeedRange.rand();
