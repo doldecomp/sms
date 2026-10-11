@@ -352,7 +352,6 @@ void TBathtubKiller::bind()
 		                                     &position.z, mBodyRadius))
 			explodeBathtubKiller();
 	}
-	// TODO: retail keeps Vec3::sub out of line here.
 	JGeometry::TVec3<f32> delta = position;
 	delta.sub(mPosition);
 	mPositionDelta = delta;
@@ -456,8 +455,6 @@ void TBathtubKiller::moveChasing()
 	mVelocity.scale(mPersonality.mChaseSpeed, direction);
 }
 
-// TODO: the current getZDir inline schedules its loads and stores differently
-// from retail. Keep the quaternion API until its original body is recovered.
 void TBathtubKiller::moveStraight()
 {
 	JGeometry::TVec3<f32> direction;
@@ -492,7 +489,6 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 	steer.setRotate(forward, normAxis, moveAmountY);
 	mQuat.mul(steer, mQuat);
 
-	// Level the up direction.
 	JGeometry::TVec3<f32> right;
 	right.cross(forward, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 	if (right.length() > 0.0f) {
@@ -511,10 +507,7 @@ void TBathtubKiller::makeQuat(JGeometry::TVec3<f32> axis, f32 moveAmountY,
 	mQuat.normalize();
 }
 
-void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32)
-{
-	// TODO: dead-stripped, with no surviving callers to recover the rotation.
-}
+void TBathtubKiller::makeScrewQuat(JGeometry::TVec3<f32>, f32, f32) { }
 
 f32 TBathtubKiller::getGravityY() const
 {
@@ -616,8 +609,6 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 	setBckAnm(0);
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mAcceleration.set(0.0f, 0.0f, 0.0f);
-	// TODO: the temporary sits 4 bytes lower than the original in both death
-	// nerves.
 	mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 	onLiveFlag(LIVE_FLAG_UNK8);
 	mNoseColor = mBodyColor;
@@ -625,8 +616,6 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 
 void TBathtubKiller::updateTimers()
 {
-	// TODO: the original countdown inline retains each timer address.
-	// Its name and signature are unknown; the positive-only updates agree.
 	if (mLifetimeTimer > 0)
 		--mLifetimeTimer;
 	if (mLaunchTimer > 0)
@@ -819,8 +808,6 @@ TBathtubKillerManager::TBathtubKillerManager(const char* name)
 
 void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
 {
-	// TODO: retail checks unk38 against null before and after loading, but
-	// neither check has a surviving branch or diagnostic.
 	TSmallEnemyManager::load(stream);
 	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
 }
@@ -837,8 +824,6 @@ void TBathtubKillerManager::loadAfter()
 	mFinalMushroomRequested = 0;
 	mEarlyMushroomRequests  = 0;
 
-	// TODO: retail compares unk38 against null here, with no surviving
-	// diagnostic.
 	static const char* loopFilenames[1] = {
 		"/scene/map/map/ms_kp_kill_smoke.jpa",
 	};
@@ -865,8 +850,6 @@ int TBathtubKillerManager::countActiveKillers()
 
 int TBathtubKillerManager::countActiveShineKillers()
 {
-	// TODO: dead-stripped. The variant test is inferred from the name and
-	// the 12-byte size difference from countActiveKillers.
 	int count = 0;
 	for (int i = 0; i < getActiveObjNum(); ++i) {
 		TBathtubKiller* killer = static_cast<TBathtubKiller*>(getObj(i));

@@ -109,7 +109,7 @@ public:
 	bool isAboided();
 	bool canChase();
 	void generateExplosion();
-	// Fabricated name for the shared current-nerve death check.
+	// fabricated
 	bool isDying() const;
 
 	// fabricated
@@ -151,8 +151,6 @@ DECLARE_NERVE(TNerveBathtubKillerStraight, TLiveActor);
 DECLARE_NERVE(TNerveBathtubKillerBreak, TLiveActor);
 DECLARE_NERVE(TNerveBathtubKillerExplosion, TLiveActor);
 
-// TODO: the original name of this shared inline is unknown. It checks only
-// the current nerve, unlike TSpineBase::isNerve's fallback to the previous one.
 inline bool TBathtubKiller::isDying() const
 {
 	return mSpine->getCurrentNerve()
