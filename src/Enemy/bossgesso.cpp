@@ -1768,7 +1768,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	TBossGesso* self = (TBossGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		self->changeBck(5);
+		self->changeBck(2);
 
 		self->getMActor()->setBtpFromIndex(1);
 
@@ -1827,7 +1827,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	}
 
 	if (self->getMActor()->checkCurBckFromIndex(2)
-	    || self->getMActor()->curAnmEndsNext()) {
+	    && self->getMActor()->curAnmEndsNext()) {
 
 		self->changeBck(6);
 		self->changeAllTentacleState(8);
@@ -1846,7 +1846,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->unk114.clear();
 
 		self->mVelocity
-		    = self->calcVelocityToJumpToY(local_24, 0.0f, self->getGravityY());
+		    = self->calcVelocityToJumpToY(local_24, 50.0f, self->getGravityY());
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		return false;
 	}
