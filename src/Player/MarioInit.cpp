@@ -132,9 +132,9 @@ TMario::TMario()
 	unkF6                = 0;
 	mLightID             = 0;
 	mAnimationId         = 0xc3;
-	unkFC                = 0;
-	unkFE                = 0;
-	unk100               = 0;
+	unkFC.x              = 0;
+	unkFC.y              = 0;
+	unkFC.z              = 0;
 	unk104               = 0.0f;
 	unk108               = nullptr;
 	mFlag                = 0;
