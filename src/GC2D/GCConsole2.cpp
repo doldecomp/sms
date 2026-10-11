@@ -454,7 +454,7 @@ TGCConsole2::TGCConsole2(const char* name)
     : JDrama::TViewObj(name)
     , unk10(0)
     , unk14(0)
-    , unk18(0)
+    , unk18(LIFE_HIDDEN)
     , unk1C(0xffff)
     , unk20(0)
     , unk24(0)
@@ -991,7 +991,7 @@ void TGCConsole2::startCameraDemo()
 	startDisappearTelop();
 	startDisappearLife(120);
 
-	unk18 = 10;
+	unk18 = LIFE_CAMERA_DEMO;
 	unk48 = 0;
 
 	unk274->setPanePosition(1, JUTPoint(0, 0), JUTPoint(0, 0), JUTPoint(0, 0));
@@ -2867,19 +2867,19 @@ void TGCConsole2::performMovement()
 	bool airMode = true;
 
 	switch (unk18) {
-	case 0:
-	case 1:
-	case 2:
-	case 3:
-	case 7:
+	case LIFE_HIDDEN:
+	case LIFE_HEALTH_APPEARING:
+	case LIFE_HEALTH_VISIBLE:
+	case LIFE_HEALTH_DISAPPEARING:
+	case LIFE_HEALTH_INSERTING:
 		airMode = false;
 		amount  = gpMarioOriginal->getHealth();
 		break;
-	case 4:
-	case 5:
-	case 6:
-	case 8:
-	case 9:
+	case LIFE_AIR_APPEARING:
+	case LIFE_AIR_VISIBLE:
+	case LIFE_AIR_DISAPPEARING:
+	case LIFE_AIR_INSERTING:
+	case LIFE_AIR_DIVING:
 		amount = gpMarioOriginal->getAir();
 		break;
 	}
@@ -2916,13 +2916,13 @@ void TGCConsole2::performMovement()
 	}
 
 	switch (unk18) {
-	case 0:
+	case LIFE_HIDDEN:
 		if (unk1C4->getPane()->isVisible())
 			unk1C4->getPane()->hide();
 
 		if (SMS_isDivingMap()) {
 			startInsertLife(1);
-			unk18 = 8;
+			unk18 = LIFE_AIR_INSERTING;
 		}
 
 		if (airTimeout) {
@@ -2932,56 +2932,56 @@ void TGCConsole2::performMovement()
 			unk1CC[0] = amount;
 			if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
 				unk1C4->getPane()->mAlpha = 0;
-			unk18 = 4;
+			unk18 = LIFE_AIR_APPEARING;
 		}
 
 		if (unk1CC[0] < 8 && !unk1C4->getPane()->isVisible() && amount != 0) {
 			startAppearLife(0);
-			unk18 = 1;
+			unk18 = LIFE_HEALTH_APPEARING;
 		}
 		break;
-	case 1:
+	case LIFE_HEALTH_APPEARING:
 		if (processAppearLife(unk84++)) {
-			unk18 = 2;
+			unk18 = LIFE_HEALTH_VISIBLE;
 			unk38 = 0;
 		}
 		if (airTimeout && startDisappearLife(1))
-			unk18 = 3;
+			unk18 = LIFE_HEALTH_DISAPPEARING;
 		break;
-	case 2:
+	case LIFE_HEALTH_VISIBLE:
 		if (unk1CC[0] == 8) {
 			startDisappearLife(0);
-			unk18 = 3;
+			unk18 = LIFE_HEALTH_DISAPPEARING;
 		} else if (airTimeout) {
-			if (startDisappearLife(0))
-				unk18 = 3;
+			if (startDisappearLife(1))
+				unk18 = LIFE_HEALTH_DISAPPEARING;
 		}
 		break;
-	case 3:
+	case LIFE_HEALTH_DISAPPEARING:
 		if (unk84 > 0x78) {
 			if (unk1C4->update()) {
 				unk4C = 0;
-				unk18 = 0;
+				unk18 = LIFE_HIDDEN;
 			}
 		} else {
 			++unk84;
 		}
 		break;
-	case 4:
+	case LIFE_HEALTH_INSERTING:
 		if (processInsertLife(unk84++))
-			unk18 = 2;
+			unk18 = LIFE_HEALTH_VISIBLE;
 		break;
-	case 5:
+	case LIFE_AIR_INSERTING:
 		if (processInsertLife(unk84++)) {
 			if (SMS_isDivingMap())
-				unk18 = 9;
+				unk18 = LIFE_AIR_DIVING;
 			else
-				unk18 = 5;
+				unk18 = LIFE_AIR_VISIBLE;
 		}
 		break;
-	case 6:
+	case LIFE_AIR_APPEARING:
 		if (processAppearLife(unk84)) {
-			unk18 = 5;
+			unk18 = LIFE_AIR_VISIBLE;
 			unk38 = 0;
 		}
 		if (!gpMarioOriginal->isUnderWater() && unk84 == 0)
@@ -2989,57 +2989,57 @@ void TGCConsole2::performMovement()
 		if (!(amount >= 8 && unk84 == 0) && unk84 < 1000)
 			++unk84;
 		break;
-	case 7:
+	case LIFE_AIR_VISIBLE:
 		if (!gpMarioOriginal->isUnderWater()) {
 			if (unk1CC[0] == 8) {
 				startDisappearLife(0);
-				unk18 = 6;
+				unk18 = LIFE_AIR_DISAPPEARING;
 			} else if (unk1CC[0] != unk1C) {
 				startAppearLife(1);
 				amount    = gpMarioOriginal->getHealth();
 				unk1CC[0] = amount;
 				resetLife(amount);
-				unk18 = 1;
+				unk18 = LIFE_HEALTH_APPEARING;
 			}
 		}
 		break;
-	case 8:
+	case LIFE_AIR_DISAPPEARING:
 		if (unk84 > 0x78) {
 			if (unk1C4->update()) {
 				unk4C = 0;
 				if (gpMarioOriginal->getHealth() == 8) {
-					unk18 = 0;
+					unk18 = LIFE_HIDDEN;
 				} else {
 					amount    = gpMarioOriginal->getHealth();
 					unk1CC[0] = amount;
 					startInsertLife(0);
 					resetLife(amount);
-					unk18 = 7;
+					unk18 = LIFE_HEALTH_INSERTING;
 				}
 			}
 		} else {
 			++unk84;
 		}
 		break;
-	case 10:
+	case LIFE_CAMERA_DEMO:
 		if (unk50) {
 			if (unk1C4->update())
 				unk4C = 0;
 		} else if (gpMarioOriginal->getHealth() != 8) {
 			startInsertLife(0);
-			unk18 = 7;
+			unk18 = LIFE_HEALTH_INSERTING;
 		} else if (gpMarioOriginal->isUnderWater() || SMS_isDivingMap()) {
 			startInsertLife(1);
-			unk18 = 8;
+			unk18 = LIFE_AIR_INSERTING;
 		} else {
 			amount    = 8;
 			unk1CC[0] = amount;
-			unk18     = 0;
+			unk18     = LIFE_HIDDEN;
 		}
 		break;
 	}
 
-	if (unk18 == 10 && amount == 0) {
+	if (unk18 == LIFE_CAMERA_DEMO && amount == 0) {
 		unk1C4->getPane()->hide();
 		unk274->getPane()->hide();
 		unk270->getPane()->hide();
@@ -3047,7 +3047,7 @@ void TGCConsole2::performMovement()
 		unk3A8->getPane()->hide();
 	}
 
-	if (amount != unk1CC[0] && unk18 != 10) {
+	if (amount != unk1CC[0] && unk18 != LIFE_CAMERA_DEMO) {
 		if (unk1CC[0] < amount) {
 			++unk1CC[0];
 			unk17C[unk1CC[0] * 2]->show();
