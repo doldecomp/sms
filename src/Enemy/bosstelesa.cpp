@@ -554,11 +554,11 @@ void TTelesaSlot::calcRootMatrix()
 {
 	bool rolling = false;
 
-	if (getDrumSpeeds()[0] != 0.0f)
+	if (unk138[0] != 0.0f)
 		rolling = true;
-	if (getDrumSpeeds()[1] != 0.0f)
+	if (unk138[1] != 0.0f)
 		rolling = true;
-	if (getDrumSpeeds()[2] != 0.0f)
+	if (unk138[2] != 0.0f)
 		rolling = true;
 
 	if (rolling) {
@@ -625,9 +625,7 @@ void TTelesaSlot::moveObject()
 
 			for (int j = 0; j < unk148; ++j) {
 				if (unk198[j]) {
-					TBossTelesa* owner                = unk1A0;
-					TBossTelesaSaveLoadParams* params = owner->unk15C;
-					f32 rate = params->mSLSlotHitCollectRate.get();
+					f32 rate = unk1A0->unk15C->mSLSlotHitCollectRate.get();
 
 					TMsRange<f32> collectRange(0.0f, 1.0f);
 					if (collectRange.rand() <= rate) {
@@ -680,8 +678,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 	if (!unk19C)
 		return;
 
-	TBossTelesaSaveLoadParams* params = unk1A0->unk15C;
-	collectRate = params->mSLSlotFirstHitCollectRate.get();
+	collectRate = unk1A0->unk15C->mSLSlotFirstHitCollectRate.get();
 
 	if (SMS_GetMarioHP() == 1)
 		collectRate = 0.9f;
@@ -726,9 +723,9 @@ bool TTelesaSlot::isRollDrum()
 
 int TTelesaSlot::getSlotResult()
 {
-	int result = getResultFromAng(unk13C[0]);
+	int result = getDrumResult(0);
 	for (int i = 1; i < 3; ++i) {
-		if (getResultFromAng(unk13C[i]) != result)
+		if (getDrumResult(i) != result)
 			return -1;
 	}
 	return result;
@@ -871,15 +868,15 @@ void TBossTelesa::init(TLiveManager* manager)
 	unk348.r = unk348.g = unk348.b = unk348.a = 0xFF;
 	unk34C.r = unk34C.g = unk34C.b = unk34C.a = mNormalAlpha;
 
-	for (int i = 0;
-	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
+	for (int i = 0; i < mMActor->getModel()->getModelData()->getMaterialNum();
+	     ++i) {
 		if (i
 		    == getModel()->getModelData()->getMaterialName()->getIndex(
 		        "_mat_body")) {
-			SMS_InitPacket_TwoTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
+			SMS_InitPacket_TwoTevKColor(mMActor->getModel(), i, GX_KCOLOR0,
 			                            &unk34C, GX_KCOLOR1, &unk348);
 		} else {
-			SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
+			SMS_InitPacket_OneTevKColor(mMActor->getModel(), i, GX_KCOLOR0,
 			                            &unk34C);
 		}
 	}
@@ -945,7 +942,7 @@ void TBossTelesa::init(TLiveManager* manager)
 void TBossTelesa::loadAfter()
 {
 	u32 rouletteType = ACTOR_TYPE_CASINORULET;
-	if ((u32)gpMapObjManager->getObjNumWithActorType(rouletteType) != 0) {
+	if (gpMapObjManager->getObjNumWithActorType(rouletteType) != 0) {
 		int found = 0;
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
@@ -957,7 +954,7 @@ void TBossTelesa::loadAfter()
 	}
 
 	u32 slotType = ACTOR_TYPE_SROT_RULET;
-	if ((u32)gpMapObjManager->getObjNumWithActorType(slotType) != 0) {
+	if (gpMapObjManager->getObjNumWithActorType(slotType) != 0) {
 		for (int i = 0; i < gpMapObjManager->getObjNum(); ++i) {
 			TMapObjBase* actor = gpMapObjManager->getObj(i);
 			if (actor->isActorType(slotType)) {
@@ -1032,10 +1029,9 @@ void TBossTelesa::loadAfter()
 	for (int i = 0; i < 10; ++i)
 		mCoins[i]->makeObjDead();
 
-	TTelesaSlot* slot = mSlot;
-	slot->unk1E4[0]   = 0.0f;
-	slot->unk1E4[1]   = 0.0f;
-	slot->unk1E4[2]   = 0.0f;
+	mSlot->unk1E4[0] = 0.0f;
+	mSlot->unk1E4[1] = 0.0f;
+	mSlot->unk1E4[2] = 0.0f;
 
 	mTelesaManager = static_cast<TTelesaManager*>(
 	    JDrama::TNameRefGen::search("テレサマネージャー"));
@@ -1279,9 +1275,8 @@ void TBossTelesa::calcRootMatrix()
 	MTXConcat(translateMtx, rotateMtx, translateMtx);
 	MTXCopy(translateMtx, mMActor->getModel()->getBaseTRMtx());
 
-	TTelesaSlot* slot = mSlot;
-	if (slot) {
-		slot->mRotation = mRotation;
+	if (mSlot) {
+		mSlot->mRotation = mRotation;
 
 		f32 slotOffsetY = -700.0f;
 		MtxPtr slotMtx;
@@ -1295,9 +1290,9 @@ void TBossTelesa::calcRootMatrix()
 			slotMtx = mMActor->getModel()->getAnmMtx(0);
 		}
 
-		slot->mPosition.x = slotMtx[0][3];
-		slot->mPosition.y = mHoseiPosY + slotMtx[1][3] + slotOffsetY;
-		slot->mPosition.z = slotMtx[2][3];
+		mSlot->mPosition.x = slotMtx[0][3];
+		mSlot->mPosition.y = mHoseiPosY + slotMtx[1][3] + slotOffsetY;
+		mSlot->mPosition.z = slotMtx[2][3];
 	}
 
 	for (u16 i = 0; i < mMActor->getModel()->getModelData()->getMaterialNum();
@@ -1842,15 +1837,7 @@ void TBossTelesa::generateSlotItem()
 	unk368      = 0;
 	mSpitObjNum = 0;
 
-	TTelesaSlot* slot = mSlot;
-	s32 result        = slot->getResultFromAng(slot->unk13C[0]);
-	for (int i = 1; i < 3; ++i) {
-		if (slot->getResultFromAng(slot->unk13C[i]) != result) {
-			result = -1;
-			break;
-		}
-	}
-	unk1A8 = result;
+	unk1A8 = mSlot->getSlotResult();
 
 	s32 slotItemNum = unk15C->mSLSlotItemNum.get();
 	MtxPtr rootMtx  = mMActor->getModel()->getAnmMtx(5);
@@ -2139,13 +2126,12 @@ void TBossTelesa::forceHide()
 
 void TBossTelesa::fanfale()
 {
-	TTelesaSlot* slot = mSlot;
-	if (slot->getSlotResult() == 2 || slot->getSlotResult() == 0) {
+	if (mSlot->getSlotResult() == 2 || mSlot->getSlotResult() == 0) {
 		mEffectPos.set(0.0f, 0.0f, 0.0f);
 		gpMarioParticleManager->emit(SCENE_BTELESA_JPA_MS_BTLS_FUBUKI,
 		                             &mEffectPos, 0, nullptr);
 
-		if (slot->getSlotResult() == 2) {
+		if (mSlot->getSlotResult() == 2) {
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_FANFALE_1,
 			                                &mPosition, 0, nullptr, 0, 4);
 		} else {
@@ -2249,9 +2235,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 			    boss->getMActor()->getModel()->getModelData());
 
 			if (boss->getMActor()->checkCurBckFromIndex(6)) {
-				boss->offHitFilter(HIT_FILTER_NO_COLLISION);
-				boss->mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
-				boss->mTongueCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
+				boss->onAllCollision();
 
 				boss->setBckAnm(15);
 				boss->getMActor()->setBtpFromIndex(2);
@@ -2344,9 +2328,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 
 			boss->mSlot->mScaling.set(1.0f, 1.0f, 1.0f);
 			boss->mSlot->randomReset();
-			boss->offHitFilter(HIT_FILTER_NO_COLLISION);
-			boss->mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
-			boss->mTongueCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->onAllCollision();
 		}
 	} else if (boss->checkCurAnmEnd(0)
 	           && !boss->getMActor()->checkCurBckFromIndex(15)) {
@@ -2432,8 +2414,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				boss->setBckAnm(12);
 				boss->getMActor()->setBtpFromIndex(1);
 			} else if (boss->getMActor()->checkCurBckFromIndex(12)) {
-				TBossTelesaSaveLoadParams* params = boss->unk15C;
-				if (boss->mSpicyTimer > params->mSLSpicyTime.get()) {
+				if (boss->mSpicyTimer > boss->unk15C->mSLSpicyTime.get()) {
 					boss->setBckAnm(13);
 				}
 			} else {
@@ -2533,9 +2514,7 @@ DEFINE_NERVE(TNerveBossTelesaFallDemo, TLiveActor)
 		JGeometry::TVec3<f32> diff = boss->mPosition - *gpMarioPos;
 
 		if (boss->slotFall()) {
-			boss->offHitFilter(HIT_FILTER_NO_COLLISION);
-			boss->mBodyCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
-			boss->mTongueCollision->offHitFilter(HIT_FILTER_NO_COLLISION);
+			boss->onAllCollision();
 			spine->reset();
 			spine->setNext(&TNerveBossTelesaHideWait::theNerve());
 			spine->pushAfterCurrent(&TNerveBossTelesaHideWait::theNerve());

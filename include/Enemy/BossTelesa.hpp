@@ -71,7 +71,6 @@ public:
 	int getSlotResult();
 	int getForcastResult(int);
 	int getResultFromAng(f32);
-	f32* getDrumSpeeds() const { return unk138; }
 	void entryObjCollision();
 	void calcObjCollision();
 	int getDrumResult(int);

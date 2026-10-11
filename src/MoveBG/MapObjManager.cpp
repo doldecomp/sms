@@ -480,7 +480,7 @@ void TMapObjBaseManager::createModelData()
 	createModelDataArray(&entry);
 }
 
-int TMapObjBaseManager::getObjNumWithActorType(u32 param_1) const
+u32 TMapObjBaseManager::getObjNumWithActorType(u32 param_1) const
 {
 	int result = 0;
 	for (int i = 0; i < mObjNum; ++i)
