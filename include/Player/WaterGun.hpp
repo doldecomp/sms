@@ -228,7 +228,7 @@ public:
 
 		if (getCurrentNozzle()->getNozzleKind() == 1) {
 			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
-			if (triggerNozzle->mSprayState
+			if (triggerNozzle->getSprayState()
 			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
 				return true;
 

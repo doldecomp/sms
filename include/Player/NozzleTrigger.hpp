@@ -13,7 +13,7 @@ public:
 	virtual void animation(int);
 
 	// Fabricated
-	int getSprayState() const { return mSprayState; }
+	s8 getSprayState() const { return mSprayState; }
 
 	// Inactive = not holding R, Active = charging R, Dead = R Waiting to be
 	// depressed

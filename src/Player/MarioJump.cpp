@@ -911,10 +911,8 @@ BOOL TMario::rocketing()
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD))
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
-	{
-		if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
-			return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
-	}
+	if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
+		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
 	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->canSpray())
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
@@ -931,12 +929,12 @@ BOOL TMario::rocketing()
 				if (angleDiff >= -0x4000 && angleDiff <= 0x4000) {
 					nozzleAngle = (s16)(0.03125f * -mag
 					                    * mWaterGun->getCurrentNozzle()
-					                          ->mSideAngleMaxFront.get()
+					                          ->getSideAngleMaxFront()
 					                    * JMASCos(angleDiff));
 				} else {
 					nozzleAngle = (s16)(0.03125f * -mag
 					                    * mWaterGun->getCurrentNozzle()
-					                          ->mSideAngleMaxBack.get()
+					                          ->getSideAngleMaxBack()
 					                    * JMASCos(angleDiff));
 				}
 				mWaterGun->unk1CC2 = nozzleAngle;
@@ -946,7 +944,7 @@ BOOL TMario::rocketing()
 			} else {
 				s16 nozzleAngle = (s16)(0.03125f * -mag
 				                        * mWaterGun->getCurrentNozzle()
-				                              ->mSideAngleMaxSide.get()
+				                              ->getSideAngleMaxSide()
 				                        * JMASSin(angleDiff));
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 					mWaterGun->unk1CC2 = -nozzleAngle;
@@ -970,7 +968,7 @@ BOOL TMario::rocketing()
 	mVel.x     = mSlideVelX;
 	mVel.z     = mSlideVelZ;
 
-	switch (mWaterGun->mCurrentNozzle) {
+	switch (mWaterGun->getCurrentNozzleType()) {
 	case TWaterGun::Hover:
 		mVel.y = (unk314 - mPosition.y) * mHoverParams.mAccelRate.get();
 		mForwardVel *= mHoverParams.mBrake.get();
@@ -1216,7 +1214,7 @@ BOOL TMario::diving()
 		    || angleDiff > 0x6AAA) {
 			s16 nozzleAngle
 			    = (s16)(0.03125f * -mag
-			            * mWaterGun->getCurrentNozzle()->mSideAngleMaxSide.get()
+			            * mWaterGun->getCurrentNozzle()->getSideAngleMaxSide()
 			            * JMASCos(angleDiff));
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 				mWaterGun->unk1CC2 = nozzleAngle;
@@ -1227,7 +1225,7 @@ BOOL TMario::diving()
 		} else {
 			s16 nozzleAngle
 			    = 0.03125f * -mag
-			      * mWaterGun->getCurrentNozzle()->mSideAngleMaxSide.get()
+			      * mWaterGun->getCurrentNozzle()->getSideAngleMaxSide()
 			      * JMASSin(angleDiff);
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 				mWaterGun->unk1CC2 = -nozzleAngle;

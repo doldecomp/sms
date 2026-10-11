@@ -314,9 +314,9 @@ void TNozzleBase::emitCommon(int param_1, TWaterEmitInfo* param_2)
 
 	// TODO: This feels wrong
 	// TODO: Fix asm
-	param_2->mPos.set(pos);
-	param_2->mV.set(speed);
-	param_2->mDir.set(dir);
+	param_2->mPos.value = pos;
+	param_2->mV.value   = speed;
+	param_2->mDir.value = dir;
 
 	param_2->mDirTremble  = mDirTremble;
 	param_2->mPowTremble  = mPowTremble;

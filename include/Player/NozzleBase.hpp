@@ -82,6 +82,13 @@ public:
 	void calcGunAngle(const TMarioControllerWork&);
 	MActor* getMActor() { return mMActor; }
 
+	// Fabricated
+	s16 getSideAngleMaxSide() { return mSideAngleMaxSide.get(); }
+	// Fabricated
+	s16 getSideAngleMaxFront() { return mSideAngleMaxFront.get(); }
+	// Fabricated
+	s16 getSideAngleMaxBack() { return mSideAngleMaxBack.get(); }
+
 public:
 	/* 0x368 */ TWaterGun* mFludd;
 	/* 0x36C */ u16 mAnimationState;

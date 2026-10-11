@@ -1423,7 +1423,7 @@ void TMario::checkController(JDrama::TGraphics*)
 		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
 		    && isUpperState(UPPER_STATE_PUMPING)
 		    && mGamePad->mCompSPos[3] > 0.0f
-		    && (f32)mWaterGun->mCurrentWater > 0.0f) {
+		    && (f32)mWaterGun->getCurrentWater() > 0.0f) {
 			if (mIntendedMag == 0.0f)
 				mIntendedYaw = mFaceAngle.y;
 
@@ -1434,9 +1434,8 @@ void TMario::checkController(JDrama::TGraphics*)
 				if ((f32)mDashTimer > (f32)mDeParams.mDashStartTime.get()) {
 					mDashTimer = mDeParams.mDashStartTime.get();
 					if (!checkFlag(MARIO_FLAG_FLUDD_EMITTING)
-					    && ((TNozzleTrigger*)((const TWaterGun*)mWaterGun)
-					            ->getCurrentNozzle())
-					               ->mSprayState
+					    && ((TNozzleTrigger*)mWaterGun->getCurrentNozzle())
+					               ->getSprayState()
 					           == TNozzleTrigger::SPRAY_STATE_ACTIVE) {
 						onFlag(MARIO_FLAG_FLUDD_EMITTING);
 						startSoundActor(MSD_SE_PO_SNIPER_TRIGGER);
