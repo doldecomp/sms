@@ -146,7 +146,7 @@ void TEnemyManager::clipEnemies(JDrama::TGraphics* graphics)
 	f32 fVar2;
 	if (unk38 == nullptr) {
 		fVar1 = 300.0f;
-		fVar2 = gpConductor->unk84.mEnemyFarClip.get();
+		fVar2 = gpConductor->getCondParams().mEnemyFarClip.get();
 	} else {
 		fVar2 = unk38->mSLFarClip.get();
 		fVar1 = unk38->mSLClipRadius.get();

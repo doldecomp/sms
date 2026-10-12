@@ -664,7 +664,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	           && isNerveMaybeDontMovement()
 	           && !checkLiveFlag(TBaseNPC::LIVE_FLAG_SINK_BOTTOM)) {
 		TNPCManager* manager = (TNPCManager*)mManager;
-		f32 farClip          = gpConductor->unk84.mEnemyFarClip.get();
+		f32 farClip          = gpConductor->getCondParams().mEnemyFarClip.get();
 		if (manager != nullptr)
 			farClip = *manager->unk58;
 

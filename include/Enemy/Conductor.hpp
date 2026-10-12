@@ -71,7 +71,7 @@ public:
 	const TCondParams& getCondParams() const { return unk84; }
 	const TNpcParams* getNpcParams() const { return unkF4; }
 
-public:
+protected:
 	/* 0x10 */ JGadget::TList<TLiveManager*> unk10;
 	/* 0x20 */ JGadget::TList<TEnemyManager*> unk20;
 	/* 0x30 */ JGadget::TList<TLiveActor*> unk30;
