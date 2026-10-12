@@ -1,11 +1,13 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <Enemy/BossWanwan.hpp>
+#include <Enemy/EffectObj.hpp>
 #include <Camera/CameraShake.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Enemy/Conductor.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/M3UJoint.hpp>
@@ -96,7 +98,7 @@ TBossWanwan::TBossWanwan(const char* name)
     , unk18D(0)
     , unk190(0)
     , unk194(true)
-    , unk195(0)
+    , mHasSpawnedWater(0)
     , unk198(0)
     , unk19C(0)
     , unk1A0(0)
@@ -117,43 +119,29 @@ void TBossWanwan::control()
 {
 	TLiveActor::control();
 
-	bool limitReached = false;
-	if (this->mPicket->mHolder != nullptr) {
-		f32 limit = getSaveParam()->mSLPullLimit.get();
-		if (mPicketPullDelta.squared() >= limit) {
-			limitReached = true;
-		}
-	}
-
-	if (this->unk17C != 0 || limitReached) {
+	if (this->unk17C != 0 || (mPicket->isHolding() && isHeadPulled())) {
 		mLinearVelocity += mPicketPullDelta;
 
-		JGeometry::TVec3<f32> pos       = mPosition;
-		JGeometry::TVec3<f32> targetPos = this->mLeash->mRope->mPoints[3].unkC;
+		JGeometry::TVec3<f32> pos = mPosition;
 
-		pos -= targetPos;
+		pos -= this->mLeash->mRope->mPoints[3].unkC;
 
 		// probable inline
 		f32 targetAngle;
 		if (pos.z == 0.0f) {
-			pos.z = pos.x < 0.0f ? -90.0f : 90.0f;
+			targetAngle = pos.x < 0.0f ? -90.0f : 90.0f;
 		} else if (pos.z >= 0.0f) {
-			s16 angle = matan(pos.z, pos.x);
-			pos.z     = (f32)angle * (180.0f / 32768.0f);
+			s16 angle   = matan(pos.z, pos.x);
+			targetAngle = (f32)angle * (180.0f / 32768.0f);
 		} else {
-			s16 angle = matan(-pos.z, pos.x);
-			pos.z     = 180.0f - (f32)(angle * (180.0f / 32768.0f));
+			s16 angle   = matan(-pos.z, pos.x);
+			targetAngle = 180.0f - (f32)(angle * (180.0f / 32768.0f));
 		}
 
-		targetAngle
-		    = MsWrap<f32>(targetAngle, 0.0f, 360.0f); // the "real" MsWrap
+		targetAngle = MsWrap<f32>(targetAngle, 0.0f, 360.0f);
 
-		// TODO: fix this fabricated func
-		f32 rotY = Wrap(mRotation.y, targetAngle - 180.0f,
-		                targetAngle + 180.0f); // the actually out-of-line one
-
+		f32 diff    = MsAngleDiff(targetAngle, mRotation.y);
 		f32 maxStep = mTurnSpeed * 4.0f;
-		f32 diff    = targetAngle - rotY;
 
 		if (diff > 0.0f) {
 			diff = (diff > maxStep) ? maxStep : diff;
@@ -161,8 +149,7 @@ void TBossWanwan::control()
 			diff = (diff > -maxStep) ? diff : -maxStep;
 		}
 
-		mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f,
-		                          360.0f); // the "real" MsWrap
+		mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f);
 	}
 
 	mPicketPullDelta.zero();
@@ -211,12 +198,9 @@ void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 		targetAngle = 180.0f - (f32)angle * (180.0f / 32768.0f);
 	}
 
-	targetAngle = MsWrap<f32>(targetAngle, 0.0f, 360.0f); // the "real" MsWrap
+	targetAngle = MsWrap<f32>(targetAngle, 0.0f, 360.0f);
 
-	// TODO: fix this fabricated func
-	f32 rotY = Wrap(mRotation.y, targetAngle - 180.0f,
-	                targetAngle + 180.0f); // the actually out-of-line one
-	f32 diff = targetAngle - rotY;
+	f32 diff = MsAngleDiff(targetAngle, mRotation.y);
 
 	if (diff > 0.0f) {
 		diff = (diff > turnSpeed) ? turnSpeed : diff;
@@ -224,8 +208,7 @@ void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 		diff = (diff > -turnSpeed) ? diff : -turnSpeed;
 	}
 
-	mRotation.y
-	    = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f); // the "real" MsWrap
+	mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> vel = mLinearVelocity;
 
@@ -622,7 +605,50 @@ void TBWLeashNode::calcMatrix()
 	mPosition = pos;
 }
 
-void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+
+	if (cue & 1) {
+		calcTemperature();
+		calcMatrix();
+		if (this->mLeash->mOwner->mHitPoints != 0 && mIndex < 8) {
+			u32 i = 0;
+			for (int i = 0; i < mColCount; i++) {
+				THitActor* elem = mCollisions[i];
+				if (elem->mActorType == -0x7fffffff) {
+					elem->receiveMessage(this, HIT_MESSAGE_UNKA);
+				}
+			}
+		}
+	}
+
+	if ((cue & 2)) {
+		J3DFrameCtrl* frameCtrl = this->mMActor->getFrameCtrl(5);
+		if (frameCtrl) {
+			f32 animDuration = (f32)(frameCtrl->getEnd() - 1) * mTemperature;
+
+			f32 progress;
+			if (mIndex < 5) {
+				progress = (f32)mIndex * 0.25f
+				           + ((f32)mLeash->mOwner->mHitPoints
+				              / (f32)mLeash->mOwner->getSaveParam()
+				                    ->mSLHitPointMax.get());
+			} else if (mIndex < (this->mLeash->mRope->mNumPoints - 10)) {
+				progress = 1.0f;
+			} else {
+				progress = (f32)(this->mLeash->mRope->mNumPoints - mIndex) / 10;
+			}
+
+			progress = MsClamp(progress, 0.0f, 1.0f);
+			frameCtrl->setFrame(animDuration * progress);
+			frameCtrl->setRate(0.0f);
+		}
+	}
+
+	if (mIndex < this->mLeash->mRope->mNumPoints - 1) {
+		this->mMActor->perform(cue, graphics);
+	}
+}
 
 void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -800,7 +826,61 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 DEFINE_NERVE(TNerveBWJump, TLiveActor) { }
 DEFINE_NERVE(TNerveBWStun, TLiveActor) { }
 DEFINE_NERVE(TNerveBWWakeup, TLiveActor) { }
-DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor) { }
+
+DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+
+	if (spine->getTime() == 0) {
+		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
+		    BW_BATH_POS, 10.0f, boss->getGravityY());
+
+		// resets
+		boss->unkF4.unk0  = nullptr;
+		boss->unkF4.unk4  = BW_BATH_POS;
+		boss->unk104      = nullptr;
+		boss->unk104.unk4 = BW_BATH_POS;
+		boss->unk114.clear();
+		boss->mLinearVelocity = vel;
+		boss->mLiveFlag |= 0x80;
+		boss->unk1C = 0;
+	}
+
+	if (spine->getTime() > 120 && !boss->mHasSpawnedWater
+	    && boss->mPosition.y < (BW_BATH_POS.y + 10.0f)) {
+
+		TEffectColumWater* effectBase
+		    = (TEffectColumWater*)gpConductor->makeOneEnemyAppear(
+		        boss->mPosition, "エフェクト水柱マネージャー", 1);
+
+		if (effectBase != nullptr) {
+			JGeometry::TVec3<f32> scale(5.0f, 5.0f, 5.0f);
+			JGeometry::TVec3<f32> effectPos;
+			effectPos.x = boss->mPosition.x;
+			effectPos.y = (boss->mPosition.y + 500.0f) - 30.0f;
+			effectPos.z = boss->mPosition.z;
+			effectBase->generate(effectPos, scale);
+			boss->mHasSpawnedWater = true;
+		}
+
+		SMSGetMSound()->startSoundActor(0x2917, &boss->mPosition, 0, nullptr, 0,
+		                                4);
+	}
+
+	JGeometry::TVec3<f32> targetPos = BW_BATH_POS;
+	JGeometry::TVec3<f32> diff      = targetPos;
+	diff.sub(boss->mPosition);
+
+	if (diff.squared() < 10000.0f && boss->mPosition.y > BW_BATH_POS.y) {
+		boss->mPosition = BW_BATH_POS;
+		spine->pushAfterCurrent(&TNerveBWDie::theNerve());
+		return true;
+	}
+
+	boss->walkToCurPathNode(0.0f, boss->mTurnSpeed, 0.0f);
+	return false;
+}
+
 DEFINE_NERVE(TNerveBWDie, TLiveActor) { }
 DEFINE_NERVE(TNerveBWJumpAway, TLiveActor) { }
 DEFINE_NERVE(TNerveBWShake, TLiveActor) { }

@@ -140,7 +140,12 @@ public:
 	TBWParams* getSaveParam() const { return (TBWParams*)getSaveParam(); }
 
 	// UNUSED
-	bool isHeadPulled();
+	bool isHeadPulled()
+	{
+		return mPicketPullDelta.squared() >= getSaveParam()->mSLPullLimit.get()
+		           ? true
+				   : false;
+	};
 	bool isMarioInSight();
 	bool isTailBurning();
 	bool isBurning();
@@ -156,6 +161,8 @@ public:
 	{
 		return mSpine->getLatestNerve();
 	}
+
+	// fabricated
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
@@ -174,7 +181,7 @@ public:
 	/* 0x18D */ u8 unk18D;
 	/* 0x190 */ s32 unk190;
 	/* 0x194 */ s8 unk194;
-	/* 0x195 */ u8 unk195;
+	/* 0x195 */ u8 mHasSpawnedWater;
 	/* 0x198 */ u32 unk198;
 	/* 0x19C */ u32 unk19C;
 	/* 0x1A0 */ u8 unk1A0;
