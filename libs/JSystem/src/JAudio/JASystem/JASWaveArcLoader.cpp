@@ -19,7 +19,7 @@ bool WaveArcLoader::init()
 	if (!var1) {
 		return false;
 	}
-	sAramHeap.initMotherHeap((u32)var1, local_8, 0);
+	sAramHeap.initMotherHeap((uintptr_t)var1, local_8, 0);
 	return true;
 }
 
