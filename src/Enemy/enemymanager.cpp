@@ -442,7 +442,8 @@ void TEnemyManager::killChildren()
 		getObj(i)->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 }
 
-void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
+void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& position,
+                                       f32 radius)
 {
 	if (!mObjNum)
 		return;
@@ -453,7 +454,8 @@ void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (VECSquareDistance((Vec*)&p, (Vec*)&enemy->mPosition) <= r * r)
+		if (VECSquareDistance((Vec*)&position, (Vec*)&enemy->mPosition)
+		    <= radius * radius)
 			enemy->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 	}
 }
