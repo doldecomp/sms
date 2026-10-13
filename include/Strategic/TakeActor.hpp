@@ -26,7 +26,7 @@ public:
 		mPosition = where_to;
 		return true;
 	}
-	virtual f32 getRadiusAtY(f32) const;
+	virtual f32 getRadiusAtY(f32) const { return mDamageRadius; }
 
 	BOOL isTaken() const { return mHolder != nullptr ? TRUE : FALSE; }
 	bool isHolding() const { return mHeldObject != nullptr ? true : false; }

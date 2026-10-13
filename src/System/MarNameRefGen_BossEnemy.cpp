@@ -9,6 +9,7 @@
 #include <Enemy/LimitKoopaJr.hpp>
 #include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TinKoopa.hpp>
+#include <Enemy/BossTelesa.hpp>
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
@@ -139,17 +140,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "KBossPakkunManager") == 0)
 		return new TBossPakkunManager("ボスパックン軽マネージャ", 1);
 
-	// TODO:
-	// if ( strcmp( name, "BossTelesa" ) == 0 )
-	//     return new TBossTelesa("ボステレサ");
+	if (strcmp(name, "BossTelesa") == 0)
+		return new TBossTelesa;
 
-	// TODO:
-	// if ( strcmp( name, "BossTelesaManager" ) == 0 )
-	//     return new TBossTelesaManager("ボステレサマネージャー");
+	if (strcmp(name, "BossTelesaManager") == 0)
+		return new TBossTelesaManager;
 
-	// TODO:
-	// if ( strcmp( name, "BubbleManager" ) == 0 )
-	//     return new TBubbleManager("バブルマネージャー");
+	if (strcmp(name, "BubbleManager") == 0)
+		return new TBubbleManager;
 
 	if (strcmp(name, "OilBall") == 0)
 		return new TOilBall;

@@ -2244,7 +2244,7 @@ bool TFireHamuKuri::isHitValid(u32 param_1)
 
 void TFireHamuKuri::recoverFire()
 {
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 	unk150 &= ~0x2;
 	unk150 |= 0x1;
 	unk214 = 0;
@@ -2516,7 +2516,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_HAMUKURI_CRUSHED,
 		                                &self->mPosition, 0, nullptr, 0, 4);
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
-		self->mHitPoints = 0;
+		self->setHitPoints(0);
 	} else {
 		int pTVar7 = self->getManager()->unk5C;
 		if (self->checkCurAnmEnd(0)) {

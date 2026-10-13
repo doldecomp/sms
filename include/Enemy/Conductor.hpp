@@ -57,10 +57,11 @@ public:
 	BOOL isBossDefeated();
 	void conduct();
 	void maskNFlagOfChildren(int, u32);
-	int makeEnemyAppear(const JGeometry::TVec3<f32>&, const char*, int, int);
-	TSpineEnemy* makeOneEnemyAppear(const JGeometry::TVec3<f32>&, const char*,
-	                                int);
-	void killEnemiesWithin(const JGeometry::TVec3<f32>&, f32);
+	int makeEnemyAppear(const JGeometry::TVec3<f32>& position,
+	                    const char* manager_name, int count, int);
+	TSpineEnemy* makeOneEnemyAppear(const JGeometry::TVec3<f32>& position,
+	                                const char* manager_name, int);
+	void killEnemiesWithin(const JGeometry::TVec3<f32>& position, f32 radius);
 	void genEnemyFromPollution();
 	void clipAloneActors(JDrama::TGraphics*);
 	void clipGenerators(JDrama::TGraphics*);
@@ -68,23 +69,23 @@ public:
 	virtual JDrama::TNameRef* searchF(u16, const char*);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
-	const TCondParams& getCondParams() const { return unk84; }
-	const TNpcParams* getNpcParams() const { return unkF4; }
+	const TCondParams& getCondParams() const { return mCondParams; }
+	const TNpcParams* getNpcParams() const { return mNpcParams; }
 
-public:
-	/* 0x10 */ JGadget::TList<TLiveManager*> unk10;
-	/* 0x20 */ JGadget::TList<TEnemyManager*> unk20;
-	/* 0x30 */ JGadget::TList<TLiveActor*> unk30;
-	/* 0x40 */ JGadget::TList<JDrama::TViewObj*> unk40;
-	/* 0x50 */ JGadget::TList<TAreaCylinderManager*> unk50;
-	/* 0x60 */ JGadget::TList<TGenerator*> unk60;
-	/* 0x70 */ JGadget::TList<SDLModelData*> unk70;
-	/* 0x80 */ TGraphGroup* unk80;
-	/* 0x84 */ TCondParams unk84;
-	/* 0xF0 */ TStageEnemyInfoTable* unkF0;
-	/* 0xF4 */ TNpcParams* unkF4;
-	/* 0xF8 */ TAreaCylinderManager* unkF8;
-	/* 0xFC */ int unkFC;
+protected:
+	/* 0x10 */ JGadget::TList<TLiveManager*> mLiveManagers;
+	/* 0x20 */ JGadget::TList<TEnemyManager*> mEnemyManagers;
+	/* 0x30 */ JGadget::TList<TLiveActor*> mAloneActors;
+	/* 0x40 */ JGadget::TList<JDrama::TViewObj*> mOtherObjects;
+	/* 0x50 */ JGadget::TList<TAreaCylinderManager*> mAreaCylinderManagers;
+	/* 0x60 */ JGadget::TList<TGenerator*> mGenerators;
+	/* 0x70 */ JGadget::TList<SDLModelData*> mSDLModelDatas;
+	/* 0x80 */ TGraphGroup* mGraphGroup;
+	/* 0x84 */ TCondParams mCondParams;
+	/* 0xF0 */ TStageEnemyInfoTable* mStageEnemyInfoTable;
+	/* 0xF4 */ TNpcParams* mNpcParams;
+	/* 0xF8 */ TAreaCylinderManager* mPollutionSpawnAreaManager;
+	/* 0xFC */ BOOL mPollutionSpawningEnabled;
 };
 
 #endif

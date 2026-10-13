@@ -190,7 +190,10 @@ public:
 
 class TBasketReverse : public TMapObjBase {
 public:
-	TBasketReverse(const char* name = "さかさバスケット");
+	TBasketReverse(const char* name = "さかさバスケット")
+	    : TMapObjBase(name)
+	{
+	}
 
 	virtual void kill();
 	virtual void initMapObj();

@@ -52,10 +52,14 @@ public:
 class TWaterHitActor : public THitActor {
 public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	void onWaterHitCounter() { unk68 = 0x3C; }
+	void onWaterHitCounter();
 
 public:
-	/* 0x68 */ int unk68;
+	// TODO: verify the original names of these overlapping fields.
+	union {
+		/* 0x68 */ int unk68; // Particle index for the static water actor.
+		/* 0x68 */ s16 mWaterHitCounter;
+	};
 };
 
 class TModelWaterManager;

@@ -42,15 +42,17 @@ void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 		mtx.setTrans(mPosition);
 
 		TPosition3f rotation;
-		rotation.identity();
 		rotation.setEularZ(DEG_TO_RAD(mRotation.z));
+		rotation.setTrans(0.0f, 0.0f, 0.0f);
 		TPosition3f result;
 		result.concat(mtx, rotation);
 
 		rotation.setEularY(DEG_TO_RAD(mRotation.y));
+		rotation.setTrans(0.0f, 0.0f, 0.0f);
 		mtx.concat(result, rotation);
 
 		rotation.setEularX(DEG_TO_RAD(mRotation.x));
+		rotation.setTrans(0.0f, 0.0f, 0.0f);
 		result.concat(mtx, rotation);
 
 		unk48->setBaseTRMtx(result);

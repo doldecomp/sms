@@ -611,7 +611,7 @@ void TBossGesso::init(TLiveManager* param_1)
 
 	reset();
 
-	mHitPoints = getSaveParams() ? getSaveParams()->mSLHitPointMax.get() : 1;
+	resetHitPoints();
 
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	getMActor()->offMakeDL();
@@ -826,8 +826,7 @@ void TBossGesso::gotBeakDamage()
 	if (mSpine->getLatestNerve() == &TNerveBGTentacleDamage::theNerve())
 		return;
 
-	if (mHitPoints > 0)
-		--mHitPoints;
+	decHitPoints();
 
 	if (mHitPoints == 0) {
 		mSpine->setNext(&TNerveBGDie::theNerve());

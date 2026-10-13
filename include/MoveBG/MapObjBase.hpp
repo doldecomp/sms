@@ -173,10 +173,7 @@ public:
 	virtual void updateObjMtx();
 	virtual void setUpCurrentMapCollision();
 	virtual void setObjHitData(u16);
-	virtual void setModelMtx(MtxPtr mtx)
-	{
-		MTXCopy(mtx, getModel()->getAnmMtx(0));
-	}
+	virtual void setModelMtx(MtxPtr mtx) { getModel()->setAnmMtx(0, mtx); }
 	virtual void initMapObj();
 	virtual void loadBeforeInit(JSUMemoryInputStream&) { }
 	virtual void initMapCollisionData();

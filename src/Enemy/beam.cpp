@@ -5,6 +5,8 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
 
+TBeamManager* gpBeamManager;
+
 static void coneInPlane(const JGeometry::TVec3<f32>& origin, f32 angle,
                         const JGeometry::TVec3<f32>& axis,
                         const JGeometry::TVec3<f32>& offsetDir,

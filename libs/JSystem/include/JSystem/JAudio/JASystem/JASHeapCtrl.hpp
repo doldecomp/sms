@@ -1,6 +1,7 @@
 #ifndef JASHEAPCTRL_HPP
 #define JASHEAPCTRL_HPP
 
+#include <stdint.h>
 #include <dolphin/types.h>
 
 namespace JASystem {
@@ -15,8 +16,8 @@ namespace Kernel {
 		void* alloc(THeap*, u32);
 		BOOL allocHeapCheck(THeap*, u32);
 		BOOL free();
-		BOOL selfAlloc(THeap*, u32, u32);
-		void initMotherHeap(u32, u32, u8);
+		BOOL selfAlloc(THeap*, u32, uintptr_t);
+		void initMotherHeap(uintptr_t, u32, u8);
 		void* getUnlockHeap();
 		void checkAlloc();
 		void selfInit(u32, u32, u32);

@@ -98,7 +98,11 @@ public:
 	ResTIMG* getCogwheelRopeTexture() { return mCogwheelRopeTexture; }
 	ResTIMG* getBridgeRopeTexture() { return mBridgeRopeTexture; }
 
-public:
+	MActor* getRedGesso() { return mRedGesso; }
+	MActor* getYellowGesso() { return mYellowGesso; }
+	MActor* getGreenGesso() { return mGreenGesso; }
+
+protected:
 	/* 0x40 */ MActorAnmData* unk40;
 	/* 0x44 */ JGeometry::TVec3<f32> unk44;
 	/* 0x50 */ JDrama::TDrawBufObj* mDrawBufferSunOpa;
@@ -130,6 +134,8 @@ public:
 	/* 0xC4 */ J3DMaterialTable* mMirrorMatTable;
 	/* 0xC8 */ ResTIMG* mCogwheelRopeTexture;
 	/* 0xCC */ ResTIMG* mBridgeRopeTexture;
+
+public: // TODO: getters/setters?
 	/* 0xD0 */ JGeometry::TVec3<f32> unkD0;
 };
 

@@ -167,7 +167,7 @@ void TSpineEnemy::calcRootMatrix()
 
 TSpineEnemyParams* TSpineEnemy::getSaveParam() const
 {
-	return ((TEnemyManager*)mManager)->unk38;
+	return ((TEnemyManager*)mManager)->getSaveParam();
 }
 
 void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
@@ -176,7 +176,7 @@ void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 	offLiveFlag(LIVE_FLAG_UNK8);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
-	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	resetHitPoints();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mVelocity = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
 	onLiveFlag(LIVE_FLAG_UNK8000);
@@ -193,9 +193,9 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& position,
 	offLiveFlag(LIVE_FLAG_UNK8);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
-	mRotation  = rotation;
-	mScaling   = scaling;
-	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	mRotation = rotation;
+	mScaling  = scaling;
+	resetHitPoints();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mVelocity = velocity;
 	onLiveFlag(LIVE_FLAG_UNK8000);
@@ -628,7 +628,7 @@ void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (mgr != nullptr) {
 		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
-		    && TEnemyManager::mIsCopyAnmMtx && mgr->unk4C >= 0) {
+		    && TEnemyManager::mIsCopyAnmMtx && mgr->getUnk4C() >= 0) {
 			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
 				return;
 

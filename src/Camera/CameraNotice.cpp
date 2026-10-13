@@ -39,7 +39,7 @@ void CPolarSubCamera::setNoticeInfo()
 		if (mgr != nullptr) {
 			s32 e = mgr->getObjNum();
 			for (int j = 0; j < e; ++unk29C, ++j)
-				unk2A0[unk29C] = mgr->getObj(j);
+				unk2A0[unk29C] = (TLiveActor*)mgr->getObj(j);
 		}
 	}
 

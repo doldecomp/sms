@@ -148,8 +148,8 @@ public:
 	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
+	bool isGameplayModeNow() const { return unk124 == 0; }
 	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
-
 	bool isDemoModeNow() const { return unk124 == 3 || unk124 == 4; }
 
 	// TODO: better names

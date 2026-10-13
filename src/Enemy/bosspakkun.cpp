@@ -831,7 +831,7 @@ void TBossPakkun::init(TLiveManager* manager)
 		goToShortestNextGraphNode();
 	}
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 }
 
 BOOL TBossPakkun::checkMarioRiding()

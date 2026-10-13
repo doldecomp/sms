@@ -271,7 +271,7 @@ void TSmallEnemy::reset()
 	mHeadHeight       = getSaveParams()->mSLHeadHeight.get();
 	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_UNK20000);

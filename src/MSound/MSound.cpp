@@ -100,7 +100,8 @@ static bool loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 		return false;
 
 	JASystem::Kernel::THeap* root = JASystem::WaveArcLoader::getRootHeap();
-	if (!heap->selfAlloc(root, extent, (u32)root->mBase + root->unk10 - extent))
+	if (!heap->selfAlloc(root, extent,
+	                     (uintptr_t)root->mBase + root->unk10 - extent))
 		return false;
 
 	u32* ptr = obj->getLoadFlagPtr();

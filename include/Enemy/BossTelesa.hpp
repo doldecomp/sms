@@ -43,19 +43,15 @@ class TBossTelesaKillSmallEnemy;
 
 class TTelesaSlot : public TSlotDrum {
 public:
-	TTelesaSlot(const char* name)
+	TTelesaSlot(const char* name = "btelesaSlot")
 	    : TSlotDrum(name)
-	    , unk1A0(nullptr)
-	    , unk1A4(0)
+	    , unk19B(false)
+	    , unk19C(true)
+	    , unk1A4(2)
 	{
-		unk198[0] = false;
-		unk198[1] = false;
-		unk198[2] = false;
-		unk19B    = 0;
-		unk19C    = 0;
-		unk1A8[0] = false;
-		unk1A8[1] = false;
-		unk1A8[2] = false;
+		unk1E0 = 0;
+		for (int i = 0; i < 3; ++i)
+			unk1A8[i] = false;
 	}
 
 	virtual void calcRootMatrix();
@@ -76,22 +72,20 @@ public:
 	int getDrumResult(int);
 
 	/* 0x198 */ bool unk198[3];
-	/* 0x19B */ u8 unk19B;
-	/* 0x19C */ u8 unk19C;
-	/* 0x19D */ u8 unk19D[3];
+	/* 0x19B */ bool unk19B;
+	/* 0x19C */ bool unk19C;
 	/* 0x1A0 */ TBossTelesa* unk1A0;
 	/* 0x1A4 */ s32 unk1A4;
 	/* 0x1A8 */ bool unk1A8[3];
-	/* 0x1AB */ u8 unk1AB[0x31];
+	/* 0x1AC */ JGeometry::TVec3<f32> unk1AC[4];
 	/* 0x1DC */ TMapCollisionMove* unk1DC;
 	/* 0x1E0 */ u8 unk1E0;
-	/* 0x1E1 */ u8 unk1E1[3];
 	/* 0x1E4 */ f32 unk1E4[3];
 };
 
 class TBossTelesa : public TSpineEnemy {
 public:
-	TBossTelesa(const char*);
+	TBossTelesa(const char* name = "ボステレサ");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -241,7 +235,7 @@ public:
 
 class TBossTelesaManager : public TEnemyManager {
 public:
-	TBossTelesaManager(const char*);
+	TBossTelesaManager(const char* name = "ボステレサマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -295,7 +289,7 @@ public:
 
 class TBubbleManager : public TSmallEnemyManager {
 public:
-	TBubbleManager(const char*);
+	TBubbleManager(const char* name = "バブルマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
