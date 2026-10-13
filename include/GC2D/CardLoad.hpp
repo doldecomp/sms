@@ -60,7 +60,7 @@ public:
 	/* 0x2C */ J2DSetScreen* mScoreScreen;
 	/* 0x30 */ u32 unk30;
 	/* 0x34 */ J2DSetScreen* mTitleScreen;
-	/* 0x38 */ TMarioGamePad* unk38;
+	/* 0x38 */ TMarioGamePad* mGamePad;
 	/* 0x3C */ char unk3C[4];
 	/* 0x40 */ TCardBookmarkInfo unk40[3];
 	/* 0xA0 */ void* unkA0;
@@ -77,19 +77,22 @@ public:
 	/* 0xBC */ int unkBC;
 	/* 0xC0 */ int unkC0;
 	/* 0xC4 */ int unkC4;
-	/* 0xC8 */ JUTTexture* unkC8[10];
-	/* 0xF0 */ TExPane* unkF0;
-	/* 0xF4 */ TExPane* unkF4;
-	/* 0xF8 */ TExPane* unkF8[11];
-	/* 0x124 */ JUTRect unk124[11];
-	/* 0x1D4 */ TExPane* unk1D4[13];
-	/* 0x208 */ J2DPane* unk208;
-	/* 0x20C */ u16 unk20C[11];
-	/* 0x222 */ u8 unk222[11];
-	/* 0x22E */ u16 unk22E[13];
-	/* 0x248 */ u8 unk248[13];
+	/* 0xC8 */ JUTTexture* mDigitTextures[10];
+
+	// Title screen elements
+	/* 0xF0 */ TExPane* mGameLogoPicture;
+	/* 0xF4 */ TExPane* mNintendoLogoPicture;
+	/* 0xF8 */ TExPane* mPressStartTextLetters[11];
+	/* 0x124 */ JUTRect mPressStartTextLettersInitialBounds[11];
+	/* 0x1D4 */ TExPane* mGameLogoLetters[13];
+	/* 0x208 */ J2DPane* mTitleScreenRoot;
+
+	/* 0x20C */ u16 mPressStartAnimTimes[11];
+	/* 0x222 */ u8 mPressStartAnimState[11];
+	/* 0x22E */ u16 mGameLogoAnimTimes[13];
+	/* 0x248 */ u8 mGameLogoAnimState[13];
 	/* 0x255 */ char unk255[0x258 - 0x255];
-	/* 0x258 */ u16 unk258;
+	/* 0x258 */ u16 mTitleAnimTimer;
 	/* 0x25C */ J2DPane* mToSettingsArrow;
 	/* 0x260 */ JUTRect mToSettingsArrowInitialBounds;
 	/* 0x270 */ J2DPane* mToSettingsText;
@@ -145,8 +148,10 @@ public:
 	/* 0x504 */ J2DPicture* mConfirmationShineCountDigitsOver100[3];
 	/* 0x510 */ J2DPane* mConfirmationShineCountUnder100;
 	/* 0x514 */ J2DPicture* mConfirmationShineCountDigitsUnder100[2];
-	/* 0x51C */ J2DTextBox* unk51C;
-	/* 0x520 */ J2DTextBox* unk520;
+	/* 0x51C */ J2DTextBox* mConfirmationNewSaveText;
+	/* 0x520 */ J2DTextBox* mConfirmationNewSaveTextShadow;
+
+	// Card error stuff
 	/* 0x524 */ TExPane* unk524;
 	/* 0x528 */ JUTRect unk528;
 	/* 0x538 */ J2DTextBox* unk538;
@@ -156,10 +161,12 @@ public:
 	/* 0x550 */ JUTRect unk550;
 	/* 0x560 */ J2DTextBox* unk560;
 	/* 0x564 */ J2DTextBox* unk564;
-	/* 0x568 */ TExPane* unk568;
-	/* 0x56C */ JUTRect unk56C;
-	/* 0x57C */ J2DTextBox* unk57C;
-	/* 0x580 */ J2DTextBox* unk580;
+
+	// Window shown after a save is erased
+	/* 0x568 */ TExPane* mErasedWindow;
+	/* 0x56C */ JUTRect mErasedWindowInitialBounds;
+	/* 0x57C */ J2DTextBox* mErasedText;
+	/* 0x580 */ J2DTextBox* mErasedTextShadow;
 
 	struct ScoreTableStageRow {
 		/* 0x0 */ J2DPicture* mRoot;

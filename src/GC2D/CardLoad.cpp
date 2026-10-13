@@ -124,17 +124,18 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 10; ++i) {
 		char buffer[0x28];
 		snprintf(buffer, 0x28, "/option/timg/coin_number_%d_min.bti", i);
-		unkC8[i] = new JUTTexture((const ResTIMG*)JKRGetResource(buffer));
+		mDigitTextures[i]
+		    = new JUTTexture((const ResTIMG*)JKRGetResource(buffer));
 	}
 
 	setupTitleScreen();
 
 	// Title screen setup
 
-	unk208 = mTitleScreen->search('ROOT');
+	mTitleScreenRoot = mTitleScreen->search('ROOT');
 
-	unkF0 = new TExPane(mTitleScreen, 'titl');
-	unkF4 = new TExPane(mTitleScreen, 'nint');
+	mGameLogoPicture     = new TExPane(mTitleScreen, 'titl');
+	mNintendoLogoPicture = new TExPane(mTitleScreen, 'nint');
 
 	for (int i = 0; i < 11; ++i) {
 		int key;
@@ -143,9 +144,10 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		else
 			key = 's_00' + ((i + 1) / 10) * 0x100 + (i + 1) % 10;
 
-		unkF8[i] = new TExPane(mTitleScreen, key);
-		unkF8[i]->getPane()->setAlpha(0);
-		unk124[i] = unkF8[i]->getPane()->getBounds();
+		mPressStartTextLetters[i] = new TExPane(mTitleScreen, key);
+		mPressStartTextLetters[i]->getPane()->setAlpha(0);
+		mPressStartTextLettersInitialBounds[i]
+		    = mPressStartTextLetters[i]->getPane()->getBounds();
 	}
 
 	for (int i = 0; i < 13; ++i) {
@@ -155,11 +157,11 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		else
 			key = 'p_00' + ((i + 1) / 10) * 0x100 + (i + 1) % 10;
 
-		unk1D4[i] = new TExPane(mTitleScreen, key);
+		mGameLogoLetters[i] = new TExPane(mTitleScreen, key);
 
-		((J2DPicture*)unk1D4[i]->getPane())->mBlack = 0x00FFFF00;
+		((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack = 0x00FFFF00;
 
-		unk1D4[i]->setPaneAlpha(20, 0xff, 0);
+		mGameLogoLetters[i]->setPaneAlpha(20, 0xff, 0);
 	}
 
 	// Save load screen setup
@@ -272,11 +274,11 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		mConfirmationShineCountDigitsUnder100[i]
 		    = (J2DPicture*)mLoadScreen->search('n_4a' + i);
 
-	unk51C = (J2DTextBox*)mLoadScreen->search('m_3a');
-	makeBuffer(unk51C, 0x14);
+	mConfirmationNewSaveText = (J2DTextBox*)mLoadScreen->search('m_3a');
+	makeBuffer(mConfirmationNewSaveText, 0x14);
 
-	unk520 = (J2DTextBox*)mLoadScreen->search('m_3b');
-	makeBuffer(unk520, 0x14);
+	mConfirmationNewSaveTextShadow = (J2DTextBox*)mLoadScreen->search('m_3b');
+	makeBuffer(mConfirmationNewSaveTextShadow, 0x14);
 
 	unk524 = new TExPane(mLoadScreen, '\0w_9');
 	unk528 = unk524->getPane()->getBounds();
@@ -301,14 +303,14 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	makeBuffer(unk564, 0x400);
 	unk564->hide();
 
-	unk568 = new TExPane(mLoadScreen, 'w_10');
-	unk56C = unk568->getPane()->getBounds();
+	mErasedWindow              = new TExPane(mLoadScreen, 'w_10');
+	mErasedWindowInitialBounds = mErasedWindow->getPane()->getBounds();
 
-	unk57C = (J2DTextBox*)mLoadScreen->search('m_6a');
-	makeBuffer(unk57C, 0x400);
+	mErasedText = (J2DTextBox*)mLoadScreen->search('m_6a');
+	makeBuffer(mErasedText, 0x400);
 
-	unk580 = (J2DTextBox*)mLoadScreen->search('m_6b');
-	makeBuffer(unk580, 0x400);
+	mErasedTextShadow = (J2DTextBox*)mLoadScreen->search('m_6b');
+	makeBuffer(mErasedTextShadow, 0x400);
 
 	// Score screen setup
 
@@ -356,52 +358,52 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 void TCardLoad::setupTitleScreen()
 {
-	for (int i = 0; i < ARRAY_COUNT(unk20C); ++i) {
-		unk20C[i] = 25 * i + 150;
+	for (int i = 0; i < ARRAY_COUNT(mPressStartAnimTimes); ++i) {
+		mPressStartAnimTimes[i] = 25 * i + 150;
 		if (i > 4)
-			unk20C[i] += 20;
-		unk222[i] = 4;
+			mPressStartAnimTimes[i] += 20;
+		mPressStartAnimState[i] = 4;
 	}
 
-	for (int i = 0; i < ARRAY_COUNT(unk22E); ++i) {
-		unk22E[i] = 400 * i;
-		unk248[i] = 4;
+	for (int i = 0; i < ARRAY_COUNT(mGameLogoAnimTimes); ++i) {
+		mGameLogoAnimTimes[i] = 400 * i;
+		mGameLogoAnimState[i] = 4;
 	}
 }
 
 void TCardLoad::setupScoreScreen()
 {
-	int iVar2 = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
-	if (iVar2 < 100) {
+	int shineCount = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
+	if (shineCount < 100) {
 		mScoreTotalShineCountDigit1->changeTexture(
-		    unkC8[iVar2 / 10]->getTexInfo(), 0);
+		    mDigitTextures[shineCount / 10]->getTexInfo(), 0);
 		mScoreTotalShineCountDigit2->changeTexture(
-		    unkC8[iVar2 % 10]->getTexInfo(), 0);
+		    mDigitTextures[shineCount % 10]->getTexInfo(), 0);
 		mScoreTotalShineCountDigit3->hide();
 	} else {
 		mScoreTotalShineCountDigit1->changeTexture(
-		    unkC8[iVar2 / 100]->getTexInfo(), 0);
+		    mDigitTextures[shineCount / 100]->getTexInfo(), 0);
 		mScoreTotalShineCountDigit2->changeTexture(
-		    unkC8[(iVar2 - 100) / 10]->getTexInfo(), 0);
+		    mDigitTextures[(shineCount - 100) / 10]->getTexInfo(), 0);
 		mScoreTotalShineCountDigit3->changeTexture(
-		    unkC8[(iVar2 - 100) % 10]->getTexInfo(), 0);
+		    mDigitTextures[(shineCount - 100) % 10]->getTexInfo(), 0);
 		mScoreTotalShineCountDigit3->show();
 	}
 
-	u16 iVar8      = 0;
-	int local_90[] = { 2, 3, 4, 5, 6, 7, 8 };
+	u16 iVar8        = 0;
+	int stageOrder[] = { 2, 3, 4, 5, 6, 7, 8 };
 
 	for (int i = 0; i < 7; ++i) {
 		u8 shineCount = 0;
 
 		if (TFlagManager::getInstance()->getBool(MSF_VISITED_BASE
-		                                         + local_90[i]))
+		                                         + stageOrder[i]))
 			mScoreTableStageRows[i].mRoot->show();
 		else
 			mScoreTableStageRows[i].mRoot->hide();
 
 		for (int j = 0; j < 8; ++j)
-			if (SMS_isGetShine(local_90[i], j, false))
+			if (SMS_isGetShine(stageOrder[i], j, false))
 				++shineCount;
 
 		iVar8 += shineCount;
@@ -418,7 +420,7 @@ void TCardLoad::setupScoreScreen()
 		}
 
 		for (int j = 0; j < 2; ++j) {
-			if (SMS_isGetShine(local_90[i], j + 1, true)) {
+			if (SMS_isGetShine(stageOrder[i], j + 1, true)) {
 				iVar8 += 1;
 				mScoreTableStageRows[i].unk30[j]->show();
 			} else {
@@ -426,31 +428,31 @@ void TCardLoad::setupScoreScreen()
 			}
 		}
 
-		if (SMS_isGetShine(local_90[i], 0, true)) {
+		if (SMS_isGetShine(stageOrder[i], 0, true)) {
 			iVar8 += 1;
 			mScoreTableStageRows[i].unk38->show();
 		} else {
 			mScoreTableStageRows[i].unk38->hide();
 		}
 
-		int iVar3 = TFlagManager::getInstance()->getFlag(MSF_COIN_RECORD_BASE
-		                                                 + local_90[i]);
-		if (iVar3 > 999)
-			iVar3 = 999;
-		if (iVar3 < 100) {
+		int coinRecord = TFlagManager::getInstance()->getFlag(
+		    MSF_COIN_RECORD_BASE + stageOrder[i]);
+		if (coinRecord > 999)
+			coinRecord = 999;
+		if (coinRecord < 100) {
 			mScoreTableStageRows[i].mCoinCountDigits[2]->hide();
 			mScoreTableStageRows[i].mCoinCountDigits[0]->changeTexture(
-			    unkC8[iVar3 / 10]->getTexInfo(), 0);
+			    mDigitTextures[coinRecord / 10]->getTexInfo(), 0);
 			mScoreTableStageRows[i].mCoinCountDigits[1]->changeTexture(
-			    unkC8[iVar3 % 10]->getTexInfo(), 0);
+			    mDigitTextures[coinRecord % 10]->getTexInfo(), 0);
 		} else {
 			mScoreTableStageRows[i].mCoinCountDigits[0]->changeTexture(
-			    unkC8[iVar3 / 100]->getTexInfo(), 0);
-			u8 iVar4 = iVar3 - (iVar3 / 100) * 100;
+			    mDigitTextures[coinRecord / 100]->getTexInfo(), 0);
+			u8 iVar4 = coinRecord - (coinRecord / 100) * 100;
 			mScoreTableStageRows[i].mCoinCountDigits[1]->changeTexture(
-			    unkC8[iVar4 / 10]->getTexInfo(), 0);
+			    mDigitTextures[iVar4 / 10]->getTexInfo(), 0);
 			mScoreTableStageRows[i].mCoinCountDigits[2]->changeTexture(
-			    unkC8[iVar4 % 10]->getTexInfo(), 0);
+			    mDigitTextures[iVar4 % 10]->getTexInfo(), 0);
 			mScoreTableStageRows[i].mCoinCountDigits[2]->show();
 		}
 
@@ -465,7 +467,7 @@ void TCardLoad::setupScoreScreen()
 	iVar8 += asdf;
 	if (asdf > 9)
 		asdf = 9;
-	const ResTIMG* pRVar4 = unkC8[asdf % 10]->getTexInfo();
+	const ResTIMG* pRVar4 = mDigitTextures[asdf % 10]->getTexInfo();
 	((J2DPicture*)mScoreScreen->search('\0n_f'))->changeTexture(pRVar4, 0);
 
 	if (TFlagManager::getInstance()->getBool(MSF_PLAZA_VISITED))
@@ -480,36 +482,43 @@ void TCardLoad::setupScoreScreen()
 		mScoreScreen->search('sh7a')->hide();
 	}
 
-	int thing = TFlagManager::getInstance()->getFlag(MSF_COIN_RECORD_DELFINO);
-	if (thing > 999)
-		thing = 999;
+	int delfinoCoinRecord
+	    = TFlagManager::getInstance()->getFlag(MSF_COIN_RECORD_DELFINO);
+	if (delfinoCoinRecord > 999)
+		delfinoCoinRecord = 999;
 
-	if (thing < 100) {
+	if (delfinoCoinRecord < 100) {
 		mScoreScreen->search('n_7c')->hide();
 		((J2DPicture*)mScoreScreen->search('n_7a'))
-		    ->changeTexture(unkC8[thing / 10]->getTexInfo(), 0);
+		    ->changeTexture(
+		        mDigitTextures[delfinoCoinRecord / 10]->getTexInfo(), 0);
 		((J2DPicture*)mScoreScreen->search('n_7b'))
-		    ->changeTexture(unkC8[thing % 10]->getTexInfo(), 0);
+		    ->changeTexture(
+		        mDigitTextures[delfinoCoinRecord % 10]->getTexInfo(), 0);
 	} else {
 		mScoreScreen->search('n_7c')->show();
 		((J2DPicture*)mScoreScreen->search('n_7a'))
-		    ->changeTexture(unkC8[thing / 100]->getTexInfo(), 0);
-		thing -= thing / 100 * 100;
+		    ->changeTexture(
+		        mDigitTextures[delfinoCoinRecord / 100]->getTexInfo(), 0);
+		delfinoCoinRecord -= delfinoCoinRecord / 100 * 100;
 		((J2DPicture*)mScoreScreen->search('n_7b'))
-		    ->changeTexture(unkC8[thing / 10]->getTexInfo(), 0);
+		    ->changeTexture(
+		        mDigitTextures[delfinoCoinRecord / 10]->getTexInfo(), 0);
 		((J2DPicture*)mScoreScreen->search('n_7c'))
-		    ->changeTexture(unkC8[thing % 10]->getTexInfo(), 0);
+		    ->changeTexture(
+		        mDigitTextures[delfinoCoinRecord % 10]->getTexInfo(), 0);
 	}
 
-	int asdf2 = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) - iVar8;
-	if (asdf2 > 100)
-		asdf2 = 99;
-	if (asdf2 < 0)
-		asdf2 = 0;
+	int totalShineCount
+	    = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT) - iVar8;
+	if (totalShineCount > 100)
+		totalShineCount = 99;
+	if (totalShineCount < 0)
+		totalShineCount = 0;
 	((J2DPicture*)mScoreScreen->search('\0n_d'))
-	    ->changeTexture(unkC8[asdf2 / 10]->getTexInfo(), 0);
+	    ->changeTexture(mDigitTextures[totalShineCount / 10]->getTexInfo(), 0);
 	((J2DPicture*)mScoreScreen->search('\0n_e'))
-	    ->changeTexture(unkC8[asdf2 % 10]->getTexInfo(), 0);
+	    ->changeTexture(mDigitTextures[totalShineCount % 10]->getTexInfo(), 0);
 
 	mScoreTotal->setAlpha(0);
 	mScoreTableHeader->setAlpha(0);
@@ -664,8 +673,8 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		} break;
 		case 1:
-			if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
-			    || unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
+			if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
+			    || mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 				                                   nullptr, 0);
 				unkB8 = true;
@@ -675,7 +684,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		case 6:
 			if (unk754->movementCard2Option()) {
-				unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+				mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 				unk14 = 2;
 			} else if (gpCameraOption->unk0 & 1) {
 				unk14 = 7;
@@ -694,7 +703,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (unk754->movementOption2Card()) {
 					unk284->onCollision();
 					unk14 = 0;
-					unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+					mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 					if (unk754->isChangedSetting()) {
 						gpCardManager->getBookmarkInfos(unk40);
 						unk1C = PROGRESS_UNK32;
@@ -710,10 +719,10 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 
 		case 8: {
-			int alpha = (s16)(unk208->getAlpha() - 4);
+			int alpha = (s16)(mTitleScreenRoot->getAlpha() - 4);
 			if (alpha < 0)
 				alpha = 0;
-			unk208->setAlpha(alpha);
+			mTitleScreenRoot->setAlpha(alpha);
 			if (gpCameraOption->unkE == 0) {
 				MSBgm::startBGM(MSD_BGM_BOSSPAKU_DEMO);
 				unk1C = PROGRESS_UNK30;
@@ -725,24 +734,28 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			titleDraw();
 			if (unk18 >= 4) {
 				if (unk18 >= 4 && unkBC >= 100 && gpCameraOption->unkA == 0
-				    && (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
-				        || unk38->getTrigger() & 0x1000)) {
+				    && (mGamePad->checkFrameMeaning(
+				            TMarioGamePad::MEANING_MENU_A)
+				        || mGamePad->getTrigger() & 0x1000)) {
 					SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE, 0,
 					                                   nullptr, 0);
 					gpCameraOption->moveToLoadFromTitle();
 					gpMarioOriginal->waitingStart(nullptr, 0.0f);
 					unk14 = 8;
 				}
-				unkF0->update();
-				unkF4->update();
+				mGameLogoPicture->update();
+				mNintendoLogoPicture->update();
 				unkBC += 1;
-			} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
-			           || unk38->getTrigger() & 0x1000) {
-				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
-				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
+			} else if (mGamePad->checkFrameMeaning(
+			               TMarioGamePad::MEANING_MENU_A)
+			           || mGamePad->getTrigger() & 0x1000) {
+				mGameLogoPicture->setPaneAlpha(
+				    10, 255, mGameLogoPicture->getPane()->getAlpha());
+				mNintendoLogoPicture->setPaneAlpha(
+				    10, 255, mNintendoLogoPicture->getPane()->getAlpha());
 				for (int i = 0; i < 13; ++i)
-					unk1D4[i]->getPane()->setAlpha(0);
-				unk258 = 0;
+					mGameLogoLetters[i]->getPane()->setAlpha(0);
+				mTitleAnimTimer = 0;
 				if (unk18 < 4)
 					unk18 = 4;
 			}
@@ -764,31 +777,33 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (gpCameraOption->unkA == 0)
 				unk14 = 3;
 
-			if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
-			    || unk38->getTrigger() & 0x1000) {
-				unkF0->setPaneAlpha(10, 255, unkF0->getPane()->getAlpha());
-				unkF4->setPaneAlpha(10, 255, unkF4->getPane()->getAlpha());
+			if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
+			    || mGamePad->getTrigger() & 0x1000) {
+				mGameLogoPicture->setPaneAlpha(
+				    10, 255, mGameLogoPicture->getPane()->getAlpha());
+				mNintendoLogoPicture->setPaneAlpha(
+				    10, 255, mNintendoLogoPicture->getPane()->getAlpha());
 				for (int i = 0; i < 13; ++i)
-					unk1D4[i]->getPane()->setAlpha(0);
-				unk258 = 0;
-				unkBC  = 0;
-				unk18  = 4;
-				unk14  = 3;
+					mGameLogoLetters[i]->getPane()->setAlpha(0);
+				mTitleAnimTimer = 0;
+				unkBC           = 0;
+				unk18           = 4;
+				unk14           = 3;
 			}
 			titleDraw();
 			break;
 
 		case 10:
 			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
-			unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+			mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			gpMarioOriginal->offFlag(MARIO_FLAG_GAME_OVER);
 			unk14 = 9;
 			unk18 = 1;
-			unkF0->getPane()->setAlpha(0);
-			unkF4->getPane()->setAlpha(0);
-			unk258 = 0;
-			unkC0  = 0;
-			unk208->show();
+			mGameLogoPicture->getPane()->setAlpha(0);
+			mNintendoLogoPicture->getPane()->setAlpha(0);
+			mTitleAnimTimer = 0;
+			unkC0           = 0;
+			mTitleScreenRoot->show();
 			break;
 		}
 
@@ -836,134 +851,137 @@ bool TCardLoad::titleDraw()
 
 	case 1:
 		for (int i = 0; i < 13; ++i) {
-			switch (unk248[i]) {
+			switch (mGameLogoAnimState[i]) {
 			case 4:
-				if (unk258 > unk22E[i]) {
-					unk1D4[i]->getPane()->show();
-					JUTRect bounds = unk1D4[i]->getPane()->getBounds();
-					unk1D4[i]->setPaneAlpha(40, 180, 0);
-					unk248[i] = 0;
+				if (mTitleAnimTimer > mGameLogoAnimTimes[i]) {
+					mGameLogoLetters[i]->getPane()->show();
+					JUTRect bounds
+					    = mGameLogoLetters[i]->getPane()->getBounds();
+					mGameLogoLetters[i]->setPaneAlpha(40, 180, 0);
+					mGameLogoAnimState[i] = 0;
 				}
 				break;
 
 			case 0:
-				if (unk1D4[i]->update()) {
-					unk248[i] = 1;
-					unk22E[i] = 0;
+				if (mGameLogoLetters[i]->update()) {
+					mGameLogoAnimState[i] = 1;
+					mGameLogoAnimTimes[i] = 0;
 				}
 				break;
 
 			case 1:
 				if (i == 12) {
-					unk258 = 0;
+					mTitleAnimTimer = 0;
 					for (int j = 0; j < 13; ++j)
-						unk1D4[j]->setPaneAlpha(40, 255, 180);
+						mGameLogoLetters[j]->setPaneAlpha(40, 255, 180);
 					unk18 = 3;
 				}
 				break;
 			}
 
-			++unk258;
+			++mTitleAnimTimer;
 		}
 		break;
 
 	case 3:
-		if (unk258 > 160) {
+		if (mTitleAnimTimer > 160) {
 			bool any = true;
 			for (int i = 0; i < 13; ++i) {
-				any &= unk1D4[i]->update();
+				any &= mGameLogoLetters[i]->update();
 				JUtility::TColor col
-				    = ((J2DPicture*)unk1D4[i]->getPane())->mBlack;
+				    = ((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack;
 				u16 r = col.r;
 				r += 7;
 				if (r > 255)
 					r = 255;
 
-				((J2DPicture*)unk1D4[i]->getPane())->mBlack
+				((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack
 				    = (r << 24) + 0xFFFF00;
 			}
 
 			if (any) {
 				for (int i = 0; i < 13; ++i)
-					unk1D4[i]->setPaneAlpha(140, 0, 255);
-				unk258 = 0;
-				unk18  = 2;
+					mGameLogoLetters[i]->setPaneAlpha(140, 0, 255);
+				mTitleAnimTimer = 0;
+				unk18           = 2;
 			}
 		}
-		++unk258;
+		++mTitleAnimTimer;
 		break;
 
 	case 2: {
-		u16 alpha = unkF0->getPane()->getAlpha();
+		u16 alpha = mGameLogoPicture->getPane()->getAlpha();
 		++alpha;
 		if (alpha > 255) {
 			bool any = true;
 			alpha    = 255;
 			for (int i = 0; i < 13; ++i)
-				any &= unk1D4[i]->update();
+				any &= mGameLogoLetters[i]->update();
 			if (any) {
 				unkBC = 0;
 				unk18 = 4;
 			}
 		}
-		unkF0->getPane()->setAlpha(alpha);
-		unkF4->getPane()->setAlpha(alpha);
+		mGameLogoPicture->getPane()->setAlpha(alpha);
+		mNintendoLogoPicture->getPane()->setAlpha(alpha);
 	} break;
 
 	case 4: {
 		for (int i = 0; i < 11; ++i) {
-			switch (unk222[i]) {
+			switch (mPressStartAnimState[i]) {
 			case 0:
-				if (unkF8[i]->update()) {
-					unk222[i] = 1;
-					unk20C[i] = 0;
+				if (mPressStartTextLetters[i]->update()) {
+					mPressStartAnimState[i] = 1;
+					mPressStartAnimTimes[i] = 0;
 				}
 				break;
 
 			case 1:
-				unk20C[i] += 1;
-				if (unk20C[i] > 500) {
-					JUTRect bounds = unkF8[i]->getPane()->getBounds();
-					unkF8[i]->setPaneAlpha(25, 0, 255);
-					unk222[i] = 2;
+				mPressStartAnimTimes[i] += 1;
+				if (mPressStartAnimTimes[i] > 500) {
+					JUTRect bounds
+					    = mPressStartTextLetters[i]->getPane()->getBounds();
+					mPressStartTextLetters[i]->setPaneAlpha(25, 0, 255);
+					mPressStartAnimState[i] = 2;
 				}
 				break;
 
 			case 2:
-				if (unkF8[i]->update()) {
-					unk20C[i] = 0;
-					unk222[i] = 3;
+				if (mPressStartTextLetters[i]->update()) {
+					mPressStartAnimTimes[i] = 0;
+					mPressStartAnimState[i] = 3;
 				}
 				break;
 
 			case 3:
-				++unk20C[i];
-				if (unk20C[i] > 300) {
-					JUTRect local_124 = unkF8[i]->getPane()->getBounds();
+				++mPressStartAnimTimes[i];
+				if (mPressStartAnimTimes[i] > 300) {
+					JUTRect local_124
+					    = mPressStartTextLetters[i]->getPane()->getBounds();
 
-					unkF8[i]->setCenteredSize(
+					mPressStartTextLetters[i]->setCenteredSize(
 					    25, local_124.getWidth(), local_124.getHeight(),
 					    local_124.getWidth() * 2, local_124.getHeight() * 2);
 
-					unkF8[i]->setPaneAlpha(25, 255, 0);
-					unk222[i] = 0;
+					mPressStartTextLetters[i]->setPaneAlpha(25, 255, 0);
+					mPressStartAnimState[i] = 0;
 				}
 				break;
 
 			case 4:
-				if (unk258 > unk20C[i]) {
-					JUTRect local_124 = unk124[i];
-					unkF8[i]->setCenteredSize(
+				if (mTitleAnimTimer > mPressStartAnimTimes[i]) {
+					JUTRect local_124 = mPressStartTextLettersInitialBounds[i];
+					mPressStartTextLetters[i]->setCenteredSize(
 					    25, local_124.getWidth(), local_124.getHeight(),
 					    local_124.getWidth() * 2, local_124.getHeight() * 2);
-					unkF8[i]->setPaneAlpha(25, 255, 0);
-					unk222[i] = 0;
-					unk20C[i] = 0;
+					mPressStartTextLetters[i]->setPaneAlpha(25, 255, 0);
+					mPressStartAnimState[i] = 0;
+					mPressStartAnimTimes[i] = 0;
 				}
 				break;
 			}
 		}
-		++unk258;
+		++mTitleAnimTimer;
 	} break;
 
 	// Cases 5 and 6 fall through the default gap. Explicit empty cases here
@@ -1064,12 +1082,12 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 
 	case 2: {
 		s8 old = unkB7;
-		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
 			unkB7 = 0;
-		} else if (unk38->checkFrameMeaning(
+		} else if (mGamePad->checkFrameMeaning(
 		               TMarioGamePad::MEANING_MENU_RIGHT)) {
 			unkB7 = 1;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			if (old == 0)
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 				                                   nullptr, 0);
@@ -1077,7 +1095,7 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 				                                   nullptr, 0);
 			unk10 = 3;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 			unkB7 = 1;
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 			                                   nullptr, 0);
@@ -1190,7 +1208,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		}
 		mConfirmationShineCountOver100->hide();
 		mConfirmationShineCountUnder100->hide();
-		unk520->hide();
+		mConfirmationNewSaveTextShadow->hide();
 		mConfirmationTextShadow->hide();
 		mConfirmationTextMario->hide();
 		for (int i = 0; i < 3; ++i)
@@ -1212,19 +1230,22 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			mConfirmationTextTargetABC[unkB0]->show();
 			TCardBookmarkInfo& info = unk40[unkB0];
 			if (info.unk0 == 1) {
-				strncpy(unk51C->getStringPtr(), "こわれています", 0x14);
-				strncpy(unk520->getStringPtr(), "こわれています", 0x14);
-				unk520->show();
+				strncpy(mConfirmationNewSaveText->getStringPtr(),
+				        "こわれています", 0x14);
+				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(),
+				        "こわれています", 0x14);
+				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
 			} else if (info.unk18 == 0) {
-				strncpy(unk51C->getStringPtr(), "NEW", 0x14);
-				strncpy(unk520->getStringPtr(), "NEW", 0x14);
-				unk520->show();
+				strncpy(mConfirmationNewSaveText->getStringPtr(), "NEW", 0x14);
+				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(), "NEW",
+				        0x14);
+				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
 			} else {
-				unk520->hide();
+				mConfirmationNewSaveTextShadow->hide();
 				u16 score = unk40[unkB0].unk1C;
 				if (score > 999)
 					score = 999;
@@ -1232,19 +1253,19 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 					mConfirmationShineCountOver100->hide();
 					mConfirmationShineCountUnder100->show();
 					mConfirmationShineCountDigitsUnder100[0]->changeTexture(
-					    unkC8[score / 10]->getTexInfo(), 0);
+					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsUnder100[1]->changeTexture(
-					    unkC8[score % 10]->getTexInfo(), 0);
+					    mDigitTextures[score % 10]->getTexInfo(), 0);
 				} else {
 					mConfirmationShineCountOver100->show();
 					mConfirmationShineCountUnder100->hide();
 					mConfirmationShineCountDigitsOver100[0]->changeTexture(
-					    unkC8[score / 100]->getTexInfo(), 0);
+					    mDigitTextures[score / 100]->getTexInfo(), 0);
 					score -= int(score * 0.01f) * 100;
 					mConfirmationShineCountDigitsOver100[1]->changeTexture(
-					    unkC8[score / 10]->getTexInfo(), 0);
+					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsOver100[2]->changeTexture(
-					    unkC8[score % 10]->getTexInfo(), 0);
+					    mDigitTextures[score % 10]->getTexInfo(), 0);
 				}
 			}
 			unkC4 = 0;
@@ -1254,16 +1275,16 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 	case 2: {
 		s8 old = unkB7;
-		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT)) {
 			unkB7 = 0;
-		} else if (unk38->checkFrameMeaning(
+		} else if (mGamePad->checkFrameMeaning(
 		               TMarioGamePad::MEANING_MENU_RIGHT)) {
 			unkB7 = 1;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 			unkB7 = 1;
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 			                                   nullptr, 0);
@@ -1327,7 +1348,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		mConfirmationTextMario->hide();
 		mConfirmationShineCountOver100->hide();
 		mConfirmationShineCountUnder100->hide();
-		unk520->hide();
+		mConfirmationNewSaveTextShadow->hide();
 		mConfirmationTextShadow->hide();
 		mConfirmationYesNo[0]->getPane()->hide();
 		mConfirmationYesNo[1]->getPane()->hide();
@@ -1364,19 +1385,20 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 
 	switch (unk10) {
 	case 0: {
-		setMessage(unk57C, 0x400, (u16)cMessageID[unk1C]);
-		setMessage(unk580, 0x400, (u16)cMessageID[unk1C]);
+		setMessage(mErasedText, 0x400, (u16)cMessageID[unk1C]);
+		setMessage(mErasedTextShadow, 0x400, (u16)cMessageID[unk1C]);
 
-		unk580->hide();
-		unk568->getPane()->show();
-		unk568->setCenteredSize(20, unk56C.getWidth(), unk56C.getHeight(), 0,
-		                        0);
+		mErasedTextShadow->hide();
+		mErasedWindow->getPane()->show();
+		mErasedWindow->setCenteredSize(
+		    20, mErasedWindowInitialBounds.getWidth(),
+		    mErasedWindowInitialBounds.getHeight(), 0, 0);
 		unk10 = 1;
 	} break;
 
 	case 1:
-		if (unk568->update()) {
-			unk580->show();
+		if (mErasedWindow->update()) {
+			mErasedTextShadow->show();
 			unkB4 = 0;
 			unk10 = 2;
 		}
@@ -1384,8 +1406,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 
 	case 2:
 		if (unkB4 > 600
-		    || unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
-		                                | TMarioGamePad::MEANING_MENU_B)) {
+		    || mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
+		                                   | TMarioGamePad::MEANING_MENU_B)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
@@ -1395,16 +1417,17 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		break;
 
 	case 3: {
-		unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
-		                        unk56C.getHeight());
-		unk580->hide();
+		mErasedWindow->setCenteredSize(20, 0, 0,
+		                               mErasedWindowInitialBounds.getWidth(),
+		                               mErasedWindowInitialBounds.getHeight());
+		mErasedTextShadow->hide();
 		unkB4 = 0;
 		unk10 = 4;
 	} break;
 
 	case 4:
-		if (unk568->update()) {
-			unk568->getPane()->hide();
+		if (mErasedWindow->update()) {
+			mErasedWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1430,7 +1453,7 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 		mConfirmationWindow->getPane()->show();
 		mConfirmationShineCountOver100->hide();
 		mConfirmationShineCountUnder100->hide();
-		unk520->hide();
+		mConfirmationNewSaveTextShadow->hide();
 		mConfirmationTextShadow->hide();
 		mConfirmationTextMario->hide();
 		for (int i = 0; i < 3; ++i)
@@ -1451,20 +1474,23 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 				unkB0 = unkB1;
 			TCardBookmarkInfo& info = unk40[unkB0];
 			if (info.unk0 == 1) {
-				strncpy(unk51C->getStringPtr(), "こわれています", 0x14);
-				strncpy(unk520->getStringPtr(), "こわれています", 0x14);
-				unk520->show();
+				strncpy(mConfirmationNewSaveText->getStringPtr(),
+				        "こわれています", 0x14);
+				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(),
+				        "こわれています", 0x14);
+				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
 			} else if (info.unk18 == 0) {
-				strncpy(unk51C->getStringPtr(), "NEW", 0x14);
-				strncpy(unk520->getStringPtr(), "NEW", 0x14);
-				unk520->show();
+				strncpy(mConfirmationNewSaveText->getStringPtr(), "NEW", 0x14);
+				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(), "NEW",
+				        0x14);
+				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
 			} else {
 				mConfirmationShineCountOver100->show();
-				unk520->hide();
+				mConfirmationNewSaveTextShadow->hide();
 				u16 score = unk40[unkB0].unk1C;
 				if (score > 999)
 					score = 999;
@@ -1472,19 +1498,19 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 					mConfirmationShineCountOver100->hide();
 					mConfirmationShineCountUnder100->show();
 					mConfirmationShineCountDigitsUnder100[0]->changeTexture(
-					    unkC8[score / 10]->getTexInfo(), 0);
+					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsUnder100[1]->changeTexture(
-					    unkC8[score % 10]->getTexInfo(), 0);
+					    mDigitTextures[score % 10]->getTexInfo(), 0);
 				} else {
 					mConfirmationShineCountOver100->show();
 					mConfirmationShineCountUnder100->hide();
 					mConfirmationShineCountDigitsOver100[0]->changeTexture(
-					    unkC8[score / 100]->getTexInfo(), 0);
+					    mDigitTextures[score / 100]->getTexInfo(), 0);
 					score -= int(score * 0.01f) * 100;
 					mConfirmationShineCountDigitsOver100[1]->changeTexture(
-					    unkC8[score / 10]->getTexInfo(), 0);
+					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsOver100[2]->changeTexture(
-					    unkC8[score % 10]->getTexInfo(), 0);
+					    mDigitTextures[score % 10]->getTexInfo(), 0);
 				}
 			}
 			unkB4 = 0;
@@ -1494,8 +1520,8 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 
 	case 2: {
 		if (unkB4 > 600
-		    || unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
-		                                | TMarioGamePad::MEANING_MENU_B)) {
+		    || mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A
+		                                   | TMarioGamePad::MEANING_MENU_B)) {
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 			                                   nullptr, 0);
 			unk10 = 3;
@@ -1511,7 +1537,7 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 		mConfirmationTextShadow->hide();
 		mConfirmationShineCountOver100->hide();
 		mConfirmationShineCountUnder100->hide();
-		unk520->hide();
+		mConfirmationNewSaveTextShadow->hide();
 		mConfirmationTextMario->hide();
 		unkB4 = 0;
 		unk10 = 4;
@@ -1571,7 +1597,7 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 	} break;
 
 	case 2:
-		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
 		    || unkB0 != -1)
 			unk10 = 3;
 		break;
@@ -1612,19 +1638,20 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 {
 	switch (unk10) {
 	case 0:
-		setMessage(unk57C, 0x400, (u16)cMessageID[unk1C]);
-		setMessage(unk580, 0x400, (u16)cMessageID[unk1C]);
+		setMessage(mErasedText, 0x400, (u16)cMessageID[unk1C]);
+		setMessage(mErasedTextShadow, 0x400, (u16)cMessageID[unk1C]);
 
-		unk568->getPane()->show();
-		unk580->hide();
-		unk568->setCenteredSize(20, unk56C.getWidth(), unk56C.getHeight(), 0,
-		                        0);
+		mErasedWindow->getPane()->show();
+		mErasedTextShadow->hide();
+		mErasedWindow->setCenteredSize(
+		    20, mErasedWindowInitialBounds.getWidth(),
+		    mErasedWindowInitialBounds.getHeight(), 0, 0);
 		unk10 = 1;
 		break;
 
 	case 1:
-		if (unk568->update()) {
-			unk580->show();
+		if (mErasedWindow->update()) {
+			mErasedTextShadow->show();
 			unkB4 = 0;
 			unk10 = 2;
 		}
@@ -1632,16 +1659,17 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 
 	case 3:
 		if (unkB4 > 180) {
-			unk568->setCenteredSize(20, 0, 0, unk56C.getWidth(),
-			                        unk56C.getHeight());
-			unk580->hide();
+			mErasedWindow->setCenteredSize(
+			    20, 0, 0, mErasedWindowInitialBounds.getWidth(),
+			    mErasedWindowInitialBounds.getHeight());
+			mErasedTextShadow->hide();
 			unk10 = 4;
 		}
 		break;
 
 	case 4:
-		if (unk568->update()) {
-			unk568->getPane()->hide();
+		if (mErasedWindow->update()) {
+			mErasedWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1667,7 +1695,7 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 
 		mConfirmationWindow->getPane()->show();
 		mConfirmationShineCountOver100->hide();
-		unk520->hide();
+		mConfirmationNewSaveTextShadow->hide();
 		mConfirmationTextShadow->hide();
 		mConfirmationTextMario->hide();
 		mConfirmationTextTargetABC[0]->hide();
@@ -1687,17 +1715,20 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 			mConfirmationTextTargetABC[unkB0]->show();
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk0 == 1) {
-				strncpy(unk51C->getStringPtr(), "こわれています", 20);
-				strncpy(unk520->getStringPtr(), "こわれています", 20);
-				unk520->show();
+				strncpy(mConfirmationNewSaveText->getStringPtr(),
+				        "こわれています", 20);
+				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(),
+				        "こわれています", 20);
+				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 			} else if (bm->unk18 == 0) {
-				strncpy(unk51C->getStringPtr(), "NEW", 20);
-				strncpy(unk520->getStringPtr(), "NEW", 20);
-				unk520->show();
+				strncpy(mConfirmationNewSaveText->getStringPtr(), "NEW", 20);
+				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(), "NEW",
+				        20);
+				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 			} else {
-				unk520->hide();
+				mConfirmationNewSaveTextShadow->hide();
 				TCardBookmarkInfo* bm2 = &unk40[unkB0];
 				u16 score              = bm2->unk1C;
 				(void)score; // TODO: hack, regswap
@@ -1707,19 +1738,19 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 					mConfirmationShineCountOver100->hide();
 					mConfirmationShineCountUnder100->show();
 					mConfirmationShineCountDigitsUnder100[0]->changeTexture(
-					    unkC8[score / 10]->getTexInfo(), 0);
+					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsUnder100[1]->changeTexture(
-					    unkC8[score % 10]->getTexInfo(), 0);
+					    mDigitTextures[score % 10]->getTexInfo(), 0);
 				} else {
 					mConfirmationShineCountOver100->show();
 					mConfirmationShineCountUnder100->hide();
 					mConfirmationShineCountDigitsOver100[0]->changeTexture(
-					    unkC8[score / 100]->getTexInfo(), 0);
+					    mDigitTextures[score / 100]->getTexInfo(), 0);
 					score -= int(score * 0.01f) * 100;
 					mConfirmationShineCountDigitsOver100[1]->changeTexture(
-					    unkC8[score / 10]->getTexInfo(), 0);
+					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsOver100[2]->changeTexture(
-					    unkC8[score % 10]->getTexInfo(), 0);
+					    mDigitTextures[score % 10]->getTexInfo(), 0);
 				}
 			}
 			unkB4 = 0;
@@ -1736,7 +1767,7 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 			mConfirmationTextMario->hide();
 			mConfirmationShineCountOver100->hide();
 			mConfirmationShineCountUnder100->hide();
-			unk520->hide();
+			mConfirmationNewSaveTextShadow->hide();
 			mConfirmationTextShadow->hide();
 			unk10 = 4;
 		}
@@ -1825,19 +1856,19 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 					u16 score = unk40[i].unk1C > 999 ? 999 : unk40[i].unk1C;
 					if (score < 100) {
 						mSaveShineCountTensUnder100[i]->changeTexture(
-						    unkC8[score / 10]->getTexInfo(), 0);
+						    mDigitTextures[score / 10]->getTexInfo(), 0);
 						mSaveShineCountOnesUnder100[i]->changeTexture(
-						    unkC8[score % 10]->getTexInfo(), 0);
+						    mDigitTextures[score % 10]->getTexInfo(), 0);
 						mSaveShineIconsUnder100[i]->show();
 						mSaveShineIconsOver100[i]->hide();
 					} else {
 						mSaveShineCountHundredsOver100[i]->changeTexture(
-						    unkC8[score / 100]->getTexInfo(), 0);
+						    mDigitTextures[score / 100]->getTexInfo(), 0);
 						score -= int(score * 0.01f) * 100;
 						mSaveShineCountTensOver100[i]->changeTexture(
-						    unkC8[score / 10]->getTexInfo(), 0);
+						    mDigitTextures[score / 10]->getTexInfo(), 0);
 						mSaveShineCountOnesOver100[i]->changeTexture(
-						    unkC8[score % 10]->getTexInfo(), 0);
+						    mDigitTextures[score % 10]->getTexInfo(), 0);
 						mSaveShineIconsOver100[i]->show();
 						mSaveShineIconsUnder100[i]->hide();
 					}
@@ -1849,14 +1880,14 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 	} break;
 
 	case 2:
-		if (param_2 != 0 && unk38->getTrigger() & 0x200)
+		if (param_2 != 0 && mGamePad->getTrigger() & 0x200)
 			unk10 = 3;
 		if (unkB0 != -1)
 			unk10 = 3;
 		break;
 
 	case 3:
-		unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+		mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		mChoseSaveTextShadow->hide();
 		mChoseSaveWindow->setCenteredSize(
 		    30, 0, 0, mChoseSaveWindowInitialBounds.getWidth(),
@@ -1898,7 +1929,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			unk278[unkB1]->makeBlockNormal();
 		result = unkB0;
 		if (unk14 == 0)
-			unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+			mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		if (unkB0 != -1)
 			unk1C = param_1;
 		else
@@ -1999,9 +2030,9 @@ s8 TCardLoad::selectFunction()
 
 					if (score < 100) {
 						mSaveShineCountTensUnder100[i]->changeTexture(
-						    unkC8[score / 10]->getTexInfo(), 0);
+						    mDigitTextures[score / 10]->getTexInfo(), 0);
 						mSaveShineCountOnesUnder100[i]->changeTexture(
-						    unkC8[score % 10]->getTexInfo(), 0);
+						    mDigitTextures[score % 10]->getTexInfo(), 0);
 						mSaveShineIconsUnder100[i]->show();
 					} else {
 						mSaveShineIconsOver100[i]->show();
@@ -2015,7 +2046,7 @@ s8 TCardLoad::selectFunction()
 	} break;
 
 	case 2:
-		if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			if (bVar1 == 0)
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0,
 				                                   nullptr, 0);
@@ -2023,7 +2054,8 @@ s8 TCardLoad::selectFunction()
 				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
 				                                   nullptr, 0);
 			unk10 = 3;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_DOWN)) {
+		} else if (mGamePad->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_DOWN)) {
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk18 == 0)
 				unkB6 = 0;
@@ -2031,7 +2063,8 @@ s8 TCardLoad::selectFunction()
 				unkB6 = bVar1 + 1;
 			if (unkB6 > 3)
 				unkB6 = 0;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP)) {
+		} else if (mGamePad->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_UP)) {
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk18 == 0)
 				unkB6 = 0;
@@ -2039,7 +2072,7 @@ s8 TCardLoad::selectFunction()
 				unkB6 = bVar1 - 1;
 			if (unkB6 < 0)
 				unkB6 = 3;
-		} else if (unk38->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
 			unkB6 = -1;
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CANCEL_COMMON, 0,
 			                                   nullptr, 0);
@@ -2203,7 +2236,7 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK0:
-		unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+		mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		gpCardManager->getBookmarkInfos(unk40);
 		unk1C = PROGRESS_UNK2;
 		break;
@@ -2685,7 +2718,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNKD:
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
-			unk38->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+			mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			unk275 = 0;
 			break;
 		}
@@ -2694,7 +2727,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNK1C:
 			unk284->onCollision();
 			unk275 = 0;
-			unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+			mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			break;
 
 		case PROGRESS_UNK13:
@@ -2706,7 +2739,7 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
 			unk275 = 1;
-			unk38->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+			mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			break;
 		}
 
