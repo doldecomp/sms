@@ -398,7 +398,7 @@ void MActor::entry()
 void MActor::frameUpdate()
 {
 	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
 
 	if (unk10)
@@ -617,37 +617,37 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && 0 <= mAnmByType[ANM_TYPE_BLK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateIn();
 }
 
 void MActor::updateOut()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
 	updateOutSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && 0 <= mAnmByType[ANM_TYPE_BLK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateOut();
 }
 
 void MActor::entryIn()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->updateIn();
 }
 
 void MActor::entryOut()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->updateOut();
 }
 
