@@ -91,7 +91,7 @@ public:
 
 class TBossTelesa : public TSpineEnemy {
 public:
-	TBossTelesa(const char*);
+	TBossTelesa(const char* name = "ボステレサ");
 
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -241,7 +241,7 @@ public:
 
 class TBossTelesaManager : public TEnemyManager {
 public:
-	TBossTelesaManager(const char*);
+	TBossTelesaManager(const char* name = "ボステレサマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -295,7 +295,7 @@ public:
 
 class TBubbleManager : public TSmallEnemyManager {
 public:
-	TBubbleManager(const char*);
+	TBubbleManager(const char* name = "バブルマネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
