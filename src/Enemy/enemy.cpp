@@ -193,8 +193,8 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& position,
 	offLiveFlag(LIVE_FLAG_UNK8);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
-	mRotation  = rotation;
-	mScaling   = scaling;
+	mRotation = rotation;
+	mScaling  = scaling;
 	resetHitPoints();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mVelocity = velocity;

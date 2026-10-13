@@ -465,11 +465,11 @@ void TBiancoGateKeeper::launchNamekuri()
 			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
 
 			enemy->reset();
-			enemy->mPosition  = pos;
-			enemy->mRotation  = rot;
-			enemy->mScaling   = scale;
+			enemy->mPosition = pos;
+			enemy->mRotation = rot;
+			enemy->mScaling  = scale;
 			enemy->resetHitPoints();
-			enemy->mVelocity  = vel;
+			enemy->mVelocity = vel;
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
 			enemy->onLiveFlag(LIVE_FLAG_UNK8000);
