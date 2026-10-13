@@ -78,9 +78,12 @@ public:
 		int n = unk38->mSLActiveEnemyNum.get();
 		return n > getObjNum() ? getObjNum() : n;
 	}
+
+	int getUnk4C() const { return unk4C; }
+
 	static bool mIsCopyAnmMtx;
 
-public:
+protected:
 	/* 0x38 */ TSpineEnemyParams* unk38;
 	/* 0x3C */ f32 unk3C;
 	/* 0x40 */ TSharedMActorSet* unk40;

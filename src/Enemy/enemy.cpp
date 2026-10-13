@@ -167,7 +167,7 @@ void TSpineEnemy::calcRootMatrix()
 
 TSpineEnemyParams* TSpineEnemy::getSaveParam() const
 {
-	return ((TEnemyManager*)mManager)->unk38;
+	return ((TEnemyManager*)mManager)->getSaveParam();
 }
 
 void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
@@ -628,7 +628,7 @@ void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (mgr != nullptr) {
 		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
-		    && TEnemyManager::mIsCopyAnmMtx && mgr->unk4C >= 0) {
+		    && TEnemyManager::mIsCopyAnmMtx && mgr->getUnk4C() >= 0) {
 			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
 				return;
 

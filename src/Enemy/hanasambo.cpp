@@ -189,7 +189,7 @@ void TSamboLeaf::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk14 += unk38;
 
 		if (unk38.y > -20.0f)
-			unk38.y -= ((TSamboFlowerSaveLoadParams*)unk48->unk38)
+			unk38.y -= ((TSamboFlowerSaveLoadParams*)unk48->getSaveParam())
 			               ->mSLLeafGravity.get();
 
 		const TBGCheckData* ground;
