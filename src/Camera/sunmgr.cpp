@@ -12,7 +12,8 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-#include <System/DummyStrings.hpp>
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 const char* cSunWarpPointName = "太陽ワープポイント";
 
@@ -60,7 +61,7 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 		    = (TStagePositionInfo*)gpPositionHolder->searchF(
 		        JDrama::TNameRef::calcKeyCode(cSunWarpPointName),
 		        cSunWarpPointName);
-		unk24 = sunWarpPoint->getPosition();
+		unk24 = sunWarpPoint->unkC;
 	}
 }
 
@@ -77,10 +78,9 @@ void TSunMgr::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	// Transition to noki bay
-	JGeometry::TVec2<f32> marioPos(SMS_GetMarioPos().x, SMS_GetMarioPos().z);
-	JGeometry::TVec2<f32> warpPos(unk24.x, unk24.z);
-	marioPos.sub(marioPos, warpPos);
-	if (marioPos.squared() < 160000.0f && gpSunModel->isInBounds(0.3f)) {
+	f32 dx = SMS_GetMarioPos().x - unk24.x;
+	f32 dz = SMS_GetMarioPos().z - unk24.z;
+	if (dx * dx + dz * dz < 160000.0f && gpSunModel->isInBounds(0.3f)) {
 		SMSGetMarDirector()->setNextStage(9, nullptr);
 		MSound* sound = SMSGetMSound();
 		if (sound->unk7C != nullptr) {

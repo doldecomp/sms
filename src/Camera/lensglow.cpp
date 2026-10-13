@@ -14,8 +14,10 @@
 #include <Camera/cameralib.hpp>
 #include <Camera/SunModel.hpp>
 #include <System/Resolution.hpp>
-#include <System/DummyStrings.hpp>
 #include <stdio.h>
+
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TLensGlow::TLensGlow(bool param_1, const char* name)
     : JDrama::TViewObj(name)

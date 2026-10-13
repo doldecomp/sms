@@ -83,7 +83,7 @@ void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		Vec sunWorldPos = gpSunModel->unk198;
+		JGeometry::TVec3<f32> sunWorldPos = gpSunModel->unk198;
 
 		// TODO: a mystery is happening here with the args, but it's definitely
 		// this inline (maybe one more inlining layer?)
