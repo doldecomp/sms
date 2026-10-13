@@ -115,7 +115,8 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 		unk30[i]         = 0x32;
 		unk2C[i]         = 0x32;
 		for (u8 j = 0; j < mat->getTexGenBlock()->getTexGenNum(); ++j) {
-			if (mat->getTexMtx(j) && mat->getTexMtx(j)->getTexMtxInfo().mInfo) {
+			if (mat->getTexGenBlock()->getTexMtx(j)
+			    && mat->getTexGenBlock()->getTexMtx(j)->getInfo()) {
 				unk30[i] = i;
 			}
 		}
@@ -458,9 +459,9 @@ bool MActor::checkAnmFileExist(const char* name, int type)
 
 J3DFrameCtrl* MActor::getFrameCtrl(int type)
 {
-	if (!getUnk28(type))
+	if (!mAnmByType[type])
 		return nullptr;
-	return getUnk28(type)->getFrameCtrl();
+	return mAnmByType[type]->getFrameCtrl();
 }
 
 BOOL MActor::checkBckPass(f32 pass_frame)
