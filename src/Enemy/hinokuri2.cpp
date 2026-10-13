@@ -1276,7 +1276,8 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 	}
 
 	if (self->mCurrentBck == 1 && self->getMActor()->curAnmEndsNext()) {
-		self->mHitPoints = self->calcHitPoints();
+		u8 hitPoints = self->calcHitPoints();
+		self->setHitPoints(hitPoints);
 
 		self->resetPolInterval();
 		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
@@ -1308,7 +1309,7 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 			self->changeBck(5);
 
 		self->unk18C = 0;
-		if (self->mHitPoints == 0) {
+		if (self->getHitPoints() == 0) {
 			self->unk180 = FALSE;
 			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
 			return true;
@@ -1332,7 +1333,8 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 			spine->reset();
 			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 
-			self->mHitPoints = self->calcHitPoints();
+			u8 hitPoints = self->calcHitPoints();
+			self->setHitPoints(hitPoints);
 			self->resetPolInterval();
 
 			return true;
@@ -1379,7 +1381,8 @@ DEFINE_NERVE(TNerveHino2Burst, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext()) {
 		self->setLevel(self->mLevel - 1);
-		self->mHitPoints = self->calcHitPoints();
+		u8 hitPoints = self->calcHitPoints();
+		self->setHitPoints(hitPoints);
 		self->unk124->reset();
 		self->goToShortestNextGraphNode();
 		spine->reset();

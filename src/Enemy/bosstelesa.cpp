@@ -652,8 +652,8 @@ void TTelesaSlot::moveObject()
 
 void TTelesaSlot::moveStart()
 {
-	unk19C = 1;
-	unk19B = 1;
+	unk19C = true;
+	unk19B = true;
 
 	for (int i = 0; i < 3; ++i) {
 		unk198[i] = true;
@@ -705,7 +705,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 			unk1A4 = 3;
 	}
 
-	unk19C = 0;
+	unk19C = false;
 }
 
 bool TTelesaSlot::isRollDrum()
@@ -717,7 +717,7 @@ bool TTelesaSlot::isRollDrum()
 	if (unk198[2])
 		return true;
 
-	unk19B = 0;
+	unk19B = false;
 	return false;
 }
 
@@ -840,7 +840,7 @@ void TBossTelesa::init(TLiveManager* manager)
 		mWallRadius       = params->mSLWallRadius.get();
 		mHeadHeight       = params->mSLHeadHeight.get();
 		mScaledBodyRadius = mBodyScale * mBodyRadius;
-		mHitPoints        = getMaxHitPoints();
+		resetHitPoints();
 	}
 
 	initHitActor(0, 5,
@@ -2149,12 +2149,12 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->unk388 = 0;
-		if (boss->mIsSpicy && boss->mHitPoints != 0)
-			--boss->mHitPoints;
+		if (boss->mIsSpicy)
+			boss->decHitPoints();
 
 		boss->offAllCollision();
 
-		if (boss->mHitPoints != 0) {
+		if (boss->getHitPoints() != 0) {
 			if (boss->mIsSpicy) {
 				boss->getMActor()->setBrkFromIndex(1);
 				boss->setBckAnm(2);
@@ -2176,7 +2176,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		}
 	}
 
-	if (boss->mHitPoints == 0) {
+	if (boss->getHitPoints() == 0) {
 		if (boss->checkCurAnmEnd(0)) {
 			if (boss->unk388 == 0) {
 				MtxPtr mtx = boss->getMActor()->getModel()->getAnmMtx(1);
@@ -2292,8 +2292,9 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 		boss->mIsSpicy = 0;
 
 		u8 maxHp = boss->getMaxHitPoints();
-		u8 alpha = TBossTelesa::mNormalAlpha + (maxHp - boss->mHitPoints) * 30;
-		alpha    = MsClamp<u8>(alpha, 0, 0xFE);
+		u8 alpha
+		    = TBossTelesa::mNormalAlpha + (maxHp - boss->getHitPoints()) * 30;
+		alpha          = MsClamp<u8>(alpha, 0, 0xFE);
 		boss->unk34C.a = alpha;
 
 		boss->mSlot->mScaling.set(0.0f, 0.0f, 0.0f);
@@ -2346,7 +2347,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 	if (spine->getTime() > 800) {
 		u8 maxHp     = boss->getMaxHitPoints();
 		int interval = TBossTelesa::mTelesaGenerateInterval
-		               + (maxHp - boss->mHitPoints) * 100;
+		               + (maxHp - boss->getHitPoints()) * 100;
 		if (spine->getTime() % interval == 1) {
 			boss->setBckAnm(14);
 		}
@@ -2423,7 +2424,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 				u8 maxHp = boss->getMaxHitPoints();
 				u8 alpha = TBossTelesa::mNormalAlpha
-				           + (maxHp - boss->mHitPoints) * 30;
+				           + (maxHp - boss->getHitPoints()) * 30;
 				if (alpha > 0xFE)
 					alpha = 0xFE;
 
@@ -2439,9 +2440,9 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 	TBossTelesaSaveLoadParams* params = boss->unk15C;
 	int waitTime                      = params->mSLStopSlotTime0.get();
-	if (boss->mHitPoints == 2)
+	if (boss->getHitPoints() == 2)
 		waitTime = params->mSLStopSlotTime1.get();
-	if (boss->mHitPoints == 1)
+	if (boss->getHitPoints() == 1)
 		waitTime = params->mSLStopSlotTime2.get();
 
 	if (boss->mSlot->getSlotResult() == 0)
@@ -2482,8 +2483,8 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 			boss->mIsSpicy = 0;
 
 			u8 maxHp = boss->getMaxHitPoints();
-			u8 alpha
-			    = TBossTelesa::mNormalAlpha + (maxHp - boss->mHitPoints) * 30;
+			u8 alpha = TBossTelesa::mNormalAlpha
+			           + (maxHp - boss->getHitPoints()) * 30;
 			alpha = MsClamp<u8>(alpha, 0, 0xFE);
 
 			boss->unk34C.a = alpha;

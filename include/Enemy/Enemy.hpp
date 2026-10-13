@@ -80,14 +80,18 @@ public:
 	f32 getMarchSpeed() const { return mMarchSpeed; }
 	f32 getTurnSpeed() const { return mTurnSpeed; }
 	u8 getHitPoints() const { return mHitPoints; }
+	void setHitPoints(u8 hit_points) { mHitPoints = hit_points; }
 	f32 getHeadHeight() const { return mBodyScale * mHeadHeight; }
 	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
 	f32 getBodyRadius() const { return mBodyScale * mBodyRadius; }
 	f32 getBodyScale() const { return mBodyScale; }
-	u32 getMaxHitPoints() const
+	u8 getMaxHitPoints() const
 	{
 		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	}
+	void resetHitPoints() { mHitPoints = getMaxHitPoints(); }
+
+	void setTurnSpeed(f32 speed) { mTurnSpeed = speed; }
 
 	void setGoalPath(const TPathNode& point)
 	{

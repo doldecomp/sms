@@ -68,15 +68,14 @@ static int PakkunSeedCallback(J3DNode* node, int type)
 
 	return true;
 }
+
 static int PakkunRootCallback(J3DNode* node, int type)
 {
 	if (type == 0) {
-		TPakkun* pakkun = gpCurPakkun;
-		if (pakkun != nullptr) {
-			u8 maxHitPoints = pakkun->getMaxHitPoints();
-			if (gpCurPakkun->mHitPoints == maxHitPoints) {
-				return true;
-			}
+		if (gpCurPakkun == nullptr
+		    || gpCurPakkun->getHitPoints() == gpCurPakkun->getMaxHitPoints()) {
+			return true;
+		} else {
 
 			J3DJoint* joint = (J3DJoint*)node;
 			MtxPtr anmMtx   = gpCurPakkun->getMActor()->getModel()->getAnmMtx(
@@ -1042,7 +1041,7 @@ DEFINE_NERVE(TNerveStayPakkunHide, TLiveActor)
 			    && gpPollution->isPolluted(self->mPosition.x, self->mPosition.y,
 			                               self->mPosition.z)
 			    && self->isFindMario(0.9f)) {
-				self->mHitPoints = self->getMaxHitPoints();
+				self->resetHitPoints();
 				spine->pushAfterCurrent(&TNerveStayPakkunAppear::theNerve());
 				return true;
 			}

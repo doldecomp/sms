@@ -7,7 +7,10 @@
 
 class TSimpleEffect : public JDrama::TActor {
 public:
-	TSimpleEffect(const char* name);
+	TSimpleEffect(const char* name)
+	    : JDrama::TActor(name)
+	{
+	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void emitEffect() = 0;
@@ -21,7 +24,10 @@ public:
 
 class TEffectPinnaFunsui : public TSimpleEffect {
 public:
-	TEffectPinnaFunsui(const char* name = "ピンナ噴水エフェクト");
+	TEffectPinnaFunsui(const char* name = "ピンナ噴水エフェクト")
+	    : TSimpleEffect(name)
+	{
+	}
 
 	virtual void loadAfter();
 	virtual void emitEffect();
@@ -29,7 +35,10 @@ public:
 
 class TEffectBiancoFunsui : public TSimpleEffect {
 public:
-	TEffectBiancoFunsui(const char* name = "ビアンコ噴水エフェクト");
+	TEffectBiancoFunsui(const char* name = "ビアンコ噴水エフェクト")
+	    : TSimpleEffect(name)
+	{
+	}
 
 	virtual void loadAfter();
 	virtual void emitEffect();

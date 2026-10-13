@@ -257,9 +257,9 @@ void TCannon::load(JSUMemoryInputStream& param_1)
 {
 	TSmallEnemy::load(param_1);
 	reset();
-	mHitPoints = getMaxHitPoints();
-	unk230     = SMSGetApplication()->mCurrArea.getStage();
-	unk23C     = mPosition;
+	resetHitPoints();
+	unk230 = SMSGetApplication()->mCurrArea.getStage();
+	unk23C = mPosition;
 }
 
 void TCannon::loadAfter()
@@ -360,7 +360,7 @@ void TCannon::reset()
 {
 	TSmallEnemy::reset();
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk214      = 1;
 	mHeadHeight = 40.0f;
@@ -1074,7 +1074,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 		if (emitter)
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f, 2.0f, 2.0f));
 		cannon->decHitPoints();
-		if (cannon->mHitPoints == 0) {
+		if (cannon->getHitPoints() == 0) {
 			cannon->killShootAct();
 			cannon->unk1A8->setBckAnm(13);
 			if (SMSGetApplication()->mCurrArea.getStage() == 5)
@@ -1113,7 +1113,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 	if (cannon->unk1A8->unk6C->getMActor()->curAnmEndsNext()) {
 		SMS_ResetDamageFogEffect(
 		    cannon->unk1A8->unk6C->getMActor()->getModel()->getModelData());
-		if (cannon->mHitPoints == 0) {
+		if (cannon->getHitPoints() == 0) {
 			spine->pushAfterCurrent(&TNerveCannonDamageDemo::theNerve());
 			return true;
 		}

@@ -22,13 +22,6 @@ public:
 	                   f32 actor_radius);
 	void manageActor(TLiveActor* actor);
 
-	// fabricated
-	TLiveActor* getObj(int i) { return (TLiveActor*)TObjManager::getObj(i); }
-	const TLiveActor* getObj(int i) const
-	{
-		return (TLiveActor*)TObjManager::getObj(i);
-	}
-
 private:
 	/* 0x34 */ TSpcBinary* unk34;
 };

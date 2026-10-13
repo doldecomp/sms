@@ -465,11 +465,11 @@ void TBiancoGateKeeper::launchNamekuri()
 			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
 
 			enemy->reset();
-			enemy->mPosition  = pos;
-			enemy->mRotation  = rot;
-			enemy->mScaling   = scale;
-			enemy->mHitPoints = enemy->getMaxHitPoints();
-			enemy->mVelocity  = vel;
+			enemy->mPosition = pos;
+			enemy->mRotation = rot;
+			enemy->mScaling  = scale;
+			enemy->resetHitPoints();
+			enemy->mVelocity = vel;
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
 			enemy->onLiveFlag(LIVE_FLAG_UNK8000);
@@ -1041,7 +1041,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		    && self->unk296 == 0) {
 			self->unk296 += 1;
-			self->mHitPoints = 3;
+			self->setHitPoints(3);
 			if (self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 				spine->pushAfterCurrent(&TNerveBGKLaunchName::theNerve());
 			else

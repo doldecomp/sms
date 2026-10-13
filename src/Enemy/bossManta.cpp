@@ -445,7 +445,7 @@ void TBossManta::init(TLiveManager* manager)
 	mMActor       = mMActorKeeper->createMActor("manta.bmd", 0);
 	unk124->setGraph(gpConductor->getGraphByName("main"));
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 
 	mHeadHeight = 5000.0f;
 	initHitActor(ACTOR_TYPE_BOSS_MANTA, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,

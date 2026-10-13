@@ -114,7 +114,7 @@ void TEffectEnemy::setDeadAnm()
 void TEffectEnemy::emitEffect()
 {
 	JGeometry::TVec3<f32> scale;
-	VECScale(&mScaling, &scale, mHitPoints / (u8)getMaxHitPoints());
+	VECScale(&mScaling, &scale, getHitPoints() / getMaxHitPoints());
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_C,
 	                                            &mPosition, 3, this);

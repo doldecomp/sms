@@ -184,9 +184,9 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (sharedAnmNum == 0 || mInstanceIndex < sharedAnmNum) {
 				mMActor->viewCalc();
 			} else {
-				J3DModel* shared
-				    = manager->getObj(mInstanceIndex % sharedAnmNum)
-				          ->getModel();
+				J3DModel* shared = ((TLiveActor*)manager->getObj(
+				                        mInstanceIndex % sharedAnmNum))
+				                       ->getModel();
 				J3DModel* model    = getModel();
 				J3DModelData* data = model->getModelData();
 				int count          = data->getDrawMtxNum();

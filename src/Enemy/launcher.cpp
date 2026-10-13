@@ -247,7 +247,7 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	initAnmSound();
 	getMActor()->offMakeDL();
 
-	mHitPoints = getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
+	resetHitPoints();
 	mHitPoints = 5;
 
 	mRotation.x = MsWrap(mRotation.x + 270.0f, 0.0f, 360.0f);

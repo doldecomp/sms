@@ -1427,7 +1427,7 @@ void TFireWanwan::initEscapeNextGraphNode()
 
 void TFireWanwan::recoverFire()
 {
-	mHitPoints        = getMaxHitPoints();
+	resetHitPoints();
 	unk194->mIsOnFire = true;
 }
 
@@ -2015,7 +2015,7 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		self->generateEffectColumWater();
 		self->onLiveFlag(LIVE_FLAG_UNK1000);
 		self->offLiveFlag(LIVE_FLAG_AIRBORNE);
-		self->mHitPoints = 0;
+		self->setHitPoints(0);
 		self->mDamageHeight -= 250.0f;
 		self->calcEntryRadius();
 	}

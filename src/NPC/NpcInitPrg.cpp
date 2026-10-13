@@ -124,7 +124,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 {
 	int iVar18 = mActorType - ACTOR_TYPE_NPC_MONTE_M;
 
-	mIndividualParams = gpConductor->unkF4->unk8[iVar18];
+	mIndividualParams = gpConductor->getNpcParams()->unk8[iVar18];
 
 	if (param_1 == nullptr) {
 		onLiveFlag(LIVE_FLAG_DEAD);

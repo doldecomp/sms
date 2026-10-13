@@ -18,6 +18,8 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
+bool TEnemyManager::mIsCopyAnmMtx = true;
+
 TSpineEnemyParams::TSpineEnemyParams(const char* path)
     : TParams(path)
     , PARAM_INIT(mSLHeadHeight, 120.0f)
@@ -146,7 +148,7 @@ void TEnemyManager::clipEnemies(JDrama::TGraphics* graphics)
 	f32 fVar2;
 	if (unk38 == nullptr) {
 		fVar1 = 300.0f;
-		fVar2 = gpConductor->unk84.mEnemyFarClip.get();
+		fVar2 = gpConductor->getCondParams().mEnemyFarClip.get();
 	} else {
 		fVar2 = unk38->mSLFarClip.get();
 		fVar1 = unk38->mSLClipRadius.get();
@@ -442,7 +444,8 @@ void TEnemyManager::killChildren()
 		getObj(i)->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 }
 
-void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
+void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& position,
+                                       f32 radius)
 {
 	if (!mObjNum)
 		return;
@@ -453,7 +456,8 @@ void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (VECSquareDistance((Vec*)&p, (Vec*)&enemy->mPosition) <= r * r)
+		if (VECSquareDistance((Vec*)&position, (Vec*)&enemy->mPosition)
+		    <= radius * radius)
 			enemy->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 	}
 }

@@ -911,9 +911,9 @@ config.libs = [
         "objects": [
             PCHObject(NonMatching, "Strategic/liveactor.cpp"),
             PCHObject(NonMatching, "Strategic/liveinterp.cpp"),
-            PCHObject(Matching, "Strategic/livemanager.cpp"),
+            PCHObject(NonMatching, "Strategic/livemanager.cpp"),
             Object(NonMatching, "Strategic/ObjHitCheck.cpp"),
-            PCHObject(NonMatching, "Strategic/objmanager.cpp"),
+            PCHObject(Matching, "Strategic/objmanager.cpp"),
             PCHObject(NonMatching, "Strategic/ObjModel.cpp"),
             Object(NonMatching, "Strategic/spcinterp.cpp"),
             PCHObject(Matching, "Strategic/Strategy.cpp"),

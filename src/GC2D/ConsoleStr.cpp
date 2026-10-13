@@ -32,7 +32,7 @@ JUTPoint TConsoleStr::cShineGetLeft3(-200, 65);
 
 TConsoleStr::TConsoleStr(const char* name)
     : JDrama::TViewObj(name)
-    , unk10(nullptr)
+    , mSplashTextScreen(nullptr)
     , unk14(nullptr)
     , unk20(0xB4)
     , unk24(0)
@@ -48,36 +48,36 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 {
 	JKRArchive* arch = SMSSwitch2DArchive("guide", gArBkConsole);
 	JDrama::TViewObj::load(stream);
-	unk10 = new J2DSetScreen("big_tx_1.blo", arch);
-	unk10->setCullBack(GX_CULL_BACK);
+	mSplashTextScreen = new J2DSetScreen("big_tx_1.blo", arch);
+	mSplashTextScreen->setCullBack(GX_CULL_BACK);
 	unk14 = new J2DSetScreen("scenario_demo_1.blo", arch);
 	unk14->setCullBack(GX_CULL_BACK);
 
 	for (int i = 0; i < 3; ++i) {
-		unk28[i] = new TBoundPane(unk10, 'go00' + i);
-		unk28[i]->unk0->hide();
+		mGoLetters[i] = new TBoundPane(mSplashTextScreen, 'go00' + i);
+		mGoLetters[i]->unk0->hide();
 	}
 
 	for (int i = 0; i < 9; ++i) {
-		unk244[i] = new TBoundPane(unk10, 'sg00' + i);
+		mShineGetLetters[i] = new TBoundPane(mSplashTextScreen, 'sg00' + i);
 	}
 
 	for (int i = 0; i < 5; ++i) {
-		unk268[i] = new TBoundPane(unk10, 'ms00' + i);
+		mMissLetters[i] = new TBoundPane(mSplashTextScreen, 'ms00' + i);
 	}
 
 	for (int i = 0; i < 5; ++i) {
-		unk27C[i] = new TExPane(unk10, 're00' + i);
+		unk27C[i] = new TExPane(mSplashTextScreen, 're00' + i);
 	}
 
-	unk2A0[0] = (J2DTextBox*)unk14->search('\0map');
-	SMSMakeTextBuffer(unk2A0[0], 0x80);
-	unk2A0[1] = (J2DTextBox*)unk14->search('stry');
-	SMSMakeTextBuffer(unk2A0[1], 0x80);
+	mMapStoryTitles[0] = (J2DTextBox*)unk14->search('\0map');
+	SMSMakeTextBuffer(mMapStoryTitles[0], 0x80);
+	mMapStoryTitles[1] = (J2DTextBox*)unk14->search('stry');
+	SMSMakeTextBuffer(mMapStoryTitles[1], 0x80);
 
 	for (int i = 0; i < 2; ++i) {
-		unk290[i] = new TExPane(unk14, 'msk1' + i);
-		unk2A0[i]->setFont(gpSystemFont);
+		mHeaderFooterMasks[i] = new TExPane(unk14, 'msk1' + i);
+		mMapStoryTitles[i]->setFont(gpSystemFont);
 	}
 
 	unk298[0] = new TExPane(unk14, 'wp_l');
@@ -86,7 +86,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 	void* pvVar10 = JKRGetResource("/common/2d/stagename.bmg");
-	unk2A0[0]->setString(SMSGetMessageData(pvVar10, uVar1));
+	mMapStoryTitles[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
 	if (SMSGetMarDirector()->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
@@ -99,7 +99,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 		else
 			puVar15 = SMSGetMessageData(pvVar10, SMS_getNormalStage(uVar2));
 
-		snprintf(unk2A0[1]->getStringPtr(), 0x80, "%s", puVar15);
+		snprintf(mMapStoryTitles[1]->getStringPtr(), 0x80, "%s", puVar15);
 	}
 }
 
@@ -124,9 +124,9 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			case 2:
 				if (unk18 == unk20) {
-					unk244[0]->setPanePosition(0x28, cShineGetRight1,
-					                           cShineGetLeft1, cShineGetLeft1);
-					unk244[0]->getPane()->show();
+					mShineGetLetters[0]->setPanePosition(
+					    0x28, cShineGetRight1, cShineGetLeft1, cShineGetLeft1);
+					mShineGetLetters[0]->getPane()->show();
 				} else if (unk18 > unk20) {
 					bVar6 = processShineGet((unk18 - unk20) * 2.0f);
 				}
@@ -144,12 +144,12 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				bVar6 = processReady(unk18 * 2.0f);
 				if (unk18 >= 60.0f) {
 					if (unk18 == 60.0f) {
-						unk28[0]->getPane()->hide();
-						unk28[1]->getPane()->hide();
-						unk28[2]->getPane()->hide();
-						unk28[0]->getPane()->setAlpha(0xff);
-						unk28[1]->getPane()->setAlpha(0xff);
-						unk28[2]->getPane()->setAlpha(0xff);
+						mGoLetters[0]->getPane()->hide();
+						mGoLetters[1]->getPane()->hide();
+						mGoLetters[2]->getPane()->hide();
+						mGoLetters[0]->getPane()->setAlpha(0xff);
+						mGoLetters[1]->getPane()->setAlpha(0xff);
+						mGoLetters[2]->getPane()->setAlpha(0xff);
 					}
 					bVar6 &= processGo(unk18 - 60.0f);
 				}
@@ -160,9 +160,9 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				bool uVar13 = true;
 
 				for (int i = 0; i < 2; ++i) {
-					uVar13 &= unk290[i]->update();
-					unk2A0[i]->setAlpha(0xff
-					                    - unk290[i]->getPane()->getAlpha());
+					uVar13 &= mHeaderFooterMasks[i]->update();
+					mMapStoryTitles[i]->setAlpha(
+					    0xff - mHeaderFooterMasks[i]->getPane()->getAlpha());
 				}
 
 				if (uVar13) {
@@ -173,7 +173,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				bool uVar13 = true;
 
 				for (int i = 0; i < 2; ++i)
-					uVar13 &= unk290[i]->update();
+					uVar13 &= mHeaderFooterMasks[i]->update();
 
 				if (uVar13) {
 					unk2BC = STATE_UNK3;
@@ -232,30 +232,31 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			for (int i = 0; i < 3; ++i) {
 				int local_b0[3] = { 4, 10, 20 };
 
-				u8 alpha         = unk28[i]->getPane()->getAlpha();
+				u8 alpha         = mGoLetters[i]->getPane()->getAlpha();
 				u8 trailAlpha    = alpha;
-				JUTRect local_a0 = unk28[i]->getPane()->getBounds();
+				JUTRect local_a0 = mGoLetters[i]->getPane()->getBounds();
 
 				for (int j = 0; j < 3; ++j) {
 					int iVar9       = local_b0[j];
 					JUTPoint& point = unk34[i][iVar9];
 					if (point.x != 0) {
 						trailAlpha = 0.7f * trailAlpha;
-						unk28[i]->getPane()->setAlpha(trailAlpha);
-						unk28[i]->getPane()->resize(
+						mGoLetters[i]->getPane()->setAlpha(trailAlpha);
+						mGoLetters[i]->getPane()->resize(
 						    local_a0.getWidth() - iVar9 * 3,
 						    local_a0.getHeight() - iVar9 * 3);
 
-						JUTRect local_90 = unk28[i]->getPane()->getBounds();
-						((J2DPicture*)unk28[i]->getPane())
+						JUTRect local_90
+						    = mGoLetters[i]->getPane()->getBounds();
+						((J2DPicture*)mGoLetters[i]->getPane())
 						    ->draw(point.x, point.y, local_90.getWidth(),
 						           local_90.getHeight(), false, false, false);
 					}
 				}
 
-				unk28[i]->getPane()->setAlpha(alpha);
-				unk28[i]->getPane()->resize(local_a0.getWidth(),
-				                            local_a0.getHeight());
+				mGoLetters[i]->getPane()->setAlpha(alpha);
+				mGoLetters[i]->getPane()->resize(local_a0.getWidth(),
+				                                 local_a0.getHeight());
 			}
 		}
 
@@ -263,7 +264,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (unk2B8 == 4) {
 			unk14->draw(0, 0, &local_1a0);
 		} else {
-			unk10->draw(0, 0, &local_1a0);
+			mSplashTextScreen->draw(0, 0, &local_1a0);
 		}
 
 		local_1a0.setup2D();
@@ -279,12 +280,12 @@ void TConsoleStr::startAppearReady()
 	unk2B8 = 1;
 	unk18  = 0.0f;
 	unk2A9 = 0;
-	unk28[0]->unk0->hide();
-	unk28[1]->unk0->hide();
-	unk28[2]->unk0->hide();
-	unk28[0]->unk0->mAlpha = 0xff;
-	unk28[1]->unk0->mAlpha = 0xff;
-	unk28[2]->unk0->mAlpha = 0xff;
+	mGoLetters[0]->unk0->hide();
+	mGoLetters[1]->unk0->hide();
+	mGoLetters[2]->unk0->hide();
+	mGoLetters[0]->unk0->mAlpha = 0xff;
+	mGoLetters[1]->unk0->mAlpha = 0xff;
+	mGoLetters[2]->unk0->mAlpha = 0xff;
 }
 
 void TConsoleStr::startAppearGo()
@@ -295,12 +296,12 @@ void TConsoleStr::startAppearGo()
 	unk2B8 = 1;
 	unk18  = 0.0f;
 	unk2A9 = 0;
-	unk28[0]->getPane()->hide();
-	unk28[1]->getPane()->hide();
-	unk28[2]->getPane()->hide();
-	unk28[0]->getPane()->setAlpha(0xff);
-	unk28[1]->getPane()->setAlpha(0xff);
-	unk28[2]->getPane()->setAlpha(0xff);
+	mGoLetters[0]->getPane()->hide();
+	mGoLetters[1]->getPane()->hide();
+	mGoLetters[2]->getPane()->hide();
+	mGoLetters[0]->getPane()->setAlpha(0xff);
+	mGoLetters[1]->getPane()->setAlpha(0xff);
+	mGoLetters[2]->getPane()->setAlpha(0xff);
 }
 
 void TConsoleStr::startAppearShineGet()
@@ -319,23 +320,23 @@ void TConsoleStr::startAppearMiss()
 		return;
 
 	if (unk2B8 == 1) {
-		unk28[0]->getPane()->hide();
-		unk28[1]->getPane()->hide();
-		unk28[2]->getPane()->hide();
+		mGoLetters[0]->getPane()->hide();
+		mGoLetters[1]->getPane()->hide();
+		mGoLetters[2]->getPane()->hide();
 	}
 
 	unk2B8 = 3;
 	unk18  = 0.0f;
 
 	for (int i = 0; i < 5; ++i) {
-		unk268[i]->getPane()->hide();
-		unk268[i]->getPane()->setAlpha(0);
+		mMissLetters[i]->getPane()->hide();
+		mMissLetters[i]->getPane()->setAlpha(0);
 	}
 
-	unk268[0]->setPanePosition(0x28, JUTPoint(0, -270), JUTPoint(0, -270),
-	                           JUTPoint(0, 30));
+	mMissLetters[0]->setPanePosition(0x28, JUTPoint(0, -270), JUTPoint(0, -270),
+	                                 JUTPoint(0, 30));
 
-	unk268[0]->getPane()->show();
+	mMissLetters[0]->getPane()->show();
 }
 
 void TConsoleStr::startAppearScenario()
@@ -349,14 +350,16 @@ void TConsoleStr::startAppearScenario()
 	unk1C  = -200;
 
 	for (int i = 0; i < 2; ++i) {
-		unk2A0[i]->setAlpha(0);
-		unk290[i]->getPane()->show();
+		mMapStoryTitles[i]->setAlpha(0);
+		mHeaderFooterMasks[i]->getPane()->show();
 	}
 
-	unk290[0]->setPaneOffset(0x1E, 0.0f, 0.0f, 0.0f,
-	                         -(unk290[0]->getInitialBounds().y2 + 1));
-	unk290[1]->setPaneOffset(0x1E, 0.0f, 0.0f, 0.0f,
-	                         465 - unk290[1]->getInitialBounds().y1);
+	mHeaderFooterMasks[0]->setPaneOffset(
+	    0x1E, 0.0f, 0.0f, 0.0f,
+	    -(mHeaderFooterMasks[0]->getInitialBounds().y2 + 1));
+	mHeaderFooterMasks[1]->setPaneOffset(
+	    0x1E, 0.0f, 0.0f, 0.0f,
+	    465 - mHeaderFooterMasks[1]->getInitialBounds().y1);
 }
 
 bool TConsoleStr::processReady(int param_1)
@@ -409,38 +412,40 @@ bool TConsoleStr::processGo(float param_1)
 	bool result = false;
 
 	if (param_1 < 90.0f) {
-		for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
+		for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
 			if (param_1 == i * 10) {
-				unk28[i]->setPanePosition(0x28, JUTPoint(0, 60),
-				                          JUTPoint(0, -40), JUTPoint(0, -40));
-				unk28[i]->getPane()->show();
+				mGoLetters[i]->setPanePosition(
+				    0x28, JUTPoint(0, 60), JUTPoint(0, -40), JUTPoint(0, -40));
+				mGoLetters[i]->getPane()->show();
 			}
 		}
 
-		for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
-			if (unk28[i]->update()) {
-				if (unk28[i]->unk14.x != 0 || unk28[i]->unk14.y != 0)
-					unk28[i]->setPanePosition(0x1E, JUTPoint(0, -40),
-					                          JUTPoint(0, -40), JUTPoint(0, 0));
+		for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+			if (mGoLetters[i]->update()) {
+				if (mGoLetters[i]->unk14.x != 0 || mGoLetters[i]->unk14.y != 0)
+					mGoLetters[i]->setPanePosition(0x1E, JUTPoint(0, -40),
+					                               JUTPoint(0, -40),
+					                               JUTPoint(0, 0));
 			}
 		}
 	} else if (param_1 >= 95.0f) {
 		if (param_1 == 95.0f) {
-			unk28[0]->setPanePosition(0x50, JUTPoint(0, 0),
-			                          JUTPoint(-170, -180),
-			                          JUTPoint(-340, -360));
-			unk28[1]->setPanePosition(0x50, JUTPoint(0, 0), JUTPoint(0, -220),
-			                          JUTPoint(0, -440));
-			unk28[2]->setPanePosition(0x50, JUTPoint(0, 0), JUTPoint(160, -180),
-			                          JUTPoint(320, -360));
+			mGoLetters[0]->setPanePosition(0x50, JUTPoint(0, 0),
+			                               JUTPoint(-170, -180),
+			                               JUTPoint(-340, -360));
+			mGoLetters[1]->setPanePosition(
+			    0x50, JUTPoint(0, 0), JUTPoint(0, -220), JUTPoint(0, -440));
+			mGoLetters[2]->setPanePosition(
+			    0x50, JUTPoint(0, 0), JUTPoint(160, -180), JUTPoint(320, -360));
 
-			for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
+			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
 				for (int j = 0; j < 16; ++j) {
-					JUTRect bounds = unk28[i]->getPane()->getGlobalBounds();
+					JUTRect bounds
+					    = mGoLetters[i]->getPane()->getGlobalBounds();
 					unk34[i][j].set(bounds.x1, bounds.y1);
 				}
 
-				JUTRect bounds = unk28[i]->getPane()->getBounds();
+				JUTRect bounds = mGoLetters[i]->getPane()->getBounds();
 				JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
 				                          bounds.y1 + bounds.getHeight() * 0.5f,
 				                          0.0f);
@@ -449,18 +454,18 @@ bool TConsoleStr::processGo(float param_1)
 				unk2AC[i] = gpEmitterManager4D2->unkC8[0][0];
 			}
 		} else if (param_1 < 175.0f) {
-			for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
-				int alpha = unk28[i]->getPane()->getAlpha() - 4;
+			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+				int alpha = mGoLetters[i]->getPane()->getAlpha() - 4;
 				if (alpha < 0)
 					alpha = 0;
-				JUTRect bounds = unk28[i]->getPane()->getGlobalBounds();
-				unk28[i]->getPane()->setAlpha(alpha);
-				unk28[i]->getPane()->resize(bounds.getWidth() + 2,
-				                            bounds.getHeight() + 2);
+				JUTRect bounds = mGoLetters[i]->getPane()->getGlobalBounds();
+				mGoLetters[i]->getPane()->setAlpha(alpha);
+				mGoLetters[i]->getPane()->resize(bounds.getWidth() + 2,
+				                                 bounds.getHeight() + 2);
 				unk2AC[i]->setGlobalTranslation(
 				    bounds.x1 + bounds.getWidth() * 0.5f,
 				    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
-				unk28[i]->update();
+				mGoLetters[i]->update();
 
 				if ((int)param_1 % 2 == 0) {
 					for (int j = 14; j >= 0; --j)
@@ -469,14 +474,14 @@ bool TConsoleStr::processGo(float param_1)
 				}
 			}
 		} else if (param_1 == 175.0f) {
-			for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
-				JUTRect bounds = unk28[i]->getPane()->getBounds();
-				unk28[i]->getPane()->resize(bounds.getWidth() - 80,
-				                            bounds.getHeight() - 80);
+			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+				JUTRect bounds = mGoLetters[i]->getPane()->getBounds();
+				mGoLetters[i]->getPane()->resize(bounds.getWidth() - 80,
+				                                 bounds.getHeight() - 80);
 			}
 		} else {
-			for (int i = 0; i < ARRAY_COUNT(unk28); ++i) {
-				unk28[i]->getPane()->hide();
+			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+				mGoLetters[i]->getPane()->hide();
 				if (unk2AC[i])
 					unk2AC[i]->stopCreateParticle();
 			}
@@ -493,10 +498,10 @@ bool TConsoleStr::processShineGet(int param_1)
 
 	for (int i = 0; i < 9; ++i) {
 		if (param_1 == 6 * i) {
-			unk244[i]->getPane()->show();
-			unk244[i]->setPanePosition(0x28, cShineGetRight1, cShineGetLeft1,
-			                           cShineGetLeft1);
-			JUTRect local_74 = unk244[i]->getPane()->getBounds();
+			mShineGetLetters[i]->getPane()->show();
+			mShineGetLetters[i]->setPanePosition(
+			    0x28, cShineGetRight1, cShineGetLeft1, cShineGetLeft1);
+			JUTRect local_74 = mShineGetLetters[i]->getPane()->getBounds();
 			JGeometry::TVec3<f32> local_80(
 			    local_74.x1 + local_74.getWidth() * 0.5f,
 			    local_74.y1 + local_74.getHeight() * 0.5f, 0.0f);
@@ -505,12 +510,12 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 == i * 6 + 40) {
-			unk244[i]->setPanePosition(0x14, cShineGetLeft2, cShineGetLeft2,
-			                           cShineGetRight2);
+			mShineGetLetters[i]->setPanePosition(
+			    0x14, cShineGetLeft2, cShineGetLeft2, cShineGetRight2);
 		}
 
 		if (param_1 == i * 6 + 60) {
-			JUTRect local_94 = unk244[i]->getPane()->getBounds();
+			JUTRect local_94 = mShineGetLetters[i]->getPane()->getBounds();
 			JGeometry::TVec3<f32> local_80(
 			    local_94.x1 + local_94.getWidth() * 0.5f,
 			    local_94.y1 + local_94.getHeight() * 0.5f, 0.0f);
@@ -519,27 +524,27 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 == i * 6 + 200) {
-			unk244[i]->setPanePosition(0x28, cShineGetRight3, cShineGetRight3,
-			                           cShineGetLeft3);
+			mShineGetLetters[i]->setPanePosition(
+			    0x28, cShineGetRight3, cShineGetRight3, cShineGetLeft3);
 		}
 
 		if (param_1 < i * 6 + 40) {
-			u16 alpha = unk244[i]->getPane()->getAlpha() + 7;
+			u16 alpha = mShineGetLetters[i]->getPane()->getAlpha() + 7;
 			if (alpha > 0xff)
 				alpha = 0xff;
-			unk244[i]->getPane()->setAlpha(alpha);
+			mShineGetLetters[i]->getPane()->setAlpha(alpha);
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = unk244[i]->getPane()->getAlpha() - 7;
+			s16 alpha = mShineGetLetters[i]->getPane()->getAlpha() - 7;
 			if (alpha < 0)
 				alpha = 0;
-			unk244[i]->getPane()->setAlpha(alpha);
+			mShineGetLetters[i]->getPane()->setAlpha(alpha);
 		}
 
-		if (unk244[i]->update()) {
+		if (mShineGetLetters[i]->update()) {
 			if (param_1 > i * 6 + 280) {
-				unk244[i]->getPane()->hide();
+				mShineGetLetters[i]->getPane()->hide();
 				result &= true;
 			} else {
 				result = 0;
@@ -558,13 +563,13 @@ bool TConsoleStr::processMiss(int param_1)
 
 	for (int i = 0; i < 5; ++i) {
 		if (param_1 == i * 10) {
-			unk268[i]->getPane()->show();
-			unk268[i]->setPanePosition(0x3C, JUTPoint(0, -270),
-			                           JUTPoint(0, -270), JUTPoint(0, 30));
+			mMissLetters[i]->getPane()->show();
+			mMissLetters[i]->setPanePosition(
+			    0x3C, JUTPoint(0, -270), JUTPoint(0, -270), JUTPoint(0, 30));
 		}
 
 		if (param_1 == i * 10 + 1) {
-			JUTRect local_9c = unk268[i]->getPane()->getBounds();
+			JUTRect local_9c = mMissLetters[i]->getPane()->getBounds();
 			JGeometry::TVec3<f32> local_a8(
 			    local_9c.x1 + local_9c.getWidth() * 0.5f,
 			    local_9c.y1 + local_9c.getHeight() * 0.5f, 0.0f);
@@ -573,39 +578,39 @@ bool TConsoleStr::processMiss(int param_1)
 		}
 
 		if (param_1 == i * 10 + 60) {
-			unk268[i]->getPane()->mRotation = 0.0f;
-			unk268[i]->setPanePosition(0x28, JUTPoint(0, 30), JUTPoint(0, -80),
-			                           JUTPoint(0, -80));
+			mMissLetters[i]->getPane()->mRotation = 0.0f;
+			mMissLetters[i]->setPanePosition(
+			    0x28, JUTPoint(0, 30), JUTPoint(0, -80), JUTPoint(0, -80));
 		}
 
 		if (param_1 == i * 10 + 100) {
-			unk268[i]->setPanePosition(0x28, JUTPoint(0, -80), JUTPoint(0, -80),
-			                           JUTPoint(0, 0));
+			mMissLetters[i]->setPanePosition(0x28, JUTPoint(0, -80),
+			                                 JUTPoint(0, -80), JUTPoint(0, 0));
 		}
 
 		if (param_1 == i * 10 + 300) {
-			unk268[i]->setPanePosition(0x1E, JUTPoint(0, 0), JUTPoint(0, 0),
-			                           JUTPoint(0, 150));
+			mMissLetters[i]->setPanePosition(0x1E, JUTPoint(0, 0),
+			                                 JUTPoint(0, 0), JUTPoint(0, 150));
 		}
 
 		if (param_1 < i * 10 + 60) {
-			u16 alpha = unk268[i]->getPane()->getAlpha();
+			u16 alpha = mMissLetters[i]->getPane()->getAlpha();
 			alpha += 12;
 			if (alpha > 0xff)
 				alpha = 0xff;
-			unk268[i]->getPane()->setAlpha(alpha);
+			mMissLetters[i]->getPane()->setAlpha(alpha);
 		}
 
-		if (unk268[i]->update()) {
+		if (mMissLetters[i]->update()) {
 			if (param_1 > i * 10 + 360) {
-				unk268[i]->getPane()->hide();
+				mMissLetters[i]->getPane()->hide();
 				result &= true;
 			} else {
 				result = false;
 			}
 		} else {
 			if (param_1 < i * 10 + 60) {
-				unk268[i]->getPane()->mRotation = (i * 10 - param_1) * 6;
+				mMissLetters[i]->getPane()->mRotation = (i * 10 - param_1) * 6;
 			}
 
 			result = false;
@@ -621,8 +626,8 @@ bool TConsoleStr::processScenario(int)
 		return 0;
 
 	bool uVar2 = true;
-	uVar2 &= unk290[0]->update();
-	uVar2 &= unk290[1]->update();
+	uVar2 &= mHeaderFooterMasks[0]->update();
+	uVar2 &= mHeaderFooterMasks[1]->update();
 
 	unk1C += 2;
 
@@ -635,8 +640,8 @@ bool TConsoleStr::processScenario(int)
 
 	int alpha = unk1C > 100 ? unk1C - 100 : 0;
 
-	unk2A0[0]->setAlpha(alpha);
-	unk2A0[1]->setAlpha(alpha);
+	mMapStoryTitles[0]->setAlpha(alpha);
+	mMapStoryTitles[1]->setAlpha(alpha);
 	if (uVar2)
 		unk2BC = STATE_UNK1;
 
@@ -646,24 +651,26 @@ bool TConsoleStr::processScenario(int)
 void TConsoleStr::startCloseWipe(bool param_1)
 {
 	if (param_1) {
-		unk290[0]->getPane()->show();
-		unk290[1]->getPane()->show();
-		unk2A0[0]->hide();
-		unk2A0[1]->hide();
+		mHeaderFooterMasks[0]->getPane()->show();
+		mHeaderFooterMasks[1]->getPane()->show();
+		mMapStoryTitles[0]->hide();
+		mMapStoryTitles[1]->hide();
 
-		JUTRect local_74 = unk290[0]->getPane()->getBounds();
+		JUTRect local_74 = mHeaderFooterMasks[0]->getPane()->getBounds();
 		s32 h            = 224;
-		unk290[0]->setPaneSize(0x2D, local_74.getWidth(), h,
-		                       local_74.getWidth(), 0);
-		unk290[0]->setPaneAlpha(0x2D, 255, 0);
+		mHeaderFooterMasks[0]->setPaneSize(0x2D, local_74.getWidth(), h,
+		                                   local_74.getWidth(), 0);
+		mHeaderFooterMasks[0]->setPaneAlpha(0x2D, 255, 0);
 
-		local_74 = unk290[1]->getPane()->getBounds();
-		unk290[1]->setPaneOffset(0x2D, 0, h - local_74.y1, 0,
-		                         465 - unk290[1]->getInitialBounds().y1);
-		unk290[1]->setPaneSize(0x2D, local_74.getWidth(),
-		                       465 - unk290[1]->getInitialBounds().y1 + h,
-		                       local_74.getWidth(), 0);
-		unk290[1]->setPaneAlpha(0x2D, 255, 0);
+		local_74 = mHeaderFooterMasks[1]->getPane()->getBounds();
+		mHeaderFooterMasks[1]->setPaneOffset(
+		    0x2D, 0, h - local_74.y1, 0,
+		    465 - mHeaderFooterMasks[1]->getInitialBounds().y1);
+		mHeaderFooterMasks[1]->setPaneSize(
+		    0x2D, local_74.getWidth(),
+		    465 - mHeaderFooterMasks[1]->getInitialBounds().y1 + h,
+		    local_74.getWidth(), 0);
+		mHeaderFooterMasks[1]->setPaneAlpha(0x2D, 255, 0);
 
 		unk2BC = STATE_UNK8;
 		unk2B8 = 4;
@@ -672,17 +679,21 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		unk2A8 = 1;
 	} else {
 		unk2BC           = STATE_UNK2;
-		JUTRect local_88 = unk290[0]->getPane()->getBounds();
+		JUTRect local_88 = mHeaderFooterMasks[0]->getPane()->getBounds();
 		s32 h            = 224;
-		unk290[0]->setPaneSize(0x2D, local_88.getWidth(), h,
-		                       local_88.getWidth(), local_88.getHeight());
-		unk290[0]->setPaneAlpha(0x2D, 255, unk290[0]->getPane()->getAlpha());
+		mHeaderFooterMasks[0]->setPaneSize(0x2D, local_88.getWidth(), h,
+		                                   local_88.getWidth(),
+		                                   local_88.getHeight());
+		mHeaderFooterMasks[0]->setPaneAlpha(
+		    0x2D, 255, mHeaderFooterMasks[0]->getPane()->getAlpha());
 
-		local_88 = unk290[1]->getPane()->getBounds();
-		unk290[1]->setPaneOffset(0x2D, 0, h - local_88.y1, 0, 0);
-		unk290[1]->setPaneSize(0x2D, local_88.getWidth(), 464 - h,
-		                       local_88.getWidth(), local_88.getHeight());
-		unk290[1]->setPaneAlpha(0x2D, 255, unk290[1]->getPane()->getAlpha());
+		local_88 = mHeaderFooterMasks[1]->getPane()->getBounds();
+		mHeaderFooterMasks[1]->setPaneOffset(0x2D, 0, h - local_88.y1, 0, 0);
+		mHeaderFooterMasks[1]->setPaneSize(0x2D, local_88.getWidth(), 464 - h,
+		                                   local_88.getWidth(),
+		                                   local_88.getHeight());
+		mHeaderFooterMasks[1]->setPaneAlpha(
+		    0x2D, 255, mHeaderFooterMasks[1]->getPane()->getAlpha());
 	}
 }
 
@@ -690,9 +701,9 @@ void TConsoleStr::startOpenWipe()
 {
 	unk2A8 = 0;
 	unk2BC = STATE_UNK5;
-	unk290[0]->getPane()->hide();
+	mHeaderFooterMasks[0]->getPane()->hide();
 	unk298[0]->getPane()->show();
-	unk290[1]->getPane()->hide();
+	mHeaderFooterMasks[1]->getPane()->hide();
 	unk298[1]->getPane()->show();
 
 	// TODO: TExPane::setPaneAlpha is wrong
