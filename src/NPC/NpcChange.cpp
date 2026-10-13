@@ -541,7 +541,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	mHolder     = nullptr;
 	if (unk15C != nullptr)
 		unk15C->unk0 = 0;
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 	if (mMultiMtxEffect != nullptr)
 		mMultiMtxEffect->flagOn(0x2);
 	mSpine->reset();

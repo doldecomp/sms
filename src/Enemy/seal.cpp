@@ -52,7 +52,7 @@ void TSeal::init(TLiveManager* param_1)
 	mMapCollisionManager->setUpActiveCollisionTRS(mPosition, mRotation,
 	                                              mScaling);
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 	mSpine->initWith(&TNerveSealSleep::theNerve());
 }
 

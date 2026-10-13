@@ -89,7 +89,7 @@ DEFINE_NERVE(TNerveBossHanachanSnort, TLiveActor)
 	    && hanachan->checkLiveFlag(LIVE_FLAG_UNK20000)) {
 		hanachan->offLiveFlag(LIVE_FLAG_UNK20000);
 		MSBgm::startBGM(MSD_BGM_BOSSGESO_2DN3RD);
-		switch (hanachan->mHitPoints) {
+		switch (hanachan->getHitPoints()) {
 		case 2:
 			SMSGetMSound()->unk98->changeTempo(0, 1);
 			break;
