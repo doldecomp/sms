@@ -258,8 +258,8 @@ void TCannon::load(JSUMemoryInputStream& param_1)
 	TSmallEnemy::load(param_1);
 	reset();
 	resetHitPoints();
-	unk230     = SMSGetApplication()->mCurrArea.getStage();
-	unk23C     = mPosition;
+	unk230 = SMSGetApplication()->mCurrArea.getStage();
+	unk23C = mPosition;
 }
 
 void TCannon::loadAfter()
