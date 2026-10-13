@@ -652,8 +652,8 @@ void TTelesaSlot::moveObject()
 
 void TTelesaSlot::moveStart()
 {
-	unk19C = 1;
-	unk19B = 1;
+	unk19C = true;
+	unk19B = true;
 
 	for (int i = 0; i < 3; ++i) {
 		unk198[i] = true;
@@ -705,7 +705,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 			unk1A4 = 3;
 	}
 
-	unk19C = 0;
+	unk19C = false;
 }
 
 bool TTelesaSlot::isRollDrum()
@@ -717,7 +717,7 @@ bool TTelesaSlot::isRollDrum()
 	if (unk198[2])
 		return true;
 
-	unk19B = 0;
+	unk19B = false;
 	return false;
 }
 
