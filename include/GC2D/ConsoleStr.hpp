@@ -51,20 +51,20 @@ public:
 	};
 
 public:
-	/* 0x10 */ J2DSetScreen* unk10;
+	/* 0x10 */ J2DSetScreen* mSplashTextScreen;
 	/* 0x14 */ J2DSetScreen* unk14;
 	/* 0x18 */ f32 unk18;
 	/* 0x1C */ int unk1C;
 	/* 0x20 */ s32 unk20;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ TBoundPane* unk28[3];
+	/* 0x28 */ TBoundPane* mGoLetters[3];
 	/* 0x34 */ JUTPoint unk34[3][22];
-	/* 0x244 */ TBoundPane* unk244[9];
-	/* 0x268 */ TBoundPane* unk268[5];
+	/* 0x244 */ TBoundPane* mShineGetLetters[9];
+	/* 0x268 */ TBoundPane* mMissLetters[5];
 	/* 0x27C */ TExPane* unk27C[5];
-	/* 0x290 */ TExPane* unk290[2];
+	/* 0x290 */ TExPane* mHeaderFooterMasks[2];
 	/* 0x298 */ TExPane* unk298[2];
-	/* 0x2A0 */ J2DTextBox* unk2A0[2];
+	/* 0x2A0 */ J2DTextBox* mMapStoryTitles[2];
 	/* 0x2A8 */ u8 unk2A8;
 	/* 0x2A9 */ u8 unk2A9;
 	/* 0x2AC */ JPABaseEmitter* unk2AC[3];
