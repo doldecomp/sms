@@ -18,7 +18,7 @@ u16 SMSGetGameVideoHeight(u32 tvFormat)
 		ret = VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
 		break;
 	case VI_PAL:
-		ret = VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
+		ret = VERSION_SELECT_DEFAULT(530, GMSP01_NX(360));
 		break;
 	default:
 		break;
