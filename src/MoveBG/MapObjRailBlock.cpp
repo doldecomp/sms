@@ -58,7 +58,6 @@ void TRailMapObj::resetStep(float param_1)
 	unk13C                      = VECDistance(&point, &mPosition) / param_1;
 }
 
-// TODO: traceSpline return type and inline frame (0x68 vs 0x88) differ.
 BOOL TRailMapObj::moveToNextNode(float param_1)
 {
 	TGraphWeb* graph = unk138->getGraph();
@@ -164,8 +163,8 @@ BOOL TRailMapObj::calcRecycle()
 
 void TRailMapObj::resetPosition()
 {
-	mPosition = getInitialPosition();
-	mRotation = getInitialRotation();
+	mPosition = mInitialPosition;
+	mRotation = mInitialRotation;
 	unk148    = 0;
 	unk14A    = 180;
 	unk14C    = 1;
@@ -213,8 +212,7 @@ u32 TRailMapObj::getShadowType() { return SHADOW_TYPE_SQUARE; }
 
 void TRailMapObj::readRailFlag()
 {
-	TGraphNode& graphNode
-	    = unk138->getGraph()->getGraphNode(unk138->getCurGraphIndex());
+	TGraphNode& graphNode = unk138->getCurrent();
 
 	if (graphNode.getRailNode()->mFlags & 0x100)
 		onRailFlag(2);
@@ -300,7 +298,6 @@ void TNormalLift::readRailFlag()
 
 void TNormalLift::initMapObj() { TRailMapObj::initMapObj(); }
 
-// TODO: frame-only mismatch: 0x68 bytes here versus 0x78 in retail.
 void TNormalLift::control()
 {
 	TMapObjBase::control();
@@ -318,8 +315,7 @@ void TNormalLift::control()
 					readRailFlag();
 					unk138->moveToShortestNext();
 
-					TGraphNode& graphNode = unk138->getCurrent();
-					u32 yaw               = graphNode.getRailNode()->mYaw;
+					u32 yaw = unk138->getCurrent().getRailNode()->mYaw;
 					if (yaw != 0xffff)
 						unk144 = yaw * 0.01f;
 
@@ -380,7 +376,6 @@ void TRailBlock::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-// TODO: frame-only mismatch: 0x170 bytes here versus 0x1b0 in retail.
 void TRailBlock::control()
 {
 	TMapObjBase::control();
@@ -510,7 +505,7 @@ void TRollBlock::calcRootMatrix()
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	model->setBaseScale(mScaling);
 
-	TRotation3f rot;
+	Mtx rot;
 	MsMtxSetRotZ(rot, unk138);
 	MTXConcat(model->getBaseTRMtx(), rot, model->getBaseTRMtx());
 }
@@ -569,8 +564,7 @@ BOOL TWoodBlock::calcRecycle()
 		}
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_EX_CUBE_DISA, &mPosition, 0, nullptr)) {
-			f32 scale
-			    = (getScaling().x + getScaling().y + getScaling().z) / 3.0f;
+			f32 scale = (mScaling.x + mScaling.y + mScaling.z) / 3.0f;
 			emitter->setGlobalDynamicsScale(
 			    JGeometry::TVec3<f32>(scale, scale, scale));
 			emitter->setGlobalParticleScale(

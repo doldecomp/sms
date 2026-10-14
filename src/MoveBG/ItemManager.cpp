@@ -17,14 +17,8 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 {
 	for (int i = 0; i < getObjNum(); ++i) {
 		THitActor* maybeBox = getObj(i);
-#ifdef VERSION_GMSP01
 		if (!maybeBox->isActorType(ACTOR_TYPE_NOZZLE_BOX))
 			continue;
-#else
-		bool isNozzleBox = maybeBox->isActorType(ACTOR_TYPE_NOZZLE_BOX);
-		if (!isNozzleBox)
-			continue;
-#endif
 
 		TNozzleBox* box = (TNozzleBox*)maybeBox;
 		if (nozzle_type != box->mContainedNozzleType)

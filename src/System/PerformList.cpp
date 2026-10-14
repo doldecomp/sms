@@ -28,8 +28,7 @@ void TPerformList::load(JSUMemoryInputStream& stream)
 		stream.readString(elementName, 80);
 
 		obj = static_cast<JDrama::TViewObj*>(
-		    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
-		        elementName));
+		    JDrama::TNameRefGen::search(elementName));
 
 		u32 value = stream.readU32();
 

@@ -60,7 +60,6 @@ void TKazekun::init(TLiveManager* param_1)
 
 void TKazekun::reset()
 {
-	// TODO: frame-only mismatch (0x18 instead of 0x20).
 	unk1A0.set(0.0f, 0.0f, 0.0f, 1.0f);
 
 	JGeometry::TVec3<f32> position = unk194;
@@ -170,8 +169,7 @@ bool TKazekun::isGiveUpAround() const
 	f32 offsetY = SMS_GetMarioY() - unk194.y;
 
 	return offsetY < -((TKazekunParams*)getSaveParam())->mLostOffsetYDown.get()
-	       || ((TKazekunParams*)getSaveParams())->mLostOffsetYUp.get()
-	              < offsetY;
+	       || ((TKazekunParams*)getSaveParam())->mLostOffsetYUp.get() < offsetY;
 }
 
 void TKazekun::changeBck(const char* name)
@@ -188,10 +186,8 @@ void TKazekun::setDeadAnm()
 
 void TKazekun::flyAroundMario()
 {
-	// TODO: inline frame layout and quaternion scheduling remain nonmatching.
 	JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
-	TKazekunParams* params        = (TKazekunParams*)getSaveParam();
-	toMario.y += params->mTurnOffsetY.value;
+	toMario.y += ((TKazekunParams*)getSaveParam())->mTurnOffsetY.get();
 	toMario -= mPosition;
 
 	f32 climb = JGeometry::TUtil<f32>::clamp(toMario.y, -400.0f, 400.0f);
@@ -233,7 +229,6 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 
 bool TKazekun::doAttackPose(bool start)
 {
-	// TODO: quaternion inlines and frame remain nonmatching (0x278 vs 0x218).
 	JGeometry::TVec3<f32> toMario = SMS_GetMarioPos();
 	toMario -= mPosition;
 	toMario.y = 0.0f;
@@ -243,11 +238,8 @@ bool TKazekun::doAttackPose(bool start)
 		getAroundQuat(quat, toMario, 1.0f);
 		unk1A0 = quat;
 
-		TKazekunParams* params = (TKazekunParams*)getSaveParam();
-		JGeometry::TVec3<f32> velocity;
-		velocity.x = 0.0f;
-		velocity.y = 0.0f;
-		velocity.z = params->mPoseSpeed.get();
+		JGeometry::TVec3<f32> velocity(
+		    0.0f, 0.0f, ((TKazekunParams*)getSaveParam())->mPoseSpeed.get());
 		quat.rotate(velocity, velocity);
 		mVelocity = velocity;
 	}
@@ -262,8 +254,7 @@ bool TKazekun::doAttackPose(bool start)
 	spin.mul(spin, current);
 	unk1A0 = spin;
 
-	JGeometry::TVec3<f32> forward(0.0f, 0.0f,
-	                              JGeometry::TVec3<f32>(mVelocity).length());
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f, getVelocity().length());
 	spin.rotate(forward, forward);
 	mVelocity = forward;
 
@@ -281,7 +272,7 @@ void TKazekun::doAttack(bool start)
 
 	JGeometry::TQuat4<f32> quat = unk1A0;
 	JGeometry::TQuat4<f32> target;
-	getAroundQuat(target, JGeometry::TVec3<f32>(mVelocity), 2.0f);
+	getAroundQuat(target, getVelocity(), 2.0f);
 	quat.slerp(target, 0.1f);
 	quat.normalize();
 	unk1A0 = quat;
@@ -430,8 +421,8 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 	}
 
 	self->doAttackPose(false);
-	int poseTime = ((TKazekunParams*)self->getSaveParams())->mPoseTime.get();
-	if (poseTime < spine->getTime()) {
+	if (((TKazekunParams*)self->getSaveParams())->mPoseTime.get()
+	    < spine->getTime()) {
 		spine->pushAfterCurrent(&TNerveKazekunAttack::theNerve());
 		return true;
 	}
@@ -440,7 +431,6 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 
 DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 {
-	// TODO: quaternion multiply inlines and frame (0x1a8 vs 0x1f0) differ.
 	TKazekun* self = (TKazekun*)spine->getBody();
 
 	if (spine->getTime() == 0) {
@@ -449,7 +439,7 @@ DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 	}
 	self->doAttack(false);
 
-	JGeometry::TVec3<f32> velocity = self->mVelocity;
+	JGeometry::TVec3<f32> velocity = self->getVelocity();
 	velocity.scale(((TKazekunParams*)self->getSaveParam())->mAirFric.value);
 	self->mVelocity = velocity;
 	if (velocity.squared() < 1.0f) {
@@ -503,15 +493,14 @@ DEFINE_NERVE(TNerveKazekunHitWater, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->changeBck("kazekun_hit");
-		if (SMSGetMSound()->gateCheck(MSD_SE_EN_KAZEKUN_DOWN))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_KAZEKUN_DOWN, self->getPosition(), 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_KAZEKUN_DOWN,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
 	if (self->checkCurAnmEnd(0)) {
 		spine->pushAfterCurrent(&TNerveKazekunDisappear::theNerve());
 		self->unk1B0
-		    = ((TKazekunParams*)self->getSaveParams())->mResetTimeHitting.get();
+		    = ((TKazekunParams*)self->getSaveParam())->mResetTimeHitting.get();
 		return true;
 	}
 

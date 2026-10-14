@@ -83,9 +83,9 @@ void TMapObjBase::checkOnManhole()
 {
 	mGroundHeight = gpMap->checkGround(mPosition.x, mPosition.y + 20.0f,
 	                                   mPosition.z, &mGroundPlane);
-	if (mGroundPlane->getActor() != nullptr
-	    && mGroundPlane->getActor()->isActorType(ACTOR_TYPE_MANHOLE)) {
-		((TManhole*)mGroundPlane->getActor())->makeManholeUnuseful(this);
+	if (mGroundPlane->mActor
+	    && mGroundPlane->mActor->isActorType(ACTOR_TYPE_MANHOLE)) {
+		((TManhole*)mGroundPlane->mActor)->makeManholeUnuseful(this);
 	}
 }
 
@@ -98,11 +98,7 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
                                   f32 vertical_speed) const
 {
 	object->appear();
-	Vec position;
-	position.x = mPosition.x;
-	position.y = mPosition.y + y_offset;
-	position.z = mPosition.z;
-	object->mPosition.set(position);
+	object->mPosition.set(mPosition.x, mPosition.y + y_offset, mPosition.z);
 	if (mMActor) {
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed,
@@ -131,12 +127,10 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
 		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	} else {
-		TMtx34f mtx;
+		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
-		f32& x = mtx.ref(0, 2);
-		f32& y = mtx.ref(1, 2);
-		f32& z = mtx.ref(2, 2);
-		object->mVelocity.set(x * speed, y * speed + y_speed, z * speed);
+		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
+		                      mtx[2][2] * speed);
 		object->offLiveFlag(LIVE_FLAG_UNK10);
 	}
 }
@@ -205,10 +199,9 @@ void TMapObjBase::startAllAnim(MActor* param_1, const char* param_2)
 void TMapObjBase::joinToGroup(const char* param_1, THitActor* param_2)
 {
 	// TODO: The group type here is a wild guess
-	JDrama::TViewObjPtrListT<THitActor>* group
-	    = static_cast<JDrama::TViewObjPtrListT<THitActor>*>(
-	        JDrama::TNameRefGen::search(param_1));
-	group->getChildren().push_back(param_2);
+	static_cast<JDrama::TViewObjPtrListT<THitActor>*>(
+	    JDrama::TNameRefGen::search(param_1))
+	    ->push_back(param_2);
 }
 
 TMapCollisionWarp*
@@ -371,8 +364,8 @@ void TMapObjBase::makeLowerStr(const char* in, char* out)
 
 void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 {
-	f32 fVar1 = sin(mRotation.z * 0.017453294f);
-	f32 fVar2 = cos(mRotation.z * 0.017453294f);
+	f32 fVar1 = sinf(mRotation.z * 0.017453294f);
+	f32 fVar2 = cosf(mRotation.z * 0.017453294f);
 
 	ptr[0][0] = fVar2;
 	ptr[0][1] = -fVar1;
@@ -382,7 +375,7 @@ void TMapObjBase::makeRootMtxRotZ(MtxPtr ptr)
 	ptr[1][0] = fVar1;
 	ptr[1][1] = fVar2;
 	ptr[1][2] = 0.0f;
-	ptr[1][3] = mPosition.y - getObjCollisionHeightOffset();
+	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = 0.0f;
 	ptr[2][1] = 0.0f;
@@ -397,8 +390,8 @@ void TMapObjBase::setRootMtxRotZ()
 
 void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 {
-	f32 fVar1 = sin(mRotation.y * 0.017453294f);
-	f32 fVar2 = cos(mRotation.y * 0.017453294f);
+	f32 fVar1 = sinf(mRotation.y * 0.017453294f);
+	f32 fVar2 = cosf(mRotation.y * 0.017453294f);
 
 	ptr[0][0] = fVar2;
 	ptr[0][1] = 0.0f;
@@ -408,7 +401,7 @@ void TMapObjBase::makeRootMtxRotY(MtxPtr ptr)
 	ptr[1][0] = 0.0f;
 	ptr[1][1] = 1.0f;
 	ptr[1][2] = 0.0f;
-	ptr[1][3] = mPosition.y - getObjCollisionHeightOffset();
+	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = -fVar1;
 	ptr[2][1] = 0.0f;
@@ -423,8 +416,8 @@ void TMapObjBase::setRootMtxRotY()
 
 void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 {
-	f32 fVar1 = sin(mRotation.x * 0.017453294f);
-	f32 fVar2 = cos(mRotation.x * 0.017453294f);
+	f32 fVar1 = sinf(mRotation.x * 0.017453294f);
+	f32 fVar2 = cosf(mRotation.x * 0.017453294f);
 
 	ptr[0][0] = 1.0f;
 	ptr[0][1] = 0.0f;
@@ -434,7 +427,7 @@ void TMapObjBase::makeRootMtxRotX(MtxPtr ptr)
 	ptr[1][0] = 0.0f;
 	ptr[1][1] = fVar2;
 	ptr[1][2] = -fVar1;
-	ptr[1][3] = mPosition.y - getObjCollisionHeightOffset();
+	ptr[1][3] = mPosition.y - mYOffset;
 
 	ptr[2][0] = 0.0f;
 	ptr[2][1] = fVar1;
@@ -506,14 +499,11 @@ void TMapObjBase::concatOnlyRotFromRight(MtxPtr param_1, MtxPtr param_2,
 void TMapObjBase::makeMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
                                    f32 param_2, MtxPtr param_3)
 {
-	MtxPtr mtx;
 	TPosition3f rotation;
 	rotation.identity();
 	rotation.setRotate(param_1, param_2);
 
-	// TODO: frame is 0x90 instead of 0x80; FPR allocation also differs.
-	// Row-copy loops change the target's arithmetic scheduling.
-	mtx           = rotation;
+	MtxPtr mtx    = rotation;
 	param_3[0][0] = mtx[0][0];
 	param_3[0][1] = mtx[0][1];
 	param_3[0][2] = mtx[0][2];
@@ -543,17 +533,6 @@ void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
 	param_3[2][1] *= mScaling.y;
 	param_3[2][2] *= mScaling.z;
 	param_3[2][3] = mPosition.z;
-}
-
-// @todo: .sdata2 suffix @3735, @3833, @4215 and @4224 in mario.MAP.
-// The discarded weak inv_sqrt copy otherwise inserts 3.0f before @3833.
-// Remove this anchor when duplicate weak-function constants are stripped.
-void order_sdata2(f32* constants)
-{
-	constants[0] = 3.81469727e-06f;
-	constants[1] = 0.017453294f;
-	constants[2] = 20.0f;
-	constants[3] = 0.06f;
 }
 
 void TMapObjBase::calcReflectingVelocity(const TBGCheckData* wall, f32 param_2,
@@ -657,7 +636,7 @@ f32 TMapObjBase::getDistanceXZ(const JGeometry::TVec3<f32>& param_1) const
 f32 TMapObjBase::getDistance(const JGeometry::TVec3<f32>& param_1) const
 {
 	f32 dx = param_1.x - mPosition.x;
-	f32 dy = param_1.y - (mPosition.y - getObjCollisionHeightOffset());
+	f32 dy = param_1.y - (mPosition.y - mYOffset);
 	f32 dz = param_1.z - mPosition.z;
 	return MsSqrtf(dx * dx + dy * dy + dz * dz);
 }
@@ -935,7 +914,6 @@ void TMapObjTurn::turn()
 	}
 }
 
-// TODO: frame is 0x130 instead of 0x140; X/Z matrix-pointer setup is early.
 void TMapObjTurn::control()
 {
 	TMapObjBase::control();
@@ -943,6 +921,7 @@ void TMapObjTurn::control()
 		return;
 
 	turn();
+	Mtx yRot;
 	Mtx mtx;
 	switch (unk150) {
 	case 0: {
@@ -951,11 +930,10 @@ void TMapObjTurn::control()
 		MsMtxSetRotX(mtxP, mRotation.x);
 		if (mRotation.y != 0.0f) {
 			MsMtxSetRotX(mtxP, mRotation.x);
-			Mtx yRot;
 			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtxP, mtxP);
 		} else {
-			MsMtxSetRotX(mtxP, mRotation.x);
+			MsMtxSetRotX(mtx, mRotation.x);
 		}
 		break;
 	}
@@ -973,11 +951,10 @@ void TMapObjTurn::control()
 		MsMtxSetRotZ(mtxP, mRotation.z);
 		if (mRotation.y != 0.0f) {
 			MsMtxSetRotZ(mtxP, mRotation.z);
-			Mtx yRot;
 			MsMtxSetRotY(yRot, mRotation.y);
 			MTXConcat(yRot, mtxP, mtxP);
 		} else {
-			MsMtxSetRotZ(mtxP, mRotation.z);
+			MsMtxSetRotZ(mtx, mRotation.z);
 		}
 		break;
 	}

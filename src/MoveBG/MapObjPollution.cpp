@@ -93,7 +93,6 @@ void TMapObjRevivalPollution::perform(u32 cue, JDrama::TGraphics*)
 
 void TMapObjRevivalPollution::loadAfter()
 {
-	// TODO: registerPolluteTex inline GPR allocation differs.
 	JDrama::TViewObj::loadAfter();
 
 	for (int i = 0; i < unk10; ++i)

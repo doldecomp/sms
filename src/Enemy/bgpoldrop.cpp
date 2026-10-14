@@ -38,14 +38,12 @@ void TBGPolDrop::move()
 		                               &checkData);
 		dVar3 += 1.0f;
 
-		bool illegalData = checkData->isIllegalData();
-		if (illegalData) {
+		if (checkData->isIllegalData()) {
 			unk58 = 0;
 			return;
 		}
 
-		f32 nextY = local_14.y;
-		if (nextY < dVar3) {
+		if (local_14.y < dVar3) {
 			unk58      = 2;
 			local_14.y = dVar3;
 			unk44.zero();

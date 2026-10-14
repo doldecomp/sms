@@ -104,9 +104,8 @@ TCameraOption::TCameraOption(JGeometry::TVec3<f32> param1,
 	if (tool != nullptr) {
 		JGeometry::TVec3<f32> origin;
 		tool->calcPosAndAt(&origin, &unk24);
-		f32 yaw = tool->getYaw();
-		s16 a   = CLBRoundf<s16>(DEG2SHORTANGLE(yaw));
-		s16 b   = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
+		s16 a = CLBRoundf<s16>(DEG2SHORTANGLE(tool->getYaw()));
+		s16 b = CLBRoundf<s16>(DEG2SHORTANGLE(60.0f));
 		CLBPolarToCross(origin, &unk30, 1000.0f, b, a);
 	}
 }

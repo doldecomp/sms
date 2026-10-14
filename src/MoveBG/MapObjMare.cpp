@@ -12,7 +12,6 @@
 #include <JSystem/JStage/JSGObject.hpp>
 #include <JSystem/JSupport/JSUInputStream.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
-#include <JSystem/JUtility/JUTColor.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
@@ -62,25 +61,6 @@ f32 TCogwheel::mMinSpeed   = 3.0f;
 static f32 mGrowStartFrame = 90.0f;
 static f32 mGrowEndFrame   = 175.0f;
 
-// TODO: fabricated; animation helper boundary follows MapObjMamma.cpp.
-static inline J3DFrameCtrl* getAnmFrameCtrl(const TLiveActor* actor, int type)
-{
-	return actor->getMActor()->getFrameCtrl(type);
-}
-
-// TODO: fabricated; nested updateHeight retains getMActor in the target.
-static inline f32 getAnmFrame(const TLiveActor* actor, int type)
-{
-	return getAnmFrameCtrl(actor, type)->getFrame();
-}
-
-// TODO: fabricated; preserves the separate frame read and write in touchWater.
-static inline void addAnmFrame(TLiveActor* actor, int type, f32 speed)
-{
-	getAnmFrameCtrl(actor, type)
-	    ->setFrame(speed + getAnmFrameCtrl(actor, type)->getFrame());
-}
-
 u32 TCogwheelScale::touchWater(THitActor* param_1)
 {
 	if (unk140 < unk144)
@@ -101,7 +81,6 @@ BOOL TCogwheelScale::receiveMessage(THitActor* param_1, u32 param_2)
 
 void TCogwheelScale::touchPlayer(THitActor* param_1)
 {
-	// TODO: frame-only mismatch (0x28 bytes instead of 0x58).
 	if (marioIsOn())
 		unk148 = unk13C;
 
@@ -187,7 +166,6 @@ void TCogwheel::initDraw() const
 
 void TCogwheel::draw() const
 {
-	// TODO: frame-only mismatch (0x58 bytes instead of 0xb0).
 	initDraw();
 	f32 x1   = unk154.x + mRopeWidthX;
 	f32 x0   = unk154.x - mRopeWidthX;
@@ -275,19 +253,13 @@ void TCogwheel::calc()
 	mtx[2][3] = mPosition.z;
 }
 
-// TODO: fabricated scale-weight helper; original inline ownership is unknown.
-static inline f32 getCogwheelScaleWeight(const TCogwheelScale* scale)
-{
-	f32 weight = scale->unk138;
-	return weight + scale->unk140 + scale->unk148;
-}
-
 void TCogwheel::control()
 {
 	TMapObjBase::control();
 	unk13C += unk138;
-	unk138 += (getCogwheelScaleWeight(unk150) - getCogwheelScaleWeight(unk164))
-	          * unk140;
+	f32 panR = unk164->unk138 + unk164->unk140 + unk164->unk148;
+	f32 panL = unk150->unk138 + unk150->unk140 + unk150->unk148;
+	unk138 += (panL - panR) * unk140;
 	unk138 *= unk144;
 	if (unk13C < unk160 && unk138 < 0.0f) {
 		rebound();
@@ -307,7 +279,6 @@ void TCogwheel::control()
 
 void TCogwheel::initMapObj()
 {
-	// TODO: frame-only mismatch (0x78 bytes instead of 0x88).
 	TMapObjBase::initMapObj();
 	f32 angle  = 0.017453294f * mRotation.y;
 	f32 radius = sRadius;
@@ -394,8 +365,7 @@ void TMapObjElasticCode::draw() const
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
-	GXColor color = { 0, 0, 100, 255 };
-	GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(color));
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 100, 255 });
 	GXSetNumTexGens(0);
 	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
@@ -444,22 +414,23 @@ void TMapObjElasticCode::initMapObj()
 
 f32 TMapObjGrowTree::getGrowHeightFromRate(f32 rate) const
 {
-	if (mGrowStartFrame < getAnmFrame(this, ANM_TYPE_BCK)
-	    && getAnmFrame(this, ANM_TYPE_BCK) < mGrowEndFrame)
+	if (mGrowStartFrame < mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+	    && mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < mGrowEndFrame)
 		return rate * unk138 / (mGrowEndFrame - mGrowStartFrame);
 	return 0.0f;
 }
 
 void TMapObjGrowTree::updateHeight()
 {
-	if (getAnmFrame(this, ANM_TYPE_BCK) > mGrowStartFrame) {
-		if (getAnmFrame(this, ANM_TYPE_BCK) > mGrowEndFrame)
+	if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > mGrowStartFrame) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > mGrowEndFrame)
 			setDamageHeight(unk138);
 		else
 			setDamageHeight(
 			    unk148
 			    + (unk138 - unk148)
-			          * (getAnmFrame(this, ANM_TYPE_BCK) - mGrowStartFrame)
+			          * (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+			             - mGrowStartFrame)
 			          / (mGrowEndFrame - mGrowStartFrame));
 	} else {
 		setDamageHeight(unk148);
@@ -472,24 +443,26 @@ u32 TMapObjGrowTree::touchWater(THitActor* water)
 		return 0;
 	if (isState(STATE_NORMAL)) {
 		startAnim(1);
-		getAnmFrameCtrl(this, ANM_TYPE_BCK)->setRate(0.0f);
+		mMActor->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.0f);
 		mState = STATE_UNK2;
 	}
-	if (getAnmFrame(this, ANM_TYPE_BCK)
-	    < getAnmFrameCtrl(this, ANM_TYPE_BCK)->getEnd()) {
+	if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+	    < mMActor->getFrameCtrl(ANM_TYPE_BCK)->getEnd()) {
 		soundBas(MSD_SE_OBJ_SANDBOMB_WATER_1, 3.0f, unk13C);
 		soundBas(MSD_SE_OBJ_SANDBOMB_WATER_2, 67.0f, unk13C);
 		soundBas(MSD_SE_OBJ_SANDBOMB_WATER_3, 103.0f, unk13C);
 		soundBas(MSD_SE_OBJ_SANDBOMB_WATER_4, 137.0f, unk13C);
-		addAnmFrame(this, ANM_TYPE_BCK, unk13C);
+		mMActor->getFrameCtrl(ANM_TYPE_BCK)
+		    ->setFrame(unk13C
+		               + mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame());
 		updateHeight();
 		if (mHeldObject) {
-			JGeometry::TVec3<f32> pos = mHeldObject->getPosition();
+			JGeometry::TVec3<f32> pos = mHeldObject->mPosition;
 			pos.y += getGrowHeightFromRate(unk13C);
 			mHeldObject->moveRequest(pos);
 		}
 	}
-	if (getAnmFrame(this, ANM_TYPE_BCK) > mGrowEndFrame) {
+	if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > mGrowEndFrame) {
 		setUpMapCollision(0);
 		mStateTimer = unk144;
 	}
@@ -499,22 +472,24 @@ u32 TMapObjGrowTree::touchWater(THitActor* water)
 void TMapObjGrowTree::control()
 {
 	TMapObjBase::control();
-	if (isState(STATE_UNK2) && getColNum() == 0 && !isStateTimerEngaged()
-	    && getAnmFrame(this, ANM_TYPE_BCK) > 0.0f) {
-		if (getAnmFrame(this, ANM_TYPE_BCK) < mGrowEndFrame)
+	if (isState(STATE_UNK2) && mColCount == 0 && !isStateTimerEngaged()
+	    && mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() > 0.0f) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < mGrowEndFrame)
 			removeMapCollision();
-		addAnmFrame(this, ANM_TYPE_BCK, -unk140);
-		if (getAnmFrame(this, ANM_TYPE_BCK) < 0.0f) {
+		mMActor->getFrameCtrl(ANM_TYPE_BCK)
+		    ->setFrame(mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		               - unk140);
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame() < 0.0f) {
 			startAnim(0);
 			mState = STATE_NORMAL;
 		} else {
-			f32 frame = getAnmFrame(this, ANM_TYPE_BCK);
+			f32 frame = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
 			if (67.0f <= frame && frame <= 240.0f)
 				SMSGetMSound()->startSoundActor(MSD_SE_OBJ_SAMDBOMB_REVERSE,
 				                                &mPosition, 0, nullptr, 0, 4);
 			updateHeight();
 			if (mHeldObject) {
-				JGeometry::TVec3<f32> pos = mHeldObject->getPosition();
+				JGeometry::TVec3<f32> pos = mHeldObject->mPosition;
 				pos.y -= getGrowHeightFromRate(unk140);
 				mHeldObject->moveRequest(pos);
 			}
@@ -630,7 +605,7 @@ void TWireBell::control()
 	mPosition.z = unk14C.z;
 	Mtx mtx;
 	MsMtxSetTRS(mtx, mPosition, mRotation, mScaling);
-	getModel()->setAnmMtx(0, mtx);
+	MTXCopy(mtx, getModel()->getAnmMtx(0));
 }
 
 void TWireBell::loadAfter()
@@ -676,20 +651,18 @@ void TMapObjPuncher::control()
 	switch (mState) {
 	case STATE_NORMAL:
 		break;
-	case STATE_UNK2: {
-		f32 rate = mMActor->getFrameCtrl(ANM_TYPE_BCK)->getRate();
-		soundBas(MSD_SE_OBJ_PUNCHER_RETURN, 101.0f, rate);
+	case STATE_UNK2:
+		soundBas(MSD_SE_OBJ_PUNCHER_RETURN, 101.0f,
+		         mMActor->getFrameCtrl(ANM_TYPE_BCK)->getRate());
 		if (animIsFinished()) {
-			JGeometry::TVec3<f32> scale(2.0f);
+			JGeometry::TVec3<f32> scale(2.0f, 2.0f, 2.0f);
 			emitAndScale(PARTICLE_MS_ENM_DISAP_A_W, 0, &mPosition, scale);
 			emitAndScale(PARTICLE_MS_ENM_DISAP_B, 0, &mPosition, scale);
-			if (SMSGetMSound()->gateCheck(MSD_SE_SMOKE_EFFECT))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_SMOKE_EFFECT, getPosition(), 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
+			                                nullptr, 0, 4);
 			kill();
 		}
 		break;
-	}
 	}
 }
 
@@ -705,8 +678,7 @@ void TMapObjPuncher::load(JSUMemoryInputStream& param_1)
 
 void TMuddyBoat::moveByWater()
 {
-	if ((int)SMS_GetMarioWaterGun()->mIsEmitWater != 0) {
-		JGeometry::TVec2<f32> delta;
+	if (SMS_GetMarioWaterGun()->mEmittedWaterCount != 0) {
 		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		JGeometry::TVec3<f32> dir(-emitMtx[0][0], 0.0f, -emitMtx[2][0]);
 		MsVECNormalize(&dir, &dir);
@@ -725,8 +697,11 @@ void TMuddyBoat::moveByWater()
 		if (normal.x != 0.0f || normal.z != 0.0f)
 			MsVECNormalize(&normal, &normal);
 
-		delta.set(dir.x - fwd.x, dir.z - fwd.z);
-		f32 turn = (fwd.z * delta.x - fwd.x * delta.y) * fwd.dot(normal);
+		JGeometry::TVec3<f32> delta;
+		delta.sub(dir, fwd);
+		JGeometry::TVec3<f32> turnVec;
+		turnVec.cross(fwd, delta);
+		f32 turn = turnVec.y * fwd.dot(normal);
 		if (turn > 0.0f)
 			unk14C += unk148 * (1.0f - fabsf(dot));
 		else
@@ -748,11 +723,11 @@ void TMuddyBoat::kill()
 	unk14C = 0.0f;
 	SMS_EasyEmitParticle(PARTICLE_MS_M_AMIATTACK, &unk170, nullptr,
 	                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-	if (SMSGetMSound()->gateCheck(MSD_SE_OBJ_DORO_BROKEN))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_OBJ_DORO_BROKEN, getPosition(), 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_DORO_BROKEN, &mPosition, 0,
+	                                nullptr, 0, 4);
 	MtxPtr dst = getModel()->getBaseTRMtx();
-	MTXCopy(getModel()->getAnmMtx(0), dst);
+	MtxPtr src = getModel()->getAnmMtx(0);
+	MTXCopy(src, dst);
 	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	onLiveFlag(LIVE_FLAG_UNK10);
 	startAnim(1);
@@ -760,20 +735,15 @@ void TMuddyBoat::kill()
 	mState = STATE_UNK2;
 }
 
-// TODO: fabricated collision-bottom boundary; target keeps the nested getter.
-static inline f32 getMuddyBoatBottomY(const TMuddyBoat* boat)
-{
-	return boat->mPosition.y - boat->getObjCollisionHeightOffset();
-}
-
 void TMuddyBoat::touchWall(JGeometry::TVec3<f32>* param_1,
                            const TBGWallCheckRecord& param_2)
 {
 	const TBGCheckData* wall = param_2.mResultWalls[0];
-	unk170.set(param_2.mCenter.x - wall->mNormal.x * (50.0f + param_2.mRadius),
-	           100.0f + getMuddyBoatBottomY(this),
-	           param_2.mCenter.z - wall->mNormal.z * (50.0f + param_2.mRadius));
-	param_1->assignCopy(mPosition);
+	unk170                   = JGeometry::TVec3<f32>(
+        param_2.mCenter.x - wall->getNormal().x * (50.0f + param_2.mRadius),
+        100.0f + (mPosition.y - getObjCollisionHeightOffset()),
+        param_2.mCenter.z - wall->getNormal().z * (50.0f + param_2.mRadius));
+	*param_1 = mPosition;
 	kill();
 	mPositionDelta.zero();
 }
@@ -790,13 +760,12 @@ bool TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& param_1, f32 param_2,
 	return false;
 }
 
-// TODO: wall-probe scheduling and stack layout still differ.
 void TMuddyBoat::bind()
 {
 	if (checkLiveFlag(LIVE_FLAG_UNK10))
 		return;
-	JGeometry::TVec3<f32> pos(mPosition, JGeometry::TVec3<f32>::ASSIGN_COPY);
-	MtxPtr mtx = getModel()->getAnmMtx(0);
+	JGeometry::TVec3<f32> pos = mPosition;
+	MtxPtr mtx                = getModel()->getAnmMtx(0);
 	pos.x += mtx[0][2] * unk140;
 	pos.z += mtx[2][2] * unk140;
 	int cubeNo = gpCubeStream->getInCubeNo(SMS_GetMarioPos());
@@ -816,16 +785,13 @@ void TMuddyBoat::bind()
 	f32 height = gpMap->checkGroundIgnoreWaterSurface(pos, &ground);
 	f32 bottom = mPosition.y - getObjCollisionHeightOffset();
 	if (height > bottom - 100.0f || ground->isIllegalData()) {
-		pos.assignCopy(mPosition);
+		pos = mPosition;
 		kill();
 		mPositionDelta.zero();
 		return;
 	}
 	JGeometry::TVec3<f32> center;
-	f32 offset = unk160;
-	center.x   = pos.x + mtx[0][2] * offset;
-	center.y   = bottom;
-	center.z   = pos.z + mtx[2][2] * offset;
+	center.set(pos.x + mtx[0][2] * unk160, bottom, pos.z + mtx[2][2] * unk160);
 	if (bindToWall(center, unk158, &pos))
 		return;
 	center.set(pos.x - mtx[0][2] * unk164,
@@ -836,7 +802,7 @@ void TMuddyBoat::bind()
 	center.set(pos.x, mPosition.y - getObjCollisionHeightOffset(), pos.z);
 	if (bindToWall(center, unk154, &pos))
 		return;
-	mPositionDelta.assignCopy(pos - mPosition);
+	mPositionDelta = pos - mPosition;
 }
 
 void TMuddyBoat::control()
@@ -862,7 +828,7 @@ void TMuddyBoat::control()
 	case STATE_UNK2: {
 		if (!animIsFinished())
 			break;
-		startStateTimer(unk168);
+		mStateTimer = unk168;
 		onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		sleep();
 		mState = STATE_UNK3;
@@ -875,10 +841,9 @@ void TMuddyBoat::control()
 		makeObjDead();
 		makeObjDefault();
 		makeObjAppeared();
-		JGeometry::TVec3<f32> scale(2.0f * getScaling().x,
-		                            2.0f * getScaling().y,
-		                            3.0f * getScaling().z);
-		unk170.set(mPosition.x, getMuddyBoatBottomY(this), mPosition.z);
+		JGeometry::TVec3<f32> scale(2.0f * mScaling.x, 2.0f * mScaling.y,
+		                            3.0f * mScaling.z);
+		unk170.set(mPosition.x, mPosition.y - mYOffset, mPosition.z);
 		emitAndSRT(PARTICLE_MS_ENM_DISAP_A, 0, &unk170, mRotation, scale);
 		emitAndSRT(PARTICLE_MS_ENM_DISAP_B, 0, &unk170, mRotation, scale);
 		SMSGetMSound()->startSoundActor(MSD_SE_SMOKE_EFFECT, &mPosition, 0,
@@ -889,7 +854,6 @@ void TMuddyBoat::control()
 	}
 }
 
-// TODO: frame-only mismatch (0xb0 bytes instead of 0xd0).
 void TMuddyBoat::calc()
 {
 	f32 waveY = mPosition.y - mYOffset;
@@ -928,8 +892,7 @@ void TMuddyBoat::initMapObj()
 	unk13C = 0.01f;
 	unk168 = 600;
 
-	u8 map = SMSGetMarDirector()->getCurrentMap();
-	if (map == 0x34) {
+	if (SMSGetMarDirector()->getCurrentMap() == 0x34) {
 		unk158 = 126.0f;
 		unk154 = 185.0f;
 		unk15C = 150.0f;
@@ -971,9 +934,8 @@ static JGeometry::TVec3<f32> fall_upper_pos(2827.0f, 8604.0f, 7202.0f);
 
 void TMareFall::calc()
 {
-	if (SMSGetMSound()->gateCheck(MSD_SE_GE_FALL))
-		MSoundSESystem::MSoundSE::startSoundActor(MSD_SE_GE_FALL, getPosition(),
-		                                          0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_GE_FALL, &mPosition, 0, nullptr, 0,
+	                                4);
 	SMSGetMSound()->startSoundActor(MSD_SE_GE_FALL_UPPER, &fall_upper_pos, 0,
 	                                nullptr, 0, 4);
 	gpMarioParticleManager->emit(MAPOBJ_MAREFALLSPLASH, &mPosition, 1, this);

@@ -217,59 +217,53 @@ void TKumokun::bind()
 		return;
 	}
 
-	JGeometry::TVec3<f32> local_168(mPositionDelta,
-	                                JGeometry::TVec3<f32>::ASSIGN_COPY);
-	JGeometry::TVec3<f32> local_104(mVelocity,
-	                                JGeometry::TVec3<f32>::ASSIGN_COPY);
+	JGeometry::TVec3<f32> local_168 = mPositionDelta;
+	JGeometry::TVec3<f32> local_104 = mVelocity;
 	local_168 += local_104;
 
 	bool bVar7;
 
-	JGeometry::TVec3<f32> local_15C;
 	JGeometry::TVec3<f32> local_150;
-	const TBGCheckData* floor;
+	JGeometry::TVec3<f32> local_15C;
 
 	if (isOnFloor()) {
-		JGeometry::TVec3<f32> local_140(local_168,
-		                                JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> local_140 = local_168;
 		local_140.setLength(50.0f);
 
 		local_140 += mPosition;
 
+		const TBGCheckData* floor;
 		bVar7 = checkOnMovingFloor(&local_150, &floor, local_140, local_168);
 		bVar7 |= checkOnMovingFloor(&local_15C, &floor, mPosition, local_168);
 	} else if (isOnRoof()) {
-		JGeometry::TVec3<f32> local_134(local_168,
-		                                JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> local_134 = local_168;
 		local_134.setLength(50.0f);
 
 		local_134 += mPosition;
 
+		const TBGCheckData* floor;
 		bVar7 = checkOnMovingRoof(&local_150, &floor, local_134, local_168);
 		bVar7 |= checkOnMovingRoof(&local_15C, &floor, mPosition, local_168);
 	} else {
-		JGeometry::TVec3<f32> local_128(local_168,
-		                                JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> local_128 = local_168;
 		local_128.setLength(0.5f * mHeadHeight);
 
 		local_128 += mPosition;
 
+		const TBGCheckData* floor;
 		bVar7 = checkOnMovingWall(&local_150, &floor, local_128, local_168);
 		bVar7 |= checkOnMovingWall(&local_15C, &floor, mPosition, local_168);
 	}
 
 	if (unk124->getGraph() != nullptr && unk1E8 != nullptr) {
-		JGeometry::TVec3<f32> local_11C(mPosition,
-		                                JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> local_11C = mPosition;
 		local_11C += local_15C;
 		local_11C += local_150;
 
-		JGeometry::TVec3<f32> local_110(local_11C,
-		                                JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> local_110 = local_11C;
 		bVar7 |= unk1E8->checkWalls(&local_110, mWallRadius);
 
-		JGeometry::TVec3<f32> local_f8(local_110 - local_11C,
-		                               JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> local_f8 = local_110 - local_11C;
 
 		local_15C += local_f8;
 	}
@@ -282,7 +276,6 @@ void TKumokun::bind()
 	mPositionDelta = local_15C + local_150;
 }
 
-// TODO: nonmatching stack layout; frame is 0xf8 instead of 0x100.
 bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
                                  const TBGCheckData** param_2,
                                  const JGeometry::TVec3<f32>& param_3,
@@ -335,12 +328,9 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 {
 	bool uVar7 = false;
 
-	// TODO: stack slots still differ despite matching 0xC8 frames.
-	JGeometry::TVec3<f32> local_98;
-	JGeometry::TVec3<f32> local_8C;
 	JGeometry::TVec3<f32> local_1C = param_3;
-	local_98                       = local_1C;
-	local_8C                       = local_1C;
+	JGeometry::TVec3<f32> local_98 = local_1C;
+	JGeometry::TVec3<f32> local_8C = local_98;
 
 	local_8C += param_4;
 
@@ -382,7 +372,6 @@ bool TKumokun::checkOnMovingFloor(JGeometry::TVec3<f32>* param_1,
 	return uVar7;
 }
 
-// TODO: lower stack slots and constant relocations still differ.
 bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
                                  const TBGCheckData** param_2,
                                  const JGeometry::TVec3<f32>& param_3,
@@ -394,12 +383,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	local_C0 *= 0.5f * -mHeadHeight;
 
 	JGeometry::TVec3<f32> local_b4 = param_3;
-	// TODO: recover the vector inline that preserves the offset's y/z.
-	local_b4.x += local_C0.x;
-	f32 fVar31;
-	local_b4.y += (fVar31 = local_C0.y);
-	f32 fVar30;
-	local_b4.z += (fVar30 = local_C0.z);
+	local_b4 += local_C0;
 
 	JGeometry::TVec3<f32> local_A8 = local_b4;
 	local_A8 += param_4;
@@ -433,9 +417,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 		local_A8.z = local_8C.z;
 	}
 
-	local_A8.x -= local_C0.x;
-	local_A8.y -= fVar31;
-	local_A8.z -= fVar30;
+	local_A8 -= local_C0;
 
 	param_1->set(local_A8);
 	param_1->sub(param_3);
@@ -443,7 +425,6 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	return uVar7;
 }
 
-// TODO: collision-query stack slots and roof/wall FPR allocation still differ.
 void TKumokun::bindOnFlying()
 {
 	bool hit = false;
@@ -617,7 +598,7 @@ void TKumokun::changeBck(const char* name)
 	setCurAnmSound();
 
 	f32 fVar1 = 1.0f;
-	if (!isCrashing()
+	if (mSpine->getLatestNerve() != &TNerveSmallEnemyDie::theNerve()
 	    && (unk1D4
 	        || mSpine->getLatestNerve() == &TNerveKumokunPreFly::theNerve())) {
 		fVar1 = 2.0f;
@@ -650,7 +631,6 @@ bool TKumokun::checkSerialAnmEnd() const
 	return unk1D8.empty() && checkCurAnmEnd(0);
 }
 
-// TODO: wall-test stack slots and the -30.0f constant relocation differ.
 void TKumokun::calcRootMatrix()
 {
 	if (isTaken()) {
@@ -742,7 +722,6 @@ static bool is_antiparallel(const JGeometry::TVec3<f32>& v1,
 	return -eps <= fVar8 && fVar8 <= eps;
 }
 
-// TODO: nonmatching geometry inlines and local stack slots.
 void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 {
 	JGeometry::TVec3<f32> local_C4 = param_1;
@@ -752,12 +731,13 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 	local_C4.y = 0.0f;
 	local_C4.normalize();
 
+	JGeometry::TVec3<f32> forward(0.0f, 0.0f, 1.0f);
+
 	JGeometry::TQuat4<f32> local_A4;
-	if (is_antiparallel(local_C4, JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f))) {
+	if (is_antiparallel(local_C4, forward)) {
 		local_A4.setEulerY(JGeometry::TUtil<f32>::PI());
 	} else {
-		local_A4.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f), local_C4,
-		                   1.0f);
+		local_A4.setRotate(forward, local_C4, 1.0f);
 	}
 
 	local_b4.mul(local_b4, local_A4);
@@ -791,16 +771,17 @@ void TKumokun::decideTargetOnGraph() { }
 JGeometry::TVec3<f32>
 TKumokun::rotateGoalDirToLocal(const JGeometry::TVec3<f32>& param_1) const
 {
-	JGeometry::TVec3<f32> result = param_1;
-	result -= mPosition;
+	JGeometry::TVec3<f32> diff = param_1;
+	diff -= mPosition;
 
 	// unit quat, conj = inv
 	JGeometry::TQuat4<f32> inv = getQuat();
 	inv.conjugate();
 
-	inv.rotate(result, result);
+	JGeometry::TVec3<f32> result;
+	inv.rotate(diff, result);
 
-	return JGeometry::TVec3<f32>(result, JGeometry::TVec3<f32>::ASSIGN_COPY);
+	return result;
 }
 
 bool TKumokun::doAdjustTarget()
@@ -898,11 +879,7 @@ bool TKumokun::isFlying() const
 	return mSpine->getLatestNerve() == &TNerveKumokunFly::theNerve();
 }
 
-bool TKumokun::isCrashing() const
-{
-	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
-	return nerve == &TNerveSmallEnemyDie::theNerve();
-}
+bool TKumokun::isCrashing() const { }
 
 bool TKumokun::isHitPlane() const { return mHitPlaneCounter > 0; }
 

@@ -1,49 +1,49 @@
-#include "Map/MapStaticObject.hpp"
-#include "Map/MapWireManager.hpp"
-#include "MoveBG/Item.hpp"
-#include "MoveBG/ItemManager.hpp"
-#include "MoveBG/MapObjAirport.hpp"
-#include "MoveBG/MapObjBall.hpp"
-#include "MoveBG/MapObjBase.hpp"
-#include "MoveBG/MapObjBianco.hpp"
-#include "MoveBG/MapObjBlock.hpp"
-#include "MoveBG/MapObjCloud.hpp"
-#include "MoveBG/MapObjCorona.hpp"
-#include "MoveBG/MapObjDolpic.hpp"
-#include "MoveBG/MapObjEx.hpp"
-#include "MoveBG/MapObjFence.hpp"
-#include "MoveBG/MapObjFlag.hpp"
-#include "MoveBG/MapObjFloat.hpp"
-#include "MoveBG/MapObjGeneral.hpp"
-#include "MoveBG/MapObjGrass.hpp"
-#include "MoveBG/MapObjHide.hpp"
-#include "MoveBG/MapObjItem2.hpp"
-#include "MoveBG/MapObjMamma.hpp"
-#include "MoveBG/MapObjManager.hpp"
-#include "MoveBG/MapObjMare.hpp"
-#include "MoveBG/MapObjMonte.hpp"
-#include "MoveBG/MapObjOption.hpp"
-#include "MoveBG/MapObjPinna.hpp"
-#include "MoveBG/MapObjPlane.hpp"
-#include "MoveBG/MapObjPole.hpp"
-#include "MoveBG/MapObjPollution.hpp"
-#include "MoveBG/MapObjRicco.hpp"
-#include "MoveBG/MapObjSample.hpp"
-#include "MoveBG/MapObjSirena.hpp"
-#include "MoveBG/MapObjTown.hpp"
-#include "MoveBG/MapObjTrap.hpp"
-#include "MoveBG/MapObjTree.hpp"
-#include "MoveBG/MapObjTurn.hpp"
-#include "MoveBG/MapObjWave.hpp"
-#include "MoveBG/ModelGate.hpp"
-#include "MoveBG/Pool.hpp"
-#include "MoveBG/WoodBarrel.hpp"
 #include <System/MarNameRefGen.hpp>
+#include <Map/MapStaticObject.hpp>
+#include <Map/MapWireManager.hpp>
+#include <MoveBG/Item.hpp>
+#include <MoveBG/ItemManager.hpp>
+#include <MoveBG/MapObjAirport.hpp>
+#include <MoveBG/MapObjBall.hpp>
+#include <MoveBG/MapObjBase.hpp>
+#include <MoveBG/MapObjBianco.hpp>
+#include <MoveBG/MapObjBlock.hpp>
+#include <MoveBG/MapObjCloud.hpp>
+#include <MoveBG/MapObjCorona.hpp>
+#include <MoveBG/MapObjDolpic.hpp>
+#include <MoveBG/MapObjEx.hpp>
+#include <MoveBG/MapObjFence.hpp>
+#include <MoveBG/MapObjFlag.hpp>
+#include <MoveBG/MapObjFloat.hpp>
+#include <MoveBG/MapObjGeneral.hpp>
+#include <MoveBG/MapObjGrass.hpp>
+#include <MoveBG/MapObjHide.hpp>
+#include <MoveBG/MapObjItem2.hpp>
+#include <MoveBG/MapObjMamma.hpp>
+#include <MoveBG/MapObjManager.hpp>
+#include <MoveBG/MapObjMare.hpp>
+#include <MoveBG/MapObjMonte.hpp>
+#include <MoveBG/MapObjOption.hpp>
+#include <MoveBG/MapObjPinna.hpp>
+#include <MoveBG/MapObjPlane.hpp>
+#include <MoveBG/MapObjPole.hpp>
+#include <MoveBG/MapObjPollution.hpp>
+#include <MoveBG/MapObjRicco.hpp>
+#include <MoveBG/MapObjSample.hpp>
+#include <MoveBG/MapObjSirena.hpp>
+#include <MoveBG/MapObjTown.hpp>
+#include <MoveBG/MapObjTrap.hpp>
+#include <MoveBG/MapObjTree.hpp>
+#include <MoveBG/MapObjTurn.hpp>
+#include <MoveBG/MapObjWave.hpp>
+#include <MoveBG/ModelGate.hpp>
+#include <MoveBG/Pool.hpp>
+#include <MoveBG/WoodBarrel.hpp>
+#include <Enemy/BossTelesa.hpp>
 
-// rogue include: the PCH strings at the start of .rodata
-// TODO: the retail .rodata also has a zero and a one Vec constant right after
-// them, from an inline that is not identified yet.
+// rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 {
@@ -470,9 +470,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "ItemSlotDrum") == 0)
 		return new TItemSlotDrum;
 
-	// TODO:
-	// if ( strcmp(name, "TelesaSlot") == 0 )
-	// 	return new TTelesaSlot("btelesaSlot");
+	if (strcmp(name, "TelesaSlot") == 0)
+		return new TTelesaSlot;
 
 	if (strcmp(name, "CasinoPanelGate") == 0)
 		return new TCasinoPanelGate;

@@ -86,8 +86,8 @@ void TMarDirector::setup2()
 	unk70
 	    = static_cast<TCardLoad*>(JDrama::TNameRefGen::search("データロード"));
 
-	unk70->unk38 = mGamePads[0];
-	unk78->unkC0 = mGamePads[0];
+	unk70->mGamePad = mGamePads[0];
+	unk78->unkC0    = mGamePads[0];
 
 	mGamePads[0]->mFlags = 0;
 	if (mMap == 15) {
@@ -114,8 +114,8 @@ void TMarDirector::setup2()
 
 	JDrama::TGraphics graphics;
 	graphics.unk0 = 0;
-	unk40->perform(CUE_ALL, &graphics);
-	unk38->perform(CUE_ALL, &graphics);
+	mPerformListDrawInit->perform(CUE_ALL, &graphics);
+	mPerformListPollutionCountObj->perform(CUE_ALL, &graphics);
 	GXSetDrawDone();
 	GXWaitDrawDone();
 

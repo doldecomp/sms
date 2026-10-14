@@ -70,8 +70,6 @@ static u32 scScenarioNameTable[] = {
 	0x1E, 0x21, 0x20, 0x23, 0x22, 0x1F, 0x24, 0x25, 0x26, 0x27,
 };
 
-// mario.MAP gives both SelectMenu.o (unreferenced there) and Guide.o a local
-// copy, right after the tables above, so it lives in this header too.
 static u32 scNormalStageTable[] = {
 	0, 1, 2, 3, 4, 0xd, 6, 8, 9, 0xa,
 };

@@ -23,20 +23,19 @@ void TMirrorCamera::makeMirrorViewMtx()
 	JGeometry::TVec3<f32> local_24;
 	local_24.set(unk84);
 
-	f32 fVar1 = (local_24.dot(gpCamera->unk124) - -unk90) * -2.0f;
+	f32 fVar1 = (local_24.dot(gpCamera->unk124) + unk90) * -2.0f;
 	unk98.scaleAdd(fVar1, gpCamera->unk124, local_24);
 
 	JGeometry::TVec3<f32> local_30;
-	fVar1 = (local_24.dot(gpCamera->unk148) - -unk90) * -2.0f;
+	fVar1 = (local_24.dot(gpCamera->unk148) + unk90) * -2.0f;
 	local_30.scaleAdd(fVar1, gpCamera->unk148, local_24);
 
 	JGeometry::TVec3<f32> local_3C;
-	fVar1 = (local_24.dot(gpCamera->mUp) - -unk90) * -2.0f;
+	fVar1 = (local_24.dot(gpCamera->mUp) + unk90) * -2.0f;
 	local_3C.scaleAdd(fVar1, gpCamera->mUp, local_24);
 	C_MTXLookAt(unk30, &unk98, &local_3C, &local_30);
 }
 
-// TODO: frame-only mismatch: 0x60 instead of 0x68; inline cause unknown.
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
@@ -47,7 +46,7 @@ void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 		graphics->mNearPlane = gpCamera->getNear();
 		graphics->mFarPlane  = gpCamera->getFar();
 		if (cue & CUE_SET_PROJECTION)
-			GXSetProjection(graphics->mProjMtx, GX_PERSPECTIVE);
+			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
 	}
 }
@@ -218,7 +217,7 @@ void TMirrorModelObj::setPlane()
 	MtxPtr mtx = unk4->getModel()->getAnmMtx(0);
 	Vec* v     = (Vec*)unk4->getModel()->getModelData()->getVtxPosArray();
 
-	Vec local_18;
+	JGeometry::TVec3<f32> local_18;
 	local_18.x = v->x;
 	local_18.y = v->y;
 	local_18.z = v->z;
@@ -228,7 +227,7 @@ void TMirrorModelObj::setPlane()
 	unk18.z = mtx[2][1];
 
 	MTXMultVec(mtx, &local_18, &local_18);
-	unk24 = -VECDotProduct(&unk18, &local_18);
+	unk24 = -VECDotProduct(unk18, local_18);
 	unk8->setUnk84AndUnk90(unk18.x, unk18.y, unk18.z, unk24);
 }
 
@@ -251,10 +250,10 @@ bool TMirrorModelManager::isUpperThanMirrorPlane(
 	const JGeometry::TVec3<f32>* normal
 	    = unk18 != -1 ? &unk1C[unk18]->getNormalVec() : nullptr;
 
-	return normal->dot(param_1) + (unk18 != -1 ? unk1C[unk18]->getD() : 0.0f)
-	               < -50.0f
-	           ? false
-	           : true;
+	f32 d   = unk18 != -1 ? unk1C[unk18]->getD() : 0.0f;
+	f32 dot = normal->dot(param_1);
+
+	return dot + d < -50.0f ? false : true;
 }
 
 bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const

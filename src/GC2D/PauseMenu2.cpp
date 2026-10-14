@@ -254,8 +254,8 @@ void TPauseMenu2::disappearWindow()
 	if (mFadeAnim <= 10.0f) {
 
 		// Fade out menu, background, and shine/stage panel.
-		bool isFadedOut = (mMenuPane->getAlpha() - 12) < 0;
-		s32 alpha       = isFadedOut ? 0 : mMenuPane->getAlpha() - 12;
+		s32 alpha
+		    = (mMenuPane->getAlpha() - 12) < 0 ? 0 : mMenuPane->getAlpha() - 12;
 
 		mMenuPane->setAlpha(alpha);
 

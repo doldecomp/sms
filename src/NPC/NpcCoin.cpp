@@ -39,7 +39,6 @@ void TNpcCoin::execAppearCoin_()
 		                                             &unk8, 0, nullptr, 0, 4);
 }
 
-// TODO: frame-only mismatch: 0x50 bytes here, 0x60 in the original.
 void TNpcCoin::requestAppearCoin(const Vec& param_1, f32 param_2, int param_3)
 {
 	unk4 = param_3;

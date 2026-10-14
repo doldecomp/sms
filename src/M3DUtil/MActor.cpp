@@ -90,7 +90,6 @@ MActor::MActor(MActorAnmData* anm_data)
 		JGadget::TList<MActorSubAnmInfo>::iterator it = mAnmData->unk1C.begin();
 		JGadget::TList<MActorSubAnmInfo>::iterator e  = mAnmData->unk1C.end();
 
-		// TODO: nonmatching iterator-comparison slots; frame size matches.
 		for (int i = 0; it != e; ++it, ++i) {
 			unk10[i] = new MActorAnmBck;
 			unk10[i]->setUnk1C(anm_data->getUnk2C());
@@ -116,7 +115,8 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 		unk30[i]         = 0x32;
 		unk2C[i]         = 0x32;
 		for (u8 j = 0; j < mat->getTexGenBlock()->getTexGenNum(); ++j) {
-			if (mat->getTexMtx(j) && mat->getTexMtx(j)->getTexMtxInfo().mInfo) {
+			if (mat->getTexGenBlock()->getTexMtx(j)
+			    && mat->getTexGenBlock()->getTexMtx(j)->getInfo()) {
 				unk30[i] = i;
 			}
 		}
@@ -132,7 +132,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 	if (mAnmData->getUnk0() > 0) {
 		JGadget::TList<MActorSubAnmInfo>::iterator it = mAnmData->unk1C.begin();
 		JGadget::TList<MActorSubAnmInfo>::iterator e  = mAnmData->unk1C.end();
-		for (int i = 0; it != e; it++, ++i) {
+		for (int i = 0; it != e; ++it, ++i) {
 			unk10[i]->setModel(mModel);
 		}
 	}
@@ -152,7 +152,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 	initDL();
 
 	if (!mAnmData->getUnk48())
-		mAnmData->createSampleModelData(getModel()->getModelData());
+		mAnmData->createSampleModelData(mModel->getModelData());
 }
 
 bool MActor::isCurAnmAlreadyEnd(int type)
@@ -161,10 +161,9 @@ bool MActor::isCurAnmAlreadyEnd(int type)
 
 	J3DFrameCtrl* ctrl = getFrameCtrl(type);
 	if (ctrl) {
-		bool completed = ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
-		                 || ctrl->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
-		                 || ctrl->getFrame() + 0.1f >= ctrl->getEnd();
-		result = completed;
+		result = ctrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
+		         || ctrl->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
+		         || ctrl->getFrame() + 0.1f >= ctrl->getEnd();
 	}
 
 	return result;
@@ -400,7 +399,7 @@ void MActor::entry()
 void MActor::frameUpdate()
 {
 	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
 
 	if (unk10)
@@ -619,43 +618,43 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && 0 <= mAnmByType[ANM_TYPE_BLK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateIn();
 }
 
 void MActor::updateOut()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && 0 <= mAnmByType[ANM_TYPE_BCK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
 	updateOutSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && 0 <= mAnmByType[ANM_TYPE_BLK]->getCurIdx())
+	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateOut();
 }
 
 void MActor::entryIn()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->updateIn();
 }
 
 void MActor::entryOut()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && 0 <= mAnmByType[i]->getCurIdx())
+		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
 			mAnmByType[i]->updateOut();
 }
 
 void MActor::updateMatAnm()
 {
-	j3dSys.setTexture(getModel()->getModelData()->getTexture());
+	j3dSys.setTexture(mModel->getModelData()->getTexture());
 	for (u16 i = 0; i < mMaterialNum; ++i)
 		if (unk30[i] != 0x32 || unk2C[i] != 0x32)
 			SMS_CalcMatAnmAndMakeDL(mModel, i);

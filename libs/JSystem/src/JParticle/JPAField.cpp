@@ -9,9 +9,6 @@
 
 static JMath::TRandomFast FieldRand(0);
 
-// TODO: fabricated; centered-sample inline follows JPABaseEmitter::getRandomSF.
-static inline f32 getRandomSF() { return FieldRand.get_ufloat_1() - 0.5f; }
-
 JPABaseField::JPABaseField()
     : unk0(this)
 {
@@ -53,14 +50,6 @@ bool JPABaseField::checkMaxDistance(JGeometry::TVec3<f32>& param_1,
 	return result;
 }
 
-// TODO: fabricated; original reciprocal-estimate helper identity is unknown.
-static inline f32 getReciprocal(register f32 value)
-{
-	// TODO: bare fres needs a register operand; __fres enables status CSE.
-	asm { fres value, value }
-	return value;
-}
-
 f32 JPABaseField::calcFieldFadeScale(f32 progress)
 {
 	bool cutOff = false;
@@ -81,14 +70,14 @@ f32 JPABaseField::calcFieldFadeScale(f32 progress)
 		    && progress >= mFadeOutStart) {
 			f32 diff = mFadeOutEnd - mFadeOutStart;
 			if (diff > 0.0f) {
-				diff   = getReciprocal(diff);
+				diff   = __fres(diff);
 				result = diff * (mFadeOutEnd - progress);
 			}
 		} else if (checkStatus(STATUS_FADE_ENABLE_FADE_IN)
 		           && progress < mFadeInEnd) {
 			f32 diff = mFadeInEnd - mFadeInStart;
 			if (diff > 0.0f) {
-				diff   = getReciprocal(diff);
+				diff   = __fres(diff);
 				result = diff * (progress - mFadeInStart);
 			}
 		}
@@ -128,13 +117,10 @@ void JPABaseField::affect(JPAParticle* particle)
 {
 	calcFieldVelocity(particle);
 }
-// TODO: nonmatching stack frame (0x48 instead of 0x50); no fabricated padding.
 void JPABaseField::loadFieldBlock(JPADataBlock* block)
 {
-	s16 fix;
-
-	JSUMemoryInputStream streamImpl(block->getRawData(),
-	                                *(u32*)(block->getRawData() + 4));
+	JSUMemoryInputStream streamImpl(block->mRawData,
+	                                *(u32*)((u8*)block->mRawData + 4));
 	JSUInputStream& stream = streamImpl; // TODO: fakematch?
 
 	stream.skip(0xC);
@@ -157,14 +143,10 @@ void JPABaseField::loadFieldBlock(JPADataBlock* block)
 	stream >> unk34;
 	stream >> unk38;
 
-	stream >> fix;
-	mFadeInEnd = JPAConvertFixToFloat(fix);
-	stream >> fix;
-	mFadeOutStart = JPAConvertFixToFloat(fix);
-	stream >> fix;
-	mFadeInStart = JPAConvertFixToFloat(fix);
-	stream >> fix;
-	mFadeOutEnd = JPAConvertFixToFloat(fix);
+	mFadeInEnd    = JPAConvertFixToFloat(stream.readS16());
+	mFadeOutStart = JPAConvertFixToFloat(stream.readS16());
+	mFadeInStart  = JPAConvertFixToFloat(stream.readS16());
+	mFadeOutEnd   = JPAConvertFixToFloat(stream.readS16());
 }
 
 JPAGravityField::JPAGravityField() { unk50 = 0; }
@@ -198,22 +180,16 @@ void JPAAirField::set()
 }
 void JPAAirField::affect(JPAParticle* particle)
 {
-	JGeometry::TVec3<f32> diff;
-	f32 len;
-	JGeometry::TVec3<f32> vec;
-
 	if (checkStatus(STATUS_AIR_CONE)) {
+		JGeometry::TVec3<f32> diff;
 		if (!checkStatus(STATUS_USE_GLOBAL_COORDS)) {
-			const JGeometry::TVec3<f32>& pos = particle->mLocalPosition;
-			diff.sub(pos, unk58);
+			diff.sub(particle->mLocalPosition, unk58);
 		} else {
-			const JGeometry::TVec3<f32>& pos = particle->mGlobalPosition;
-			diff.sub(pos, unk58);
+			diff.sub(particle->mGlobalPosition, unk58);
 		}
 
 		JGeometry::TVec3<f32> dir;
-		dir.set(diff);
-		dir.normalize();
+		dir.normalize(diff);
 		if (unk70.dot(dir) >= unk64.x)
 			calcFieldVelocity(particle);
 	} else {
@@ -221,8 +197,9 @@ void JPAAirField::affect(JPAParticle* particle)
 	}
 
 	if (checkStatus(STATUS_AIR_CLAMP_VELOCITY)) {
+		JGeometry::TVec3<f32> vec;
 		particle->getBaseVelVec(vec);
-		len = vec.length();
+		f32 len = vec.length();
 		if (len > unk14) {
 			vec.scale(unk14 / len);
 			particle->setBaseVelVec(vec);
@@ -295,16 +272,6 @@ void JPAVortexField::set()
 	unk30 = unk18.z * unk18.z;
 	unk34 = 1.0f / unk30;
 }
-// TODO: fabricated; clamped-strength inline boundary matches FPR allocation.
-// The original helper's identity is not established.
-static inline f32 calcVortexStrength(const JPAVortexField& field, f32 fVar1)
-{
-	if (fVar1 > field.unk30)
-		fVar1 = field.unk30;
-	f32 ratio = fVar1 * field.unk34;
-	return (1.0f - ratio) * field.unk10 + ratio * field.unk14;
-}
-
 void JPAVortexField::affect(JPAParticle* particle)
 {
 	JGeometry::TVec3<f32> localPos;
@@ -314,7 +281,11 @@ void JPAVortexField::affect(JPAParticle* particle)
 	JGeometry::TVec3<f32> thing3;
 	thing3.sub(localPos, projected);
 
-	f32 fVar2 = calcVortexStrength(*this, thing3.squared());
+	f32 fVar1 = thing3.squared();
+	if (fVar1 > unk30)
+		fVar1 = unk30;
+	fVar1 *= unk34;
+	f32 fVar2 = (1.0f - fVar1) * unk10 + fVar1 * unk14;
 
 	JGeometry::TVec3<f32> tmp;
 	tmp.normalize(thing3);
@@ -373,21 +344,20 @@ void JPAConvectionField::affect(JPAParticle* particle)
 		b.scale(unk70.dot(thing), unk70);
 		thing2.add(a, b);
 	}
-	JGeometry::TVec3<f32> projected;
-	projected.setLength(thing2, unk30);
+	thing2.setLength(thing2, unk30);
 
 	JGeometry::TVec3<f32> thing4;
-	thing4.sub(thing, projected);
+	thing4.sub(thing, thing2);
 
 	JGeometry::TVec3<f32> thing3;
-	thing3.cross(unk64, projected);
+	thing3.cross(unk64, thing2);
 
 	unk7C.cross(thing3, thing4);
 	unk7C.setLength(unk10);
 	if (unk34 != 0.0f) {
-		JGeometry::TVec3<f32> contribution;
-		contribution.setLength(thing4, unk34);
-		unk7C.add(contribution);
+		JGeometry::TVec3<f32> thing4;
+		thing4.setLength(thing4, unk34);
+		unk7C.add(thing4);
 	}
 	calcFieldVelocity(particle);
 }
@@ -413,7 +383,9 @@ void JPARandomField::affect(JPAParticle* particle)
 	}
 
 	if (bVar3) {
-		unk7C.set(getRandomSF(), getRandomSF(), getRandomSF());
+		unk7C.set(FieldRand.get_ufloat_1() - 0.5f,
+		          FieldRand.get_ufloat_1() - 0.5f,
+		          FieldRand.get_ufloat_1() - 0.5f);
 		unk7C.scale(unk10);
 		calcFieldVelocity(particle);
 	}
@@ -425,7 +397,7 @@ void JPADragField::affect(JPAParticle* particle)
 {
 	if (!particle->checkStatus(JPABaseParticle::FLAG_UNK4)) {
 		if (particle->getAge() == 0) {
-			f32 rnd = unk14 * getRandomSF() + unk10;
+			f32 rnd = unk14 * (FieldRand.get_ufloat_1() - 0.5f) + unk10;
 			if (rnd > 1.0f)
 				rnd = 1.0f;
 			particle->mDragForce = rnd;

@@ -92,7 +92,7 @@ struct TBGWallCheckRecord {
 	// fabricated
 	TBGWallCheckRecord(const JGeometry::TVec3<f32>& center, f32 radius,
 	                   u32 max_results, u32 flags)
-	    : mCenter(center, JGeometry::TVec3<f32>::ASSIGN_COPY)
+	    : mCenter(center)
 	    , mRadius(radius)
 	    , mMaxResults(max_results)
 	    , mFlags(flags)

@@ -17,10 +17,9 @@ void TMapWarp::changeModel(int i)
 	if (unk8 == i)
 		return;
 
-	TJointModel* model = gpMap->getModelManager()->getJointModel(0);
-	model->getChild(unk8)->sleep();
-	model = gpMap->getModelManager()->getJointModel(0);
-	model->getChild(i)->awake();
+	// TODO: inlines
+	gpMap->getModelManager()->getJointModel(0)->mChildren[unk8]->sleep();
+	gpMap->getModelManager()->getJointModel(0)->mChildren[i]->awake();
 	unk8 = i;
 }
 
@@ -29,13 +28,12 @@ void TMapWarp::warp(int) { }
 void TMapWarp::watchToWarp()
 {
 	const TBGCheckData* checkData;
-	int data;
 	f32 fVar8 = gpMap->checkGroundExactY(SMS_GetMarioPos().x,
 	                                     SMS_GetMarioPos().y + 30.0f,
 	                                     SMS_GetMarioPos().z, &checkData);
 
 	if (checkData->isWarp()) {
-		data     = checkData->getData();
+		int data = checkData->getData();
 		int warp = unk4[data].unk0;
 		if (unk8 != warp) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
@@ -50,7 +48,7 @@ void TMapWarp::watchToWarp()
 	}
 
 	if (checkData->isMapChange()) {
-		data = checkData->getData();
+		int data = checkData->getData();
 		if (unk8 != data) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()->getJointModel(0)->getChild(data)->awake();
@@ -79,17 +77,19 @@ void TMapWarp::watchToWarp()
 
 void TMapWarp::initModel()
 {
+	// TODO: inlines
 	int num = gpMap->getModelManager()->getJointModel(0)->mChildrenNum;
 	for (int i = 0; i < num; ++i)
 		if (i != unk8)
 			gpMap->getModelManager()
 			    ->getJointModel(0)
-			    ->getChild((u16)i)
+			    ->mChildren[(u16)i]
 			    ->sleep();
 }
 
 int getWarpPointNo(const char* name)
 {
+	// Fabricated
 	struct NameTableEntry {
 		const char* unk0;
 		u32 unk4;
@@ -99,7 +99,7 @@ int getWarpPointNo(const char* name)
 		{ "warpC1", 4 },  { "warpC0", 5 },  { "warpD1", 6 },  { "warpD0", 7 },
 		{ "warpE1", 8 },  { "warpE0", 9 },  { "warpF1", 10 }, { "warpF0", 11 },
 		{ "warpG1", 12 }, { "warpG0", 13 }, { "warpH1", 14 }, { "warpH0", 15 },
-		{ "warpI1", 16 }, { "warpI0", 17 }, { 0, 0 },
+		{ "warpI1", 16 }, { "warpI0", 17 }, { nullptr, 0 },
 	};
 
 	int i = 0;
@@ -121,28 +121,22 @@ void loadWarpPointPos(JSUMemoryInputStream& stream, int count, Vec* points)
 	}
 }
 
-// TODO: instructions match except for a frame 0x18 bytes smaller than retail.
 void TMapWarp::init(JSUMemoryInputStream& stream)
 {
-	u32 value;
-	stream >> value;
-	unk0 = value;
+	unk0 = stream.readU32();
 	if (!unk0)
 		return;
 
-	stream >> value;
-	unk8 = value;
+	unk8 = stream.readU32();
 	unk4 = new TMapWarpInfo[unk0 * 2];
 
-	JGeometry::TVec3<f32> local_130[20];
-	u32 local_180[20];
 	u32 local_1d0[20];
+	u32 local_180[20];
+	JGeometry::TVec3<f32> local_130[20];
 
 	for (int i = 0; i < unk0; ++i) {
-		stream >> value;
-		local_1d0[i] = value;
-		stream >> value;
-		local_180[i] = value;
+		local_1d0[i] = stream.readU32();
+		local_180[i] = stream.readU32();
 	}
 
 	int count = unk0 * 2;

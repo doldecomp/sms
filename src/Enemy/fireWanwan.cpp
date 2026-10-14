@@ -1267,10 +1267,8 @@ void TFireWanwan::updateHitPoint()
 
 void TFireWanwan::emitEffects()
 {
-	JGeometry::TVec3<f32> local_2c;
 	MtxPtr mtx = getModel()->getAnmMtx(mCenterJointIdx);
-	local_2c.set(mtx[0][3], mtx[1][3], mtx[2][3]);
-	unk1F0.set(local_2c);
+	unk1F0.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
 	if (mHitPoints != 0 && unk194->mIsOnFire) {
 		SMS_EasyEmitParticle(FIREWANWAN_JPA_MS_CAN_YUGAMI, &unk1F0, this,
@@ -1435,7 +1433,7 @@ void TFireWanwan::initEscapeNextGraphNode()
 
 void TFireWanwan::recoverFire()
 {
-	mHitPoints        = getMaxHitPoints();
+	resetHitPoints();
 	unk194->mIsOnFire = true;
 }
 
@@ -1642,14 +1640,12 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 	bound_step->zero();
 	normal_sum->zero();
 
-	JGeometry::TVec3<f32> currPos(mPosition,
-	                              JGeometry::TVec3<f32>::ASSIGN_COPY);
+	JGeometry::TVec3<f32> currPos = mPosition;
 
 	bool bVar8 = true;
 
 	for (int i = 0; i < 8; ++i) {
-		JGeometry::TVec3<f32> point(currPos,
-		                            JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> point = currPos;
 
 		{
 			// Give a man a hammer...
@@ -1665,8 +1661,7 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 		bindPoint(&boundPointStep, point, step, fVar1, &checkRecord);
 		bVar8 &= isAirborne();
 
-		JGeometry::TVec3<f32> pointCorrection(
-		    boundPointStep - step, JGeometry::TVec3<f32>::ASSIGN_COPY);
+		JGeometry::TVec3<f32> pointCorrection = boundPointStep - step;
 		currPos += pointCorrection;
 
 		for (int i = 0; i < checkRecord.mResultWallsNum; ++i)
@@ -1674,10 +1669,9 @@ int TFireWanwan::bindBody(JGeometry::TVec3<f32>* bound_step,
 
 		collisionNum += checkRecord.mResultWallsNum;
 	}
-	JGeometry::TVec3<f32> totalCorrection(currPos - mPosition,
-	                                      JGeometry::TVec3<f32>::ASSIGN_COPY);
+	JGeometry::TVec3<f32> totalCorrection = currPos - mPosition;
 
-	bound_step->assignCopy(totalCorrection + step);
+	*bound_step = totalCorrection + step;
 
 	if (bVar8)
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -1692,11 +1686,10 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
                             const JGeometry::TVec3<f32>& param_3, f32 radius,
                             TBGWallCheckRecord* out_record)
 {
-	const TBGCheckData* local_30;
-	const TBGCheckData* local_34;
-
 	JGeometry::TVec3<f32> actualPoint = point;
 	actualPoint += param_3;
+
+	const TBGCheckData* local_30;
 
 	if (checkLiveFlag(LIVE_FLAG_UNK1000))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
@@ -1712,6 +1705,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 	if (point.y > actualPoint.y && !local_30->isIllegalData()) {
 		if (!local_30->isEnemyThrough()) {
 			f32 dVar9;
+			const TBGCheckData* local_34;
 			if (checkLiveFlag(LIVE_FLAG_UNK1000))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
@@ -2028,7 +2022,7 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		self->generateEffectColumWater();
 		self->onLiveFlag(LIVE_FLAG_UNK1000);
 		self->offLiveFlag(LIVE_FLAG_AIRBORNE);
-		self->mHitPoints = 0;
+		self->setHitPoints(0);
 		self->mDamageHeight -= 250.0f;
 		self->calcEntryRadius();
 	}
@@ -2057,8 +2051,7 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 	JGeometry::TVec3<f32> vec = self->mPosition;
 	vec -= SMS_GetMarioPos();
 
-	f32 rot           = MsGetRotFromZaxisY(vec);
-	self->mRotation.y = rot;
+	self->mRotation.y = MsGetRotFromZaxisY(vec);
 	if (self->isReadyToFly()) {
 		spine->pushAfterCurrent(&TNerveFireWanwanFly::theNerve());
 		return true;
@@ -2070,10 +2063,9 @@ DEFINE_NERVE(TNerveFireWanwanHungTail, TLiveActor)
 // TODO: fake
 static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
-	JGeometry::TVec3<f32> result(radius * JMASSin(theta * (65536.0f / 360.0f)),
+	return JGeometry::TVec3<f32>(radius * JMASSin(theta * (65536.0f / 360.0f)),
 	                             0.0f,
 	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
-	return result;
 }
 
 DEFINE_NERVE(TNerveFireWanwanFly, TLiveActor)

@@ -48,8 +48,7 @@ void TMario::decHP(int hp)
 {
 	// volatile u32 padding[2];
 	if (isUnderWater() || checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
-		f32 air = hp;
-		mAir -= air;
+		mAir -= hp;
 
 		for (int i = 0; i < 10; ++i) {
 			bubbleFromMouth(i);
@@ -119,8 +118,7 @@ bool TMario::isTakeSituation(THitActor* object)
 		return false;
 	}
 
-	const JGeometry::TVec3<f32>& pos = object->getPosition();
-	f32 dist = JGeometry::TVec3<f32>(pos - getPosition()).length();
+	f32 dist = JGeometry::TVec3<f32>(object->mPosition - mPosition).length();
 	if (dist > mAttackRadius + object->getDamageRadius()) {
 		return false;
 	}
@@ -139,13 +137,13 @@ BOOL TMario::trampleExec(THitActor* param_1)
 	if (!checkStatusType(MARIO_STATUS_FLAG_JUMPING))
 		return false;
 
-	if (getStatus() == MARIO_STATUS_DIVE)
+	if (mStatus == MARIO_STATUS_DIVE)
 		return false;
 
 	if (param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE) == FALSE)
 		return false;
 
-	if (getStatus() == MARIO_STATUS_BROAD_JUMP) {
+	if (mStatus == MARIO_STATUS_BROAD_JUMP) {
 		changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
 	} else {
 		switch (mAnimationId) {
@@ -193,8 +191,8 @@ void TMario::resetNozzle() { }
 
 void TMario::normalizeNozzle()
 {
-	BOOL hasFludd = checkFlag(MARIO_FLAG_HAS_FLUDD);
-	if (hasFludd) {
+	// volatile u32 padding[2];
+	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		mWaterGun->changeNozzle(TWaterGun::Spray, true);
 		unk144 = -1;
 		unk148 = 0;
@@ -203,10 +201,10 @@ void TMario::normalizeNozzle()
 
 void TMario::loserExec()
 {
-	u32 status = getStatus();
-	if (status != MARIO_STATUS_SWIM_DOWN && status != MARIO_STATUS_ELEC_DOWN
-	    && status != MARIO_STATUS_SWIM_P_DOWN
-	    && status != MARIO_STATUS_DOWN_LOSER) {
+	// volatile u32 padding[2];
+	if (mStatus != MARIO_STATUS_SWIM_DOWN && mStatus != MARIO_STATUS_ELEC_DOWN
+	    && mStatus != MARIO_STATUS_SWIM_P_DOWN
+	    && mStatus != MARIO_STATUS_DOWN_LOSER) {
 		onFlag(MARIO_FLAG_GAME_OVER);
 		mHealth = 0;
 
@@ -226,7 +224,7 @@ void TMario::loserExec()
 			}
 			return;
 		}
-		if (getStatus() == MARIO_STATUS_ELECTRIC_DAMAGE) {
+		if (mStatus == MARIO_STATUS_ELECTRIC_DAMAGE) {
 			changePlayerStatus(MARIO_STATUS_ELEC_DOWN, 0, true);
 		} else {
 			changePlayerStatus(MARIO_STATUS_DOWN_LOSER, 0, true);
@@ -259,19 +257,9 @@ void TMario::floorDamageExec(const TMario::TEParams& params)
 	           params.mInvincibleTime.get());
 }
 
-// TODO: fabricated boundary for the 50-unit damage offset. In damageExec,
-// the binary calls TVec3's scalar operator*= and returned-vector constructor.
-static inline JGeometry::TVec3<f32>
-scaleDamageOffset(const JGeometry::TVec3<f32>& offset)
-{
-	return offset * 50.0f;
-}
-
 // Closest i got, but i think this is wrong, but probably functionally
 // equivalent? I kinda suspect they didn't use this many helper functions? The
 // double epsilon check confused me
-// TODO: the remaining copy and stack-slot layout differs in this function
-// and its expansion in damageExec.
 void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 {
 	JGeometry::TVec3<f32> offset = pos - mPosition;
@@ -280,14 +268,14 @@ void TMario::calcDamagePos(const JGeometry::TVec3<f32>& pos)
 		return;
 	}
 	offset.normalize();
-	mDamagePos = mPosition + scaleDamageOffset(offset);
+	mDamagePos = mPosition + offset * 50.0f;
 }
 
 void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
                         int waterEmit, f32 knockbackSpeed, int rumbleFrames,
                         f32 pollutionAmount, s16 invincibilityFrames)
 {
-	// TODO: vector temporary layout differs; frame is 0x128, not 0x150.
+	// volatile u32 padding[10];
 	u32 animationTypes[2][2][4] = {
 		{
 		    { MARIO_STATUS_SAFE_BACK_DOWN, MARIO_STATUS_SHORT_BACK_DOWN,
@@ -377,8 +365,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	}
 	mInvincibilityFrames = invincibilityFrames;
 	decHP(damage);
-	bool hasFludd = checkFlag(MARIO_FLAG_HAS_FLUDD);
-	if (hasFludd) {
+	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		for (int i = 0; i < waterEmit; ++i) {
 			if (mWaterGun->damage()) {
 				unk154->mPos.value = mWaterGun->mEmitPos[0];
@@ -422,6 +409,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 
 void TMario::considerTake()
 {
+	// volatile u32 missingStack[6];
 	bool check = false;
 
 	if (isUpperState(UPPER_STATE_HOLDING_OBJECT))
@@ -430,16 +418,20 @@ void TMario::considerTake()
 	if (isUpperState(UPPER_STATE_UNK3))
 		check = true;
 
-	if (getStatus() == MARIO_STATUS_TAKE
+	if (mStatus == MARIO_STATUS_TAKE
 	    || checkStatusType(MARIO_STATUS_FLAG_UNK80000000))
 		check = true;
 
-	if (getStatus() == MARIO_STATUS_PULLING
-	    || getStatus() == MARIO_STATUS_PULL_JUMP
-	    || getStatus() == MARIO_STATUS_OIL_PULLING)
+	if (mStatus == MARIO_STATUS_PULLING || mStatus == MARIO_STATUS_PULL_JUMP
+	    || mStatus == MARIO_STATUS_OIL_PULLING)
 		check = true;
 
-	TTakeActor::ensureTakeSituation();
+	if (mHeldObject != nullptr && mHeldObject->getHolder() != this) {
+		mHeldObject = nullptr;
+	}
+
+	if (mHolder != nullptr && mHolder->getHeldObject() != this)
+		mHolder = nullptr;
 
 	if (mHeldObject != nullptr && !check) {
 		mHeldObject->receiveMessage(this, HIT_MESSAGE_THROWN);
@@ -450,10 +442,10 @@ void TMario::considerTake()
 	if (mHolder != nullptr) {
 		BOOL check2 = false;
 		// TODO: status check inline
-		u32 test = getStatus() & MARIO_STATUS_TYPE_AND_ID_MASK;
+		u32 test = mStatus & MARIO_STATUS_TYPE_AND_ID_MASK;
 		if ((0x150 <= test && 0x15c >= test) || (0x140 <= test && test <= 0x143)
 		    || checkStatusType(MARIO_STATUS_FLAG_UNK1000)
-		    || getStatus() == MARIO_STATUS_TAKEN) {
+		    || mStatus == MARIO_STATUS_TAKEN) {
 			check2 = true;
 		}
 

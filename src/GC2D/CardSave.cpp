@@ -85,16 +85,16 @@ TCardSave::TCardSave(const char* name, bool param_2)
     , unkA8(nullptr)
     , unkBC(0)
     , unkC0(0)
-    , unkE0(nullptr)
+    , mConfirmWindow(nullptr)
     , unkF4(nullptr)
     , unkF8(nullptr)
-    , unkFC(nullptr)
-    , unk100(nullptr)
+    , mConfirmWindowYes(nullptr)
+    , mConfirmWindowNo(nullptr)
     , unk124(nullptr)
     , unk128(nullptr)
-    , unk12C(nullptr)
-    , unk130(nullptr)
-    , unk134(nullptr)
+    , mConfirmWindowText(nullptr)
+    , mConfirmWindowTextShadow(nullptr)
+    , mShineCountOver100(nullptr)
     , unk160(nullptr)
     , unk174(nullptr)
     , unk178(nullptr)
@@ -119,18 +119,17 @@ void TCardSave::load(JSUMemoryInputStream& stream)
 	initData(SMSGetMarDirector()->getGamePad());
 }
 
-void TCardSave::initData(TMarioGamePad* param_1)
+void TCardSave::initData(TMarioGamePad* game_pad)
 {
-
 	if (unk18) {
 		JKRArchive* arch = (JKRArchive*)JKRFileLoader::getVolume("endsave");
-		unk14            = new J2DSetScreen("save_end.blo", arch);
+		mSaveScreen      = new J2DSetScreen("save_end.blo", arch);
 	} else {
 		JKRArchive* arch = (JKRArchive*)JKRFileLoader::getVolume("game_6");
-		unk14            = new J2DSetScreen("save.blo", arch);
+		mSaveScreen      = new J2DSetScreen("save.blo", arch);
 	}
 
-	unk14->setCullBack(GX_CULL_BACK);
+	mSaveScreen->setCullBack(GX_CULL_BACK);
 
 	for (int i = 0; i < 10; ++i) {
 		char acStack_48[0x28];
@@ -140,146 +139,166 @@ void TCardSave::initData(TMarioGamePad* param_1)
 			snprintf(acStack_48, 0x28, "/game_6/timg/coin_number_%d.bti", i);
 		}
 
-		// TODO: retail keeps a separate constructor this pointer here.
-		JUTTexture* texture
+		mLargeDigitFontTextures[i]
 		    = new JUTTexture((ResTIMG*)JKRGetResource(acStack_48));
-		unk1C[i] = texture;
 	}
-	unk48 = new TExPane(unk14, 0x775f30);
+
+	// Window 0: some kind of error window
+	unk48 = new TExPane(mSaveScreen, '\0w_0');
 	unk4C = unk48->getPane()->getBounds();
 
-	unkA0 = (J2DTextBox*)unk14->search(0x6d5f3561);
-	unkA4 = (J2DTextBox*)unk14->search(0x6d5f3562);
+	unkA0 = (J2DTextBox*)mSaveScreen->search('m_5a');
+	unkA4 = (J2DTextBox*)mSaveScreen->search('m_5b');
 	makeBuffer(unkA0, 0x200);
 	makeBuffer(unkA4, 0x200);
 
-	unkA8 = new TExPane(unk14, 0x775f33);
+	unkA8 = new TExPane(mSaveScreen, '\0w_3');
 	unkAC = unkA8->getPane()->getBounds();
-	unkC4 = new TExPane(unk14, 0x775f33);
+	unkC4 = new TExPane(mSaveScreen, '\0w_3');
 	unkC8 = unkC4->getPane()->getBounds();
 
-	unkD8 = (J2DTextBox*)unk14->search(0x6d5f3761);
-	unkDC = (J2DTextBox*)unk14->search(0x6d5f3762);
+	unkD8 = (J2DTextBox*)mSaveScreen->search('m_7a');
+	unkDC = (J2DTextBox*)mSaveScreen->search('m_7b');
 	makeBuffer(unkD8, 0x200);
 	makeBuffer(unkDC, 0x200);
-	unkE0 = new TExPane(unk14, 0x775f31);
-	unkE4 = unkE0->getPane()->getBounds();
 
-	unkF4 = (J2DTextBox*)unk14->search(0x6d5f3261);
-	unkF8 = (J2DTextBox*)unk14->search(0x6d5f3262);
+	// Regular confirm/saving/continue or quit window
+	mConfirmWindow              = new TExPane(mSaveScreen, '\0w_1');
+	mConfirmWindowInitialBounds = mConfirmWindow->getPane()->getBounds();
+
+	unkF4 = (J2DTextBox*)mSaveScreen->search('m_2a');
+	unkF8 = (J2DTextBox*)mSaveScreen->search('m_2b');
 	makeBuffer(unkF4, 0x200);
 	makeBuffer(unkF8, 0x200);
-	unkFC  = new TExPane(unk14, 0x735f36);
-	unk104 = unkFC->getPane()->getBounds();
 
-	unk100 = new TExPane(unk14, 0x735f37);
-	unk114 = unk100->getPane()->getBounds();
+	mConfirmWindowYes              = new TExPane(mSaveScreen, '\0s_6');
+	mConfirmWindowYesInitialBounds = mConfirmWindowYes->getPane()->getBounds();
 
-	unk124 = (J2DTextBox*)unk14->search(0x6d5f3361);
-	unk128 = (J2DTextBox*)unk14->search(0x6d5f3362);
+	mConfirmWindowNo              = new TExPane(mSaveScreen, '\0s_7');
+	mConfirmWindowNoInitialBounds = mConfirmWindowNo->getPane()->getBounds();
+
+	unk124 = (J2DTextBox*)mSaveScreen->search('m_3a');
+	unk128 = (J2DTextBox*)mSaveScreen->search('m_3b');
 	makeBuffer(unk124, 0x20);
 	makeBuffer(unk128, 0x20);
-	unk12C = (J2DTextBox*)unk14->search(0x6d5f3461);
-	unk130 = (J2DTextBox*)unk14->search(0x6d5f3462);
-	makeBuffer(unk12C, 0x200);
-	makeBuffer(unk130, 0x200);
 
-	unk134 = unk14->search(0x665f7369);
-	unk138 = unk14->search(0x665f7368);
-	unk13C = (J2DPicture*)unk14->search(0x6e5f3461);
-	unk140 = (J2DPicture*)unk14->search(0x6e5f3462);
-	unk144 = (J2DPicture*)unk14->search(0x6e5f3463);
-	unk148 = (J2DPicture*)unk14->search(0x6e5f3361);
-	unk14C = (J2DPicture*)unk14->search(0x6e5f3362);
-	unk150 = unk14->search(0x745f30);
+	mConfirmWindowText       = (J2DTextBox*)mSaveScreen->search('m_4a');
+	mConfirmWindowTextShadow = (J2DTextBox*)mSaveScreen->search('m_4b');
+	makeBuffer(mConfirmWindowText, 0x200);
+	makeBuffer(mConfirmWindowTextShadow, 0x200);
+
+	mShineCountOver100         = mSaveScreen->search('f_si');
+	mShineCountUnder100        = mSaveScreen->search('f_sh');
+	mShineCountHundredsOver100 = (J2DPicture*)mSaveScreen->search('n_4a');
+	mShineCountTensOver100     = (J2DPicture*)mSaveScreen->search('n_4b');
+	mShineCountOnesOver100     = (J2DPicture*)mSaveScreen->search('n_4c');
+	mShineCountTensUnder100    = (J2DPicture*)mSaveScreen->search('n_3a');
+	mShineCountOnesUnder100    = (J2DPicture*)mSaveScreen->search('n_3b');
+	mConfirmWindowMarioText    = mSaveScreen->search('\0t_0');
 
 	for (int i = 0; i < 3; ++i)
-		unk154[i] = unk14->search(0x745f31 + i);
+		mSaveNameABC[i] = mSaveScreen->search('\0t_1' + i);
 
-	unk160 = new TExPane(unk14, 0x775f32);
+	// Window for a save that requires card formatting
+	unk160 = new TExPane(mSaveScreen, '\0w_2');
 	unk164 = unk160->getPane()->getBounds();
 
-	unk174 = (J2DTextBox*)unk14->search(0x6d5f3661);
-	unk178 = (J2DTextBox*)unk14->search(0x6d5f3662);
+	unk174 = (J2DTextBox*)mSaveScreen->search('m_6a');
+	unk178 = (J2DTextBox*)mSaveScreen->search('m_6b');
 	makeBuffer(unk174, 0x200);
 	makeBuffer(unk178, 0x200);
-	unk17C = new TExPane(unk14, 0x775f34);
-	unk180 = unk17C->getPane()->getBounds();
 
-	unk190 = (J2DTextBox*)unk14->search(0x736d3061);
-	unk194 = (J2DTextBox*)unk14->search(0x736d3062);
-	makeBuffer(unk190, 0x200);
-	makeBuffer(unk194, 0x200);
+	// Event save window
+	mEventSaveWindow              = new TExPane(mSaveScreen, '\0w_4');
+	mEventSaveWindowInitialBounds = mEventSaveWindow->getPane()->getBounds();
+
+	mEventSaveWindowText       = (J2DTextBox*)mSaveScreen->search('sm0a');
+	mEventSaveWindowTextShadow = (J2DTextBox*)mSaveScreen->search('sm0b');
+	makeBuffer(mEventSaveWindowText, 0x200);
+	makeBuffer(mEventSaveWindowTextShadow, 0x200);
 
 	for (int i = 0; i < 2; ++i) {
-		unk198[i][0] = (J2DTextBox*)unk14->search(0x736d3161 + 0x100 * i);
-		unk198[i][0]->setFont((JUTFont*)gpSystemFont);
+		mEventSaveOptions[i][0]
+		    = (J2DTextBox*)mSaveScreen->search('sm1a' + 0x100 * i);
+		mEventSaveOptions[i][0]->setFont((JUTFont*)gpSystemFont);
 
-		unk198[i][1] = (J2DTextBox*)unk14->search(0x736d3162 + 0x100 * i);
-		unk198[i][1]->setFont((JUTFont*)gpSystemFont);
+		mEventSaveOptions[i][1]
+		    = (J2DTextBox*)mSaveScreen->search('sm1b' + 0x100 * i);
+		mEventSaveOptions[i][1]->setFont((JUTFont*)gpSystemFont);
 
-		unk1A8[i][0] = unk14->search(0x73633161 + 0x100 * i);
-		unk1A8[i][1] = unk14->search(0x73633162 + 0x100 * i);
+		mEventSavePointerHands[i][0] = mSaveScreen->search('sc1a' + 0x100 * i);
+		mEventSavePointerHands[i][1] = mSaveScreen->search('sc1b' + 0x100 * i);
 	}
-	unk1B8 = unk1A8[0][0]->getBounds().x1;
+	unk1B8 = mEventSavePointerHands[0][0]->getBounds().x1;
 
-	unk1BC = new TExPane(unk14, 0x775f35);
-	unk1C0 = unk1BC->getPane()->getBounds();
+	// Save window after getting a shine
+	mShineGetSaveWindow = new TExPane(mSaveScreen, '\0w_5');
+	mShineGetSaveWindowInitialBounds
+	    = mShineGetSaveWindow->getPane()->getBounds();
 
-	unk200 = (J2DTextBox*)unk14->search(0x736d3661);
-	unk204 = (J2DTextBox*)unk14->search(0x736d3662);
-	makeBuffer(unk200, 0x200);
-	makeBuffer(unk204, 0x200);
+	mShineGetSaveWindowText       = (J2DTextBox*)mSaveScreen->search('sm6a');
+	mShineGetSaveWindowTextShadow = (J2DTextBox*)mSaveScreen->search('sm6b');
+	makeBuffer(mShineGetSaveWindowText, 0x200);
+	makeBuffer(mShineGetSaveWindowTextShadow, 0x200);
 
-	unk208 = (J2DTextBox*)unk14->search(0x6d5f3861);
-	unk20C = (J2DTextBox*)unk14->search(0x6d5f3862);
+	unk208 = (J2DTextBox*)mSaveScreen->search('m_8a');
+	unk20C = (J2DTextBox*)mSaveScreen->search('m_8b');
 	makeBuffer(unk208, 0x20);
 	makeBuffer(unk20C, 0x20);
 
-	unk210 = unk14->search(0x665f736b);
-	unk214 = unk14->search(0x665f736a);
-	unk218 = unk14->search(0x6e5f3661);
-	unk21C = unk14->search(0x6e5f3662);
-	unk220 = unk14->search(0x6e5f3663);
-	unk224 = unk14->search(0x6e5f3561);
-	unk228 = unk14->search(0x6e5f3562);
-	unk22C = unk14->search(0x745f34);
+	unk210 = mSaveScreen->search('f_sk');
+	unk214 = mSaveScreen->search('f_sj');
+	unk218 = mSaveScreen->search('n_6a');
+	unk21C = mSaveScreen->search('n_6b');
+	unk220 = mSaveScreen->search('n_6c');
+	unk224 = mSaveScreen->search('n_5a');
+	unk228 = mSaveScreen->search('n_5b');
+
+	mShineGetSaveMarioText = mSaveScreen->search('\0t_4');
 
 	for (int i = 0; i < 3; ++i)
-		unk230[i] = unk14->search(0x745f35 + i);
+		mShineGetSaveNameABC[i] = mSaveScreen->search('\0t_5' + i);
 
 	for (int i = 0; i < 3; ++i) {
-		unk1E8[i][0] = (J2DTextBox*)unk14->search(0x736d3361 + 0x100 * i);
-		unk1E8[i][0]->setFont((JUTFont*)gpSystemFont);
-		unk1E8[i][1] = (J2DTextBox*)unk14->search(0x736d3362 + 0x100 * i);
-		unk1E8[i][1]->setFont((JUTFont*)gpSystemFont);
+		mShineGetSaveOptions[i][0]
+		    = (J2DTextBox*)mSaveScreen->search('sm3a' + 0x100 * i);
+		mShineGetSaveOptions[i][0]->setFont((JUTFont*)gpSystemFont);
+		mShineGetSaveOptions[i][1]
+		    = (J2DTextBox*)mSaveScreen->search('sm3b' + 0x100 * i);
+		mShineGetSaveOptions[i][1]->setFont((JUTFont*)gpSystemFont);
 
-		unk1D0[i][0] = (J2DTextBox*)unk14->search(0x73633361 + 0x100 * i);
-		unk1D0[i][1] = (J2DTextBox*)unk14->search(0x73633362 + 0x100 * i);
+		mShineGetSavePointerHands[i][0]
+		    = (J2DTextBox*)mSaveScreen->search('sc3a' + 0x100 * i);
+		mShineGetSavePointerHands[i][1]
+		    = (J2DTextBox*)mSaveScreen->search('sc3b' + 0x100 * i);
 	}
-	unk23C = unk1D0[0][0]->getBounds().x1;
+	unk23C = mShineGetSavePointerHands[0][0]->getBounds().x1;
 
-	unk240 = new TExPane(unk14, 0x775f36);
-	unk244 = unk240->getPane()->getBounds();
+	mGameOverSaveWindow = new TExPane(mSaveScreen, '\0w_6');
+	mGameOverSaveWindowInitialBounds
+	    = mGameOverSaveWindow->getPane()->getBounds();
 
 	for (int i = 0; i < 2; ++i) {
-		unk254[i][0] = (J2DTextBox*)unk14->search(0x73633661 + 0x100 * i);
-		unk254[i][1] = (J2DTextBox*)unk14->search(0x73633662 + 0x100 * i);
-		unk264[i]    = (J2DTextBox*)unk14->search(0x736d3762 + 0x100 * i);
+		mGameOverSavePointerHands[i][0]
+		    = (J2DTextBox*)mSaveScreen->search('sc6a' + 0x100 * i);
+		mGameOverSavePointerHands[i][1]
+		    = (J2DTextBox*)mSaveScreen->search('sc6b' + 0x100 * i);
 
-		((J2DTextBox*)unk14->search(0x736d3761 + 0x100 * i))
+		mGameOverSaveOptions[i]
+		    = (J2DTextBox*)mSaveScreen->search('sm7b' + 0x100 * i);
+		((J2DTextBox*)mSaveScreen->search('sm7a' + 0x100 * i))
 		    ->setFont((JUTFont*)gpSystemFont);
-		unk264[i]->setFont((JUTFont*)gpSystemFont);
+		mGameOverSaveOptions[i]->setFont((JUTFont*)gpSystemFont);
 	}
 
-	unk26C = unk254[0][0]->getBounds().x1;
+	unk26C = mGameOverSavePointerHands[0][0]->getBounds().x1;
 
-	unk14->search(0x6d61736b)->hide();
+	mSaveScreen->search('mask')->hide();
 	unk2E4 = JKRGetResource("/common/2d/savemessage.bmg");
 	if (!unk18)
 		unk2D8 = static_cast<TPauseMenu2*>(
 		    JDrama::TNameRefGen::search("ポーズメニュー"));
-	unk270 = param_1;
+	mGamePad = game_pad;
 }
 
 void TCardSave::init(int param_1)
@@ -290,10 +309,10 @@ void TCardSave::init(int param_1)
 	unk2F8 = 0;
 	unk2F9 = 1;
 	if (unk308 == 7 || unk308 == 8 || unk308 == 9) {
-		unk14->search('mask')->show();
-		unk14->search('mask')->setAlpha(255);
+		mSaveScreen->search('mask')->show();
+		mSaveScreen->search('mask')->setAlpha(255);
 	} else {
-		unk14->search('mask')->hide();
+		mSaveScreen->search('mask')->hide();
 	}
 }
 
@@ -321,7 +340,6 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 	        param_2);
 }
 
-// TODO: nonmatching GPR allocation; frame and instruction shapes match.
 s8 TCardSave::waitForStop(TEProgress param_1)
 {
 	s8 result = -1;
@@ -364,9 +382,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 	}
 
 	case 2:
-		if (unk270->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
-			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0,
-			                                   nullptr, 0);
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
+			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 
 			unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
 			                       unk4C.getHeight());
@@ -404,20 +421,20 @@ void TCardSave::endWaitForChoice()
 	if (unk10 != 2)
 		return;
 
-	unk134->hide();
-	unk138->hide();
+	mShineCountOver100->hide();
+	mShineCountUnder100->hide();
 	unk128->hide();
 	unkF8->hide();
-	unk130->hide();
-	unk150->hide();
-	unkFC->getPane()->hide();
-	unk100->getPane()->hide();
+	mConfirmWindowTextShadow->hide();
+	mConfirmWindowMarioText->hide();
+	mConfirmWindowYes->getPane()->hide();
+	mConfirmWindowNo->getPane()->hide();
 	unk10 = 3;
-	unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(), unkE4.getHeight());
+	mConfirmWindow->setCenteredSize(20, 0, 0,
+	                                mConfirmWindowInitialBounds.getWidth(),
+	                                mConfirmWindowInitialBounds.getHeight());
 }
 
-// TODO: nonmatching frame (0x378 vs 0x428), reset interpolator, and
-// emitter argument setup. updateCenteredSize reads size instead of offset.
 s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 {
 	s8 result = -1;
@@ -427,44 +444,49 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 		setMessage(unkF4, 0x200, getCurMessageID());
 		setMessage(unkF8, 0x200, getCurMessageID());
 
-		unk134->hide();
-		unk138->hide();
+		mShineCountOver100->hide();
+		mShineCountUnder100->hide();
 		unk128->hide();
 		unkF8->hide();
-		unk130->hide();
-		unk150->hide();
-		unkFC->getPane()->hide();
-		unk100->getPane()->hide();
+		mConfirmWindowTextShadow->hide();
+		mConfirmWindowMarioText->hide();
+		mConfirmWindowYes->getPane()->hide();
+		mConfirmWindowNo->getPane()->hide();
 
-		unkE0->getPane()->show();
-		unkE0->setCenteredSize(20, unkE4.getWidth(), unkE4.getHeight(), 0, 0);
+		mConfirmWindow->getPane()->show();
+		mConfirmWindow->setCenteredSize(
+		    20, mConfirmWindowInitialBounds.getWidth(),
+		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
 		unk10 = 1;
 		break;
 
 	case 1:
-		if (unkE0->update()) {
+		if (mConfirmWindow->update()) {
 			unkF8->show();
-			unkFC->getPane()->show();
-			unk100->getPane()->show();
+			mConfirmWindowYes->getPane()->show();
+			mConfirmWindowNo->getPane()->show();
 
 			unk2E9 = param_3;
 			if (param_3 == 0) {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
 			} else {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
 			}
 
-			unkFC->updateCenteredSize(1, unk104.getWidth(), unk104.getHeight());
-			unk100->updateCenteredSize(1, unk114.getWidth(),
-			                           unk114.getHeight());
-			unkFC->update();
-			unk100->update();
+			mConfirmWindowYes->updateCenteredSize(
+			    1, mConfirmWindowYesInitialBounds.getWidth(),
+			    mConfirmWindowYesInitialBounds.getHeight());
+			mConfirmWindowNo->updateCenteredSize(
+			    1, mConfirmWindowNoInitialBounds.getWidth(),
+			    mConfirmWindowNoInitialBounds.getHeight());
+			mConfirmWindowYes->update();
+			mConfirmWindowNo->update();
 
 			unk2FC = 0;
 			unk10  = 2;
@@ -473,7 +495,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 	case 2: {
 		s8 old    = unk2E9;
-		u32 input = unk270->mEnabledFrameMeaning;
+		u32 input = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			if (unk44 != nullptr)
@@ -486,12 +508,13 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			}
 
 			unkF8->hide();
-			unk150->hide();
-			unkFC->getPane()->hide();
-			unk100->getPane()->hide();
+			mConfirmWindowMarioText->hide();
+			mConfirmWindowYes->getPane()->hide();
+			mConfirmWindowNo->getPane()->hide();
 			unk10 = 3;
-			unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(),
-			                       unkE4.getHeight());
+			mConfirmWindow->setCenteredSize(
+			    20, 0, 0, mConfirmWindowInitialBounds.getWidth(),
+			    mConfirmWindowInitialBounds.getHeight());
 		} else if (input & TMarioGamePad::MEANING_MENU_B) {
 			if (unk44 != nullptr)
 				gpEmitterManager4D2->forceDeleteEmitter(unk44);
@@ -499,12 +522,13 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			gpMSound->startSoundSystemSE(0x481DU, 0, nullptr, 0);
 
 			unkF8->hide();
-			unk150->hide();
-			unkFC->getPane()->hide();
-			unk100->getPane()->hide();
+			mConfirmWindowMarioText->hide();
+			mConfirmWindowYes->getPane()->hide();
+			mConfirmWindowNo->getPane()->hide();
 			unk10 = 3;
-			unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(),
-			                       unkE4.getHeight());
+			mConfirmWindow->setCenteredSize(
+			    20, 0, 0, mConfirmWindowInitialBounds.getWidth(),
+			    mConfirmWindowInitialBounds.getHeight());
 			unk2E9 = 1;
 		} else if (input & TMarioGamePad::MEANING_MENU_LEFT) {
 			unk2E9 = 0;
@@ -515,11 +539,11 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 		TExPane* selectedPane;
 		JUTRect selectedRect;
 		if (unk2E9 == 0) {
-			selectedPane = unkFC;
-			selectedRect = unk104;
+			selectedPane = mConfirmWindowYes;
+			selectedRect = mConfirmWindowYesInitialBounds;
 		} else {
-			selectedPane = unk100;
-			selectedRect = unk114;
+			selectedPane = mConfirmWindowNo;
+			selectedRect = mConfirmWindowNoInitialBounds;
 		}
 
 		if (unk2FC == 4) {
@@ -564,21 +588,24 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
-			unkFC->updateCenteredSize(1, unk104.getWidth(), unk104.getHeight());
-			unk100->updateCenteredSize(1, unk114.getWidth(),
-			                           unk114.getHeight());
-			unkFC->update();
-			unk100->update();
+			mConfirmWindowYes->updateCenteredSize(
+			    1, mConfirmWindowYesInitialBounds.getWidth(),
+			    mConfirmWindowYesInitialBounds.getHeight());
+			mConfirmWindowNo->updateCenteredSize(
+			    1, mConfirmWindowNoInitialBounds.getWidth(),
+			    mConfirmWindowNoInitialBounds.getHeight());
+			mConfirmWindowYes->update();
+			mConfirmWindowNo->update();
 
 			if (unk2E9 == 0) {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
 			} else {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
 			}
 		}
@@ -586,8 +613,8 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 	}
 
 	case 3:
-		if (unkE0->update()) {
-			unkE0->getPane()->hide();
+		if (mConfirmWindow->update()) {
+			mConfirmWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -601,8 +628,6 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 	return result;
 }
 
-// TODO: nonmatching frame (0x3e8 vs 0x498) and reset interpolator.
-// TExPane::updateCenteredSize reads size instead of offset.
 s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
                               s8 param_3)
 {
@@ -614,92 +639,102 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			unk10 = 5;
 		}
 
-		setMessage(unk12C, 0x200, getCurMessageID());
-		setMessage(unk130, 0x200, getCurMessageID());
+		setMessage(mConfirmWindowText, 0x200, getCurMessageID());
+		setMessage(mConfirmWindowTextShadow, 0x200, getCurMessageID());
 
-		unk134->hide();
-		unk138->hide();
+		mShineCountOver100->hide();
+		mShineCountUnder100->hide();
 		unk128->hide();
 		unkF8->hide();
-		unk130->hide();
-		unk150->hide();
-		unkFC->getPane()->hide();
-		unk100->getPane()->hide();
-		unk154[0]->hide();
-		unk154[1]->hide();
-		unk154[2]->hide();
+		mConfirmWindowTextShadow->hide();
+		mConfirmWindowMarioText->hide();
+		mConfirmWindowYes->getPane()->hide();
+		mConfirmWindowNo->getPane()->hide();
+		mSaveNameABC[0]->hide();
+		mSaveNameABC[1]->hide();
+		mSaveNameABC[2]->hide();
 
-		unkE0->getPane()->show();
-		unkE0->setCenteredSize(20, unkE4.getWidth(), unkE4.getHeight(), 0, 0);
+		mConfirmWindow->getPane()->show();
+		mConfirmWindow->setCenteredSize(
+		    20, mConfirmWindowInitialBounds.getWidth(),
+		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
 		unk10 = 1;
 		break;
 
 	case 1:
-		if (unkE0->update()) {
-			unk154[unk2EA]->show();
-			unk150->show();
-			unk130->show();
+		if (mConfirmWindow->update()) {
+			mSaveNameABC[unk2EA]->show();
+			mConfirmWindowMarioText->show();
+			mConfirmWindowTextShadow->show();
 
 			if (unk310 == PROGRESS_UNK17) {
 				unk128->hide();
 				u16 score
 				    = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
 				if (score < 100) {
-					unk148->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
-					unk14C->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk134->hide();
-					unk138->show();
+					mShineCountTensUnder100->changeTexture(
+					    mLargeDigitFontTextures[score / 10]->getTexInfo(), 0);
+					mShineCountOnesUnder100->changeTexture(
+					    mLargeDigitFontTextures[score % 10]->getTexInfo(), 0);
+					mShineCountOver100->hide();
+					mShineCountUnder100->show();
 				} else {
-					unk13C->changeTexture(unk1C[score / 100]->getTexInfo(), 0);
+					mShineCountHundredsOver100->changeTexture(
+					    mLargeDigitFontTextures[score / 100]->getTexInfo(), 0);
 					score -= 100;
-					unk140->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
-					unk144->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk138->hide();
-					unk134->show();
+					mShineCountTensOver100->changeTexture(
+					    mLargeDigitFontTextures[score / 10]->getTexInfo(), 0);
+					mShineCountOnesOver100->changeTexture(
+					    mLargeDigitFontTextures[score % 10]->getTexInfo(), 0);
+					mShineCountUnder100->hide();
+					mShineCountOver100->show();
 				}
 			} else {
 				if (getBookmarkInfo().unk0 == 1) {
 					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
 					strncpy(unk128->getStringPtr(), "こわれています", 0x14);
 					unk128->show();
-					unk134->hide();
-					unk138->hide();
+					mShineCountOver100->hide();
+					mShineCountUnder100->hide();
 				} else if (getBookmarkInfo().unk18 == 0) {
 					strncpy(unk124->getStringPtr(), "NEW", 0x14);
 					strncpy(unk128->getStringPtr(), "NEW", 0x14);
 					unk128->show();
-					unk134->hide();
-					unk138->hide();
+					mShineCountOver100->hide();
+					mShineCountUnder100->hide();
 				} else {
 					if (getBookmarkInfo().unk1C >= 100) {
-						unk134->show();
-						unk138->hide();
+						mShineCountOver100->show();
+						mShineCountUnder100->hide();
 					} else {
-						unk134->hide();
-						unk138->show();
+						mShineCountOver100->hide();
+						mShineCountUnder100->show();
 					}
 					unk128->hide();
 				}
 			}
 
-			unkFC->getPane()->show();
-			unk100->getPane()->show();
-			unkFC->updateCenteredSize(1, unk104.getWidth(), unk104.getHeight());
-			unk100->updateCenteredSize(1, unk114.getWidth(),
-			                           unk114.getHeight());
-			unkFC->update();
-			unk100->update();
+			mConfirmWindowYes->getPane()->show();
+			mConfirmWindowNo->getPane()->show();
+			mConfirmWindowYes->updateCenteredSize(
+			    1, mConfirmWindowYesInitialBounds.getWidth(),
+			    mConfirmWindowYesInitialBounds.getHeight());
+			mConfirmWindowNo->updateCenteredSize(
+			    1, mConfirmWindowNoInitialBounds.getWidth(),
+			    mConfirmWindowNoInitialBounds.getHeight());
+			mConfirmWindowYes->update();
+			mConfirmWindowNo->update();
 			unk2E9 = param_3;
 
 			if (param_3 == 0) {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
 			} else {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
 			}
 
@@ -709,7 +744,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 	case 2: {
 		s8 old    = unk2E9;
-		u32 input = unk270->mEnabledFrameMeaning;
+		u32 input = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			if (unk44 != nullptr)
@@ -721,17 +756,18 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 				gpMSound->startSoundSystemSE(0x481DU, 0, nullptr, 0);
 			}
 
-			unk134->hide();
-			unk138->hide();
+			mShineCountOver100->hide();
+			mShineCountUnder100->hide();
 			unk128->hide();
 			unkF8->hide();
-			unk130->hide();
-			unk150->hide();
-			unkFC->getPane()->hide();
-			unk100->getPane()->hide();
+			mConfirmWindowTextShadow->hide();
+			mConfirmWindowMarioText->hide();
+			mConfirmWindowYes->getPane()->hide();
+			mConfirmWindowNo->getPane()->hide();
 			unk10 = 3;
-			unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(),
-			                       unkE4.getHeight());
+			mConfirmWindow->setCenteredSize(
+			    20, 0, 0, mConfirmWindowInitialBounds.getWidth(),
+			    mConfirmWindowInitialBounds.getHeight());
 		} else if (input & TMarioGamePad::MEANING_MENU_LEFT) {
 			unk2E9 = 0;
 		} else if (input & TMarioGamePad::MEANING_MENU_RIGHT) {
@@ -741,11 +777,11 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		TExPane* selectedPane;
 		JUTRect selectedRect;
 		if (unk2E9 == 0) {
-			selectedPane = unkFC;
-			selectedRect = unk104;
+			selectedPane = mConfirmWindowYes;
+			selectedRect = mConfirmWindowYesInitialBounds;
 		} else {
-			selectedPane = unk100;
-			selectedRect = unk114;
+			selectedPane = mConfirmWindowNo;
+			selectedRect = mConfirmWindowNoInitialBounds;
 		}
 
 		if (unk2FC == 4) {
@@ -790,20 +826,23 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
-			unkFC->updateCenteredSize(1, unk104.getWidth(), unk104.getHeight());
-			unk100->updateCenteredSize(1, unk114.getWidth(),
-			                           unk114.getHeight());
-			unkFC->update();
-			unk100->update();
+			mConfirmWindowYes->updateCenteredSize(
+			    1, mConfirmWindowYesInitialBounds.getWidth(),
+			    mConfirmWindowYesInitialBounds.getHeight());
+			mConfirmWindowNo->updateCenteredSize(
+			    1, mConfirmWindowNoInitialBounds.getWidth(),
+			    mConfirmWindowNoInitialBounds.getHeight());
+			mConfirmWindowYes->update();
+			mConfirmWindowNo->update();
 			if (unk2E9 == 0) {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
 			} else {
-				((J2DPicture*)unkFC->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
 				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)unk100->getPane())->mWhite
+				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
 			}
 		}
@@ -811,8 +850,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 	}
 
 	case 3:
-		if (unkE0->update()) {
-			unkE0->getPane()->hide();
+		if (mConfirmWindow->update()) {
+			mConfirmWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -831,16 +870,18 @@ void TCardSave::endDrawMessage()
 	if (unk10 != 2)
 		return;
 
-	unk134->hide();
-	unk138->hide();
+	mShineCountOver100->hide();
+	mShineCountUnder100->hide();
 	unk128->hide();
 	unkF8->hide();
-	unk130->hide();
-	unk150->hide();
-	unkFC->getPane()->hide();
-	unk100->getPane()->hide();
+	mConfirmWindowTextShadow->hide();
+	mConfirmWindowMarioText->hide();
+	mConfirmWindowYes->getPane()->hide();
+	mConfirmWindowNo->getPane()->hide();
 	unk10 = 3;
-	unkE0->setCenteredSize(20, 0, 0, unkE4.getWidth(), unkE4.getHeight());
+	mConfirmWindow->setCenteredSize(20, 0, 0,
+	                                mConfirmWindowInitialBounds.getWidth(),
+	                                mConfirmWindowInitialBounds.getHeight());
 }
 
 s8 TCardSave::drawMessage(TEProgress param_1)
@@ -848,8 +889,8 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 	s8 result = -1;
 	switch (unk10) {
 	case 0:
-		setMessage(unk174, 0x200, (u16)cMessageID[unk310]);
-		setMessage(unk178, 0x200, (u16)cMessageID[unk310]);
+		setMessage(unk174, 0x200, getCurMessageID());
+		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
 		unk160->getPane()->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
@@ -879,8 +920,6 @@ s8 TCardSave::drawMessage(TEProgress param_1)
 	return result;
 }
 
-// TODO: nonmatching frame-only instructions (0x158 vs 0x168); inline
-// temporary ownership is unresolved.
 s8 TCardSave::drawMessageBM(TEProgress param_1)
 {
 
@@ -892,52 +931,55 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 			unk10 = 5;
 		}
 
-		setMessage(unk12C, 0x200, getCurMessageID());
-		setMessage(unk130, 0x200, getCurMessageID());
+		setMessage(mConfirmWindowText, 0x200, getCurMessageID());
+		setMessage(mConfirmWindowTextShadow, 0x200, getCurMessageID());
 
-		unk134->hide();
-		unk138->hide();
+		mShineCountOver100->hide();
+		mShineCountUnder100->hide();
 		unk128->hide();
 		unkF8->hide();
-		unk130->hide();
-		unk150->hide();
-		unkFC->getPane()->hide();
-		unk100->getPane()->hide();
-		for (int i = 0; i < 3; ++i)
-			unk154[i]->hide();
+		mConfirmWindowTextShadow->hide();
+		mConfirmWindowMarioText->hide();
+		mConfirmWindowYes->getPane()->hide();
+		mConfirmWindowNo->getPane()->hide();
+		mSaveNameABC[0]->hide();
+		mSaveNameABC[1]->hide();
+		mSaveNameABC[2]->hide();
 
-		unkE0->getPane()->show();
-		unkE0->setCenteredSize(20, unkE4.getWidth(), unkE4.getHeight(), 0, 0);
+		mConfirmWindow->getPane()->show();
+		mConfirmWindow->setCenteredSize(
+		    20, mConfirmWindowInitialBounds.getWidth(),
+		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
 		unk10 = 1;
 		break;
 
 	case 1:
-		if (unkE0->update()) {
-			unk130->show();
-			unk154[unk2EA]->show();
-			unk150->show();
+		if (mConfirmWindow->update()) {
+			mConfirmWindowTextShadow->show();
+			mSaveNameABC[unk2EA]->show();
+			mConfirmWindowMarioText->show();
 
 			if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 				if (getBookmarkInfo().unk0 == 1) {
 					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
 					strncpy(unk128->getStringPtr(), "こわれています", 0x14);
 					unk128->show();
-					unk134->hide();
-					unk138->hide();
+					mShineCountOver100->hide();
+					mShineCountUnder100->hide();
 				} else if (getBookmarkInfo().unk18 == 0) {
 					strncpy(unk124->getStringPtr(), "NEW", 0x14);
 					strncpy(unk128->getStringPtr(), "NEW", 0x14);
 					unk128->show();
-					unk134->hide();
-					unk138->hide();
+					mShineCountOver100->hide();
+					mShineCountUnder100->hide();
 				} else {
 					unk128->hide();
 					if (getBookmarkInfo().unk1C >= 100) {
-						unk134->show();
-						unk138->hide();
+						mShineCountOver100->show();
+						mShineCountUnder100->hide();
 					} else {
-						unk134->hide();
-						unk138->show();
+						mShineCountOver100->hide();
+						mShineCountUnder100->show();
 					}
 				}
 			}
@@ -947,8 +989,8 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 		break;
 
 	case 3:
-		if (unkE0->update()) {
-			unkE0->getPane()->hide();
+		if (mConfirmWindow->update()) {
+			mConfirmWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1014,48 +1056,36 @@ s8 TCardSave::waitForAnyKey(TEProgress param_1)
 s8 TCardSave::waitForSelectOver()
 {
 	s8 result = -1;
-	TExPane* pane;
 
 	switch (unk10) {
-	case 0: {
-		unk240->getPane()->show();
-		s32 width;
-		s32 height = unk244.getHeight();
-		width      = unk244.getWidth();
-		pane       = unk240;
-		pane->setPaneSize(20, width, height, 0, 0);
-		s32 initialX;
-		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
-		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
-		pane->setPaneOffset(20,
-		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
-		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
-		                    initialX, initialY);
-		int i = 0;
-		while (i < 2) {
-			unk264[i]->hide();
-			unk254[i][0]->hide();
-			unk254[i][1]->hide();
-			++i;
-		}
+	case 0:
+		mGameOverSaveWindow->getPane()->show();
+		mGameOverSaveWindow->setCenteredSize(
+		    20, mGameOverSaveWindowInitialBounds.getWidth(),
+		    mGameOverSaveWindowInitialBounds.getHeight(), 0, 0);
+		mGameOverSaveOptions[0]->hide();
+		mGameOverSavePointerHands[0][0]->hide();
+		mGameOverSavePointerHands[0][1]->hide();
+		mGameOverSaveOptions[1]->hide();
+		mGameOverSavePointerHands[1][0]->hide();
+		mGameOverSavePointerHands[1][1]->hide();
 		unk10 = 1;
 		break;
-	}
 
 	case 1:
-		if (unk240->update()) {
+		if (mGameOverSaveWindow->update()) {
 			unk10  = 2;
 			unk2E9 = 0;
-			unk264[0]->show();
-			unk264[1]->show();
-			unk254[0][0]->show();
-			unk254[0][1]->show();
+			mGameOverSaveOptions[0]->show();
+			mGameOverSaveOptions[1]->show();
+			mGameOverSavePointerHands[0][0]->show();
+			mGameOverSavePointerHands[0][1]->show();
 		}
 		break;
 
 	case 2: {
 		s8 oldSelect = unk2E9;
-		u32 input    = unk270->mEnabledFrameMeaning;
+		u32 input    = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
@@ -1069,37 +1099,28 @@ s8 TCardSave::waitForSelectOver()
 		if (oldSelect != unk2E9) {
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
-			unk254[oldSelect][0]->hide();
-			unk254[oldSelect][1]->hide();
-			unk254[unk2E9][0]->show();
-			unk254[unk2E9][1]->show();
+			mGameOverSavePointerHands[oldSelect][0]->hide();
+			mGameOverSavePointerHands[oldSelect][1]->hide();
+			mGameOverSavePointerHands[unk2E9][0]->show();
+			mGameOverSavePointerHands[unk2E9][1]->show();
 		}
 		break;
 	}
 
-	case 4: {
-		s32 width;
-		s32 height = unk244.getHeight();
-		width      = unk244.getWidth();
-		pane       = unk240;
-		pane->setPaneSize(20, 0, 0, width, height);
-		s32 initialX;
-		s32 initialY = (pane->mInitialBounds.getHeight() - height) * 0.5f;
-		initialX     = (pane->mInitialBounds.getWidth() - width) * 0.5f;
-		pane->setPaneOffset(20, pane->mInitialBounds.getWidth() * 0.5f,
-		                    pane->mInitialBounds.getHeight() * 0.5f, initialX,
-		                    initialY);
-		unk264[0]->hide();
-		unk264[1]->hide();
-		unk254[unk2E9][0]->hide();
-		unk254[unk2E9][1]->hide();
+	case 4:
+		mGameOverSaveWindow->setCenteredSize(
+		    20, 0, 0, mGameOverSaveWindowInitialBounds.getWidth(),
+		    mGameOverSaveWindowInitialBounds.getHeight());
+		mGameOverSaveOptions[0]->hide();
+		mGameOverSaveOptions[1]->hide();
+		mGameOverSavePointerHands[unk2E9][0]->hide();
+		mGameOverSavePointerHands[unk2E9][1]->hide();
 		unk10 = 3;
 		break;
-	}
 
 	case 3:
-		if (unk240->update()) {
-			unk240->getPane()->hide();
+		if (mGameOverSaveWindow->update()) {
+			mGameOverSaveWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1117,11 +1138,9 @@ s8 TCardSave::waitForSelectOver()
 	return result;
 }
 
-// TODO: nonmatching message ID register allocation (r30 instead of r24).
 s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 {
 	s8 result = -1;
-	TExPane* pane;
 
 	switch (unk10) {
 	case 0: {
@@ -1144,45 +1163,36 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 			break;
 		}
 
-		setMessage(unk190, 0x200, (u16)messageID);
-		setMessage(unk194, 0x200, (u16)messageID);
+		setMessage(mEventSaveWindowText, 0x200, (u16)messageID);
+		setMessage(mEventSaveWindowTextShadow, 0x200, (u16)messageID);
 
-		unk194->hide();
-		unk17C->getPane()->show();
-		s32 width;
-		s32 height = unk180.getHeight();
-		width      = unk180.getWidth();
-		pane       = unk17C;
-		pane->setPaneSize(20, width, height, 0, 0);
-		s32 initialX;
-		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
-		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
-		pane->setPaneOffset(20,
-		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
-		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
-		                    initialX, initialY);
+		mEventSaveWindowTextShadow->hide();
+		mEventSaveWindow->getPane()->show();
+		mEventSaveWindow->setCenteredSize(
+		    20, mEventSaveWindowInitialBounds.getWidth(),
+		    mEventSaveWindowInitialBounds.getHeight(), 0, 0);
 
-		unk198[0][1]->hide();
-		unk1A8[0][0]->hide();
-		unk1A8[0][1]->hide();
-		unk198[1][1]->hide();
-		unk1A8[1][0]->hide();
-		unk1A8[1][1]->hide();
+		mEventSaveOptions[0][1]->hide();
+		mEventSavePointerHands[0][0]->hide();
+		mEventSavePointerHands[0][1]->hide();
+		mEventSaveOptions[1][1]->hide();
+		mEventSavePointerHands[1][0]->hide();
+		mEventSavePointerHands[1][1]->hide();
 
 		unk10 = 1;
 		break;
 	}
 
 	case 1:
-		if (unk17C->update()) {
-			unk194->show();
+		if (mEventSaveWindow->update()) {
+			mEventSaveWindowTextShadow->show();
 			unk10  = 2;
 			unk2E9 = 0;
 
-			unk198[0][1]->show();
-			unk198[1][1]->show();
-			unk1A8[0][0]->show();
-			unk1A8[0][1]->show();
+			mEventSaveOptions[0][1]->show();
+			mEventSaveOptions[1][1]->show();
+			mEventSavePointerHands[0][0]->show();
+			mEventSavePointerHands[0][1]->show();
 
 			unk2F8 = 0;
 			unk2F9 = 1;
@@ -1191,7 +1201,7 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 
 	case 2: {
 		s8 oldSelect = unk2E9;
-		u32 input    = unk270->mEnabledFrameMeaning;
+		u32 input    = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
@@ -1205,10 +1215,10 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		if (oldSelect != unk2E9) {
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
-			unk1A8[oldSelect][0]->hide();
-			unk1A8[oldSelect][1]->hide();
-			unk1A8[unk2E9][0]->show();
-			unk1A8[unk2E9][1]->show();
+			mEventSavePointerHands[oldSelect][0]->hide();
+			mEventSavePointerHands[oldSelect][1]->hide();
+			mEventSavePointerHands[unk2E9][0]->show();
+			mEventSavePointerHands[unk2E9][1]->show();
 
 			unk2F8 = 0;
 			unk2F9 = 1;
@@ -1216,32 +1226,23 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		break;
 	}
 
-	case 4: {
-		unk194->hide();
-		s32 width;
-		s32 height = unk180.getHeight();
-		width      = unk180.getWidth();
-		pane       = unk17C;
-		pane->setPaneSize(20, 0, 0, width, height);
-		s32 initialX;
-		s32 initialY = (pane->mInitialBounds.getHeight() - height) * 0.5f;
-		initialX     = (pane->mInitialBounds.getWidth() - width) * 0.5f;
-		pane->setPaneOffset(20, pane->mInitialBounds.getWidth() * 0.5f,
-		                    pane->mInitialBounds.getHeight() * 0.5f, initialX,
-		                    initialY);
+	case 4:
+		mEventSaveWindowTextShadow->hide();
+		mEventSaveWindow->setCenteredSize(
+		    20, 0, 0, mEventSaveWindowInitialBounds.getWidth(),
+		    mEventSaveWindowInitialBounds.getHeight());
 
-		unk198[0][1]->hide();
-		unk198[1][1]->hide();
-		unk1A8[unk2E9][0]->hide();
-		unk1A8[unk2E9][1]->hide();
+		mEventSaveOptions[0][1]->hide();
+		mEventSaveOptions[1][1]->hide();
+		mEventSavePointerHands[unk2E9][0]->hide();
+		mEventSavePointerHands[unk2E9][1]->hide();
 
 		unk10 = 3;
 		break;
-	}
 
 	case 3:
-		if (unk17C->update()) {
-			unk17C->getPane()->hide();
+		if (mEventSaveWindow->update()) {
+			mEventSaveWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1259,62 +1260,57 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 	return result;
 }
 
-// TODO: text-box receivers and reduced score use r26 instead of r25.
 s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
                              TEProgress param_3)
 {
 	s8 result = -1;
 
 	switch (unk10) {
-	case 0: {
-		unk1BC->getPane()->show();
-		s32 width;
-		s32 height    = unk1C0.getHeight();
-		width         = unk1C0.getWidth();
-		TExPane* pane = unk1BC;
-		pane->setPaneSize(20, width, height, 0, 0);
-		s32 initialX;
-		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
-		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
-		pane->setPaneOffset(20,
-		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
-		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
-		                    initialX, initialY);
+	case 0:
+		mShineGetSaveWindow->getPane()->show();
+		mShineGetSaveWindow->setCenteredSize(
+		    20, mShineGetSaveWindowInitialBounds.getWidth(),
+		    mShineGetSaveWindowInitialBounds.getHeight(), 0, 0);
 
-		unk204->hide();
-		setMessage(unk200, 0x200, 0x21);
-		setMessage(unk204, 0x200, 0x21);
+		mShineGetSaveWindowTextShadow->hide();
+		setMessage(mShineGetSaveWindowText, 0x200, 0x21);
+		setMessage(mShineGetSaveWindowTextShadow, 0x200, 0x21);
 
-		for (int i = 0; i < 3; ++i) {
-			unk1E8[i][1]->hide();
-			for (int j = 0; j < 2; ++j)
-				unk1D0[i][j]->hide();
-		}
+		mShineGetSaveOptions[0][1]->hide();
+		mShineGetSavePointerHands[0][0]->hide();
+		mShineGetSavePointerHands[0][1]->hide();
+		mShineGetSaveOptions[1][1]->hide();
+		mShineGetSavePointerHands[1][0]->hide();
+		mShineGetSavePointerHands[1][1]->hide();
+		mShineGetSaveOptions[2][1]->hide();
+		mShineGetSavePointerHands[2][0]->hide();
+		mShineGetSavePointerHands[2][1]->hide();
 
-		for (int i = 0; i < 3; ++i)
-			unk230[i]->hide();
+		mShineGetSaveNameABC[0]->hide();
+		mShineGetSaveNameABC[1]->hide();
+		mShineGetSaveNameABC[2]->hide();
 		unk20C->hide();
 		unk210->hide();
 		unk214->hide();
-		unk22C->hide();
+		mShineGetSaveMarioText->hide();
 
 		unk10 = 1;
 		break;
-	}
 
 	case 1:
-		if (unk1BC->update()) {
+		if (mShineGetSaveWindow->update()) {
 			unk10  = 2;
 			unk2E9 = 0;
 
-			for (int i = 0; i < 3; ++i)
-				unk1E8[i][1]->show();
-			for (int i = 0; i < 2; ++i)
-				unk1D0[0][i]->show();
-			unk204->show();
+			mShineGetSaveOptions[0][1]->show();
+			mShineGetSaveOptions[1][1]->show();
+			mShineGetSaveOptions[2][1]->show();
+			mShineGetSavePointerHands[0][0]->show();
+			mShineGetSavePointerHands[0][1]->show();
+			mShineGetSaveWindowTextShadow->show();
 
-			unk230[unk2EA]->show();
-			unk22C->show();
+			mShineGetSaveNameABC[unk2EA]->show();
+			mShineGetSaveMarioText->show();
 
 			if (getBookmarkInfo().unk0 == 1) {
 				strncpy(unk208->getStringPtr(), "こわれています", 0x14);
@@ -1336,18 +1332,28 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 
 				if (score < 100) {
 					((J2DPicture*)unk224)
-					    ->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score / 10]->getTexInfo(),
+					        0);
 					((J2DPicture*)unk228)
-					    ->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score % 10]->getTexInfo(),
+					        0);
 					unk214->show();
 				} else {
 					((J2DPicture*)unk218)
-					    ->changeTexture(unk1C[score / 100]->getTexInfo(), 0);
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score / 100]->getTexInfo(),
+					        0);
 					score -= 100;
 					((J2DPicture*)unk21C)
-					    ->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score / 10]->getTexInfo(),
+					        0);
 					((J2DPicture*)unk220)
-					    ->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score % 10]->getTexInfo(),
+					        0);
 					unk210->show();
 				}
 
@@ -1358,7 +1364,7 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 
 	case 2: {
 		s8 oldSelect = unk2E9;
-		u32 input    = unk270->mEnabledFrameMeaning;
+		u32 input    = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
@@ -1376,47 +1382,40 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		if (oldSelect != unk2E9) {
 			gpMSound->startSoundSystemSE(0x481EU, 0, nullptr, 0);
 
-			unk1D0[oldSelect][0]->hide();
-			unk1D0[oldSelect][1]->hide();
-			unk1D0[unk2E9][0]->show();
-			unk1D0[unk2E9][1]->show();
+			mShineGetSavePointerHands[oldSelect][0]->hide();
+			mShineGetSavePointerHands[oldSelect][1]->hide();
+			mShineGetSavePointerHands[unk2E9][0]->show();
+			mShineGetSavePointerHands[unk2E9][1]->show();
 		}
 		break;
 	}
 
-	case 4: {
-		s32 width;
-		s32 height    = unk1C0.getHeight();
-		width         = unk1C0.getWidth();
-		TExPane* pane = unk1BC;
-		pane->setPaneSize(20, 0, 0, width, height);
-		s32 initialX;
-		s32 initialY = (pane->mInitialBounds.getHeight() - height) * 0.5f;
-		initialX     = (pane->mInitialBounds.getWidth() - width) * 0.5f;
-		pane->setPaneOffset(20, pane->mInitialBounds.getWidth() * 0.5f,
-		                    pane->mInitialBounds.getHeight() * 0.5f, initialX,
-		                    initialY);
+	case 4:
+		mShineGetSaveWindow->setCenteredSize(
+		    20, 0, 0, mShineGetSaveWindowInitialBounds.getWidth(),
+		    mShineGetSaveWindowInitialBounds.getHeight());
 
-		for (int i = 0; i < 3; ++i)
-			unk1E8[i][1]->hide();
-		unk1D0[unk2E9][0]->hide();
-		unk1D0[unk2E9][1]->hide();
+		mShineGetSaveOptions[0][1]->hide();
+		mShineGetSaveOptions[1][1]->hide();
+		mShineGetSaveOptions[2][1]->hide();
+		mShineGetSavePointerHands[unk2E9][0]->hide();
+		mShineGetSavePointerHands[unk2E9][1]->hide();
 
-		for (int i = 0; i < 3; ++i)
-			unk230[i]->hide();
-		unk204->hide();
+		mShineGetSaveNameABC[0]->hide();
+		mShineGetSaveNameABC[1]->hide();
+		mShineGetSaveNameABC[2]->hide();
+		mShineGetSaveWindowTextShadow->hide();
 		unk20C->hide();
 		unk210->hide();
 		unk214->hide();
-		unk22C->hide();
+		mShineGetSaveMarioText->hide();
 
 		unk10 = 3;
 		break;
-	}
 
 	case 3:
-		if (unk1BC->update()) {
-			unk1BC->getPane()->hide();
+		if (mShineGetSaveWindow->update()) {
+			mShineGetSaveWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1436,82 +1435,86 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 	return result;
 }
 
-// TODO: closing-animation width and height use r26/r25 instead of r25/r26.
 s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 {
 	s8 result = -1;
 
 	switch (unk10) {
-	case 0: {
-		setMessage(unk12C, 0x200, getCurMessageID());
+	case 0:
+		setMessage(mConfirmWindowText, 0x200, getCurMessageID());
 		{
 			u16 messageID = getCurMessageID();
-			setMessage(unk130, 0x200, messageID);
+			setMessage(mConfirmWindowTextShadow, 0x200, messageID);
 		}
 
 		unkF8->hide();
-		for (int i = 0; i < 3; ++i) {
-			unk128->hide();
-			unk134->hide();
-			unk138->hide();
-		}
-		unkFC->getPane()->hide();
-		unk100->getPane()->hide();
+		unk128->hide();
+		mShineCountOver100->hide();
+		mShineCountUnder100->hide();
+		unk128->hide();
+		mShineCountOver100->hide();
+		mShineCountUnder100->hide();
+		unk128->hide();
+		mShineCountOver100->hide();
+		mShineCountUnder100->hide();
+		mConfirmWindowYes->getPane()->hide();
+		mConfirmWindowNo->getPane()->hide();
 
-		unkE0->getPane()->show();
-		s32 height    = unkE4.getHeight();
-		s32 width     = unkE4.getWidth();
-		TExPane* pane = unkE0;
-		pane->setPaneSize(20, width, height, 0, 0);
-		s32 initialX;
-		s32 initialY = pane->mInitialBounds.getHeight() * 0.5f;
-		initialX     = pane->mInitialBounds.getWidth() * 0.5f;
-		pane->setPaneOffset(20,
-		                    (pane->mInitialBounds.getWidth() - width) * 0.5f,
-		                    (pane->mInitialBounds.getHeight() - height) * 0.5f,
-		                    initialX, initialY);
+		mConfirmWindow->getPane()->show();
+		mConfirmWindow->setCenteredSize(
+		    20, mConfirmWindowInitialBounds.getWidth(),
+		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
 		unk10 = 1;
 		break;
-	}
 
 	case 1:
-		if (unkE0->update()) {
-			unk154[unk2EA]->show();
-			unk150->show();
-			unk130->show();
+		if (mConfirmWindow->update()) {
+			mSaveNameABC[unk2EA]->show();
+			mConfirmWindowMarioText->show();
+			mConfirmWindowTextShadow->show();
 
 			if (getBookmarkInfo().unk0 == 1) {
 				strncpy(unk124->getStringPtr(), "こわれています", 0x14);
 				strncpy(unk128->getStringPtr(), "こわれています", 0x14);
 				unk128->show();
-				unk134->hide();
-				unk138->hide();
+				mShineCountOver100->hide();
+				mShineCountUnder100->hide();
 			} else if (getBookmarkInfo().unk18 == 0) {
 				strncpy(unk124->getStringPtr(), "NEW", 0x14);
 				strncpy(unk128->getStringPtr(), "NEW", 0x14);
 				unk128->show();
-				unk134->hide();
-				unk138->hide();
+				mShineCountOver100->hide();
+				mShineCountUnder100->hide();
 			} else {
 				unk128->hide();
 				u16 score = getBookmarkInfo().unk1C;
 				if (score < 100) {
-					((J2DPicture*)unk148)
-					    ->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
-					((J2DPicture*)unk14C)
-					    ->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk134->hide();
-					unk138->show();
+					((J2DPicture*)mShineCountTensUnder100)
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score / 10]->getTexInfo(),
+					        0);
+					((J2DPicture*)mShineCountOnesUnder100)
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score % 10]->getTexInfo(),
+					        0);
+					mShineCountOver100->hide();
+					mShineCountUnder100->show();
 				} else {
-					((J2DPicture*)unk13C)
-					    ->changeTexture(unk1C[score / 100]->getTexInfo(), 0);
+					((J2DPicture*)mShineCountHundredsOver100)
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score / 100]->getTexInfo(),
+					        0);
 					score -= 100;
-					((J2DPicture*)unk140)
-					    ->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
-					((J2DPicture*)unk144)
-					    ->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk134->show();
-					unk138->hide();
+					((J2DPicture*)mShineCountTensOver100)
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score / 10]->getTexInfo(),
+					        0);
+					((J2DPicture*)mShineCountOnesOver100)
+					    ->changeTexture(
+					        mLargeDigitFontTextures[score % 10]->getTexInfo(),
+					        0);
+					mShineCountOver100->show();
+					mShineCountUnder100->hide();
 				}
 			}
 
@@ -1529,8 +1532,8 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 		break;
 
 	case 3:
-		if (unkE0->update()) {
-			unkE0->getPane()->hide();
+		if (mConfirmWindow->update()) {
+			mConfirmWindow->getPane()->hide();
 			unk10 = 5;
 		}
 		break;
@@ -1556,21 +1559,8 @@ void TCardSave::selectBookmarks(TEProgress, TEProgress, TEProgress, TEProgress)
 {
 }
 
-void TCardSave::changePattern(J2DPicture* picture, s16 period, u32 frame)
-{
-	if (frame % period == 0) {
-		if ((frame / period) % 2 == 0) {
-			picture->setBlendKonstColor(0.0f, 1.0f, 0.0f, 0.0f);
-			picture->setBlendKonstAlpha(0.0f, 1.0f, 0.0f, 0.0f);
-		} else {
-			picture->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
-			picture->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
-		}
-	}
-}
+void TCardSave::changePattern(J2DPicture*, s16, u32) { }
 
-// TODO: nonmatching frame (0x4e0 vs 0x5e8) and GPR allocation. Investigate
-// JUTRect dimension inlines in the shared setCenteredSize helper.
 void TCardSave::execMovement_()
 {
 
@@ -1578,7 +1568,7 @@ void TCardSave::execMovement_()
 	s32 prevMode         = unk10;
 	s32 status;
 
-	unk270->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+	mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 
 	switch (unk310) {
 	case PROGRESS_UNK0:
@@ -1599,7 +1589,7 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK1:
 	case PROGRESS_UNK19:
-		unk270->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+		mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		gpCardManager->unmount();
 
 		if (!unk18 && unk308 == 0)
@@ -1619,13 +1609,18 @@ void TCardSave::execMovement_()
 				score = 0x3E7;
 
 			if (score < 100) {
-				unk148->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
-				unk14C->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
+				mShineCountTensUnder100->changeTexture(
+				    mLargeDigitFontTextures[score / 10]->getTexInfo(), 0);
+				mShineCountOnesUnder100->changeTexture(
+				    mLargeDigitFontTextures[score % 10]->getTexInfo(), 0);
 			} else {
-				unk13C->changeTexture(unk1C[score / 100]->getTexInfo(), 0);
+				mShineCountHundredsOver100->changeTexture(
+				    mLargeDigitFontTextures[score / 100]->getTexInfo(), 0);
 				score -= int(score * 0.01f) * 100;
-				unk140->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
-				unk144->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
+				mShineCountTensOver100->changeTexture(
+				    mLargeDigitFontTextures[score / 10]->getTexInfo(), 0);
+				mShineCountOnesOver100->changeTexture(
+				    mLargeDigitFontTextures[score % 10]->getTexInfo(), 0);
 			}
 
 			switch (unk308) {
@@ -1931,22 +1926,32 @@ void TCardSave::execMovement_()
 								score = 0x3E7;
 
 							if (score < 100) {
-								unk138->show();
-								unk134->hide();
-								unk148->changeTexture(
-								    unk1C[score / 10]->getTexInfo(), 0);
-								unk14C->changeTexture(
-								    unk1C[score % 10]->getTexInfo(), 0);
+								mShineCountUnder100->show();
+								mShineCountOver100->hide();
+								mShineCountTensUnder100->changeTexture(
+								    mLargeDigitFontTextures[score / 10]
+								        ->getTexInfo(),
+								    0);
+								mShineCountOnesUnder100->changeTexture(
+								    mLargeDigitFontTextures[score % 10]
+								        ->getTexInfo(),
+								    0);
 							} else {
-								unk134->show();
-								unk138->hide();
-								unk13C->changeTexture(
-								    unk1C[score / 100]->getTexInfo(), 0);
+								mShineCountOver100->show();
+								mShineCountUnder100->hide();
+								mShineCountHundredsOver100->changeTexture(
+								    mLargeDigitFontTextures[score / 100]
+								        ->getTexInfo(),
+								    0);
 								score -= ((s32)((f32)score * 0.01f)) * 100;
-								unk140->changeTexture(
-								    unk1C[score / 10]->getTexInfo(), 0);
-								unk144->changeTexture(
-								    unk1C[score % 10]->getTexInfo(), 0);
+								mShineCountTensOver100->changeTexture(
+								    mLargeDigitFontTextures[score / 10]
+								        ->getTexInfo(),
+								    0);
+								mShineCountOnesOver100->changeTexture(
+								    mLargeDigitFontTextures[score % 10]
+								        ->getTexInfo(),
+								    0);
 							}
 						}
 
@@ -2157,7 +2162,7 @@ void TCardSave::execIssueGX_(JDrama::TGraphics* param_1)
 		J2DOrthoGraph graph(param_1->getViewport());
 		graph.setup2D();
 		const J2DGrafContext* context = &graph;
-		unk14->draw(0, 0, context);
+		mSaveScreen->draw(0, 0, context);
 	}
 
 	param_1->setScissor(scissorRect);

@@ -17,31 +17,13 @@ class TDemoBossHanachanSaveParams;
 
 class TDemoBossHanachan : public TSpineEnemy {
 public:
-	// not in mario.MAP: always inlined, e.g. into
-	// TMarNameRefGen::getNameRef_BossEnemy via TSleepBossHanachan
 	TDemoBossHanachan(const char* name)
 	    : TSpineEnemy(name)
 	{
 	}
-
 	virtual BOOL receiveMessage(THitActor*, u32);
 
 	void initBase(TLiveManager*, u32);
-};
-
-class TDemoBossHanachanManager : public TEnemyManager {
-public:
-	// not in mario.MAP: always inlined, e.g. into
-	// TMarNameRefGen::getNameRef_BossEnemy via TSleepBossHanachanManager
-	TDemoBossHanachanManager(const char* name)
-	    : TEnemyManager(name)
-	{
-	}
-
-	virtual void clipEnemies(JDrama::TGraphics*);
-
-public:
-	/* 0x54 */ TDemoBossHanachanSaveParams* mSaveParams;
 };
 
 class TDemoBossHanachanSaveParams : public TParams {
@@ -51,6 +33,20 @@ public:
 public:
 	/* 0x8  */ TParamRT<f32> mSLViewClipFar;
 	/* 0x1C */ TParamRT<f32> mSLViewClipRadius;
+};
+
+class TDemoBossHanachanManager : public TEnemyManager {
+public:
+	TDemoBossHanachanManager(const char* name)
+	    : TEnemyManager(name)
+	{
+		mSaveParams
+		    = new TDemoBossHanachanSaveParams("/enemy/sleepBossHanachan.prm");
+	}
+	virtual void clipEnemies(JDrama::TGraphics*);
+
+public:
+	/* 0x54 */ TDemoBossHanachanSaveParams* mSaveParams;
 };
 
 #endif // ENEMY_DEMOBOSSHANACHAN_HPP

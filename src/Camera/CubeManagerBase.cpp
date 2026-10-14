@@ -3,8 +3,10 @@
 #include <System/MarDirector.hpp>
 #include <Camera/cameralib.hpp>
 #include <Player/MarioAccess.hpp>
-#include <System/DummyStrings.hpp>
 #include <string.h>
+
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 TCubeManagerBase* gpCubeCamera;
 TCubeManagerBase* gpCubeMirror;
@@ -33,7 +35,7 @@ TCubeManagerBase::TCubeManagerBase(const char* name, u8 param_2)
     , unk18(nullptr)
 {
 	unk14 = new TNameRefPtrAryT<TCubeGeneralInfo>;
-	unk14->getChildren().reserve(unk10);
+	unk14->reserve(unk10);
 	for (int i = 0; i < unk10; ++i)
 		unk14->push_back(new TCubeGeneralInfo);
 }
@@ -41,9 +43,10 @@ TCubeManagerBase::TCubeManagerBase(const char* name, u8 param_2)
 void TCubeManagerBase::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TNameRef::load(stream);
+	JDrama::TNameRef* root
+	    = JDrama::TNameRefGen::getInstance()->getRootNameRef();
 	TNameRefPtrAryT<TCubeGeneralInfo>* ary
-	    = static_cast<TNameRefPtrAryT<TCubeGeneralInfo>*>(
-	        JDrama::TNameRefGen::search(unk18));
+	    = (TNameRefPtrAryT<TCubeGeneralInfo>*)root->search(unk18);
 
 	if (ary == nullptr)
 		return;
@@ -79,23 +82,10 @@ bool TCubeManagerBase::isInCube(const Vec& v, s32 i) const
 	bool result = false;
 	if (i >= 0 && i < unk10) {
 		TCubeGeneralInfo& info = (*unk14)[i];
-		const Vec& unk24       = info.getUnk24();
-		if (CLBIsPointInCube(v, info.getUnkC(), info.getUnk18(), unk24))
+		if (CLBIsPointInCube(v, info.getUnkC(), info.getUnk18(),
+		                     info.getUnk24()))
 			result = true;
 	}
-	return result;
-}
-
-// TODO: UNUSED; name lookup is inferred, with no surviving call site to verify.
-bool TCubeManagerBase::isInCube(const Vec& v, const char* name) const
-{
-	bool result = false;
-	TCubeGeneralInfo* info
-	    = static_cast<TCubeGeneralInfo*>(unk14->search(name));
-	if (info != nullptr
-	    && CLBIsPointInCube(v, info->getUnkC(), info->getUnk18(),
-	                        info->getUnk24()))
-		result = true;
 	return result;
 }
 
@@ -132,7 +122,7 @@ bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 	return result;
 }
 
-bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
+inline bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 {
 	bool result = false;
 	int in      = getInCubeNo(pos);
@@ -145,8 +135,7 @@ bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 bool SMS_IsInOtherFastCube(const Vec& pos)
 {
 	bool result = false;
-	bool demo   = SMSGetMarDirector()->isDemoModeNow();
-	if (!demo
+	if (!SMSGetMarDirector()->isDemoModeNow()
 	    && (gpCubeFastA->isInOtherCube(pos) || gpCubeFastB->isInOtherCube(pos)
 	        || gpCubeFastC->isInOtherCube(pos)))
 		result = true;
@@ -157,7 +146,7 @@ bool SMS_IsInOtherFastCube(const Vec& pos)
 bool SMS_IsInSameCameraCube(const Vec& pos)
 {
 	bool result  = false;
-	Vec marioPos = *gpMarioPos;
+	Vec marioPos = SMS_GetMarioPos();
 	marioPos.y += 75.0f;
 	int uVar7 = gpCubeCamera->getInCubeNo(marioPos);
 	int uVar4 = gpCubeCamera->getInCubeNo(pos);

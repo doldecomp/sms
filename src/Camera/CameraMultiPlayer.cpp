@@ -29,7 +29,9 @@ bool TCameraMultiPlayer::addPlayer(const JGeometry::TVec3<f32>* param_1,
 	return true;
 }
 
-bool TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
+// TODO: shouldn't be marked as inline
+inline bool
+TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 {
 	bool found = false;
 	int i;
@@ -42,8 +44,10 @@ bool TCameraMultiPlayer::removePlayer(const JGeometry::TVec3<f32>* param_1)
 		}
 	}
 
-	if (found == true)
-		mPlayerCount -= 1;
+	if (found != true)
+		return found;
+
+	mPlayerCount -= 1;
 	return found;
 }
 
@@ -73,7 +77,6 @@ bool CPolarSubCamera::removeMultiPlayer(const JGeometry::TVec3<f32>* param_1)
 	return unk2BC->removePlayer(param_1);
 }
 
-// TODO: nonmatching inline temporaries, stack slots, and FPR coalescing.
 void CPolarSubCamera::ctrlMultiPlayerCamera_()
 {
 	int count = unk2BC->mPlayerCount;
@@ -104,9 +107,10 @@ void CPolarSubCamera::ctrlMultiPlayerCamera_()
 				for (j = i + 1; j < count; ++j, ++jt) {
 					JGeometry::TVec3<f32> diff;
 					diff.sub(*it->unk0, *jt->unk0);
-					JGeometry::TVec3<f32> squares;
-					squares.mul(diff, diff);
-					f32 sq = squares.x + squares.y + squares.z;
+					f32 x2 = diff.x * diff.x;
+					f32 y2 = diff.y * diff.y;
+					f32 z2 = diff.z * diff.z;
+					f32 sq = x2 + y2 + z2;
 					if (sq > maxSqDist)
 						maxSqDist = sq;
 				}

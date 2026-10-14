@@ -6,7 +6,6 @@
 class TMtxCalcFootInv : public J3DMtxCalcSoftimageAnm {
 public:
 	TMtxCalcFootInv(u16, u16, u16, u16, u16, u16, f32);
-	virtual ~TMtxCalcFootInv() { }
 	virtual void calc(u16 jntIdx);
 
 public:

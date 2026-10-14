@@ -94,12 +94,11 @@ void TLampTrapSpike::control()
 			ctrl->setFrame(6.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
-		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 2;
 		}
-		f32 end = ctrl->getEnd();
-		if (ctrl->getFrame() > end * 0.5f)
+		if (ctrl->getFrame() > ctrl->getEnd() * 0.5f)
 			bVar1 = true;
 	} break;
 
@@ -111,12 +110,11 @@ void TLampTrapSpike::control()
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate() * 0.8f);
 		}
-		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk13C = 0;
 			unk138 = 3;
 		}
-		f32 end = ctrl->getEnd();
-		if (ctrl->getFrame() > end * 0.5f)
+		if (ctrl->getFrame() > ctrl->getEnd() * 0.5f)
 			bVar1 = true;
 	} break;
 
@@ -264,9 +262,9 @@ BOOL TLampTrapIron::receiveMessage(THitActor* sender, u32 message)
 		if (unk13C > 0) {
 			--unk13C;
 			if (unk13C == 0) {
-				unk140     = mFireTimerMax;
-				MtxPtr mtx = getModel()->getBaseTRMtx();
-				gpMarioParticleManager->emitAndBindToMtxPtr(100, mtx, 0, this);
+				unk140 = mFireTimerMax;
+				gpMarioParticleManager->emitAndBindToMtxPtr(
+				    100, getModel()->getBaseTRMtx(), 0, this);
 			}
 		}
 		return true;

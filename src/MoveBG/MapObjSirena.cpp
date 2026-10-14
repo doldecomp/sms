@@ -58,17 +58,12 @@ TRoulette::TRoulette(const char* name)
     , unk144(0.2f)
     , unk150(nullptr)
 {
-	GXColorS10 color;
-	color.r  = 0;
-	color.g  = 0;
-	color.b  = 0;
-	color.a  = 255;
-	unk148.r = color.r;
-	unk148.g = color.g;
-	unk148.b = color.b;
-	unk148.a = color.a;
+	unk148.r = 0;
+	unk148.g = 0;
+	unk148.b = 0;
+	unk148.a = 255;
 	if (SMSGetApplication()->mCurrArea.getStage() == 14
-	    && gpMarDirector->getCurrentStage() == 1) {
+	    && SMSGetMarDirector()->getCurrentStage() == 1) {
 		unk141   = 1;
 		unk148.b = 255;
 	}
@@ -128,9 +123,7 @@ void TRoulette::moveObject()
 	}
 
 	MtxPtr jnt = mMActor->getModel()->getAnmMtx(1);
-	JGeometry::TVec3<f32> pos;
-	pos.set(jnt[0][3], mPosition.y - 100.0f, jnt[2][3]);
-	unk150->mPosition.set(pos.x, pos.y, pos.z);
+	unk150->mPosition.set(jnt[0][3], mPosition.y - 100.0f, jnt[2][3]);
 }
 
 void TRoulette::calcRootMatrix()
@@ -250,8 +243,8 @@ void TSlotDrum::initMapObj()
 	for (int i = 1; i <= unk148; ++i)
 		mMActor->setJointCallback(i, partsRollCallback);
 
-	unk140 = getDamageRadius() / 3.0f;
-	unk144 = getDamageHeight();
+	unk140 = mDamageRadius / 3.0f;
+	unk144 = mDamageHeight;
 	initNeonMatColor();
 }
 
@@ -264,7 +257,7 @@ void TSlotDrum::initNeonMatColor()
 		unk170[i].b = 255;
 		unk170[i].a = 255;
 		SMS_InitPacket_OneTevColor(
-		    getMActor()->getModel(),
+		    mMActor->getModel(),
 		    getModel()->getModelData()->getMaterialName()->getIndex(
 		        matNames[i]),
 		    GX_TEVREG0, &unk170[i]);
@@ -277,8 +270,7 @@ void TSlotDrum::moveObject()
 	mPosition.y = unk150 + unk14C;
 	for (int i = 0; i < unk148; ++i) {
 		if (unk138[i] != 0.0f) {
-			f32 rotationStep = fabsf(unk138[i]);
-			unk188[i] += rotationStep;
+			unk188[i] += fabsf(unk138[i]);
 			if (unk188[i] > 360.0f / (f32)unk168) {
 				unk188[i] = 0.0f;
 				switch (i) {
@@ -296,7 +288,7 @@ void TSlotDrum::moveObject()
 					break;
 				}
 			}
-			if (fabs(unk138[i]) > unk160) {
+			if (fabsf(unk138[i]) > unk160) {
 				unk13C[i] += unk138[i];
 				if (unk138[i] > 0.0f)
 					unk138[i] -= unk15C;
@@ -408,12 +400,9 @@ void TItemSlotDrum::moveObject()
 	if (unk1A4 > 0) {
 		unk1A4++;
 		if (unk1A4 > 160) {
-			unk1A4 = 0;
-			TMsRange<s32> range(0, 2);
-			int idx     = range.rand();
-			unk19C[idx] = true;
-			TMsRange<f32> range2(0.0f, 100.0f);
-			f32 v = range2.rand();
+			unk1A4                             = 0;
+			unk19C[TMsRange<s32>(0, 2).rand()] = true;
+			f32 v = TMsRange<f32>(0.0f, 100.0f).rand();
 			if (v < unk1A8 && unk1A8 > 10.0f)
 				unk198 = 0;
 			else if (v < 30.0f)
@@ -432,7 +421,7 @@ void TItemSlotDrum::moveObject()
 			unk19F[i] = false;
 		}
 		if (unk138[i] != 0.0f) {
-			if (fabs(unk138[i]) > unk160) {
+			if (fabsf(unk138[i]) > unk160) {
 				unk13C[i] += unk138[i];
 				if (unk19F[i] == false) {
 					if (unk138[i] > 0.0f)
@@ -450,7 +439,7 @@ void TItemSlotDrum::moveObject()
 					unk13C[i] -= 360.0f;
 				if (unk13C[i] <= 0.0f)
 					unk13C[i] += 360.0f;
-				if (!unk19F[i] && (int)fabs(unk13C[i]) % unk168 == 0) {
+				if (!unk19F[i] && (int)fabsf(unk13C[i]) % unk168 == 0) {
 					unk13C[i] = (f32)(unk168 * (int)(unk13C[i] / (f32)unk168));
 					unk138[i] = 0.0f;
 					SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_STOP,
@@ -466,8 +455,7 @@ void TItemSlotDrum::moveObject()
 					}
 					for (int j = 0; j < unk148; ++j) {
 						if (unk19F[j]) {
-							TMsRange<f32> range3(0.0f, 1.0f);
-							if (range3.rand() <= 0.9f)
+							if (TMsRange<f32>(0.0f, 1.0f).rand() <= 0.9f)
 								unk19C[j] = true;
 							else
 								unk19F[j] = false;
@@ -513,13 +501,11 @@ u32 TItemSlotDrum::touchWater(THitActor* water)
 	if (unk194 || !unk1A2)
 		return 1;
 
-	TMsRange<s32> range(100, 150);
-	unk1A4 = range.rand();
+	unk1A4 = TMsRange<s32>(100, 150).rand();
 	for (int i = 0; i < unk148; ++i) {
 		unk19F[i] = true;
 		unk19C[i] = false;
-		TMsRange<f32> range2(0.5f, 0.8f);
-		unk138[i] = unk158 * range2.rand();
+		unk138[i] = unk158 * TMsRange<f32>(0.5f, 0.8f).rand();
 	}
 	unk1A2 = false;
 
@@ -937,8 +923,7 @@ void TCloset::moveObject()
 	} else {
 		for (int i = 0; i < unk148; ++i) {
 			if (unk138[i] != 0.0f) {
-				f64 rotationStep = fabs(unk138[i]);
-				if (rotationStep > unk160) {
+				if (fabsf(unk138[i]) > unk160) {
 					unk13C[i] += unk138[i];
 					if (unk138[i] > 0.0f)
 						unk138[i] -= unk15C;
@@ -1004,11 +989,9 @@ void TCloset::calcRootMatrix()
 	model->setBaseTRMtx(mtx);
 	model->setBaseScale(mScaling);
 	mtx.ref(1, 3) += unk14C;
-	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)) {
-		BOOL state = mMActor->curAnmEndsNext();
-		if (state)
-			mMapCollisionWarp->remove();
-	}
+	if (unk16C != 0 && mMActor->checkCurAnm("closetopen", ANM_TYPE_BCK)
+	    && mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
+		mMapCollisionWarp->remove();
 }
 
 u32 TCloset::touchWater(THitActor* water)
@@ -1016,8 +999,9 @@ u32 TCloset::touchWater(THitActor* water)
 	if (unk16C != 0)
 		return 0;
 	if (fabsf(mPosition.x - water->mPosition.x) < 50.0f) {
+		f32 halfDepth = 1.1f * unk140;
 		int idx;
-		if (water->mPosition.z < mPosition.z - 1.1f * unk140) {
+		if (water->mPosition.z < mPosition.z - halfDepth) {
 			idx = 0;
 			if (mRotation.y < 0.0f)
 				idx = 3;
@@ -1174,8 +1158,7 @@ TWarpAreaActor::TWarpAreaActor(const char* name)
 
 u32 TChestRevolve::touchWater(THitActor* actor)
 {
-	bool state = isState(STATE_NORMAL);
-	if (state) {
+	if (isState(STATE_NORMAL)) {
 		mState = STATE_REVOLVING;
 		startAnim(1);
 		setUpMapCollision(1);
@@ -1200,8 +1183,7 @@ void TChestRevolve::control()
 
 BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 {
-	bool state = isState(STATE_NORMAL);
-	if (state) {
+	if (isState(STATE_NORMAL)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
 		                                nullptr, 0, 4);
 		mState = STATE_REVOLVING;
@@ -1213,15 +1195,12 @@ BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
 
 void TPanelRevolve::touchPlayer(THitActor* actor)
 {
-	if (marioHipAttack()) {
-		BOOL state = isState(STATE_NORMAL);
-		if (state) {
-			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition,
-			                                0, nullptr, 0, 4);
-			mState = STATE_REVOLVING;
-			startAnim(1);
-			removeMapCollision();
-		}
+	if (marioHipAttack() && isState(STATE_NORMAL)) {
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,
+		                                nullptr, 0, 4);
+		mState = STATE_REVOLVING;
+		startAnim(1);
+		removeMapCollision();
 	}
 }
 
@@ -1246,9 +1225,8 @@ void TPictureTelesa::afterFinishedAnim()
 	if (isActorType(ACTOR_TYPE_PICTURE_TERESA)) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CLEAR_SIGN_BIG, 0, nullptr,
 		                                   0);
-		if (SMSGetMSound()->gateCheck(MSD_SE_BS_TELESA_V_LAUGH2))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_BS_TELESA_V_LAUGH2, getPosition(), 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH2, &mPosition,
+		                                0, nullptr, 0, 4);
 	}
 }
 
@@ -1257,8 +1235,7 @@ void TPictureTelesa::touchActor(THitActor* actor)
 	TWaterHitPictureHideObj::touchActor(actor);
 	if (isActorType(ACTOR_TYPE_PICTURE_TERESA) && !unk174
 	    && isState(STATE_FINISHED) && !isStateTimerEngaged()) {
-		f32 distance = actor->mPosition.distance(mPosition);
-		if (distance < 200.0f) {
+		if (actor->mPosition.distance(mPosition) < 200.0f) {
 			startStateTimer(60);
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_DISAPPEAR,
 			                                &mPosition, 0, nullptr, 0, 4);

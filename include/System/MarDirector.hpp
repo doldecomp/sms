@@ -148,8 +148,8 @@ public:
 	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
+	bool isGameplayModeNow() const { return unk124 == 0; }
 	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
-
 	bool isDemoModeNow() const { return unk124 == 3 || unk124 == 4; }
 
 	// TODO: better names
@@ -175,6 +175,9 @@ public:
 
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
 	TMarioGamePad* getGamePad(int i = 0) { return mGamePads[i]; }
+
+	// Fabricated
+	int getMoveTickCount() const { return mMoveTickCount; }
 
 public:
 	enum {
@@ -227,13 +230,13 @@ public:
 	/* 0x24 */ TPerformList* mPerformListGXPost;
 	/* 0x28 */ TPerformList* mPerformListMovement;
 	/* 0x2C */ TPerformList* mPerformListCalcAnim;
-	/* 0x30 */ TPerformList* unk30;
-	/* 0x34 */ TPerformList* unk34;
-	/* 0x38 */ TPerformList* unk38;
-	/* 0x3C */ TPerformList* unk3C;
-	/* 0x40 */ TPerformList* unk40;
-	/* 0x44 */ TPerformList* mShinePfLstMov;
-	/* 0x48 */ TPerformList* mShinePfLstAnm;
+	/* 0x30 */ TPerformList* mPerformListConsole;
+	/* 0x34 */ TPerformList* mPerformListPreEntry;
+	/* 0x38 */ TPerformList* mPerformListPollutionCountObj;
+	/* 0x3C */ TPerformList* mPerformListPollutionCountLayer;
+	/* 0x40 */ TPerformList* mPerformListDrawInit;
+	/* 0x44 */ TPerformList* mPerformListShineMovement;
+	/* 0x48 */ TPerformList* mPerformListShineCalcAnim;
 	/* 0x4C */ u16 mFlags;
 	/* 0x4E */ u16 mDemoFlags;
 	/* 0x50 */ u16 mTransitionFlags;

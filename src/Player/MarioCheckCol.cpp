@@ -15,7 +15,7 @@
 void TMario::hitNormal(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
-	    && actor->getPosition().y < mPosition.y) {
+	    && actor->mPosition.y < mPosition.y) {
 		if (mStatus == MARIO_STATUS_HIP_DROP) {
 			if (actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP)) {
 				if (actor->isActorType(ACTOR_TYPE_HINOKURI2)) {
@@ -31,8 +31,7 @@ void TMario::hitNormal(THitActor* actor)
 		}
 	}
 
-	if (checkFlag(MARIO_FLAG_UNK200)
-	    && actor->getPosition().y > getPosition().y) {
+	if (checkFlag(MARIO_FLAG_UNK200) && actor->mPosition.y > mPosition.y) {
 		actor->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 		return;
 	}
@@ -44,7 +43,7 @@ void TMario::hitNormal(THitActor* actor)
 	}
 
 	TWaterGun* wg = mWaterGun;
-	if ((int)wg->mCurrentNozzle == 0 && wg->mIsEmitWater != 0) {
+	if ((int)wg->mCurrentNozzle == 0 && wg->mEmittedWaterCount != 0) {
 		TWaterHitActor* waterActor;
 		(waterActor = &TModelWaterManager::mStaticHitActor)->mPosition
 		    = getPosition();
@@ -57,7 +56,7 @@ void TMario::hitNormal(THitActor* actor)
 // TODO: wrong size! maybe we return the receiveMessage result?
 void TMario::hitHipDrop(THitActor* actor)
 {
-	if (getStatus() == MARIO_STATUS_HIP_DROP && mStatusState == 2
+	if (mStatus == MARIO_STATUS_HIP_DROP && mStatusState == 2
 	    && actor->mPosition.y < mPosition.y) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
@@ -85,7 +84,7 @@ void TMario::hitNpc(THitActor* actor)
 	if (!checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)
 	    && !checkStatusType(MARIO_FLAG_HELMET)
 	    && checkStatusType(MARIO_STATUS_FLAG_JUMPING)
-	    && getStatus() != MARIO_STATUS_HIP_DROP && mVel.y < 0.0f
+	    && mStatus != MARIO_STATUS_HIP_DROP && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
 	    && ((TBaseNPC*)actor)->isBeTrampledNpc()) {
 		if (trampleExec(actor) == TRUE)
@@ -119,13 +118,13 @@ void TMario::hitBarrel(THitActor* actor)
 	hitWantToTake(actor);
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
-	    && getStatus() == MARIO_STATUS_HIP_DROP) {
+	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 			TWaterGun* wg     = mWaterGun;
 			wg->mCurrentWater = (s32)((const TWaterGun*)wg)
 			                        ->getCurrentNozzle()
-			                        ->mEmitParams.mAmountMax.get();
+			                        ->mAmountMax.get();
 		}
 	}
 }
@@ -141,7 +140,7 @@ void TMario::hitBrakable(THitActor* actor)
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_JUMPING) && mVel.y < 0.0f
 	    && actor->mPosition.y < mPosition.y
-	    && getStatus() == MARIO_STATUS_HIP_DROP) {
+	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 	}
 }
@@ -232,9 +231,8 @@ void TMario::hitSurfingBoard(THitActor*) { }
 // As in we pull but don't "keep" the object, cuz it's a tentacle/tail?
 void TMario::hitNoKeepPull(THitActor* actor)
 {
-	if (getStatus() != MARIO_STATUS_PULLING
-	    && getStatus() != MARIO_STATUS_PULL_JUMP && canTake(actor)
-	    && actor->receiveMessage(this, HIT_MESSAGE_TAKE)) {
+	if (mStatus != MARIO_STATUS_PULLING && mStatus != MARIO_STATUS_PULL_JUMP
+	    && canTake(actor) && actor->receiveMessage(this, HIT_MESSAGE_TAKE)) {
 		changePlayerStatus(MARIO_STATUS_PULLING, 0, false);
 		setAnimation(ANIM_HOLD, 1.0f);
 		mHeldObject = (TTakeActor*)actor;
@@ -275,8 +273,7 @@ void TMario::checkCollision()
 					unk3E8              = mWaterGun->mSecondNozzle;
 					const TWaterGun* wg = mWaterGun;
 					unk3EC              = (f32)(wg->mCurrentWater
-                                   / wg->getCurrentNozzle()
-                                         ->mEmitParams.mAmountMax.get());
+                                   / wg->getCurrentNozzle()->mAmountMax.get());
 				}
 				mYoshi->ride();
 				onFlag(MARIO_FLAG_HAS_FLUDD);
@@ -292,27 +289,27 @@ void TMario::checkCollision()
 	}
 
 	for (s32 i = 0; i < (s32)mColCount; i++) {
-		u32 type = getCollision(i)->getActorType();
-		if (type & HIT_CATEGORY_NPC ? true : false) {
-			hitNpc(getCollision(i));
+		if (mCollisions[i]->isHitCategory(HIT_CATEGORY_NPC)) {
+			hitNpc(mCollisions[i]);
 			continue;
 		}
 
-		switch (type) {
+		// TODO: switch still a bit wrong!
+		switch (mCollisions[i]->getActorType()) {
 		case ACTOR_TYPE_MARIO:
-			hitMario(getCollision(i));
-			keepDistance(*getCollision(i), 0.0f);
+			hitMario(mCollisions[i]);
+			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_ITEM_UNK8:
 		case ACTOR_TYPE_ITEM_UNKA:
 		case ACTOR_TYPE_ITEM_UNKC:
-			hitNormal(getCollision(i));
+			hitNormal(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_HINOKURI2:
 		case ACTOR_TYPE_BOSS_EEL:
-		case ACTOR_TYPE_BOSS_UNK13:
+		case ACTOR_TYPE_BOSS_TELESA:
 		case ACTOR_TYPE_BATHTUB_KILLER:
 		case ACTOR_TYPE_ENEMY_UNK1:
 		case ACTOR_TYPE_HAMU_KURI:
@@ -339,17 +336,17 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_ENEMY_UNK31:
 		case ACTOR_TYPE_DORO_HANE_KURI:
 		case ACTOR_TYPE_CASINORULET:
-			hitNormal(getCollision(i));
+			hitNormal(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_BOSS_PAKKUN_HEAD:
-			hitHipDrop(getCollision(i));
+			hitHipDrop(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_KUMOKUN:
-			hitNormal(getCollision(i));
-			if (((TSmallEnemy*)getCollision(i))->doKeepDistance())
-				keepDistance(*getCollision(i), 0.0f);
+			hitNormal(mCollisions[i]);
+			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
+				keepDistance(*mCollisions[i], 0.0f);
 			// fall through
 
 		case ACTOR_TYPE_AMI_NOKO:
@@ -360,26 +357,26 @@ void TMario::checkCollision()
 			if (mStatus == MARIO_STATUS_FENCE_PUNCH
 			    && 5.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 9.0f) {
-				getCollision(i)->receiveMessage(this, HIT_MESSAGE_PUNCH);
+				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
 			if (mStatus == MARIO_STATUS_KICK_ROOF
 			    && 9.0f <= getMotionFrameCtrl().getFrame()
 			    && getMotionFrameCtrl().getFrame() < 13.0f) {
-				getCollision(i)->receiveMessage(this, HIT_MESSAGE_PUNCH);
+				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_PUNCH);
 			}
 			break;
 
 		case ACTOR_TYPE_TAMA_NOKO:
 		case ACTOR_TYPE_BOMB_HEI:
-			hitPickUpEnemy(getCollision(i));
+			hitPickUpEnemy(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_MAME_GESSO: {
-			TSmallEnemy* enemy = (TSmallEnemy*)getCollision(i);
+			TSmallEnemy* enemy = (TSmallEnemy*)mCollisions[i];
 			if (enemy->doKeepDistance())
-				keepDistance(*getCollision(i), 0.0f);
+				keepDistance(*mCollisions[i], 0.0f);
 			else
-				hitPickUpEnemy(getCollision(i));
+				hitPickUpEnemy(mCollisions[i]);
 			break;
 		}
 
@@ -387,7 +384,7 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_BOSS_EEL_COLLISION:
 		case ACTOR_TYPE_DEBU_TELESA:
 		case ACTOR_TYPE_SROT_RULET:
-			keepDistance(*getCollision(i), 0.0f);
+			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_GESSO:
@@ -395,13 +392,13 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_POI_HANA:
 		case ACTOR_TYPE_YUMBO:
 		case ACTOR_TYPE_AMENBO:
-			hitNormal(getCollision(i));
-			if (((TSmallEnemy*)getCollision(i))->doKeepDistance())
-				keepDistance(*getCollision(i), 0.0f);
+			hitNormal(mCollisions[i]);
+			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
+				keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_CHUU_HANA:
-			hitNormal(getCollision(i));
+			hitNormal(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_BOSS_UNKB:
@@ -412,14 +409,14 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_BOSS_UNK15:
 		case ACTOR_TYPE_SAMBO_FLOWER:
 		case ACTOR_TYPE_ENEMY_UNK35:
-			keepDistance(*getCollision(i), 0.0f);
+			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_E_MARIO:
 		case ACTOR_TYPE_BOSS_GESSO:
 		case ACTOR_TYPE_BOSS_GESSO_TAKE_HIT:
 		case ACTOR_TYPE_BIANCO_GATE_KEEPER:
-			keepDistance(*getCollision(i), 0.0f);
+			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_BOSS_GESSO_TENTACLE:
@@ -427,25 +424,25 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_BOSS_UNKD:
 		case ACTOR_TYPE_YOSHI_TONGUE:
 		case ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT:
-			hitNoKeepPull(getCollision(i));
+			hitNoKeepPull(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_NOZZLE_BOX:
-			hitNormal(getCollision(i));
-			keepDistance(*getCollision(i), 0.0f);
+			hitNormal(mCollisions[i]);
+			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_FOOTBALL:
-			hitPushup(getCollision(i));
+			hitPushup(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_MAP_OBJECT_UNK2:
-			hitBrakable(getCollision(i));
+			hitBrakable(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_WOOD_BARREL:
 		case ACTOR_TYPE_BARREL_OIL:
-			hitBarrel(getCollision(i));
+			hitBarrel(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_EGG_YOSHI:
@@ -466,7 +463,7 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_EX_BOTTLE:
 		case ACTOR_TYPE_MAP_OBJ_NAIL:
 		case ACTOR_TYPE_FRUIT_COVER_PINE:
-			keepDistance(*getCollision(i), 0.0f);
+			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
 		case ACTOR_TYPE_DPTLIGHT:
@@ -485,11 +482,11 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_ELASTIC_CODE:
 		case ACTOR_TYPE_MONTE_ROOT:
 		case ACTOR_TYPE_MONTE_GOAL_FLAG:
-			hangPole(getCollision(i));
+			hangPole(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_JUMPBASE:
-			hitJumpBase(getCollision(i));
+			hitJumpBase(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_FRUIT_COCONUT:
@@ -497,28 +494,28 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_FRUIT_PINE:
 		case ACTOR_TYPE_FRUIT_BANANA:
 		case ACTOR_TYPE_RED_PEPPER:
-			hitWantToTake(getCollision(i));
+			hitWantToTake(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_FRUIT_DURIAN:
-			hitPushup(getCollision(i));
+			hitPushup(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_BREAKABLE_BLOCK:
-			hitBrakable(getCollision(i));
+			hitBrakable(mCollisions[i]);
 			break;
 
 		case ACTOR_TYPE_BOSS_MANTA:
 		case ACTOR_TYPE_BOSS_UNK12:
 		case ACTOR_TYPE_SLEEP_BOSS_HANACHAN:
 		case ACTOR_TYPE_BOSS_UNK17:
-		case ACTOR_TYPE_BOSS_UNK18:
-		case ACTOR_TYPE_BOSS_UNK19:
-		case ACTOR_TYPE_BOSS_UNK1A:
-		case ACTOR_TYPE_BOSS_UNK1B:
-		case ACTOR_TYPE_BOSS_UNK1C:
-		case ACTOR_TYPE_BOSS_UNK1D:
-		case ACTOR_TYPE_BOSS_UNK1E:
+		case ACTOR_TYPE_TIN_KOOPA:
+		case ACTOR_TYPE_TIN_KOOPA_HEAD:
+		case ACTOR_TYPE_TIN_KOOPA_BREAST:
+		case ACTOR_TYPE_TIN_KOOPA_STOMACH:
+		case ACTOR_TYPE_TIN_KOOPA_LARM:
+		case ACTOR_TYPE_TIN_KOOPA_RARM:
+		case ACTOR_TYPE_TIN_KOOPA_LEG:
 		case ACTOR_TYPE_COASTER_KILLER:
 		case ACTOR_TYPE_BOSS_UNK20:
 		case ACTOR_TYPE_BOSS_UNK21:

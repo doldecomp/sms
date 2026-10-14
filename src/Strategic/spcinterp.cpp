@@ -403,8 +403,6 @@ void TSpcInterp::execshr()
 	push(arg1.getDataInt() >> arg2.getDataInt());
 }
 
-// TODO: frame-only mismatch: 0x70 bytes here versus 0x88 in retail.
-// Recover the remaining inline stack owners rather than adding padding.
 void TSpcInterp::execcall()
 {
 	u32 address = fetchU32();

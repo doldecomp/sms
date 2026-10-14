@@ -7,6 +7,8 @@ template <typename T> class TRecordValueManager {
 public:
 	void reset();
 	bool get(T* outValue);
+	void recordReset();
+	void record(T);
 
 public:
 	/* 0x0 */ u32* mFirstDurationPtr;
@@ -16,6 +18,14 @@ public:
 	/* 0x10 */ s32 mElapsedFrames;
 	/* 0x14 */ s32 mUnk14;
 	/* 0x18 */ s32 mUnk18;
+};
+
+// TODO: UNUSED recorder; member layout and return types are unknown.
+class TMarioInputRecord {
+public:
+	void init();
+	void reset();
+	void record(f32, s16, u32, u8, u8);
 };
 
 class TMarioInputReplay {

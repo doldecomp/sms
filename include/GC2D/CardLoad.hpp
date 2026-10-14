@@ -50,25 +50,17 @@ public:
 	static u32 cMessageID[];
 
 public:
-	struct UnkCardLoadStruct {
-		/* 0x0 */ J2DPicture* unk0;
-		/* 0x4 */ J2DPicture* unk4[3];
-		/* 0x10 */ J2DPane* unk10[8];
-		/* 0x30 */ J2DPane* unk30[2];
-		/* 0x38 */ J2DPane* unk38;
-	};
-
 	/* 0x10 */ int unk10;
 	/* 0x14 */ int unk14;
 	/* 0x18 */ int unk18;
 	/* 0x1C */ TEProgress unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ int unk24;
-	/* 0x28 */ J2DSetScreen* unk28;
-	/* 0x2C */ J2DSetScreen* unk2C;
+	/* 0x28 */ J2DSetScreen* mLoadScreen;
+	/* 0x2C */ J2DSetScreen* mScoreScreen;
 	/* 0x30 */ u32 unk30;
-	/* 0x34 */ J2DSetScreen* unk34;
-	/* 0x38 */ TMarioGamePad* unk38;
+	/* 0x34 */ J2DSetScreen* mTitleScreen;
+	/* 0x38 */ TMarioGamePad* mGamePad;
 	/* 0x3C */ char unk3C[4];
 	/* 0x40 */ TCardBookmarkInfo unk40[3];
 	/* 0xA0 */ void* unkA0;
@@ -81,71 +73,85 @@ public:
 	/* 0xB4 */ s16 unkB4;
 	/* 0xB6 */ s8 unkB6;
 	/* 0xB7 */ s8 unkB7;
-	/* 0xB8 */ u8 unkB8;
+	/* 0xB8 */ bool unkB8;
 	/* 0xBC */ int unkBC;
 	/* 0xC0 */ int unkC0;
 	/* 0xC4 */ int unkC4;
-	/* 0xC8 */ JUTTexture* unkC8[10];
-	/* 0xF0 */ TExPane* unkF0;
-	/* 0xF4 */ TExPane* unkF4;
-	/* 0xF8 */ TExPane* unkF8[11];
-	/* 0x124 */ JUTRect unk124[11];
-	/* 0x1D4 */ TExPane* unk1D4[13];
-	/* 0x208 */ J2DPane* unk208;
-	/* 0x20C */ u16 unk20C[11];
-	/* 0x222 */ u8 unk222[11];
-	/* 0x22E */ u16 unk22E[13];
-	/* 0x248 */ u8 unk248[13];
+	/* 0xC8 */ JUTTexture* mDigitTextures[10];
+
+	// Title screen elements
+	/* 0xF0 */ TExPane* mGameLogoPicture;
+	/* 0xF4 */ TExPane* mNintendoLogoPicture;
+	/* 0xF8 */ TExPane* mPressStartTextLetters[11];
+	/* 0x124 */ JUTRect mPressStartTextLettersInitialBounds[11];
+	/* 0x1D4 */ TExPane* mGameLogoLetters[13];
+	/* 0x208 */ J2DPane* mTitleScreenRoot;
+
+	/* 0x20C */ u16 mPressStartAnimTimes[11];
+	/* 0x222 */ u8 mPressStartAnimState[11];
+	/* 0x22E */ u16 mGameLogoAnimTimes[13];
+	/* 0x248 */ u8 mGameLogoAnimState[13];
 	/* 0x255 */ char unk255[0x258 - 0x255];
-	/* 0x258 */ u16 unk258;
-	/* 0x25C */ J2DPane* unk25C;
-	/* 0x260 */ JUTRect unk260;
-	/* 0x270 */ J2DPane* unk270;
+	/* 0x258 */ u16 mTitleAnimTimer;
+	/* 0x25C */ J2DPane* mToSettingsArrow;
+	/* 0x260 */ JUTRect mToSettingsArrowInitialBounds;
+	/* 0x270 */ J2DPane* mToSettingsText;
 	/* 0x274 */ u8 unk274;
 	/* 0x275 */ u8 unk275;
 	/* 0x278 */ TFileLoadBlock* unk278[3];
 	/* 0x284 */ TMapObjOptionWall* unk284;
-	/* 0x288 */ TExPane* unk288;
-	/* 0x28C */ JUTRect unk28C;
-	/* 0x29C */ J2DTextBox* unk29C;
-	/* 0x2A0 */ J2DTextBox* unk2A0;
-	/* 0x2A4 */ TExPane* unk2A4[3];
+
+	// Header window above the 3 saves
+	/* 0x288 */ TExPane* mChoseSaveWindow;
+	/* 0x28C */ JUTRect mChoseSaveWindowInitialBounds;
+	/* 0x29C */ J2DTextBox* mChoseSaveText;
+	/* 0x2A0 */ J2DTextBox* mChoseSaveTextShadow;
+
+	// The 3 saves, "A", "B", and "C"
+	/* 0x2A4 */ TExPane* mSaveWindows[3];
 	/* 0x2B0 */ JUTRect unk2B0;
 	/* 0x2C0 */ J2DTextBox* unk2C0[3];
 	/* 0x2CC */ J2DTextBox* unk2CC[3];
-	/* 0x2D8 */ J2DPane* unk2D8[3];
-	/* 0x2E4 */ J2DPicture* unk2E4[3];
-	/* 0x2F0 */ J2DPicture* unk2F0[3];
-	/* 0x2FC */ J2DPane* unk2FC[3];
-	/* 0x308 */ J2DPicture* unk308[3];
-	/* 0x314 */ J2DPicture* unk314[3];
-	/* 0x320 */ J2DPicture* unk320[3];
+	/* 0x2D8 */ J2DPane* mSaveShineIconsUnder100[3];
+	/* 0x2E4 */ J2DPicture* mSaveShineCountTensUnder100[3];
+	/* 0x2F0 */ J2DPicture* mSaveShineCountOnesUnder100[3];
+	/* 0x2FC */ J2DPane* mSaveShineIconsOver100[3];
+	/* 0x308 */ J2DPicture* mSaveShineCountHundredsOver100[3];
+	/* 0x314 */ J2DPicture* mSaveShineCountTensOver100[3];
+	/* 0x320 */ J2DPicture* mSaveShineCountOnesOver100[3];
 	/* 0x32C */ J2DPicture* unk32C[3];
 	/* 0x338 */ int unk338;
-	/* 0x33C */ TExPane* unk33C[3];
-	/* 0x348 */ JUTRect unk348[3];
-	/* 0x378 */ TExPane* unk378[3][4];
-	/* 0x3A8 */ JUTRect unk3A8[3][4];
+
+	// Management options for the 3 saves: start, copy, erase, score.
+	/* 0x33C */ TExPane* mSaveManageOptionsWindow[3];
+	/* 0x348 */ JUTRect mSaveManageOptionsWindowInitialBounds[3];
+	/* 0x378 */ TExPane* mSaveManageOptionsEntries[3][4];
+	/* 0x3A8 */ JUTRect mSaveManageOptionsEntriesInitialBounds[3][4];
+
 	/* 0x468 */ TExPane* unk468;
 	/* 0x46C */ JUTRect unk46C;
 	/* 0x47C */ J2DTextBox* unk47C;
 	/* 0x480 */ J2DTextBox* unk480;
 	/* 0x484 */ TExPane* unk484[2];
 	/* 0x48C */ JUTRect unk48C[2];
-	/* 0x4AC */ TExPane* unk4AC;
-	/* 0x4B0 */ JUTRect unk4B0;
-	/* 0x4C0 */ J2DTextBox* unk4C0;
-	/* 0x4C4 */ J2DTextBox* unk4C4;
-	/* 0x4C8 */ J2DPane* unk4C8;
-	/* 0x4CC */ J2DPane* unk4CC[3];
-	/* 0x4D8 */ TExPane* unk4D8[2];
-	/* 0x4E0 */ JUTRect unk4E0[2];
-	/* 0x500 */ J2DPane* unk500;
-	/* 0x504 */ J2DPicture* unk504[3];
-	/* 0x510 */ J2DPane* unk510;
-	/* 0x514 */ J2DPicture* unk514[2];
-	/* 0x51C */ J2DTextBox* unk51C;
-	/* 0x520 */ J2DTextBox* unk520;
+
+	// Confirmation window for copying/erasing saves
+	/* 0x4AC */ TExPane* mConfirmationWindow;
+	/* 0x4B0 */ JUTRect mConfirmationWindowInitialBounds;
+	/* 0x4C0 */ J2DTextBox* mConfirmationText;
+	/* 0x4C4 */ J2DTextBox* mConfirmationTextShadow;
+	/* 0x4C8 */ J2DPane* mConfirmationTextMario;
+	/* 0x4CC */ J2DPane* mConfirmationTextTargetABC[3];
+	/* 0x4D8 */ TExPane* mConfirmationYesNo[2];
+	/* 0x4E0 */ JUTRect mConfirmationYesNoInitialBounds[2];
+	/* 0x500 */ J2DPane* mConfirmationShineCountOver100;
+	/* 0x504 */ J2DPicture* mConfirmationShineCountDigitsOver100[3];
+	/* 0x510 */ J2DPane* mConfirmationShineCountUnder100;
+	/* 0x514 */ J2DPicture* mConfirmationShineCountDigitsUnder100[2];
+	/* 0x51C */ J2DTextBox* mConfirmationNewSaveText;
+	/* 0x520 */ J2DTextBox* mConfirmationNewSaveTextShadow;
+
+	// Card error stuff
 	/* 0x524 */ TExPane* unk524;
 	/* 0x528 */ JUTRect unk528;
 	/* 0x538 */ J2DTextBox* unk538;
@@ -155,18 +161,30 @@ public:
 	/* 0x550 */ JUTRect unk550;
 	/* 0x560 */ J2DTextBox* unk560;
 	/* 0x564 */ J2DTextBox* unk564;
-	/* 0x568 */ TExPane* unk568;
-	/* 0x56C */ JUTRect unk56C;
-	/* 0x57C */ J2DTextBox* unk57C;
-	/* 0x580 */ J2DTextBox* unk580;
-	/* 0x584 */ UnkCardLoadStruct unk584[7];
-	/* 0x728 */ J2DPane* unk728[3];
+
+	// Window shown after a save is erased
+	/* 0x568 */ TExPane* mErasedWindow;
+	/* 0x56C */ JUTRect mErasedWindowInitialBounds;
+	/* 0x57C */ J2DTextBox* mErasedText;
+	/* 0x580 */ J2DTextBox* mErasedTextShadow;
+
+	struct ScoreTableStageRow {
+		/* 0x0 */ J2DPicture* mRoot;
+		/* 0x4 */ J2DPicture* mCoinCountDigits[3];
+		/* 0x10 */ J2DPane* mShineIcons[8];
+		/* 0x30 */ J2DPane* unk30[2];
+		/* 0x38 */ J2DPane* unk38;
+	};
+
+	// Scoreboard with per-stage shine and coin counts, and total shine count
+	/* 0x584 */ ScoreTableStageRow mScoreTableStageRows[7];
+	/* 0x728 */ J2DPane* mScoreTableWhichSaveABC[3];
 	/* 0x734 */ char unk734[0x740 - 0x734];
-	/* 0x740 */ J2DPane* unk740;
-	/* 0x744 */ J2DPane* unk744;
-	/* 0x748 */ J2DPicture* unk748;
-	/* 0x74C */ J2DPicture* unk74C;
-	/* 0x750 */ J2DPicture* unk750;
+	/* 0x740 */ J2DPane* mScoreTableHeader;
+	/* 0x744 */ J2DPane* mScoreTotal;
+	/* 0x748 */ J2DPicture* mScoreTotalShineCountDigit1;
+	/* 0x74C */ J2DPicture* mScoreTotalShineCountDigit2;
+	/* 0x750 */ J2DPicture* mScoreTotalShineCountDigit3;
 	/* 0x754 */ TOptionControl* unk754;
 };
 

@@ -87,9 +87,8 @@ BOOL TGKHitObj::receiveMessage(THitActor* sender, u32 message)
 			mOwner->unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		MSound* sound = SMSGetMSound();
-		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
-		                     0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 		return true;
 	}
 	return mOwner->receiveMessage(sender, message);
@@ -133,9 +132,8 @@ BOOL TGateKeeperBase::receiveMessage(THitActor* sender, u32 message)
 			unk154++;
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		MSound* sound = SMSGetMSound();
-		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
-		                     0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 		return true;
 	}
 	return false;
@@ -232,7 +230,6 @@ void TBGKMtxCalc::setAnm(int param_1)
 	        param_1));
 }
 
-// TODO: nonmatching stack layout; target frame is 0x148 bytes.
 void TBGKMtxCalc::calc(u16 param_1)
 {
 	M3UMtxCalcSIAnmBlendQuat::calc(param_1);
@@ -461,23 +458,21 @@ void TBiancoGateKeeper::launchNamekuri()
 			if (enemy == NULL)
 				break;
 
-			JGeometry::TVec3<f32> pos = getPosition();
+			JGeometry::TVec3<f32> pos = mPosition;
 			pos.y += 100.0f;
 			JGeometry::TVec3<f32> rot = mRotation;
 			JGeometry::TVec3<f32> scale;
 			scale.set(1.0f, 1.0f, 1.0f);
 			s16 angle = (s16)(182.04445f * (36.0f * (f32)i));
 			JGeometry::TVec3<f32> vel;
-			vel.x = 4.0f * JMASSin(angle);
-			vel.y = 12.0f;
-			vel.z = 4.0f * JMASCos(angle);
+			vel.set(4.0f * JMASSin(angle), 12.0f, 4.0f * JMASCos(angle));
 
 			enemy->reset();
-			enemy->mPosition  = pos;
-			enemy->mRotation  = rot;
-			enemy->mScaling   = scale;
-			enemy->mHitPoints = enemy->getMaxHitPoints();
-			enemy->mVelocity  = vel;
+			enemy->mPosition = pos;
+			enemy->mRotation = rot;
+			enemy->mScaling  = scale;
+			enemy->resetHitPoints();
+			enemy->mVelocity = vel;
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
 			enemy->onLiveFlag(LIVE_FLAG_UNK8000);
@@ -489,10 +484,9 @@ void TBiancoGateKeeper::launchNamekuri()
 
 f32 TBiancoGateKeeper::getRumblePow()
 {
-	f32 dist;
 	JGeometry::TVec3<f32> diff = mPosition;
 	diff -= SMS_GetMarioPos();
-	dist = diff.length();
+	f32 dist = diff.length();
 	if (dist == 0.0f)
 		return 1.0f;
 	f32 pow = 2000.0f / dist;
@@ -525,11 +519,12 @@ void TBiancoGateKeeper::deathRumble()
 BOOL TBiancoGateKeeper::curBckFinished() const
 {
 	J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+	BOOL done;
 	if (fc == NULL)
 		return true;
 
-	bool completed = fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE);
-	if (completed || fc->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
+	if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE)
+	    || fc->checkState(J3DFrameCtrl::STATE_LOOPED_ONCE)
 	    || 0.1f + fc->getFrame() >= (f32)fc->getEnd())
 		return true;
 	else
@@ -1006,7 +1001,6 @@ DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 	return false;
 }
 
-// TODO: nonmatching frame (target 0xB0) and retry-counter reload.
 DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 {
 	TBiancoGateKeeper* self = (TBiancoGateKeeper*)spine->getBody();
@@ -1051,7 +1045,7 @@ DEFINE_NERVE(TNerveBGKDie, TLiveActor)
 		     || self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 		    && self->unk296 == 0) {
 			self->unk296 += 1;
-			self->mHitPoints = 3;
+			self->setHitPoints(3);
 			if (self->mVariant == TBiancoGateKeeper::VARIANT_MAMMA_GATEKEEPER)
 				spine->pushAfterCurrent(&TNerveBGKLaunchName::theNerve());
 			else

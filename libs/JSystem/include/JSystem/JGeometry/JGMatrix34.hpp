@@ -108,20 +108,20 @@ public:
 	{
 		this->set(
 		    // clang-format off
-		a.at(0, 0) * b.at(0, 0) + a.at(1, 0) * b.at(0, 1) + a.at(2, 0) * b.at(0, 2),
-		a.at(0, 0) * b.at(1, 0) + a.at(1, 0) * b.at(1, 1) + a.at(2, 0) * b.at(1, 2),
-		a.at(0, 0) * b.at(2, 0) + a.at(1, 0) * b.at(2, 1) + a.at(2, 0) * b.at(2, 2),
-		a.at(0, 0) * b.at(0, 3) + a.at(1, 0) * b.at(3, 1) + a.at(2, 0) * b.at(3, 2) + a.at(3, 0),
+		a.at(0, 0) * b.at(0, 0) + a.at(0, 1) * b.at(1, 0) + a.at(0, 2) * b.at(2, 0),
+		a.at(0, 0) * b.at(0, 1) + a.at(0, 1) * b.at(1, 1) + a.at(0, 2) * b.at(2, 1),
+		a.at(0, 0) * b.at(0, 2) + a.at(0, 1) * b.at(1, 2) + a.at(0, 2) * b.at(2, 2),
+		a.at(0, 0) * b.at(0, 3) + a.at(0, 1) * b.at(1, 3) + a.at(0, 2) * b.at(2, 3) + a.at(0, 3),
 
-		a.at(0, 1) * b.at(0, 0) + a.at(1, 1) * b.at(0, 1) + a.at(2, 1) * b.at(0, 2),
-		a.at(0, 1) * b.at(1, 0) + a.at(1, 1) * b.at(1, 1) + a.at(2, 1) * b.at(1, 2),
-		a.at(0, 1) * b.at(2, 0) + a.at(1, 1) * b.at(2, 1) + a.at(2, 1) * b.at(2, 2),
-		a.at(0, 1) * b.at(3, 0) + a.at(1, 1) * b.at(3, 1) + a.at(2, 1) * b.at(3, 2) + a.at(3, 1),
+		a.at(1, 0) * b.at(0, 0) + a.at(1, 1) * b.at(1, 0) + a.at(1, 2) * b.at(2, 0),
+		a.at(1, 0) * b.at(0, 1) + a.at(1, 1) * b.at(1, 1) + a.at(1, 2) * b.at(2, 1),
+		a.at(1, 0) * b.at(0, 2) + a.at(1, 1) * b.at(1, 2) + a.at(1, 2) * b.at(2, 2),
+		a.at(1, 0) * b.at(0, 3) + a.at(1, 1) * b.at(1, 3) + a.at(1, 2) * b.at(2, 3) + a.at(1, 3),
 
-		a.at(0, 2) * b.at(0, 0) + a.at(1, 2) * b.at(0, 1) + a.at(2, 2) * b.at(0, 2),
-		a.at(0, 2) * b.at(1, 0) + a.at(1, 2) * b.at(1, 1) + a.at(2, 2) * b.at(1, 2),
-		a.at(0, 2) * b.at(2, 0) + a.at(1, 2) * b.at(2, 1) + a.at(2, 2) * b.at(2, 2),
-		a.at(0, 2) * b.at(3, 0) + a.at(1, 2) * b.at(3, 1) + a.at(2, 2) * b.at(3, 2) + a.at(3, 2)
+		a.at(2, 0) * b.at(0, 0) + a.at(2, 1) * b.at(1, 0) + a.at(2, 2) * b.at(2, 0),
+		a.at(2, 0) * b.at(0, 1) + a.at(2, 1) * b.at(1, 1) + a.at(2, 2) * b.at(2, 1),
+		a.at(2, 0) * b.at(0, 2) + a.at(2, 1) * b.at(1, 2) + a.at(2, 2) * b.at(2, 2),
+		a.at(2, 0) * b.at(0, 3) + a.at(2, 1) * b.at(1, 3) + a.at(2, 2) * b.at(2, 3) + a.at(2, 3)
 		    // clang-format on
 		);
 	}

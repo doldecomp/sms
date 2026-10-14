@@ -59,13 +59,12 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 			unk2B0->updateDemo(&unk124, &unk148, &mUp, &mFovy);
 
 			if (mCameraDemo->unk4 != 0.0f) {
-				u16 angle = CLBDegToShortAngle(mCameraDemo->unk4);
+				s16 angle = CLBDegToShortAngle(mCameraDemo->unk4);
 
 				JGeometry::TVec3<f32> origin(0.0f, 0.0f, 0.0f);
 				if (mCameraDemo->unk0 != nullptr)
 					origin = *mCameraDemo->unk0;
 
-				// TODO: frame-only; vector temporary slots still differ.
 				JGeometry::TVec3<f32> result(unk124.x - origin.x,
 				                             unk124.y - origin.y,
 				                             unk124.z - origin.z);
@@ -112,9 +111,8 @@ void CPolarSubCamera::updateGateDemoCamera_()
 	f32 fovy;
 	unk2B0->updateDemo(nullptr, nullptr, nullptr, &fovy);
 
-	int v  = mInbetween->getUnk4();
-	bool b = unk70 != mCameraDemo->unk8;
-	if (b && v > 0)
+	int v = mInbetween->getUnk4();
+	if (unk70 != mCameraDemo->unk8 && v > 0)
 		CLBChaseConstantSpecifyFrame<f32>(&mFovy, fovy, (f32)v);
 	else
 		mFovy = fovy;

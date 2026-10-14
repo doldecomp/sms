@@ -142,7 +142,6 @@ THino2MtxCalc::THino2MtxCalc(u16 param_1, u16 param_2, u16 param_3, u16 param_4,
 
 static THinokuri2* gpCurHinokuri;
 
-// TODO: nonmatching stack frame (0x130 instead of 0x148); no padding.
 void THino2MtxCalc::calc(u16 param_1)
 {
 	j3dSys.setCurrentMtxCalc(this);
@@ -307,7 +306,6 @@ void THino2Mask::breakMask() { }
 
 void THino2Mask::startDamageMotion() { }
 
-// TODO: nonmatching cached animation-cue register (r28 instead of r26).
 void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk4 == 0)
@@ -373,8 +371,6 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-// TODO: frame is 0xe0 instead of 0x100; joint-index register and yaw-constant
-// scheduling also differ. No fabricated padding.
 static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
@@ -391,7 +387,7 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 			MtxPtr mB = local_74;
 			MsMtxSetRotY(mB, gpCurHinokuri->unk198);
 
-			MTXConcat(mA, mB, mA);
+			MTXConcat(mA, local_74, mA);
 			MTXConcat(mA, local_44, mA);
 			MTXConcat(J3DSys::mCurrentMtx, mB, J3DSys::mCurrentMtx);
 			MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
@@ -604,31 +600,17 @@ void THinokuri2::emitWaterParticle()
 		return;
 
 	JGeometry::TVec3<f32> position;
-	if (getLevel() >= 1) {
+	if (mLevel >= 1) {
 		getJointTransByIndex(0x19, &position);
 	} else {
-		position = getPosition();
-		position.y += getSaveParams()->mSLWaterEmitPos.get();
+		position = mPosition;
+		position.y += ((THino2Params*)getSaveParam())->mSLWaterEmitPos.get();
 	}
 	unk19C->mPos.value = position;
 	gpModelWaterManager->emitRequest(*unk19C);
 }
 
-// TODO: UNUSED body is 0xa4 bytes; mario.MAP records 0xa8.
-void THinokuri2::shakeCamera(int param_1)
-{
-	if (param_1 == 0) {
-		f32 ws = getSaveParams()->mSLWalkShake.get();
-		if (ws * ws < getDistToMarioSquared())
-			return;
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK3, 0.8f);
-	} else {
-		f32 js = getSaveParams()->mSLJumpShake.get();
-		if (js * js < getDistToMarioSquared())
-			return;
-		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
-	}
-}
+void THinokuri2::shakeCamera(int) { }
 
 void THinokuri2::makeQuake(f32) { }
 
@@ -697,11 +679,9 @@ void THinokuri2::generateEnemy()
 void THinokuri2::updateAnmSound()
 {
 	TSpineEnemy::updateAnmSound();
-	if (unk158 > 0) {
-		if (SMSGetMSound()->gateCheck(MSD_SE_BS_HINO_SEED_LQ_LEV))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_BS_HINO_SEED_LQ_LEV, getPosition(), 0, nullptr, 0, 4);
-	}
+	if (unk158 > 0)
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_HINO_SEED_LQ_LEV, &mPosition,
+		                                0, nullptr, 0, 4);
 }
 
 void THinokuri2::changeBck(int param_1)
@@ -718,11 +698,11 @@ void THinokuri2::changeBck(int param_1)
 		    || curBck == 0x16 && param_1 == 0xB
 		    || curBck == 0xB && param_1 == 0x18) {
 			unk1A0->addTransform(
-			    mMActorKeeper->getMActorAnmData()->getUnk2C()->getAnmPtr(
+			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
 			        param_1));
 		} else {
 			unk1A0->setAnmTransform(
-			    mMActorKeeper->getMActorAnmData()->getUnk2C()->getAnmPtr(
+			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
 			        param_1));
 		}
 
@@ -735,7 +715,7 @@ void THinokuri2::changeBck(int param_1)
 	if (pJVar7 != nullptr) {
 		if (mLevel == 0 && (param_1 - 23U <= 1 || param_1 - 26U <= 1))
 			pJVar7->setRate(
-			    ((THino2Params*)getSaveParam())->mSLWalkSpeedRateLv0.value);
+			    ((THino2Params*)getSaveParam())->mSLWalkSpeedRateLv0.get());
 		else
 			pJVar7->setRate(1.0f);
 	}
@@ -772,7 +752,6 @@ BOOL THinokuri2::receiveMessageLv0(THitActor* sender, u32 message)
 	return false;
 }
 
-// TODO: frame-only mismatch (0x68 instead of 0x78); no fabricated padding.
 BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 {
 	if (mJointIdxMessageCameFrom == 0x13
@@ -897,7 +876,6 @@ BOOL THinokuri2::receiveMessage(THitActor* sender, u32 message)
 	return 0;
 }
 
-// TODO: nonmatching frame (0xf0 instead of 0x178); no fabricated padding.
 void THinokuri2::moveObject()
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
@@ -986,8 +964,6 @@ void THinokuri2::moveObject()
 		--unk168;
 }
 
-// TODO: the question-request vector is at 0x30 instead of 0x34;
-// the 0x58-byte frame and saved-register offsets match.
 void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	gpCurHinokuri = this;
@@ -1023,8 +999,7 @@ void THinokuri2::perform(u32 cue, JDrama::TGraphics* graphics)
 		TSpineEnemy::perform(cue, graphics);
 	}
 
-	bool inactive = checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT);
-	if (!inactive) {
+	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 		if (mLevel == 2 || unk1A4->unk4 == 2) {
 			if (cue & CUE_CALC_ANIM) {
 				unk1A4->setMatrix(getModel()->getAnmMtx(0x17));
@@ -1055,7 +1030,6 @@ DEFINE_NERVE(TNerveHino2Appear, TLiveActor)
 	return false;
 }
 
-// TODO: nonmatching stack frame and local offsets; no fabricated padding.
 DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
@@ -1130,8 +1104,6 @@ DEFINE_NERVE(TNerveHino2Fly, TLiveActor)
 	return false;
 }
 
-// TODO: getPoint's subobject address and return-copy registers differ; the
-// velocity result is at 0x30 rather than 0x34, and the frame is 0x58, not 0x68.
 DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
@@ -1211,7 +1183,7 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 	if (spine->getTime() == 0)
 		self->changeBck(0x16);
 
-	if (self->getCurrentBck() == 0x16) {
+	if (self->mCurrentBck == 0x16) {
 		if (self->getMActor()->curAnmEndsNext()) {
 			int uVar5 = self->mWaitTimer;
 			uVar5 += 1;
@@ -1237,8 +1209,6 @@ DEFINE_NERVE(TNerveHino2PrePol, TLiveActor)
 	return false;
 }
 
-// TODO: nonmatching frame (0xa0 instead of 0xe8) and local stack offsets;
-// the missing inline temporaries are unresolved. No fabricated padding.
 DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
@@ -1288,7 +1258,8 @@ DEFINE_NERVE(TNerveHino2Pollute, TLiveActor)
 	}
 
 	if (self->mCurrentBck == 1 && self->getMActor()->curAnmEndsNext()) {
-		self->mHitPoints = self->calcHitPoints();
+		u8 hitPoints = self->calcHitPoints();
+		self->setHitPoints(hitPoints);
 
 		self->resetPolInterval();
 		spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
@@ -1320,7 +1291,7 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 			self->changeBck(5);
 
 		self->unk18C = 0;
-		if (self->mHitPoints == 0) {
+		if (self->getHitPoints() == 0) {
 			self->unk180 = FALSE;
 			spine->pushAfterCurrent(&TNerveHino2Squat::theNerve());
 			return true;
@@ -1344,7 +1315,8 @@ DEFINE_NERVE(TNerveHino2Damage, TLiveActor)
 			spine->reset();
 			spine->pushAfterCurrent(&TNerveHino2GraphWander::theNerve());
 
-			self->mHitPoints = self->calcHitPoints();
+			u8 hitPoints = self->calcHitPoints();
+			self->setHitPoints(hitPoints);
 			self->resetPolInterval();
 
 			return true;
@@ -1365,7 +1337,9 @@ DEFINE_NERVE(TNerveHino2Squat, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext()) {
 		if (self->mCurrentBck == 0x13) {
-			self->shakeCamera(1);
+			f32 js = ((THino2Params*)self->getSaveParam())->mSLJumpShake.get();
+			if (!(js * js < self->getDistToMarioSquared()))
+				gpCameraShake->startShake(CAM_SHAKE_MODE_UNK4, 0.8f);
 			self->changeBck(0x14);
 		}
 
@@ -1389,7 +1363,8 @@ DEFINE_NERVE(TNerveHino2Burst, TLiveActor)
 
 	if (self->getMActor()->curAnmEndsNext()) {
 		self->setLevel(self->mLevel - 1);
-		self->mHitPoints = self->calcHitPoints();
+		u8 hitPoints = self->calcHitPoints();
+		self->setHitPoints(hitPoints);
 		self->unk124->reset();
 		self->goToShortestNextGraphNode();
 		spine->reset();
@@ -1400,14 +1375,12 @@ DEFINE_NERVE(TNerveHino2Burst, TLiveActor)
 	return false;
 }
 
-// TODO: stack-only mismatch; the coin position is at 0x68 instead of 0x64.
-// The frame and water-emission position match. No fabricated padding.
 DEFINE_NERVE(TNerveHino2Die, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->changeBck(0xD);
-		JGeometry::TVec3<f32> local_1C = self->getPosition();
+		JGeometry::TVec3<f32> local_1C = self->mPosition;
 		gpItemManager->makeObjAppear(local_1C.x, local_1C.y, local_1C.z,
 		                             ACTOR_TYPE_COIN, false);
 		self->invalidateCollisionAll();
@@ -1487,28 +1460,4 @@ DEFINE_NERVE(TNerveHino2WaitAnm, TLiveActor)
 		return true;
 
 	return false;
-}
-
-// @todo: preserve hinokuri2.cpp's .sdata2 prefix @3767 through @5074.
-// An extra weak-inline 3.0f otherwise displaces moveObject's bank constants.
-void order_sdata2(f32* constants, f64* conversion)
-{
-	constants[0]  = 3.05175781e-05f;
-	constants[1]  = 0.8f;
-	conversion[0] = 4503601774854144.0;
-	constants[2]  = 500.0f;
-	constants[3]  = 0.0f;
-	constants[4]  = 90.0f;
-	constants[5]  = -90.0f;
-	constants[6]  = 0.00549316406f;
-	constants[7]  = 180.0f;
-	constants[8]  = 360.0f;
-	constants[9]  = 15.0f;
-	constants[10] = 0.5f;
-	constants[11] = 100.0f;
-	constants[12] = 1.0f;
-	constants[13] = -180.0f;
-	constants[14] = 30.0f;
-	constants[15] = -30.0f;
-	constants[16] = 0.1f;
 }

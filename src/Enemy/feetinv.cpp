@@ -1,8 +1,8 @@
-#include <Enemy/FeetInv.hpp>
+#include "Enemy/FeetInv.hpp"
 #include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/JMath.hpp>
-#include <Map/Map.hpp>
+#include "Map/Map.hpp"
 #include <Map/MapData.hpp>
 #include <MarioUtil/MathUtil.hpp>
 
@@ -10,11 +10,11 @@
 inline f32 getAngleBetween(const JGeometry::TVec3<f32>& a,
                            const JGeometry::TVec3<f32>& b)
 {
-	f32 dot = a.dot(b);
 	JGeometry::TVec3<f32> crossVec;
 	crossVec.cross(a, b);
 
-	return MsAtan2(dot, MsVECMag2(&crossVec));
+	s16 rawAngle = matan(a.dot(b), MsVECMag2(&crossVec));
+	return SHORTANGLE2DEG(rawAngle);
 }
 
 // fabricated
@@ -25,9 +25,8 @@ inline f32 MsAsin(f32 x)
 	} else if (x == -1.0f) {
 		return -90.0f;
 	} else {
-		f32 cosSq = -((x * x) - 1.0f);
-		// TODO: the target uses an unrefined square-root estimate.
-		f32 cosVal = MsSqrtf(cosSq);
+		f32 cosSq  = -((x * x) - 1.0f);
+		f32 cosVal = cosSq * __frsqrte(cosSq);
 		return SHORTANGLE2DEG(matan(cosVal, x));
 	}
 }
@@ -40,15 +39,12 @@ inline f32 MsAcos(f32 x)
 	} else if (x == -1.0f) {
 		return 180.0f;
 	} else {
-		f32 cosSq = -((x * x) - 1.0f);
-		// TODO: the target uses an unrefined square-root estimate.
-		f32 cosVal = MsSqrtf(cosSq);
-		f32 angle  = SHORTANGLE2DEG(matan(cosVal, x));
-		return 90.0f - angle;
+		f32 cosSq  = -((x * x) - 1.0f);
+		f32 cosVal = cosSq * __frsqrte(cosSq);
+		return 90.0f - SHORTANGLE2DEG(matan(cosVal, x));
 	}
 }
 
-// TODO: nonmatching frame layout and vector-value reloads remain.
 void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
                  f32 heightOffset)
 {
@@ -75,7 +71,7 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 	                                 &groundData);
 	groundY += heightOffset;
 
-	if (!(groundY < footY)) {
+	if (!(groundY < footPos.y)) {
 		footPos.y = groundY;
 
 		MtxPtr hipMtx = model->getAnmMtx(hipIdx);
@@ -111,7 +107,8 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		dir.normalize();
 		dir.scale(thighLen);
 
-		kneePos = hipPos + dir;
+		JGeometry::TVec3<f32> newKnee = hipPos + dir;
+		kneePos                       = newKnee;
 
 		kneeMtx[0][3] = kneePos.x;
 		kneeMtx[1][3] = kneePos.y;
@@ -165,8 +162,10 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		footMtx[1][1] = negNormal.y;
 		footMtx[2][1] = negNormal.z;
 
-		JGeometry::TVec3<f32> footZDir(footMtx[0][2], footMtx[1][2],
-		                               footMtx[2][2]);
+		JGeometry::TVec3<f32> footZDir;
+		footZDir.x = footMtx[0][2];
+		footZDir.y = footMtx[1][2];
+		footZDir.z = footMtx[2][2];
 
 		JGeometry::TVec3<f32> footSideRaw;
 		footSideRaw.cross2(negNormal, footZDir);

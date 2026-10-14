@@ -101,9 +101,9 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	u8 stage = SMSGetMarDirector()->getCurrentStage();
+	int stage = SMSGetMarDirector()->getCurrentStage();
 	if (SMSGetMarDirector()->getCurrentMap() == 58
-	    && !(stage != 0 && stage != 1)) {
+	    && (stage == 0 || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
 		switch (stage) {
@@ -432,15 +432,10 @@ void CPolarSubCamera::calcSlopeAngleX_(s16* param_1)
 				MsVECNormalize(&diff, &norm);
 				norm *= fwdDist;
 
-				// Copies spelled out as the old TVec3 copy-ctor body; the
-				// current `: Vec(other)` ctor codegens differently here.
-				JGeometry::TVec3<f32> sample;
-				*(Vec*)&sample = *(Vec*)&SMS_GetMarioPos();
+				JGeometry::TVec3<f32> sample = SMS_GetMarioPos();
 				sample += norm;
-				JGeometry::TVec3<f32> p2;
-				*(Vec*)&p2 = *(Vec*)&sample;
-				JGeometry::TVec3<f32> p3;
-				*(Vec*)&p3 = *(Vec*)&p2;
+				JGeometry::TVec3<f32> p2 = sample;
+				JGeometry::TVec3<f32> p3 = p2;
 
 				const TBGCheckData* ground;
 				f32 height = gpMap->checkGroundIgnoreWaterSurface(
@@ -475,9 +470,10 @@ void CPolarSubCamera::calcPosAndAt_()
 
 	if (!(unk64 & CAMERA_FLAG_UNK80)) {
 		if (unk284 > 0) {
-			s32 acf = mCurrentParams->mAutoChaseCompleteFrame;
-			s32 acs = mCurrentParams->mAutoChaseStartFrame;
-			if ((acf - unk284) + 1 <= acs)
+			s32 acf   = mCurrentParams->mAutoChaseCompleteFrame;
+			s32 acs   = mCurrentParams->mAutoChaseStartFrame;
+			s32 delta = (acf - unk284) + 1;
+			if (delta <= acs)
 				unk288 = 0.0f;
 			else
 				unk288 = CLBCalcRatio<s32>(acs, acf, (acf - unk284) + 1);
@@ -715,10 +711,9 @@ void CPolarSubCamera::calcPosAndAt_()
 							    = SMS_GetMarioPos().z - mCurrentTarget.unk18.z;
 							f32 d    = MsSqrtf(dx * dx + dz * dz);
 							f32 minD = mSaveEx->mSLMinCushionXZ.get();
-							f32 mD2
-							    = minD < dist * cushion ? dist * cushion : minD;
-							if (d < mD2) {
-								f32 add = mD2 - d;
+							minD     = MsMin(minD, dist * cushion);
+							if (d < minD) {
+								f32 add = minD - d;
 								mCurrentTarget.unk18.x += sY * add;
 								mCurrentTarget.unk18.z += cY * add;
 							}

@@ -8,15 +8,14 @@
 void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
-		const JDrama::TRect& rect = graphics->getScissor();
 		J2DOrthoGraph orthoGraph(graphics->getViewport());
 		orthoGraph.setup2D();
 		unk10->draw(0, 0, &orthoGraph);
-		graphics->setScissor(rect);
+		const JUTRect& rect = graphics->getScissor();
+		GXSetScissor(rect.x1, rect.y1, rect.getWidth(), rect.getHeight());
 	}
 }
 
-// TODO: Match the child-collection count reload and color temporary layout.
 TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
                        u32 param_3, u32 param_4)
     : JDrama::TViewObj("<TMenuPlane>")
@@ -80,8 +79,8 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 		                                | TMarioGamePad::MEANING_MENU_DOWN
 		                                | TMarioGamePad::MEANING_MENU_LEFT
 		                                | TMarioGamePad::MEANING_MENU_RIGHT)) {
-			unk30[unk2C]->mCharColor = unk24.toUInt32();
-			unk30[unk2C]->mGradColor = unk24.toUInt32();
+			unk30[unk2C]->mCharColor = unk24.get();
+			unk30[unk2C]->mGradColor = unk24.get();
 			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT
 			                             | TMarioGamePad::MEANING_MENU_RIGHT)) {
 				int index = unk2C;
@@ -107,8 +106,8 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 					unk2C = 0;
 			}
 
-			unk30[unk2C]->mCharColor = unk1C.toUInt32();
-			unk30[unk2C]->mGradColor = unk20.toUInt32();
+			unk30[unk2C]->mCharColor = unk1C.get();
+			unk30[unk2C]->mGradColor = unk20.get();
 		}
 	}
 }

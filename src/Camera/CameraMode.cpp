@@ -1,6 +1,8 @@
 #include <Camera/Camera.hpp>
 #include <Camera/CameraJetCoaster.hpp>
-#include <System/DummyStrings.hpp>
+
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 const char* CPolarSubCamera::mCamKindNameSaveFile[73] = {
 	"/Camera/kindFollow.prm",
@@ -186,17 +188,10 @@ bool CPolarSubCamera::isNormalCameraSpecifyMode(int param) const
 	return result;
 }
 
-// TODO: fabricated; model retail's current-mode accessor boundary, like
-// isLButtonCamera(). Confirm the name and move into CPolarSubCamera.
-static inline bool isNormalCamera(const CPolarSubCamera* camera)
-{
-	return camera->isNormalCameraSpecifyMode(camera->mMode);
-}
-
 bool CPolarSubCamera::isNormalCameraCompletely() const
 {
 	bool result = false;
-	if (isNormalCamera(this)
+	if (isNormalCameraSpecifyMode(mMode)
 	    && (!isNowInbetween() || isNormalCameraSpecifyMode(mPrevMode)))
 		result = true;
 

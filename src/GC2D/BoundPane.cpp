@@ -46,13 +46,8 @@ bool TBoundPane::update()
 			unk24 = false;
 		}
 
-		JUTPoint point;
-		makeNewPosition(unk28, unk38, unk40, unk48, point);
-
-		unk14.x1 = point.x;
-		unk14.y1 = point.y;
-		unk0->move(unk4.x1 + unk14.x1, unk4.y1 + unk14.y1);
-
+		makeNewPosition(unk28, unk14, unk38, unk40, unk48);
+		unk0->move(unk4.x1 + unk14.x, unk4.y1 + unk14.y);
 		unk28 += unk2C;
 	}
 
@@ -62,13 +57,8 @@ bool TBoundPane::update()
 			unk25 = false;
 		}
 
-		JUTPoint point;
-		makeNewPosition(unk30, unk50, unk58, unk60, point);
-
-		unk14.x2 = point.x;
-		unk14.y2 = point.y;
-		unk0->resize(unk14.x2 + unk4.getWidth(), unk14.y2 + unk4.getHeight());
-
+		makeNewPosition(unk30, unk1C, unk50, unk58, unk60);
+		unk0->resize(unk1C.x + unk4.getWidth(), unk1C.y + unk4.getHeight());
 		unk30 += unk34;
 	}
 
@@ -79,18 +69,17 @@ bool TBoundPane::update()
 	return result;
 }
 
-void TBoundPane::makeNewPosition(f32 param_1, JUTPoint& param_2,
-                                 JUTPoint& param_3, JUTPoint& param_4,
-                                 JUTPoint& param_5)
+void TBoundPane::makeNewPosition(f32 t, JUTPoint& out, JUTPoint& start,
+                                 JUTPoint& control, JUTPoint& end)
 {
-	f32 fVar1 = param_1 * param_1;
-	f32 fVar2 = 1.0f - param_1;
-	f32 fVar4 = 2.0f * fVar2 * param_1;
-	f32 fVar3 = fVar2 * fVar2;
-	f32 fVar5 = param_4.x * fVar1 + param_2.x * fVar3 + param_3.x * fVar4;
-	f32 fVar6 = param_4.y * fVar1 + param_2.y * fVar3 + param_3.y * fVar4;
+	f32 tt = t * t;
+	f32 u  = 1.0f - t;
+	f32 uu = u * u;
+	f32 ut = 2.0f * u * t;
 
-	fVar5 += fVar5 > 0.0f ? 0.5f : -0.5f;
-	fVar6 += fVar6 > 0.0f ? 0.5f : -0.5f;
-	param_5.set(fVar5, fVar6);
+	f32 x = end.x * tt + (start.x * uu + control.x * ut);
+	f32 y = end.y * tt + (start.y * uu + control.y * ut);
+
+	out.x = (s16)(x + (x > 0.0f ? 0.5f : -0.5f));
+	out.y = (s16)(y + (y > 0.0f ? 0.5f : -0.5f));
 }

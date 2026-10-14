@@ -103,7 +103,6 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 
 extern void marker();
 
-// TODO: frame-only mismatch: 0x2e8 bytes here versus 0x370 in retail.
 void TMarDirector::initECDisp(
     TPerformList* param_1,
     JDrama::TViewObjPtrListT<JDrama::TViewObj, JDrama::TViewObj>*
@@ -236,7 +235,7 @@ void TMarDirector::setupPerformList_console()
 
 	list->insert(new TEmitterViewObj(gpEmitterManager4D2));
 
-	unk30->push_back(list, CUE_MOVE | CUE_CALC_ANIM);
-	unk30->push_back("Group 2D 2", CUE_MOVE | CUE_CALC_ANIM);
-	unk30->push_back("Guide", CUE_MOVE | CUE_CALC_ANIM);
+	mPerformListConsole->push_back(list, CUE_MOVE | CUE_CALC_ANIM);
+	mPerformListConsole->push_back("Group 2D 2", CUE_MOVE | CUE_CALC_ANIM);
+	mPerformListConsole->push_back("Guide", CUE_MOVE | CUE_CALC_ANIM);
 }

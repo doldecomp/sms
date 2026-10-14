@@ -156,7 +156,6 @@ void TMovieDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	OSResumeThread(&gSetupThread);
 }
 
-// TODO: nonmatching inline stack slots; the 0x2d8 frame now matches.
 int TMovieDirector::rsetup()
 {
 #ifdef VERSION_GMSP01
@@ -214,9 +213,8 @@ int TMovieDirector::rsetup()
 	const char* movie = "EX128x144_q0.thp";
 
 	{
-		TApplication* app     = SMSGetApplication();
-		u32 movieIdx          = app->getMovie();
-		const char* movieName = getStreamMovieName(movieIdx);
+		const char* movieName
+		    = getStreamMovieName(SMSGetApplication()->getMovie());
 		if (movieName != nullptr)
 			if (DVDConvertPathToEntrynum((char*)movieName) != -1)
 				movie = movieName;
@@ -302,8 +300,7 @@ TMovieDirector::~TMovieDirector()
 	    = (JKRMemArchive*)JKRFileLoader::getVolume("subtitle"))
 		arc->unmountFixed();
 
-	MSound* sound = gpMSound;
-	sound->stopAllSound();
+	SMSGetMSound()->stopAllSound();
 	THPPlayerStop();
 	THPPlayerClose();
 	THPPlayerQuit();

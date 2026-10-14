@@ -25,7 +25,8 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 	int count                   = save->mSLSharedAnmNum.get();
 
 	if (count != 0 && actor->getInstanceIndex() >= count) {
-		TLiveActor* other = manager->getObj(actor->getInstanceIndex() % count);
+		TLiveActor* other
+		    = (TLiveActor*)manager->getObj(actor->getInstanceIndex() % count);
 
 		int anmIdx = other->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		mActor->setBckFromIndex(anmIdx);

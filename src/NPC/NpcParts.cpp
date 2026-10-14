@@ -28,24 +28,21 @@ const char* cPeachHostTextureName  = "H_peach_main_s3tc";
 
 void SetMActorAnmFrame(MActor* actor, f32 frame, bool bck, bool btp)
 {
-	if (actor == nullptr)
+	if (!actor)
 		return;
 
-	J3DFrameCtrl* ctrl;
 	if (bck) {
-		ctrl = actor->getFrameCtrl(ANM_TYPE_BCK);
-		if (ctrl != nullptr)
+		J3DFrameCtrl* ctrl = actor->getFrameCtrl(ANM_TYPE_BCK);
+		if (ctrl)
 			ctrl->setFrame(frame);
 	}
-
 	if (btp) {
-		ctrl = actor->getFrameCtrl(ANM_TYPE_BTP);
-		if (ctrl != nullptr)
+		J3DFrameCtrl* ctrl = actor->getFrameCtrl(ANM_TYPE_BTP);
+		if (ctrl)
 			ctrl->setFrame(frame);
 	}
 }
 
-// TODO: recover the default motion-blend helper and remaining frame difference.
 TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
                      TBaseNPC* param_3)
     : unk60(param_3)
@@ -53,9 +50,9 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(unk60->getActorType() - ACTOR_TYPE_NPC_MONTE_M);
 
-	TSharedParts** parts = &unk0[0][0];
-	for (int i = 0; i < 24; ++i, ++parts)
-		*parts = nullptr;
+	TSharedParts** it = unk0[0];
+	for (int i = 0; i < sizeof(unk0) / sizeof(unk0[0][0]); ++i)
+		*it++ = nullptr;
 
 	for (int i = 0; i < 12; ++i) {
 		if (initInfo->unk4[i] == nullptr || !(param_1 & (1 << i)))
@@ -126,9 +123,13 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 				break;
 
 			case ACTOR_TYPE_NPC_MARE_WB:
-				if (j == 0 && i == 10)
-					unk0[j][i]->getMActor()->initBckSimpleMotionBlend(
-					    TBaseNPC::mPtrSaveNormal->mMotionBlendFrame.get());
+				if (j == 0 && i == 10) {
+					int iVar6 = -1;
+					if (iVar6 == -1)
+						iVar6
+						    = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame.get();
+					unk0[j][i]->getMActor()->initBckSimpleMotionBlend(iVar6);
+				}
 				break;
 			}
 
@@ -165,8 +166,7 @@ void TNpcParts::addJellyFishParts(f32 param_1)
 	TSharedParts** slot = &unk0[0][11];
 
 	int iVar2 = gpMareJellyFishManager->getModelDataKeeper()->getModelDataNum();
-	f32 random = MsRandF();
-	int iVar3  = iVar2 * random;
+	int iVar3 = MsRandF() * iVar2;
 
 	SDLModelData* data
 	    = gpMareJellyFishManager->getModelDataKeeper()->getNthData(iVar3);
@@ -220,61 +220,6 @@ void TNpcParts::partsFrameUpdate()
 			(*it)->getMActor()->frameUpdate();
 }
 
-// TODO: fabricated boundary; reproduces the Peach predicate GPR flow.
-// The original helper name remains unknown.
-static inline bool ShouldPerformPeachPart(TBaseNPC* npc, int i)
-{
-	bool r4 = true;
-	if (npc->checkUnk1D8(TBaseNPC::UNK1D8_FLAG_UNK4)) {
-		switch (i) {
-		case 1:
-		case 2:
-		case 4:
-			r4 = false;
-			break;
-		}
-	} else if (npc->checkUnk1D8(TBaseNPC::UNK1D8_FLAG_UNK1)) {
-		switch (i) {
-		case 1:
-		case 2:
-			r4 = false;
-			break;
-		}
-	} else {
-		switch (i) {
-		case 4:
-		case 5:
-		case 6:
-			r4 = false;
-			break;
-		}
-	}
-	return r4;
-}
-
-// TODO: fabricated boundary; guard and matrix update match the GPR flow.
-// The original helper identity is unknown.
-static inline void UpdateJellyFishPart(TBaseNPC* npc, TSharedParts** it, int i)
-{
-	if (npc->isJellyFishMare() && i == 11) {
-		MActor* mactor = (*it)->getMActor();
-		Mtx44 mtx;
-		SMS_GetLightPerspectiveForEffectMtx(mtx);
-		J3DModelData* data = mactor->getModel()->getModelData();
-		int starglowMatIdx = data->getMaterialName()->getIndex("_starglow1");
-		int matNum         = data->getMaterialNum();
-		for (u16 j = 0; j < matNum; ++j) {
-			if (j != starglowMatIdx)
-				data->getMaterialNodePointer(j)
-				    ->getTexGenBlock()
-				    ->getTexMtx(0)
-				    ->setEffectMtx(mtx);
-		}
-	}
-}
-
-// TODO: nonmatching frame is 0xf0 instead of 0xf8; no padding added.
-// Matrix and other instructions match; the missing stack-home owner is unknown.
 void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	int i = 0;
@@ -286,12 +231,55 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 			continue;
 
 		if (unk60->getActorType() == ACTOR_TYPE_NPC_PEACH) {
-			if (!ShouldPerformPeachPart(unk60, i))
+			// Peach stuff
+			bool r4 = true;
+			if (unk60->checkUnk1D8(TBaseNPC::UNK1D8_FLAG_UNK4)) {
+				switch (i) {
+				case 1:
+				case 2:
+				case 4:
+					r4 = false;
+					break;
+				}
+			} else if (unk60->checkUnk1D8(TBaseNPC::UNK1D8_FLAG_UNK1)) {
+				switch (i) {
+				case 1:
+				case 2:
+					r4 = false;
+					break;
+				}
+			} else {
+				switch (i) {
+				case 4:
+				case 5:
+				case 6:
+					r4 = false;
+					break;
+				}
+			}
+
+			if (!r4)
 				continue;
 		}
 
-		if (param_1 & 2)
-			UpdateJellyFishPart(unk60, it, i);
+		if (param_1 & 2) {
+			if (unk60->isJellyFishMare() && i == 11) {
+				MActor* mactor = (*it)->getMActor();
+				Mtx44 mtx;
+				SMS_GetLightPerspectiveForEffectMtx(mtx);
+				J3DModelData* data = mactor->getModel()->getModelData();
+				int starglowMatIdx
+				    = data->getMaterialName()->getIndex("_starglow1");
+				int matNum = data->getMaterialNum();
+				for (u16 j = 0; j < matNum; ++j) {
+					if (j != starglowMatIdx)
+						data->getMaterialNodePointer(j)
+						    ->getTexGenBlock()
+						    ->getTexMtx(0)
+						    ->setEffectMtx(mtx);
+				}
+			}
+		}
 
 		(*it)->perform(param_1, param_2);
 	}

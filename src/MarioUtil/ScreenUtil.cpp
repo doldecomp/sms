@@ -162,8 +162,7 @@ void TAfterEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 	f32 fVar3  = (fVar4 + fVar5) * 0.5f;
 	f32 fVar10 = (fVar6 + fVar7) * 0.5f;
 
-	f32 nearPlane = -graphics->getNearPlane();
-	u16 uVar14    = nearPlane;
+	u16 uVar14 = -graphics->getNearPlane();
 
 	GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, 8);
 

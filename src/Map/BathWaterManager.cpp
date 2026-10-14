@@ -263,11 +263,13 @@ public:
 
 			if (distSq <= outerR2) {
 				if (proj < 0.0f) {
-					if (distSq >= innerR2) {
+					if (distSq >= innerR * innerR) {
 						f32 dist = JGeometry::TUtil<f32>::sqrt(distSq);
 						f32 pen  = dist - innerR;
 						f32 inv  = -1.0f / dist;
+						JGeometry::TVec3<f32> n;
 						n.scale(inv, delta);
+						JGeometry::TVec3<f32> point;
 						point.scale(pen, n);
 						unk18.extend(point);
 
@@ -275,18 +277,20 @@ public:
 						if (c < 0.0f)
 							c = 0.0f;
 
-						point.scale(c, n);
-						point += data.unk58;
-						unk30.extend(point);
+						JGeometry::TVec3<f32> point2;
+						point2.scale(c, n);
+						point2 += data.unk58;
+						unk30.extend(point2);
 					} else {
 						f32 f = radius + (data.mPos.y - data.unk44);
 						if (unk0.y < f) {
 							f32 pen = f - unk0.y;
-							point.set(0.0f, pen, 0.0f);
+							JGeometry::TVec3<f32> point(0.0f, pen, 0.0f);
 							unk18.extend(point);
-							point.set(0.0f, -1.0f * unkC.y, 0.0f);
-							point += data.unk58;
-							unk30.extend(point);
+							JGeometry::TVec3<f32> point2(0.0f, -1.0f * unkC.y,
+							                             0.0f);
+							point2 += data.unk58;
+							unk30.extend(point2);
 						} else {
 							count++;
 							accum.add(unk0);
@@ -300,7 +304,7 @@ public:
 			} else {
 				if (proj > 0.0f && proj < radius + data.unk48
 				    && distSq > innerR2 && distSq < outerR2) {
-					point.scale((radius + data.unk48) + -proj, m);
+					point.scale((radius + data.unk48) - proj, m);
 					unk18.extend(point);
 
 					point.scale(1.5f * -m.dot(unkC), m);
@@ -512,8 +516,8 @@ static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 namespace {
 void clearEFB_alpha(s16 x, s16 y, s16 wd, s16 ht, u8 alpha)
 {
-	Mtx pmtx;
 	Mtx44 m;
+	Mtx pmtx;
 
 	if (wd <= 0)
 		wd = SMSGetGameRenderWidth();

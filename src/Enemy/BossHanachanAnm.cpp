@@ -155,8 +155,6 @@ void TBossHanachan::copyFrameFromOldAnmToNewAnm_()
 		unk150[i]->copyFrameFromOldAnmToNewAnm_();
 }
 
-// TODO: nonmatching: frame is 0x110 instead of 0x118; inline-temporary
-// stack ownership remains unresolved.
 void TBossHanachan::changeAnmRateAndFrameUpdate_()
 {
 	bool doRate = true;

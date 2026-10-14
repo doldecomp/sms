@@ -44,19 +44,19 @@ void TMario::getGesso(THitActor* param_1)
 		emitGetEffect();
 		switch (param_1->getActorType()) {
 		case ACTOR_TYPE_SURF_GESO_RED:
-			mSurfGesso     = gpMapObjManager->mRedGesso;
+			mSurfGesso     = gpMapObjManager->getRedGesso();
 			mSurfGessoType = SURF_GESSO_TYPE_RED;
 			break;
 
 		case ACTOR_TYPE_SURF_GESO_YELLOW:
-			mSurfGesso     = gpMapObjManager->mYellowGesso;
+			mSurfGesso     = gpMapObjManager->getYellowGesso();
 			mSurfGessoType = SURF_GESSO_TYPE_YELLOW;
 			break;
 
 		default:
 		case ACTOR_TYPE_SURF_GESO_GREEN:
 			mSurfGessoType = SURF_GESSO_TYPE_GREEN;
-			mSurfGesso     = gpMapObjManager->mGreenGesso;
+			mSurfGesso     = gpMapObjManager->getGreenGesso();
 			break;
 		}
 		mSurfGesso->setBck("surfgeso_run1");
@@ -89,7 +89,6 @@ void TMario::getCoinBlue()
 	emitGetCoinEffect(&mPosition);
 }
 
-// TODO: Nonmatching stack layout (0x1A8 frame; target is 0x220).
 BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkFlag(MARIO_FLAG_GAME_OVER))
@@ -97,23 +96,23 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 	if (sender->isHitCategory(HIT_CATEGORY_ITEM)) {
 		bool playThump = true;
-		if (sender->getActorType() == ACTOR_TYPE_COIN)
+		if (sender->mActorType == ACTOR_TYPE_COIN)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_COIN_RED)
+		if (sender->mActorType == ACTOR_TYPE_COIN_RED)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_COIN_BLUE)
+		if (sender->mActorType == ACTOR_TYPE_COIN_BLUE)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_HIDE_OBJ)
+		if (sender->mActorType == ACTOR_TYPE_HIDE_OBJ)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_SHINE)
+		if (sender->mActorType == ACTOR_TYPE_SHINE)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_WATERGUN_ITEM)
+		if (sender->mActorType == ACTOR_TYPE_WATERGUN_ITEM)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_NORMAL_NOZZLE_ITEM)
+		if (sender->mActorType == ACTOR_TYPE_NORMAL_NOZZLE_ITEM)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_ROCKET_NOZZLE_ITEM)
+		if (sender->mActorType == ACTOR_TYPE_ROCKET_NOZZLE_ITEM)
 			playThump = false;
-		if (sender->getActorType() == ACTOR_TYPE_BACK_NOZZLE_ITEM)
+		if (sender->mActorType == ACTOR_TYPE_BACK_NOZZLE_ITEM)
 			playThump = false;
 
 		if (playThump == true)
@@ -129,7 +128,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_HANEAGARI, &mPosition, 0,
 			                                &mSound, 0, 4);
 		}
-		if (sender->getActorType() == ACTOR_TYPE_POI_HANA)
+		if (sender->mActorType == ACTOR_TYPE_POI_HANA)
 			startVoice(MSD_SE_MV27_SPRISE_01);
 
 		if (sender->isHitCategory(HIT_CATEGORY_MAP_OBJECT)
@@ -245,7 +244,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 				mPosition.x  = sender->mPosition.x;
 				mPosition.z  = sender->mPosition.z;
 				mFaceAngle.y = DEG2SHORTANGLE(
-				    static_cast<TMapObjBase*>(sender)->getInitialRotation().y);
+				    static_cast<TMapObjBase*>(sender)->mInitialRotation.y);
 				mModelFaceAngle = mFaceAngle.y;
 				setPlayerVelocity(0.0f);
 				mHealth = mDeParams.mHPMax.get();
@@ -634,7 +633,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_BOSS_GESSO:
 		break;
 
-	case ACTOR_TYPE_BOSS_UNK13:
+	case ACTOR_TYPE_BOSS_TELESA:
 		switch (message) {
 		case HIT_MESSAGE_TAKE:
 			if (mHeldObject == nullptr && mHolder == nullptr) {
@@ -695,7 +694,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_COASTER_KILLER:
 	case ACTOR_TYPE_BOSS_EEL_TOOTH:
 	case ACTOR_TYPE_BOSS_EEL_COLLISION:
-	case ACTOR_TYPE_BOSS_UNK27:
+	case ACTOR_TYPE_TIN_KOOPA_FLAME:
 	case ACTOR_TYPE_HANE_HAMU_KURI:
 	case ACTOR_TYPE_ENEMY_UNK35:
 		switch (message) {

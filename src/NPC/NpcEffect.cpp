@@ -24,7 +24,7 @@ void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
 		jointName = monte;
 	else if (isNormalMare())
 		jointName = mare;
-	else if (getActorType() == ACTOR_TYPE_NPC_KINOPIO)
+	else if (mActorType == ACTOR_TYPE_NPC_KINOPIO)
 		jointName = kinoppio;
 	else
 		jointName = nullptr;
@@ -75,7 +75,7 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 		pcVar5    = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
-	} else if (getActorType() == ACTOR_TYPE_NPC_KINOPIO) {
+	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO) {
 		pcVar5 = bodyJoint;
 	} else {
 		pcVar5 = nullptr;
@@ -98,8 +98,8 @@ void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)
 		model  = getModel();
 		pcVar3 = "yashi_jnt";
 	}
-	int index = model->getModelData()->getJointName()->getIndex(pcVar3);
-	mSmokeEffectMtxPtr = model->getAnmMtx((u16)index);
+	u16 idx = model->getModelData()->getJointName()->getIndex(pcVar3);
+	mSmokeEffectMtxPtr = model->getAnmMtx(idx);
 }
 
 static bool IsCheckPassFrame(J3DFrameCtrl* param_1, const f32* param_2)
@@ -140,7 +140,7 @@ void TBaseNPC::emitHappyEffect_()
 	if (isNormalMonte()) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MNT_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
-	} else if (isNormalMare() || getActorType() == ACTOR_TYPE_NPC_KINOPIO) {
+	} else if (isNormalMare() || mActorType == ACTOR_TYPE_NPC_KINOPIO) {
 		SMS_EasyEmitParticle(PARTICLE_MS_MARE_KIRA, mHappyEffectMtxPtr, this,
 		                     scale);
 	}
@@ -210,7 +210,7 @@ inline bool TBaseNPC::isPolWaitCEffectEmitTime_() const
 	} else if (isNormalMare()) {
 		static const f32 sCheckFrameMare[] = { 126.0f, 156.0f, -1.0f };
 		checkFrames                        = sCheckFrameMare;
-	} else if (getActorType() == ACTOR_TYPE_NPC_KINOPIO) {
+	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO) {
 		static const f32 sCheckFrameKino[] = { 22.0f, 44.0f, -1.0f };
 		checkFrames                        = sCheckFrameKino;
 	}

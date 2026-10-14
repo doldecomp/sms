@@ -14,7 +14,8 @@
 #include <JSystem/JMath.hpp>
 #include <Enemy/Enemy.hpp>
 
-#include <System/DummyStrings.hpp>
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 static const char* sNoticeActorManagerName[] = {
 	"ヒノクリマネージャー",
@@ -38,7 +39,7 @@ void CPolarSubCamera::setNoticeInfo()
 		if (mgr != nullptr) {
 			s32 e = mgr->getObjNum();
 			for (int j = 0; j < e; ++unk29C, ++j)
-				unk2A0[unk29C] = mgr->getObj(j);
+				unk2A0[unk29C] = (TLiveActor*)mgr->getObj(j);
 		}
 	}
 
@@ -68,8 +69,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax)
 				inClipY = true;
 
-			bool isInside = inClipX && inClipY;
-			if (isInside)
+			if (inClipY)
 				return mNoticeActor;
 		}
 	}
@@ -148,7 +148,6 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 
 void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 {
-	// TODO: nonmatching frame and signed absolute-value expansion remain.
 	Vec mPos  = gpCameraMario->unk0;
 	f32 dist2 = CLBSquared<f32>(mPos.x - target.x)
 	            + CLBSquared<f32>(mPos.z - target.z);
@@ -196,11 +195,9 @@ void CPolarSubCamera::getNozzleTopPos_(JGeometry::TVec3<f32>* out) const
 		out->z     = mtx[2][3];
 
 		JGeometry::TVec3<f32> dir(mtx[0][1], mtx[1][1], mtx[2][1]);
-		JGeometry::TVec3<f32> offset;
-		offset.set(dir);
-		offset.normalize();
-		offset *= 30.0f;
-		*out += offset;
+		dir.normalize();
+		dir *= 30.0f;
+		*out += dir;
 	}
 }
 

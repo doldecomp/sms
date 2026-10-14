@@ -12,13 +12,12 @@ public:
 	void stagger(bool);
 	void getDown();
 	bool allowsLaunch() const;
+	bool effectsTumble() const;
 
 public:
-	// TODO: unknown layout, size from getNameRef_BossEnemy's operator new
 	/* 0x150 */ u8 unk150[0x6C];
 };
 
-// fabricated: declaration only, layout unknown beyond TEnemyManager
 class TKoopaManager : public TEnemyManager {
 public:
 	TKoopaManager(const char*);

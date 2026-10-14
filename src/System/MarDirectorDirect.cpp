@@ -58,7 +58,7 @@ int TMarDirector::direct()
 	}
 
 	u8 prevSeGateMask;
-	int desiredAppState = TApplication::APP_STATE_DEFAULT;
+	u32 desiredAppState = TApplication::APP_STATE_DEFAULT;
 
 	JDrama::TGraphics local_140;
 
@@ -140,35 +140,36 @@ int TMarDirector::direct()
 			if (mMoveTickCount & 2)
 				movementCue &= ~CUE_MOVEMENT_GATE_B;
 			if (checkDemoFlag(DEMO_FLAG_SHINE_GET_STOP_THE_WORLD))
-				mShinePfLstMov->perform(movementCue, &local_140);
+				mPerformListShineMovement->perform(movementCue, &local_140);
 			else
 				mPerformListMovement->perform(movementCue, &local_140);
 
 			u32 someCue = 0;
 			if (!checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK))
 				someCue |= CUE_CALC_ANIM;
-			u32 unk30Cue = ~someCue;
-			unk30->perform(unk30Cue, &local_140);
+			u32 consoleCue = ~someCue;
+			mPerformListConsole->perform(consoleCue, &local_140);
 			movement();
 			if (!(blacklistedCues & CUE_CALC_ANIM)) {
 				if (checkDemoFlag(DEMO_FLAG_SHINE_GET_STOP_THE_WORLD))
-					mShinePfLstAnm->perform(~blacklistedCues, &local_140);
+					mPerformListShineCalcAnim->perform(~blacklistedCues,
+					                                   &local_140);
 				else
 					mPerformListCalcAnim->perform(~blacklistedCues, &local_140);
 			}
 
 			if (checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK)) {
 				local_140.unk0 = 0;
-				unk34->perform(CUE_ALL, &local_140);
+				mPerformListPreEntry->perform(CUE_ALL, &local_140);
 				break;
 			}
 		} else {
 			local_140.unk0 = 0;
-			unk40->perform(CUE_ALL, &local_140);
-			unk38->perform(CUE_ALL, &local_140);
-			unk3C->perform(CUE_ALL, &local_140);
+			mPerformListDrawInit->perform(CUE_ALL, &local_140);
+			mPerformListPollutionCountObj->perform(CUE_ALL, &local_140);
+			mPerformListPollutionCountLayer->perform(CUE_ALL, &local_140);
 			mPerformListGX->perform(CUE_ALL, &local_140);
-			if (gpSilhouetteManager->isUnk48Positive()
+			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
 				mPerformListSilhouette->perform(CUE_ALL, &local_140);
 			}
@@ -184,13 +185,11 @@ int TMarDirector::direct()
 	return desiredAppState;
 }
 
-// TODO: nonmatching next-area copy scheduling.
 static void decideNextStage()
 {
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
 	TGameSequence local_3C;
 
-	int stage = SMS_getShineStage(curArea.getStage());
+	int stage = SMS_getShineStage(SMSGetApplication()->mCurrArea.getStage());
 	switch (stage) {
 	case 0:
 		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
@@ -258,7 +257,6 @@ static int decideNextScenario(u8 param_1)
 	return result;
 }
 
-// TODO: nonmatching stack frame and slot offsets.
 int TMarDirector::changeState()
 {
 	int desiredAppState = TApplication::APP_STATE_DEFAULT;
@@ -536,7 +534,6 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 	}
 }
 
-// TODO: nonmatching frame (0x58 vs 0xB0) and StageUtil table relocations.
 void TMarDirector::setMario()
 {
 	bool cVar4 = false;

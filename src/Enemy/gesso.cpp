@@ -184,7 +184,6 @@ void TGessoManager::requestPolluteModel(JGeometry::TVec3<float>& position,
 	unk60->generatePolluteModel(position, scale);
 }
 
-// TODO: joint-index register and inlined rotation setup still differ.
 static int GessoBodyCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
@@ -195,16 +194,15 @@ static int GessoBodyCallback(J3DNode* param_1, int param_2)
 		MtxPtr anmMtx   = gpCurGesso->getModel()->getAnmMtx(joint->getJntNo());
 
 		TPosition3f local_44;
-		Mtx local_74;
 		local_44.setTrans(0.0f, 0.0f, 0.0f);
 		f32 scale = gpCurGesso->getBodyScale();
 		local_44.setScale(scale, scale, scale);
 
-		TGessoSaveLoadParams* params = gpCurGesso->unk1E8;
-		f32 maxAngle                 = params->mSLBodyAngMax.get();
+		f32 maxAngle = gpCurGesso->getSaveParams()->mSLBodyAngMax.get();
 		f32 angle = MsClamp(gpCurGesso->mBodyTrackingAngle - 90.0f, -maxAngle,
 		                    maxAngle);
 
+		Mtx local_74;
 		MtxPtr rotation = local_74;
 		MsMtxSetRotX(rotation, angle);
 
@@ -433,13 +431,12 @@ void TGesso::setBehavior()
 	if (mAttackCooldown > 200)
 		mAttackCooldown = 0;
 
-	if (isAirborne() && getPosition().y > getGroundHeight() + 250.0f
+	if (isAirborne() && mPosition.y > mGroundHeight + 250.0f
 	    && mSpine->getCurrentNerve() != &TNerveWalkerGenerate::theNerve()) {
 		mNeedsLanding = true;
 	}
 
-	bool airborne = isAirborne();
-	if (!airborne && mNeedsLanding
+	if (!isAirborne() && mNeedsLanding
 	    && (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
 	        || mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve())) {
 		mSpine->pushNerve(&TNerveGessoLand::theNerve());
@@ -511,8 +508,8 @@ void TGesso::pollute()
 
 	JGeometry::TVec3<f32> tmp;
 	tmp.sub(mPolluteVelocity, mPosition);
-	tmp.y                        = 0.0f;
-	getPolluteObj()->mRotation.y = MsGetRotFromZaxisY(tmp);
+	tmp.y                    = 0.0f;
+	mPolluteObj->mRotation.y = MsGetRotFromZaxisY(tmp);
 
 	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(mMouthJntIndex);
 
@@ -524,9 +521,9 @@ void TGesso::pollute()
 		MsMtxSetRotRPH(afStack_5c, 0.0f, mRotation.y + mStayYaw, 0.0f);
 	}
 	MTXMultVec(afStack_5c, &local_2c, &local_2c);
-	getPolluteObj()->mPosition.x = mtx[0][3] + local_2c.x;
-	getPolluteObj()->mPosition.y = mtx[1][3];
-	getPolluteObj()->mPosition.z = mtx[2][3] + local_2c.z;
+	mPolluteObj->mPosition.x = mtx[0][3] + local_2c.x;
+	mPolluteObj->mPosition.y = mtx[1][3];
+	mPolluteObj->mPosition.z = mtx[2][3] + local_2c.z;
 }
 
 bool TGesso::isUseBodyCallBack() const
@@ -662,7 +659,7 @@ void TGesso::calcRootMatrix()
 	}
 
 	if (!isEaten()) {
-		J3DModel* model = getMActor()->getModel();
+		J3DModel* model = mMActor->getModel();
 		MtxPtr mA       = model->getBaseTRMtx();
 
 		MsMtxSetXYZRPH(mA, mPosition.x, mPosition.y + unk1D0, mPosition.z,
@@ -699,9 +696,7 @@ void TGesso::behaveToFindMario()
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
 		setGoalPath(TPathNode((THitActor*)gpMarioAddress));
-		const TNerveBase<TLiveActor>* nerve
-		    = &TNerveWalkerGraphWander::theNerve();
-		mSpine->pushAfterCurrent(nerve);
+		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		if (unk1B4 == 0) {
 			mSpine->pushAfterCurrent(&TNerveGessoFindMario::theNerve());
@@ -732,7 +727,7 @@ void TGesso::rollCheck()
 
 	f32 turnLength = unk1E8->mSLTurnLength.get();
 	updateSquareToMario();
-	if (getDistToMarioSquared() < turnLength * turnLength && mIsRightSideUp
+	if (mDistToMarioSquared < turnLength * turnLength && mIsRightSideUp
 	    && !MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
 	                    unk1E8->mSLSearchLengthOnObj.get(),
 	                    unk1E8->mSLSearchAngleOnObj.get(), 0.0f)) {
@@ -777,8 +772,8 @@ bool TGesso::turning()
 	f32 step = 7.2f;
 	if (mTurnAngle + step <= 180.0f) {
 		mBodyTrackingAngle = 90.0f;
-		mRotation.y += step;
-		mTurnAngle += step;
+		mRotation.y += 7.2f;
+		mTurnAngle += 7.2f;
 		return false;
 	}
 
@@ -799,8 +794,8 @@ void TGesso::turnOut()
 bool TGesso::checkDropInWater()
 {
 	// Don't skip your calculus class, kids.
-	JGeometry::TVec3<f32> position = getPosition();
-	JGeometry::TVec3<f32> velocity = getVelocityRef();
+	JGeometry::TVec3<f32> position = mPosition;
+	JGeometry::TVec3<f32> velocity = mVelocity;
 	for (int i = 0; i < 50; ++i) {
 		position += velocity;
 		velocity.y -= getGravityY();
@@ -858,9 +853,9 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 	TEnemyAttachment::loadInit(param_1, param_2);
 
 	unk16C = (TGesso*)unk160;
-	TIdxGroupObj* group
-	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
-	group->getChildren().push_back(this);
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+	    ->getChildren()
+	    .push_back(this);
 
 	THitActor::initHitActor(ACTOR_TYPE_POLLUTE_OBJ, 1, HIT_CATEGORY_PLAYER,
 	                        10.0f, 10.0f, 10.0f, 10.0f);
@@ -960,9 +955,8 @@ void TGessoPolluteObj::calcRootMatrix()
 	if (unk168 != 0)
 		return;
 
-	if (SMSGetMSound()->gateCheck(MSD_SE_EN_GESO_GERO_FLY))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_EN_GESO_GERO_FLY, getPosition(), 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_GESO_GERO_FLY, &mPosition, 0,
+	                                nullptr, 0, 4);
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_GESO_KISEKI,
 	                                            &mPosition, 1, this);
 }
@@ -989,12 +983,12 @@ DEFINE_NERVE(TNerveGessoStay, TLiveActor)
 	return false;
 }
 
-// TODO: vector temporary slots still differ within the matching 0xa8 frame.
 DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 {
 	TGesso* self = (TGesso*)spine->getBody();
 	if (spine->getTime() == 0) {
-		JGeometry::TVec3<f32> local_88 = self->getPosition() - *gpMarioPos;
+		JGeometry::TVec3<f32> local_88
+		    = self->getPosition() - SMS_GetMarioPos();
 		MsVECNormalize(&local_88, &local_88);
 		local_88.y = 5.0f;
 		local_88.x *= 4.0f;
@@ -1095,8 +1089,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 	TGesso* self = (TGesso*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		TPathNode point(SMS_GetMarioPos());
-		self->setGoalPath(point);
+		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
 
 		if (self->isWandering()) {
 			JGeometry::TVec3<f32> local_80
@@ -1182,7 +1175,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 		}
 	}
 
-	JGeometry::TVec3<f32> velocity = self->getVelocityRef();
+	JGeometry::TVec3<f32> velocity = self->getVelocity();
 	velocity.x *= 0.99f;
 	velocity.z *= 0.99f;
 	self->setVelocity(velocity);

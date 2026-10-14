@@ -107,7 +107,6 @@ void TSamboFlowerCoinUnit::add(TSamboFlower* param_1)
 	}
 }
 
-// TODO: nonmatching frame (0x108 instead of 0x120) and spawn-loop registers.
 void TSamboFlowerCoinUnit::checkGenCoin()
 {
 	if (!unk18)
@@ -133,6 +132,7 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 	}
 
 	if (total > 0) {
+		Mtx mtx;
 		int spawned = 0;
 		for (int i = 0; i < unk10; ++i) {
 			if (!unk0[i]->unk168)
@@ -194,7 +194,7 @@ void TSamboLeaf::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk14 += unk38;
 
 		if (unk38.y > -20.0f)
-			unk38.y -= ((TSamboFlowerSaveLoadParams*)unk48->unk38)
+			unk38.y -= ((TSamboFlowerSaveLoadParams*)unk48->getSaveParam())
 			               ->mSLLeafGravity.get();
 
 		const TBGCheckData* ground;
@@ -275,7 +275,6 @@ TSpineEnemy* TSamboFlowerManager::createEnemyInstance()
 	return new TSamboFlower;
 }
 
-// TODO: nonmatching TSamboLeaf constructor this slot (0x94 instead of 0x88).
 void TSamboFlowerManager::loadAfter()
 {
 	void* leafRes
@@ -299,7 +298,7 @@ void TSamboFlowerManager::loadAfter()
 	for (int i = 0; i < unk58; i++)
 		counts[i] = 0;
 
-	for (int i = 0; i < mObjNum; i++) {
+	for (int i = 0; i < getObjNum(); i++) {
 		if (strstr(getObj(i)->getName(), "フラワー（コイン用）")) {
 			TSamboFlower* flower = (TSamboFlower*)getObj(i);
 			if (flower->unk158 < unk58)
@@ -323,7 +322,7 @@ void TSamboFlowerManager::loadAfter()
 		}
 	}
 
-	for (int i = 0; i < mObjNum; i++) {
+	for (int i = 0; i < getObjNum(); i++) {
 		if (strstr(getObj(i)->getName(), "フラワー（コイン用）")) {
 			TSamboFlower* flower = (TSamboFlower*)getObj(i);
 			if (flower->unk158 < unk58)
@@ -482,13 +481,10 @@ void TSamboFlower::moveObject()
 					        getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd());
 					getMActor()->setFrameRate(-SMSGetAnmFrameRate(),
 					                          ANM_TYPE_BCK);
-				} else {
-					f32 frame
-					    = getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame();
-					if (frame < 1.0f) {
-						unk154 = 0;
-						getMActor()->setBck("flower_wait");
-					}
+				} else if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+				           < 1.0f) {
+					unk154 = 0;
+					getMActor()->setBck("flower_wait");
 				}
 			}
 		}
@@ -626,8 +622,6 @@ void THanaSambo::load(JSUMemoryInputStream& param_1)
 	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 }
 
-// TODO: nonmatching frame (0xE0 instead of 0xE8) and list-insertion stack
-// slots.
 void THanaSambo::init(TLiveManager* param_1)
 {
 	TSmallEnemy::init(param_1);
@@ -853,7 +847,6 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 	return false;
 }
 
-// TODO: frame-only mismatch (0x60 instead of 0x80); no fabricated padding.
 DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 {
 	THanaSambo* self = (THanaSambo*)spine->getBody();
@@ -897,10 +890,8 @@ DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 	} else if (self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(3)) {
 			self->createPollen();
-			if (SMSGetMSound()->gateCheck(MSD_SE_EN_SAMBO_ATTACK))
-				MSoundSESystem::MSoundSE::startSoundActor(
-				    MSD_SE_EN_SAMBO_ATTACK, self->getPosition(), 0, nullptr, 0,
-				    4);
+			SMSGetMSound()->startSoundActor(MSD_SE_EN_SAMBO_ATTACK,
+			                                &self->mPosition, 0, nullptr, 0, 4);
 
 			self->setBckAnm(1);
 		} else if (self->isBckAnm(1)) {
@@ -1013,7 +1004,6 @@ DEFINE_NERVE(TNerveHanaSamboFreeze, TLiveActor)
 	return false;
 }
 
-// TODO: nonmatching frame (0x168 instead of 0x148), FPRs and basis-load order.
 static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
@@ -1171,11 +1161,11 @@ void TSamboHead::behaveToWater(THitActor* param_1)
 	    || mSpine->getCurrentNerve() == &TNerveSmallEnemyDie::theNerve())
 		return;
 
-	JGeometry::TVec3<f32> velocity = getVelocityRef();
+	JGeometry::TVec3<f32> velocity = mVelocity;
 	velocity.y                     = 0.0f;
 
-	JGeometry::TVec3<f32> jump(getPosition().x - SMS_GetMarioPos().x, 0.0f,
-	                           getPosition().z - SMS_GetMarioPos().z);
+	JGeometry::TVec3<f32> jump(mPosition.x - SMS_GetMarioPos().x, 0.0f,
+	                           mPosition.z - SMS_GetMarioPos().z);
 	MsVECNormalize(&jump, &jump);
 	jump.scale(unk194->mSLHitJumpSpXZ.get());
 	jump.y = unk194->mSLHitJumpSpY.get();
@@ -1195,11 +1185,8 @@ void TSamboHead::attackToMario()
 	sendAttackMsgToMario();
 
 	if (isAirborne()) {
-		JGeometry::TVec3<f32> direction(mPosition.x - SMS_GetMarioPos().x,
-		                                10.0f,
-		                                mPosition.z - SMS_GetMarioPos().z);
-		JGeometry::TVec3<f32> velocity;
-		velocity.set(direction);
+		JGeometry::TVec3<f32> velocity(mPosition.x - SMS_GetMarioPos().x, 10.0f,
+		                               mPosition.z - SMS_GetMarioPos().z);
 		MsVECNormalize(&velocity, &velocity);
 		velocity.scale(8.0f);
 		setVelocity(velocity);

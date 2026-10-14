@@ -170,9 +170,7 @@ void TCardManager::copyTo(TCardManager::TCriteria* param_1,
 		param_2->unk0 = 0;
 		JSUMemoryInputStream stream(param_1[sector].getPreviewBytes(), 0x1C);
 
-		u32 val4;
-		stream.read(&val4, sizeof(val4));
-		param_2->unk4  = val4;
+		param_2->unk4  = stream.readU32();
 		param_2->unk8  = stream.readU64();
 		param_2->unk10 = stream.readU64();
 		param_2->unk18 = stream.readU32();
@@ -437,7 +435,6 @@ s32 TCardManager::createFile_()
 	return result;
 }
 
-// TODO: frame-only mismatch; 0x80-byte frame instead of 0x90.
 s32 TCardManager::filledInitData_(CARDFileInfo* file)
 {
 	TCardSector* sector = (TCardSector*)mSector;
@@ -615,11 +612,11 @@ s32 TCardManager::readBlock_(u32 index)
 
 	u32 crit_idx = index * 2 + 1;
 
-	if (mSectorCriteria[crit_idx].getState() == TCriteria::STATE_UNREAD)
+	if (mSectorCriteria[crit_idx].mState == TCriteria::STATE_UNREAD)
 		result = sector->read(&info, crit_idx, mSectorCriteria + crit_idx);
 
 	if (result == CARD_RESULT_READY)
-		if (mSectorCriteria[crit_idx + 1].getState() == TCriteria::STATE_UNREAD)
+		if (mSectorCriteria[crit_idx + 1].mState == TCriteria::STATE_UNREAD)
 			result = sector->read(&info, crit_idx + 1,
 			                      mSectorCriteria + (crit_idx + 1));
 
@@ -649,7 +646,7 @@ s32 TCardManager::readOptionBlock_()
 	s32 result = open_(&info);
 	if (result == CARD_RESULT_READY) {
 		TCardSector* sector = (TCardSector*)mSector;
-		if (mSectorCriteria[0].getState() == TCriteria::STATE_EMPTY) {
+		if (mSectorCriteria[0].mState == TCriteria::STATE_EMPTY) {
 			sector->clearData();
 			sector->setCheckSum(0);
 		} else {

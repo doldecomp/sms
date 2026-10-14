@@ -39,6 +39,8 @@ class TWaterParticleType : public TParams {
 public:
 	TWaterParticleType(const char* path);
 
+	f32 getAlive() const { return mAlive.get(); }
+
 public:
 	/* 0x8 */ TParamRT<f32> mExtension;
 	/* 0x1C */ TParamRT<f32> mMagnify;
@@ -50,10 +52,14 @@ public:
 class TWaterHitActor : public THitActor {
 public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	void onWaterHitCounter() { unk68 = 0x3C; }
+	void onWaterHitCounter();
 
 public:
-	/* 0x68 */ int unk68;
+	// TODO: verify the original names of these overlapping fields.
+	union {
+		/* 0x68 */ int unk68; // Particle index for the static water actor.
+		/* 0x68 */ s16 mWaterHitCounter;
+	};
 };
 
 class TModelWaterManager;
@@ -140,6 +146,13 @@ public:
 	u16 getParticleCount() const { return mParticleCount; }
 
 	enum { SLOT_NUM = 256 };
+
+	// Fabricated
+	// Enum?
+	const TWaterParticleType* getWaterParticleType(int type) const
+	{
+		return mWaterParticleTypes[type];
+	}
 
 public:
 	/* 0x10 */ s16 unk10;

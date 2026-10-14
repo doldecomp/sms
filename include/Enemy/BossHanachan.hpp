@@ -73,13 +73,11 @@ public:
 	/* 0x1C0 */ TBossHanachanChangeSaveParams* unk1C0;
 };
 
-// fabricated: declaration only, layout unknown
 class TBossHanachanManager : public TEnemyManager {
 public:
 	TBossHanachanManager(const char*);
 
 public:
-	// TODO: unknown layout, size from getNameRef_BossEnemy's operator new
 	/* 0x54 */ u8 unk54[0x10];
 };
 

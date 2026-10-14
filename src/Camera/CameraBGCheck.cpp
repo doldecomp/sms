@@ -8,8 +8,6 @@
 #include <MarioUtil/MapUtil.hpp>
 #include <JSystem/JMath.hpp>
 
-#define ABS(x) ((x) >= 0 ? (x) : -(x))
-
 void CPolarSubCamera::calcInHouseNoSub_()
 {
 	if (unk2CA != -1) {
@@ -159,7 +157,6 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 			for (int i = 0; i < n; ++i) {
 				TBGCheckData* wall = record.mResultWalls[i];
 				if (should_clip_fabricated(wall)) {
-					// 0: scaled camera position; 1: full check position.
 					Vec pos[2];
 					pos[1] = mCurrentTarget.mPosition;
 					pos[0] = pos[1];
@@ -168,7 +165,8 @@ bool CPolarSubCamera::execWallCheck_(Vec* param_1)
 					         + pos[0].y * wall->getNormal().y
 					         + pos[0].z * wall->getNormal().z
 					         + wall->getPlaneDistance();
-					if (ABS(sd) < radius) {
+					f32 absSd = sd >= 0.0f ? sd : -sd;
+					if (absSd < radius) {
 						moved      = true;
 						f32 pushSd = (radius - sd)
 						             * mSaveEx->mSLWallRevisionRatio.get();
@@ -200,9 +198,10 @@ bool CPolarSubCamera::execRoofCheck_(Vec param_1)
 		roofHeight = -512.5f;
 		skipCheck  = true;
 	} else {
-		const f32& roofChg = mSaveEx->mSLRoofChangeY.get();
-		roofHeight         = gpMap->checkRoof(
-            param_1.x, mPreviousTarget.mPosition.y - roofChg, param_1.z, &roof);
+		roofHeight = gpMap->checkRoof(param_1.x,
+		                              mPreviousTarget.mPosition.y
+		                                  - mSaveEx->mSLRoofChangeY.get(),
+		                              param_1.z, &roof);
 	}
 
 	if (skipCheck || should_clip_fabricated(roof)) {

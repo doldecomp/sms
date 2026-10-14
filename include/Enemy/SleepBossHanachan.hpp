@@ -7,7 +7,6 @@ class TMirrorActor;
 
 class TSleepBossHanachan : public TDemoBossHanachan {
 public:
-	// not in mario.MAP: inlined into TMarNameRefGen::getNameRef_BossEnemy
 	TSleepBossHanachan(const char* name = "?")
 	    : TDemoBossHanachan(name)
 	{
@@ -28,12 +27,9 @@ public:
 
 class TSleepBossHanachanManager : public TDemoBossHanachanManager {
 public:
-	// not in mario.MAP: inlined into TMarNameRefGen::getNameRef_BossEnemy
 	TSleepBossHanachanManager(const char* name = "?")
 	    : TDemoBossHanachanManager(name)
 	{
-		mSaveParams
-		    = new TDemoBossHanachanSaveParams("/enemy/sleepBossHanachan.prm");
 	}
 
 	virtual void createModelData();

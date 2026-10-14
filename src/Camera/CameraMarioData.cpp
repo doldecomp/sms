@@ -33,8 +33,7 @@ void TCameraMarioData::calcAndSetMarioData()
 	default:
 		JGeometry::TVec3<f32> offset;
 		offset.sub(SMS_GetMarioPos(), gpMarioOriginal->getPrevPosition());
-		f32 horizontal           = offset.x * offset.x + offset.z * offset.z;
-		mFrameMoveDistHorizontal = horizontal;
+		mFrameMoveDistHorizontal = offset.x * offset.x + offset.z * offset.z;
 		mFrameMoveDistVertical   = offset.y * offset.y;
 		if (mFrameMoveDistHorizontal > 100.0f)
 			mFrameMoveDistHorizontal = 100.0f;
@@ -50,7 +49,7 @@ void TCameraMarioData::calcAndSetMarioData()
 		mFramesSinceMarioStatusChange += 1;
 	}
 
-	s16 angleMin = SMS_GetMarioWaterGun()->getEmitParams().mLAngleMin.get();
+	s16 angleMin = SMS_GetMarioWaterGun()->getCurrentNozzle()->mLAngleMin.get();
 	s16 angle    = ((const TWaterGun*)SMS_GetMarioWaterGun())
 	                ->getCurrentNozzle()
 	                ->getGunAngle();

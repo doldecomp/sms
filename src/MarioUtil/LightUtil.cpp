@@ -41,14 +41,13 @@ void TLightCommon::loadAfter()
 	    JDrama::TNameRefGen::search("Ambient Group"));
 	mLightAry = static_cast<JDrama::TLightAry*>(
 	    JDrama::TNameRefGen::search("Light Group"));
-	mLightPos  = &mLightAry->mLights[0].mPosition;
+	mLightPos  = &mLightAry->getLight(0)->mPosition;
 	mShininess = 50.0f;
 	for (int i = 0; i < 4; ++i) {
 		unk31[i] = mLightAry->getLight(i + mLightIndex)->getColor();
 		unk44[i] = mLightAry->mLights[i + mLightIndex].mPosition;
 	}
-	// TODO: nonmatching color-temporary stack slots.
-	unk29[0] = GXColor(mAmbAry->getAmb(mAmbIndex)->mColor);
+	unk29[0] = mAmbAry->getAmb(mAmbIndex)->getColor();
 	unk29[1] = mAmbAry->getAmb(mAmbIndex + 1)->getColor();
 }
 
@@ -195,13 +194,10 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     , unk80(param_1)
 {
 	snprintf(unk1C, 0x32, "%s%s", name, "opa");
-	JDrama::TDrawBufObj* drawBuffer
-	    = new JDrama::TDrawBufObj(3, param_2, unk1C);
-	mOpaDrawBufferObject = drawBuffer;
+	mOpaDrawBufferObject = new JDrama::TDrawBufObj(3, param_2, unk1C);
 
 	snprintf(unk4E, 0x32, "%s%s", name, "xlu");
-	drawBuffer           = new JDrama::TDrawBufObj(4, param_2, unk4E);
-	mXluDrawBufferObject = drawBuffer;
+	mXluDrawBufferObject = new JDrama::TDrawBufObj(4, param_2, unk4E);
 }
 #pragma dont_inline reset
 

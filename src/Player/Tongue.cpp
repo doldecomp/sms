@@ -18,17 +18,11 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
+
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 static const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
-// TODO: fabricated boundary; keeps the first scale call out of line.
-static inline JGeometry::TVec3<f32>& scaleVector(JGeometry::TVec3<f32>& vector,
-                                                 f32 scale)
-{
-	vector *= scale;
-	return vector;
-}
 
 void TYoshiTongue::init(TYoshi* yoshi)
 {
@@ -105,10 +99,7 @@ void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,
 		mHeadPos = src;
 		mHeadDir = dir;
 
-		// TODO: frame-only mismatch (target 0x60, current 0x50); no padding.
-		f32 initialSpeed                 = mInitialSpeed;
-		JGeometry::TVec3<f32> initialDir = dir;
-		mInitialVelocity = scaleVector(initialDir, initialSpeed);
+		mInitialVelocity = dir * mInitialSpeed;
 		mInitialVelocity += vel * 0.5f;
 
 		if (mInitialVelocity.y < -50.0f)
@@ -123,20 +114,16 @@ void TYoshiTongue::rest(const JGeometry::TVec3<f32>& a,
 {
 }
 
-// TODO: fakematch; without this boundary, canGo is inlined into movement.
 #pragma dont_inline on
 BOOL TYoshiTongue::canGo()
 {
-	// TODO: stack-only mismatch; subtraction temporary is at 0x20, not 0x14.
 	JGeometry::TVec3<f32> toTip = mTipPos - mHeadPos;
-	f32 dot                     = toTip.dot(mHeadDir);
 
-	if (dot < 0.0f)
+	if (toTip.dot(mHeadDir) < 0.0f)
 		return false;
 
-	if ((int)gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
-	                                          &mTipPos.z, 50.0f)
-	    > 0)
+	if (gpMap->isTouchedOneWallAndMoveXZ(&mTipPos.x, 10.0f + mTipPos.y,
+	                                     &mTipPos.z, 50.0f))
 		return false;
 
 	const TBGCheckData* ground;
@@ -156,7 +143,6 @@ BOOL TYoshiTongue::canGo()
 
 	return true;
 }
-// TODO: end the canGo out-of-line boundary above.
 #pragma dont_inline off
 
 THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
@@ -164,17 +150,17 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 	THitActor* best = nullptr;
 	f32 bestDist    = 10000.0f;
 
-	for (s32 i = 0; i < getColNum(); ++i) {
-		s32 type = getCollision(i)->getActorType();
+	for (s32 i = 0; i < mColCount; ++i) {
+		s32 type = mCollisions[i]->mActorType;
 		if (type == ACTOR_TYPE_SEAL || type == ACTOR_TYPE_BASKET_REVERSE) {
 			mState = STATE_RETRACTING;
 			return nullptr;
 		}
 	}
 
-	for (s32 i = 0; i < getColNum(); ++i) {
-		THitActor* actor = getCollision(i);
-		s32 type         = actor->getActorType();
+	for (s32 i = 0; i < mColCount; ++i) {
+		THitActor* actor = mCollisions[i];
+		s32 type         = actor->mActorType;
 		int ok           = 0;
 
 		if (type == ACTOR_TYPE_FRUIT_COCONUT)
@@ -207,15 +193,13 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 			continue;
 
 		JGeometry::TVec3<f32> targetPos = actor->mPosition;
-		targetPos.y += 0.5f * actor->getDamageHeight();
+		targetPos.y += 0.5f * actor->mDamageHeight;
 		JGeometry::TVec3<f32> delta = targetPos - mTipPos;
 
 		bool isZero = delta.isZero();
 		if (isZero)
 			continue;
 
-		// TODO: squared() is recomputed across the length() inline;
-		// the target reuses it. Vector stack homes also still differ.
 		f32 dist = delta.length();
 		delta.normalize();
 
@@ -224,7 +208,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 
 		if (dist < bestDist) {
 			bestDist = dist;
-			best     = getCollision(i);
+			best     = mCollisions[i];
 		}
 	}
 
@@ -233,7 +217,6 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 
 void TYoshiTongue::movement()
 {
-	// TODO: vector return-value copies, length inlines, and stack homes differ.
 	if (unkD4 != 0) {
 		mColCount = mSavedColCount;
 		unkD4--;
@@ -269,8 +252,6 @@ void TYoshiTongue::movement()
 		JGeometry::TVec3<f32> diff = mTipPos - mHeadPos;
 
 		if (mHeldObject != nullptr) {
-			// TODO: expanded length; scalar inputs preserve the target FMA.
-			// movement's @2843 table addends depend on this contraction.
 			f32 x = diff.x;
 			f32 y = diff.y;
 			f32 z = diff.z;
@@ -282,16 +263,11 @@ void TYoshiTongue::movement()
 				scale *= elasticity;
 				if (scale.x < 0.01f)
 					scale.set(0.01f, 0.01f, 0.01f);
-				heldScale = scale;
+				mHeldObject->mScaling = scale;
 			}
 		}
 
-		// TODO: expanded length; retain the target contraction as above.
-		f32 x = diff.x;
-		f32 y = diff.y;
-		f32 z = diff.z;
-		if (JGeometry::TUtil<f32>::sqrt(x * x + y * y + z * z)
-		    < mRetractedLength) {
+		if (diff.length() < mRetractedLength) {
 			if (mHeldObject != nullptr) {
 				mActorTypeInMouth = mHeldObject->mActorType;
 				mHeldObject->receiveMessage(this, HIT_MESSAGE_DETACH);
@@ -385,7 +361,6 @@ void TYoshiTongue::movement()
 
 void TYoshiTongue::calcAnim(MtxPtr mtx)
 {
-	// TODO: cross() scalar temporaries change FPR allocation.
 	mHeadPos.x = mtx[0][3];
 	mHeadPos.y = mtx[1][3];
 	mHeadPos.z = mtx[2][3];
@@ -411,11 +386,9 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 		MtxPtr b = mModel->getAnmMtx(mModel->getModelData()->getJointNum() - 1);
 
 		JGeometry::TVec3<f32> dir;
-		f32 x = b[0][3] - a[0][3];
-		dir.x = x;
+		dir.x = b[0][3] - a[0][3];
 		dir.y = 0.0f;
-		f32 z = b[2][3] - a[2][3];
-		dir.z = z;
+		dir.z = b[2][3] - a[2][3];
 		MsVECNormalize(&dir, &dir);
 
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
@@ -436,6 +409,8 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 		modelMtx[2][1] = up.z;
 		modelMtx[2][2] = dir.z;
 		modelMtx[2][3] = tip.z;
+
+		char kek[0x40];
 
 		mTipModel->setBaseTRMtx(modelMtx);
 		mTipModel->calc();

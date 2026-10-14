@@ -86,8 +86,7 @@ void TSilhouette::loadAfter()
 
 void TSilhouette::setting(MtxPtr param_1)
 {
-	GXColor color = (GXColor) { unk12.r, unk12.g, unk12.b, 0 };
-	GXSetChanAmbColor(GX_COLOR0A0, color);
+	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
 	GXLightObj GStack_54;
 	Vec local_60;
 	Vec local_6C = SMS_GetMarioPos();
@@ -112,7 +111,6 @@ void TSilhouette::setting(MtxPtr param_1)
 
 void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	// TODO: projection color argument slots are still 4 bytes too low.
 	if ((cue & CUE_MOVE) != 0) {
 		f32 fVar1 = SMS_CheckMarioFlag(MARIO_FLAG_OCCLUDED) ? unk50 : 0.0f;
 		unk48 += unk4C * (fVar1 - unk48);
@@ -135,12 +133,12 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 		setting(graphics->getViewMtx());
 	}
 	if (((cue & CUE_SET_PROJECTION) != 0) && gpPollution->getJointModelNum()) {
-		Mtx afStack_50;
 		Mtx afStack_80;
 		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);
 		Mtx afStack_b0;
 		PSMTXRotRad(afStack_b0, 0x58, 1.5707964f);
+		Mtx afStack_50;
 		PSMTXConcat(afStack_80, afStack_b0, afStack_50);
 		Mtx afStack_e0;
 		PSMTXScale(afStack_e0, unk3C, unk3C, unk3C);
@@ -164,10 +162,10 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 		              GX_AF_SPOT);
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
-		JUtility::TColor color = unk12;
-		GXSetChanMatColor(GX_COLOR0A0, color.get());
+		GXColor color = unk12;
+		GXSetChanMatColor(GX_COLOR0A0, color);
 		color.a = 0x40;
-		GXSetTevColor(GX_TEVREG0, color.get());
+		GXSetTevColor(GX_TEVREG0, color);
 		GXSetNumTevStages(2);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
 		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC,
@@ -218,7 +216,7 @@ void TTrembleModelEffect::init(J3DModel* model)
 
 	if (found == 1) {
 		unk4  = unk0->getModelData()->getVtxPosArray();
-		u32 n = unk0->getModelData()->getVtxNum();
+		u32 n = unk0->getModelData()->getVertexData().getVtxNum();
 		unk9  = 0;
 		switch (unk8 & 2) {
 		case 0: {
@@ -278,18 +276,17 @@ void TTrembleModelEffect::tremble(f32 magnitude, f32 spring, f32 damping,
 		break;
 	}
 	case 2: {
-		unk3C    = spring;
-		unk38    = damping;
-		Vec* src = (Vec*)unk4;
+		unk3C                      = spring;
+		unk38                      = damping;
+		JGeometry::TVec3<f32>* src = (JGeometry::TVec3<f32>*)unk4;
 		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
 		     ++i) {
-			unk34[i].x = magnitude * (2.0f * MsRandF() - 1.0f);
-			unk34[i].y = magnitude * (2.0f * MsRandF() - 1.0f);
-			unk34[i].z = magnitude * (2.0f * MsRandF() - 1.0f);
-			// Copy the raw vertex records through their Vec base.
-			static_cast<Vec&>(unk28[i])    = src[i];
-			static_cast<Vec&>(unk2C[0][i]) = src[i];
-			static_cast<Vec&>(unk2C[1][i]) = src[i];
+			unk34[i].x  = magnitude * (2.0f * MsRandF() - 1.0f);
+			unk34[i].y  = magnitude * (2.0f * MsRandF() - 1.0f);
+			unk34[i].z  = magnitude * (2.0f * MsRandF() - 1.0f);
+			unk28[i]    = src[i];
+			unk2C[0][i] = src[i];
+			unk2C[1][i] = src[i];
 		}
 		break;
 	}
@@ -327,7 +324,6 @@ void TTrembleModelEffect::clash(f32 magnitude)
 
 void TTrembleModelEffect::movement()
 {
-	// TODO: vector subtraction temporaries still use different stack slots.
 	if (!(unk8 & 1))
 		return;
 
@@ -342,7 +338,8 @@ void TTrembleModelEffect::movement()
 	switch (unk8 & 2) {
 	case 0: {
 		JGeometry::TVec3<s16>* src = (JGeometry::TVec3<s16>*)unk4;
-		for (u32 i = 0; i < unk0->getModelData()->getVtxNum(); ++i) {
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
 			JGeometry::TVec3<s16> diff = src[i] - unk14[i];
 			unk20[i].x += (s16)((diff.x * unk26) >> unkA);
 			unk20[i].y += (s16)((diff.y * unk26) >> unkA);
@@ -353,7 +350,8 @@ void TTrembleModelEffect::movement()
 			unk14[i] += unk20[i];
 			unk18[unk9][i] = unk14[i];
 		}
-		DCFlushRange(unk18[unk9], unk0->getModelData()->getVtxNum() * 6);
+		DCFlushRange(unk18[unk9],
+		             unk0->getModelData()->getVertexData().getVtxNum() * 6);
 		unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk18[unk9]);
 		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
 			unk0->getShapePacket(0)->setVtxPos(unk18[unk9]);
@@ -361,7 +359,8 @@ void TTrembleModelEffect::movement()
 	}
 	case 2: {
 		JGeometry::TVec3<f32>* src = (JGeometry::TVec3<f32>*)unk4;
-		for (u32 i = 0; i < unk0->getModelData()->getVtxNum(); ++i) {
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     ++i) {
 			JGeometry::TVec3<f32> diff = src[i] - unk28[i];
 			unk34[i].x += diff.x * unk3C;
 			unk34[i].y += diff.y * unk3C;
@@ -372,8 +371,8 @@ void TTrembleModelEffect::movement()
 			unk28[i] += unk34[i];
 			unk2C[unk9][i] = unk28[i];
 		}
-		J3DModelData* modelData = unk0->getModelData();
-		DCFlushRange(unk2C[unk9], modelData->getVtxNum() * 12);
+		DCFlushRange(unk2C[unk9],
+		             unk0->getModelData()->getVertexData().getVtxNum() * 12);
 		unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk2C[unk9]);
 		for (int j = 0; j < unk0->getModelData()->getShapeNum(); ++j)
 			unk0->getShapePacket(0)->setVtxPos(unk2C[unk9]);
@@ -389,7 +388,8 @@ void TTrembleModelEffect::reset()
 	switch (unk8 & 2) {
 	case 0: {
 		JGeometry::TVec3<s16>* src = (JGeometry::TVec3<s16>*)unk4;
-		for (u32 i = 0; i < unk0->getModelData()->getVtxNum(); i++) {
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     i++) {
 			unk20[i].set(0, 0, 0);
 			unk14[i]    = src[i];
 			unk18[0][i] = src[i];
@@ -399,7 +399,8 @@ void TTrembleModelEffect::reset()
 	}
 	case 2: {
 		JGeometry::TVec3<f32>* src = (JGeometry::TVec3<f32>*)unk4;
-		for (u32 i = 0; i < unk0->getModelData()->getVtxNum(); i++) {
+		for (u32 i = 0; i < unk0->getModelData()->getVertexData().getVtxNum();
+		     i++) {
 			unk34[i].set(0.0f, 0.0f, 0.0f);
 			unk28[i]    = src[i];
 			unk2C[0][i] = src[i];
@@ -411,52 +412,33 @@ void TTrembleModelEffect::reset()
 
 	unk8 &= ~1;
 	GXInvalidateVtxCache();
-	J3DModelData* modelData = unk0->getModelData();
-	modelData->getVertexData().setVtxPosArray(unk4);
+	unk0->getModelData()->getVertexData().setVtxPosArray(unk4);
 	unk0->getVertexBuffer()->setVtxPosArrayPointer(0, unk4);
 	unk0->getVertexBuffer()->setVtxPosArrayPointer(1, unk4);
 	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
-}
-
-// fabricated: model-level fog-range inline preserves the sine/delta FPRs.
-// Original name/boundary is unknown; frame and constant-load order differ.
-static inline void SetDamageFogRange(J3DModelData* modelData, const Vec& pos,
-                                     f32 s)
-{
-	f32 startBase = -700.0f;
-	f32 endBase   = 500.0f;
-	f32 startOsc  = -400.0f;
-	f32 endOsc    = 800.0f;
-	endOsc -= endBase;
-	startOsc -= startBase;
-	f32 endOffset;
-	f32 startOffset;
-	startOffset = startOsc * s;
-	endOffset   = endOsc * s;
-	for (u16 i = 0; i < modelData->getMaterialNum(); i++) {
-		J3DFog* fog
-		    = modelData->getMaterialNodePointer(i)->getPEBlock()->getFog();
-		f32 startZ = -pos.z + startBase;
-		startZ += startOffset;
-		fog->mStartZ = startZ;
-		f32 endZ     = -pos.z + endBase;
-		endZ += endOffset;
-		fog->mEndZ  = endZ;
-		fog->mNearZ = gpCamera->getNear();
-		fog->mFarZ  = gpCamera->getFar();
-	}
 }
 
 void SMS_AddDamageFogEffect(J3DModelData* param_1,
                             const JGeometry::TVec3<f32>& param_2,
                             JDrama::TGraphics* param_3)
 {
-	// TODO: frame size and fog-range setup still differ.
 	Vec local_80;
 	MTXMultVec(param_3->getViewMtx(), param_2, &local_80);
 
-	f32 s = JMASSin((s16)(SMSGetMarDirector()->mMoveTickCount * 0x888));
-	SetDamageFogRange(param_1, local_80, s);
+	f32 startBase = -700.0f;
+	f32 endBase   = 500.0f;
+	f32 s         = JMASSin((s16)(SMSGetMarDirector()->mMoveTickCount * 0x888));
+	f32 startOsc  = (-400.0f - startBase) * s;
+	f32 endOsc    = (800.0f - endBase) * s;
+
+	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
+		J3DFog* fog
+		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
+		fog->mStartZ = -local_80.z + startBase + startOsc;
+		fog->mEndZ   = -local_80.z + endBase + endOsc;
+		fog->mNearZ  = gpCamera->getNear();
+		fog->mFarZ   = gpCamera->getFar();
+	}
 }
 
 void SMS_ResetDamageFogEffect(J3DModelData* param_1)
@@ -464,8 +446,7 @@ void SMS_ResetDamageFogEffect(J3DModelData* param_1)
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog
 		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
-		f32 nearZ    = gpCamera->getNear();
-		fog->mNearZ  = nearZ;
+		fog->mNearZ  = gpCamera->getNear();
 		fog->mFarZ   = gpCamera->getFar();
 		fog->mEndZ   = fog->mFarZ;
 		fog->mStartZ = fog->mEndZ - 1.0f;
@@ -677,8 +658,7 @@ int SMS_CountPolygonNumInShape(J3DShape* shape)
 		while (p - dl < shape->getShapeDraw(i)->getDisplayListSize()) {
 			u8 op = *p;
 			if (op == GX_TRIANGLEFAN || op == GX_TRIANGLESTRIP) {
-				u8* p2  = p + 1;
-				u16 n   = *(u16*)p2;
+				u16 n   = *(u16*)(p + 1);
 				polyNum = n + polyNum;
 				p += vtxSize * n;
 				polyNum -= 2;
@@ -792,20 +772,6 @@ void SMS_ShowJoint(J3DMaterial* param_1, bool param_2)
 
 void MsWireInit(GXVtxFmt) { }
 
-// @todo: .sdata2 order: @2453, @2472/@2473, @2948, @3041/@3042.
-// Recover the wire drawing helpers and identity33 use instead of this anchor.
-void order_sdata2(f64* conversion, TPosition3f* transform, f32* constants)
-{
-	*conversion = 4503601774854144.0;
-	transform->translation(0.0f, 0.0f, 0.0f);
-	constants[0] = 1.0f;
-	constants[1] = 2.0f;
-	constants[2] = 0.5f;
-	constants[3] = 3.141593f / 180.0f / 2.0f;
-	constants[4] = -700.0f;
-	constants[5] = 500.0f;
-}
-
 void MsDrawCube(const JGeometry::TVec3<f32>&, f32, GXColor) { }
 
 void MsDrawAxis(MtxPtr, f32) { }
@@ -821,18 +787,14 @@ void SMS_DrawHorzCircle(const JGeometry::TVec3<f32>&, f32, int, const GXColor&)
 {
 }
 
-// fabricated: shared lookup boundary, like PacketUtil's InitPacket_Sub.
-// Both inline sites are needed for the retail 0x50-byte frame; name is unknown.
-static inline J3DMaterial* GetMaterialForDL(J3DModel* model, u16 index)
-{
-	return model->getModelData()->getMaterialNodePointer(index);
-}
-
 void SMS_CalcMatAnmAndMakeDL(J3DModel* param_1, u16 param_2)
 {
-	J3DMaterial* mat = GetMaterialForDL(param_1, param_2);
+	J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(param_2);
 
-	GetMaterialForDL(param_1, param_2)->getMaterialAnm()->calc(mat);
+	param_1->getModelData()
+	    ->getMaterialNodePointer(param_2)
+	    ->getMaterialAnm()
+	    ->calc(mat);
 	j3dSys.setMatPacket(param_1->getMatPacket(param_2));
 	mat->makeDisplayList();
 }

@@ -55,7 +55,7 @@ SDLModelData* TModelDataKeeper::createAndKeepData(const char* file_name,
                                                   u32 flags)
 {
 	TModelDataNode* node = &mHead;
-	while (node->getNext() != nullptr)
+	while (node->getNext())
 		node = node->getNext();
 
 	SDLModelData* data = loadModelData(file_name, flags, mFolder);
@@ -76,9 +76,8 @@ int TModelDataKeeper::getIndex(const char* file_name) const
 	u16 key = JDrama::TNameRef::calcKeyCode(file_name);
 
 	const TModelDataNode* node = &mHead;
-	for (u32 i = 0; node && node->getData() != nullptr; ++i) {
-		bool sameName = node->isSameName(file_name, key);
-		if (sameName)
+	for (u32 i = 0; node && node->getData(); ++i) {
+		if (node->isSameName(file_name, key))
 			return i;
 		node = node->getNext();
 	}
@@ -127,7 +126,7 @@ MActor* TMActorKeeper::getMActor(const char* model_data_name) const
 	if (!getModelDataKeeper())
 		return mActors[0];
 
-	int index = mModelDataKeeper->getIndex(model_data_name);
+	int index = getModelDataKeeper()->getIndex(model_data_name);
 	for (int i = 0; i < mActorNum; ++i) {
 		if (index == mActorModelDataIndices[i])
 			return mActors[i];
@@ -156,7 +155,9 @@ MActor* TMActorKeeper::createMActorFromNthData(int n, u32 flags)
 MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 {
 	TModelDataKeeper* keeper = getModelDataKeeper();
-	int index                = keeper->getIndex(model_data_name);
+
+	int index = keeper->getIndex(model_data_name);
+
 	if (index < 0) {
 		keeper->createAndKeepData(model_data_name, mModelLoaderFlags);
 		index = keeper->getIndex(model_data_name);
@@ -169,7 +170,7 @@ MActor* TMActorKeeper::createMActor(const char* model_data_name, u32 flags)
 
 void TMActorKeeper::createMActorFromAllBmd(u32 flags)
 {
-	int num = getModelDataKeeper()->getModelDataNum();
+	int num = mModelDataKeeper->getModelDataNum();
 	for (int i = 0; i < num; ++i)
 		createMActorFromNthData(i, flags);
 }
@@ -199,8 +200,7 @@ TMActorKeeper::TMActorKeeper(TLiveManager* manager)
 		mActorAnmData    = manager->getMActorAnmData();
 	}
 
-	int modelDataNum       = mModelDataKeeper->getModelDataNum();
-	mMActorCapacity        = modelDataNum;
+	mMActorCapacity        = mModelDataKeeper->getModelDataNum();
 	mActorNum              = 0;
 	mActors                = new MActor*[mMActorCapacity];
 	mActorModelDataIndices = new u16[mMActorCapacity];

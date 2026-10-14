@@ -95,7 +95,7 @@ void TAmiHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 
 		mPosition = unk68->mPosition;
 		mPosition += vec;
-		mPosition.y -= 0.5f * getAttackHeight();
+		mPosition.y -= 0.5f * mAttackHeight;
 
 		if (!unk68->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			for (int i = 0; i < getColNum(); ++i) {
@@ -204,7 +204,6 @@ void TAmiNoko::setWalkAnm()
 		setBckAnm(8);
 }
 
-// TODO: frame is 0x58 instead of 0x60; nerve-static relocations also differ.
 bool TAmiNoko::isHitValid(u32 param_1)
 {
 	if (param_1 == HIT_MESSAGE_PUNCH || param_1 == HIT_MESSAGE_HIP_DROP) {
@@ -412,7 +411,6 @@ void TAmiNoko::calcRootMatrix()
 	MTXCopy(rootMtx, unk1CC);
 }
 #else
-// TODO: path-node inline, stack frame and nerve-static relocations differ.
 void TAmiNoko::calcRootMatrix()
 {
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_AMINOKO_SPARK, &mPosition, 0,
@@ -592,7 +590,6 @@ void TAmiNoko::calcRootMatrix()
 }
 #endif
 
-// TODO: subtraction temporary is at 0x20 instead of the target's 0x10.
 void TAmiNoko::bind()
 {
 	if (isBckAnm(0)) {
@@ -642,7 +639,6 @@ f32 TAmiNoko::getGravityY() const
 	return mGravity;
 }
 
-// TODO: non-PAL path-node inline differs.
 void TAmiNoko::creepToCurPathNode(f32 param_1)
 {
 #ifdef VERSION_GMSP01
@@ -693,15 +689,6 @@ bool TAmiNoko::isDeadByWall()
 
 const char** TAmiNoko::getBasNameTable() const { return amiNoko_bastable; }
 
-// TODO: fabricated; recover the distance inline shared by enemy code.
-// By-value copy preserves the vector at 0x34 and the out-of-line sqrt call.
-static inline f32 dist(JGeometry::TVec3<f32> pos,
-                       const JGeometry::TVec3<f32>& b)
-{
-	pos.sub(b);
-	return pos.length();
-}
-
 DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 {
 	TAmiNoko* self = (TAmiNoko*)spine->getBody();
@@ -717,8 +704,9 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 		}
 	}
 
-	const JGeometry::TVec3<f32>& pos = self->unkF4.getPoint();
-	if (dist(pos, self->mPosition) < 1.5f && self->checkCurAnmEnd(0)) {
+	JGeometry::TVec3<f32> pos = self->getUnkF4().getPoint();
+	pos -= self->mPosition;
+	if (pos.length() < 1.5f && self->checkCurAnmEnd(0)) {
 		if (self->isBckAnm(3) || self->isBckAnm(6)) {
 			self->goToRandomNextGraphNode();
 			spine->pushAfterCurrent(&TNerveAmiNokoTurn::theNerve());
@@ -734,7 +722,6 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 	return false;
 }
 
-// TODO: getPoint inline reloads the actor pointer on the non-null branch.
 DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 {
 	TAmiNoko* self = (TAmiNoko*)spine->getBody();
@@ -754,8 +741,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 		}
 	}
 
-	const TPathNode* node     = &self->getUnkF4();
-	JGeometry::TVec3<f32> pos = node->getPoint();
+	JGeometry::TVec3<f32> pos = self->getUnkF4().getPoint();
 	pos -= self->mPosition;
 	if (pos.x == 0.0f && pos.y == 0.0f && pos.z == 0.0f)
 		pos.x = 1.0f;
@@ -783,7 +769,6 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 
 DEFINE_NERVE(TNerveAmiNokoAttack, TLiveActor) { return false; }
 
-// TODO: vector inline stack slots and magnitude contraction still differ.
 DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 {
 	TAmiNoko* self = (TAmiNoko*)spine->getBody();
@@ -815,7 +800,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 	if (self->isBckAnm(0) && spine->getTime() > 30) {
 		JGeometry::TVec3<f32> direction = self->mPosition - SMS_GetMarioPos();
 		if (self->isDeadByWall() || !self->isAirborne()
-		    || JGeometry::TUtil<f32>::sqrt(direction.squared()) > 10000.0f) {
+		    || direction.length() > 10000.0f) {
 			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			self->onLiveFlag(LIVE_FLAG_DEAD);
 			self->onLiveFlag(LIVE_FLAG_UNK8);

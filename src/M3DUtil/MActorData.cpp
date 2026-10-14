@@ -178,10 +178,7 @@ void MActorAnmData::init(const char* anm_folder, const char** additional_files)
 
 	fileFinder = JKRFileLoader::findFirstFile(fullAnmPath);
 	do {
-		const char* name = fileFinder->mBase.mFileName;
-		if (strstr(name, "#")) {
-			// TODO: recover the stripped filename check.
-		}
+		strstr(fileFinder->mBase.mFileName, "#");
 		addFileTable(fileFinder->mBase.mFileName);
 	} while (fileFinder->findNextFile());
 

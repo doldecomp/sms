@@ -22,7 +22,7 @@ void TTalkCursor::loadAfter()
 	                0);
 	actor->setBck("icon_rot");
 	actor->setBrk("icon_flash");
-	unkC = unkC.get() | CUE_CALC_VIEW | CUE_ENTRY;
+	unkC.on(CUE_CALC_VIEW | CUE_ENTRY);
 }
 
 void TTalkCursor::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -40,8 +40,8 @@ void TTalkCursor::associateNPC(TBaseNPC* param_1)
 		TPosition3f mtx;
 		mtx.translation(param_1->getCursorPos());
 		unk10->getModel()->setBaseTRMtx(mtx);
-		unkC = unkC.get() & ~(CUE_CALC_VIEW | CUE_ENTRY);
+		unkC.off(CUE_CALC_VIEW | CUE_ENTRY);
 	} else {
-		unkC = unkC.get() | CUE_CALC_VIEW | CUE_ENTRY;
+		unkC.on(CUE_CALC_VIEW | CUE_ENTRY);
 	}
 }

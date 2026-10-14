@@ -127,21 +127,22 @@ void TEnemyManager::createEnemies(int count)
 			count = limit - getObjNum();
 	}
 
-	if (count >= 0)
-		for (int i = 0; i < count; ++i) {
-			// TODO: createEnemy() but size won't match :(
+	if (count < 0)
+		return;
 
-			TSpineEnemy* enemy = createEnemyInstance();
+	for (int i = 0; i < count; ++i) {
+		// TODO: createEnemy() but size won't match :(
 
-			if (!enemy)
-				continue;
+		TSpineEnemy* enemy = createEnemyInstance();
 
-			static_cast<TIdxGroupObj*>(
-			    JDrama::TNameRefGen::search("敵グループ"))
-			    ->add(enemy);
+		if (!enemy)
+			continue;
 
-			enemy->init(this);
-		}
+		static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
+		    ->add(enemy);
+
+		enemy->init(this);
+	}
 }
 
 void TEnemyManager::clipEnemies(JDrama::TGraphics* graphics)
@@ -150,7 +151,7 @@ void TEnemyManager::clipEnemies(JDrama::TGraphics* graphics)
 	f32 fVar2;
 	if (unk38 == nullptr) {
 		fVar1 = 300.0f;
-		fVar2 = gpConductor->unk84.mEnemyFarClip.get();
+		fVar2 = gpConductor->getCondParams().mEnemyFarClip.get();
 	} else {
 		fVar2 = unk38->mSLFarClip.get();
 		fVar1 = unk38->mSLClipRadius.get();
@@ -217,7 +218,6 @@ void TEnemyManager::updateAnmSoundShared()
 
 void TEnemyManager::copyFromShared()
 {
-	Mtx afStack_58;
 	Mtx afStack_88;
 	MTXCopy(j3dSys.getViewMtx(), afStack_88);
 
@@ -231,7 +231,7 @@ void TEnemyManager::copyFromShared()
 
 		int iVar6 = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		for (int j = 0; j < unk44; ++j) {
-			if (iVar6 >= 0 && iVar6 != unk40[j].getIdx())
+			if (iVar6 >= 0 && iVar6 != unk40[j].unk8)
 				continue;
 
 			J3DModel* model
@@ -239,6 +239,7 @@ void TEnemyManager::copyFromShared()
 			MtxPtr src = enemy->getModel()->getBaseTRMtx();
 			MTXScaleApply(src, src, enemy->mScaling.x, enemy->mScaling.y,
 			              enemy->mScaling.z);
+			Mtx afStack_58;
 			MTXConcat(afStack_88, src, afStack_58);
 			j3dSys.setViewMtx(afStack_58);
 
@@ -450,7 +451,8 @@ void TEnemyManager::killChildren()
 		getObj(i)->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 }
 
-void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
+void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& position,
+                                       f32 radius)
 {
 	if (!mObjNum)
 		return;
@@ -461,7 +463,8 @@ void TEnemyManager::killChildrenWithin(const JGeometry::TVec3<f32>& p, f32 r)
 
 	for (int i = 0; i < mObjNum; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (VECSquareDistance((Vec*)&p, (Vec*)&enemy->mPosition) <= r * r)
+		if (VECSquareDistance((Vec*)&position, (Vec*)&enemy->mPosition)
+		    <= radius * radius)
 			enemy->onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK40);
 	}
 }
@@ -480,7 +483,6 @@ int TEnemyManager::countLivingEnemy() const
 	return result;
 }
 
-// TODO: UNUSED (0x15c in mario.MAP); no surviving inline body recovered.
 void TEnemyManager::createCopyAnmMtx(int) { }
 
 bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
@@ -494,6 +496,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 	enemy->getMActor()->frameUpdate();
 
 	Mtx afStack_5C;
+	MtxPtr wtf = afStack_5C;
 	MtxPtr mtx = enemy->getMActor()->getModel()->getBaseTRMtx();
 
 	const JGeometry::TVec3<f32>& v = enemy->mScaling;

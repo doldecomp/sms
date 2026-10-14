@@ -43,9 +43,9 @@ void TMario::doSlipJumping()
 	if (mInput & 1) {
 		u16 angleDiff    = mIntendedYaw - mFaceAngle.y;
 		f32 velIncrement = 0.03125f * mIntendedMag;
-		f32 cosAngle     = JMASCos(angleDiff);
 
-		mForwardVel += velIncrement * cosAngle * getJumpAccelControl();
+		mForwardVel
+		    += velIncrement * JMASCos(angleDiff) * getJumpAccelControl();
 
 		mFaceAngle.y
 		    += velIncrement * JMASSin(angleDiff) * getJumpSlideControl();
@@ -74,8 +74,6 @@ void TMario::setJumpingAttackArea()
 	}
 }
 
-// TODO: recover the inline/temporary homes behind the 0xa8 retail frame.
-// The current 0x88 frame is otherwise instruction-matching; do not pad it.
 void TMario::doJumping()
 {
 	f32 sideVel = 0.0f;
@@ -137,7 +135,7 @@ bool TMario::askStrongGroundTouch()
 	if (onYoshi())
 		isStrong = false;
 
-	if (getGroundPlane()->isThing4())
+	if (mGroundPlane->isThing4())
 		isStrong = false;
 
 	if (mVel.y > -70.0f)
@@ -156,14 +154,13 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 		break;
 
 	case 1: {
-		if (getGroundPlane()->getActor() != nullptr)
-			((THitActor*)getGroundPlane()->getActor())
+		if (mGroundPlane->mActor != nullptr)
+			((THitActor*)mGroundPlane->mActor)
 			    ->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 
 		bool didTrample = false;
-		bool isStrong   = askStrongGroundTouch();
 
-		if (isStrong) {
+		if (askStrongGroundTouch()) {
 			if (checkFlag(MARIO_FLAG_ON_SAND)) {
 				sinkInSandEffect();
 				return changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 0, 0);
@@ -192,9 +189,9 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 			stopVoice();
 		}
 
-		if (getPreviousStatus() == MARIO_STATUS_U_TURN_JUMP
-		    || getPreviousStatus() == MARIO_STATUS_LEFT_ROTATE_JUMP
-		    || getPreviousStatus() == MARIO_STATUS_RIGHT_ROTATE_JUMP)
+		if (mPrevStatus == MARIO_STATUS_U_TURN_JUMP
+		    || mPrevStatus == MARIO_STATUS_LEFT_ROTATE_JUMP
+		    || mPrevStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 			strongTouchDownEffect();
 		else
 			smallTouchDownEffect();
@@ -202,7 +199,7 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 	}
 
 	case 2:
-		if (getStatus() != MARIO_STATUS_WIRE_ROLL_JUMP
+		if (mStatus != MARIO_STATUS_WIRE_ROLL_JUMP
 		    && mForwardVel > mDeParams.mClashSpeed.get()) {
 			emitParticle(PARTICLE_MS_DMG_C);
 			changePlayerDropping(MARIO_STATUS_JUMP_SHORT_BACK_DOWN, 0U);
@@ -222,17 +219,16 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 		}
 		if (mWallPlane != nullptr) {
 			if (mWallPlane->isFence()) {
-				mFaceAngle.y = matan(mWallPlane->getNormal().z,
-				                     mWallPlane->getNormal().x)
-				               + 0x8000;
+				const JGeometry::TVec3<f32>& normal = mWallPlane->getNormal();
+				mFaceAngle.y    = matan(normal.z, normal.x) + 0x8000;
 				mModelFaceAngle = mFaceAngle.y;
-				if (getStatus() == MARIO_STATUS_U_TURN_JUMP)
+				if (mStatus == MARIO_STATUS_U_TURN_JUMP)
 					mModelFaceAngle -= 0x8000;
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
 				return changePlayerStatus(MARIO_STATUS_FENCE_JUMP_CATCH, 0, 0);
 			}
 		}
-		if (mForwardVel > 16.0f && getStatus() != MARIO_STATUS_ROCKET_LANDING) {
+		if (mForwardVel > 16.0f && mStatus != MARIO_STATUS_ROCKET_LANDING) {
 			playerRefrection(0);
 			mFaceAngle.y += 0x8000;
 			if (mWallPlane != nullptr) {
@@ -312,8 +308,7 @@ BOOL TMario::jumpingCommonEvents()
 	if (rocketCheck())
 		return 1;
 
-	int result = considerJumpRotate() ? 1 : 0;
-	return result;
+	return considerJumpRotate() ? 1 : 0;
 }
 
 BOOL TMario::jumping()
@@ -700,9 +695,9 @@ BOOL TMario::fireDowning()
 		mForwardVel = FConverge(mForwardVel, 0.0f, 0.35f, 0.35f);
 
 	if (mInput & 1) {
-		u16 angleDiff    = mIntendedYaw - mFaceAngle.y;
-		f32 mag          = 0.03125f * mIntendedMag;
-		f32 velIncrement = mag * mJumpParams.mFireDownControl.get();
+		u16 angleDiff = mIntendedYaw - mFaceAngle.y;
+		f32 velIncrement
+		    = 0.03125f * mIntendedMag * mJumpParams.mFireDownControl.get();
 
 		mForwardVel += velIncrement * JMASCos(angleDiff);
 		mFaceAngle.y += 1024.0f * (velIncrement * JMASSin(angleDiff));
@@ -889,7 +884,7 @@ BOOL TMario::rocketCheck()
 		bVar2 = false;
 
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		if (mWaterGun->getEmitParams().mRocketType.get() != 1)
+		if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
 			bVar2 = false;
 
 		if (!isUpperState(UPPER_STATE_PUMPING))
@@ -914,10 +909,8 @@ BOOL TMario::rocketing()
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD))
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
-	{
-		if (mWaterGun->getEmitParams().mRocketType.get() != 1)
-			return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
-	}
+	if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
+		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
 	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->canSpray())
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
@@ -933,13 +926,13 @@ BOOL TMario::rocketing()
 				s16 nozzleAngle;
 				if (angleDiff >= -0x4000 && angleDiff <= 0x4000) {
 					nozzleAngle = (s16)(0.03125f * -mag
-					                    * mWaterGun->getEmitParams()
-					                          .mSideAngleMaxFront.get()
+					                    * mWaterGun->getCurrentNozzle()
+					                          ->getSideAngleMaxFront()
 					                    * JMASCos(angleDiff));
 				} else {
 					nozzleAngle = (s16)(0.03125f * -mag
-					                    * mWaterGun->getEmitParams()
-					                          .mSideAngleMaxBack.get()
+					                    * mWaterGun->getCurrentNozzle()
+					                          ->getSideAngleMaxBack()
 					                    * JMASCos(angleDiff));
 				}
 				mWaterGun->unk1CC2 = nozzleAngle;
@@ -947,10 +940,10 @@ BOOL TMario::rocketing()
 				mForwardVel += mag * JMASCos(angleDiff)
 				               * mDivingParams.mAccelControl.get();
 			} else {
-				s16 nozzleAngle
-				    = (s16)(0.03125f * -mag
-				            * mWaterGun->getEmitParams().mSideAngleMaxSide.get()
-				            * JMASSin(angleDiff));
+				s16 nozzleAngle = (s16)(0.03125f * -mag
+				                        * mWaterGun->getCurrentNozzle()
+				                              ->getSideAngleMaxSide()
+				                        * JMASSin(angleDiff));
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 					mWaterGun->unk1CC2 = -nozzleAngle;
 					mWaterGun->unk1CC4 = nozzleAngle;
@@ -973,7 +966,7 @@ BOOL TMario::rocketing()
 	mVel.x     = mSlideVelX;
 	mVel.z     = mSlideVelZ;
 
-	switch (mWaterGun->mCurrentNozzle) {
+	switch (mWaterGun->getCurrentNozzleType()) {
 	case TWaterGun::Hover:
 		mVel.y = (unk314 - mPosition.y) * mHoverParams.mAccelRate.get();
 		mForwardVel *= mHoverParams.mBrake.get();
@@ -1017,7 +1010,7 @@ BOOL TMario::rotateJumping()
 	else
 		mModelFaceAngle = mStatusTimer * -4096;
 
-	if (!(gpMarDirector->mMoveTickCount & 0x3F))
+	if (!(SMSGetMarDirector()->mMoveTickCount & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
 
 	return 0;
@@ -1146,26 +1139,26 @@ BOOL TMario::hipAttacking()
 				}
 			}
 
-			if (mGroundPlane->getActor() != nullptr) {
+			if (mGroundPlane->mActor != nullptr) {
 				if (!onYoshi()
-				    && mGroundPlane->getActor()->getActorType()
+				    && mGroundPlane->mActor->mActorType
 				           == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 					emitParticle(PARTICLE_MS_M_AMIATTACK, &mPosition);
 					f32 oldY    = mPosition.y;
 					mPosition.y = oldY - 160.0f;
-					((THitActor*)mGroundPlane->getActor())
+					((THitActor*)mGroundPlane->mActor)
 					    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 					startVoice(MSD_SE_MV28_SPRISE_SMALL_01);
 					return changePlayerStatus(MARIO_STATUS_KICK_ROOF_ROLL_DOWN,
 					                          0, 0);
 				}
 				if (mStatusState == 2) {
-					((THitActor*)mGroundPlane->getActor())
+					((THitActor*)mGroundPlane->mActor)
 					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				} else {
-					((THitActor*)mGroundPlane->getActor())
+					((THitActor*)mGroundPlane->mActor)
 					    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
-					((THitActor*)mGroundPlane->getActor())
+					((THitActor*)mGroundPlane->mActor)
 					    ->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 				}
 			}
@@ -1197,33 +1190,6 @@ BOOL TMario::hipAttacking()
 	return 0;
 }
 
-// @todo: .sdata2 order from @3598 through @4633 in MarioJump.cpp.
-// The unused weak sqrt copy otherwise shifts these constants by four bytes.
-void order_sdata2(f32* constants)
-{
-	constants[0]  = 70.0f;
-	constants[1]  = 0.5f;
-	constants[2]  = 160.0f;
-	constants[3]  = 0.25f;
-	constants[4]  = 0.4f;
-	constants[5]  = 0.35f;
-	constants[6]  = 1024.0f;
-	constants[7]  = -1.0f;
-	constants[8]  = 32.0f;
-	constants[9]  = 2.0f;
-	constants[10] = 500.0f;
-	constants[11] = 0.2f;
-	constants[12] = 0.9848077f;
-	constants[13] = 30.0f;
-	constants[14] = 52.0f;
-	constants[15] = -10.0f;
-	constants[16] = -70.0f;
-	constants[17] = 38.0f;
-	constants[18] = 8.0f;
-	constants[19] = -8.0f;
-	constants[20] = 2.5f;
-}
-
 BOOL TMario::diving()
 {
 	if (mHolder != nullptr) {
@@ -1246,7 +1212,7 @@ BOOL TMario::diving()
 		    || angleDiff > 0x6AAA) {
 			s16 nozzleAngle
 			    = (s16)(0.03125f * -mag
-			            * mWaterGun->getEmitParams().mSideAngleMaxSide.get()
+			            * mWaterGun->getCurrentNozzle()->getSideAngleMaxSide()
 			            * JMASCos(angleDiff));
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 				mWaterGun->unk1CC2 = nozzleAngle;
@@ -1257,7 +1223,7 @@ BOOL TMario::diving()
 		} else {
 			s16 nozzleAngle
 			    = 0.03125f * -mag
-			      * mWaterGun->getEmitParams().mSideAngleMaxSide.get()
+			      * mWaterGun->getCurrentNozzle()->getSideAngleMaxSide()
 			      * JMASSin(angleDiff);
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 				mWaterGun->unk1CC2 = -nozzleAngle;

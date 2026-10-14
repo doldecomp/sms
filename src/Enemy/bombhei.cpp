@@ -150,7 +150,7 @@ void TBombHei::changeOut()
 	onLiveFlag(LIVE_FLAG_DEAD);
 	genEventCoin();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mPosition = mJuiceBlock->getPosition();
+	mPosition = mJuiceBlock->mPosition;
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TLS_CHANGE,
 	                                            &mPosition, 0, nullptr);
@@ -285,10 +285,8 @@ f32 TBombHei::getGravityY() const
 
 void TBombHei::walkBehavior(int param_1, f32 param_2)
 {
-	// TODO: MSound::startSoundActor is fabricated; use the gated sound API.
-	if (SMSGetMSound()->gateCheck(MSD_SE_EN_BOMBHEI_ZENMAI))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_EN_BOMBHEI_ZENMAI, getPosition(), 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_EN_BOMBHEI_ZENMAI, &mPosition, 0,
+	                                nullptr, 0, 4);
 
 	TWalkerEnemy::walkBehavior(param_1, param_2);
 }
@@ -301,8 +299,7 @@ void TBombHei::moveObject()
 	    && mSpine->getCurrentNerve() != &TNerveBombHeiGenerate::theNerve()
 	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyChange::theNerve()) {
 		++unk198;
-		s32 bombTime = unk194->mSLBombTime.get();
-		if (unk198 > bombTime) {
+		if (unk198 > unk194->mSLBombTime.get()) {
 			unk164 = 0;
 			unk198 = 0;
 			if (mSpine->getCurrentNerve()
@@ -319,7 +316,7 @@ bool TBombHei::isCollidMove(THitActor* param_1)
 		if (mSpine->getCurrentNerve() != &TNerveBombHeiExplosion::theNerve())
 			mSpine->pushNerve(&TNerveBombHeiExplosion::theNerve());
 	}
-	if (param_1->isActorType(ACTOR_TYPE_BOSS_UNK13)) {
+	if (param_1->isActorType(ACTOR_TYPE_BOSS_TELESA)) {
 		if (mSpine->getCurrentNerve() == &TNerveBombHeiExplosion::theNerve())
 			param_1->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 		if (mSpine->getCurrentNerve() == &TNerveBombHeiThrown::theNerve())
@@ -381,11 +378,10 @@ DEFINE_NERVE(TNerveBombHeiGenerate, TLiveActor)
 		self->getMActor()->setBtpFromIndex(1);
 		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BTP);
 	}
-	if (self->getHolder() != nullptr)
+	if (self->getHolder())
 		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
-	if (!self->isAirborne() && self->getHolder() == nullptr) {
-		bool generating = self->isBckAnm(2);
-		if (generating) {
+	if (!self->isAirborne() && !self->getHolder()) {
+		if (self->isBckAnm(2)) {
 			self->setBckAnm(3);
 		} else if (self->checkCurAnmEnd(0)) {
 			spine->pushAfterCurrent(&TNerveBombHeiAttack::theNerve());
@@ -413,16 +409,9 @@ DEFINE_NERVE(TNerveBombHeiAttack, TLiveActor)
 	return false;
 }
 
-// TODO: recover the original typed spine-body accessor. This inline boundary
-// keeps the actor in r30 and spine in r31 when using the gated sound API.
-static inline TBombHei* getBombHei(TSpineBase<TLiveActor>* spine)
-{
-	return (TBombHei*)spine->getBody();
-}
-
 DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 {
-	TBombHei* self = getBombHei(spine);
+	TBombHei* self = (TBombHei*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
 		self->getMActor()->setBtpFromIndex(0);
@@ -431,11 +420,9 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 		return true;
 	}
 	if ((int)self->getMActor()->getFrameCtrl(ANM_TYPE_BTP)->getFrame() % 40
-	    == 0) {
-		if (SMSGetMSound()->gateCheck(MSD_SE_EN_BOMBHEI_COUNT))
-			MSoundSESystem::MSoundSE::startSoundActor(
-			    MSD_SE_EN_BOMBHEI_COUNT, self->getPosition(), 0, nullptr, 0, 4);
-	}
+	    == 0)
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_BOMBHEI_COUNT,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 	self->walkBehavior(2, 0.6f);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_BOMB_LIMIT, self->getMActor()->getModel()->getAnmMtx(1), 1,
@@ -521,9 +508,8 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 	if (spine->getTime() == 0) {
 		TBombHeiSaveLoadParams* params
 		    = (TBombHeiSaveLoadParams*)self->getSaveParam();
-		f32 bombRange = params->mSLBombRange.get();
-		self->unk1A0
-		    = bombRange * self->getBodyScale() / self->getAttackRadius();
+		self->unk1A0 = params->mSLBombRange.get() * self->getBodyScale()
+		               / self->getAttackRadius();
 		self->setDeadAnm();
 		self->onLiveFlag(LIVE_FLAG_UNK8);
 		if (self->getHolder() == gpMarioAddress)

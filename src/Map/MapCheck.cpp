@@ -13,8 +13,7 @@ static inline f32 skewProduct(f32 x1, f32 y1, f32 x2, f32 y2)
 	return x1 * y2 - y1 * x2;
 }
 
-// fabricated: the early boolean exits indicate an acceptance helper.
-// TODO: recover its original boundary; frame and operand mismatches remain.
+// either this or have to use gotos
 inline static bool someUnknownInline(TBGCheckData* r31, TBGWallCheckRecord* r29)
 {
 	f32 radius = r29->mRadius;
@@ -154,7 +153,6 @@ int TMapCollisionData::checkWallList(const TBGCheckList* param_1,
 	return r30;
 }
 
-// TODO: nonmatching stack frame (0x60 vs 0xa0); original inlines unknown.
 int TMapCollisionData::checkWalls(TBGWallCheckRecord* param_1) const
 {
 	param_1->mResultWallsNum = 0;
@@ -176,8 +174,6 @@ int TMapCollisionData::checkWalls(TBGWallCheckRecord* param_1) const
 	return iVar6;
 }
 
-// TODO: .sdata2 references differ after the retail sqrt constants were
-// stripped.
 f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
                                      const TBGCheckList* head,
                                      const TBGCheckData** result)
@@ -198,10 +194,8 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 		    > 1.0f)
 			continue;
 
-		if ((data->getPoint2().z - z)
-		            * (data->getPoint3().x - data->getPoint2().x)
-		        - (data->getPoint2().x - x)
-		              * (data->getPoint3().z - data->getPoint2().z)
+		if ((data->mPoint2.z - z) * (data->mPoint3.x - data->mPoint2.x)
+		        - (data->mPoint2.x - x) * (data->mPoint3.z - data->mPoint2.z)
 		    > 1.0f)
 			continue;
 
@@ -224,20 +218,17 @@ f32 TMapCollisionData::checkRoofList(f32 x, f32 y, f32 z, u8 param_4,
 	return 9999999.0f;
 }
 
-// TODO: instructions match; the sentinel's .sdata2 offset differs because
-// the current object retains the dead-stripped TUtil<f32>::sqrt constants.
 f32 TMapCollisionData::checkRoof(f32 x, f32 y, f32 z, u8 flags,
                                  const TBGCheckData** result) const
 {
-	JGeometry::TVec2<f32> position(x, z);
-	if (position.x < -mGridExtentX || mGridExtentX <= position.x
-	    || position.y < -mGridExtentY || mGridExtentY <= position.y) {
+	if (x < -mGridExtentX || mGridExtentX <= x || z < -mGridExtentY
+	    || mGridExtentY <= z) {
 		*result = &mIllegalCheckData;
 		return 9999999.0f;
 	}
 
-	int gridX = (position.x + mGridExtentX) * (1.0f / 1024);
-	int gridZ = (position.y + mGridExtentY) * (1.0f / 1024);
+	int gridX = (x + mGridExtentX) * (1.0f / 1024);
+	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
 
 	const TBGCheckData* local_4c;
 	f32 dVar5 = checkRoofList(
@@ -269,10 +260,10 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 		if (data->mMinY > y)
 			continue;
 
-		if ((s32)ignoreWaterThrough != 0 && data->isWaterThrough())
+		if (ignoreWaterThrough != 0 && data->isWaterThrough())
 			continue;
 
-		if ((s32)ignoreWaterSurface != 0 && data->isWaterSurface())
+		if (ignoreWaterSurface != 0 && data->isWaterSurface())
 			continue;
 
 		f32 x1 = data->mPoint1.x;
@@ -310,15 +301,14 @@ f32 TMapCollisionData::checkGroundList(f32 x, f32 y, f32 z, u8 flags,
 f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
                                    const TBGCheckData** result) const
 {
-	JGeometry::TVec2<f32> position(x, z);
-	if (position.x < -mGridExtentX || mGridExtentX <= position.x
-	    || position.y < -mGridExtentY || mGridExtentY <= position.y) {
+	if (x < -mGridExtentX || mGridExtentX <= x || z < -mGridExtentY
+	    || mGridExtentY <= z) {
 		*result = &mIllegalCheckData;
 		return -32767.0f;
 	}
 
-	int gridX = (position.x + mGridExtentX) * (1.0f / 1024);
-	int gridZ = (position.y + mGridExtentY) * (1.0f / 1024);
+	int gridX = (x + mGridExtentX) * (1.0f / 1024);
+	int gridZ = (z + mGridExtentY) * (1.0f / 1024);
 
 	const TBGCheckData* local_60;
 	f32 dVar5 = checkGroundList(
@@ -346,7 +336,6 @@ f32 TMapCollisionData::checkGround(f32 x, f32 y, f32 z, u8 flags,
 	}
 }
 
-// TODO: nonmatching frame (0x180 vs 0x1d8) and plane/angle scheduling.
 static bool bgIntersectLine(const TBGCheckData* data,
                             const JGeometry::TVec3<f32>& start,
                             const JGeometry::TVec3<f32>& end, bool front_only,
@@ -393,8 +382,7 @@ static bool bgIntersectLine(const TBGCheckData* data,
 
 	f32 angleSum = 0.0f;
 
-	f32 angle = MsAngleBetween(a, b);
-	angleSum += fabsf(angle);
+	angleSum += fabsf(MsAngleBetween(a, b));
 	angleSum += fabsf(MsAngleBetween(b, c));
 	angleSum += fabsf(MsAngleBetween(c, a));
 
@@ -407,11 +395,11 @@ static bool bgIntersectLine(const TBGCheckData* data,
 	return true;
 }
 
-const TBGCheckData* intersectLineList(const TBGCheckList* head,
-                                      const JGeometry::TVec3<f32>& start,
-                                      const JGeometry::TVec3<f32>& end,
-                                      bool front_only,
-                                      JGeometry::TVec3<f32>* hit_pos)
+inline const TBGCheckData* intersectLineList(const TBGCheckList* head,
+                                             const JGeometry::TVec3<f32>& start,
+                                             const JGeometry::TVec3<f32>& end,
+                                             bool front_only,
+                                             JGeometry::TVec3<f32>* hit_pos)
 {
 	while (head) {
 		TBGCheckData* data = head->unk8;
@@ -437,7 +425,6 @@ static bool LineInLineXZ(const JGeometry::TVec2<f32>& a0,
 	return false;
 }
 
-// TODO: line-test temporary scheduling and frame (0x528 vs 0x510) differ.
 const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const

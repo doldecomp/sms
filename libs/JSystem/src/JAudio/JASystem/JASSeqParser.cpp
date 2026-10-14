@@ -662,7 +662,7 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 	}
 
 #ifndef NDEBUG
-	OSReport(buf, registers[0], registers[1], registers[2], registers[3]);
+	OSReport(buffer, registers[0], registers[1], registers[2], registers[3]);
 #endif
 
 	return 0;

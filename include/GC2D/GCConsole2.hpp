@@ -28,6 +28,20 @@ class JSUMemoryOutputStream;
 
 class TGCConsole2 : public JDrama::TViewObj {
 public:
+	enum LifeState {
+		LIFE_HIDDEN              = 0,
+		LIFE_HEALTH_APPEARING    = 1,
+		LIFE_HEALTH_VISIBLE      = 2,
+		LIFE_HEALTH_DISAPPEARING = 3,
+		LIFE_AIR_APPEARING       = 4,
+		LIFE_AIR_VISIBLE         = 5,
+		LIFE_AIR_DISAPPEARING    = 6,
+		LIFE_HEALTH_INSERTING    = 7,
+		LIFE_AIR_INSERTING       = 8,
+		LIFE_AIR_DIVING          = 9,
+		LIFE_CAMERA_DEMO         = 10,
+	};
+
 	TGCConsole2(const char* name = "<TGCConsole2>");
 	void load(JSUMemoryInputStream&);
 	void loadAfter();

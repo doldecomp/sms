@@ -57,20 +57,19 @@ void TMapModel::perform(u32 cue, JDrama::TGraphics* graphics)
 	mActor->perform(cue, graphics);
 }
 
-// TODO: nonmatching "underpass" literal relocation.
 void TMapModel::initUnderpass()
 {
-	s32 nameIdx = getModelData()->getJointName()->getIndex("underpass");
+	s32 nameIdx = mModelData->getJointName()->getIndex("underpass");
 	if (nameIdx < 0)
 		return;
 
-	J3DJoint* underpass = getModelData()->getJointNodePointer(nameIdx);
+	J3DJoint* underpass = mModelData->getJointNodePointer(nameIdx);
 
 	int i = 0;
-	while (i < getChildrenNum() && getChild(i)->getJoint() != underpass)
+	while (i < mChildrenNum && mChildren[i]->getJoint() != underpass)
 		++i;
 
-	mUnderpass         = getChild(i);
+	mUnderpass         = mChildren[i];
 	mUnderpassMaterial = underpass->getMesh();
 	mUnderpassMaterial->change();
 	mUnderpassMaterial->setSomeFlag();
@@ -81,8 +80,7 @@ void TMapModel::initUnderpass()
 	texCoord->setTexGenMtx(GX_TEXMTX0);
 
 	J3DTexMtx* texMtxInfo = new J3DTexMtx;
-	J3DTexMtxInfo& info   = texMtxInfo->getTexMtxInfo();
-	info.mInfo            = 2;
+	texMtxInfo->mInfo     = 2;
 	mUnderpassMaterial->setTexMtx(0, texMtxInfo);
 
 	J3DZMode* zmode = mUnderpassMaterial->getZMode();

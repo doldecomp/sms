@@ -28,12 +28,8 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 	SetViewFrustumClipCheckPerspective(
 	    gpCamera->getFovy(), gpCamera->getAspect(), nearClip, *mViewClipFarPtr);
 
-	int e;
-	TLiveActor* actor;
-	int i;
-
-	for (e = getObjNum(), i = 0; i < e; ++i) {
-		actor                     = TLiveManager::getObj(i);
+	for (int i = 0, e = getObjNum(); i < e; ++i) {
+		TLiveActor* actor         = (TLiveActor*)getObj(i);
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 
@@ -51,7 +47,6 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 void TMewManager::load(JSUMemoryInputStream& stream)
 {
 	TAnimalManagerBase::load(stream);
-	// TODO: recover loadSaveParams_ (UNUSED, 0x80 in mario.MAP).
 	mAnimalSave     = new TAnimalSaveIndividual("/Animal/mew.prm");
 	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
 	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();

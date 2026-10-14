@@ -441,7 +441,6 @@ void TMapObjBase::setGroundCollision()
 				mMapCollisionManager->moveActiveCollisionTrans(pos);
 			}
 		}
-		break;
 	}
 }
 
@@ -584,9 +583,9 @@ void TMapObjBase::initAndRegister(const char* instance_name)
 	mIndividualName = instance_name;
 	initMapObj();
 	if (mMapObjData->mIdxGroupName) {
-		TIdxGroupObj* group = static_cast<TIdxGroupObj*>(
-		    JDrama::TNameRefGen::search(mMapObjData->mIdxGroupName));
-		group->getChildren().push_back(this);
+		static_cast<TIdxGroupObj*>(
+		    JDrama::TNameRefGen::search(mMapObjData->mIdxGroupName))
+		    ->push_back(this);
 	}
 }
 

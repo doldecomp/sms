@@ -455,15 +455,10 @@ void TLiveActor::initAnmSound()
 	if (mAnmSound)
 		return;
 
-	MAnmSoundNPC* npcAnmSound;
-	MAnmSound* anmSound;
-	if (isHitCategory(HIT_CATEGORY_NPC)) {
-		npcAnmSound = new MAnmSoundNPC(SMSGetMSound());
-		mAnmSound   = npcAnmSound;
-	} else {
-		anmSound  = new MAnmSound(SMSGetMSound());
-		mAnmSound = anmSound;
-	}
+	if (isHitCategory(HIT_CATEGORY_NPC))
+		mAnmSound = new MAnmSoundNPC(SMSGetMSound());
+	else
+		mAnmSound = new MAnmSound(SMSGetMSound());
 
 	mAnmSound->initAnmSound(nullptr, 1, 0.0f);
 }

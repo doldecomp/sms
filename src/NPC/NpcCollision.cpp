@@ -63,7 +63,6 @@ void TBaseNPC::execNpcObjCollision_()
 				local_4C.set(0.0f, diffY, 0.0f);
 			}
 		} else {
-			// TODO: recover the shared ABS macro; CLBAbs evaluates only once.
 			f32 dVar8
 			    = getAttackRadius() + mCollisions[i]->getDamageRadius()
 			                  - MsVECMag2(local_4C)
@@ -91,26 +90,22 @@ void TBaseNPC::setVariableDamageRadius_()
 {
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(mActorType - ACTOR_TYPE_NPC_MONTE_M);
-	f32 fVar6 = initInfo->mDamageRadius;
-	fVar6     = mScaling.x * fVar6;
-	f32 fVar7 = fVar6;
+	f32 baseRadius = initInfo->mDamageRadius;
+	baseRadius     = mScaling.x * baseRadius;
+	f32 radius     = baseRadius;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioPos().y > mPosition.y) {
-		JGeometry::TVec3<f32> marioPos;
-		marioPos.set(SMS_GetMarioPos());
 		JGeometry::TVec3<f32> diff;
-		diff.sub(marioPos, mPosition);
+		diff.sub(SMS_GetMarioPos(), mPosition);
 		diff.y = 0.0f;
-		if (diff.squared() < CLBSquared(fVar6 * 3.0f))
-			fVar7 = mIndividualParams->mSLDamageRadiusSmall.get();
+		if (diff.squared() < CLBSquared(baseRadius * 3.0f))
+			radius = mIndividualParams->mSLDamageRadiusSmall.get();
 	}
 
-	mDamageRadius = fVar7;
+	mDamageRadius = radius;
 	calcEntryRadius();
 }
 
-// TODO: frame-only mismatch in the subtraction-result stack slots.
-// Investigate the canonical TVec3 subtraction inline; do not add padding.
 void TBaseNPC::bind()
 {
 	JGeometry::TVec3<f32> nextPos = mPosition;
@@ -127,7 +122,7 @@ void TBaseNPC::bind()
 	mGroundHeight += 1.0f;
 
 	if (nextPos.y <= mGroundHeight + 0.05f) {
-		if (mGroundPlane && getGroundPlane()->isLegal()) {
+		if (mGroundPlane && mGroundPlane->isLegal()) {
 			offLiveFlag(LIVE_FLAG_AIRBORNE);
 			mVelocity.set(0.0f, 0.0f, 0.0f);
 			nextPos.y = mGroundHeight;

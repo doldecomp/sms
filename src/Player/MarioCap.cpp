@@ -5,7 +5,6 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <System/MarDirector.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
-#include <System/DummyStrings.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>

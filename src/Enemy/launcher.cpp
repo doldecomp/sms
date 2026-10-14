@@ -78,9 +78,8 @@ BOOL TLauncher::receiveMessage(THitActor* sender, u32 message)
 		if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 			                             &sender->mPosition, 0, nullptr);
-			MSound* sound = SMSGetMSound();
-			sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition,
-			                     0, 0.0f, 0, 0, 4);
+			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+			                        &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (mState == STATE_HITBYWATER)
 				return true;
 
@@ -216,7 +215,6 @@ TCommonLauncher::TCommonLauncher(const char* name)
 {
 }
 
-// TODO: frame-only mismatch: list iterator slots remain 4 bytes too high.
 void TCommonLauncher::init(TLiveManager* param_1)
 {
 	mManager = param_1;
@@ -250,7 +248,7 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	initAnmSound();
 	getMActor()->offMakeDL();
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 	mHitPoints = 5;
 
 	mRotation.x = MsWrap(mRotation.x + 270.0f, 0.0f, 360.0f);
@@ -278,8 +276,7 @@ void TCommonLauncher::stateHitByWater()
 		decHitPoints();
 	}
 
-	BOOL anmEndsNext = mMActor->curAnmEndsNext();
-	if (anmEndsNext) {
+	if (mMActor->curAnmEndsNext()) {
 		if (mHitPoints == 0)
 			changeState(STATE_DIE);
 		else
@@ -321,16 +318,15 @@ void TCommonLauncher::stateLaunch()
 		TSpineEnemy* enemy = getProperEnemy(unk164);
 		if (enemy) {
 			JGeometry::TVec3<f32> local_14 = mRotation;
-			JGeometry::TVec3<f32> local_2c;
-			Mtx mtx;
 
 			local_14.x = MsWrap(local_14.x - 270.0f, 0.0f, 360.0f);
 
+			Mtx mtx;
 			MsMtxSetRotRPH(mtx, local_14.x, local_14.y, local_14.z);
-			local_2c.set(0.0f, 4.0f, 0.0f);
+			JGeometry::TVec3<f32> local_20(0.0f, 4.0f, 0.0f);
 			local_14.set(0.0f, 0.0f, 0.0f);
-			MTXMultVec(mtx, &local_2c, &local_2c);
-			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_2c);
+			MTXMultVec(mtx, &local_20, &local_20);
+			enemy->resetSRTV(mPosition, local_14, enemy->mScaling, local_20);
 		}
 	}
 
@@ -383,7 +379,7 @@ void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSpineEnemy::perform(cue, graphics);
 	if ((cue & CUE_CALC_ANIM) && mMActor->checkCurBckFromIndex(1)) {
-		MtxPtr mtx = getMActor()->getModel()->getAnmMtx(0);
+		MtxPtr mtx = mMActor->getModel()->getAnmMtx(0);
 
 		if (JPABaseEmitter* emitter
 		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_GENE_HIT,
@@ -402,8 +398,8 @@ void TCommonLauncher::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		for (int i = 0; i < getColNum(); ++i)
-			if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
+		for (int i = 0; i < mColCount; ++i)
+			if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 				SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	}
 }

@@ -48,8 +48,7 @@ void TMareWallRock::appear()
 
 	unk10C[0]->setUp();
 	unk104->awake();
-	JGeometry::TVec3<f32> trans(0.0f, 0.0f, unkFC);
-	unk10C[0]->moveTrans(trans);
+	unk10C[0]->moveTrans(JGeometry::TVec3<f32>(0.0f, 0.0f, unkFC));
 	f32 rotY = unk128;
 
 	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
@@ -69,8 +68,6 @@ void TMareWallRock::appear()
 
 void TMareWallRock::movement()
 {
-	// TODO: frame-only mismatch; collision translation slots are eight bytes
-	// low.
 	switch (unkF4) {
 	case 0:
 		if (((TPollutionLayer*)gpPollution->getJointModel(unk108))
@@ -82,8 +79,8 @@ void TMareWallRock::movement()
 		break;
 
 	case 2: {
-		J3DTransformInfo& transformInfo
-		    = unk104->getJoint()->getTransformInfo();
+		J3DJoint* joint                 = unk104->getJoint();
+		J3DTransformInfo& transformInfo = joint->getTransformInfo();
 		if (!TMapObjBase::isDemo()) {
 			transformInfo.mTranslate.z -= mAppearSpeed;
 			if (TMapObjBase::marioIsOn(this))
@@ -96,15 +93,16 @@ void TMareWallRock::movement()
 
 		unk104->getJoint()->setTransformInfo(transformInfo);
 		getMapModel()->calc();
-		if (transformInfo.mTranslate.z < 0.0f) {
+		f32 z = transformInfo.mTranslate.z;
+		if (z < 0.0f) {
 			unk100 = mWaitTimeToDepress;
 			unk10C[1]->setUp();
 			unkF4 = 1;
 			SMSRumbleMgr->stop(0x13);
 			return;
 		}
-		unk10C[0]->moveTrans(
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, transformInfo.mTranslate.z));
+		JGeometry::TVec3<f32> t(0.0f, 0.0f, z);
+		unk10C[0]->moveTrans(t);
 		break;
 	}
 
@@ -119,8 +117,8 @@ void TMareWallRock::movement()
 		break;
 
 	case 4: {
-		J3DTransformInfo& transformInfo
-		    = unk104->getJoint()->getTransformInfo();
+		J3DJoint* joint                 = unk104->getJoint();
+		J3DTransformInfo& transformInfo = joint->getTransformInfo();
 		if (!TMapObjBase::isDemo()) {
 			transformInfo.mTranslate.z += mDepressSpeed;
 			if (TMapObjBase::marioIsOn(this))
@@ -129,15 +127,16 @@ void TMareWallRock::movement()
 
 		unk104->getJoint()->setTransformInfo(transformInfo);
 		getMapModel()->calc();
-		if (transformInfo.mTranslate.z > unkFC) {
+		f32 z = transformInfo.mTranslate.z;
+		if (z > unkFC) {
 			unk10C[0]->remove();
 			unk104->sleep();
 			unk100 = mWaitTimeToAppear;
 			unkF4  = 3;
 			return;
 		}
-		unk10C[0]->moveTrans(
-		    JGeometry::TVec3<f32>(0.0f, 0.0f, transformInfo.mTranslate.z));
+		JGeometry::TVec3<f32> t(0.0f, 0.0f, z);
+		unk10C[0]->moveTrans(t);
 		break;
 	}
 	}
@@ -186,7 +185,6 @@ void TMareWallRock::initEffect()
 
 void TMareWallRock::loadAfter()
 {
-	// TODO: frame-only instruction mismatch; collision-path relocation differs.
 	JDrama::TNameRef::loadAfter();
 	unk10C    = new TMapCollisionBase*[2];
 	unk10C[0] = new TMapCollisionMove;
@@ -240,8 +238,50 @@ TMareEventWallRock::TMareEventWallRock(const char* name)
 	unk14 = nullptr;
 }
 
-void TMareEventDepressWall::finishEvent()
+void TMareEventDepressWall::finishEvent() { }
+
+void TMareEventDepressWall::setJointPosX(float, int) { }
+
+void TMareEventDepressWall::rising()
 {
+	f32 x = TMapObjBase::getJointTransX(unk30[unk48]);
+	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk34[unk48], 0, nullptr,
+	                                0, 4);
+
+	emitEffect(unk48);
+
+	if (unk1C[unk48]) {
+		if (x > 0.0f) {
+			x -= mRiseSpeed;
+			int idx = unk48;
+			TMapObjBase::setJointTransX(unk30[idx], x);
+			JGeometry::TVec3<f32> t(x, 0.0f, 0.0f);
+			unk28[idx].moveTrans(t);
+			return;
+		}
+		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+		unk28[unk48].remove();
+		unk24[unk48].setUpTrans(zero);
+		TMapObjBase::setJointTransX(unk30[unk48], 0.0f);
+		SMSRumbleMgr->stop(0x13);
+		unk48 += 1;
+		if (unk48 == unk10) {
+			unk44 = 4;
+			unk4C = mWaitTimeToWatch;
+			return;
+		}
+		unk4C = unk18[unk48];
+		unk44 = 2;
+		return;
+	}
+	if (x < 0.0f) {
+		x += mRiseSpeed;
+		int idx = unk48;
+		TMapObjBase::setJointTransX(unk30[idx], x);
+		JGeometry::TVec3<f32> t(x, 0.0f, 0.0f);
+		unk28[idx].moveTrans(t);
+		return;
+	}
 	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
 	unk28[unk48].remove();
 	unk24[unk48].setUpTrans(zero);
@@ -255,38 +295,6 @@ void TMareEventDepressWall::finishEvent()
 	}
 	unk4C = unk18[unk48];
 	unk44 = 2;
-}
-
-void TMareEventDepressWall::setJointPosX(float x, int idx)
-{
-	TMapObjBase::setJointTransX(unk30[idx], x);
-	JGeometry::TVec3<f32> t(x, 0.0f, 0.0f);
-	unk28[idx].moveTrans(t);
-}
-
-void TMareEventDepressWall::rising()
-{
-	f32 x = TMapObjBase::getJointTransX(unk30[unk48]);
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &unk34[unk48], 0, nullptr,
-	                                0, 4);
-
-	emitEffect(unk48);
-
-	if (unk1C[unk48]) {
-		if (x > 0.0f) {
-			x -= mRiseSpeed;
-			setJointPosX(x, unk48);
-			return;
-		}
-		finishEvent();
-		return;
-	}
-	if (x < 0.0f) {
-		x += mRiseSpeed;
-		setJointPosX(x, unk48);
-		return;
-	}
-	finishEvent();
 }
 
 void TMareEventDepressWall::startToRise() { }
@@ -464,7 +472,8 @@ void TMareEventDepressWall::initCommon()
 	unk3C = new f32[unk10];
 	unk40 = new f32[unk10];
 
-	J3DNode* joint = gpMap->getRootJointModel()
+	J3DNode* joint = gpMap->getModelManager()
+	                     ->getJointModel(0)
 	                     ->getModelData()
 	                     ->getJointNodePointer(0)
 	                     ->getChild();
@@ -472,7 +481,6 @@ void TMareEventDepressWall::initCommon()
 	int skipCount = unk10;
 	--skipCount;
 	joint = joint->getYounger()->getChild();
-	// TODO: buffer slot, skip-loop registers, and literal relocations differ.
 	for (int i = 0; i < (int)(0x43 - (skipCount + unk14)); ++i)
 		joint = joint->getYounger();
 
@@ -596,7 +604,6 @@ u32 TMareEventBumpyWall::touchWater(THitActor*)
 
 void TMareEventBumpyWall::bumpDownZ()
 {
-	// TODO: frame-only mismatch; trans is four bytes below the target slot.
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
 	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
 	f32 limit = unk144;
@@ -624,7 +631,6 @@ void TMareEventBumpyWall::bumpDownZ()
 
 void TMareEventBumpyWall::bumpUpZ()
 {
-	// TODO: frame-only mismatch; trans is four bytes below the target slot.
 	f32 z = TMapObjBase::getJointTransZ(unk13C);
 	JGeometry::TVec3<f32> trans(0.0f, 0.0f, z);
 	f32 limit;
@@ -652,7 +658,6 @@ void TMareEventBumpyWall::bumpUpZ()
 
 void TMareEventBumpyWall::bumpDownX()
 {
-	// TODO: frame-only mismatch; trans is four bytes below the target slot.
 	f32 x = TMapObjBase::getJointTransX(unk13C);
 	JGeometry::TVec3<f32> trans(x, 0.0f, 0.0f);
 	f32 limit = unk144;
@@ -680,7 +685,6 @@ void TMareEventBumpyWall::bumpDownX()
 
 void TMareEventBumpyWall::bumpUpX()
 {
-	// TODO: frame-only mismatch; trans is four bytes below the target slot.
 	f32 x = TMapObjBase::getJointTransX(unk13C);
 	JGeometry::TVec3<f32> trans(x, 0.0f, 0.0f);
 	f32 limit;

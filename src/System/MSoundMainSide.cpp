@@ -2,30 +2,16 @@
 #include <System/MarDirector.hpp>
 #include <System/FlagManager.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <MSound/MSModBgm.hpp>
 #include <MSound/MSHandle.hpp>
-#include <MSound/MSSetSound.hpp>
 #include <MarioUtil/MapUtil.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Camera/CubeMapTool.hpp>
 #include <Player/MarioAccess.hpp>
 
-template class JALList<MSBgm>;
-template class JALList<MSSetSoundGrp>;
-template class JALList<MSSetSound>;
-template class JALList<JALSeModEffDGrp>;
-template class JALList<JALSeModPitDGrp>;
-template class JALList<JALSeModVolDGrp>;
-template class JALList<JALSeModEffFGrp>;
-template class JALList<JALSeModPitFGrp>;
-template class JALList<JALSeModVolFGrp>;
-template class JALList<JALSeModEffDist>;
-template class JALList<JALSeModPitDist>;
-template class JALList<JALSeModVolDist>;
-template class JALList<JALSeModEffFunk>;
-template class JALList<JALSeModPitFunk>;
-template class JALList<JALSeModVolFunk>;
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 MSStage* MSStage::smMSStage;
 #ifdef VERSION_GMSP01
@@ -101,9 +87,7 @@ int MSMainProc::getMonteVillageActorArea(const Vec& param_1)
 {
 	int result = 4;
 	if (MSGMSound->unkCD == 8) {
-		// TODO: frame-only mismatch; 0x38 here versus 0x30 in the target.
-		Vec pos = getCubeCheckPos(param_1);
-		switch (gpCubeFastC->getInCubeNo(pos)) {
+		switch (gpCubeFastC->getInCubeNo(getCubeCheckPos(param_1))) {
 		case 0:
 			result = 2;
 			break;
@@ -180,7 +164,7 @@ void MSMainProc::setBossNotDamagedFlag(bool param_1)
 
 void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 {
-	// TODO: frame-only instruction mismatch; 0x40 here versus 0x60 in target.
+
 	MSStageInfo::msStg                     = MSBgm::getSceneNo(0xfffffff0);
 	MSStageInfo::stageBgm                  = 0xfffffff0;
 	MSStageInfo::demoBgm                   = MSD_BGM_MONTE_ONSEN;
@@ -297,11 +281,11 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::stageBgm = MSD_BGM_MAP_SELECT;
 		}
 		if (param_2 == 6) {
-			MSStageInfo::demoBgm = MSD_BGM_CAMERA;
-			MSStageInfo::flags   = 3;
+			MSStageInfo::switchBgm = 0xfffffff0;
+			MSStageInfo::demoBgm   = MSD_BGM_CAMERA;
+			MSStageInfo::flags     = 3;
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent           = 1;
-			MSStageInfo::switchBgm           = 0xfffffff0;
 			MSStageInfo::switchBgm2          = 0xfffffff0;
 			MSStageInfo::distFadeStageToKage = 0;
 		} else if (param_2 == 2) {
@@ -351,15 +335,15 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			break;
 		}
 		if (param_2 == 6) {
-			MSStageInfo::demoBgm = MSD_BGM_CAMERA;
-			MSStageInfo::flags   = 6;
+			MSStageInfo::switchBgm = 0xfffffff0;
+			MSStageInfo::demoBgm   = MSD_BGM_CAMERA;
+			MSStageInfo::flags     = 6;
 			MSStageInfo::volOffCategory -= 0x83;
 			MSStageInfo::fadeEvent  = 1;
-			MSStageInfo::switchBgm  = 0xfffffff0;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 		} else {
-			MSStageInfo::fadeEvent  = 2;
 			MSStageInfo::switchBgm  = 0xfffffff0;
+			MSStageInfo::fadeEvent  = 2;
 			MSStageInfo::switchBgm2 = 0xfffffff0;
 
 			switch (param_2) {
@@ -394,8 +378,8 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 			MSStageInfo::switchBgm2          = 0xfffffff0;
 			MSStageInfo::distFadeStageToKage = 0;
 		} else if (param_2 == 1) {
-			MSStageInfo::fadeEvent  = 3;
 			MSStageInfo::switchBgm  = MSD_BGM_MISS;
+			MSStageInfo::fadeEvent  = 3;
 			MSStageInfo::switchBgm2 = MSD_BGM_MISS;
 		}
 		break;
@@ -752,7 +736,6 @@ inline f32 vec_dist(const Vec& a, const Vec& b)
 
 void MSStageDistFade::proc()
 {
-	// TODO: frame-only mismatch; 0x98 here versus 0xd8 in the target.
 	JAISound* sound1 = MSBgm::getHandle(1);
 	JAISound* sound2 = MSBgm::getHandle(0);
 	if (sound1 == nullptr || sound2 == nullptr)
@@ -796,7 +779,6 @@ MSStageDistFadeMonte::MSStageDistFadeMonte(const Vec* param_1, f32 param_2,
 
 void MSStageDistFadeMonte::proc()
 {
-	// TODO: frame-only mismatch; 0xb8 here versus 0x118 in the target.
 	JAISound* sound1 = MSBgm::getHandle(1);
 	JAISound* sound2 = MSBgm::getHandle(0);
 	if (sound1 == nullptr || sound2 == nullptr)

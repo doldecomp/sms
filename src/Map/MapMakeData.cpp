@@ -76,26 +76,9 @@ void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
 
 	TBGCheckData* checkDataIt = mCheckDatas;
-	f32 y                     = delta.y;
-	f32 z                     = delta.z;
 	for (int i = 0; i < mCheckDataNum; ++checkDataIt, ++i) {
-		checkDataIt->mPoint1.x += delta.x;
-		checkDataIt->mPoint1.y += y;
-		checkDataIt->mPoint1.z += z;
-		checkDataIt->mPoint2.x += delta.x;
-		checkDataIt->mPoint2.y += y;
-		checkDataIt->mPoint2.z += z;
-		checkDataIt->mPoint3.x += delta.x;
-		checkDataIt->mPoint3.y += y;
-		checkDataIt->mPoint3.z += z;
-		checkDataIt->mMinY += y;
-		checkDataIt->mMaxY += y;
-		checkDataIt->mPlaneDistance
-		    = -(checkDataIt->mNormal.x * checkDataIt->mPoint1.x
-		        + checkDataIt->mNormal.y * checkDataIt->mPoint1.y
-		        + checkDataIt->mNormal.z * checkDataIt->mPoint1.z);
-		int kind = getKind();
-		gpMapCollisionData->addCheckDataToGrid(checkDataIt, kind);
+		checkDataIt->updateTrans(delta);
+		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getKind());
 	}
 
 	mPrevTranslation = param_1;
@@ -129,7 +112,7 @@ void TMapCollisionBase::initAllCheckData(s16 default_additional_data,
                                          const f32* vertices, u16 param_3,
                                          const TLiveActor* actor)
 {
-	mCheckDatas   = TMapCollisionData::getInstance()->getCheckDataPoolTop();
+	mCheckDatas   = gpMapCollisionData->getCheckDataPoolTop();
 	mCheckDataNum = 0;
 
 	for (s16 i = 0; i < mCollisionGroupNum; ++i) {

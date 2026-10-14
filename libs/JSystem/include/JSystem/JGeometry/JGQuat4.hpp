@@ -47,7 +47,7 @@ public:
 		T _w = this->w * other.w - this->x * other.x - this->y * other.y - this->z * other.z;
 		// clang-format on
 
-		set(_x, _y, _z, _w);
+		this->set(_x, _y, _z, _w);
 	}
 
 	void mul(const TQuat4& a, const TQuat4& b)
@@ -59,7 +59,7 @@ public:
 		T _w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
 		// clang-format on
 
-		set(_x, _y, _z, _w);
+		this->set(_x, _y, _z, _w);
 	}
 
 	// NOTE: SMG contains a "normalize" implementation here that reset the

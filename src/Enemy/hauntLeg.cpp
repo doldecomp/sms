@@ -27,14 +27,13 @@ static const char* hauntleg_bastable[] = {
 
 static THauntLeg* gpCurHauntLeg;
 
-// TODO: rotation-address binding and constant-load scheduling still differ.
 static int HauntLegCallback(J3DNode* param_1, int param_2)
 {
 	if (param_2 == 0) {
 		if (gpCurHauntLeg == nullptr || !gpCurHauntLeg->isUseCallBack())
 			return true;
-		u16 jntNo  = ((J3DJoint*)param_1)->getJntNo();
-		MtxPtr mtx = gpCurHauntLeg->getMActor()->getModel()->getAnmMtx(jntNo);
+		MtxPtr mtx = gpCurHauntLeg->getMActor()->getModel()->getAnmMtx(
+		    ((J3DJoint*)param_1)->getJntNo());
 		Mtx rotation;
 		MsMtxSetRotZ(rotation, gpCurHauntLeg->unk1AC);
 		MTXConcat(mtx, rotation, mtx);
@@ -73,10 +72,9 @@ void THauntLegManager::initSetEnemies()
 	for (int i = 0; i < mObjNum; ++i) {
 		TGraphWeb* graph = gpConductor->getGraphByName("main");
 		THauntLeg* enemy = (THauntLeg*)getObj(i);
-		TMsRange<s32> nodeRange(0, graph->getNodeNum());
-		int nodeIndex = nodeRange.rand();
 		JGeometry::TVec3<f32> position;
-		graph->getGraphNode(nodeIndex).getPoint(&position);
+		graph->getGraphNode(TMsRange<s32>(0, graph->getNodeNum()).rand())
+		    .getPoint(&position);
 		enemy->mPosition = position;
 		enemy->mPosition.y += 5.0f;
 		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -96,7 +94,6 @@ void THauntLegManager::initSetEnemies()
 
 void THauntLegManager::createModelData()
 {
-	// The retail entry$2798 is one 12-byte entry, without a sentinel.
 	static TModelDataLoadEntry entry[] = {
 		{ "hauntleg.bmd",
 		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
@@ -133,7 +130,6 @@ THauntLeg::THauntLeg(const char* param_1)
 {
 }
 
-// TODO: nonmatching frame size (0x70 bytes instead of the retail 0x78).
 void THauntLeg::init(TLiveManager* param_1)
 {
 	TWalkerEnemy::init(param_1);
@@ -144,9 +140,7 @@ void THauntLeg::init(TLiveManager* param_1)
 	unk130 = 2;
 	getMActor()->setJointCallback(1, HauntLegCallback);
 	unk194 = new THauntedObject;
-	static_cast<TIdxGroupObj*>(
-	    JDrama::TNameRefGen::getInstance()->getRootNameRef()->search(
-	        "敵グループ"))
+	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk194);
 	f32 radius = 30.0f * mBodyScale;
@@ -169,7 +163,6 @@ void THauntLeg::reset()
 	TWalkerEnemy::reset();
 }
 
-// TODO: cross-product inline ordering and the stack frame remain nonmatching.
 void THauntLeg::calcRootMatrix()
 {
 	gpCurHauntLeg = this;
@@ -257,8 +250,7 @@ void THauntLeg::setDeadAnm()
 void THauntLeg::attackToMario()
 {
 	updateSquareToMario();
-	f32 squareToMario = getDistToMarioSquared();
-	if (squareToMario < 10000.0f)
+	if (mDistToMarioSquared < 10000.0f)
 		sendAttackMsgToMario();
 }
 
@@ -299,7 +291,6 @@ bool THauntLeg::isUseCallBack()
 	return false;
 }
 
-// TODO: norm contraction and subtraction-temporary stack slots still differ.
 DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 {
 	THauntLeg* enemy = (THauntLeg*)spine->getBody();
@@ -318,8 +309,8 @@ DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 			enemy->unk199 = 0;
 			JGeometry::TVec3<f32> distance
 			    = enemy->mPosition - enemy->unk19C->mPosition;
-			f32 distanceLength = distance.length();
-			if (distanceLength < 200.0f && enemy->unk19C->getHolder() == nullptr
+			if (distance.length() < 200.0f
+			    && enemy->unk19C->getHolder() == nullptr
 			    && enemy->unk19C->receiveMessage(enemy, HIT_MESSAGE_TAKE)) {
 				enemy->mHeldObject = enemy->unk19C;
 				enemy->unk198      = 1;

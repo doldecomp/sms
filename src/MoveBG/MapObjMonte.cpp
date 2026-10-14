@@ -44,7 +44,7 @@ void TMapObjMonteRoot::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	setDamageHeight(1400.0f * mScaling.y);
-	mPosition.y = mInitialPosition.y + getObjCollisionHeightOffset();
+	mPosition.y = mInitialPosition.y + mYOffset;
 }
 
 BOOL TJumpMushroom::receiveMessage(THitActor* param_1, u32 param_2)
@@ -73,11 +73,10 @@ f32 THangingBridgeBoard::mTexPosRate         = 0.01f;
 void THangingBridgeBoard::drawOneRope(
     const JGeometry::TVec3<f32>& param_1) const
 {
-	JGeometry::TVec2<f32> ropeWidth(mRopeWidthX, mRopeWidthZ);
-	f32 xPlus  = param_1.x + ropeWidth.x;
-	f32 xMinus = param_1.x - ropeWidth.x;
-	f32 zPlus  = param_1.z + ropeWidth.y;
-	f32 zMinus = param_1.z - ropeWidth.y;
+	f32 xPlus  = param_1.x + mRopeWidthX;
+	f32 xMinus = param_1.x - mRopeWidthX;
+	f32 zPlus  = param_1.z + mRopeWidthZ;
+	f32 zMinus = param_1.z - mRopeWidthZ;
 
 	f32 bottomY = param_1.y;
 	f32 topY    = param_1.y + THangingBridge::mRopeHeight;
@@ -86,10 +85,9 @@ void THangingBridgeBoard::drawOneRope(
 	f32 bottomTexCoordY = mTexPosRate * (bottomY - param_1.y);
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
-	f32 centerX = param_1.x;
-	GXPosition3f32(centerX, topY, zPlus);
+	GXPosition3f32(param_1.x, topY, zPlus);
 	GXTexCoord2f32(0.0f, topTexCoordY);
-	GXPosition3f32(centerX, bottomY, zPlus);
+	GXPosition3f32(param_1.x, bottomY, zPlus);
 	GXTexCoord2f32(0.0f, bottomTexCoordY);
 	GXPosition3f32(xMinus, topY, zMinus);
 	GXTexCoord2f32(1.0f, topTexCoordY);
@@ -99,9 +97,9 @@ void THangingBridgeBoard::drawOneRope(
 	GXTexCoord2f32(2.0f, topTexCoordY);
 	GXPosition3f32(xPlus, bottomY, zMinus);
 	GXTexCoord2f32(2.0f, bottomTexCoordY);
-	GXPosition3f32(centerX, topY, zPlus);
+	GXPosition3f32(param_1.x, topY, zPlus);
 	GXTexCoord2f32(3.0f, topTexCoordY);
-	GXPosition3f32(centerX, bottomY, zPlus);
+	GXPosition3f32(param_1.x, bottomY, zPlus);
 	GXTexCoord2f32(3.0f, bottomTexCoordY);
 	GXEnd();
 }
@@ -291,7 +289,6 @@ void THangingBridge::setDrawPos(int board_index, f32 height,
 
 void THangingBridge::drawRopeBetweenBoards(f32 param_1, int param_2) const
 {
-	// TODO: nonmatching stack frame: 0xb0 bytes instead of 0x108.
 	f32 xw = unk30.x * unk3C;
 	f32 zw = unk30.y;
 	zw *= unk3C;
@@ -476,15 +473,14 @@ void THangingBridge::initMonte()
 
 void THangingBridge::loadAfter()
 {
-	// TODO: nonmatching frame size: 0x248 bytes instead of 0x298.
 	JDrama::TViewObj::loadAfter();
 	f32 rotY = 0.0f;
 	if (SMSGetMarDirector()->getCurrentMap() == 13) {
 		unk10 = 14;
 		unk18.set(1550.0f, 2980.0f, -9410.0f);
 		unk24.set(3570.0f, 2455.0f, -9410.0f);
-		rotY        = 90.0f;
 		mRopeHeight = 200.0f;
+		rotY        = 90.0f;
 		unk40       = 0.8f;
 		unk44       = 0.5f;
 		unk3C       = 150.0f;
@@ -640,7 +636,6 @@ void TSwingBoard::initDraw() const
 
 void TSwingBoard::draw() const
 {
-	// TODO: frame is 0x50 instead of 0x58; top is at 0x24 instead of 0x3c.
 	initDraw();
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	JGeometry::TVec3<f32> bottom;
@@ -661,7 +656,7 @@ void TSwingBoard::draw() const
 
 void TSwingBoard::swing()
 {
-	if (marioIsOn() && (int)SMS_GetMarioWaterGun()->mIsEmitWater != 0) {
+	if (marioIsOn() && SMS_GetMarioWaterGun()->getEmittedWaterCount() != 0) {
 		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		JGeometry::TVec3<f32> direction;
 		direction.x = -emitMtx[0][0];
@@ -676,8 +671,6 @@ void TSwingBoard::swing()
 
 void TSwingBoard::control()
 {
-	// TODO: frame is 0x88 instead of 0x118; rot is at 0x3c instead of 0xd0.
-	// The target also calls cosf/sinf after MTXConcat, but drops both results.
 	TMapObjBase::control();
 	if (marioIsOn())
 		swing();
@@ -769,7 +762,7 @@ void TGoalFlag::touchActor(THitActor* param_1)
 		if (!TFlagManager::getInstance()->getBool(MSF_RACE_GOAL_REACHED))
 			TFlagManager::getInstance()->setBool(true, MSF_RACE_GOAL_REACHED);
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
-	} else if (bool isEMario = param_1->isActorType(ACTOR_TYPE_E_MARIO)) {
+	} else if (param_1->isActorType(ACTOR_TYPE_E_MARIO)) {
 		param_1->receiveMessage(this, HIT_MESSAGE_ATTACK);
 	}
 }
@@ -841,12 +834,8 @@ void TFluff::control()
 		break;
 	case STATE_NORMAL: {
 		mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
-		if (JGeometry::TVec3<f32>(getVelocityRef(),
-		                          JGeometry::TVec3<f32>::ASSIGN_COPY)
-		            .y
-		        < 0.0f
-		    && (getGroundHeight() > mPosition.y - unk13C
-		        || mPosition.y < -1000.0f))
+		if (getVelocity().y < 0.0f
+		    && (mGroundHeight > mPosition.y - unk13C || mPosition.y < -1000.0f))
 			kill();
 		if (gpMap->isTouchedOneWall(mPosition.x, mPosition.y, mPosition.z,
 		                            100.0f))

@@ -18,7 +18,6 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-// dummy: emits @2520 and @2522.
 static void dummy(Vec* v)
 {
 	*v = (Vec) { 0.0f, 0.0f, 0.0f };
@@ -50,7 +49,6 @@ TMapObjSeaIndirect::TMapObjSeaIndirect(const char* name)
 void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: mother of all intern codes...
-	// Frame is 0xF8 rather than 0x128; the wave-height return also folds.
 
 	if (!unk44)
 		return;
@@ -68,9 +66,6 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		Mtx afStack_48;
-		Mtx afStack_78;
-		Mtx afStack_a8;
 		MtxPtr viewMtx = graphics->mViewMtx;
 
 		J3DTransformInfo info;
@@ -83,8 +78,11 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 		info.mTranslate.x = mPosition.x;
 		info.mTranslate.y = mPosition.y;
 		info.mTranslate.z = mPosition.z;
+		Mtx afStack_78;
 		J3DGetTranslateRotateMtx(info, afStack_78);
+		Mtx afStack_a8;
 		PSMTXScale(afStack_a8, mScaling.x, mScaling.y, mScaling.z);
+		Mtx afStack_48;
 		MTXInverse(viewMtx, afStack_48);
 		MTXConcat(afStack_48, afStack_78, afStack_48);
 		MTXConcat(afStack_48, afStack_a8, afStack_48);

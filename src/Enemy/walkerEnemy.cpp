@@ -37,8 +37,7 @@ void TWalkerEnemy::init(TLiveManager* param_1)
 	TSmallEnemy::init(param_1);
 	mBinder = new TWalker;
 	getWalker()->reset();
-	TWalker* walker = getWalker();
-	walker->setUnk18(150.0f);
+	getWalker()->setUnk18(150.0f);
 
 	mMarchSpeed = getSaveParam2()->unk324.rand();
 	mSpine->initWith(&TNerveWalkerGenerate::theNerve());
@@ -65,7 +64,7 @@ void TWalkerEnemy::moveObject()
 	if (getWalker()->getUnk1C()
 	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyJump::theNerve()) {
 
-		// TODO: recover authored inlines; frame is 0x60 instead of 0x88.
+		// TODO: some order of inlines should be used instead of tmps
 		f32 yAngle = mRotation.y;
 		f32 f      = getSaveParam2()->unk324.mMax;
 
@@ -143,8 +142,7 @@ void TWalkerEnemy::behaveToFindMario()
 		setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
-		const TNerveBase<TLiveActor>* nerve = &TNerveSmallEnemyJump::theNerve();
-		mSpine->pushAfterCurrent(nerve);
+		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	}
 }
 
@@ -238,14 +236,15 @@ DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setRunAnm();
 
+	// TODO: what is the inlines play here?
 	if (self->unkF4.unk0 == (THitActor*)gpMarioAddress) {
-		bool isVisible = SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE);
-		if (isVisible || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
+		if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
+		    || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 		    || SMS_GetMarioGroundPlane()->isWaterSurface()
 		    || SMS_CheckMarioFlag(MARIO_FLAG_IN_WATER))
 			return true;
 
-		f32 giveUpHeight = self->getSaveParam2()->getSLGiveUpHeight();
+		f32 giveUpHeight = self->getSaveParam2()->mSLGiveUpHeight.get();
 		if (abs(SMS_GetMarioPos().y - self->getPosition().y) > giveUpHeight)
 			return true;
 	}
@@ -331,24 +330,4 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 		return true;
 
 	return false;
-}
-
-// @todo: preserve walkerEnemy.cpp's .sdata2 prefix @2788 through @3378.
-// The extra weak TUtil<f32>::sqrt constant otherwise displaces init's floats.
-void order_sdata2(f32* constants, f64* conversion)
-{
-	constants[0]  = 0.0f;
-	constants[1]  = 3.0f;
-	constants[2]  = 2.0f;
-	constants[3]  = 100.0f;
-	constants[4]  = 1.0f;
-	constants[5]  = 3.05175781e-05f;
-	conversion[0] = 4503601774854144.0;
-	constants[6]  = 182.044449f;
-	constants[7]  = 5.0f;
-	constants[8]  = 150.0f;
-	constants[9]  = 1000.0f;
-	constants[10] = 30.0f;
-	constants[11] = 0.8f;
-	constants[12] = 1.5f;
 }

@@ -33,21 +33,16 @@ void TMapObjFlag::draw()
 	mtx.set(j3dSys.getViewMtx());
 	MTXConcat(mtx, unk8C.mMtx, mtx);
 	GXLoadPosMtxImm(mtx, GX_PNMTX0);
-	s32 stripColumns = (unk70 - 2 * unkBC) / unkBC + 2;
-	u16 count        = 2 * stripColumns;
-	f32 sStep        = 1.0f / (unk70 - 1);
-	f32 tStep        = 1.0f / (unk74 - 1);
+	u16 count = 2 * ((unk70 - 2 * unkBC) / unkBC + 2);
+	f32 sStep = 1.0f / (unk70 - 1);
+	f32 tStep = 1.0f / (unk74 - 1);
 	for (s32 i = 0; i < unk74 - unkBC; i += unkBC) {
 		f32 t0 = tStep * (unk74 - 1 - i);
 		f32 t1 = tStep * (unk74 - 1 - (i + 1));
 		GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, count);
-		JGeometry::TVec3<f32> position(unk78[i][0].x, unk78[i][0].y,
-		                               unk78[i][0].z);
-		GXPosition3f32(position.x, position.y, position.z);
+		GXPosition3f32(unk78[i][0].x, unk78[i][0].y, unk78[i][0].z);
 		GXTexCoord2f32(0.0f, t0);
-		JGeometry::TVec3<f32> nextPosition(unk78[i + 1][0].x, unk78[i + 1][0].y,
-		                                   unk78[i + 1][0].z);
-		GXPosition3f32(nextPosition.x, nextPosition.y, nextPosition.z);
+		GXPosition3f32(unk78[i + 1][0].x, unk78[i + 1][0].y, unk78[i + 1][0].z);
 		GXTexCoord2f32(0.0f, t1);
 		for (s32 j = 1; j < unk70 - unkBC; j += unkBC) {
 			GXPosition3f32(unk78[i][j].x, unk78[i][j].y, unk78[i][j].z);
@@ -71,10 +66,10 @@ void TMapObjFlag::updateVertex()
 	for (s32 i = 0; i < unk74; i += unkBC) {
 		f32 rowAngle = i * unk80;
 		for (s32 j = 0; j < unk70; j += unkBC) {
-			f32 ratio = (f32)j / unk70;
-			f32 angle = unk88 + (-j * unk7C + rowAngle);
-			unk78[i][j].x
-			    = unk84 * ratio * MsSin(MsWrap(angle, -180.0f, 180.0f));
+			f32 ratio     = (f32)j / unk70;
+			f32 angle     = unk88 + (-j * unk7C + rowAngle);
+			angle         = MsWrap(angle, -180.0f, 180.0f);
+			unk78[i][j].x = unk84 * ratio * MsSin(angle);
 		}
 	}
 }
@@ -87,10 +82,9 @@ void TMapObjFlag::update()
 	unk88 += mFlutterSpeed;
 	if (unk88 > 360.0f)
 		unk88 -= 360.0f;
-	if (mScaling.y > 3.0f && mScaling.z > 3.0f) {
-		MSound* sound = SMSGetMSound();
-		sound->startSoundActor(MSD_SE_OBJ_FLAG, &mPosition, 0, nullptr, 0, 4);
-	}
+	if (mScaling.y > 3.0f && mScaling.z > 3.0f)
+		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FLAG, &mPosition, 0, nullptr,
+		                                0, 4);
 }
 
 void TMapObjFlag::init(const char* param_1)
@@ -112,8 +106,7 @@ void TMapObjFlag::init(const char* param_1)
 
 	f32 colWidth  = unk68 / unk70;
 	f32 rowHeight = unk6C / unk74;
-	JKRHeap* heap = JKRGetCurrentHeap();
-	heap->getTotalFreeSize();
+	JKRGetCurrentHeap()->getTotalFreeSize();
 	unk78 = new JGeometry::TVec3<f32>*[unk74];
 	for (s32 i = 0; i < unk74; ++i) {
 		unk78[i] = new JGeometry::TVec3<f32>[unk70];
@@ -122,8 +115,7 @@ void TMapObjFlag::init(const char* param_1)
 	}
 
 	static int total_use_size = 0;
-	heap                      = JKRGetCurrentHeap();
-	heap->getTotalFreeSize();
+	JKRGetCurrentHeap()->getTotalFreeSize();
 	gpMapObjFlagManager->registerObj(this, param_1);
 	initHitActor(ACTOR_TYPE_MAP_OBJ_FLAG, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 }
@@ -289,8 +281,7 @@ void TMapObjFlagManager::load(JSUMemoryInputStream& stream)
 	char buf[8];
 	stream.readString(buf, 8);
 
-	u8 map = SMSGetMarDirector()->getCurrentMap();
-	switch (map) {
+	switch (SMSGetMarDirector()->getCurrentMap()) {
 	case 0:
 		TMapObjFlag::mFlutterSpeed = 16.0f;
 		break;

@@ -17,7 +17,6 @@ MSSceneSE::MSSceneSE(u32 param_1)
 	mUseRandPlay = 0;
 }
 
-// TODO: frame-only mismatch (0x98 vs 0xc0); no fabricated stack padding.
 void MSSceneSE::frameLoop(u32 sound_id, Vec* trans, u8 trans_num)
 {
 	if (MSGMSound->gateCheck(sound_id) && trans_num <= ARRAY_COUNT(mTrans)) {
@@ -116,11 +115,3 @@ void MSSceneSE::calcPosVolume(Vec* param_1, f32* param_2, u8 param_3) { }
 void MSSceneSE::calcPosPanLR(Vec* param_1, f32 param_2) { }
 
 void MSSceneSE::calcPosPanSR(Vec* param_1, f32 param_2) { }
-
-// @todo: .sdata2 order: @2051 and @2053 precede frameLoop's @2263.
-// Recover the UNUSED calcPos bodies instead of this ordering anchor.
-void order_sdata2(f32* constants)
-{
-	constants[0] = 0.0f;
-	constants[1] = M_PI;
-}

@@ -75,7 +75,7 @@ void TSandBlock::control()
 		mScaling.y -= mSandScaleDown;
 		gpMSound->startSoundActor(MSD_SE_OBJ_SANDBLOCK_BREAK, &mPosition, 0,
 		                          nullptr, 0, 0x4);
-		JGeometry::TVec3<f32> particleScale(mScaling.x, getInitialScaling().y,
+		JGeometry::TVec3<f32> particleScale(mScaling.x, mInitialScaling.y,
 		                                    mScaling.z);
 		emitAndScale(0x147, 0x1, &mPosition, particleScale);
 		emitAndScale(0x148, 0x1, &mPosition, particleScale);
@@ -91,7 +91,7 @@ void TSandBlock::control()
 		if (!isStateTimerEngaged()
 		    && getDistance(SMS_GetMarioPos()) > mScaling.x * 100.0f) {
 			TMapObjBase::awake();
-			JGeometry::TVec3<f32> scaleCopy = getScaling();
+			JGeometry::TVec3<f32> scaleCopy = mScaling;
 			mScaling.set(mInitialScaling);
 			setUpMapCollision(0);
 			mScaling.set(scaleCopy);
@@ -230,13 +230,13 @@ void TIceBlock::control()
 	JPABaseEmitter* emitter
 	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKA, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->setGlobalDynamicsScale(getScaling());
+		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
 	emitter
 	    = gpMarioParticleManager->emit(MAPOBJ_ICEBLOCKB, &mPosition, 1, this);
 	if (emitter != nullptr) {
-		emitter->setGlobalDynamicsScale(getScaling());
+		emitter->setGlobalDynamicsScale(mScaling);
 	}
 
 	offHitFilter(HIT_FILTER_NO_COLLISION);
@@ -251,8 +251,8 @@ void TIceBlock::control()
 
 		mScaledBodyRadius = mScaling.x * mMapObjData->unk30;
 
-		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition,
-		                                0, nullptr, 0, 4);
+		gpMSound->startSoundActor(MSD_SE_OBJ_ICE_BLOCK_MELT, &mPosition, 0,
+		                          nullptr, 0, 4);
 
 		setObjHitData(0);
 		onHitFilter(HIT_FILTER_NO_COLLISION);
@@ -289,7 +289,7 @@ void TBrickBlock::kill()
 	emitAndScale(0x62, 0, &mPosition);
 	gpMSound->startSoundActor(MSD_SE_OBJ_CLASSIC_BLOCK_B, &mPosition, 0,
 	                          nullptr, 0, 4);
-	SMSRumbleMgr->start(0x15, 0x14, getPosition());
+	SMSRumbleMgr->start(0x15, 0x14, &mPosition);
 	appearObj(100.0f);
 }
 
@@ -359,14 +359,17 @@ void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		TPosition3f mtx;
-		mtx.setTrans(0.0f, 0.0f, 0.0f);
+
+		// TODO: Possibly more TRotation3f inlines?
+		TRotation3f mtx;
+		mtx.ref(0, 3) = 0.0f;
+		mtx.ref(1, 3) = 0.0f;
+		mtx.ref(2, 3) = 0.0f;
 		mtx.setScale(unk140.x, unk140.y, unk140.z);
 		PSMTXConcat(getModel()->getAnmMtx(1), mtx, getModel()->getAnmMtx(1));
 
 		mtx.setScale(unk140.y, unk140.y, unk140.z);
-		MtxPtr rootMtx = getModel()->getAnmMtx(0);
-		PSMTXConcat(getModel()->getAnmMtx(0), mtx, rootMtx);
+		PSMTXConcat(getModel()->getAnmMtx(0), mtx, getModel()->getAnmMtx(0));
 	}
 }
 
@@ -380,8 +383,7 @@ void TTelesaBlock::setGroundCollision()
 
 BOOL TSuperHipDropBlock::receiveMessage(THitActor* sender, u32 message)
 {
-	bool superHipDrop = message == HIT_MESSAGE_SUPER_HIP_DROP;
-	if (superHipDrop) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		kill();
 		if (mMonteBlockBroken)
 			TFlagManager::getInstance()->setBool(

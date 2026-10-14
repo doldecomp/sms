@@ -98,9 +98,8 @@ BOOL TMonumentShine::receiveMessage(THitActor* sender, u32 message)
 	if (sender->isActorType(ACTOR_TYPE_WATER)) {
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, nullptr);
-		MSound* sound = SMSGetMSound();
-		sound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &sender->mPosition, 0,
-		                     0.0f, 0, 0, 4);
+		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
+		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 
 		if (unk13C == 0)
 			return 1;
@@ -280,8 +279,7 @@ BOOL TBellDolpic::receiveMessage(THitActor* sender, u32 message)
 
 		unk154 = unk154 - 1;
 
-		int alpha = unk154 * 100 / 1000;
-		unk138.a  = (u8)alpha;
+		unk138.a = (u8)(unk154 * 100 / 1000);
 
 		if (unk154 == 0) {
 			if (unk13C == 0) {
@@ -396,8 +394,8 @@ void TMareGate::control()
 	TMapObjBase::control();
 
 	MSound* sound = SMSGetMSound();
-	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
-	                                &sound->unk7C, 0, 4);
+	sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
+	                       &sound->unk7C, 0, 4);
 }
 
 void TMareGate::loadAfter()
@@ -407,8 +405,6 @@ void TMareGate::loadAfter()
 		makeObjDead();
 	}
 }
-
-// TODO: TWeathercock is UNUSED in mario.MAP; no surviving body is known.
 
 // TDemoCannon
 
@@ -438,7 +434,7 @@ void TDemoCannon::initMapObj()
 
 	JUTNameTab* jointName = mMActor->getModel()->getModelData()->getJointName();
 
-	TSharedParts* parts = new TSharedParts(self, jointName->getIndex("nullA"),
+	TSharedParts* parts = new TSharedParts(this, jointName->getIndex("nullA"),
 	                                       sdlData, 3, "<TSharedParts>");
 	unk138              = parts;
 
@@ -532,7 +528,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	if (!SMS_IsMarioDashing())
 		return;
 
-	if (gpMarDirector->mMap == 1) {
+	if (SMSGetMarDirector()->mMap == 1) {
 		startBck("nozzledoor");
 	} else {
 		makeObjDead();
@@ -546,8 +542,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 
 	JGeometry::TVec3<f32> scale(1.3f);
 
-	unk138.set(
-	    JGeometry::TVec3<f32>(mPosition.x, mPosition.y + 100.0f, mPosition.z));
+	unk138.set(mPosition.x, mPosition.y + 100.0f, mPosition.z);
 
 	emitAndScale(24, 0, &unk138, scale);
 	emitAndScale(25, 0, &unk138, scale);

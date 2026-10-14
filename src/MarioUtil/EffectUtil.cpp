@@ -1,4 +1,3 @@
-#include <MarioUtil/EffectUtil.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/MarDirector.hpp>
 #include <System/Particles.hpp>
@@ -70,7 +69,6 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 	TPosition3f matrix;
 
 	TVec3<f32> C;
-	// TODO: recover the cross inline; FPRs and the stack frame still differ.
 	C.cross2(arg1, B);
 	C.normalize();
 	B.normalize();
@@ -85,6 +83,3 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 	gpMarioParticleManager->emitAndBindToMtx(PARTICLE_MS_MARI_RAKUHAMON,
 	                                         matrix.mMtx, 2U, nullptr);
 }
-
-// TODO: UNUSED in mario.MAP (0x20 bytes); no surviving inline body found.
-void SMS_GetJumpIntoWaterModelData() { }

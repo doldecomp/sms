@@ -74,7 +74,6 @@ void TEnemyAttachment::bind()
 	mVelocity.y -= getNowGravity();
 	if (mVelocity.y < mVelocityMinY)
 		mVelocity.y = mVelocityMinY;
-
 	if (!unk168) {
 		mGroundHeight = gpMap->checkGround(local_1C.x, local_1C.y + mHeadHeight,
 		                                   local_1C.z, &mGroundPlane);
@@ -177,8 +176,7 @@ void TEnemyAttachment::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		calcRootMatrix();
-		MActor* actor = getMActor();
-		actor->calcAnm();
+		getMActor()->calcAnm();
 	}
 
 	if (cue & CUE_CALC_VIEW)
@@ -197,7 +195,7 @@ void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		f32 f31     = 100.0f;
-		f32 farClip = gpConductor->unk84.getEnemyFarClip();
+		f32 farClip = gpConductor->getCondParams().getEnemyFarClip();
 		SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
 		                                   gpCamera->getAspect(),
 		                                   graphics->getNearPlane(), farClip);
@@ -243,7 +241,7 @@ void TEnemyPolluteModel::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
-		if (unk10->getMActor()->curAnmEndsNext()) {
+		if (unk10->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			unk5D = false;
 			return;
 		}

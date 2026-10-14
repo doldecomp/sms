@@ -20,7 +20,15 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-#include <M3DUtil/InfectiousStrings.hpp>
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
 
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
@@ -97,8 +105,6 @@ void TEMario::loadAfter()
 		gpCamera->addMultiPlayer(&mPosition, 60.0f, 150.0f);
 	}
 }
-// TODO: Nonmatching frame (0x70 vs 0x88) and .sdata2 constant offsets.
-// The remaining inline provenance is unresolved; no fabricated padding.
 void TEMario::init(TLiveManager* manager)
 {
 	if (!manager) {
@@ -110,7 +116,7 @@ void TEMario::init(TLiveManager* manager)
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
 			    chara->getFolder(), 0);
 			for (int i = 0;
-			     i < getMActor()->getModel()->getModelData()->getMaterialNum();
+			     i < mMActor->getModel()->getModelData()->getMaterialNum();
 			     i++) {
 				SMS_InitPacket_Fog(getMActor()->getModel(), i);
 			}
@@ -124,8 +130,8 @@ void TEMario::init(TLiveManager* manager)
 		mMActor = mMActorKeeper->createMActorFromNthData(0, 0);
 	}
 
-	if (getMActor() != nullptr) {
-		gpScreenTexture->replace(getMActor()->getModel()->getModelData(),
+	if (mMActor != nullptr) {
+		gpScreenTexture->replace(mMActor->getModel()->getModelData(),
 		                         "H_kagemario_dummy");
 	}
 

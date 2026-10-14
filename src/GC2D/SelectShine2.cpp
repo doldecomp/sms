@@ -16,7 +16,6 @@
 #include <JSystem/JDrama/JDRGraphics.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
-#include <MarioUtil/RandomUtil.hpp>
 #include <System/Application.hpp>
 #include <System/DummyStrings.hpp>
 
@@ -41,7 +40,6 @@ TSelectShineManager::TSelectShineManager(const char* name)
 {
 }
 
-// TODO: Inlined vector copies, frame size, and register allocation differ.
 void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
                                    JPAEmitterManager* emitter_manager)
 {
@@ -93,11 +91,13 @@ void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
 		if (*state == 3) {
 			mShines[i] = new TSelectShine(
 			    modelData, anmColor, emitter_manager, pos, angle, 0,
-			    (s32)(4000.0f * MsRandF()) / 1000.0f, 0.01f, 10.0f);
+			    (s32)(4000.0f * (rand() * (1.0f / 32768.0f))) / 1000.0f, 0.01f,
+			    10.0f);
 		} else if (*state == 1 || *state == 2) {
 			mShines[i] = new TSelectShine(
 			    emptyModelData, emptyAnmColor, emitter_manager, pos, angle, 1,
-			    (s32)(4000.0f * MsRandF()) / 1000.0f, 0.01f, 10.0f);
+			    (s32)(4000.0f * (rand() * (1.0f / 32768.0f))) / 1000.0f, 0.01f,
+			    10.0f);
 		} else {
 			mShines[i] = nullptr;
 		}
@@ -199,9 +199,8 @@ void TSelectShineManager::startDecrease(int step)
 // TODO: fabricated, get rid of this
 inline void TSelectShineManager::updateShine(int i)
 {
-	// Copy as the pre-merge TVec3::operator= did (Vec struct copy).
 	JGeometry::TVec3<f32> pos     = getPosition(mRingAngle + i * 40);
-	*(Vec*)&mShines[i]->mPos      = *(Vec*)&pos;
+	mShines[i]->mPos              = pos;
 	JGeometry::TVec3<f32> realPos = mShines[i]->mPos + mShines[i]->mOffset;
 	s16 angle                     = getAngle(realPos);
 	TSelectShine* shine           = mShines[i];
@@ -212,7 +211,6 @@ inline void TSelectShineManager::updateShine(int i)
 	shine->mAngleY = angle;
 }
 
-// TODO: Vector-copy chains and frame layout differ from the target.
 void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & 1) {
@@ -328,7 +326,6 @@ TSelectShine::TSelectShine(J3DModelData* model_data, J3DAnmColor* anm_color,
 	}
 }
 
-// TODO: Frame-only mismatch; inline stack layout differs.
 void TSelectShine::move()
 {
 	f32 height;
@@ -415,7 +412,6 @@ void TSelectShine::move()
 
 f32 TSelectShine::makeNewPosition(f32 t, f32 p0, f32 p1, f32 p2)
 {
-	f32 s  = 1.0f - t;
-	f32 ss = s * s;
-	return p0 * ss + p1 * (2.0f * s * t) + p2 * (t * t);
+	f32 s = 1.0f - t;
+	return p0 * (s * s) + p1 * (2.0f * s * t) + p2 * (t * t);
 }

@@ -690,7 +690,7 @@ public:
 
 	// Draw stuff
 	void getJumpIntoWaterModelData();
-	void getHeadRot();
+	f32 getHeadRot();
 	Mtx* getRootAnmMtx();
 	MtxPtr getCenterAnmMtx();
 	f32 getPumpFrame() const;
@@ -704,7 +704,7 @@ public:
 	u32 getTrampleCt();
 	void calcBodyPos(JGeometry::TVec3<f32>*);
 	MtxPtr getTakenMtx();
-	void getRailMtx() const;
+	MtxPtr getRailMtx() const;
 	f32 getCurrentFrame(int);
 	J3DFrameCtrl& getMotionFrameCtrl();
 	BOOL isLast1AnimeFrame();
@@ -1256,6 +1256,12 @@ public:
 	u32 getStatus() const { return mStatus; }
 
 	// Fabricated
+	bool isStatus(u32 status) const { return mStatus == status; }
+
+	// Fabricated
+	const JGeometry::TVec3<f32>& getVelocity() const { return mVel; }
+
+	// Fabricated
 	bool isSleeping() const
 	{
 		bool sleepKind = true;
@@ -1301,6 +1307,12 @@ public:
 		           params.mInvincibleTime.get());
 	}
 
+	// Fabricated name; shared predicate recovered from MarioDraw/MarioMove.
+	bool isFeelDeep() const
+	{
+		return unk370 > mDeParams.mFeelDeep.get() ? true : false;
+	}
+
 	// Fabricated
 	BOOL isSinking() const { return mSinkTimer > 0.0f ? TRUE : FALSE; }
 
@@ -1308,6 +1320,24 @@ public:
 	{
 		return mPrevPosition;
 	}
+
+	// Fabricated
+	TWaterGun* const getWaterGun() { return mWaterGun; }
+
+	// Fabricated
+	TMarioGamePad* const getGamePad() { return mGamePad; }
+
+	// Fabricated and probably fake
+	s16 getFaceAngleY() const { return mFaceAngle.y; }
+
+	// Fabricated
+	f32 getUnk564() const { return unk564; }
+
+	// Fabricated
+	f32 getUnk568() const { return unk568; }
+
+	// Fabricated
+	TYoshi* const getYoshi() { return mYoshi; }
 
 public:
 	/* 0x74 */ u32 mInput;
@@ -1569,10 +1599,7 @@ public:
 	/* 0xF8 */ s16 mLightID;
 	/* 0xFA */ u16 mAnimationId;
 
-	/* 0xFC */ s16 unkFC;
-	/* 0xFE */ s16 unkFE;
-
-	/* 0x100 */ s16 unk100;
+	/* 0xFC */ JGeometry::TVec3<s16> unkFC;
 	/* 0x102 */ s16 unk102;
 	/* 0x104 */ f32 unk104;
 

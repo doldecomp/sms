@@ -16,28 +16,19 @@
 #include <Enemy/LimitKoopaJr.hpp>
 #include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TinKoopa.hpp>
+#include <Enemy/BossTelesa.hpp>
 #include <System/MarNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// rogue includes: the PCH strings at the start of .rodata
 #include <System/DummyStrings.hpp>
 
-// mario.MAP: local arrays at .rodata+0x20 and +0x44 in this TU.
-// TODO: their original owning header is unknown.
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 #include <M3DUtil/InfectiousStrings.hpp>
-
-// TODO: recover the header-inline constructor; its body survives at
-// 0x800fddc0 in getNameRef_BossEnemy (mario.MAP has no out-of-line copy).
-inline TOilBall::TOilBall(const char* name)
-    : TBEelTears(name)
-{
-}
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
@@ -53,17 +44,14 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BossHanachanManager") == 0)
 		return new TBossHanachanManager("?");
 
-	// TODO: recover mShinePosition's member-construction boundary in
-	// SleepBossHanachan.hpp; mario.MAP retains TVec3<f32>::set<f32> at
-	// 0x800fdf48, but the current constructor fully inlines it.
 	if (strcmp(name, "SleepBossHanachan") == 0)
-		return new TSleepBossHanachan("?");
+		return new TSleepBossHanachan;
 
 	if (strcmp(name, "SleepBossHanachanManager") == 0)
-		return new TSleepBossHanachanManager("?");
+		return new TSleepBossHanachanManager;
 
 	if (strcmp(name, "BossEel") == 0)
-		return new TBossEel("?");
+		return new TBossEel;
 
 	if (strcmp(name, "BossEelManager") == 0)
 		return new TBossEelManager("?");
@@ -157,13 +145,13 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 		return new TBossPakkunManager("ボスパックン軽マネージャ", 1);
 
 	if (strcmp(name, "BossTelesa") == 0)
-		return new TBossTelesa("ボステレサ");
+		return new TBossTelesa;
 
 	if (strcmp(name, "BossTelesaManager") == 0)
-		return new TBossTelesaManager("ボステレサマネージャー");
+		return new TBossTelesaManager;
 
 	if (strcmp(name, "BubbleManager") == 0)
-		return new TBubbleManager("バブルマネージャー");
+		return new TBubbleManager;
 
 	if (strcmp(name, "OilBall") == 0)
 		return new TOilBall;

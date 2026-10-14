@@ -44,11 +44,7 @@ f32 TMapEventSink::getSinkOffsetY() const
 
 TPollutionObj* TMapEventSink::getPollutionObj(int i)
 {
-	u16 layerIndex             = unk60[i].unk0;
-	TPollutionManager* manager = gpPollution;
-	TPollutionLayer* layer     = manager->getLayer(layerIndex);
-	TPollutionObj* obj         = layer->getObj(unk60[i].unk2);
-	return obj;
+	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2);
 }
 
 bool TMapEventSink::isFinishedAll() const
@@ -140,12 +136,12 @@ void TMapEventSink::startControl()
 
 	J3DModel* model = unk1C->getActor()->getModel();
 	model->calc();
-	JGeometry::TVec3<f32> trans;
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
 	unk4C     = unk40;
 
-	trans.set(info.mTranslate.x, info.mTranslate.y, info.mTranslate.z);
+	JGeometry::TVec3<f32> trans(info.mTranslate.x, info.mTranslate.y,
+	                            info.mTranslate.z);
 	unk5C[mRaisingBuildingIdx]->setUpTrans(trans);
 }
 
@@ -185,10 +181,10 @@ void TMapEventSink::load(JSUMemoryInputStream& stream)
 		initBuilding(i, stream);
 	}
 
-	if (SMSGetMarDirector()->getCurrentMap() == 0) {
+	if (SMSGetMarDirector()->mMap == 0) {
 		mCleanedDegree = 30;
 		unk38          = 200.0f;
-	} else if (SMSGetMarDirector()->getCurrentMap() == 2) {
+	} else if (SMSGetMarDirector()->mMap == 2) {
 		mCleanedDegree = 30;
 	}
 }
@@ -246,11 +242,7 @@ void TMapEventSinkInPollution::loadAfter()
 
 TPollutionObj* TMapEventSinkInPollutionReset::getResetPollutionObj(int i)
 {
-	u16 layerIndex             = unk60[i].unk0;
-	TPollutionManager* manager = gpPollution;
-	TPollutionLayer* layer     = manager->getLayer(layerIndex);
-	TPollutionObj* obj         = layer->getObj(unk60[i].unk2 + 1);
-	return obj;
+	return gpPollution->getLayer(unk60[i].unk0)->getObj(unk60[i].unk2 + 1);
 }
 
 void TMapEventSinkInPollutionReset::makeBuildingRecovered(int i)
@@ -270,7 +262,6 @@ void TMapEventSinkInPollutionReset::loadAfter()
 	}
 }
 
-// TODO: Frame is 0xa0, not retail's 0xc0; recovery-call load order differs.
 void TMapEventSinkBianco::finishControl()
 {
 	char buffer[64];
@@ -347,10 +338,9 @@ void TMapEventSinkBianco::startControl()
 		SMS_ShowJoint(unk64->getMesh(), true);
 		SMS_MarioWarpRequest(unk6C, unk78);
 		unk50[mRaisingBuildingIdx].set(7170.0f, 3675.0f, -185.0f);
-		TMarDirector* director = SMSGetMarDirector();
-		director->fireStartDemoCamera("bianco0_event0", nullptr, -1, 0.0f, true,
-		                              nullptr, 0, nullptr,
-		                              JDrama::TFlagT<u16>(0));
+		SMSGetMarDirector()->fireStartDemoCamera(
+		    "bianco0_event0", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
+		    JDrama::TFlagT<u16>(0));
 	}
 }
 
@@ -366,7 +356,9 @@ bool TMapEventSinkBianco::watch()
 
 	for (int i = 1; i < mBuildingNum; ++i) {
 		if (!mIsBuildingRecovered[i]) {
-			if (getPollutionObj(i)->isCleaned()) {
+			if (gpPollution->getLayer(unk60[i].unk0)
+			        ->getObj(unk60[i].unk2)
+			        ->isCleaned()) {
 				mRaisingBuildingIdx = i;
 				return true;
 			}
@@ -376,7 +368,6 @@ bool TMapEventSinkBianco::watch()
 	return false;
 }
 
-// TODO: Frame-only mismatch: 0xd8 bytes versus retail's 0xf8.
 void TMapEventSinkBianco::loadAfter()
 {
 	TMapEventSinkInPollutionReset::loadAfter();
@@ -423,8 +414,9 @@ void TMapEventSinkShadowMario::loadAfter()
 	for (int i = 0; i < mBuildingNum; ++i) {
 		unk64[i] = static_cast<JDrama::TPlacement*>(
 		    JDrama::TNameRefGen::search(unk68[i]));
-		J3DJoint* joint = getBuilding(i)->getJoint();
-		unk64[i]->mPosition.y -= joint->getMax().y - joint->getMin().y;
+		TJointObj* obj = getBuilding(i);
+		unk64[i]->mPosition.y
+		    -= obj->getJoint()->getMax().y - obj->getJoint()->getMin().y;
 	}
 }
 

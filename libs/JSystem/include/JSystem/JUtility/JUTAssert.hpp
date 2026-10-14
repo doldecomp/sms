@@ -38,7 +38,7 @@ void setLogMessage_f_va(u32 device, char* file, int line, const char* fmt,
 }
 } // namespace JUTAssertion
 
-#ifdef DEBUG
+#ifndef NDEBUG
 
 // Asserts
 #define JUT_CONFIRM_MESSAGE(COND)                                              \

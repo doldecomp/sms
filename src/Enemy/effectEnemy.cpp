@@ -106,16 +106,15 @@ void TEffectEnemy::setDeadAnm()
 {
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_OFF,
 	                                            &mPosition, 0, nullptr);
-	if (SMSGetMSound()->gateCheck(MSD_SE_BS_WANWAN_TO_COOL))
-		MSoundSESystem::MSoundSE::startSoundActor(
-		    MSD_SE_BS_WANWAN_TO_COOL, getPosition(), 0, nullptr, 0, 4);
+	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+	                                nullptr, 0, 4);
 	onLiveFlag(LIVE_FLAG_UNK20000);
 }
 
 void TEffectEnemy::emitEffect()
 {
 	JGeometry::TVec3<f32> scale;
-	VECScale(&mScaling, &scale, mHitPoints / (u8)getMaxHitPoints());
+	VECScale(&mScaling, &scale, getHitPoints() / getMaxHitPoints());
 
 	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_MOE_FIRE_C,
 	                                            &mPosition, 3, this);

@@ -29,6 +29,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 TMario* gpMarioForCallBack;
 
@@ -399,67 +400,64 @@ BOOL TMarioAnimeData::isPumpOK() const
 	return TRUE;
 }
 
+// fabricated
+// TODO: get rid of me! there must be some other way
+static inline void calcMarioNormalHeadRotation(Mtx transform)
+{
+	if (gpMarioForCallBack->mStatus == MARIO_STATUS_WAIT) {
+		if (gpMarioForCallBack->isFeelDeep()) {
+			s16 headAngle
+			    = gpMarioForCallBack->mUpperBodyParams.mFeelDeepHeadAngle.get();
+			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
+			return;
+		} else if (gpMarioForCallBack->isWallInFront()) {
+
+			s16 headAngle = gpMarioForCallBack->mUpperBodyParams
+			                    .mFrontWallHeadAngle.get();
+			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
+			return;
+		}
+	}
+	TMario* mario                       = gpMarioForCallBack;
+	const JGeometry::TVec3<s16>& angles = mario->unkFC;
+	MsMtxSetRotRPH(transform, 0.0f,
+	               SHORTANGLE2DEG((s16)(-angles.z * mario->getHeadRot())),
+	               0.0f);
+	const TWaterGun* gun = gpMarioForCallBack->mWaterGun;
+	s16 gunAngle         = gun->getCurrentNozzle()->getGunAngle() / 2;
+	if (gunAngle < 0) {
+		Mtx gunMtx;
+		MsMtxSetRotRPH(gunMtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
+		MTXConcat(transform, gunMtx, transform);
+	}
+}
+
 static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 {
-	// volatile u32 padding[34];
+	// TODO: Nonmatching stack layout and register allocation.
 	Mtx transform;
 	if (param_2 == 0) {
 		if (gpMarioForCallBack->mStatus == MARIO_STATUS_READ_BILLBOARD) {
-			if (SMSGetMarDirector()->unkA0 == nullptr)
+			TBaseNPC* npc = SMSGetMarDirector()->unkA0;
+			if (npc == nullptr)
 				return 0;
 
-			JGeometry::TVec3<f32> npcFocalPoint
-			    = SMSGetMarDirector()->unkA0->getFocalPoint();
+			const JGeometry::TVec3<f32>& npcFocalPoint = npc->getFocalPoint();
 			JGeometry::TVec3<f32> pos;
-			pos.x = gpMarioForCallBack->mPosition.x;
-			pos.y = gpMarioForCallBack->mPosition.y + 112.0f;
-			pos.z = gpMarioForCallBack->mPosition.z;
+			gpMarioForCallBack->calcBodyPos(&pos);
 			JGeometry::TVec3<f32> other = npcFocalPoint - pos;
 
 			f32 mult = std::sqrtf(other.x * other.x + other.z * other.z);
 
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
-		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET) {
-			if (gpMarioForCallBack->mWaterGun->canSpray() == true) {
-
-				s16 headAngle = gpMarioForCallBack->mUpperBodyParams
-				                    .mHoverHeadAngle.get();
-				MsMtxSetRotRPH(transform, 0.0f, 0.0f,
-				               SHORTANGLE2DEG(headAngle));
-			}
-		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_WAIT
-		           && (gpMarioForCallBack->unk370
-		                       > gpMarioForCallBack->mDeParams.mFeelDeep.get()
-		                   ? true
-		                   : false)) {
+		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET
+		           && gpMarioForCallBack->mWaterGun->canSpray() == true) {
 			s16 headAngle
-			    = gpMarioForCallBack->mUpperBodyParams.mFeelDeepHeadAngle.get();
-			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
-		} else if (gpMarioForCallBack->isWallInFront()) {
-
-			s16 headAngle = gpMarioForCallBack->mUpperBodyParams
-			                    .mFrontWallHeadAngle.get();
+			    = gpMarioForCallBack->mUpperBodyParams.mHoverHeadAngle.get();
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
 		} else {
-
-			TMario* mario = gpMarioForCallBack;
-			f32 anmSpeed;
-			if (mario->fabricatedIsPumping()) {
-				anmSpeed = mario->mUpperBodyParams.mPumpAnmSpeed.get();
-			} else {
-				anmSpeed = mario->mDirtyParams.mSlipAnmSpeed.get();
-			}
-
-			s16 headAngle = mario->unk100 * anmSpeed;
-			MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(headAngle), 0.0f);
-			const TWaterGun* gun = gpMarioForCallBack->mWaterGun;
-			s16 gunAngle         = gun->getCurrentNozzle()->getGunAngle() / 2;
-			if (gunAngle < 0) {
-				Mtx gunMtx;
-				MsMtxSetRotRPH(gunMtx, 0.0f, 0.0f, SHORTANGLE2DEG(gunAngle));
-				MTXConcat(transform, gunMtx, transform);
-			}
+			calcMarioNormalHeadRotation(transform);
 		}
 
 		MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
@@ -472,13 +470,13 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 	volatile u32 padding[3];
 	if (param_2 == 0) {
 		TMario* mario = gpMarioForCallBack;
-		s16* unk      = &mario->unkFC; // This feels wrong
+		s16* unk      = &mario->unkFC.x; // This feels wrong
 		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
 			*unk = gpCamera->mCurrentTarget.mPitch;
 			Mtx transform;
-			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unk100), 0.0f,
+			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unkFC.z), 0.0f,
 			               SHORTANGLE2DEG(gpCamera->mCurrentTarget.mPitch));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
@@ -514,23 +512,21 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
-			*unk          = 0;
-			mario->unk100 = 0;
+			*unk           = 0;
+			mario->unkFC.z = 0;
 		}
 	}
 	return 1;
 }
 
-// UNUSED in mario.MAP, size 0x80; inlined by all four foot callbacks.
 static BOOL CheckMarioFootPosCtrl()
 {
 	if ((gpMarioForCallBack->mStatus & MARIO_STATUS_TYPE_MASK)
 	        == MARIO_STATUS_TYPE_WAITING
 	    && gpMarioForCallBack->mStatus != MARIO_STATUS_BRAKE_END
 	    && gpMarioForCallBack->onYoshi() == 0
-	    && !gpMarioForCallBack->isSleeping()) {
+	    && !gpMarioForCallBack->isSleeping())
 		return TRUE;
-	}
 	return FALSE;
 }
 
@@ -576,22 +572,18 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 			                              footMtx[2][3], &checkData);
 			if (!checkData->isIllegalData()) {
 
-				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir = { 0.0f, 0.0f, 0.0f };
-				currentMtxDir.x   = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y   = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z   = J3DSys::mCurrentMtx[2][0];
+				Vec currentMtxDir = (Vec) { J3DSys::mCurrentMtx[0][0],
+					                        J3DSys::mCurrentMtx[1][0],
+					                        J3DSys::mCurrentMtx[2][0] };
+				Vec normalDir     = (Vec) { -checkData->getNormal().x,
+					                        -checkData->getNormal().y,
+					                        -checkData->getNormal().z };
 
-				Vec normalDir = { 0.0f, 0.0f, 0.0f };
-				normalDir.x   = -checkData->getNormal().x;
-				normalDir.y   = -checkData->getNormal().y;
-				normalDir.z   = -checkData->getNormal().z;
-
-				Vec currentNormalCross1;
 				Vec currentNormalCross2;
+				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
 				                  &currentNormalCross1);
-				PSVECCrossProduct(&normalDir, &currentMtxDir,
+				PSVECCrossProduct(&normalDir, &currentNormalCross1,
 				                  &currentNormalCross2);
 				PSVECNormalize(&currentNormalCross1, &currentNormalCross1);
 				PSVECNormalize(&currentNormalCross2, &currentNormalCross2);
@@ -614,7 +606,7 @@ static int MarioFootDirRCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
@@ -668,22 +660,18 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 			                              footMtx[2][3], &checkData);
 			if (!checkData->isIllegalData()) {
 
-				// A lot of stuff is not matching with these copies
-				Vec currentMtxDir = { 0.0f, 0.0f, 0.0f };
-				currentMtxDir.x   = J3DSys::mCurrentMtx[0][0];
-				currentMtxDir.y   = J3DSys::mCurrentMtx[1][0];
-				currentMtxDir.z   = J3DSys::mCurrentMtx[2][0];
+				Vec currentMtxDir = (Vec) { J3DSys::mCurrentMtx[0][0],
+					                        J3DSys::mCurrentMtx[1][0],
+					                        J3DSys::mCurrentMtx[2][0] };
+				Vec normalDir     = (Vec) { -checkData->getNormal().x,
+					                        -checkData->getNormal().y,
+					                        -checkData->getNormal().z };
 
-				Vec normalDir = { 0.0f, 0.0f, 0.0f };
-				normalDir.x   = -checkData->getNormal().x;
-				normalDir.y   = -checkData->getNormal().y;
-				normalDir.z   = -checkData->getNormal().z;
-
-				Vec currentNormalCross1;
 				Vec currentNormalCross2;
+				Vec currentNormalCross1;
 				PSVECCrossProduct(&currentMtxDir, &normalDir,
 				                  &currentNormalCross1);
-				PSVECCrossProduct(&normalDir, &currentMtxDir,
+				PSVECCrossProduct(&normalDir, &currentNormalCross1,
 				                  &currentNormalCross2);
 				PSVECNormalize(&currentNormalCross1, &currentNormalCross1);
 				PSVECNormalize(&currentNormalCross2, &currentNormalCross2);
@@ -706,7 +694,7 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 				footMtx[0][1] = normalDir.x;
 				footMtx[1][1] = normalDir.y;
-				footMtx[2][1] = normalDir.z;
+				footMtx[2][2] = normalDir.z;
 
 				footMtx[0][2] = currentNormalCross1.x;
 				footMtx[1][2] = currentNormalCross1.y;
@@ -720,7 +708,13 @@ static int MarioFootDirLCtrl(J3DNode* param_1, int param_2)
 
 void TMario::getJumpIntoWaterModelData() { }
 
-void TMario::getHeadRot() { }
+f32 TMario::getHeadRot()
+{
+	if (fabricatedIsPumping())
+		return mBodyAngleParamsWaterGun.mHeadRot.get();
+	else
+		return mBodyAngleParamsFree.mHeadRot.get();
+}
 
 Mtx* TMario::getRootAnmMtx() { return (Mtx*)mModel->getModel()->getAnmMtx(0); }
 
@@ -812,9 +806,17 @@ u32 TMario::getTrampleCt()
 	return 0;
 }
 
+void TMario::calcBodyPos(JGeometry::TVec3<f32>* pos)
+{
+	*pos = mPosition;
+	pos->y += 112.0f;
+}
+
 MtxPtr TMario::getTakingMtx() { return getRootAnmMtx()[mJointIdHandR]; }
 
 MtxPtr TMario::getTakenMtx() { return mModel->unk8->getBaseTRMtx(); }
+
+MtxPtr TMario::getRailMtx() const { }
 
 f32 TMario::getCurrentFrame(int idx)
 {
@@ -896,6 +898,19 @@ void TMario::changeHand(int idx)
 	}
 
 	flagOnAllShapes(mRHand4ndModel->getModelData(), J3DShpFlag_Visible);
+}
+
+void TMario::changeHandByRate(f32 rate)
+{
+	if (rate < 0.3f) {
+		changeHand(2);
+	}
+	if (0.3f <= rate && rate <= 0.7f) {
+		changeHand(1);
+	}
+	if (0.7f < rate) {
+		changeHand(0);
+	}
 }
 
 f32 TMario::setAnimation(int anm_id, f32 rate)
@@ -1072,7 +1087,6 @@ void TMario::loadAnmTexPattern(J3DAnmTexPattern** param_1, char* param_2,
 	(*param_1)->searchUpdateMaterialID(param_3);
 }
 
-// TODO: animation-table registers and stack layout differ.
 void TMario::initModel()
 {
 	unk394         = new J3DDrawBuffer(0x20);
@@ -1181,8 +1195,8 @@ void TMario::initModel()
 	for (int i = 0; i < 0x18; ++i) {
 		loadAnmTexPattern(&anmTexPattern[i], marioAnimeTexPatternFilenames[i],
 		                  mBodyModelData);
-		anmTexNoAnm[i]
-		    = new J3DTexNoAnm[anmTexPattern[i]->getUpdateMaterialNum()];
+		u16 matCount   = anmTexPattern[i]->getUpdateMaterialNum();
+		anmTexNoAnm[i] = new J3DTexNoAnm[matCount];
 
 		for (int j = 0; j < anmTexPattern[i]->getUpdateMaterialNum(); ++j) {
 			anmTexNoAnm[i][j].setAnmIndex(j);
@@ -1259,7 +1273,21 @@ void TMario::initModel()
 
 	mModel->unk8->calc();
 
-	calcAnimHands();
+	if (mHandModels[0][0] != nullptr) {
+		// Possibly inline since this exact same thing exists in
+		// TMario::calcAnim
+		mHandModels[0][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[0][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mHandModels[1][0]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+		mHandModels[1][1]->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandL));
+		mRHand4ndModel->setBaseTRMtx(mModel->unk8->getAnmMtx(mJointIdHandR));
+
+		mHandModels[0][0]->calc();
+		mHandModels[0][1]->calc();
+		mHandModels[1][0]->calc();
+		mHandModels[1][1]->calc();
+		mRHand4ndModel->calc();
+	}
 
 	mSurfGesso = nullptr;
 	if (SMSGetMarDirector()->mMap == 58
@@ -1484,67 +1512,80 @@ void TMario::considerWaist()
 	mWaistRoll += angleChangeRate * (targetRoll - mWaistRoll);
 }
 
+void TMario::calcBaseMtxTorocco(MtxPtr mtx)
+{
+	if (mRailType == 0) {
+		mPinaRail->calcAnm();
+		MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
+		        mTorocco->getModel()->getBaseTRMtx());
+	}
+	if (mRailType == 1) {
+		mKoopaRail->calcAnm();
+		MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
+		        mTorocco->getModel()->getBaseTRMtx());
+	}
+
+	mTorocco->calcAnm();
+	Mtx transform;
+	MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(mToroccoAngle), 0.0f);
+	MTXConcat(mTorocco->getModel()->getAnmMtx(2), transform, mtx);
+
+	mToroccoPos = mPosition;
+	mPosition.x = mtx[0][3];
+	mPosition.y = mtx[1][3];
+	mPosition.z = mtx[2][3];
+}
+void TMario::calcBaseMtxPole(MtxPtr mtx)
+{
+	J3DTransformInfo ti;
+	ti.mScale.x     = 1.0f;
+	ti.mScale.y     = 1.0f;
+	ti.mScale.z     = 1.0f;
+	ti.mRotation.x  = 0;
+	ti.mRotation.y  = mModelFaceAngle;
+	ti.mRotation.z  = 0;
+	f32 radiusAtY   = mHolder->getRadiusAtY(mPosition.y);
+	ti.mTranslate.x = mPosition.x - (radiusAtY * JMASSin(mModelFaceAngle));
+	ti.mTranslate.y = mPosition.y;
+	ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
+	J3DGetTranslateRotateMtx(ti, mtx);
+}
+void TMario::calcBaseMtxSwim(MtxPtr mtx)
+{
+	J3DTransformInfo ti;
+	ti.mScale.x     = 1.0f;
+	ti.mScale.y     = 1.0f;
+	ti.mScale.z     = 1.0f;
+	ti.mRotation.x  = 0;
+	ti.mRotation.y  = mModelFaceAngle;
+	ti.mRotation.z  = 0;
+	ti.mTranslate.x = mPosition.x;
+	ti.mTranslate.y = mPosition.y;
+	ti.mTranslate.z = mPosition.z;
+	ti.mTranslate.y
+	    += gpMapObjWave->getHeight(mPosition.x, mFloorPosition.z, mPosition.z)
+	       - mFloorPosition.z;
+	J3DGetTranslateRotateMtx(ti, mtx);
+}
+
 void TMario::calcBaseMtx(MtxPtr mtx)
 {
 	if (mStatus == MARIO_STATUS_TOROCCO) {
-		if (mRailType == 0) {
-			mPinaRail->calcAnm();
-			MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-			        mTorocco->getModel()->getBaseTRMtx());
-		}
-		if (mRailType == 1) {
-			mKoopaRail->calcAnm();
-			MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-			        mTorocco->getModel()->getBaseTRMtx());
-		}
-
-		mTorocco->calcAnm();
-		Mtx transform;
-		MsMtxSetRotRPH(transform, 0.0f, SHORTANGLE2DEG(mToroccoAngle), 0.0f);
-		MTXConcat(mTorocco->getModel()->getAnmMtx(2), transform, mtx);
-
-		mToroccoPos = mPosition;
-		mPosition.x = mtx[0][3];
-		mPosition.y = mtx[1][3];
-		mPosition.z = mtx[2][3];
+		calcBaseMtxTorocco(mtx);
 		return;
 	}
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK100000)) {
-		J3DTransformInfo ti;
-		ti.mScale.x     = 1.0f;
-		ti.mScale.y     = 1.0f;
-		ti.mScale.z     = 1.0f;
-		ti.mRotation.x  = 0;
-		ti.mRotation.y  = mModelFaceAngle;
-		ti.mRotation.z  = 0;
-		f32 radiusAtY   = mHolder->getRadiusAtY(mPosition.y);
-		ti.mTranslate.x = mPosition.x - (radiusAtY * JMASSin(mModelFaceAngle));
-		ti.mTranslate.y = mPosition.y;
-		ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
-		J3DGetTranslateRotateMtx(ti, mtx);
-		return;
-	}
-
-	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
-		J3DTransformInfo ti;
-		ti.mScale.x     = 1.0f;
-		ti.mScale.y     = 1.0f;
-		ti.mScale.z     = 1.0f;
-		ti.mRotation.x  = 0;
-		ti.mRotation.y  = mModelFaceAngle;
-		ti.mRotation.z  = 0;
-		ti.mTranslate.x = mPosition.x;
-		ti.mTranslate.y = mPosition.y;
-		ti.mTranslate.z = mPosition.z;
-		ti.mTranslate.y += gpMapObjWave->getHeight(
-		                       mPosition.x, mFloorPosition.z, mPosition.z)
-		                   - mFloorPosition.z;
-		J3DGetTranslateRotateMtx(ti, mtx);
+		calcBaseMtxPole(mtx);
 		return;
 	}
 
 	// Swimming
+	if (checkStatusType(MARIO_STATUS_FLAG_SWIMMING)) {
+		calcBaseMtxSwim(mtx);
+		return;
+	}
+
 	if (mHolder != nullptr && mHolder->getTakingMtx() != nullptr) {
 		MTXCopy(mHolder->getTakingMtx(), mtx);
 		return;
@@ -1591,7 +1632,7 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 		v2.sub(p3, p2);
 
 		JGeometry::TVec3<f32> cross;
-		cross.cross(v2, v1);
+		cross.cross2(v2, v1);
 		cross.normalize();
 
 		f32 d = cross.dot(p1);
@@ -1607,19 +1648,19 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 
 		JGeometry::TVec3<f32> bin;
 		bin.cross(axis, ncross);
-		MsVECNormalize(&bin, &bin);
+		MsVECNormalize(&ncross, &ncross);
 
 		mtx[0][0] = axis.x;
 		mtx[0][1] = ncross.x;
-		mtx[0][2] = bin.z;
+		mtx[0][2] = bin.x;
 		mtx[0][3] = mPosition.x;
 		mtx[1][0] = axis.y;
 		mtx[1][1] = ncross.y;
-		mtx[1][2] = bin.x;
+		mtx[1][2] = bin.y;
 		mtx[1][3] = (avgY < mPosition.y) ? mPosition.y : avgY;
 		mtx[2][0] = axis.z;
 		mtx[2][1] = ncross.z;
-		mtx[2][2] = bin.y;
+		mtx[2][2] = bin.z;
 		mtx[2][3] = mPosition.z;
 		(void)d;
 	} else {
@@ -1638,55 +1679,53 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
 		if (mGroundPlane->isWaterSurface()) {
-			// Use water-side surf params
-			s16 rMax = mSurfingParamsWaterRed.mPitchMax.get();
-			s16 pMax = mSurfingParamsWaterRed.mPitchMax.get();
+			s16 pitchMax = mSurfingParamsWaterRed.mPitchMax.get();
 
-			f32 rollScale  = mSurfingParamsWaterRed.mPitch.get();
-			f32 pitchScale = mSurfingParamsWaterRed.mWaistRoll.get();
+			s16 pitch
+			    = (s16)(mForwardVel * mSurfingParamsWaterRed.mPitch.get());
+			s16 delta   = mFaceAngle.y - unk9C;
+			s16 roll    = (s16)((f32)delta * mForwardVel
+                             * mSurfingParamsWaterRed.mRoll.get());
+			s16 rollMax = mSurfingParamsWaterRed.mRollMax.get();
+			if (pitch > pitchMax)
+				pitch = pitchMax;
+			if (pitch < -pitchMax)
+				pitch = -pitchMax;
 
-			s16 limitR = (s16)(mForwardVel * rollScale);
-			s16 delta  = mFaceAngle.y - unk9C;
-			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
-			if (limitR > rMax)
-				limitR = rMax;
-			if (-rMax > limitR)
-				limitR = -rMax;
+			if (roll > rollMax)
+				roll = rollMax;
+			if (roll < -rollMax)
+				roll = -rollMax;
 
-			if (limitP > pMax)
-				limitP = pMax;
-			if (limitP < -pMax)
-				limitP = -pMax;
-
-			unk414.y = ((f32)limitR - unk414.y)
+			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
 			           + unk414.y;
-			unk414.x = ((f32)limitP - unk414.x)
+			unk414.x = ((f32)roll - unk414.x)
 			               * mSurfingParamsWaterRed.mAngleChangeRate.get()
 			           + unk414.x;
 		} else {
-			// Use ground-side surf params
-			s16 rMax       = mSurfingParamsGroundRed.mRollMax.get();
-			s16 pMax       = mSurfingParamsGroundRed.mPitchMax.get();
-			f32 rollScale  = mSurfingParamsGroundRed.mWaistRoll.get();
-			f32 pitchScale = mSurfingParamsGroundRed.mPitch.get();
+			s16 pitchMax = mSurfingParamsGroundRed.mPitchMax.get();
 
-			s16 limitR = (s16)(mForwardVel * rollScale);
-			s16 delta  = mFaceAngle.y - unk9C;
-			s16 limitP = (s16)((f32)delta * mForwardVel * pitchScale);
-			if (limitR > rMax)
-				limitR = rMax;
-			if (limitR < -rMax)
-				limitR = -rMax;
-			if (limitP > pMax)
-				limitP = pMax;
-			if (limitP < -pMax)
-				limitP = -pMax;
+			s16 pitch
+			    = (s16)(mForwardVel * mSurfingParamsGroundRed.mPitch.get());
+			s16 delta   = mFaceAngle.y - unk9C;
+			s16 roll    = (s16)((f32)delta * mForwardVel
+                             * mSurfingParamsGroundRed.mRoll.get());
+			s16 rollMax = mSurfingParamsGroundRed.mRollMax.get();
+			if (pitch > pitchMax)
+				pitch = pitchMax;
+			if (pitch < -pitchMax)
+				pitch = -pitchMax;
 
-			unk414.y = ((f32)limitR - unk414.y)
+			if (roll > rollMax)
+				roll = rollMax;
+			if (roll < -rollMax)
+				roll = -rollMax;
+
+			unk414.y = ((f32)pitch - unk414.y)
 			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
 			           + unk414.y;
-			unk414.x = ((f32)limitP - unk414.x)
+			unk414.x = ((f32)roll - unk414.x)
 			               * mSurfingParamsGroundRed.mAngleChangeRate.get()
 			           + unk414.x;
 		}
@@ -1721,7 +1760,15 @@ void TMario::calcBaseMtx(MtxPtr mtx)
 	MTXConcat(mtx, unk318, mtx);
 }
 
-// UNUSED in mario.MAP, size 0x148; shared by initModel and calcAnim.
+void TMario::calcAnimBody(u32 cue, JDrama::TGraphics* graphics)
+{
+	Mtx baseMtx;
+	calcBaseMtx(baseMtx);
+	considerWaist();
+	MTXCopy(baseMtx, mModel->unk8->getBaseTRMtx());
+	mModel->perform(cue, graphics);
+}
+
 void TMario::calcAnimHands()
 {
 	if (mHandModels[0][0] != nullptr) {
@@ -1866,15 +1913,8 @@ void TMario::addUpper()
 	}
 }
 
-void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
+void TMario::removeCallBack()
 {
-	addCallBack(graphics);
-	addUpper();
-	Mtx baseMtx;
-	calcBaseMtx(baseMtx);
-	considerWaist();
-	MTXCopy(baseMtx, mModel->unk8->getBaseTRMtx());
-	mModel->perform(param_1, graphics);
 	gpMarioForCallBack = nullptr;
 
 	J3DModelData* modelData = mModel->unk8->getModelData();
@@ -1884,6 +1924,14 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	modelData->getJointNodePointer(mJointIdFootR)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdChnFootL)->setCallBack(nullptr);
 	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
+}
+
+void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
+{
+	addCallBack(graphics);
+	addUpper();
+	calcAnimBody(param_1, graphics);
+	removeCallBack();
 
 	calcAnimHands();
 
@@ -1918,16 +1966,7 @@ void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
 	}
 
 	if (mStatus == MARIO_STATUS_RUN && mAnimationId != ANIM_SSTEP) {
-		f32 blendRatio = unk414.z;
-		if (blendRatio < 0.3f) {
-			changeHand(2);
-		}
-		if (0.3f <= blendRatio && blendRatio <= 0.7f) {
-			changeHand(1);
-		}
-		if (0.7f < blendRatio) {
-			changeHand(0);
-		}
+		changeHandByRate(unk414.z);
 	}
 
 	if (mAnimationId == ANIM_DEMO_GATE_OUT_GET2) {
@@ -2060,7 +2099,7 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 	f32 psave[7];
 	GXGetProjectionv(psave);
 
-	f32 wpsave[6];
+	f32 wpsave[5];
 	GXGetViewportv(wpsave);
 
 	JGeometry::TVec3<f32> pos = mPosition;
@@ -2211,3 +2250,6 @@ void TMario::addDamageFog(JDrama::TGraphics* graphics)
 		}
 	}
 }
+
+// TODO: UNUSED; no inline call site identified in this TU.
+void TMario::thinkDashEffect() { }

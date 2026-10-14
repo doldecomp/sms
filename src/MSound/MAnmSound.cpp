@@ -75,19 +75,13 @@ void MAnmSound::setSpeedModifySound(JAISound* sound,
 		JAIAnimeSound::setSpeedModifySound(sound, frame_data, speed);
 }
 
-// TODO: fabricated distance boundary; keeps sqrtf out of line in the NPC call.
-static f32 vec_dist(const Vec& pos, const Vec& mario)
-{
-	f32 dy = std::powf(pos.y - mario.y, 2.0f);
-	f32 dx = std::powf(pos.x - mario.x, 2.0f);
-	f32 dz = std::powf(pos.z - mario.z, 2.0f);
-	return std::sqrtf(dx + dy + dz);
-}
-
 f32 MSMarioPosVolume::getDistFromMario(const Vec& pos)
 {
 	if (MSGMSound->cameraLooksAtMario()) {
-		return vec_dist(pos, *MSGMSound->unkAC[0].mPosition);
+		const Vec* mario = MSGMSound->unkAC[0].mPosition;
+		return std::sqrtf(std::powf(pos.x - mario->x, 2.0f)
+		                  + std::powf(pos.y - mario->y, 2.0f)
+		                  + std::powf(pos.z - mario->z, 2.0f));
 	}
 
 	return 0.0f;

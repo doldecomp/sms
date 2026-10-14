@@ -612,7 +612,7 @@ void TBossGesso::init(TLiveManager* param_1)
 
 	reset();
 
-	mHitPoints = getSaveParams() ? getSaveParams()->mSLHitPointMax.get() : 1;
+	resetHitPoints();
 
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	getMActor()->offMakeDL();
@@ -644,10 +644,9 @@ void TBossGesso::rumblePad(int param_1, const JGeometry::TVec3<f32>& param_2)
 	if (!SMS_IsMarioTouchGround4cm())
 		return;
 
-	f32 fVar2;
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= param_2;
-	fVar2     = delta.length();
+	f32 fVar2 = delta.length();
 	f32 fVar1 = (3000.0f - fVar2) / 1000.0f;
 
 	if (fVar1 < 0.0f)
@@ -762,20 +761,10 @@ void TBossGesso::changeAttackMode(int new_mode)
 	mAttackMode              = new_mode;
 	mTimeInCurrentAttackMode = 0;
 	switch (mAttackMode) {
-	case ASTATE_SINGLE:
-	case ASTATE_DOUBLE:
-	case ASTATE_SKIP_ROPE:
+	case ASTATE_GUARD:
+		// TODO: wrong, this should only use 2 tentacles, not all
+		changeAllTentacleState(10);
 		break;
-
-	case ASTATE_GUARD: {
-		static int idx[] = { 1, 3 };
-		for (int i = 0; i < 2; ++i) {
-			TBGTentacle* tentacle = mTentacles[idx[i]];
-			if (!tentacle->isThing())
-				tentacle->changeStateAndFixNodes(10);
-		}
-		break;
-	}
 
 	case ASTATE_UNISON:
 		changeAllTentacleState(0);
@@ -838,8 +827,7 @@ void TBossGesso::gotBeakDamage()
 	if (mSpine->getLatestNerve() == &TNerveBGTentacleDamage::theNerve())
 		return;
 
-	if (mHitPoints > 0)
-		--mHitPoints;
+	decHitPoints();
 
 	if (mHitPoints == 0) {
 		mSpine->setNext(&TNerveBGDie::theNerve());
@@ -959,7 +947,7 @@ void TBossGesso::doAttackSingle()
 		static const int idxarray[] = { 1, 3 };
 		TBGTentacle* tentacle       = mTentacles[idxarray[i]];
 
-		if (inSightAngle(getSaveParams()->mSLSightAngle.get() * 0.5f)
+		if (inSightAngle(getSaveParams()->mSLSightAngle.get())
 		    && tentacle->mState == 0) {
 			JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 			delta -= tentacle->getFirstNode()->getPosition();
@@ -1851,29 +1839,29 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 
 		self->getMActor()->resetDL();
 
-		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
+		if (SMSGetMarDirector()->mMap == 3 || SMSGetMarDirector()->mMap == 59) {
 			MSBgm::stopTrackBGMs(7, 10);
 			MSMainProc::setBossLivesFlag(false);
-		} else if (gpMarDirector->mMap == 9) {
+		} else if (SMSGetMarDirector()->mMap == 9) {
 			MSBgm::stopTrackBGM(1, 10);
 			MSMainProc::setBossLivesFlagOnlyFlag(false);
 		}
 
-		if (gpMarDirector->mMap == 9) {
-			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera3", nullptr,
-			                                   -1, 0.0f, true, nullptr, 0,
-			                                   nullptr, JDrama::TFlagT<u16>(0));
-		} else if (gpMarDirector->unk7D == 4 ? true : false) {
-			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera2", nullptr,
-			                                   -1, 0.0f, true, nullptr, 0,
-			                                   nullptr, JDrama::TFlagT<u16>(0));
+		if (SMSGetMarDirector()->mMap == 9) {
+			SMSGetMarDirector()->fireStartDemoCamera(
+			    "bgeso_fall_camera3", nullptr, -1, 0.0f, true, nullptr, 0,
+			    nullptr, JDrama::TFlagT<u16>(0));
+		} else if (SMSGetMarDirector()->unk7D == 4) {
+			SMSGetMarDirector()->fireStartDemoCamera(
+			    "bgeso_fall_camera2", nullptr, -1, 0.0f, true, nullptr, 0,
+			    nullptr, JDrama::TFlagT<u16>(0));
 		} else {
-			gpMarDirector->fireStartDemoCamera("bgeso_fall_camera", nullptr, -1,
-			                                   0.0f, true, nullptr, 0, nullptr,
-			                                   JDrama::TFlagT<u16>(0));
+			SMSGetMarDirector()->fireStartDemoCamera(
+			    "bgeso_fall_camera", nullptr, -1, 0.0f, true, nullptr, 0,
+			    nullptr, JDrama::TFlagT<u16>(0));
 		}
 
-		if (gpMarDirector->mMap == 3 || gpMarDirector->mMap == 59) {
+		if (SMSGetMarDirector()->mMap == 3 || SMSGetMarDirector()->mMap == 59) {
 			gpItemManager->makeShineAppearWithDemo(
 			    "シャイン（ボス用）", "ボスシャインカメラ", self->mPosition.x,
 			    self->mPosition.y + 6000.0f, self->mPosition.z);
@@ -1888,7 +1876,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
-	if (gpMarDirector->mMap == 9 && spine->getTime() >= 740
+	if (SMSGetMarDirector()->mMap == 9 && spine->getTime() >= 740
 	    && spine->getTime() <= 750) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &self->mPosition, 0,
 		                                nullptr, 0, 4);
@@ -1928,7 +1916,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (self->isReachedToGoal() && gpMarDirector->unk124 != 3) {
+	if (self->isReachedToGoal() && SMSGetMarDirector()->unk124 != 3) {
 
 		self->changeAllTentacleState(0);
 		self->kill();

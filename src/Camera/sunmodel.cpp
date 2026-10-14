@@ -149,11 +149,9 @@ void TSunModel::calcDispRatioAndScreenPos_()
 {
 	unk191   = 0;
 	bool* it = unk180;
-	for (int i = 17; i != 0; --i) {
+	for (int i = 0; i < 17; ++i, ++it)
 		if (*it)
 			unk191 += 1;
-		++it;
-	}
 
 	unk194 = (f32)unk191 * (1.0f / 17.0f);
 
@@ -184,7 +182,11 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 	if (gpCameraMario->isMarioIndoor()) {
 		sunInBounds = false;
 	} else {
-		sunInBounds = isInBounds(unk1A8);
+		f32 bounds  = unk1A8;
+		sunInBounds = -bounds <= unkF8[0].x && unkF8[0].x <= bounds
+		                      && -bounds <= unkF8[0].y && unkF8[0].y <= bounds
+		                  ? true
+		                  : false;
 	}
 
 	if (cue & CUE_MOVE) {

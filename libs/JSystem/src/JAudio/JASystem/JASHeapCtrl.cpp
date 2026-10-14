@@ -34,7 +34,7 @@ namespace Kernel {
 
 	void THeap::selfInit(u32, u32, u32) { }
 
-	BOOL THeap::selfAlloc(THeap* param_1, u32 param_2, u32 param_3)
+	BOOL THeap::selfAlloc(THeap* param_1, u32 param_2, uintptr_t param_3)
 	{
 		if (mBase != 0 && mBase != (u8*)0xffffffff)
 			return 0;
@@ -83,7 +83,7 @@ namespace Kernel {
 
 	void THeap::cutDown() { }
 
-	void THeap::initMotherHeap(u32 param_1, u32 param_2, u8 param_3)
+	void THeap::initMotherHeap(uintptr_t param_1, u32 param_2, u8 param_3)
 	{
 		mBase = (u8*)ALIGN_NEXT(param_1, 0x20);
 		unkC  = 0;

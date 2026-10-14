@@ -157,7 +157,8 @@ BOOL TMario::downLoser()
 
 BOOL TMario::warpIn()
 {
-	// TODO: vector result storage and the final squared-length FMA differ.
+	// Missing stack space
+	// volatile u32 padding[10];
 	mStatusTimer += 1;
 	const JGeometry::TVec3<f32>& gatePosOffset = ((TModelGate*)mHolder)->unkAC;
 	JGeometry::TVec3<f32> holderPosOffset(((TModelGate*)mHolder)->unkAC);
@@ -168,17 +169,17 @@ BOOL TMario::warpIn()
 			if (onYoshi() != FALSE) {
 				getOffYoshi(true);
 			}
-			TModelGate* gate    = (TModelGate*)mHolder;
-			const MActor* actor = gate->unk78;
-			MtxPtr nodeMatrix   = actor->getModel()->getAnmMtx(gate->unk72);
-			mWarpInDir.x        = nodeMatrix[0][3] - gatePosOffset.x;
-			mWarpInDir.y        = nodeMatrix[1][3] - gatePosOffset.y;
-			mWarpInDir.z        = nodeMatrix[2][3] - gatePosOffset.z;
+			TModelGate* gate  = (TModelGate*)mHolder;
+			MtxPtr nodeMatrix = gate->unk78->getModel()->getAnmMtx(gate->unk72);
+			mWarpInDir.x      = nodeMatrix[0][3] - gatePosOffset.x;
+			mWarpInDir.y      = nodeMatrix[1][3] - gatePosOffset.y;
+			mWarpInDir.z      = nodeMatrix[2][3] - gatePosOffset.z;
 			mWarpInDir.normalize();
 			warpInLight();
 
-			u8 nextStage = 2;
-			switch (((TModelGate*)mHolder)->unk71) {
+			u8 nextStage   = 2;
+			u8 destination = ((TModelGate*)mHolder)->unk71;
+			switch (destination) {
 			case 0:
 				nextStage = 2;
 				break;
@@ -189,20 +190,19 @@ BOOL TMario::warpIn()
 				nextStage = 4;
 				break;
 			}
-			gpMarDirector->setNextStage(nextStage, mHolder);
+			SMSGetMarDirector()->setNextStage(nextStage, mHolder);
 		}
 
 		onUnk114(UNK114_FLAG_VISIBLE);
 		J3DFrameCtrl& frameCtrl = getMotionFrameCtrl();
 		frameCtrl.setRate(0.0f);
 
+		// Possibly TVec3 inaccuracies?
 		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
-		Vec marioDistCopy               = marioDist;
 		mPosition                       = mPosition + marioDist * 0.02f;
 
-		JGeometry::TVec3<f32> distanceVec(marioDistCopy);
-		f32 dist = mAutoDemoParams.mWarpInTremble.get()
-		           - distanceVec.length() * 0.1f;
+		f32 dist
+		    = mAutoDemoParams.mWarpInTremble.get() - marioDist.length() * 0.1f;
 		if (dist > 0.0f) {
 			mTrembleModelEffect->clash(dist);
 		}

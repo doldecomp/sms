@@ -46,7 +46,7 @@ void TLiveManager::clipActorsAux(JDrama::TGraphics* graphics, f32 clip_far,
 	                                   graphics->getNearPlane(), clip_far);
 
 	for (int i = 0; i < mObjNum; ++i) {
-		TLiveActor* actor = getObj(i);
+		TLiveActor* actor = (TLiveActor*)getObj(i);
 		if (!actor->checkLiveFlag(LIVE_FLAG_ENABLE_CLIPPING)) {
 			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
@@ -74,7 +74,7 @@ void TLiveManager::clipActors(JDrama::TGraphics* param_1)
 void TLiveManager::setFlagOutOfCube()
 {
 	for (int i = 0; i < getObjNum(); ++i) {
-		TLiveActor* actor         = getObj(i);
+		TLiveActor* actor         = (TLiveActor*)getObj(i);
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 		if (gpCubeArea->isInAreaCube(pos))
@@ -102,7 +102,7 @@ void TLiveManager::perform(u32 cue, JDrama::TGraphics* graphics)
 const TLiveActor* TLiveManager::getActorByFlag(u32 flag) const
 {
 	for (int i = 0; i < mObjNum; ++i) {
-		const TLiveActor* actor = getObj(i);
+		TLiveActor* actor = (TLiveActor*)getObj(i);
 		if (actor->checkLiveFlag(flag))
 			return actor;
 	}
@@ -114,5 +114,5 @@ BOOL TLiveManager::hasMapCollision() const
 	if (mObjNum == 0)
 		return false;
 
-	return getObj(0)->hasMapCollision();
+	return ((TLiveActor*)getObj(0))->hasMapCollision();
 }

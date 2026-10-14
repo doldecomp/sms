@@ -86,7 +86,7 @@ void TMameGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	for (int i = 0; i < mObjNum; i++) {
 		if (!(cue & CUE_MOVE))
 			continue;
-		TMameGesso* gesso = (TMameGesso*)TSmallEnemyManager::getObj(i);
+		TMameGesso* gesso = getObj(i);
 		if (gesso->checkLiveFlag(LIVE_FLAG_DEAD) && gesso->unk1D2) {
 			gesso->unk1CC += 1;
 			if (gesso->unk1CC > gesso->unk194->mSLGenerateInterval.get()) {
@@ -287,22 +287,35 @@ void TMameGesso::calcObjCollision()
 	f32 scale = unk194->mSLCollisionScale.get();
 	scale *= getAttackRadius() * getBodyScale();
 
+	MtxPtr mtx = mMActor->getModel()->getAnmMtx(1);
 	JGeometry::TVec3<f32> pos;
-	MtxPtr mtx = getMActor()->getModel()->getAnmMtx(1);
-	pos.x      = mtx[0][3];
-	pos.y      = mtx[1][3];
-	pos.z      = mtx[2][3];
+	pos.x = mtx[0][3];
+	pos.y = mtx[1][3];
+	pos.z = mtx[2][3];
 
 	static const f32 xzTable[8] = {
 		1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
 	};
 
-	for (int i = 0; i < 4; i++) {
-		unk19C[i] = pos;
-		unk19C[i].y += 90.0f;
-		unk19C[i].x += scale * xzTable[2 * i];
-		unk19C[i].z += scale * xzTable[2 * i + 1];
-	}
+	unk19C[0] = pos;
+	unk19C[0].y += 90.0f;
+	unk19C[0].x += scale * xzTable[0];
+	unk19C[0].z += scale * xzTable[1];
+
+	unk19C[1] = pos;
+	unk19C[1].y += 90.0f;
+	unk19C[1].x += scale * xzTable[2];
+	unk19C[1].z += scale * xzTable[3];
+
+	unk19C[2] = pos;
+	unk19C[2].y += 90.0f;
+	unk19C[2].x += scale * xzTable[4];
+	unk19C[2].z += scale * xzTable[5];
+
+	unk19C[3] = pos;
+	unk19C[3].y += 90.0f;
+	unk19C[3].x += scale * xzTable[6];
+	unk19C[3].z += scale * xzTable[7];
 }
 
 void TMameGesso::entryObjCollision()
@@ -325,7 +338,6 @@ void TMameGesso::checkMarioState() { }
 
 const char** TMameGesso::getBasNameTable() const { return mameGesso_bastable; }
 
-// TODO: nonmatching frame (0xf8 vs 0xe8); recover inline stack ownership.
 DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
@@ -382,12 +394,9 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	}
 
 	if (self->unk1EC != 0) {
-		if (self->isReachedToGoal()) {
-			if (!self->isAirborne()
-			    || self->getGroundPlane()->isWaterSurface()) {
-				// This guarded branch has no side effects in retail.
-			}
-		} else {
+		// TODO: one more condition that is kind of like
+		// mGroundPlane->isWaterSurface() but not really
+		if (!self->isReachedToGoal() || self->isAirborne()) {
 			if (!self->isAirborne())
 				self->walkBehavior(2, 1.0f);
 			else
@@ -459,16 +468,6 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 	return false;
 }
 
-// fabricated: follows walkerEnemy.cpp's distance helper; the inline boundary
-// preserves the sqrt call and vector stack ownership in Jitabata.
-static inline f32 dist(const JGeometry::TVec3<f32>& a,
-                       const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> diff = a;
-	diff.sub(b);
-	return diff.length();
-}
-
 DEFINE_NERVE(TNerveMameGessoJitabata, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
@@ -481,8 +480,9 @@ DEFINE_NERVE(TNerveMameGessoJitabata, TLiveActor)
 				if (spine->getTime() > self->unk194->mSLFreezeWait.get())
 					self->setBckAnm(5);
 			} else if (self->isBckAnm(5)) {
-				const JGeometry::TVec3<f32>& goalPos = self->unk104.getPoint();
-				if (dist(goalPos, self->mPosition) > 300.0f)
+				// TODO: operator- inline is wrong here, too much stack frame
+				if ((self->unk104.getPoint() - self->getPosition()).length()
+				    > 300.0f)
 					self->unk1EC = 0;
 
 				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
@@ -650,21 +650,4 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 	}
 
 	return false;
-}
-
-// @todo: .sdata2 prefix @2884 through @3460 in mameGesso.cpp.
-// Extra weak-inline constants otherwise displace calcObjCollision's floats.
-void order_sdata2(f32* constants)
-{
-	constants[0]  = 2.5f;
-	constants[1]  = 0.0f;
-	constants[2]  = 80.0f;
-	constants[3]  = 1.0f;
-	constants[4]  = 2.0f;
-	constants[5]  = 300.0f;
-	constants[6]  = 0.5f;
-	constants[7]  = 26.0f;
-	constants[8]  = 10.0f;
-	constants[9]  = 50.0f;
-	constants[10] = 90.0f;
 }

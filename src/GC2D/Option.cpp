@@ -15,11 +15,14 @@
 #include <GC2D/ExPane.hpp>
 #include <Camera/CameraOption.hpp>
 #include <Player/MarioAccess.hpp>
-#include <System/DummyStrings.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+
+// TODO: get rid of this
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 namespace {
 
@@ -129,7 +132,7 @@ void TArrowControl::updateAlpha()
 	    JGeometry::TUtil<s32>::clamp(iVar3 * 8 + mPane->getAlpha(), 0, 255));
 }
 
-// TODO: movementOption inlines this but retains the JUTRect constructor call.
+// incorrect
 void TArrowControl::updateScale()
 {
 	int move = calcMoveX(mPhase);
@@ -646,8 +649,8 @@ void TOptionSoundUnit::toggle()
 void TOptionSoundUnit::adjust()
 {
 	adjustView();
-	int number                             = mSelectionText->getNumber();
-	const FabricatedSoundSettings& setting = cSoundSettings[number];
+	const FabricatedSoundSettings& setting
+	    = cSoundSettings[mSelectionText->getNumber()];
 	JAIGlobalParameter::setParamSoundOutputMode(setting.mOutputMode);
 }
 
@@ -947,7 +950,6 @@ bool TOptionControl::isChangedSetting() const
 
 void TOptionControl::resetChangedSetting()
 {
-	TOptionRumbleUnit::RumbleType value = mRumbleOption->getValue();
-	mInitialRumbleValue                 = value;
-	mInitialSoundValue                  = mSoundOption->getValue();
+	mInitialRumbleValue = mRumbleOption->getValue();
+	mInitialSoundValue  = mSoundOption->getValue();
 }

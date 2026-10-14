@@ -74,11 +74,11 @@ static const char* bosspakkun_bastable[] = {
 	nullptr,
 };
 
-// fabricated: shared polar inline inferred from launchPolDrop and BPVomit.
+// fabricated
 static inline JGeometry::TVec3<f32> fromPolar(s16 angle, f32 radius)
 {
-	f32 c = radius * JMASCos(angle);
-	return JGeometry::TVec3<f32>(radius * JMASSin(angle), 0.0f, c);
+	return JGeometry::TVec3<f32>(radius * JMASSin(angle), 0.0f,
+	                             radius * JMASCos(angle));
 }
 
 TBossPakkunParams::TBossPakkunParams(const char* path)
@@ -242,7 +242,7 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 			    = mOwner->getBossPakkunParams()->mSLPollBallStampScale.get();
 			JGeometry::TVec3<f32> stampScale(scale, scale, scale);
 			unk7C->getModel()->setBaseScale(stampScale);
-			unk7C->getModel()->setBaseTRMtx(mtx);
+			MTXCopy(mtx, unk7C->getModel()->getBaseTRMtx());
 		}
 	}
 
@@ -251,10 +251,11 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 
 		if (flags & CUE_CALC_VIEW) {
 			TCircleShadowRequest request;
-			request.mPosition = mPosition;
-			request.mRadiusX = request.mRadiusZ = 400.0f;
-			request.mRotationY                  = 0.0f;
-			request.mShadowType                 = SHADOW_TYPE_CIRCLE;
+			request.mPosition   = mPosition;
+			request.mRadiusX    = 400.0f;
+			request.mRadiusZ    = 400.0f;
+			request.mRotationY  = 0.0f;
+			request.mShadowType = SHADOW_TYPE_CIRCLE;
 			gpBindShadowManager->request(request, 0);
 		}
 	}
@@ -282,9 +283,9 @@ void TBPVomit::vomit()
 
 	MtxPtr mtx = mOwner->getModel()->getBaseTRMtx();
 	unk14->getModel()->setBaseTRMtx(mtx);
-	unk14->getModel()->setBaseScale(mOwner->getScaling());
+	unk14->getModel()->setBaseScale(mOwner->mScaling);
 	unk18->getModel()->setBaseTRMtx(mtx);
-	unk18->getModel()->setBaseScale(mOwner->getScaling());
+	unk18->getModel()->setBaseScale(mOwner->mScaling);
 }
 
 // TODO: 4 bytes more than the 0x3C in the map
@@ -543,7 +544,7 @@ void TBPHeadHit::throwActor(THitActor* actor)
 void TBPHeadHit::perform(u32 flags, JDrama::TGraphics* graphics)
 {
 	if ((flags & CUE_MOVE)
-	    && mOwner->getWeakPoint() != TBossPakkun::WEAK_POINT_NAVEL) {
+	    && mOwner->mWeakPoint != TBossPakkun::WEAK_POINT_NAVEL) {
 		for (int i = 0; i < mColCount; ++i) {
 			THitActor* actor = mCollisions[i];
 			if (actor->isActorType(ACTOR_TYPE_MARIO))
@@ -574,7 +575,7 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 	if (sender->getActorType() == ACTOR_TYPE_WATER)
 		return false;
 
-	if (mOwner->getWeakPoint() != TBossPakkun::WEAK_POINT_NAVEL)
+	if (mOwner->mWeakPoint != TBossPakkun::WEAK_POINT_NAVEL)
 		return true;
 
 	if (sender->getActorType() == ACTOR_TYPE_MARIO) {
@@ -606,7 +607,6 @@ void TBossPakkunMtxCalc::calcBellyScale(u16 jointIndex)
 	if (jointIndex != 4 && jointIndex != 36)
 		return;
 
-	Mtx scaleMtx;
 	f32 progress;
 	if (mOwner->unk17C != 0) {
 		progress = static_cast<f32>(mOwner->unk1B8) / 50.0f;
@@ -619,23 +619,22 @@ void TBossPakkunMtxCalc::calcBellyScale(u16 jointIndex)
 	f32 blend = JMAHermiteInterpolation(progress, 0.0f, 0.0f, 10.0f, 1.0f, 1.0f,
 	                                    0.0f);
 	MtxPtr jointMtx = mOwner->getModel()->getAnmMtx(jointIndex);
+	Mtx scaleMtx;
 
 	if (jointIndex == 36) {
 		static JGeometry::TVec3<f32> goal(1.4f, 1.4f, 1.6f);
 		static JGeometry::TVec3<f32> start(1.0f, 0.8f, 0.8f);
-		JGeometry::TVec3<f32> scale;
-		scale.x = blend * (goal.x - start.x) + start.x;
-		scale.y = blend * (goal.y - start.y) + start.y;
-		scale.z = blend * (goal.z - start.z) + start.z;
-		MTXScale(scaleMtx, scale.x, scale.y, scale.z);
+		f32 scaleX = blend * (goal.x - start.x) + start.x;
+		f32 scaleY = blend * (goal.y - start.y) + start.y;
+		f32 scaleZ = blend * (goal.z - start.z) + start.z;
+		MTXScale(scaleMtx, scaleX, scaleY, scaleZ);
 	} else {
 		static JGeometry::TVec3<f32> goal(1.3f, 1.7f, 1.7f);
 		static JGeometry::TVec3<f32> start(1.0f, 0.9f, 0.9f);
-		JGeometry::TVec3<f32> scale;
-		scale.x = blend * (goal.x - start.x) + start.x;
-		scale.y = blend * (goal.y - start.y) + start.y;
-		scale.z = blend * (goal.z - start.z) + start.z;
-		MTXScale(scaleMtx, scale.x, scale.y, scale.z);
+		f32 scaleX = blend * (goal.x - start.x) + start.x;
+		f32 scaleY = blend * (goal.y - start.y) + start.y;
+		f32 scaleZ = blend * (goal.z - start.z) + start.z;
+		MTXScale(scaleMtx, scaleX, scaleY, scaleZ);
 	}
 
 	MTXConcat(jointMtx, scaleMtx, jointMtx);
@@ -832,7 +831,7 @@ void TBossPakkun::init(TLiveManager* manager)
 		goToShortestNextGraphNode();
 	}
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 }
 
 BOOL TBossPakkun::checkMarioRiding()
@@ -870,7 +869,8 @@ void TBossPakkun::rumblePad(int type, const JGeometry::TVec3<f32>& position)
 
 	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 	delta -= position;
-	f32 power = (3000.0f - delta.length()) / 1000.0f;
+	f32 distance = delta.length();
+	f32 power    = (3000.0f - distance) / 1000.0f;
 
 	if (power < 0.0f)
 		return;
@@ -902,7 +902,7 @@ void TBossPakkun::showMessage(u32 message)
 		mask = 1 << index;
 
 	if (!(unk1C0 & mask)) {
-		TGCConsole2* console = gpMarDirector->getConsole();
+		TGCConsole2* console = SMSGetMarDirector()->getConsole();
 		console->startAppearBalloon(message, true);
 	}
 	unk1C0 |= mask;
@@ -910,8 +910,8 @@ void TBossPakkun::showMessage(u32 message)
 
 bool TBossPakkun::is2ndFightNow() const
 {
-	if (gpMarDirector->getCurrentMap() == 2
-	    && gpMarDirector->getCurrentStage() == 4)
+	if (SMSGetMarDirector()->getCurrentMap() == 2
+	    && SMSGetMarDirector()->getCurrentStage() == 4)
 		return true;
 	return false;
 }
@@ -979,7 +979,6 @@ void TBossPakkun::gotWaterDamage()
 	}
 }
 
-// TODO: frame-only mismatch (0x80 instead of 0x90); no fabricated padding.
 void TBossPakkun::gotHipDropDamage()
 {
 	decHitPoints();
@@ -1025,17 +1024,19 @@ void TBossPakkun::launchPolDrop()
 
 	JGeometry::TVec3<f32> launchPosition;
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		launchPosition = getPosition();
+		launchPosition = mPosition;
 		launchPosition.x += 1.0f;
 	} else {
 		getJointTransByIndex(18, &launchPosition);
 	}
 
-	JGeometry::TVec3<f32> velocity;
 	f32 marioYaw = gpMarioOriginal->mRotation.y;
 	f32 front    = getBossPakkunParams()->mSLPollBallFront.get();
-	JGeometry::TVec3<f32> target = fromPolar(DEG2SHORTANGLE(marioYaw), front);
+	s16 angle    = DEG2SHORTANGLE(marioYaw);
+	JGeometry::TVec3<f32> target = fromPolar(angle, front);
 	target += SMS_GetMarioPos();
+
+	JGeometry::TVec3<f32> velocity;
 	SMSCalcJumpVelocityXZ(target, launchPosition,
 	                      getBossPakkunParams()->mSLPollBallSpeed.get(), 0.1f,
 	                      &velocity);
@@ -1065,7 +1066,7 @@ void TBossPakkun::changeBck(int index)
 	if (index == 21) {
 		getMActor()
 		    ->getFrameCtrl(ANM_TYPE_BCK)
-		    ->setRate(getBossPakkunParams()->mSLVomitAnmRate.value);
+		    ->setRate(getBossPakkunParams()->mSLVomitAnmRate.get());
 	}
 
 	f32 blendTime = -1.0f;
@@ -1120,10 +1121,10 @@ const char** TBossPakkun::getBasNameTable() const
 
 void TBossPakkun::setGroundCollision()
 {
-	if (!mSpine->isNerve(&TNerveBPDie::theNerve())
-	    && mMapCollisionManager != nullptr) {
+	const TNerveBase<TLiveActor>* dieNerve = &TNerveBPDie::theNerve();
+	if (!mSpine->isNerve(dieNerve) && mMapCollisionManager != nullptr) {
 		TPosition3f collisionMtx;
-		collisionMtx.set(*(TMtx34f*)getModel()->getAnmMtx(2));
+		collisionMtx.set(getModel()->getAnmMtx(2));
 		mMapCollisionManager->moveActiveCollisionMtx(collisionMtx);
 	}
 }
@@ -1155,9 +1156,9 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32)
 	if (mWeakPoint == WEAK_POINT_FLY
 	    && (sender->getActorType() == ACTOR_TYPE_POPO
 	        || sender->getActorType() == ACTOR_TYPE_WATER)) {
-		if (getPosition().y - 300.0f > sender->getPosition().y)
+		if (mPosition.y - 300.0f > sender->mPosition.y)
 			return true;
-		if (getPosition().y + 1500.0f < sender->getPosition().y)
+		if (mPosition.y + 1500.0f < sender->mPosition.y)
 			return true;
 		gotFlyingDamage();
 		return true;
@@ -1165,7 +1166,6 @@ BOOL TBossPakkun::receiveMessage(THitActor* sender, u32)
 	return false;
 }
 
-// TODO: frame-only mismatch (0x118 instead of 0x178); no fabricated padding.
 void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mPolDrop != nullptr)
@@ -1397,7 +1397,6 @@ void TBossPakkunManager::load(JSUMemoryInputStream& stream)
 	initJParticle();
 }
 
-// TODO: frame-only mismatch (0x180 instead of 0x1B8); no fabricated padding.
 DEFINE_NERVE(TNerveBPWait, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
@@ -1499,7 +1498,7 @@ DEFINE_NERVE(TNerveBPCannon, TLiveActor)
 DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 {
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0)
 		boss->changeBck(21);
 
@@ -1528,15 +1527,19 @@ DEFINE_NERVE(TNerveBPVomit, TLiveActor)
 			boss->mVomit->vomit();
 			boss->rumblePad(1, boss->mPosition);
 		} else {
-			if (!boss->is2ndFightNow())
-				boss->showMessage(0xE0000);
+			if (!boss->is2ndFightNow()) {
+				if (!(boss->unk1C0 & 1))
+					SMSGetMarDirector()->getConsole()->startAppearBalloon(
+					    0xE0000, true);
+				boss->unk1C0 |= 1;
+			}
 			return true;
 		}
 	}
 
 	if (actor->checkCurBckFromIndex(20)) {
-		f32 c = MsCos(boss->mRotation.y);
-		JGeometry::TVec3<f32> wind(MsSin(boss->mRotation.y), 0.0f, c);
+		JGeometry::TVec3<f32> wind(MsSin(boss->mRotation.y), 0.0f,
+		                           MsCos(boss->mRotation.y));
 		gpModelWaterManager->wind(wind);
 	}
 	return false;
@@ -1548,9 +1551,9 @@ DEFINE_NERVE(TNerveBPTornado, TLiveActor)
 	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
 		boss->changeBck(24);
-		MtxPtr jointMtx = boss->getModel()->getAnmMtx(3);
 		gpMarioParticleManager->emitAndBindToSRTMtxPtr(
-		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING1, jointMtx, 0, boss);
+		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING1, boss->getModel()->getAnmMtx(3),
+		    0, boss);
 		boss->startTornadoBlur();
 	}
 	if (spine->getTime() == 150)

@@ -550,7 +550,6 @@ static void Hx_Circle(void)
 	}
 }
 
-// TODO: sqrtf rounding slot is 0x7C; target uses 0xA4.
 static void Hxs1_Circle(f32 radius)
 {
 	struct {
@@ -622,7 +621,6 @@ static void Hxs1_Circle(f32 radius)
 	}
 }
 
-// TODO: frame-only; inner sqrtf rounding slot is 0x7C, target uses 0xAC.
 static void Hxs2_Circle(u8 color, f32 innerRadius, f32 outerRadius)
 {
 	struct {
@@ -632,6 +630,7 @@ static void Hxs2_Circle(u8 color, f32 innerRadius, f32 outerRadius)
 		u32 color;
 	} v1, v2;
 	f32 outerOffset;
+	f32 innerOffset;
 	f32 distance;
 	f32 innerRadiusSquared;
 	f32 outerRadiusSquared;
@@ -686,9 +685,8 @@ static void Hxs2_Circle(u8 color, f32 innerRadius, f32 outerRadius)
 			GXColor1u32(v1.color);
 			GXPosition3f32(v2.x, v2.y, v2.z);
 			GXColor1u32(v2.color);
-			v1.x        = hx.halfWidth - outerOffset;
-			outerOffset = v1.x;
-			v2.x        = hx.halfWidth - distance;
+			v1.x = hx.halfWidth - outerOffset;
+			v2.x = hx.halfWidth - distance;
 			GXPosition3f32(v1.x, v1.y, v1.z);
 			GXColor1u32(v1.color);
 			GXPosition3f32(v2.x, v2.y, v2.z);
@@ -1265,7 +1263,6 @@ static void Hxs_PenDraw(u32 count, HxDrawPath* target, f32 startX, f32 startY)
 	Hxs_Logo_TexDraw(startX, startY, nextX, nextY, img_wx, img_wy);
 }
 
-// TODO: nonmatching frame is 0x28 bytes; target is 0x30. No padding added.
 static void Hx_Logo(void)
 {
 	static HxDrawPath* dp;
@@ -1452,8 +1449,6 @@ static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 		u8 color;
 	} v1, v2;
 	f32 radiusSquared;
-	f32 offset;
-	f32 y;
 	u32 i;
 
 	Hx_CameraInit();
@@ -1466,7 +1461,11 @@ static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 	v2.color      = 0xFF;
 	GXBegin(GX_LINES, GX_VTXFMT0, (u32)radius * 2 + 2);
 	for (i = 0; i <= (u32)radius; ++i) {
-		offset = sqrtf(radiusSquared - (f32)(i * i));
+		f32 offset = sqrtf(radiusSquared - (f32)(i * i));
+		f32 y1;
+		f32 y2;
+		f32 x1;
+		f32 x2;
 
 		if (centerY < (f32)hx.halfHeight) {
 			v1.y = centerY + (f32)i;
@@ -1486,8 +1485,7 @@ static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 
 		GXPosition3f32(v1.x, v1.y, v1.z);
 		GXColor1u32(v1.color);
-		y = v2.y;
-		GXPosition3f32(v2.x, y, v2.z);
+		GXPosition3f32(v2.x, v2.y, v2.z);
 		GXColor1u32(v2.color);
 	}
 	GXEnd();
@@ -1671,17 +1669,14 @@ static void Hxs1_Test2(u32 count, u32 direction, f32 centerX, f32 centerY,
 		v1.y = y;
 		v2.y = y;
 		GXBegin(GX_LINES, GX_VTXFMT0, 2);
-		y = v1.y;
-		GXPosition3f32(v1.x, y, v1.z);
+		GXPosition3f32(v1.x, v1.y, v1.z);
 		GXColor1u32(v1.color);
-		y = v2.y;
-		GXPosition3f32(v2.x, y, v2.z);
+		GXPosition3f32(v2.x, v2.y, v2.z);
 		GXColor1u32(v2.color);
 		GXEnd();
 	}
 }
 
-// TODO: frame-only mismatch; frame is 0xC8 instead of 0xD0.
 static void Hx_Test4(void)
 {
 	static f32 thin;
@@ -1689,6 +1684,7 @@ static void Hx_Test4(void)
 	static f32 thin_d;
 	static f32 rstep_d;
 	f32 angle;
+	f32 startAngle;
 	f32 outerX;
 	f32 outerY;
 	f32 innerX;
@@ -1703,8 +1699,6 @@ static void Hx_Test4(void)
 	u32 i;
 
 	switch (hx.animationState) {
-	case 2:
-		break;
 	case 0:
 		switch (hx.direction) {
 		case 0:
@@ -1726,13 +1720,13 @@ static void Hx_Test4(void)
 		rstep = rstep + rstep_d;
 		thin += thin_d;
 		radius      = (hx.width >> 1) + 200;
-		angle       = 0.0f;
+		startAngle  = 0.0f;
 		outerRadius = radius + thin;
-		outerX      = outerRadius * sinf(angle) + hx.halfWidth;
-		outerY      = outerRadius * cosf(angle) + hx.halfHeight;
+		outerX      = outerRadius * sinf(startAngle) + hx.halfWidth;
+		outerY      = outerRadius * cosf(startAngle) + hx.halfHeight;
 		innerRadius = radius - thin;
-		innerX      = innerRadius * sinf(angle) + hx.halfWidth;
-		innerY      = innerRadius * cosf(angle) + hx.halfHeight;
+		innerX      = innerRadius * sinf(startAngle) + hx.halfWidth;
+		innerY      = innerRadius * cosf(startAngle) + hx.halfHeight;
 		angle       = 0.0f;
 		Hx_CameraInit();
 		Hx_GxInit(0, 1);
@@ -1773,7 +1767,6 @@ static void Hx_Test4(void)
 	}
 }
 
-// TODO: frame is 0x108 instead of 0x110; GPR allocation also differs.
 static void Hx_Test5(void)
 {
 	u8* buffer = hx_buffer;
@@ -1803,8 +1796,6 @@ static void Hx_Test5(void)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 
 	switch (hx.animationState) {
-	case 2:
-		break;
 	case 0:
 		hx.timer = 20;
 		hx.animationState++;
@@ -1829,7 +1820,10 @@ static void Hx_Test5(void)
 				Hx_GetFrBuffer(buffer, x, y, 64, 64);
 				GXInvalidateTexAll();
 				GXLoadTexObj(&texObj, GX_TEXMAP0);
-				scale = hx.direction != 0 ? outScale : inScale;
+				if (hx.direction != 0)
+					scale = outScale;
+				else
+					scale = inScale;
 				if (scale < 1.0f)
 					twist = 3.1415927f * (1.0f - scale);
 				else

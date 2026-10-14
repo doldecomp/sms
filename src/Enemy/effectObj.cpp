@@ -253,15 +253,14 @@ void TEffectModel::moveObject()
 	}
 }
 
-// TODO: instructions match; the angle-scale .sdata2 relocation still differs.
 void TEffectModel::calcRootMatrix()
 {
 	TPosition3f mtx;
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
 	mtx.translation(mPosition.x, mPosition.y, mPosition.z);
-	getMActor()->getModel()->setBaseTRMtx(mtx);
-	getMActor()->getModel()->setBaseScale(mScaling);
+	mMActor->getModel()->setBaseTRMtx(mtx);
+	mMActor->getModel()->setBaseScale(mScaling);
 }
 
 TEffectColumWaterManager::TEffectColumWaterManager(const char* name)
@@ -487,7 +486,6 @@ void TEffectColumSand::init(TLiveManager* param_1)
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
-// TODO: instructions match; duplicate weak-inline constants shift .sdata2.
 void TEffectColumSand::reset()
 {
 	TEffectModel::reset();

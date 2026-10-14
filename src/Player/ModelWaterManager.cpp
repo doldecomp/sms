@@ -305,8 +305,7 @@ u8 TModelWaterManager::emitRequest(const TWaterEmitInfo& param_1)
 		mParticleCount += 1;
 	}
 
-	u8 result = (param_1.mNum.get() - particlesToSpawn) & 0xff;
-	return result;
+	return (param_1.mNum.get() - particlesToSpawn) & 0xff;
 }
 
 void TModelWaterManager::splashSound(const JGeometry::TVec3<f32>& pos,
@@ -733,11 +732,9 @@ void TModelWaterManager::calcWorldMinMax()
 	if (mParticleCount == 0) {
 		unk5D70 = SMS_GetMarioPos();
 		unk5D7C = SMS_GetMarioPos();
-
 		unk5D70.x -= 1.0f;
 		unk5D70.y -= 1.0f;
 		unk5D70.z -= 1.0f;
-
 		unk5D7C.x += 1.0f;
 		unk5D7C.y += 1.0f;
 		unk5D7C.z += 1.0f;

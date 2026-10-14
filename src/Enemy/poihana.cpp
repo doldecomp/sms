@@ -150,7 +150,6 @@ void TPoiHana::init(TLiveManager* param_1)
 	unk19C = (TPoihanaSaveLoadParams*)getSaveParam();
 	unk1BC = new TPoiHanaCollision;
 
-	// TODO: nonmatching list-insertion stack slots (off by 4 bytes).
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(unk1BC);
@@ -236,9 +235,10 @@ void TPoiHana::bind()
 	TLiveActor::bind();
 }
 
+// TODO: off by 4 bytes
 bool TPoiHana::isOnTrap()
 {
-	const TLiveActor* groundActor = getGroundPlane()->getActor();
+	const TLiveActor* groundActor = mGroundPlane->mActor;
 	if (groundActor == nullptr) {
 		unk198 = mGroundHeight;
 	} else if (groundActor->getActorType() == ACTOR_TYPE_SAND_BOMB_BASE00) {
@@ -246,7 +246,7 @@ bool TPoiHana::isOnTrap()
 		if (mtx[1][1] >= 0.1f) {
 			if (!mIsTrapped) {
 				unk1A8 = false;
-				if (getGroundHeight() > unk198) {
+				if (mGroundHeight > unk198) {
 					unk1A8      = true;
 					mHeadHeight = 350.0f;
 				}
@@ -348,9 +348,8 @@ bool TPoiHana::isHitValid(u32 param_1)
 
 bool TPoiHana::isCollidMove(THitActor* param_1)
 {
-	JGeometry::TVec3<f32> vel;
-	u32 category = param_1->getHitCategory();
-	if (category == HIT_CATEGORY_MAP_OBJECT) {
+	if ((param_1->getActorType() & HIT_CATEGORY_MASK)
+	    == HIT_CATEGORY_MAP_OBJECT) {
 		if (((TMapObjBase*)param_1)->isHideObj(param_1))
 			return false;
 
@@ -360,7 +359,7 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 
 		if (mSpine->getCurrentNerve() == &TNerveWalkerAttack::theNerve()) {
 			mSpine->pushNerve(&TNervePoihanaFreeze::theNerve());
-			vel = mPositionDelta;
+			JGeometry::TVec3<f32> vel = mPositionDelta;
 			vel.x *= -2.0f;
 			vel.y *= 5.0f;
 			vel.z *= -2.0f;
@@ -372,9 +371,7 @@ bool TPoiHana::isCollidMove(THitActor* param_1)
 		return true;
 	}
 
-	TLiveActor* actor = (TLiveActor*)param_1;
-	bool airborne     = actor->isAirborne();
-	if (!airborne && !isAirborne())
+	if (!((TLiveActor*)param_1)->isAirborne() && !isAirborne())
 		return true;
 
 	return false;
@@ -634,7 +631,10 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 			self->setBckAnm(4);
 			self->mIsTrapped = false;
 		} else if (self->isBckAnm(4)) {
-			if (spine->getTime() > self->getSaveParams()->getSLFreezeWait())
+			TPoihanaSaveLoadParams* params
+			    = (TPoihanaSaveLoadParams*)self->getSaveParam();
+
+			if (spine->getTime() > params->mSLFreezeWait.get())
 				self->setBckAnm(2);
 			else
 				self->setBckAnm(4);
@@ -693,8 +693,6 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 	return false;
 }
 
-// TODO: nonmatching stack layout: 0x150 frame instead of 0x158; inline
-// subtraction temporaries and range/vector slots differ. No padding locals.
 DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 {
 	TPoiHana* self = (TPoiHana*)spine->getBody();

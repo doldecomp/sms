@@ -47,9 +47,9 @@ u32 TRideCloud::touchWater(THitActor*)
 void TRideCloud::setGroundCollision()
 {
 	if (mMapCollisionManager) {
+		// TODO: this is used in MapObjRailBlock too, inline global?
 		TMtx34f mtx;
-		// Use the matrix-to-matrix copy overload.
-		mtx.set(*(TMtx34f*)getModel()->getAnmMtx(0));
+		mtx.set(getModel()->getAnmMtx(0));
 		mMapCollisionManager->moveActiveCollisionMtx(mtx);
 	}
 }
@@ -92,7 +92,6 @@ void TRideCloud::load(JSUMemoryInputStream& stream)
 
 u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 
-// TODO: nonmatching frame (0xa0 vs 0xc8); no fabricated padding.
 void TRideCloud::control()
 {
 	TMapObjBase::control();

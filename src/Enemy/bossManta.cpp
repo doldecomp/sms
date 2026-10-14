@@ -34,7 +34,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
-#include <Map/MapCollisionEntry.hpp>
 
 f32 TBossManta::sScale[]      = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
 f32 TBossManta::sFrameRate[6] = { 0.3f, 0.5f, 1.2f, 2.0f, 5.0f, 5.3f };
@@ -56,35 +55,15 @@ void AttackMario(THitActor* attacker)
 
 } // namespace
 
-const TNerveMantaMove& TNerveMantaMove::theNerve()
-{
-	static TNerveMantaMove instance;
-	return instance;
-}
+DEFINE_NERVE_INSTANCE(TNerveMantaMove)
 
-const TNerveMantaHitWater& TNerveMantaHitWater::theNerve()
-{
-	static TNerveMantaHitWater instance;
-	return instance;
-}
+DEFINE_NERVE_INSTANCE(TNerveMantaHitWater)
 
-const TNerveMantaSpawn& TNerveMantaSpawn::theNerve()
-{
-	static TNerveMantaSpawn instance;
-	return instance;
-}
+DEFINE_NERVE_INSTANCE(TNerveMantaSpawn)
 
-const TNerveMantaDeath& TNerveMantaDeath::theNerve()
-{
-	static TNerveMantaDeath instance;
-	return instance;
-}
+DEFINE_NERVE_INSTANCE(TNerveMantaDeath)
 
-const TNerveMantaAppearDemo& TNerveMantaAppearDemo::theNerve()
-{
-	static TNerveMantaAppearDemo instance;
-	return instance;
-}
+DEFINE_NERVE_INSTANCE(TNerveMantaAppearDemo)
 
 int TBossManta::sCenterJointIndex;
 int TBossManta::sBodyJointIndex;
@@ -92,14 +71,13 @@ int TBossManta::sRwingJointIndex;
 int TBossManta::sLwingJointIndex;
 u8 TBossManta::sEscapeFromMario;
 
-// TODO: fabricated interpolation helper; recover the authored inline.
 static inline void lerp_hack(f32& value, f32 target, f32 progress)
 {
 	f32 step = progress * (target - value);
 	value += step;
 }
 
-BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
+DEFINE_NERVE_EXECUTE(TNerveMantaMove, TLiveActor)
 {
 	s32 time         = spine->getTime();
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -217,8 +195,7 @@ BOOL TNerveMantaMove::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-// TODO: particles begins at 0x28 instead of 0x2c.
-BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
+DEFINE_NERVE_EXECUTE(TNerveMantaHitWater, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -252,7 +229,7 @@ BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 			for (int i = 0; i < effectCount; ++i) {
 				gpMarioParticleManager->emitAndBindToPosPtr(
 				    particles[self->mGeneration][j], &self->unk17C, 1,
-				    self + i);
+				    (u8*)self + i * sizeof(TBossManta));
 				if (j == 2)
 					break;
 			}
@@ -266,7 +243,7 @@ BOOL TNerveMantaHitWater::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
+DEFINE_NERVE_EXECUTE(TNerveMantaSpawn, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -303,7 +280,7 @@ BOOL TNerveMantaSpawn::execute(TSpineBase<TLiveActor>* spine) const
 	return FALSE;
 }
 
-BOOL TNerveMantaDeath::execute(TSpineBase<TLiveActor>* spine) const
+DEFINE_NERVE_EXECUTE(TNerveMantaDeath, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -316,18 +293,15 @@ BOOL TNerveMantaDeath::execute(TSpineBase<TLiveActor>* spine) const
 	if (self->checkCurAnmEnd(0)) {
 		gpMarioParticleManager->emitAndBindToPosPtr(SCENE_MANTA_JPA_MS_MAN_DEAD,
 		                                            &self->unk17C, 0, self);
-		if (SMSGetMSound()->gateCheck(MSD_SE_BS_MANTA_VANISH)) {
-			u32 snd = MSD_SE_BS_MANTA_VANISH;
-			MSoundSESystem::MSoundSE::startSoundActor(snd, self->getPosition(),
-			                                          0, nullptr, 0, 4);
-		}
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_MANTA_VANISH,
+		                                &self->mPosition, 0, nullptr, 0, 4);
 		self->kill();
 	}
 
 	return FALSE;
 }
 
-BOOL TNerveMantaAppearDemo::execute(TSpineBase<TLiveActor>* spine) const
+DEFINE_NERVE_EXECUTE(TNerveMantaAppearDemo, TLiveActor)
 {
 	s32 time         = spine->getTime();
 	TBossManta* self = (TBossManta*)spine->getBody();
@@ -371,13 +345,6 @@ TBossManta::TBossManta(const char* name)
 	unk198      = 0.0f;
 	unk19C      = 0;
 	unk1A0      = 0;
-}
-
-// TODO: recover the authored table-lookup inline; both sites copy @3022.
-static inline int getWaterHitCount(TBossManta* manta)
-{
-	const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
-	return hitCounts[manta->mGeneration];
 }
 
 f32 TBossManta::getTailAnimSpeed()
@@ -455,7 +422,7 @@ bool TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 
 		JGeometry::TVec3<f32> d;
 		d.sub(graph->indexToPoint(idx), graph->indexToPoint(idx + 1));
-		d.set(d.x, 0.0f, d.z);
+		d.y = 0.0f;
 
 		if (a.z * d.x - a.x * d.z < 0.0f) {
 			JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
@@ -471,10 +438,11 @@ bool TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 
 	JGeometry::TVec3<f32> d;
 	d.sub(graph->indexToPoint(12), graph->indexToPoint(0));
-	d.set(d.x, 0.0f, d.z);
+	d.y = 0.0f;
 
 	if (a.z * d.x - a.x * d.z < 0.0f) {
-		out->cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), d);
+		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+		out->cross(up, d);
 		out->normalize();
 		return true;
 	}
@@ -482,16 +450,15 @@ bool TBossManta::getIntoGraphVec(JGeometry::TVec3<f32>* out)
 	return false;
 }
 
-// TODO: insertion-result slots and r30/r31 allocation still differ.
 void TBossManta::init(TLiveManager* manager)
 {
 	mManager = manager;
 	mManager->manageActor(this);
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
 	mMActor       = mMActorKeeper->createMActor("manta.bmd", 0);
-	getTracer()->setGraph(gpConductor->getGraphByName("main"));
+	unk124->setGraph(gpConductor->getGraphByName("main"));
 
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 
 	mHeadHeight   = 5000.0f;
 	u32 actorType = ACTOR_TYPE_BOSS_MANTA;
@@ -529,11 +496,9 @@ void TBossManta::moveObject()
 		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
 		                     getPolluteRadius());
 
-	for (int i = 0; i < mColCount; ++i) {
-		THitActor* collision = mCollisions[i];
-		if (collision->isActorType(ACTOR_TYPE_MARIO))
+	for (int i = 0; i < mColCount; ++i)
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 			AttackMario(this);
-	}
 }
 
 BOOL TBossManta::isSpawnState()
@@ -552,7 +517,8 @@ bool TBossManta::collidedWithWater()
 		else
 			isHitWater = false;
 
-		if (unk19C < getWaterHitCount(this)) {
+		const int hitCounts[6] = { 16, 8, 4, 2, 1, 1 };
+		if (unk19C < hitCounts[mGeneration]) {
 			unk1A0 = 0x1E;
 			if (!isHitWater) {
 				mSpine->reset();
@@ -560,7 +526,8 @@ bool TBossManta::collidedWithWater()
 			}
 			unk19C++;
 
-			if (getWaterHitCount(this) == unk19C) {
+			const int hitCounts2[6] = { 16, 8, 4, 2, 1, 1 };
+			if (unk19C == hitCounts2[mGeneration]) {
 				if (mGeneration >= 4)
 					mSpine->pushAfterCurrent(&TNerveMantaDeath::theNerve());
 				else
@@ -714,10 +681,9 @@ void TBossManta::calcRootMatrix()
 
 	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	JGeometry::TVec3<f32> side;
-	// TODO: cross-product FPR allocation remains nonmatching.
 	side.cross2(up, unk170);
 	m.setXDir(side);
-	m.setYDir(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+	m.setYDir(up);
 	m.setZDir(unk170);
 
 	MtxPtr joint = getModel()->getAnmMtx(sCenterJointIndex);
@@ -758,7 +724,6 @@ f32 TBossManta::getPolluteRadius()
 	return 0.0f;
 }
 
-// TODO: normalization still recomputes the squared length; frame also differs.
 void TBossManta::updateAttractor()
 {
 	JGeometry::TVec3<f32> local_108 = unk158;
@@ -792,10 +757,8 @@ void TBossManta::updateAttractor()
 		delta -= otherPos;
 		delta.y = 0.0f;
 
-		f32 deltaSquared = delta.squared();
-		if (0.1f < JGeometry::TUtil<f32>::sqrt(deltaSquared)
-		    && JGeometry::TUtil<f32>::sqrt(deltaSquared)
-		           < getSaveParams()->mSLEscapeRegion.get()) {
+		if (0.1f < delta.length()
+		    && delta.length() < getSaveParams()->mSLEscapeRegion.get()) {
 			delta.normalize();
 			delta *= getSaveParams()->mSLPusherPower.get() / delta.length();
 			local_108 += delta;
@@ -825,14 +788,13 @@ void TBossManta::updateAttractor()
 void TBossMantaManager::TMantaBattleState::update()
 {
 	static JAISound* sDefeatSE;
-	JDrama::TFlagT<u16> flag = 0;
 
 	switch (mState) {
 	case 0:
 		if (TFlagManager::getInstance()->getBool(MSF_MANTA_SPAWNED)) {
-			TMarDirector* director = SMSGetMarDirector();
-			director->fireStartDemoCamera("sirena_manta", nullptr, -1, 0.0f,
-			                              true, nullptr, 0, nullptr, flag);
+			SMSGetMarDirector()->fireStartDemoCamera(
+			    "sirena_manta", nullptr, -1, 0.0f, true, nullptr, 0, nullptr,
+			    JDrama::TFlagT<u16>(0));
 			((TBossManta*)unk0->getObj(0))->initNthGeneration(0);
 			MSBgm::stopTrackBGMs(7, 10);
 			mState++;
@@ -851,7 +813,7 @@ void TBossMantaManager::TMantaBattleState::update()
 			}
 		}
 		if (allMaxGen) {
-			for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+			for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 				TBossManta* m = (TBossManta*)unk0->getObj(i);
 				if (!m->checkLiveFlag(LIVE_FLAG_DEAD))
 					m->initNthGeneration(5);
@@ -900,8 +862,8 @@ void TBossMantaManager::TMantaMessageState::update()
 	switch (unk4) {
 	case 0:
 		if (((TBossManta*)unk0->getObj(0))->isSpawnState()) {
-			TGCConsole2* console = SMSGetMarDirector()->getConsole();
-			console->startAppearBalloon(0xE000C, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000C,
+			                                                      true);
 			unk4++;
 		}
 		break;
@@ -913,16 +875,16 @@ void TBossMantaManager::TMantaMessageState::update()
 				aliveCount++;
 		}
 		if (aliveCount > 50) {
-			TGCConsole2* console = SMSGetMarDirector()->getConsole();
-			console->startAppearBalloon(0xE000D, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000D,
+			                                                      true);
 			unk4++;
 		}
 		break;
 	}
 	case 2:
 		if (unk0->unk88.mState == 2) {
-			TGCConsole2* console = SMSGetMarDirector()->getConsole();
-			console->startAppearBalloon(0xE000E, true);
+			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000E,
+			                                                      true);
 			unk4++;
 		}
 		break;
@@ -938,18 +900,16 @@ TBossMantaAdditionalCollisionSet::TBossMantaAdditionalCollisionSet()
 		unk0[i] = new TBossMantaAdditionalCollision;
 }
 
-// TODO: frame size differs (0x30 instead of 0x80).
 void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 {
 	unkC = manta;
 
-	f32 scale = unkC->mScaling.x;
-	unk0[0]->setHitParams(54.0f * scale, 100.0f, 54.0f * scale, 100.0f);
-	scale = unkC->mScaling.x;
-	unk0[1]->setHitParams(26.0f * scale, 100.0f, 26.0f * scale, 100.0f);
-	scale = unkC->mScaling.x;
-	scale = 26.0f * scale;
-	unk0[2]->setHitParams(scale, 100.0f, scale, 100.0f);
+	unk0[0]->setHitParams(54.0f * unkC->mScaling.x, 100.0f,
+	                      54.0f * unkC->mScaling.x, 100.0f);
+	unk0[1]->setHitParams(26.0f * unkC->mScaling.x, 100.0f,
+	                      26.0f * unkC->mScaling.x, 100.0f);
+	unk0[2]->setHitParams(26.0f * unkC->mScaling.x, 100.0f,
+	                      26.0f * unkC->mScaling.x, 100.0f);
 
 	for (int i = 0; i < 3; ++i)
 		unk0[i]->setManta(unkC);

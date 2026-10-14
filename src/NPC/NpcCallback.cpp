@@ -14,16 +14,14 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 			return FALSE;
 
 		bool shouldRun = false;
-		if (gpCurrentNpc->mNeckJointIndex != -1) {
-			if (!gpCurrentNpc->checkLiveFlag(LIVE_FLAG_HIDDEN
-			                                 | LIVE_FLAG_CLIPPED_OUT))
-				shouldRun = true;
-		}
+		if (gpCurrentNpc->mNeckJointIndex != -1
+		    && !gpCurrentNpc->checkLiveFlag(LIVE_FLAG_HIDDEN
+		                                    | LIVE_FLAG_CLIPPED_OUT))
+			shouldRun = true;
 
-		if (shouldRun ? true : false) {
+		if (shouldRun) {
 			J3DJoint* joint = (J3DJoint*)param_1;
-			int jntNo       = joint->getJntNo();
-			MtxPtr currMtx  = j3dSys.getModel()->getAnmMtx(jntNo);
+			MtxPtr currMtx  = j3dSys.getModel()->getAnmMtx(joint->getJntNo());
 
 			s16 tmp;
 			s16 r30 = 0;
@@ -45,17 +43,16 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 			if (useTracking) {
 				JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 				marioPos.y += 85.0f;
-				f32 marioY = marioPos.y;
 
 				JGeometry::TVec3<f32> toMario(marioPos.x - currMtx[0][3],
-				                              marioY - currMtx[1][3],
+				                              marioPos.y - currMtx[1][3],
 				                              marioPos.z - currMtx[2][3]);
 
 				f32 dist2 = toMario.squared();
 				if (dist2 > 0.001f
 				    && dist2 < CLBSquared<f32>(gpCurrentNpc->mIndividualParams
 				                                   ->mNeckTurnSearchDist.get())
-				    && fabs(marioY - currMtx[1][3])
+				    && fabs(marioPos.y - currMtx[1][3])
 				           < gpCurrentNpc->mIndividualParams
 				                 ->mNeckTurnSearchHeight.get()) {
 
@@ -71,9 +68,8 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 				}
 
 				s16 tmp = CLBDegToShortAngle(local_148.y);
-				const TParamT<s16> maxAngleY
-				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY;
-				s16 maxNeckY = maxAngleY.get();
+				s16 maxNeckY
+				    = gpCurrentNpc->mIndividualParams->mNeckMaxAngleY.get();
 				s16 minNeckY = -maxNeckY;
 
 				r28 = MsClamp<s16>(tmp, minNeckY, maxNeckY);

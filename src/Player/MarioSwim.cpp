@@ -116,8 +116,7 @@ BOOL TMario::checkSwimJump()
 			}
 		}
 
-		bool doSwimUp = mIntendedMag == 0.0f;
-		if (doSwimUp)
+		if (mIntendedMag == 0.0f)
 			return changePlayerStatus(MARIO_STATUS_SWIM_UP, 0, false);
 		return changePlayerStatus(MARIO_STATUS_SWIM_PADDLE_START, 0, false);
 	}
@@ -199,8 +198,7 @@ BOOL TMario::swimPaddleStart()
 
 	doSwimming();
 
-	bool swimming = checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
-	if (!swimming)
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -224,8 +222,7 @@ BOOL TMario::swimPaddle()
 
 	doSwimming();
 
-	BOOL swimming = checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
-	if (!swimming)
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	if (checkFlag(MARIO_FLAG_FLUDD_EMITTING) && !isUnderWater())
@@ -244,8 +241,7 @@ BOOL TMario::swimPaddleEnd()
 
 	doSwimming();
 
-	bool swimming = checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
-	if (!swimming)
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -260,8 +256,7 @@ BOOL TMario::swimPaddleEndToWait()
 
 	doSwimming();
 
-	bool swimming = checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
-	if (!swimming)
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -279,8 +274,7 @@ BOOL TMario::swimUp()
 
 	doSwimming();
 
-	bool swimming = checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
-	if (!swimming)
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;
@@ -305,8 +299,7 @@ BOOL TMario::swimDive()
 
 	doSwimming();
 
-	bool swimming = checkStatusType(MARIO_STATUS_FLAG_SWIMMING);
-	if (!swimming)
+	if (!checkStatusType(MARIO_STATUS_FLAG_SWIMMING))
 		return 1;
 
 	return 0;

@@ -77,8 +77,7 @@ bool TBaseNPC::isNerveCanGoToTalk() const
 	    || nerve == &TNerveNPCRecoverAfter::theNerve()
 	    || nerve == &TNerveNPCMad::theNerve()
 	    || nerve == &TNerveNPCMareStand::theNerve()) {
-		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
-		if (current != nullptr
+		if (mSpine->getCurrentNerve() != nullptr
 		    || (mSpine->getTop() != &TNerveNPCWet::theNerve()
 		        && mSpine->getTop() != &TNerveNPCTalk::theNerve())) {
 			result = true;
@@ -171,11 +170,9 @@ bool TBaseNPC::isNerveCanGoToBlown() const
 	    || nerve == &TNerveNPCWaitMarioApproach::theNerve()
 	    || nerve == &TNerveNPCTurnToMario::theNerve()
 	    || nerve == &TNerveNPCWet::theNerve()
-	    || nerve == &TNerveNPCMareStand::theNerve()) {
-		TMarDirector* director = SMSGetMarDirector();
-		if (!director->isThing())
+	    || nerve == &TNerveNPCMareStand::theNerve())
+		if (!SMSGetMarDirector()->isThing())
 			result = true;
-	}
 	return result;
 }
 
@@ -205,10 +202,7 @@ void TBaseNPC::changeNerveFromTalk_()
 	offLiveFlag(LIVE_FLAG_UNK2000000);
 }
 
-void TBaseNPC::changeNerveToWet_()
-{
-	mSpine->pushNerve(&TNerveNPCWet::theNerve());
-}
+void TBaseNPC::changeNerveToWet_() { }
 
 void TBaseNPC::changeNerveToMad_()
 {
@@ -230,7 +224,7 @@ void TBaseNPC::releaseTaken_()
 
 	unk1DC = CLBPalFrame(15l);
 	unk158 = nullptr;
-	if (getActorType() == ACTOR_TYPE_NPC_PEACH) {
+	if (mActorType == ACTOR_TYPE_NPC_PEACH) {
 		peachTiredIn_();
 		mBalloonCtrl->setNextMessage(0, -1);
 	}
@@ -340,7 +334,6 @@ void TBaseNPC::behaveToBeTrampled_()
 	}
 }
 
-// TODO: isSunflowerReviving() result uses r29 instead of r28.
 void TBaseNPC::behaveToHitObject_(THitActor* param_1,
                                   EnumHitNpcObjectKind param_2)
 {
@@ -386,19 +379,18 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 	if (checkActionFlag(NPC_ACTION_UNK400 | NPC_ACTION_HAPPY))
 		return;
 
-	bool canGoToWet = isNerveCanGoToWet();
-	if (canGoToWet && !checkActionFlag(NPC_ACTION_UNK800)) {
+	if (isNerveCanGoToWet() && !checkActionFlag(NPC_ACTION_UNK800)) {
 		if (!isPeachTired()) {
 			if (!isSunflowerReviving()
 			    && (isClean() || param_2 != HIT_NPC_OBJECT_KIND_UNK1)
 			    && (mActorType != ACTOR_TYPE_NPC_MONTE_ME
-			        || getLodAnm()->getCurrentAnmKind() == NPC_ANM_KIND_UNK4
-			        || getLodAnm()->getCurrentAnmKind() == NPC_ANM_KIND_UNK6)
+			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4
+			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK6)
 			    && (mSpine->getCurrentNerve() != &TNerveNPCTalk::theNerve()
 			        || mSpine->getTime() >= 4)) {
 				if (param_2 == 1)
 					onLiveFlag(LIVE_FLAG_UNK4000000);
-				changeNerveToWet_();
+				mSpine->pushNerve(&TNerveNPCWet::theNerve());
 			}
 		}
 	}
@@ -414,8 +406,7 @@ void TBaseNPC::behaveToSandBomb_(const TLiveActor* param_1)
 		mPosition.y += fVar1;
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity = JGeometry::TVec3<f32>(0.0f, fVar1, 0.0f);
-		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
-		if (current == &TNerveNPCWet::theNerve()) {
+		if (mSpine->getCurrentNerve() == &TNerveNPCWet::theNerve()) {
 			mSpine->setNext(&TNerveNPCBlown::theNerve());
 		} else {
 			mSpine->pushNerve(&TNerveNPCBlown::theNerve());
@@ -438,9 +429,8 @@ bool TBaseNPC::isStateGoToMad_() const
 bool TBaseNPC::isNowCanTaken() const
 {
 	bool result = false;
-	if (checkLiveFlag(LIVE_FLAG_UNK100000)
-	    && getActorType() != ACTOR_TYPE_NPC_DUMMY && mHolder == nullptr
-	    && mHeldObject == nullptr
+	if (checkLiveFlag(LIVE_FLAG_UNK100000) && mActorType != ACTOR_TYPE_NPC_DUMMY
+	    && mHolder == nullptr && mHeldObject == nullptr
 	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                      | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK40000
 	                      | LIVE_FLAG_SINK_BOTTOM)
@@ -450,65 +440,8 @@ bool TBaseNPC::isNowCanTaken() const
 	return result;
 }
 
-// TODO: fabricated; inline rejection boundary matches the camera branches.
-static inline void canTalkToMario(TBaseNPC* npc, bool& result)
-{
-	if (npc->mTalkForbidCount != 0 || npc->isJellyFishMare()
-	    || gpCamera->isTalkCameraInbetween() || npc->mHolder != nullptr
-	    || npc->checkLiveFlag(
-	        LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
-	        | LIVE_FLAG_UNK200 | TBaseNPC::LIVE_FLAG_DONT_TALK
-	        | TBaseNPC::LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
-	    || npc->checkActionFlag(TBaseNPC::NPC_ACTION_BURNING)
-	    || !npc->isClean())
-		return;
-
-	if (npc->isSunflowerReviving() || !npc->isNerveCanGoToTalk()
-	    || (npc->mActorType == ACTOR_TYPE_NPC_MONTE_ME
-	        && npc->mLodAnm->getCurrentAnmKind() != NPC_ANM_KIND_UNK4)
-	    || SMS_IsMarioOpeningDoor())
-		return;
-
-	if (SMSGetMarDirector()->mMap == 7) {
-		JGeometry::TVec3<f32> local_58 = npc->mPosition;
-		local_58.y += 75.0f;
-		if (!SMS_IsInSameCameraCube(local_58))
-			return;
-	}
-
-	f32 fVar2;
-	f32 fVar1;
-	if (npc->mThrowCtrl != nullptr) {
-		fVar2 = TBaseNPC::mPtrSaveNormal->mSLThrowTalkAcceptDist.get();
-		fVar1 = TBaseNPC::mPtrSaveNormal->mSLThrowTalkAcceptHeight.get();
-	} else {
-		if (npc->mActorType == ACTOR_TYPE_NPC_SUNFLOWER_L)
-			fVar2 = TBaseNPC::mPtrSaveNormal->mSLSunflowerLTalkDist.get();
-		else
-			fVar2 = TBaseNPC::mPtrSaveNormal->mTalkAcceptDist.get();
-		fVar1 = TBaseNPC::mPtrSaveNormal->mTalkAcceptHeight.get();
-	}
-
-	f32 fVar3;
-	if (npc->checkActionFlag(TBaseNPC::NPC_ACTION_UNK400
-	                         | TBaseNPC::NPC_ACTION_UNK1)
-	    || npc->isSunflower() || npc->mActorType == ACTOR_TYPE_NPC_BOARD)
-		fVar3 = TBaseNPC::mPtrSaveNormal->mSLSitTalkAcceptDegree.get();
-	else
-		fVar3 = TBaseNPC::mPtrSaveNormal->mTalkAcceptDegree.get();
-
-	if (abs(SMS_GetMarioPos().y - npc->mPosition.y) < fVar1
-	    && npc->isInSight(SMS_GetMarioPos(), fVar2, fVar3, -1.0f)
-	    && MsIsInSight(SMS_GetMarioPos(), SHORTANGLE2DEG(*gpMarioAngleY),
-	                   npc->mPosition, fVar2,
-	                   TBaseNPC::mPtrSaveNormal->mSLMarioTalkAcceptDegree.get(),
-	                   0.0f))
-		result = true;
-}
-
 void TBaseNPC::changeNerveProc_()
 {
-	bool bVar5;
 	bool bVar4                                = false;
 	const TNerveBase<TLiveActor>* latestNerve = mSpine->getLatestNerve();
 	if (latestNerve == &TNerveNPCTalk::theNerve()) {
@@ -516,12 +449,7 @@ void TBaseNPC::changeNerveProc_()
 		onLiveFlag(LIVE_FLAG_UNK20000);
 		offLiveFlag(LIVE_FLAG_UNK40000);
 	} else {
-		bVar5 = false;
-		if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
-			bVar5 = true;
-		} else {
-			canTalkToMario(this, bVar5);
-		}
+		bool bVar5 = isTalkable_();
 
 		if (bVar5) {
 			onLiveFlag(LIVE_FLAG_UNK20000);
@@ -599,16 +527,11 @@ void TBaseNPC::changeNerveProc_()
 	}
 }
 
-// TODO: frame-only mismatch; no fabricated stack padding.
 void TBaseNPC::setPosAndInitAfterSinkBottom()
 {
 	JGeometry::TVec3<f32> pos = unk194;
-	f32 z;
-	f32 y;
-	y = pos.y;
-	z = pos.z;
 
-	bool cVar8 = gpPollution->isPolluted(pos.x, y, z);
+	bool cVar8 = gpPollution->isPolluted(pos.x, pos.y, pos.z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
 	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
 	            | LIVE_FLAG_UNK40000 | LIVE_FLAG_UNK400000
@@ -619,7 +542,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	mHolder     = nullptr;
 	if (unk15C != nullptr)
 		unk15C->unk0 = 0;
-	mHitPoints = getMaxHitPoints();
+	resetHitPoints();
 	if (mMultiMtxEffect != nullptr)
 		mMultiMtxEffect->flagOn(0x2);
 	mSpine->reset();
@@ -635,7 +558,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
 		           | LIVE_FLAG_SINK_BOTTOM);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
-		    pos.x, y + getHeadHeight(), z, &mGroundPlane);
+		    pos.x, pos.y + getHeadHeight(), pos.z, &mGroundPlane);
 		pos.y = unk1C4 - mIndividualParams->mSinkHeight.get();
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {

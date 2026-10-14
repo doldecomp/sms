@@ -184,7 +184,8 @@ void TMapStaticObj::calcUnique(JPABaseEmitter* emitter)
 	switch (mActorType) {
 	case ACTOR_TYPE_TOP_OF_CORONA:
 		if (emitter) {
-			JGeometry::TVec3<f32> scale(mEffectCoronaScale);
+			JGeometry::TVec3<f32> scale(mEffectCoronaScale, mEffectCoronaScale,
+			                            mEffectCoronaScale);
 			emitter->setGlobalScale(scale);
 		}
 		break;
@@ -218,8 +219,11 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx44 afStack_7c;
 		SMS_GetLightPerspectiveForEffectMtx(afStack_7c);
 
-		getModelData()->getMaterialNodePointer(0)->getTexMtx(1)->setEffectMtx(
-		    afStack_7c);
+		getModelData()
+		    ->getMaterialNodePointer(0)
+		    ->getTexGenBlock()
+		    ->getTexMtx(1)
+		    ->setEffectMtx(afStack_7c);
 	}
 
 	if ((cue & CUE_ENTRY)
@@ -429,16 +433,20 @@ void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> local_c18[0x100];
 		JGeometry::TVec3<f32> local_c24;
-		mGraph->getGraphNode(0).getPoint(&local_c24);
+		mGraph->unk0->getPoint(&local_c24);
+
+		JGeometry::TVec3<f32> tmp;
+		JGeometry::TVec3<f32>& camPos = tmp;
 
 		int count = 0;
 		for (int i = 1; i < mGraph->getNodeNum(); ++i, ++count) {
 			JGeometry::TVec3<f32> local_c30;
 			mGraph->getGraphNode(i).getPoint(&local_c30);
 
-			JGeometry::TVec3<f32> tmp = MsPerpendicFootToLineR(
-			    local_c24, local_c30,
-			    static_cast<const Vec&>(gpCamera->getUnk124()));
+			camPos.set(gpCamera->unk124);
+
+			JGeometry::TVec3<f32> tmp
+			    = MsPerpendicFootToLineR(local_c24, local_c30, camPos);
 			local_c18[count].set(tmp);
 
 			local_c24 = local_c30;

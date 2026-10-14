@@ -96,11 +96,9 @@ void TDolpicEventRiccoMammaGate::rising()
 	SMSRumbleMgr->start(0, (f32*)nullptr);
 	TMapObjBase::setJointScaleY(unk20, scale);
 	TMapObjBase::setJointTransY(unk20, 300.0f * (1.0f - scale));
-	J3DModel* model = gpMap->getRootJointModel()->getModel();
-	model->calc();
+	gpMap->getRootJointModel()->getModel()->calc();
 }
 
-// TODO: stack-only mismatch: matrix at 0x34 vs. 0x38 in retail.
 bool TDolpicEventRiccoMammaGate::control()
 {
 	if (unk44 < unk38 - unk3C && unk44 > unk40)
@@ -191,7 +189,8 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 	stream.readString();
 	stream >> unk54.x >> unk54.y >> unk54.z;
 	f32 unused;
-	stream >> unused >> unk60;
+	stream >> unused;
+	stream >> unk60;
 
 	int idx;
 	if (strcmp("イベント（リコゲート）", getName()) == 0) {

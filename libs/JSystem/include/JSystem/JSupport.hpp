@@ -19,7 +19,7 @@ T* JSUConvertOffsetToPtr(const void* ptr, const void* offset)
 	if (offset == nullptr) {
 		return nullptr;
 	} else {
-		return (T*)((intptr_t)ptr + (s32)offset);
+		return (T*)((intptr_t)ptr + (intptr_t)offset);
 	}
 }
 

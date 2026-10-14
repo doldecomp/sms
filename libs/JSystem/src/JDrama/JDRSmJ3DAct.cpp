@@ -37,27 +37,25 @@ void TSmJ3DAct::load(JSUMemoryInputStream& stream)
 void TSmJ3DAct::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		TPosition3f local_148;
-		local_148.identity();
-		local_148.setTrans(mPosition);
+		TPosition3f mtx;
+		mtx.identity();
+		mtx.setTrans(mPosition);
 
-		(void)&local_148;
+		TPosition3f rotation;
+		rotation.setEularZ(DEG_TO_RAD(mRotation.z));
+		rotation.setTrans(0.0f, 0.0f, 0.0f);
+		TPosition3f result;
+		result.concat(mtx, rotation);
 
-		TPosition3f tmp;
-		tmp.identity();
-		tmp.setEularX(DEG_TO_RAD(mRotation.x));
+		rotation.setEularY(DEG_TO_RAD(mRotation.y));
+		rotation.setTrans(0.0f, 0.0f, 0.0f);
+		mtx.concat(result, rotation);
 
-		TMtx34f local_110;
-		local_110.concat(local_148, tmp);
+		rotation.setEularX(DEG_TO_RAD(mRotation.x));
+		rotation.setTrans(0.0f, 0.0f, 0.0f);
+		result.concat(mtx, rotation);
 
-		tmp.setEularY(DEG_TO_RAD(mRotation.y));
-		TMtx34f local_140;
-		local_140.concat(local_110, tmp);
-
-		tmp.setEularZ(DEG_TO_RAD(mRotation.z));
-		local_110.concat(local_140, tmp);
-
-		unk48->setBaseTRMtx(local_110);
+		unk48->setBaseTRMtx(result);
 		unk48->setBaseScale(mScaling);
 
 		if (unk4C == nullptr) {

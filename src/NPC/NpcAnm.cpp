@@ -46,113 +46,10 @@ void TBaseNPC::offStopMotionBlend() { mInbetweenCtrl->stopMotionBlend(); }
 
 void TBaseNPC::onStopMotionBlend() { mInbetweenCtrl->startMotionBlend(); }
 
-// TODO: fabricated inline boundary; restores the late MActor pointer
-// copies in setNpcAnm_. Its original name and late GPR mismatch remain unknown.
-static inline void SetNpcPartsAnm(TBaseNPC* npc, EnumNpcAnmKind param_1)
-{
-	if (npc->unk168 != nullptr && npc->isPartsAnmNpc()) {
-		int actorType = npc->getActorType();
-		switch (actorType) {
-		case ACTOR_TYPE_NPC_PEACH: {
-			bool bVar8 = npc->checkUnk1D8(TBaseNPC::UNK1D8_FLAG_UNK1);
-			int iVar7;
-			MActor* mactor = npc->unk168->getPartsMActor(0, 0);
-			if (mactor != nullptr) {
-				switch (param_1) {
-				case NPC_ANM_KIND_UNK5:
-					iVar7 = bVar8 ? 4 : 6;
-					break;
-
-				default:
-					iVar7 = bVar8 ? 3 : 5;
-					break;
-				}
-				mactor->setBck(iVar7);
-			}
-
-			mactor = npc->unk168->getPartsMActor(3, 0);
-			if (mactor != nullptr) {
-				switch (param_1) {
-				case NPC_ANM_KIND_TAKEN:
-					iVar7 = 7;
-					break;
-
-				case NPC_ANM_KIND_UNK10:
-					iVar7 = 14;
-					break;
-
-				case NPC_ANM_KIND_UNK1A:
-					iVar7 = 13;
-					break;
-
-				case NPC_ANM_KIND_UNK5:
-				default:
-					iVar7 = bVar8                                          ? 11
-					        : npc->checkUnk1D8(TBaseNPC::UNK1D8_FLAG_UNK4) ? 9
-					                                                       : 8;
-					break;
-				}
-
-				mactor->setBck(iVar7);
-			}
-
-			mactor = npc->unk168->getPartsMActor(4, 0);
-			if (mactor != nullptr) {
-				switch (param_1) {
-				case NPC_ANM_KIND_UNK5:
-					iVar7 = -1;
-					break;
-				default:
-					iVar7 = 17;
-					break;
-				}
-				mactor->setBck(iVar7);
-			}
-		} break;
-
-		case ACTOR_TYPE_NPC_MARE_MB: {
-			int iVar7 = 1;
-			switch (param_1) {
-			case NPC_ANM_KIND_UNK6:
-				iVar7 = 2;
-				break;
-			case NPC_ANM_KIND_UNK5:
-				iVar7 = 3;
-				break;
-			}
-			MActor* mactor = npc->unk168->getPartsMActor(9, 0);
-			if (mactor != nullptr) {
-				mactor->setBck(iVar7);
-			}
-		} break;
-
-		case ACTOR_TYPE_NPC_MARE_WB: {
-			int iVar7 = 0;
-			int iVar3 = 0;
-			switch (param_1) {
-			case NPC_ANM_KIND_UNK5:
-				iVar7 = 2;
-				iVar3 = 1;
-				break;
-			case NPC_ANM_KIND_UNK6:
-				iVar7 = 1;
-				break;
-			}
-			MActor* mactor = npc->unk168->getPartsMActor(10, 0);
-			if (mactor != nullptr) {
-				mactor->setBck(iVar7);
-				mactor->setBtpFromIndex(iVar3);
-			}
-		} break;
-		}
-	}
-}
-
 void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
                           EnumNpcStopMotionBlendOnOff param_2)
 {
-	int actorType = getActorType();
-	if (actorType < 0x400001E && actorType >= ACTOR_TYPE_NPC_DUMMY)
+	if (mActorType < 0x400001E && mActorType >= ACTOR_TYPE_NPC_DUMMY)
 		return;
 
 	mKeepAnmCtrl->reset();
@@ -181,23 +78,131 @@ void TBaseNPC::setNpcAnm_(EnumNpcAnmKind param_1,
 		if (checkUnk1D8(UNK1D8_FLAG_UNK1)) {
 			if (param_1 == NPC_ANM_KIND_UNK5) {
 				mMActor->setBrkFromIndex(
-				    getActorType() == ACTOR_TYPE_NPC_SUNFLOWER_L ? 1 : 1);
+				    mActorType == ACTOR_TYPE_NPC_SUNFLOWER_L ? 1 : 1);
 				ctrl->setAttribute(J3DFrameCtrl::ATTR_ONCE);
 			} else {
 				mMActor->setBrkFromIndex(
-				    getActorType() == ACTOR_TYPE_NPC_SUNFLOWER_L ? 0 : 0);
+				    mActorType == ACTOR_TYPE_NPC_SUNFLOWER_L ? 0 : 0);
 				ctrl->setRate(0.0f);
 			}
 		} else if (checkUnk1D8(UNK1D8_FLAG_UNK2)) {
 			if (param_1 == NPC_ANM_KIND_UNK1A) {
 				mMActor->setBrkFromIndex(
-				    getActorType() == ACTOR_TYPE_NPC_SUNFLOWER_L ? 0 : 0);
+				    mActorType == ACTOR_TYPE_NPC_SUNFLOWER_L ? 0 : 0);
 				ctrl->setAttribute(J3DFrameCtrl::ATTR_ONCE);
 			}
 		}
 	}
 
-	SetNpcPartsAnm(this, param_1);
+	if (unk168 != nullptr && isPartsAnmNpc()) {
+		switch (mActorType) {
+		case ACTOR_TYPE_NPC_PEACH: {
+			bool bVar8 = checkUnk1D8(UNK1D8_FLAG_UNK1);
+			if (MActor* mactor = unk168->getPartsMActor(0, 0)) {
+				int iVar7;
+				switch (param_1) {
+				case NPC_ANM_KIND_UNK5:
+					if (bVar8)
+						iVar7 = 4;
+					else
+						iVar7 = 6;
+					break;
+
+				default:
+					if (bVar8)
+						iVar7 = 3;
+					else
+						iVar7 = 5;
+					break;
+				}
+				if (!mactor->checkCurBckFromIndex(iVar7))
+					mactor->setBckFromIndex(iVar7);
+			}
+
+			if (MActor* mactor = unk168->getPartsMActor(3, 0)) {
+				int iVar7;
+
+				switch (param_1) {
+				case NPC_ANM_KIND_TAKEN:
+					iVar7 = 7;
+					break;
+
+				case NPC_ANM_KIND_UNK10:
+					iVar7 = 14;
+					break;
+
+				case NPC_ANM_KIND_UNK1A:
+					iVar7 = 13;
+					break;
+
+				case NPC_ANM_KIND_UNK5:
+				default:
+					if (bVar8)
+						iVar7 = 11;
+					else if (checkUnk1D8(UNK1D8_FLAG_UNK4))
+						iVar7 = 9;
+					else
+						iVar7 = 8;
+					break;
+				}
+
+				if (!mactor->checkCurBckFromIndex(iVar7))
+					mactor->setBckFromIndex(iVar7);
+			}
+
+			if (MActor* mactor = unk168->getPartsMActor(4, 0)) {
+				int iVar7;
+				switch (param_1) {
+				case NPC_ANM_KIND_UNK5:
+					iVar7 = -1;
+					break;
+				default:
+					iVar7 = 17;
+					break;
+				}
+				if (!mactor->checkCurBckFromIndex(iVar7))
+					mactor->setBckFromIndex(iVar7);
+			}
+		} break;
+
+		case ACTOR_TYPE_NPC_MARE_MB: {
+			int iVar7 = 1;
+			switch (param_1) {
+			case NPC_ANM_KIND_UNK6:
+				iVar7 = 2;
+				break;
+			case NPC_ANM_KIND_UNK5:
+				iVar7 = 3;
+				break;
+			}
+			MActor* mactor = unk168->getPartsMActor(9, 0);
+			if (mactor != nullptr) {
+				if (!mactor->checkCurBckFromIndex(iVar7))
+					mactor->setBckFromIndex(iVar7);
+			}
+		} break;
+
+		case ACTOR_TYPE_NPC_MARE_WB: {
+			int iVar7 = 0;
+			int iVar3 = 0;
+			switch (param_1) {
+			case NPC_ANM_KIND_UNK5:
+				iVar7 = 2;
+				iVar3 = 1;
+				break;
+			case NPC_ANM_KIND_UNK6:
+				iVar7 = 1;
+				break;
+			}
+			MActor* mactor = unk168->getPartsMActor(10, 0);
+			if (mactor != nullptr) {
+				if (!mactor->checkCurBckFromIndex(iVar7))
+					mactor->setBckFromIndex(iVar7);
+				mactor->setBtpFromIndex(iVar3);
+			}
+		} break;
+		}
+	}
 
 	if (param_2 == NPC_STOP_MOTION_BLEND_ON)
 		onStopMotionBlend();
@@ -269,18 +274,10 @@ void TBaseNPC::randomizeBckAndBtpFrame_()
 	}
 }
 
-// TODO: fabricated horizontal-speed output inline; original name unknown.
-// Its output boundary restores MsSqrtf's 0x7c rounding slot (return: 0x80).
-static inline void NpcHorizontalMagnitude(const JGeometry::TVec3<f32>& vec,
-                                          f32* magnitude)
-{
-	*magnitude = MsSqrtf(vec.x * vec.x + vec.z * vec.z);
-}
-
 void TBaseNPC::walkAnmRateChange_()
 {
-	f32 dVar13;
-	NpcHorizontalMagnitude(mPositionDelta, &dVar13);
+	f32 dVar13 = MsSqrtf(mPositionDelta.x * mPositionDelta.x
+	                     + mPositionDelta.z * mPositionDelta.z);
 	if (dVar13 < 0.001f) {
 		switch (mLodAnm->getCurrentAnmKind()) {
 		case NPC_ANM_KIND_WALK:
@@ -339,9 +336,10 @@ void TBaseNPC::walkAnmRateChange_()
 			if (dVar13 > dVar10)
 				dVar13 = dVar10;
 
-			f32 fVar2 = mIndividualParams->mSLMinMarchSpeed.get();
-			f32 dVar131
-			    = MsClamp(CLBCalcRatio(fVar2, dVar10, dVar13), 0.0f, 1.0f);
+			f32 dVar131 = MsClamp(
+			    CLBCalcRatio(mIndividualParams->mSLMinMarchSpeed.get(), dVar10,
+			                 dVar13),
+			    0.0f, 1.0f);
 
 			f32 dVar132 = CLBLinearInbetween(fVar1, dVar12, dVar131);
 
@@ -385,9 +383,8 @@ EnumNpcAnmKind TBaseNPC::getNpcWaitAnmBase_()
 void TBaseNPC::npcWaitIn()
 {
 	EnumNpcAnmKind kind = NPC_ANM_KIND_UNK1;
-	bool canSelectWait  = !checkActionFlag(NPC_ACTION_UNK400);
 
-	if (canSelectWait) {
+	if (!checkActionFlag(NPC_ACTION_UNK400)) {
 		if (!isClean()) {
 			kind = NPC_ANM_KIND_DIRTY;
 		} else if (checkActionFlag(NPC_ACTION_HAPPY)) {
@@ -400,8 +397,7 @@ void TBaseNPC::npcWaitIn()
 				kind = NPC_ANM_KIND_UNK12;
 			}
 		} else {
-			const TGraphWeb* graph = unk124->getGraph();
-			if (!graph->isDummy()) {
+			if (!unk124->unk0->isDummy()) {
 				if (mSpine->getLatestNerve()
 				    == &TNerveNPCGraphWait::theNerve()) {
 					if (!SMSGetMarDirector()->isThing())
@@ -431,9 +427,8 @@ bool TBaseNPC::npcRecoverFromSinking()
 	if (!bVar2) {
 		if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
-			f32 gravity = getGravityY();
-			f32 height  = unk1C4 - mPosition.y + 150.0f;
-			mVelocity.y = CalcJumpVelocityY(height, gravity);
+			mVelocity.y = CalcJumpVelocityY(unk1C4 - mPosition.y + 150.0f,
+			                                getGravityY());
 			if (mVelocity.y < 5.0f)
 				mVelocity.y = 5.0f;
 		}
@@ -500,27 +495,27 @@ void TBaseNPC::npcTalking()
 	if (isTurnToMarioWhenTalk()) {
 		SMS_GoRotate(mPosition, SMS_GetMarioPos(), getTurnSpeed(),
 		             &mRotation.y);
-		TGraphWeb* graph = getTracer()->getGraph();
-		if (!graph->isDummy())
+		if (!unk124->getGraph()->isDummy())
 			onUnk1DA(UNK1DA_FLAG_UNK1);
 	}
 
-	if (isPeachTired() && mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A
+	bool bVar1 = false;
+	if (mActorType == ACTOR_TYPE_NPC_PEACH && checkUnk1D8(UNK1D8_FLAG_UNK2))
+		bVar1 = true;
+
+	if (bVar1 && mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A
 	    && mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		peachTiredOut_();
 	}
 }
 
-// TODO: cursor-position temporary is at sp+0x30; retail uses sp+0x34.
 void TBaseNPC::npcTalkOut()
 {
 	mTalkForbidCount = 60;
 
-	bool bVar2 = checkLiveFlag(LIVE_FLAG_UNK80000);
-	if (bVar2) {
+	if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
 		mWalkForbidCount = 120;
-		bVar2            = isPeachTired();
-		if (bVar2)
+		if (isPeachTired())
 			peachTiredOut_();
 
 		if (checkActionFlag(NPC_ACTION_HAPPY)) {
@@ -574,8 +569,7 @@ void TBaseNPC::npcWetIn()
 				if (isNormalMonte())
 					EVar6 = NPC_STOP_MOTION_BLEND_OFF;
 			} else {
-				if (isNormalMonte()
-				    || getActorType() == ACTOR_TYPE_NPC_MONTE_WC) {
+				if (isNormalMonte() || mActorType == ACTOR_TYPE_NPC_MONTE_WC) {
 					if (!checkLiveFlag(LIVE_FLAG_UNK4000000)
 					    && MsRandF() < 0.5f)
 						EVar7 = NPC_ANM_KIND_UNKB;
@@ -583,20 +577,15 @@ void TBaseNPC::npcWetIn()
 						EVar6 = NPC_STOP_MOTION_BLEND_OFF;
 				} else {
 					if (isNormalMare()
-					    || getActorType() == ACTOR_TYPE_NPC_MARE_MC) {
+					    || mActorType == ACTOR_TYPE_NPC_MARE_MC) {
 						if (MsRandF() < 0.5f)
 							EVar7 = NPC_ANM_KIND_UNKB;
-					} else {
-						int actorType = getActorType();
-						switch (actorType) {
-						case ACTOR_TYPE_NPC_KINOPIO:
-						case ACTOR_TYPE_NPC_KINOJII:
-							if (!checkLiveFlag(LIVE_FLAG_UNK4000000)) {
-								if (MsRandF() < 0.5f)
-									EVar7 = NPC_ANM_KIND_UNKB;
-							}
-							break;
-						}
+					} else if (!(mActorType < ACTOR_TYPE_NPC_PEACH
+					             && mActorType >= ACTOR_TYPE_NPC_KINOPIO)) {
+						(void)mActorType; // TODO: uh, inlining maybe?
+					} else if (!checkLiveFlag(LIVE_FLAG_UNK4000000)) {
+						if (MsRandF() < 0.5f)
+							EVar7 = NPC_ANM_KIND_UNKB;
 					}
 				}
 			}
@@ -821,15 +810,10 @@ bool TBaseNPC::npcMadding()
 		case NPC_ANM_KIND_UNK4: {
 			SMS_GoRotate(mPosition, SMS_GetMarioPos(),
 			             mIndividualParams->mMadTurnSpeed.get(), &mRotation.y);
-			// Copies spelled out as the old TVec3 copy-ctor body; the current
-			// `: Vec(other)` ctor codegens differently here.
-			JGeometry::TVec3<f32> axis;
-			*(Vec*)&axis = *(Vec*)&SMS_GetMarioPos();
+			JGeometry::TVec3<f32> axis = SMS_GetMarioPos();
 			axis -= mPosition;
-			JGeometry::TVec3<f32> copy;
-			*(Vec*)&copy = *(Vec*)&axis;
-			JGeometry::TVec3<f32> copy2;
-			*(Vec*)&copy2 = *(Vec*)&copy;
+			JGeometry::TVec3<f32> copy  = axis;
+			JGeometry::TVec3<f32> copy2 = copy;
 			JGeometry::TVec3<f32> copy3;
 			copy3.set(copy2);
 			f32 fVar1 = MsWrap(abs(mRotation.y - MsGetRotFromZaxisY(copy3)),
@@ -871,8 +855,7 @@ bool TBaseNPC::npcBlowning()
 
 void TBaseNPC::npcMareStandIn()
 {
-	int kind = mLodAnm->getCurrentAnmKind();
-	switch (kind) {
+	switch (mLodAnm->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_UNKE:
 	case NPC_ANM_KIND_UNK5:
 		unk22C->doThing3(240, 360);
@@ -1000,8 +983,8 @@ void TBaseNPC::sunflowerReviveIn()
 bool TBaseNPC::sunflowerReviving()
 {
 	bool result = false;
-	bool bVar1  = checkUnk1D8(UNK1D8_FLAG_UNK2);
-	if (bVar1 && mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
+	if (checkUnk1D8(UNK1D8_FLAG_UNK2)
+	    && mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
 		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 			offUnk1D8(UNK1D8_FLAG_UNK2);
 			if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
@@ -1059,7 +1042,3 @@ void TBaseNPC::monteMESetAnmWhenNear()
 		break;
 	}
 }
-
-// @todo: npcMareStandIn's .sdata2 @3245 precedes the timer width @3246.
-// Recover the random helper boundary instead of this ordering anchor.
-void order_sdata2(f32* constants) { *constants = 1.0f / 32768.0f; }

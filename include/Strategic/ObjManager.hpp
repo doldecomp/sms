@@ -61,9 +61,6 @@ public:
 	TObjChara* getChara() { return unk1C; }
 	s32 getModelDataNum() const { return mModelDataNum; }
 
-	// fabricated: reads unk18 directly; getObj() changes its codegen
-	friend class TNerveTamaNokoSink;
-
 protected:
 	/* 0x10 */ s32 mCapacity;
 	/* 0x14 */ s32 mObjNum;

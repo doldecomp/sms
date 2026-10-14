@@ -122,6 +122,17 @@ b   ...
 ... the code block inside the switch ...
 ```
 
+### Comparison constants can be default-range boundaries
+
+MWCC's `build_case_ranges` sorts case values and inserts default ranges between them.
+`emit_case_range_binary_search` can compare against the beginning of a default range, so a comparison constant need not be an explicit `case` value.
+Read these routines in the MWCC decompilation when the switch dispatch differs despite apparently correct case values.
+
+Concrete case (`conductor.cpp`, `TConductor::isBossDefeated`): `default` grouped with `case 1`, followed by `case 3`, reproduces the target comparisons against `2` and `4`.
+Here `2` is the single-value default gap between the explicit cases, and `4` starts the default range above `3`.
+Using `case 2` instead gives a different decision tree.
+The corrected switch matches; the function remains frame-only nonmatching.
+
 ### Case ordering is strict
 
 MWCC **never reorders cases in a switch statement** during compilation. The order of `case` labels in the source code must match exactly the order they appear in the assembled jump table or branch chain. If a function exhibits a non-matching switch and you've verified the case logic is correct, inspect the target assembly to determine the actual case sequence and reorder the source cases accordingly. Even if semantically equivalent, the compiled output will differ until case order matches.

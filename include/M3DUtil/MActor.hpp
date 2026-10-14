@@ -106,6 +106,7 @@ public:
 	MActorAnmBck* getAnmBck() { return mAnmBck; }
 	J3DModel* getModel() const { return mModel; }
 	void unmarkUnk40() { unk40 = false; }
+	void markUnk40() { unk40 = true; }
 	BOOL curAnmEndsNext() { return curAnmEndsNext(ANM_TYPE_BCK, nullptr); }
 
 	// fabricated

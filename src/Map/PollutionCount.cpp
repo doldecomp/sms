@@ -325,9 +325,9 @@ static void makeWorldToPollutionMtx(f32 scale, f32 x, f32 z, TPosition3f* mtx)
 	mtx->zero();
 
 	mtx->mMtx[0][0] = scale;
-	mtx->mMtx[0][3] = -z * scale;
+	mtx->mMtx[0][3] = -x * scale;
 	mtx->mMtx[1][2] = scale;
-	mtx->mMtx[1][3] = -x * scale;
+	mtx->mMtx[1][3] = -z * scale;
 }
 
 void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
@@ -510,9 +510,7 @@ void TPollutionCounterLayer::drawRevivalTexStamp(int layer_index) const
 	GXSetNumTexGens(0);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, 0, 0x7D);
 	GXSetNumChans(1);
-	GXColor color;
-	color = (GXColor) { 0xff, 0xff, 0xff, 0x14 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0xff, 0xff, 0xff, 0x14 });
 	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 	              GX_AF_NONE);
 	GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
@@ -673,10 +671,8 @@ void TPollutionCounterLayer::calcViewMtx()
 		TPollutionLayer* layer = gpPollution->getLayer(i);
 
 		TPosition3f local_a4;
-		f32 z = layer->mMinZ;
-		f32 x = layer->mMinX;
-		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, z, x,
-		                        &local_a4);
+		makeWorldToPollutionMtx(layer->mPos.mInverseTexelScale, layer->mMinX,
+		                        layer->mMinZ, &local_a4);
 
 		j3dSys.setViewMtx(local_a4);
 		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 0);

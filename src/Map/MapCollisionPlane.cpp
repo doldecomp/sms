@@ -8,8 +8,7 @@
 
 TBGCheckData* TMapCheckGroundPlane::getCheckData(int x, int z, int which) const
 {
-	x += z * mGridHeight;
-	return &mGrid[x * 2 + which];
+	return &mGrid[(z * mGridHeight + x) * 2 + which];
 }
 
 f32 TMapCheckGroundPlane::checkPlaneGround(f32 x, f32 y, f32 z,

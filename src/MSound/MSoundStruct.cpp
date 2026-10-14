@@ -99,7 +99,6 @@ bool MSSetSoundGrp::startSoundSetGrp(u32 param1, const Vec* param2, u32 param3,
 
 // Their original include structure was complete nonsense,
 // so this shall live here for now to avoid circular includes.
-// TODO: replay guard/register allocation and replacement actor slot differ.
 template <typename T>
 bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
                                         u32 param_3, f32 param_4, u32 param_5,
@@ -114,7 +113,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 	f32 f31 = JALCalc::getDist(&unkAC, (Vec*)param_2);
 
 	if (unk5C[unk5A] == nullptr) {
-		f32 f29 = dVar9;
+		f32 f29 = param_4;
 		u32 r31 = param_1;
 
 		switch (param_1) {
@@ -154,7 +153,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		MSSetSoundMember* candidate;
 
 		u32 bVar1 = unk1D.get();
-		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.unk0;
+		u32 uVar5 = JALCalc::getRandom_0_1() * unk1E.get();
 		bVar1 += uVar5;
 		u32 uVar7 = unk5C[unk5A]->getPlayGameFrameCounter();
 		if (uVar7 < bVar1) {
@@ -176,7 +175,7 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 		if (!bVar2)
 			return true;
 
-		f32 f29 = dVar9;
+		f32 f29 = param_4;
 		u32 r26 = param_1;
 		switch (param_1) {
 		case MSD_SE_ERASE_SCRAWL:
@@ -227,10 +226,11 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 					f1  = unk28.get();
 					f30 = JALCalc::linearTransform(uVar7, unk1D.get(), f1,
 					                               unk30.get(), 1.0f, false);
-					f1  = unk28.get();
+					f32 pitchEnd   = unk28.get();
 					f32 pitchStart = 1.0f;
-					f29            = JALCalc::linearTransform(
-                        uVar7, unk1D.get(), f1, pitchStart, unk34.get(), false);
+					f29 = JALCalc::linearTransform(uVar7, unk1D.get(), pitchEnd,
+					                               pitchStart, unk34.get(),
+					                               false);
 				}
 
 				f32 f28;
@@ -240,10 +240,12 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 					unk58 = 1;
 					JALCalc::linearTransform((f32)unk54, 0.0f, unk44.get(),
 					                         0.0f, unk50.get(), false);
-					f27 = JALCalc::linearTransform(
-					    (f32)unk54, 0.0f, unk44.get(), 1.0f, unk48.unk0, false);
-					f28 = JALCalc::linearTransform(
-					    (f32)unk54, 0.0f, unk44.get(), 1.0f, unk4C.unk0, false);
+					f27 = JALCalc::linearTransform((f32)unk54, 0.0f,
+					                               unk44.get(), 1.0f,
+					                               unk48.get(), false);
+					f28 = JALCalc::linearTransform((f32)unk54, 0.0f,
+					                               unk44.get(), 1.0f,
+					                               unk4C.get(), false);
 				} else {
 					unk58 = 0;
 					unk54 = 0;

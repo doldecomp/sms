@@ -30,10 +30,9 @@ BOOL TMario::barWait()
 		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 	}
 
-	mPosition.x = mHolder->getPosition().x;
-	f32 holderY = mHolder->getPosition().y;
-	mPosition.y = holderY + mHolderHeightDiff;
-	mPosition.z = mHolder->getPosition().z;
+	mPosition.x = mHolder->mPosition.x;
+	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
+	mPosition.z = mHolder->mPosition.z;
 
 	if ((mInput & 0x8000) || mHolderHeightDiff <= 100.0f) {
 		setPlayerVelocity(-2.0f);
@@ -46,8 +45,7 @@ BOOL TMario::barWait()
 		return changePlayerStatus(MARIO_STATUS_BAR_CLIMB, 0, false);
 
 	if (unk108->mStickV < -16.0f) {
-		f32 slipRate = 0.001953125f;
-		mVel.y += unk108->mStickV * slipRate;
+		mVel.y += unk108->mStickV / 512.0f;
 		mPosition.y += mVel.y;
 		mHolderHeightDiff = mPosition.y - mHolder->mPosition.y;
 		treeSlipEffect();
@@ -75,7 +73,7 @@ BOOL TMario::barWait()
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
-		u8 map = gpMarDirector->getCurrentMap();
+		u8 map = SMSGetMarDirector()->getCurrentMap();
 		if (map == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
@@ -117,16 +115,14 @@ BOOL TMario::barClimb()
 
 	if (mInput & 0x2) {
 		mPosition.x -= 200.0f * JMASSin(mFaceAngle.y);
-		s16 angle = mFaceAngle.y;
-		mPosition.z -= 200.0f * JMASCos(angle);
+		mPosition.z -= 200.0f * JMASCos(mFaceAngle.y);
 		mFaceAngle.y += 0x8000;
 		return changePlayerStatus(MARIO_STATUS_WALL_JUMP, 0, false);
 	}
 
-	mPosition.x = mHolder->getPosition().x;
-	f32 holderY = mHolder->getPosition().y;
-	mPosition.y = holderY + mHolderHeightDiff;
-	mPosition.z = mHolder->getPosition().z;
+	mPosition.x = mHolder->mPosition.x;
+	mPosition.y = mHolder->mPosition.y + mHolderHeightDiff;
+	mPosition.z = mHolder->mPosition.z;
 
 	if (unk108->mStickV < 8.0f)
 		return changePlayerStatus(MARIO_STATUS_BAR_WAIT, 0, false);
@@ -142,8 +138,10 @@ BOOL TMario::barClimb()
 	}
 
 	if (barProcess() == 0) {
-		f32 rate = mBarParams.mClimbAnmRate.get() * unk108->mStickV + 1.0f;
-		setAnimation(ANIM_TREE_CLIMB, rate);
+		// TODO: fakematch
+		f32 rate = mBarParams.mClimbAnmRate.get();
+		f32 v    = unk108->mStickV;
+		setAnimation(ANIM_TREE_CLIMB, v * rate + 1.0f);
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_BANANA_TREE) {
@@ -154,7 +152,7 @@ BOOL TMario::barClimb()
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
-		u8 state = gpMarDirector->getCurrentMap();
+		u8 state = SMSGetMarDirector()->mMap;
 		if (state == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
@@ -255,8 +253,7 @@ int TMario::doRoofMovingProcess()
 	mVel.z     = mSlideVelZ;
 
 	JGeometry::TVec3<f32> newPos;
-	f32 x    = mPosition.x - mVel.x * mRoofPlane->getNormal().y;
-	newPos.x = x;
+	newPos.x = mPosition.x - mVel.x * mRoofPlane->getNormal().y;
 	newPos.z = mPosition.z - mVel.z * mRoofPlane->getNormal().y;
 	newPos.y = mPosition.y;
 
@@ -286,9 +283,10 @@ BOOL TMario::roofCommonEvents()
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
 	}
 	if (mInput & 0x2) {
-		THitActor* actor = (THitActor*)mRoofPlane->getActor();
+		const TLiveActor* actor = mRoofPlane->mActor;
 		if (actor != nullptr) {
-			actor->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
+			((THitActor*)actor)
+			    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 			if (actor->mActorType == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 				emitParticle(PARTICLE_MS_M_AMIATTACK, &mHeadPos);
 				rumbleStart(0x15, mMotorParams.mMotorWall.get());
@@ -653,7 +651,6 @@ BOOL TMario::taken()
 
 void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 {
-	// TODO: frame-only mismatch; stack frame is 0x150 instead of 0x148.
 	JGeometry::TVec3<f32> start   = mWireStartPos;
 	JGeometry::TVec3<f32> dir     = mWireEndPos - start;
 	JGeometry::TVec3<f32> dirCopy = dir;
@@ -682,11 +679,10 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 BOOL TMario::wireMove(f32 param_1)
 {
 	JGeometry::TVec3<f32> start = mWireStartPos;
-	JGeometry::TVec3<f32> dir;
-	dir        = mWireEndPos - start;
-	f32 len    = dir.length();
-	f32 delta  = param_1 / len;
-	f32 margin = 100.0f / len;
+	JGeometry::TVec3<f32> dir   = mWireEndPos - start;
+	f32 len                     = dir.length();
+	f32 delta                   = param_1 / len;
+	f32 margin                  = 100.0f / len;
 
 	BOOL clean = true;
 	if (mWirePosRatio + delta > 1.0f - margin) {
@@ -697,7 +693,7 @@ BOOL TMario::wireMove(f32 param_1)
 		mWirePosRatio = margin;
 		clean         = false;
 	}
-	if (clean == TRUE)
+	if (clean)
 		mWirePosRatio += delta;
 	return clean;
 }
@@ -705,31 +701,7 @@ BOOL TMario::wireMove(f32 param_1)
 BOOL TMario::wireWait()
 {
 	s16 wireAngle;
-	// TODO: recover the getOnWirePosAngle inline; its current body adds a copy.
-	JGeometry::TVec3<f32> start(mWireStartPos,
-	                            JGeometry::TVec3<f32>::ASSIGN_COPY);
-	JGeometry::TVec3<f32> dir(mWireEndPos - start,
-	                          JGeometry::TVec3<f32>::ASSIGN_COPY);
-
-	mPosition.assignCopy(start + dir * mWirePosRatio);
-	mPosition.y -= 160.0f;
-
-	Mtx rotA;
-	J3DGetTranslateRotateMtx(mFaceAngle.x, 0, 0, 0.0f, 0.0f, 0.0f, rotA);
-	Mtx rotB;
-	J3DGetTranslateRotateMtx(0, mFaceAngle.y, 0, 0.0f, 0.0f, 0.0f, rotB);
-	Mtx concat;
-	MTXConcat(rotB, rotA, concat);
-
-	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * JGeometry::TUtil<f32>::one(),
-	                             0.0f);
-	MTXMultVec(concat, &sagVec, &sagVec);
-
-	mPosition.x += sagVec.x;
-	mPosition.y += sagVec.y;
-	mPosition.z += sagVec.z;
-
-	wireAngle = matan(dir.z, dir.x);
+	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
 		onFlag(MARIO_FLAG_UNK100);
@@ -795,20 +767,10 @@ BOOL TMario::wireWait()
 	return 0;
 }
 
-// TODO: inferred shared swap inline; the original helper name is unknown.
-static inline void swapWirePositions(JGeometry::TVec3<f32>& start,
-                                     JGeometry::TVec3<f32>& end)
-{
-	JGeometry::TVec3<f32> tmp = start;
-	start                     = end;
-	end                       = tmp;
-}
-
 BOOL TMario::wireSWait()
 {
 	s16 wireAngle;
 
-	// TODO: TVec3 scalar multiplication has a different inline boundary.
 	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
@@ -838,8 +800,10 @@ BOOL TMario::wireSWait()
 			return changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_L, 0,
 			                          false);
 
-		swapWirePositions(mWireStartPos, mWireEndPos);
-		mWirePosRatio = 1.0f - mWirePosRatio;
+		JGeometry::TVec3<f32> tmp = mWireStartPos;
+		mWireStartPos             = mWireEndPos;
+		mWireEndPos               = tmp;
+		mWirePosRatio             = 1.0f - mWirePosRatio;
 		return changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_R, 0, false);
 	}
 
@@ -866,8 +830,10 @@ BOOL TMario::wireWaitToSWaitR()
 	setAnimation(ANIM_ROPE_WTOSW_R, 1.0f);
 	if (isLast1AnimeFrame()) {
 		changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT, 0, false);
-		swapWirePositions(mWireStartPos, mWireEndPos);
-		mWirePosRatio = 1.0f - mWirePosRatio;
+		JGeometry::TVec3<f32> tmp = mWireStartPos;
+		mWireStartPos             = mWireEndPos;
+		mWireEndPos               = tmp;
+		mWirePosRatio             = 1.0f - mWirePosRatio;
 	}
 	return 0;
 }
@@ -892,7 +858,7 @@ BOOL TMario::wireWaitToHang()
 	if (isLast1AnimeFrame()) {
 		bool noHold = false;
 		if (mHeldObject == nullptr && !onYoshi())
-			noHold = true;
+			noHold = TRUE;
 		if (noHold)
 			return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -908,7 +874,7 @@ BOOL TMario::wireSWaitToHang()
 	if (isLast1AnimeFrame()) {
 		bool noHold = false;
 		if (mHeldObject == nullptr && !onYoshi())
-			noHold = true;
+			noHold = TRUE;
 		if (noHold)
 			return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 		return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -1018,25 +984,7 @@ BOOL TMario::wireRolling()
 	s16 initialAngle = mFaceAngle.x;
 
 	s16 wireAngle;
-	// TODO: recover getOnWirePosAngle's vector operator inline boundaries.
-	JGeometry::TVec3<f32> start = mWireStartPos;
-	JGeometry::TVec3<f32> dir;
-	dir       = mWireEndPos - start;
-	mPosition = dir * mWirePosRatio + start;
-	mPosition.y -= 160.0f;
-	Mtx rotA;
-	J3DGetTranslateRotateMtx(mFaceAngle.x, 0, 0, 0.0f, 0.0f, 0.0f, rotA);
-	Mtx rotB;
-	J3DGetTranslateRotateMtx(0, mFaceAngle.y, 0, 0.0f, 0.0f, 0.0f, rotB);
-	Mtx concat;
-	MTXConcat(rotB, rotA, concat);
-	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * JGeometry::TUtil<f32>::one(),
-	                             0.0f);
-	MTXMultVec(concat, &sagVec, &sagVec);
-	mPosition.x += sagVec.x;
-	mPosition.y += sagVec.y;
-	mPosition.z += sagVec.z;
-	wireAngle = matan(dir.z, dir.x);
+	getOnWirePosAngle(&mPosition, &wireAngle);
 
 	if (mInput & 0x2)
 		mStatusState |= 1;
@@ -1150,7 +1098,7 @@ BOOL TMario::wireRolling()
 			mWireSag       = 0.0f;
 			bool noHold    = false;
 			if (mHeldObject == nullptr && !onYoshi())
-				noHold = true;
+				noHold = TRUE;
 			if (noHold)
 				return changePlayerStatus(MARIO_STATUS_WIRE_HANGING, 0, false);
 			return changePlayerStatus(MARIO_STATUS_LANDING, 0, false);
@@ -1212,19 +1160,7 @@ void TMario::getCurrentPullParams(f32* outV, f32* outH)
 	}
 }
 
-void TMario::setPullingAnm(const JGeometry::TVec3<f32>& delta, f32 animRate)
-{
-	s16 ang  = matan(delta.z, delta.x);
-	s16 adff = ang - mFaceAngle.y;
-	if (adff >= -0x2000 && adff <= 0x2000)
-		setAnimation(ANIM_HOLD_DRAG, animRate);
-	if (adff <= -0x6000 || adff >= 0x6000)
-		setAnimation(ANIM_HOLD_BACK, animRate);
-	if (adff > -0x6000 && adff < -0x2000)
-		setAnimation(ANIM_HOLD_MOVE_R, animRate);
-	if (adff > 0x2000 && adff < 0x6000)
-		setAnimation(ANIM_HOLD_MOVE_L, animRate);
-}
+void TMario::setPullingAnm(const JGeometry::TVec3<f32>&, f32) { }
 
 BOOL TMario::pulling()
 {
@@ -1300,14 +1236,22 @@ BOOL TMario::pulling()
 			delta = mPosition - mPrevPosition;
 		}
 
-		// TODO: expanded length; length() leaves both sums unfused.
 		f32 y   = delta.y;
 		f32 len = JGeometry::TUtil<f32>::sqrt(delta.x * delta.x + y * y
 		                                      + delta.z * delta.z);
 		if (len < 1.0f) {
 			setAnimation(ANIM_HOLD_WAIT, animRate);
 		} else {
-			setPullingAnm(delta, animRate);
+			s16 ang  = matan(delta.z, delta.x);
+			s16 adff = ang - mFaceAngle.y;
+			if (adff >= -0x2000 && adff <= 0x2000)
+				setAnimation(ANIM_HOLD_DRAG, animRate);
+			if (adff <= -0x6000 || adff >= 0x6000)
+				setAnimation(ANIM_HOLD_BACK, animRate);
+			if (adff > -0x6000 && adff < -0x2000)
+				setAnimation(ANIM_HOLD_MOVE_R, animRate);
+			if (adff > 0x2000 && adff < 0x6000)
+				setAnimation(ANIM_HOLD_MOVE_L, animRate);
 		}
 		break;
 	}
@@ -1355,7 +1299,6 @@ BOOL TMario::fenceJumpCatch()
 	return 0;
 }
 
-// TODO: Animation-rate FPRs and vector temporary stack layout still differ.
 BOOL TMario::fenceMove()
 {
 	JGeometry::TVec3<f32> frontPos = mPosition;
@@ -1366,25 +1309,22 @@ BOOL TMario::fenceMove()
 	if (wall != nullptr) {
 		if (mInput & 0x1) {
 			JGeometry::TVec3<f32> newPos = mPosition;
-			f32 fenceSpeed               = mJumpParams.mFenceSpeed.get();
-			TMarioControllerWork* input  = unk108;
-			newPos.y += 0.015625f * input->mStickV * fenceSpeed;
+			newPos.y
+			    += 0.015625f * unk108->mStickV * mJumpParams.mFenceSpeed.get();
 
 			s16 camDelta = mFaceAngle.y - gpCamera->unk258;
 			f32 normX, normZ;
 			if (camDelta > -0x4000 && camDelta < 0x4000) {
-				normX = -wall->mNormal.z;
-				normZ = wall->mNormal.x;
+				normZ = wall->getNormal().x;
+				normX = -wall->getNormal().z;
 			} else {
-				normX = wall->mNormal.z;
-				normZ = -wall->mNormal.x;
+				normX = wall->getNormal().z;
+				normZ = -wall->getNormal().x;
 			}
 
-			f32 stickH = 0.015625f * input->mStickH;
-			f32 hMoveX = normX * stickH;
-			f32 hMoveZ = normZ * stickH;
-			newPos.x += hMoveX * fenceSpeed;
-			newPos.z += hMoveZ * fenceSpeed;
+			f32 stickH = 0.015625f * unk108->mStickH;
+			newPos.x += normX * stickH * mJumpParams.mFenceSpeed.get();
+			newPos.z += normZ * stickH * mJumpParams.mFenceSpeed.get();
 
 			JGeometry::TVec3<f32> sideFront = newPos;
 			sideFront.x += 0.5f * (50.0f * JMASSin(mFaceAngle.y));
@@ -1459,24 +1399,21 @@ BOOL TMario::fenceMove()
 			f32 hDot, vDiff, dist;
 			if (unk2C0 == nullptr) {
 				vDiff = mPosition.y - mPrevPosition.y;
-				JGeometry::TVec3<f32> forward(JMASSin(mFaceAngle.y), 0.0f,
-				                              JMASCos(mFaceAngle.y));
-				JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+				JGeometry::TVec3<f32> front(JMASSin(mFaceAngle.y), 0.0f,
+				                            JMASCos(mFaceAngle.y));
 				JGeometry::TVec3<f32> side;
-				side.cross(up, forward);
+				side.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), front);
 
 				JGeometry::TVec3<f32> diff = mPosition - mPrevPosition;
 
 				hDot = side.dot(diff);
 				dist = diff.length();
 			} else {
-				JGeometry::TVec3<f32> prev;
-				prev.set(unk300.x, unk300.y, unk300.z);
-				vDiff = unk2F4.y - prev.y;
-				hDot  = unk2F4.x - prev.x;
+				vDiff = unk2F4.y - unk300.y;
+				hDot  = unk2F4.x - unk300.x;
 				if ((s16)((182.04445f * unk30C) - (f32)mFaceAngle.y) != 0)
 					hDot = -hDot;
-				dist = JGeometry::TVec3<f32>(unk2F4 - prev).length();
+				dist = JGeometry::TVec3<f32>(unk2F4 - unk300).length();
 			}
 
 			f32 absH = hDot;
@@ -1537,9 +1474,7 @@ BOOL TMario::fencePunch()
 			((THitActor*)unk2C0)
 			    ->receiveMessage(this, HIT_MESSAGE_SUPER_HIP_DROP);
 			startVoice(MSD_SE_MV15_EXERT_INST_02);
-			Mtx mtx;
-			u32 type = unk2C0->getActorType();
-			if (type == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
+			if (unk2C0->mActorType == ACTOR_TYPE_FENCE_REVOLVE_INNER) {
 				f32 x = unk2F4.x;
 				f32 z = unk2F4.y;
 				if (x < -120.0f)
@@ -1552,6 +1487,7 @@ BOOL TMario::fencePunch()
 					z = 60.0f;
 				unk2F4.x = x;
 				unk2F4.y = z;
+				Mtx mtx;
 				getRidingMtx(mtx);
 				PSMTXMultVec(mtx, &unk2F4, &mPosition);
 			}

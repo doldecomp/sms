@@ -151,7 +151,7 @@ void TMarioEffect::setJumpIntoWaterEffectSmall()
 	unk74[idx]->getFrameCtrl(ANM_TYPE_BTK)->setRate(SMSGetAnmFrameRate());
 	unk74[idx]->getFrameCtrl(ANM_TYPE_BRK)->setRate(SMSGetAnmFrameRate());
 
-	MTXCopy(localMtx, unk74[idx]->getModel()->getBaseTRMtx());
+	unk74[idx]->getModel()->setBaseTRMtx(localMtx);
 
 	unk74[idx]->getModel()->getShapePacket(1)->hide();
 	unk74[idx]->getModel()->getShapePacket(2)->hide();

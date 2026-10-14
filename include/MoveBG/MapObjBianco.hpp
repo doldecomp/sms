@@ -198,7 +198,8 @@ public:
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ TMapObjBase* unk140;
 	/* 0x144 */ u8 unk144;
-	/* 0x148 */ JAISound* unk148[2];
+	/* 0x148 */ JAISound* unk148;
+	/* 0x14C */ JAISound* unk14C;
 };
 
 class TBiancoWatermill : public TMapObjBase {

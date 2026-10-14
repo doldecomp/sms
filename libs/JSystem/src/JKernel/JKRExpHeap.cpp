@@ -1,7 +1,7 @@
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JUtility/JUTConsole.hpp>
 #include <JSystem/JUtility/JUTAssert.hpp>
-#include <JSystem/JMacro.hpp>
+
 #include <macros.h>
 
 static u32 whatdo;
@@ -178,10 +178,9 @@ void* JKRExpHeap::allocFromHead(u32 size, int align)
 	CMemBlock* newUsedBlock = nullptr;
 
 	for (CMemBlock* block = mHead; block; block = block->mNext) {
-		// TODO: alignment mask/content register allocation remains nonmatching.
-		void* content        = block->getContent();
-		void* alignedContent = (void*)ALIGN_NEXT((uintptr_t)content, align);
-		u32 offset           = (uintptr_t)alignedContent - (uintptr_t)content;
+		// this bastard is the problem
+		void* content = block->getContent();
+		u32 offset = ALIGN_NEXT((uintptr_t)content, align) - (uintptr_t)content;
 
 		if (block->mAllocatedSpace < size + offset) {
 			continue;
@@ -676,9 +675,9 @@ bool JKRExpHeap::check()
 
 void JKRExpHeap::appendUsedList(JKRExpHeap::CMemBlock* blockToAppend)
 {
-	if (!blockToAppend) {
-		JPANIC(1527, ":::ERROR! appendUsedList\n");
-	}
+	if (!blockToAppend)
+		OSErrorLine(1527, ":::ERROR! appendUsedList\n");
+
 	CMemBlock* tail             = mTailUsedList;
 	blockToAppend->mUsageHeader = 'HM';
 	if (tail) {
@@ -801,15 +800,18 @@ void JKRExpHeap::joinTwoBlocks(CMemBlock* block)
 	uintptr_t nextAddr = (uintptr_t)next - (next->mFlags & 0x7f);
 	if (endAddr > nextAddr) {
 		JUTWarningConsole_f(":::Heap may be broken. (block = %x)", block);
-		JREPORTF(":::block = %x\n", block);
-		JREPORTF(":::joinTwoBlocks [%x %x %x][%x %x %x]\n", block,
+#ifndef NDEBUG
+		OSReport(":::block = %x\n", block);
+		OSReport(":::joinTwoBlocks [%x %x %x][%x %x %x]\n", block,
 		         block->mFlags, block->mAllocatedSpace, block->mNext,
 		         block->mNext->mFlags, block->mNext->mAllocatedSpace);
-		JREPORTF(":::: endAddr = %x\n", endAddr);
-		JREPORTF(":::: nextAddr = %x\n", nextAddr);
+		OSReport(":::: endAddr = %x\n", endAddr);
+		OSReport(":::: nextAddr = %x\n", nextAddr);
+#endif
+
 		JKRHeap* heap = JKRGetCurrentHeap();
 		heap->dump();
-		JPANIC(1808, ":::: Bad Block\n");
+		OSErrorLine(1808, ":::: Bad Block\n");
 	}
 	if (endAddr == nextAddr) {
 		block->mAllocatedSpace = next->mAllocatedSpace + sizeof(CMemBlock)

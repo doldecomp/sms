@@ -369,7 +369,7 @@ TCoasterKillerManager::TCoasterKillerManager(const char* name)
 
 void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 {
-	ASSERT_TEST(!unk38);
+	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
 	TSmallEnemyManager::load(stream);
 	unk38 = new TCoasterKillerSaveLoadParams("/enemy/coasterkiller.prm");
 	ASSERT_TEST(unk38);

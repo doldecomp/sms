@@ -166,7 +166,7 @@ void TEnemyMario::initModel()
 	mHandModels[1][1]   = nullptr;
 
 	mAnmSoundTbl = new JAIAnimeSound*[199];
-	char buffer[0x164];
+	char buffer[0x10C];
 	for (int i = 0; i < 199; ++i) {
 		snprintf(buffer, 0xff, "/mario/bas/ma_%s.bas", marioAnimeFiles[i].unk4);
 		loadBas((void**)&mAnmSoundTbl[i], buffer);
@@ -327,7 +327,6 @@ void TEnemyMario::initEnemyValues()
 		specialModelData = J3DModelLoaderDataBase::load(
 		    JKRGetResource(bmdFileNames[modelIndex]), 0x10040000);
 		mPlayerType = PLAYER_TYPE_MONTE_MAN;
-		break;
 	}
 
 	mBrushModel                = nullptr;
@@ -384,7 +383,6 @@ void TEnemyMario::initEnemyValues()
 	case 1:
 		mPadIndex      = 0;
 		mSettingParams = new TSettingParams("/../map/pad/Setting.prm");
-		break;
 	}
 
 	mWaterCounter          = mSettingParams->mWaterCtMax.get();
@@ -618,11 +616,9 @@ void TEnemyMario::startMonteReplay(u32 replayIndex)
 	    ->getGraph()
 	    ->getGraphNode(nodeIndex + 1)
 	    .getPoint(&nextPoint);
-	JGeometry::TVec3<s16> direction;
 	f32 xDifference = nextPoint.x - currentPoint.x;
 	f32 zDifference = nextPoint.z - currentPoint.z;
-	direction.y     = matan(zDifference, xDifference);
-	mFaceAngle.y    = direction.y;
+	mFaceAngle.y    = matan(zDifference, xDifference);
 	resetReplayStatus();
 	mReplayIndex = replayIndex;
 	mInputReplays[mReplayIndex]->reset();
@@ -656,7 +652,7 @@ bool TEnemyMario::tryTake()
 		return TRUE;
 
 	for (int i = 0; i < mEMario->getColNum(); ++i) {
-		THitActor* actor = mEMario->mCollisions[i];
+		THitActor* actor = mEMario->getCollision(i);
 		u32 actorType    = actor->getActorType();
 		if (actorType == ACTOR_TYPE_NPC_PEACH
 		    || actorType == ACTOR_TYPE_BACK_NOZZLE_ITEM
@@ -682,12 +678,8 @@ void TEnemyMario::emWaiting()
 	if (mDistanceToMario < 800.0f)
 		changeEMDoing(EM_DOING_RUN_AWAY);
 
-	if (mDistanceToMario > 1500.0f || rand() < 0x88) {
-		TEMario* emario = mEMario;
-		emario->getTracer()->reset();
-		emario->goToShortestNextGraphNode();
-		changeEMDoing(EM_DOING_WALK_GRAPH);
-	}
+	if (mDistanceToMario > 1500.0f || rand() < 0x88)
+		changeEMWalkGraph();
 }
 
 void TEnemyMario::emRunAway()
@@ -769,18 +761,10 @@ void TEnemyMario::emWalkAround()
 	setStickToAngle(mFaceAngle.y, 0.5f);
 }
 
-// TODO: fabricated; recover the authored graph-distance helper.
-// Retail consider leaves getPoint, sub and dot out of line here.
-static inline f32 distToGraphNode(const TSpineEnemy& enemy)
-{
-	JGeometry::TVec3<f32> difference = enemy.getUnk104().getPoint();
-	difference -= enemy.mPosition;
-	return difference.length();
-}
-
 void TEnemyMario::emWalkGraph()
 {
-	if (distToGraphNode(*mEMario) < 100.0f) {
+	if ((mEMario->getUnk104().getPoint() - mEMario->mPosition).length()
+	    < 100.0f) {
 		if (mDistanceToMario > 3000.0f)
 			mEMario->goToRandomNextGraphNode();
 		else
@@ -832,7 +816,7 @@ void TEnemyMario::emAppear()
 
 void TEnemyMario::startDisappear(u16 doing)
 {
-	mDisappearPosition = getPosition();
+	mDisappearPosition = mPosition;
 
 	u8 currentMap      = SMSGetMarDirector()->getCurrentMap();
 	u8 currentStage    = SMSGetMarDirector()->getCurrentStage();
@@ -957,8 +941,9 @@ void TEnemyMario::emReplayWaiting()
 
 void TEnemyMario::emReplayJumpToNearestNode()
 {
-	// TODO: Nonmatching vector alias/inline lifetimes: retail hoists direction
-	// Y/Z across both selection loops and uses a 0x2c0 frame instead of 0x280.
+	// TODO: Recover the original vector temporary and inline lifetimes; the
+	// logic matches, but retail reserves a larger stack frame and saves two
+	// additional floating-point registers.
 	if (canJumpToNode()) {
 		unk108->mFrameInput |= TMarioControllerWork::A;
 		unk108->mInput |= TMarioControllerWork::A;
@@ -1003,8 +988,10 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			TGraphNode* candidate
 			    = &mEMario->getTracer()->getGraph()->getGraphNode(
 			        link.mNodeIndex);
-			candidate->getPoint(&nextPoint);
-			JGeometry::TVec3<f32> candidateDirection(nextPoint - currentPoint);
+			JGeometry::TVec3<f32> candidatePoint;
+			candidate->getPoint(&candidatePoint);
+			JGeometry::TVec3<f32> candidateDirection(candidatePoint
+			                                         - currentPoint);
 			candidateDirection.normalize();
 			f32 dot = marioDirection.dot(candidateDirection);
 			if (dot < smallestDot) {
@@ -1019,11 +1006,13 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		int validLinks[3];
 		int validCount = 0;
 		for (int i = 0; i < 3; ++i) {
-			dots[i] = 0.0f;
-			if (links[i].mNodeIndex == 0xFF) {
+			dots[i]           = 0.0f;
+			TReplayLink& link = links[i];
+			if (link.mNodeIndex == 0xFF) {
 				continue;
 			}
 
+			JGeometry::TVec3<f32> candidatePoint;
 			mEMario->getTracer()
 			    ->getGraph()
 			    ->getGraphNode(links[i].mNodeIndex)
@@ -1047,7 +1036,6 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		}
 
 		f32 choice = MsRandF();
-		// TODO: Retail leaves selected unset when no weight is chosen.
 		int selected;
 		for (int i = 0; i < validCount; ++i) {
 			choice -= weights[i];
@@ -1086,7 +1074,6 @@ void TEnemyMario::emPreDownAnimation()
 	}
 }
 
-// TODO: dont_inline preserves the call from consider (80254A48).
 #pragma dont_inline on
 void TEnemyMario::emDownAnimation()
 {
@@ -1095,19 +1082,20 @@ void TEnemyMario::emDownAnimation()
 
 	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
 	    || SMSGetMarDirector()->isTalkModeNow()) {
-		mDisappearPosition = mReferencePosition = mPosition;
+		mReferencePosition = mPosition;
+		mDisappearPosition = mReferencePosition;
 		return;
 	}
 
 	++mEMDoingTimer;
-	mDisappearPosition = mReferencePosition = mPosition;
+	mReferencePosition = mPosition;
+	mDisappearPosition = mReferencePosition;
 	if (SMSGetMarDirector()->getCurrentMap() != 1
 	    && mEMDoingTimer > mSettingParams->mDownTime.get()) {
 		mWaterCounter = mSettingParams->mWaterCtMax.get();
 		changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
 	}
 }
-// TODO: restore normal inlining after emDownAnimation.
 #pragma dont_inline off
 
 void TEnemyMario::startRunAway()
@@ -1115,7 +1103,6 @@ void TEnemyMario::startRunAway()
 	changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
 }
 
-// TODO: frame-only mismatch; recover the vector temporary/inline boundaries.
 void TEnemyMario::findRunAwayNearestNode()
 {
 	int nearestIndex    = 0;
@@ -1159,14 +1146,11 @@ void TEnemyMario::runAwayMoveEffect()
 	    SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_B, &mDisappearPosition, 1, this);
 }
 
-// TODO: frame-only mismatch (retail 0x128, current 0xf8); vector inline slots.
 void TEnemyMario::emRunAwayToNearestNode()
 {
+	TGraphWeb* graph = mEMario->getTracer()->getGraph();
 	JGeometry::TVec3<f32> targetPoint;
-	mEMario->getTracer()
-	    ->getGraph()
-	    ->getGraphNode(mRunAwayNodeIndex)
-	    .getPoint(&targetPoint);
+	graph->getGraphNode(mRunAwayNodeIndex).getPoint(&targetPoint);
 	runAwayMoveEffect();
 
 	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
@@ -1284,7 +1268,6 @@ void TEnemyMario::emDrawStamp()
 		decideDoingAfterCarry();
 }
 
-// TODO: stack layout remains nonmatching (0x98 frame vs retail's 0xa8).
 void TEnemyMario::emWaitingToInviteMario()
 {
 	JGeometry::TVec3<f32> waitingPoint;
@@ -1372,8 +1355,9 @@ void TEnemyMario::emGetPad()
 	TMario::checkController(&graphics);
 }
 
-// TODO: Nonmatching graph-accessor/temporary boundaries and replay-distance
-// scheduling; no fabricated stack padding.
+// TODO: Reconstruct the retail deferred-inline boundaries that emit the
+// TMatrix34/TRotation3 constructors and TPathNode::getPoint without changing
+// shared JGeometry/Graph code generation.
 void TEnemyMario::consider()
 {
 	switch (mEMDoing) {
@@ -1668,7 +1652,6 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	worldPosition.y += 210.0f;
 	JGeometry::TVec3<f32> screenPosition;
 	MTXMultVec(viewMtx, &worldPosition, &screenPosition);
-	GXColor color;
 
 	TPosition3f identity;
 	MTXIdentity(identity);
@@ -1697,8 +1680,7 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	f32 borderRight  = left + 96.0f + 5.0f;
 	f32 borderTop    = top - 5.0f;
 	f32 borderBottom = bottom + 5.0f;
-	color            = (GXColor) { 0, 0, 0, 0xC0 };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xC0 });
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(borderLeft, borderTop, screenPosition.z);
 	GXPosition3f32(borderRight, borderTop, screenPosition.z);
@@ -1707,8 +1689,7 @@ void TEnemyMario::drawHPMeter(MtxPtr viewMtx)
 	GXEnd();
 
 	f32 right = left + mWaterCounter * 1.5f;
-	color     = (GXColor) { 0x40, 0x40, 0xFF, 0xFF };
-	GXSetChanMatColor(GX_COLOR0A0, color);
+	GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0x40, 0x40, 0xFF, 0xFF });
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition3f32(left, top, screenPosition.z);
 	GXPosition3f32(right, top, screenPosition.z);
