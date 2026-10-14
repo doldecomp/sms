@@ -1035,9 +1035,9 @@ void TBathtub::load(JSUMemoryInputStream& stream)
 	}
 	mBathtubData.mPos.set(mInitialPosition);
 	mBathtubData.unk18.identity();
-	mBathtubData.unk3C.x = 3000.0f;
-	mBathtubData.unk3C.y = 3600.0f;
-	mBathtubData.unk3C.z = mBathtubData.unk3C.x * sinf(0.27925268f);
+	mBathtubData.unk3C = 3000.0f;
+	mBathtubData.unk40 = 3600.0f;
+	mBathtubData.unk44 = mBathtubData.unk3C * sinf(0.27925268f);
 	mBathtubData.unk4C = mBathtubData.unk50 = mBathtubData.unk54 = 0.0f;
 	mBathtubData.unk58.zero();
 	mBathtubData.unk48 = 100.0f;

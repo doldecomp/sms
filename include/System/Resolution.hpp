@@ -2,6 +2,7 @@
 #define SYSTEM_RESOLUTION_HPP
 
 #include <dolphin/types.h>
+#include "version.h"
 
 #if defined(VERSION_GMSP01_NX)
 u16 SMSGetIntroRenderWidth();

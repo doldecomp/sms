@@ -31,7 +31,7 @@ public:
 	{
 		f32 angle = (f32)i * (JGeometry::TUtil<f32>::PI() / 10.0f);
 		f32 t     = (f32)i / (f32)j;
-		f32 amp   = t * (unk3C.x - h);
+		f32 amp   = t * (unk3C - h);
 
 		JGeometry::TVec3<f32> result;
 		result = mPos;
@@ -46,7 +46,7 @@ public:
 		result.y += unk18.mMtx[2][1] * c;
 		result.z += unk18.mMtx[2][2] * c;
 
-		f32 yScale = (1.0f - t) * -(unk3C.z - h);
+		f32 yScale = (1.0f - t) * -(unk44 - h);
 		result.x += unk18.mMtx[1][0] * yScale;
 		result.y += unk18.mMtx[1][1] * yScale;
 		result.z += unk18.mMtx[1][2] * yScale;
@@ -57,7 +57,7 @@ public:
 	// fabricated
 	JGeometry::TVec3<f32> getThing() const
 	{
-		return JGeometry::TVec3<f32>(mPos.x, mPos.y - unk3C.z, mPos.z);
+		return JGeometry::TVec3<f32>(mPos.x, mPos.y - unk44, mPos.z);
 	}
 
 public:
@@ -66,7 +66,9 @@ public:
 	/* 0x18 */ JGeometry::TRotation3<
 	    JGeometry::TMatrix33<JGeometry::SMatrix33R<f32> > >
 	    unk18;
-	/* 0x3C */ JGeometry::TVec3<f32> unk3C;
+	/* 0x3C */ f32 unk3C;
+	/* 0x40 */ f32 unk40;
+	/* 0x44 */ f32 unk44;
 	/* 0x48 */ f32 unk48;
 	/* 0x4C */ f32 unk4C;
 	/* 0x50 */ f32 unk50;

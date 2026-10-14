@@ -1,4 +1,3 @@
-#include "version.h"
 #include <System/Resolution.hpp>
 #include <dolphin/vi.h>
 

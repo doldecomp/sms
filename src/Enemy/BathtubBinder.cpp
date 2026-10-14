@@ -1,4 +1,3 @@
-#include "JSystem/JGeometry/JGVec3.hpp"
 #include <Enemy/BathtubBinder.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -89,8 +88,8 @@ void TBathtubBinder::constrain_(JGeometry::TVec3<f32>& param_1, f32 param_2)
 
 	const TBathtubData& data     = unk4->getBathtubData();
 	JGeometry::TVec3<f32> center = data.getThing();
-	f32 radius = JGeometry::TUtil<f32>::sqrt(data.unk3C.x * data.unk3C.x
-	                                         - data.unk3C.z * data.unk3C.z)
+	f32 radius = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
+	                                         - data.unk44 * data.unk44)
 	             - param_2;
 	f32 centerZ = center.z;
 	f32 dx      = param_1.x - center.x;
