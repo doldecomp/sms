@@ -296,12 +296,12 @@ static inline bool isMarioJumping()
 	return ret;
 }
 
-void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TModelGate::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(unk70 & 1))
 		return;
 
-	if ((param_1 & 8) && ActivePlayer.open != 0) {
+	if ((cue & CUE_DRAW) && ActivePlayer.open != 0) {
 		THPTextureSet* textureSet = ActivePlayer.dispTextureSet;
 		if (textureSet != nullptr) {
 			J3DTexture* textures
@@ -317,9 +317,9 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 			    = (uintptr_t)textureSet->vtexture - (uintptr_t)imageV;
 		}
 	}
-	unk78->perform(param_1, param_2);
-	if (param_1 & 1) {
-		if (!(unk70 & 2)) {
+	unk78->perform(cue, graphics);
+	if (cue & CUE_MOVE) {
+		if (!(unk70 & CUE_CALC_ANIM)) {
 			if (SMS_DistanceFromMarioVec(mPosition).length() < 1000.0f) {
 				unkD0 += 0.01f;
 				if (unkD0 > 1.0f) {
@@ -357,7 +357,7 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 			}
 		}
 	}
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		switch (unkC4) {
 		case STATE_UNK0:
 			if (unk78->getFrameCtrl(ANM_TYPE_BPK)
@@ -463,7 +463,7 @@ void TModelGate::perform(u32 param_1, JDrama::TGraphics* param_2)
 		f32 frame = unkD0 * unk78->getFrameCtrl(ANM_TYPE_BRK)->getEnd();
 		unk78->getFrameCtrl(ANM_TYPE_BRK)->setFrame(frame);
 	}
-	if (param_1 & 4)
-		screenBlur(param_2);
-	THitActor::perform(param_1, param_2);
+	if (cue & CUE_CALC_VIEW)
+		screenBlur(graphics);
+	THitActor::perform(cue, graphics);
 }
