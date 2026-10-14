@@ -132,6 +132,9 @@ public:
 	f32 getPressureMax();
 	void init();
 	void initInLoadAfter();
+#ifdef VERSION_GMSP01
+	bool isEmitting();
+#else
 	bool isEmitting()
 	{
 		// TODO: more inlines!
@@ -151,6 +154,7 @@ public:
 
 		return false;
 	}
+#endif
 	BOOL isPressureOn();
 	void movement();
 	void rotateProp(f32);
@@ -234,29 +238,6 @@ public:
 
 	// Fabricated
 	s32 getMaxWater() const { return getCurrentNozzle()->mAmountMax.get(); }
-
-	// TODO: get rid of this -- it's real name is isEmitting() and it
-	// wasn't stripped in MarioRun.cpp
-	// //Fabricated
-	bool canSpray() const
-	{
-		if (mCurrentWater == 0)
-			return false;
-
-		if (getCurrentNozzle()->getNozzleKind() == 1) {
-			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
-			if (triggerNozzle->getSprayState()
-			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
-				return true;
-
-			return false;
-		}
-
-		if (getCurrentNozzle()->unk378 > 0.0f)
-			return true;
-
-		return false;
-	}
 
 	// Fabricated
 	bool isSwitchingToPrimaryNozzle()

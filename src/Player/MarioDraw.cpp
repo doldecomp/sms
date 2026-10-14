@@ -451,7 +451,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
 		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET
-		           && gpMarioForCallBack->mWaterGun->canSpray() == true) {
+		           && gpMarioForCallBack->mWaterGun->isEmitting() == true) {
 			s16 headAngle
 			    = gpMarioForCallBack->mUpperBodyParams.mHoverHeadAngle.get();
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
@@ -980,7 +980,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		}
 
 		bool check = false;
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->canSpray()) {
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->isEmitting()) {
 			check = true;
 		}
 

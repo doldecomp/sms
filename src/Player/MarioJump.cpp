@@ -85,7 +85,7 @@ void TMario::doJumping()
 
 		if (mStatus == MARIO_STATUS_ROCKET
 		    && checkFlag(MARIO_STATUS_FLAG_UNK8000)) {
-			if (mWaterGun->canSpray())
+			if (mWaterGun->isEmitting())
 				mag = 2.5f * mIntendedMag;
 		}
 
@@ -892,7 +892,7 @@ BOOL TMario::rocketCheck()
 		if (!isUpperState(UPPER_STATE_PUMPING))
 			bVar2 = false;
 
-		if (!mWaterGun->canSpray())
+		if (!mWaterGun->isEmitting())
 			bVar2 = false;
 	} else {
 		bVar2 = false;
@@ -914,7 +914,7 @@ BOOL TMario::rocketing()
 	if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
-	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->canSpray())
+	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->isEmitting())
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
 	if (mInput & 1) {
