@@ -53,10 +53,12 @@ public:
 
 public:
 	/* 0x10 */ int unk10;
-	/* 0x14 */ J2DScreen* unk14;
+	/* 0x14 */ J2DScreen* mSaveScreen;
 	/* 0x18 */ bool unk18;
-	/* 0x1C */ JUTTexture* unk1C[10];
+	/* 0x1C */ JUTTexture* mLargeDigitFontTextures[10];
 	/* 0x44 */ JPABaseEmitter* unk44;
+
+	// Card error window
 	/* 0x48 */ TExPane* unk48;
 	/* 0x4C */ JUTRect unk4C;
 	/* 0x5C */ u32 unk5C;
@@ -72,44 +74,52 @@ public:
 	/* 0xC8 */ JUTRect unkC8;
 	/* 0xD8 */ J2DTextBox* unkD8;
 	/* 0xDC */ J2DTextBox* unkDC;
-	/* 0xE0 */ TExPane* unkE0;
-	/* 0xE4 */ JUTRect unkE4;
+
+	// Confirmation window for saving and continuing/quitting after
+	/* 0xE0 */ TExPane* mConfirmWindow;
+	/* 0xE4 */ JUTRect mConfirmWindowInitialBounds;
 	/* 0xF4 */ J2DTextBox* unkF4;
 	/* 0xF8 */ J2DTextBox* unkF8;
-	/* 0xFC */ TExPane* unkFC;
-	/* 0x100 */ TExPane* unk100;
-	/* 0x104 */ JUTRect unk104;
-	/* 0x114 */ JUTRect unk114;
+	/* 0xFC */ TExPane* mConfirmWindowYes;
+	/* 0x100 */ TExPane* mConfirmWindowNo;
+	/* 0x104 */ JUTRect mConfirmWindowYesInitialBounds;
+	/* 0x114 */ JUTRect mConfirmWindowNoInitialBounds;
 	/* 0x124 */ J2DTextBox* unk124;
 	/* 0x128 */ J2DTextBox* unk128;
-	/* 0x12C */ J2DTextBox* unk12C;
-	/* 0x130 */ J2DTextBox* unk130;
-	/* 0x134 */ J2DPane* unk134;
-	/* 0x138 */ J2DPane* unk138;
-	/* 0x13C */ J2DPicture* unk13C;
-	/* 0x140 */ J2DPicture* unk140;
-	/* 0x144 */ J2DPicture* unk144;
-	/* 0x148 */ J2DPicture* unk148;
-	/* 0x14C */ J2DPicture* unk14C;
-	/* 0x150 */ J2DPane* unk150;
-	/* 0x154 */ J2DPane* unk154[3];
+	/* 0x12C */ J2DTextBox* mConfirmWindowText;
+	/* 0x130 */ J2DTextBox* mConfirmWindowTextShadow;
+	/* 0x134 */ J2DPane* mShineCountOver100;
+	/* 0x138 */ J2DPane* mShineCountUnder100;
+	/* 0x13C */ J2DPicture* mShineCountHundredsOver100;
+	/* 0x140 */ J2DPicture* mShineCountTensOver100;
+	/* 0x144 */ J2DPicture* mShineCountOnesOver100;
+	/* 0x148 */ J2DPicture* mShineCountTensUnder100;
+	/* 0x14C */ J2DPicture* mShineCountOnesUnder100;
+	/* 0x150 */ J2DPane* mConfirmWindowMarioText;
+	/* 0x154 */ J2DPane* mSaveNameABC[3];
+
+	// Card formatting window
 	/* 0x160 */ TExPane* unk160;
 	/* 0x164 */ JUTRect unk164;
 	/* 0x174 */ J2DTextBox* unk174;
 	/* 0x178 */ J2DTextBox* unk178;
-	/* 0x17C */ TExPane* unk17C;
-	/* 0x180 */ JUTRect unk180;
-	/* 0x190 */ J2DTextBox* unk190;
-	/* 0x194 */ J2DTextBox* unk194;
-	/* 0x198 */ J2DTextBox* unk198[2][2];
-	/* 0x1A8 */ J2DPane* unk1A8[2][2];
+
+	// Event save window: blue coins, nozzles, yoshi
+	/* 0x17C */ TExPane* mEventSaveWindow;
+	/* 0x180 */ JUTRect mEventSaveWindowInitialBounds;
+	/* 0x190 */ J2DTextBox* mEventSaveWindowText;
+	/* 0x194 */ J2DTextBox* mEventSaveWindowTextShadow;
+	/* 0x198 */ J2DTextBox* mEventSaveOptions[2][2];
+	/* 0x1A8 */ J2DPane* mEventSavePointerHands[2][2];
 	/* 0x1B8 */ u16 unk1B8;
-	/* 0x1BC */ TExPane* unk1BC;
-	/* 0x1C0 */ JUTRect unk1C0;
-	/* 0x1D0 */ J2DTextBox* unk1D0[3][2];
-	/* 0x1E8 */ J2DTextBox* unk1E8[3][2];
-	/* 0x200 */ J2DTextBox* unk200;
-	/* 0x204 */ J2DTextBox* unk204;
+
+	// Shine get save window
+	/* 0x1BC */ TExPane* mShineGetSaveWindow;
+	/* 0x1C0 */ JUTRect mShineGetSaveWindowInitialBounds;
+	/* 0x1D0 */ J2DTextBox* mShineGetSavePointerHands[3][2];
+	/* 0x1E8 */ J2DTextBox* mShineGetSaveOptions[3][2];
+	/* 0x200 */ J2DTextBox* mShineGetSaveWindowText;
+	/* 0x204 */ J2DTextBox* mShineGetSaveWindowTextShadow;
 	/* 0x208 */ J2DTextBox* unk208;
 	/* 0x20C */ J2DTextBox* unk20C;
 	/* 0x210 */ J2DPane* unk210;
@@ -119,15 +129,18 @@ public:
 	/* 0x220 */ J2DPane* unk220;
 	/* 0x224 */ J2DPane* unk224;
 	/* 0x228 */ J2DPane* unk228;
-	/* 0x22C */ J2DPane* unk22C;
-	/* 0x230 */ J2DPane* unk230[3];
+	/* 0x22C */ J2DPane* mShineGetSaveMarioText;
+	/* 0x230 */ J2DPane* mShineGetSaveNameABC[3];
 	/* 0x23C */ u16 unk23C;
-	/* 0x240 */ TExPane* unk240;
-	/* 0x244 */ JUTRect unk244;
-	/* 0x254 */ J2DTextBox* unk254[2][2];
-	/* 0x264 */ J2DTextBox* unk264[2];
+
+	// Game over: continue or quit
+	/* 0x240 */ TExPane* mGameOverSaveWindow;
+	/* 0x244 */ JUTRect mGameOverSaveWindowInitialBounds;
+	/* 0x254 */ J2DTextBox* mGameOverSavePointerHands[2][2];
+	/* 0x264 */ J2DTextBox* mGameOverSaveOptions[2];
 	/* 0x26C */ u16 unk26C;
-	/* 0x270 */ TMarioGamePad* unk270;
+
+	/* 0x270 */ TMarioGamePad* mGamePad;
 	/* 0x274 */ char unk274[0x4];
 	/* 0x278 */ TCardBookmarkInfo unk278[3];
 	/* 0x2D8 */ TPauseMenu2* unk2D8;
