@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [GMSJ01, GMSP01]
+        version: [GMSJ01, GMSE01, GMSP01, GMSJ01_01, GMSP01_NX]
 
     steps:
     # Checkout the repository
