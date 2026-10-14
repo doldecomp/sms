@@ -93,6 +93,7 @@ jobs:
 
     # Build the same sources at the base revision. Some TUs already have strict
     # map-validation errors; CI must reject new errors, not inherited debt.
+    # GMSE01 has no MAP file, so we skip symbol order validation for it
     - name: Build symbol-validation baseline
       if: matrix.version != 'GMSE01' && steps.changes.outputs.base != ''
       env:
@@ -112,6 +113,7 @@ jobs:
 
     # Validate map symbol presence/order/linkage for each changed .cpp.
     # Keep the full diagnostics; only errors absent from the base fail this job.
+    # GMSE01 has no MAP file, so we skip symbol order validation for it
     - name: Validate symbol order
       if: matrix.version != 'GMSE01'
       run: |
