@@ -360,11 +360,14 @@ static bool bgIntersectLine(const TBGCheckData* data,
 	JGeometry::TVec3<f32> hit = start + dir;
 
 	JGeometry::TVec3<f32> a;
-	a.sub(data->getPoint1(), hit);
+	a.set(data->getPoint1());
 	JGeometry::TVec3<f32> b;
-	b.sub(data->getPoint2(), hit);
+	b.set(data->getPoint2());
 	JGeometry::TVec3<f32> c;
-	c.sub(data->getPoint3(), hit);
+	c.set(data->getPoint3());
+	a -= hit;
+	b -= hit;
+	c -= hit;
 
 	f32 angleSum = 0.0f;
 
@@ -381,7 +384,7 @@ static bool bgIntersectLine(const TBGCheckData* data,
 	return true;
 }
 
-inline const TBGCheckData* intersectLineList(const TBGCheckList* head,
+static const TBGCheckData* intersectLineList(const TBGCheckList* head,
                                              const JGeometry::TVec3<f32>& start,
                                              const JGeometry::TVec3<f32>& end,
                                              bool front_only,
@@ -414,21 +417,22 @@ const TBGCheckData* TMapCollisionData::intersectLine(
     const JGeometry::TVec3<f32>& start, const JGeometry::TVec3<f32>& end,
     bool front_only, JGeometry::TVec3<f32>* hit_pos) const
 {
-	JGeometry::TVec2<int> start2d(start.x, start.z);
-	JGeometry::TVec2<int> end2d(end.x, end.z);
-
-	int minXi = start2d.x;
-	int maxXi = end2d.x;
-	if (start2d.x > end2d.x) {
-		minXi = end2d.x;
-		maxXi = start2d.x;
+	JGeometry::TVec2<f32> startXZ(start.x, start.z);
+	JGeometry::TVec2<f32> endXZ(end.x, end.z);
+	int minXi = startXZ.x;
+	int maxXi = endXZ.x;
+	int minZi = startXZ.y;
+	int maxZi = endXZ.y;
+	if (minXi > maxXi) {
+		int tmp = minXi;
+		minXi   = maxXi;
+		maxXi   = tmp;
 	}
 
-	int minZi = start2d.y;
-	int maxZi = end2d.y;
-	if (start2d.y > end2d.y) {
-		minZi = end2d.y;
-		maxZi = start2d.y;
+	if (minZi > maxZi) {
+		int tmp = minZi;
+		minZi   = maxZi;
+		maxZi   = tmp;
 	}
 
 	int minGridZ = (int)((minZi + mGridExtentY) * (1.0f / 1024));
@@ -438,29 +442,21 @@ const TBGCheckData* TMapCollisionData::intersectLine(
 
 	for (int gridZ = minGridZ; gridZ <= maxGridZ; ++gridZ) {
 		for (int gridX = minGridX; gridX <= maxGridX; ++gridX) {
-			if (gridX == minGridX && gridZ == minGridZ) {
-			} else {
-				f32 x0i = gridX * 1024.0f;
-				f32 z0i = gridZ * 1024.0f;
-				f32 x1i = (gridX + 1) * 1024.0f;
-				f32 z1i = (gridZ + 1) * 1024.0f;
+			if (gridX != minGridX || gridZ != minGridZ) {
+				JGeometry::TVec2<f32> corners[4];
+				corners[0].set((s32)(gridX * 1024.0f - mGridExtentX),
+				               (s32)(gridZ * 1024.0f - mGridExtentY));
+				corners[1].set((s32)((gridX + 1) * 1024.0f - mGridExtentX),
+				               (s32)(gridZ * 1024.0f - mGridExtentY));
+				corners[2].set((s32)(gridX * 1024.0f - mGridExtentX),
+				               (s32)((gridZ + 1) * 1024.0f - mGridExtentY));
+				corners[3].set((s32)((gridX + 1) * 1024.0f - mGridExtentX),
+				               (s32)((gridZ + 1) * 1024.0f - mGridExtentY));
 
-				JGeometry::TVec2<f32> p00((s32)(x0i - mGridExtentX),
-				                          (s32)(z0i - mGridExtentY));
-				JGeometry::TVec2<f32> p10((s32)(x1i - mGridExtentX),
-				                          (s32)(z0i - mGridExtentY));
-				JGeometry::TVec2<f32> p01((s32)(x0i - mGridExtentX),
-				                          (s32)(z1i - mGridExtentY));
-				JGeometry::TVec2<f32> p11((s32)(x1i - mGridExtentX),
-				                          (s32)(z1i - mGridExtentY));
-
-				JGeometry::TVec2<f32> lineA(start.x, start.z);
-				JGeometry::TVec2<f32> lineB(end.x, end.z);
-
-				if (!LineInLineXZ(lineA, lineB, p10, p00)
-				    && !LineInLineXZ(lineA, lineB, p01, p00)
-				    && !LineInLineXZ(lineA, lineB, p11, p01)
-				    && !LineInLineXZ(lineA, lineB, p10, p11))
+				if (!LineInLineXZ(startXZ, endXZ, corners[1], corners[0])
+				    && !LineInLineXZ(startXZ, endXZ, corners[2], corners[0])
+				    && !LineInLineXZ(startXZ, endXZ, corners[3], corners[2])
+				    && !LineInLineXZ(startXZ, endXZ, corners[1], corners[3]))
 					continue;
 			}
 
