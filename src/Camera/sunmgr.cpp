@@ -33,18 +33,11 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	u32 local_24;
-	stream >> local_24;
-	u32 local_20;
-	stream >> local_20;
-	u32 local_1c;
-	stream >> local_1c;
-	u32 local_18;
-	stream >> local_18;
-	stream >> unk20;
+	u32 local_24[4];
+	stream >> local_24[0] >> local_24[1] >> local_24[2] >> local_24[3] >> unk20;
 
-	u32 col1 = local_24 << 8 | local_20;
-	u32 col2 = local_1c << 8 | local_18;
+	u32 col1 = local_24[0] << 8 | local_24[1];
+	u32 col2 = local_24[2] << 8 | local_24[3];
 	unk18.set(col1);
 	unk1C.set(col2);
 

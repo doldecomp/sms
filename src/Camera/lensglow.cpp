@@ -150,13 +150,14 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 					if (*it1)
 						avg += *it2;
 
-				f32 avgx = avg.x * (1.0f / (f32)thing);
-				f32 avgy = avg.y * (1.0f / (f32)thing);
+				f32 avgx       = avg.x * (1.0f / (f32)thing);
+				f32 avgy       = avg.y * (1.0f / (f32)thing);
+				f32 blendRatio = dispRatio * 2.0f;
 
 				f32 tx = CLBLinearInbetween(avgx, gpSunModel->unkF8[0].x,
-				                            dispRatio * 2.0f);
+				                            blendRatio);
 				f32 ty = CLBLinearInbetween(avgy, gpSunModel->unkF8[0].y,
-				                            dispRatio * 2.0f);
+				                            blendRatio);
 
 				u16 w  = SMSGetGameRenderWidth();
 				u16 h  = SMSGetGameRenderHeight();
@@ -189,8 +190,9 @@ void TLensGlow::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & CUE_ENTRY) != 0 && inBounds) {
+		u16 i;
 		int matCount = unk10->getMaterialNum();
-		for (u16 i = 0; i < matCount; ++i) {
+		for (i = 0; i < matCount; ++i) {
 			J3DGXColorS10 c;
 			c         = *unk10->getMaterialNodePointer(i)->getTevColor(0);
 			c.color.a = (s16)unk48;
