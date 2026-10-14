@@ -1649,8 +1649,8 @@ bool TWaterGun::isEmitting()
 	if (mCurrentWater == 0)
 		return false;
 
-	if (gpMarDirector->isDemoMode3() || gpMarDirector->isDemoMode4()
-	    || gpMarDirector->isTalkModeNow())
+	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	    || SMSGetMarDirector()->isTalkModeNow())
 		return false;
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
 		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
