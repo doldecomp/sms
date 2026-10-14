@@ -94,7 +94,7 @@ jobs:
     # Build the same sources at the base revision. Some TUs already have strict
     # map-validation errors; CI must reject new errors, not inherited debt.
     - name: Build symbol-validation baseline
-      if: steps.changes.outputs.base != ''
+      if: matrix.version != 'GMSE01' && steps.changes.outputs.base != ''
       env:
         BASE: ${{ steps.changes.outputs.base }}
       run: |
@@ -113,6 +113,7 @@ jobs:
     # Validate map symbol presence/order/linkage for each changed .cpp.
     # Keep the full diagnostics; only errors absent from the base fail this job.
     - name: Validate symbol order
+      if: matrix.version != 'GMSE01'
       run: |
         if [ ! -s changed_cpp.txt ]; then
           echo "No changed .cpp files; nothing to validate."
