@@ -154,6 +154,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 	THitActor* best = nullptr;
 	f32 bestDist    = 10000.0f;
 
+#ifndef VERSION_GMSP01
 	for (s32 i = 0; i < mColCount; ++i) {
 		s32 type = mCollisions[i]->mActorType;
 		if (type == ACTOR_TYPE_SEAL || type == ACTOR_TYPE_BASKET_REVERSE) {
@@ -161,6 +162,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 			return nullptr;
 		}
 	}
+#endif
 
 	for (s32 i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
@@ -189,8 +191,21 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 				ok = 1;
 			if (type == ACTOR_TYPE_WOOD_BARREL)
 				ok = 1;
-			if (type & HIT_CATEGORY_ENEMY ? true : false)
+			if (type & HIT_CATEGORY_ENEMY ? true : false) {
+#ifdef VERSION_GMSP01
+				switch (type) {
+				case ACTOR_TYPE_SEAL:
+				case ACTOR_TYPE_EFFECT_ENEMY:
+				case ACTOR_TYPE_BASKET_REVERSE:
+					break;
+				default:
+					ok = 1;
+					break;
+				}
+#else
 				ok = 1;
+#endif
+			}
 		}
 
 		if (ok != 1)
@@ -200,7 +215,8 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 		targetPos.y += 0.5f * actor->mDamageHeight;
 		JGeometry::TVec3<f32> delta = targetPos - mTipPos;
 
-		if (delta.isZero())
+		bool atTip = delta.isZero();
+		if (atTip)
 			continue;
 
 		f32 dist = delta.length();
@@ -300,12 +316,12 @@ void TYoshiTongue::movement()
 		if (target != nullptr && mHeldObject == nullptr) {
 			JGeometry::TVec3<f32> tpos = target->mPosition;
 			tpos.y += 0.5f * target->mDamageHeight;
-			JGeometry::TVec3<f32> step = (tpos - mTipPos) * mExtendAmount;
-			mTipPos += step;
-			mInitialVelocity = step;
+			JGeometry::TVec3<f32> oldTip = mTipPos;
+			JGeometry::TVec3<f32> step   = (tpos - mTipPos) * mExtendAmount;
+			mTipPos                      = mTipPos + step;
+			mInitialVelocity             = mTipPos - oldTip;
 
-			JGeometry::TVec3<f32> rem = tpos - mTipPos;
-			if (rem.length() < 200.0f
+			if ((tpos - mTipPos).length() < 200.0f
 			    && target->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
 				mHeldObject = (TTakeActor*)target;
 				SMSGetMSound()->startSoundActor(MSD_SE_YV_PERON, &mTipPos, 0,
@@ -320,17 +336,13 @@ void TYoshiTongue::movement()
 	}
 
 	case STATE_GRABBED:
-		mTipPos += mInitialVelocity;
 		mProgress += 1;
 		if (mProgress > 10)
 			mState = STATE_RETRACTING;
 		break;
 
 	case STATE_RETRACTING: {
-		JGeometry::TVec3<f32> diff = (mTipPos - mHeadPos) * mRetractAmount;
-
-		mTipPos = mHeadPos;
-		mTipPos += diff;
+		mTipPos = mHeadPos + (mTipPos - mHeadPos) * mRetractAmount;
 		break;
 	}
 
@@ -340,7 +352,10 @@ void TYoshiTongue::movement()
 		f32 len                    = diff.length();
 
 		MtxPtr mtx = getTakingMtx();
-		JGeometry::TVec3<f32> step(-mtx[0][0], -mtx[1][0], -mtx[2][0]);
+		JGeometry::TVec3<f32> step;
+		step.x = -mtx[0][0];
+		step.y = -mtx[1][0];
+		step.z = -mtx[2][0];
 
 		f32 amount = len * mPullAmount;
 		if (mState == STATE_PULLING_SLOW)
@@ -369,7 +384,7 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 	mHeadDir.z = mtx[2][0];
 
 	switch (mState) {
-	case STATE_EXTENDING: {
+	case STATE_IDLE: {
 		J3DModelData* modelData = mModel->getModelData();
 		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
 			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
