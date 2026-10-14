@@ -323,7 +323,8 @@ bool TMarDirector::setupObjects()
 
 		JDrama::TLookAtCamera* cam = static_cast<JDrama::TLookAtCamera*>(
 		    JDrama::TNameRefGen::search("camera 1"));
-#if defined(VERSION_GMSE01) || defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSE01) || defined(VERSION_GMSP01)                         \
+    || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 		cam->mAspect = (u16)SMSGetGameVideoWidth() * 0.9134614f
 		               / (u16)SMSGetGameRenderHeight();
 #else

@@ -1,8 +1,7 @@
 #include <GC2D/ChangeValue.hpp>
 #include <Camera/cameralib.hpp>
 
-void TChangeValue::calcChangeValue() {
-}
+void TChangeValue::calcChangeValue() { }
 
 void dummy(s32 param_1, s32 param_2, s32 param_3)
 {

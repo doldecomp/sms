@@ -35,11 +35,11 @@
 
 #define VERSION_SELECT(...) (VERSION_SELECT_JOIN(__VA_ARGS__, , , , , , , ))
 
-#define VSD_STR(x) #x
+#define VSD_STR(x)  #x
 #define VSD_XSTR(x) VSD_STR(x)
-#define VERSION_SELECT_DEFAULT(defualt_value, ...)                              \
-    (sizeof(VSD_XSTR(VERSION_SELECT_JOIN(__VA_ARGS__, , , , , , , , ))) > 1     \
-         ? (VERSION_SELECT_JOIN(__VA_ARGS__, , , , , , , , ))                   \
-         : (defualt_value))
+#define VERSION_SELECT_DEFAULT(defualt_value, ...)                             \
+	(sizeof(VSD_XSTR(VERSION_SELECT_JOIN(__VA_ARGS__, , , , , , , , ))) > 1    \
+	     ? (VERSION_SELECT_JOIN(__VA_ARGS__, , , , , , , , ) + 0)              \
+	     : (defualt_value))
 
 #endif

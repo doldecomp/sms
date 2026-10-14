@@ -147,8 +147,13 @@ void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 		J2DPrint JStack_174(gpSystemFont, 0);
 		JStack_174.setUnk50(32);
 		JStack_174.printReturn(
-		    unk1C, VERSION_SELECT(GMSJ01(300), GMSE01(580), GMSP01(580), GMSJ01_01(580), GMSP01_NX(580)), 160, HBIND_CENTER,
-		    VBIND_TOP, VERSION_SELECT(GMSJ01(175), GMSE01(35), GMSP01(35), GMSJ01_01(35), GMSP01_NX(35)), 300, 255);
+		    unk1C,
+		    VERSION_SELECT(GMSJ01(300), GMSE01(580), GMSP01(580),
+		                   GMSJ01_01(580), GMSP01_NX(580)),
+		    160, HBIND_CENTER, VBIND_TOP,
+		    VERSION_SELECT(GMSJ01(175), GMSE01(35), GMSP01(35), GMSJ01_01(35),
+		                   GMSP01_NX(35)),
+		    300, 255);
 		if (!mHideTextBoxes) {
 			unk120[0]->draw(240, 400);
 			unk120[1]->draw(340, 400);

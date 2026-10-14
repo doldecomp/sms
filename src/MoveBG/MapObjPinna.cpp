@@ -53,24 +53,22 @@ s32 TFerrisWheel::becomeCalmlyCallback(uintptr_t param_1, u32 param_2)
 	return 0;
 }
 
-#define VERSION_FRAME_RATE (VERSION_SELECT(GMSJ01(SMSGetAnmFrameRate()), 	\
-		                        GMSE01(SMSGetAnmFrameRate()),				\
-		                        GMSP01(rotate_frame_rate),					\
-		                        GMSJ01_01(SMSGetAnmFrameRate()),			\
-		                        GMSP01_NX(SMSGetAnmFrameRate())))
+#define VERSION_FRAME_RATE                                                     \
+	(VERSION_SELECT(GMSJ01(SMSGetAnmFrameRate()),                              \
+	                GMSE01(SMSGetAnmFrameRate()), GMSP01(rotate_frame_rate),   \
+	                GMSJ01_01(SMSGetAnmFrameRate()),                           \
+	                GMSP01_NX(SMSGetAnmFrameRate())))
 
 void TFerrisWheel::control()
 {
 	TMapObjBase::control();
 	if (isState(STATE_UNK2) && !isStateTimerEngaged()) {
-		if (unk140 > VERSION_FRAME_RATE
-		                 / 4.0f)
+		if (unk140 > VERSION_FRAME_RATE / 4.0f)
 			unk140 -= 0.015f;
 		else
 			mState = STATE_NORMAL;
 	}
-	if (unk140 > VERSION_FRAME_RATE
-	                 / 4.0f) {
+	if (unk140 > VERSION_FRAME_RATE / 4.0f) {
 		MSound* sound = SMSGetMSound();
 		sound->startSoundActor(MSD_SE_OBJ_MAHRE_GATE_LIGHT, &mPosition, 0,
 		                       &sound->unk80, 0, 4);
@@ -106,8 +104,7 @@ void TFerrisWheel::initMapObj()
 #endif
 		unk140 = 10.0f;
 	} else {
-		unk140 = VERSION_FRAME_RATE
-		         / 4.0f;
+		unk140 = VERSION_FRAME_RATE / 4.0f;
 	}
 }
 

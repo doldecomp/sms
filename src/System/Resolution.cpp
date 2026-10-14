@@ -1,11 +1,13 @@
 #include <System/Resolution.hpp>
 #include <dolphin/vi.h>
 
-u16 SMSGetGameVideoWidth() {
+u16 SMSGetGameVideoWidth()
+{
 	return VERSION_SELECT_DEFAULT(660, GMSP01_NX(640));
 }
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
 u16 SMSGetGameVideoHeight(u32 tvFormat)
 {
 	u16 ret = VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
@@ -49,9 +51,13 @@ s32 SMSGetDisplayWidthMax() { return 720; }
 // UNUSED
 s32 SMSGetDisplayHeightMax() { return 574; }
 
-u16 SMSGetTitleVideoWidth() { return VERSION_SELECT_DEFAULT(660, GMSP01_NX(640)); }
+u16 SMSGetTitleVideoWidth()
+{
+	return VERSION_SELECT_DEFAULT(660, GMSP01_NX(640));
+}
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
 u16 SMSGetTitleVideoHeight(u32 tvFormat)
 {
 	return SMSGetGameVideoHeight(tvFormat);
@@ -62,19 +68,29 @@ u16 SMSGetTitleVideoHeight() { return SMSGetGameVideoHeight(); }
 
 u16 SMSGetGameRenderWidth() { return 640; }
 
-u16 SMSGetGameRenderHeight() { return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360)); }
+u16 SMSGetGameRenderHeight()
+{
+	return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
+}
 
 u16 SMSGetTitleRenderWidth() { return 640; }
 
-u16 SMSGetTitleRenderHeight() { return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360)); }
+u16 SMSGetTitleRenderHeight()
+{
+	return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
+}
 
 u16 SMSGetGCLogoRenderWidth() { return 640; }
 
-u16 SMSGetGCLogoRenderHeight() { return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360)); }
+u16 SMSGetGCLogoRenderHeight()
+{
+	return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
+}
 
 u16 SMSGetGCLogoVideoWidth() { return 640; }
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
 u16 SMSGetGCLogoVideoHeight(u32 tvFormat)
 {
 	return SMSGetTitleVideoHeight(tvFormat);
