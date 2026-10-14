@@ -19,6 +19,9 @@ Supported versions:
 
 - `GMSJ01`: Rev 0 (JPN)
 - `GMSP01`: Rev 0 (PAL)
+- `GMSE01`: Rev 0 (NTSC)
+- `GMSJ01_01`: Rev 1 (JPN)
+- `GMSP01_NX`: Rev 0 (Mario 3D All Stars (Switch))
 
 Dependencies
 ============
