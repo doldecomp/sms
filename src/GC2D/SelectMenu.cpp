@@ -590,6 +590,12 @@ void TSelectMenu::startMove()
 	mSelectShineMgr->mShines[mSelectedShine]->mIsSelected = true;
 }
 
+// fabricated TODO: get rid of this and match properly!
+static inline JUtility::TColor makeBlackCornerColor(u8 alpha)
+{
+	return JUtility::TColor(0, 0, 0, alpha);
+}
+
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 {
 	if (flags & 0x1) {
@@ -834,7 +840,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
 					                              mSelectedShine, false);
 					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, SMS_getNormalStage(shineID2));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
@@ -907,7 +913,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
 					                              mSelectedShine, false);
 					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, SMS_getNormalStage(shineID2));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
@@ -978,22 +984,22 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 				alpha = mArrowR->getAlpha();
 				if (getNextIndex() == -1) {
-					if (alpha > 0) {
-						s32 alpha2 = alpha - 4;
-						if (alpha2 < 0) {
-							alpha2 = 0;
+					if (alpha != 0) {
+						alpha -= 4;
+						if (alpha < 0) {
+							alpha = 0;
 							mArrowR->hide();
 						}
-						mArrowR->setAlpha(alpha2);
+						mArrowR->setAlpha(alpha);
 					}
 				} else {
 					u8 alphaRef = mMarkAlpha;
 					if (alpha < alphaRef) {
-						s32 alpha2 = alpha + 4;
-						if (alpha2 > alphaRef) {
-							alpha2 = alphaRef;
+						alpha += 4;
+						if (alpha > alphaRef) {
+							alpha = alphaRef;
 						}
-						mArrowR->setAlpha(alpha2);
+						mArrowR->setAlpha(alpha);
 					}
 				}
 			}
@@ -1050,8 +1056,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			updated &= mLetterBoxTop->update();
 			updated &= mLetterBoxBottom->update();
 
-			// TODO: This needs to be matched properly.
-			// The compiler does a lot of inlining here that we don't want.
+			// TODO: recover the original color helper and remaining stack
+			// layout.
 			{
 				u32 ccol1
 				    = ((J2DPicture*)mLetterBoxTop->getPane())->mCornerColor[0];
@@ -1074,20 +1080,20 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
-				// These are probably inlined functions.
+				// TODO: get rid of this crap and match properly!!!
 				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col1 = makeBlackCornerColor(alpha);
 
 				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col2 = makeBlackCornerColor(alpha);
 
 				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col3 = makeBlackCornerColor(alpha);
 
 				alpha = var1;
 				((J2DPicture*)mLetterBoxTop->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(makeBlackCornerColor(alpha), col3, col2,
+				                     col1);
 			}
 
 			{
@@ -1111,19 +1117,20 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
+				// TODO: get rid of this crap and match properly!!!
 				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col1 = makeBlackCornerColor(alpha);
 
 				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col2 = makeBlackCornerColor(alpha);
 
 				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col3 = makeBlackCornerColor(alpha);
 
 				alpha = var1;
 				((J2DPicture*)mLetterBoxBottom->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(makeBlackCornerColor(alpha), col3, col2,
+				                     col1);
 
 				if (updated) {
 					mMenuState            = WAIT_BEFORE_CLOSE;
@@ -1142,13 +1149,27 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	if (flags & 0x8) {
-		if (mMenuState < 10 && mMenuState >= 0) {
+		switch (mMenuState) {
+		case CLOSE_MENU:
+		case LETTERBOX_ANIMATION:
+		case STAGE_BANNER_SLIDE:
+		case STAGE_BANNER_SQUASH:
+		case STAGE_BANNER_STRETCH:
+		case APPEAR_MENU:
+		case MENU_INPUT_LOOP:
+		case MENU_ANIM_LOOP:
+		case DISAPPEAR_MENU:
+		case WAIT_BEFORE_CLOSE: {
 			ReInitializeGX();
 			SMS_DrawInit();
 			J2DOrthoGraph graph(gfx->getViewport());
 			graph.setup2D();
 			graph.setup2D();
 			mMenuScreen->draw(0, 0, &graph);
+			break;
+		}
+		default:
+			break;
 		}
 	}
 }
