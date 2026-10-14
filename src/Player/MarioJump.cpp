@@ -860,6 +860,9 @@ BOOL TMario::boardJumping()
 		if (mWallPlane == nullptr) {
 			setPlayerVelocity(0.0f);
 			loserExec();
+#ifdef VERSION_GMSP01
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
+#endif
 		} else {
 			s16 diff
 			    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
@@ -868,6 +871,10 @@ BOOL TMario::boardJumping()
 			if ((diff < -max || max < diff)
 			    && mForwardVel > mSurfingParamsWaterRed.mClashSpeed.get()) {
 				loserExec();
+#ifdef VERSION_GMSP01
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr,
+				                                   0);
+#endif
 			} else {
 				setPlayerVelocity(0.0f);
 			}
