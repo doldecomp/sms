@@ -25,7 +25,7 @@ JDrama::TRect SMSGetRederRect_Game()
 
 void SMSSetupGCLogoRenderMode(GXRenderModeObj* rmo)
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	u32 tvFormat = VIGetTvFormat();
 	if (!(OSGetConsoleType() & OS_CONSOLE_DEVELOPMENT))
 		tvFormat = VI_PAL;
@@ -40,7 +40,7 @@ void SMSSetupGCLogoRenderMode(GXRenderModeObj* rmo)
 	rmo->xFBmode         = VI_XFBMODE_DF;
 	rmo->field_rendering = 0;
 	rmo->aa              = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	JDrama::CalcRenderModeXFBHeight(rmo, SMSGetGCLogoVideoHeight(tvFormat));
 #else
 	JDrama::CalcRenderModeXFBHeight(rmo, SMSGetGCLogoVideoHeight());
@@ -59,7 +59,7 @@ void SMSSetupGCLogoRenderingInfo(JDrama::TDisplay* param_1)
 
 void SMSSetupTitleRenderMode(GXRenderModeObj* rmo)
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	u32 tvFormat = VIGetTvFormat();
 	if (!(OSGetConsoleType() & OS_CONSOLE_DEVELOPMENT))
 		tvFormat = VI_PAL;
@@ -82,7 +82,7 @@ void SMSSetupTitleRenderMode(GXRenderModeObj* rmo)
 	rmo->xFBmode         = noFilter ? VI_XFBMODE_SF : VI_XFBMODE_DF;
 	rmo->field_rendering = 0;
 	rmo->aa              = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	JDrama::CalcRenderModeXFBHeight(rmo, SMSGetTitleVideoHeight(tvFormat));
 #else
 	JDrama::CalcRenderModeXFBHeight(rmo, SMSGetTitleVideoHeight());
@@ -102,7 +102,7 @@ void SMSSetupTitleRenderingInfo(JDrama::TDisplay* param_1)
 
 void SMSSetupGameRenderingInfo(JDrama::TDisplay* param_1, bool param_2)
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	u32 tvFormat = VIGetTvFormat();
 	if (!(OSGetConsoleType() & OS_CONSOLE_DEVELOPMENT))
 		tvFormat = VI_PAL;
@@ -134,7 +134,7 @@ void SMSSetupGameRenderingInfo(JDrama::TDisplay* param_1, bool param_2)
 	rmo.efbHeight = SMSGetGameRenderHeight();
 	rmo.viWidth   = SMSGetGameVideoWidth();
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	JDrama::CalcRenderModeXFBHeight(&rmo, SMSGetGameVideoHeight(tvFormat));
 #else
 	JDrama::CalcRenderModeXFBHeight(&rmo, SMSGetGameVideoHeight());
@@ -153,7 +153,7 @@ void SMSSetupGameRenderingInfo(JDrama::TDisplay* param_1, bool param_2)
 
 void SMSSetupMovieRenderingInfo(JDrama::TDisplay* param_1)
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	u32 tvFormat = VIGetTvFormat();
 	if (!(OSGetConsoleType() & OS_CONSOLE_DEVELOPMENT))
 		tvFormat = VI_PAL;
@@ -178,7 +178,7 @@ void SMSSetupMovieRenderingInfo(JDrama::TDisplay* param_1)
 	rmo.xFBmode         = noFilter ? VI_XFBMODE_SF : VI_XFBMODE_DF;
 	rmo.field_rendering = 0;
 	rmo.aa              = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 	JDrama::CalcRenderModeXFBHeight(&rmo, SMSGetGameVideoHeight(tvFormat));
 #else
 	JDrama::CalcRenderModeXFBHeight(&rmo, SMSGetGameVideoHeight());

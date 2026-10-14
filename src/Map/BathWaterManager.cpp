@@ -195,13 +195,13 @@ public:
 
 		JGeometry::TVec3<f32> capCenter = data.getThing();
 
-		f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-		                                      - data.unk44 * data.unk44);
+		f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C.x * data.unk3C.x
+		                                      - data.unk3C.z * data.unk3C.z);
 		bool hit;
 		if (capCenter.y < my)
 			return false;
 
-		f32 h = data.unk3C - data.unk44;
+		f32 h = data.unk3C.x - data.unk3C.z;
 		if (my + mdh < capCenter.y - h)
 			return false;
 
@@ -252,8 +252,8 @@ public:
 			                        data.unk18.at(2, 1));
 			JGeometry::TVec3<f32> delta;
 			delta.sub(unk0, data.mPos);
-			f32 outerR = data.unk40 + radius;
-			f32 innerR = data.unk3C - radius;
+			f32 outerR = data.unk3C.y + radius;
+			f32 innerR = data.unk3C.x - radius;
 			f32 distSq = delta.squared();
 			f32 proj   = m.dot(delta);
 
@@ -278,7 +278,7 @@ public:
 						point2 += data.unk58;
 						unk30.extend(point2);
 					} else {
-						f32 f = radius + (data.mPos.y - data.unk44);
+						f32 f = radius + (data.mPos.y - data.unk3C.z);
 						if (unk0.y < f) {
 							f32 pen = f - unk0.y;
 							JGeometry::TVec3<f32> point(0.0f, pen, 0.0f);
@@ -422,9 +422,9 @@ public:
 				}
 			}
 
-			f32 threshold = data.mPos.y - data.unk3C;
+			f32 threshold = data.mPos.y - data.unk3C.x;
 			if (data.unk65)
-				threshold = data.mPos.y - 8.0f * data.unk3C;
+				threshold = data.mPos.y - 8.0f * data.unk3C.x;
 
 			int respawnIdx = 0;
 			for (TDrop* drop = bw->unk88; drop < end2; drop++) {
@@ -888,8 +888,8 @@ public:
 
 		if (unk2C->showsCap.get() && !data.unk65) {
 			drawCap(data.getThing(),
-			        JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                    - data.unk44 * data.unk44));
+			        JGeometry::TUtil<f32>::sqrt(data.unk3C.x * data.unk3C.x
+			                                    - data.unk3C.z * data.unk3C.z));
 		}
 
 		GXColor color = (GXColor) { 0x78, 0xFA, 0x14, unk2C->alpha.get() };
@@ -1037,8 +1037,8 @@ public:
 	                       const TBathtubData& data, TBathWater** waters,
 	                       TBathWaterParams** params, int num)
 	{
-		f32 negR = -data.unk3C;
-		f32 R3   = 3.0f * data.unk3C;
+		f32 negR = -data.unk3C.x;
+		f32 R3   = 3.0f * data.unk3C.x;
 
 		unk800AC = unk80134->meshTexWidth.get() & ~3;
 		unk800B0 = 1.0f / (f32)unk800AC;
@@ -1046,8 +1046,8 @@ public:
 		// Half-stripped crap
 		JGeometry::TVec3<f32> v1;
 		v1.set(data.getThing());
-		if (data.unk3C * data.unk3C - data.unk44 * data.unk44 <= 0)
-			(void)(data.unk3C * data.unk3C - data.unk44 * data.unk44);
+		if (data.unk3C.x * data.unk3C.x - data.unk3C.z * data.unk3C.z <= 0)
+			(void)(data.unk3C.x * data.unk3C.x - data.unk3C.z * data.unk3C.z);
 
 		JGeometry::TVec3<f32> v2;
 		v2.set(data.getThing());
@@ -1169,8 +1169,8 @@ public:
 			GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 			GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U8, 7);
 			JGeometry::TVec3<f32> capCenter = data.getThing();
-			f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                      - data.unk44 * data.unk44);
+			f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C.x * data.unk3C.x
+			                                      - data.unk3C.z * data.unk3C.z);
 			drawCap(capCenter, rad);
 			capCenter.y += 0.5f * negR;
 			drawCap(capCenter, unk800B0 * unk80134->meshWidth.get() + rad);
@@ -1261,8 +1261,8 @@ public:
 
 		if (unk80134->showsCap.get() && !data.unk65) {
 			drawCap(data.getThing(),
-			        JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                    - data.unk44 * data.unk44));
+			        JGeometry::TUtil<f32>::sqrt(data.unk3C.x * data.unk3C.x
+			                                    - data.unk3C.z * data.unk3C.z));
 		}
 
 		GXInitTexObj(&unk800D4, unk800A8, r23, r24, (GXTexFmt)1, GX_CLAMP,
@@ -1304,8 +1304,8 @@ public:
 		                  GX_FALSE, 0x7d);
 
 		f32 cell = unk800B0 * unk80134->meshWidth.get();
-		f32 tmp  = 3.0f * data.unk3C;
-		unk80080.set(cell, -data.unk3C - tmp, cell);
+		f32 tmp  = 3.0f * data.unk3C.x;
+		unk80080.set(cell, -data.unk3C.x - tmp, cell);
 		unk80050.identity33();
 
 		JGeometry::TVec3<f32> pos = data.getThing();
@@ -1789,7 +1789,7 @@ static inline bool fakeCalcPos(const TBathtubData& data, f32 radius, f32 rnd1,
 	nAxis.y += cross.y * perturb;
 	nAxis.z += cross.z * perturb;
 
-	f32 h = 0.9f * (data.unk3C - radius);
+	f32 h = 0.9f * (data.unk3C.x - radius);
 	nAxis.setLength(h);
 
 	JGeometry::TVec3<f32> up2(0.0f, 1.0f, 0.0f);

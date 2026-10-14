@@ -3,7 +3,12 @@
 
 #include <dolphin/types.h>
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01_NX)
+u16 SMSGetIntroRenderWidth();
+u16 SMSGetIntroRenderHeight();
+#endif
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 u16 SMSGetGCLogoVideoHeight(u32 tvFormat);
 #else
 u16 SMSGetGCLogoVideoHeight();
@@ -15,7 +20,7 @@ u16 SMSGetTitleRenderHeight();
 u16 SMSGetTitleRenderWidth();
 u16 SMSGetGameRenderHeight();
 u16 SMSGetGameRenderWidth();
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 u16 SMSGetTitleVideoHeight(u32 tvFormat);
 #else
 u16 SMSGetTitleVideoHeight();
@@ -23,7 +28,7 @@ u16 SMSGetTitleVideoHeight();
 u16 SMSGetTitleVideoWidth();
 s32 SMSGetDisplayHeightMax();
 s32 SMSGetDisplayWidthMax();
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
 u16 SMSGetGameVideoHeight(u32 tvFormat);
 #else
 u16 SMSGetGameVideoHeight();
