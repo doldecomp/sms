@@ -360,11 +360,14 @@ static bool bgIntersectLine(const TBGCheckData* data,
 	JGeometry::TVec3<f32> hit = start + dir;
 
 	JGeometry::TVec3<f32> a;
-	a.sub(data->getPoint1(), hit);
+	a.set(data->getPoint1());
 	JGeometry::TVec3<f32> b;
-	b.sub(data->getPoint2(), hit);
+	b.set(data->getPoint2());
 	JGeometry::TVec3<f32> c;
-	c.sub(data->getPoint3(), hit);
+	c.set(data->getPoint3());
+	a -= hit;
+	b -= hit;
+	c -= hit;
 
 	f32 angleSum = 0.0f;
 
