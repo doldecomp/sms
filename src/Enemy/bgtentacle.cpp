@@ -87,10 +87,10 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		MtxPtr mtx2 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
 		JGeometry::TVec3<f32> vec2(mtx2[0][3], mtx2[1][3], mtx2[2][3]);
 
-		vec2 -= vec1;
+		JGeometry::TVec3<f32> vec3 = vec2 - vec1;
 
-		if (!vec2.isZero()) {
-			VECNormalize(&vec2, &local_68);
+		if (!vec3.isZero()) {
+			VECNormalize(&vec3, &local_68);
 		} else {
 			local_68.set(1.0f, 0.0f, 0.0f);
 		}
@@ -305,9 +305,8 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			vec2.cross(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), vec1);
 			vec2.normalize();
 
-			JGeometry::TVec3<f32> vec3;
-			vec3.cross(vec2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
-			vec3.normalize();
+			vec1.cross2(vec2, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+			vec1.normalize();
 
 			unk80.mMtx[0][0] = vec2.x;
 			unk80.mMtx[1][0] = vec2.y;
@@ -317,18 +316,18 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk80.mMtx[1][1] = 1.0f;
 			unk80.mMtx[2][1] = 0.0f;
 
-			unk80.mMtx[0][2] = vec3.x;
-			unk80.mMtx[1][2] = vec3.y;
-			unk80.mMtx[2][2] = vec3.z;
+			unk80.mMtx[0][2] = vec1.x;
+			unk80.mMtx[1][2] = vec1.y;
+			unk80.mMtx[2][2] = vec1.z;
 
-			vec3.scale(mDamageRadius);
+			vec1.scale(mDamageRadius);
 
-			JGeometry::TVec3<f32> tip(mtx[0][3], mtx[1][3], mtx[2][3]);
-			tip += vec3;
+			vec1.add(JGeometry::TVec3<f32>(mtx[0][3], mtx[1][3], mtx[2][3]),
+			         vec1);
 
-			unk80.mMtx[0][3] = tip.x;
-			unk80.mMtx[1][3] = tip.y;
-			unk80.mMtx[2][3] = tip.z;
+			unk80.mMtx[0][3] = vec1.x;
+			unk80.mMtx[1][3] = vec1.y;
+			unk80.mMtx[2][3] = vec1.z;
 
 			JGeometry::TVec3<f32> local_8c
 			    = mOwner->getLastNode()->getVelocity();
@@ -368,8 +367,10 @@ void TBGTakeHit::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mOwner->getState() != TBGTentacle::TSTATE_HELD
 		    && mOwner->getState() != TBGTentacle::TSTATE_AMPUTEE
-		    && mHolder != nullptr)
-			mHolder->receiveMessage(this, HIT_MESSAGE_DETACH);
+		    && mHolder != nullptr) {
+			TTakeActor* holder = mHolder;
+			holder->receiveMessage(this, HIT_MESSAGE_DETACH);
+		}
 	}
 }
 
@@ -601,7 +602,7 @@ void TBGTentacle::incDamage()
 void TBGTentacle::throwMario(THitActor* param_1, THitActor* param_2)
 {
 	JGeometry::TVec3<f32> local_e0 = param_1->getPosition();
-	local_e0 -= param_2->getPosition();
+	local_e0 -= param_2->mPosition;
 
 	local_e0.normalize();
 	local_e0.scale(2.0f);
@@ -751,7 +752,8 @@ void TBGTentacle::setAttackTarget()
 	}
 
 	J3DFrameCtrl* ctrl = unk80->getFrameCtrl(0);
-	ctrl->setRate(mOwner->getAttackSpeed() * SMSGetAnmFrameRate());
+	TBossGesso* owner  = mOwner;
+	ctrl->setRate(owner->getAttackSpeed() * SMSGetAnmFrameRate());
 	unk4C = 0;
 }
 
@@ -854,8 +856,8 @@ void TBGTentacle::returnToDefaultState()
 
 void TBGTentacle::moveNode()
 {
-	f32 fVar1 = mParams->mVibrationSpeed.get();
 	f32 fVar2 = mParams->mVibrationForce.get();
+	f32 fVar1 = mParams->mVibrationSpeed.get();
 
 	if (mState == TSTATE_AMPUTEE) {
 		fVar2 *= mParams->mDamagePropF.get();
@@ -913,7 +915,7 @@ void TBGTentacle::moveNode()
 	for (int i = 0; i < mNodeNum; ++i) {
 		mNodes[i].calcPosition(this);
 
-		if (i <= 1 && mOwner->getAttackMode() == 6)
+		if ((i == 0 || i == 1) && mOwner->getAttackMode() == 6)
 			continue;
 
 		TNode* node = &mNodes[i];
@@ -946,9 +948,10 @@ void TBGTentacle::moveNode()
 			                         local_ac.z, &pTStack_b0);
 		}
 
-		if (local_ac.y < dVar16 + 20.0f) {
+		dVar16 += 20.0f;
+		if (local_ac.y < dVar16) {
 			mNodes[i].setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-			local_ac.y = dVar16 + 20.0f;
+			local_ac.y = dVar16;
 		}
 
 		if (mState == TSTATE_STUN && local_ac.y < mOwner->mPosition.y) {

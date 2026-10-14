@@ -1,16 +1,34 @@
 #include <Enemy/BathtubKiller.hpp>
+#include <Enemy/BathtubPeach.hpp>
 #include <Enemy/BossGesso.hpp>
+#include <Enemy/BossHanachan.hpp>
+#include <Enemy/BossTelesa.hpp>
+#include <Enemy/BossWanwan.hpp>
 #include <Enemy/CoasterKiller.hpp>
 #include <Enemy/Emario.hpp>
 #include <Enemy/BossEel.hpp>
 #include <Enemy/BossManta.hpp>
 #include <Enemy/BossPakkun.hpp>
 #include <Enemy/Hinokuri2.hpp>
+#include <Enemy/Koopa.hpp>
+#include <Enemy/KoopaJr.hpp>
+#include <Enemy/LimitKoopa.hpp>
 #include <Enemy/LimitKoopaJr.hpp>
 #include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TinKoopa.hpp>
 #include <Enemy/BossTelesa.hpp>
 #include <System/MarNameRefGen.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+
+#include <System/DummyStrings.hpp>
+
+const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
+#include <M3DUtil/InfectiousStrings.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
@@ -20,13 +38,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "EMarioManager") == 0)
 		return new TEMarioManager;
 
-	// TODO:
-	// if ( strcmp( name, "BossHanachan" ) == 0 )
-	//     return new TBossHanachan("?");
+	if (strcmp(name, "BossHanachan") == 0)
+		return new TBossHanachan("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossHanachanManager" ) == 0 )
-	//     return new TBossHanachanManager("?");
+	if (strcmp(name, "BossHanachanManager") == 0)
+		return new TBossHanachanManager("?");
 
 	if (strcmp(name, "SleepBossHanachan") == 0)
 		return new TSleepBossHanachan;
@@ -43,13 +59,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BEelTearsManager") == 0)
 		return new TBEelTearsManager("めおとウナギ涙マネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "Koopa" ) == 0 )
-	//     return new TKoopa("クッパ");
+	if (strcmp(name, "Koopa") == 0)
+		return new TKoopa("クッパ");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaManager" ) == 0 )
-	//     return new TKoopaManager("クッパマネージャー");
+	if (strcmp(name, "KoopaManager") == 0)
+		return new TKoopaManager("クッパマネージャー");
 
 	if (strcmp(name, "HinoKuri2") == 0)
 		return new THinokuri2;
@@ -75,22 +89,18 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "CoasterKiller") == 0)
 		return new TCoasterKiller;
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrManager" ) == 0 )
-	//     return new TKoopaJrManager("クッパジュニアマネージャー");
+	if (strcmp(name, "KoopaJrManager") == 0)
+		return new TKoopaJrManager("クッパジュニアマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJr" ) == 0 )
-	//     return new TKoopaJr("クッパジュニア");
+	if (strcmp(name, "KoopaJr") == 0)
+		return new TKoopaJr("クッパジュニア");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrSubmarineManager" ) == 0 )
-	//     return new
-	//     TKoopaJrSubmarineManager("クッパジュニアサブマリンマネージャー");
+	if (strcmp(name, "KoopaJrSubmarineManager") == 0)
+		return new TKoopaJrSubmarineManager(
+		    "クッパジュニアサブマリンマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrSubmarine" ) == 0 )
-	//     return new TKoopaJrSubmarine("クッパジュニアサブマリン");
+	if (strcmp(name, "KoopaJrSubmarine") == 0)
+		return new TKoopaJrSubmarine("クッパジュニアサブマリン");
 
 	if (strcmp(name, "LimitKoopaJrManager") == 0)
 		return new TLimitKoopaJrManager;
@@ -98,13 +108,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "LimitKoopaJr") == 0)
 		return new TLimitKoopaJr;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaManager" ) == 0 )
-	//     return new TLimitKoopaManager("クッパマネージャー");
+	if (strcmp(name, "LimitKoopaManager") == 0)
+		return new TLimitKoopaManager("クッパマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopa" ) == 0 )
-	//     return new TLimitKoopa("クッパ");
+	if (strcmp(name, "LimitKoopa") == 0)
+		return new TLimitKoopa("クッパ");
 
 	if (strcmp(name, "BathtubKillerManager") == 0)
 		return new TBathtubKillerManager;
@@ -112,21 +120,17 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BathtubKiller") == 0)
 		return new TBathtubKiller;
 
-	// TODO:
-	// if ( strcmp( name, "BathtubPeachManager" ) == 0 )
-	//     return new TBathtubPeachManager("バスタブピーチマネージャー");
+	if (strcmp(name, "BathtubPeachManager") == 0)
+		return new TBathtubPeachManager("バスタブピーチマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "BathtubPeach" ) == 0 )
-	//     return new TBathtubPeach("バスタブピーチ");
+	if (strcmp(name, "BathtubPeach") == 0)
+		return new TBathtubPeach("バスタブピーチ");
 
-	// TODO:
-	// if ( strcmp( name, "BossWanwan" ) == 0 )
-	//     return new TBossWanwan("ボスワンワン");
+	if (strcmp(name, "BossWanwan") == 0)
+		return new TBossWanwan("ボスワンワン");
 
-	// TODO:
-	// if ( strcmp( name, "BossWanwanManager" ) == 0 )
-	//     return new TBossWanwanManager("ボスワンワンマネージャ");
+	if (strcmp(name, "BossWanwanManager") == 0)
+		return new TBossWanwanManager("ボスワンワンマネージャ");
 
 	if (strcmp(name, "BossPakkun") == 0)
 		return new TBossPakkun("ボスパックン改");

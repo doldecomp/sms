@@ -27,10 +27,6 @@
 
 static u8 setup_wait;
 
-static u32 scNormalStageTable[] = {
-	0, 1, 2, 3, 4, 0xd, 6, 8, 9, 0xa,
-};
-
 TGuide::TGuide(const char* name)
     : JDrama::TViewObj(name)
     , unk10(STATE_CLOSED)

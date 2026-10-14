@@ -33,29 +33,27 @@ void TMapWarp::watchToWarp()
 	                                     SMS_GetMarioPos().z, &checkData);
 
 	if (checkData->isWarp()) {
-		int warp = unk4[checkData->getData()].unk0;
-		if (warp != unk8) {
+		int data = checkData->getData();
+		int warp = unk4[data].unk0;
+		if (unk8 != warp) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
 			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
-			unk8 = warp;
-
 			// TODO: inlines
-			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-			marioPos += unk4[checkData->getData()].unk8;
+			unk8 = unk4[data].unk0;
+			JGeometry::TVec3<f32> marioPos
+			    = SMS_GetMarioPos() + unk4[data].unk8;
 			SMS_MarioWarpRequest(marioPos,
 			                     (SMS_GetMarioAngleY() * 180.0f) / 32768.0f);
 		}
 	}
 
 	if (checkData->isMapChange()) {
-		if (checkData->getData() != unk8) {
+		int data = checkData->getData();
+		if (unk8 != data) {
 			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-			gpMap->getModelManager()
-			    ->getJointModel(0)
-			    ->getChild(checkData->getData())
-			    ->awake();
+			gpMap->getModelManager()->getJointModel(0)->getChild(data)->awake();
 
-			unk8 = checkData->getData();
+			unk8 = data;
 		}
 	}
 
@@ -68,7 +66,8 @@ void TMapWarp::watchToWarp()
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
 	               info.unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
+	vec2.z = info.unk40 * 0.01f;
 	MTXMultVec(mtx, &vec2, &vec2);
 	if ((info.unk38 == 0 ? true : false) || (info.unk38 == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
@@ -88,11 +87,7 @@ void TMapWarp::initModel()
 			    ->sleep();
 }
 
-void getWarpPointNo(const char*) { }
-
-void loadWarpPointPos(JSUMemoryInputStream&, int, Vec*) { }
-
-void TMapWarp::init(JSUMemoryInputStream& stream)
+int getWarpPointNo(const char* name)
 {
 	// Fabricated
 	struct NameTableEntry {
@@ -107,6 +102,27 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		{ "warpI1", 16 }, { "warpI0", 17 }, { nullptr, 0 },
 	};
 
+	int i = 0;
+	while (strcmp(point_name_table[i].unk0, name) != 0)
+		++i;
+	return point_name_table[i].unk4;
+}
+
+void loadWarpPointPos(JSUMemoryInputStream& stream, int count, Vec* points)
+{
+	for (int i = 0; i < count; ++i) {
+		const char* name = stream.readString();
+		Vec& point       = points[getWarpPointNo(name)];
+		stream >> point.x >> point.y >> point.z;
+
+		u32 dummy;
+		stream >> dummy >> dummy >> dummy;
+		stream >> dummy >> dummy >> dummy;
+	}
+}
+
+void TMapWarp::init(JSUMemoryInputStream& stream)
+{
 	unk0 = stream.readU32();
 	if (!unk0)
 		return;
@@ -123,26 +139,8 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		local_180[i] = stream.readU32();
 	}
 
-	int cnt = unk0 * 2;
-	for (int i = 0; i < cnt; ++i) {
-		const char* str = stream.readString();
-		u32 needle      = 0;
-		while (strcmp(point_name_table[needle].unk0, str) != 0)
-			++needle;
-
-		u32 idx = point_name_table[needle].unk4;
-		stream >> local_130[idx].x;
-		stream >> local_130[idx].y;
-		stream >> local_130[idx].z;
-
-		u32 dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-		stream >> dummy;
-	}
+	int count = unk0 * 2;
+	loadWarpPointPos(stream, count, local_130);
 
 	for (int i = 0; i < unk0; ++i) {
 		unk4[2 * i].unk8.x = local_130[2 * i].x - local_130[2 * i + 1].x;
@@ -152,12 +150,12 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		unk4[2 * i].unk0 = local_180[i];
 		unk4[2 * i].unk4 = local_1d0[i];
 
-		unk4[2 * i + 1].unk8.x = -unk4[2 * i].getUnk8().x;
-		unk4[2 * i + 1].unk8.y = -unk4[2 * i].getUnk8().y;
-		unk4[2 * i + 1].unk8.z = -unk4[2 * i].getUnk8().z;
+		unk4[2 * i + 1].unk8.x = -unk4[2 * i].unk8.x;
+		unk4[2 * i + 1].unk8.y = -unk4[2 * i].unk8.y;
+		unk4[2 * i + 1].unk8.z = -unk4[2 * i].unk8.z;
 
-		unk4[2 * i + 1].unk0 = local_180[i];
-		unk4[2 * i + 1].unk4 = local_1d0[i];
+		unk4[2 * i + 1].unk0 = local_1d0[i];
+		unk4[2 * i + 1].unk4 = local_180[i];
 	}
 
 	if (SMSGetMarDirector()->mMap == 4) {

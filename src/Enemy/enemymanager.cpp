@@ -121,8 +121,11 @@ void TEnemyManager::createEnemies(int count)
 	if (count + getObjNum() > getCapacity())
 		count = getCapacity() - getObjNum();
 
-	if (unk38 != nullptr && count + getObjNum() > unk38->mSLInstanceNum.get())
-		count = unk38->mSLInstanceNum.get() - getObjNum();
+	if (unk38 != nullptr) {
+		u8 limit = unk38->mSLInstanceNum.get();
+		if (count + getObjNum() > limit)
+			count = limit - getObjNum();
+	}
 
 	if (count < 0)
 		return;
@@ -279,9 +282,13 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 
 	if (param_1 & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
-		for (int i = 0; i < unk44; ++i)
-			for (int j = 0; j < unk40[i].unk4; ++j)
-				unk40[i].unk0[j]->calcAnm();
+		int j;
+		TSharedMActorSet* set;
+		for (int i = 0; i < unk44; ++i) {
+			set = &unk40[i];
+			for (j = 0; j < set->unk4; ++j)
+				set->unk0[j]->calcAnm();
+		}
 		setSharedFlags();
 		updateAnmSoundShared();
 	}
@@ -505,7 +512,7 @@ bool TEnemyManager::copyAnmMtx(TSpineEnemy* enemy)
 
 	for (int i = 0; i < unk50; ++i) {
 		MTXConcat(mtx, unk48[f][i], afStack_5C);
-		enemy->getMActor()->getModel()->setAnmMtx(i, wtf);
+		enemy->getMActor()->getModel()->setAnmMtx(i, afStack_5C);
 	}
 
 	if (enemy->getMActor()->getModel()->getModelData()->getWEvlpMtxNum())

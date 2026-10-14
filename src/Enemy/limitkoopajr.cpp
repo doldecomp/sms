@@ -54,7 +54,7 @@ void TLimitKoopaJr::init(TLiveManager* param_1)
 	mMActor->setLightType(1);
 	initAnmSound();
 	f32 damageHeight
-	    = ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageHeight.get();
+	    = ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageHeight.value;
 	initHitActor(ACTOR_TYPE_LIMIT_KOOPA_JR, 1, 0, 0.0f, 0.0f,
 	             ((TLimitKoopaJrParams*)getSaveParam())->mSLDamageRadius.get(),
 	             damageHeight);

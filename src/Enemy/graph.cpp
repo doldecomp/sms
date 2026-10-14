@@ -64,8 +64,7 @@ f32 TSplineRail::wrapT(f32 param_1)
 	return param_1;
 }
 
-// TODO: you'd think this is correct, but the size is wrong...
-f32 TSplineRail::getNthT(int n) { return unk0->mParametrization[n]; }
+f32 TSplineRail::getNthT(int n) { return unk0->getNthT(n); }
 
 JGeometry::TVec3<f32> TSplineRail::getPosition(f32 t)
 {
@@ -341,7 +340,7 @@ int TGraphWeb::getEscapeFromMarioIndex(int param_1, int param_2,
 			continue;
 
 		JGeometry::TVec3<f32> local_ac;
-		getGraphNode(railNode->mConnections[i]).getPoint(local_ac);
+		unk0[railNode->mConnections[i]].getPoint(&local_ac);
 		local_ac -= param_3;
 		MsVECNormalize(&local_ac, &local_ac);
 
@@ -468,7 +467,7 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 		}
 	}
 
-	if (result > 0)
+	if (iVar13 > 0)
 		return result;
 
 	result     = -1;
@@ -696,9 +695,10 @@ void TGraphWeb::isOnePath() const { }
 
 BOOL TGraphWeb::startIsEnd() const
 {
-	if (getFirstGraphNode().unk0->mConnectionNum > 2
-	    || (getFirstGraphNode().unk0->mConnections[0] != getNodeNum() - 1
-	        && getFirstGraphNode().unk0->mConnections[1] != getNodeNum() - 1))
+	const TRailNode* first = getFirstGraphNode().getRailNode();
+	if (first->mConnectionNum > 2
+	    || (first->mConnections[0] != getNodeNum() - 1
+	        && first->mConnections[1] != getNodeNum() - 1))
 		return false;
 
 	if (getLastGraphNode().unk0->mConnectionNum > 2
@@ -732,31 +732,38 @@ BOOL TGraphWeb::isDummy() const
 JGeometry::TVec3<f32>
 TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 {
-	bool bVar9 = true;
+	BOOL bVar9 = true;
 
-	JGeometry::TVec3<f32> local_48;
+	JGeometry::TVec3<f32> local_48 = param_1;
 	f32 min;
-	for (int i = 0; i < unk8; ++i) {
-		const TGraphNode& node = getGraphNode(i);
-		JGeometry::TVec3<f32> point;
-		node.getPoint(&point);
+	int nodeNum = getNodeNum();
+	for (int i = 0; i < nodeNum; ++i) {
+		const TGraphNode* nodes   = unk0;
+		const TGraphNode& node    = nodes[i];
 		const TRailNode* railNode = node.getRailNode();
-		for (int i = 0; i < railNode->mConnectionNum; ++i) {
-			int conn               = railNode->mConnections[i];
-			const TGraphNode& node = getGraphNode(conn);
+		JGeometry::TVec3<f32> point(railNode->mPosition.x,
+		                            railNode->mPosition.y,
+		                            railNode->mPosition.z);
+		int connectionNum = railNode->mConnectionNum;
+		for (int i = 0; i < connectionNum; ++i) {
+			int conn = railNode->mConnections[i];
 			JGeometry::TVec3<f32> point2;
-			node.getPoint(&point2);
+			nodes[conn].getPoint(&point2);
 			point2 -= point;
 
-			f32 fVar4 = MsClamp((param_1.dot(point2) - point.dot(point2))
-			                        / point2.squared(),
-			                    0.0f, 1.0f);
-			JGeometry::TVec3<f32> thing;
-			thing.scaleAdd(fVar4, point2, point);
-			thing.sub(param_1);
+			JGeometry::TVec3<f32> pos(param_1.x, param_1.y, param_1.z);
+			f32 fVar4 = JGeometry::TUtil<f32>::clamp(
+			    (pos.dot(point2) - point.dot(point2)) / point2.squared(), 0.0f,
+			    1.0f);
+			JGeometry::TVec3<f32> thing = point2;
+			thing.scale(fVar4);
+			thing.add(point);
+			thing.sub(pos);
 			f32 dVar18 = thing.squared();
 			if (bVar9 || dVar18 < min) {
-				local_48.scaleAdd(fVar4, point2, point);
+				local_48.set(point.x + point2.x * fVar4,
+				             point.y + point2.y * fVar4,
+				             point.z + point2.z * fVar4);
 				bVar9 = false;
 				min   = dVar18;
 			}
@@ -892,35 +899,30 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	if (mPrevIdx < 0)
 		return 0.001f;
 
-	JGeometry::TVec3<f32> v1;
-	unk0->unk0[mCurrIdx].getPoint(&v1);
-	JGeometry::TVec3<f32> v2;
-	unk0->unk0[mPrevIdx].getPoint(&v2);
-
-	JGeometry::TVec3<f32> diff = v1;
-	diff -= v2;
-	f32 fVar13 = VECMag(&diff);
+	JGeometry::TVec3<f32> v1 = getCurrent().getPoint();
+	v1 -= getPrevious().getPoint();
+	f32 fVar13 = VECMag(&v1);
 
 	f32 fVar1;
 	f32 fVar2;
-	if (unk0->getSplineRail()->isUnk4() && mPrevIdx == unk0->unk8 - 1
-	    && mCurrIdx == 0) {
-		fVar1 = unk0->getSplineRail()->getNthT(0);
-		fVar2 = unk0->getSplineRail()->getNthT(1);
-	} else if (unk0->getSplineRail()->isUnk4() && mPrevIdx == 0
+	TSplineRail* spline = unk0->getSplineRail();
+	if (spline->isUnk4() && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
+		fVar1 = spline->getNthT(0);
+		fVar2 = spline->getNthT(1);
+	} else if (spline->isUnk4() && mPrevIdx == 0
 	           && mCurrIdx == unk0->unk8 - 1) {
-		fVar1 = unk0->getSplineRail()->getNthT(mPrevIdx + 1);
-		fVar2 = unk0->getSplineRail()->getNthT(mPrevIdx);
+		fVar1 = spline->getNthT(unk0->getNodeNum() + 1);
+		fVar2 = spline->getNthT(unk0->getNodeNum());
 	} else {
 		u32 uVar10 = mPrevIdx;
-		if (unk0->getSplineRail()->isUnk4())
+		if (spline->isUnk4())
 			uVar10 += 1;
-		fVar1 = unk0->getSplineRail()->getNthT(uVar10);
+		fVar1 = spline->getNthT(uVar10);
 
 		u32 uVar7 = mCurrIdx;
-		if (unk0->getSplineRail()->isUnk4())
+		if (spline->isUnk4())
 			uVar7 += 1;
-		fVar2 = unk0->getSplineRail()->getNthT(uVar7);
+		fVar2 = spline->getNthT(uVar7);
 	}
 
 	return param_1 * (fVar2 - fVar1) / fVar13;
@@ -935,11 +937,13 @@ bool TGraphTracer::traceSpline(f32 param_1)
 	f32 dVar9 = dVar8 + param_1;
 
 	f32 dVar10;
-	if (unk0->unk14->unk4 && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
-		dVar10 = unk0->unk14->getNthT(mPrevIdx + 1);
-	} else if (unk0->unk14->unk4 && mPrevIdx == 0
-	           && mCurrIdx == unk0->unk8 - 1) {
-		dVar10 = unk0->unk14->getNthT(mPrevIdx);
+	TGraphWeb* graph    = unk0;
+	TSplineRail* spline = graph->getSplineRail();
+	if (spline->unk4 && mPrevIdx == graph->getNodeNum() - 1 && mCurrIdx == 0) {
+		dVar10 = spline->getNthT(graph->getNodeNum() + 1);
+	} else if (spline->unk4 && mPrevIdx == 0
+	           && getCurGraphIndex() == graph->getNodeNum() - 1) {
+		dVar10 = spline->getNthT(graph->getNodeNum());
 	} else {
 		u32 uVar7 = mCurrIdx;
 		if (unk0->unk14->unk4)

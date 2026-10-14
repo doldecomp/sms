@@ -42,13 +42,14 @@ void TMario::hitNormal(THitActor* actor)
 		actor->receiveMessage(this, HIT_MESSAGE_TRAMPLE);
 	}
 
-	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
-	    && mWaterGun->getEmittedWaterCount() != 0) {
-		TModelWaterManager::mStaticHitActor.mPosition = mPosition;
-		TModelWaterManager::mStaticHitActor.mPosition.y += 80.0f;
-		TModelWaterManager::mStaticHitActor.unk68 = 0;
-		actor->receiveMessage(&TModelWaterManager::mStaticHitActor,
-		                      HIT_MESSAGE_SPRAYED_BY_WATER);
+	TWaterGun* wg = mWaterGun;
+	if ((int)wg->mCurrentNozzle == 0 && wg->mEmittedWaterCount != 0) {
+		TWaterHitActor* waterActor;
+		(waterActor = &TModelWaterManager::mStaticHitActor)->mPosition
+		    = getPosition();
+		waterActor->mPosition.y += 80.0f;
+		waterActor->unk68 = 0;
+		actor->receiveMessage(waterActor, HIT_MESSAGE_SPRAYED_BY_WATER);
 	}
 }
 
@@ -169,17 +170,19 @@ void TMario::hangPole(THitActor* actor)
 		}
 
 		if (inHangStatus == 1) {
-			f32 dz   = actor->mPosition.z - mPosition.z;
-			f32 dx   = actor->mPosition.x - mPosition.x;
-			f32 dist = std::sqrtf(dx * dx + dz * dz);
+			f32 dz   = actor->mPosition.x - mPosition.x;
+			f32 dx   = actor->mPosition.z - mPosition.z;
+			f32 dist = std::sqrtf(dz * dz + dx * dx);
 			if (dist == 0.0f)
 				dist = 1.0f;
 
-			f32 a = JMASSin(mFaceAngle.y) * (dx / dist)
-			        + JMASCos(mFaceAngle.y) * (dz / dist);
-
 			f32 b = 50.0f + actor->getDamageRadius()
 			        + mBarParams.mCatchRadius.get();
+			JGeometry::TVec2<f32> delta;
+			delta.set(dz / dist, dx / dist);
+			f32 facingY = JMASSin(mFaceAngle.y);
+			f32 facingX = JMASCos(mFaceAngle.y);
+			f32 a       = facingY * delta.x + facingX * delta.y;
 
 			bool canCatch = true;
 			if (mPrevStatus & MARIO_STATUS_FLAG_UNK100000)
@@ -368,12 +371,14 @@ void TMario::checkCollision()
 			hitPickUpEnemy(mCollisions[i]);
 			break;
 
-		case ACTOR_TYPE_MAME_GESSO:
-			if (((TSmallEnemy*)mCollisions[i])->doKeepDistance())
+		case ACTOR_TYPE_MAME_GESSO: {
+			TSmallEnemy* enemy = (TSmallEnemy*)mCollisions[i];
+			if (enemy->doKeepDistance())
 				keepDistance(*mCollisions[i], 0.0f);
 			else
 				hitPickUpEnemy(mCollisions[i]);
 			break;
+		}
 
 		case ACTOR_TYPE_BOSS_EEL_TOOTH:
 		case ACTOR_TYPE_BOSS_EEL_COLLISION:

@@ -420,7 +420,8 @@ void TApplication::initialize_nlogoAfter()
 
 		u32 lVar3 = JKRGetRootHeap()->getSize(bufStageArcBin);
 		JSUMemoryInputStream stream(bufStageArcBin, lVar3);
-		JDrama::TNameRefGen::getInstance()->load(stream);
+		JSUMemoryInputStream& input = stream;
+		JDrama::TNameRefGen::getInstance()->load(input);
 		unk30 = static_cast<
 		    TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >*>(
 		    JDrama::TNameRefGen::search("ステージ毎シナリオアーカイブ名群"));
@@ -758,9 +759,12 @@ int TApplication::gameLoop()
 			           (f32)rmode.fbWidth, -1.0f, 1.0f);
 			GXSetProjection(afStack_1ac, GX_ORTHOGRAPHIC);
 			mFader->update();
-			mFader->draw(JDrama::TRect(0, 0, rmode.fbWidth, rmode.efbHeight));
-			if (gpMSound != nullptr)
-				gpMSound->mainLoop();
+			getFader()->draw(
+			    JDrama::TRect(0, 0, rmode.fbWidth, rmode.efbHeight));
+			if (gpMSound != nullptr) {
+				MSound* sound = SMSGetMSound();
+				sound->mainLoop();
+			}
 		}
 
 		TTimeRec::snapCPUTime(0);
@@ -769,7 +773,7 @@ int TApplication::gameLoop()
 		mDisplay->endRendering();
 
 		if (TTimeRec::_instance)
-			TTimeRec::_instance->flip();
+			TTimeRec::instance()->flip();
 
 		JDrama::TVideo* video = mDisplay->unk60;
 		if (video->mCurFrameBuffer) {
@@ -1020,7 +1024,7 @@ JKRMemArchive* TApplication::mountStageArchive()
 	JKRMemArchive* result = nullptr;
 
 	TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >& tmp = *unk30;
-	if (mCurrArea.getStage() < tmp.getChildren().size()) {
+	if (mCurrArea.getStage() < unk30->size()) {
 		TNameRefAryT<TScenarioArchiveName>& scenarios
 		    = tmp[mCurrArea.getStage()];
 		if (mCurrArea.getScenario() < scenarios.size()) {

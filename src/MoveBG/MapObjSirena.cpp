@@ -173,20 +173,18 @@ static int partsRollCallback(J3DNode* node, int flag)
 	if (flag == 0) {
 		if (gpCurObject == nullptr)
 			return 1;
-		int jntNo     = ((J3DJoint*)node)->getJntNo();
+		u16 jntNo     = ((J3DJoint*)node)->getJntNo();
 		MtxPtr jntMtx = gpCurObject->getModel()->getAnmMtx(jntNo);
-
-		--jntNo;
 
 		TPosition3f local_4C;
 		local_4C.setTrans(0.0f, 0.0f, 0.0f);
-		local_4C.setScale(gpCurObject->mScaling.x, gpCurObject->mScaling.y,
-		                  gpCurObject->mScaling.z);
+		const JGeometry::TVec3<f32>& scaling = gpCurObject->mScaling;
+		local_4C.setScale(scaling.x, scaling.y, scaling.z);
 
 		Mtx local_1C;
-		MsMtxSetRotRPH(local_1C, gpCurObject->getRollAngX(jntNo),
-		               gpCurObject->getRollAngY(jntNo),
-		               gpCurObject->getRollAngZ(jntNo));
+		MsMtxSetRotRPH(local_1C, gpCurObject->getRollAngX(jntNo - 1),
+		               gpCurObject->getRollAngY(jntNo - 1),
+		               gpCurObject->getRollAngZ(jntNo - 1));
 		MTXConcat(jntMtx, local_1C, jntMtx);
 		MTXConcat(jntMtx, local_4C, jntMtx);
 		MTXConcat(J3DSys::mCurrentMtx, local_1C, J3DSys::mCurrentMtx);
@@ -526,9 +524,10 @@ void TItemSlotDrum::generateItem()
 		    mPosition, "テレサマネージャー", 1);
 		if (item != nullptr) {
 			Mtx m;
-			MsMtxSetRotY(m, mRotation.y);
+			MtxPtr matrix = m;
+			MsMtxSetRotY(matrix, mRotation.y);
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 300.0f);
-			MTXMultVec(m, &off, &off);
+			MTXMultVec(matrix, &off, &off);
 			item->mPosition += off;
 			item->initItemAttacker(this);
 		}
@@ -543,9 +542,10 @@ void TItemSlotDrum::generateItem()
 		}
 		for (int i = 0; i < count; ++i) {
 			Mtx m;
-			MsMtxSetRotY(m, spread * (f32)i + (mRotation.y - spread));
+			MtxPtr matrix = m;
+			MsMtxSetRotY(matrix, spread * (f32)i + (mRotation.y - spread));
 			JGeometry::TVec3<f32> off(0.0f, -350.0f, 200.0f);
-			MTXMultVec(m, &off, &off);
+			MTXMultVec(matrix, &off, &off);
 			TMapObjBase* item = gpItemManager->makeObjAppear(
 			    mPosition.x + off.x, mPosition.y, mPosition.z + off.z,
 			    ACTOR_TYPE_COIN, false);
@@ -1009,7 +1009,7 @@ u32 TCloset::touchWater(THitActor* water)
 			idx = 1;
 			if (mRotation.y < 0.0f)
 				idx = 2;
-		} else if (water->mPosition.z < mPosition.z + halfDepth) {
+		} else if (water->mPosition.z < mPosition.z + 1.1f * unk140) {
 			idx = 2;
 			if (mRotation.y < 0.0f)
 				idx = 1;

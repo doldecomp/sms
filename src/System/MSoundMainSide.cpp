@@ -698,10 +698,13 @@ void MSStageProc::setBgmPosition(const Vec& pos, f32 dist, bool fade, u32 frame,
 {
 	Vec camPos = gpMSound->mAudioCameras->toCamSpace(pos);
 
-	f32 pan   = MSHandle::calcPan(camPos, dist, 10000.0f);
-	f32 dolby = MSHandle::calcDolby(camPos, dist);
+	f32 dolby;
+	f32 pan;
+	pan   = MSHandle::calcPan(camPos, dist, 10000.0f);
+	dolby = MSHandle::calcDolby(camPos, dist);
 	if (fade && frame < fadeFrame) {
-		pan = (pan - 0.5f) * frame / fadeFrame;
+		pan -= 0.5f;
+		pan = pan * frame / fadeFrame;
 		pan += 0.5f;
 		dolby = dolby * frame / fadeFrame;
 	}

@@ -57,11 +57,12 @@ int TMarDirector::direct()
 		mSetupDone = true;
 	}
 
+	u8 prevSeGateMask;
 	u32 desiredAppState = TApplication::APP_STATE_DEFAULT;
 
 	JDrama::TGraphics local_140;
 
-	u8 prevSeGateMask = SMSGetMSound()->mSeGateMask;
+	prevSeGateMask = SMSGetMSound()->mSeGateMask;
 	mPendingSimulationTime += dt;
 
 	int i = 0;
@@ -116,12 +117,12 @@ int TMarDirector::direct()
 				}
 			}
 
-			u32 tmp = 0;
+			JDrama::TFlagT<u16> tmp;
 			if (checkFlag(DIRECTOR_FLAG_FIRST_SIMULATION_TICK))
-				tmp |= 1;
+				tmp.on(1);
 			if (checkFlag(DIRECTOR_FLAG_LAST_SIMULATION_TICK))
-				tmp |= 2;
-			local_140.unk0 = tmp;
+				tmp.on(2);
+			local_140.unk0 = tmp.get();
 
 			// inline
 			bool bVar1 = true;
@@ -311,8 +312,9 @@ int TMarDirector::changeState()
 				offDemoFlag(DEMO_FLAG_CAMERA_DEMO_WIPE_STARTED);
 			}
 		} else {
+			TConsoleStr* str;
 			TGameSequence& curArea = SMSGetApplication()->mCurrArea;
-			TConsoleStr* str       = getConsole()->unk94;
+			str                    = getConsole()->unk94;
 			f32 iVar2              = gpCamera->getRestDemoFrames() / 120.0f;
 			if (iVar2 <= str->getWipeCloseTime()
 			    || ((curArea.getStage() != 1 || curArea.getScenario() != 1)
@@ -597,6 +599,7 @@ void TMarDirector::setMario()
 	} break;
 	}
 
+	TWaterGun* gun;
 	TMario* mario                = gpMarioOriginal;
 	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
 	if (mario->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
@@ -620,7 +623,7 @@ void TMarDirector::setMario()
 			break;
 
 		default: {
-			TWaterGun* gun = mario->mWaterGun;
+			gun = mario->mWaterGun;
 			gun->changeNozzle(
 			    (TWaterGun::TNozzleType)TFlagManager::getInstance()->getFlag(
 			        MSF_SECONDARY_NOZZLE),

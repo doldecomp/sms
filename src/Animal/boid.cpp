@@ -63,8 +63,8 @@ void TBoidLeader::calcBoids()
 
 				f32 radius = mNeighborRadius;
 				if (d2 < radius * radius) {
-					i->mSeparationForce += d / d2 * radius;
-					j->mSeparationForce -= d / d2 * radius;
+					i->mSeparationForce += d / d2 * mNeighborRadius;
+					j->mSeparationForce -= d / d2 * mNeighborRadius;
 
 					i->mAlignmentForce += j->mHeading;
 					j->mAlignmentForce += i->mHeading;
@@ -108,10 +108,9 @@ void TBoidLeader::calcBoids()
 
 				f32 targetYaw = MsGetRotFromZaxisY(force);
 				f32 diff      = MsAngleDiff(targetYaw, b->mRotation.y);
-				if (diff < -0.01f)
-					diff = -mYawSpeed;
-				else if (diff > 0.01f)
-					diff = mYawSpeed;
+				diff          = diff < -0.01f  ? -mYawSpeed
+				                : diff > 0.01f ? mYawSpeed
+				                               : diff;
 
 				f32 newYaw = b->mRotation.y + diff;
 				while (newYaw >= 360.0f)

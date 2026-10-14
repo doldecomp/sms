@@ -209,8 +209,9 @@ void TFishoid::perform(u32 cue, JDrama::TGraphics* graphics)
 void TFishoid::performItem(u32 cue, JDrama::TGraphics*)
 {
 	if (unk15C != nullptr && (cue & CUE_MOVE)) {
+		TBoidLeader* leader = unk150;
 		unk15C->mPosition
-		    = unk150->getBoid(unk150->getBoidNum() - 1)->mPosition;
+		    = leader->getBoid(leader->getBoidNum() - 1)->mPosition;
 	}
 }
 

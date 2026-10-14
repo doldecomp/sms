@@ -66,7 +66,7 @@ TTamaNokoFlower::TTamaNokoFlower(const TLiveActor* param_1, int param_2,
     , unk34(0)
     , unk35(0)
 {
-	unk2C = new MAnmSound(gpMSound);
+	unk2C = new MAnmSound(SMSGetMSound());
 	unk2C->initAnmSound(nullptr, 1, 0.0f);
 }
 
@@ -78,20 +78,23 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 				if (!SMSGetMarDirector()->isDemoModeNow()) {
 					unk1C = 1;
 
+					Mtx local_b8;
+					MtxPtr local_mtx = local_b8;
 					for (int i = 0; i < 5; ++i) {
 						JGeometry::TVec3<f32> local_88(0.0f, 0.0f, 350.0f);
-						Mtx local_b8;
 
 						MsMtxSetRotY(local_b8, (i + 1) * 72.0f);
 
-						MTXMultVec(local_b8, &local_88, &local_88);
+						MTXMultVec(local_mtx, &local_88, &local_88);
 
 						JGeometry::TVec3<f32> local_c4 = unk10->getPosition();
+						f32 local_x                    = local_c4.x;
+						f32 local_y                    = local_c4.y;
 						if (TMapObjBase* mapObj = gpItemManager->makeObjAppear(
-						        local_c4.x + local_88.x, local_c4.y,
+						        local_x + local_88.x, local_y,
 						        local_c4.z + local_88.z, ACTOR_TYPE_COIN,
 						        true)) {
-							mapObj->mPosition.y = local_c4.y;
+							mapObj->mPosition.y = local_y;
 							MsVECNormalize(&local_88, &local_88);
 							mapObj->mVelocity.set(local_88.x * 4.0f, 20.0f,
 							                      local_88.z * 4.0f);
@@ -302,7 +305,8 @@ void TTamaNoko::walkBehavior(int param_1, f32 param_2)
 	mTurnSpeed  = getSaveParams2()->mSLTurnSpeedLow.get();
 	mMarchSpeed = getSaveParams2()->mSLMarchSpeedLow.get();
 
-	JGeometry::TVec3<f32> local_34 = unkF4.getPoint();
+	const TPathNode& local_28      = getUnkF4();
+	JGeometry::TVec3<f32> local_34 = local_28.getPoint();
 	local_34 -= mPosition;
 	VECMag(&local_34);
 
@@ -512,11 +516,10 @@ void TTamaNoko::requestShadow()
 				}
 			}
 
-			local_2c.mPosition   = local_38;
-			local_2c.mRadiusX    = mScaledBodyRadius;
-			local_2c.mRadiusZ    = local_2c.mRadiusX;
-			local_2c.mShadowType = getShadowType();
-			local_2c.mRotationY  = mRotation.y;
+			local_2c.mPosition = local_38;
+			local_2c.mRadiusX = local_2c.mRadiusZ = mScaledBodyRadius;
+			local_2c.mShadowType                  = getShadowType();
+			local_2c.mRotationY                   = mRotation.y;
 			if (checkLiveFlag(LIVE_FLAG_FORCE_SHADOW)) {
 				gpBindShadowManager->forceRequest(local_2c, getActorType());
 			} else {
@@ -570,7 +573,8 @@ void TTamaNoko::forceSleep()
 {
 	updateSquareToMario();
 	f32 giveUpLen = getSaveParams2()->mSLGiveUpLength.get();
-	if (mDistToMarioSquared > giveUpLen * giveUpLen) {
+	giveUpLen *= giveUpLen;
+	if (mDistToMarioSquared > giveUpLen) {
 		setBckAnm(11);
 		mSpine->reset();
 		mSpine->setNext(mSpine->getDefault());
@@ -608,13 +612,14 @@ void TTamaNoko::setDeadAnm() { setBckAnm(3); }
 
 BOOL TTamaNoko::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> pos = unk104.getPoint();
-	pos -= mPosition;
-	pos.y = 0.0f;
-	if (pos.x == 0.0f && pos.z == 0.0f)
+	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
+	local_c -= mPosition;
+	local_c.y = 0.0f;
+
+	if (local_c.x == 0.0f && local_c.z == 0.0f)
 		return true;
 
-	if (MsVECMag2(&pos) < 200.0f)
+	if (MsVECMag2(&local_c) < 200.0f)
 		return true;
 
 	return false;
@@ -714,7 +719,8 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 			} else if (self->isBckAnm(9)) {
 				self->updateSquareToMario();
 				f32 searchLen = self->getSaveParams2()->mSLSearchLength.get();
-				if (searchLen * searchLen < self->getDistToMarioSquared()) {
+				searchLen *= searchLen;
+				if (self->getDistToMarioSquared() > searchLen) {
 					self->unk1B8 = true;
 					self->setBckAnm(8);
 				} else {

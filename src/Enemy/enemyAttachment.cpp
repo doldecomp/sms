@@ -80,15 +80,18 @@ void TEnemyAttachment::bind()
 		mGroundHeight += 1.0f;
 	}
 
-	if (local_1C.y + mVelocity.y <= mGroundHeight)
+	f32 y = local_1C.y;
+	if (y + mVelocity.y <= mGroundHeight)
 		behaveToHitGround();
 	else
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
-	TBGWallCheckRecord local_48(local_1C.x, local_1C.y + mHeadHeight,
-	                            local_1C.z, 2.0f * mBodyRadius, 1, 0);
-	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
-		behaveToHitWall(local_48.mResultWalls[0]);
+	TBGWallCheckRecord local_48(local_1C.x, y + mHeadHeight, local_1C.z,
+	                            mBodyRadius * 2.0f, 1, 0);
+	if (gpMap->isTouchedWallsAndMoveXZ(&local_48)) {
+		const TBGCheckData* local_18 = local_48.mResultWalls[0];
+		behaveToHitWall(local_18);
+	}
 
 	mPosition      = local_1C;
 	mPositionDelta = local_1C - mPosition;
@@ -191,11 +194,11 @@ void TEnemyPolluteModelManager::init(TLiveActor* param_1)
 void TEnemyPolluteModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
-		f32 f31 = 100.0f;
-		SetViewFrustumClipCheckPerspective(
-		    gpCamera->getFovy(), gpCamera->getAspect(),
-		    graphics->getNearPlane(),
-		    gpConductor->getCondParams().mEnemyFarClip.get());
+		f32 f31     = 100.0f;
+		f32 farClip = gpConductor->getCondParams().getEnemyFarClip();
+		SetViewFrustumClipCheckPerspective(gpCamera->getFovy(),
+		                                   gpCamera->getAspect(),
+		                                   graphics->getNearPlane(), farClip);
 
 		for (int i = 0; i < unk14; ++i) {
 			if (unk18[i]->unk5D) {

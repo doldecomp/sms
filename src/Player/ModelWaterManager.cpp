@@ -741,37 +741,34 @@ void TModelWaterManager::calcWorldMinMax()
 		return;
 	}
 
-	JGeometry::TVec3<f32> min;
-	JGeometry::TVec3<f32> max;
-	min.x = mParticlePositionSOA[0].x - 1.0f;
-	min.y = mParticlePositionSOA[0].y - 1.0f;
-	min.z = mParticlePositionSOA[0].z - 1.0f;
-	max.x = 1.0f + mParticlePositionSOA[0].x;
-	max.y = 1.0f + mParticlePositionSOA[0].y;
-	max.z = 1.0f + mParticlePositionSOA[0].z;
-
+	f32 minX = mParticlePositionSOA[0].x - 1.0f;
+	f32 minY = mParticlePositionSOA[0].y - 1.0f;
+	f32 minZ = mParticlePositionSOA[0].z - 1.0f;
+	f32 maxX = mParticlePositionSOA[0].x + 1.0f;
+	f32 maxY = mParticlePositionSOA[0].y + 1.0f;
+	f32 maxZ = mParticlePositionSOA[0].z + 1.0f;
 	for (int i = 1; i < mParticleCount; ++i) {
-		if (min.x > mParticlePositionSOA[i].x)
-			min.x = mParticlePositionSOA[i].x;
-		if (min.y > mParticlePositionSOA[i].y)
-			min.y = mParticlePositionSOA[i].y;
-		if (min.z > mParticlePositionSOA[i].z)
-			min.z = mParticlePositionSOA[i].z;
-
-		if (max.x < mParticlePositionSOA[i].x)
-			max.x = mParticlePositionSOA[i].x;
-		if (max.y < mParticlePositionSOA[i].y)
-			max.y = mParticlePositionSOA[i].y;
-		if (max.z < mParticlePositionSOA[i].z)
-			max.z = mParticlePositionSOA[i].z;
+		if (minX > mParticlePositionSOA[i].x)
+			minX = mParticlePositionSOA[i].x;
+		if (minY > mParticlePositionSOA[i].y)
+			minY = mParticlePositionSOA[i].y;
+		if (minZ > mParticlePositionSOA[i].z)
+			minZ = mParticlePositionSOA[i].z;
+		if (maxX < mParticlePositionSOA[i].x)
+			maxX = mParticlePositionSOA[i].x;
+		if (maxY < mParticlePositionSOA[i].y)
+			maxY = mParticlePositionSOA[i].y;
+		if (maxZ < mParticlePositionSOA[i].z)
+			maxZ = mParticlePositionSOA[i].z;
 	}
 
-	unk5D70.x = min.x - 200.0f;
-	unk5D70.y = min.y - 200.0f;
-	unk5D70.z = min.z - 200.0f;
-	unk5D7C.x = 200.0f + max.x;
-	unk5D7C.y = 200.0f + max.y;
-	unk5D7C.z = 200.0f + max.z;
+	unk5D70.x = minX - 200.0f;
+	unk5D70.y = minY - 200.0f;
+	unk5D70.z = minZ - 200.0f;
+
+	unk5D7C.x = maxX + 200.0f;
+	unk5D7C.y = maxY + 200.0f;
+	unk5D7C.z = maxZ + 200.0f;
 }
 
 void TModelWaterManager::calcDrawVtx(MtxPtr viewMtx)

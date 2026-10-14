@@ -36,11 +36,11 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 
 	JSUTreeIterator<J2DPane> iterator;
 	for (iterator = unk14->mPaneTree.getFirstChild();
-	     iterator != unk14->mPaneTree.getEndChild();) {
+	     iterator != unk14->getEndChild();) {
 		J2DPane* pane = iterator.getObject();
 
 		if (pane->mInfoTag == 0x13 && pane->mUserInfoTag != 'rset') {
-			J2DTextBox* textBox = (J2DTextBox*)pane;
+			J2DTextBox* textBox = (J2DTextBox*)iterator.getObject();
 			local_420[unk28]    = textBox;
 			if (unk28 == 0) {
 				unk24               = textBox->mCharColor.get();
@@ -54,7 +54,7 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 	}
 
 	unk30 = new J2DTextBox*[unk28];
-	for (u32 i = 0; i < unk28; ++i)
+	for (int i = 0; i < unk28; ++i)
 		unk30[i] = local_420[i];
 }
 
@@ -83,8 +83,9 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 			unk30[unk2C]->mGradColor = unk24.get();
 			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT
 			                             | TMarioGamePad::MEANING_MENU_RIGHT)) {
-				if (unk2C < unk3C) {
-					if (unk28 > unk2C + unk3C) {
+				int index = unk2C;
+				if (index < unk3C) {
+					if (unk28 > index + unk3C) {
 						unk2C += unk3C;
 					}
 				} else {

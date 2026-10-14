@@ -1,3 +1,4 @@
+#include <M3DUtil/InfectiousStrings.hpp>
 
 #include "Camera/SunMgr.hpp"
 #include "Camera/SunModel.hpp"

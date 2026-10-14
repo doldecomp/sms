@@ -27,11 +27,11 @@ void TMario::playerRefrection(int param_1)
 void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
                           f32 param_3)
 {
-	f32 dz = mPosition.z - target.z;
-	f32 dx = mPosition.x - target.x;
-
 	f32 thresh = param_3 + (param_2 + unk15C);
-	f32 dist   = MsSqrtf(dx * dx + dz * dz);
+	f32 dx;
+	f32 dz   = mPosition.z - target.z;
+	dx       = mPosition.x - target.x;
+	f32 dist = MsSqrtf(dx * dx + dz * dz);
 
 	if (dist == 0.0f)
 		dist = dx = 1.0f;
@@ -69,8 +69,8 @@ void TMario::keepDistance(const JGeometry::TVec3<f32>& target, f32 param_2,
 	newPos.z = target.z + thresh * JMASCos(angle);
 
 	checkWallPlane(&newPos, 60.0f, unk15C);
-	f32 floorY;
 	const TBGCheckData* ground;
+	f32 floorY;
 	checkGroundPlane(newPos.x, newPos.y, newPos.z, &floorY, &ground);
 	if (!ground->isLegal())
 		return;
@@ -297,7 +297,9 @@ BOOL TMario::hangonCheck(const TBGCheckData* wall, const Vec& prev,
 	if (mVel.y > 0.0f)
 		return false;
 
-	if ((curr.x - prev.x) * mVel.x + (curr.z - prev.z) * mVel.z > 0.0f)
+	f32 dz = curr.z - prev.z;
+	f32 dx = curr.x - prev.x;
+	if (dx * mVel.x + dz * mVel.z > 0.0f)
 		return false;
 
 	JGeometry::TVec3<f32> newPos;

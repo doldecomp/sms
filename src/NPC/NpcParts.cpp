@@ -72,15 +72,15 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 			if (puVar3 == nullptr)
 				continue;
 
-			int iVar6
-			    = strcmp(initInfo->unk4[i]->unk0[j], cNpcPartsNameRootJoint)
-			              == 0
-			          ? -1
-			          : unk60->mMActorKeeper->getMActor(j)
-			                ->getModel()
-			                ->getModelData()
-			                ->getJointName()
-			                ->getIndex(initInfo->unk4[i]->unk0[j]);
+			int iVar6;
+			if (strcmp(initInfo->unk4[i]->unk0[j], cNpcPartsNameRootJoint) == 0)
+				iVar6 = -1;
+			else
+				iVar6 = unk60->mMActorKeeper->getMActor(j)
+				            ->getModel()
+				            ->getModelData()
+				            ->getJointName()
+				            ->getIndex(initInfo->unk4[i]->unk0[j]);
 
 			TNPCManager* manager    = (TNPCManager*)unk60->getManager();
 			SDLModelData* modelData = manager->getPartsSDLModelData(puVar3);
@@ -110,12 +110,8 @@ TNpcParts::TNpcParts(u32 param_1, const J3DGXColorS10* param_2,
 					case 0:
 					case 3:
 					case 4:
-						int iVar6 = -1;
-						if (iVar6 == -1)
-							iVar6 = TBaseNPC::mPtrSaveNormal->mMotionBlendFrame
-							            .get();
 						unk0[j][i]->getMActor()->initBckSimpleMotionBlend(
-						    iVar6);
+						    TBaseNPC::mPtrSaveNormal->mMotionBlendFrame.get());
 						break;
 					}
 				}

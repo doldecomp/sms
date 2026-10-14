@@ -29,8 +29,10 @@ void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
 	else
 		jointName = nullptr;
 
-	if (jointName != nullptr)
-		mHappyEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName != nullptr) {
+		int index          = tab->getIndex(jointName);
+		mHappyEffectMtxPtr = getModel()->getAnmMtx((u16)index);
+	}
 }
 
 void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
@@ -50,23 +52,27 @@ void TBaseNPC::setNoteEffectMtxPtr_(const JUTNameTab* tab)
 		break;
 	}
 
-	if (jointName)
-		mNoteEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(jointName));
+	if (jointName) {
+		int index         = tab->getIndex(jointName);
+		mNoteEffectMtxPtr = getModel()->getAnmMtx((u16)index);
+	}
 }
 
 void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 {
 	const char* koshiNullJoint = "koshi_null";
+	const char* koshiJoint     = "koshi";
 	const char* bodyJoint      = "jnt_body";
 	const char* leftFootJoint  = "footL_jnt";
 	const char* rightFootJoint = "footR_jnt";
-	const char* koshiJoint     = "koshi";
 
 	const char* pcVar5;
 	if (isNormalMonte()) {
-		unk200 = getModel()->getAnmMtx(tab->getIndex(leftFootJoint));
-		unk204 = getModel()->getAnmMtx(tab->getIndex(rightFootJoint));
-		pcVar5 = koshiNullJoint;
+		int index = tab->getIndex(leftFootJoint);
+		unk200    = getModel()->getAnmMtx((u16)index);
+		index     = tab->getIndex(rightFootJoint);
+		unk204    = getModel()->getAnmMtx((u16)index);
+		pcVar5    = koshiNullJoint;
 	} else if (isNormalMare()) {
 		pcVar5 = koshiJoint;
 	} else if (mActorType == ACTOR_TYPE_NPC_KINOPIO) {
@@ -75,8 +81,10 @@ void TBaseNPC::setPollutionEffectMtxPtr_(const JUTNameTab* tab)
 		pcVar5 = nullptr;
 	}
 
-	if (pcVar5)
-		mPollutionEffectMtxPtr = getModel()->getAnmMtx(tab->getIndex(pcVar5));
+	if (pcVar5) {
+		int index              = tab->getIndex(pcVar5);
+		mPollutionEffectMtxPtr = getModel()->getAnmMtx((u16)index);
+	}
 }
 
 void TBaseNPC::setSmokeEffectMtxPtr_(bool param_1)

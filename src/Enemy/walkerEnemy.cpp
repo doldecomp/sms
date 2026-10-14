@@ -75,7 +75,7 @@ void TWalkerEnemy::moveObject()
 		mVelocity.z = local.z;
 		mSpine->pushNerve(&TNerveSmallEnemyJump::theNerve());
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
-		mRotation.y += 5.0f;
+		mPosition.y += 5.0f;
 	}
 }
 

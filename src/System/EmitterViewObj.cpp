@@ -241,6 +241,8 @@ JPABaseEmitter* TMarioParticleManager::emitWithRotate(
     s32 param_1, const JGeometry::TVec3<f32>* param_2, s16 param_3, s16 param_4,
     s16 param_5, u8 param_6, const void* param_7)
 {
+	const ResTIMG* texInfo;
+	JPABaseEmitter* emitter2;
 
 	if (param_6 == 0)
 		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
@@ -250,13 +252,13 @@ JPABaseEmitter* TMarioParticleManager::emitWithRotate(
 		}
 
 	if (param_6 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_6, 0, nullptr, nullptr)) {
-			emitter->setRotation(param_3, param_4, param_5);
-			emitter->mDraw.swapImage(
-			    gpScreenTexture->getTexture()->getTexInfo(),
-			    emitter->mDraw.getMainTextureID(0));
-			return emitter;
+		if (emitter2 = unk3B8->createSimpleEmitterID(*param_2, param_1, param_6,
+		                                             0, nullptr, nullptr)) {
+			emitter2->setRotation(param_3, param_4, param_5);
+			texInfo = gpScreenTexture->getTexture()->getTexInfo();
+			emitter2->mDraw.swapImage(texInfo,
+			                          emitter2->mDraw.getMainTextureID(0));
+			return emitter2;
 		}
 
 	return nullptr;
@@ -453,6 +455,8 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 param_1,
                                                         u8 param_3,
                                                         const void* param_4)
 {
+	const ResTIMG* texInfo;
+	JPABaseEmitter* emitter2;
 	JGeometry::TVec3<f32> local_24;
 	local_24.x = param_2[0][3];
 	local_24.y = param_2[1][3];
@@ -466,13 +470,13 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 param_1,
 		}
 
 	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setGlobalRTMatrix(param_2);
-			emitter->mDraw.swapImage(
-			    gpScreenTexture->getTexture()->getTexInfo(),
-			    emitter->mDraw.getMainTextureID(0));
-			return emitter;
+		if (emitter2 = unk3B8->createSimpleEmitterID(local_24, param_1, param_3,
+		                                             0, nullptr, nullptr)) {
+			emitter2->setGlobalRTMatrix(param_2);
+			texInfo = gpScreenTexture->getTexture()->getTexInfo();
+			emitter2->mDraw.swapImage(texInfo,
+			                          emitter2->mDraw.getMainTextureID(0));
+			return emitter2;
 		}
 
 	return nullptr;
@@ -554,7 +558,7 @@ void TMarioParticleManager::emitTry(s32 param_1,
 					    &emitterCallBackBindToSRTMtxPtr);
 				else
 					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToMtxPtr);
+					    &emitterCallBackBindToSRTMtxPtr);
 			}
 		} else {
 			param_2->mEmitter = unk3B8->createSimpleEmitterID(

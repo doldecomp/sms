@@ -1111,7 +1111,10 @@ void TFireWanwan::calcRootMatrix()
 		return;
 	{
 		MtxPtr mtx = getModel()->getBaseTRMtx();
-		JGeometry::TVec3<f32> v1(mtx[0][1], mtx[1][1], mtx[2][1]);
+		JGeometry::TVec3<f32> v1;
+		v1.x = mtx[0][1];
+		v1.y = mtx[1][1];
+		v1.z = mtx[2][1];
 		JGeometry::TVec3<f32> v2(mtx[0][2], mtx[1][2], mtx[2][2]);
 		v1.normalize();
 		v2.normalize();
@@ -1234,7 +1237,10 @@ void TFireWanwan::updatePollute()
 
 	mPolluteTimer = getSaveParam2()->mPolluteTimerMax.get();
 	MtxPtr mtx    = getModel()->getBaseTRMtx();
-	JGeometry::TVec3<f32> v1(mtx[0][0], mtx[1][0], mtx[2][0]);
+	JGeometry::TVec3<f32> v1;
+	v1.x = mtx[0][0];
+	v1.y = mtx[1][0];
+	v1.z = mtx[2][0];
 	v1.scaleAdd((MsRandF() - 0.5f) * 2.0f * mAttackRadius, mPosition, v1);
 
 	f32 radius = 375.0f;
@@ -1572,10 +1578,10 @@ void TFireWanwan::bind()
 
 	JGeometry::TVec3<f32> vel     = mVelocity;
 	JGeometry::TVec3<f32> velStep = mPositionDelta;
-	velStep += vel;
+	vel += velStep;
 
-	int stepCount = int(velStep.length() / 25.0f) + 1;
-	velStep *= 1.0f / stepCount;
+	int stepCount = int(vel.length() / 25.0f) + 1;
+	vel *= 1.0f / stepCount;
 
 	JGeometry::TVec3<f32> totalNormal(0.0f, 0.0f, 0.0f);
 	int iVar12 = 0;
@@ -1583,9 +1589,10 @@ void TFireWanwan::bind()
 	for (int i = 0; i < stepCount; ++i) {
 		JGeometry::TVec3<f32> boundStep;
 		JGeometry::TVec3<f32> stepNormal;
-		iVar12 += bindBody(&boundStep, &stepNormal, velStep);
+		int collisionNum = bindBody(&boundStep, &stepNormal, vel);
 
 		bVar2 &= isAirborne();
+		iVar12 += collisionNum;
 
 		mPosition += boundStep;
 		totalNormal += stepNormal;

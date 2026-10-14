@@ -71,7 +71,9 @@ u32 TCogwheelScale::touchWater(THitActor* param_1)
 BOOL TCogwheelScale::receiveMessage(THitActor* param_1, u32 param_2)
 {
 	if (param_2 == HIT_MESSAGE_HIP_DROP) {
-		unk158->unk138 += unk150;
+		f32 cogwheelSpeed = unk158->unk138;
+		cogwheelSpeed     = unk150 + cogwheelSpeed;
+		unk158->unk138    = cogwheelSpeed;
 		return TRUE;
 	}
 	return TMapObjBase::receiveMessage(param_1, param_2);
@@ -86,9 +88,11 @@ void TCogwheelScale::touchPlayer(THitActor* param_1)
 		if ((unk154 && unk158->unk138 > 0.0f)
 		    || (!unk154 && unk158->unk138 < 0.0f)) {
 			unk158->rebound();
-			if (marioHeadAttack())
-				unk158->unk138
-				    = unk14C * (unk158->unk138 * SMS_GetMarioSpeedY());
+			if (marioHeadAttack()) {
+				f32 cogwheelSpeed = unk158->unk138;
+				cogwheelSpeed = unk14C * (cogwheelSpeed * SMS_GetMarioSpeedY());
+				unk158->unk138 = cogwheelSpeed;
+			}
 		}
 	}
 	unk140 = 0.0f;
@@ -163,15 +167,14 @@ void TCogwheel::initDraw() const
 void TCogwheel::draw() const
 {
 	initDraw();
-	f32 yBot = unk154.y;
-	f32 dy   = unk150->mPosition.y - unk150->getObjCollisionHeightOffset();
-	f32 yTop = 600.0f + dy;
 	f32 x1   = unk154.x + mRopeWidthX;
 	f32 x0   = unk154.x - mRopeWidthX;
 	f32 z1   = unk154.z + mRopeWidthZ;
 	f32 z0   = unk154.z - mRopeWidthZ;
-	f32 vTop = mTexPosRate * (yTop - dy);
-	f32 vBot = mTexPosRate * (yBot - dy);
+	f32 yTop = 600.0f + (unk150->mPosition.y - unk150->mYOffset);
+	f32 yBot = unk154.y;
+	f32 vTop = mTexPosRate * (yTop - (unk150->mPosition.y - unk150->mYOffset));
+	f32 vBot = mTexPosRate * (yBot - (unk150->mPosition.y - unk150->mYOffset));
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
 	GXPosition3f32(x0, yTop, z0);
 	GXTexCoord2f32(0.0f, vTop);
@@ -190,14 +193,13 @@ void TCogwheel::draw() const
 	GXPosition3f32(x0, yBot, z1);
 	GXTexCoord2f32(3.0f, vBot);
 	GXEnd();
-	dy   = unk164->mPosition.y - unk164->getObjCollisionHeightOffset();
-	yTop = 1200.0f + dy;
+	yTop = 1200.0f + (unk164->mPosition.y - unk164->mYOffset);
 	x1   = unk168.x + mRopeWidthX;
 	x0   = unk168.x - mRopeWidthX;
 	z1   = unk168.z + mRopeWidthZ;
 	z0   = unk168.z - mRopeWidthZ;
-	vBot = mTexPosRate * (yBot - dy);
-	vTop = mTexPosRate * (yTop - dy);
+	vTop = mTexPosRate * (yTop - (unk164->mPosition.y - unk164->mYOffset));
+	vBot = mTexPosRate * (yBot - (unk164->mPosition.y - unk164->mYOffset));
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 8);
 	GXPosition3f32(x0, yTop, z0);
 	GXTexCoord2f32(0.0f, vTop);
@@ -278,8 +280,10 @@ void TCogwheel::control()
 void TCogwheel::initMapObj()
 {
 	TMapObjBase::initMapObj();
-	JGeometry::TVec2<f32> off(sRadius, 0.0f);
-	off.rotate(DEG_TO_RAD(mRotation.y));
+	f32 angle  = 0.017453294f * mRotation.y;
+	f32 radius = sRadius;
+	JGeometry::TVec2<f32> off(radius, 0.0f);
+	off.rotate(angle);
 	f32 dx = off.x;
 	f32 dz = off.y;
 	JGeometry::TVec3<f32> pos(mPosition.x + dx, mPosition.y, mPosition.z - dz);
@@ -596,7 +600,9 @@ void TWireBell::draw() const
 void TWireBell::control()
 {
 	gpMapWireManager->getPointPosInNthWire(unk138, mPosition, &unk14C);
-	mPosition.set(unk14C.x, unk14C.y - unk13C, unk14C.z);
+	mPosition.x = unk14C.x;
+	mPosition.y = unk14C.y - unk13C;
+	mPosition.z = unk14C.z;
 	Mtx mtx;
 	MsMtxSetTRS(mtx, mPosition, mRotation, mScaling);
 	MTXCopy(mtx, getModel()->getAnmMtx(0));
@@ -678,7 +684,10 @@ void TMuddyBoat::moveByWater()
 		MsVECNormalize(&dir, &dir);
 
 		MtxPtr modelMtx = getModel()->getAnmMtx(0);
-		JGeometry::TVec3<f32> fwd(modelMtx[0][2], 0.0f, modelMtx[2][2]);
+		JGeometry::TVec3<f32> fwd;
+		fwd.x = modelMtx[0][2];
+		fwd.y = 0.0f;
+		fwd.z = modelMtx[2][2];
 
 		f32 dot = dir.dot(fwd);
 
@@ -769,7 +778,8 @@ void TMuddyBoat::bind()
 		JGeometry::TVec3<f32> direction(mtx[0][2], 0.0f, mtx[2][2]);
 		JGeometry::TVec3<f32> streamDirection(streamMtx[0][2], 0.0f,
 		                                      streamMtx[2][2]);
-		unk140 += 0.0001f * (direction.dot(streamDirection) * cube.unk40);
+		f32 dot = direction.dot(streamDirection);
+		unk140 += 0.0001f * (dot * cube.unk40);
 	}
 	const TBGCheckData* ground;
 	f32 height = gpMap->checkGroundIgnoreWaterSurface(pos, &ground);
@@ -847,9 +857,12 @@ void TMuddyBoat::control()
 void TMuddyBoat::calc()
 {
 	f32 waveY = mPosition.y - mYOffset;
-	waveY += gpMapObjWave->getWaveHeight(mPosition.x, mPosition.z);
-	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), mPosition.x, waveY, mPosition.z,
-	               0.0f, mRotation.y, 0.0f);
+	JGeometry::TVec3<f32> pos(
+	    mPosition.x,
+	    waveY + gpMapObjWave->getWaveHeight(mPosition.x, mPosition.z),
+	    mPosition.z);
+	MsMtxSetXYZRPH(getModel()->getAnmMtx(0), pos.x, pos.y, pos.z, 0.0f,
+	               mRotation.y, 0.0f);
 
 	JGeometry::TMatrix34<JGeometry::SMatrix34C<f32> > scaleMtx;
 	scaleMtx.identity();

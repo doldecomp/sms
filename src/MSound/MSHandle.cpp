@@ -190,11 +190,11 @@ f32 MSHandle::calcDolby(const Vec& pos, f32 dist)
 		dVar2 = 1.0f;
 	}
 
-	if (dist < cPan_HiSence_Dist) {
-		dVar2 = dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f;
-	}
+	f32 dolby = dist < cPan_HiSence_Dist
+	                ? dist * ((dVar2 - 0.5f) / cPan_HiSence_Dist) + 0.5f
+	                : dVar2;
 
-	f32 r = dVar2 > 1.0f ? 1.0f : dVar2;
+	f32 r = dolby > 1.0f ? 1.0f : dolby;
 	return r < 0.0f ? 0.0f : r;
 }
 
@@ -210,7 +210,8 @@ void MSHandle::setSeDistanceVolume(u8 moveTime)
 	f32 volume;
 	if (!(swBit & JAISeSwBit_NoDistanceVolume)) {
 		// TODO: inline?
-		u32 tmp = getSwBit() >> JAISeSwBit_DistanceVolumeCurveShift & 0x7;
+		u8 tmp = (getSwBit() & JAISeSwBit_DistanceVolumeCurveMask)
+		         >> JAISeSwBit_DistanceVolumeCurveShift;
 		volume = setDistanceVolumeCommon(smSeCategory[get_thing(mSoundID)].unk4,
 		                                 tmp);
 	} else {

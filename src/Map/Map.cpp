@@ -34,7 +34,7 @@ static void initMonte()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
-	        JDrama::TNameRefGen::search("マップグループ"));
+	        JDrama::TNameRefGen::search("インダイレクトシーン"));
 
 	TMapStaticObj* obj = new TMapStaticObj("水インダイレクト");
 	obj->init("SeaIndirect");
@@ -83,19 +83,19 @@ static void initMare()
 
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init1stEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init2ndEvent();
 		group->getChildren().push_back(event);
 	}
 	{
 		TMareEventDepressWall* event
-		    = new TMareEventDepressWall("イベント(マーレへこむ壁)");
+		    = new TMareEventDepressWall("イベント（マーレへこむ壁）");
 		event->init3rdEvent();
 		group->getChildren().push_back(event);
 	}
@@ -133,9 +133,9 @@ static void initStageCommon()
 		TMapStaticObj* sea = new TMapStaticObj("波（遠景）");
 		sea->init("sea");
 
-		TMapStaticObj* indirect = new TMapStaticObj("インダイレクト波");
-		indirect->init("SeaIndirect");
-		group->getChildren().push_back(indirect);
+		sea = new TMapStaticObj("インダイレクト波");
+		sea->init("SeaIndirect");
+		group->getChildren().push_back(sea);
 
 		TMapObjWaterFilter* filter
 		    = new TMapObjWaterFilter("水中カメラフィルタ");
@@ -205,12 +205,13 @@ static void initStage()
 
 void TMap::updateDelfino()
 {
-	int cube = gpCubeArea->unk1C;
-	if (cube != mWarp->unk8) {
+	TMapWarp* warp = mWarp;
+	int cube       = gpCubeArea->unk1C;
+	if (cube != warp->unk8) {
 		if (cube != -1)
 			mWarp->changeModel(cube);
 		else if (SMSGetMarDirector()->getCurrentStage() != 0)
-			mWarp->changeModel(3);
+			warp->changeModel(3);
 	}
 }
 
@@ -246,17 +247,12 @@ void TMap::update()
 		break;
 	}
 
-	if (SMSGetMarDirector()->unk124 != 0)
-		return;
-
-	if (gpCamera->isDemoCamera())
+	if (SMSGetMarDirector()->unk124 != 0 || gpCamera->isDemoCamera())
 		return;
 
 	if (SMSGetMarDirector()->getCurrentMap() == 0x39
-	    || SMSGetMarDirector()->getCurrentMap() == 0x10)
-		return;
-
-	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
+	    || SMSGetMarDirector()->getCurrentMap() == 0x10
+	    || SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
 		return;
 
 	const JGeometry::TVec3<f32>& camPos = gpCamera->getUnk124();

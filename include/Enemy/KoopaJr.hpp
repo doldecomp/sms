@@ -24,4 +24,30 @@ public:
 	/* 0x0 */ f32 unk0;
 };
 
+class TKoopaJr : public TSpineEnemy {
+public:
+	TKoopaJr(const char*);
+
+public:
+	/* 0x150 */ u8 unk150[0x20];
+};
+
+class TKoopaJrManager : public TEnemyManager {
+public:
+	TKoopaJrManager(const char*);
+};
+
+class TKoopaJrSubmarine : public TSpineEnemy {
+public:
+	TKoopaJrSubmarine(const char*);
+
+public:
+	/* 0x150 */ u8 unk150[0x5C];
+};
+
+class TKoopaJrSubmarineManager : public TEnemyManager {
+public:
+	TKoopaJrSubmarineManager(const char*);
+};
+
 #endif

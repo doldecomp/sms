@@ -172,6 +172,12 @@ void THamuKuriManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new THamuKuriSaveLoadParams("/enemy/hamukuri.prm");
 	TSmallEnemyManager::load(stream);
+
+	static const char* anmlist[] = {
+		"hamukuri_walk",
+		"hamukuri_run",
+		nullptr,
+	};
 }
 
 void THamuKuriManager::loadAfter()
@@ -193,14 +199,6 @@ void THamuKuriManager::loadAfter()
 		}
 	}
 }
-
-static const char* anmlist[] = {
-	"hamukuri_walk",
-	"hamukuri_run",
-	// TODO: this shouldn't be here but rodata ordering looks like it should?!
-	// "default.bmd",
-	"hanekuri_wait",
-};
 
 void THamuKuriManager::createModelData()
 {
@@ -250,7 +248,8 @@ void THamuKuriManager::setSearchHamuKuri()
 			f32 canSearchDist = params->mSLCanSearchDist.get();
 
 			TMapObjBase* pTVar18 = nullptr;
-			f32 fVar1            = canSearchDist * canSearchDist;
+			f32 fVar1            = canSearchDist;
+			fVar1 *= canSearchDist;
 
 			for (int i = 0; i < unk68; ++i) {
 				TMapObjBase* uVar16 = unk64[i];
@@ -343,6 +342,8 @@ void THaneHamuKuriManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new THaneHamuKuriSaveLoadParams("/enemy/hanehamukuri.prm");
 	TSmallEnemyManager::load(stream);
+
+	static const char* anmlist[] = { "hanekuri_wait", nullptr };
 }
 
 TSpineEnemy* THaneHamuKuriManager::createEnemyInstance()
@@ -513,7 +514,7 @@ void TFireHamuKuriManager::initSetEnemies()
 			{ 200, 160, 130, 255 },
 		};
 
-		u32 matBodyBottom1Idx = ((TFireHamuKuri*)unk18[0])
+		u32 matBodyBottom1Idx = getObj(0)
 		                            ->getModel()
 		                            ->getModelData()
 		                            ->getMaterialName()
@@ -1136,8 +1137,9 @@ const char** THamuKuri::getBasNameTable() const { return hamukurianm_bastable; }
 
 MtxPtr THamuKuri::getTakingMtx()
 {
-	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
-	                               mPosition.z, &mGroundPlane);
+	MtxPtr result = unk1B0;
+	f32 dVar4     = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
+	                                   mPosition.z, &mGroundPlane);
 
 	mHeldObject->onHitFilter(HIT_FILTER_NO_COLLISION);
 
@@ -1161,7 +1163,7 @@ MtxPtr THamuKuri::getTakingMtx()
 	unk1B0[2][1] = 0.0f;
 	unk1B0[2][2] = 1.0f;
 
-	MTXConcat(mat, unk1B0, unk1B0);
+	MTXConcat(mat, result, result);
 
 	return unk1B0;
 }
@@ -1184,7 +1186,7 @@ bool THamuKuri::isResignationAttack()
 bool THamuKuri::isHitValid(u32 param_1)
 {
 	if (isBckAnm(3)) {
-		getManager()->requestSerialKill(this);
+		((THamuKuriManager*)TLiveActor::getManager())->requestSerialKill(this);
 		return true;
 	}
 
@@ -1487,7 +1489,7 @@ void THaneHamuKuri::bind()
 
 BOOL THaneHamuKuri::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = unk104.getPoint();
+	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 100.0f)

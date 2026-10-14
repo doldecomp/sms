@@ -438,7 +438,8 @@ void TTelesa::calcRootMatrix()
 {
 	if (mSpine->getCurrentNerve() != &TNerveTelesaDie::theNerve()) {
 		for (u16 i = 0;
-		     i < mMActor->getModel()->getModelData()->getMaterialNum(); ++i) {
+		     i < getMActor()->getModel()->getModelData()->getMaterialNum();
+		     ++i) {
 			Mtx44 afStack_94;
 			SMS_GetLightPerspectiveForEffectMtx(afStack_94);
 			mMActor->getModel()
@@ -688,7 +689,8 @@ void TTelesa::initAttacker(THitActor* param_1)
 	unk184 = 1;
 	mSpine->initWith(&TNerveTelesaAttackMario::theNerve());
 
-	MtxPtr mtx = ((TLiveActor*)param_1)->getModel()->getAnmMtx(5);
+	TLiveActor& actor = *(TLiveActor*)param_1;
+	MtxPtr mtx        = actor.getModel()->getAnmMtx(5);
 	mPosition.set(mtx[0][3], mtx[1][3] - 150.0f, mtx[2][3]);
 	mDampenedGroundHeight = mPosition.y;
 
@@ -761,12 +763,13 @@ void TTelesa::setAttackPoint()
 {
 	JGeometry::TVec3<f32> pos = mPosition;
 
-	f32 dx = SMS_GetMarioPos().x - mPosition.x;
-	f32 dz = SMS_GetMarioPos().z - mPosition.z;
-	f32 r  = TMsRange<f32>(0.7f, 1.6f).rand();
+	JGeometry::TVec2<f32> delta;
+	delta.x = SMS_GetMarioPos().x - mPosition.x;
+	delta.y = SMS_GetMarioPos().z - mPosition.z;
+	f32 r   = TMsRange<f32>(0.7f, 1.6f).rand();
 
-	pos.x += dx * r;
-	pos.z += dz * r;
+	pos.x += delta.x * r;
+	pos.z += delta.y * r;
 
 	setGoalPath(TPathNode(pos));
 }
@@ -1037,9 +1040,8 @@ void TMarioModokiTelesa::imitateAnm()
 
 DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 {
-	TTelesa* self = (TTelesa*)spine->getBody();
-
-	TSharedParts* imitatedItem = self->mImitatedBmd;
+	TSharedParts* imitatedItem = ((TTelesa*)spine->getBody())->mImitatedBmd;
+	TTelesa* self              = (TTelesa*)spine->getBody();
 
 	if (SMSGetApplication()->mCurrArea.getStage() != 7
 	    && SMSGetApplication()->mCurrArea.getStage() != 14) {

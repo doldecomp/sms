@@ -18,16 +18,33 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-void TMirrorCamera::makeMirrorViewMtx() { }
+void TMirrorCamera::makeMirrorViewMtx()
+{
+	JGeometry::TVec3<f32> local_24;
+	local_24.set(unk84);
+
+	f32 fVar1 = (local_24.dot(gpCamera->unk124) + unk90) * -2.0f;
+	unk98.scaleAdd(fVar1, gpCamera->unk124, local_24);
+
+	JGeometry::TVec3<f32> local_30;
+	fVar1 = (local_24.dot(gpCamera->unk148) + unk90) * -2.0f;
+	local_30.scaleAdd(fVar1, gpCamera->unk148, local_24);
+
+	JGeometry::TVec3<f32> local_3C;
+	fVar1 = (local_24.dot(gpCamera->mUp) + unk90) * -2.0f;
+	local_3C.scaleAdd(fVar1, gpCamera->mUp, local_24);
+	C_MTXLookAt(unk30, &unk98, &local_3C, &local_30);
+}
 
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
-		C_MTXPerspective(graphics->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
-		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
-		MTXCopy(unk30, graphics->mViewMtx);
-		graphics->mNearPlane = gpCamera->mNear;
-		graphics->mFarPlane  = gpCamera->mFar;
+		C_MTXPerspective(graphics->mProjMtx, unk80 * gpCamera->getFovy(),
+		                 gpCamera->getAspect(), gpCamera->getNear(),
+		                 gpCamera->getFar());
+		MTXCopy(unk30, graphics->getViewMtx());
+		graphics->mNearPlane = gpCamera->getNear();
+		graphics->mFarPlane  = gpCamera->getFar();
 		if (cue & CUE_SET_PROJECTION)
 			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
@@ -248,18 +265,17 @@ bool TMirrorModelManager::isInMirror(JGeometry::TVec3<f32>& param_1) const
 
 void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
-	unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
-	if (!(unk18 != -1 ? true : false)
-	    && !gpMarioGroundPlane[0]->isIllegalData()) {
-		unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
-		unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
-
-		JGeometry::TVec3<f32> local_7C;
-		local_7C.set(unk24->unk84);
-		f32 fVar4 = (local_7C.dot(gpCamera->unk124) - -unk24->unk90) * -2.0f;
-		unk24->unk98.scaleAdd(fVar4, gpCamera->unk124, local_7C);
-		// TODO: awful vector math, one of unused functions inlined
+	if (cue & CUE_MOVE) {
+		JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
+		unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
+		if (!(unk18 != -1 ? true : false)
+		    && !gpMarioGroundPlane[0]->isIllegalData()) {
+			unk24->setUnk84AndUnk90(gpMarioGroundPlane[1]->mNormal.x,
+			                        gpMarioGroundPlane[1]->mNormal.y,
+			                        gpMarioGroundPlane[1]->mNormal.z,
+			                        gpMarioGroundPlane[1]->mPlaneDistance);
+			unk24->makeMirrorViewMtx();
+		}
 	}
 
 	if (unk18 != -1) {
@@ -270,9 +286,23 @@ void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			unk1C[unk18]->unk4->viewCalc();
 
 		if (cue & CUE_ENTRY) {
-			unk1C[unk18]->setPlane();
+			TMirrorModel* model = unk1C[unk18];
+			model->setPlane();
 
-			// TODO: awful vector math, one of unused functions inlined
+			model->unk8->makeMirrorViewMtx();
+
+			Mtx lightPerspective;
+			C_MTXLightPerspective(
+			    lightPerspective, model->unk8->unk80 * gpCamera->getFovy(),
+			    gpCamera->getAspect(), 0.5f, -0.5f, 0.5f, 0.5f);
+			Mtx effectMtx;
+			MTXConcat(lightPerspective, model->unk8->getUnk30(), effectMtx);
+			J3DMaterial* material = model->unk4->getModel()
+			                            ->getModelData()
+			                            ->getMaterialNodePointer(0);
+			material->change();
+			material->getTexGenBlock()->getTexMtx(0)->setEffectMtx(effectMtx);
+			model->unk4->entry();
 		}
 	}
 }

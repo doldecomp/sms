@@ -572,8 +572,9 @@ void TOptionSoundUnit::initSurroundAnm()
 {
 	TPatternAnmControl** ary = mSurroundAnimations;
 
-	ary[0] = new TPatternAnmControl(mScreen);
-	ary[0]->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
+	ary[0]                  = new TPatternAnmControl(mScreen);
+	TPatternAnmControl* anm = ary[0];
+	anm->set(cSurMonteAnm, ARRAY_COUNT(cSurMonteAnm));
 	ary[0]->setupAnm();
 
 	ary[1] = new TPatternAnmControl(mScreen);
@@ -937,9 +938,10 @@ void TOptionControl::writeValue()
 
 bool TOptionControl::isChangedSetting() const
 {
-	bool result = true;
+	TOptionRumbleUnit::RumbleType current = mRumbleOption->getValue();
+	bool result                           = true;
 
-	if (mInitialRumbleValue == mRumbleOption->getValue()
+	if (current == mInitialRumbleValue
 	    && mInitialSoundValue == mSoundOption->getValue())
 		result = false;
 

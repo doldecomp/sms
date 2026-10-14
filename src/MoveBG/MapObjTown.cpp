@@ -119,12 +119,12 @@ void TManhole::touchPlayer(THitActor*)
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_DOWN, &mPosition,
 			                                0, nullptr, 0, 4);
 		}
-		if (mPosition.y > mInitialPosition.y - mDownHeight)
+		if (mPosition.y > getInitialPosition().y - mDownHeight)
 			mPosition.y = mPosition.y - mDownSpeed;
 		else
-			mPosition.y = mInitialPosition.y - mDownHeight;
+			mPosition.y = getInitialPosition().y - mDownHeight;
 		unk148 = 1.0f;
-		unk14C = mInitialPosition.y - mPosition.y;
+		unk14C = getInitialPosition().y - mPosition.y;
 		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		return;
 	}
@@ -391,7 +391,10 @@ void TMapObjWaterSpray::calc()
 	JPABaseEmitter* em
 	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
 	if (em) {
-		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
+		s16 x = mRotation.x;
+		s16 y = mRotation.y;
+		s16 z = mRotation.z;
+		em->setRotation(x, y, z);
 		em->setGlobalScale(mScaling);
 		em->setRate(unk13C);
 		em->setGlobalParticleScale(unk140);
@@ -572,7 +575,7 @@ void TRedCoinSwitch::control()
 	TMapObjBase::control();
 	switch (mState) {
 	case 1:
-		break;
+		return;
 	case 2:
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 			mStateTimer = 120;

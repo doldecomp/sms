@@ -306,9 +306,9 @@ void TYumbo::shotSeeds()
 	dir.y += 200.0f * (0.5f + MsRandF());
 	dir.setLength(((TYumboParams*)getSaveParam())->mShootSpeed.get());
 
-	f32 angle = MsGetRotFromZaxisY(dir);
+	f32 angle = -(0.017453294f * MsGetRotFromZaxisY(dir));
 	JGeometry::TQuat4<f32> yaw;
-	yaw.setEulerY(-(0.017453294f * angle));
+	yaw.setEulerY(angle);
 	yaw.rotate(dir, dir);
 
 	JGeometry::TQuat4<f32> spin;

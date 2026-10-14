@@ -91,7 +91,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	if (SMSGetMarDirector()->mMap != 15) {
 		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
 
-		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
+		s16 uVar2 = SMS_getShineID(uVar1, (u8)uVar9, false);
 
 		const void* puVar15;
 		if (pvVar10 == nullptr || uVar2 == -1)
@@ -113,6 +113,8 @@ void TConsoleStr::loadAfter()
 
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
+	int i;
+
 	if (cue & CUE_MOVE) {
 		if (SMSGetMarDirector()->mState != 5) {
 			bool bVar6 = false;
@@ -172,7 +174,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 			} else if (unk2BC == STATE_UNK8) {
 				bool uVar13 = true;
 
-				for (int i = 0; i < 2; ++i)
+				for (i = 0; i < 2; ++i)
 					uVar13 &= mHeaderFooterMasks[i]->update();
 
 				if (uVar13) {
@@ -181,7 +183,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 			} else if (unk2BC == STATE_UNK5) {
 				bool uVar13 = true;
-				for (int i = 0; i < 2; ++i)
+				for (i = 0; i < 2; ++i)
 					uVar13 &= unk298[i]->update();
 				if (uVar13) {
 					unk2BC = STATE_UNK6;
@@ -237,19 +239,20 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				JUTRect local_a0 = mGoLetters[i]->getPane()->getBounds();
 
 				for (int j = 0; j < 3; ++j) {
-					int iVar9       = local_b0[j];
-					JUTPoint& point = unk34[i][iVar9];
-					if (point.x != 0) {
+					int iVar9  = local_b0[j];
+					int& point = unk34[i][iVar9].x;
+					int& y     = unk34[i][iVar9].y;
+					if (point != 0) {
 						trailAlpha = 0.7f * trailAlpha;
 						mGoLetters[i]->getPane()->setAlpha(trailAlpha);
+						int height = local_a0.getHeight() - iVar9 * 3;
 						mGoLetters[i]->getPane()->resize(
-						    local_a0.getWidth() - iVar9 * 3,
-						    local_a0.getHeight() - iVar9 * 3);
+						    local_a0.getWidth() - iVar9 * 3, height);
 
 						JUTRect local_90
 						    = mGoLetters[i]->getPane()->getBounds();
 						((J2DPicture*)mGoLetters[i]->getPane())
-						    ->draw(point.x, point.y, local_90.getWidth(),
+						    ->draw(point, y, local_90.getWidth(),
 						           local_90.getHeight(), false, false, false);
 					}
 				}
@@ -422,7 +425,9 @@ bool TConsoleStr::processGo(float param_1)
 
 		for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
 			if (mGoLetters[i]->update()) {
-				if (mGoLetters[i]->unk14.x != 0 || mGoLetters[i]->unk14.y != 0)
+				bool paneFinished = mGoLetters[i]->unk14.x == 0
+				                    && mGoLetters[i]->unk14.y == 0;
+				if (!paneFinished)
 					mGoLetters[i]->setPanePosition(0x1E, JUTPoint(0, -40),
 					                               JUTPoint(0, -40),
 					                               JUTPoint(0, 0));
@@ -476,8 +481,9 @@ bool TConsoleStr::processGo(float param_1)
 		} else if (param_1 == 175.0f) {
 			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
 				JUTRect bounds = mGoLetters[i]->getPane()->getBounds();
+				int height     = bounds.getHeight() - 80;
 				mGoLetters[i]->getPane()->resize(bounds.getWidth() - 80,
-				                                 bounds.getHeight() - 80);
+				                                 height);
 			}
 		} else {
 			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
@@ -529,14 +535,16 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 < i * 6 + 40) {
-			u16 alpha = mShineGetLetters[i]->getPane()->getAlpha() + 7;
+			u16 alpha = mShineGetLetters[i]->getPane()->getAlpha();
+			alpha += 7;
 			if (alpha > 0xff)
 				alpha = 0xff;
 			mShineGetLetters[i]->getPane()->setAlpha(alpha);
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = mShineGetLetters[i]->getPane()->getAlpha() - 7;
+			s16 alpha = mShineGetLetters[i]->getPane()->getAlpha();
+			alpha -= 7;
 			if (alpha < 0)
 				alpha = 0;
 			mShineGetLetters[i]->getPane()->setAlpha(alpha);
@@ -570,11 +578,11 @@ bool TConsoleStr::processMiss(int param_1)
 
 		if (param_1 == i * 10 + 1) {
 			JUTRect local_9c = mMissLetters[i]->getPane()->getBounds();
-			JGeometry::TVec3<f32> local_a8(
-			    local_9c.x1 + local_9c.getWidth() * 0.5f,
-			    local_9c.y1 + local_9c.getHeight() * 0.5f, 0.0f);
-			gpEmitterManager4D2->createEmitter(local_a8, 0x1F9, nullptr,
-			                                   nullptr);
+			gpEmitterManager4D2->createEmitter(
+			    JGeometry::TVec3<f32>(local_9c.x1 + local_9c.getWidth() * 0.5f,
+			                          local_9c.y1 + local_9c.getHeight() * 0.5f,
+			                          0.0f),
+			    0x1F9, nullptr, nullptr);
 		}
 
 		if (param_1 == i * 10 + 60) {
@@ -668,7 +676,7 @@ void TConsoleStr::startCloseWipe(bool param_1)
 		    465 - mHeaderFooterMasks[1]->getInitialBounds().y1);
 		mHeaderFooterMasks[1]->setPaneSize(
 		    0x2D, local_74.getWidth(),
-		    465 - mHeaderFooterMasks[1]->getInitialBounds().y1 + h,
+		    465 - mHeaderFooterMasks[1]->mInitialBounds.y1 + h,
 		    local_74.getWidth(), 0);
 		mHeaderFooterMasks[1]->setPaneAlpha(0x2D, 255, 0);
 

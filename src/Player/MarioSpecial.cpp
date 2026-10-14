@@ -507,14 +507,14 @@ BOOL TMario::hanging()
 				           - moveSp * (mIntendedMag * foundWall->mNormal.z);
 				newPos.y = mPosition.y;
 				newPos.z = mPosition.z
-				           + moveSp * (mIntendedMag * foundWall->mNormal.x);
+				           + moveSp * (foundWall->mNormal.x * mIntendedMag);
 			}
 			if (yawDiff > -0x71c7 && yawDiff < -0x400) {
 				newPos.x = mPosition.x
 				           + moveSp * (mIntendedMag * foundWall->mNormal.z);
 				newPos.y = mPosition.y;
 				newPos.z = mPosition.z
-				           - moveSp * (mIntendedMag * foundWall->mNormal.x);
+				           - moveSp * (foundWall->mNormal.x * mIntendedMag);
 			}
 
 			TBGCheckData* foundWall2 = nullptr;
@@ -524,8 +524,9 @@ BOOL TMario::hanging()
 			newPos = record3.mCenter;
 
 			const TBGCheckData* groundDummy;
-			f32 groundY = gpMap->checkGround(newPos.x, 50.0f + newPos.y,
-			                                 newPos.z, &groundDummy);
+			f32 z       = newPos.z;
+			f32 y       = 50.0f + newPos.y;
+			f32 groundY = gpMap->checkGround(newPos.x, y, z, &groundDummy);
 			if (mPosition.y - 100.0f < groundY
 			    && groundY < 50.0f + mPosition.y) {
 				TBGWallCheckRecord record4(
@@ -558,8 +559,8 @@ BOOL TMario::hanging()
 					mFaceAngle.y = matan(foundWall2->getNormal().z,
 					                     foundWall2->getNormal().x)
 					               + 0x8000;
-					mPosition.x
-					    = record4.mCenter.x - 40.0f * foundWall2->getNormal().x;
+					f32 offset  = 40.0f * foundWall2->getNormal().x;
+					mPosition.x = record4.mCenter.x - offset;
 					mPosition.z
 					    = record4.mCenter.z - 40.0f * foundWall2->getNormal().z;
 					const TBGCheckData* dummy2;
@@ -664,7 +665,8 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 	Mtx concat;
 	MTXConcat(rotB, rotA, concat);
 
-	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * 1.0f, 0.0f);
+	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * JGeometry::TUtil<f32>::one(),
+	                             0.0f);
 	MTXMultVec(concat, &sagVec, &sagVec);
 
 	outPos->x += sagVec.x;
@@ -780,20 +782,20 @@ BOOL TMario::wireSWait()
 			mHolder  = nullptr;
 			BOOL ret = changePlayerStatus(MARIO_STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
-			if (mWireBounceVelPrev < 0.0f)
-				mVel.y -= 5.0f * mWireBounceVelPrev;
+			if (mWireBounceVel < 0.0f)
+				mVel.y -= 5.0f * mWireBounceVel;
 			return ret;
 		}
 	}
 
-	if (mInput & 0x10000) {
-		mWireBounceVelPrev = 5.0f;
+	if (mInput & 0x8000) {
+		mWireBounceVel = 5.0f;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
 
 	if (mInput & 0x1) {
-		s16 diff = mIntendedYaw - wireAngle;
+		s16 diff = wireAngle - mIntendedYaw;
 		if (diff > -0x4000 && diff < 0x4000)
 			return changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_L, 0,
 			                          false);
@@ -854,7 +856,7 @@ BOOL TMario::wireWaitToHang()
 	mFaceAngle.y = mModelFaceAngle + 0x4000;
 	setAnimation(ANIM_ROPE_WHG, 1.0f);
 	if (isLast1AnimeFrame()) {
-		BOOL noHold = FALSE;
+		bool noHold = false;
 		if (mHeldObject == nullptr && !onYoshi())
 			noHold = TRUE;
 		if (noHold)
@@ -870,7 +872,7 @@ BOOL TMario::wireSWaitToHang()
 	mModelFaceAngle = mFaceAngle.y;
 	setAnimation(ANIM_ROPE_SWHG, 1.0f);
 	if (isLast1AnimeFrame()) {
-		BOOL noHold = FALSE;
+		bool noHold = false;
 		if (mHeldObject == nullptr && !onYoshi())
 			noHold = TRUE;
 		if (noHold)
@@ -937,64 +939,45 @@ BOOL TMario::wireHanging()
 
 		if (diff >= 0x3555 && diff <= 0x4aaa)
 			startHangLanding(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN);
-
-		return 0;
-	}
-
-	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
-	    && mWaterGun->canSpray()) {
-		s16 rotSp;
-		if (mWaterGun == nullptr) {
-			rotSp = 0;
-		} else {
-			switch (mWaterGun->mCurrentNozzle) {
-			case 1:
-				rotSp = mWireParams.mRotSpeedTrgRocket.get();
-				break;
-			case 4:
-				rotSp = mWireParams.mRotSpeedTrgHover.get();
-				break;
-			case 5:
-				rotSp = mWireParams.mRotSpeedTrgTurbo.get();
-				break;
-			default:
-				rotSp = mWireParams.mRotSpeed.get();
-				break;
-			}
-		}
+	} else if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
+	           && mWaterGun->canSpray()) {
+		s16 rotSp = getNozzleEmitVX();
 		if (rotSp > 0)
 			unkF6 += 2 * mWireParams.mRotStop.get();
 		else
 			unkF6 -= 2 * mWireParams.mRotStop.get();
 
-		s16 rotSp2;
-		if (mWaterGun == nullptr) {
-			rotSp2 = 0;
-		} else {
-			switch (mWaterGun->mCurrentNozzle) {
-			case 1:
-				rotSp2 = mWireParams.mRotSpeedTrgRocket.get();
-				break;
-			case 4:
-				rotSp2 = mWireParams.mRotSpeedTrgHover.get();
-				break;
-			case 5:
-				rotSp2 = mWireParams.mRotSpeedTrgTurbo.get();
-				break;
-			default:
-				rotSp2 = mWireParams.mRotSpeed.get();
-				break;
-			}
-		}
-		unkF6 += rotSp2;
+		unkF6 += getNozzleEmitVX();
 		return changePlayerStatus(MARIO_STATUS_WIRE_ROLLING, 0, false);
+	} else {
+		setAnimation(ANIM_ROPE_HGWAT, 1.0f);
 	}
-
-	setAnimation(ANIM_ROPE_HGWAT, 1.0f);
 	return 0;
 }
 
-s16 TMario::getNozzleEmitVX() { }
+s16 TMario::getNozzleEmitVX()
+{
+	if (mWaterGun == nullptr)
+		return 0;
+
+	int rotSp;
+	switch (mWaterGun->mCurrentNozzle) {
+	case TWaterGun::Rocket:
+		rotSp = mWireParams.mRotSpeedTrgRocket.get();
+		break;
+	case TWaterGun::Hover:
+		rotSp = mWireParams.mRotSpeedTrgHover.get();
+		break;
+	case TWaterGun::Turbo:
+		rotSp = mWireParams.mRotSpeedTrgTurbo.get();
+		break;
+	case TWaterGun::Spray:
+	default:
+		rotSp = mWireParams.mRotSpeed.get();
+		break;
+	}
+	return rotSp;
+}
 
 BOOL TMario::wireRolling()
 {
@@ -1029,26 +1012,7 @@ BOOL TMario::wireRolling()
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
 	    && mWaterGun->canSpray()) {
-		s16 rotSp;
-		if (mWaterGun == nullptr) {
-			rotSp = 0;
-		} else {
-			switch (mWaterGun->mCurrentNozzle) {
-			case 1:
-				rotSp = mWireParams.mRotSpeedTrgRocket.get();
-				break;
-			case 4:
-				rotSp = mWireParams.mRotSpeedTrgHover.get();
-				break;
-			case 5:
-				rotSp = mWireParams.mRotSpeedTrgTurbo.get();
-				break;
-			default:
-				rotSp = mWireParams.mRotSpeed.get();
-				break;
-			}
-		}
-		unkF6 += rotSp;
+		unkF6 += getNozzleEmitVX();
 	}
 
 	unkF6 -= (s16)((f32)mWireParams.mRotGravity.get() * JMASSin(mFaceAngle.x));
@@ -1132,7 +1096,7 @@ BOOL TMario::wireRolling()
 			unkF6          = 0;
 			mWireBounceVel = 0.0f;
 			mWireSag       = 0.0f;
-			BOOL noHold    = FALSE;
+			bool noHold    = false;
 			if (mHeldObject == nullptr && !onYoshi())
 				noHold = TRUE;
 			if (noHold)
@@ -1264,17 +1228,17 @@ BOOL TMario::pulling()
 
 	default:
 		JGeometry::TVec3<f32> delta;
-		if ((mHeldObject->getActorType() == ACTOR_TYPE_BOSS_GESSO_TENTACLE
-		         ? true
-		         : false)
-		    || (mHeldObject->getActorType() == ACTOR_TYPE_BOSS_UNK8 ? true
-		                                                            : false)) {
+		TTakeActor* heldObject = mHeldObject;
+		if (heldObject->isActorType(ACTOR_TYPE_BOSS_GESSO_TENTACLE)
+		    || heldObject->isActorType(ACTOR_TYPE_BOSS_UNK8)) {
 			delta = pos - mPrevPosition;
 		} else {
 			delta = mPosition - mPrevPosition;
 		}
 
-		f32 len = delta.length();
+		f32 y   = delta.y;
+		f32 len = JGeometry::TUtil<f32>::sqrt(delta.x * delta.x + y * y
+		                                      + delta.z * delta.z);
 		if (len < 1.0f) {
 			setAnimation(ANIM_HOLD_WAIT, animRate);
 		} else {

@@ -579,7 +579,7 @@ void TLeanMirror::touchEnemy(THitActor* enemy)
 void TLeanMirror::calcCurrentMtx(MtxPtr mtx)
 {
 	JGeometry::TVec3<f32> axis(unk14C.x, 0.0f, unk14C.z);
-	rotateVecByAxisY(&axis, 1.5707964f);
+	rotateVecByAxisY(&axis, 1.5707963f);
 	f32 len   = MsSqrtf(unk14C.x * unk14C.x + unk14C.z * unk14C.z);
 	f32 speed = len * unk158;
 	TPosition3f rot;
@@ -595,7 +595,7 @@ void TLeanMirror::release()
 	up.x = mtx[0][1];
 	up.y = mtx[1][1];
 	up.z = mtx[2][1];
-	unk18C.cross(up, unk180);
+	unk18C.cross2(up, unk180);
 	unk198      = MsAngleBetween(up, unk180) / mGoTargetTime;
 	mStateTimer = mGoTargetTime;
 	mState      = STATE_GO_TARGET;
@@ -1188,10 +1188,25 @@ void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics*)
 		if (gpMirrorModelManager->isUnk18Present()) {
 			const JGeometry::TVec3<f32>& camPos
 			    = gpMirrorModelManager->unk24->getUnk98();
-			const JGeometry::TVec3<f32>& mirror = unkB8[mirrorIdx];
-			f32 dist                            = camPos.distance(mirror);
+			f32 dy, dx, dz;
+			dx       = camPos.x - unkB8[mirrorIdx].x;
+			dy       = camPos.y - unkB8[mirrorIdx].y;
+			dz       = camPos.z - unkB8[mirrorIdx].z;
+			f32 dx2  = dx * dx;
+			f32 dy2  = dy * dy;
+			f32 dz2  = dz * dz;
+			f32 xy2  = dx2 + dy2;
+			f32 dist = JGeometry::TUtil<f32>::sqrt(dz2 + xy2);
 			for (int i = 0; i < 8; ++i) {
-				f32 d = camPos.distance(unk30[i]);
+				f32 dy, dx, dz;
+				dx    = camPos.x - unk30[i].x;
+				dy    = camPos.y - unk30[i].y;
+				dz    = camPos.z - unk30[i].z;
+				dx2   = dx * dx;
+				dy2   = dy * dy;
+				dz2   = dz * dz;
+				xy2   = dx2 + dy2;
+				f32 d = JGeometry::TUtil<f32>::sqrt(dz2 + xy2);
 				if (d > unk90[i] || d > dist)
 					show(i);
 				else

@@ -235,14 +235,15 @@ void TRollEnemy::setBehavior()
 			s32 min   = getSaveParams()->getSLPolluteRMin();
 			s32 max   = getSaveParams()->getSLPolluteRMax();
 			s32 cycle = getSaveParams()->getSLPolluteCycle();
-			f32 angle = 180.0f * (f32)(mSpine->getTime() % cycle) / (f32)cycle;
-			range = (f32)min + mBodyScale * ((f32)(max - min) * MsSin(angle));
+			range     = 180.0f * (f32)(mSpine->getTime() % cycle) / (f32)cycle;
+			range     = MsSin(range);
+			range     = (f32)min + mBodyScale * ((f32)(max - min) * range);
 		}
 	}
 
-	gpPollution->stampGround(
-	    1, mPosition.x + unk1AC * mPositionDelta.x, mPosition.y,
-	    mPosition.z + unk1AC * mPositionDelta.z, 32.0f * range);
+	f32 z = mPosition.z + unk1AC * mPositionDelta.z;
+	gpPollution->stampGround(1, mPosition.x + unk1AC * mPositionDelta.x,
+	                         mPosition.y, z, 32.0f * range);
 }
 
 void TIgaigaPolluteModelManager::init(TLiveActor* param_1)
@@ -295,7 +296,7 @@ TSmallEnemy* TIgaigaManager::createEnemyInstance() { return new TIgaiga; }
 
 void TIgaigaManager::initSetEnemies()
 {
-	unk60 = new TIgaigaPolluteModelManager;
+	unk60 = new TIgaigaPolluteModelManager("イガイガモデル汚染");
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -432,7 +433,7 @@ void TIgaiga::moveObject()
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
-	f32 damageHeight = getSaveParams()->getSLDamageHeight();
+	f32 damageHeight = getSaveParams()->mSLDamageHeight.get();
 	f32 baseScale    = unk154 * unk1CC;
 	mBodyScale = MsClamp(unk1E4 * baseScale, baseScale, 3.0f * mBodyScale);
 	f32 scale  = mBodyScale / unk154;
@@ -443,9 +444,15 @@ void TIgaiga::moveObject()
 	             damageRadius * scale, damageHeight * scale);
 	mMarchSpeed = unk1A4->mSLMarchSpeedLow.get();
 	mTurnSpeed  = unk1A4->mSLTurnSpeedLow.get();
-	if (getTracer()->getCurrent().checkFlag(0x40)) {
+	if (getTracer()
+	        ->getGraph()
+	        ->getGraphNode(getTracer()->getCurGraphIndex())
+	        .checkFlag(0x40)) {
 		JGeometry::TVec3<f32> point;
-		getTracer()->getCurrent().getPoint(&point);
+		getTracer()
+		    ->getGraph()
+		    ->getGraphNode(getTracer()->getCurGraphIndex())
+		    .getPoint(&point);
 		if (mPosition.y < point.y + 50.0f) {
 			kill();
 			unk1BC = true;
@@ -477,8 +484,9 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 		x = getVelocity().x;
 		z = getVelocity().z;
 	}
-	f32 speed = JGeometry::TVec2<f32>(x, z).length();
-	unk194 += 4.0f * (speed / (mBodyRadius * unk1CC * unk1E4));
+	unk194 += 4.0f
+	          * (JGeometry::TUtil<f32>::sqrt(x * x + z * z)
+	             / (mBodyRadius * unk1CC * unk1E4));
 
 	if (unk1B4) {
 		++unk1B4;
@@ -486,9 +494,10 @@ void TIgaiga::walkBehavior(int param_1, f32 param_2)
 			unk1B4 = 0;
 	}
 
-	if (!isAirborne() && mGroundPlane && mGroundPlane->getActor())
-		((TLiveActor*)mGroundPlane->getActor())
-		    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	if (!isAirborne() && mGroundPlane && mGroundPlane->getActor()) {
+		TLiveActor* actor = (TLiveActor*)mGroundPlane->getActor();
+		actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	}
 	if (unk138 && unk138->getActor())
 		((TLiveActor*)unk138->getActor())
 		    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
@@ -736,8 +745,8 @@ TSmallEnemy* TGorogoroManager::createEnemyInstance() { return new TGorogoro; }
 
 void TGorogoroManager::initSetEnemies()
 {
-	unk6C = new TGorogoroPolluteModelManager;
-	unk6C->init((TLiveActor*)unk18[0]);
+	unk6C = new TGorogoroPolluteModelManager("ゴロゴロモデル汚染");
+	unk6C->init(getObj(0));
 
 	static const char* graphlist[] = { "gorogoro0", "gorogoro1" };
 	for (int i = 0; i < mObjNum; ++i) {

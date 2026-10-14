@@ -23,6 +23,7 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 			J3DJoint* joint = (J3DJoint*)param_1;
 			MtxPtr currMtx  = j3dSys.getModel()->getAnmMtx(joint->getJntNo());
 
+			s16 tmp;
 			s16 r30 = 0;
 			s16 r28 = 0;
 
@@ -59,8 +60,9 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
 					MsVECNormalize(&toMario, &toMario);
 
-					local_148 = MsGetRotFromZaxis(toMario)
-					            - MsGetRotFromZaxis(neckForward);
+					const JGeometry::TVec3<f32>& neckRot
+					    = MsGetRotFromZaxis(neckForward);
+					local_148 = neckRot - MsGetRotFromZaxis(toMario);
 				} else {
 					local_148.zero();
 				}
@@ -81,7 +83,7 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 			if (useTracking) {
 
 				s16 tmp2 = CLBDegToShortAngle(local_148.x);
-				s16 tmp  = MsClamp<s16>(
+				tmp      = MsClamp<s16>(
                     tmp2, gpCurrentNpc->mIndividualParams->mNeckMinAngleX.get(),
                     gpCurrentNpc->mIndividualParams->mNeckMaxAngleX.get());
 

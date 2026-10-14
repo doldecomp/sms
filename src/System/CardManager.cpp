@@ -84,12 +84,10 @@ s32 TCardSector::read(CARDFileInfo* file, s32 index,
 	s32 errc = CARDRead(file, this, sizeof(TCardSector),
 	                    index * sizeof(TCardSector));
 	if (errc == CARD_RESULT_READY) {
-		s32 writeCount   = mWriteCount;
-		const void* data = &mHeader;
 		criteria->set(isCheckSumValid()
 		                  ? TCardManager::TCriteria::STATE_VALID
 		                  : TCardManager::TCriteria::STATE_CHECKSUM_BAD,
-		              writeCount, data);
+		              getWriteCount(), getData());
 	}
 	return errc;
 }
@@ -581,8 +579,8 @@ s32 TCardManager::getBookmarkInfos_()
 					    != TCriteria::STATE_UNREAD)
 						continue;
 
-					result = ((TCardSector*)mSector)
-					             ->read(&info, i, &mSectorCriteria[i]);
+					TCardSector* sector = (TCardSector*)mSector;
+					result = sector->read(&info, i, &mSectorCriteria[i]);
 					if (result != CARD_RESULT_READY)
 						break;
 				}

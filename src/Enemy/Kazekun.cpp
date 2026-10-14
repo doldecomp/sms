@@ -62,7 +62,8 @@ void TKazekun::reset()
 {
 	unk1A0.set(0.0f, 0.0f, 0.0f, 1.0f);
 
-	mPosition = unk194;
+	JGeometry::TVec3<f32> position = unk194;
+	mPosition.set(position);
 
 	setVisible(false);
 }
@@ -189,8 +190,8 @@ void TKazekun::flyAroundMario()
 	toMario.y += ((TKazekunParams*)getSaveParam())->mTurnOffsetY.get();
 	toMario -= mPosition;
 
-	f32 climb
-	    = JGeometry::TUtil<f32>::clamp(toMario.y, -400.0f, 400.0f) * 0.0025f;
+	f32 climb = JGeometry::TUtil<f32>::clamp(toMario.y, -400.0f, 400.0f);
+	climb *= 0.0025f;
 	toMario.y = 0.0f;
 
 	JGeometry::TQuat4<f32> quat;
@@ -202,7 +203,7 @@ void TKazekun::flyAroundMario()
 	quat.rotate(velocity, velocity);
 	velocity.y = climb;
 	velocity.scale(1.0f + fabsf(climb));
-	velocity.scale(((TKazekunParams*)getSaveParam())->mAroundSpeed.get());
+	velocity.scale(((TKazekunParams*)getSaveParam())->mAroundSpeed.value);
 	mPositionDelta = velocity;
 }
 
@@ -219,8 +220,7 @@ void TKazekun::getAroundQuat(JGeometry::TQuat4<f32>& quat,
 	TPosition3f mtx;
 	JGeometry::TQuat4<f32> rotation;
 	JGeometry::TVec3<f32> axis;
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	SMS_CalcToDirMatrix(mtx, dir, up);
+	SMS_CalcToDirMatrix(mtx, dir, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 	mtx.getQuat(quat);
 	mtx.getYDir(axis);
 	rotation.setRotate(axis, (2.0f - rate) * (M_PI / 2.0f));
@@ -244,14 +244,14 @@ bool TKazekun::doAttackPose(bool start)
 		mVelocity = velocity;
 	}
 
+	const JGeometry::TQuat4<f32>& current = unk1A0;
 	JGeometry::TVec3<f32> spinAxis;
-	unk1A0.rotate(JGeometry::TVec3<f32>(-1.0f, 0.0f, 0.0f), spinAxis);
+	current.rotate(JGeometry::TVec3<f32>(-1.0f, 0.0f, 0.0f), spinAxis);
 
 	JGeometry::TQuat4<f32> spin;
-	spin.setRotate(
-	    spinAxis,
-	    M_PI * ((TKazekunParams*)getSaveParam())->mPoseOmegaRate.get());
-	spin.mul(spin, unk1A0);
+	f32 poseOmegaRate = ((TKazekunParams*)getSaveParam())->mPoseOmegaRate.get();
+	spin.setRotate(spinAxis, M_PI * poseOmegaRate);
+	spin.mul(spin, current);
 	unk1A0 = spin;
 
 	JGeometry::TVec3<f32> forward(0.0f, 0.0f, getVelocity().length());
@@ -266,13 +266,13 @@ void TKazekun::doAttack(bool start)
 	if (start) {
 		JGeometry::TVec3<f32> dir = getUnk104().getPoint();
 		dir -= mPosition;
-		dir.setLength(((TKazekunParams*)getSaveParam())->mAttackSpeed.get());
+		dir.setLength(((TKazekunParams*)getSaveParam())->mAttackSpeed.value);
 		mVelocity = dir;
 	}
 
 	JGeometry::TQuat4<f32> quat = unk1A0;
 	JGeometry::TQuat4<f32> target;
-	getAroundQuat(target, mVelocity, 2.0f);
+	getAroundQuat(target, getVelocity(), 2.0f);
 	quat.slerp(target, 0.1f);
 	quat.normalize();
 	unk1A0 = quat;
@@ -392,7 +392,7 @@ DEFINE_NERVE(TNerveKazekunTurn, TLiveActor)
 		return true;
 	}
 
-	if (((TKazekunParams*)self->getSaveParam())->mAroundTime.get()
+	if (((TKazekunParams*)self->getSaveParams())->mAroundTime.get()
 	    < (f32)spine->getTime()) {
 		spine->pushAfterCurrent(&TNerveKazekunPreAttack::theNerve());
 		return true;
@@ -412,14 +412,16 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 		self->setAnmSound(nullptr);
 	}
 
-	if (((TKazekunParams*)self->getSaveParam())->mPoseTime.get()
-	        * ((TKazekunParams*)self->getSaveParam())->mDicideTiming.get()
+	if (((TKazekunParams*)self->getSaveParams())->mPoseTime.get()
+	        * ((TKazekunParams*)self->getSaveParams())->mDicideTiming.get()
 	    < spine->getTime()) {
-		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
+		JGeometry::TVec3<f32> position = SMS_GetMarioPos();
+		TPathNode point(position);
+		self->setGoalPath(point);
 	}
 
 	self->doAttackPose(false);
-	if (((TKazekunParams*)self->getSaveParam())->mPoseTime.get()
+	if (((TKazekunParams*)self->getSaveParams())->mPoseTime.get()
 	    < spine->getTime()) {
 		spine->pushAfterCurrent(&TNerveKazekunAttack::theNerve());
 		return true;
@@ -438,7 +440,7 @@ DEFINE_NERVE(TNerveKazekunAttack, TLiveActor)
 	self->doAttack(false);
 
 	JGeometry::TVec3<f32> velocity = self->getVelocity();
-	velocity.scale(((TKazekunParams*)self->getSaveParam())->mAirFric.get());
+	velocity.scale(((TKazekunParams*)self->getSaveParam())->mAirFric.value);
 	self->mVelocity = velocity;
 	if (velocity.squared() < 1.0f) {
 		spine->pushAfterCurrent(&TNerveKazekunDisappear::theNerve());

@@ -522,12 +522,11 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->mGlobalBounds;
-				JGeometry::TVec3<f32> pos;
-				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
-				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
-				pos.z = 0.0f;
-				gpEmitterManager4D2->createEmitter(pos, 0x1FA, nullptr,
-				                                   nullptr);
+				gpEmitterManager4D2->createEmitter(
+				    JGeometry::TVec3<f32>(bounds.x1 + bounds.getWidth() * 0.5f,
+				                          bounds.y1 + bounds.getHeight() * 0.5f,
+				                          0.0f),
+				    0x1FA, nullptr, nullptr);
 
 				unk44 = gpEmitterManager4D2->unkC8[0][0];
 				unk44->setRotation(0, 0, DEG2SHORTANGLE(12));
@@ -646,8 +645,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 					score -= 100;
 					unk140->changeTexture(unk1C[score / 10]->getTexInfo(), 0);
 					unk144->changeTexture(unk1C[score % 10]->getTexInfo(), 0);
-					unk134->show();
 					unk138->hide();
+					unk134->show();
 				}
 			} else {
 				if (getBookmarkInfo().unk0 == 1) {
@@ -747,12 +746,11 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			                              selectedRect.getHeight());
 			if (!unk18) {
 				JUTRect bounds = selectedPane->getPane()->getGlobalBounds();
-				JGeometry::TVec3<f32> pos;
-				pos.x = bounds.x1 + bounds.getWidth() * 0.5f;
-				pos.y = bounds.y1 + bounds.getHeight() * 0.5f;
-				pos.z = 0.0f;
-				gpEmitterManager4D2->createEmitter(pos, 0x1FA, nullptr,
-				                                   nullptr);
+				gpEmitterManager4D2->createEmitter(
+				    JGeometry::TVec3<f32>(bounds.x1 + bounds.getWidth() * 0.5f,
+				                          bounds.y1 + bounds.getHeight() * 0.5f,
+				                          0.0f),
+				    0x1FA, nullptr, nullptr);
 
 				unk44 = gpEmitterManager4D2->unkC8[0][0];
 				unk44->setRotation(0, 0, DEG2SHORTANGLE(12));
@@ -1376,7 +1374,10 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 	switch (unk10) {
 	case 0:
 		setMessage(unk12C, 0x200, getCurMessageID());
-		setMessage(unk130, 0x200, getCurMessageID());
+		{
+			u16 messageID = getCurMessageID();
+			setMessage(unk130, 0x200, messageID);
+		}
 
 		unkF8->hide();
 		unk128->hide();
@@ -1485,6 +1486,7 @@ void TCardSave::execMovement_()
 
 	TEProgress prevState = unk310;
 	s32 prevMode         = unk10;
+	s32 status;
 
 	unk270->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 
@@ -1606,7 +1608,7 @@ void TCardSave::execMovement_()
 		break;
 
 	case PROGRESS_UNK8: {
-		s32 status = gpCardManager->getLastStatus();
+		status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_BUSY)
 			break;
 
@@ -2064,7 +2066,8 @@ void TCardSave::execIssueGX_(JDrama::TGraphics* param_1)
 	{
 		J2DOrthoGraph graph(param_1->getViewport());
 		graph.setup2D();
-		unk14->draw(0, 0, &graph);
+		const J2DGrafContext* context = &graph;
+		unk14->draw(0, 0, context);
 	}
 
 	param_1->setScissor(scissorRect);

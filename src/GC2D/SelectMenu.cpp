@@ -34,6 +34,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)
@@ -162,15 +163,12 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 
 		if (nextCycle) {
-			// TODO: This doesn't fully match.
-			mRgbAnimCycle[0]++;
-			mRgbAnimCycle[0] = (mRgbAnimCycle[0] >= 6) ? 0 : mRgbAnimCycle[0];
-
-			mRgbAnimCycle[1]++;
-			mRgbAnimCycle[1] = (mRgbAnimCycle[1] >= 6) ? 0 : mRgbAnimCycle[1];
-
-			mRgbAnimCycle[2]++;
-			mRgbAnimCycle[2] = (mRgbAnimCycle[2] >= 6) ? 0 : mRgbAnimCycle[2];
+			for (s32 i = 0; i < 3; i++) {
+				mRgbAnimCycle[i]++;
+				if (mRgbAnimCycle[i] >= 6) {
+					mRgbAnimCycle[i] = 0;
+				}
+			}
 		}
 	}
 
@@ -201,9 +199,12 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 
-		u8 midR = (mTopLeftCol.r + mBottomRightCol.r) >> 1;
-		u8 midG = (mTopLeftCol.g + mBottomRightCol.g) >> 1;
-		u8 midB = (mTopLeftCol.b + mBottomRightCol.b) >> 1;
+		u8 midB;
+		u8 midG;
+		u8 midR;
+		midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
+		midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
+		midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(0.0f, 16.0f, -100.0f);
@@ -293,7 +294,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		return;
 	}
 
-	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", nullptr);
+	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", pArch);
 	mLetterBoxTop    = new TExPane(mMenuScreen, 'msk1');
 	mLetterBoxBottom = new TExPane(mMenuScreen, 'msk2');
 	mStageName       = (J2DTextBox*)mMenuScreen->search('map');
@@ -380,7 +381,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 digit0 = hundreds;
 		coinDigits[0]->changeTexture(mCoinNumTex[digit0]->getTexInfo(), 0);
 
-		s32 digit1 = 0.1f * (numCoins - 100 * (s32)(hundreds));
+		numCoins -= 100 * (s32)(hundreds);
+		s32 digit1 = 0.1f * numCoins;
 		coinDigits[1]->changeTexture(mCoinNumTex[digit1]->getTexInfo(), 0);
 
 		s32 digit2 = numCoins % 10;
@@ -476,10 +478,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	}
 	mSelectedShine = lastShineIdx;
 
-	if (mNumUnlockedShines < 8) {
-		// TODO: I tried matching this as best as I could but the compiler
-		// keeps unrolling the loops and I'm running out of ideas...
-		bzero(mShineUnlockStates + mNumUnlockedShines, 8 - mNumUnlockedShines);
+	for (s32 i = mNumUnlockedShines; i < 8; i++) {
+		mShineUnlockStates[i] = 0;
 	}
 
 	// Show arrows if we have more than one shine unlocked.
@@ -518,8 +518,9 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 firstSlot = (7 - mNumUnlockedShines) / 2;
 		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
 
-		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
-			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
+		for (; firstSlot <= lastSlot; firstSlot++) {
+			mShineMarks[i]
+			    = (J2DPicture*)mMenuScreen->search('i_o0' + firstSlot);
 			mShineMarks[i]->show();
 
 			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
@@ -536,9 +537,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 firstSlot = (8 - mNumUnlockedShines) / 2;
 		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
 
-		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
-			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
-			mShineMarks[i]->mVisible = true;
+		for (; firstSlot <= lastSlot; firstSlot++) {
+			mShineMarks[i]
+			    = (J2DPicture*)mMenuScreen->search('i_e0' + firstSlot);
+			mShineMarks[i]->show();
 
 			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
 				JUTTexture* mark = mShineUnlockedMark;
@@ -707,8 +709,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			updated &= mStageBannerShadow->update();
 
 			// Fade the stage name in.
-			f32 curAlpha   = mStageName->getAlpha();
-			u16 stageAlpha = SMSGetAnmFrameRate() * 6.0f + curAlpha;
+			u16 stageAlpha = mStageName->getAlpha();
+			stageAlpha += SMSGetAnmFrameRate() * 6.0f;
 			if (stageAlpha > 255u) {
 				stageAlpha = 255u;
 			}
@@ -854,6 +856,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					}
 
 					mMenuState = MENU_ANIM_LOOP;
+				} else {
+					break;
 				}
 			} else if (mGamePad->checkFrameMeaning(
 			               TMarioGamePad::MEANING_MENU_RIGHT)) {
@@ -927,6 +931,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					}
 
 					mMenuState = MENU_ANIM_LOOP;
+				} else {
+					break;
 				}
 			}
 		}
@@ -989,11 +995,11 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 				} else {
 					u8 alphaRef = mMarkAlpha;
 					if (alpha < alphaRef) {
-						s32 alpha2 = alpha + 4;
-						if (alpha2 > alphaRef) {
-							alpha2 = alphaRef;
+						alpha += 4;
+						if (alpha > alphaRef) {
+							alpha = alphaRef;
 						}
-						mArrowR->setAlpha(alpha2);
+						mArrowR->setAlpha(alpha);
 					}
 				}
 			}

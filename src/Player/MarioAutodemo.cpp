@@ -199,7 +199,7 @@ BOOL TMario::warpIn()
 
 		// Possibly TVec3 inaccuracies?
 		JGeometry::TVec3<f32> marioDist = holderPosOffset - mPosition;
-		mPosition                       = marioDist * 0.02f + mPosition;
+		mPosition                       = mPosition + marioDist * 0.02f;
 
 		f32 dist
 		    = mAutoDemoParams.mWarpInTremble.get() - marioDist.length() * 0.1f;

@@ -50,23 +50,24 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	// TODO: mother of all intern codes...
 
-	if (!unk44 || gpMarDirector->unk124 != 0)
+	if (!unk44)
 		return;
 
-	bool bVar1 = true;
-	if (!gpCamera->isSimpleDemoCamera() && !gpCamera->isBckDemoCamera()) {
-		bVar1 = false;
-	}
-
-	if (bVar1 ? true : false)
+	if (gpMarDirector->unk124 != 0)
 		return;
 
-	if (gpCamera->unk124.y > 0.0f
-	    && gpCamera->unk124.y >= gpMapObjWave->getHeight(
-	           gpCamera->unk124.x, gpCamera->unk124.y, gpCamera->unk124.z))
+	if (gpCamera->isDemoCamera())
+		return;
+
+	const JGeometry::TVec3<f32>& cameraPos = gpCamera->getUnk124();
+	if (cameraPos.y > 0.0f
+	    && cameraPos.y >= gpMapObjWave->getHeight(cameraPos.x, cameraPos.y,
+	                                              cameraPos.z))
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
+		MtxPtr viewMtx = graphics->mViewMtx;
+
 		J3DTransformInfo info;
 		info.mScale.x     = 1.0f;
 		info.mScale.y     = 1.0f;
@@ -82,7 +83,7 @@ void TMapObjWaterFilter::perform(u32 cue, JDrama::TGraphics* graphics)
 		Mtx afStack_a8;
 		PSMTXScale(afStack_a8, mScaling.x, mScaling.y, mScaling.z);
 		Mtx afStack_48;
-		MTXInverse(graphics->mViewMtx, afStack_48);
+		MTXInverse(viewMtx, afStack_48);
 		MTXConcat(afStack_48, afStack_78, afStack_48);
 		MTXConcat(afStack_48, afStack_a8, afStack_48);
 		unk44->getModel()->setBaseTRMtx(afStack_48);

@@ -62,8 +62,9 @@ void TAmenbo::init(TLiveManager* manager)
 	mSearchDisableCooldown = 0;
 	mOutOfWaterDeathTimer  = 0;
 	for (int i = 0; i < 4; ++i) {
-		unk1EC[i].mJointIdx
-		    = getModel()->getModelData()->getMaterialName()->getIndex(
+		EffectOnJoint* effect = &unk1EC[i];
+		effect->mJointIdx
+		    = getModel()->getModelData()->getJointName()->getIndex(
 		        cJointNames[i]);
 	}
 }
@@ -98,9 +99,9 @@ void TAmenbo::bind()
 		return;
 
 	JGeometry::TVec3<f32> local_14 = mPosition;
+	local_14.y += mHeadHeight;
 	local_14 += mPositionDelta;
 	local_14 += mVelocity;
-	local_14.y += mHeadHeight;
 
 	mVelocity.y -= getGravityY();
 
@@ -140,7 +141,7 @@ void TAmenbo::bind()
 void TAmenbo::control()
 {
 	if (mWaterGunHitCooldown > 0)
-		mWaterGunHitCooldown--;
+		mWaterGunHitCooldown = mWaterGunHitCooldown - 1;
 
 	if (mSearchDisableCooldown > 0)
 		mSearchDisableCooldown--;
@@ -174,7 +175,7 @@ void TAmenbo::checkMarioWaterIn()
 	JGeometry::TVec3<f32> local_60;
 
 	if (!isOverTerritory(&local_60) && mSearchDisableCooldown <= 0) {
-		if (isFreeze() && isChangedBlock()) {
+		if (isFreeze() && !isChangedBlock()) {
 			decideTargetOnFingingMario();
 			mSpine->reset();
 			mSpine->setNext(&TNerveAmenboTurn::theNerve());
@@ -339,7 +340,8 @@ void TAmenbo::doAdjustTarget()
 
 void TAmenbo::doChangeWaitAnm()
 {
-	if (checkCurAnmEnd(ANM_TYPE_BCK)) {
+	bool ended = checkCurAnmEnd(ANM_TYPE_BCK);
+	if (ended) {
 		if (mMActor->checkCurAnm("amenbo_wait1_start", ANM_TYPE_BCK))
 			changeBck("amenbo_wait1_loop", 1.0f);
 		else if (mMActor->checkCurAnm("amenbo_wait1_loop", ANM_TYPE_BCK))
@@ -436,7 +438,7 @@ bool TAmenbo::isOverTerritory(JGeometry::TVec3<f32>* param_1) const
 	*param_1 -= mPosition;
 	param_1->y = 0.0f;
 	f32 range  = getSaveParam2()->mTerritoryRange.get();
-	return param_1->squared() < range * range;
+	return range * range < param_1->squared();
 }
 
 bool TAmenbo::isAttacking() const

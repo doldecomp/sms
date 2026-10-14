@@ -675,8 +675,8 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 		if (i != 0) {
 			unk2AC[i] = (J2DPicture*)unkB0->search('w_m1' + i);
 
-			unk2AC[i]->setBlendKonstColor(0.0f, 0.0f, 0.0f, 0.0f);
-			unk2AC[i]->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			unk2A0[i]->setBlendKonstColor(0.0f, 0.0f, 0.0f, 0.0f);
+			unk2A0[i]->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
 
 			unk2AC[i]->hide();
 		}
@@ -777,25 +777,25 @@ void TGCConsole2::loadAfter()
 	unk94 = static_cast<TConsoleStr*>(
 	    JDrama::TNameRefGen::search("コンソール文字"));
 
-	JUTRect bounds(unk2F8->getPane()->mBounds);
+	JUTRect waterBounds(unk2F8->getPane()->mBounds);
 
-	unk2A0[0]->add(bounds.x1, bounds.y1);
-	unk270->getPane()->add(bounds.x1, bounds.y1);
+	unk2A0[0]->add(waterBounds.x1, waterBounds.y1);
+	unk270->getPane()->add(waterBounds.x1, waterBounds.y1);
 	syncPaneBounds(unk270);
-	unk26C->getPane()->add(bounds.x1, bounds.y1);
+	unk26C->getPane()->add(waterBounds.x1, waterBounds.y1);
 	syncPaneBounds(unk26C);
-	unk328->add(bounds.x1, bounds.y1);
+	unk328->add(waterBounds.x1, waterBounds.y1);
 
 	for (int i = 0; i < 3; ++i) {
 		unk2BC[i] = unk2A0[i]->mBounds;
-		unk2BC[i].add(bounds.x1, bounds.y1);
+		unk2BC[i].add(waterBounds.x1, waterBounds.y1);
 	}
 
 	unk2A0[0]->show();
 	detachPaneFromParent(unk2A0[0]);
 	detachBoundPaneFromParent(unk270);
 	for (int i = 0; i < 4; ++i) {
-		unk278[i]->getPane()->add(bounds.x1, bounds.y1);
+		unk278[i]->getPane()->add(waterBounds.x1, waterBounds.y1);
 		syncPaneBounds(unk278[i]);
 		detachBoundPaneFromParent(unk278[i]);
 	}
@@ -822,31 +822,44 @@ void TGCConsole2::loadAfter()
 
 	unk26A = unk140->getPane()->mBounds.y1 - unk108->getPane()->mBounds.y1;
 
-	initHiddenPaneAbove(unk140);
+	TExPane* pane = unk140;
+	initHiddenPaneAbove(pane);
 	unk140->getPane()->hide();
 	initHiddenPaneAbove(unk160);
 	unk160->getPane()->hide();
 	initHiddenPaneOffset(unk108, unk26A);
 	unk108->getPane()->hide();
-	initHiddenPaneAbove(unk3A8);
+	initHiddenPaneOffset(unk3A8, -(unk3A8->mInitialBounds.y2 + 1));
 	unk3A8->getPane()->hide();
 
 	unk168 = TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT);
 
-	int blueCoins = 0;
+	int spentBlueCoins = 0;
 	for (int flag = 0x46; flag < 0x56; ++flag)
 		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag) != 0)
-			++blueCoins;
+			++spentBlueCoins;
 
 	for (int flag = 0x6C; flag <= 0x73; ++flag)
 		if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag) != 0)
-			++blueCoins;
+			++spentBlueCoins;
 
-	blueCoins = unk168 - blueCoins * 10;
-	if (blueCoins < 0)
-		blueCoins = 0;
-	setBlueCoinDigits(unk154, unkE0, blueCoins);
-	unk170 = blueCoins;
+	s32 blueCoinValue = unk168 - spentBlueCoins * 10;
+	if (blueCoinValue < 0)
+		blueCoinValue = 0;
+	if (blueCoinValue < 100) {
+		setDigitPane(unk154[0], unkE0, (int)(blueCoinValue * 0.1f));
+		setDigitPane(unk154[1], unkE0, blueCoinValue % 10);
+		if (unk154[2]->getPane()->isVisible())
+			unk154[2]->getPane()->hide();
+	} else {
+		setDigitPane(unk154[0], unkE0, (int)(blueCoinValue * 0.01f));
+		int remainder = blueCoinValue - (int)(blueCoinValue * 0.01f) * 100;
+		setDigitPane(unk154[1], unkE0, (int)(remainder * 0.1f));
+		setDigitPane(unk154[2], unkE0, remainder % 10);
+		if (!unk154[2]->getPane()->isVisible())
+			unk154[2]->getPane()->show();
+	}
+	unk170 = blueCoinValue;
 
 	unk20 = TFlagManager::getInstance()->getFlag(MSF_GOLD_COIN_COUNT);
 	if (unk20 > 999)
@@ -889,8 +902,8 @@ void TGCConsole2::loadAfter()
 	unk52C->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
 
 	JUTRect telopBounds(unk524->getPane()->mBounds);
-	bounds = unk520->getPane()->mBounds;
-	telopBounds.add(bounds.x1, bounds.y1 - 3);
+	waterBounds = unk520->getPane()->getBounds();
+	telopBounds.add(waterBounds.x1, waterBounds.y1 - 3);
 	unk544.set(telopBounds.x1 + 8, telopBounds.y1 + 8, telopBounds.x2 - 8,
 	           telopBounds.y2 - 8);
 
@@ -1032,10 +1045,7 @@ void TGCConsole2::resetMoveTank() { }
 
 void TGCConsole2::endCameraDemo()
 {
-	if (unk39)
-		return;
-
-	if (!unk50)
+	if (unk39 || !unk50)
 		return;
 
 	// TODO: the ROM has one extra branch here, as if the whole body
@@ -1103,8 +1113,8 @@ void TGCConsole2::startAppearTank()
 	unk26C->setPanePosition(50, JUTPoint(0, 100), JUTPoint(0, -30),
 	                        JUTPoint(0, -30));
 
-	unk274->getPane()->show();
-	unk29C->getPane()->show();
+	unk274->getPane()->hide();
+	unk29C->getPane()->hide();
 }
 
 void TGCConsole2::startDisappearTank()
@@ -1732,18 +1742,18 @@ void TGCConsole2::drawWaterBack()
 
 			u32 color = 0xff3f3f00;
 			if (unk30C < 10) {
-				s16 green = unk30C * -6.3f;
-				s32 blue  = unk30C * 19.2f;
-				color += green << 8;
-				color += blue << 16;
+				f32 blue = -6.3f;
+				blue     = unk30C * blue;
+				color += (s16)blue << 8;
+				f32 green = 19.2f;
+				green     = unk30C * green;
+				color += (s16)green << 16;
 			} else if ((int)unk30C < 15) {
 				color = 0xffff0000;
 			} else if ((int)unk30C < 25) {
-				int fade  = 25 - unk30C;
-				s16 green = fade * -6.3f;
-				s32 blue  = fade * 19.2f;
-				color += green << 8;
-				color += blue << 16;
+				int fade = 25 - unk30C;
+				color += (s16)(-6.3f * fade) << 8;
+				color += (s16)(19.2f * fade) << 16;
 			} else {
 				unk30C = 0;
 			}
@@ -1919,12 +1929,14 @@ void TGCConsole2::setTimer(s32 param_1)
 		((J2DPicture*)unk458[5]->getPane())
 		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
 	} else {
-		if (timerValue < 1000
-		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != unk508) {
-			for (int i = 6; i <= 9; i++) {
-				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+		if (timerValue < 1000) {
+			u32 white = ((J2DPicture*)unk458[9]->getPane())->getWhite();
+			if (white != unk508) {
+				for (int i = 6; i <= 9; i++) {
+					((J2DPicture*)unk458[i]->getPane())->setWhite(unk508);
+				}
+				((J2DPicture*)unk480[2]->getPane())->setWhite(unk508);
 			}
-			((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
 		}
 		((J2DPicture*)unk458[6]->getPane())
 		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
@@ -2088,9 +2100,10 @@ bool TGCConsole2::processAppearStar(int param_1)
 		updateDownPaneState(unk154[i], isFinished);
 	}
 
-	JUTRect bounds = unk12C->getPane()->mGlobalBounds;
+	JUTRect bounds(unk12C->getPane()->mGlobalBounds);
+	int height = bounds.getHeight();
 	unk144->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
-	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	                             bounds.y1 + height * 0.5f, 0.0f);
 
 	bounds = unk14C->getPane()->mGlobalBounds;
 	unk164->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,

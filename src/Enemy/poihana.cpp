@@ -154,11 +154,14 @@ void TPoiHana::init(TLiveManager* param_1)
 	    ->getChildren()
 	    .push_back(unk1BC);
 
-	unk1BC->initHitActor(0, 2, HIT_CATEGORY_PLAYER,
-	                     unk19C->mSLAttackRadius.get() * mBodyScale,
-	                     unk19C->mSLAttackHeight.get() * mBodyScale,
-	                     unk19C->mSLDamageRadius.get() * mBodyScale,
-	                     unk19C->mSLDamageHeight.get() * mBodyScale);
+	f32 attackRadius = unk19C->mSLAttackRadius.get();
+	f32 attackHeight = unk19C->mSLAttackHeight.get();
+	f32 damageRadius = unk19C->mSLDamageRadius.get();
+	f32 damageHeight = unk19C->mSLDamageHeight.get();
+
+	unk1BC->initHitActor(0, 2, HIT_CATEGORY_PLAYER, attackRadius * mBodyScale,
+	                     attackHeight * mBodyScale, damageRadius * mBodyScale,
+	                     damageHeight * mBodyScale);
 
 	unk1BC->unk68 = this;
 
@@ -381,8 +384,9 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
 		if (checkCurAnmEnd(0)) {
-			if (mGoToSleepTimer
-			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
+			int threshold = unk19C->mSLWakeFrame.get();
+			threshold += getInstanceIndex() * 100;
+			if (mGoToSleepTimer > threshold) {
 				mGoToSleepTimer = 0;
 
 				mGoToSleepTimer = TMsRange<s32>(-500, 500).rand();
@@ -699,25 +703,26 @@ DEFINE_NERVE(TNervePoihanaTrapped, TLiveActor)
 			self->mPosition.y += 150.0f;
 			self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			if (self->unk1A8) {
-				TMsRange<f32> rangeXZ(self->unk19C->mSLTrapJumpMinSpXZ.get(),
-				                      self->unk19C->mSLTrapJumpMaxSpXZ.get());
-				TMsRange<f32> rangeY(self->unk19C->mSLTrapJumpMinSpY.get(),
-				                     self->unk19C->mSLTrapJumpMaxSpY.get());
+				f32 trapJumpMaxSpXZ = self->unk19C->mSLTrapJumpMaxSpXZ.get();
+				f32 trapJumpMaxSpY  = self->unk19C->mSLTrapJumpMaxSpY.get();
+				f32 trapJumpMinSpY  = self->unk19C->mSLTrapJumpMinSpY.get();
+				f32 trapJumpMinSpXZ = self->unk19C->mSLTrapJumpMinSpXZ.get();
+				TMsRange<f32> trapJumpSpXZ(trapJumpMinSpXZ, trapJumpMaxSpXZ);
+				TMsRange<f32> trapJumpSpY(trapJumpMinSpY, trapJumpMaxSpY);
 
 				JGeometry::TVec3<f32> local_48;
-				const TLiveActor* groundActor
-				    = self->getGroundPlane()->getActor();
-				if (groundActor)
-					local_48 = self->mPosition - groundActor->mPosition;
+				if (self->getGroundPlane()->getActor())
+					local_48 = self->mPosition
+					           - self->getGroundPlane()->getActor()->mPosition;
 				else
 					local_48 = self->mPosition - SMS_GetMarioPos();
 				if (local_48.x == local_48.y == local_48.z)
 					local_48.x = 1.0f;
 
 				VECNormalize(&local_48, &local_48);
-				local_48.x *= rangeXZ.rand();
-				local_48.y = rangeY.rand();
-				local_48.z *= rangeXZ.rand();
+				local_48.x *= trapJumpSpXZ.rand();
+				local_48.y = trapJumpSpY.rand();
+				local_48.z *= trapJumpSpXZ.rand();
 
 				self->mVelocity             = local_48;
 				self->mCurrentFlungVelocity = local_48;

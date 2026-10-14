@@ -1261,7 +1261,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 					mConfirmationShineCountUnder100->hide();
 					mConfirmationShineCountDigitsOver100[0]->changeTexture(
 					    mDigitTextures[score / 100]->getTexInfo(), 0);
-					score -= int(score * 0.01f) * 100;
+					score = score - int(score * 0.01f) * 100;
 					mConfirmationShineCountDigitsOver100[1]->changeTexture(
 					    mDigitTextures[score / 10]->getTexInfo(), 0);
 					mConfirmationShineCountDigitsOver100[2]->changeTexture(
@@ -1864,7 +1864,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 					} else {
 						mSaveShineCountHundredsOver100[i]->changeTexture(
 						    mDigitTextures[score / 100]->getTexInfo(), 0);
-						score -= int(score * 0.01f) * 100;
+						score = score - int(score * 0.01f) * 100;
 						mSaveShineCountTensOver100[i]->changeTexture(
 						    mDigitTextures[score / 10]->getTexInfo(), 0);
 						mSaveShineCountOnesOver100[i]->changeTexture(

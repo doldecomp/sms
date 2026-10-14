@@ -11,8 +11,10 @@ void TNpcInbetween::execPosInbetween(JGeometry::TVec3<f32>* cur_pos)
 		f32 progress = mPosInbetweenTimer * (1.0f / mPosInbetweenFrame);
 
 		cur_pos->x = mCurrentPos.x + (mTargetPos.x - mCurrentPos.x) * progress;
-		cur_pos->y = mCurrentPos.y + (mTargetPos.y - mCurrentPos.y) * progress;
-		cur_pos->z = mCurrentPos.z + (mTargetPos.z - mCurrentPos.z) * progress;
+		f32 current_y = mCurrentPos.y;
+		cur_pos->y    = current_y + (mTargetPos.y - current_y) * progress;
+		f32 current_z = mCurrentPos.z;
+		cur_pos->z    = current_z + (mTargetPos.z - current_z) * progress;
 	} else {
 		mTargetPos.set(*cur_pos);
 		mPosInbetweenTimer = 0;

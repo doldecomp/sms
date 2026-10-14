@@ -42,8 +42,9 @@ static const s32 cParticleIDs[] = {
 
 void TMario::initParticle()
 {
+	const char* fileName;
 	for (int i = 0; i < 3; ++i) {
-		const char* fileName = cParticleFileNames[i];
+		fileName = cParticleFileNames[i];
 		if (JKRFileLoader::getGlbResource(fileName)) {
 			if (i < 1)
 				SMS_LoadParticle(fileName, cParticleIDs[i]);
@@ -233,11 +234,11 @@ void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 		JGeometry::TVec3<f32> pos;
 		particle->getCurrentPosition(pos);
 		if (pos.y > gpMarioOriginal->mFloorPosition.z) {
-			particle->unk10 |= 2;
-			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()
-			    != 0.0f) {
-				gpMarioParticleManager->emit(PARTICLE_MS_M_AWAHAMON, &pos, 0,
-				                             nullptr);
+			particle->setDeleteParticleFlag();
+			f32 bubbleToRipple
+			    = gpMarioOriginal->mParticleParams.mBubbleToRipple.get();
+			if (bubbleToRipple) {
+				gpMarioOriginal->emitParticle(PARTICLE_MS_M_AWAHAMON, &pos);
 			}
 		}
 	}
@@ -409,15 +410,16 @@ void TWarpInCallBack::execute(JPABaseEmitter* emitter,
 	f32 timer = (f32)gpMarioOriginal->mStatusTimer;
 	f32 tmp   = gpMarioOriginal->unk468;
 
-	f32 factor = ((((intptr_t)particle >> 2) & 0x3F) / 16.0f + 1.0f);
+	f32 factor = 1.0f;
+	f32 spread = (1.0f / 16.0f) * (((intptr_t)particle >> 2) & 0x3F);
+	factor += spread;
 
-	JGeometry::TVec3<f32> v = *vel;
-
-	v = v * tmp;
-	v = v * timer;
-	v = v * factor;
-
-	particle->unk14 += v;
+	JGeometry::TVec3<f32> pos;
+	pos.set(particle->unk14);
+	JGeometry::TVec3<f32> v = *vel * tmp;
+	v *= timer;
+	pos.add(v * factor);
+	particle->unk14.set(pos);
 }
 
 TWarpInCallBack warpInCallBack;
@@ -724,7 +726,7 @@ void TMario::elecEndEffect()
 void TMario::kickRoofEffect()
 {
 	if (getMotionFrameCtrl().checkPass(8.0f)) {
-		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdHead);
+		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdChnFootR);
 		mFootprintPos.x = mtx[0][3];
 		mFootprintPos.y = mtx[1][3];
 		mFootprintPos.z = mtx[2][3];

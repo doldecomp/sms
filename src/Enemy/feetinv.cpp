@@ -66,9 +66,10 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 	f32 shinLen = shin.length();
 
 	const TBGCheckData* groundData;
-	f32 groundY = gpMap->checkGround(footPos.x, footPos.y + shinLen, footPos.z,
-	                                 &groundData)
-	              + heightOffset;
+	f32 footY   = footPos.y;
+	f32 groundY = gpMap->checkGround(footPos.x, footY + shinLen, footPos.z,
+	                                 &groundData);
+	groundY += heightOffset;
 
 	if (!(groundY < footPos.y)) {
 		footPos.y = groundY;
@@ -99,14 +100,12 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 
 		f32 rotAngle = kneeSolveAngle - betweenAngleDeg;
 		TRotation3f rotMtx;
-		MsMtxSetRotZ(rotMtx, rotAngle);
+		MsMtxSetRotZ(rotMtx, -rotAngle);
 		PSMTXConcat(hipMtx, rotMtx, hipMtx);
 
-		JGeometry::TVec3<f32> dir;
-		dir.x = hipMtx[0][0];
-		dir.y = hipMtx[1][0];
-		dir.z = hipMtx[2][0];
-		dir.setLength(thighLen);
+		JGeometry::TVec3<f32> dir(hipMtx[0][0], hipMtx[1][0], hipMtx[2][0]);
+		dir.normalize();
+		dir.scale(thighLen);
 
 		JGeometry::TVec3<f32> newKnee = hipPos + dir;
 		kneePos                       = newKnee;
@@ -115,22 +114,16 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		kneeMtx[1][3] = kneePos.y;
 		kneeMtx[2][3] = kneePos.z;
 
-		JGeometry::TVec3<f32> kneeFwd;
-		kneeFwd.x = kneeMtx[0][2];
-		kneeFwd.y = kneeMtx[1][2];
-		kneeFwd.z = kneeMtx[2][2];
-
-		JGeometry::TVec3<f32> kneeSide;
-		kneeSide.x = kneeMtx[0][0];
-		kneeSide.y = kneeMtx[1][0];
-		kneeSide.z = kneeMtx[2][0];
-
-		f32 kneeFwdLen  = kneeFwd.length();
-		f32 kneeSideLen = kneeSide.length();
-
 		JGeometry::TVec3<f32> newDir(footPos);
+		f32 kneeFwdLen  = MsSqrtf(kneeMtx[0][2] * kneeMtx[0][2]
+		                          + kneeMtx[1][2] * kneeMtx[1][2]
+		                          + kneeMtx[2][2] * kneeMtx[2][2]);
+		f32 kneeSideLen = MsSqrtf(kneeMtx[0][0] * kneeMtx[0][0]
+		                          + kneeMtx[1][0] * kneeMtx[1][0]
+		                          + kneeMtx[2][0] * kneeMtx[2][0]);
 		newDir -= kneePos;
-		newDir.setLength(kneeSideLen);
+		newDir.normalize();
+		newDir.scale(kneeSideLen);
 
 		kneeMtx[0][0] = newDir.x;
 		kneeMtx[1][0] = newDir.y;
@@ -142,8 +135,9 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		oldUp.z = kneeMtx[2][1];
 
 		JGeometry::TVec3<f32> upRaw;
-		upRaw.cross(newDir, oldUp);
-		upRaw.setLength(kneeFwdLen);
+		upRaw.cross2(newDir, oldUp);
+		upRaw.normalize();
+		upRaw.scale(kneeFwdLen);
 
 		kneeMtx[0][2] = upRaw.x;
 		kneeMtx[1][2] = upRaw.y;
@@ -153,24 +147,16 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		footMtx[1][3] = footPos.y;
 		footMtx[2][3] = footPos.z;
 
-		JGeometry::TVec3<f32> footFwd;
-		footFwd.x = footMtx[0][1];
-		footFwd.y = footMtx[1][1];
-		footFwd.z = footMtx[2][1];
+		JGeometry::TVec3<f32> negNormal(groundData->getNormal());
+		f32 footFwdLen  = MsSqrtf(footMtx[0][1] * footMtx[0][1]
+		                          + footMtx[1][1] * footMtx[1][1]
+		                          + footMtx[2][1] * footMtx[2][1]);
+		f32 footSideLen = MsSqrtf(footMtx[0][0] * footMtx[0][0]
+		                          + footMtx[1][0] * footMtx[1][0]
+		                          + footMtx[2][0] * footMtx[2][0]);
 
-		JGeometry::TVec3<f32> footSide;
-		footSide.x = footMtx[0][0];
-		footSide.y = footMtx[1][0];
-		footSide.z = footMtx[2][0];
-
-		f32 footFwdLen  = footFwd.length();
-		f32 footSideLen = footSide.length();
-
-		const JGeometry::TVec3<f32>& normal = groundData->getNormal();
-		JGeometry::TVec3<f32> negNormal;
-		negNormal.x = -normal.x * footFwdLen;
-		negNormal.y = -normal.y * footFwdLen;
-		negNormal.z = -normal.z * footFwdLen;
+		negNormal.negate();
+		negNormal.scale(footFwdLen);
 
 		footMtx[0][1] = negNormal.x;
 		footMtx[1][1] = negNormal.y;
@@ -182,8 +168,9 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		footZDir.z = footMtx[2][2];
 
 		JGeometry::TVec3<f32> footSideRaw;
-		footSideRaw.cross(negNormal, footZDir);
-		footSideRaw.setLength(footSideLen);
+		footSideRaw.cross2(negNormal, footZDir);
+		footSideRaw.normalize();
+		footSideRaw.scale(footSideLen);
 
 		footMtx[0][0] = footSideRaw.x;
 		footMtx[1][0] = footSideRaw.y;

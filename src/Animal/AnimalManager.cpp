@@ -23,23 +23,23 @@ TAnimalManagerBase::TAnimalManagerBase(const char* name)
 
 void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 {
-	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
-	                                   mViewClipNear, *mViewClipFarPtr);
+	f32 nearClip = mViewClipNear;
 
-	s32 count = mObjNum;
-	for (int i = 0; i < count; ++i) {
-		TLiveActor* actor         = (TLiveActor*)unk18[i];
+	SetViewFrustumClipCheckPerspective(
+	    gpCamera->getFovy(), gpCamera->getAspect(), nearClip, *mViewClipFarPtr);
+
+	for (int i = 0, e = getObjNum(); i < e; ++i) {
+		TLiveActor* actor         = (TLiveActor*)getObj(i);
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
 		    && SMS_IsInOtherFastCube(pos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+		} else if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C)) {
+			actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {
-			if (ViewFrustumClipCheck(graphics, &actor->mPosition, unk3C))
-				actor->offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-			else
-				actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
+			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		}
 	}
 }

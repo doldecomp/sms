@@ -328,12 +328,12 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 	getSlopeSlideAccele(&slopeUp, &slopeDown);
 	f32 acc;
 	if (angDiff > -0x4000 && angDiff < 0x4000)
-		acc = slopeUp * mag + baseAcc;
+		baseAcc += slopeUp * mag;
 	else
-		acc = slopeDown * mag + baseAcc;
+		baseAcc += slopeDown * mag;
 
-	mSlideVelX += acc * JMASSin(dirAng);
-	mSlideVelZ += acc * JMASCos(dirAng);
+	mSlideVelX += baseAcc * JMASSin(dirAng);
+	mSlideVelZ += baseAcc * JMASCos(dirAng);
 	mSlideVelX *= friction;
 	mSlideVelZ *= friction;
 	unk9E = matan(mSlideVelZ, mSlideVelX);
@@ -410,14 +410,14 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		}
 	}
 
-	f32 mult   = (0.02f * (mIntendedMag * 0.03125f * cs)) + slipFr;
+	f32 mult   = (0.02f * (mIntendedMag / 32.0f * cs)) + slipFr;
 	f32 oldMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 
 	mSlideVelX
-	    += sn * (mSlideVelZ * (mIntendedMag * 0.03125f)) * getSlideStickMult();
-	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag * 0.03125f)) * getSlideStickMult())
-	    - mSlideVelZ);
+	    += sn * (mSlideVelZ * (mIntendedMag / 32.0f)) * getSlideStickMult();
+	mSlideVelZ
+	    = -((sn * (mSlideVelX * (mIntendedMag / 32.0f)) * getSlideStickMult())
+	        - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 	if (oldMag > 0.0f && newMag > 0.0f) {
@@ -552,10 +552,10 @@ void TMario::doSurfing()
 	const TBGCheckData* below;
 	gpMap->checkGround(mPosition.x, mPosition.y - mVel.y, mPosition.z, &below);
 
+	f32 powMax;
 	f32 rotMin;
 	f32 rotMax;
 	f32 powMin;
-	f32 powMax;
 
 	if (below->isWaterSurface()) {
 		rotMin = getSurfingParamsWater()->mRotMin.get();
@@ -591,8 +591,8 @@ void TMario::doSurfing()
 	if (mForwardVel > powMax)
 		mForwardVel = powMax;
 
-	s16 rotSp
-	    = (((want - powMin) / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
+	f32 tmp      = want - powMin;
+	s16 rotSp    = ((tmp / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 	slopeProcess();
@@ -1029,7 +1029,8 @@ BOOL TMario::walkEnd()
 		break;
 	}
 
-	f32 rate = 0.25f * mForwardVel;
+	f32 rate = 0.25f;
+	rate     = mForwardVel * rate;
 	if (rate < 0.1f)
 		rate = 0.1f;
 	setAnimation(ANIM_RUN1, rate);

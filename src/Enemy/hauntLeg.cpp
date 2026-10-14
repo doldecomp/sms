@@ -19,6 +19,12 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* hauntleg_bastable[] = {
+	nullptr,
+	nullptr,
+	nullptr,
+};
+
 static THauntLeg* gpCurHauntLeg;
 
 static int HauntLegCallback(J3DNode* param_1, int param_2)
@@ -93,7 +99,6 @@ void THauntLegManager::createModelData()
 		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 		      | (2 << J3DMLF_TevStageNumShift),
 		  0 },
-		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
 }
@@ -266,12 +271,6 @@ bool THauntLeg::isCollidMove(THitActor* param_1)
 	return false;
 }
 
-static const char* hauntleg_bastable[] = {
-	nullptr,
-	nullptr,
-	nullptr,
-};
-
 const char** THauntLeg::getBasNameTable() const { return hauntleg_bastable; }
 
 MtxPtr THauntLeg::getTakingMtx()
@@ -296,8 +295,9 @@ DEFINE_NERVE(TNerveHauntLegHaunt, TLiveActor)
 {
 	THauntLeg* enemy = (THauntLeg*)spine->getBody();
 	if (spine->getTime() == 0) {
+		f32 jumpSpeed = 10.0f;
 		enemy->unk1A0 = enemy->calcVelocityToJumpToY(
-		    enemy->unk19C->mPosition, 10.0f, enemy->getGravityY());
+		    enemy->unk19C->mPosition, jumpSpeed, enemy->getGravityY());
 		enemy->mVelocity = enemy->unk1A0;
 		enemy->mPosition.y += 10.0f;
 		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
