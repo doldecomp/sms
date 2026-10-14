@@ -114,8 +114,10 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01) || defined(VERSION_GMSP01_NX)
-	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT_DEFAULT("/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/scenarioname.bmg")));
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
+	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT_DEFAULT(
+	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/scenarioname.bmg")));
 	if (SMSGetMarDirector()->mMap == 0x14)
 		shineStage = 0;
 	mStageName->setString(SMSGetMessageData(stageBmg, shineStage));
