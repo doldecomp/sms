@@ -64,10 +64,8 @@ public:
 	void viewCalc();
 	void loadSetDeformData(const char*);
 	void setLightID(s16);
-#ifdef VERSION_GMSP01
 	// fabricated
 	int getLightID() const { return mLightId; }
-#endif
 	void setLightData(const TBGCheckData*, const JGeometry::TVec3<f32>&);
 	void setLightType(int);
 	void update();

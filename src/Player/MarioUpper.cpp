@@ -80,7 +80,8 @@ void TMario::stateMachineUpper()
 		}
 		if (!checkFlag(MARIO_FLAG_IN_ANY_WATER) && mWaterGun != nullptr) {
 #ifdef VERSION_GMSP01
-			if (mWaterGun->isEmitting()) {
+			if (mWaterGun->isEmitting())
+				emitSweatSometimes();
 #else
 			s32 flag;
 			if (mWaterGun->mCurrentWater == 0) {
@@ -102,10 +103,9 @@ void TMario::stateMachineUpper()
 				}
 			}
 
-			if (flag != 0) {
-#endif
+			if (flag != 0)
 				emitSweatSometimes();
-			}
+#endif
 		}
 		break;
 
