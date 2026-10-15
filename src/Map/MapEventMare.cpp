@@ -309,16 +309,7 @@ void TMareEventDepressWall::rising()
 
 void TMareEventDepressWall::startToRise() { }
 
-void TMareEventDepressWall::emitEffect(int idx)
-{
-	if (JPABaseEmitter* em = gpMarioParticleManager->emit(
-	        MAP_MAP_MS_MARE_BLOCKUP, &unk34[idx], 1, &unk34[idx])) {
-		em->setGlobalScale(unk38[idx]);
-		em->setRate(unk3C[idx]);
-		em->setGlobalParticleScale(
-		    JGeometry::TVec3<f32>(unk40[idx], unk40[idx], unk40[idx]));
-	}
-}
+void TMareEventDepressWall::emitEffect(int) { }
 
 void TMareEventDepressWall::depressing()
 {
