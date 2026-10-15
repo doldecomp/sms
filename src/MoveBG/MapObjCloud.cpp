@@ -116,16 +116,19 @@ void TRideCloud::control()
 		fVar8 = -mScaleSpeed;
 	}
 
-	unk160 = MsClamp<f32>(unk160 + fVar8, 1.0f, 3.0f);
-	unk168 = MsClamp<f32>(unk168 + fVar8, 1.0f, 3.0f);
-	setHitParams(mAttackRadius, mAttackHeight, mScaling.x * 300.0f * unk160,
-	             50.0f);
+	unk160        = MsClamp<f32>(unk160 + fVar8, 1.0f, 3.0f);
+	unk168        = MsClamp<f32>(unk168 + fVar8, 1.0f, 3.0f);
+	mDamageRadius = mScaling.x * 300.0f * unk160;
+	mDamageHeight = 50.0f;
+	calcEntryRadius();
 	if (!calcRecycle() && !checkRailFlag(0x2)) {
 		if (unk16C != 0) {
 			--unk16C;
 		} else {
-			TGraphWeb* web = unk138->getGraph();
-			if (!web || web->isDummy())
+			// TODO: common subexpression elimination did a mess here and it is
+			// painful to figure out....
+
+			if (!unk138->unk0 || unk138->unk0->isDummy())
 				return;
 
 			if (moveToNextNode(unk15C)) {
@@ -141,8 +144,7 @@ void TRideCloud::control()
 				if (node.getRailNode()->mFlags & 0x800)
 					unk16C = node.getRailNode()->mPitch;
 
-				TRailNode* node2 = web->getGraphNode(unk138->getCurGraphIndex())
-				                       .getRailNode();
+				TRailNode* node2 = unk138->getCurrent().getRailNode();
 				if (node2->mYaw != 0xffff)
 					unk15C = node2->mYaw * 0.01f;
 

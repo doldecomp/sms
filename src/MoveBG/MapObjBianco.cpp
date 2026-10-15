@@ -47,8 +47,8 @@ void TBigWindmill::control()
 	for (int i = 0; i < ARRAY_COUNT(unk138); ++i) {
 		MtxPtr mtx = unk138[i]->getModel()->getAnmMtx(0);
 		mtx[0][3]  = mPosition.x + sRadius * cosf(0.017453294f * angle);
-		mtx[1][3]  = mPosition.y + sRadius * sinf(0.017453294f * angle)
-		            - getObjCollisionHeightOffset();
+		mtx[1][3]
+		    = mPosition.y + sRadius * sinf(0.017453294f * angle) - mYOffset;
 		mtx[2][3] = mPosition.z - sSubZ;
 		unk138[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		angle += 90.0f;
@@ -372,10 +372,9 @@ void TLeafBoat::bind()
 	mPositionDelta = position - mPosition;
 	f32 dx         = SMS_GetMarioPos().x - mPosition.x;
 	f32 dz         = SMS_GetMarioPos().z - mPosition.z;
-	f32 radius     = mBodyRadius;
 	if (SMS_GetMarioPos().y <= mPosition.y - mYOffset
 	    && mPosition.y - mYOffset - 100.0f < SMS_GetMarioPos().y
-	    && dx * dx + dz * dz < radius * radius)
+	    && dx * dx + dz * dz < mBodyRadius * mBodyRadius)
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
@@ -554,7 +553,7 @@ void TLampSeesawMain::pushDown(f32 param_1)
 void TLampSeesawMain::move()
 {
 	if (mPosition.y + unk144 < unk13C
-	    || unk138->unk13C > unk138->mPosition.y - unk144) {
+	    || unk138->mPosition.y - unk144 < unk138->unk13C) {
 		if (fabsf(unk144) < unk150)
 			unk144 = 0.0f;
 		else
@@ -752,17 +751,16 @@ void TBellWatermill::control()
 			unk1A0 = 0;
 		}
 	}
-	mPosition.y = unk170 + mInitialPosition.y + getObjCollisionHeightOffset();
+	mPosition.y = unk170 + mInitialPosition.y + mYOffset;
 	unk190      = 0;
 	mRotation.z = unk154;
 	Mtx mtx;
-	MtxPtr mtxP = mtx;
 	MsMtxSetRotZ(mtx, mRotation.z);
 	if (mRotation.y != 0.0f) {
 		MsMtxSetRotZ(mtx, mRotation.z);
 		Mtx yRot;
 		MsMtxSetRotY(yRot, mRotation.y);
-		MTXConcat(yRot, mtxP, mtxP);
+		MTXConcat(yRot, mtx, mtx);
 	} else {
 		MsMtxSetRotZ(mtx, mRotation.z);
 	}

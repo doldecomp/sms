@@ -17,16 +17,15 @@ f32 calcDist(const JGeometry::TVec3<f32>& a, const JGeometry::TVec3<f32>& b)
 
 DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 {
-	TAnimalBase* actor    = (TAnimalBase*)spine->getBody();
-	MActor* mActor        = actor->getMActor();
-	TLiveManager* manager = actor->getManager();
+	TAnimalBase* actor          = (TAnimalBase*)spine->getBody();
+	MActor* mActor              = actor->getMActor();
+	TAnimalManagerBase* manager = (TAnimalManagerBase*)actor->getManager();
 
-	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)manager)->mAnimalSave;
+	TAnimalSaveIndividual* save = manager->mAnimalSave;
 	int count                   = save->mSLSharedAnmNum.get();
 
 	if (count != 0 && actor->getInstanceIndex() >= count) {
-		TLiveActor* other
-		    = (TLiveActor*)manager->getObj(actor->getInstanceIndex() % count);
+		TLiveActor* other = manager->getObj(actor->getInstanceIndex() % count);
 
 		int anmIdx = other->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 		mActor->setBckFromIndex(anmIdx);

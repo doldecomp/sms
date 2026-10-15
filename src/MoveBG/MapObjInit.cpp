@@ -11185,8 +11185,8 @@ MActor* TMapObjBase::initMActor(const char* bmd_file, const char* param_2,
 		mMActor->unmarkUnk40();
 	}
 	calcRootMatrix();
-	getMActor()->calc();
-	getMActor()->viewCalc();
+	mMActor->calc();
+	mMActor->viewCalc();
 	mMActor = oldActor;
 	return newActor;
 }
@@ -11311,7 +11311,7 @@ void TMapObjBase::initMapObj()
 		    JDrama::TNameRefGen::search("スクリーンテクスチャ"));
 		const ResTIMG* img = scrTex->getTexture()->getTexInfo();
 		getModel()->getModelData()->getTexture()->setResTIMG(2, *img);
-		getMActor()->setLightType(LIGHT_TYPE_INDIRECT);
+		mMActor->setLightType(LIGHT_TYPE_INDIRECT);
 	}
 
 	makeObjDead();

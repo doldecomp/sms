@@ -93,11 +93,10 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		s16 angle                 = DEG2SHORTANGLE(5.0f * t);
+		pos.x += 1.5f * (50.0f * MsCos(5.0f * t));
 		pos.y += 200.0f;
-		pos.x += 1.5f * (50.0f * JMASCos(angle));
-		pos.z += 1.5f * (50.0f * JMASSin(angle));
-		mPosition = pos;
+		pos.z += 1.5f * (50.0f * MsSin(5.0f * t));
+		mPosition.set(pos);
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
 		mPositionDelta.zero();
@@ -331,8 +330,7 @@ void TJumpBase::control()
 			onLiveFlag(LIVE_FLAG_AIRBORNE);
 			int angle = SMS_GetMarioAngleY();
 			mVelocity
-			    = JGeometry::TVec3<f32>(JMASSin(SMS_GetMarioAngleY()), 0.0f,
-			                            JMASCos(SMS_GetMarioAngleY()));
+			    = JGeometry::TVec3<f32>(JMASSin(angle), 0.0f, JMASCos(angle));
 			JGeometry::TVec3<f32> v2 = mVelocity;
 			mPosition += v2;
 			offLiveFlag(LIVE_FLAG_UNK10);

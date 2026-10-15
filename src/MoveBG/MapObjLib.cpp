@@ -503,16 +503,17 @@ void TMapObjBase::makeMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
 	rotation.identity();
 	rotation.setRotate(param_1, param_2);
 
-	MtxPtr mtx    = rotation;
-	param_3[0][0] = mtx[0][0];
-	param_3[0][1] = mtx[0][1];
-	param_3[0][2] = mtx[0][2];
-	param_3[1][0] = mtx[1][0];
-	param_3[1][1] = mtx[1][1];
-	param_3[1][2] = mtx[1][2];
-	param_3[2][0] = mtx[2][0];
-	param_3[2][1] = mtx[2][1];
-	param_3[2][2] = mtx[2][2];
+	param_3[0][0] = rotation.at(0, 0);
+	param_3[0][1] = rotation.at(0, 1);
+	param_3[0][2] = rotation.at(0, 2);
+
+	param_3[1][0] = rotation.at(1, 0);
+	param_3[1][1] = rotation.at(1, 1);
+	param_3[1][2] = rotation.at(1, 2);
+
+	param_3[2][0] = rotation.at(2, 0);
+	param_3[2][1] = rotation.at(2, 1);
+	param_3[2][2] = rotation.at(2, 2);
 }
 
 void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
@@ -749,10 +750,7 @@ void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, param_3);
 
 	if (emitter) {
-		s16 x = param_4.x;
-		s16 y = param_4.y;
-		s16 z = param_4.z;
-		emitter->setRotation(x, y, z);
+		emitter->setRotation(param_4.x, param_4.y, param_4.z);
 		emitter->setGlobalScale(param_5);
 	}
 }
@@ -764,10 +762,9 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
 
 	if (emitter) {
-		JGeometry::TVec3<s16> rotation(mRotation.x / 180.0f * 32768.0f,
-		                               mRotation.y / 180.0f * 32768.0f,
-		                               mRotation.z / 180.0f * 32768.0f);
-		emitter->setRotation(rotation.x, rotation.y, rotation.z);
+		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
+		                     mRotation.y / 180.0f * 32768.0f,
+		                     mRotation.z / 180.0f * 32768.0f);
 		emitter->setGlobalScale(mScaling);
 	}
 }
@@ -924,40 +921,34 @@ void TMapObjTurn::control()
 	Mtx yRot;
 	Mtx mtx;
 	switch (unk150) {
-	case 0: {
-		MtxPtr mtxP = mtx;
+	case 0:
 		mRotation.x = MsWrap(unk154 + mInitialRotation.x, 0.0f, 360.0f);
-		MsMtxSetRotX(mtxP, mRotation.x);
+		MsMtxSetRotX(mtx, mRotation.x);
 		if (mRotation.y != 0.0f) {
-			MsMtxSetRotX(mtxP, mRotation.x);
+			MsMtxSetRotX(mtx, mRotation.x);
 			MsMtxSetRotY(yRot, mRotation.y);
-			MTXConcat(yRot, mtxP, mtxP);
+			MTXConcat(yRot, mtx, mtx);
 		} else {
 			MsMtxSetRotX(mtx, mRotation.x);
 		}
 		break;
-	}
 
-	case 1: {
-		MtxPtr mtxP = mtx;
+	case 1:
 		mRotation.y = MsWrap(unk154 + mInitialRotation.y, 0.0f, 360.0f);
-		MsMtxSetRotY(mtxP, mRotation.y);
+		MsMtxSetRotY(mtx, mRotation.y);
 		break;
-	}
 
-	case 2: {
-		MtxPtr mtxP = mtx;
+	case 2:
 		mRotation.z = MsWrap(unk154 + mInitialRotation.z, 0.0f, 360.0f);
-		MsMtxSetRotZ(mtxP, mRotation.z);
+		MsMtxSetRotZ(mtx, mRotation.z);
 		if (mRotation.y != 0.0f) {
-			MsMtxSetRotZ(mtxP, mRotation.z);
+			MsMtxSetRotZ(mtx, mRotation.z);
 			MsMtxSetRotY(yRot, mRotation.y);
-			MTXConcat(yRot, mtxP, mtxP);
+			MTXConcat(yRot, mtx, mtx);
 		} else {
 			MsMtxSetRotZ(mtx, mRotation.z);
 		}
 		break;
-	}
 	}
 
 	MtxPtr ptr = mtx;

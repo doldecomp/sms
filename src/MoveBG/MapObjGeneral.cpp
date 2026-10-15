@@ -51,12 +51,14 @@ void TMapObjGeneral::waitingToAppear()
 		return;
 
 	if (isActorType(ACTOR_TYPE_WOOD_BARREL)) {
-		if (getInitialPosition().distance(SMS_GetMarioPos())
-		    > SMS_GetMarioDamageRadius() + getDamageRadius() + 100.0f)
+		f32 damageRadius = getDamageRadius();
+		if (distToMario(mInitialPosition)
+		    > SMS_GetMarioDamageRadius() + damageRadius + 100.0f)
 			appear();
 	} else {
-		if (getInitialPosition().distance(SMS_GetMarioPos())
-		    > SMS_GetMarioDamageRadius() + getDamageRadius())
+		f32 damageRadius = getDamageRadius();
+		if (distToMario(mInitialPosition)
+		    > SMS_GetMarioDamageRadius() + damageRadius)
 			appear();
 	}
 }
@@ -228,7 +230,7 @@ void TMapObjGeneral::appearing()
 		if (mScaling.x < mInitialScaling.x)
 			return;
 
-		mScaling.set(getInitialScaling());
+		mScaling.set(mInitialScaling);
 	}
 
 uuuh:
@@ -287,11 +289,8 @@ void TMapObjGeneral::touchPlayer(THitActor* player)
 
 void TMapObjGeneral::recover()
 {
-	TPollutionManager* pollution          = gpPollution;
-	const JGeometry::TVec3<f32>& position = getPosition();
-	JGeometry::TVec3<f32> pos(position.x, unk144, position.z);
-	pollution->clean(
-	    pos.x, pos.y, pos.z,
+	gpPollution->clean(
+	    mPosition.x, unk144, mPosition.z,
 	    (u16)(mMapObjData->mHit->mEntries[2].mAttackRadius / 6.0f));
 
 	setUpMapCollision(1);

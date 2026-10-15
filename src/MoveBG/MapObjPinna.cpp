@@ -117,9 +117,8 @@ void THorizontalViking::updateTrans()
 {
 	f32 sin     = sinf(3.14f * (unk148 / 180.0f));
 	mPosition.x = unk138 * sin + mInitialPosition.x;
-	mPosition.y = getObjCollisionHeightOffset()
-	              + (unk138 * (1.0f - cosf(3.14f * (unk148 / 180.0f)))
-	                 + mInitialPosition.y);
+	f32 cos     = cosf(3.14f * (unk148 / 180.0f));
+	mPosition.y = mYOffset + (unk138 * (1.0f - cos) + mInitialPosition.y);
 }
 
 void THorizontalViking::moveNormal()
