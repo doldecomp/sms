@@ -11,11 +11,12 @@ const JGeometry::TVec3<f32> CLBConstUpVec(0.0f, 1.0f, 0.0f);
 static const f32 SHORTANGLE_TO_DEGREES = 0.005493164f; // 360/65536
 static const f32 DEGREES_TO_RADIANS    = 0.017453294f; // pi/180
 
-// TODO: These are very fake
-static void normalizeInner1(JGeometry::TVec3<f32>& vec) { vec.normalize(); }
-static void normalizeInner2(JGeometry::TVec3<f32>& vec)
+static inline void unitVecTo(const JGeometry::TVec3<f32>& from,
+                             const JGeometry::TVec3<f32>& to,
+                             JGeometry::TVec3<f32>* out)
 {
-	normalizeInner1(vec);
+	out->set(to.x - from.x, to.y - from.y, to.z - from.z);
+	out->normalize();
 }
 
 void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
@@ -310,6 +311,22 @@ void CLBCalcScaleTranslateMatrix(MtxPtr mtx, const Vec& scale,
 	mtx[2][3] = translate.z;
 }
 
+void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_pos, S16Vec* out_euler,
+                          const JGeometry::TVec3<f32>& origin,
+                          const JGeometry::TVec3<f32>& lookat, s16 roll,
+                          f32 near_dist)
+{
+	JGeometry::TVec3<f32> direction;
+	unitVecTo(origin, lookat, &direction);
+	out_pos->scaleAdd(near_dist, origin, direction);
+
+	f32 dx       = origin.x - lookat.x;
+	f32 dz       = origin.z - lookat.z;
+	out_euler->x = -matan(MsSqrtf(dx * dx + dz * dz), origin.y - lookat.y);
+	out_euler->y = matan(origin.z - lookat.z, origin.x - lookat.x);
+	out_euler->z = roll;
+}
+
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
@@ -330,24 +347,13 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 	JGeometry::TVec3<f32> local_74;
 	JGeometry::TVec3<f32> local_68;
 
-	local_a8.sub(lookat, origin);
-	normalizeInner2(local_a8);
-
-	// Center point
-	out_grid[4].scaleAdd(near_dist, origin, local_a8);
-
-	f32 xzDistance = MsSqrtf(((origin.x - lookat.x) * (origin.x - lookat.x)
-	                          + (origin.z - lookat.z) * (origin.z - lookat.z)));
-	out_euler->x   = -matan(xzDistance, origin.y - lookat.y);
-	out_euler->y   = matan(origin.z - lookat.z, origin.x - lookat.x);
-	out_euler->z   = roll;
+	CLBCalcNearClipAngle(&out_grid[4], out_euler, origin, lookat, roll,
+	                     near_dist);
 
 	local_68.set(0.0f, 1.0f, 0.0f);
 	local_74.set(1.0f, 0.0f, 0.0f);
 
-	// We already did this, so maybe we're calling another function here?
-	local_80.sub(lookat, origin);
-	normalizeInner1(local_80);
+	unitVecTo(origin, lookat, &local_80);
 
 	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 

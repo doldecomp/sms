@@ -107,7 +107,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (!inClipY)
 			continue;
 
-		if (!MsIsInSight(*gpMarioPos, DEG2SHORTANGLE(SMS_GetMarioAngleY()),
+		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(SMS_GetMarioAngleY()),
 		                 unk2A0[i]->mPosition, dist2,
 		                 mSaveNotice->mOnDegree.get(), -1.0f))
 			continue;
@@ -151,22 +151,20 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 	f32 dz2      = CLBSquared<f32>(mPos.z - target.z);
 	f32 dx2      = CLBSquared<f32>(mPos.x - target.x);
 	f32 dist2    = dx2 + dz2;
-	f32 farClip2 = CLBSquared<f32>(mSaveNotice->mRotateMinDistXZ.get());
-	f32 near2    = CLBSquared<f32>(mSaveNotice->mRotateFastMinDistXZ.get());
+	f32 near2    = CLBSquared<f32>(mSaveNotice->mRotateMinDistXZ.get());
+	f32 farClip2 = CLBSquared<f32>(mSaveNotice->mRotateFastMinDistXZ.get());
 
 	if (dist2 > near2) {
 		JGeometry::TVec3<f32> diff(mPos.x - target.x, mPos.y - target.y,
 		                           mPos.z - target.z);
 		MsVECNormalize(&diff, &diff);
 		// TODO: many inlines from cameralib maybe?
-		f32 dx       = diff.x * 500.0f + mPos.x;
-		f32 dz       = diff.z * 500.0f + mPos.z;
-		s16 ang      = matan(dz - mCurrentTarget.mTarget.z,
-		                     dx - mCurrentTarget.mTarget.x);
-		int absAngle = ang - mCurrentTarget.mYaw >= 0
-		                   ? ang - mCurrentTarget.mYaw
-		                   : -(ang - mCurrentTarget.mYaw);
-		f32 ratio    = DEG2SHORTANGLE(1.0f) * (f32)absAngle;
+		f32 dx  = diff.x * 500.0f + mPos.x;
+		f32 dz  = diff.z * 500.0f + mPos.z;
+		s16 ang = matan(dz - mCurrentTarget.mTarget.z,
+		                dx - mCurrentTarget.mTarget.x);
+		f32 ratio
+		    = (2.0f / 65536.0f) * CLBAbs<int>((s16)(mCurrentTarget.mYaw - ang));
 
 		f32 chase;
 		if (dist2 > farClip2) {
