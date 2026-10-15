@@ -15,7 +15,7 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from tools.project import (
     Object,
@@ -325,6 +325,9 @@ def MatchingFor(*versions):
 def PCHObject(completed: bool, name: str) -> Object:
     return Object(completed, name, extra_cflags=["-prefix SMS.mch"])
 
+# Object only exists in the listed versions; skipped entirely elsewhere
+def ObjectFor(versions, obj: Object) -> Optional[Object]:
+    return obj if config.version in versions else None
 
 config.warn_missing_config = True
 config.warn_missing_source = False
@@ -1144,6 +1147,7 @@ config.libs = [
             PCHObject(NonMatching, "GC2D/MovieSubtitle.cpp"),
             PCHObject(NonMatching, "GC2D/Option.cpp"),
             PCHObject(NonMatching, "GC2D/MovieRumble.cpp"),
+            ObjectFor(["GMSP01_NX"], Object(MatchingFor("GMSP01_NX"), "GC2D/Helpers.cpp")),
         ],
     },
     {
@@ -1295,6 +1299,9 @@ config.libs = [
         ],
     },
 ]
+
+for lib in config.libs:
+    lib["objects"] = [o for o in lib["objects"] if o is not None]
 
 for lib in config.libs:
     for obj in lib["objects"]:
