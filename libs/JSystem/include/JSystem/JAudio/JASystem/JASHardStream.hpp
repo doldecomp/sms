@@ -89,7 +89,8 @@ namespace HardStream {
 		/* 0x06 */ u16 mLoopNum;
 	};
 
-	struct TPlayList {
+	class TPlayList {
+	public:
 		TPlayList();
 		~TPlayList();
 
@@ -103,7 +104,6 @@ namespace HardStream {
 		TPlayPair* getPair() { return mPair; }
 		TPlayList* getNext() { return mNextList; }
 
-	public:
 		/* 0x00 */ TPlayPair* mPair;
 		/* 0x04 */ TPlayList* mNextList;
 		/* 0x08 */ u32 unk8;

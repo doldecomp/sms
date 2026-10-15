@@ -10,7 +10,7 @@
 #include <MSound/MSound.hpp>
 
 class JAIActor;
-class JAIAnimeFrameSoundData;
+struct JAIAnimeFrameSoundData;
 
 class MAnmSound : public JAIAnimeSound {
 public:

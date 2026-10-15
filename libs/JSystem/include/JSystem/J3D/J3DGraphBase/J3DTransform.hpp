@@ -5,7 +5,7 @@
 
 typedef f32 Mtx33[3][3];
 
-struct J3DTextureSRTInfo;
+class J3DTextureSRTInfo;
 
 struct J3DTransformInfo {
 	/* 0x00 */ Vec mScale;

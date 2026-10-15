@@ -10,7 +10,8 @@ class J3DModelData;
 class J3DModel;
 class SDLModel;
 
-struct TMultiBtk {
+class TMultiBtk {
+public:
 	int unk00;
 	J3DAnmTextureSRTKey** unk04;
 	J3DModelData* unk08;
