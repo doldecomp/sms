@@ -25,6 +25,25 @@ TAmiNokoSaveLoadParams::TAmiNokoSaveLoadParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+static const char* amiNoko_bastable[] = {
+	nullptr,
+	"/scene/amiNoko/bas/aminoko_flying1_start.bas",
+	"/scene/amiNoko/bas/aminoko_hit1.bas",
+	nullptr,
+	"/scene/amiNoko/bas/aminoko_run1_loop.bas",
+	nullptr,
+	nullptr,
+	"/scene/amiNoko/bas/aminoko_run2_loop.bas",
+	nullptr,
+	nullptr,
+	"/scene/amiNoko/bas/aminoko_turn1_loop.bas",
+	nullptr,
+	nullptr,
+	"/scene/amiNoko/bas/aminoko_turn2_loop.bas",
+	nullptr,
+	nullptr,
+};
+
 TAmiNokoManager::TAmiNokoManager(const char* name)
     : TSmallEnemyManager(name)
 {
@@ -663,25 +682,6 @@ bool TAmiNoko::isDeadByWall()
 	}
 	return false;
 }
-
-static const char* amiNoko_bastable[] = {
-	nullptr,
-	"/scene/amiNoko/bas/aminoko_flying1_start.bas",
-	"/scene/amiNoko/bas/aminoko_hit1.bas",
-	nullptr,
-	"/scene/amiNoko/bas/aminoko_run1_loop.bas",
-	nullptr,
-	nullptr,
-	"/scene/amiNoko/bas/aminoko_run2_loop.bas",
-	nullptr,
-	nullptr,
-	"/scene/amiNoko/bas/aminoko_turn1_loop.bas",
-	nullptr,
-	nullptr,
-	"/scene/amiNoko/bas/aminoko_turn2_loop.bas",
-	nullptr,
-	nullptr,
-};
 
 const char** TAmiNoko::getBasNameTable() const { return amiNoko_bastable; }
 

@@ -45,7 +45,7 @@ int TNameKuriManager::mStopMinScaleFrame = 8;
 static TNameKuri* gpCurNameKuri;
 
 const char* namekuri2_bastable[] = {
-	nullptr, nullptr, nullptr, "/scene/namekuri2/bas/name_jump_start.base",
+	nullptr, nullptr, nullptr, "/scene/namekuri2/bas/name_jump_start.bas",
 	nullptr, nullptr, nullptr, nullptr,
 };
 
@@ -662,11 +662,12 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 {
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
-	if (self->isBckAnm(4) && self->checkCurAnmEnd(0))
-		return true;
-
-	if (!self->isAirborne())
+	if (self->isBckAnm(4)) {
+		if (self->checkCurAnmEnd(0))
+			return true;
+	} else if (!self->isAirborne()) {
 		self->setBckAnm(4);
+	}
 
 	return false;
 }

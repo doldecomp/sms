@@ -172,6 +172,12 @@ void THamuKuriManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new THamuKuriSaveLoadParams("/enemy/hamukuri.prm");
 	TSmallEnemyManager::load(stream);
+
+	static const char* anmlist[] = {
+		"hamukuri_walk",
+		"hamukuri_run",
+		nullptr,
+	};
 }
 
 void THamuKuriManager::loadAfter()
@@ -193,14 +199,6 @@ void THamuKuriManager::loadAfter()
 		}
 	}
 }
-
-static const char* anmlist[] = {
-	"hamukuri_walk",
-	"hamukuri_run",
-	// TODO: this shouldn't be here but rodata ordering looks like it should?!
-	// "default.bmd",
-	"hanekuri_wait",
-};
 
 void THamuKuriManager::createModelData()
 {
@@ -343,6 +341,8 @@ void THaneHamuKuriManager::load(JSUMemoryInputStream& stream)
 {
 	unk38 = new THaneHamuKuriSaveLoadParams("/enemy/hanehamukuri.prm");
 	TSmallEnemyManager::load(stream);
+
+	static const char* anmlist[] = { "hanekuri_wait", nullptr };
 }
 
 TSpineEnemy* THaneHamuKuriManager::createEnemyInstance()
