@@ -390,6 +390,9 @@ void TBossHanachanPartsBase::considerSetAnm_(EnumBossHanachanNerveAnm nerve_anm)
 					setAnm_(BOSS_HANACHAN_ANM_UNK12,
 					        BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 				break;
+			case BOSS_HANACHAN_ANM_UNK9:
+			case BOSS_HANACHAN_ANM_UNK12:
+				break;
 			default:
 				if (mRotation.z < 0.0f)
 					setAnm_(BOSS_HANACHAN_ANM_UNK7,
