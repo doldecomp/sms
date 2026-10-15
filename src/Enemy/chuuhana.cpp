@@ -156,7 +156,7 @@ static BOOL ChuuHanaBodyCallback(J3DNode* param_1, BOOL param_2)
 		if (gpCurChuuHana == nullptr || !gpCurChuuHana->isRolling())
 			return TRUE;
 
-		TPosition3f* mtx = (TPosition3f*)gpCurChuuHana->getModel()->getAnmMtx(
+		MtxPtr mtx = gpCurChuuHana->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 		TPosition3f scale;
 		scale.setTrans(0.0f, 0.0f, 0.0f);
@@ -173,16 +173,9 @@ static BOOL ChuuHanaBodyCallback(J3DNode* param_1, BOOL param_2)
 		VECCrossProduct(&up, &axis, &side);
 
 		f32 angle = gpCurChuuHana->unk210;
-		JGeometry::TVec3<f32> zDir;
-		JGeometry::TVec3<f32> xDir;
-		JGeometry::TVec3<f32> yDir;
-		mtx->getZDir(zDir);
-		xDir.x = mtx->at(0, 0);
-		xDir.y = mtx->at(1, 0);
-		xDir.z = mtx->at(2, 0);
-		yDir.x = mtx->at(0, 1);
-		yDir.y = mtx->at(1, 1);
-		yDir.z = mtx->at(2, 1);
+		JGeometry::TVec3<f32> zDir(mtx[0][2], mtx[1][2], mtx[2][2]);
+		JGeometry::TVec3<f32> xDir(mtx[0][0], mtx[1][0], mtx[2][0]);
+		JGeometry::TVec3<f32> yDir(mtx[0][1], mtx[1][1], mtx[2][1]);
 		JGeometry::TVec3<f32> local;
 
 		f32 lenZ   = zDir.squared();
@@ -194,8 +187,8 @@ static BOOL ChuuHanaBodyCallback(J3DNode* param_1, BOOL param_2)
 		local.set(localX, localY, localZ);
 
 		MTXRotAxisRad(rot, &local, DEG_TO_RAD(angle));
-		MTXConcat(mtx->mMtx, rot, mtx->mMtx);
-		MTXConcat(mtx->mMtx, scale, mtx->mMtx);
+		MTXConcat(mtx, rot, mtx);
+		MTXConcat(mtx, scale, mtx);
 		MTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
 		MTXConcat(J3DSys::mCurrentMtx, scale, J3DSys::mCurrentMtx);
 	}
@@ -665,9 +658,7 @@ bool TChuuHana::willFall(s32 param_1)
 
 	if (unk218 != nullptr) {
 		JGeometry::TVec3<f32> diff;
-		f32 dx = mPosition.x - unk218->mPosition.x;
-		diff.set(dx, mPosition.y - unk218->mPosition.y,
-		         mPosition.z - unk218->mPosition.z);
+		diff.sub(mPosition, unk218->mPosition);
 		if (diff.length() > radius) {
 			setSafeGoal();
 			return true;

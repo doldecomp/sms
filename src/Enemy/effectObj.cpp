@@ -133,21 +133,20 @@ void TEffectObjBase::moveObject()
 		unk74 += 1;
 		Vec local_1c;
 		VECScale(&mScaling, &local_1c, unk70 / unk6C);
-		Vec& scale = local_1c;
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_C, &mPosition, 3, this)) {
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(local_1c);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_A, &mPosition, 1, this)) {
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(local_1c);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_B, &mPosition, 1, this)) {
-			emitter->setGlobalScale(scale);
+			emitter->setGlobalScale(local_1c);
 		}
 
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
@@ -489,9 +488,9 @@ void TEffectColumSand::init(TLiveManager* param_1)
 void TEffectColumSand::reset()
 {
 	TEffectModel::reset();
-	getMActor()->setBck("08_sunabashira");
-	getMActor()->setBrk("08_sunabashira");
-	getMActor()->setBtk("08_sunabashira");
+	mMActor->setBck("08_sunabashira");
+	mMActor->setBrk("08_sunabashira");
+	mMActor->setBtk("08_sunabashira");
 	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	mMActor->getFrameCtrl(4)->setFrame(0.0f);

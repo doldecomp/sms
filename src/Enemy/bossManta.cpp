@@ -79,16 +79,15 @@ static inline void lerp_hack(f32& value, f32 target, f32 progress)
 
 DEFINE_NERVE_EXECUTE(TNerveMantaMove, TLiveActor)
 {
-	s32 time         = spine->getTime();
 	TBossManta* self = (TBossManta*)spine->getBody();
+	s32 time         = spine->getTime();
 	TGraphWeb* graph = self->getTracer()->getGraph();
 
 	if (time == 0) {
 		self->startWalkAnim();
 
-		int nodeCount = graph->getNodeNum();
 		JGeometry::TVec3<f32> pt
-		    = graph->indexToPoint((int)(nodeCount * MsRandF()));
+		    = graph->indexToPoint((int)(MsRandF() * graph->getNodeNum()));
 		lerp_hack(pt.x, SMS_GetMarioPos().x, 1.0f);
 		lerp_hack(pt.y, SMS_GetMarioPos().y, 1.0f);
 		lerp_hack(pt.z, SMS_GetMarioPos().z, 1.0f);
@@ -104,9 +103,8 @@ DEFINE_NERVE_EXECUTE(TNerveMantaMove, TLiveActor)
 		                              0, 0.0f, 0, 0, 4);
 
 	if (self->mPosition.distance(self->unk158) < 500.0f || time % 150 == 0) {
-		int nodeCount = graph->getNodeNum();
 		JGeometry::TVec3<f32> pt
-		    = graph->indexToPoint((int)(nodeCount * MsRandF()));
+		    = graph->indexToPoint((int)(MsRandF() * graph->getNodeNum()));
 
 		if (self->unk1A4) {
 			switch (self->mGeneration) {
@@ -206,7 +204,7 @@ DEFINE_NERVE_EXECUTE(TNerveMantaHitWater, TLiveActor)
 		    = { MSD_SE_BS_MANTA_DAMAGE_1, MSD_SE_BS_MANTA_DAMAGE_2,
 			    MSD_SE_BS_MANTA_DAMAGE_3, MSD_SE_BS_MANTA_DAMAGE_4,
 			    MSD_SE_BS_MANTA_DAMAGE_5, MSD_SE_BS_MANTA_DAMAGE_5 };
-		const u32& snd = hitSounds[self->mGeneration];
+		u32 snd = hitSounds[self->mGeneration];
 		SMSGetMSound()->startSoundActor(snd, &self->mPosition, 0, nullptr, 0,
 		                                4);
 	}
@@ -460,9 +458,9 @@ void TBossManta::init(TLiveManager* manager)
 
 	resetHitPoints();
 
-	mHeadHeight   = 5000.0f;
-	u32 actorType = ACTOR_TYPE_BOSS_MANTA;
-	initHitActor(actorType, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f, 0.0f, 0.0f);
+	mHeadHeight = 5000.0f;
+	initHitActor(ACTOR_TYPE_BOSS_MANTA, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
+	             0.0f, 0.0f);
 	unk170.set(0.0f, 0.0f, 1.0f);
 	calcRootMatrix();
 	kill();
@@ -713,10 +711,8 @@ f32 TBossManta::getPolluteRadius()
 	case 0:
 	case 1:
 	case 2:
-	case 3: {
-		const f32& radius = getSaveParams()->mSLPolluteRadius.get();
-		return radius * mScaling.x;
-	}
+	case 3:
+		return getSaveParams()->mSLPolluteRadius.get() * mScaling.x;
 	case 4:
 	case 5:
 		return 100.0f;
@@ -746,14 +742,13 @@ void TBossManta::updateAttractor()
 		    || other->getInstanceIndex() == getInstanceIndex())
 			continue;
 
-		JGeometry::TVec3<f32> delta = selfPos;
-
 		JGeometry::TVec3<f32> otherFacing = other->unk170;
 		otherFacing *= getSaveParams()->mSLEscapeLookedPoint.get();
 
 		JGeometry::TVec3<f32> otherPos = other->mPosition;
 		otherPos += otherFacing;
 
+		JGeometry::TVec3<f32> delta = selfPos;
 		delta -= otherPos;
 		delta.y = 0.0f;
 
@@ -801,9 +796,8 @@ void TBossMantaManager::TMantaBattleState::update()
 		}
 		break;
 	case 1: {
-		int i;
 		bool allMaxGen = true;
-		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->checkLiveFlag(LIVE_FLAG_DEAD))
 				continue;
@@ -823,9 +817,8 @@ void TBossMantaManager::TMantaBattleState::update()
 		break;
 	}
 	case 2: {
-		int i;
 		bool victory = true;
-		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
+		for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
 			TBossManta* m = (TBossManta*)unk0->getObj(i);
 			if (m->mGeneration != 5)
 				continue;
@@ -868,9 +861,9 @@ void TBossMantaManager::TMantaMessageState::update()
 		}
 		break;
 	case 1: {
-		int i          = 0;
+		int i;
 		int aliveCount = 0;
-		for (; i < unk0->getActiveObjNum(); ++i) {
+		for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 			if (!unk0->getObj(i)->checkLiveFlag(LIVE_FLAG_DEAD))
 				aliveCount++;
 		}
@@ -933,45 +926,41 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 		for (int i = 0; i < 3; ++i)
 			unk0[i]->perform(cue, graphics);
 
-		MtxPtr centerMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sCenterJointIndex);
-		JGeometry::TVec3<f32> center;
-		center.x = centerMtx[0][3];
-		center.y = centerMtx[1][3];
-		center.z = centerMtx[2][3];
+		int centerIdx    = TBossManta::sCenterJointIndex;
+		MtxPtr centerMtx = unkC->getModel()->getAnmMtx(centerIdx);
+		f32 centerX      = centerMtx[0][3];
+		f32 centerY      = centerMtx[1][3];
+		f32 centerZ      = centerMtx[2][3];
 
-		MtxPtr bodyMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sBodyJointIndex);
-		JGeometry::TVec3<f32> body;
-		body.x = bodyMtx[0][3];
-		body.y = bodyMtx[1][3];
-		body.z = bodyMtx[2][3];
+		int bodyIdx    = TBossManta::sBodyJointIndex;
+		MtxPtr bodyMtx = unkC->getModel()->getAnmMtx(bodyIdx);
+		f32 bodyX      = bodyMtx[0][3];
+		f32 bodyY      = bodyMtx[1][3];
+		f32 bodyZ      = bodyMtx[2][3];
 
-		MtxPtr rwingMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sRwingJointIndex);
-		JGeometry::TVec3<f32> rwing;
-		rwing.x = rwingMtx[0][3];
-		rwing.y = rwingMtx[1][3];
-		rwing.z = rwingMtx[2][3];
+		int rwingIdx    = TBossManta::sRwingJointIndex;
+		MtxPtr rwingMtx = unkC->getModel()->getAnmMtx(rwingIdx);
+		f32 rwingX      = rwingMtx[0][3];
+		f32 rwingY      = rwingMtx[1][3];
+		f32 rwingZ      = rwingMtx[2][3];
 
-		MtxPtr lwingMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sLwingJointIndex);
-		JGeometry::TVec3<f32> lwing;
-		lwing.x = lwingMtx[0][3];
-		lwing.y = lwingMtx[1][3];
-		lwing.z = lwingMtx[2][3];
+		int lwingIdx    = TBossManta::sLwingJointIndex;
+		MtxPtr lwingMtx = unkC->getModel()->getAnmMtx(lwingIdx);
+		f32 lwingX      = lwingMtx[0][3];
+		f32 lwingY      = lwingMtx[1][3];
+		f32 lwingZ      = lwingMtx[2][3];
 
-		unk0[0]->mPosition.set(-0.15f * (body.x - center.x) + center.x,
-		                       -0.15f * (body.y - center.y) + center.y,
-		                       -0.15f * (body.z - center.z) + center.z);
+		unk0[0]->mPosition.set(-0.15f * (bodyX - centerX) + centerX,
+		                       -0.15f * (bodyY - centerY) + centerY,
+		                       -0.15f * (bodyZ - centerZ) + centerZ);
 
-		unk0[1]->mPosition.set(0.75f * (rwing.x - center.x) + center.x,
-		                       0.75f * (rwing.y - center.y) + center.y,
-		                       0.75f * (rwing.z - center.z) + center.z);
+		unk0[1]->mPosition.set(0.75f * (rwingX - centerX) + centerX,
+		                       0.75f * (rwingY - centerY) + centerY,
+		                       0.75f * (rwingZ - centerZ) + centerZ);
 
-		unk0[2]->mPosition.set(0.75f * (lwing.x - center.x) + center.x,
-		                       0.75f * (lwing.y - center.y) + center.y,
-		                       0.75f * (lwing.z - center.z) + center.z);
+		unk0[2]->mPosition.set(0.75f * (lwingX - centerX) + centerX,
+		                       0.75f * (lwingY - centerY) + centerY,
+		                       0.75f * (lwingZ - centerZ) + centerZ);
 	}
 }
 
@@ -1224,8 +1213,7 @@ void TBossMantaManager::updateMantaEscape()
 	TBossManta::sEscapeFromMario = 0;
 
 	JGeometry::TVec3<f32> marioPos2 = SMS_GetMarioPos();
-	marioPos2.y                     = 0.0f;
-	JGeometry::TVec3<f32> marioPos(marioPos2.x, marioPos2.y, marioPos2.z);
+	JGeometry::TVec3<f32> marioPos(marioPos2.x, 0.0f, marioPos2.z);
 
 	for (int i = 0; i < 7; ++i) {
 		if (unk74[i].distance(marioPos) < 350.0f)
