@@ -411,35 +411,37 @@ void TRailBlock::control()
 			unk168.x = 0.0f;
 			unk168.y = 0.0f;
 			unk168.z = 0.0f;
-			return;
+		} else {
+			unk168 = unk15C;
+
+			Mtx rotMtx;
+			MsMtxSetRotRPH(rotMtx, unk168.x, unk168.y, unk168.z);
+			MTXConcat(rotMtx, unk174, unk174);
+
+			unk168.x = 0.0f;
+			unk168.y = 0.0f;
+			unk168.z = 0.0f;
+
+			JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0],
+			                            unk174[2][0]);
+			JGeometry::TVec3<f32> yAxis(unk174[0][1], unk174[1][1],
+			                            unk174[2][1]);
+			JGeometry::TVec3<f32> zAxis(unk174[0][2], unk174[1][2],
+			                            unk174[2][2]);
+			PSVECNormalize(&xAxis, &xAxis);
+			PSVECNormalize(&yAxis, &yAxis);
+			PSVECNormalize(&zAxis, &zAxis);
+
+			xAxis.x -= 1.0f;
+			yAxis.y -= 1.0f;
+			zAxis.z -= 1.0f;
+			if (fabsf(xAxis.x) < 0.02f && fabsf(xAxis.y) < 0.02f
+			    && fabsf(xAxis.z) < 0.02f && fabsf(yAxis.x) < 0.02f
+			    && fabsf(yAxis.y) < 0.02f && fabsf(yAxis.z) < 0.02f
+			    && fabsf(zAxis.x) < 0.02f && fabsf(zAxis.y) < 0.02f
+			    && fabsf(zAxis.z) < 0.02f)
+				MTXIdentity(unk174);
 		}
-
-		unk168 = unk15C;
-
-		Mtx rotMtx;
-		MsMtxSetRotRPH(rotMtx, unk168.x, unk168.y, unk168.z);
-		MTXConcat(rotMtx, unk174, unk174);
-
-		unk168.x = 0.0f;
-		unk168.y = 0.0f;
-		unk168.z = 0.0f;
-
-		JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0], unk174[2][0]);
-		JGeometry::TVec3<f32> yAxis(unk174[0][1], unk174[1][1], unk174[2][1]);
-		JGeometry::TVec3<f32> zAxis(unk174[0][2], unk174[1][2], unk174[2][2]);
-		PSVECNormalize(&xAxis, &xAxis);
-		PSVECNormalize(&yAxis, &yAxis);
-		PSVECNormalize(&zAxis, &zAxis);
-
-		xAxis.x -= 1.0f;
-		yAxis.y -= 1.0f;
-		zAxis.z -= 1.0f;
-		if (fabsf(xAxis.x) < 0.02f && fabsf(xAxis.y) < 0.02f
-		    && fabsf(xAxis.z) < 0.02f && fabsf(yAxis.x) < 0.02f
-		    && fabsf(yAxis.y) < 0.02f && fabsf(yAxis.z) < 0.02f
-		    && fabsf(zAxis.x) < 0.02f && fabsf(zAxis.y) < 0.02f
-		    && fabsf(zAxis.z) < 0.02f)
-			MTXIdentity(unk174);
 
 		JGeometry::TVec3<f32> point;
 		TGraphNode& rotateNode = unk138->getCurrent();

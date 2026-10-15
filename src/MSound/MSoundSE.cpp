@@ -507,7 +507,7 @@ void MSoundSE::startSoundActorWithInfo(u32 id, const Vec* position,
 
 	case MSD_SE_IT_EGG_BOUND:
 	case MSD_SE_IT_DRIAN_BOUND:
-		fVar7 = vecLength(*param_3);
+		fVar7 = VECMag(param_3);
 		fVar7 = std::fabs(fVar7);
 		break;
 

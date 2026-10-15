@@ -42,7 +42,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 			int lo     = CLBPalFrame<int>(150);
 			int* timer = actor->mFrameTimer;
 			timer[0]   = 0;
-			timer[1]   = MsRandI(hi, lo);
+			timer[1]   = MsRandI(lo, hi);
 		}
 
 		int* timer = actor->mFrameTimer;
@@ -63,7 +63,7 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 				int lo     = CLBPalFrame<int>(150);
 				int* timer = actor->mFrameTimer;
 				timer[0]   = 0;
-				timer[1]   = MsRandI(hi, lo);
+				timer[1]   = MsRandI(lo, hi);
 			}
 			break;
 		}
