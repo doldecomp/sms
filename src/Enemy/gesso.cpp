@@ -162,7 +162,7 @@ void TGessoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TGessoManager::initSetEnemies()
 {
-	unk60 = new TGessoPolluteModelManager("ゲッソーモデル汚染");
+	unk60 = new TGessoPolluteModelManager;
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -769,8 +769,7 @@ void TGesso::turnIn()
 
 bool TGesso::turning()
 {
-	f32 step = 7.2f;
-	if (mTurnAngle + step <= 180.0f) {
+	if (mTurnAngle + 7.2f <= 180.0f) {
 		mBodyTrackingAngle = 90.0f;
 		mRotation.y += 7.2f;
 		mTurnAngle += 7.2f;
@@ -866,12 +865,11 @@ void TGessoPolluteObj::loadInit(TSpineEnemy* param_1, const char* param_2)
 
 f32 TGessoPolluteObj::getNowGravity()
 {
-	TGesso* gesso = unk16C;
-	f32 gravity   = gesso->getSaveParams()->mSLPolluteObjGravity.get();
-	if (gesso->unk1D8 == 0)
+	f32 gravity = unk16C->getSaveParams()->mSLPolluteObjGravity.get();
+	if (unk16C->unk1D8 == 0)
 		return gravity;
 
-	return gesso->getSaveParams()->mSLPolluteObjLinerG.get();
+	return unk16C->getSaveParams()->mSLPolluteObjLinerG.get();
 }
 
 void TGessoPolluteObj::pollute()
@@ -902,12 +900,8 @@ void TGessoPolluteObj::rebirth()
 
 	if (unk158 == 10) {
 		mVelocity.y = -15.0f;
-		f32 range   = 0.5f * (TGesso::mPollRange * 32.0f);
-		Vec position;
-		position.z = mPosition.z;
-		position.y = mPosition.y;
-		position.x = mPosition.x;
-		gpPollution->stamp(1, position.x, position.y, position.z, range);
+		gpPollution->stamp(1, mPosition.x, mPosition.y, mPosition.z,
+		                   TGesso::mPollRange * 32.0f * 0.5f);
 
 		((TGesso*)unk160)
 		    ->getManager()

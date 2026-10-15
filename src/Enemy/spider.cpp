@@ -80,7 +80,7 @@ void TSpider::bind(TLiveActor* param_1)
 	JGeometry::TVec3<f32> local_bc;
 	f32 unaff_f29;
 
-	BOOL b   = gpMap->isTouchedWallsAndMoveXZ(&local_90);
+	bool b   = gpMap->isTouchedWallsAndMoveXZ(&local_90);
 	local_bc = local_90.mCenter;
 	if (!b) {
 		if (unk8 > 0) {
