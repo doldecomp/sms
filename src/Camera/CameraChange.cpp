@@ -277,7 +277,10 @@ void CPolarSubCamera::changeCamModeSub_(int mode, int tween_frames, bool force)
 		bVar11 = true;
 	}
 
-	if ((!force && mMode == mode) || tween_frames < 0)
+	if (!force && mMode == mode)
+		return;
+
+	if (tween_frames < 0)
 		return;
 
 	if (tween_frames == 0)
@@ -608,16 +611,22 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 			if (unk64 & CAMERA_FLAG_UNK10) {
 				unk64 &= ~CAMERA_FLAG_UNK10;
 				doLButtonCameraOn_();
-			} else if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y
-			                                     | TMarioGamePad::MEANING_CAM_L)
-			           && (!unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)
-			               || unk282 == 0)) {
-				if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y))
-					execNoticeOnOffProc_(NOTICE_MODE_UNK2);
-				if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
-					doLButtonCameraOn_();
-				} else if (!isLButtonCameraInbetween()) {
-					execFrontRotate_();
+			} else if (unk120->checkFrameMeaning(
+			               TMarioGamePad::MEANING_Y
+			               | TMarioGamePad::MEANING_CAM_L)) {
+				bool doCheck = true;
+				if (unk120->checkFrameMeaning(TMarioGamePad::MEANING_Y)) {
+					if (unk282 != 0)
+						doCheck = false;
+					else
+						execNoticeOnOffProc_((EnumNoticeOnOffMode)2);
+				}
+				if (doCheck) {
+					if (unk64 & CAMERA_FLAG_NOTICE_ACTIVE) {
+						doLButtonCameraOn_();
+					} else if (!isLButtonCameraInbetween()) {
+						execFrontRotate_();
+					}
 				}
 			}
 		}

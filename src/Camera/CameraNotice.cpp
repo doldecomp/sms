@@ -55,11 +55,11 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (mNoticeActor->mPosition.squared(SMS_GetMarioPos())
 		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
 			JGeometry::TVec2<f32> clipPos;
-			f32 clipMax = mSaveNotice->mOffClipRatio.get();
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
 			              nullptr, false);
 
 			// TODO: inline
+			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
 			f32 clipMin  = -clipMax;
 			bool inClipX = false;
 			bool inClipY = false;
@@ -90,11 +90,11 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 			continue;
 
 		JGeometry::TVec2<f32> clipPos;
-		f32 clipMax = mSaveNotice->mOnClipRatio.get();
 		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->mPosition, nullptr,
 		              false);
 
 		// TODO: inline
+		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
 		f32 clipMin  = -clipMax;
 		bool inClipX = false;
 		bool inClipY = false;
@@ -104,8 +104,7 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax) {
 			inClipY = true;
 		}
-		bool isInside = inClipX && inClipY;
-		if (!isInside)
+		if (!inClipY)
 			continue;
 
 		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(SMS_GetMarioAngleY()),
@@ -148,9 +147,10 @@ void CPolarSubCamera::execNoticeOnOffProc_(EnumNoticeOnOffMode mode)
 
 void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 {
-	Vec mPos  = gpCameraMario->unk0;
-	f32 dist2 = CLBSquared<f32>(mPos.x - target.x)
-	            + CLBSquared<f32>(mPos.z - target.z);
+	Vec mPos     = gpCameraMario->unk0;
+	f32 dz2      = CLBSquared<f32>(mPos.z - target.z);
+	f32 dx2      = CLBSquared<f32>(mPos.x - target.x);
+	f32 dist2    = dx2 + dz2;
 	f32 near2    = CLBSquared<f32>(mSaveNotice->mRotateMinDistXZ.get());
 	f32 farClip2 = CLBSquared<f32>(mSaveNotice->mRotateFastMinDistXZ.get());
 
@@ -158,10 +158,11 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		JGeometry::TVec3<f32> diff(mPos.x - target.x, mPos.y - target.y,
 		                           mPos.z - target.z);
 		MsVECNormalize(&diff, &diff);
-		JGeometry::TVec3<f32> point;
-		point.scaleAdd(500.0f, mPos, diff);
-		s16 ang = matan(point.z - mCurrentTarget.mTarget.z,
-		                point.x - mCurrentTarget.mTarget.x);
+		// TODO: many inlines from cameralib maybe?
+		f32 dx  = diff.x * 500.0f + mPos.x;
+		f32 dz  = diff.z * 500.0f + mPos.z;
+		s16 ang = matan(dz - mCurrentTarget.mTarget.z,
+		                dx - mCurrentTarget.mTarget.x);
 		f32 ratio
 		    = (2.0f / 65536.0f) * CLBAbs<int>((s16)(mCurrentTarget.mYaw - ang));
 
@@ -175,7 +176,8 @@ void CPolarSubCamera::calcNoticeTargetYrot_(const Vec& target)
 		    1.0f, mSaveNotice->mRotateMagnifXmax.get(), mCurrentTarget.unk28);
 		f32 speed
 		    = unk288
-		      * (base * (chase * (ratio * mSaveNotice->mRotateYSpeed.get())));
+		      * (chase
+		         * (ratio * ((f32)mSaveNotice->mRotateYSpeed.get() * base)));
 		if (speed > 32766.998f)
 			speed = 32766.998f;
 		s16 delta = CLBRoundf<s16>(speed);
