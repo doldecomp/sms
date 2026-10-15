@@ -319,7 +319,7 @@ void TBaseNPC::behaveToBeTrampled_()
 	case NPC_ANM_KIND_UNK7: {
 		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
 		const TNerveBase<TLiveActor>* latest  = mSpine->getLatestNerve();
-		if (latest == &TNerveNPCWet::theNerve()) {
+		if (current == &TNerveNPCWet::theNerve()) {
 			mSpine->pushNerve(&TNerveNPCWet::theNerve());
 			mSpine->setNext(nullptr);
 		} else if (current == nullptr && latest == &TNerveNPCWet::theNerve())
@@ -343,8 +343,8 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 		if (SMSGetMarDirector()->isTalkOrDemoModeNow())
 			return;
 
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
-		                             nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+		                             &param_1->mPosition, 0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		if (SMSGetMSound()->gateCheck(MSD_SE_NPC_FIRE_FIGHTING))

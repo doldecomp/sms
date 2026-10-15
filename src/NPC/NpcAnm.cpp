@@ -701,7 +701,7 @@ bool TBaseNPC::npcWetting()
 								break;
 
 							case NPC_ANM_KIND_UNK7:
-							case NPC_ANM_KIND_UNK10:
+							case NPC_ANM_KIND_MAD:
 							case NPC_ANM_KIND_UNK18:
 								npcWetOut();
 								result = true;
