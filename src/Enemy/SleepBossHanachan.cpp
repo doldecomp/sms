@@ -27,6 +27,11 @@
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/InfectiousStrings.hpp>
 
+static const char* sleepBossHanachan_bastable[2] = {
+	"/scene/sleepBossHanachan/bas/demohanatyan_fall.bas",
+	nullptr,
+};
+
 void TSleepBossHanachanManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
@@ -53,11 +58,6 @@ void TSleepBossHanachan::init(TLiveManager* param_1)
 }
 
 void TSleepBossHanachan::calcRootMatrix() { }
-
-static const char* sleepBossHanachan_bastable[2] = {
-	"/scene/sleepBossHanachan/bas/demohanatyan_fall.bas",
-	nullptr,
-};
 
 const char** TSleepBossHanachan::getBasNameTable() const
 {

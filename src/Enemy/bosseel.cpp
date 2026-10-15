@@ -80,8 +80,6 @@ static const char* bosseel_bastable[] = {
 static const char* bossEelTears_bastable[]
     = { nullptr, nullptr, nullptr, nullptr };
 
-static f32 testHeight;
-
 TBEelTearsDrop::TBEelTearsDrop(TBEelTears* owner, int jointIndex,
                                SDLModelData* modelData, const char* name)
     : THitActor(name)
@@ -281,7 +279,7 @@ void TBEelTears::init(TLiveManager* manager)
 {
 	TSpineEnemy::init(manager);
 	mActorType = ACTOR_TYPE_BOSS_EEL;
-	onHitFilter(HIT_CATEGORY_BOSS);
+	onHitFilter(HIT_CATEGORY_PLAYER);
 	setMActorAndKeeper();
 	mTearsParams = static_cast<TBEelTearsSaveLoadParams*>(getSaveParam());
 	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
@@ -2110,7 +2108,11 @@ DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 	return false;
 }
 
-DEFINE_NERVE(TNerveBossEelAppear, TLiveActor)
+DEFINE_NERVE_INSTANCE(TNerveBossEelAppear)
+
+static f32 testHeight;
+
+DEFINE_NERVE_EXECUTE(TNerveBossEelAppear, TLiveActor)
 {
 	TBossEel* eel = static_cast<TBossEel*>(spine->getBody());
 	if (spine->getTime() == 0) {
