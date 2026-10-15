@@ -71,7 +71,7 @@ static void Hxs1_Circle(f32);
 static void Hxs2_Circle(u8, f32, f32);
 static void Hxs_FrBufferMorf2(f32);
 static void Hxs_FrBufferMorf2B(f32);
-static void Hxs_Logo_TexDraw(u16, f32, f32, f32, f32, f32, f32);
+static void Hxs_Logo_TexDraw(f32, f32, f32, f32, f32, f32);
 static void dummy_handler(void);
 
 static HxWiper hx;
@@ -1097,8 +1097,8 @@ static void Hxs_Logo_TexSetup(u8 red, u8 alpha, struct ResTIMG* resource)
 	}
 }
 
-static void Hxs_Logo_TexDraw(u16 textureWidth, f32 x1, f32 y1, f32 x2, f32 y2,
-                             f32 width, f32 height)
+static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 width,
+                             f32 height)
 {
 	Vec direction;
 	f32 left;
@@ -1218,17 +1218,16 @@ static void Hxs_PenDraw(u32 count, HxDrawPath* target, f32 startX, f32 startY)
 				direction.y = nextY - prevY;
 				VECNormalize(&direction, &direction);
 				VECScale(&direction, &direction, 6.0f);
-				Hxs_Logo_TexDraw(img_wx, prevX - direction.x,
-				                 prevY - direction.y, nextX + direction.x,
-				                 nextY + direction.y, img_wx, img_wy);
+				Hxs_Logo_TexDraw(prevX - direction.x, prevY - direction.y,
+				                 nextX + direction.x, nextY + direction.y,
+				                 img_wx, img_wy);
 			}
 			prevX = nextX;
 			prevY = nextY;
 		}
 	}
 	progress = (f32)(target->type - hx.timer) / (f32)target->type;
-	Hxs_Logo_TexDraw(img_wx, startX, startY,
-	                 progress * (target->x - startX) + startX,
+	Hxs_Logo_TexDraw(startX, startY, progress * (target->x - startX) + startX,
 	                 progress * (target->y - startY) + startY, img_wx, img_wy);
 }
 

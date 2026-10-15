@@ -34,6 +34,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/DummyStrings.hpp>
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)
@@ -293,7 +294,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		return;
 	}
 
-	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", nullptr);
+	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", pArch);
 	mLetterBoxTop    = new TExPane(mMenuScreen, 'msk1');
 	mLetterBoxBottom = new TExPane(mMenuScreen, 'msk2');
 	mStageName       = (J2DTextBox*)mMenuScreen->search('map');
@@ -860,6 +861,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					}
 
 					mMenuState = MENU_ANIM_LOOP;
+				} else {
+					break;
 				}
 			} else if (mGamePad->checkFrameMeaning(
 			               TMarioGamePad::MEANING_MENU_RIGHT)) {
@@ -933,6 +936,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					}
 
 					mMenuState = MENU_ANIM_LOOP;
+				} else {
+					break;
 				}
 			}
 		}
