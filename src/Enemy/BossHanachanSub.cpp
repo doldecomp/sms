@@ -136,7 +136,7 @@ void TSphereLink::moveHead(const JGeometry::TVec3<f32>& position)
 			offset.set(0.0f, 1.0f, 0.0f);
 		else
 			VECNormalize(&offset, &offset);
-		offset.scale(point.mLinkLength);
+		offset *= point.mLinkLength;
 		point.mPosition = previous.mPosition + offset;
 		execMapCollision_(&point.mPosition);
 	}

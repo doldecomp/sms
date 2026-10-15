@@ -3,12 +3,12 @@
 #include <GC2D/GCConsole2.hpp>
 #include <MSound/MSModBgm.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundBGM.hpp>
 #include <Strategic/Spine.hpp>
 #include <System/MarDirector.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
 
 DEFINE_NERVE(TNerveBossHanachanGraphWander, TLiveActor)
 {

@@ -51,11 +51,18 @@ public:
 
 class TWaterHitActor : public THitActor {
 public:
+	TWaterHitActor() { }
+	TWaterHitActor(const char* name)
+	    : THitActor(name)
+	    , mWaterHitCounter(0)
+	{
+	}
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	void onWaterHitCounter();
 
 public:
-	// TODO: verify the original names of these overlapping fields.
+	// TODO: this is cursed, but it's what they do? Maybe ODR violation on the
+	// TWaterHitActor type?
 	union {
 		/* 0x68 */ int unk68; // Particle index for the static water actor.
 		/* 0x68 */ s16 mWaterHitCounter;

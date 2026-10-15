@@ -1755,7 +1755,7 @@ void TBossTelesa::genAttacker()
 
 void TBossTelesa::setBckAnm(int index)
 {
-	unk164 = getMActor()->getCurAnmIdx(0);
+	unk164 = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 	unk160 = index;
 	unk168 = 1.0f;
 

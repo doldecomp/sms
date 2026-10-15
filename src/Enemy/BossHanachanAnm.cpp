@@ -12,9 +12,9 @@ void TBossHanachan::setHeadAndBodyAnm(
     EnumBossHanachanAnmKind param_1,
     EnumBossHanachanStopMotionBlendOnOff param_2)
 {
-	unk170->setAnm_(param_1, param_2);
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
-		TBossHanachanPartsBase* part = unk150[i];
+	mHead->setAnm_(param_1, param_2);
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
+		TBossHanachanPartsBase* part = mBodyParts[i];
 		if (part->setAnm_(param_1, param_2)) {
 			J3DFrameCtrl* frameCtrl
 			    = part->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
@@ -50,66 +50,66 @@ void TBossHanachan::setTumbleAnm(EnumBossHanachanStopMotionBlendOnOff param_1)
 		anm = BOSS_HANACHAN_ANM_UNK16;
 	else
 		return;
-	unk170->setAnm_(anm, param_1);
-	setTumbleBckRate_(unk170);
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
-		unk150[i]->setAnm_(anm, param_1);
-		setTumbleBckRate_(unk150[i]);
+	mHead->setAnm_(anm, param_1);
+	setTumbleBckRate_(mHead);
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
+		mBodyParts[i]->setAnm_(anm, param_1);
+		setTumbleBckRate_(mBodyParts[i]);
 	}
 }
 
 void TBossHanachan::setAnmTimerWhenGetUp()
 {
 	u8 diff = unk1C0->mSLGetUpFrameDiff.get();
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i)
-		unk150[7 - i]->unk10C = diff * i;
-	unk170->unk10C = diff * 8;
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
+		mBodyParts[7 - i]->unk10C = diff * i;
+	mHead->unk10C = diff * 8;
 }
 
 void TBossHanachan::setAnmTimerWhenSnort()
 {
-	u8 diff        = unk1C0->mSLSnortFrameDiff.get();
-	unk170->unk10C = 0;
-	for (int i = 0; i < ARRAY_COUNT(unk150); i++)
-		unk150[i]->unk10C = diff * (i + 1);
+	u8 diff       = unk1C0->mSLSnortFrameDiff.get();
+	mHead->unk10C = 0;
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); i++)
+		mBodyParts[i]->unk10C = diff * (i + 1);
 }
 
 void TBossHanachan::setAnmTimerWhenDamage()
 {
 	u8 diff = unk1C0->mSLDamageFrameDiff.get();
-	for (int i = 0; i < ARRAY_COUNT(unk150); i++) {
-		s32 frame         = unk174 - i;
-		unk150[i]->unk10C = diff * (frame >= 0 ? frame : -frame);
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); i++) {
+		s32 frame             = unk174 - i;
+		mBodyParts[i]->unk10C = diff * (frame >= 0 ? frame : -frame);
 	}
-	s32 frame      = unk174 + 1;
-	unk170->unk10C = diff * (frame >= 0 ? frame : -frame);
+	s32 frame     = unk174 + 1;
+	mHead->unk10C = diff * (frame >= 0 ? frame : -frame);
 }
 
 void TBossHanachan::setAnmTimerWhenDead()
 {
 	u8 diff = unk1C0->mSLDeadFrameDiff.get();
-	for (int i = 0; i < ARRAY_COUNT(unk150); i++) {
-		s32 frame         = unk174 - i;
-		unk150[i]->unk10C = diff * (frame >= 0 ? frame : -frame);
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); i++) {
+		s32 frame             = unk174 - i;
+		mBodyParts[i]->unk10C = diff * (frame >= 0 ? frame : -frame);
 	}
-	s32 frame      = unk174 + 1;
-	unk170->unk10C = diff * (frame >= 0 ? frame : -frame);
+	s32 frame     = unk174 + 1;
+	mHead->unk10C = diff * (frame >= 0 ? frame : -frame);
 }
 
 void TBossHanachan::considerSetAnm(EnumBossHanachanNerveAnm param_1)
 {
-	unk170->considerSetAnm_(param_1);
-	for (int i = 0; i < ARRAY_COUNT(unk150); i++)
-		unk150[i]->considerSetAnm_(param_1);
+	mHead->considerSetAnm_(param_1);
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); i++)
+		mBodyParts[i]->considerSetAnm_(param_1);
 }
 
 bool TBossHanachan::isFinishedGetUp() const
 {
 	bool result = false;
-	switch (unk170->unkF4) {
+	switch (mHead->mCurAnm) {
 	case BOSS_HANACHAN_ANM_UNK9:
 	case BOSS_HANACHAN_ANM_UNK12:
-		if (unk170->isCurBckAlreadyEnd_())
+		if (mHead->isCurBckAlreadyEnd_())
 			result = true;
 		break;
 	}
@@ -119,12 +119,12 @@ bool TBossHanachan::isFinishedGetUp() const
 bool TBossHanachan::isAllBckAlreadyEnd(EnumBossHanachanAnmKind param_1) const
 {
 	bool result = true;
-	if ((unk170->unkF4 == param_1 && unk170->isCurBckAlreadyEnd_()) == false) {
+	if ((mHead->mCurAnm == param_1 && mHead->isCurBckAlreadyEnd_()) == false) {
 		result = false;
 	} else {
-		for (int i = 0; i < ARRAY_COUNT(unk150); i++) {
-			if ((unk150[i]->unkF4 == param_1
-			     && unk150[i]->isCurBckAlreadyEnd_())
+		for (int i = 0; i < ARRAY_COUNT(mBodyParts); i++) {
+			if ((mBodyParts[i]->mCurAnm == param_1
+			     && mBodyParts[i]->isCurBckAlreadyEnd_())
 			    == false) {
 				result = false;
 				break;
@@ -136,23 +136,23 @@ bool TBossHanachan::isAllBckAlreadyEnd(EnumBossHanachanAnmKind param_1) const
 
 void TBossHanachan::offHeadAndBodyNonstopMotionBlend_()
 {
-	unk170->offNonstopMotionBlend_();
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i)
-		unk150[i]->offNonstopMotionBlend_();
+	mHead->unk110->mForcedBlendRatio = 0.0f;
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
+		mBodyParts[i]->unk110->mForcedBlendRatio = 0.0f;
 }
 
 void TBossHanachan::setHeadAndBodyNonstopMotionBlendRatio_(f32 param_1)
 {
-	unk170->setNonstopMotionBlendRatio_(param_1);
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i)
-		unk150[i]->setNonstopMotionBlendRatio_(param_1);
+	mHead->unk110->mForcedBlendRatio = param_1;
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
+		mBodyParts[i]->unk110->mForcedBlendRatio = param_1;
 }
 
 void TBossHanachan::copyFrameFromOldAnmToNewAnm_()
 {
-	unk170->copyFrameFromOldAnmToNewAnm_();
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i)
-		unk150[i]->copyFrameFromOldAnmToNewAnm_();
+	mHead->copyFrameFromOldAnmToNewAnm_();
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
+		mBodyParts[i]->copyFrameFromOldAnmToNewAnm_();
 }
 
 void TBossHanachan::changeAnmRateAndFrameUpdate_()
@@ -161,17 +161,17 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 	f32 rate    = SMSGetAnmFrameRate();
 	if (mSpine->getLatestNerve() == &TNerveBossHanachanTumble::theNerve()) {
 		offHeadAndBodyNonstopMotionBlend_();
-		unk170->changeTumbleAnmRate_();
-		for (int i = 0; i < ARRAY_COUNT(unk150); ++i)
-			unk150[i]->changeTumbleAnmRate_();
+		mHead->changeTumbleAnmRate_();
+		for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
+			mBodyParts[i]->changeTumbleAnmRate_();
 		doRate = false;
 	} else {
-		switch (unk170->unkF4) {
+		switch (mHead->mCurAnm) {
 		case BOSS_HANACHAN_ANM_UNK0:
 		case BOSS_HANACHAN_ANM_UNK1:
 			if (mMarchSpeed <= unk1C0->mSLWalkAnmMarchSpeed.get()) {
 				offHeadAndBodyNonstopMotionBlend_();
-				switch (unk170->unkF4) {
+				switch (mHead->mCurAnm) {
 				case BOSS_HANACHAN_ANM_UNK1:
 					setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK0,
 					                  BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
@@ -186,7 +186,7 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 				}
 			} else if (mMarchSpeed >= unk1C0->mSLRunAnmMarchSpeed.get()) {
 				offHeadAndBodyNonstopMotionBlend_();
-				switch (unk170->unkF4) {
+				switch (mHead->mCurAnm) {
 				case BOSS_HANACHAN_ANM_UNK1:
 					break;
 				case BOSS_HANACHAN_ANM_UNK0:
@@ -203,9 +203,9 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 				rate = CLBCalcRatio(unk1C0->mSLWalkAnmMarchSpeed.get(),
 				                    unk1C0->mSLRunAnmMarchSpeed.get(),
 				                    mMarchSpeed);
-				switch (unk170->unkF4) {
+				switch (mHead->mCurAnm) {
 				case BOSS_HANACHAN_ANM_UNK0:
-					if (unk170->unkF8 != BOSS_HANACHAN_ANM_UNK1) {
+					if (mHead->mPrevAnm != BOSS_HANACHAN_ANM_UNK1) {
 						setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK1,
 						                  BOSS_HANACHAN_STOP_MOTION_BLEND_OFF);
 						copyFrameFromOldAnmToNewAnm_();
@@ -214,7 +214,7 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 					setHeadAndBodyNonstopMotionBlendRatio_(rate);
 					break;
 				case BOSS_HANACHAN_ANM_UNK1:
-					if (unk170->unkF8 == BOSS_HANACHAN_ANM_UNK0) {
+					if (mHead->mPrevAnm == BOSS_HANACHAN_ANM_UNK0) {
 						rate = 1.0f - rate;
 					} else {
 						setHeadAndBodyAnm(BOSS_HANACHAN_ANM_UNK0,
@@ -241,16 +241,16 @@ void TBossHanachan::changeAnmRateAndFrameUpdate_()
 			break;
 		}
 	}
-	MActor* mactor = unk170->getMActor();
+	MActor* mactor = mHead->getMActor();
 	if (doRate)
 		mactor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
-	unk170->updateAnmSound();
+	mHead->updateAnmSound();
 	mactor->frameUpdate();
-	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
-		MActor* loopMactor = unk150[i]->getMActor();
+	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
+		MActor* loopMactor = mBodyParts[i]->getMActor();
 		if (doRate)
 			loopMactor->getFrameCtrl(ANM_TYPE_BCK)->setRate(rate);
-		unk150[i]->updateAnmSound();
+		mBodyParts[i]->updateAnmSound();
 		loopMactor->frameUpdate();
 	}
 }

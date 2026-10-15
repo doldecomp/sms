@@ -9,6 +9,7 @@
 class TLiveActor;
 class TBossHanachanPartsBase;
 class TBossHanachanPartsBody;
+class TBossHanachanPartsHead;
 class TBossHanachanCommonSaveParams;
 class TBossHanachanChangeSaveParams;
 class TSphereLink;
@@ -57,8 +58,8 @@ public:
 	void emitParticle_();
 
 public:
-	/* 0x150 */ TBossHanachanPartsBase* unk150[8];
-	/* 0x170 */ TBossHanachanPartsBase* unk170;
+	/* 0x150 */ TBossHanachanPartsBody* mBodyParts[8];
+	/* 0x170 */ TBossHanachanPartsHead* mHead;
 	/* 0x174 */ s32 unk174;
 	/* 0x178 */ TSphereLink* unk178;
 	/* 0x17C */ JGeometry::TVec3<f32> unk17C;
@@ -76,9 +77,20 @@ public:
 class TBossHanachanManager : public TEnemyManager {
 public:
 	TBossHanachanManager(const char*);
+	virtual ~TBossHanachanManager() { }
+	virtual void loadAfter();
+	virtual void createModelData();
+	virtual BOOL hasMapCollision() const;
+	virtual void clipEnemies(JDrama::TGraphics*);
 
-public:
-	/* 0x54 */ u8 unk54[0x10];
+	// fabricated
+	TBossHanachanChangeSaveParams* getChangeSaveParams(int index) const
+	{
+		return unk58[index];
+	}
+
+	/* 0x54 */ TBossHanachanCommonSaveParams* unk54;
+	/* 0x58 */ TBossHanachanChangeSaveParams* unk58[3];
 };
 
 DECLARE_NERVE(TNerveSBH_Fall, TLiveActor);
