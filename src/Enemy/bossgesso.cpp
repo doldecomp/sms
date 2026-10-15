@@ -158,6 +158,7 @@ BOOL TBGBeakHit::moveRequest(const JGeometry::TVec3<f32>& where_to)
 	unkA4 += delta;
 
 	mPosition = where_to;
+	return false;
 }
 
 BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
@@ -168,8 +169,8 @@ BOOL TBGBeakHit::receiveMessage(THitActor* sender, u32 message)
 
 		mOwner->gotEyeDamage();
 
-		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &mPosition, 0,
-		                             nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		return true;
 	}
 
@@ -231,7 +232,7 @@ void TBGBeakHit::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mHolder != nullptr) {
 			JGeometry::TVec3<f32> us2mario = SMS_GetMarioPos();
-			us2mario -= mPosition;
+			us2mario -= mOwner->mPosition;
 			if (!us2mario.isZero())
 				VECNormalize(&us2mario, &us2mario);
 			else
@@ -943,15 +944,16 @@ void TBossGesso::doAttackSingle()
 	}
 
 	for (int i = 0; i < 2; ++i) {
-		static const int idxarray[] = { 2, 3, 5, 6 };
+		static const int idxarray[] = { 1, 3 };
 		TBGTentacle* tentacle       = mTentacles[idxarray[i]];
 
 		if (inSightAngle(getSaveParams()->mSLSightAngle.get())
 		    && tentacle->mState == 0) {
 			JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
-			delta -= mPosition;
+			delta -= tentacle->getFirstNode()->getPosition();
 
-			if (delta.squared() > getSaveParams()->mSLSingleAttackLen.get()) {
+			f32 len = getSaveParams()->mSLSingleAttackLen.get();
+			if (delta.squared() < len * len) {
 				tentacle->changeStateAndFixNodes(1);
 				break;
 			}
@@ -959,7 +961,7 @@ void TBossGesso::doAttackSingle()
 	}
 
 	if (mTentacles[3]->isThing2() && mTentacles[1]->isThing2()
-	    && mTentacles[2]->isThing2()) {
+	    && mTentacles[2]->isThing2() && !mTentacles[0]->isThing2()) {
 		if (mTimeInCurrentAttackMode <= getSaveParams()->mSLUnisonInter.get())
 			return;
 
@@ -970,7 +972,67 @@ void TBossGesso::doAttackSingle()
 		return;
 	}
 
-	// TODO: ughhhhhhhhhhhhhh
+	if (tentacleHeld())
+		return;
+
+	JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
+	f32 unisonLen               = getSaveParams()->mSLUnisonAttackLen.get();
+	unisonLen *= unisonLen;
+	f32 forceUnisonLen = getSaveParams()->mSLForceUnisonLen.get();
+	forceUnisonLen *= forceUnisonLen;
+	delta -= mPosition;
+
+	if (mBeak->getHolder() != nullptr
+	    && (mTentacles[3]->isThing2() && mTentacles[1]->isThing2())) {
+		for (int i = 0; i < 2; ++i) {
+			static const int idxarray[] = { 1, 3 };
+			TBGTentacle* tentacle       = mTentacles[idxarray[i]];
+			if (tentacle->mState != 1 && tentacle->mState != 4
+			    && tentacle->mState != 5 && tentacle->mState != 3
+			    && tentacle->mState != 6)
+				tentacle->changeStateAndFixNodes(1);
+		}
+		return;
+	}
+
+	f32 dist = delta.squared();
+	if (dist < forceUnisonLen && gpMarioOriginal->isTouchGround4cm()) {
+		changeAttackMode(ASTATE_UNISON);
+		return;
+	}
+
+	if (dist < unisonLen && gpMarioOriginal->isTouchGround4cm()) {
+		if (mTimeInCurrentAttackMode > getSaveParams()->mSLUnisonInter.get()) {
+			if (SMSGetMarDirector()->unk7D == 4)
+				changeAttackMode(ASTATE_ROLL);
+			else
+				changeAttackMode(ASTATE_UNISON);
+		}
+		return;
+	}
+
+	for (int i = 0; i < TENTACLE_NUM; ++i)
+		if (mTentacles[i]->mState == 1)
+			return;
+
+	if (mCork->unkC != 0 && unk195 < 3) {
+		f32 shootLen = getSaveParams()->mSLShootRadius.get();
+		shootLen *= shootLen;
+		if (mTimeInCurrentAttackMode > getSaveParams()->mSLUnisonInter.get()
+		    && dist < shootLen) {
+			if (inSightAngle(30.0f)) {
+				changeAttackMode(ASTATE_SHOOT);
+				return;
+			}
+		}
+	}
+
+	if (SMSGetMarDirector()->unk7D == 4
+	    && inSightAngle(getSaveParams()->mSLSightAngle.get() * 0.5f)
+	    && mTimeInCurrentAttackMode > getSaveParams()->mSLUnisonInter.get()) {
+		changeAttackMode(ASTATE_ROLL);
+		unk195 = 0;
+	}
 }
 #pragma dont_inline off
 
@@ -1437,7 +1499,7 @@ TBossGessoManager::TBossGessoManager(const char* name)
 
 void TBossGessoManager::createModelData()
 {
-	static TModelDataLoadEntry entry[] = {
+	static const TModelDataLoadEntry entry[] = {
 		{ "bgeso_body.bmd",
 		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 		      | (16 << J3DMLF_TevStageNumShift),
@@ -1727,11 +1789,11 @@ DEFINE_NERVE(TNerveBGTug, TLiveActor)
 	}
 
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_ASE, self->getModel()->getAnmMtx(47), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(7), 1, self);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
-	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 0, nullptr);
+	    BGESO_JPA_MS_BOGE_NAMIDA, self->getModel()->getAnmMtx(4), 1, self);
 
 	if (self->mBeak->getHolder() != nullptr) {
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();

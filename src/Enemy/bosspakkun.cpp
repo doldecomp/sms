@@ -1421,14 +1421,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 		if (SMSGetMarDirector()->mMap == 2
 		    && (SMSGetMarDirector()->unk7D == 0
 		        || SMSGetMarDirector()->unk7D == 1)) {
-			JGeometry::TVec3<f32>* marioPos = &SMS_GetMarioPos();
-			if (boss->unk188 == nullptr) {
-				boss->unk188 = static_cast<TAreaCylinderManager*>(
-				    gpConductor->search("ゲロエリアマネージャー"));
-			}
-			BOOL marioInArea = boss->unk188 == nullptr
-			                       ? false
-			                       : boss->unk188->contain(*marioPos);
+			BOOL marioInArea = boss->inArea(SMS_GetMarioPos());
 			if (marioInArea && !SMS_GetMarioGroundPlane()->isWaterSurface()) {
 				spine->pushAfterCurrent(&TNerveBPCannon::theNerve());
 				return true;

@@ -35,12 +35,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 
-f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
-int TBossManta::sCenterJointIndex;
-int TBossManta::sBodyJointIndex;
-int TBossManta::sRwingJointIndex;
-int TBossManta::sLwingJointIndex;
-u8 TBossManta::sEscapeFromMario;
+f32 TBossManta::sScale[]      = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
 f32 TBossManta::sFrameRate[6] = { 0.3f, 0.5f, 1.2f, 2.0f, 5.0f, 5.3f };
 
 namespace {
@@ -60,13 +55,29 @@ void AttackMario(THitActor* attacker)
 
 } // namespace
 
+DEFINE_NERVE_INSTANCE(TNerveMantaMove)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaHitWater)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaSpawn)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaDeath)
+
+DEFINE_NERVE_INSTANCE(TNerveMantaAppearDemo)
+
+int TBossManta::sCenterJointIndex;
+int TBossManta::sBodyJointIndex;
+int TBossManta::sRwingJointIndex;
+int TBossManta::sLwingJointIndex;
+u8 TBossManta::sEscapeFromMario;
+
 static inline void lerp_hack(f32& value, f32 target, f32 progress)
 {
 	f32 step = progress * (target - value);
 	value += step;
 }
 
-DEFINE_NERVE(TNerveMantaMove, TLiveActor)
+DEFINE_NERVE_EXECUTE(TNerveMantaMove, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 	s32 time         = spine->getTime();
@@ -182,7 +193,7 @@ DEFINE_NERVE(TNerveMantaMove, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
+DEFINE_NERVE_EXECUTE(TNerveMantaHitWater, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -230,7 +241,7 @@ DEFINE_NERVE(TNerveMantaHitWater, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
+DEFINE_NERVE_EXECUTE(TNerveMantaSpawn, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -267,7 +278,7 @@ DEFINE_NERVE(TNerveMantaSpawn, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
+DEFINE_NERVE_EXECUTE(TNerveMantaDeath, TLiveActor)
 {
 	TBossManta* self = (TBossManta*)spine->getBody();
 
@@ -288,7 +299,7 @@ DEFINE_NERVE(TNerveMantaDeath, TLiveActor)
 	return FALSE;
 }
 
-DEFINE_NERVE(TNerveMantaAppearDemo, TLiveActor)
+DEFINE_NERVE_EXECUTE(TNerveMantaAppearDemo, TLiveActor)
 {
 	s32 time         = spine->getTime();
 	TBossManta* self = (TBossManta*)spine->getBody();
