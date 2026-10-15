@@ -482,7 +482,18 @@ public:
 	/* 0x8C */ TBathWaterParams* unk8C;
 };
 
-static void initScreen2D(s16, s16) { }
+static void initScreen2D(s16 width, s16 height)
+{
+	Mtx44 ortho;
+	TPosition3f mtx;
+	mtx.identity();
+	C_MTXOrtho(ortho, 0.0f, (f32)height, 0.0f, (f32)width, -1.0f, 1.0f);
+	GXSetProjection(ortho, GX_ORTHOGRAPHIC);
+	GXSetViewport(0.0f, 0.0f, (f32)width, (f32)height, 0.0f, 1.0f);
+	GXSetScissor(0, 0, width, height);
+	GXLoadPosMtxImm(mtx, GX_PNMTX0);
+	GXSetCurrentMtx(GX_PNMTX0);
+}
 
 static void drawCap(const JGeometry::TVec3<f32>& pos, f32 radius)
 {
@@ -935,15 +946,7 @@ public:
 
 		s16 w2 = SMSGetGameRenderWidth();
 		s16 h2 = SMSGetGameRenderHeight();
-		TPosition3f mtx;
-		mtx.identity();
-		Mtx44 ortho;
-		C_MTXOrtho(ortho, 0.0f, (f32)h2, 0.0f, (f32)w2, -1.0f, 1.0f);
-		GXSetProjection(ortho, GX_ORTHOGRAPHIC);
-		GXSetViewport(0.0f, 0.0f, (f32)w2, (f32)h2, 0.0f, 1.0f);
-		GXSetScissor(0, 0, w2, h2);
-		GXLoadPosMtxImm(mtx, GX_PNMTX0);
-		GXSetCurrentMtx(GX_PNMTX0);
+		initScreen2D(w2, h2);
 		GXSetCullMode(GX_CULL_BACK);
 		GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA,
