@@ -157,9 +157,8 @@ void TMarioGamePad::read()
 {
 	JUTGamePad::read();
 
-	s32 resetPort      = 0;
-	bool resetOccurred = checkReset(&resetPort);
-	if (resetOccurred)
+	s32 resetPort = 0;
+	if (checkReset(&resetPort))
 		handleReset(resetPort);
 }
 

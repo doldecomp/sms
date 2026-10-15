@@ -58,7 +58,7 @@ u32 TPollutionManager::getPollutionDegree() const
 	u32 totalDegree = 0;
 	for (int i = 0; i < getJointModelNum(); ++i) {
 		TPollutionLayer* layer = getLayer(i);
-		totalDegree += layer->mCounter;
+		totalDegree += layer->getPollutionDegree();
 	}
 	return totalDegree;
 }

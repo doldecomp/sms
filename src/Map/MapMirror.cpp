@@ -39,12 +39,11 @@ void TMirrorCamera::makeMirrorViewMtx()
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_CALC_VIEW | CUE_SET_PROJECTION)) {
-		C_MTXPerspective(graphics->mProjMtx, unk80 * gpCamera->getFovy(),
-		                 gpCamera->getAspect(), gpCamera->getNear(),
-		                 gpCamera->getFar());
-		MTXCopy(unk30, graphics->getViewMtx());
-		graphics->mNearPlane = gpCamera->getNear();
-		graphics->mFarPlane  = gpCamera->getFar();
+		C_MTXPerspective(graphics->mProjMtx.mMtx, unk80 * gpCamera->mFovy,
+		                 gpCamera->mAspect, gpCamera->mNear, gpCamera->mFar);
+		MTXCopy(unk30, graphics->mViewMtx);
+		graphics->mNearPlane = gpCamera->mNear;
+		graphics->mFarPlane  = gpCamera->mFar;
 		if (cue & CUE_SET_PROJECTION)
 			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 		GXSetAlphaUpdate(GX_TRUE);
@@ -270,10 +269,8 @@ void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
 		if (!(unk18 != -1 ? true : false)
 		    && !gpMarioGroundPlane[0]->isIllegalData()) {
-			unk24->setUnk84AndUnk90(gpMarioGroundPlane[1]->mNormal.x,
-			                        gpMarioGroundPlane[1]->mNormal.y,
-			                        gpMarioGroundPlane[1]->mNormal.z,
-			                        gpMarioGroundPlane[1]->mPlaneDistance);
+			unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
+			unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
 			unk24->makeMirrorViewMtx();
 		}
 	}

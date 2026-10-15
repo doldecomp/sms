@@ -133,9 +133,9 @@ static void initStageCommon()
 		TMapStaticObj* sea = new TMapStaticObj("波（遠景）");
 		sea->init("sea");
 
-		sea = new TMapStaticObj("インダイレクト波");
-		sea->init("SeaIndirect");
-		group->getChildren().push_back(sea);
+		TMapStaticObj* indirect = new TMapStaticObj("インダイレクト波");
+		indirect->init("SeaIndirect");
+		group->getChildren().push_back(indirect);
 
 		TMapObjWaterFilter* filter
 		    = new TMapObjWaterFilter("水中カメラフィルタ");
@@ -205,13 +205,12 @@ static void initStage()
 
 void TMap::updateDelfino()
 {
-	TMapWarp* warp = mWarp;
-	int cube       = gpCubeArea->unk1C;
-	if (cube != warp->unk8) {
+	int cube = gpCubeArea->unk1C;
+	if (cube != mWarp->unk8) {
 		if (cube != -1)
 			mWarp->changeModel(cube);
 		else if (SMSGetMarDirector()->getCurrentStage() != 0)
-			warp->changeModel(3);
+			mWarp->changeModel(3);
 	}
 }
 
@@ -247,12 +246,17 @@ void TMap::update()
 		break;
 	}
 
-	if (SMSGetMarDirector()->unk124 != 0 || gpCamera->isDemoCamera())
+	if (SMSGetMarDirector()->unk124 != 0)
+		return;
+
+	if (gpCamera->isDemoCamera())
 		return;
 
 	if (SMSGetMarDirector()->getCurrentMap() == 0x39
-	    || SMSGetMarDirector()->getCurrentMap() == 0x10
-	    || SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
+	    || SMSGetMarDirector()->getCurrentMap() == 0x10)
+		return;
+
+	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
 		return;
 
 	const JGeometry::TVec3<f32>& camPos = gpCamera->getUnk124();
