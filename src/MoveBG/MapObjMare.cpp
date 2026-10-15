@@ -279,7 +279,7 @@ void TCogwheel::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	JGeometry::TVec2<f32> off(sRadius, 0.0f);
-	off.rotate(DEG_TO_RAD(mRotation.y));
+	off.rotate(0.017453294f * mRotation.y);
 	f32 dx = off.x;
 	f32 dz = off.y;
 	JGeometry::TVec3<f32> pos(mPosition.x + dx, mPosition.y, mPosition.z - dz);

@@ -607,7 +607,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (message == HIT_MESSAGE_TAKE && isActorType(ACTOR_TYPE_HAUNT_LEG)
+	if (message == HIT_MESSAGE_TAKE && sender->isActorType(ACTOR_TYPE_HAUNT_LEG)
 	    && (isState(STATE_APPEARING) || isState(STATE_NORMAL))) {
 		hold((TTakeActor*)sender);
 		return 1;
@@ -630,7 +630,7 @@ BOOL TMapObjGeneral::receiveMessage(THitActor* sender, u32 message)
 		return true;
 	}
 
-	if (isActorType(ACTOR_TYPE_MARIO)
+	if (sender->isActorType(ACTOR_TYPE_MARIO)
 	    && (message == HIT_MESSAGE_TRAMPLE
 	        || message == HIT_MESSAGE_HIP_DROP)) {
 		receiveMessageFromPlayer();

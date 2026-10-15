@@ -127,7 +127,7 @@ u8 MSBgmXFade::getTiming(f32 param_1, u32* param_2)
 	for (u8 i = 0; i < 18; ++i) {
 		if (param_1 > scTiming[i] && f1 <= scTiming[i])
 			return i;
-		if (param_1 < scTiming[i] && scTiming[i] >= f1)
+		if (param_1 < scTiming[i] && unk0 >= scTiming[i])
 			return i;
 	}
 

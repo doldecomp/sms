@@ -248,13 +248,13 @@ bool MSSetSoundTL<T>::startSoundSetDyna(u32 param_1, const Vec* param_2,
 				JAISound* snd = unk5C[unk59];
 				snd->setVolume(f30 * f27, 3, 0);
 				snd->setPitch(f29 * f28, 3, 0);
-			} else {
-				// Huh.
-				if (unk5C[unk59] != nullptr)
-					unk5C[unk59]->setPortData(13, 1);
-				unk58 = 0;
-				unk54 = 0;
 			}
+		} else {
+			// Huh.
+			if (unk5C[unk59] != nullptr)
+				unk5C[unk59]->setPortData(13, 1);
+			unk58 = 0;
+			unk54 = 0;
 		}
 	}
 

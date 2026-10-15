@@ -800,8 +800,8 @@ void TResetFruit::kicked()
 
 	JGeometry::TVec3<f32> toMario(SMS_GetMarioPos().x - mPosition.x, 0.0f,
 	                              SMS_GetMarioPos().z - mPosition.z);
-	if (getVelocity().y <= 0.0f && isAirborne()
-	    && getVelocity().dot(toMario) > 0.0f) {
+	if (getVelocity().y <= 0.0f
+	    && !(isAirborne() && getVelocity().dot(toMario) > 0.0f)) {
 		if (getVelocity().y == 0.0f)
 			mVelocity.y = unk178;
 		else
@@ -1175,28 +1175,7 @@ void TBigWatermelon::rebound(JGeometry::TVec3<f32>* surface)
 		kill();
 		*surface = mPosition;
 	} else {
-		TMapObjBase::calcReflectingVelocity(
-		    mGroundPlane, mMapObjData->mPhysical->mData->unk4, &mVelocity);
-		surface->y = mGroundHeight;
-		onLiveFlag(LIVE_FLAG_AIRBORNE);
-		if (isActorType(ACTOR_TYPE_WATERMELON)) {
-			f32 volume;
-			if (mScaling.y >= 5.0f) {
-				volume = abs(mGroundPlane->getNormal().y);
-				SMSGetMSound()->startSoundActorWithInfo(
-				    MSD_SE_OBJ_WATERMELON_BBUND, &mPosition, nullptr, volume, 0,
-				    0, nullptr, 0, 4);
-			} else {
-				volume = abs(mGroundPlane->getNormal().y);
-				SMSGetMSound()->startSoundActorWithInfo(
-				    MSD_SE_OBJ_WATERMELON_SBUND, &mPosition, nullptr, volume, 0,
-				    0, nullptr, 0, 4);
-			}
-		} else {
-			u32 soundId = mMapObjData->mSound->mData->mSoundIdTable[4];
-			SMSGetMSound()->startSoundActorWithInfo(
-			    soundId, &mPosition, &mVelocity, 0.0f, 0, 0, nullptr, 0, 4);
-		}
+		TMapObjBall::rebound(surface);
 		if (isState(STATE_LAUNCHED)) {
 			mState = STATE_LANDED;
 		}
@@ -1211,7 +1190,7 @@ void TBigWatermelon::touchGround(JGeometry::TVec3<f32>* ground)
 void TBigWatermelon::touchActor(THitActor* actor)
 {
 	if (!isState(STATE_APPEARING)) {
-		if (isState(STATE_NORMAL) || getVelocity().y < 0.0f) {
+		if (!isState(STATE_NORMAL) && getVelocity().y < 0.0f) {
 			kill();
 		} else {
 			if (actor->isActorType(ACTOR_TYPE_MARIO)) {
