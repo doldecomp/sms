@@ -4,7 +4,7 @@
 #include <JSystem/JDrama/JDRDirector.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <System/Application.hpp>
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 #include <JSystem/J2D/J2DScreen.hpp>
 #endif
 
@@ -18,7 +18,7 @@ class TDisplay;
 
 class TMarioGamePad;
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 class TEndingString : public JDrama::TViewObj {
 public:
 	TEndingString(const char*);
@@ -74,7 +74,7 @@ private:
 	/* 0x28 */ TMovieSubTitle* unk28;
 	/* 0x2C */ TMovieRumble* unk2C;
 	/* 0x30 */ JDrama::TFlagT<u16> unk30;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	/* 0x34 */ TEndingString* mEndingString;
 	/* 0x38 */ u32 mEndingTimer;
 #endif

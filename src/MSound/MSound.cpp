@@ -121,7 +121,7 @@ void MSSeCallBack::setWaterCameraFir(bool enabled)
 		smWaterFilter = 0x78;
 	else
 		smWaterFilter = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	if (MSGMSound->mWaterFirEnabled == true)
 		smWaterFilter = 0x78;
 #endif
@@ -435,7 +435,7 @@ f32 MSound::getDistFromCamera(Vec* pos)
 	return JALCalc::getDist(pos, mAudioCameras->mPosition);
 }
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 f32 MSound::getDistPowFromCamera(const Vec& pos)
 {
 	const Vec* cam = mAudioCameras->mPosition;
@@ -506,7 +506,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 
 	unk7C = 0;
 	unk80 = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	unk94            = -1;
 	mWaterFirEnabled = false;
 	MSSeCallBack::setWaterCameraFir(false);

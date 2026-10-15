@@ -46,7 +46,7 @@ public:
 	virtual void proc();
 
 	f32 calcParamRatioInCube(s32);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	void setBgmVolumeForce();
 
 	static MSStageCubeFade* smInstance;
@@ -58,7 +58,7 @@ public:
 	/* 0xC */ f32 unkC;
 };
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 class MSStageCubeFadeDouble : public MSStageCubeFade {
 public:
 	MSStageCubeFadeDouble();
@@ -153,7 +153,7 @@ void startStageEntranceDemo(u8, u8);
 void entranceDemoLoop(u32);
 void endStageEntranceDemo(u8, u8);
 void startStageBGM(u8, u8);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 bool getGateKeeperBGMStopFlag();
 void setGateKeeperBGMPlayFlag(u32, bool);
 #endif

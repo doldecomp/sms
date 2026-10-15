@@ -1,13 +1,13 @@
 #include <JSystem/JDrama/JDRResolution.hpp>
 #include <dolphin/vi.h>
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 u16 JDrama::GetVIWidthMax(u32 tvFormat)
 #else
 u16 JDrama::GetVIWidthMax()
 #endif
 {
-#ifndef VERSION_GMSP01
+#if !(defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX))
 	const u32 tvFormat = VIGetTvFormat();
 #endif
 	switch (tvFormat) {
@@ -23,13 +23,13 @@ u16 JDrama::GetVIWidthMax()
 	}
 }
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 u16 JDrama::GetVIHeightMax(u32 tvFormat)
 #else
 u16 JDrama::GetVIHeightMax()
 #endif
 {
-#ifndef VERSION_GMSP01
+#if !(defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX))
 	const u32 tvFormat = VIGetTvFormat();
 #endif
 	switch (tvFormat) {

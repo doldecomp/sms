@@ -61,7 +61,7 @@ public:
 
 	bool isDeadByWall();
 	void creepToCurPathNode(f32);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	void emitEffects();
 	void calcDirection();
 #endif
@@ -75,7 +75,7 @@ public:
 	/* 0x1C0 */ JGeometry::TVec3<f32> unk1C0;
 	/* 0x1CC */ Mtx unk1CC;
 	/* 0x1FC */ JGeometry::TVec3<f32> unk1FC;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	/* 0x208 */ TAmiNokoSaveLoadParams* unk20C;
 	/* 0x20C */ u8 unk210;
 	/* 0x210 */ TAmiHit* unk208;

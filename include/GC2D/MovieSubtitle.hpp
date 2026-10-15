@@ -13,7 +13,7 @@ class TMessageLoader;
 
 class TMovieSubTitle : public JDrama::TViewObj {
 public:
-	TMovieSubTitle(const TTHPRender*);
+	TMovieSubTitle(const TTHPRender* thpRender);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
@@ -29,13 +29,13 @@ public:
 	void draw(JDrama::TGraphics*);
 
 public:
-	/* 0x10 */ const TTHPRender* unk10;
+	/* 0x10 */ const TTHPRender* mThpRenderer;
 	/* 0x14 */ J2DSetScreen* unk14;
 	/* 0x18 */ J2DTextBox* unk18;
 	/* 0x1C */ J2DTextBox* unk1C;
 	/* 0x20 */ TMessageLoader* unk20;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ bool unk28;
+	/* 0x28 */ bool mVisible;
 };
 
 #endif

@@ -43,7 +43,7 @@ public:
 	TYumboSeed* getUnusedSeed();
 	bool isDead() const;
 	bool isFreeze() const;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	bool isChangedBlock() const;
 #endif
 	bool isWaterproof() const;

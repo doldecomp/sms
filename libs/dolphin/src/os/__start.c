@@ -15,7 +15,7 @@
 
 extern void InitMetroTRK();
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
 #else
 __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x80424008);

@@ -78,7 +78,7 @@ public:
 
 	void initSound();
 	void mainLoop();
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	f32 getDistPowFromCamera(const Vec& pos);
 #endif
 	void exitStage();
@@ -197,7 +197,7 @@ public:
 	}
 
 public:
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	/* 0x94 */ s32 unk94;
 	/* 0x98 */ bool mWaterFirEnabled;
 	/* 0x9A */ u16 mTimerSyncValue;
