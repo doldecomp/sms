@@ -738,7 +738,7 @@ void TKumokun::decideTargetAtDir(const JGeometry::TVec3<f32>& param_1)
 		local_A4.setRotate(forward, local_C4, 1.0f);
 	}
 
-	local_b4.mul(local_A4);
+	local_b4.mul(local_b4, local_A4);
 
 	unk1AC = unk19C;
 	unk1BC = local_b4;

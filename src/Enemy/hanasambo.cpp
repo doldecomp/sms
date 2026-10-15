@@ -53,6 +53,10 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+u8 TSamboHead::mBodyJntIndex;
+
+static TSamboHead* gpCurSamboHead;
+
 static const char* sambo_bastable[] = {
 	"/scene/sambo/bas/sambo_down.bas",
 	0,
@@ -992,10 +996,6 @@ DEFINE_NERVE(TNerveHanaSamboFreeze, TLiveActor)
 
 	return false;
 }
-
-u8 TSamboHead::mBodyJntIndex;
-
-static TSamboHead* gpCurSamboHead;
 
 static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 {
