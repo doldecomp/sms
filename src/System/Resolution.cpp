@@ -1,24 +1,21 @@
 #include <System/Resolution.hpp>
 #include <dolphin/vi.h>
 
-u16 SMSGetGameVideoWidth()
-{
-	return VERSION_SELECT_DEFAULT(660, GMSP01_NX(640));
-}
+u16 SMSGetGameVideoWidth() { return VERSION_SELECT(660, GMSP01_NX(640)); }
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
 u16 SMSGetGameVideoHeight(u32 tvFormat)
 {
-	u16 ret = VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
+	u16 ret = VERSION_SELECT(448, GMSP01_NX(360));
 	switch (tvFormat) {
 	case VI_MPAL:
 	case VI_NTSC:
 	case VI_EURGB60:
-		ret = VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
+		ret = VERSION_SELECT(448, GMSP01_NX(360));
 		break;
 	case VI_PAL:
-		ret = VERSION_SELECT_DEFAULT(530, GMSP01_NX(360));
+		ret = VERSION_SELECT(530, GMSP01_NX(360));
 		break;
 	default:
 		break;
@@ -51,10 +48,7 @@ s32 SMSGetDisplayWidthMax() { return 720; }
 // UNUSED
 s32 SMSGetDisplayHeightMax() { return 574; }
 
-u16 SMSGetTitleVideoWidth()
-{
-	return VERSION_SELECT_DEFAULT(660, GMSP01_NX(640));
-}
+u16 SMSGetTitleVideoWidth() { return VERSION_SELECT(660, GMSP01_NX(640)); }
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
@@ -68,24 +62,15 @@ u16 SMSGetTitleVideoHeight() { return SMSGetGameVideoHeight(); }
 
 u16 SMSGetGameRenderWidth() { return 640; }
 
-u16 SMSGetGameRenderHeight()
-{
-	return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
-}
+u16 SMSGetGameRenderHeight() { return VERSION_SELECT(448, GMSP01_NX(360)); }
 
 u16 SMSGetTitleRenderWidth() { return 640; }
 
-u16 SMSGetTitleRenderHeight()
-{
-	return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
-}
+u16 SMSGetTitleRenderHeight() { return VERSION_SELECT(448, GMSP01_NX(360)); }
 
 u16 SMSGetGCLogoRenderWidth() { return 640; }
 
-u16 SMSGetGCLogoRenderHeight()
-{
-	return VERSION_SELECT_DEFAULT(448, GMSP01_NX(360));
-}
+u16 SMSGetGCLogoRenderHeight() { return VERSION_SELECT(448, GMSP01_NX(360)); }
 
 u16 SMSGetGCLogoVideoWidth() { return 640; }
 

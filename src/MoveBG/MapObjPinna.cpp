@@ -54,10 +54,7 @@ s32 TFerrisWheel::becomeCalmlyCallback(uintptr_t param_1, u32 param_2)
 }
 
 #define VERSION_FRAME_RATE                                                     \
-	(VERSION_SELECT(GMSJ01(SMSGetAnmFrameRate()),                              \
-	                GMSE01(SMSGetAnmFrameRate()), GMSP01(rotate_frame_rate),   \
-	                GMSJ01_01(SMSGetAnmFrameRate()),                           \
-	                GMSP01_NX(SMSGetAnmFrameRate())))
+	(VERSION_SELECT(SMSGetAnmFrameRate(), GMSP01(rotate_frame_rate)))
 
 void TFerrisWheel::control()
 {
@@ -671,11 +668,8 @@ void TWaterRecoverObj::touchPlayer(THitActor* param_1)
 void TAmiKing::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	SMS_LoadParticle(VERSION_SELECT(GMSJ01("/scene/Mapobj/amiking.jpa"),
-	                                GMSE01("/scene/mapObj/amiking.jpa"),
-	                                GMSP01("/scene/mapObj/amiking.jpa"),
-	                                GMSJ01_01("/scene/mapObj/amiking.jpa"),
-	                                GMSP01_NX("/scene/mapObj/amiking.jpa")),
+	SMS_LoadParticle(VERSION_SELECT("/scene/mapObj/amiking.jpa",
+	                                GMSJ01("/scene/Mapobj/amiking.jpa")),
 	                 MAPOBJ_AMIKING);
 }
 

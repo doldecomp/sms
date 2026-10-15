@@ -116,7 +116,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
-	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT_DEFAULT(
+	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
 	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/scenarioname.bmg")));
 	if (SMSGetMarDirector()->mMap == 0x14)
 		shineStage = 0;
@@ -127,13 +127,10 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 #endif
 
 	if (SMSGetMarDirector()->mMap != 0xF) {
-		void* scenarioBmg = JKRFileLoader::getGlbResource(
-		    VERSION_SELECT(GMSJ01("/common/2d/scenarioname.bmg"),
-		                   GMSE01("/common/2d/scenarioname.bmg"),
-		                   GMSP01("/cmn2d/scenarioname.bmg"),
-		                   GMSJ01_01("/common/2d/scenarioname.bmg"),
-		                   GMSP01_NX("/cmn2d/scenarioname.bmg")));
-		s16 shineID = SMS_getShineID(shineStage, flag, false);
+		void* scenarioBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
+		    "/common/2d/scenarioname.bmg", GMSP01("/cmn2d/scenarioname.bmg"),
+		    GMSP01_NX("/cmn2d/scenarioname.bmg")));
+		s16 shineID       = SMS_getShineID(shineStage, flag, false);
 		const char* scenarioName;
 		if (scenarioBmg == nullptr || shineID == -1 || shineStage == 0) {
 			scenarioName = "";

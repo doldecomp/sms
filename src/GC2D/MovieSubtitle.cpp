@@ -54,8 +54,7 @@ void TMovieSubTitle::setupResource(const char* param_1, JKRArchive* param_2)
 	unk18 = (J2DTextBox*)unk14->search('me_a');
 	unk1C = (J2DTextBox*)unk14->search('me_b');
 
-	char buffer[VERSION_SELECT(GMSJ01(256), GMSE01(256), GMSP01(1024),
-	                           GMSJ01_01(1024), GMSP01_NX(1024))];
+	char buffer[VERSION_SELECT(1024, GMSJ01(256), GMSE01(256))];
 
 	// inline?
 	memset(buffer, ' ', ARRAY_COUNT(buffer));
