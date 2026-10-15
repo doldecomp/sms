@@ -23,7 +23,7 @@
 #include <MoveBG/MapObjBase.hpp>
 #include <MoveBG/Item.hpp>
 #include <MSound/MSound.hpp>
-#include <MSound/MSoundSe.hpp>
+#include <MSound/MSoundSE.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>

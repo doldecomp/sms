@@ -4,7 +4,7 @@
 #include <dolphin/types.h>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
-struct J3DMaterial;
+class J3DMaterial;
 
 class J3DMatColorAnm {
 public:

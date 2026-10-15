@@ -3,7 +3,7 @@
 
 #include <JSystem/JAudio/JAInterface/JAIEntry.hpp>
 
-struct JAIActor;
+class JAIActor;
 
 class JAISeqEntry : public JAIEntry {
 public:

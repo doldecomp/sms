@@ -16,7 +16,7 @@ public:
 	virtual ~JPAKeyFrameAnime() { }
 };
 
-struct JPAEmitterData;
+class JPAEmitterData;
 
 class JPAEmitterLoaderDataBase {
 public:
