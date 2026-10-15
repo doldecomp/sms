@@ -73,7 +73,10 @@ int TMarDirector::loadResource()
 	gpMarioParticleManager->unk3B8 = new JPAEmitterManager(
 	    gpResourceManager, particleNum, emitterNum, emitterNum * 2, nullptr);
 	gpEmitterManager4D2 = new JPAEmitterManager(
-	    nullptr, VERSION_SELECT(GMSJ01(200), GMSP01(270)), 0x20, 0x40, nullptr);
+	    nullptr,
+	    VERSION_SELECT(GMSJ01(200), GMSE01(270), GMSP01(270), GMSJ01_01(270),
+	                   GMSP01_NX(270)),
+	    0x20, 0x40, nullptr);
 	loadParticle();
 
 	void* rawArch = SMSLoadArchive("/data/yoshi.arc", nullptr, 0, nullptr);

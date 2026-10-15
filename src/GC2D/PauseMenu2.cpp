@@ -114,8 +114,10 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
-#ifdef VERSION_GMSP01
-	void* stageBmg = JKRFileLoader::getGlbResource("/cmn2d/stagename.bmg");
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
+	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT_DEFAULT(
+	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/scenarioname.bmg")));
 	if (SMSGetMarDirector()->mMap == 0x14)
 		shineStage = 0;
 	mStageName->setString(SMSGetMessageData(stageBmg, shineStage));
@@ -127,7 +129,10 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	if (SMSGetMarDirector()->mMap != 0xF) {
 		void* scenarioBmg = JKRFileLoader::getGlbResource(
 		    VERSION_SELECT(GMSJ01("/common/2d/scenarioname.bmg"),
-		                   GMSP01("/cmn2d/scenarioname.bmg")));
+		                   GMSE01("/common/2d/scenarioname.bmg"),
+		                   GMSP01("/cmn2d/scenarioname.bmg"),
+		                   GMSJ01_01("/common/2d/scenarioname.bmg"),
+		                   GMSP01_NX("/cmn2d/scenarioname.bmg")));
 		s16 shineID = SMS_getShineID(shineStage, flag, false);
 		const char* scenarioName;
 		if (scenarioBmg == nullptr || shineID == -1 || shineStage == 0) {

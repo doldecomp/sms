@@ -29,8 +29,11 @@ from tools.project import (
 # Game versions
 DEFAULT_VERSION = 0
 VERSIONS = [
-    "GMSJ01",  # 0
-    "GMSP01",  # 1
+    "GMSJ01",     # 0
+    "GMSP01",     # 1
+    "GMSE01",     # 2
+    "GMSJ01_01",  # 3
+    "GMSP01_NX",  # 4 (Switch 3D all stars version)
 ]
 
 parser = argparse.ArgumentParser()
