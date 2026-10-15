@@ -344,7 +344,8 @@ void TMultiMtxEffect::setup(J3DModel* model, const char* prmLocation)
 		}
 		}
 	}
-	flagOn(2);
+	for (int i = 0; i < mNumBones; ++i)
+		mMtxEffectTbl[i]->onFlag(2);
 }
 
 void TMultiMtxEffect::setUserArea()
@@ -368,8 +369,7 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 
 	JGeometry::TVec3<f32> dir = end - start;
 	f32 mag                   = VECMag(dir);
-	f32 invMag                = 1.0f / mag;
-	dir.scale(invMag);
+	dir.scale(1.0f / mag);
 
 	JGeometry::TVec3<f32> up = upDir;
 	up.normalize();
@@ -384,21 +384,20 @@ void SMS_MakeJointsToArc(J3DModel* model, const JGeometry::TVec3<f32>& start,
 		c.normalize();
 
 		MtxPtr jm = model->getAnmMtx(i);
-		Vec axis  = c;
 
 		f32 dist = (f32)i * (mag / (f32)(jointNum - 1));
 
 		JGeometry::TVec3<f32> zAxis(jm[0][2], jm[1][2], jm[2][2]);
 		JGeometry::TVec3<f32> side;
-		side.cross2(zAxis, axis);
+		side.cross(zAxis, c);
 		JGeometry::TVec3<f32> fwd;
-		fwd.cross2(axis, side);
+		fwd.cross(c, side);
 		side.normalize();
 		fwd.normalize();
 
-		jm[0][0] = axis.x;
-		jm[1][0] = axis.y;
-		jm[2][0] = axis.z;
+		jm[0][0] = c.x;
+		jm[1][0] = c.y;
+		jm[2][0] = c.z;
 		jm[0][1] = side.x;
 		jm[1][1] = side.y;
 		jm[2][1] = side.z;
@@ -503,16 +502,7 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 		TRopePoint& cur  = mPoints[i];
 		TRopePoint& prev = mPoints[i - 1];
 
-		bool same
-		    = (-JGeometry::TUtil<f32>::epsilon() <= prev.unkC.x - cur.unkC.x
-		       && prev.unkC.x - cur.unkC.x <= JGeometry::TUtil<f32>::epsilon())
-		      && (-JGeometry::TUtil<f32>::epsilon() <= prev.unkC.y - cur.unkC.y
-		          && prev.unkC.y - cur.unkC.y
-		                 <= JGeometry::TUtil<f32>::epsilon())
-		      && (-JGeometry::TUtil<f32>::epsilon() <= prev.unkC.z - cur.unkC.z
-		          && prev.unkC.z - cur.unkC.z
-		                 <= JGeometry::TUtil<f32>::epsilon());
-		if (!same) {
+		if (!cur.unkC.epsilonEquals(prev.unkC)) {
 			JGeometry::TVec3<f32> delta = prev.unkC;
 			delta -= cur.unkC;
 			VECNormalize(&delta, &delta);

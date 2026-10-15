@@ -421,11 +421,8 @@ void TBaseNPC::npcFallIn()
 
 bool TBaseNPC::npcRecoverFromSinking()
 {
-	bool result = false;
-
-	bool bVar2 = checkLiveFlag(LIVE_FLAG_UNK8000000);
-	if (!bVar2) {
-		if (getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
+	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
+		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
 			onLiveFlag(LIVE_FLAG_UNK8000000);
 			mVelocity.y = CalcJumpVelocityY(unk1C4 - mPosition.y + 150.0f,
 			                                getGravityY());
@@ -434,8 +431,8 @@ bool TBaseNPC::npcRecoverFromSinking()
 		}
 	}
 
-	bVar2 = getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK);
-	if (bVar2) {
+	bool result = false;
+	if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 		result = true;
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);

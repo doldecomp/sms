@@ -208,7 +208,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	if (mNeckJointIndex != -1) {
 		unk230 = new TNpcUnk230Struct;
 		extern int NPCNeckCallBack(J3DNode * param_1, int param_2);
-		getMActor()->setJointCallback(mNeckJointIndex, &NPCNeckCallBack);
+		mMActor->setJointCallback(mNeckJointIndex, &NPCNeckCallBack);
 	}
 
 	setHappyEffectMtxPtr_(jointNameTab);
@@ -222,8 +222,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 		setPollutionEffectMtxPtr_(jointNameTab);
 
 	if (pTVar3->unk0 != nullptr) {
-		const char* modelName = pTVar3->unk0->unk0;
-		unk150                = SMS_CreateMinimumSDLModel(modelName);
+		unk150  = SMS_CreateMinimumSDLModel(pTVar3->unk0->unk0);
 		u16 idx = unk150->getModelData()->getJointName()->getIndex(
 		    pTVar3->unk0->unk4);
 		unk154 = unk150->getAnmMtx(idx);
@@ -394,17 +393,15 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 		uVar20 = 0;
 
 	{
-		s16* indices         = &local_78[0].color.r;
 		int uVar16           = mManager->getModelDataNum();
+		s16* indices         = &local_78[0].color.r;
 		const GXColor* color = getPtrInitPollutionColor();
 		for (int i = 0; i < uVar16; ++i) {
 			for (int j = 0; j < 2; ++j) {
-				const TColorChangeInfo* const* row = initInfo->unk34[j];
-				s16 tmp                            = indices[j];
+				s16 tmp = indices[j];
 				if (initInfo->unk34[j][i]) {
-					const TColorChangeInfo* ccInfo = row[i];
-					SMS_InitChangeNpcColor(mMActorKeeper->getMActor(i), ccInfo,
-					                       tmp, color);
+					SMS_InitChangeNpcColor(mMActorKeeper->getMActor(i),
+					                       initInfo->unk34[j][i], tmp, color);
 				}
 			}
 		}

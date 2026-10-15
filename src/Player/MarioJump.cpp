@@ -307,8 +307,10 @@ BOOL TMario::jumpingCommonEvents()
 		return 1;
 	if (rocketCheck())
 		return 1;
+	if (considerJumpRotate())
+		return 1;
 
-	return considerJumpRotate() ? 1 : 0;
+	return 0;
 }
 
 BOOL TMario::jumping()
@@ -1008,7 +1010,7 @@ BOOL TMario::rotateJumping()
 	if (mStatus == MARIO_STATUS_RIGHT_ROTATE_JUMP)
 		mModelFaceAngle = mStatusTimer * 4096;
 	else
-		mModelFaceAngle = mStatusTimer * -4096;
+		mModelFaceAngle = -(mStatusTimer * 4096);
 
 	if (!(SMSGetMarDirector()->mMoveTickCount & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
@@ -1075,10 +1077,10 @@ BOOL TMario::hipAttacking()
 			changePlayerStatus(MARIO_STATUS_HIP_ATTACK_END, 0, 0);
 		}
 		if (mStatusTimer < 0x28) {
-			f32 lift = (0x28 - mStatusTimer) / 2.0f;
+			f32 lift = (f32)(0x28 - mStatusTimer) * 0.5f;
 			if (160.0f + (mPosition.y + lift) < mFloorPosition.x) {
-				mPosition.y += lift / 4.0f;
-				unk104 = mPosition.y;
+				mPosition.y = lift * 0.25f + mPosition.y;
+				unk104      = mPosition.y;
 			}
 		}
 		setPlayerVelocity(0.0f);
@@ -1228,10 +1230,10 @@ BOOL TMario::diving()
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 				mWaterGun->unk1CC2 = -nozzleAngle;
 				mWaterGun->unk1CC4 = nozzleAngle;
-				s16 rotSp          = mDivingParams.mRotSp.get();
 				mFaceAngle.y       = mIntendedYaw
 				               - IConverge((s16)(mIntendedYaw - mFaceAngle.y),
-				                           0, rotSp, rotSp);
+				                           0, mDivingParams.mRotSp.get(),
+				                           mDivingParams.mRotSp.get());
 			}
 		}
 		setAnimation(ANIM_DIVE_WAIT, 1.0f);
