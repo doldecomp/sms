@@ -265,9 +265,8 @@ void TBGKMtxCalc::calc(u16 param_1)
 				else
 					turn = MsMax(-3.0f, delta);
 
-				turn += cur;
-				turn -= mOwner->mRotation.y;
-				mOwner->unk180 = MsWrap(turn, 0.0f, 360.0f);
+				f32 newYaw     = (turn + cur) - mOwner->mRotation.y;
+				mOwner->unk180 = MsWrap(newYaw, 0.0f, 360.0f);
 			}
 		}
 
@@ -360,10 +359,8 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveBGKSleep::theNerve());
 
 	J3DModel* model = mMActor->getModel();
-	if (model->getSkinDeform() == NULL) {
-		J3DSkinDeform* skinDeform = new J3DSkinDeform;
-		model->setSkinDeform(skinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
-	}
+	if (model->getSkinDeform() == NULL)
+		model->setSkinDeform(new J3DSkinDeform, (J3DDeformAttachFlag)1);
 
 	unk178 = new TBGKMtxCalc(this);
 	mMActor->setBckMtxCalc(unk178);
@@ -372,7 +369,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(2, getModel()->getModelData());
-	for (int i = 0; i <= 1; i++)
+	for (int i = 0; i < 2; i++)
 		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
 
 	mObstacle = new TBGKObstacle(this, "TBGKObstacle");
@@ -508,8 +505,7 @@ void TBiancoGateKeeper::deathRumble()
 	if (SMS_IsMarioTouchGround4cm()) {
 		J3DFrameCtrl* fc = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != NULL) {
-			f32 t        = fc->getFrame() / (f32)fc->getEnd();
-			t            = 1.0f - t;
+			f32 t        = 1.0f - fc->getFrame() / (f32)fc->getEnd();
 			mRumblePower = t * getRumblePow();
 			SMSRumbleMgr->start(8, &mRumblePower);
 		}

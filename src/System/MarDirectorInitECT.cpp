@@ -114,10 +114,8 @@ void TMarDirector::initECDisp(
 	    0, 0, (u16)SMSGetGameRenderWidth(), (u16)SMSGetGameRenderHeight()));
 	scene->insert(stageDisp);
 
-	JDrama::TNameRef* root
-	    = JDrama::TNameRefGen::getInstance()->getRootNameRef();
 	JDrama::TViewObj* composite3
-	    = static_cast<JDrama::TViewObj*>(root->search("合成3"));
+	    = static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("合成3"));
 	JDrama::TViewObj* specularSheen = static_cast<JDrama::TViewObj*>(
 	    JDrama::TNameRefGen::search("スペキュラシーン"));
 

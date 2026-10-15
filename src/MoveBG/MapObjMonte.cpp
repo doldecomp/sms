@@ -290,8 +290,7 @@ void THangingBridge::setDrawPos(int board_index, f32 height,
 void THangingBridge::drawRopeBetweenBoards(f32 param_1, int param_2) const
 {
 	f32 xw = unk30.x * unk3C;
-	f32 zw = unk30.y;
-	zw *= unk3C;
+	f32 zw = unk30.y * unk3C;
 	JGeometry::TVec2<f32> ropeWidth;
 	ropeWidth.set(unk30);
 	ropeWidth.scale(mRopeWidthBetweenBoards);
@@ -640,15 +639,15 @@ void TSwingBoard::draw() const
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	JGeometry::TVec3<f32> bottom;
 	JGeometry::TVec3<f32> top;
-	bottom.x = mBoardWidth * mtx[0][0] + getInitialPosition().x;
-	bottom.y = unk138 + getInitialPosition().y;
-	bottom.z = mBoardWidth * mtx[2][0] + getInitialPosition().z;
+	bottom.x = mBoardWidth * mtx[0][0] + mInitialPosition.x;
+	bottom.y = unk138 + mInitialPosition.y;
+	bottom.z = mBoardWidth * mtx[2][0] + mInitialPosition.z;
 	top.x    = mBoardWidth * mtx[0][0] + mPosition.x;
 	top.y    = 60.0f + mPosition.y;
 	top.z    = mBoardWidth * mtx[2][0] + mPosition.z;
 	drawOneRope(top, bottom);
-	bottom.x = getInitialPosition().x - mBoardWidth * mtx[0][0];
-	bottom.z = getInitialPosition().z - mBoardWidth * mtx[2][0];
+	bottom.x = mInitialPosition.x - mBoardWidth * mtx[0][0];
+	bottom.z = mInitialPosition.z - mBoardWidth * mtx[2][0];
 	top.x    = mPosition.x - mBoardWidth * mtx[0][0];
 	top.z    = mPosition.z - mBoardWidth * mtx[2][0];
 	drawOneRope(top, bottom);
@@ -658,11 +657,8 @@ void TSwingBoard::swing()
 {
 	if (marioIsOn() && SMS_GetMarioWaterGun()->getEmittedWaterCount() != 0) {
 		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
-		JGeometry::TVec3<f32> direction;
-		direction.x = -emitMtx[0][0];
-		direction.y = 0.0f;
-		direction.z = -emitMtx[2][0];
-		MtxPtr mtx  = getModel()->getAnmMtx(0);
+		JGeometry::TVec3<f32> direction(-emitMtx[0][0], 0.0f, -emitMtx[2][0]);
+		MtxPtr mtx = getModel()->getAnmMtx(0);
 		unk144 += unk140
 		          * (mtx[0][2] * direction.x + mtx[1][2] * direction.y
 		             + mtx[2][2] * direction.z);
@@ -790,10 +786,9 @@ void TFluff::move()
 		mPosition.y = 5000.0f;
 	unk154 += unk150 * gpMapObjManager->unkD0.x;
 	unk15C += unk150 * gpMapObjManager->unkD0.z;
-	JGeometry::TVec3<f32> velocity = getVelocity();
-	unk154 += velocity.x;
-	unk158 += velocity.y;
-	unk15C += velocity.z;
+	unk154 += mVelocity.x;
+	unk158 += mVelocity.y;
+	unk15C += mVelocity.z;
 	mVelocity *= unk164;
 	f32 wave    = unk138 * sinf(3.14f * unk148 / 180.0f);
 	mPosition.x = mInitialPosition.x + wave * (unk144 + unk140) + unk154;
@@ -862,7 +857,9 @@ void TFluff::control()
 	case STATE_UNK4:
 		if (!isStateTimerEngaged()) {
 			appear();
-			mRotation.set(0.0f, 360.0f * MsRandF(), 0.0f);
+			mRotation.x      = 0.0f;
+			mRotation.y      = 360.0f * MsRandF();
+			mRotation.z      = 0.0f;
 			mInitialRotation = mRotation;
 			unk16C           = 0;
 			unk168->registerNextFluff(this);

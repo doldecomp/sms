@@ -909,18 +909,14 @@ void TNozzleDeform::emit(int param_1)
 			f32 reaction
 			    = localUnk378 * (reactionPow - reactionPowMin) + reactionPowMin;
 
-			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
-			f32 dirX           = emitInfo->mDir.get().x;
-			f32 dirZ           = emitInfo->mDir.get().z;
-			f32 cosAngle       = JMASCos(faceAngleY);
-			f32 sinAngle       = JMASSin(faceAngleY);
-			f32 directionScale = (-dirX * sinAngle - cosAngle * dirZ);
+			s16 faceAngleY = mFludd->mMario->mFaceAngle.y;
+			f32 dirX       = emitInfo->mDir.get().x;
+			f32 dirZ       = emitInfo->mDir.get().z;
+			f32 cosAngle   = JMASCos(faceAngleY);
+			f32 sinAngle   = JMASSin(faceAngleY);
+			f32 faceDot    = (-cosAngle * dirZ - dirX * sinAngle);
 
-			f32 velocity = reaction;
-			velocity *= refEmitPow;
-			velocity *= directionScale;
-
-			mFludd->mMario->addVelocity(velocity);
+			mFludd->mMario->addVelocity(reaction * faceDot * refEmitPow);
 
 			JGeometry::TVec3<f32> const& dirVec = emitInfo->mDir.get();
 			f32 accelY = -dirVec.y * refEmitPow * mReactionY.get();
@@ -1016,7 +1012,23 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(5))
 			mactor->setBckFromIndex(5);
 
-		bool updateAnimation = mFludd->isEmitting();
+		bool updateAnimation = false;
+		if (mFludd->mCurrentWater == 0) {
+			updateAnimation = false;
+		} else if (mFludd->getNozzle(mFludd->mCurrentNozzle)->getNozzleKind()
+		           == 1) {
+			if (((TNozzleTrigger*)mFludd->getNozzle(mFludd->mCurrentNozzle))
+			        ->mSprayState
+			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
+				updateAnimation = true;
+			else
+				updateAnimation = false;
+		} else {
+			if (mFludd->getNozzle(mFludd->mCurrentNozzle)->unk378 > 0.0f)
+				updateAnimation = true;
+			else
+				updateAnimation = false;
+		}
 
 		if (!updateAnimation)
 			mAnimationState = 8;
@@ -1028,21 +1040,35 @@ void TNozzleDeform::animation(int param)
 		if (!mactor->checkCurBckFromIndex(6))
 			mactor->setBckFromIndex(6);
 
-		bool updateAnimation = mFludd->isEmitting();
+		bool updateAnimation = false;
+		if (mFludd->mCurrentWater == 0) {
+			updateAnimation = false;
+		} else if (mFludd->getCurrentNozzle()->getNozzleKind() == 1) {
+			if (((TNozzleTrigger*)mFludd->getCurrentNozzle())->mSprayState
+			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
+				updateAnimation = true;
+			else
+				updateAnimation = false;
+		} else {
+			if (mFludd->getCurrentNozzle()->unk378 > 0.0f)
+				updateAnimation = true;
+			else
+				updateAnimation = false;
+		}
 
 		if (updateAnimation == true)
 			mAnimationState = 2;
 
-		check                   = false;
+		bool finished           = false;
 		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (frameCtrl->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE
 		                          | J3DFrameCtrl::STATE_LOOPED_ONCE))
-			check = true;
+			finished = true;
 
 		if (frameCtrl->getFrame() > (frameCtrl->getEnd() - 0.1f))
-			check = true;
+			finished = true;
 
-		if (check && !(mFludd->unk1CEC == 0.0f ? true : false))
+		if (finished && !(mFludd->unk1CEC == 0.0f ? true : false))
 			mAnimationState = 0;
 
 		break;

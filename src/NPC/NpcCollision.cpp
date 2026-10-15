@@ -54,23 +54,31 @@ void TBaseNPC::execNpcObjCollision_()
 		if (bVar2)
 			local_4C.negate();
 
-		if (local_4C.isZero()) {
-			f32 diffY = mPosition.y;
-			diffY -= mCollisions[i]->mPosition.y;
-			if (CLBAbs(diffY) < 0.001f) {
-				local_4C.set(1.0f, 10.0f, 0.0f);
+		if (local_4C.squared() <= JGeometry::TUtil<f32>::epsilon()) {
+			f32 diffY = mPosition.y - mCollisions[i]->mPosition.y;
+
+			f32 y = diffY >= 0.0f ? diffY : -diffY;
+
+			if (y < 0.001f) {
+				local_4C.x = 1.0f;
+				local_4C.y = 10.0f;
+				local_4C.z = 0.0f;
 			} else {
-				local_4C.set(0.0f, diffY, 0.0f);
+				local_4C.x = 0.0f;
+				local_4C.y = diffY;
+				local_4C.z = 0.0f;
 			}
 		} else {
-			f32 dVar8
-			    = getAttackRadius() + mCollisions[i]->getDamageRadius()
-			                  - MsVECMag2(local_4C)
-			              >= 0.0f
-			          ? getAttackRadius() + mCollisions[i]->getDamageRadius()
-			                - MsVECMag2(local_4C)
-			          : -(getAttackRadius() + mCollisions[i]->getDamageRadius()
-			              - MsVECMag2(local_4C));
+			f32 dVar8;
+			if (mAttackRadius + mCollisions[i]->mDamageRadius
+			        - MsVECMag2(local_4C)
+			    >= 0.0f) {
+				dVar8 = mAttackRadius + mCollisions[i]->mDamageRadius
+				        - MsVECMag2(local_4C);
+			} else {
+				dVar8 = -(mAttackRadius + mCollisions[i]->mDamageRadius
+				          - MsVECMag2(local_4C));
+			}
 
 			if (dVar8 < 0.001f)
 				dVar8 = 0.001f;
@@ -90,8 +98,7 @@ void TBaseNPC::setVariableDamageRadius_()
 {
 	const TNpcInitInfo* initInfo
 	    = SMSGetNpcInitData(mActorType - ACTOR_TYPE_NPC_MONTE_M);
-	f32 baseRadius = initInfo->mDamageRadius;
-	baseRadius     = mScaling.x * baseRadius;
+	f32 baseRadius = initInfo->mDamageRadius * mScaling.x;
 	f32 radius     = baseRadius;
 	if (isBeTrampledNpc() && !SMS_IsMarioTouchGround4cm()
 	    && SMS_GetMarioPos().y > mPosition.y) {

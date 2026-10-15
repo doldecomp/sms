@@ -476,7 +476,7 @@ void CPolarSubCamera::calcPosAndAt_()
 			if (delta <= acs)
 				unk288 = 0.0f;
 			else
-				unk288 = CLBCalcRatio<s32>(acs, acf, (acf - unk284) + 1);
+				unk288 = CLBCalcRatio<s32>(acs, acf, delta);
 		} else {
 			unk288 = 1.0f;
 		}
@@ -594,12 +594,11 @@ void CPolarSubCamera::calcPosAndAt_()
 				    = mCurrentTarget.mYaw + mCurrentParams->mOffsetAngleY;
 
 				if (gpCameraMario->mFrameMoveDistHorizontal >= 0.05f) {
-					s16 mAngle = SMS_GetMarioAngleY();
-					mAngle -= 0x8000;
-					f32 m = MsClamp<f32>(
-					    (f32)mCurrentParams->mMaxAddAngleY
-					        * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
-					    -32766.998f, 32766.998f);
+					s16 mAngle = SMS_GetMarioAngleY() - 0x8000;
+					f32 m      = MsClamp<f32>(
+                        (f32)mCurrentParams->mMaxAddAngleY
+                            * (0.5f * (1.0f - JMASCos((mAngle - unk258) * 2))),
+                        -32766.998f, 32766.998f);
 
 					if ((s16)(mAngle - yAngle) < 0)
 						m = -m;

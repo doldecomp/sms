@@ -439,7 +439,7 @@ void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 		JGeometry::TVec3<f32>& camPos = tmp;
 
 		int count = 0;
-		for (int i = 1; i < mGraph->getNodeNum(); ++i, ++count) {
+		for (int i = 1; i < mGraph->getNodeNum(); ++i) {
 			JGeometry::TVec3<f32> local_c30;
 			mGraph->getGraphNode(i).getPoint(&local_c30);
 
@@ -456,6 +456,8 @@ void TMapObjSoundGroup::perform(u32 cue, JDrama::TGraphics* graphics)
 				++i;
 				mGraph->getGraphNode(i).getPoint(&local_c24);
 			}
+
+			++count;
 		}
 		mSceneSE->frameLoop(mSoundID, local_c18, count);
 	}

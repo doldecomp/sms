@@ -163,12 +163,15 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 
 		if (nextCycle) {
-			for (s32 i = 0; i < 3; i++) {
-				mRgbAnimCycle[i]++;
-				if (mRgbAnimCycle[i] >= 6) {
-					mRgbAnimCycle[i] = 0;
-				}
-			}
+			// TODO: This doesn't fully match.
+			mRgbAnimCycle[0]++;
+			mRgbAnimCycle[0] = (mRgbAnimCycle[0] >= 6) ? 0 : mRgbAnimCycle[0];
+
+			mRgbAnimCycle[1]++;
+			mRgbAnimCycle[1] = (mRgbAnimCycle[1] >= 6) ? 0 : mRgbAnimCycle[1];
+
+			mRgbAnimCycle[2]++;
+			mRgbAnimCycle[2] = (mRgbAnimCycle[2] >= 6) ? 0 : mRgbAnimCycle[2];
 		}
 	}
 
@@ -199,12 +202,9 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 
-		u8 midB;
-		u8 midG;
-		u8 midR;
-		midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
-		midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
-		midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
+		u8 midR = (mTopLeftCol.r + mBottomRightCol.r) >> 1;
+		u8 midG = (mTopLeftCol.g + mBottomRightCol.g) >> 1;
+		u8 midB = (mTopLeftCol.b + mBottomRightCol.b) >> 1;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(0.0f, 16.0f, -100.0f);
@@ -381,8 +381,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 digit0 = hundreds;
 		coinDigits[0]->changeTexture(mCoinNumTex[digit0]->getTexInfo(), 0);
 
-		numCoins -= 100 * (s32)(hundreds);
-		s32 digit1 = 0.1f * numCoins;
+		s32 digit1 = 0.1f * (numCoins - 100 * (s32)(hundreds));
 		coinDigits[1]->changeTexture(mCoinNumTex[digit1]->getTexInfo(), 0);
 
 		s32 digit2 = numCoins % 10;
@@ -478,8 +477,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	}
 	mSelectedShine = lastShineIdx;
 
-	for (s32 i = mNumUnlockedShines; i < 8; i++) {
-		mShineUnlockStates[i] = 0;
+	if (mNumUnlockedShines < 8) {
+		// TODO: I tried matching this as best as I could but the compiler
+		// keeps unrolling the loops and I'm running out of ideas...
+		bzero(mShineUnlockStates + mNumUnlockedShines, 8 - mNumUnlockedShines);
 	}
 
 	// Show arrows if we have more than one shine unlocked.
@@ -518,9 +519,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 firstSlot = (7 - mNumUnlockedShines) / 2;
 		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
 
-		for (; firstSlot <= lastSlot; firstSlot++) {
-			mShineMarks[i]
-			    = (J2DPicture*)mMenuScreen->search('i_o0' + firstSlot);
+		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
 			mShineMarks[i]->show();
 
 			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
@@ -537,10 +537,9 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 firstSlot = (8 - mNumUnlockedShines) / 2;
 		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
 
-		for (; firstSlot <= lastSlot; firstSlot++) {
-			mShineMarks[i]
-			    = (J2DPicture*)mMenuScreen->search('i_e0' + firstSlot);
-			mShineMarks[i]->show();
+		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
+			mShineMarks[i]->mVisible = true;
 
 			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
 				JUTTexture* mark = mShineUnlockedMark;
@@ -590,6 +589,12 @@ void TSelectMenu::startMove()
 	mSelectShineMgr->initData(mShineUnlockStates, mNumUnlockedShines,
 	                          mSelectedShine, emitter);
 	mSelectShineMgr->mShines[mSelectedShine]->mIsSelected = true;
+}
+
+// fabricated TODO: get rid of this and match properly!
+static inline JUtility::TColor makeBlackCornerColor(u8 alpha)
+{
+	return JUtility::TColor(0, 0, 0, alpha);
 }
 
 void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
@@ -709,8 +714,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			updated &= mStageBannerShadow->update();
 
 			// Fade the stage name in.
-			u16 stageAlpha = mStageName->getAlpha();
-			stageAlpha += SMSGetAnmFrameRate() * 6.0f;
+			f32 curAlpha   = mStageName->getAlpha();
+			u16 stageAlpha = SMSGetAnmFrameRate() * 6.0f + curAlpha;
 			if (stageAlpha > 255u) {
 				stageAlpha = 255u;
 			}
@@ -836,7 +841,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
 					                              mSelectedShine, false);
 					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, SMS_getNormalStage(shineID2));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
 					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
@@ -911,7 +916,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
 					                              mSelectedShine, false);
 					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
+					    mScenarioBmg2, SMS_getNormalStage(shineID2));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
@@ -984,13 +989,13 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 				alpha = mArrowR->getAlpha();
 				if (getNextIndex() == -1) {
-					if (alpha > 0) {
-						s32 alpha2 = alpha - 4;
-						if (alpha2 < 0) {
-							alpha2 = 0;
+					if (alpha != 0) {
+						alpha -= 4;
+						if (alpha < 0) {
+							alpha = 0;
 							mArrowR->hide();
 						}
-						mArrowR->setAlpha(alpha2);
+						mArrowR->setAlpha(alpha);
 					}
 				} else {
 					u8 alphaRef = mMarkAlpha;
@@ -1056,8 +1061,8 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			updated &= mLetterBoxTop->update();
 			updated &= mLetterBoxBottom->update();
 
-			// TODO: This needs to be matched properly.
-			// The compiler does a lot of inlining here that we don't want.
+			// TODO: recover the original color helper and remaining stack
+			// layout.
 			{
 				u32 ccol1
 				    = ((J2DPicture*)mLetterBoxTop->getPane())->mCornerColor[0];
@@ -1080,20 +1085,20 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
-				// These are probably inlined functions.
+				// TODO: get rid of this crap and match properly!!!
 				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col1 = makeBlackCornerColor(alpha);
 
 				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col2 = makeBlackCornerColor(alpha);
 
 				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col3 = makeBlackCornerColor(alpha);
 
 				alpha = var1;
 				((J2DPicture*)mLetterBoxTop->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(makeBlackCornerColor(alpha), col3, col2,
+				                     col1);
 			}
 
 			{
@@ -1117,19 +1122,20 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					updated = false;
 				}
 
+				// TODO: get rid of this crap and match properly!!!
 				u8 alpha              = var2;
-				JUtility::TColor col1 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col1 = makeBlackCornerColor(alpha);
 
 				alpha                 = var2;
-				JUtility::TColor col2 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col2 = makeBlackCornerColor(alpha);
 
 				alpha                 = var1;
-				JUtility::TColor col3 = JUtility::TColor(0, 0, 0, alpha);
+				JUtility::TColor col3 = makeBlackCornerColor(alpha);
 
 				alpha = var1;
 				((J2DPicture*)mLetterBoxBottom->getPane())
-				    ->setCornerColor(JUtility::TColor(0, 0, 0, alpha), col3,
-				                     col2, col1);
+				    ->setCornerColor(makeBlackCornerColor(alpha), col3, col2,
+				                     col1);
 
 				if (updated) {
 					mMenuState            = WAIT_BEFORE_CLOSE;
@@ -1148,13 +1154,27 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	if (flags & 0x8) {
-		if (mMenuState < 10 && mMenuState >= 0) {
+		switch (mMenuState) {
+		case CLOSE_MENU:
+		case LETTERBOX_ANIMATION:
+		case STAGE_BANNER_SLIDE:
+		case STAGE_BANNER_SQUASH:
+		case STAGE_BANNER_STRETCH:
+		case APPEAR_MENU:
+		case MENU_INPUT_LOOP:
+		case MENU_ANIM_LOOP:
+		case DISAPPEAR_MENU:
+		case WAIT_BEFORE_CLOSE: {
 			ReInitializeGX();
 			SMS_DrawInit();
 			J2DOrthoGraph graph(gfx->getViewport());
 			graph.setup2D();
 			graph.setup2D();
 			mMenuScreen->draw(0, 0, &graph);
+			break;
+		}
+		default:
+			break;
 		}
 	}
 }

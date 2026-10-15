@@ -50,9 +50,7 @@ void TSilhouette::loadAfter()
 	// three sample points atten = {0.9, 0.5, 0.05} at distances
 	// d = {30, 650, 1500}. k0 is eliminated by subtracting adjacent equations
 	// scaled by a[i]*a[i+1], leaving a 2x2 system solved via Cramer's rule.
-	f32 m2[2];
-	f32 m1[2];
-	f32 m0[2];
+	f32 m[3][2];
 	f32 dist[3];
 	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
 
@@ -60,14 +58,16 @@ void TSilhouette::loadAfter()
 		dist[i] = unk24[i];
 
 	for (int i = 0; i < 2; ++i) {
-		m0[i] = atten[i + 1]
-		        * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
-		m1[i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
-		m2[i] = atten[i + 1] - atten[i];
+		m[0][i]
+		    = atten[i + 1]
+		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
+		m[1][i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
+		m[2][i] = atten[i + 1] - atten[i];
 	}
 
-	unk38 = (m2[0] * m1[1] - m2[1] * m1[0]) / (m0[0] * m1[1] - m0[1] * m1[0]);
-	unk34 = (m2[0] - m0[0] * unk38) / m1[0];
+	unk38 = (m[2][0] * m[1][1] - m[2][1] * m[1][0])
+	        / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
+	unk34 = (m[2][0] - m[0][0] * unk38) / m[1][0];
 	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
 	unk3C = 8e-05f;
 
@@ -504,13 +504,10 @@ Plane sViewPlane[6];
 static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
                                     f32 near, f32 far)
 {
-	f32 farLeft;
-	f32 farRight;
-	f32 farBottom;
-	f32 ratio = far / near;
-	farLeft   = left * ratio;
-	farRight  = right * ratio;
-	farBottom = bottom * ratio;
+	f32 farTop    = top * (far / near);
+	f32 farBottom = bottom * (far / near);
+	f32 farLeft   = left * (far / near);
+	f32 farRight  = right * (far / near);
 
 	Vec corner[8];
 
@@ -519,7 +516,7 @@ static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
 	corner[0].z = -near;
 
 	corner[1].x = farLeft;
-	corner[1].y = top * ratio;
+	corner[1].y = farTop;
 	corner[1].z = -far;
 
 	corner[2].x = right;
@@ -527,7 +524,7 @@ static void SetViewFrustumClipCheck(f32 top, f32 bottom, f32 left, f32 right,
 	corner[2].z = -near;
 
 	corner[3].x = farRight;
-	corner[3].y = top * ratio;
+	corner[3].y = farTop;
 	corner[3].z = -far;
 
 	corner[4].x = left;

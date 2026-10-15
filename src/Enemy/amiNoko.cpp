@@ -98,8 +98,8 @@ void TAmiHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 		mPosition.y -= 0.5f * mAttackHeight;
 
 		if (!unk68->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			for (int i = 0; i < getColNum(); ++i) {
-				if (getCollision(i)->getActorType() == ACTOR_TYPE_MARIO)
+			for (int i = 0; i < mColCount; ++i) {
+				if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
 					unk68->attackToMario();
 			}
 		}
@@ -211,9 +211,7 @@ bool TAmiNoko::isHitValid(u32 param_1)
 		f32 z = mPosition.z - SMS_GetMarioPos().z;
 
 		JGeometry::TVec3<f32> diff(x, 0.0f, z);
-		f32 normalZ = unk19C.z;
-		f32 normalX = unk19C.x;
-		matan(normalZ, normalX);
+		matan(unk19C.z, unk19C.x);
 
 		if (diff.dot(unk19C) > 0.0f || param_1 == HIT_MESSAGE_HIP_DROP)
 			mSpine->pushNerve(&TNerveAmiNokoDie::theNerve());
@@ -580,12 +578,11 @@ void TAmiNoko::calcRootMatrix()
 	MsMtxSetRotRPH(rot, normal.x, normal.y, normal.z);
 	MTXMultVec(rot, &offset, &offset);
 
-	MtxPtr savedMtx = unk1CC;
-	rootMtx[0][3]   = mPosition.x - 30.0f * unk19C.x;
-	rootMtx[1][3]   = mPosition.y - 30.0f * unk19C.y;
-	rootMtx[2][3]   = mPosition.z - 30.0f * unk19C.z;
+	rootMtx[0][3] = mPosition.x - 30.0f * unk19C.x;
+	rootMtx[1][3] = mPosition.y - 30.0f * unk19C.y;
+	rootMtx[2][3] = mPosition.z - 30.0f * unk19C.z;
 
-	MTXCopy(rootMtx, savedMtx);
+	MTXCopy(rootMtx, unk1CC);
 	getModel()->setBaseScale(mScaling);
 }
 #endif
@@ -593,9 +590,8 @@ void TAmiNoko::calcRootMatrix()
 void TAmiNoko::bind()
 {
 	if (isBckAnm(0)) {
-		JGeometry::TVec3<f32> vec = mPosition;
-		vec += mPositionDelta;
-		vec += mVelocity;
+		JGeometry::TVec3<f32> vec;
+		getNextFramePosition(vec);
 		mVelocity.y -= getGravityY();
 		if (mVelocity.y < mVelocityMinY)
 			mVelocity.y = mVelocityMinY;
@@ -615,7 +611,8 @@ void TAmiNoko::bind()
 		} else {
 			onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
-		mPositionDelta = vec - mPosition;
+		vec -= mPosition;
+		mPositionDelta = vec;
 	} else {
 		TLiveActor::bind();
 	}
@@ -654,8 +651,7 @@ void TAmiNoko::creepToCurPathNode(f32 param_1)
 	}
 #else
 	if (isBckAnm(4) || isBckAnm(7) || isBckAnm(10) || isBckAnm(13)) {
-		const TPathNode* node           = &unkF4;
-		JGeometry::TVec3<f32> direction = node->getPoint();
+		JGeometry::TVec3<f32> direction = unkF4.getPoint();
 		direction -= mPosition;
 		if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
 			direction.x = 1.0f;
@@ -780,7 +776,8 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 #endif
 	}
 	if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
-		JGeometry::TVec3<f32> direction = self->mPosition - SMS_GetMarioPos();
+		JGeometry::TVec3<f32> direction = self->mPosition;
+		direction -= SMS_GetMarioPos();
 		if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
 			direction.x = 1.0f;
 		MtxPtr mtx  = self->getMActor()->getModel()->getBaseTRMtx();
@@ -798,7 +795,8 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 	    PARTICLE_MS_KIL_SMOKE, self->getMActor()->getModel()->getBaseTRMtx(), 1,
 	    self);
 	if (self->isBckAnm(0) && spine->getTime() > 30) {
-		JGeometry::TVec3<f32> direction = self->mPosition - SMS_GetMarioPos();
+		JGeometry::TVec3<f32> direction = self->mPosition;
+		direction -= SMS_GetMarioPos();
 		if (self->isDeadByWall() || !self->isAirborne()
 		    || direction.length() > 10000.0f) {
 			self->onHitFilter(HIT_FILTER_NO_COLLISION);

@@ -33,7 +33,9 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	mYoshi = yoshi;
 	mModel = new J3DModel(modelData, 0x10000, 1);
 
-	mModel->getModelData()->onFlag1OnAllShapes();
+	J3DModelData* modelData2 = mModel->getModelData();
+	for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
+		modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 	mTipModel = new J3DModel(
 	    J3DModelLoaderDataBase::load(
@@ -41,7 +43,9 @@ void TYoshiTongue::init(TYoshi* yoshi)
 	        J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 	    0x10000, 1);
 
-	mTipModel->getModelData()->onFlag1OnAllShapes();
+	J3DModelData* modelData3 = mTipModel->getModelData();
+	for (u16 i = 0; i < modelData3->getShapeNum(); ++i)
+		modelData3->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 
 	mState       = STATE_IDLE;
 	mProgress    = 0;
@@ -150,6 +154,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 	THitActor* best = nullptr;
 	f32 bestDist    = 10000.0f;
 
+#ifndef VERSION_GMSP01
 	for (s32 i = 0; i < mColCount; ++i) {
 		s32 type = mCollisions[i]->mActorType;
 		if (type == ACTOR_TYPE_SEAL || type == ACTOR_TYPE_BASKET_REVERSE) {
@@ -157,6 +162,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 			return nullptr;
 		}
 	}
+#endif
 
 	for (s32 i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
@@ -185,8 +191,21 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 				ok = 1;
 			if (type == ACTOR_TYPE_WOOD_BARREL)
 				ok = 1;
-			if (type & HIT_CATEGORY_ENEMY ? true : false)
+			if (type & HIT_CATEGORY_ENEMY ? true : false) {
+#ifdef VERSION_GMSP01
+				switch (type) {
+				case ACTOR_TYPE_SEAL:
+				case ACTOR_TYPE_EFFECT_ENEMY:
+				case ACTOR_TYPE_BASKET_REVERSE:
+					break;
+				default:
+					ok = 1;
+					break;
+				}
+#else
 				ok = 1;
+#endif
+			}
 		}
 
 		if (ok != 1)
@@ -196,8 +215,8 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 		targetPos.y += 0.5f * actor->mDamageHeight;
 		JGeometry::TVec3<f32> delta = targetPos - mTipPos;
 
-		bool isZero = delta.isZero();
-		if (isZero)
+		bool atTip = delta.isZero();
+		if (atTip)
 			continue;
 
 		f32 dist = delta.length();
@@ -252,15 +271,9 @@ void TYoshiTongue::movement()
 		JGeometry::TVec3<f32> diff = mTipPos - mHeadPos;
 
 		if (mHeldObject != nullptr) {
-			f32 x = diff.x;
-			f32 y = diff.y;
-			f32 z = diff.z;
-			if (JGeometry::TUtil<f32>::sqrt(x * x + y * y + z * z)
-			    < mMaxReach) {
-				JGeometry::TVec3<f32>& heldScale = mHeldObject->mScaling;
-				f32 elasticity                   = mElasticity;
-				JGeometry::TVec3<f32> scale      = heldScale;
-				scale *= elasticity;
+			if (diff.length() < mMaxReach) {
+				JGeometry::TVec3<f32> scale = mHeldObject->mScaling;
+				scale *= mElasticity;
 				if (scale.x < 0.01f)
 					scale.set(0.01f, 0.01f, 0.01f);
 				mHeldObject->mScaling = scale;
@@ -303,11 +316,12 @@ void TYoshiTongue::movement()
 		if (target != nullptr && mHeldObject == nullptr) {
 			JGeometry::TVec3<f32> tpos = target->mPosition;
 			tpos.y += 0.5f * target->mDamageHeight;
-			JGeometry::TVec3<f32> step = mTipPos;
-			mTipPos += (tpos - mTipPos) * mExtendAmount;
-			mInitialVelocity = mTipPos - step;
+			JGeometry::TVec3<f32> oldTip = mTipPos;
+			JGeometry::TVec3<f32> step   = (tpos - mTipPos) * mExtendAmount;
+			mTipPos                      = mTipPos + step;
+			mInitialVelocity             = mTipPos - oldTip;
 
-			if (JGeometry::TVec3<f32>(tpos - mTipPos).length() < 200.0f
+			if ((tpos - mTipPos).length() < 200.0f
 			    && target->receiveMessage(this, HIT_MESSAGE_TAKE) == true) {
 				mHeldObject = (TTakeActor*)target;
 				SMSGetMSound()->startSoundActor(MSD_SE_YV_PERON, &mTipPos, 0,
@@ -327,9 +341,10 @@ void TYoshiTongue::movement()
 			mState = STATE_RETRACTING;
 		break;
 
-	case STATE_RETRACTING:
+	case STATE_RETRACTING: {
 		mTipPos = mHeadPos + (mTipPos - mHeadPos) * mRetractAmount;
 		break;
+	}
 
 	case STATE_PULLING:
 	case STATE_PULLING_SLOW: {
@@ -369,21 +384,32 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 	mHeadDir.z = mtx[2][0];
 
 	switch (mState) {
-	case STATE_IDLE:
-		mModel->getModelData()->onFlag1OnAllShapes();
-		mTipModel->getModelData()->onFlag1OnAllShapes();
+	case STATE_IDLE: {
+		J3DModelData* modelData = mModel->getModelData();
+		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
+			modelData->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
+
+		J3DModelData* modelData2 = mTipModel->getModelData();
+		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
+			modelData2->getShapeNodePointer(i)->onFlag(J3DShpFlag_Visible);
 		break;
+	}
 	default:
-		mModel->getModelData()->offFlag1OnAllShapes();
-		mTipModel->getModelData()->offFlag1OnAllShapes();
+		J3DModelData* modelData = mModel->getModelData();
+		for (u16 i = 0; i < modelData->getShapeNum(); ++i)
+			modelData->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
+
+		J3DModelData* modelData2 = mTipModel->getModelData();
+		for (u16 i = 0; i < modelData2->getShapeNum(); ++i)
+			modelData2->getShapeNodePointer(i)->offFlag(J3DShpFlag_Visible);
 
 		JGeometry::TVec3<f32> tip = mTipPos;
 		tip.y += 50.0f;
 		SMS_MakeJointsToArc(mModel, mHeadPos, mHeadDir, tip);
 
-		Mtx modelMtx;
-		MtxPtr a = mModel->getAnmMtx(mModel->getModelData()->getJointNum() - 2);
-		MtxPtr b = mModel->getAnmMtx(mModel->getModelData()->getJointNum() - 1);
+		u16 jointNum = mModel->getModelData()->getJointNum();
+		MtxPtr a     = mModel->getAnmMtx(jointNum - 2);
+		MtxPtr b     = mModel->getAnmMtx(jointNum - 1);
 
 		JGeometry::TVec3<f32> dir;
 		dir.x = b[0][3] - a[0][3];
@@ -395,6 +421,7 @@ void TYoshiTongue::calcAnim(MtxPtr mtx)
 		JGeometry::TVec3<f32> tmp;
 		tmp.cross(up, dir);
 
+		Mtx modelMtx;
 		modelMtx[0][0] = tmp.x;
 		modelMtx[0][1] = up.x;
 		modelMtx[0][2] = dir.x;

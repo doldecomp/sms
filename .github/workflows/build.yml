@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [GMSJ01, GMSP01]
+        version: [GMSJ01, GMSE01, GMSP01, GMSJ01_01, GMSP01_NX]
 
     steps:
     # Checkout the repository
@@ -93,8 +93,9 @@ jobs:
 
     # Build the same sources at the base revision. Some TUs already have strict
     # map-validation errors; CI must reject new errors, not inherited debt.
+    # GMSE01 has no MAP file, so we skip symbol order validation for it
     - name: Build symbol-validation baseline
-      if: steps.changes.outputs.base != ''
+      if: matrix.version != 'GMSE01' && steps.changes.outputs.base != ''
       env:
         BASE: ${{ steps.changes.outputs.base }}
       run: |
@@ -112,7 +113,9 @@ jobs:
 
     # Validate map symbol presence/order/linkage for each changed .cpp.
     # Keep the full diagnostics; only errors absent from the base fail this job.
+    # GMSE01 has no MAP file, so we skip symbol order validation for it
     - name: Validate symbol order
+      if: matrix.version != 'GMSE01'
       run: |
         if [ ! -s changed_cpp.txt ]; then
           echo "No changed .cpp files; nothing to validate."

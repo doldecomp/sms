@@ -80,10 +80,9 @@ TSpineEnemy* TRocketManager::createEnemyInstance() { return new TRocket; }
 
 void TRocketManager::initSetEnemies()
 {
-	TGraphWeb* graph;
 	for (int i = 0; i < mObjNum; ++i) {
-		graph           = gpConductor->getGraphByName("main");
-		TRocket* rocket = (TRocket*)getObj(i);
+		TGraphWeb* graph = gpConductor->getGraphByName("main");
+		TRocket* rocket  = (TRocket*)getObj(i);
 		if (rocket->checkLiveFlag(LIVE_FLAG_DEAD) && !graph->isDummy()) {
 			JGeometry::TVec3<f32> position;
 			graph->getGraphNode(TMsRange<s32>(0, graph->getNodeNum()).rand())
@@ -235,22 +234,19 @@ void TRocket::bind()
 		TBGWallCheckRecord record(mPosition.x, mPosition.y, mPosition.z,
 		                          getWallRadius(), 1, 0);
 		if (gpMap->isTouchedWallsAndMoveXZ(&record)) {
-			if (record.mResultWalls[0]->getActor() != nullptr) {
-				TLiveActor* actor
-				    = (TLiveActor*)record.mResultWalls[0]->getActor();
-				actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
-			}
+			const TLiveActor* actor = record.mResultWalls[0]->getActor();
+			if (actor)
+				((TLiveActor*)actor)->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			kill();
 			return;
 		}
 		if (mSpine->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
 			TLiveActor::bind();
 			if (!isAirborne()) {
-				if (getGroundPlane()->getActor() != nullptr) {
-					TLiveActor* actor
-					    = (TLiveActor*)getGroundPlane()->getActor();
-					actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
-				}
+				const TLiveActor* actor = getGroundPlane()->getActor();
+				if (actor)
+					((TLiveActor*)actor)
+					    ->receiveMessage(this, HIT_MESSAGE_ATTACK);
 				kill();
 			}
 		}

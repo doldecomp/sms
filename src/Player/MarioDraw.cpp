@@ -1133,36 +1133,30 @@ void TMario::initModel()
 	    "/mario/bmd/ma_hnd4r.bmd",
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 
-	{
-		ResTIMG* texture        = mBodyModelData->getTexture()->getResTIMG(0);
-		J3DModelData* modelData = mHandModels[0][0]->getModelData();
-		modelData->getTexture()->setResTIMG(0, *texture);
-		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	}
-	{
-		ResTIMG* texture        = mBodyModelData->getTexture()->getResTIMG(0);
-		J3DModelData* modelData = mHandModels[0][1]->getModelData();
-		modelData->getTexture()->setResTIMG(0, *texture);
-		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	}
-	{
-		ResTIMG* texture        = mBodyModelData->getTexture()->getResTIMG(0);
-		J3DModelData* modelData = mHandModels[1][0]->getModelData();
-		modelData->getTexture()->setResTIMG(0, *texture);
-		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	}
-	{
-		ResTIMG* texture        = mBodyModelData->getTexture()->getResTIMG(0);
-		J3DModelData* modelData = mHandModels[1][1]->getModelData();
-		modelData->getTexture()->setResTIMG(0, *texture);
-		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	}
-	{
-		ResTIMG* texture        = mBodyModelData->getTexture()->getResTIMG(0);
-		J3DModelData* modelData = mRHand4ndModel->getModelData();
-		modelData->getTexture()->setResTIMG(0, *texture);
-		DCFlushRange(modelData->getTexture()->getResTIMG(0), sizeof(ResTIMG));
-	}
+	// possible inlines around setting ResTIMG through J3DTexture?
+	mHandModels[0][0]->getModelData()->getTexture()->setResTIMG(
+	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	DCFlushRange(mHandModels[0][0]->getModelData()->getTexture()->getResTIMG(0),
+	             0x20);
+
+	mHandModels[0][1]->getModelData()->getTexture()->setResTIMG(
+	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	DCFlushRange(mHandModels[0][1]->getModelData()->getTexture()->getResTIMG(0),
+	             0x20);
+
+	mHandModels[1][0]->getModelData()->getTexture()->setResTIMG(
+	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	DCFlushRange(mHandModels[1][0]->getModelData()->getTexture()->getResTIMG(0),
+	             0x20);
+	mHandModels[1][1]->getModelData()->getTexture()->setResTIMG(
+	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	DCFlushRange(mHandModels[1][1]->getModelData()->getTexture()->getResTIMG(0),
+	             0x20);
+
+	mRHand4ndModel->getModelData()->getTexture()->setResTIMG(
+	    0, *mBodyModelData->getTexture()->getResTIMG(0));
+	DCFlushRange(mRHand4ndModel->getModelData()->getTexture()->getResTIMG(0),
+	             0x20);
 
 	mBodyModelData->getShapeNodePointer(4)->onFlag(J3DShpFlag_Visible);
 
@@ -1198,7 +1192,7 @@ void TMario::initModel()
 		u16 matCount   = anmTexPattern[i]->getUpdateMaterialNum();
 		anmTexNoAnm[i] = new J3DTexNoAnm[matCount];
 
-		for (int j = 0; j < anmTexPattern[i]->getUpdateMaterialNum(); ++j) {
+		for (int j = 0; j < matCount; ++j) {
 			anmTexNoAnm[i][j].setAnmIndex(j);
 			anmTexNoAnm[i][j].setAnmTexPattern(anmTexPattern[i]);
 		}
@@ -1430,8 +1424,8 @@ void TMario::considerWaist()
 {
 	// volatile u32 padding[6];
 	f32 maxPitch;
-	f32 angleChangeRate;
 	f32 targetPitch;
+	f32 angleChangeRate;
 
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
@@ -1470,8 +1464,8 @@ void TMario::considerWaist()
 	targetPitch = targetPitchCopy;
 	mWaistPitch += angleChangeRate * (targetPitch - mWaistPitch);
 
-	f32 targetRoll;
 	f32 rollMax;
+	f32 targetRoll;
 	s16 diffAngle = mFaceAngle.y - unk9C;
 	// Possibly unused get params function?
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {

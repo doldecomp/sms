@@ -67,7 +67,7 @@ void TMarioEffect::setJumpIntoWaterEffect()
 {
 	f32 absVelY = unk68->mVel.y;
 	if (absVelY < 0.0f)
-		absVelY = -unk68->mVel.y;
+		absVelY = -absVelY;
 
 	if (absVelY < unk68->mWaterEffectParams.mJumpIntoMdlEffectSpY.get())
 		return;
@@ -75,20 +75,15 @@ void TMarioEffect::setJumpIntoWaterEffect()
 	if (unk68->mFloorPosition.z - unk68->mFloorPosition.y < 50.0f)
 		return;
 
-	int idx = -1;
-	if (unk6C[0] == 0)
-		idx = 0;
-	if (unk6C[1] == 0)
-		idx = 1;
+	int idx = getThing();
 	if (idx < 0)
 		return;
 
 	Mtx localMtx;
 	MTXCopy(unk68->unk220, localMtx);
 
-	TMario* mario = unk68;
-	f32 minY      = mario->mWaterEffectParams.mJumpIntoMinY.get();
-	f32 maxY      = mario->mWaterEffectParams.mJumpIntoMaxY.get();
+	f32 minY = unk68->mWaterEffectParams.mJumpIntoMinY.get();
+	f32 maxY = unk68->mWaterEffectParams.mJumpIntoMaxY.get();
 
 	f32 ratio;
 	if (absVelY < minY)
@@ -127,11 +122,7 @@ void TMarioEffect::setJumpIntoWaterEffect()
 
 void TMarioEffect::setJumpIntoWaterEffectSmall()
 {
-	int idx = -1;
-	for (int i = 0; i < 2; ++i) {
-		if (unk6C[i] == 0)
-			idx = i;
-	}
+	int idx = getThing();
 	if (idx < 0)
 		return;
 

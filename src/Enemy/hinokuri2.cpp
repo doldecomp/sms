@@ -341,26 +341,27 @@ void THino2Mask::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (cue & CUE_CALC_ANIM) {
 			Mtx afStack_58;
 			Mtx afStack_88;
-			MtxPtr mtx;
-			MTXIdentity(afStack_58);
-			afStack_58[0][3] = unk28.x;
-			afStack_58[1][3] = unk28.y;
-			afStack_58[2][3] = unk28.z;
-			MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
-			MtxPtr base = getUnk4C();
-			MTXConcat(base, afStack_58, afStack_58);
-			MTXConcat(afStack_58, afStack_88, afStack_58);
-			mtx = afStack_58;
-			unk14->getModel()->setBaseTRMtx(mtx);
+			{
+				MTXIdentity(afStack_58);
+				afStack_58[0][3] = unk28.x;
+				afStack_58[1][3] = unk28.y;
+				afStack_58[2][3] = unk28.z;
+				MsMtxSetRotRPH(afStack_88, 0.0f, 360.0f - unk8, 0.0f);
+				MTXConcat(getUnk4C(), afStack_58, afStack_58);
+				MTXConcat(afStack_58, afStack_88, afStack_58);
+				unk14->getModel()->setBaseTRMtx(afStack_58);
+			}
 
-			MTXIdentity(mtx);
-			mtx[0][3] = unk1C.x;
-			mtx[1][3] = unk1C.y;
-			mtx[2][3] = unk1C.z;
-			MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
-			MTXConcat(base, mtx, mtx);
-			MTXConcat(mtx, afStack_88, mtx);
-			unk18->getModel()->setBaseTRMtx(mtx);
+			{
+				PSMTXIdentity(afStack_58);
+				afStack_58[0][3] = unk1C.x;
+				afStack_58[1][3] = unk1C.y;
+				afStack_58[2][3] = unk1C.z;
+				MsMtxSetRotRPH(afStack_88, 0.0f, unk8, 0.0f);
+				MTXConcat(getUnk4C(), afStack_58, afStack_58);
+				MTXConcat(afStack_58, afStack_88, afStack_58);
+				unk18->getModel()->setBaseTRMtx(afStack_58);
+			}
 		}
 
 		if ((cue & CUE_ENTRY) && unk8 > 60 && unk8 % 6 >= 3)
@@ -377,27 +378,38 @@ static int Hino2HeadCallback(J3DNode* param_1, int param_2)
 		MtxPtr mA = gpCurHinokuri->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
-		if (gpCurHinokuri->getLevel() == 1) {
-			TPosition3f local_44;
-			local_44.setTrans(0.0f, 0.0f, 0.0f);
+		if (gpCurHinokuri->mLevel == 1) {
 			f32 scale = gpCurHinokuri->unk194;
-			local_44.setScale(scale, scale, scale);
+
+			Mtx local_44;
+			local_44[0][0] = scale;
+			local_44[0][1] = 0.0;
+			local_44[0][2] = 0.0;
+			local_44[0][3] = 0.0;
+
+			local_44[1][0] = 0.0;
+			local_44[1][1] = scale;
+			local_44[1][2] = 0.0;
+			local_44[1][3] = 0.0;
+
+			local_44[2][0] = 0.0;
+			local_44[2][1] = 0.0;
+			local_44[2][2] = scale;
+			local_44[2][3] = 0.0;
 
 			Mtx local_74;
-			MtxPtr mB = local_74;
-			MsMtxSetRotY(mB, gpCurHinokuri->unk198);
+			MsMtxSetRotY(local_74, gpCurHinokuri->unk198);
 
 			MTXConcat(mA, local_74, mA);
 			MTXConcat(mA, local_44, mA);
-			MTXConcat(J3DSys::mCurrentMtx, mB, J3DSys::mCurrentMtx);
+			MTXConcat(J3DSys::mCurrentMtx, local_74, J3DSys::mCurrentMtx);
 			MTXConcat(J3DSys::mCurrentMtx, local_44, J3DSys::mCurrentMtx);
 		} else {
 			Mtx local_a4;
-			MtxPtr mB = local_a4;
-			MsMtxSetRotY(mB, gpCurHinokuri->unk198);
+			MsMtxSetRotY(local_a4, gpCurHinokuri->unk198);
 
-			MTXConcat(mA, mB, mA);
-			MTXConcat(J3DSys::mCurrentMtx, mB, J3DSys::mCurrentMtx);
+			MTXConcat(mA, local_a4, mA);
+			MTXConcat(J3DSys::mCurrentMtx, local_a4, J3DSys::mCurrentMtx);
 		}
 	}
 
@@ -770,11 +782,10 @@ BOOL THinokuri2::receiveMessageLv1(THitActor* sender, u32 message)
 		if (dmgAmount <= 0)
 			return true;
 
-		int hitPoints = mHitPoints;
-		if (dmgAmount >= hitPoints)
+		if (dmgAmount >= mHitPoints)
 			mHitPoints = 0;
 		else
-			mHitPoints = hitPoints - dmgAmount;
+			mHitPoints -= dmgAmount;
 
 		++unk18C;
 
@@ -948,8 +959,7 @@ void THinokuri2::moveObject()
 
 	// looks like symmetric_clamp but it isn't???
 	if (unk198 < 0.0f) {
-		f32 fVar1 = unk198;
-		fVar1 += 0.1f;
+		f32 fVar1 = 0.1f + unk198;
 		if (fVar1 > 0.0f)
 			fVar1 = 0.0f;
 		unk198 = fVar1;
@@ -1114,8 +1124,8 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 	if (self->getMActor()->curAnmEndsNext()) {
 		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
 		f32 f                          = self->unk124->unkC;
-		self->mVelocity
-		    = self->calcVelocityToJumpToY(p, f, self->getGravityY());
+		f32 grav                       = self->getGravityY();
+		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		spine->pushAfterCurrent(&TNerveHino2Fly::theNerve());
 		return true;

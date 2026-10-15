@@ -48,7 +48,6 @@
 #include <System/ParamInst.hpp>
 #include <System/Particles.hpp>
 #include <System/Params.hpp>
-#include <macros.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -138,14 +137,13 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 			if (!unk0[i]->unk168)
 				continue;
 
-			JGeometry::TVec3<f32> offset(0.0f, 0.0f,
-			                             unk0[i]->unk16C->mSLCoinCircleR.get());
 			f32 rate = (f32)spawned / (f32)total;
 
-			Mtx mtx;
-			MtxPtr matrix = mtx;
-			MsMtxSetRotY(matrix, 360.0f * rate);
-			MTXMultVec(matrix, &offset, &offset);
+			JGeometry::TVec3<f32> offset(0.0f, 0.0f,
+			                             unk0[i]->unk16C->mSLCoinCircleR.get());
+
+			MsMtxSetRotY(mtx, 360.0f * rate);
+			MTXMultVec(mtx, &offset, &offset);
 
 			TMapObjBase* coin = unk0[i]->unk168;
 			if (coin->isActorType(ACTOR_TYPE_COIN))
@@ -154,15 +152,16 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 			if (coin) {
 				coin->appear();
 
-				coin->mPosition = unk4 + offset;
+				JGeometry::TVec3<f32> pos = unk4;
+				pos += offset;
+				coin->mPosition = pos;
 
 				MsVECNormalize(&offset, &offset);
 
 				TSamboFlowerSaveLoadParams* prm = unk0[i]->unk16C;
-				f32 velY                        = prm->mSLCoinVelocityY.get();
-				f32 velXZ                       = prm->mSLCoinVelocityXZ.get();
-				coin->mVelocity.set(offset.x * velXZ, 8.0f * rate + velY,
-				                    offset.z * velXZ);
+				coin->mVelocity.set(offset.x * prm->mSLCoinVelocityXZ.get(),
+				                    8.0f * rate + prm->mSLCoinVelocityY.get(),
+				                    offset.z * prm->mSLCoinVelocityXZ.get());
 				coin->offLiveFlag(LIVE_FLAG_UNK10);
 				spawned++;
 			}
@@ -643,17 +642,12 @@ void THanaSambo::init(TLiveManager* param_1)
 	}
 
 	unk194 = new THanaSamboHead;
-	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))
-	    ->getChildren()
-	    .push_back(unk194);
-
-	f32 attackRadius = unk198->mSLHeadAttackRadius.get();
-	f32 attackHeight = unk198->mSLHeadAttackHeight.get();
-	f32 damageRadius = unk198->mSLHeadDamageRadius.get();
-	f32 damageHeight = unk198->mSLHeadDamageHeight.get();
+	((TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ"))->add(unk194);
 	unk194->initHitActor(ACTOR_TYPE_SAMBO_HEAD, 2, HIT_CATEGORY_PLAYER,
-	                     attackRadius * mBodyScale, attackHeight * mBodyScale,
-	                     damageRadius * mBodyScale, damageHeight * mBodyScale);
+	                     unk198->mSLHeadAttackRadius.get() * mBodyScale,
+	                     unk198->mSLHeadAttackHeight.get() * mBodyScale,
+	                     unk198->mSLHeadDamageRadius.get() * mBodyScale,
+	                     unk198->mSLHeadDamageHeight.get() * mBodyScale);
 	unk194->unk68 = this;
 }
 
@@ -835,9 +829,9 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 		self->setWaitAnm();
 		if (SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 			self->updateSquareToMario();
-			f32 attackDist = self->unk198->mSLAttackDist.get();
-			attackDist *= self->unk198->mSLAttackDist.get();
-			if (self->getDistToMarioSquared() < attackDist)
+			if (self->getDistToMarioSquared()
+			    < self->unk198->mSLAttackDist.get()
+			          * self->unk198->mSLAttackDist.get())
 				spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
 		}
 		return true;
@@ -861,18 +855,17 @@ DEFINE_NERVE(TNerveHanaSamboWait, TLiveActor)
 	if (spine->getTime() > self->unk198->mSLAttackInterval.get()
 	    && SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
 		self->updateSquareToMario();
-		f32 attackDist = self->unk198->mSLAttackDist.get();
-		attackDist *= attackDist;
-		if (self->getDistToMarioSquared() < attackDist) {
+		if (self->getDistToMarioSquared()
+		    < self->unk198->mSLAttackDist.get()
+		          * self->unk198->mSLAttackDist.get()) {
 			spine->pushAfterCurrent(&TNerveHanaSamboAttack::theNerve());
 			return true;
 		}
 	}
 
 	self->updateSquareToMario();
-	f32 hideDist = self->unk198->mSLHideDist.get();
-	hideDist *= hideDist;
-	if (self->getDistToMarioSquared() > hideDist) {
+	if (self->getDistToMarioSquared()
+	    > self->unk198->mSLHideDist.get() * self->unk198->mSLHideDist.get()) {
 		spine->pushAfterCurrent(&TNerveHanaSamboHide::theNerve());
 		return true;
 	}
@@ -933,9 +926,9 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	}
 
 	self->updateSquareToMario();
-	f32 appearDist = self->unk198->mSLAppearDist.get();
-	appearDist *= self->unk198->mSLAppearDist.get();
-	if (self->getDistToMarioSquared() < appearDist) {
+	if (self->getDistToMarioSquared()
+	    < self->unk198->mSLAppearDist.get()
+	          * self->unk198->mSLAppearDist.get()) {
 		spine->pushAfterCurrent(&TNerveHanaSamboAppear::theNerve());
 		return true;
 	}
@@ -1011,10 +1004,8 @@ static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 			return true;
 
 		J3DJoint* joint = (J3DJoint*)param_1;
-		TPosition3f* anmMtx
-		    = (TPosition3f*)gpCurSamboHead->getModel()->getAnmMtx(
-		        joint->getJntNo());
-		Mtx rotMtx;
+		MtxPtr anmMtx
+		    = gpCurSamboHead->getModel()->getAnmMtx(joint->getJntNo());
 
 		JGeometry::TVec3<f32> velocity = gpCurSamboHead->mVelocity;
 		if (0.0f == velocity.x && 0.0f == velocity.z)
@@ -1024,26 +1015,27 @@ static int SamboHeadRollCallback(J3DNode* param_1, int param_2)
 		JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 		VECCrossProduct(&up, &velocity, &side);
 
-		f32 angle = gpCurSamboHead->unk1AC;
-		JGeometry::TVec3<f32> zAxis;
-		JGeometry::TVec3<f32> xAxis;
-		JGeometry::TVec3<f32> yAxis;
-		anmMtx->getZDir(zAxis);
-		anmMtx->getXDir(xAxis);
-		anmMtx->getYDir(yAxis);
-		JGeometry::TVec3<f32> axis;
+		JGeometry::TVec3<f32> zAxis(anmMtx[0][2], anmMtx[1][2], anmMtx[2][2]);
+		JGeometry::TVec3<f32> yAxis(anmMtx[0][1], anmMtx[1][1], anmMtx[2][1]);
+		JGeometry::TVec3<f32> xAxis(anmMtx[0][0], anmMtx[1][0], anmMtx[2][0]);
 
-		f32 lenZ  = zAxis.squared();
-		f32 rateZ = 0.0f == lenZ ? 0.0f : side.dot(zAxis) / lenZ;
-		f32 lenY  = yAxis.squared();
-		f32 rateY = 0.0f == lenY ? 0.0f : side.dot(yAxis) / lenY;
-		f32 lenX  = xAxis.squared();
-		f32 rateX = 0.0f == lenX ? 0.0f : side.dot(xAxis) / lenX;
+		f32 rateZ = 0.0f;
+		if (0.0f != zAxis.squared())
+			rateZ = side.dot(zAxis) / zAxis.squared();
 
-		axis.set(rateX, rateY, rateZ);
+		f32 rateY = 0.0f;
+		if (0.0f != yAxis.squared())
+			rateY = side.dot(yAxis) / yAxis.squared();
 
-		MTXRotAxisRad(rotMtx, &axis, DEG_TO_RAD(angle));
-		MTXConcat(anmMtx->mMtx, rotMtx, anmMtx->mMtx);
+		f32 rateX = 0.0f;
+		if (0.0f != xAxis.squared())
+			rateX = side.dot(xAxis) / xAxis.squared();
+
+		JGeometry::TVec3<f32> axis(rateX, rateY, rateZ);
+
+		Mtx rotMtx;
+		MTXRotAxisRad(rotMtx, &axis, 0.017453292f * gpCurSamboHead->unk1AC);
+		MTXConcat(anmMtx, rotMtx, anmMtx);
 		MTXConcat(J3DSys::mCurrentMtx, rotMtx, J3DSys::mCurrentMtx);
 	}
 	return true;

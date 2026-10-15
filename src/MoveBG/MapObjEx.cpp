@@ -95,8 +95,7 @@ TMapObjBase* TJointCoin::makeObj(const char* name, u16 i)
 		pTVar2->onMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	}
 
-	TMapObjBase* obj = unk140[unk13C];
-	obj->makeObjAppeared();
+	unk140[unk13C]->makeObjAppeared();
 	unk140[unk13C]->onMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 	unk140[unk13C]->offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	unk140[unk13C]->offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);

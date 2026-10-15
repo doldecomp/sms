@@ -96,7 +96,7 @@ BOOL TMario::waitingCommonEvents()
 	if (mInput & 0x1) {
 		s16 diff      = mIntendedYaw - mFaceAngle.y;
 		s16 rotSp     = mDeParams.mWaitingRotSp.get();
-		int converged = IConverge(diff, 0, rotSp, rotSp);
+		s16 converged = IConverge(diff, 0, rotSp, rotSp);
 		mFaceAngle.y  = mIntendedYaw - converged;
 		if (mIntendedMag > mControllerParams.mStartToWalkLevel.get()) {
 			emitSmoke(mFaceAngle.y);

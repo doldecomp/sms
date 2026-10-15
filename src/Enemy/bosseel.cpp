@@ -233,9 +233,8 @@ void TBEelTearsManager::createEnemies(int count)
 {
 	TEnemyManager::createEnemies(count);
 
-	SDLModelData* modelData;
 	void* resource = JKRGetResource("/scene/bossEelTears/tears_drop.bmd");
-	modelData
+	SDLModelData* modelData
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x11240000));
 	TBEelTears* owner = static_cast<TBEelTears*>(getObj(0));
 	for (int i = 0; i < 30; ++i)
@@ -290,17 +289,17 @@ void TBEelTears::init(TLiveManager* manager)
 	const ResTIMG& screenTexInfo = *screenTexture->getTexture()->getTexInfo();
 
 	J3DSkinDeform* deform = new J3DSkinDeform;
-	MActor* tearsActor    = getActorKeeper()->getMActor("tears.bmd");
+	MActor* tearsActor    = mMActorKeeper->getMActor("tears.bmd");
 	tearsActor->getModel()->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	tearsActor->resetDL();
 	SMS_ChangeTextureAll(tearsActor->getModel()->getModelData(), "M_dummy",
 	                     screenTexInfo);
 	tearsActor->setLightType(LIGHT_TYPE_INDIRECT);
 
-	tearsActor = mMActorKeeper->getMActor("tears_waterhit.bmd");
-	SMS_ChangeTextureAll(tearsActor->getModel()->getModelData(), "M_dummy",
+	MActor* waterHitActor = mMActorKeeper->getMActor("tears_waterhit.bmd");
+	SMS_ChangeTextureAll(waterHitActor->getModel()->getModelData(), "M_dummy",
 	                     screenTexInfo);
-	tearsActor->setLightType(LIGHT_TYPE_INDIRECT);
+	waterHitActor->setLightType(LIGHT_TYPE_INDIRECT);
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mBodyScale = mTearsParams->mBodyScaleRange.rand();
@@ -379,12 +378,14 @@ void TBEelTears::calcRootMatrix()
 
 		if (mSpine->getCurrentNerve() == &TNerveBEelTearsGenerate::theNerve()) {
 			TPosition3f transform(mPosition.x, mPosition.y, mPosition.z);
-			MtxPtr ptr = transform;
-			ptr[0][3] += (mSpawnMtx[0][3] - ptr[0][3]) * 0.1f;
-			ptr[2][3] += (mSpawnMtx[2][3] - ptr[2][3]) * 0.1f;
+			transform.ref(0, 3)
+			    = transform.at(0, 3)
+			      + (mSpawnMtx[0][3] - transform.at(0, 3)) * 0.1f;
+			transform.ref(2, 3)
+			    = transform.at(2, 3)
+			      + (mSpawnMtx[2][3] - transform.at(2, 3)) * 0.1f;
 
-			const f32& scale = mTearsParams->mSLBodyScaleLow.get();
-			mScaling.set(scale, scale, scale);
+			mScaling.setAll(mTearsParams->mSLBodyScaleLow.get());
 			mMActor->getModel()->setBaseScale(mScaling);
 			mMActor->getModel()->setBaseTRMtx(transform);
 		}
@@ -631,11 +632,12 @@ void TOilBall::reset()
 
 void TOilBall::moveObject()
 {
-	f32 scale        = mScaling.x;
-	f32 attackRadius = mTearsParams->mSLTearsAttackRadius.get();
-	f32 attackHeight = mTearsParams->mSLTearsAttackHeight.get();
-	f32 damageRadius = mTearsParams->mSLTearsDamageRadius.get();
-	f32 damageHeight = mTearsParams->mSLTearsDamageHeight.get();
+	TBEelTearsSaveLoadParams* params = mTearsParams;
+	f32 scale                        = mScaling.x;
+	f32 attackRadius                 = params->mSLTearsAttackRadius.get();
+	f32 attackHeight                 = params->mSLTearsAttackHeight.get();
+	f32 damageRadius                 = params->mSLTearsDamageRadius.get();
+	f32 damageHeight                 = params->mSLTearsDamageHeight.get();
 	setHitParams(attackRadius * scale, attackHeight * scale,
 	             damageRadius * scale, damageHeight * scale);
 
@@ -650,9 +652,8 @@ void TOilBall::moveObject()
 			}
 		} else {
 			JGeometry::TVec3<f32> velocity(0.0f, 0.0f, 0.0f);
-			JGeometry::TVec3<f32> push(mPosition.x - actor->mPosition.x,
-			                           mPosition.y - actor->mPosition.y,
-			                           mPosition.z - actor->mPosition.z);
+			JGeometry::TVec3<f32> push;
+			push.sub(mPosition, actor->mPosition);
 			if (push.x == 0.0f && push.y == 0.0f && push.z == 0.0f)
 				push.x += 1.0f;
 			MsVECNormalize(&push, &push);
@@ -866,13 +867,17 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_MOVE) {
-		f32 scale        = mOwner->mScaling.x;
-		f32 attackRadius = mOwner->mSaveParams->mSLToothAttackRadius.get();
-		f32 attackHeight = mOwner->mSaveParams->mSLToothAttackHeight.get();
-		f32 damageRadius = mOwner->mSaveParams->mSLToothDamageRadius.get();
-		f32 damageHeight = mOwner->mSaveParams->mSLToothDamageHeight.get();
-		setHitParams(attackRadius * scale, attackHeight * scale,
-		             damageRadius * scale, damageHeight * scale);
+		TBossEelSaveParams* params = mOwner->mSaveParams;
+		f32 scale                  = mOwner->mScaling.x;
+		f32 attackRadius           = params->mSLToothAttackRadius.get();
+		f32 attackHeight           = params->mSLToothAttackHeight.get();
+		f32 damageHeight           = params->mSLToothDamageHeight.get();
+		f32 damageRadius           = params->mSLToothDamageRadius.get();
+		attackRadius *= scale;
+		attackHeight *= scale;
+		damageRadius *= scale;
+		damageHeight *= scale;
+		setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 
 		for (s32 i = 0; i < mColCount; ++i) {
 			THitActor* collision = mCollisions[i];
@@ -923,7 +928,7 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		TPosition3f toothMtx;
+		Mtx toothMtx;
 		if (mHitPoints > 1 || mToothType == 0 || mToothType == 2)
 			MTXCopy(mSharedParts->getConnectedMtx(), toothMtx);
 		else
@@ -957,10 +962,10 @@ void TBossEelTooth::perform(u32 cue, JDrama::TGraphics* graphics)
 		MTXConcat(toothMtx, transform, toothMtx);
 		MsMtxSetRotRPH(transform, mTrembleRotation.z, mTrembleRotation.z, 0.0f);
 		MTXConcat(toothMtx, transform, toothMtx);
-		toothMtx.ref(1, 3) += mTrembleRotation.y;
-		mPosition.x = toothMtx.at(0, 3);
-		mPosition.y = toothMtx.at(1, 3);
-		mPosition.z = toothMtx.at(2, 3);
+		toothMtx[1][3] += mTrembleRotation.y;
+		mPosition.x = toothMtx[0][3];
+		mPosition.y = toothMtx[1][3];
+		mPosition.z = toothMtx[2][3];
 		mSharedParts->getMActor()->getModel()->setBaseTRMtx(toothMtx);
 	}
 
@@ -990,13 +995,20 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 
 	if (cue & CUE_MOVE) {
-		f32 scale        = mOwner->mScaling.x;
-		f32 attackRadius = mOwner->mSaveParams->mSLVortexAttackRadius.get();
-		f32 attackHeight = mOwner->mSaveParams->mSLVortexAttackHeight.get();
-		f32 damageRadius = mOwner->mSaveParams->mSLVortexDamageRadius.get();
-		f32 damageHeight = mOwner->mSaveParams->mSLVortexDamageHeight.get();
-		setHitParams(attackRadius * scale, attackHeight * scale,
-		             damageRadius * scale, damageHeight * scale);
+		{
+			TBossEel* owner            = mOwner;
+			TBossEelSaveParams* params = owner->mSaveParams;
+			f32 scale                  = owner->mScaling.x;
+			f32 attackRadius           = params->mSLVortexAttackRadius.get();
+			f32 attackHeight           = params->mSLVortexAttackHeight.get();
+			f32 damageHeight           = params->mSLVortexDamageHeight.get();
+			f32 damageRadius           = params->mSLVortexDamageRadius.get();
+			mAttackRadius              = attackRadius * scale;
+			mAttackHeight              = attackHeight * scale;
+			mDamageRadius              = damageRadius * scale;
+			mDamageHeight              = damageHeight * scale;
+		}
+		calcEntryRadius();
 
 		++mTimer;
 		if (mTimer > 30) {
@@ -1686,10 +1698,8 @@ void TBossEel::collideToMario()
 	for (s32 i = 0; i < 2; ++i) {
 		MtxPtr collisionMtx
 		    = mMActor->getModel()->getAnmMtx(mMapCollisionJointIndices[i]);
-		JGeometry::TVec3<f32> center;
-		center.x = collisionMtx[0][3];
-		center.y = collisionMtx[1][3];
-		center.z = collisionMtx[2][3];
+		JGeometry::TVec3<f32> center(collisionMtx[0][3], collisionMtx[1][3],
+		                             collisionMtx[2][3]);
 		JGeometry::TVec3<f32> axis;
 		axis.x = collisionMtx[0][1];
 		axis.y = collisionMtx[1][1];
@@ -1784,14 +1794,11 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 		bodyToHeadDistance *= mScaling.y;
 		mHeadCollision->mPosition.y += bodyToHeadDistance;
 
-		f32 scale        = mScaling.x;
-		f32 attackRadius = mSaveParams->mSLHeadAttackRadius.get();
-		f32 attackHeight = mSaveParams->mSLHeadAttackHeight.get();
-		f32 damageRadius = mSaveParams->mSLHeadDamageRadius.get();
-		f32 damageHeight = mSaveParams->mSLHeadDamageHeight.get();
-		mHeadCollision->setHitParams(attackRadius * scale, attackHeight * scale,
-		                             damageRadius * scale,
-		                             damageHeight * scale);
+		mHeadCollision->setHitParams(
+		    mSaveParams->mSLHeadAttackRadius.get() * mScaling.x,
+		    mSaveParams->mSLHeadAttackHeight.get() * mScaling.x,
+		    mSaveParams->mSLHeadDamageRadius.get() * mScaling.x,
+		    mSaveParams->mSLHeadDamageHeight.get() * mScaling.x);
 
 		setHitParams(mSaveParams->mSLBodyAttackRadius.get() * mScaling.x,
 		             mSaveParams->mSLBodyAttackHeight.get() * mScaling.x,

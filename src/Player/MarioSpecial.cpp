@@ -507,14 +507,14 @@ BOOL TMario::hanging()
 				           - moveSp * (mIntendedMag * foundWall->mNormal.z);
 				newPos.y = mPosition.y;
 				newPos.z = mPosition.z
-				           + moveSp * (foundWall->mNormal.x * mIntendedMag);
+				           + moveSp * (mIntendedMag * foundWall->mNormal.x);
 			}
 			if (yawDiff > -0x71c7 && yawDiff < -0x400) {
 				newPos.x = mPosition.x
 				           + moveSp * (mIntendedMag * foundWall->mNormal.z);
 				newPos.y = mPosition.y;
 				newPos.z = mPosition.z
-				           - moveSp * (foundWall->mNormal.x * mIntendedMag);
+				           - moveSp * (mIntendedMag * foundWall->mNormal.x);
 			}
 
 			TBGCheckData* foundWall2 = nullptr;
@@ -524,9 +524,8 @@ BOOL TMario::hanging()
 			newPos = record3.mCenter;
 
 			const TBGCheckData* groundDummy;
-			f32 z       = newPos.z;
-			f32 y       = 50.0f + newPos.y;
-			f32 groundY = gpMap->checkGround(newPos.x, y, z, &groundDummy);
+			f32 groundY = gpMap->checkGround(newPos.x, 50.0f + newPos.y,
+			                                 newPos.z, &groundDummy);
 			if (mPosition.y - 100.0f < groundY
 			    && groundY < 50.0f + mPosition.y) {
 				TBGWallCheckRecord record4(
@@ -559,8 +558,8 @@ BOOL TMario::hanging()
 					mFaceAngle.y = matan(foundWall2->getNormal().z,
 					                     foundWall2->getNormal().x)
 					               + 0x8000;
-					f32 offset  = 40.0f * foundWall2->getNormal().x;
-					mPosition.x = record4.mCenter.x - offset;
+					mPosition.x
+					    = record4.mCenter.x - 40.0f * foundWall2->getNormal().x;
 					mPosition.z
 					    = record4.mCenter.z - 40.0f * foundWall2->getNormal().z;
 					const TBGCheckData* dummy2;
@@ -665,8 +664,7 @@ void TMario::getOnWirePosAngle(JGeometry::TVec3<f32>* outPos, s16* outAngle)
 	Mtx concat;
 	MTXConcat(rotB, rotA, concat);
 
-	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * JGeometry::TUtil<f32>::one(),
-	                             0.0f);
+	JGeometry::TVec3<f32> sagVec(0.0f, -mWireSag * 1.0f, 0.0f);
 	MTXMultVec(concat, &sagVec, &sagVec);
 
 	outPos->x += sagVec.x;
@@ -795,7 +793,7 @@ BOOL TMario::wireSWait()
 	}
 
 	if (mInput & 0x1) {
-		s16 diff = wireAngle - mIntendedYaw;
+		s16 diff = mIntendedYaw - wireAngle;
 		if (diff > -0x4000 && diff < 0x4000)
 			return changePlayerStatus(MARIO_STATUS_WIRE_S_WAIT_TO_WAIT_L, 0,
 			                          false);
@@ -856,7 +854,7 @@ BOOL TMario::wireWaitToHang()
 	mFaceAngle.y = mModelFaceAngle + 0x4000;
 	setAnimation(ANIM_ROPE_WHG, 1.0f);
 	if (isLast1AnimeFrame()) {
-		bool noHold = false;
+		BOOL noHold = FALSE;
 		if (mHeldObject == nullptr && !onYoshi())
 			noHold = TRUE;
 		if (noHold)
@@ -872,7 +870,7 @@ BOOL TMario::wireSWaitToHang()
 	mModelFaceAngle = mFaceAngle.y;
 	setAnimation(ANIM_ROPE_SWHG, 1.0f);
 	if (isLast1AnimeFrame()) {
-		bool noHold = false;
+		BOOL noHold = FALSE;
 		if (mHeldObject == nullptr && !onYoshi())
 			noHold = TRUE;
 		if (noHold)
@@ -939,8 +937,12 @@ BOOL TMario::wireHanging()
 
 		if (diff >= 0x3555 && diff <= 0x4aaa)
 			startHangLanding(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN);
-	} else if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
-	           && mWaterGun->canSpray()) {
+
+		return 0;
+	}
+
+	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
+	    && mWaterGun->canSpray()) {
 		s16 rotSp = getNozzleEmitVX();
 		if (rotSp > 0)
 			unkF6 += 2 * mWireParams.mRotStop.get();
@@ -949,9 +951,9 @@ BOOL TMario::wireHanging()
 
 		unkF6 += getNozzleEmitVX();
 		return changePlayerStatus(MARIO_STATUS_WIRE_ROLLING, 0, false);
-	} else {
-		setAnimation(ANIM_ROPE_HGWAT, 1.0f);
 	}
+
+	setAnimation(ANIM_ROPE_HGWAT, 1.0f);
 	return 0;
 }
 
@@ -1096,7 +1098,7 @@ BOOL TMario::wireRolling()
 			unkF6          = 0;
 			mWireBounceVel = 0.0f;
 			mWireSag       = 0.0f;
-			bool noHold    = false;
+			BOOL noHold    = FALSE;
 			if (mHeldObject == nullptr && !onYoshi())
 				noHold = TRUE;
 			if (noHold)
@@ -1228,17 +1230,17 @@ BOOL TMario::pulling()
 
 	default:
 		JGeometry::TVec3<f32> delta;
-		TTakeActor* heldObject = mHeldObject;
-		if (heldObject->isActorType(ACTOR_TYPE_BOSS_GESSO_TENTACLE)
-		    || heldObject->isActorType(ACTOR_TYPE_BOSS_UNK8)) {
+		if ((mHeldObject->getActorType() == ACTOR_TYPE_BOSS_GESSO_TENTACLE
+		         ? true
+		         : false)
+		    || (mHeldObject->getActorType() == ACTOR_TYPE_BOSS_UNK8 ? true
+		                                                            : false)) {
 			delta = pos - mPrevPosition;
 		} else {
 			delta = mPosition - mPrevPosition;
 		}
 
-		f32 y   = delta.y;
-		f32 len = JGeometry::TUtil<f32>::sqrt(delta.x * delta.x + y * y
-		                                      + delta.z * delta.z);
+		f32 len = delta.length();
 		if (len < 1.0f) {
 			setAnimation(ANIM_HOLD_WAIT, animRate);
 		} else {

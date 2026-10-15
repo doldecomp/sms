@@ -91,6 +91,7 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
+
 	int result = 0;
 
 	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
@@ -104,6 +105,7 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	} else {
 		interp->pop();
 	}
+
 	interp->push(result);
 }
 
@@ -111,8 +113,8 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
-
 	int result = 0;
+	// TODO: uuuh...
 	(void)interp->pop();
 
 	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()

@@ -84,8 +84,7 @@ bool TDolpicEventRiccoMammaGate::isFinishedAll() const
 
 void TDolpicEventRiccoMammaGate::rising()
 {
-	f32 scale = TMapObjBase::getJointScaleY(unk20);
-	scale += unk34;
+	f32 scale = TMapObjBase::getJointScaleY(unk20) + unk34;
 
 	TPosition3f mtx;
 	mtx.identity();
@@ -201,10 +200,9 @@ void TDolpicEventRiccoMammaGate::load(JSUMemoryInputStream& stream)
 		idx   = 1;
 	}
 
-	unk24    = TMapObjBase::newAndInitBuildingCollisionMove(idx + 1, nullptr);
-	unk28    = TMapObjBase::newAndInitBuildingCollisionWarp(idx + 1, nullptr);
-	u32 flag = unk2C;
-	if (TFlagManager::getInstance()->getBool(flag)) {
+	unk24 = TMapObjBase::newAndInitBuildingCollisionMove(idx + 1, nullptr);
+	unk28 = TMapObjBase::newAndInitBuildingCollisionWarp(idx + 1, nullptr);
+	if (TFlagManager::getInstance()->getBool(unk2C)) {
 		unk20 = getBuilding(idx + 1)->getJoint();
 		TMapObjBase::setJointScaleY(unk20, 0.008f);
 		TMapObjBase::setJointTransY(unk20, 295.0f);

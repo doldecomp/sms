@@ -412,8 +412,10 @@ void TRailFence::goOnRail()
 	JGeometry::TVec3<f32> direction = unk13C->getCurrentPos();
 	direction -= mPosition;
 	if (direction.squared() < 50.0f) {
-		const TRailNode* node
-		    = unk13C->getGraph()->getGraphNode(unk13C->mCurrIdx).getRailNode();
+		TGraphTracer* tracer  = unk13C;
+		const TRailNode* node = tracer->getGraph()
+		                            ->getGraphNode(tracer->getCurGraphIndex())
+		                            .getRailNode();
 		if (node->mConnectionNum == 0 && (node->mFlags & 8)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_SET,
 			                                &mPosition, 0, nullptr, 0, 4);
@@ -422,7 +424,7 @@ void TRailFence::goOnRail()
 			mState = STATE_UNK3;
 			return;
 		}
-		unk13C->moveToShortestNext();
+		tracer->moveToShortestNext();
 		direction.set(unk13C->getCurrentPos());
 	}
 	SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCE_MOVE, &mPosition, 0,

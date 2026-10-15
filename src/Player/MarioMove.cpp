@@ -617,15 +617,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case MARIO_STATUS_WIRE_ROLL_JUMP: {
 		if (arg == 0) {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get()
-			                * JGeometry::TUtil<f32>::one();
-			mVel.y = jumpPower * JMASSin(0xE000);
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			mVel.y        = jumpPower * JMASSin(0xE000);
 
 			setPlayerVelocity(jumpPower * -JMASCos(0xE000));
 		} else {
-			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get()
-			                * JGeometry::TUtil<f32>::one();
-			mVel.y = jumpPower * JMASSin(0x6000);
+			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
+			mVel.y        = jumpPower * JMASSin(0x6000);
 
 			setPlayerVelocity(jumpPower * -JMASCos(0x6000));
 		}
@@ -647,8 +645,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 	}
 
 	if (isSinking()) {
-		f32 sinkJumpRateMax = mGraffitoParams.mSinkJumpRateMax.get();
-		f32 scale = ((sinkJumpRateMax - mGraffitoParams.mSinkJumpRateMin.get())
+		f32 scale = ((mGraffitoParams.mSinkJumpRateMax.get()
+		              - mGraffitoParams.mSinkJumpRateMin.get())
 		             * (1.0f - (mSinkTimer / mGraffitoParams.mSinkTime.get())))
 		            + mGraffitoParams.mSinkJumpRateMin.get();
 
@@ -664,9 +662,8 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	if (onYoshi()) {
 		mVel.y *= mYoshiParams.mJumpYoshiMult.get();
-		TYoshi* yoshi        = mYoshi;
-		yoshi->mFlutterState = 0;
-		yoshi->mFlutterTimer = yoshi->mMaxFlutterTimer;
+		mYoshi->mFlutterState = 0;
+		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
 	}
 
 	unk104 = mPosition.y;
@@ -951,13 +948,11 @@ void TMario::checkGraffito()
 	if (onYoshi())
 		return;
 
-	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO)
-		return;
-	if (mPlayerType == PLAYER_TYPE_MONTE_MAN)
+	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO
+	    || mPlayerType == PLAYER_TYPE_MONTE_MAN)
 		return;
 
 	int isDirty = 0;
-	JGeometry::TVec3<f32> pos;
 	mPollutionTypeStandingOn
 	    = gpPollution->getPollutionType(mPosition.x, mPosition.y, mPosition.z);
 
@@ -1003,6 +998,7 @@ void TMario::checkGraffito()
 	case POLLUTION_TYPE_FIRE:
 	case POLLUTION_TYPE_GLASS_WALL:
 	case POLLUTION_TYPE_UNK7: {
+		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
@@ -1037,6 +1033,7 @@ void TMario::checkGraffito()
 	}
 
 	case POLLUTION_TYPE_ELECTRIC: {
+		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
@@ -1190,11 +1187,11 @@ void TMario::checkSink()
 		if (checkFlag(MARIO_FLAG_DIRTY)) {
 			mSinkTimer += 1.0f;
 			mFootPrintTimer = mDeParams.mFootPrintTimerMax.get();
-			if (mHealth > 0) {
-				f32 maxSinkTimer = mGraffitoParams.mSinkTime.get()
-				                   * mGraffitoParams.mSinkDmgDepth.get();
-				if (mSinkTimer > maxSinkTimer)
-					mSinkTimer = maxSinkTimer;
+			if (mHealth > 0
+			    && mSinkTimer > mGraffitoParams.mSinkTime.get()
+			                        * mGraffitoParams.mSinkDmgDepth.get()) {
+				mSinkTimer = mGraffitoParams.mSinkTime.get()
+				             * mGraffitoParams.mSinkDmgDepth.get();
 			}
 
 			if (SMSGetMarDirector()->mMoveTickCount
@@ -1283,9 +1280,9 @@ void TMario::checkThrowObject()
 
 int TMario::getDizzyAngle()
 {
-	f32 angle = JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
-	            * mGraffitoParams.mDizzyAngleY.get();
-	return angle * mDizzyTimer / mGraffitoParams.mDizzyWalkCtMax.get();
+	return JMASSin(mDizzyTimer * mGraffitoParams.mDizzyAngleRate.get())
+	       * mGraffitoParams.mDizzyAngleY.get() * mDizzyTimer
+	       / mGraffitoParams.mDizzyWalkCtMax.get();
 }
 
 f32 TMario::getDizzyPower()
@@ -1320,9 +1317,9 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickVS16 = (s16)(128.0f * mGamePad->mCompSPos[1]);
 
 	if (isSinking()) {
-		f32 sinkMoveMax = mGraffitoParams.mSinkMoveMax.get();
 		f32 sinkScale
-		    = (sinkMoveMax - mGraffitoParams.mSinkMoveMin.get())
+		    = (mGraffitoParams.mSinkMoveMax.get()
+		       - mGraffitoParams.mSinkMoveMin.get())
 		          * (1.0f - (mSinkTimer / (f32)mGraffitoParams.mSinkTime.get()))
 		      + mGraffitoParams.mSinkMoveMin.get();
 		unk108->mStickHS16 *= sinkScale;
@@ -1385,14 +1382,15 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickDist = dist;
 
 	if (unk108->mStickDist > 64.0f) {
-		unk108->mStickH *= 64.0f / unk108->mStickDist;
-		unk108->mStickV *= 64.0f / unk108->mStickDist;
+		unk108->mStickH    = unk108->mStickH * (64.0f / unk108->mStickDist);
+		unk108->mStickV    = unk108->mStickV * (64.0f / unk108->mStickDist);
 		unk108->mStickDist = 64.0f;
 	}
 
-	mIntendedMag = 32.0f
-	               * (((1.0f / 64.0f) * unk108->mStickDist)
-	                  * ((1.0f / 64.0f) * unk108->mStickDist));
+	{
+		f32 norm     = unk108->mStickDist / 64.0f;
+		mIntendedMag = 32.0f * (norm * norm);
+	}
 
 	if (mDizzyTimer > 0)
 		mDizzyTimer -= 1;
@@ -1406,10 +1404,8 @@ void TMario::checkController(JDrama::TGraphics*)
 	}
 
 	if (mIntendedMag > 0.0f) {
-		s16 stickYaw  = matan(-unk108->mStickV, unk108->mStickH);
-		s16 cameraYaw = gpCamera->unk258;
-		cameraYaw += yawJitter;
-		mIntendedYaw = stickYaw + cameraYaw;
+		mIntendedYaw = matan(-unk108->mStickV, unk108->mStickH)
+		               + (gpCamera->unk258 + yawJitter);
 	} else {
 		mIntendedYaw = mFaceAngle.y;
 	}
@@ -1467,7 +1463,7 @@ void TMario::checkController(JDrama::TGraphics*)
 		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
 		    && ((mStatus + 0xF3C00000) == 0x201
 		        || ((mStatus + 0xFC000000) & 0xFFFFFFFF) == 0x440)) {
-			f32 propRot = mIntendedMag / 32.0f;
+			f32 propRot = mIntendedMag * 0.03125f;
 			// TODO: wrong??? Correct offset is 0x714 which is way past
 			// the end of a TNozzleTrigger???
 			((TNozzleTrigger*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
@@ -1952,7 +1948,7 @@ void TMario::thinkWaterSurface()
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
-	BOOL isInWater  = false;
+	bool isInWater  = false;
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
 		isInWater = true;
 	else
@@ -2212,12 +2208,9 @@ void TMario::thinkYoshiHeadCollision()
 
 	JGeometry::TVec3<f32> headPos = mPosition;
 
-	f32 front     = mYoshiParams.mHeadFront.get();
-	s16 angle     = mFaceAngle.y;
-	f32 direction = JMASSin(angle);
-	headPos.x += direction * front;
-	direction = JMASCos(angle);
-	headPos.z += direction * front;
+	f32 front = mYoshiParams.mHeadFront.get();
+	headPos.x += front * JMASSin(mFaceAngle.y);
+	headPos.z += front * JMASCos(mFaceAngle.y);
 
 	TBGWallCheckRecord record(headPos.x, headPos.y + 100.0f, headPos.z,
 	                          mYoshiParams.mHeadRadius.get(), 4, 0);
@@ -2297,10 +2290,7 @@ void TMario::checkWet()
 
 void TMario::gunExec()
 {
-	BOOL isOnYoshi = false;
-	if (onYoshi())
-		isOnYoshi = true;
-	if (!isOnYoshi)
+	if (!onYoshi())
 		gpModelWaterManager->unk5D5F = 0;
 
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())

@@ -94,14 +94,15 @@ bool TWallAtGraph::init(const TGraphWeb* param_1,
 	unk0   = new TPartition3f[sz];
 
 	for (int i = 0; i < sz; ++i) {
-		JGeometry::TVec3<f32> diff = param_1->indexToPoint((i + 1) % sz);
+		JGeometry::TVec3<f32> diff
+		    = param_1->indexToPoint(i + 1 - ((i + 1) / sz) * sz);
 		diff -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_54 = param_2;
 		local_54 -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_70;
-		local_70.cross2(param_3, diff);
+		local_70.cross(param_3, diff);
 		local_70.normalize();
 		if (local_70.dot(local_54) < 0.0f)
 			local_70.negate();
@@ -293,9 +294,10 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 	f32 dVar10 = gpMap->checkGround(local_3C.x, yTmp + mHeadHeight, local_3C.z,
 	                                param_2);
 	dVar10 += 1.0f;
-	if (yTmp <= dVar10 + mHeadHeight + 0.05f) {
+	dVar10 += mHeadHeight;
+	if (yTmp <= dVar10 + 0.05f) {
 		result     = true;
-		local_3C.y = dVar10 + mHeadHeight;
+		local_3C.y = dVar10;
 	}
 
 	JGeometry::TVec3<f32> local_48 = getPlaneNormal();
@@ -380,7 +382,7 @@ bool TKumokun::checkOnMovingRoof(JGeometry::TVec3<f32>* param_1,
 	bool uVar7 = false;
 
 	JGeometry::TVec3<f32> local_C0 = getPlaneNormal();
-	local_C0 *= 0.5f * -mHeadHeight;
+	local_C0 *= -mHeadHeight / 2.0f;
 
 	JGeometry::TVec3<f32> local_b4 = param_3;
 	local_b4 += local_C0;
@@ -638,13 +640,10 @@ void TKumokun::calcRootMatrix()
 		return;
 	}
 
-	MtxPtr baseMtx;
 	JGeometry::TVec3<f32> offset(0.0f);
 
-	if (isOnWall() || isOnRoof()) {
-		offset.set(getPlaneNormal());
-		offset.scale(-30.0f);
-	}
+	if (isOnWall() || isOnRoof())
+		offset.scale(-30.0f, getPlaneNormal());
 
 	JGeometry::TVec3<f32> pos = mPosition;
 	pos += offset;
@@ -655,10 +654,9 @@ void TKumokun::calcRootMatrix()
 	getModel()->setBaseTRMtx(mtx);
 
 	if (isFlying()) {
-		baseMtx = getModel()->getBaseTRMtx();
 		if (JPABaseEmitter* emitter
-		    = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_KIL_SMOKE,
-		                                                  baseMtx, 1, this)) {
+		    = gpMarioParticleManager->emitAndBindToMtxPtr(
+		        PARTICLE_MS_KIL_SMOKE, getModel()->getBaseTRMtx(), 1, this)) {
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(1.5f));
 			emitter->setGlobalAlpha(128);
 		}
@@ -752,9 +750,8 @@ void TKumokun::decideTargetAtRandom()
 	JGeometry::TQuat4<f32> q = getQuat();
 
 	JGeometry::TQuat4<f32> p;
-	const f32 random = MsRandF();
 	p.setRotate(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f),
-	            (random + 0.5f) * M_PI);
+	            (MsRandF() + 0.5f) * M_PI);
 
 	q.mul(q, p);
 
@@ -918,12 +915,11 @@ JGeometry::TVec3<f32> TKumokun::getPlaneNormal() const
 const TBGCheckData* TKumokun::checkWallPlane(JGeometry::TVec3<f32>* param_1,
                                              f32 param_2, f32 param_3)
 {
-	const TBGCheckData* wall = nullptr;
 	TBGWallCheckRecord record(param_1->x, param_1->y + param_2, param_1->z,
 	                          param_3, 1, 0);
 
-	int hits = gpMap->isTouchedWallsAndMoveXZ(&record);
-	if (hits > 0)
+	const TBGCheckData* wall = nullptr;
+	if (gpMap->isTouchedWallsAndMoveXZ(&record))
 		wall = record.mResultWalls[0];
 
 	param_1->x = record.mCenter.x;

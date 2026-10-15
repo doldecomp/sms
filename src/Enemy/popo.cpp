@@ -183,11 +183,10 @@ static int PopoRollCallback(J3DNode* param_1, int param_2)
 		scale.setScale(bodyScale, bodyScale, bodyScale);
 
 		Mtx rot;
-		MtxPtr rotation = rot;
 		if (gpCurPopo->isRollJump()) {
-			MsMtxSetRotX(rotation, gpCurPopo->unk1B8);
+			MsMtxSetRotX(rot, gpCurPopo->unk1B8);
 		} else {
-			MsMtxSetRotY(rotation, 180.0f);
+			MsMtxSetRotY(rot, 180.0f);
 		}
 		MTXConcat(mtx, rot, mtx);
 		MTXConcat(mtx, scale, mtx);
@@ -301,13 +300,13 @@ void TPopo::init(TLiveManager* param_1)
 	unk194 = (TPopoSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
 	onHitFilter(HIT_CATEGORY_BOSS);
-	getMActor()->setJointCallback(mCenterJntIndex, PopoRollCallback);
+	mMActor->setJointCallback(mCenterJntIndex, PopoRollCallback);
 	mMActorKeeper->getMActor("popoL.bmd")
 	    ->setJointCallback(mCenterJntIndex, PopoRollCallback);
-	getMActor()->setJointCallback(mMouthJntIndex, PopoPossessedCallback);
-	getMActor()->setJointCallback(mRLegJntIndex, PopoNonScaleCallback);
-	getMActor()->setJointCallback(mLLegJntIndex, PopoNonScaleCallback);
-	getMActor()->setJointCallback(mRHandJntIndex, PopoNonScaleCallback);
+	mMActor->setJointCallback(mMouthJntIndex, PopoPossessedCallback);
+	mMActor->setJointCallback(mRLegJntIndex, PopoNonScaleCallback);
+	mMActor->setJointCallback(mLLegJntIndex, PopoNonScaleCallback);
+	mMActor->setJointCallback(mRHandJntIndex, PopoNonScaleCallback);
 	mMActor->setJointCallback(mLHandJntIndex, PopoNonScaleCallback);
 	unk188 = 0.0f;
 
@@ -492,8 +491,8 @@ void TPopo::walkBehavior(int param_1, f32 param_2)
 		TMsRange<f32> range(-20.0f, 20.0f);
 		f32 rangeScale = 1.0f;
 		if (mSpine->getCurrentNerve() == &TNervePopoAttack::theNerve()) {
-			jumpDistance = unk194->mSLAttackDist.get();
 			jumpSpeed    = unk194->mSLAttackJumpSp.get();
+			jumpDistance = unk194->mSLAttackDist.get();
 			rangeScale   = 10.0f;
 			setBckAnm(0);
 		}
@@ -522,7 +521,7 @@ void TPopo::walkBehavior(int param_1, f32 param_2)
 		if (mVelocity.y < -1.0f)
 			mPosition.y += 0.2f * mVelocity.y;
 	}
-	unk1B8 = unk1B8 + 1.0f;
+	unk1B8 += 1.0f;
 	if (mSpine->getCurrentNerve() == &TNervePopoAttack::theNerve())
 		unk1B8 += 2.0f;
 	if (unk1B8 > 360.0f)
@@ -571,7 +570,6 @@ void TPopo::calcRootMatrix()
 		expandCollision();
 		getModel()->setBaseScale(mScaling);
 
-		int i;
 		TPosition3f matrix;
 		if (mSpine->getCurrentNerve() == &TNervePopoFly::theNerve()) {
 			matrix.translation(mPosition.x, mPosition.y, mPosition.z);
@@ -619,8 +617,9 @@ void TPopo::calcRootMatrix()
 				MtxPtr emitMtx = unk200;
 				MTXCopy(mMActor->getModel()->getAnmMtx(mCenterJntIndex),
 				        emitMtx);
-				for (i = 0; i < 3; ++i)
-					unk200[i][3] = body.at(i, 3);
+				emitMtx[0][3] = body.at(0, 3);
+				emitMtx[1][3] = body.at(1, 3);
+				emitMtx[2][3] = body.at(2, 3);
 				JPABaseEmitter* emitter
 				    = gpMarioParticleManager->emitAndBindToMtxPtr(
 				        PARTICLE_MS_POPO_SHUWA_B, emitMtx, 1, this);
@@ -794,18 +793,18 @@ void TPopo::explosion()
 		flippedDir.y *= -1.0f;
 		dir = flippedDir;
 	}
-	f32 num = manager->unk68->mNum.get();
-	num *= unk198 / unk194->mSLWaterScaleMax.get();
+	f32 num = manager->unk68->mNum.value
+	          * (unk198 / unk194->mSLWaterScaleMax.get());
 	if (num < 2.0f)
 		num = 2.0f;
-	manager->unk68->mNum.set((s32)num);
+	manager->unk68->mNum.value = (s32)num;
 	manager->unk68->mPos.value = emitPos;
 	gpModelWaterManager->emitRequest(*manager->unk68);
 }
 
 void TPopo::possessedIn()
 {
-	mMActor = getActorKeeper()->getMActor("popoH.bmd");
+	mMActor = mMActorKeeper->getMActor("popoH.bmd");
 	setBckAnm(3);
 	mMActor->setBtpFromIndex(0);
 	mMActor->setFrameRate(0.0f, 3);

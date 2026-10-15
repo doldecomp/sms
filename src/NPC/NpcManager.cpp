@@ -310,18 +310,13 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 				farClip = 15000.0f;
 	}
 
-	SetViewFrustumClipCheckPerspective(
-	    gpCamera->getFovy(), gpCamera->getAspect(), nearClip, farClip);
+	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->mAspect,
+	                                   nearClip, farClip);
 
-	int e;
-	TBaseNPC* actor;
-	int i;
+	for (int i = 0, e = mObjNum; i < e; ++i) {
+		TBaseNPC* actor = (TBaseNPC*)unk18[i];
 
-	e = getObjNum();
-	for (i = 0; i < e; ++i) {
-		actor = (TBaseNPC*)getObj(i);
-
-		JGeometry::TVec3<f32> checkPos = actor->getPosition();
+		JGeometry::TVec3<f32> checkPos = actor->mPosition;
 		checkPos.y += 75.0f;
 
 		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)

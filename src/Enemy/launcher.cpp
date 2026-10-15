@@ -223,8 +223,7 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	mMActor       = mMActorKeeper->createMActor("generator_model1.bmd", 0);
 	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 
-	s32 launchPeriod = mLaunchPeriod;
-	mLaunchCooldown  = launchPeriod * MsRandF();
+	mLaunchCooldown = mLaunchPeriod * MsRandF();
 
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
 	initHitActor(ACTOR_TYPE_LAUNCHER, 1,

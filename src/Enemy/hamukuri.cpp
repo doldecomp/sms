@@ -248,8 +248,7 @@ void THamuKuriManager::setSearchHamuKuri()
 			f32 canSearchDist = params->mSLCanSearchDist.get();
 
 			TMapObjBase* pTVar18 = nullptr;
-			f32 fVar1            = canSearchDist;
-			fVar1 *= canSearchDist;
+			f32 fVar1            = canSearchDist * canSearchDist;
 
 			for (int i = 0; i < unk68; ++i) {
 				TMapObjBase* uVar16 = unk64[i];
@@ -514,7 +513,7 @@ void TFireHamuKuriManager::initSetEnemies()
 			{ 200, 160, 130, 255 },
 		};
 
-		u32 matBodyBottom1Idx = getObj(0)
+		u32 matBodyBottom1Idx = ((TFireHamuKuri*)unk18[0])
 		                            ->getModel()
 		                            ->getModelData()
 		                            ->getMaterialName()
@@ -1137,9 +1136,8 @@ const char** THamuKuri::getBasNameTable() const { return hamukurianm_bastable; }
 
 MtxPtr THamuKuri::getTakingMtx()
 {
-	MtxPtr result = unk1B0;
-	f32 dVar4     = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
-	                                   mPosition.z, &mGroundPlane);
+	f32 dVar4 = gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight,
+	                               mPosition.z, &mGroundPlane);
 
 	mHeldObject->onHitFilter(HIT_FILTER_NO_COLLISION);
 
@@ -1163,7 +1161,7 @@ MtxPtr THamuKuri::getTakingMtx()
 	unk1B0[2][1] = 0.0f;
 	unk1B0[2][2] = 1.0f;
 
-	MTXConcat(mat, result, result);
+	MTXConcat(mat, unk1B0, unk1B0);
 
 	return unk1B0;
 }
@@ -1186,7 +1184,7 @@ bool THamuKuri::isResignationAttack()
 bool THamuKuri::isHitValid(u32 param_1)
 {
 	if (isBckAnm(3)) {
-		((THamuKuriManager*)TLiveActor::getManager())->requestSerialKill(this);
+		getManager()->requestSerialKill(this);
 		return true;
 	}
 
@@ -1489,7 +1487,7 @@ void THaneHamuKuri::bind()
 
 BOOL THaneHamuKuri::isReachedToGoal() const
 {
-	JGeometry::TVec3<f32> local_c = getUnk104().getPoint();
+	JGeometry::TVec3<f32> local_c = unk104.getPoint();
 	local_c -= mPosition;
 	local_c.y = 0.0f;
 	if (MsVECMag2(&local_c) < 100.0f)

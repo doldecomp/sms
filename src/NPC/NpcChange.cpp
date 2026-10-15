@@ -317,9 +317,8 @@ void TBaseNPC::behaveToBeTrampled_()
 	switch (mLodAnm->getCurrentAnmKind()) {
 	case NPC_ANM_KIND_UNK1B:
 	case NPC_ANM_KIND_UNK7: {
-		TSpineBase<TLiveActor>* spine         = mSpine;
-		const TNerveBase<TLiveActor>* current = spine->getCurrentNerve();
-		const TNerveBase<TLiveActor>* latest  = spine->getLatestNerve();
+		const TNerveBase<TLiveActor>* current = mSpine->getCurrentNerve();
+		const TNerveBase<TLiveActor>* latest  = mSpine->getLatestNerve();
 		if (current == &TNerveNPCWet::theNerve()) {
 			mSpine->pushNerve(&TNerveNPCWet::theNerve());
 			mSpine->setNext(nullptr);
@@ -552,7 +551,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 	unk1D0 = 0.0f;
 	if (cVar8 && isPollutionNpc() && !checkActionFlag(NPC_ACTION_UNK400)) {
 		onHitFilter(HIT_FILTER_NO_COLLISION);
-		mSpine->setNext(mSpine->getDefault());
+		mSpine->setDefaultNext();
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
@@ -563,7 +562,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
 		offHitFilter(HIT_FILTER_NO_COLLISION);
-		mSpine->setNext(mSpine->getDefault());
+		mSpine->setDefaultNext();
 		mSpine->pushNerve(mSpine->getDefault());
 		pos.y += 2.0f;
 		mVelocity.set(0.0f, 5.0f, 0.0f);

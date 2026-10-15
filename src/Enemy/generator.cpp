@@ -31,7 +31,6 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 	stream >> scale.x >> scale.y >> scale.z;
 	stream.readString();
 
-	s32 timer;
 	s32 count = stream.readS32();
 	for (int i = 0; i < count; ++i) {
 		s32 dummy;
@@ -44,8 +43,8 @@ void TGenerator::load(JSUMemoryInputStream& stream)
 
 	stream >> mInterval;
 
-	timer  = mInterval;
-	mTimer = timer * MsRandF();
+	s32 timer = mInterval;
+	mTimer    = timer * MsRandF();
 
 	gpConductor->registerGenerator(this);
 }

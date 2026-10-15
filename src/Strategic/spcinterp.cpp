@@ -407,7 +407,7 @@ void TSpcInterp::execcall()
 {
 	u32 address = fetchU32();
 	s32 argNum  = fetchS32();
-	s32 counter = mProgramCounter;
+	u32 counter = mProgramCounter;
 
 	mContextStack.push(counter);
 	mContextStack.push(mStorageStack.size());
@@ -571,8 +571,7 @@ TSpcInterp::TSpcInterp(TSpcBinary* binary, void* owner, int steps,
 		mDisplay[i] = 0;
 
 	for (int i = 0; i < mBinary->getHeader()->unk18; ++i) {
-		TSpcInterp* interp = this;
-		interp->mStorageStack.push(TSpcSlice(0));
+		mStorageStack.push(TSpcSlice(0));
 	}
 }
 

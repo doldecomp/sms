@@ -554,10 +554,7 @@ void TShine::control()
 		J3DModel* model      = getMActor()->getModel();
 		MtxPtr mtx           = model->getAnmMtx(2);
 		const GXColor& color = (GXColor) { 0xff, 0xff, 0xff, 0xff };
-		JGeometry::TVec3<f32> trans;
-		trans.x = mtx[0][3];
-		trans.y = mtx[1][3];
-		trans.z = mtx[2][3];
+		JGeometry::TVec3<f32> trans(mtx[0][3], mtx[1][3], mtx[2][3]);
 		gpLightManager->setEffectLightColor(color);
 		gpLightManager->setEffectLightPos(trans);
 	} break;
@@ -699,7 +696,7 @@ void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
 	unk17C.y = yDelta / (f32)unk168;
 	unk17C.z = (mInitialPosition.z - mPosition.z) / (f32)unk168;
 
-	unk15C = getDistanceXZ(getInitialPosition());
+	unk15C = getDistanceXZ(mInitialPosition);
 	if (unk15C == 0.0f)
 		unk15C = 1000.0f;
 	if (yDelta > 0.0f)
@@ -917,12 +914,11 @@ void TEggYoshi::touchFruit(THitActor* fruit)
 	if (unk14C == (u32)fruit->mActorType) {
 		startAnim(1);
 		unk148->getFrameCtrl(ANM_TYPE_BTP)->setFrame(11.0f);
-		JGeometry::TVec3<f32> diff;
-		diff.sub(fruit->mPosition, mPosition);
-		s16 angle   = matan(diff.z, diff.x);
-		mRotation.y = SHORTANGLE2DEG(angle);
-		mState      = 0xB;
-		unk150      = fruit;
+		mRotation.y = (360.0f / 65536.0f)
+		              * matan(fruit->mPosition.z - mPosition.z,
+		                      fruit->mPosition.x - mPosition.x);
+		mState = 0xB;
+		unk150 = fruit;
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_COLLECT_PRETTY, 0, nullptr,
 		                                   0);
 	} else if (animIsFinished()) {

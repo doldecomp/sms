@@ -65,13 +65,15 @@ void TMapObjBall::touchWall(JGeometry::TVec3<f32>* pos,
 			mVelocity.z += bounce * wall->getNormal().z;
 			if (isActorType(ACTOR_TYPE_WATERMELON)) {
 				if (mScaling.y >= 5.0f) {
+					f32 volume = abs(getVelocity().length());
 					SMSGetMSound()->startSoundActorWithInfo(
 					    MSD_SE_OBJ_WATERMELON_BROLL, &mPosition, nullptr,
-					    abs(getVelocity().length()), 0, 0, nullptr, 0, 4);
+					    volume, 0, 0, nullptr, 0, 4);
 				} else {
+					f32 volume = abs(getVelocity().length());
 					SMSGetMSound()->startSoundActorWithInfo(
 					    MSD_SE_OBJ_WATERMELON_SROLL, &mPosition, nullptr,
-					    abs(getVelocity().length()), 0, 0, nullptr, 0, 4);
+					    volume, 0, 0, nullptr, 0, 4);
 				}
 			} else {
 				SMSGetMSound()->startSoundActorWithInfo(
@@ -96,13 +98,15 @@ void TMapObjBall::rebound(JGeometry::TVec3<f32>* wall)
 	if (isActorType(ACTOR_TYPE_WATERMELON)) {
 		f32 soundY;
 		if (mScaling.y >= 5.0f) {
-			SMSGetMSound()->startSoundActorWithInfo(
-			    MSD_SE_OBJ_WATERMELON_BBUND, &mPosition, nullptr,
-			    abs(getGroundPlane()->getNormal().y), 0, 0, nullptr, 0, 4);
+			soundY = abs(mGroundPlane->getNormal().y);
+			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_WATERMELON_BBUND,
+			                                        &mPosition, nullptr, soundY,
+			                                        0, 0, nullptr, 0, 4);
 		} else {
-			SMSGetMSound()->startSoundActorWithInfo(
-			    MSD_SE_OBJ_WATERMELON_SBUND, &mPosition, nullptr,
-			    abs(getGroundPlane()->getNormal().y), 0, 0, nullptr, 0, 4);
+			soundY = abs(mGroundPlane->getNormal().y);
+			SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_WATERMELON_SBUND,
+			                                        &mPosition, nullptr, soundY,
+			                                        0, 0, nullptr, 0, 4);
 		}
 	} else {
 		u32 soundId = mMapObjData->mSound->mData->mSoundIdTable[4];
@@ -150,13 +154,12 @@ void TMapObjBall::touchGround(JGeometry::TVec3<f32>* ground)
 			mVelocity.x *= mMapObjData->mPhysical->mData->unk10;
 			mVelocity.z *= mMapObjData->mPhysical->mData->unk10;
 
-			if (isActorType(ACTOR_TYPE_WATERMELON)) {
-				f32 minSpeed = getMapObjData()->mPhysical->mData->unkC;
-				if (abs(mVelocity.x) > minSpeed
-				    || abs(mVelocity.z) > minSpeed) {
-					SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition,
-					                                0, nullptr, 0, 4);
-				}
+			if (isActorType(ACTOR_TYPE_WATERMELON)
+			    && (abs(mVelocity.x) > mMapObjData->mPhysical->mData->unkC
+			        || abs(mVelocity.z)
+			               > mMapObjData->mPhysical->mData->unkC)) {
+				SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP, &mPosition, 0,
+				                                nullptr, 0, 4);
 			}
 		}
 	}
@@ -789,24 +792,16 @@ void TResetFruit::pick(THitActor* actor)
 
 void TResetFruit::kicked()
 {
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000))
-		return;
-	if (isState(STATE_HOLDING))
+	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK2000000) || isState(STATE_HOLDING))
 		return;
 
 	if (SMS_GetMarioSpeedY() < 0.0f)
 		return;
 
-	if (getVelocity().y <= 0.0f) {
-		JGeometry::TVec3<f32> toMario;
-		f32 toMarioX = SMS_GetMarioPos().x - mPosition.x;
-		toMario.x    = toMarioX;
-		toMario.y    = 0.0f;
-		toMario.z    = SMS_GetMarioPos().z - mPosition.z;
-		f32 approach = getVelocity().dot(toMario);
-		if (isAirborne() && approach > 0.0f)
-			return;
-
+	JGeometry::TVec3<f32> toMario(SMS_GetMarioPos().x - mPosition.x, 0.0f,
+	                              SMS_GetMarioPos().z - mPosition.z);
+	if (getVelocity().y <= 0.0f
+	    && !(isAirborne() && getVelocity().dot(toMario) > 0.0f)) {
 		if (getVelocity().y == 0.0f)
 			mVelocity.y = unk178;
 		else

@@ -398,7 +398,7 @@ void TMapWire::getPointPosDefault(f32 pos, JGeometry::TVec3<f32>* out) const
 
 void TMapWire::initTipPoints(const TCubeGeneralInfo* cubeInfo)
 {
-	JGeometry::TVec3<f32> halfWire(0.0f, 0.0f, mWireLength / 2.0f);
+	JGeometry::TVec3<f32> halfWire(0.0f, 0.0f, mWireLength * 0.5f);
 
 	JGeometry::TRotation3<TMtx33f> wireTransform;
 	wireTransform.identity();
@@ -448,9 +448,8 @@ void TMapWire::init(const TCubeGeneralInfo* cubeInfo)
 	}
 
 	if (mEndPoint.x != mStartPoint.x) {
-		f32 angle
-		    = (mEndPoint.z - mStartPoint.z) / (mEndPoint.x - mStartPoint.x);
-		angle       = atanf(angle);
+		f32 angle   = atanf((mEndPoint.z - mStartPoint.z)
+		                    / (mEndPoint.x - mStartPoint.x));
 		mWireHAngle = -angle * 180.0f / M_PI + 90.0f;
 	} else {
 		mWireHAngle = 0.0f;

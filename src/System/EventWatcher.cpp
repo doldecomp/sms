@@ -214,9 +214,8 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 			f32 dist
 			    = interp->mProcessStack.getFromTop(arg_num - 2).getDataFloat();
 
-			u32 i = 2;
 			count = 1;
-			for (; i < arg_num; ++i) {
+			for (u32 i = 2; i < arg_num; ++i) {
 				THitActor* other = (THitActor*)getNameRefPtr(
 				    interp->mProcessStack.getFromBottom(
 				        interp->mProcessStack.size() - (arg_num - i)));
@@ -230,7 +229,7 @@ static void evIsNearActors(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 		}
 	}
 
-	for (int i = 0; i < (int)arg_num; ++i)
+	for (int i = 0; i < arg_num; ++i)
 		interp->pop();
 
 	interp->push(count);
@@ -240,7 +239,7 @@ static void evGetTalkNPC(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
 
-	TBaseNPC* npc = SMSGetMarDirector()->unkA0;
+	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
 	interp->push(!npc ? 0 : (int)npc);
 }
@@ -250,13 +249,12 @@ static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 
-	TMarDirector* director = SMSGetMarDirector();
+	TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 
-	if (!director->getTalkingNPC()) {
-		interp->push((const char*)"");
-	} else {
-		interp->push(director->getTalkingNPC()->getName());
-	}
+	if (!npc)
+		interp->push("");
+	else
+		interp->push(npc->getName());
 }
 
 // TODO: `TSpcSlice(interp->pop()).getDataInt()` is a placeholder for something
@@ -281,10 +279,9 @@ static void evGetTalkNPCName(TSpcTypedInterp<TEventWatcher>* interp,
 static void evSetTalkMsgID(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(2, &arg_num);
-	int p1         = TSpcSlice(interp->pop()).getDataInt();
-	int p2         = TSpcSlice(interp->pop()).getDataInt();
-	TTalk2D2* talk = gpTalk2D;
-	talk->setMessageID(p2, p1);
+	int p1 = TSpcSlice(interp->pop()).getDataInt();
+	int p2 = TSpcSlice(interp->pop()).getDataInt();
+	gpTalk2D->setMessageID(p2, p1);
 	interp->push();
 }
 
@@ -1197,9 +1194,8 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
                                       u32 arg_num)
 {
 	interp->verifyArgNum(0, &arg_num);
-	const char* name = "赤コイン用スイッチ";
-	TRedCoinSwitch* swtch
-	    = static_cast<TRedCoinSwitch*>(JDrama::TNameRefGen::search(name));
+	TRedCoinSwitch* swtch = static_cast<TRedCoinSwitch*>(
+	    JDrama::TNameRefGen::search("赤コイン用スイッチ"));
 
 	int iVar9 = swtch->unk138;
 	for (int i = 0; i < 8; ++i) {
@@ -1229,7 +1225,7 @@ JGeometry::TVec3<f32> rotateY(JGeometry::TVec3<f32> vec, s16 angleY)
 	f32 z = -vec.x * JMASSin(angleY) + vec.z * JMASCos(angleY);
 	vec.x = x;
 	vec.z = z;
-	return JGeometry::TVec3<f32>(static_cast<const Vec&>(vec));
+	return JGeometry::TVec3<f32>(vec.x, vec.y, vec.z);
 }
 
 static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>* interp,

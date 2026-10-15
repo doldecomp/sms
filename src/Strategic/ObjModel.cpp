@@ -20,13 +20,10 @@ bool TModelDataNode::isSameName(const char* file_name, u16 key) const
 void TModelDataNode::registerDataAndJoinNewNode(SDLModelData* data,
                                                 const char* bmd_file)
 {
-	JUT_ASSERT(data);
-	JUT_ASSERT(bmd_file);
 	mData     = data;
 	mFileName = bmd_file;
 	mKey      = JDrama::TNameRef::calcKeyCode(bmd_file);
 	mNext     = new TModelDataNode;
-	JUT_ASSERT(mNext);
 }
 
 TModelDataNode::TModelDataNode()
@@ -40,12 +37,9 @@ TModelDataNode::TModelDataNode()
 SDLModelData* TModelDataKeeper::loadModelData(const char* file_name, u32 flags,
                                               const char* folder)
 {
-	JUT_ASSERT(file_name);
-	JUT_ASSERT(folder);
 	char fullPath[256];
 	sprintf(fullPath, "%s/%s", folder, file_name);
-	void* res = JKRGetResource(fullPath);
-	JUT_ASSERT(res);
+	void* res             = JKRGetResource(fullPath);
 	J3DModelData* data    = J3DModelLoaderDataBase::load(res, flags);
 	SDLModelData* sdlData = new SDLModelData(data);
 	return sdlData;

@@ -277,7 +277,7 @@ void TPollutionLayer::perform(u32 cue, JDrama::TGraphics* graphics)
 
 static inline u8 readBmpPixel(const u8* bmp, int x, int y, int w, int h)
 {
-	return (bmp + w * (h - 1 - y) + 0x436)[x];
+	return bmp[0x436 + x + w * (h - 1 - y)];
 }
 
 void TPollutionLayer::initTexImage(const char* name)

@@ -309,8 +309,7 @@ void TPollutionCounterLayer::drawPollutionLayer(int layer_index) const
 	drawBlack(img->width, img->height);
 	loadPollutionLayer((u8*)img + img->imageDataOffset, img->width, img->height,
 	                   GX_TEXMAP0);
-	u16 flags = layer->mFlags;
-	initGXforPollutionLayer(layer->mPollutionType, flags,
+	initGXforPollutionLayer(layer->mPollutionType, layer->mFlags,
 	                        layer->mPerFrameChangeThreshold,
 	                        layer->mPerFrameChangeDelta);
 
@@ -346,7 +345,7 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
 
-		if (info.unk0 == 0) {
+		if (mJointObjStampTaskQueue[i].unk0 == 0) {
 			GXSetChanMatColor(GX_COLOR0A0, (GXColor) { 0, 0, 0, 0xff });
 		} else {
 			GXSetChanMatColor(GX_COLOR0A0,
@@ -370,8 +369,9 @@ void TPollutionCounterLayer::drawJointObjStamp(int layer_index) const
 		GXLoadPosMtxImm(local_6c, GX_PNMTX0);
 
 		j3dSys.setVtxPos(layer->getModelData()->getVtxPosArray());
-		for (int j = 0; j < info.mJointObj->getShapeNum(); ++j)
-			drawShape(info.mJointObj->getShape(j));
+		for (int j = 0; j < mJointObjStampTaskQueue[i].mJointObj->getShapeNum();
+		     ++j)
+			drawShape(mJointObjStampTaskQueue[i].mJointObj->getShape(j));
 	}
 }
 

@@ -62,8 +62,7 @@ void TAmenbo::init(TLiveManager* manager)
 	mSearchDisableCooldown = 0;
 	mOutOfWaterDeathTimer  = 0;
 	for (int i = 0; i < 4; ++i) {
-		EffectOnJoint* effect = &unk1EC[i];
-		effect->mJointIdx
+		unk1EC[i].mJointIdx
 		    = getModel()->getModelData()->getJointName()->getIndex(
 		        cJointNames[i]);
 	}
@@ -141,7 +140,7 @@ void TAmenbo::bind()
 void TAmenbo::control()
 {
 	if (mWaterGunHitCooldown > 0)
-		mWaterGunHitCooldown = mWaterGunHitCooldown - 1;
+		mWaterGunHitCooldown--;
 
 	if (mSearchDisableCooldown > 0)
 		mSearchDisableCooldown--;
@@ -340,8 +339,7 @@ void TAmenbo::doAdjustTarget()
 
 void TAmenbo::doChangeWaitAnm()
 {
-	bool ended = checkCurAnmEnd(ANM_TYPE_BCK);
-	if (ended) {
+	if (checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (mMActor->checkCurAnm("amenbo_wait1_start", ANM_TYPE_BCK))
 			changeBck("amenbo_wait1_loop", 1.0f);
 		else if (mMActor->checkCurAnm("amenbo_wait1_loop", ANM_TYPE_BCK))

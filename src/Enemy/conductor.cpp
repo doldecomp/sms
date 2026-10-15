@@ -283,9 +283,8 @@ void TConductor::genEnemyFromPollution()
 		return;
 
 	JGeometry::TVec3<f32> targetPos = SMS_GetMarioPos();
-	f32 min                         = mCondParams.mGenerateRadiusMin.get();
-	f32 max                         = mCondParams.mGenerateRadiusMax.get();
-	f32 r                           = MsRandF(min, max);
+	f32 r = MsRandF(mCondParams.mGenerateRadiusMin.get(),
+	                mCondParams.mGenerateRadiusMax.get());
 
 	f32 theta = MsRandF() * 360 * (65536.0f / 360.0f);
 	targetPos.x += r * JMASSin(theta);

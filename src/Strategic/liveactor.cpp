@@ -118,10 +118,9 @@ void TLiveActor::calcRideMomentum()
 			mPositionDelta += rideVelocity;
 
 			if (unkE8 >= 2) {
-				f32 angleDiff
-				    = MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
-				mRotationDelta.y = angleDiff + mRotationDelta.y;
-				mGroundActorYaw  = mGroundActor->mRotation.y;
+				mRotationDelta.y
+				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
+				mGroundActorYaw = mGroundActor->mRotation.y;
 			}
 		}
 	} else {

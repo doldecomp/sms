@@ -251,9 +251,22 @@ BOOL NameKuriScaleCallback(J3DNode* param_1, int param_2)
 		MtxPtr mA = gpCurNameKuri->getMActor()->getModel()->getAnmMtx(
 		    ((J3DJoint*)param_1)->getJntNo());
 
-		TPosition3f local_3c;
-		local_3c.setTrans(0.0f, 0.0f, 0.0f);
-		local_3c.setScale(0.4f, 4.0f, 0.4f);
+		Mtx local_3c;
+
+		local_3c[0][0] = 0.4;
+		local_3c[0][1] = 0.0;
+		local_3c[0][2] = 0.0;
+		local_3c[0][3] = 0.0;
+
+		local_3c[1][0] = 0.0;
+		local_3c[1][1] = 4.0;
+		local_3c[1][2] = 0.0;
+		local_3c[1][3] = 0.0;
+
+		local_3c[2][0] = 0.0;
+		local_3c[2][1] = 0.0;
+		local_3c[2][2] = 0.4;
+		local_3c[2][3] = 0.0;
 
 		MTXConcat(mA, local_3c, mA);
 		MTXConcat(J3DSys::mCurrentMtx, local_3c, J3DSys::mCurrentMtx);
@@ -652,8 +665,9 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 	if (self->isBckAnm(4)) {
 		if (self->checkCurAnmEnd(0))
 			return true;
-	} else if (!self->isAirborne())
+	} else if (!self->isAirborne()) {
 		self->setBckAnm(4);
+	}
 
 	return false;
 }

@@ -69,7 +69,7 @@ void SMS_EmitSinkInPollutionEffect(const JGeometry::TVec3<float>& arg0,
 	TPosition3f matrix;
 
 	TVec3<f32> C;
-	C.cross2(arg1, B);
+	C.cross(arg1, B);
 	C.normalize();
 	B.normalize();
 

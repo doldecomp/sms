@@ -996,21 +996,13 @@ void TBossPakkun::gotHipDropDamage()
 		if (SMSGetMarDirector()->getCurrentStage() == 4) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPTakeOff::theNerve());
-			const TNerveBase<TLiveActor>* getUpNerve
-			    = &TNerveBPGetUp::theNerve();
-			mSpine->pushNerve(getUpNerve);
-			const TNerveBase<TLiveActor>* stompReactNerve
-			    = &TNerveBPStompReact::theNerve();
-			mSpine->pushNerve(stompReactNerve);
+			mSpine->pushNerve(&TNerveBPGetUp::theNerve());
+			mSpine->pushNerve(&TNerveBPStompReact::theNerve());
 		} else {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPWait::theNerve());
-			const TNerveBase<TLiveActor>* getUpNerve
-			    = &TNerveBPGetUp::theNerve();
-			mSpine->pushNerve(getUpNerve);
-			const TNerveBase<TLiveActor>* stompReactNerve
-			    = &TNerveBPStompReact::theNerve();
-			mSpine->pushNerve(stompReactNerve);
+			mSpine->pushNerve(&TNerveBPGetUp::theNerve());
+			mSpine->pushNerve(&TNerveBPStompReact::theNerve());
 		}
 	}
 }
@@ -1192,8 +1184,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 				unk17C = 0;
 				unk178 = 0;
 			} else {
-				s32 step = getBossPakkunParams()->mSLWaterMarkLimit.get();
-				step /= 100;
+				s32 step = getBossPakkunParams()->mSLWaterMarkLimit.get() / 100;
 				if (step == 0)
 					step = 1;
 				unk178 -= step;
@@ -1220,9 +1211,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mWeakPoint == WEAK_POINT_NAVEL && checkMarioRiding()) {
 			if (!mSpine->isNerve(&TNerveBPJumpReact::theNerve())) {
-				const TNerveBase<TLiveActor>* jumpReactNerve
-				    = &TNerveBPJumpReact::theNerve();
-				mSpine->pushNerve(jumpReactNerve);
+				mSpine->pushNerve(&TNerveBPJumpReact::theNerve());
 			}
 		}
 	}
@@ -1270,7 +1259,7 @@ void TBossPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (static_cast<TBossPakkunManager*>(mManager)->unk54 == 0) {
 		if (mSpine->isNerve(&TNerveBPDie::theNerve())) {
-			MActor* origActor = getMActor();
+			MActor* origActor = mMActor;
 			mMActor           = unk180;
 			TSpineEnemy::perform(cue, graphics);
 			mMActor = origActor;
@@ -1404,8 +1393,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 	JGeometry::TVec3<f32> toMario = boss->mPosition;
 	toMario -= SMS_GetMarioPos();
 	f32 swingLength = boss->getBossPakkunParams()->mSLSwingLength.get();
-	swingLength *= swingLength;
-	if (toMario.squared() < swingLength) {
+	if (toMario.squared() < swingLength * swingLength) {
 		JGeometry::TVec3<f32> facing;
 		facing = JGeometry::TVec3<f32>(-toMario.x, -toMario.y, -toMario.z);
 		f32 desiredYaw = MsGetRotFromZaxisY(facing);

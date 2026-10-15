@@ -97,10 +97,8 @@ static bool loadWaveBackword(JASystem::WaveArcLoader::TObject* obj)
 		return false;
 
 	JASystem::Kernel::THeap* root = JASystem::WaveArcLoader::getRootHeap();
-	uintptr_t address             = (uintptr_t)root->getBase();
-	address += root->unk10;
-	address -= extent;
-	if (!heap->selfAlloc(root, extent, address))
+	if (!heap->selfAlloc(root, extent,
+	                     (uintptr_t)root->mBase + root->unk10 - extent))
 		return false;
 
 	u32* ptr = obj->getLoadFlagPtr();
@@ -150,8 +148,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 					break;
 
 				u16 tmp = i << 4 | j;
-				param_1->getChild(i)->getChild(j)->readPortAppDirect(
-				    9, &smTrackCategory[tmp]);
+				pTVar1->readPortAppDirect(9, &smTrackCategory[tmp]);
 
 				smPolifonic[smTrackCategory[tmp]] += 1;
 			}
@@ -166,7 +163,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	case 12: {
 		param_1->getParent()->readPortAppDirect(8, &local_26);
 		param_1->readPortAppDirect(0xf, &local_28);
-		u16 uVar4 = max(smWaterFilter, local_26);
+		u16 uVar4 = local_26 > smWaterFilter ? local_26 : smWaterFilter;
 
 		if (uVar4 != local_28) {
 			param_1->readPortAppDirect(14, &local_2a);

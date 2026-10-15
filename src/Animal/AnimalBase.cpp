@@ -198,8 +198,9 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 				srcArrays[1] = (Mtx*)shared->getWeightAnmMtx(0);
 
 				for (u16 i = 0; i < count; ++i) {
-					Mtx* srcArray = srcArrays[data->getDrawMtxFlag(i)];
-					MTXConcat(world, srcArray[data->getDrawMtxIndex(i)],
+					MTXConcat(world,
+					          srcArrays[data->getDrawMtxFlag(i)]
+					                   [data->getDrawMtxIndex(i)],
 					          model->getDrawMtx(i));
 				}
 
@@ -302,8 +303,9 @@ void TAnimalBase::execWalk(bool moving)
 	getRotationFlyToDir(&mRotation, diff, marchSpeed, turnSpeed);
 
 	JGeometry::TQuat4<f32> quat = SMS_Eular2Quat(mRotation);
-	JGeometry::TVec3<f32> tmp(0.0f, 0.0f, marchSpeed);
-	quat.rotate(tmp, tmp);
+	JGeometry::TVec3<f32> tmp;
+	// TODO: quaternions are still wrong
+	quat.rotate(JGeometry::TVec3<f32>(0.0f, 0.0f, marchSpeed), tmp);
 	mPositionDelta = tmp;
 }
 

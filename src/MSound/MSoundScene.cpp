@@ -58,8 +58,7 @@ void MSSceneSE::frameLoop(u32 sound_id, Vec* trans, u8 trans_num)
 				direction = DIRECTION_SR;
 			}
 
-			u8 rank = 0;
-			sortMaxTrans(mTrans[i], direction, rank);
+			sortMaxTrans(mTrans[i], direction, 0);
 		}
 
 		for (u8 i = 0; i < DIRECTION_NUM; ++i) {

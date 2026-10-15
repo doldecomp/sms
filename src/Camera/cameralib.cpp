@@ -23,7 +23,6 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
                    const f32 (*view_mtx)[4], const Vec& world_pos,
                    u32* out_depth, bool disable_z_clip)
 {
-	JGeometry::TVec3<f32> projPos;
 	Vec camSpacePos;
 
 	MTXMultVec((MtxPtr)view_mtx, (Vec*)&world_pos, &camSpacePos);
@@ -35,9 +34,9 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
 
 	f32 perspectiveFactor = 1.0f / -camSpacePos.z;
 
-	projPos.z = proj_mtx[2][2] * camSpacePos.z + proj_mtx[2][3];
-	projPos.z *= perspectiveFactor;
-	if (!disable_z_clip && (projPos.z > 0.0f || projPos.z < -1.0f)) {
+	f32 z = proj_mtx[2][2] * camSpacePos.z + proj_mtx[2][3];
+	z *= perspectiveFactor;
+	if (!disable_z_clip && (z > 0.0f || z < -1.0f)) {
 		out_ndc_pos->x = out_ndc_pos->y = 10000.0f;
 		return;
 	}
@@ -47,7 +46,7 @@ void CLBCalc2DFPos(JGeometry::TVec2<f32>* out_ndc_pos, const f32 (*proj_mtx)[4],
 	out_ndc_pos->set(x * perspectiveFactor, y * perspectiveFactor);
 
 	if (out_depth != nullptr)
-		*out_depth = CLBLinearInbetween<u32>(0, 0xffffff, projPos.z + 1.0f);
+		*out_depth = CLBLinearInbetween<u32>(0, 0xffffff, z + 1.0f);
 }
 
 BOOL CLBChaseAngleDecrease(s16* value, s16 desired, s16 ratio)
@@ -408,25 +407,26 @@ void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
 
 	out_grid[1].scaleAdd(fVar3, out_grid[4], local_68);
 	out_grid[7].scaleAdd(fVar6, out_grid[4], local_68);
-	JGeometry::TVec3<f32> negativeRight;
-	negativeRight.scale(fVar7, local_74);
-	out_grid[3].add(out_grid[4], negativeRight);
+	out_grid[3].scaleAdd(fVar7, out_grid[4], local_74);
+	out_grid[5].scaleAdd(fVar5, out_grid[4], local_74);
+
+	// Anything below here could be part of CLBCalcNearFourPos?
+
 	fVar16.scale(fVar5, local_74);
 	fVar19.scale(fVar3, local_68);
 
-	f32 halfWidthSquared  = fVar5 * fVar5;
-	f32 halfPlaneDiagonal = MsSqrtf(fVar3 * fVar3 + halfWidthSquared);
+	f32 halfPlaneDiagonal = MsSqrtf(fVar3 * fVar3 + fVar5 * fVar5);
 
-	local_90.set(negativeRight);
-	local_90.add(fVar19);
+	local_90.scaleAdd(fVar7, fVar19, local_74);
 	MsVECNormalize(&local_90, &local_90);
 
 	out_grid[0].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 	local_90.negate();
 	out_grid[8].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);
 
-	local_90.set(fVar16);
-	local_90.add(fVar19);
+	local_90.x = (f32)(fVar16.x + fVar19.x);
+	local_90.y = (f32)(fVar16.y + fVar19.y);
+	local_90.z = (f32)(fVar16.z + fVar19.z);
 	MsVECNormalize(&local_90, &local_90);
 
 	out_grid[2].scaleAdd(halfPlaneDiagonal, out_grid[4], local_90);

@@ -31,7 +31,7 @@ void TMapObjFlag::draw()
 {
 	TMtx34f mtx;
 	mtx.set(j3dSys.getViewMtx());
-	MTXConcat(mtx, unk8C.mMtx, mtx);
+	MTXConcat(mtx, unk8C, mtx);
 	GXLoadPosMtxImm(mtx, GX_PNMTX0);
 	u16 count = 2 * ((unk70 - 2 * unkBC) / unkBC + 2);
 	f32 sStep = 1.0f / (unk70 - 1);
@@ -76,8 +76,8 @@ void TMapObjFlag::updateVertex()
 
 void TMapObjFlag::update()
 {
-	MsMtxSetXYZRPH(unk8C.mMtx, mPosition.x, mPosition.y, mPosition.z,
-	               mRotation.x, mRotation.y, mRotation.z);
+	MsMtxSetXYZRPH(unk8C, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
+	               mRotation.y, mRotation.z);
 	updateVertex();
 	unk88 += mFlutterSpeed;
 	if (unk88 > 360.0f)

@@ -71,7 +71,7 @@ void TMapEventSink::makeBuildingRecovered(int i)
 
 void TMapEventSink::finishControl()
 {
-	makeBuildingRecovered(getRaisingBuildingIdx());
+	makeBuildingRecovered(mRaisingBuildingIdx);
 	unk2C               = nullptr;
 	unk30               = nullptr;
 	mRaisingBuildingIdx = -1;
@@ -234,9 +234,8 @@ void TMapEventSinkInPollution::loadAfter()
 {
 	TMapEventSink::loadAfter();
 	for (int i = 0; i < mBuildingNum; ++i) {
-		TPollutionCounterObj& counter = gpPollution->getCounterObj();
-		TPollutionObj* obj            = getPollutionObj(i);
-		counter.registerPollutionObj(obj, &getPollutionObj(i)->mCounter);
+		gpPollution->getCounterObj().registerPollutionObj(
+		    getPollutionObj(i), &getPollutionObj(i)->mCounter);
 	}
 }
 
