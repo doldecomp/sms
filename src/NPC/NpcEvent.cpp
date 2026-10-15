@@ -87,6 +87,28 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push(result);
 }
 
+static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
+                               u32 arg_num)
+{
+	interp->verifyArgNum(1, &arg_num);
+
+	int result = 0;
+
+	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
+	    && SMS_IsMarioTouchGround4cm()
+	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
+
+		SMSGetMarDirector()->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
+		SMSGetMarDirector()->unk126 = 1;
+
+		result = 1;
+	} else {
+		interp->pop();
+	}
+
+	interp->push(result);
+}
+
 static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
                                         u32 arg_num)
 {
@@ -109,28 +131,6 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 			result = 1;
 		}
 	}
-	interp->push(result);
-}
-
-static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
-                               u32 arg_num)
-{
-	interp->verifyArgNum(1, &arg_num);
-
-	int result = 0;
-
-	if (!SMSGetMarDirector()->isTalkOrDemoModeNow()
-	    && SMS_IsMarioTouchGround4cm()
-	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
-
-		SMSGetMarDirector()->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
-		SMSGetMarDirector()->unk126 = 1;
-
-		result = 1;
-	} else {
-		interp->pop();
-	}
-
 	interp->push(result);
 }
 

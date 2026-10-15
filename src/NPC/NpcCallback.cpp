@@ -59,8 +59,8 @@ BOOL NPCNeckCallBack(J3DNode* param_1, int param_2)
 					    currMtx[0][1], currMtx[1][1], currMtx[2][1]);
 					MsVECNormalize(&toMario, &toMario);
 
-					local_148 = MsGetRotFromZaxis(toMario)
-					            - MsGetRotFromZaxis(neckForward);
+					local_148 = MsGetRotFromZaxis(neckForward)
+					            - MsGetRotFromZaxis(toMario);
 				} else {
 					local_148.zero();
 				}
