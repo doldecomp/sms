@@ -513,20 +513,20 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	f32 dVar12 = f29 + MsGetRotFromZaxisY(local_58);
 
 	f32 fVar1 = MsAngleDiff(dVar12, mRotation.y);
+	f32 fVar2 = fVar1;
 
 	f32 fVar3;
 	if (turn_speed >= 90.0f) {
 		fVar3 = 0.0f;
 	} else {
 		f32 s = MsSin(turn_speed);
-		if (fVar3 == 0.0f) {
+		if (s == 0.0f) {
 			fVar3 = 100000.0f;
 		} else {
 			fVar3 = march_speed * MsSin(90.0f - turn_speed * 0.5f) / s;
 		}
 	}
 
-	f32 fVar2;
 	if (dVar9 > fVar3 * 2.0f) {
 		if (fVar1 > 0.0f) {
 			fVar2 = MsMin(fVar1, turn_speed);
