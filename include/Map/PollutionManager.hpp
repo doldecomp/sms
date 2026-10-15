@@ -11,7 +11,7 @@ class TPollutionManager;
 
 extern TPollutionManager* gpPollution;
 
-class TPollutionLayerInfo;
+struct TPollutionLayerInfo;
 
 class TPollutionManager : public TJointModelManager {
 public:

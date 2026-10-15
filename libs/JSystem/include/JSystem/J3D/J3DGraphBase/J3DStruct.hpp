@@ -39,7 +39,8 @@ public:
 	/* 0x28 */ Vec mDistAtten;
 }; // Size = 0x34
 
-struct J3DTextureSRTInfo {
+class J3DTextureSRTInfo {
+public:
 	J3DTextureSRTInfo& operator=(const J3DTextureSRTInfo& other)
 	{
 		mScaleX       = other.mScaleX;
@@ -121,7 +122,8 @@ struct J3DIndTexMtxInfo {
 	/* 0x18 */ s8 mScaleExp;
 }; // Size: 0x1C
 
-struct J3DFogInfo {
+class J3DFogInfo {
+public:
 	J3DFogInfo& operator=(const J3DFogInfo& other)
 	{
 		mType      = other.mType;

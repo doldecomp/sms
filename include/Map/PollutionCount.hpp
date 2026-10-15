@@ -8,7 +8,7 @@ class TPollutionObj;
 class TPollutionLayer;
 class J3DModel;
 class J3DDrawBuffer;
-class ResTIMG;
+struct ResTIMG;
 
 class TPollutionCounterBase : public TDrawSyncCallback {
 public:

@@ -21,7 +21,7 @@
 #include <JSystem/J3D/J3DGraphBase/Components/J3DAlphaComp.hpp>
 
 class J3DMaterial;
-struct J3DTexCoord2Info;
+struct J3DTexCoord2Info { };
 struct J3DCurrentMtxInfo;
 
 struct J3DMaterialBlock : public JUTDataBlockHeader {

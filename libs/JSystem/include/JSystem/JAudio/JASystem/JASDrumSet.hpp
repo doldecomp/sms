@@ -7,7 +7,7 @@
 
 namespace JASystem {
 
-class TInstParam;
+struct TInstParam;
 
 class TDrumSet : public TInst {
 public:

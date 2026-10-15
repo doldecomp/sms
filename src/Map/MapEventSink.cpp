@@ -18,7 +18,7 @@
 #include <System/Particles.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JParticle/JPAResourceManager.hpp>
-#include <Jsystem/JDrama/JDRNameRefGen.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

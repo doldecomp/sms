@@ -15,7 +15,7 @@
 
 class JAIActor;
 class JAICamera;
-class JAIAnimeFrameSoundData;
+struct JAIAnimeFrameSoundData;
 class MSModBgm;
 class MSBgmXFade;
 

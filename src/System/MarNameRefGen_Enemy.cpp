@@ -18,7 +18,7 @@
 #include <Enemy/TypicalEnemy.hpp>
 #include <Enemy/WalkerEnemy.hpp>
 #include <Enemy/FireWanwan.hpp>
-#include <Enemy/beam.hpp>
+#include <Enemy/Beam.hpp>
 #include <Enemy/Amenbo.hpp>
 #include <Enemy/Kumokun.hpp>
 #include <Enemy/EggGen.hpp>
