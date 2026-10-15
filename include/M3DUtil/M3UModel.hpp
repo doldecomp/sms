@@ -34,8 +34,7 @@ public:
 	/* 0x14 */ J3DMtxCalcSoftimageAnm* unk14;
 };
 
-class M3UMtxCalcSetInfo {
-public:
+struct M3UMtxCalcSetInfo {
 	/* 0x0 */ u16 mJntIdx;
 	/* 0x2 */ u8 mAnmType;
 	/* 0x3 */ u8 mMtxCalcIdx;

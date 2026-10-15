@@ -39,7 +39,8 @@ class JPAExTexShape;
 class JPAKeyFrameAnime;
 
 // TODO: fabricated. Name taken from TWW
-struct JPADataBlockLinkInfo {
+class JPADataBlockLinkInfo {
+public:
 	JPADataBlockLinkInfo()
 	    : mBaseEmitterBlock(nullptr)
 	    , mBaseShape(nullptr)
@@ -73,7 +74,6 @@ struct JPADataBlockLinkInfo {
 	JPAKeyFrameAnime** getKey() { return mKeyframeAnimations; }
 	u8 getKeyNum() { return mKeyframeAnimationNum; }
 
-public:
 	/* 0x0 */ JPADataBlock* mBaseEmitterBlock;
 	/* 0x4 */ JPABaseShape* mBaseShape;
 	/* 0x8 */ JPAExtraShape* mExtraShape;

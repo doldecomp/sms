@@ -191,8 +191,8 @@ public:
 	/* 0xB8 */ JUTNameTab* unkB8;
 };
 
-struct J3DDeformData;
-struct J3DSkinDeform;
+class J3DDeformData;
+class J3DSkinDeform;
 struct J3DVtxShader;
 
 // Stolen from TP, unused in sms

@@ -7,7 +7,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 
-struct JKRThread;
+class JKRThread;
 class JUTConsole;
 
 struct JKRThreadName_ {
