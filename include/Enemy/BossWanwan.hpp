@@ -5,6 +5,19 @@
 
 class TLiveActor;
 
+class TBossWanwan : public TSpineEnemy {
+public:
+	TBossWanwan(const char*);
+
+public:
+	/* 0x150 */ u8 unk150[0x68];
+};
+
+class TBossWanwanManager : public TEnemyManager {
+public:
+	TBossWanwanManager(const char*);
+};
+
 DECLARE_NERVE(TNerveBWGraphWander, TLiveActor);
 DECLARE_NERVE(TNerveBWRoll, TLiveActor);
 DECLARE_NERVE(TNerveBWBark, TLiveActor);
