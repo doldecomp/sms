@@ -541,18 +541,7 @@ void TChuuHana::bind()
 	mPositionDelta = next - mPosition;
 }
 
-f32 TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1)
-{
-	JGeometry::TVec3<f32> velocity        = getVelocity();
-	JGeometry::TVec3<f32> currentVelocity = getVelocity();
-	f32 horizontalSpeed
-	    = JGeometry::TUtil<f32>::sqrt(currentVelocity.x * currentVelocity.x
-	                                  + currentVelocity.z * currentVelocity.z);
-	VECAdd(&velocity, &param_1, &velocity);
-	velocity.y = 0.0f;
-	setVelocity(velocity);
-	return horizontalSpeed;
-}
+void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1) { }
 
 BOOL TChuuHana::receiveMessage(THitActor* sender, u32 message)
 {
@@ -702,22 +691,7 @@ void TChuuHana::setSafeGoal()
 	unk1B2 = 1;
 }
 
-void TChuuHana::rolling()
-{
-	JGeometry::TVec3<f32> velocity = mVelocity;
-	unk204.x += 0.2f * (velocity.x - unk204.x);
-	unk204.z += 0.2f * (velocity.z - unk204.z);
-
-	unk1B8 = 2.0f
-	         * (JGeometry::TUtil<f32>::sqrt(unk204.x * unk204.x
-	                                        + unk204.z * unk204.z)
-	            / mBodyRadius);
-	unk210 += unk1B8;
-	if (unk210 > 360.0f)
-		unk210 -= 360.0f;
-	if (unk210 < 0.0f)
-		unk210 += 360.0f;
-}
+void TChuuHana::rolling() { }
 
 void TChuuHana::rollStart()
 {
