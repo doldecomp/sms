@@ -44,8 +44,58 @@ TConsoleStr::TConsoleStr(const char* name)
 
 f32 TConsoleStr::getWipeCloseTime() { return 30.0f / SMSGetVSyncTimesPerSec(); }
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+// this feels like a macro bc this expression is too weird to NOT be one
+#define MACRO_UNK(identifier)    (((i / 10) << 8) + identifier + (i % 10))
+#define GO_LETTERS_LENGTH        (this->mGoLettersLength)
+#define SHINE_GET_LETTERS_LENGTH (this->mShineLettersLength)
+#define MISS_LETTERS_LENGTH      (this->mMissLettersLength)
+#define COMMON2D                 "/cmn2d"
+#else
+#define MACRO_UNK(identifier)    (identifier + i)
+#define GO_LETTERS_LENGTH        (3)
+#define SHINE_GET_LETTERS_LENGTH (9)
+#define MISS_LETTERS_LENGTH      (5)
+#define COMMON2D                 "/common/2d"
+#endif
+
 void TConsoleStr::load(JSUMemoryInputStream& stream)
 {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	// what is default??
+	mGoLettersLength      = 11;
+	mShineLettersLength   = 11;
+	mMissLettersLength    = 12;
+	u32 sLoadResourceLang = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
+	switch (sLoadResourceLang) {
+	case MSLANG_ENGLISH:
+		mGoLettersLength    = 3;
+		mShineLettersLength = 6;
+		mMissLettersLength  = 7;
+		break;
+	case MSLANG_GERMAN:
+		mGoLettersLength    = 4;
+		mShineLettersLength = 11;
+		mMissLettersLength  = 12;
+		break;
+	case MSLANG_FRENCH:
+		mGoLettersLength    = 11;
+		mShineLettersLength = 11;
+		mMissLettersLength  = 8;
+		break;
+	case MSLANG_SPANISH:
+		mGoLettersLength    = 10;
+		mShineLettersLength = 11;
+		mMissLettersLength  = 10;
+		break;
+	case MSLANG_ITALIAN:
+		mGoLettersLength    = 4;
+		mShineLettersLength = 10;
+		mMissLettersLength  = 7;
+		break;
+	}
+#endif
+
 	JKRArchive* arch = SMSSwitch2DArchive("guide", gArBkConsole);
 	JDrama::TViewObj::load(stream);
 	mSplashTextScreen = new J2DSetScreen("big_tx_1.blo", arch);
@@ -53,17 +103,21 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk14 = new J2DSetScreen("scenario_demo_1.blo", arch);
 	unk14->setCullBack(GX_CULL_BACK);
 
-	for (int i = 0; i < 3; ++i) {
-		mGoLetters[i] = new TBoundPane(mSplashTextScreen, 'go00' + i);
+	for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
+		mGoLetters[i] = new TBoundPane(mSplashTextScreen, MACRO_UNK('go00'));
 		mGoLetters[i]->unk0->hide();
 	}
 
-	for (int i = 0; i < 9; ++i) {
-		mShineGetLetters[i] = new TBoundPane(mSplashTextScreen, 'sg00' + i);
+	for (int i = 0; i < SHINE_GET_LETTERS_LENGTH; ++i) {
+		mShineGetLetters[i]
+		    = new TBoundPane(mSplashTextScreen, MACRO_UNK('sg00'));
 	}
 
-	for (int i = 0; i < 5; ++i) {
-		mMissLetters[i] = new TBoundPane(mSplashTextScreen, 'ms00' + i);
+	for (int i = 0; i < MISS_LETTERS_LENGTH; ++i) {
+		mMissLetters[i] = new TBoundPane(mSplashTextScreen, MACRO_UNK('ms00'));
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+		mMissLetters[i]->unk0->hide();
+#endif
 	}
 
 	for (int i = 0; i < 5; ++i) {
@@ -85,11 +139,11 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 
 	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->mMap);
 	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
-	void* pvVar10 = JKRGetResource("/common/2d/stagename.bmg");
+	void* pvVar10 = JKRGetResource(COMMON2D "/stagename.bmg");
 	mMapStoryTitles[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
 	if (SMSGetMarDirector()->mMap != 15) {
-		void* pvVar10 = JKRGetResource("/common/2d/scenarioname.bmg");
+		void* pvVar10 = JKRGetResource(COMMON2D "/scenarioname.bmg");
 
 		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
 

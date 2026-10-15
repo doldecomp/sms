@@ -511,4 +511,14 @@ enum MSFlag {
 	MSF_OPTION_INT_END        = 0xA0002,
 };
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+enum MSLanguage {
+	MSLANG_ENGLISH = 0,
+	MSLANG_GERMAN  = 1,
+	MSLANG_FRENCH  = 2,
+	MSLANG_SPANISH = 3,
+	MSLANG_ITALIAN = 4,
+};
+#endif
+
 #endif
