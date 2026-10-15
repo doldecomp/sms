@@ -288,44 +288,44 @@ void TMario::soundMovement()
 					SMSGetMSound()->startMarioVoice(MSD_SE_MV03_DAMAGE_LITLE_01,
 					                                mHealth, getVoiceStatus());
 				}
-			}
-			switch (mSoundValues.unk28) {
-			case 0:
-				if (isDownLike != 0) {
-					if (mSoundValues.unk04 & 8) {
-						SMSGetMSound()->startSoundActor(MSD_SE_MA_WALL_COL_HEAD,
-						                                &mPosition, 0, nullptr,
-						                                0, 4);
-						mSoundValues.unk04 ^= 8;
+				switch (mSoundValues.unk28) {
+				case 0:
+					if (isDownLike != 0) {
+						if (mSoundValues.unk04 & 8) {
+							SMSGetMSound()->startSoundActor(
+							    MSD_SE_MA_WALL_COL_HEAD, &mPosition, 0, nullptr,
+							    0, 4);
+							mSoundValues.unk04 ^= 8;
+						}
+					} else {
+						mSoundValues.unk04 |= 8;
 					}
-				} else {
-					mSoundValues.unk04 |= 8;
-				}
-				break;
-			case 1:
-				if (isDownLike != 0) {
-					if (mSoundValues.unk04 & 8) {
-						SMSGetMSound()->startSoundActor(
-						    MSD_SE_MA_WALL_COL_CMN_S, &mPosition, 0, nullptr, 0,
-						    4);
-						mSoundValues.unk04 ^= 8;
+					break;
+				case 1:
+					if (isDownLike != 0) {
+						if (mSoundValues.unk04 & 8) {
+							SMSGetMSound()->startSoundActor(
+							    MSD_SE_MA_WALL_COL_CMN_S, &mPosition, 0,
+							    nullptr, 0, 4);
+							mSoundValues.unk04 ^= 8;
+						}
+					} else {
+						mSoundValues.unk04 |= 8;
 					}
-				} else {
-					mSoundValues.unk04 |= 8;
-				}
-				break;
-			case 2:
-				if (isDownLike != 0) {
-					if (mSoundValues.unk04 & 8) {
-						SMSGetMSound()->startSoundActor(
-						    MSD_SE_MA_WALL_COL_CMN_H, &mPosition, 0, nullptr, 0,
-						    4);
-						mSoundValues.unk04 ^= 8;
+					break;
+				case 2:
+					if (isDownLike != 0) {
+						if (mSoundValues.unk04 & 8) {
+							SMSGetMSound()->startSoundActor(
+							    MSD_SE_MA_WALL_COL_CMN_H, &mPosition, 0,
+							    nullptr, 0, 4);
+							mSoundValues.unk04 ^= 8;
+						}
+					} else {
+						mSoundValues.unk04 |= 8;
 					}
-				} else {
-					mSoundValues.unk04 |= 8;
+					break;
 				}
-				break;
 			}
 		} else {
 			mSoundValues.unk04 |= 8;
