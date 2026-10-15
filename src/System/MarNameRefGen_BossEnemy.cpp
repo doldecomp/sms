@@ -10,6 +10,7 @@
 #include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TinKoopa.hpp>
 #include <Enemy/BossTelesa.hpp>
+#include <Enemy/BossHanachan.hpp>
 #include <System/MarNameRefGen.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
@@ -20,13 +21,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "EMarioManager") == 0)
 		return new TEMarioManager;
 
-	// TODO:
-	// if ( strcmp( name, "BossHanachan" ) == 0 )
-	//     return new TBossHanachan("?");
+	if (strcmp(name, "BossHanachan") == 0)
+		return new TBossHanachan("?");
 
-	// TODO:
-	// if ( strcmp( name, "BossHanachanManager" ) == 0 )
-	//     return new TBossHanachanManager("?");
+	if (strcmp(name, "BossHanachanManager") == 0)
+		return new TBossHanachanManager("?");
 
 	if (strcmp(name, "SleepBossHanachan") == 0)
 		return new TSleepBossHanachan;
