@@ -64,7 +64,7 @@ asm void InitMetroTRK()
 	mtspr  0x3f2, r0
 	mtspr  0x3f5, r0
 	//Restore stack pointer
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	lis r1, 0x80420D48@h
 	ori r1, r1, 0x80420D48@l
 #else

@@ -289,7 +289,7 @@ bool TYumbo::isAllSeedBroken() const
 	return true;
 }
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 bool TYumbo::isChangedBlock() const { return false; }
 #endif
 

@@ -138,7 +138,7 @@ void TAmiNoko::init(TLiveManager* param_1)
 	initialGraphNode();
 	if (SMSGetMarDirector()->getCurrentMap() == 8)
 		unk210 = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	unkE8 = 0;
 #endif
 	unk208 = new TAmiHit(this);
@@ -222,7 +222,7 @@ bool TAmiNoko::isHitValid(u32 param_1)
 	return false;
 }
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 void TAmiNoko::calcDirection()
 {
 	JGeometry::TVec3<f32> pos = unkF4.getPoint();
@@ -620,7 +620,7 @@ void TAmiNoko::bind()
 
 void TAmiNoko::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	if (param_1 & CUE_CALC_ANIM)
 		calcDirection();
 #endif
@@ -638,7 +638,7 @@ f32 TAmiNoko::getGravityY() const
 
 void TAmiNoko::creepToCurPathNode(f32 param_1)
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	JGeometry::TVec3<f32> direction = unkF4.getPoint();
 	direction -= mPosition;
 	if (!direction.isZero()) {
@@ -771,7 +771,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(1);
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		self->unk208->onHitFilter(HIT_FILTER_NO_COLLISION);
 #endif
 	}

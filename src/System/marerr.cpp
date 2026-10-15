@@ -29,7 +29,7 @@ void MarErrInit()
 	JUTConsoleManager::createManager(nullptr);
 	JUTException::create(print);
 	JUTException::createConsole(new u8[0x1400], 0x1400);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	JUTException::appendMapFile("/marioEU.MAP");
 #else
 	JUTException::appendMapFile("/mario.MAP");

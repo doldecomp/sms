@@ -98,7 +98,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 		mMenuItems[i]->mVisible = false;
 	}
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	unk20 = mScreen->search('brek');
 #endif
 

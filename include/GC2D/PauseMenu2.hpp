@@ -53,7 +53,7 @@ public:
 	/* 0x14 */ J2DSetScreen* mScreen;
 	/* 0x18 */ J2DPane* mBackground;
 	/* 0x1C */ J2DPane* mMenuPane;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	/* 0x20 */ J2DPane* unk20;
 #endif
 

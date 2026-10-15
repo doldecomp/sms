@@ -10,7 +10,7 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <version.h>
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 #include <System/DummyStrings.hpp>
 #endif
 
@@ -24,7 +24,7 @@ TProgSelect::TProgSelect(u8 param_1, const char* name)
 	f32 sync     = SMSGetVSyncTimesPerSec();
 	unk128       = 0;
 	mRefreshRate = sync;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	mMessageBmg = nullptr;
 	char* yes   = new char[0x20];
 	unk120[0]   = new J2DTextBox(gpSystemFont->getResFont(), yes);
@@ -48,7 +48,7 @@ TProgSelect::TProgSelect(u8 param_1, const char* name)
 	}
 }
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 void TProgSelect::setLang(s32 lang)
 {
 	static const char* filename[] = {
@@ -99,7 +99,7 @@ void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)
 		           || thing()) {
 			{
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 				if (!mSelection) {
 					snprintf(unk1C, 256, SMSGetMessageData(mMessageBmg, 3));
 					OSSetEuRgb60Mode(1);

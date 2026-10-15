@@ -350,7 +350,7 @@ void MActor::setLightData(const TBGCheckData* param_1,
 		return;
 
 	mLightId = 0;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	if (param_1->isShadow()) {
 		f32 tmp = param_2.x * param_1->mNormal.x
 		          + param_2.z * param_1->mNormal.z + param_1->mPlaneDistance;

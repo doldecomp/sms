@@ -192,7 +192,7 @@ THitActor* TYoshiTongue::findTarget(bool allowExtra, bool checkForward)
 			if (type == ACTOR_TYPE_WOOD_BARREL)
 				ok = 1;
 			if (type & HIT_CATEGORY_ENEMY ? true : false) {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 				switch (type) {
 				case ACTOR_TYPE_SEAL:
 				case ACTOR_TYPE_EFFECT_ENEMY:

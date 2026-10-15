@@ -22,7 +22,7 @@ class JKRArchive;
 class JUTResFont;
 
 f32 SMSGetVSyncTimesPerSec();
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 f32 SMSGetRealVSyncTimesPerSec();
 void load2DResource2Aram();
 #endif

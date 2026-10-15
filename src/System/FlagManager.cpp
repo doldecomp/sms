@@ -545,7 +545,7 @@ void TFlagManager::correctOptFlag()
 		setFlag(MSF_SOUND_MODE, getBool(MSF_SAVED_SURROUND) ? 2 : 1);
 	}
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	s32 language = getFlag(MSF_SAVED_LANGUAGE);
 	if (language == 0) {
 		u8 osLanguage = OSGetLanguage();
@@ -594,7 +594,7 @@ void TFlagManager::saveOption(JSUMemoryOutputStream& out)
 		OSSetSoundMode(1);
 		setBool(true, MSF_SAVED_SURROUND);
 	}
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	setFlag(MSF_SAVED_LANGUAGE, getFlag(MSF_LANGUAGE) + 1);
 	setBool(!getBool(MSF_SUBTITLES), MSF_SAVED_SUBTITLES_OFF);
 #else
