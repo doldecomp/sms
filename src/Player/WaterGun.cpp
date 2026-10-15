@@ -883,8 +883,8 @@ void TNozzleDeform::emit(int param_1)
 			emitSizeLerp = 0.0f;
 		} else {
 			if (localUnk378 < sizeMaxPressure) {
-				emitSizeLerp = (sizeMinPressure - localUnk378)
-				               / (sizeMaxPressure - localUnk378);
+				emitSizeLerp = (localUnk378 - sizeMinPressure)
+				               / (sizeMaxPressure - sizeMinPressure);
 			} else {
 				emitSizeLerp = 1.0f;
 			}
@@ -1019,7 +1019,7 @@ void TNozzleDeform::animation(int param)
 		           == 1) {
 			if (((TNozzleTrigger*)mFludd->getNozzle(mFludd->mCurrentNozzle))
 			        ->mSprayState
-			    == TNozzleTrigger::SPRAY_STATE_INACTIVE)
+			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
 				updateAnimation = true;
 			else
 				updateAnimation = false;
@@ -1045,7 +1045,7 @@ void TNozzleDeform::animation(int param)
 			updateAnimation = false;
 		} else if (mFludd->getCurrentNozzle()->getNozzleKind() == 1) {
 			if (((TNozzleTrigger*)mFludd->getCurrentNozzle())->mSprayState
-			    == TNozzleTrigger::SPRAY_STATE_INACTIVE)
+			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
 				updateAnimation = true;
 			else
 				updateAnimation = false;

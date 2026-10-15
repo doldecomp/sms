@@ -192,8 +192,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case ACTOR_TYPE_MUSHROOM1UP_X:
 			if (message == HIT_MESSAGE_ATTACK) {
 				TMushroom1up* mushroom = static_cast<TMushroom1up*>(sender);
-				if (mushroom->unk13A == 0
-				    && !(mushroom->unk13C < 120 ? true : false)) {
+				if (!(mushroom->unk13A == 0
+				      && (mushroom->unk13C < 120 ? true : false))) {
 					mHealth = mDeParams.mHPMax.get();
 					if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 						mWaterGun->addWater(mWaterGun->getMaxWater());

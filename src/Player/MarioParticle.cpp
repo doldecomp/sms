@@ -236,8 +236,7 @@ void TBubbleCallBack::execute(JPABaseEmitter*, JPABaseParticle* particle)
 			particle->unk10 |= 2;
 			if (gpMarioOriginal->mParticleParams.mBubbleToRipple.get()
 			    != 0.0f) {
-				gpMarioParticleManager->emit(PARTICLE_MS_M_AWAHAMON, &pos, 0,
-				                             nullptr);
+				gpMarioOriginal->emitParticle(PARTICLE_MS_M_AWAHAMON, &pos);
 			}
 		}
 	}
@@ -724,7 +723,7 @@ void TMario::elecEndEffect()
 void TMario::kickRoofEffect()
 {
 	if (getMotionFrameCtrl().checkPass(8.0f)) {
-		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdHead);
+		MtxPtr mtx      = mModel->getModel()->getAnmMtx(mJointIdChnFootR);
 		mFootprintPos.x = mtx[0][3];
 		mFootprintPos.y = mtx[1][3];
 		mFootprintPos.z = mtx[2][3];

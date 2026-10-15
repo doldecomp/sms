@@ -780,14 +780,14 @@ BOOL TMario::wireSWait()
 			mHolder  = nullptr;
 			BOOL ret = changePlayerStatus(MARIO_STATUS_WIRE_JUMP, 0, false);
 			setPlayerVelocity(0.0f);
-			if (mWireBounceVelPrev < 0.0f)
-				mVel.y -= 5.0f * mWireBounceVelPrev;
+			if (mWireBounceVel < 0.0f)
+				mVel.y -= 5.0f * mWireBounceVel;
 			return ret;
 		}
 	}
 
-	if (mInput & 0x10000) {
-		mWireBounceVelPrev = 5.0f;
+	if (mInput & 0x8000) {
+		mWireBounceVel = 5.0f;
 		startVoice(MSD_SE_MV30_FRIGHT_01);
 		return changePlayerStatus(MARIO_STATUS_WIRE_WAIT_TO_HANG, 0, false);
 	}
@@ -943,50 +943,13 @@ BOOL TMario::wireHanging()
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
 	    && mWaterGun->canSpray()) {
-		s16 rotSp;
-		if (mWaterGun == nullptr) {
-			rotSp = 0;
-		} else {
-			switch (mWaterGun->mCurrentNozzle) {
-			case 1:
-				rotSp = mWireParams.mRotSpeedTrgRocket.get();
-				break;
-			case 4:
-				rotSp = mWireParams.mRotSpeedTrgHover.get();
-				break;
-			case 5:
-				rotSp = mWireParams.mRotSpeedTrgTurbo.get();
-				break;
-			default:
-				rotSp = mWireParams.mRotSpeed.get();
-				break;
-			}
-		}
+		s16 rotSp = getNozzleEmitVX();
 		if (rotSp > 0)
 			unkF6 += 2 * mWireParams.mRotStop.get();
 		else
 			unkF6 -= 2 * mWireParams.mRotStop.get();
 
-		s16 rotSp2;
-		if (mWaterGun == nullptr) {
-			rotSp2 = 0;
-		} else {
-			switch (mWaterGun->mCurrentNozzle) {
-			case 1:
-				rotSp2 = mWireParams.mRotSpeedTrgRocket.get();
-				break;
-			case 4:
-				rotSp2 = mWireParams.mRotSpeedTrgHover.get();
-				break;
-			case 5:
-				rotSp2 = mWireParams.mRotSpeedTrgTurbo.get();
-				break;
-			default:
-				rotSp2 = mWireParams.mRotSpeed.get();
-				break;
-			}
-		}
-		unkF6 += rotSp2;
+		unkF6 += getNozzleEmitVX();
 		return changePlayerStatus(MARIO_STATUS_WIRE_ROLLING, 0, false);
 	}
 
@@ -994,7 +957,29 @@ BOOL TMario::wireHanging()
 	return 0;
 }
 
-s16 TMario::getNozzleEmitVX() { }
+s16 TMario::getNozzleEmitVX()
+{
+	if (mWaterGun == nullptr)
+		return 0;
+
+	int rotSp;
+	switch (mWaterGun->mCurrentNozzle) {
+	case TWaterGun::Rocket:
+		rotSp = mWireParams.mRotSpeedTrgRocket.get();
+		break;
+	case TWaterGun::Hover:
+		rotSp = mWireParams.mRotSpeedTrgHover.get();
+		break;
+	case TWaterGun::Turbo:
+		rotSp = mWireParams.mRotSpeedTrgTurbo.get();
+		break;
+	case TWaterGun::Spray:
+	default:
+		rotSp = mWireParams.mRotSpeed.get();
+		break;
+	}
+	return rotSp;
+}
 
 BOOL TMario::wireRolling()
 {
@@ -1029,26 +1014,7 @@ BOOL TMario::wireRolling()
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
 	    && mWaterGun->canSpray()) {
-		s16 rotSp;
-		if (mWaterGun == nullptr) {
-			rotSp = 0;
-		} else {
-			switch (mWaterGun->mCurrentNozzle) {
-			case 1:
-				rotSp = mWireParams.mRotSpeedTrgRocket.get();
-				break;
-			case 4:
-				rotSp = mWireParams.mRotSpeedTrgHover.get();
-				break;
-			case 5:
-				rotSp = mWireParams.mRotSpeedTrgTurbo.get();
-				break;
-			default:
-				rotSp = mWireParams.mRotSpeed.get();
-				break;
-			}
-		}
-		unkF6 += rotSp;
+		unkF6 += getNozzleEmitVX();
 	}
 
 	unkF6 -= (s16)((f32)mWireParams.mRotGravity.get() * JMASSin(mFaceAngle.x));
