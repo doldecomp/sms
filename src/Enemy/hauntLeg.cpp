@@ -19,6 +19,12 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
+static const char* hauntleg_bastable[] = {
+	nullptr,
+	nullptr,
+	nullptr,
+};
+
 static THauntLeg* gpCurHauntLeg;
 
 static int HauntLegCallback(J3DNode* param_1, int param_2)
@@ -93,7 +99,6 @@ void THauntLegManager::createModelData()
 		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 		      | (2 << J3DMLF_TevStageNumShift),
 		  0 },
-		{ nullptr, 0, 0 },
 	};
 	createModelDataArray(entry);
 }
@@ -265,12 +270,6 @@ bool THauntLeg::isCollidMove(THitActor* param_1)
 	}
 	return false;
 }
-
-static const char* hauntleg_bastable[] = {
-	nullptr,
-	nullptr,
-	nullptr,
-};
 
 const char** THauntLeg::getBasNameTable() const { return hauntleg_bastable; }
 

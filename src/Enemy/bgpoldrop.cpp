@@ -49,7 +49,7 @@ void TBGPolDrop::move()
 			unk44.zero();
 			if (!unk50->checkCurBckFromIndex(12)) {
 				unk50->setBckFromIndex(12);
-				unk50->setBckFromIndex(13);
+				unk54->setBckFromIndex(13);
 			}
 
 			gpMarioParticleManager->emit(BGESO_JPA_MS_BOGE_ODANHIT_A, &local_14,

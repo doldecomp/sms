@@ -484,14 +484,15 @@ void TEnemyMario::initEnemyValues()
 		mEMDoing = EM_DOING_DISAPPEAR;
 
 	switch (shadowMarioEvent) {
+	case 0:
+	case 1:
+		mReplayIndex = mEMario->unk158;
+		break;
 	case 2:
 		mReplayIndex = mEMario->unk15C;
 		break;
 	case 3:
 		mReplayIndex = mEMario->unk160;
-		break;
-	default:
-		mReplayIndex = mEMario->unk158;
 		break;
 	}
 	mEMario->getTracer()
@@ -1451,7 +1452,8 @@ void TEnemyMario::hitWater(THitActor* sender)
 			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
 			                             &sender->mPosition, 0, nullptr);
 			SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
-			                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
+			                              &sender->mPosition, 0, 30.0f, 0, 0,
+			                              4);
 			mWaterEffectTimer = mWaterEffectTimerMax;
 
 			if (mEMDoing == EM_DOING_REPLAY_WAITING) {

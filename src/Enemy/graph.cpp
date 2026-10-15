@@ -468,7 +468,7 @@ int TGraphWeb::getRandomButDirLimited(int param_1, int param_2,
 		}
 	}
 
-	if (result > 0)
+	if (iVar13 > 0)
 		return result;
 
 	result     = -1;
@@ -909,8 +909,8 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 		fVar2 = unk0->getSplineRail()->getNthT(1);
 	} else if (unk0->getSplineRail()->isUnk4() && mPrevIdx == 0
 	           && mCurrIdx == unk0->unk8 - 1) {
-		fVar1 = unk0->getSplineRail()->getNthT(mPrevIdx + 1);
-		fVar2 = unk0->getSplineRail()->getNthT(mPrevIdx);
+		fVar1 = unk0->getSplineRail()->getNthT(unk0->unk8 + 1);
+		fVar2 = unk0->getSplineRail()->getNthT(unk0->unk8);
 	} else {
 		u32 uVar10 = mPrevIdx;
 		if (unk0->getSplineRail()->isUnk4())
@@ -936,7 +936,7 @@ bool TGraphTracer::traceSpline(f32 param_1)
 
 	f32 dVar10;
 	if (unk0->unk14->unk4 && mPrevIdx == unk0->unk8 - 1 && mCurrIdx == 0) {
-		dVar10 = unk0->unk14->getNthT(mPrevIdx + 1);
+		dVar10 = unk0->unk14->getNthT(unk0->unk8 + 1);
 	} else if (unk0->unk14->unk4 && mPrevIdx == 0
 	           && mCurrIdx == unk0->unk8 - 1) {
 		dVar10 = unk0->unk14->getNthT(mPrevIdx);

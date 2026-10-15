@@ -99,7 +99,7 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 
 		f32 rotAngle = kneeSolveAngle - betweenAngleDeg;
 		TRotation3f rotMtx;
-		MsMtxSetRotZ(rotMtx, rotAngle);
+		MsMtxSetRotZ(rotMtx, -rotAngle);
 		PSMTXConcat(hipMtx, rotMtx, hipMtx);
 
 		JGeometry::TVec3<f32> dir;
@@ -125,8 +125,8 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		kneeSide.y = kneeMtx[1][0];
 		kneeSide.z = kneeMtx[2][0];
 
-		f32 kneeFwdLen  = kneeFwd.length();
-		f32 kneeSideLen = kneeSide.length();
+		f32 kneeFwdLen  = MsSqrtf(kneeFwd.squared());
+		f32 kneeSideLen = MsSqrtf(kneeSide.squared());
 
 		JGeometry::TVec3<f32> newDir(footPos);
 		newDir -= kneePos;
@@ -163,8 +163,8 @@ void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
 		footSide.y = footMtx[1][0];
 		footSide.z = footMtx[2][0];
 
-		f32 footFwdLen  = footFwd.length();
-		f32 footSideLen = footSide.length();
+		f32 footFwdLen  = MsSqrtf(footFwd.squared());
+		f32 footSideLen = MsSqrtf(footSide.squared());
 
 		const JGeometry::TVec3<f32>& normal = groundData->getNormal();
 		JGeometry::TVec3<f32> negNormal;
