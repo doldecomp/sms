@@ -507,6 +507,10 @@ void TNozzleTrigger::init()
 
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 {
+#ifdef VERSION_GMSP01
+	f32 prevPressure = mInsidePressure;
+#endif
+
 	if (mFludd->getCurrentWater() <= 0) {
 		mSprayState     = TNozzleTrigger::SPRAY_STATE_INACTIVE;
 		mSprayTimer     = 0;
@@ -559,6 +563,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 				SMSRumbleMgr->start(20, (int)mFludd->getMario()->getUnk564(),
 				                    (f32*)nullptr);
 		}
+#ifndef VERSION_GMSP01
 		if (mRumbleOnCharge != true
 		    && mSprayState == TNozzleTrigger::SPRAY_STATE_INACTIVE
 		    && controllerWork.mAnalogR > 0.0f) {
@@ -566,11 +571,21 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 			                                mFludd->getEmitPos0(), 0, nullptr,
 			                                0, 4);
 		}
+#endif
 	}
 	mInsidePressure -= mInsidePressureDec.get();
 	if (mInsidePressure < 0.0f) {
 		mInsidePressure = 0.0f;
 	}
+
+#ifdef VERSION_GMSP01
+	if (canSpray == true && mRumbleOnCharge != true
+	    && mSprayState == TNozzleTrigger::SPRAY_STATE_INACTIVE
+	    && controllerWork.mAnalogR > 0.0f && prevPressure < mInsidePressure) {
+		SMSGetMSound()->startSoundActor(
+		    MSD_SE_SY_NEWP_AIR_TAME, mFludd->getEmitPos0(), 0, nullptr, 0, 4);
+	}
+#endif
 
 	if (mInsidePressure > mInsidePressureMax.get()) {
 		mInsidePressure = mInsidePressureMax.get();
@@ -1437,7 +1452,7 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 
 void TWaterGun::movement()
 {
-	if (!canSpray()) {
+	if (!isEmitting()) {
 		unk1CC2 = 0;
 		unk1CC4 = 0;
 	}
@@ -1627,6 +1642,30 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 		getCurrentNozzle()->getMActor()->perform(cue, graphics);
 	}
 }
+
+#ifdef VERSION_GMSP01
+bool TWaterGun::isEmitting()
+{
+	if (mCurrentWater == 0)
+		return false;
+
+	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	    || SMSGetMarDirector()->isTalkModeNow())
+		return false;
+	if (getCurrentNozzle()->getNozzleKind() == 1) {
+		TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
+		if (triggerNozzle->getSprayState()
+		    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
+			return true;
+		return false;
+	}
+
+	if (getCurrentNozzle()->getUnk378() > 0.0f)
+		return true;
+
+	return false;
+}
+#endif
 
 TNozzleBase* TWaterGun::getCurrentNozzle() const
 {

@@ -85,7 +85,7 @@ void TMario::doJumping()
 
 		if (mStatus == MARIO_STATUS_ROCKET
 		    && checkFlag(MARIO_STATUS_FLAG_UNK8000)) {
-			if (mWaterGun->canSpray())
+			if (mWaterGun->isEmitting())
 				mag = 2.5f * mIntendedMag;
 		}
 
@@ -860,6 +860,9 @@ BOOL TMario::boardJumping()
 		if (mWallPlane == nullptr) {
 			setPlayerVelocity(0.0f);
 			loserExec();
+#ifdef VERSION_GMSP01
+			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr, 0);
+#endif
 		} else {
 			s16 diff
 			    = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
@@ -868,6 +871,10 @@ BOOL TMario::boardJumping()
 			if ((diff < -max || max < diff)
 			    && mForwardVel > mSurfingParamsWaterRed.mClashSpeed.get()) {
 				loserExec();
+#ifdef VERSION_GMSP01
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_DAMAGE, 0, nullptr,
+				                                   0);
+#endif
 			} else {
 				setPlayerVelocity(0.0f);
 			}
@@ -892,7 +899,7 @@ BOOL TMario::rocketCheck()
 		if (!isUpperState(UPPER_STATE_PUMPING))
 			bVar2 = false;
 
-		if (!mWaterGun->canSpray())
+		if (!mWaterGun->isEmitting())
 			bVar2 = false;
 	} else {
 		bVar2 = false;
@@ -914,7 +921,7 @@ BOOL TMario::rocketing()
 	if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
-	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->canSpray())
+	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->isEmitting())
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
 	if (mInput & 1) {

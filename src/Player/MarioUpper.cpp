@@ -79,6 +79,10 @@ void TMario::stateMachineUpper()
 			mPumpCooldown = mUpperBodyParams.mPumpWaitTime.get();
 		}
 		if (!checkFlag(MARIO_FLAG_IN_ANY_WATER) && mWaterGun != nullptr) {
+#ifdef VERSION_GMSP01
+			if (mWaterGun->isEmitting())
+				emitSweatSometimes();
+#else
 			s32 flag;
 			if (mWaterGun->mCurrentWater == 0) {
 				flag = 0;
@@ -99,9 +103,9 @@ void TMario::stateMachineUpper()
 				}
 			}
 
-			if (flag != 0) {
+			if (flag != 0)
 				emitSweatSometimes();
-			}
+#endif
 		}
 		break;
 

@@ -5,6 +5,9 @@
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#ifdef VERSION_GMSP01
+#include <MarioUtil/LightUtil.hpp>
+#endif
 #include <MarioUtil/ModelUtil.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
@@ -1054,17 +1057,23 @@ void TYoshi::entry()
 	if (!isHatched())
 		return;
 
-	bool bVar1 = true;
+	bool visible = true;
 	if (mState == STATE_UNMOUNTED || mState == STATE_MOUNTED) {
 		if (unkC >= 360 && unkC < 600 && !(unkC & 0x10))
-			bVar1 = false;
+			visible = false;
 
 		if (unkC < 360 && !(unkC & 0x8))
-			bVar1 = false;
+			visible = false;
 	}
 
 	if (mState == STATE_EGG)
-		bVar1 = false;
+		visible = false;
+
+#ifdef VERSION_GMSP01
+	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	    || SMSGetMarDirector()->isTalkModeNow())
+		visible = true;
+#endif
 
 	if (unkC < 600)
 		mType = 0;
@@ -1072,7 +1081,7 @@ void TYoshi::entry()
 	if (!isHatched())
 		return;
 
-	if (bVar1 != true)
+	if (visible != true)
 		return;
 
 	s16 r = (s16)unk84.x;
@@ -1117,9 +1126,16 @@ void TYoshi::entry()
 	}
 
 	mActor->entry();
+#ifdef VERSION_GMSP01
+	gpLightManager->getLightSet(LIGHT_TYPE_OBJECT)
+	    ->changeLightDrawBuffer(mActor->getLightID());
+#endif
 	mMirrorModels[0]->entry();
 	mMirrorModels[1]->entry();
 	mTongue->entry();
+#ifdef VERSION_GMSP01
+	gpLightManager->getLightSet(LIGHT_TYPE_OBJECT)->resetLightDrawBuffer();
+#endif
 
 	TCircleShadowRequest shadowRequest;
 	shadowRequest.mPosition = mTranslation;
