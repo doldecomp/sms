@@ -18,6 +18,10 @@ public:
 	virtual void emit(int);
 	virtual void animation(int);
 
+	// Fabricated
+	TNozzleTrigger* getBomb() { return &mBomb; }
+
+protected:
 	/* 0x384 */ TNozzleTrigger mBomb;
 };
 

@@ -31,8 +31,7 @@ void TMario::soundMovement()
 
 	if (onYoshi()) {
 		if (mWaterGun->isEmitting()
-		    && ((const TWaterGun*)mWaterGun)->getCurrentNozzle()->unk378
-		           > 0.0f) {
+		    && mWaterGun->getCurrentNozzle()->getUnk378() > 0.0f) {
 			SMSGetMSound()->startSoundActor(
 			    MSD_SE_YV_WATER, &mYoshi->mTranslation, 0, nullptr, 0, 4);
 		}
@@ -337,7 +336,7 @@ void TMario::soundMovement()
 		}
 
 		const TWaterGun* gun = mWaterGun;
-		s32 pressureScale    = (s32)(100.0f * gun->unk1CEC);
+		s32 pressureScale    = (s32)(100.0f * gun->mHouseProgress);
 		if (mSoundValues.unk2A == 0 && (u8)pressureScale != 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_HAND_OFF, &mPosition, 0,
 			                                nullptr, 0, 4);
