@@ -45,14 +45,11 @@ TConsoleStr::TConsoleStr(const char* name)
 f32 TConsoleStr::getWipeCloseTime() { return 30.0f / SMSGetVSyncTimesPerSec(); }
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-// this feels like a macro bc this expression is too weird to NOT be one
-#define MACRO_UNK(identifier)    (((i / 10) << 8) + identifier + (i % 10))
 #define GO_LETTERS_LENGTH        (this->mGoLettersLength)
 #define SHINE_GET_LETTERS_LENGTH (this->mShineLettersLength)
 #define MISS_LETTERS_LENGTH      (this->mMissLettersLength)
 #define COMMON2D                 "/cmn2d"
 #else
-#define MACRO_UNK(identifier)    (identifier + i)
 #define GO_LETTERS_LENGTH        (3)
 #define SHINE_GET_LETTERS_LENGTH (9)
 #define MISS_LETTERS_LENGTH      (5)
@@ -104,17 +101,25 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk14->setCullBack(GX_CULL_BACK);
 
 	for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
-		mGoLetters[i] = new TBoundPane(mSplashTextScreen, MACRO_UNK('go00'));
+		mGoLetters[i] = new TBoundPane(
+		    mSplashTextScreen,
+		    VERSION_SELECT(('go00' + i),
+		                   GMSP01(((i / 10) << 8) + 'go00' + (i % 10))));
 		mGoLetters[i]->unk0->hide();
 	}
 
 	for (int i = 0; i < SHINE_GET_LETTERS_LENGTH; ++i) {
-		mShineGetLetters[i]
-		    = new TBoundPane(mSplashTextScreen, MACRO_UNK('sg00'));
+		mShineGetLetters[i] = new TBoundPane(
+		    mSplashTextScreen,
+		    VERSION_SELECT(('sg00' + i),
+		                   GMSP01(((i / 10) << 8) + 'sg00' + (i % 10))));
 	}
 
 	for (int i = 0; i < MISS_LETTERS_LENGTH; ++i) {
-		mMissLetters[i] = new TBoundPane(mSplashTextScreen, MACRO_UNK('ms00'));
+		mMissLetters[i] = new TBoundPane(
+		    mSplashTextScreen,
+		    VERSION_SELECT(('ms00' + i),
+		                   GMSP01(((i / 10) << 8) + 'ms00' + (i % 10))));
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		mMissLetters[i]->unk0->hide();
 #endif
