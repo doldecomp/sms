@@ -349,7 +349,7 @@ Game-tunable parameters use `TParamRT<T>` fields initialized via the `PARAM_INIT
 - `// rogue includes needed for matching sinit & bss` — includes added purely for BSS/static-init ordering.
 - `#pragma dont_inline on/off` — forces the compiler to not inline a function (required for matching in specific cases).
 
-Don't be afraid to leave notes that would be useful to the next person trying to match the code, figure it out, or in the far future, write mods for the game.
+Agents don't leave notes or comments in the code. The only exception is the `// fabricated` marker.
 
 ### Style
 
@@ -459,6 +459,28 @@ UNUSED functions must still be reconstructed in the source because:
 - Keep existing `TODO` comments unless the change resolves them.
 - One unit per PR; leave out edits that don't change the object.
 - If the bot reports broken matches in units you didn't touch, the branch is behind main. Merge main.
+
+Code:
+- Before writing an expression out, look for the inline it might be: an UNUSED function in the same TU, or an existing helper such as `isActorType`, `getMActor()`, `getBas`, `offAllCollision`, `MsWrap`, `MsAngleDiff`, `MsSqrtf`, `JGeometry::TUtil<f32>::sqrt`, `TMsRange`, `operator-`, `.length()` or `.squared()`.
+- Call accessors instead of caching members in locals or taking a field's address; CSE merges repeated calls (`getMActor()` twice, `cue & CUE_CALC_ANIM` twice).
+- An inline is likely real when it improves several functions at once. One that only fixes a frame size is a local minimum; leave it out.
+- Keep a new fabricated inline in the `.cpp` that needs it, marked `// fabricated`, until more call sites support it. Don't add it to a shared header.
+- No `volatile` padding, `_pad` fields, `(void)&local` or casts whose only purpose is codegen.
+- Use the spellings the game uses: `SMSGetMSound()->startSoundActor(...)`, `SMS_GetMarioPos()`, `-=` and `+=` on vectors, `stream >> value` in `load`, `MTX*`/`VEC*` macros, and `BOOL` with `TRUE`/`FALSE` when `bool` doesn't match.
+- Use the enums for sounds, particles, hit messages and cues instead of numbers.
+- `Particles.hpp` has four particle enums; pick the one that matches the emit call's last argument. Name new entries from the modders' [particle table](https://docs.google.com/spreadsheets/d/1RHqHd_xbO0Cjc8UsXytDLGoCua0ZP_IQ/edit?gid=72346018#gid=72346018).
+- Name enums `EState` with values `STATE_WAITING`: no `typedef`, no `enum class`, and use `STATE_UNK*` when the meaning is unknown.
+- Don't pass defaulted arguments at call sites. Defaults go only in the header, and actor constructors default their name to the Japanese class name.
+- Don't declare destructors or constructors the compiler generates.
+- Put classes in the header named after their file, not in an unrelated one.
+- Decode Shift-JIS strings into readable Japanese literals.
+
+Headers:
+- Give every field a `/* 0x50 */` offset comment, and don't add type-name comments after fields that already have the type.
+
+Pull requests:
+- A large number of PRs is not the goal; their quality is.
+- Rebase on main and re-read this file before opening a PR; it gains rules after reviews.
 
 ### Pre-PR checklist
 
