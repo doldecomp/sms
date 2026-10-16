@@ -48,10 +48,7 @@ f32 FConverge(f32 value, f32 target, f32 inc, f32 dec);
 s16 matan(f32 x, f32 y);
 
 // fabricated
-inline f32 MsAtan2(f32 x, f32 y)
-{
-	return matan(x, y) * (360.0f / 65536.0f);
-}
+inline f32 MsAtan2(f32 x, f32 y) { return matan(x, y) * (360.0f / 65536.0f); }
 
 inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 {
