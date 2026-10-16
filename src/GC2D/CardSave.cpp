@@ -238,15 +238,15 @@ void TCardSave::initData(TMarioGamePad* game_pad)
 
 	for (int i = 0; i < 2; ++i) {
 		mEventSaveOptions[i][0]
-		    = (J2DTextBox*)mSaveScreen->search('sm1a' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sm1a' + (i << 8));
 		mEventSaveOptions[i][0]->setFont((JUTFont*)gpSystemFont);
 
 		mEventSaveOptions[i][1]
-		    = (J2DTextBox*)mSaveScreen->search('sm1b' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sm1b' + (i << 8));
 		mEventSaveOptions[i][1]->setFont((JUTFont*)gpSystemFont);
 
-		mEventSavePointerHands[i][0] = mSaveScreen->search('sc1a' + 0x100 * i);
-		mEventSavePointerHands[i][1] = mSaveScreen->search('sc1b' + 0x100 * i);
+		mEventSavePointerHands[i][0] = mSaveScreen->search('sc1a' + (i << 8));
+		mEventSavePointerHands[i][1] = mSaveScreen->search('sc1b' + (i << 8));
 	}
 	unk1B8 = mEventSavePointerHands[0][0]->getBounds().x1;
 
@@ -280,16 +280,16 @@ void TCardSave::initData(TMarioGamePad* game_pad)
 
 	for (int i = 0; i < 3; ++i) {
 		mShineGetSaveOptions[i][0]
-		    = (J2DTextBox*)mSaveScreen->search('sm3a' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sm3a' + (i << 8));
 		mShineGetSaveOptions[i][0]->setFont((JUTFont*)gpSystemFont);
 		mShineGetSaveOptions[i][1]
-		    = (J2DTextBox*)mSaveScreen->search('sm3b' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sm3b' + (i << 8));
 		mShineGetSaveOptions[i][1]->setFont((JUTFont*)gpSystemFont);
 
 		mShineGetSavePointerHands[i][0]
-		    = (J2DTextBox*)mSaveScreen->search('sc3a' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sc3a' + (i << 8));
 		mShineGetSavePointerHands[i][1]
-		    = (J2DTextBox*)mSaveScreen->search('sc3b' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sc3b' + (i << 8));
 	}
 	unk23C = mShineGetSavePointerHands[0][0]->getBounds().x1;
 
@@ -299,13 +299,13 @@ void TCardSave::initData(TMarioGamePad* game_pad)
 
 	for (int i = 0; i < 2; ++i) {
 		mGameOverSavePointerHands[i][0]
-		    = (J2DTextBox*)mSaveScreen->search('sc6a' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sc6a' + (i << 8));
 		mGameOverSavePointerHands[i][1]
-		    = (J2DTextBox*)mSaveScreen->search('sc6b' + 0x100 * i);
+		    = (J2DTextBox*)mSaveScreen->search('sc6b' + (i << 8));
 
 		mGameOverSaveOptions[i]
-		    = (J2DTextBox*)mSaveScreen->search('sm7b' + 0x100 * i);
-		((J2DTextBox*)mSaveScreen->search('sm7a' + 0x100 * i))
+		    = (J2DTextBox*)mSaveScreen->search('sm7b' + (i << 8));
+		((J2DTextBox*)mSaveScreen->search('sm7a' + (i << 8)))
 		    ->setFont((JUTFont*)gpSystemFont);
 		mGameOverSaveOptions[i]->setFont((JUTFont*)gpSystemFont);
 	}

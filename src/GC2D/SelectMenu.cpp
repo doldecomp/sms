@@ -430,12 +430,11 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 	mMenuScreen->search('bi_0')->hide();
 
-	mStageBannerPane = new TExPane(mMenuScreen, tags[mStage] * 0x100 + '0');
+	mStageBannerPane = new TExPane(mMenuScreen, (tags[mStage] << 8) + '0');
 	mStageBannerPane->getPane()->show();
-	mStageBannerText = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'a');
+	mStageBannerText = new TBoundPane(mMenuScreen, (tags[mStage] << 8) + 'a');
 	mStageBannerText->getPane()->show();
-	mStageBannerShadow
-	    = new TBoundPane(mMenuScreen, tags[mStage] * 0x100 + 'b');
+	mStageBannerShadow = new TBoundPane(mMenuScreen, (tags[mStage] << 8) + 'b');
 	mStageBannerShadow->getPane()->show();
 
 	mStageNameBmg = JKRGetResource("/common/2d/stagename.bmg");

@@ -372,21 +372,21 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 		mSaveShineIconsUnder100[i] = mLoadScreen->search('shn0' + i);
 		mSaveShineCountTensUnder100[i]
-		    = (J2DPicture*)mLoadScreen->search('n_0a' + i * 0x100);
+		    = (J2DPicture*)mLoadScreen->search('n_0a' + (i << 8));
 		mSaveShineCountOnesUnder100[i]
-		    = (J2DPicture*)mLoadScreen->search('n_0b' + i * 0x100);
+		    = (J2DPicture*)mLoadScreen->search('n_0b' + (i << 8));
 
 		mSaveShineIconsOver100[i] = mLoadScreen->search('shp0' + i);
 		mSaveShineCountHundredsOver100[i]
-		    = (J2DPicture*)mLoadScreen->search('np0a' + i * 0x100);
+		    = (J2DPicture*)mLoadScreen->search('np0a' + (i << 8));
 		mSaveShineCountTensOver100[i]
-		    = (J2DPicture*)mLoadScreen->search('np0b' + i * 0x100);
+		    = (J2DPicture*)mLoadScreen->search('np0b' + (i << 8));
 		mSaveShineCountOnesOver100[i]
-		    = (J2DPicture*)mLoadScreen->search('np0c' + i * 0x100);
-		unk32C[i] = (J2DPicture*)mLoadScreen->search('cra1' + i * 0x100);
+		    = (J2DPicture*)mLoadScreen->search('np0c' + (i << 8));
+		unk32C[i] = (J2DPicture*)mLoadScreen->search('cra1' + (i << 8));
 
 		unk32C[i]->insert(pJVar5, unk32C[i]->mTextureNum, 0.0f);
-		mLoadScreen->search('cra2' + i * 0x100)->hide();
+		mLoadScreen->search('cra2' + (i << 8))->hide();
 	}
 
 	unk2B0 = mSaveWindows[0]->getPane()->getBounds();
@@ -399,7 +399,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		u32 key = 's_2a' + i;
 		for (int j = 0; j < 4; ++j) {
 			mSaveManageOptionsEntries[i][j]
-			    = new TExPane(mLoadScreen, key + j * 0x100);
+			    = new TExPane(mLoadScreen, key + (j << 8));
 			mSaveManageOptionsEntriesInitialBounds[i][j]
 			    = mSaveManageOptionsEntries[i][j]->getPane()->getBounds();
 		}
@@ -415,7 +415,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	makeBuffer(unk480, 0x400);
 
 	for (int i = 0; i < 2; ++i) {
-		unk484[i] = new TExPane(mLoadScreen, 's_6a' + i * 0x100);
+		unk484[i] = new TExPane(mLoadScreen, 's_6a' + (i << 8));
 		unk48C[i] = unk484[i]->getPane()->getBounds();
 	}
 
@@ -435,7 +435,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		mConfirmationTextTargetABC[i] = mLoadScreen->search('\0t_1' + i);
 
 	for (int i = 0; i < 2; ++i) {
-		mConfirmationYesNo[i] = new TExPane(mLoadScreen, 's_6b' + i * 0x100);
+		mConfirmationYesNo[i] = new TExPane(mLoadScreen, 's_6b' + (i << 8));
 		mConfirmationYesNoInitialBounds[i]
 		    = mConfirmationYesNo[i]->getPane()->getBounds();
 #if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
@@ -652,7 +652,7 @@ void TCardLoad::changeLanguage(int lang)
 	for (int i = 0; i < 3; ++i) {
 		replaceTexture('s_0a' + i, mBMarkNewTextures[lang], mLoadScreen);
 		for (int j = 0; j < 4; ++j)
-			replaceTexture('s_2a' + j * 0x100 + i, mBMarkMenuTextures[j][lang],
+			replaceTexture('s_2a' + (j << 8) + i, mBMarkMenuTextures[j][lang],
 			               mLoadScreen);
 	}
 	for (int i = 0; i < 9; ++i)
