@@ -28,15 +28,14 @@ JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot)
 	qz.setEulerZ(0.017453294f * rot.z);
 	JGeometry::TQuat4<f32> qy;
 	qy.setEulerY(0.017453294f * rot.y);
-	(void)&qy;
+	JGeometry::TQuat4<f32>& rotation = qy;
 	JGeometry::TQuat4<f32> qx;
 	qx.setEulerX(0.017453294f * rot.x);
 
-	JGeometry::TQuat4<f32> result2;
-	result2.mul(qx, qz);
 	JGeometry::TQuat4<f32> result;
-	result.mul(qy, result2);
-	return result;
+	result.mul(qx, qz);
+	rotation.mul(rotation, result);
+	return rotation;
 }
 
 TAnimalBase::TAnimalBase(u32 actorType, const char* name)

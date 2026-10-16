@@ -315,9 +315,8 @@ void TYumbo::shotSeeds()
 	spin.setEulerY(2.0f * M_PI * MsRandF());
 	JGeometry::TQuat4<f32> tilt;
 	tilt.setEulerX(-M_PI * ((TYumboParams*)getSaveParam())->mShootAngleX.get());
-	JGeometry::TQuat4<f32> rotation;
-	rotation.mul(spin, tilt);
-	rotation.rotate(dir, dir);
+	spin.mul(tilt);
+	spin.rotate(dir, dir);
 
 	seed->startToMove(mPosition, dir,
 	                  ((TYumboParams*)getSaveParam())->mSeedLife.get());

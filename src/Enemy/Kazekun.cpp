@@ -244,15 +244,16 @@ bool TKazekun::doAttackPose(bool start)
 		mVelocity = velocity;
 	}
 
+	JGeometry::TQuat4<f32>& orientation = unk1A0;
 	JGeometry::TVec3<f32> spinAxis;
-	unk1A0.rotate(JGeometry::TVec3<f32>(-1.0f, 0.0f, 0.0f), spinAxis);
+	orientation.rotate(JGeometry::TVec3<f32>(-1.0f, 0.0f, 0.0f), spinAxis);
 
 	JGeometry::TQuat4<f32> spin;
 	spin.setRotate(
 	    spinAxis,
 	    M_PI * ((TKazekunParams*)getSaveParam())->mPoseOmegaRate.get());
-	spin.mul(spin, unk1A0);
-	unk1A0 = spin;
+	spin.mul(spin, orientation);
+	orientation = spin;
 
 	JGeometry::TVec3<f32> forward(0.0f, 0.0f, getVelocity().length());
 	spin.rotate(forward, forward);

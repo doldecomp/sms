@@ -521,7 +521,7 @@ void TFireWanwanTailHit::init()
 		unkA8[i]->setScale(local_78);
 
 		TPosition3f mtx;
-		mtx.translation(unkA4->getNode(i)->mPos);
+		mtx.translation(getBodyNthPos(i));
 		actor->getModel()->setBaseTRMtx(mtx);
 		actor->getModel()->setBaseScale(local_78);
 		actor->getModel()->calc();
@@ -563,20 +563,12 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		unkBC->update();
 
 	if (mHolder != nullptr) {
-		JGeometry::TVec3<f32> local_3c = unkA4->getNode(4)->mPos;
+		JGeometry::TVec3<f32> local_3c = getBodyNthPos(4);
 		local_3c -= mOwner->mPosition;
 		SMS_CalcToDirMatrix(unk74, local_3c,
 		                    JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 
-		JGeometry::TVec3<f32> local_48 = unkA4->unk0.back().mVel;
-		f32 fVar1 = mOwner->getSaveParam2()->mTailEndPowRate.get();
-		local_48 *= fVar1;
-		local_48.y = 0.0f;
-		mPosition += local_48;
-
-		moveRequest(mPosition);
-
-		unk74.setTrans(mPosition);
+		bindBody();
 
 		mPrevTailLength = mCurTailLength;
 		mCurTailLength  = unkA4->getLength();
@@ -595,12 +587,12 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 {
 	for (int i = 0; i < 5; ++i) {
-		JGeometry::TVec3<f32> local_68 = unkA4->getNode(i)->mPos;
+		JGeometry::TVec3<f32> local_68 = getBodyNthPos(i);
 		JGeometry::TVec3<f32> local_74;
 		if (i == 4) {
 			local_74.set(0.0f, 0.0f, 1.0f);
 		} else {
-			local_74.set(unkA4->getNode(i + 1)->mPos);
+			local_74.set(getBodyNthPos(i + 1));
 			local_74 -= local_68;
 			local_74.normalize();
 		}
@@ -611,7 +603,7 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 		TPosition3f afStack_a4;
 		MTXCopy(afStack_a4, unkA8[i]->mMActor->getModel()->getBaseTRMtx());
 
-		afStack_a4.setTrans(unkA4->getNode(i + 1)->mPos);
+		afStack_a4.setTrans(getBodyNthPos(i + 1));
 
 		unkA8[i]->setBarAnmMtx(afStack_a4);
 	}
@@ -643,13 +635,38 @@ void TFireWanwanTailHit::movementBody(const JGeometry::TVec3<f32>& param_1)
 	unkA4->movement();
 }
 
-void TFireWanwanTailHit::bindBody() { }
+// TODO: UNUSED body is 4 bytes larger than the map.
+void TFireWanwanTailHit::bindBody()
+{
+	JGeometry::TVec3<f32> local_48 = getBodyTailPow();
+	f32 fVar1 = mOwner->getSaveParam2()->mTailEndPowRate.get();
+	local_48 *= fVar1;
+	local_48.y = 0.0f;
+	mPosition += local_48;
 
-JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyNthPos(int i) const { }
+	JGeometry::TVec3<f32> holderPos = mPosition;
+	holderPos.y                     = mHolder->mPosition.y;
+	mHolder->moveRequest(holderPos);
 
-f32 TFireWanwanTailHit::getBodyTailPow() const { }
+	unk74.setTrans(mPosition);
+}
 
-f32 TFireWanwanTailHit::getBodyHeadPow() const { }
+const JGeometry::TVec3<f32>& TFireWanwanTailHit::getBodyNthPos(int i) const
+{
+	return unkA4->getNode(i)->mPos;
+}
+
+JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyTailPow() const
+{
+	const ArrayWrapper<TTailRubber::Node>& nodes = unkA4->unk0;
+	return nodes[nodes.size() - 1].mVel;
+}
+
+JGeometry::TVec3<f32> TFireWanwanTailHit::getBodyHeadPow() const
+{
+	const ArrayWrapper<TTailRubber::Node>& nodes = unkA4->unk0;
+	return nodes[0].mVel;
+}
 
 f32 TFireWanwanTailHit::calcApartPow()
 {
@@ -720,7 +737,7 @@ void TFireWanwanTailHit::changeBodyToSilver(f32 param_1)
 	unkBC->init(cBodyColorOnSilver, unkBC->getCurrent(), param_1);
 }
 
-f32 TFireWanwanTailHit::getTailLength() const { }
+f32 TFireWanwanTailHit::getTailLength() const { return unkA4->getLength(); }
 
 const JGeometry::TVec3<f32>& TFireWanwanTailHit::getHostPos() const
 {
@@ -1115,8 +1132,8 @@ void TFireWanwan::calcRootMatrix()
 		JGeometry::TVec3<f32> v2(mtx[0][2], mtx[1][2], mtx[2][2]);
 		v1.normalize();
 		v2.normalize();
-		v1 *= 0.0f;
-		v2 *= -160.0f;
+		v1 *= -160.0f;
+		v2 *= 0.0f;
 		v1 += v2;
 
 		mtx[0][3] += v1.x;
@@ -1184,17 +1201,19 @@ void TFireWanwan::updateCollisionFromParam()
 	if (isDefeat())
 		return;
 
-	setHitParams(getSaveParam2()->mSLAttackRadius.get(),
-	             getSaveParam2()->mSLAttackHeight.get(),
-	             getSaveParam2()->mSLDamageRadius.get(),
-	             getSaveParam2()->mSLDamageHeight.get());
+	f32 attackRadius = getSaveParam2()->mSLAttackRadius.get();
+	f32 attackHeight = getSaveParam2()->mSLAttackHeight.get();
+	f32 damageRadius = getSaveParam2()->mSLDamageRadius.get();
+	f32 damageHeight = getSaveParam2()->mSLDamageHeight.get();
+	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 }
 
 // Tiny size mismatch
 void TFireWanwan::updateCameraShake()
 {
 	f32 shakeRange = getSaveParam2()->mCamShakeRange.get();
-	if (!isWalking() && !isAttacking()) {
+	if ((isWalking() || isAttacking())
+	    && mDistToMarioSquared < shakeRange * shakeRange) {
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK3, 0.5f);
 	}
 }
@@ -1203,7 +1222,8 @@ void TFireWanwan::updateRumble()
 {
 	f32 fVar1 = getSaveParam2()->mContShakeRange.get();
 
-	if (!isCameraShake() && mDistToMarioSquared < fVar1 * fVar1) {
+	bool cameraShake = isCameraShake();
+	if (!cameraShake && mDistToMarioSquared < fVar1 * fVar1) {
 		if (!isOverApproachRumble()) {
 			SMSRumbleMgr->start(9, &mPosition);
 			mApproachRumbleTimer += 1;
@@ -1376,7 +1396,7 @@ void TFireWanwan::checkHitActors()
 
 void TFireWanwan::checkHungTail()
 {
-	if (!canTakenByMario() || unk194->isTaken()) {
+	if (canTakenByMario() && unk194->isTaken()) {
 		mSpine->reset();
 		mSpine->setNext(&TNerveFireWanwanHungTail::theNerve());
 	}
@@ -1618,7 +1638,7 @@ void TFireWanwan::bind()
 	}
 
 	if (isFlying() && !checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
-		mVelocity *= getSaveParam2()->mAirFric.get();
+		mVelocity *= getSaveParam2()->mFloorFric.get();
 		mVelocity.y *= -0.05f;
 	}
 }

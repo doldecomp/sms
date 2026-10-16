@@ -626,7 +626,7 @@ void TGesso::bind()
 		JGeometry::TVec3<f32> local_48;
 		local_48.cross(var1, var2);
 		f32 cos   = var1.dot(var2);
-		f32 angle = MsAtan2(cos, MsVECMag2(&local_48));
+		f32 angle = abs(MsAtan2(cos, MsVECMag2(&local_48)));
 		if (mBodyTrackingAngle != angle) {
 			if (mBodyTrackingAngle < angle) {
 				mBodyTrackingAngle += mBodyRotSpeed;

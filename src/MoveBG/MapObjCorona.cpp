@@ -980,7 +980,8 @@ void TBathtub::updatePosture_()
 		JGeometry::TVec3<f32> axis;
 		axis.cross(y, up);
 		axis.normalize();
-		axis.scale(unk16C->rebound.get() * (rate * -acosf(y.dot(up))));
+		f32 rebound = unk16C->rebound.get();
+		axis.scale(rebound * (rate * -acosf(y.dot(up))));
 		unk1E8.scaleAdd(unk16C->angleVelDamp.get(), axis, unk1E8);
 	} else {
 		unk250--;
