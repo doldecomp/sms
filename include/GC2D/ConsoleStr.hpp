@@ -51,6 +51,11 @@ public:
 	};
 
 public:
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x010 */ s32 mGoLettersLength;
+	/* 0x014 */ s32 mShineLettersLength;
+	/* 0x018 */ s32 mMissLettersLength;
+#endif
 	/* 0x10 */ J2DSetScreen* mSplashTextScreen;
 	/* 0x14 */ J2DSetScreen* unk14;
 	/* 0x18 */ f32 unk18;
