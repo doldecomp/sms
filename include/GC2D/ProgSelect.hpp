@@ -12,7 +12,7 @@ public:
 	TProgSelect(u8, const char* name = "ProgSelect");
 
 	void perform(u32 cue, JDrama::TGraphics* graphics);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	void setLang(s32);
 #endif
 
@@ -34,7 +34,7 @@ public:
 	/* 0x120 */ J2DTextBox* unk120[2];
 	/* 0x128 */ int unk128;
 	/* 0x12C */ f32 mRefreshRate;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	/* 0x130 */ void* mMessageBmg;
 #endif
 };

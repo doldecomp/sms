@@ -24,7 +24,7 @@ void EnableMetroTRKInterrupts(void);
 
 extern unsigned long __DVDLongFileNameFlag;
 extern unsigned long __PADSpec;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 extern unsigned char __ArenaLo[] AT_ADDRESS(0x80420D60);
 extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
 #else

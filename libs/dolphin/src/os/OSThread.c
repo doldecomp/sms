@@ -70,7 +70,7 @@
 	} while (0);
 
 // which header should these go in?
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
 extern unsigned char _stack_end[] AT_ADDRESS(0x8040ED44);
 #else

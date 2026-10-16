@@ -345,12 +345,12 @@ void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 		updateAnmSound();
 
 	if (mMActor) {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		f32 frame;
 #endif
 		if (cue & CUE_CALC_ANIM) {
 			mMActor->frameUpdate();
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 			if (mLiveFlag & LIVE_FLAG_CALC_INT_FRAME) {
 				J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
 				frame              = ctrl->getFrame();
@@ -366,7 +366,7 @@ void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (cue & CUE_CALC_ANIM) {
 				calcRootMatrix();
 				mMActor->calc();
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 				if (mLiveFlag & LIVE_FLAG_CALC_INT_FRAME)
 					mMActor->getFrameCtrl(0)->setFrame(frame);
 #endif

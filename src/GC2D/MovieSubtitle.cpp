@@ -8,7 +8,7 @@
 #include <System/Application.hpp>
 #include <version.h>
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
@@ -34,8 +34,8 @@ bool is_longheight_movie(u32 param_1)
 
 } // namespace
 
-TMovieSubTitle::TMovieSubTitle(const TTHPRender* param_1)
-    : unk10(param_1)
+TMovieSubTitle::TMovieSubTitle(const TTHPRender* thpRender)
+    : mThpRenderer(thpRender)
     , unk14(nullptr)
     , unk18(nullptr)
     , unk1C(nullptr)
@@ -80,7 +80,7 @@ void TMovieSubTitle::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TMovieSubTitle::movement()
 {
-	if (unk28)
+	if (mVisible)
 		checkSubTitleOff();
 	else
 		checkSubTitleOn();
@@ -88,7 +88,7 @@ void TMovieSubTitle::movement()
 
 void TMovieSubTitle::checkSubTitleOff()
 {
-	int frame = unk10->getFrameNumber();
+	int frame = mThpRenderer->getFrameNumber();
 	if (getCurEntry()) {
 		if (getCurEntry()->unk6 <= frame) {
 			hide();
@@ -99,7 +99,7 @@ void TMovieSubTitle::checkSubTitleOff()
 
 void TMovieSubTitle::checkSubTitleOn()
 {
-	int frame = unk10->getFrameNumber();
+	int frame = mThpRenderer->getFrameNumber();
 	if (getCurEntry()) {
 		if (getCurEntry()->unk4 <= frame)
 			show();
@@ -108,20 +108,20 @@ void TMovieSubTitle::checkSubTitleOn()
 
 void TMovieSubTitle::show()
 {
-	unk28 = true;
+	mVisible = true;
 	unk14->show();
 	setCurMessage();
 }
 
 void TMovieSubTitle::hide()
 {
-	unk28 = false;
+	mVisible = false;
 	unk14->hide();
 }
 
 const TMessageLoader::EntryInfo* TMovieSubTitle::getCurEntry() const
 {
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	if (unk20->getMessageNum() <= unk24
 	    || !TFlagManager::getInstance()->getFlag(MSF_SUBTITLES))
 		return nullptr;
@@ -138,7 +138,7 @@ void TMovieSubTitle::setCurMessage()
 	const char* msg
 	    = (const char*)(unk20->getMessageData() + getCurEntry()->unk0);
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	JSUMemoryInputStream in(msg, 0x400);
 	JSUMemoryOutputStream out(unk18->getStringPtr(), 0x400);
 

@@ -23,8 +23,10 @@ public:
 
 	void set(const char*, JKRArchive*);
 	void set(JSURandomInputStream*);
-	void makeHiearachyPanes(J2DPane*, JSURandomInputStream*, bool, bool, bool,
-	                        s32*);
+	void makeHiearachyPanes(J2DPane* parent,
+                                   JSURandomInputStream* stream,
+                                   bool allow_user_panes, bool we_are_root,
+                                   bool is_ex, s32* out_next_pane_offset);
 	J2DPane* stop();
 	void draw(int x, int y, const J2DGrafContext* pCtx);
 	void gather(J2DPane**, u32, u32, int);
@@ -37,7 +39,7 @@ protected:
 
 class J2DSetScreen : public J2DScreen {
 public:
-	J2DSetScreen(const char*, JKRArchive*);
+	J2DSetScreen(const char* name, JKRArchive* arch);
 
 	virtual ~J2DSetScreen() { }
 };

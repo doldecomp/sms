@@ -8,7 +8,7 @@
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
 #include <Enemy/BossHanachan.hpp>
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 #include <dolphin/vi.h>
 #include <dolphin/dvd.h>
 #endif
@@ -113,7 +113,7 @@ int TMarDirector::loadResource()
 			return 1;
 	}
 
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	load2DResource2Aram();
 #endif
 	unkD4 = new (0x20) char[0x64000];
@@ -405,7 +405,7 @@ int TMarDirector::thpInit()
 {
 	if (mMap == 1) {
 		THPPlayerInit(0);
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		const char* path = "/data/ex128x144_q0.thp";
 		if (VIGetTvFormat() == VI_PAL) {
 			char palPath[] = "/data/ex128x144_q0_pal.thp";
@@ -422,7 +422,7 @@ int TMarDirector::thpInit()
 		THPPlayerSetBuffer(new (0x20) u8[sz]);
 		if (!THPPlayerPrepare(0, 1, 0))
 			return 1;
-#ifdef VERSION_GMSP01
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		s32 start = OSGetTick();
 		while (true) {
 			if (0.5f <= (f32)(s32)(OSGetTick() - start) / (f32)OS_TIMER_CLOCK)
