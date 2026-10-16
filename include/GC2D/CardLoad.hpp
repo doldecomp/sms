@@ -30,6 +30,29 @@ extern TCardLoad* gpCardLoad;
 
 class TCardLoad : public JDrama::TViewObj {
 public:
+	enum ScreenState {
+		SCREEN_FILE_SELECT   = 0,
+		SCREEN_SCORE         = 1,
+		SCREEN_OPTIONS       = 2,
+		SCREEN_TITLE         = 3,
+		SCREEN_ENTER_SCORE   = 4,
+		SCREEN_EXIT_SCORE    = 5,
+		SCREEN_ENTER_OPTIONS = 6,
+		SCREEN_EXIT_OPTIONS  = 7,
+		SCREEN_EXIT_TITLE    = 8,
+		SCREEN_ENTER_TITLE   = 9,
+		SCREEN_INIT_TITLE    = 10,
+	};
+
+	enum WindowStep {
+		WINDOW_OPEN    = 0,
+		WINDOW_OPENING = 1,
+		WINDOW_SHOWN   = 2,
+		WINDOW_CLOSE   = 3,
+		WINDOW_CLOSING = 4,
+		WINDOW_DONE    = 5,
+	};
+
 	TCardLoad(const char* name = "<TCardLoad>");
 
 	virtual void load(JSUMemoryInputStream& stream);
@@ -73,8 +96,8 @@ public:
 	static u32 cMessageID[];
 
 public:
-	/* 0x10 */ int unk10;
-	/* 0x14 */ int unk14;
+	/* 0x10 */ WindowStep mWindowStep;
+	/* 0x14 */ ScreenState mScreenState;
 	/* 0x18 */ int unk18;
 	/* 0x1C */ TEProgress unk1C;
 	/* 0x20 */ u32 unk20;

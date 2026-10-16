@@ -30,7 +30,8 @@
 extern JPAEmitterManager* gpEmitterManager4D2;
 
 #define CARD_SAVE_FORMAT_CANCEL                                                \
-	VERSION_SELECT(PROGRESS_UNK35, GMSJ01(PROGRESS_UNK4))
+	VERSION_SELECT(PROGRESS_CONTINUE_WITHOUT_SAVING,                           \
+	               GMSJ01(PROGRESS_WRONG_DEVICE))
 
 u32 TCardSave::cMessageID[] = {
 #if defined(VERSION_GMSJ01)
@@ -58,35 +59,35 @@ u32 TCardSave::cMessageID[] = {
 
 TEProgress TCardSave::changeMode(s32 param_1)
 {
-	TEProgress result = PROGRESS_UNK4;
+	TEProgress result = PROGRESS_WRONG_DEVICE;
 	switch (param_1) {
 	case CARD_RESULT_NOCARD:
-		result = PROGRESS_UNK3;
+		result = PROGRESS_NO_CARD;
 		break;
 	case CARD_RESULT_FATAL_ERROR:
 	case CARD_RESULT_WRONGDEVICE:
-		result = PROGRESS_UNK4;
+		result = PROGRESS_WRONG_DEVICE;
 		break;
 	case CARD_RESULT_IOERROR:
-		result = PROGRESS_UNK2D;
+		result = PROGRESS_IO_ERROR;
 		break;
 	case -0x100:
-		result = PROGRESS_UNK5;
+		result = PROGRESS_INCOMPATIBLE_CARD;
 		break;
 	case CARD_RESULT_BROKEN:
-		result = PROGRESS_UNK6;
+		result = PROGRESS_BROKEN_CARD;
 		break;
 	case CARD_RESULT_ENCODING:
-		result = PROGRESS_UNK7;
+		result = PROGRESS_WRONG_ENCODING;
 		break;
 	case CARD_RESULT_INSSPACE:
-		result = PROGRESS_UNKC;
+		result = PROGRESS_INSUFFICIENT_SPACE;
 		break;
 	case CARD_RESULT_NOENT:
-		result = PROGRESS_UNKD;
+		result = PROGRESS_NO_FREE_ENTRY;
 		break;
 	case CARD_RESULT_NOFILE:
-		result = PROGRESS_UNKE;
+		result = PROGRESS_CREATE_FILE_CONFIRM;
 		break;
 	}
 	return result;
@@ -350,14 +351,16 @@ void TCardSave::changeMessage(u32 tag, u32 shadowTag, int message)
 }
 #endif
 
-void TCardSave::init(int param_1)
+void TCardSave::init(int purpose)
 {
-	unk310 = PROGRESS_UNK0;
-	unk2DF = 0;
-	unk308 = param_1;
-	unk2F8 = 0;
-	unk2F9 = 1;
-	if (unk308 == 7 || unk308 == 8 || unk308 == 9) {
+	unk310         = PROGRESS_UNK0;
+	unk2DF         = 0;
+	mDialogPurpose = (DialogPurpose)purpose;
+	unk2F8         = 0;
+	unk2F9         = 1;
+	if (mDialogPurpose == PURPOSE_GAME_OVER
+	    || mDialogPurpose == PURPOSE_ALL_SHINES_SAVE
+	    || mDialogPurpose == PURPOSE_EXPLANATION_AGAIN) {
 		mSaveScreen->search('mask')->show();
 		mSaveScreen->search('mask')->setAlpha(255);
 	} else {
@@ -492,8 +495,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		setMessage(unkA0, 0x200, getCurMessageID());
 		setMessage(unkA4, 0x200, getCurMessageID());
 		setMessage(unkD8, 0x200, VERSION_SELECT(1, GMSJ01(0)));
@@ -506,11 +509,12 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 		unkDC->hide();
 		unkC4->setCenteredSize(20, unkC8.getWidth(), unkC8.getHeight(), 0, 0);
 
-		if (unk310 == PROGRESS_UNK4 || unk310 == PROGRESS_UNK3
-		    || unk310 == PROGRESS_UNK5 || unk310 == PROGRESS_UNKC
-		    || unk310 == PROGRESS_UNKD || unk310 == PROGRESS_UNK2D
+		if (unk310 == PROGRESS_WRONG_DEVICE || unk310 == PROGRESS_NO_CARD
+		    || unk310 == PROGRESS_INCOMPATIBLE_CARD
+		    || unk310 == PROGRESS_INSUFFICIENT_SPACE
+		    || unk310 == PROGRESS_NO_FREE_ENTRY || unk310 == PROGRESS_IO_ERROR
 #if !defined(VERSION_GMSJ01)
-		    || unk310 == PROGRESS_UNK35
+		    || unk310 == PROGRESS_CONTINUE_WITHOUT_SAVING
 #endif
 		) {
 			unkC4->getPane()->show();
@@ -518,22 +522,22 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 			unkC4->getPane()->hide();
 		}
 
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1: {
+	case WINDOW_OPENING: {
 		u8 done = 1;
 		done &= unk48->update();
 		done &= unkC4->update();
 		if (done) {
-			unk10 = 2;
+			mWindowStep = WINDOW_SHOWN;
 			unkA4->show();
 			unkDC->show();
 		}
 		break;
 	}
 
-	case 2:
+	case WINDOW_SHOWN:
 		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_A)) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
 
@@ -543,23 +547,23 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 			                       unkC8.getHeight());
 			unkA4->hide();
 			unkDC->hide();
-			unk10 = 3;
+			mWindowStep = WINDOW_CLOSING;
 		}
 		break;
 
-	case 3: {
+	case WINDOW_CLOSING: {
 		u8 done = 1;
 		done &= unk48->update();
 		done &= unkC4->update();
 		if (done) {
 			unk48->getPane()->hide();
 			unkC4->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 	}
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = param_1;
 		result = 0;
 		break;
@@ -570,7 +574,7 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 
 void TCardSave::endWaitForChoice()
 {
-	if (unk10 != 2)
+	if (mWindowStep != WINDOW_SHOWN)
 		return;
 
 	mShineCountOver100->hide();
@@ -581,7 +585,7 @@ void TCardSave::endWaitForChoice()
 	mConfirmWindowMarioText->hide();
 	mConfirmWindowYes->getPane()->hide();
 	mConfirmWindowNo->getPane()->hide();
-	unk10 = 3;
+	mWindowStep = WINDOW_CLOSING;
 	mConfirmWindow->setCenteredSize(20, 0, 0,
 	                                mConfirmWindowInitialBounds.getWidth(),
 	                                mConfirmWindowInitialBounds.getHeight());
@@ -591,8 +595,8 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		setMessage(unkF4, 0x200, getCurMessageID());
 		setMessage(unkF8, 0x200, getCurMessageID());
 
@@ -609,10 +613,10 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 		mConfirmWindow->setCenteredSize(
 		    20, mConfirmWindowInitialBounds.getWidth(),
 		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mConfirmWindow->update()) {
 			unkF8->show();
 			mConfirmWindowYes->getPane()->show();
@@ -640,12 +644,12 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			mConfirmWindowYes->update();
 			mConfirmWindowNo->update();
 
-			unk2FC = 0;
-			unk10  = 2;
+			unk2FC      = 0;
+			mWindowStep = WINDOW_SHOWN;
 		}
 		break;
 
-	case 2: {
+	case WINDOW_SHOWN: {
 		s8 old    = unk2E9;
 		u32 input = mGamePad->mEnabledFrameMeaning;
 
@@ -663,7 +667,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			mConfirmWindowMarioText->hide();
 			mConfirmWindowYes->getPane()->hide();
 			mConfirmWindowNo->getPane()->hide();
-			unk10 = 3;
+			mWindowStep = WINDOW_CLOSING;
 			mConfirmWindow->setCenteredSize(
 			    20, 0, 0, mConfirmWindowInitialBounds.getWidth(),
 			    mConfirmWindowInitialBounds.getHeight());
@@ -677,7 +681,7 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			mConfirmWindowMarioText->hide();
 			mConfirmWindowYes->getPane()->hide();
 			mConfirmWindowNo->getPane()->hide();
-			unk10 = 3;
+			mWindowStep = WINDOW_CLOSING;
 			mConfirmWindow->setCenteredSize(
 			    20, 0, 0, mConfirmWindowInitialBounds.getWidth(),
 			    mConfirmWindowInitialBounds.getHeight());
@@ -765,14 +769,14 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 		break;
 	}
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mConfirmWindow->update()) {
 			mConfirmWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = unk2E9 == 0 ? param_1 : param_2;
 		result = unk2E9;
 		break;
@@ -786,10 +790,10 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		if (unk2EA == -1) {
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 
 		setMessage(mConfirmWindowText, 0x200, getCurMessageID());
@@ -811,16 +815,16 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		mConfirmWindow->setCenteredSize(
 		    20, mConfirmWindowInitialBounds.getWidth(),
 		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mConfirmWindow->update()) {
 			mSaveNameABC[unk2EA]->show();
 			mConfirmWindowMarioText->show();
 			mConfirmWindowTextShadow->show();
 
-			if (unk310 == PROGRESS_UNK17) {
+			if (unk310 == PROGRESS_SAVE_DONE) {
 				unk128->hide();
 				u16 score
 				    = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
@@ -901,11 +905,11 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
 			}
 
-			unk10 = 2;
+			mWindowStep = WINDOW_SHOWN;
 		}
 		break;
 
-	case 2: {
+	case WINDOW_SHOWN: {
 		s8 old    = unk2E9;
 		u32 input = mGamePad->mEnabledFrameMeaning;
 
@@ -927,7 +931,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			mConfirmWindowMarioText->hide();
 			mConfirmWindowYes->getPane()->hide();
 			mConfirmWindowNo->getPane()->hide();
-			unk10 = 3;
+			mWindowStep = WINDOW_CLOSING;
 			mConfirmWindow->setCenteredSize(
 			    20, 0, 0, mConfirmWindowInitialBounds.getWidth(),
 			    mConfirmWindowInitialBounds.getHeight());
@@ -1013,14 +1017,14 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		break;
 	}
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mConfirmWindow->update()) {
 			mConfirmWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = unk2E9 == 0 ? param_1 : param_2;
 		result = unk2E9;
 		break;
@@ -1031,7 +1035,7 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 void TCardSave::endDrawMessage()
 {
-	if (unk10 != 2)
+	if (mWindowStep != WINDOW_SHOWN)
 		return;
 
 	mShineCountOver100->hide();
@@ -1042,7 +1046,7 @@ void TCardSave::endDrawMessage()
 	mConfirmWindowMarioText->hide();
 	mConfirmWindowYes->getPane()->hide();
 	mConfirmWindowNo->getPane()->hide();
-	unk10 = 3;
+	mWindowStep = WINDOW_CLOSING;
 	mConfirmWindow->setCenteredSize(20, 0, 0,
 	                                mConfirmWindowInitialBounds.getWidth(),
 	                                mConfirmWindowInitialBounds.getHeight());
@@ -1051,32 +1055,32 @@ void TCardSave::endDrawMessage()
 s8 TCardSave::drawMessage(TEProgress param_1)
 {
 	s8 result = -1;
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		setMessage(unk174, 0x200, getCurMessageID());
 		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
 		unk160->getPane()->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
 		                        0);
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (unk160->update()) {
 			unk178->show();
-			unk10 = 2;
+			mWindowStep = WINDOW_SHOWN;
 		}
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (unk160->update()) {
 			unk160->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = param_1;
 		result = 0;
 		break;
@@ -1089,10 +1093,10 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		if (unk2EA == -1) {
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 
 		setMessage(mConfirmWindowText, 0x200, getCurMessageID());
@@ -1114,16 +1118,18 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 		mConfirmWindow->setCenteredSize(
 		    20, mConfirmWindowInitialBounds.getWidth(),
 		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mConfirmWindow->update()) {
 			mConfirmWindowTextShadow->show();
 			mSaveNameABC[unk2EA]->show();
 			mConfirmWindowMarioText->show();
 
-			if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
+			if (mDialogPurpose == PURPOSE_SAVE
+			    || mDialogPurpose == PURPOSE_SHINE_GET
+			    || mDialogPurpose == PURPOSE_ALL_SHINES_SAVE) {
 				if (getBookmarkInfo().unk0 == 1) {
 #if defined(VERSION_GMSJ01)
 					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
@@ -1158,18 +1164,18 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 				}
 			}
 
-			unk10 = 2;
+			mWindowStep = WINDOW_SHOWN;
 		}
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mConfirmWindow->update()) {
 			mConfirmWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = param_1;
 		result = 0;
 		break;
@@ -1182,43 +1188,43 @@ s8 TCardSave::waitForAnyKey(TEProgress param_1)
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		setMessage(unk174, 0x200, getCurMessageID());
 		setMessage(unk178, 0x200, getCurMessageID());
 		unk178->hide();
 		unk160->getPane()->show();
 		unk160->setCenteredSize(20, unk164.getWidth(), unk164.getHeight(), 0,
 		                        0);
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (unk160->update()) {
 			unk178->show();
-			unk10 = 2;
+			mWindowStep = WINDOW_SHOWN;
 		}
 		break;
 
-	case 2:
+	case WINDOW_SHOWN:
 		if (unk2E0 > 300) {
 			unk178->hide();
 			unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 			                        unk164.getHeight());
-			unk10 = 3;
+			mWindowStep = WINDOW_CLOSING;
 		} else {
 			unk2E0++;
 		}
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (unk160->update()) {
 			unk160->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = param_1;
 		result = 0;
 		break;
@@ -1231,8 +1237,8 @@ s8 TCardSave::waitForSelectOver()
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		mGameOverSaveWindow->getPane()->show();
 		mGameOverSaveWindow->setCenteredSize(
 		    20, mGameOverSaveWindowInitialBounds.getWidth(),
@@ -1243,13 +1249,13 @@ s8 TCardSave::waitForSelectOver()
 		mGameOverSaveOptions[1]->hide();
 		mGameOverSavePointerHands[1][0]->hide();
 		mGameOverSavePointerHands[1][1]->hide();
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mGameOverSaveWindow->update()) {
-			unk10  = 2;
-			unk2E9 = 0;
+			mWindowStep = WINDOW_SHOWN;
+			unk2E9      = 0;
 			mGameOverSaveOptions[0]->show();
 			mGameOverSaveOptions[1]->show();
 			mGameOverSavePointerHands[0][0]->show();
@@ -1257,13 +1263,13 @@ s8 TCardSave::waitForSelectOver()
 		}
 		break;
 
-	case 2: {
+	case WINDOW_SHOWN: {
 		s8 oldSelect = unk2E9;
 		u32 input    = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
-			unk10 = 4;
+			mWindowStep = WINDOW_CLOSE;
 		} else if (input & TMarioGamePad::MEANING_MENU_UP) {
 			unk2E9 = 0;
 		} else if (input & TMarioGamePad::MEANING_MENU_DOWN) {
@@ -1281,7 +1287,7 @@ s8 TCardSave::waitForSelectOver()
 		break;
 	}
 
-	case 4:
+	case WINDOW_CLOSE:
 		mGameOverSaveWindow->setCenteredSize(
 		    20, 0, 0, mGameOverSaveWindowInitialBounds.getWidth(),
 		    mGameOverSaveWindowInitialBounds.getHeight());
@@ -1289,17 +1295,17 @@ s8 TCardSave::waitForSelectOver()
 		mGameOverSaveOptions[1]->hide();
 		mGameOverSavePointerHands[unk2E9][0]->hide();
 		mGameOverSavePointerHands[unk2E9][1]->hide();
-		unk10 = 3;
+		mWindowStep = WINDOW_CLOSING;
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mGameOverSaveWindow->update()) {
 			mGameOverSaveWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		if (unk2E9 == 0) {
 			unk310 = PROGRESS_UNK1;
 		} else {
@@ -1316,23 +1322,23 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0: {
+	switch (mWindowStep) {
+	case WINDOW_OPEN: {
 		u32 messageID = cMessageID[unk310];
-		switch (unk308) {
-		case 1:
+		switch (mDialogPurpose) {
+		case PURPOSE_BLUE_COIN_GET:
 			messageID = VERSION_SELECT(0x24, GMSJ01(0x1C), GMSJ01_01(0x1C));
 			break;
-		case 2:
+		case PURPOSE_HOVER_NOZZLE_GET:
 			messageID = VERSION_SELECT(0x25, GMSJ01(0x1D), GMSJ01_01(0x1D));
 			break;
-		case 3:
+		case PURPOSE_ROCKET_NOZZLE_GET:
 			messageID = VERSION_SELECT(0x26, GMSJ01(0x1E), GMSJ01_01(0x1E));
 			break;
-		case 4:
+		case PURPOSE_TURBO_NOZZLE_GET:
 			messageID = VERSION_SELECT(0x27, GMSJ01(0x1F), GMSJ01_01(0x1F));
 			break;
-		case 5:
+		case PURPOSE_YOSHI_UNLOCKED:
 			messageID = VERSION_SELECT(0x28, GMSJ01(0x20), GMSJ01_01(0x20));
 			break;
 		}
@@ -1357,15 +1363,15 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		mEventSavePointerHands[1][0]->hide();
 		mEventSavePointerHands[1][1]->hide();
 
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 	}
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mEventSaveWindow->update()) {
 			mEventSaveWindowTextShadow->show();
-			unk10  = 2;
-			unk2E9 = 0;
+			mWindowStep = WINDOW_SHOWN;
+			unk2E9      = 0;
 
 			mEventSaveOptions[0][1]->show();
 			mEventSaveOptions[1][1]->show();
@@ -1377,13 +1383,13 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		}
 		break;
 
-	case 2: {
+	case WINDOW_SHOWN: {
 		s8 oldSelect = unk2E9;
 		u32 input    = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
-			unk10 = 4;
+			mWindowStep = WINDOW_CLOSE;
 		} else if (input & TMarioGamePad::MEANING_MENU_UP) {
 			unk2E9 = 0;
 		} else if (input & TMarioGamePad::MEANING_MENU_DOWN) {
@@ -1404,7 +1410,7 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		break;
 	}
 
-	case 4:
+	case WINDOW_CLOSE:
 		mEventSaveWindowTextShadow->hide();
 		mEventSaveWindow->setCenteredSize(
 		    20, 0, 0, mEventSaveWindowInitialBounds.getWidth(),
@@ -1415,17 +1421,17 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		mEventSavePointerHands[unk2E9][0]->hide();
 		mEventSavePointerHands[unk2E9][1]->hide();
 
-		unk10 = 3;
+		mWindowStep = WINDOW_CLOSING;
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mEventSaveWindow->update()) {
 			mEventSaveWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		if (unk2E9 == 0) {
 			unk310 = param_1;
 		} else {
@@ -1443,8 +1449,8 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		mShineGetSaveWindow->getPane()->show();
 		mShineGetSaveWindow->setCenteredSize(
 		    20, mShineGetSaveWindowInitialBounds.getWidth(),
@@ -1472,13 +1478,13 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		unk214->hide();
 		mShineGetSaveMarioText->hide();
 
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mShineGetSaveWindow->update()) {
-			unk10  = 2;
-			unk2E9 = 0;
+			mWindowStep = WINDOW_SHOWN;
+			unk2E9      = 0;
 
 			mShineGetSaveOptions[0][1]->show();
 			mShineGetSaveOptions[1][1]->show();
@@ -1550,13 +1556,13 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		}
 		break;
 
-	case 2: {
+	case WINDOW_SHOWN: {
 		s8 oldSelect = unk2E9;
 		u32 input    = mGamePad->mEnabledFrameMeaning;
 
 		if (input & TMarioGamePad::MEANING_MENU_A) {
 			gpMSound->startSoundSystemSE(0x481CU, 0, nullptr, 0);
-			unk10 = 4;
+			mWindowStep = WINDOW_CLOSE;
 		} else if (input & TMarioGamePad::MEANING_MENU_UP) {
 			if (oldSelect > 0) {
 				unk2E9 = oldSelect - 1;
@@ -1578,7 +1584,7 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		break;
 	}
 
-	case 4:
+	case WINDOW_CLOSE:
 		mShineGetSaveWindow->setCenteredSize(
 		    20, 0, 0, mShineGetSaveWindowInitialBounds.getWidth(),
 		    mShineGetSaveWindowInitialBounds.getHeight());
@@ -1598,17 +1604,17 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 		unk214->hide();
 		mShineGetSaveMarioText->hide();
 
-		unk10 = 3;
+		mWindowStep = WINDOW_CLOSING;
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mShineGetSaveWindow->update()) {
 			mShineGetSaveWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		if (unk2E9 == 0) {
 			unk310 = param_1;
 		} else if (unk2E9 == 1) {
@@ -1627,8 +1633,8 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 {
 	s8 result = -1;
 
-	switch (unk10) {
-	case 0:
+	switch (mWindowStep) {
+	case WINDOW_OPEN:
 		setMessage(mConfirmWindowText, 0x200, getCurMessageID());
 		setMessage(mConfirmWindowTextShadow, 0x200, getCurMessageID());
 
@@ -1649,10 +1655,10 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 		mConfirmWindow->setCenteredSize(
 		    20, mConfirmWindowInitialBounds.getWidth(),
 		    mConfirmWindowInitialBounds.getHeight(), 0, 0);
-		unk10 = 1;
+		mWindowStep = WINDOW_OPENING;
 		break;
 
-	case 1:
+	case WINDOW_OPENING:
 		if (mConfirmWindow->update()) {
 			mSaveNameABC[unk2EA]->show();
 			mConfirmWindowMarioText->show();
@@ -1713,27 +1719,27 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 				}
 			}
 
-			unk10 = 2;
+			mWindowStep = WINDOW_SHOWN;
 		}
 		break;
 
-	case 2:
+	case WINDOW_SHOWN:
 		if (unk2E0 > 300) {
 			endWaitForChoice();
-			unk10 = 3;
+			mWindowStep = WINDOW_CLOSING;
 		} else {
 			unk2E0++;
 		}
 		break;
 
-	case 3:
+	case WINDOW_CLOSING:
 		if (mConfirmWindow->update()) {
 			mConfirmWindow->getPane()->hide();
-			unk10 = 5;
+			mWindowStep = WINDOW_DONE;
 		}
 		break;
 
-	case 5:
+	case WINDOW_DONE:
 		unk310 = param_1;
 		result = 0;
 		break;
@@ -1759,8 +1765,8 @@ void TCardSave::changePattern(J2DPicture*, s16, u32) { }
 void TCardSave::execMovement_()
 {
 
-	TEProgress prevState = unk310;
-	s32 prevMode         = unk10;
+	TEProgress prevState      = unk310;
+	WindowStep prevWindowStep = mWindowStep;
 
 	mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 
@@ -1768,12 +1774,12 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK0:
 		unk2EA = SMSGetApplication()->mSaveFile;
 
-		if (unk308 == 7) {
+		if (mDialogPurpose == PURPOSE_GAME_OVER) {
 			unk310 = PROGRESS_UNK2E;
 			break;
 		}
-		if (unk308 == 9) {
-			unk310 = PROGRESS_UNK34;
+		if (mDialogPurpose == PURPOSE_EXPLANATION_AGAIN) {
+			unk310 = PROGRESS_EXPLANATION_AGAIN_CONFIRM;
 			break;
 		}
 
@@ -1786,7 +1792,7 @@ void TCardSave::execMovement_()
 		mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		gpCardManager->unmount();
 
-		if (!unk18 && unk308 == 0)
+		if (!unk18 && mDialogPurpose == PURPOSE_SAVE)
 			unk2D8->setDrawEnd();
 
 		unk2DF = 1;
@@ -1817,15 +1823,15 @@ void TCardSave::execMovement_()
 				    mLargeDigitFontTextures[score % 10]->getTexInfo(), 0);
 			}
 
-			switch (unk308) {
-			case 0:
+			switch (mDialogPurpose) {
+			case PURPOSE_SAVE:
 				unk310 = PROGRESS_UNK15;
 				break;
-			case 6:
+			case PURPOSE_SHINE_GET:
 				unk310 = PROGRESS_UNK2B;
 				break;
-			case 8:
-				unk310 = PROGRESS_UNK33;
+			case PURPOSE_ALL_SHINES_SAVE:
+				unk310 = PROGRESS_ALL_SHINES_SAVE_CONFIRM;
 				break;
 			default:
 				unk310 = PROGRESS_UNK2A;
@@ -1837,7 +1843,7 @@ void TCardSave::execMovement_()
 		break;
 	}
 
-	case PROGRESS_UNK3:
+	case PROGRESS_NO_CARD:
 		if (gpCardManager->getLastStatus() == CARD_RESULT_NOCARD) {
 			waitForStop(PROGRESS_UNK1);
 			gpCardManager->probe();
@@ -1846,7 +1852,7 @@ void TCardSave::execMovement_()
 				unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
 				                       unk4C.getHeight());
 				unkA4->hide();
-				unk10 = 3;
+				mWindowStep = WINDOW_CLOSING;
 			}
 
 			if (waitForStop(PROGRESS_UNK2) != -1)
@@ -1854,13 +1860,13 @@ void TCardSave::execMovement_()
 		}
 		break;
 
-	case PROGRESS_UNK4:
-	case PROGRESS_UNK5:
-	case PROGRESS_UNKC:
-	case PROGRESS_UNKD:
-	case PROGRESS_UNK2D:
+	case PROGRESS_WRONG_DEVICE:
+	case PROGRESS_INCOMPATIBLE_CARD:
+	case PROGRESS_INSUFFICIENT_SPACE:
+	case PROGRESS_NO_FREE_ENTRY:
+	case PROGRESS_IO_ERROR:
 #if !defined(VERSION_GMSJ01)
-	case PROGRESS_UNK35:
+	case PROGRESS_CONTINUE_WITHOUT_SAVING:
 #endif
 		if (gpCardManager->getLastStatus() != CARD_RESULT_NOCARD) {
 			waitForStop(PROGRESS_UNK1);
@@ -1870,32 +1876,33 @@ void TCardSave::execMovement_()
 				unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
 				                       unk4C.getHeight());
 				unkA4->hide();
-				unk10 = 3;
+				mWindowStep = WINDOW_CLOSING;
 			}
-			waitForStop(PROGRESS_UNK3);
+			waitForStop(PROGRESS_NO_CARD);
 		}
 		break;
 
-	case PROGRESS_UNK6:
-	case PROGRESS_UNK7:
+	case PROGRESS_BROKEN_CARD:
+	case PROGRESS_WRONG_ENCODING:
 		if (gpCardManager->getLastStatus() != CARD_RESULT_NOCARD) {
-			waitForChoice(PROGRESS_UNK8, CARD_SAVE_FORMAT_CANCEL, 1);
+			waitForChoice(PROGRESS_FORMAT_CONFIRM, CARD_SAVE_FORMAT_CANCEL, 1);
 			gpCardManager->probe();
 		} else {
 			if (unkF8->isVisible())
 				endWaitForChoice();
 
-			waitForChoice(PROGRESS_UNK3, PROGRESS_UNK3, 1);
+			waitForChoice(PROGRESS_NO_CARD, PROGRESS_NO_CARD, 1);
 		}
 		break;
 
-	case PROGRESS_UNK8: {
+	case PROGRESS_FORMAT_CONFIRM: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_BUSY)
 			break;
 
 		if (status == CARD_RESULT_READY) {
-			s8 r = waitForChoice(PROGRESS_UNK9, CARD_SAVE_FORMAT_CANCEL, 1);
+			s8 r = waitForChoice(PROGRESS_FORMATTING, CARD_SAVE_FORMAT_CANCEL,
+			                     1);
 			if (r == 0) {
 				unk2E0 = 0;
 				gpCardManager->format();
@@ -1910,17 +1917,17 @@ void TCardSave::execMovement_()
 		break;
 	}
 
-	case PROGRESS_UNK9: {
+	case PROGRESS_FORMATTING: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status != CARD_RESULT_BUSY) {
 			if (status == CARD_RESULT_READY) {
-				drawMessage(PROGRESS_UNKA);
+				drawMessage(PROGRESS_FORMAT_DONE);
 				if (unk2E0 > 0x12C) {
 					if (unk178->isVisible()) {
 						unk178->hide();
 						unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 						                        unk164.getHeight());
-						unk10 = 3;
+						mWindowStep = WINDOW_CLOSING;
 					}
 				} else {
 					unk2E0++;
@@ -1930,9 +1937,9 @@ void TCardSave::execMovement_()
 					unk178->hide();
 					unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 					                        unk164.getHeight());
-					unk10 = 3;
+					mWindowStep = WINDOW_CLOSING;
 				}
-				drawMessage(PROGRESS_UNKB);
+				drawMessage(PROGRESS_FORMAT_FAILED);
 			}
 		} else {
 			drawMessage(PROGRESS_UNK0);
@@ -1940,7 +1947,7 @@ void TCardSave::execMovement_()
 		break;
 	}
 
-	case PROGRESS_UNKA:
+	case PROGRESS_FORMAT_DONE:
 		if (gpCardManager->getLastStatus() == CARD_RESULT_READY) {
 			s32 r = waitForAnyKey(PROGRESS_UNK2);
 			gpCardManager->probe();
@@ -1956,11 +1963,11 @@ void TCardSave::execMovement_()
 				                        unk164.getHeight());
 				unk178->hide();
 			}
-			waitForAnyKey(PROGRESS_UNK3);
+			waitForAnyKey(PROGRESS_NO_CARD);
 		}
 		break;
 
-	case PROGRESS_UNKB:
+	case PROGRESS_FORMAT_FAILED:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 #if defined(VERSION_GMSJ01)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
@@ -1969,32 +1976,33 @@ void TCardSave::execMovement_()
 #endif
 		break;
 
-	case PROGRESS_UNKE:
-		if (unk10 == 0)
+	case PROGRESS_CREATE_FILE_CONFIRM:
+		if (mWindowStep == WINDOW_OPEN)
 			gpCardManager->probe();
 
 		if (gpCardManager->getLastStatus() == CARD_RESULT_READY) {
-			s32 r = waitForChoice(PROGRESS_UNKF, PROGRESS_UNK10, 0);
+			s32 r = waitForChoice(PROGRESS_CREATING_FILE, PROGRESS_NO_SAVE_FILE,
+			                      0);
 			gpCardManager->probe();
 			if (r == 0)
 				gpCardManager->createFile();
 		} else {
 			endWaitForChoice();
-			waitForChoice(PROGRESS_UNK3, PROGRESS_UNK3, 1);
+			waitForChoice(PROGRESS_NO_CARD, PROGRESS_NO_CARD, 1);
 		}
 		break;
 
-	case PROGRESS_UNKF: {
+	case PROGRESS_CREATING_FILE: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status != CARD_RESULT_BUSY) {
 			if (status == CARD_RESULT_READY) {
-				drawMessage(PROGRESS_UNK11);
+				drawMessage(PROGRESS_FILE_CREATED);
 				if (unk2E0 > 0x12C) {
 					if (unk178->isVisible()) {
 						unk178->hide();
 						unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 						                        unk164.getHeight());
-						unk10 = 3;
+						mWindowStep = WINDOW_CLOSING;
 					}
 				} else {
 					unk2E0++;
@@ -2005,17 +2013,17 @@ void TCardSave::execMovement_()
 					unk178->hide();
 					unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 					                        unk164.getHeight());
-					unk10 = 3;
+					mWindowStep = WINDOW_CLOSING;
 				}
-				drawMessage(PROGRESS_UNK12);
+				drawMessage(PROGRESS_CREATE_FILE_FAILED);
 #else
-				drawMessage(PROGRESS_UNK12);
+				drawMessage(PROGRESS_CREATE_FILE_FAILED);
 				if (unk2E0 > 0x12C) {
 					if (unk178->isVisible()) {
 						unk178->hide();
 						unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 						                        unk164.getHeight());
-						unk10 = 3;
+						mWindowStep = WINDOW_CLOSING;
 					}
 				} else {
 					unk2E0++;
@@ -2028,12 +2036,12 @@ void TCardSave::execMovement_()
 		break;
 	}
 
-	case PROGRESS_UNK11:
+	case PROGRESS_FILE_CREATED:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
 		break;
 
-	case PROGRESS_UNK12:
+	case PROGRESS_CREATE_FILE_FAILED:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 #if defined(VERSION_GMSJ01)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
@@ -2042,23 +2050,23 @@ void TCardSave::execMovement_()
 #endif
 		break;
 
-	case PROGRESS_UNK10:
+	case PROGRESS_NO_SAVE_FILE:
 		waitForStop(PROGRESS_UNK1);
 		break;
 
-	case PROGRESS_UNK13: {
+	case PROGRESS_SELECT_FILE: {
 		unk2E8 = unk2EA;
 
 		TCardBookmarkInfo& bm = getBookmarkInfo();
 		if (bm.unk0 == 1) {
 			unk310 = PROGRESS_UNK14;
 		} else if (bm.unk18 == 0) {
-			unk310 = PROGRESS_UNK16;
+			unk310 = PROGRESS_SAVING;
 			saveBookmark(unk2EA);
 		} else if (bm.unk18 == 0
 		           || bm.unk8
 		                  == TFlagManager::getInstance()->getLastSaveTime()) {
-			unk310 = PROGRESS_UNK16;
+			unk310 = PROGRESS_SAVING;
 		} else {
 			unk310 = PROGRESS_UNK2C;
 		}
@@ -2069,7 +2077,7 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK1E: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
-			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK2, 1);
+			s32 r = waitForChoiceBM(PROGRESS_SAVING, PROGRESS_UNK2, 1);
 			gpCardManager->probe();
 			if (r == 0)
 				saveBookmark(unk2EA);
@@ -2085,7 +2093,7 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK15: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
-			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1,
+			s32 r = waitForChoiceBM(PROGRESS_SAVING, PROGRESS_UNK1,
 			                        VERSION_SELECT(0, GMSJ01(1)));
 			gpCardManager->probe();
 			if (r == 0) {
@@ -2107,12 +2115,12 @@ void TCardSave::execMovement_()
 		} else {
 			endWaitForChoice();
 
-			waitForChoiceBM(PROGRESS_UNK3, PROGRESS_UNK3, 1);
+			waitForChoiceBM(PROGRESS_NO_CARD, PROGRESS_NO_CARD, 1);
 		}
 		break;
 	}
 
-	case PROGRESS_UNK16: {
+	case PROGRESS_SAVING: {
 		s32 status = gpCardManager->getLastStatus();
 
 		if (status != CARD_RESULT_BUSY) {
@@ -2123,7 +2131,7 @@ void TCardSave::execMovement_()
 						TFlagManager::getInstance()->saveSuccess();
 				}
 
-				s8 r = drawMessageBM(PROGRESS_UNK17);
+				s8 r = drawMessageBM(PROGRESS_SAVE_DONE);
 				if (r != -1 && unk2DE != 0)
 					unk310 = PROGRESS_UNK19;
 
@@ -2142,7 +2150,9 @@ void TCardSave::execMovement_()
 						gpMSound->startSoundSystemSE(MSD_SE_SY_DECIDE_COMMON, 0,
 						                             nullptr, 0);
 
-						if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
+						if (mDialogPurpose == PURPOSE_SAVE
+						    || mDialogPurpose == PURPOSE_SHINE_GET
+						    || mDialogPurpose == PURPOSE_ALL_SHINES_SAVE) {
 							unk128->hide();
 							u16 score = TFlagManager::getInstance()->getFlag(
 							    MSF_SHINE_COUNT);
@@ -2186,7 +2196,7 @@ void TCardSave::execMovement_()
 				}
 				gpCardManager->probe();
 			} else {
-				drawMessageBM(PROGRESS_UNK18);
+				drawMessageBM(PROGRESS_SAVE_FAILED);
 
 				endWaitForChoice();
 
@@ -2204,15 +2214,15 @@ void TCardSave::execMovement_()
 		break;
 	}
 
-	case PROGRESS_UNK17:
-		if (unk308 != 0 || unk18) {
+	case PROGRESS_SAVE_DONE:
+		if (mDialogPurpose != PURPOSE_SAVE || unk18) {
 			unk310 = PROGRESS_UNK1;
 		} else {
 			waitForChoiceBM(PROGRESS_UNK1, PROGRESS_UNK19, 0);
 		}
 		break;
 
-	case PROGRESS_UNK18:
+	case PROGRESS_SAVE_FAILED:
 		if (waitForAnyKeyBM(PROGRESS_UNK2) != -1)
 #if defined(VERSION_GMSJ01)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
@@ -2223,7 +2233,7 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK2A:
 		if (gpCardManager->getLastStatus() == CARD_RESULT_READY) {
-			s32 r = waitForSelect2(PROGRESS_UNK16, PROGRESS_UNK1);
+			s32 r = waitForSelect2(PROGRESS_SAVING, PROGRESS_UNK1);
 			gpCardManager->probe();
 			if (r == 0) {
 				TCardBookmarkInfo& bm = getBookmarkInfo();
@@ -2235,23 +2245,23 @@ void TCardSave::execMovement_()
 					           == TFlagManager::getInstance()
 					                  ->getLastSaveTime()) {
 						saveBookmark(unk2EA);
-						unk310 = PROGRESS_UNK16;
+						unk310 = PROGRESS_SAVING;
 					} else {
 						unk310 = PROGRESS_UNK2C;
 					}
 				}
 			}
 		} else {
-			if (unk10 < 3)
-				unk10 = 4;
-			waitForSelect2(PROGRESS_UNK3, PROGRESS_UNK3);
+			if (mWindowStep < WINDOW_CLOSING)
+				mWindowStep = WINDOW_CLOSE;
+			waitForSelect2(PROGRESS_NO_CARD, PROGRESS_NO_CARD);
 		}
 		break;
 
 	case PROGRESS_UNK2B:
 		if (gpCardManager->getLastStatus() == CARD_RESULT_READY) {
-			s32 r
-			    = waitForSelect3(PROGRESS_UNK16, PROGRESS_UNK16, PROGRESS_UNK1);
+			s32 r = waitForSelect3(PROGRESS_SAVING, PROGRESS_SAVING,
+			                       PROGRESS_UNK1);
 			gpCardManager->probe();
 
 			if (r != -1) {
@@ -2265,7 +2275,7 @@ void TCardSave::execMovement_()
 						           == TFlagManager::getInstance()
 						                  ->getLastSaveTime()) {
 							saveBookmark(unk2EA);
-							unk310 = PROGRESS_UNK16;
+							unk310 = PROGRESS_SAVING;
 						} else {
 							unk310 = PROGRESS_UNK2C;
 						}
@@ -2281,9 +2291,10 @@ void TCardSave::execMovement_()
 				}
 			}
 		} else {
-			if (unk10 < 3)
-				unk10 = 4;
-			waitForSelect3(PROGRESS_UNK3, PROGRESS_UNK3, PROGRESS_UNK3);
+			if (mWindowStep < WINDOW_CLOSING)
+				mWindowStep = WINDOW_CLOSE;
+			waitForSelect3(PROGRESS_NO_CARD, PROGRESS_NO_CARD,
+			               PROGRESS_NO_CARD);
 		}
 		break;
 
@@ -2296,9 +2307,9 @@ void TCardSave::execMovement_()
 				unk48->setCenteredSize(20, 0, 0, unk4C.getWidth(),
 				                       unk4C.getHeight());
 				unkA4->hide();
-				unk10 = 3;
+				mWindowStep = WINDOW_CLOSING;
 			}
-			waitForStop(PROGRESS_UNK3);
+			waitForStop(PROGRESS_NO_CARD);
 		}
 		break;
 
@@ -2306,10 +2317,10 @@ void TCardSave::execMovement_()
 		waitForSelectOver();
 		break;
 
-	case PROGRESS_UNK33: {
+	case PROGRESS_ALL_SHINES_SAVE_CONFIRM: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
-			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1,
+			s32 r = waitForChoiceBM(PROGRESS_SAVING, PROGRESS_UNK1,
 			                        VERSION_SELECT(0, GMSJ01(1)));
 			gpCardManager->probe();
 			if (r == 0) {
@@ -2322,7 +2333,7 @@ void TCardSave::execMovement_()
 					           == TFlagManager::getInstance()
 					                  ->getLastSaveTime()) {
 						saveBookmark(unk2EA);
-						unk310 = PROGRESS_UNK16;
+						unk310 = PROGRESS_SAVING;
 					} else {
 						unk310 = PROGRESS_UNK2C;
 					}
@@ -2337,7 +2348,7 @@ void TCardSave::execMovement_()
 		break;
 	}
 
-	case PROGRESS_UNK34:
+	case PROGRESS_EXPLANATION_AGAIN_CONFIRM:
 		waitForChoice(PROGRESS_UNK19, PROGRESS_UNK1, 1);
 		break;
 
@@ -2346,24 +2357,24 @@ void TCardSave::execMovement_()
 	}
 
 	if (prevState != unk310) {
-		unk314 = unk310;
-		unk318 = 0;
-		unk2E0 = 0;
-		unk2F8 = 0;
-		unk2F9 = 1;
-		unk2DC = 1;
-		unk30C = 0;
-		unk2DD = 0;
-		unk10  = 0;
-		unk44  = nullptr;
+		unk314      = unk310;
+		unk318      = 0;
+		unk2E0      = 0;
+		unk2F8      = 0;
+		unk2F9      = 1;
+		unk2DC      = 1;
+		unk30C      = 0;
+		unk2DD      = 0;
+		mWindowStep = WINDOW_OPEN;
+		unk44       = nullptr;
 	}
 
-	if (prevMode != unk10) {
-		if (prevMode == 1) {
+	if (prevWindowStep != mWindowStep) {
+		if (prevWindowStep == WINDOW_OPENING) {
 			gpMSound->startSoundSystemSE(MSD_SE_SY_2D_IN, 0, nullptr, 0);
 		}
 
-		if (unk10 == 3) {
+		if (mWindowStep == WINDOW_CLOSING) {
 			gpMSound->startSoundSystemSE(MSD_SE_SY_2D_OUT, 0, nullptr, 0);
 		}
 	}
@@ -2372,7 +2383,7 @@ void TCardSave::execMovement_()
 u8 TCardSave::getNextState()
 {
 	if (unk2DF != 0) {
-		if (unk310 == 0x19)
+		if (unk310 == PROGRESS_UNK19)
 			return 1;
 
 		if (unk310 == PROGRESS_UNK1)

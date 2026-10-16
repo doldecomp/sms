@@ -521,7 +521,9 @@ int TMovieDirector::direct()
 			SMSGetApplication()->getFader()->startWipe(14, 0.3f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 255));
-			unk24->init(SMSGetApplication()->getMovie() == 17 ? 8 : 0);
+			unk24->init(SMSGetApplication()->getMovie() == 17
+			                ? TCardSave::PURPOSE_ALL_SHINES_SAVE
+			                : TCardSave::PURPOSE_SAVE);
 			break;
 
 		case STATE_SAVE_AND_CONTINUE:
@@ -531,7 +533,7 @@ int TMovieDirector::direct()
 			SMSGetApplication()->getFader()->startWipe(14, 0.3f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 255));
-			unk24->init(9);
+			unk24->init(TCardSave::PURPOSE_EXPLANATION_AGAIN);
 			break;
 
 		case STATE_FADE_OUT:

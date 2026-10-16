@@ -1,4 +1,5 @@
 #include <System/MarDirector.hpp>
+#include <GC2D/CardSave.hpp>
 #include <System/TalkCursor.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/FlagManager.hpp>
@@ -112,7 +113,7 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 	TFlagManager::getInstance()->setBlueCoinFlag(
 	    SMSGetApplication()->mCurrArea.getStage(), coin->getEventId());
 	onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
-	unk261 = 1;
+	unk261 = TCardSave::PURPOSE_BLUE_COIN_GET;
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition,
 	                                0, nullptr, 0, 4);
 }
@@ -127,12 +128,12 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	    && !TFlagManager::getInstance()->getNozzleRight(stage, 0)) {
 		TFlagManager::getInstance()->setNozzleRight(stage, 0);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
-		unk261 = 3;
+		unk261 = TCardSave::PURPOSE_ROCKET_NOZZLE_GET;
 	} else if (nozzle->isActorType(ACTOR_TYPE_BACK_NOZZLE_ITEM)
 	           && !TFlagManager::getInstance()->getNozzleRight(stage, 1)) {
 		TFlagManager::getInstance()->setNozzleRight(stage, 1);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
-		unk261 = 4;
+		unk261 = TCardSave::PURPOSE_TURBO_NOZZLE_GET;
 	}
 }
 
@@ -156,7 +157,7 @@ void TMarDirector::fireRideYoshi(TYoshi* yoshi)
 	    && !TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 		TFlagManager::getInstance()->setBool(true, MSF_YOSHI_UNLOCKED);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
-		unk261 = 5;
+		unk261 = TCardSave::PURPOSE_YOSHI_UNLOCKED;
 	}
 }
 

@@ -365,7 +365,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							    MSD_SE_SY_PAUSE_ON, 0, nullptr, 0);
 
 							mSelectionConfirmed = true;
-							mCardSave->init(0);
+							mCardSave->init(TCardSave::PURPOSE_SAVE);
 							mState = MENU_SAVING;
 						default:
 							break;

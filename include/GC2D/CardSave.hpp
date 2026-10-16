@@ -17,6 +17,28 @@ class TPauseMenu2;
 
 class TCardSave : public JDrama::TViewObj {
 public:
+	enum DialogPurpose {
+		PURPOSE_SAVE              = 0,
+		PURPOSE_BLUE_COIN_GET     = 1,
+		PURPOSE_HOVER_NOZZLE_GET  = 2,
+		PURPOSE_ROCKET_NOZZLE_GET = 3,
+		PURPOSE_TURBO_NOZZLE_GET  = 4,
+		PURPOSE_YOSHI_UNLOCKED    = 5,
+		PURPOSE_SHINE_GET         = 6,
+		PURPOSE_GAME_OVER         = 7,
+		PURPOSE_ALL_SHINES_SAVE   = 8,
+		PURPOSE_EXPLANATION_AGAIN = 9,
+	};
+
+	enum WindowStep {
+		WINDOW_OPEN    = 0,
+		WINDOW_OPENING = 1,
+		WINDOW_SHOWN   = 2,
+		WINDOW_CLOSING = 3,
+		WINDOW_CLOSE   = 4,
+		WINDOW_DONE    = 5,
+	};
+
 	TEProgress changeMode(s32);
 
 	TCardSave(const char* name = "<TCardSave>", bool = false);
@@ -54,7 +76,7 @@ public:
 	TCardBookmarkInfo& getBookmarkInfo() { return unk278[unk2EA]; }
 
 public:
-	/* 0x10 */ int unk10;
+	/* 0x10 */ WindowStep mWindowStep;
 	/* 0x14 */ J2DScreen* mSaveScreen;
 	/* 0x18 */ bool unk18;
 	/* 0x1C */ JUTTexture* mLargeDigitFontTextures[10];
@@ -162,7 +184,7 @@ public:
 	/* 0x300 */ s16 unk300;
 	/* 0x302 */ s16 unk302;
 	/* 0x304 */ s16 unk304;
-	/* 0x308 */ int unk308;
+	/* 0x308 */ DialogPurpose mDialogPurpose;
 	/* 0x30C */ u8 unk30C;
 	/* 0x310 */ TEProgress unk310;
 	/* 0x314 */ TEProgress unk314;

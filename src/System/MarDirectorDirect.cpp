@@ -379,7 +379,7 @@ int TMarDirector::changeState()
 	case STATE_CARD_SAVE: {
 		switch (unkAC->mCardSave->getNextState()) {
 		case 0:
-			if (unk261 == 7) {
+			if (unk261 == TCardSave::PURPOSE_GAME_OVER) {
 				TFlagManager::getInstance()->restore();
 				TFlagManager::getInstance()->setBool(true, MSF_UNK30001);
 				if (!TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT)) {
@@ -397,7 +397,7 @@ int TMarDirector::changeState()
 			}
 			break;
 		case 1:
-			if (unk261 == 7) {
+			if (unk261 == TCardSave::PURPOSE_GAME_OVER) {
 				SMSGetApplication()->getFader()->setFadeStatus(
 				    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
 				desiredAppState = TApplication::APP_STATE_DONE;
@@ -428,7 +428,7 @@ int TMarDirector::changeState()
 				SMSGetApplication()->getFader()->startWipe(0xE, 0.3f, 0.0f);
 				SMSGetApplication()->getFader()->setColor(
 				    JUtility::TColor(0, 0, 0, 0xff));
-				unk261    = 7;
+				unk261    = TCardSave::PURPOSE_GAME_OVER;
 				nextState = STATE_CARD_SAVE;
 				getConsole()->startDisappearStar();
 				getConsole()->startDisappearCoin();
@@ -520,11 +520,11 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		if (SMSGetApplication()->mCurrArea.getStage() == 1)
 			THPPlayerPlay();
 		switch (unk261) {
-		case 3:
+		case TCardSave::PURPOSE_ROCKET_NOZZLE_GET:
 			getConsole()->startAppearBalloon(0xE0048, true);
 			break;
 
-		case 4:
+		case TCardSave::PURPOSE_TURBO_NOZZLE_GET:
 			getConsole()->startAppearBalloon(0xE0049, true);
 			break;
 		}
@@ -854,7 +854,7 @@ u8 TMarDirector::updateGameMode()
 				onFlag(DIRECTOR_FLAG_SHINE_TAKEN
 				       | DIRECTOR_FLAG_CARD_SAVE_PENDING
 				       | DIRECTOR_FLAG_STAGE_TRANSITION_PENDING);
-				unk261 = 6;
+				unk261 = TCardSave::PURPOSE_SHINE_GET;
 				decideNextStage();
 				break;
 			}
