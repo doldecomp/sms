@@ -1949,8 +1949,6 @@ BOOL TWaterGun::damage()
 
 void TWaterGun::changeBackup()
 {
-	// POSSIBLE MATCH: using getSwitchProgress() [using internal getters]
-	// POSSIBLE MATCH: making a getChangeSpeed() [protected/private params]
 	if (mSwitchToSecondNozzleProgress == 0.0f) {
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_POMP_BACK, 0,
 		                                   nullptr, 0);
