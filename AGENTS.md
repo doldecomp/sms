@@ -20,6 +20,8 @@ The ultimate goal of the project is not just a matching binary, but **human-read
 
 ## Repository Layout
 
+Paths below use `GMSJ01`, the default version. Each supported version has the same layout under its own name.
+
 ```
 config/GMSJ01/
   config.yml          — decomp-toolkit project config
@@ -63,8 +65,33 @@ Ninja is used for most workflows. Simply running `ninja` in the root of the repo
 
 To check changes against a baseline, `ninja baseline` can be used to generate a baseline report on the current state of the work tree, after which `ninja changes_all` can be used to show how the current changes to work tree influence matching progress, including a per-symbol report.
 **Important**: for regression testing, you **must** use `ninja baseline` and `ninja changes_all`.
-If the worktree already has changes and you want to test for regressions when compared to master, stash the changes, call `ninja baseline`, pop the stash and call `ninja changes_all`.
 When asked to work on a task, if a worktree is clean or only contains general scaffolding like classes and function stubs, you **must** use `baseline` before starting work and `changes_all` after finishing work to report on the results to the user.
+If the worktree already has changes and you need a baseline of the committed tree, ask the human to stash and restore the changes.
+
+**Never** use `git checkout`, `git restore`, `git stash`, `git reset` or `git checkout-index` to undo an experiment or to get a "before" state.
+The worktree usually holds the human's uncommitted work and your earlier changes in the same files, and these commands destroy all of it.
+To measure "before" and "after", copy the files to a scratch directory, make the change, measure, and copy the files back.
+Or undo the change with an edit.
+
+The project builds five versions of the game (see `README.md`): `GMSJ01`, `GMSP01`, `GMSE01`, `GMSJ01_01` and `GMSP01_NX`.
+Before you commit a change, test **all** of them for regressions, not only JP.
+Each version keeps its own baseline in `build/<version>/baseline.json`, so you can make all the baselines first and compare all of them after the change:
+
+```sh
+# before the change
+for v in GMSJ01 GMSP01 GMSE01 GMSJ01_01 GMSP01_NX; do python configure.py -v $v && ninja baseline; done
+# after the change
+for v in GMSJ01 GMSP01 GMSE01 GMSJ01_01 GMSP01_NX; do python configure.py -v $v && ninja changes_all; done
+python configure.py   # go back to the default version (GMSJ01)
+```
+
+Each version must also still report its DOL as `OK`.
+A version whose disc image is not in `orig/<version>/` cannot be built. Tell the human which versions you could not test.
+`objdiff.json` and `decomp-diff.py` follow the last `configure.py -v`, so reconfigure to the version that you want to diff.
+Do not build old commits in separate trees.
+
+When a sweep changes many sites (for example an accessor at every read of a field), report the number of functions that got better, the number that got worse, and the number that reached or lost 100%.
+Read the full `changes_all` report, not only the function you work on: a frame gain in one function is not a match if another function gets worse.
 
 The underlying utility used for splitting the binary is `dtk` (`build/tools/dtk`).
 It is already properly set up and almost never requires any meddling.
@@ -219,12 +246,100 @@ Important limitations:
 - `m2c` does **not** support the C++ context flow needed for this repository's real types, so do not try to feed it SMS C++ context files and expect good typed output.
 - use `m2c` for orientation only; never trust it over the asm or decomp-diff.
 
+### Read the compiler instead of guessing: the MWCC decompilation
+
+A 100% matching decompilation of `mwcceppc.exe` exists: [`rayanht/mwcc`](https://github.com/rayanht/mwcc).
+It covers GC 1.0, 1.1, 1.1p1, 1.2.5, 1.2.5n and 1.3, so it includes the exact compiler that SMS uses (`GC/1.2.5`, and `GC/1.2.5n` for a few TUs).
+Usually it is at `../mwcc` relative to the project root.
+
+Some problems do not yield to guesswork, for example:
+
+- a register swap or rotation when every instruction already matches,
+- a frame that is a few slots too big or too small,
+- an inline that the ROM expands at one site and calls at another,
+- a CSE, a copy or a load that MWCC keeps or removes for no visible reason,
+- a symbol in the wrong section, or a weak symbol in the wrong TU.
+
+For such problems, reading what the compiler does is much faster than trying source spellings one by one.
+When you meet such a problem and the decompilation is not available, **stop and ask the human to clone it**, and tell them the path where you expect it.
+Do not continue to guess spellings for hours when you could read the answer.
+
+Where to look:
+
+| Topic | Files |
+|---|---|
+| Parser, expressions, inlining, templates, mangling | `src/frontend/` (`CInline.c`, `CExpr.c`, `CDecl.c`, `CTemplate*.c`, `CMangler.c`) |
+| IR optimizer: copy propagation, CSE, struct scalarization | `src/optimizer/Iro*.c` |
+| Code generation, register colouring, scheduling, stack frame, peephole | `src/backend/` (`CodeGen.c`, `Coloring.c`, `InterferenceGraph.c`, `StackFrameEABI.c`, `Peephole.c`) |
+
+Use the decompilation to **explain** a codegen difference, and then find a source spelling that a human would write.
+An explanation of the compiler is not permission for a fakematch: the rules in [Fakematches](#fakematches-important) still apply.
+Check each conclusion with a real build of SMS. [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md#use-the-compiler-sources-and-the-mwcc-debugger) has the facts that were already read from it, and the `mwcc-izer` debugger that dumps the compiler's internal state for one function.
+
 ### Decompiling brand-new code without existing scaffolding
 
 When a user requests to decompile a fresh TU for which no stubs or header exists, `docs/PROGRAM_STRUCTURE_REVVING.md` **must** be followed to reconstruct the scaffolding like declarations/definitions of methods/functions, class definitions, global variables, etc.
 
 **Important**: as soon as you notice some method declaration and/or definition missing, thats a sure-sign of someone forgetting to scan the entire `mario.MAP` file properly for all known methods of some class and/or all known symbols in a TU.
 Do the rescan yourself for relevant classes and TUs using relevant regular expressions containing file name or the correct mangling suffix that all such class members have.
+
+## Evidence
+
+Every name, every helper and every body in the source needs evidence.
+A guess that compiles to the right bytes is not evidence: many different sources compile to the same bytes.
+
+### What counts as evidence
+
+In order of strength:
+
+1. A name in `mario.MAP`: a function, a data symbol, or a class name inside a mangled signature.
+2. A debug string in the binary, for example the field names that `PARAM_INIT` stringifies, or an assert condition.
+3. A setter that stores the field, especially one that also configures something else from the same value.
+4. An allocation size: `count * sizeof(T)` names the array that it fills.
+5. The parameter name of the function that the value goes to.
+6. The size of an UNUSED map symbol.
+
+A name in **our own** source is not evidence.
+A local variable name, a placeholder or a field name that someone wrote earlier (often an agent in the same session) is a guess.
+Do not read it back as proof.
+
+### The maps
+
+- `orig/GMSJ01/files/mario.MAP` is the main source of truth.
+- `config/GMSJ01/symbols.txt` lists only the symbols that survived in the DOL.
+  A function that is missing there can still be an UNUSED map entry with a size.
+  Before you say that a function is inline, stripped or missing, grep `mario.MAP` for its mangled name.
+- The symbol-closure part of `mario.MAP` (the tree before `.init section layout`) has a `>>>` line for each other TU that emitted the same weak symbol.
+  The closure, not the section layout, shows which TUs emitted an inline.
+  A weak symbol that the map lists but our build does not emit shows a site where MWCC did not inline, in the ROM.
+- `orig/GMSJ01/files/marioL.MAP` is the map of a **different** link that keeps the `JAW*` debug windows.
+  About 287 functions that `mario.MAP` calls UNUSED are linked there.
+  In its closure tree, the entries indented one level below a function are the symbols that the function references: its call list.
+  Read it before you write any UNUSED body.
+- Other versions have their own maps, for example `orig/GMSP01/files/marioEU.MAP` (PAL) and `orig/GMSJ01_01/files/mario.MAP` (JP Rev 1). They can name functions that the JP map does not.
+- A function that another version's map names but the JP map does not is usually the same source, dead-stripped from the JP link.
+  Write the body without `#ifdef` in the shared `.cpp`. The JP DOL stays identical, because the linker removes it again.
+  Confirm this with a build of every version.
+
+### Other games
+
+Other decomp projects share JSystem and some game-layer code.
+Each one uses a **different MWCC version**, so take only source-level facts from them: names, field order, control flow, whether a function or an assert existed.
+Never use their frame sizes, instruction counts or register assignments as evidence for our build.
+
+| Project | Symbol evidence |
+|---|---|
+| The Wind Waker (TWW) | A **debug** map with demangled names. It lists every inline that each TU called. Asserts are on, so its string pools keep assert conditions of dead-stripped code. |
+| Twilight Princess (TP) | Retail and debug builds. Good for JSystem names and asserts. |
+| Mario Kart: Double Dash (MKDD) | A review build that ships a linker map with mangled names only. It is **not** a debug build. |
+| Animal Crossing | Shipped linker maps (`static.map`, `foresta.map`) with function and file names. Its decomp has the older C version of the JAudio library (`jaudio_NES`), a close relative of SMS's JASystem. Its function bodies are decompiled, and their names are evidence only where the AC maps confirm them. |
+| Pikmin 2 | Some `JAInter` field names. |
+| Luigi's Mansion | **No** map. Its names are the decompilers' own. Never cite it. |
+
+A decomp project's `asm` and `symbols.txt` files are outputs of naming decisions, not evidence.
+Trace a borrowed name back to a shipped map or to strings in that game's binary.
+Check every borrowed name against a use in SMS: TWW is sometimes wrong for the SMS revision.
+SMS's own map wins over any other game on names and on inline-or-not.
 
 ## Source Organization
 
@@ -343,13 +458,23 @@ Game-tunable parameters use `TParamRT<T>` fields initialized via the `PARAM_INIT
 ### Comments & annotations in the code
 
 - `// fabricated` — the code is not from the original binary; it was invented/guessed to make things compile. May be incorrect.
-- `// TODO:` — known issues, suspected inaccuracies, or incomplete understanding.
-- `// Tiny size mismatch` / `// TODO: incorrect size` — for functions which were completely inlined and not emitted to the original binary, but are present in the symbol map as UNUSED symbols and their size is available. That size can be compared against the size in our code using tools/decomp-diff.py and if it's different, then the guess for the function's contents is not correct yet.
+- `// TODO:` — known issues, suspected inaccuracies, or incomplete understanding, for example a guessed name.
 - `// correct but X is incorrect` — the function itself matches, but a called function does not.
 - `// rogue includes needed for matching sinit & bss` — includes added purely for BSS/static-init ordering.
-- `#pragma dont_inline on/off` — forces the compiler to not inline a function (required for matching in specific cases).
+- `#pragma dont_inline on/off` — forces the compiler to not inline a function. This always hides a real cause (see the inlining section of the tips document).
+- `/* 0x1EC */` — the offset comment of a field. It is part of the layout record.
 
-Don't be afraid to leave notes that would be useful to the next person trying to match the code, figure it out, or in the far future, write mods for the game.
+Keep comments to these short markers.
+Do not write explanatory prose in source files: no paragraphs above a declaration, no notes after a field, no text that summarizes a function.
+A header is a layout record: write the offset comment and the declaration.
+Put the reasoning and the evidence in the PR description or in the commit message.
+Write prose in source only when a human asks for documentation.
+
+Do not write a `// TODO` about a frame deficit or about the size of an UNUSED body.
+Such notes go out of date at once, and `decomp-diff.py` shows the difference anyway.
+Write "frame-only" in the PR description.
+
+Keep existing `TODO` comments unless your change resolves them, and delete a `TODO` that is no longer true.
 
 ### Style
 
@@ -357,6 +482,15 @@ Don't be afraid to leave notes that would be useful to the next person trying to
 - C++98 style: no auto, no range-for, no lambdas, no `nullptr` keyword (it's a macro).
 - `#include` paths use angle brackets with project-relative paths: `#include <Enemy/FireWanwan.hpp>`.
 - Header guards use `#ifndef FOLDER_FILENAME_HPP` / `#define` / `#endif` pattern.
+- When the bodies of a class template must leave the header, put them in `<Header>.tpp` (never `<Header>Impl.hpp`), with a `_TPP` include guard.
+  The `.tpp` includes its own `.hpp` first.
+  Include the `.tpp` only from the TUs that the map shows as owners of the template's weak symbols.
+- Cast between a pointer and an integer with `uintptr_t`, never with `u32`, `s32` or `int`.
+  On PowerPC this changes no byte, and it keeps a 64-bit port possible.
+  Do not change casts that do not involve pointers.
+- Port the asserts that a reference project supports, as `JUT_ASSERT(<cond>);` with no line number.
+  A disabled assert still changes codegen.
+- Write a release-stripped warning with the existing `JUT_REPORT_MSG(...)` or `JUT_ASSERT(...)` macros, never with an empty `if (cond) { }`.
 - When working with dolphin's mtx.h library, always prefer routing calls to PSMTX* or PSVEC* functions through the non-PS-prefixed macros MTX* and VEC*.
   This is so that when a debug build of the game is eventually built, we still can easily switch between paired-singles PowerPC assembly implementation or a regular C implementation (C_MTX* and C_VEC*).
   However, sometimes the game code directly calls C_ prefixed versions of the functions, in which case we should too.
@@ -377,6 +511,48 @@ Never the less, their temporary use is encouraged to **validate** that the funct
 It must however be noted that such tricks don't always resolve stack frame issues -- it is not rare for proper inlines at correct points in the function to be required for a perfect match.
 
 If only stack offsets still differ, stop. Leave the function nonmatching and write "frame-only" in the PR description. Don't commit locals, casts or temporaries whose only job is the frame.
+
+#### Frame deficits are not evidence
+
+A frame deficit can be closed in many ways.
+Two `f32` pads, two `s32` pads, one `f64`, four `u16`s or two pointers all give the same 100%.
+An invented accessor almost always gives the missing slots too.
+So a frame match alone says nothing about what the original wrote.
+
+These are fakematches, and reviewers reject them on sight:
+
+- an unused local that only adds a slot,
+- a named or reference local inside a one-line accessor, only to add a temp:
+  `u8 getGlobalAlpha() const { const GXColor& c = mGlobalPrmColor; return c.a; }`,
+- a getter for a class's **own** field, called inside that class's own methods.
+  A method of the class reads its own fields raw.
+  An accessor on **another** object is normal.
+- an accessor that the frame size alone chose.
+  If a deficit could equally come from an accessor for `unk61`, `unk60` or `unk4C`, the frame does not tell you which one.
+
+The frame measurements in [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md#the-stack-frame) are **diagnostics**.
+Use them to measure how many slots are missing and where.
+Commit a spelling only when something outside the frame also supports it: an instruction difference, a sibling function in the same file that uses the same idiom, a reference project, a debug string, or the map.
+
+Remove every pad and probe from a function before you measure anything else in it.
+A pad sets the frame, so a correct candidate competes with it and measures worse than it is.
+
+#### The accessor consistency test
+
+An accessor that has no map symbol is a hypothesis.
+Test it at **every** site in the game that touches that member, then read the whole `changes_all` report.
+
+- A real accessor holds everywhere: no function gets worse.
+- If any function gets worse, the hypothesis is refuted. Report it as refuted and remove it.
+- Do not keep the accessor at the sites where it helps and remove it where it hurts. That is choosing by score, and it hides the evidence.
+- An accessor that changes nothing anywhere has no evidence either.
+
+A helper that the ROM **proves** (its out-of-line copy matches byte for byte, or the map names it) is different.
+Use it at every site whose code it explains, also where the match percentage drops.
+A site that gets worse then shows other damage in that function; do not hide it with a hand-written block that scores better by chance.
+
+A few accessors are known exceptions, where the original used the getter and the raw field without a rule.
+They are listed in [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md#known-accessor-verdicts) with the other sweep results.
 
 ## UNUSED Functions (Inlined/Dead Code)
 
@@ -410,6 +586,47 @@ UNUSED functions must still be reconstructed in the source because:
 
 4. **Some UNUSED functions are truly dead**: If no code in the TU resembles the function, it may have been unused or called only from other UNUSED functions.
 
+### Decide fast whether an UNUSED body is recoverable
+
+An UNUSED function defined out of line in a `.cpp` can only be inlined **inside its own TU**: other TUs see only the declaration.
+UNUSED also means that no linked function calls it out of line.
+So there are two cases, and one command tells them apart:
+
+```
+python tools/decomp-diff.py -u <unit> -s nonmatching -t function
+```
+
+- A linked function in the TU is missing a block of about the UNUSED size: that is the inline site, and its ROM assembly **is** the body. Recover it.
+  The caller's match rises, and the standalone copy hits the map size: two checks.
+- Every linked function in the TU already matches: nothing in the shipped game reaches the UNUSED function. Leave the stub empty.
+
+Before you call a body unrecoverable, also check `marioL.MAP` (see [The maps](#the-maps)) and the reference projects.
+
+### Never fabricate an UNUSED body
+
+Write a body for an UNUSED symbol only when you can reconstruct it from evidence: an inline site in the same TU, a function in `marioL.MAP`'s call tree, or a reference project.
+With no evidence, leave the stub empty (`void Foo::bar() { }`), and write no `TODO`.
+`validate-symbol-order.py` reports the size difference as a warning, and warnings never fail.
+
+An exact size is a **necessary** check on a body that came from evidence.
+It is never a **reason** to believe a body that you guessed: many different bodies compile to the same size.
+Do not tune a guessed body until its size matches.
+
+Stronger than the size is the **weak helper cluster**.
+MWCC emits the weak helpers that a function first needs immediately after that function, so the run of weak symbols after an UNUSED entry in the map is a fingerprint of its body.
+
+- A `__dt__` in the run means a by-value local of that type.
+- `__construct_new_array` means `new T[n]`.
+- A run of one class's accessors means that the body touched that class.
+
+Check that your body brings back the whole run in the map's order, not only its own size.
+Do not declare such a destructor yourself: let the call site generate it.
+
+Before you size a destructor body, subtract the delete tail: an empty destructor is already about 0x70 bytes (see the tips document).
+
+A fabricated helper that has no UNUSED entry must be `inline` (or `static inline`), not plain `static`.
+A plain `static` function stays in the object after MWCC expands all its sites, so the map would list it as UNUSED.
+
 ## Working with the Codebase
 
 ### Key tasks an agent may help with
@@ -427,17 +644,30 @@ UNUSED functions must still be reconstructed in the source because:
 
 - **Always verify**. All decompiled code must be verified against the ground truth (original binary) via `decomp-diff.py`.
 - **Always use tools for arithmetic**. When computing sizes, offsets, instruction counts, or any numeric conversions (e.g. hex↔decimal, size/4), use Python or a terminal command instead of mental math. LLMs are unreliable at arithmetic.
-- **Order matters**. Functions and global variables must appear in the same order as in the original binary. The order is determined by the address in `symbols.txt`. **Important**: when `-inline deferred` is used, which it is for most game code, this order is **reversed**. If in doubt, verify. If you move anything around, verify.
+- **Order matters**. Functions and global variables must appear in the same order as in the original binary. The order is determined by the address in `symbols.txt`. **Important**: when `-inline deferred` is used, which it is for most game code, this order is **reversed**. The JAudio TUs do not use it, so their order follows the map forward. If in doubt, verify. If you move anything around, verify.
 - **Include order matters**. It affects BSS layout and static initialization order.
 - **Template instantiation** is explicit in the binary — each instantiation is a separate symbol.
 - **The compiler is MWCC, not GCC/Clang**. It has unique optimization behavior, instruction selection, and register allocation. Code that looks equivalent in C++ may compile differently. The only ground truth is `decomp-diff.py` comparison.
-- **`#pragma dont_inline on/off`** is sometimes needed to prevent the compiler from inlining a function when matching requires a standalone copy to exist. This is a temporary fakematch which can hopefully be figured out later.
+- **`#pragma dont_inline on/off`** is sometimes needed to prevent the compiler from inlining a function when matching requires a standalone copy to exist. This is a temporary fakematch which can hopefully be figured out later. The real cause is almost always the inline pass ladder: a wrapper inline, a call in a conditional part, or a callee over the statement limit (see the tips document).
+- **A high match percentage does not mean correct behavior.** objdiff ignores register names and scores a different offset as a small difference, so a logic bug can hide in the last 1-3%. Real gameplay bugs were found in 97-99.8% functions:
+  * a field load at the wrong offset (`lfs 0x50` where the ROM has `lfs 0x58`), or a wrong array index,
+  * a wrong bit in a mask (`rlwinm.`/`andi.`), or a wrong constant in a compare,
+  * a virtual call through the wrong vtable slot (only the `lwz r12, N(r12)` displacement differs),
+  * a `bl` to the wrong function,
+  * a virtual call on the wrong receiver, or two values stored into swapped slots,
+  * a misplaced closing brace (only one branch target differs),
+  * a wrong stack local passed to a call, hidden because every `r1` offset already differs in a frame-short function,
+  * `max` written where the ROM has `min`.
+
+  For each `~` line in a diff, check the data flow: which field offset feeds which store, which register is the call receiver, which arm writes the result.
+  Do not stop at the percentage.
+- **A function in `mario.MAP` but not in `symbols.txt` is not missing.** `symbols.txt` lists only what survived in the DOL. Grep the map for the mangled name.
 
 ### Matching workflow for agents
 
 - **One change at a time**. Make a single source-level change, rebuild with `ninja`, and check the diff immediately. Even small changes can have non-local effects on register allocation and instruction scheduling.
 - **Prioritize structural differences**.
-   - First of all, control flow and function call order must be matched. Sometimes, the control flow might not look stuctured and it might seem like a `goto` was used. In almost 100% of the cases, this is actually an inlined call to a different function with early returns inside of it. Introducing a TU-local (`static`) fabricated helper is a good first step, which can later be promoted to a method or one of the UNUSED functions in the TU. Function call ordering is trivial to match, unless inline functions are involved. When experiencing inlining issues, pragmas or additional wrappers can be temporarily employed to force a match. Remember to always mark them as fabricated/fake/needs further work.
+   - First of all, control flow and function call order must be matched. Sometimes, the control flow might not look stuctured and it might seem like a `goto` was used. In almost 100% of the cases, this is actually an inlined call to a different function with early returns inside of it. Introducing a TU-local (`static inline`) fabricated helper is a good first step, which can later be promoted to a method or one of the UNUSED functions in the TU. Function call ordering is trivial to match, unless inline functions are involved. When experiencing inlining issues, pragmas or additional wrappers can be temporarily employed to force a match. Remember to always mark them as fabricated/fake/needs further work.
    - Secnd, order of loads/stores to memory must be matched. Any function call in MWCC invalidates all cached loads, most stores to memory do too, and this can be used to figure out where exactly loads and re-loads happen in the original code.
    - Lastly, in the diff output, `|` (opcode replacement), `<` (deleted), and `>` (inserted) are the real issues. `~` (operand-only) mismatches are usually just register renumbering or stack offset differences that resolve once structural issues are fixed.
 - **Don't try to process diff tool output with external utilities**. It is designed to be read by agents, and filtering out certain lines via regex will miss crucial context. The diff shows the disassembly of the original binary and current code simultaneously and should be read directly and sequentially in an attempt to understand what the current code does differently from the original.
@@ -448,6 +678,20 @@ UNUSED functions must still be reconstructed in the source because:
 - **Prove every hunk.** Before opening a PR, revert each change on its own, rebuild, and keep only those that move the object toward the target.
 - **Follow the file's own idioms.** Use a spelling only if an already-matching function in the same file or directory writes it the same way. A form the rest of the file never uses is usually a fakematch.
 - **Read [docs/AGENT_MATCHING_TIPS.md](docs/AGENT_MATCHING_TIPS.md)** for detailed MWCC codegen patterns that come up repeatedly.
+- **When two spellings both match, choose the one that invents nothing.** A plain local beats a new helper, and a helper that the map proves beats one that it does not.
+- **Rename in small batches.** For each renamed field, state the evidence. Then run `ninja changes_all` and confirm that the objects did not change.
+
+### Editing files on Windows
+
+These traps have emptied or silently skipped edits before:
+
+- Do not edit source files with a `python -c` one-liner. Write a script file, and pass literal strings through a JSON file.
+- `open(p, 'wb').write(open(p, 'rb').read())` truncates the file before it reads it.
+- PowerShell 5 removes embedded `"` from the arguments of native programs, so a replacement with quotes silently fails to match.
+- Git Bash `sed -i`, and Python text mode with `newline=""`, change CRLF files to LF. `git diff` shows nothing, but `git status` shows the file as modified.
+- `Set-Content -Encoding utf8` in PowerShell 5 adds a BOM.
+
+After each scripted edit, check the result with `git diff --stat`.
 
 ### Common review feedback
 
@@ -473,8 +717,12 @@ Before submitting a PR with matching work, make sure to check the following:
   * For each TU, every function available in the map, including UNUSED ones
 - Whether functions inside of each TU are defined in the same order as they are listed in the mario.MAP file (or reverse order if the unit is -inline deferred)
 - If some UNUSED symbols were filled out with guessed code from inline sites -- check that the function size matches the size listed in mario.MAP
-- Check that UNUSED symbols are defined inside of the **cpp file** and not the header -- UNUSED symbols are never weak so cannot be inline
-- Check that all weak symbols are actually marked as inline in case of free functions or define in-line inside of the class in case of methods. Note that this does not include UNUSED symbols, as they are **never** weak
+- Check that UNUSED symbols are defined inside of the **cpp file** and not the header.
+  An `inline` function that MWCC expands at every site is never emitted, so it leaves no map entry at all.
+  An UNUSED entry therefore means that the TU emitted an out-of-line copy, which is normally an ordinary non-inline function.
+  An UNUSED symbol can be weak only when the code that referenced it was dead-stripped too (the map does not record the binding of UNUSED symbols)
+- Check that all weak symbols are actually marked as inline in case of free functions or define in-line inside of the class in case of methods
+- Check that no fabricated helper is plain `static`: a helper with no UNUSED map entry must be `inline`
 - Whether the code uses properly uses available inlines of other classes (e.g. checkLiveFlag instead of direct access)
 - Re-validate GX code using decomp-diff.py to see whether correct constants were used everywhere (e.g. GX_COLOR0 vs GX_COLOR0A0)
 - Validate const-ness of global variables -- they get emitted to different sections depending on if const is present or not
@@ -483,4 +731,7 @@ Before submitting a PR with matching work, make sure to check the following:
 - Validate that all virtual functions in each class are properly marked as virtual (even if they are overriden) and are sorted in the order they appear inside of the virtual table
 - After a header change, rebuild everything and confirm no other unit lost a match.
 - For a unit that is empty on main, the symbol check allows nothing. Every symbol the map lists for it, weak and template copies included, must exist in the object.
-- CI also checks the PAL build; don't change or invent `VERSION_GMSP01` code you can't verify against it.
+- Run `ninja baseline` and `ninja changes_all` for **every** supported version (see [Build & Diff Workflow](#build--diff-workflow)), and confirm that each DOL still reports `OK`.
+- CI also checks the other versions; don't change or invent `VERSION_*` code you can't verify against that version.
+- Check that no pad, probe, marker call or `volatile` frame trick is left in the source.
+- Commit messages are one line, with no `Co-Authored-By` line.
