@@ -2,6 +2,7 @@
 #define GC2D_OPTION_HPP
 
 #include <dolphin/types.h>
+#include <version.h>
 #include <JSystem/J2D/J2DPane.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JUtility/JUTRect.hpp>
@@ -284,6 +285,9 @@ public:
 	/* 0x14 */ bool mWasJumping;
 	/* 0x18 */ int mInitialRumbleValue;
 	/* 0x1C */ int mInitialSoundValue;
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+	/* 0x20 */ u8 unk20[VERSION_SELECT(0x8, GMSP01(0x2C), GMSP01_NX(0x58))];
+#endif
 };
 
 #endif

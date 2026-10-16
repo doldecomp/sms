@@ -1,11 +1,14 @@
 #include <GC2D/CardLoad.hpp>
 #include <stdio.h>
 #include <macros.h>
+#include <version.h>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
+#include <JSystem/J2D/J2DWindow.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
@@ -33,6 +36,21 @@ TCardLoad* gpCardLoad;
 // TODO: where should this go?
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#define CARD_LOAD_PRESS_START_NUM mPressStartLetterNum
+#else
+#define CARD_LOAD_PRESS_START_NUM ARRAY_COUNT(mPressStartTextLetters)
+#endif
+
+#if defined(VERSION_GMSP01_NX)
+#define CARD_LOAD_GAME_LOGO_NUM mGameLogoLetterNum
+#else
+#define CARD_LOAD_GAME_LOGO_NUM ARRAY_COUNT(mGameLogoLetters)
+#endif
+
+#define CARD_LOAD_FORMAT_CANCEL                                                \
+	VERSION_SELECT(PROGRESS_UNK35, GMSJ01(PROGRESS_UNK4))
+
 static void clearBookmark(u32 bm)
 {
 	JSUMemoryOutputStream stream;
@@ -47,7 +65,29 @@ static void loadBookmark()
 	TFlagManager::getInstance()->load(stream);
 }
 
+#if defined(VERSION_GMSP01)
+const char* TCardLoad::cToOptionFileName   = "select_options.bti";
+const char* TCardLoad::cBMarkNewFileName   = "select_new.bti";
+const char* TCardLoad::cWindowYesFileName  = "select_yes.bti";
+const char* TCardLoad::cWindowNoFileName   = "select_no.bti";
+const char* TCardLoad::cScoreTotalFileName = "select_total.bti";
+
+const char* TCardLoad::cBMarkMenuFileName[] = {
+	"select_start.bti",
+	"select_copy.bti",
+	"select_erase.bti",
+	"select_score.bti",
+};
+
+const char* TCardLoad::cScoreStageFileName[] = {
+	"stage_bianco.bti", "stage_ricco.bti",      "stage_mamma.bti",
+	"stage_pinna.bti",  "stage_sirena.bti",     "stage_monte.bti",
+	"stage_mare.bti",   "stage_dolpicTown.bti", "stage_airport.bti",
+};
+#endif
+
 u32 TCardLoad::cMessageID[] = {
+#if defined(VERSION_GMSJ01)
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000E,    0x10012,    0x10013,
 	0x10004,    0x10005,    0x10006,    0x10018,    0x1001F,    0x10017,
 	0x10011,    0x1000F,    0x10001,    0x1000A,    0x10010,    0x1001D,
@@ -57,6 +97,27 @@ u32 TCardLoad::cMessageID[] = {
 	0x10009,    0x10009,    0x10014,    0x1001C,    0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000D,    0xFFFFFFFF, 0x10019,
 	0x0,        0x0,        0x0,        0x0,        0x0,
+#elif defined(VERSION_GMSE01)
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x10010,    0x10014,    0x10015,
+	0x10005,    0x10006,    0x10007,    0x1001A,    0x10022,    0x10019,
+	0x10013,    0x10011,    0x10002,    0x1000B,    0x10012,    0x10020,
+	0x10017,    0x1001D,    0xFFFFFFFF, 0x10009,    0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0x10008,    0xFFFFFFFF, 0x1001E,    0x10004,
+	0x10003,    0x1000C,    0x10021,    0x10018,    0x10001,    0xFFFFFFFF,
+	0x1000A,    0x1000A,    0x10016,    0x1001F,    0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000F,    0xFFFFFFFF, 0x1001C,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000E,
+#else
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x10010,    0x10014,    0x10015,
+	0x10005,    0x10006,    0x10007,    0x1001A,    0x10023,    0x10019,
+	0x10013,    0x10011,    0x10002,    0x1000B,    0x10012,    0x10021,
+	0x10017,    0x1001E,    0xFFFFFFFF, 0x10009,    0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0x10008,    0xFFFFFFFF, 0x1001F,    0x10004,
+	0x10003,    0x1000C,    0x10022,    0x10018,    0x10001,    0xFFFFFFFF,
+	0x1000A,    0x1000A,    0x10016,    0x10020,    0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000F,    0xFFFFFFFF, 0x1001D,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x1000E,
+#endif
 };
 
 TCardLoad::TCardLoad(const char* name)
@@ -109,6 +170,117 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 	JKRArchive* optionVolume = (JKRArchive*)JKRFileLoader::getVolume("option");
 
+#if defined(VERSION_GMSP01)
+	mLangMessageData[MSLANG_ENGLISH]
+	    = JKRGetResource("/option/loadmessage_en.bmg");
+	mLangMessageData[MSLANG_GERMAN]
+	    = JKRGetResource("/option/loadmessage_ge.bmg");
+	mLangMessageData[MSLANG_FRENCH]
+	    = JKRGetResource("/option/loadmessage_fr.bmg");
+	mLangMessageData[MSLANG_SPANISH]
+	    = JKRGetResource("/option/loadmessage_sp.bmg");
+	mLangMessageData[MSLANG_ITALIAN]
+	    = JKRGetResource("/option/loadmessage_it.bmg");
+
+	mLoadScreen = new J2DSetScreen("load.blo", optionVolume);
+	mLoadScreen->setCullBack(GX_CULL_BACK);
+	mLangScoreScreens[MSLANG_ENGLISH]
+	    = new J2DSetScreen("load_score_en.blo", optionVolume);
+	mLangScoreScreens[MSLANG_GERMAN]
+	    = new J2DSetScreen("load_score_ge.blo", optionVolume);
+	mLangScoreScreens[MSLANG_FRENCH]
+	    = new J2DSetScreen("load_score_fr.blo", optionVolume);
+	mLangScoreScreens[MSLANG_SPANISH]
+	    = new J2DSetScreen("load_score_sp.blo", optionVolume);
+	mLangScoreScreens[MSLANG_ITALIAN]
+	    = new J2DSetScreen("load_score_it.blo", optionVolume);
+	mScoreScreen = mLangScoreScreens[MSLANG_ENGLISH];
+	mScoreScreen->setCullBack(GX_CULL_BACK);
+	unk754 = new TOptionControl;
+	unk754->load();
+
+	int lang = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
+	const char* titleScreenName;
+	switch (lang) {
+	default:
+	case MSLANG_ENGLISH:
+		titleScreenName = "title_1.blo";
+		break;
+	case MSLANG_GERMAN:
+		titleScreenName = "title_1_ge.blo";
+		break;
+	case MSLANG_FRENCH:
+		titleScreenName = "title_1_fr.blo";
+		break;
+	case MSLANG_SPANISH:
+		titleScreenName = "title_1_sp.blo";
+		break;
+	case MSLANG_ITALIAN:
+		titleScreenName = "title_1_it.blo";
+		break;
+	}
+	mTitleScreen = new J2DSetScreen(titleScreenName, optionVolume);
+	mTitleScreen->setCullBack(GX_CULL_BACK);
+#elif defined(VERSION_GMSP01_NX)
+	static const char* loadLangMessageName[] = {
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		"/option/loadmessage_jp.bmg",
+		"/option/loadmessage_us.bmg",
+		"/option/loadmessage_en.bmg",
+		"/option/loadmessage_ge.bmg",
+		"/option/loadmessage_fr.bmg",
+		"/option/loadmessage_sp.bmg",
+		"/option/loadmessage_it.bmg",
+	};
+	static const char* loadScreenName[] = {
+		nullptr,       nullptr,       nullptr,       nullptr,
+		nullptr,       "load_jp.blo", "load.blo",    "load.blo",
+		"load_ge.blo", "load_fr.blo", "load_sp.blo", "load_it.blo",
+	};
+	static const char* scoreLangScreenName[] = {
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		"load_score_jp.blo",
+		"load_score_us.blo",
+		"load_score_en.blo",
+		"load_score_ge.blo",
+		"load_score_fr.blo",
+		"load_score_sp.blo",
+		"load_score_it.blo",
+	};
+	static const char* titleScrnName[] = {
+		nullptr,          nullptr,          nullptr,          nullptr,
+		nullptr,          "title_1_jp.blo", "title_1_us.blo", "title_1_en.blo",
+		"title_1_ge.blo", "title_1_fr.blo", "title_1_sp.blo", "title_1_it.blo",
+	};
+
+	unkA0 = JKRGetResource(
+	    loadLangMessageName[TFlagManager::getInstance()->getFlag(
+	        MSF_LANGUAGE)]);
+
+	mLoadScreen = new J2DSetScreen(
+	    loadScreenName[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)],
+	    optionVolume);
+	mLoadScreen->setCullBack(GX_CULL_BACK);
+	mScoreScreen = new J2DSetScreen(
+	    scoreLangScreenName[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)],
+	    optionVolume);
+	mScoreScreen->setCullBack(GX_CULL_BACK);
+	unk754 = new TOptionControl;
+	unk754->load();
+
+	mTitleScreen = new J2DSetScreen(
+	    titleScrnName[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)],
+	    optionVolume);
+	mTitleScreen->setCullBack(GX_CULL_BACK);
+#else
 	unkA0 = JKRGetResource("/option/loadmessage.bmg");
 
 	mLoadScreen = new J2DSetScreen("load.blo", optionVolume);
@@ -120,6 +292,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 	mTitleScreen = new J2DSetScreen("title_1.blo", optionVolume);
 	mTitleScreen->setCullBack(GX_CULL_BACK);
+#endif
 
 	for (int i = 0; i < 10; ++i) {
 		char buffer[0x28];
@@ -129,6 +302,9 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	}
 
 	setupTitleScreen();
+#if defined(VERSION_GMSP01)
+	changeTitleTexture(lang);
+#endif
 
 	// Title screen setup
 
@@ -137,12 +313,12 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	mGameLogoPicture     = new TExPane(mTitleScreen, 'titl');
 	mNintendoLogoPicture = new TExPane(mTitleScreen, 'nint');
 
-	for (int i = 0; i < 11; ++i) {
+	for (int i = 0; i < CARD_LOAD_PRESS_START_NUM; ++i) {
 		int key;
 		if (i < 9)
 			key = 's_01' + i;
 		else
-			key = 's_00' + ((i + 1) / 10) * 0x100 + (i + 1) % 10;
+			key = 's_00' + ((i + 1) / 10 << 8) + (i + 1) % 10;
 
 		mPressStartTextLetters[i] = new TExPane(mTitleScreen, key);
 		mPressStartTextLetters[i]->getPane()->setAlpha(0);
@@ -150,12 +326,12 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		    = mPressStartTextLetters[i]->getPane()->getBounds();
 	}
 
-	for (int i = 0; i < 13; ++i) {
+	for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i) {
 		int key;
 		if (i < 9)
 			key = 'p_01' + i;
 		else
-			key = 'p_00' + ((i + 1) / 10) * 0x100 + (i + 1) % 10;
+			key = 'p_00' + ((i + 1) / 10 << 8) + (i + 1) % 10;
 
 		mGameLogoLetters[i] = new TExPane(mTitleScreen, key);
 
@@ -177,10 +353,10 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	mChoseSaveWindowInitialBounds = mChoseSaveWindow->getPane()->getBounds();
 
 	mChoseSaveText = (J2DTextBox*)mLoadScreen->search('m_0a');
-	makeBuffer(mChoseSaveText, 0x80);
+	makeBuffer(mChoseSaveText, VERSION_SELECT(0x100, GMSJ01(0x80)));
 
 	mChoseSaveTextShadow = (J2DTextBox*)mLoadScreen->search('m_0b');
-	makeBuffer(mChoseSaveTextShadow, 0x80);
+	makeBuffer(mChoseSaveTextShadow, VERSION_SELECT(0x100, GMSJ01(0x80)));
 
 	JUTTexture* pJVar5 = new JUTTexture(
 	    (const ResTIMG*)JKRGetResource("/option/timg/load_sun_1.bti"));
@@ -261,10 +437,17 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		mConfirmationYesNo[i] = new TExPane(mLoadScreen, 's_6b' + i * 0x100);
 		mConfirmationYesNoInitialBounds[i]
 		    = mConfirmationYesNo[i]->getPane()->getBounds();
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+		mConfirmationYesNo[i]->getPane()->hide();
+#endif
 	}
 
 	mConfirmationShineCountOver100  = mLoadScreen->search('f_sh');
 	mConfirmationShineCountUnder100 = mLoadScreen->search('f_si');
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+	mConfirmationShineCountOver100->hide();
+	mConfirmationShineCountUnder100->hide();
+#endif
 
 	for (int i = 0; i < 3; ++i)
 		mConfirmationShineCountDigitsOver100[i]
@@ -312,6 +495,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	mErasedTextShadow = (J2DTextBox*)mLoadScreen->search('m_6b');
 	makeBuffer(mErasedTextShadow, 0x400);
 
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
 	// Score screen setup
 
 	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
@@ -321,26 +505,71 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		    = (J2DPicture*)mScoreScreen->search('st_0' + i);
 		for (int j = 0; j < 3; ++j)
 			mScoreTableStageRows[i].mCoinCountDigits[j]
-			    = (J2DPicture*)mScoreScreen->search('n_0a' + i * 0x100 + j);
-
-		int tmp = local_90[i];
+			    = (J2DPicture*)mScoreScreen->search('n_0a' + (i << 8) + j);
 
 		for (int j = 0; j < 8; ++j) {
 			mScoreTableStageRows[i].mShineIcons[j]
-			    = mScoreScreen->search('sh0a' + i * 0x100 + j);
+			    = mScoreScreen->search('sh0a' + (i << 8) + j);
 
-			if (!SMS_isGetShine(tmp, j, false))
+			if (!SMS_isGetShine(local_90[i], j, false))
 				mScoreTableStageRows[i].mShineIcons[j]->hide();
 		}
 
 		for (int j = 0; j < 2; ++j) {
 			mScoreTableStageRows[i].unk30[j]
-			    = mScoreScreen->search('sh0i' + i * 0x100 + j);
+			    = mScoreScreen->search('sh0i' + (i << 8) + j);
 			mScoreTableStageRows[i].unk30[j]->hide();
 		}
 
-		mScoreTableStageRows[i].unk38
-		    = mScoreScreen->search('sh0k' + i * 0x100);
+		mScoreTableStageRows[i].unk38 = mScoreScreen->search('sh0k' + (i << 8));
+		mScoreTableStageRows[i].unk38->hide();
+	}
+
+	for (int i = 0; i < 3; ++i) {
+		mScoreTableWhichSaveABC[i] = mScoreScreen->search('\0t_1' + i);
+		mScoreTableWhichSaveABC[i]->hide();
+	}
+
+	mScoreTableHeader           = mScoreScreen->search('\0t_p');
+	mScoreTotal                 = mScoreScreen->search('s_tl');
+	mScoreTotalShineCountDigit1 = (J2DPicture*)mScoreScreen->search('\0n_a');
+	mScoreTotalShineCountDigit2 = (J2DPicture*)mScoreScreen->search('\0n_b');
+	mScoreTotalShineCountDigit3 = (J2DPicture*)mScoreScreen->search('\0n_c');
+#elif defined(VERSION_GMSP01)
+	loadLangTexture();
+	changeLanguage(TFlagManager::getInstance()->getFlag(MSF_LANGUAGE));
+#else
+	resetScoreScreenObjects();
+#endif
+}
+
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+void TCardLoad::resetScoreScreenObjects()
+{
+	int local_90[] = { 2, 3, 4, 5, 6, 8, 7 };
+
+	for (int i = 0; i < 7; ++i) {
+		mScoreTableStageRows[i].mRoot
+		    = (J2DPicture*)mScoreScreen->search('st_0' + i);
+		for (int j = 0; j < 3; ++j)
+			mScoreTableStageRows[i].mCoinCountDigits[j]
+			    = (J2DPicture*)mScoreScreen->search('n_0a' + (i << 8) + j);
+
+		for (int j = 0; j < 8; ++j) {
+			mScoreTableStageRows[i].mShineIcons[j]
+			    = mScoreScreen->search('sh0a' + (i << 8) + j);
+
+			if (!SMS_isGetShine(local_90[i], j, false))
+				mScoreTableStageRows[i].mShineIcons[j]->hide();
+		}
+
+		for (int j = 0; j < 2; ++j) {
+			mScoreTableStageRows[i].unk30[j]
+			    = mScoreScreen->search('sh0i' + (i << 8) + j);
+			mScoreTableStageRows[i].unk30[j]->hide();
+		}
+
+		mScoreTableStageRows[i].unk38 = mScoreScreen->search('sh0k' + (i << 8));
 		mScoreTableStageRows[i].unk38->hide();
 	}
 
@@ -355,17 +584,135 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 	mScoreTotalShineCountDigit2 = (J2DPicture*)mScoreScreen->search('\0n_b');
 	mScoreTotalShineCountDigit3 = (J2DPicture*)mScoreScreen->search('\0n_c');
 }
+#endif
+
+#if defined(VERSION_GMSP01)
+void TCardLoad::changeTitleTexture(int lang)
+{
+	const char* dirs[] = {
+		"/option/timg/",    "/option/timg/ge/", "/option/timg/fr/",
+		"/option/timg/sp/", "/option/timg/it/",
+	};
+	const char* dir = dirs[lang];
+	for (int i = 0; i < mPressStartLetterNum; ++i) {
+		char path[256];
+		snprintf(path, 255, "%stitle_start_%02d.bti", dir, i + 1);
+		JUTTexture* texture
+		    = new JUTTexture((const ResTIMG*)JKRGetResource(path));
+		replaceTexture('s_00' + (i + 1) % 10 + ((i + 1) / 10 << 8), texture,
+		               mTitleScreen);
+	}
+}
+
+void TCardLoad::loadLangTexture()
+{
+	loadTextureFile(mToOptionTextures, cToOptionFileName);
+	for (int i = 0; i < 4; ++i)
+		loadTextureFile(mBMarkMenuTextures[i], cBMarkMenuFileName[i]);
+	loadTextureFile(mBMarkNewTextures, cBMarkNewFileName);
+	loadTextureFile(mWindowYesTextures, cWindowYesFileName);
+	loadTextureFile(mWindowNoTextures, cWindowNoFileName);
+	for (int i = 0; i < 9; ++i)
+		loadTextureFile(mScoreStageTextures[i], cScoreStageFileName[i]);
+	loadTextureFile(mScoreTotalTextures, cScoreTotalFileName);
+}
+
+void TCardLoad::loadTextureFile(JUTTexture** textures, const char* name)
+{
+	static const char* langArray[] = { "", "ge/", "fr/", "sp/", "it/" };
+	for (int i = 0; i < 5; ++i) {
+		char path[256];
+		snprintf(path, 255, "/option/timg/%s%s", langArray[i], name);
+		textures[i] = new JUTTexture((const ResTIMG*)JKRGetResource(path));
+	}
+}
+
+void TCardLoad::replaceTexture(u32 tag, JUTTexture* texture, J2DScreen* screen)
+{
+	J2DPicture* picture = (J2DPicture*)screen->search(tag);
+	picture->changeTexture(texture->getTexInfo(), 0);
+}
+
+void TCardLoad::replaceTexture_fixCenter(u32 tag, JUTTexture* texture,
+                                         J2DScreen* screen)
+{
+}
+
+void TCardLoad::changeLanguage(int lang)
+{
+	unkA0        = mLangMessageData[lang];
+	mScoreScreen = mLangScoreScreens[lang];
+	resetScoreScreenObjects();
+	replaceTexture('\0s_1', mToOptionTextures[lang], mLoadScreen);
+	replaceTexture('s_6a', mWindowYesTextures[lang], mLoadScreen);
+	replaceTexture('s_7a', mWindowNoTextures[lang], mLoadScreen);
+	replaceTexture('s_6b', mWindowYesTextures[lang], mLoadScreen);
+	replaceTexture('s_7b', mWindowNoTextures[lang], mLoadScreen);
+	for (int i = 0; i < 3; ++i) {
+		replaceTexture('s_0a' + i, mBMarkNewTextures[lang], mLoadScreen);
+		for (int j = 0; j < 4; ++j)
+			replaceTexture('s_2a' + j * 0x100 + i, mBMarkMenuTextures[j][lang],
+			               mLoadScreen);
+	}
+	for (int i = 0; i < 9; ++i)
+		replaceTexture('st_0' + i, mScoreStageTextures[i][lang], mScoreScreen);
+	replaceTexture('s_tl', mScoreTotalTextures[lang], mScoreScreen);
+}
+#endif
 
 void TCardLoad::setupTitleScreen()
 {
+#if defined(VERSION_GMSP01)
+	switch (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)) {
+	default:
+	case MSLANG_ENGLISH:
+		mPressStartLetterNum = 11;
+		break;
+	case MSLANG_GERMAN:
+		mPressStartLetterNum = 11;
+		break;
+	case MSLANG_FRENCH:
+		mPressStartLetterNum = 15;
+		break;
+	case MSLANG_SPANISH:
+		mPressStartLetterNum = 12;
+		break;
+	case MSLANG_ITALIAN:
+		mPressStartLetterNum = 10;
+		break;
+	}
+
+	int pressStartLetterNum = mPressStartLetterNum;
+	for (int i = 0; i < pressStartLetterNum; ++i) {
+		mPressStartAnimTimes[i] = 25 * i + 150;
+		mPressStartAnimState[i] = 4;
+	}
+#elif defined(VERSION_GMSP01_NX)
+	static const int euStartLength[] = { 0, 0, 0, 0, 0, 6, 6, 6, 7, 11, 6, 6 };
+
+	int lang             = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
+	mPressStartLetterNum = euStartLength[lang];
+	int pressStartLetterNum = mPressStartLetterNum;
+	mGameLogoLetterNum      = lang == 5 ? 13 : 18;
+	for (int i = 0; i < pressStartLetterNum; ++i) {
+		mPressStartAnimTimes[i] = 25 * i + 150;
+		mPressStartAnimState[i] = 4;
+	}
+#else
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
 	for (int i = 0; i < ARRAY_COUNT(mPressStartAnimTimes); ++i) {
+#else
+	int pressStartLetterNum = ARRAY_COUNT(mPressStartAnimTimes);
+	for (int i = 0; i < pressStartLetterNum; ++i) {
+#endif
 		mPressStartAnimTimes[i] = 25 * i + 150;
 		if (i > 4)
 			mPressStartAnimTimes[i] += 20;
 		mPressStartAnimState[i] = 4;
 	}
+#endif
 
-	for (int i = 0; i < ARRAY_COUNT(mGameLogoAnimTimes); ++i) {
+	for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i) {
 		mGameLogoAnimTimes[i] = 400 * i;
 		mGameLogoAnimState[i] = 4;
 	}
@@ -576,8 +923,14 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 					unk274 = 0;
 			}
 
-			if (unk1C == 19 || unk1C == 12 || unk1C == 13 || unk1C == 3
-			    || unk1C == 4 || unk1C == 5 || unk1C == 45 || unk1C == 16) {
+			if (unk1C == PROGRESS_UNK13 || unk1C == PROGRESS_UNKC
+			    || unk1C == PROGRESS_UNKD || unk1C == PROGRESS_UNK3
+			    || unk1C == PROGRESS_UNK4 || unk1C == PROGRESS_UNK5
+			    || unk1C == PROGRESS_UNK2D || unk1C == PROGRESS_UNK10
+#if !defined(VERSION_GMSJ01)
+			    || unk1C == PROGRESS_UNK35
+#endif
+			) {
 				unk284->offCollision();
 				if (!(gpCameraOption->unk0 & 1)) {
 					if (unk10 == 2)
@@ -692,8 +1045,13 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 
 		case 2:
-			if (unk754->movementOption())
+			if (unk754->movementOption()) {
+#if defined(VERSION_GMSP01)
+				changeLanguage(
+				    TFlagManager::getInstance()->getFlag(MSF_LANGUAGE));
+#endif
 				unk14 = 7;
+			}
 			break;
 
 		case 7:
@@ -753,13 +1111,14 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				    10, 255, mGameLogoPicture->getPane()->getAlpha());
 				mNintendoLogoPicture->setPaneAlpha(
 				    10, 255, mNintendoLogoPicture->getPane()->getAlpha());
-				for (int i = 0; i < 13; ++i)
+				for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
 					mGameLogoLetters[i]->getPane()->setAlpha(0);
 				mTitleAnimTimer = 0;
 				if (unk18 < 4)
 					unk18 = 4;
 			}
 
+#if !defined(VERSION_GMSP01_NX)
 			if (unkC0 / 120.0f > 45.0f) {
 				if (TFlagManager::getInstance()->getBool(MSF_UNK3001C)) {
 					SMSGetMarDirector()->fireStreamingMovie(9);
@@ -771,6 +1130,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 					unkC0 = 0;
 				}
 			}
+#endif
 			break;
 
 		case 9:
@@ -783,7 +1143,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				    10, 255, mGameLogoPicture->getPane()->getAlpha());
 				mNintendoLogoPicture->setPaneAlpha(
 				    10, 255, mNintendoLogoPicture->getPane()->getAlpha());
-				for (int i = 0; i < 13; ++i)
+				for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
 					mGameLogoLetters[i]->getPane()->setAlpha(0);
 				mTitleAnimTimer = 0;
 				unkBC           = 0;
@@ -850,7 +1210,7 @@ bool TCardLoad::titleDraw()
 		break;
 
 	case 1:
-		for (int i = 0; i < 13; ++i) {
+		for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i) {
 			switch (mGameLogoAnimState[i]) {
 			case 4:
 				if (mTitleAnimTimer > mGameLogoAnimTimes[i]) {
@@ -870,9 +1230,9 @@ bool TCardLoad::titleDraw()
 				break;
 
 			case 1:
-				if (i == 12) {
+				if (i == CARD_LOAD_GAME_LOGO_NUM - 1) {
 					mTitleAnimTimer = 0;
-					for (int j = 0; j < 13; ++j)
+					for (int j = 0; j < CARD_LOAD_GAME_LOGO_NUM; ++j)
 						mGameLogoLetters[j]->setPaneAlpha(40, 255, 180);
 					unk18 = 3;
 				}
@@ -886,7 +1246,7 @@ bool TCardLoad::titleDraw()
 	case 3:
 		if (mTitleAnimTimer > 160) {
 			bool any = true;
-			for (int i = 0; i < 13; ++i) {
+			for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i) {
 				any &= mGameLogoLetters[i]->update();
 				JUtility::TColor col
 				    = ((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack;
@@ -900,7 +1260,7 @@ bool TCardLoad::titleDraw()
 			}
 
 			if (any) {
-				for (int i = 0; i < 13; ++i)
+				for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
 					mGameLogoLetters[i]->setPaneAlpha(140, 0, 255);
 				mTitleAnimTimer = 0;
 				unk18           = 2;
@@ -915,7 +1275,7 @@ bool TCardLoad::titleDraw()
 		if (alpha > 255) {
 			bool any = true;
 			alpha    = 255;
-			for (int i = 0; i < 13; ++i)
+			for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
 				any &= mGameLogoLetters[i]->update();
 			if (any) {
 				unkBC = 0;
@@ -927,7 +1287,7 @@ bool TCardLoad::titleDraw()
 	} break;
 
 	case 4: {
-		for (int i = 0; i < 11; ++i) {
+		for (int i = 0; i < CARD_LOAD_PRESS_START_NUM; ++i) {
 			switch (mPressStartAnimState[i]) {
 			case 0:
 				if (mPressStartTextLetters[i]->update()) {
@@ -1041,6 +1401,34 @@ void TCardLoad::setMessage(J2DTextBox* text_box, s32 param_2, int param_3)
 	strncpy(text_box->getStringPtr(), SMSGetMessageData(unkA0, param_3),
 	        param_2);
 }
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+void TCardLoad::resizeBox(J2DWindow* window, J2DTextBox* text,
+                          J2DTextBox* shadow)
+{
+	const char* str      = text->getStringPtr();
+	JUTRect windowBounds = window->getBounds();
+
+	J2DPrint print((JUTFont*)gpSystemFont, 0);
+	J2DPrint::TSize size;
+	print.getSize(size, str);
+
+	JUTRect contents = window->getContentsBounds();
+	int width
+	    = 10.0f + (size.unk0 + (windowBounds.getWidth() - contents.getWidth()));
+	int height
+	    = 10.0f
+	      + (size.unk4 + (windowBounds.getHeight() - contents.getHeight()));
+	window->resize(width, height);
+
+	JUTRect newBounds = window->getBounds();
+	int dx            = (windowBounds.x2 - newBounds.x2) / 2;
+	int dy            = (windowBounds.y2 - newBounds.y2) / 2;
+	text->resize(10.0f + size.unk0, 10.0f + size.unk4);
+	shadow->resize(10.0f + size.unk0, 10.0f + size.unk4);
+	window->add(dx, dy);
+}
+#endif
 
 s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 {
@@ -1230,17 +1618,27 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			mConfirmationTextTargetABC[unkB0]->show();
 			TCardBookmarkInfo& info = unk40[unkB0];
 			if (info.unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 				strncpy(mConfirmationNewSaveText->getStringPtr(),
 				        "こわれています", 0x14);
 				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(),
 				        "こわれています", 0x14);
+#else
+				setMessage(mConfirmationNewSaveText, 0x14, 0);
+				setMessage(mConfirmationNewSaveTextShadow, 0x14, 0);
+#endif
 				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
 			} else if (info.unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 				strncpy(mConfirmationNewSaveText->getStringPtr(), "NEW", 0x14);
 				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(), "NEW",
 				        0x14);
+#else
+				setMessage(mConfirmationNewSaveText, 0x14, 0x1B);
+				setMessage(mConfirmationNewSaveTextShadow, 0x14, 0x1B);
+#endif
 				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
@@ -1387,12 +1785,38 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 	case 0: {
 		setMessage(mErasedText, 0x400, (u16)cMessageID[unk1C]);
 		setMessage(mErasedTextShadow, 0x400, (u16)cMessageID[unk1C]);
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+			resizeBox((J2DWindow*)mErasedWindow->getPane(), mErasedTextShadow,
+			          mErasedText);
+#elif defined(VERSION_GMSP01)
+		resizeBox((J2DWindow*)mErasedWindow->getPane(), mErasedTextShadow,
+		          mErasedText);
+#endif
 
 		mErasedTextShadow->hide();
 		mErasedWindow->getPane()->show();
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+			JUTRect bounds = mErasedWindow->getPane()->getBounds();
+			mErasedWindow->setCenteredSize(20, bounds.getWidth(),
+			                               bounds.getHeight(), 0, 0);
+		} else {
+			mErasedWindow->setCenteredSize(
+			    20, mErasedWindowInitialBounds.getWidth(),
+			    mErasedWindowInitialBounds.getHeight(), 0, 0);
+		}
+#elif defined(VERSION_GMSP01)
+		{
+			JUTRect bounds = mErasedWindow->getPane()->getBounds();
+			mErasedWindow->setCenteredSize(20, bounds.getWidth(),
+			                               bounds.getHeight(), 0, 0);
+		}
+#else
 		mErasedWindow->setCenteredSize(
 		    20, mErasedWindowInitialBounds.getWidth(),
 		    mErasedWindowInitialBounds.getHeight(), 0, 0);
+#endif
 		unk10 = 1;
 	} break;
 
@@ -1417,9 +1841,27 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		break;
 
 	case 3: {
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+			JUTRect bounds = mErasedWindow->getPane()->getBounds();
+			mErasedWindow->setCenteredSize(20, 0, 0, bounds.getWidth(),
+			                               bounds.getHeight());
+		} else {
+			mErasedWindow->setCenteredSize(
+			    20, 0, 0, mErasedWindowInitialBounds.getWidth(),
+			    mErasedWindowInitialBounds.getHeight());
+		}
+#elif defined(VERSION_GMSP01)
+		{
+			JUTRect bounds = mErasedWindow->getPane()->getBounds();
+			mErasedWindow->setCenteredSize(20, 0, 0, bounds.getWidth(),
+			                               bounds.getHeight());
+		}
+#else
 		mErasedWindow->setCenteredSize(20, 0, 0,
 		                               mErasedWindowInitialBounds.getWidth(),
 		                               mErasedWindowInitialBounds.getHeight());
+#endif
 		mErasedTextShadow->hide();
 		unkB4 = 0;
 		unk10 = 4;
@@ -1474,17 +1916,27 @@ s8 TCardLoad::waitForAnyKeyBM(TEProgress param_1)
 				unkB0 = unkB1;
 			TCardBookmarkInfo& info = unk40[unkB0];
 			if (info.unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 				strncpy(mConfirmationNewSaveText->getStringPtr(),
 				        "こわれています", 0x14);
 				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(),
 				        "こわれています", 0x14);
+#else
+				setMessage(mConfirmationNewSaveText, 0x14, 0);
+				setMessage(mConfirmationNewSaveTextShadow, 0x14, 0);
+#endif
 				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
 			} else if (info.unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 				strncpy(mConfirmationNewSaveText->getStringPtr(), "NEW", 0x14);
 				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(), "NEW",
 				        0x14);
+#else
+				setMessage(mConfirmationNewSaveText, 0x14, 0x1B);
+				setMessage(mConfirmationNewSaveTextShadow, 0x14, 0x1B);
+#endif
 				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 				mConfirmationShineCountUnder100->hide();
@@ -1569,12 +2021,35 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 		setMessage(unk53C, 0x400, (u16)cMessageID[unk1C]);
 		setMessage(unk560, 0x400, 12);
 		setMessage(unk564, 0x400, 12);
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+			resizeBox((J2DWindow*)unk524->getPane(), unk53C, unk538);
+#elif defined(VERSION_GMSP01)
+		resizeBox((J2DWindow*)unk524->getPane(), unk53C, unk538);
+#endif
 
 		unk524->getPane()->show();
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+			JUTRect bounds = unk524->getPane()->getBounds();
+			unk524->setCenteredSize(20, bounds.getWidth(), bounds.getHeight(),
+			                        0, 0);
+		} else {
+			unk524->setCenteredSize(20, unk528.getWidth(), unk528.getHeight(),
+			                        0, 0);
+		}
+#elif defined(VERSION_GMSP01)
+		{
+			JUTRect bounds = unk524->getPane()->getBounds();
+			unk524->setCenteredSize(20, bounds.getWidth(), bounds.getHeight(),
+			                        0, 0);
+		}
+#else
 		unk524->setCenteredSize(20, unk528.getWidth(), unk528.getHeight(), 0,
 		                        0);
+#endif
 		unk564->hide();
-		if (unk1C == 12 || unk1C == 13) {
+		if (unk1C == PROGRESS_UNKC || unk1C == PROGRESS_UNKD) {
 			unk54C->getPane()->show();
 			unk54C->setCenteredSize(20, unk550.getWidth(), unk550.getHeight(),
 			                        0, 0);
@@ -1606,8 +2081,25 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 		unk53C->hide();
 		for (int i = 0; i < 3; ++i)
 			unk540[i]->hide();
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+			JUTRect bounds = unk524->getPane()->getBounds();
+			unk524->setCenteredSize(20, 0, 0, bounds.getWidth(),
+			                        bounds.getHeight());
+		} else {
+			unk524->setCenteredSize(20, 0, 0, unk528.getWidth(),
+			                        unk528.getHeight());
+		}
+#elif defined(VERSION_GMSP01)
+		{
+			JUTRect bounds = unk524->getPane()->getBounds();
+			unk524->setCenteredSize(20, 0, 0, bounds.getWidth(),
+			                        bounds.getHeight());
+		}
+#else
 		unk524->setCenteredSize(20, 0, 0, unk528.getWidth(),
 		                        unk528.getHeight());
+#endif
 		unk564->hide();
 		unk54C->setCenteredSize(20, 0, 0, unk550.getWidth(),
 		                        unk550.getHeight());
@@ -1640,12 +2132,38 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 	case 0:
 		setMessage(mErasedText, 0x400, (u16)cMessageID[unk1C]);
 		setMessage(mErasedTextShadow, 0x400, (u16)cMessageID[unk1C]);
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+			resizeBox((J2DWindow*)mErasedWindow->getPane(), mErasedTextShadow,
+			          mErasedText);
+#elif defined(VERSION_GMSP01)
+		resizeBox((J2DWindow*)mErasedWindow->getPane(), mErasedTextShadow,
+		          mErasedText);
+#endif
 
 		mErasedWindow->getPane()->show();
 		mErasedTextShadow->hide();
+#if defined(VERSION_GMSP01_NX)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+			JUTRect bounds = mErasedWindow->getPane()->getBounds();
+			mErasedWindow->setCenteredSize(20, bounds.getWidth(),
+			                               bounds.getHeight(), 0, 0);
+		} else {
+			mErasedWindow->setCenteredSize(
+			    20, mErasedWindowInitialBounds.getWidth(),
+			    mErasedWindowInitialBounds.getHeight(), 0, 0);
+		}
+#elif defined(VERSION_GMSP01)
+		{
+			JUTRect bounds = mErasedWindow->getPane()->getBounds();
+			mErasedWindow->setCenteredSize(20, bounds.getWidth(),
+			                               bounds.getHeight(), 0, 0);
+		}
+#else
 		mErasedWindow->setCenteredSize(
 		    20, mErasedWindowInitialBounds.getWidth(),
 		    mErasedWindowInitialBounds.getHeight(), 0, 0);
+#endif
 		unk10 = 1;
 		break;
 
@@ -1659,9 +2177,27 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 
 	case 3:
 		if (unkB4 > 180) {
+#if defined(VERSION_GMSP01_NX)
+			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+				JUTRect bounds = mErasedWindow->getPane()->getBounds();
+				mErasedWindow->setCenteredSize(20, 0, 0, bounds.getWidth(),
+				                               bounds.getHeight());
+			} else {
+				mErasedWindow->setCenteredSize(
+				    20, 0, 0, mErasedWindowInitialBounds.getWidth(),
+				    mErasedWindowInitialBounds.getHeight());
+			}
+#elif defined(VERSION_GMSP01)
+			{
+				JUTRect bounds = mErasedWindow->getPane()->getBounds();
+				mErasedWindow->setCenteredSize(20, 0, 0, bounds.getWidth(),
+				                               bounds.getHeight());
+			}
+#else
 			mErasedWindow->setCenteredSize(
 			    20, 0, 0, mErasedWindowInitialBounds.getWidth(),
 			    mErasedWindowInitialBounds.getHeight());
+#endif
 			mErasedTextShadow->hide();
 			unk10 = 4;
 		}
@@ -1715,16 +2251,26 @@ s8 TCardLoad::drawMessageBM(TEProgress param_1)
 			mConfirmationTextTargetABC[unkB0]->show();
 			TCardBookmarkInfo* bm = &unk40[unkB0];
 			if (bm->unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 				strncpy(mConfirmationNewSaveText->getStringPtr(),
 				        "こわれています", 20);
 				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(),
 				        "こわれています", 20);
+#else
+				setMessage(mConfirmationNewSaveText, 20, 0);
+				setMessage(mConfirmationNewSaveTextShadow, 20, 0);
+#endif
 				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 			} else if (bm->unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 				strncpy(mConfirmationNewSaveText->getStringPtr(), "NEW", 20);
 				strncpy(mConfirmationNewSaveTextShadow->getStringPtr(), "NEW",
 				        20);
+#else
+				setMessage(mConfirmationNewSaveText, 20, 0x1B);
+				setMessage(mConfirmationNewSaveTextShadow, 20, 0x1B);
+#endif
 				mConfirmationNewSaveTextShadow->show();
 				mConfirmationShineCountOver100->hide();
 			} else {
@@ -1806,11 +2352,15 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 		    mChoseSaveWindowInitialBounds.getHeight(), 0, 0);
 		if (unk1C == PROGRESS_UNK1C) {
 			unk278[unkB1]->makeBlockRock();
-			setMessage(mChoseSaveText, 30, 0x1B);
-			setMessage(mChoseSaveTextShadow, 30, 0x1B);
+			setMessage(mChoseSaveText, 30,
+			           VERSION_SELECT(0x1F, GMSJ01(0x1B), GMSE01(0x1E)));
+			setMessage(mChoseSaveTextShadow, 30,
+			           VERSION_SELECT(0x1F, GMSJ01(0x1B), GMSE01(0x1E)));
 		} else {
-			setMessage(mChoseSaveText, 30, 0x1A);
-			setMessage(mChoseSaveTextShadow, 30, 0x1A);
+			setMessage(mChoseSaveText, 30,
+			           VERSION_SELECT(0x1E, GMSJ01(0x1A), GMSE01(0x1D)));
+			setMessage(mChoseSaveTextShadow, 30,
+			           VERSION_SELECT(0x1E, GMSJ01(0x1A), GMSE01(0x1D)));
 		}
 
 		for (int i = 0; i < 3; ++i) {
@@ -1838,13 +2388,23 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 			mChoseSaveTextShadow->show();
 			for (int i = 0; i < 3; ++i) {
 				if (unk40[i].unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk2C0[i]->getStringPtr(), "こわれています", 20);
 					strncpy(unk2CC[i]->getStringPtr(), "こわれています", 20);
+#else
+					setMessage(unk2C0[i], 20, 0);
+					setMessage(unk2CC[i], 20, 0);
+#endif
 					unk2CC[i]->show();
 					mSaveShineIconsUnder100[i]->hide();
 				} else if (unk40[i].unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk2C0[i]->getStringPtr(), "NEW", 20);
 					strncpy(unk2CC[i]->getStringPtr(), "NEW", 20);
+#else
+					setMessage(unk2C0[i], 20, 0x1B);
+					setMessage(unk2CC[i], 20, 0x1B);
+#endif
 					unk2CC[i]->show();
 					mSaveShineIconsUnder100[i]->hide();
 				} else {
@@ -1880,7 +2440,7 @@ s8 TCardLoad::selectBookmark(TEProgress param_1, TEProgress param_2,
 	} break;
 
 	case 2:
-		if (param_2 != 0 && mGamePad->getTrigger() & 0x200)
+		if (param_2 != PROGRESS_UNK0 && mGamePad->getTrigger() & 0x200)
 			unk10 = 3;
 		if (unkB0 != -1)
 			unk10 = 3;
@@ -2014,13 +2574,23 @@ s8 TCardLoad::selectFunction()
 			    = 0x00FF00FF;
 			for (int i = 0; i < 3; ++i) {
 				if (unk40[i].unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk2C0[i]->getStringPtr(), "こわれています", 20);
 					strncpy(unk2CC[i]->getStringPtr(), "こわれています", 20);
+#else
+					setMessage(mConfirmationNewSaveText, 20, 0);
+					setMessage(mConfirmationNewSaveTextShadow, 20, 0);
+#endif
 					unk2CC[i]->show();
 					mSaveShineIconsUnder100[i]->hide();
 				} else if (unk40[i].unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk2C0[i]->getStringPtr(), "NEW", 20);
 					strncpy(unk2CC[i]->getStringPtr(), "NEW", 20);
+#else
+					setMessage(mConfirmationNewSaveText, 20, 0x1B);
+					setMessage(mConfirmationNewSaveTextShadow, 20, 0x1B);
+#endif
 					unk2CC[i]->show();
 					mSaveShineIconsUnder100[i]->hide();
 				} else {
@@ -2275,7 +2845,11 @@ void TCardLoad::changeScene()
 	case PROGRESS_UNKC:
 	case PROGRESS_UNKD:
 	case PROGRESS_UNK10:
-	case PROGRESS_UNK2D: {
+	case PROGRESS_UNK2D:
+#if !defined(VERSION_GMSJ01)
+	case PROGRESS_UNK35:
+#endif
+	{
 		int rc = gpCardManager->getLastStatus();
 		if (rc != CARD_RESULT_NOCARD) {
 			waitForStart(PROGRESS_UNK1A);
@@ -2292,12 +2866,12 @@ void TCardLoad::changeScene()
 	case PROGRESS_UNK7: {
 		int rc = gpCardManager->getLastStatus();
 		if (rc == CARD_RESULT_READY) {
-			waitForChoice(PROGRESS_UNK8, PROGRESS_UNK4, 1);
+			waitForChoice(PROGRESS_UNK8, CARD_LOAD_FORMAT_CANCEL, 1);
 			gpCardManager->probe();
 		} else if (rc != CARD_RESULT_BUSY) {
 			if (unk10 < 3)
 				unk10 = 3;
-			if (waitForChoice(PROGRESS_UNK8, PROGRESS_UNK4, 1) != -1)
+			if (waitForChoice(PROGRESS_UNK8, CARD_LOAD_FORMAT_CANCEL, 1) != -1)
 				unk1C = changeMode(rc);
 		}
 	} break;
@@ -2305,7 +2879,8 @@ void TCardLoad::changeScene()
 	case PROGRESS_UNK8: {
 		int rc = gpCardManager->getLastStatus();
 		if (rc == CARD_RESULT_READY) {
-			s8 choice = waitForChoice(PROGRESS_UNK9, PROGRESS_UNK4, 1);
+			s8 choice
+			    = waitForChoice(PROGRESS_UNK9, CARD_LOAD_FORMAT_CANCEL, 1);
 			if (choice == 0)
 				gpCardManager->format();
 			if (choice == -1)
@@ -2313,7 +2888,7 @@ void TCardLoad::changeScene()
 		} else if (rc != CARD_RESULT_BUSY) {
 			if (unk10 < 3)
 				unk10 = 3;
-			if (waitForChoice(PROGRESS_UNK9, PROGRESS_UNK4, 1) != -1)
+			if (waitForChoice(PROGRESS_UNK9, CARD_LOAD_FORMAT_CANCEL, 1) != -1)
 				unk1C = changeMode(rc);
 		}
 	} break;
@@ -2323,7 +2898,7 @@ void TCardLoad::changeScene()
 		if (rc != CARD_RESULT_BUSY) {
 			if (rc == CARD_RESULT_READY) {
 				if (unk10 == 2)
-					unk10 = 4;
+					unk10 = VERSION_SELECT(3, GMSJ01(4), GMSE01(4));
 				drawMessage(PROGRESS_UNKA);
 				gpCardManager->probe();
 				if (unk10 == 5)
@@ -2341,10 +2916,19 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNKA:
+#if defined(VERSION_GMSJ01)
 	case PROGRESS_UNKB:
+#endif
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(unk40);
 		break;
+
+#if !defined(VERSION_GMSJ01)
+	case PROGRESS_UNKB:
+		if (waitForAnyKey(PROGRESS_UNK2) != -1)
+			unk1C = changeMode(gpCardManager->getLastStatus());
+		break;
+#endif
 
 	case PROGRESS_UNK1A: {
 		s8 choice = waitForChoice(PROGRESS_UNK29, PROGRESS_UNK2, 0);
@@ -2375,7 +2959,7 @@ void TCardLoad::changeScene()
 		if (rc != CARD_RESULT_BUSY) {
 			if (rc == CARD_RESULT_READY) {
 				if (unk10 == 2)
-					unk10 = 4;
+					unk10 = VERSION_SELECT(3, GMSJ01(4));
 				drawMessage(PROGRESS_UNK11);
 				gpCardManager->probe();
 				if (unk10 == 5)
@@ -2383,7 +2967,7 @@ void TCardLoad::changeScene()
 					                                   nullptr, 0);
 			} else {
 				if (unk10 == 2)
-					unk10 = 4;
+					unk10 = VERSION_SELECT(3, GMSJ01(4));
 				drawMessage(PROGRESS_UNK12);
 			}
 		} else {
@@ -2393,10 +2977,19 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK11:
+#if defined(VERSION_GMSJ01)
 	case PROGRESS_UNK12:
+#endif
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(unk40);
 		break;
+
+#if !defined(VERSION_GMSJ01)
+	case PROGRESS_UNK12:
+		if (waitForAnyKey(PROGRESS_UNK2) != -1)
+			unk1C = changeMode(gpCardManager->getLastStatus());
+		break;
+#endif
 
 	case PROGRESS_UNK13: {
 		if (unk24 != 0)
@@ -2422,8 +3015,15 @@ void TCardLoad::changeScene()
 				unkB2 = choice;
 
 				TCardBookmarkInfo* bm = &unk40[unkB2];
-				if (bm->unk0 == 1)
+				if (bm->unk0 == 1) {
 					unk1C = PROGRESS_UNK22;
+				}
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+				else if (bm->unk18 == 0) {
+					gpCardManager->readBlock(unkB1);
+					unk1C = PROGRESS_UNK24;
+				}
+#endif
 			}
 			if (unk1C == PROGRESS_UNK2)
 				gpCardManager->getBookmarkInfos(unk40);
@@ -2533,10 +3133,19 @@ void TCardLoad::changeScene()
 	} break;
 
 	case PROGRESS_UNK20:
+#if defined(VERSION_GMSJ01)
 	case PROGRESS_UNK21:
+#endif
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
 			gpCardManager->getBookmarkInfos(unk40);
 		break;
+
+#if !defined(VERSION_GMSJ01)
+	case PROGRESS_UNK21:
+		if (waitForAnyKeyBM(PROGRESS_UNK2) != -1)
+			unk1C = changeMode(gpCardManager->getLastStatus());
+		break;
+#endif
 
 	case PROGRESS_UNK1D: {
 		int rc = gpCardManager->getLastStatus();
@@ -2630,7 +3239,9 @@ void TCardLoad::changeScene()
 		}
 	} break;
 
+#if defined(VERSION_GMSJ01)
 	case PROGRESS_UNK26:
+#endif
 	case PROGRESS_UNK27: {
 		int rc = gpCardManager->probe();
 		if (rc == CARD_RESULT_READY) {
@@ -2641,6 +3252,19 @@ void TCardLoad::changeScene()
 				unk1C = changeMode(rc);
 		}
 	} break;
+
+#if !defined(VERSION_GMSJ01)
+	case PROGRESS_UNK26: {
+		int rc = gpCardManager->getLastStatus();
+		if (rc == CARD_RESULT_READY) {
+			if (waitForAnyKeyBM(PROGRESS_UNK0) != -1)
+				unk1C = changeMode(rc);
+		} else if (rc != CARD_RESULT_BUSY) {
+			if (waitForAnyKeyBM(PROGRESS_UNK0) != -1)
+				unk1C = changeMode(rc);
+		}
+	} break;
+#endif
 
 	case PROGRESS_UNK28: {
 		int rc = gpCardManager->getLastStatus();
@@ -2706,6 +3330,9 @@ void TCardLoad::changeScene()
 		unk24 = 0;
 		unk20 = unk1C;
 		unk10 = 0;
+#if !defined(VERSION_GMSJ01)
+		unkB4 = 0;
+#endif
 		switch (prevUnk1C) {
 		case PROGRESS_UNK1C:
 			unk284->offCollision();
@@ -2718,6 +3345,9 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNKD:
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
+#if !defined(VERSION_GMSJ01)
+		case PROGRESS_UNK35:
+#endif
 			mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			unk275 = 0;
 			break;
@@ -2738,6 +3368,9 @@ void TCardLoad::changeScene()
 		case PROGRESS_UNKD:
 		case PROGRESS_UNK10:
 		case PROGRESS_UNK2D:
+#if !defined(VERSION_GMSJ01)
+		case PROGRESS_UNK35:
+#endif
 			unk275 = 1;
 			mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 			break;

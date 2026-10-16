@@ -55,6 +55,7 @@ enum TEProgress {
 	PROGRESS_UNK32 = 0x32,
 	PROGRESS_UNK33 = 0x33,
 	PROGRESS_UNK34 = 0x34,
+	PROGRESS_UNK35 = 0x35,
 };
 
 #endif

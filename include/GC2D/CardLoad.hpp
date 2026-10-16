@@ -4,11 +4,14 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <System/CardManager.hpp>
 #include <GC2D/Progress.hpp>
+#include <version.h>
 
 class J2DPane;
 class J2DPicture;
 class J2DTextBox;
 class J2DSetScreen;
+class J2DScreen;
+class J2DWindow;
 class JPABaseEmitter;
 class TCardLoad;
 class TExPane;
@@ -20,6 +23,11 @@ class TMarioGamePad;
 
 extern TCardLoad* gpCardLoad;
 
+#define CARD_LOAD_PRESS_START_LETTERS                                          \
+	VERSION_SELECT(11, GMSP01(15), GMSP01_NX(15))
+#define CARD_LOAD_GAME_LOGO_LETTERS                                            \
+	VERSION_SELECT(18, GMSJ01(13), GMSJ01_01(13))
+
 class TCardLoad : public JDrama::TViewObj {
 public:
 	TCardLoad(const char* name = "<TCardLoad>");
@@ -28,6 +36,13 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void changePattern(J2DPicture*, s16, u32);
+	void resetScoreScreenObjects();
+	void changeTitleTexture(int);
+	void loadLangTexture();
+	void loadTextureFile(JUTTexture**, const char*);
+	void replaceTexture(u32, JUTTexture*, J2DScreen*);
+	void replaceTexture_fixCenter(u32, JUTTexture*, J2DScreen*);
+	void changeLanguage(int);
 	void setupTitleScreen();
 	void setupScoreScreen();
 	void loadAfter();
@@ -35,6 +50,7 @@ public:
 	void makeBuffer(J2DTextBox*, int);
 	TEProgress changeMode(s32);
 	void setMessage(J2DTextBox*, s32, int);
+	void resizeBox(J2DWindow*, J2DTextBox*, J2DTextBox*);
 	s8 waitForChoice(TEProgress, TEProgress, int);
 	s8 waitForChoiceBM(TEProgress, TEProgress, int);
 	s8 waitForAnyKey(TEProgress);
@@ -47,6 +63,13 @@ public:
 	void setSelected(u8);
 	void changeScene();
 
+	static const char* cToOptionFileName;
+	static const char* cBMarkNewFileName;
+	static const char* cWindowYesFileName;
+	static const char* cWindowNoFileName;
+	static const char* cScoreTotalFileName;
+	static const char* cBMarkMenuFileName[];
+	static const char* cScoreStageFileName[];
 	static u32 cMessageID[];
 
 public:
@@ -82,16 +105,17 @@ public:
 	// Title screen elements
 	/* 0xF0 */ TExPane* mGameLogoPicture;
 	/* 0xF4 */ TExPane* mNintendoLogoPicture;
-	/* 0xF8 */ TExPane* mPressStartTextLetters[11];
-	/* 0x124 */ JUTRect mPressStartTextLettersInitialBounds[11];
-	/* 0x1D4 */ TExPane* mGameLogoLetters[13];
+	/* 0xF8 */ TExPane* mPressStartTextLetters[CARD_LOAD_PRESS_START_LETTERS];
+	/* 0x124 */ JUTRect
+	    mPressStartTextLettersInitialBounds[CARD_LOAD_PRESS_START_LETTERS];
+	/* 0x1D4 */ TExPane* mGameLogoLetters[CARD_LOAD_GAME_LOGO_LETTERS];
 	/* 0x208 */ J2DPane* mTitleScreenRoot;
 
-	/* 0x20C */ u16 mPressStartAnimTimes[11];
-	/* 0x222 */ u8 mPressStartAnimState[11];
-	/* 0x22E */ u16 mGameLogoAnimTimes[13];
-	/* 0x248 */ u8 mGameLogoAnimState[13];
-	/* 0x255 */ char unk255[0x258 - 0x255];
+	/* 0x20C */ u16 mPressStartAnimTimes[CARD_LOAD_PRESS_START_LETTERS];
+	/* 0x222 */ u8 mPressStartAnimState[CARD_LOAD_PRESS_START_LETTERS];
+	/* 0x22E */ u16 mGameLogoAnimTimes[CARD_LOAD_GAME_LOGO_LETTERS];
+	/* 0x248 */ u8 mGameLogoAnimState[CARD_LOAD_GAME_LOGO_LETTERS];
+	/* 0x256 */ u16 unk256;
 	/* 0x258 */ u16 mTitleAnimTimer;
 	/* 0x25C */ J2DPane* mToSettingsArrow;
 	/* 0x260 */ JUTRect mToSettingsArrowInitialBounds;
@@ -186,6 +210,22 @@ public:
 	/* 0x74C */ J2DPicture* mScoreTotalShineCountDigit2;
 	/* 0x750 */ J2DPicture* mScoreTotalShineCountDigit3;
 	/* 0x754 */ TOptionControl* unk754;
+#if defined(VERSION_GMSP01)
+	/* 0x7D4 */ int mPressStartLetterNum;
+	/* 0x7D8 */ void* mLangMessageData[5];
+	/* 0x7EC */ J2DSetScreen* mLangScoreScreens[5];
+	/* 0x800 */ JUTTexture* mToOptionTextures[5];
+	/* 0x814 */ JUTTexture* mBMarkMenuTextures[4][5];
+	/* 0x864 */ JUTTexture* mBMarkNewTextures[5];
+	/* 0x878 */ JUTTexture* mWindowYesTextures[5];
+	/* 0x88C */ JUTTexture* mWindowNoTextures[5];
+	/* 0x8A0 */ JUTTexture* mScoreStageTextures[9][5];
+	/* 0x954 */ JUTTexture* mScoreTotalTextures[5];
+#elif defined(VERSION_GMSP01_NX)
+	/* 0x7D4 */ int mPressStartLetterNum;
+	/* 0x7D8 */ int mGameLogoLetterNum;
+	/* 0x7DC */ u32 unk7DC;
+#endif
 };
 
 #endif
