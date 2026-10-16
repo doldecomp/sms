@@ -776,7 +776,7 @@ void TYoshi::thinkHoldOut()
 	switch (mFlutterState) {
 	case 0:
 		if (mMario->mVel.y < mMaxVSpdStartFlutter
-		    && mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
+		    && mMario->getGamePad()->checkMeaning(TMarioGamePad::MEANING_A))
 			mFlutterState = 1;
 		break;
 	case 1:
@@ -793,7 +793,7 @@ void TYoshi::thinkHoldOut()
 			mFlutterState = 2;
 		}
 
-		if (!mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
+		if (!mMario->getGamePad()->checkMeaning(TMarioGamePad::MEANING_A))
 			mFlutterState = 2;
 		break;
 	case 2:

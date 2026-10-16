@@ -77,6 +77,8 @@ public:
 	bool isAnmEnd() const;
 
 	// Fabricated
+	f32 getUnk374() { return unk374; }
+	// Fabricated
 	f32 getUnk378() { return unk378; }
 
 	void calcGunAngle(const TMarioControllerWork&);
@@ -88,8 +90,16 @@ public:
 	s16 getSideAngleMaxFront() { return mSideAngleMaxFront.get(); }
 	// Fabricated
 	s16 getSideAngleMaxBack() { return mSideAngleMaxBack.get(); }
+	// Fabricated
+	s32 getDamageLoss() { return mDamageLoss.get(); }
+	// Fabricated
+	s32 getAmountMax() { return mAmountMax.get(); }
+	// Fabricated
+	f32 getInsidePressureMax() { return mInsidePressureMax.get(); }
+	// Fabricated
+	void setMActor(MActor* actor) { mMActor = actor; }
 
-public:
+protected:
 	/* 0x368 */ TWaterGun* mFludd;
 	/* 0x36C */ u16 mAnimationState;
 	/* 0x36E */ s16 mGunAngle;

@@ -70,6 +70,9 @@ public:
 
 	const JGeometry::TVec3<f32>& getTranslation() const { return mTranslation; }
 
+	// fabricated
+	u32 getUnkD4() const { return unkD4; }
+
 public:
 	/* 0x0 */ u8 mState;
 	/* 0x1 */ u8 unk1;

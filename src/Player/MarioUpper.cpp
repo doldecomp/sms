@@ -91,7 +91,7 @@ void TMario::stateMachineUpper()
 						flag = 0;
 					}
 				} else {
-					if (waterGun->getCurrentNozzle()->unk378 > 0.0f) {
+					if (waterGun->getCurrentNozzle()->getUnk378() > 0.0f) {
 						flag = 1;
 					} else {
 						flag = 0;
