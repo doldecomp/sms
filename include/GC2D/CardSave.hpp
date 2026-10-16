@@ -27,6 +27,8 @@ public:
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	void makeBuffer(J2DTextBox*, int);
 	void setMessage(J2DTextBox*, s32, u32);
+	void setMessageC(J2DTextBox*, s32, u32);
+	void changeMessage(u32, u32, int);
 	s8 waitForStop(TEProgress);
 	void endWaitForChoice();
 	s8 waitForChoice(TEProgress, TEProgress, signed char);

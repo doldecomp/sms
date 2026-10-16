@@ -1,5 +1,8 @@
 #include <GC2D/CardSave.hpp>
 #include <stdio.h>
+#include <version.h>
+#include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
+#include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <dolphin/gx/GXCull.h>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
@@ -26,7 +29,11 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
+#define CARD_SAVE_FORMAT_CANCEL                                                \
+	VERSION_SELECT(PROGRESS_UNK35, GMSJ01(PROGRESS_UNK4))
+
 u32 TCardSave::cMessageID[] = {
+#if defined(VERSION_GMSJ01)
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xC,        0xF,        0x12,
 	0x4,        0x5,        0x6,        0x16,       0x1A,       0x14,
 	0xE,        0xD,        0x1,        0xA,        0x10,       0x19,
@@ -36,6 +43,17 @@ u32 TCardSave::cMessageID[] = {
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF, 0x11,       0xB,        0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x9,        0x7,
+#else
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xE,        0x11,       0x14,
+	0x5,        0x6,        0x7,        0x18,       0x22,       0x16,
+	0x10,       0xF,        0x2,        0xB,        0x12,       0x21,
+	0x15,       0x1B,       0x3,        0x9,        0x1A,       0x23,
+	0x17,       0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0x4,        0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0x13,       0xD,        0xFFFFFFFF, 0xFFFFFFFF,
+	0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xA,        0x8,        0xC,
+#endif
 };
 
 TEProgress TCardSave::changeMode(s32 param_1)
@@ -293,13 +311,44 @@ void TCardSave::initData(TMarioGamePad* game_pad)
 
 	unk26C = mGameOverSavePointerHands[0][0]->getBounds().x1;
 
+#if defined(VERSION_GMSP01_NX)
+	J2DPane* mask  = mSaveScreen->search('mask');
+	JUTRect bounds = mask->getBounds();
+	mask->add(-110, 0);
+	mask->resize(bounds.getWidth() + 220, bounds.getHeight());
+	mask->hide();
+#else
 	mSaveScreen->search('mask')->hide();
-	unk2E4 = JKRGetResource("/common/2d/savemessage.bmg");
+#endif
+	unk2E4 = JKRGetResource(VERSION_SELECT(
+	    "/common/2d/savemessage.bmg", GMSP01("/cmn2d/savemessage.bmg"),
+	    GMSP01_NX("/cmn2d/savemessage.bmg")));
 	if (!unk18)
 		unk2D8 = static_cast<TPauseMenu2*>(
 		    JDrama::TNameRefGen::search("ポーズメニュー"));
+#if !defined(VERSION_GMSJ01)
+	changeMessage('sm1a', 'sm1b', 0x1C);
+	changeMessage('sm2a', 'sm2b', 0x1D);
+	changeMessage('sm3a', 'sm3b', 0x1C);
+	changeMessage('sm4a', 'sm4b', 0x1E);
+	changeMessage('sm5a', 'sm5b', 0x1D);
+	changeMessage('sm7a', 'sm7b', 0x1F);
+	changeMessage('sm8a', 'sm8b', 0x20);
+#endif
 	mGamePad = game_pad;
 }
+
+#if !defined(VERSION_GMSJ01)
+void TCardSave::changeMessage(u32 tag, u32 shadowTag, int message)
+{
+	J2DTextBox* text   = (J2DTextBox*)mSaveScreen->search(tag);
+	J2DTextBox* shadow = (J2DTextBox*)mSaveScreen->search(shadowTag);
+	makeBuffer(text, 0x80);
+	makeBuffer(shadow, 0x80);
+	setMessage(text, 0x80, message);
+	setMessage(shadow, 0x80, message);
+}
+#endif
 
 void TCardSave::init(int param_1)
 {
@@ -340,6 +389,105 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 	        param_2);
 }
 
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+void TCardSave::setMessageC(J2DTextBox* text_box, s32 message, u32 size)
+{
+#if defined(VERSION_GMSP01_NX)
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+		JSUMemoryInputStream in(SMSGetMessageData(unk2E4, (u16)message), size);
+		JSUMemoryOutputStream out(text_box->getStringPtr(), size);
+		while (in.getAvailable() != 0 && out.getAvailable() != 0) {
+			u8 c;
+			in >> c;
+			switch (c) {
+			case 0x1A: {
+				u8 length;
+				in >> length;
+				in.skip(length - 2);
+				break;
+			}
+			case 0:
+				out << c;
+				return;
+			default:
+				out << c;
+				break;
+			}
+		}
+	} else {
+		setMessage(text_box, size, (u16)message);
+	}
+#else
+	char buffer[256];
+	JSUMemoryInputStream in(SMSGetMessageData(unk2E4, (u16)message), size);
+	JSUMemoryOutputStream out(text_box->getStringPtr(), size);
+	while (in.getAvailable() != 0 && out.getAvailable() != 0) {
+		u8 c;
+		in >> c;
+		JUtility::TColor color;
+		switch (c) {
+		case 0x1A: {
+			u8 length;
+			in >> length;
+			in.skip(length - 2);
+			continue;
+		}
+		case 0:
+			out << c;
+			return;
+		case 0x0A:
+			out << c;
+			continue;
+		}
+
+		bool colored = true;
+		switch (c) {
+		case '@':
+			color.set(100, 255, 100, 255);
+			break;
+		case '#':
+			color.set(255, 160, 100, 255);
+			break;
+		case '%':
+			color.set(255, 255, 0, 255);
+			break;
+		case '+':
+		case '<':
+		case '>':
+		case 0xA5:
+			color.set(220, 220, 220, 255);
+			break;
+		case '$':
+			color.set(110, 230, 255, 255);
+			break;
+		default:
+			colored = false;
+			break;
+		}
+
+		if (colored) {
+			snprintf(buffer, 255,
+			         "\x1BGM[0]\x1B"
+			         "CC[%02x%02x%02x]\x1BSH[3]\x1B"
+			         "CD[4]",
+			         color.r, color.g, color.b);
+			out.write(buffer, 29);
+		}
+		out << c;
+		if (colored) {
+			snprintf(buffer, 255,
+			         "\x1BGM[0]\x1B"
+			         "CC\x1B"
+			         "FX\x1B"
+			         "FY\x1BSH\x1B"
+			         "CU[4]");
+			out.write(buffer, 24);
+		}
+	}
+#endif
+}
+#endif
+
 s8 TCardSave::waitForStop(TEProgress param_1)
 {
 	s8 result = -1;
@@ -348,8 +496,8 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 	case 0:
 		setMessage(unkA0, 0x200, getCurMessageID());
 		setMessage(unkA4, 0x200, getCurMessageID());
-		setMessage(unkD8, 0x200, 0);
-		setMessage(unkDC, 0x200, 0);
+		setMessage(unkD8, 0x200, VERSION_SELECT(1, GMSJ01(0)));
+		setMessage(unkDC, 0x200, VERSION_SELECT(1, GMSJ01(0)));
 
 		unkA4->hide();
 		unk48->getPane()->show();
@@ -360,7 +508,11 @@ s8 TCardSave::waitForStop(TEProgress param_1)
 
 		if (unk310 == PROGRESS_UNK4 || unk310 == PROGRESS_UNK3
 		    || unk310 == PROGRESS_UNK5 || unk310 == PROGRESS_UNKC
-		    || unk310 == PROGRESS_UNKD || unk310 == PROGRESS_UNK2D) {
+		    || unk310 == PROGRESS_UNKD || unk310 == PROGRESS_UNK2D
+#if !defined(VERSION_GMSJ01)
+		    || unk310 == PROGRESS_UNK35
+#endif
+		) {
 			unkC4->getPane()->show();
 		} else {
 			unkC4->getPane()->hide();
@@ -692,14 +844,24 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 				}
 			} else {
 				if (getBookmarkInfo().unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
 					strncpy(unk128->getStringPtr(), "こわれています", 0x14);
+#else
+					setMessage(unk124, 0x14, 0);
+					setMessage(unk128, 0x14, 0);
+#endif
 					unk128->show();
 					mShineCountOver100->hide();
 					mShineCountUnder100->hide();
 				} else if (getBookmarkInfo().unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk124->getStringPtr(), "NEW", 0x14);
 					strncpy(unk128->getStringPtr(), "NEW", 0x14);
+#else
+					setMessage(unk124, 0x14, 0x19);
+					setMessage(unk128, 0x14, 0x19);
+#endif
 					unk128->show();
 					mShineCountOver100->hide();
 					mShineCountUnder100->hide();
@@ -963,14 +1125,24 @@ s8 TCardSave::drawMessageBM(TEProgress param_1)
 
 			if (unk308 == 0 || unk308 == 6 || unk308 == 8) {
 				if (getBookmarkInfo().unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk124->getStringPtr(), "こわれています", 0x14);
 					strncpy(unk128->getStringPtr(), "こわれています", 0x14);
+#else
+					setMessage(unk124, 0x14, 0);
+					setMessage(unk128, 0x14, 0);
+#endif
 					unk128->show();
 					mShineCountOver100->hide();
 					mShineCountUnder100->hide();
 				} else if (getBookmarkInfo().unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 					strncpy(unk124->getStringPtr(), "NEW", 0x14);
 					strncpy(unk128->getStringPtr(), "NEW", 0x14);
+#else
+					setMessage(unk124, 0x14, 0x19);
+					setMessage(unk128, 0x14, 0x19);
+#endif
 					unk128->show();
 					mShineCountOver100->hide();
 					mShineCountUnder100->hide();
@@ -1149,23 +1321,27 @@ s8 TCardSave::waitForSelect2(TEProgress param_1, TEProgress param_2)
 		u32 messageID = cMessageID[unk310];
 		switch (unk308) {
 		case 1:
-			messageID = 0x1C;
+			messageID = VERSION_SELECT(0x24, GMSJ01(0x1C), GMSJ01_01(0x1C));
 			break;
 		case 2:
-			messageID = 0x1D;
+			messageID = VERSION_SELECT(0x25, GMSJ01(0x1D), GMSJ01_01(0x1D));
 			break;
 		case 3:
-			messageID = 0x1E;
+			messageID = VERSION_SELECT(0x26, GMSJ01(0x1E), GMSJ01_01(0x1E));
 			break;
 		case 4:
-			messageID = 0x1F;
+			messageID = VERSION_SELECT(0x27, GMSJ01(0x1F), GMSJ01_01(0x1F));
 			break;
 		case 5:
-			messageID = 0x20;
+			messageID = VERSION_SELECT(0x28, GMSJ01(0x20), GMSJ01_01(0x20));
 			break;
 		}
 
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 		setMessage(mEventSaveWindowText, 0x200, (u16)messageID);
+#else
+		setMessageC(mEventSaveWindowText, messageID, 0x200);
+#endif
 		setMessage(mEventSaveWindowTextShadow, 0x200, (u16)messageID);
 
 		mEventSaveWindowTextShadow->hide();
@@ -1315,14 +1491,24 @@ s8 TCardSave::waitForSelect3(TEProgress param_1, TEProgress param_2,
 			mShineGetSaveMarioText->show();
 
 			if (getBookmarkInfo().unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 				strncpy(unk208->getStringPtr(), "こわれています", 0x14);
 				strncpy(unk20C->getStringPtr(), "こわれています", 0x14);
+#else
+				setMessage(unk208, 0x14, 0);
+				setMessage(unk20C, 0x14, 0);
+#endif
 				unk20C->show();
 				unk210->hide();
 				unk214->hide();
 			} else if (getBookmarkInfo().unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 				strncpy(unk208->getStringPtr(), "NEW", 0x14);
 				strncpy(unk20C->getStringPtr(), "NEW", 0x14);
+#else
+				setMessage(unk208, 0x14, 0x19);
+				setMessage(unk20C, 0x14, 0x19);
+#endif
 				unk20C->show();
 				unk210->hide();
 				unk214->hide();
@@ -1473,14 +1659,24 @@ s8 TCardSave::waitForAnyKeyBM(TEProgress param_1)
 			mConfirmWindowTextShadow->show();
 
 			if (getBookmarkInfo().unk0 == 1) {
+#if defined(VERSION_GMSJ01)
 				strncpy(unk124->getStringPtr(), "こわれています", 0x14);
 				strncpy(unk128->getStringPtr(), "こわれています", 0x14);
+#else
+				setMessage(unk124, 0x14, 0);
+				setMessage(unk128, 0x14, 0);
+#endif
 				unk128->show();
 				mShineCountOver100->hide();
 				mShineCountUnder100->hide();
 			} else if (getBookmarkInfo().unk18 == 0) {
+#if defined(VERSION_GMSJ01)
 				strncpy(unk124->getStringPtr(), "NEW", 0x14);
 				strncpy(unk128->getStringPtr(), "NEW", 0x14);
+#else
+				setMessage(unk124, 0x14, 0x19);
+				setMessage(unk128, 0x14, 0x19);
+#endif
 				unk128->show();
 				mShineCountOver100->hide();
 				mShineCountUnder100->hide();
@@ -1663,6 +1859,9 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNKC:
 	case PROGRESS_UNKD:
 	case PROGRESS_UNK2D:
+#if !defined(VERSION_GMSJ01)
+	case PROGRESS_UNK35:
+#endif
 		if (gpCardManager->getLastStatus() != CARD_RESULT_NOCARD) {
 			waitForStop(PROGRESS_UNK1);
 			gpCardManager->probe();
@@ -1680,7 +1879,7 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK6:
 	case PROGRESS_UNK7:
 		if (gpCardManager->getLastStatus() != CARD_RESULT_NOCARD) {
-			waitForChoice(PROGRESS_UNK8, PROGRESS_UNK4, 1);
+			waitForChoice(PROGRESS_UNK8, CARD_SAVE_FORMAT_CANCEL, 1);
 			gpCardManager->probe();
 		} else {
 			if (unkF8->isVisible())
@@ -1696,7 +1895,7 @@ void TCardSave::execMovement_()
 			break;
 
 		if (status == CARD_RESULT_READY) {
-			s8 r = waitForChoice(PROGRESS_UNK9, PROGRESS_UNK4, 1);
+			s8 r = waitForChoice(PROGRESS_UNK9, CARD_SAVE_FORMAT_CANCEL, 1);
 			if (r == 0) {
 				unk2E0 = 0;
 				gpCardManager->format();
@@ -1748,7 +1947,11 @@ void TCardSave::execMovement_()
 			if (r != -1)
 				gpCardManager->getBookmarkInfos(&unk278[0]);
 		} else {
+#if defined(VERSION_GMSJ01)
 			if (unk178->isVisible()) {
+#else
+			if (unk310 == PROGRESS_UNK2 && unk178->isVisible()) {
+#endif
 				unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
 				                        unk164.getHeight());
 				unk178->hide();
@@ -1759,7 +1962,11 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNKB:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
+#if defined(VERSION_GMSJ01)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
+#else
+			unk310 = changeMode(gpCardManager->getLastStatus());
+#endif
 		break;
 
 	case PROGRESS_UNKE:
@@ -1793,6 +2000,7 @@ void TCardSave::execMovement_()
 					unk2E0++;
 				}
 			} else {
+#if defined(VERSION_GMSJ01)
 				if (unk178->isVisible()) {
 					unk178->hide();
 					unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
@@ -1800,6 +2008,19 @@ void TCardSave::execMovement_()
 					unk10 = 3;
 				}
 				drawMessage(PROGRESS_UNK12);
+#else
+				drawMessage(PROGRESS_UNK12);
+				if (unk2E0 > 0x12C) {
+					if (unk178->isVisible()) {
+						unk178->hide();
+						unk160->setCenteredSize(20, 0, 0, unk164.getWidth(),
+						                        unk164.getHeight());
+						unk10 = 3;
+					}
+				} else {
+					unk2E0++;
+				}
+#endif
 			}
 		} else {
 			drawMessage(PROGRESS_UNK0);
@@ -1814,7 +2035,11 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK12:
 		if (waitForAnyKey(PROGRESS_UNK2) != -1)
+#if defined(VERSION_GMSJ01)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
+#else
+			unk310 = changeMode(gpCardManager->getLastStatus());
+#endif
 		break;
 
 	case PROGRESS_UNK10:
@@ -1860,7 +2085,8 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK15: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
-			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, 1);
+			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1,
+			                        VERSION_SELECT(0, GMSJ01(1)));
 			gpCardManager->probe();
 			if (r == 0) {
 				TCardBookmarkInfo& bm = getBookmarkInfo();
@@ -1988,7 +2214,11 @@ void TCardSave::execMovement_()
 
 	case PROGRESS_UNK18:
 		if (waitForAnyKeyBM(PROGRESS_UNK2) != -1)
+#if defined(VERSION_GMSJ01)
 			gpCardManager->getBookmarkInfos(&unk278[0]);
+#else
+			unk310 = changeMode(gpCardManager->getLastStatus());
+#endif
 		break;
 
 	case PROGRESS_UNK2A:
@@ -2079,7 +2309,8 @@ void TCardSave::execMovement_()
 	case PROGRESS_UNK33: {
 		s32 status = gpCardManager->getLastStatus();
 		if (status == CARD_RESULT_READY) {
-			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1, 1);
+			s32 r = waitForChoiceBM(PROGRESS_UNK16, PROGRESS_UNK1,
+			                        VERSION_SELECT(0, GMSJ01(1)));
 			gpCardManager->probe();
 			if (r == 0) {
 				TCardBookmarkInfo& bm = getBookmarkInfo();
