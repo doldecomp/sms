@@ -6,6 +6,7 @@
 #include <GC2D/MessageUtil.hpp>
 #include <GC2D/HelpActor.hpp>
 #include <GC2D/ExPane.hpp>
+#include <GC2D/Helpers.hpp>
 #include <Camera/Camera.hpp>
 #include <MSound/MSound.hpp>
 #include <Player/MarioAccess.hpp>
@@ -38,6 +39,7 @@
 #include <dolphin/mtx.h>
 #include <stdio.h>
 #include <string.h>
+#include <version.h>
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 bool SMS_isDivingMap();
@@ -56,6 +58,22 @@ JUTPoint TGCConsole2::cUpBotPoint(0, 0);
 JUTPoint TGCConsole2::cCoinTopPoint(0, 0);
 JUTPoint TGCConsole2::cCoinMidPoint(0, 45);
 JUTPoint TGCConsole2::cCoinBotPoint(0, 0);
+
+#if defined(VERSION_GMSP01_NX)
+// fabricated
+static inline void shiftWidePane(TExPane* pane, int x)
+{
+	pane->getPane()->add(x, 0);
+	pane->mInitialBounds = pane->getPane()->getBounds();
+}
+
+// fabricated
+static inline void shiftWidePane(TBoundPane* pane, int x)
+{
+	pane->getPane()->add(x, 0);
+	pane->unk4 = pane->getPane()->getBounds();
+}
+#endif
 
 // fabricated
 static inline void syncPaneBounds(TBoundPane* pane)
@@ -442,6 +460,7 @@ static u32 scDolpicNewsDolpic5_3[] = { 0x000E0013, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic5_4[] = { 0x000E0012, 0x000E0013, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic6[]   = { 0x000E0002, 0x000E0004, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic7[]   = { 0x000E0005, 0x000E0006, 0xFFFFFFFF };
+#if defined(VERSION_GMSJ01)
 static u32 scDolpicNewsDolpic8_1[] = { 0x000E0003, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic8_2[] = { 0x000E0007, 0x000E0003, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic8_3[] = { 0x000E0008, 0x000E0003, 0xFFFFFFFF };
@@ -450,8 +469,84 @@ static u32 scDolpicNewsDolpic8_5[] = { 0x000E000F, 0x000E0003, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic8_6[]
     = { 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic8_7[] = { 0x000E0010, 0x000E0003, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic9[]   = { 0x000E000A, 0x000E000B, 0xFFFFFFFF };
-static u32 scDolpicNewsDolpic10[]  = { 0x000E000C, 0x000E000D, 0xFFFFFFFF };
+#else
+static u32 scDolpicNewsDolpic8_Aa1[]
+    = { 0x000E0007, 0x000E000E, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Aa2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Aa3[]
+    = { 0x000E0007, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Aa4[] = { 0x000E0007, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab1[]
+    = { 0x000E0008, 0x000E000E, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab3[]
+    = { 0x000E0008, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ab4[] = { 0x000E0008, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac1[] = { 0x000E000E, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac2[]
+    = { 0x000E000E, 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac3[] = { 0x000E000F, 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ac4[] = { 0x000E0003, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba1[]
+    = { 0x000E0007, 0x000E000E, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba2[] = { 0x000E0007, 0x000E000E, 0x000E000F,
+	                                     0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba3[]
+    = { 0x000E0007, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ba4[]
+    = { 0x000E0007, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb1[]
+    = { 0x000E0008, 0x000E000E, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb2[] = { 0x000E0008, 0x000E000E, 0x000E000F,
+	                                     0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb3[]
+    = { 0x000E0008, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bb4[]
+    = { 0x000E0008, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc1[]
+    = { 0x000E000E, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc2[]
+    = { 0x000E000E, 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc3[]
+    = { 0x000E000F, 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Bc4[] = { 0x000E0003, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca1[]
+    = { 0x000E0007, 0x000E000E, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca3[]
+    = { 0x000E0007, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Ca4[] = { 0x000E0007, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb1[]
+    = { 0x000E0008, 0x000E000E, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb3[]
+    = { 0x000E0008, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cb4[] = { 0x000E0008, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc1[] = { 0x000E000E, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc2[]
+    = { 0x000E000E, 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc3[] = { 0x000E000F, 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Cc4[] = { 0x000E0010, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da1[] = { 0x000E0007, 0x000E000E, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da2[]
+    = { 0x000E0007, 0x000E000E, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da3[] = { 0x000E0007, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Da4[] = { 0x000E0007, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db1[] = { 0x000E0008, 0x000E000E, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db2[]
+    = { 0x000E0008, 0x000E000E, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db3[] = { 0x000E0008, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Db4[] = { 0x000E0008, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Dc1[] = { 0x000E000E, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Dc2[] = { 0x000E000E, 0x000E000F, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic8_Dc3[] = { 0x000E000F, 0xFFFFFFFF };
+#endif
+static u32 scDolpicNewsDolpic9[]  = { 0x000E000A, 0x000E000B, 0xFFFFFFFF };
+static u32 scDolpicNewsDolpic10[] = { 0x000E000C, 0x000E000D, 0xFFFFFFFF };
 
 // rogue include
 #include <M3DUtil/InfectiousStrings.hpp>
@@ -540,6 +635,11 @@ TGCConsole2::TGCConsole2(const char* name)
     , mBlueCoinCountIcon(nullptr)
     , mBlueCoinCountX(nullptr)
     , unk160(nullptr)
+#if !defined(VERSION_GMSJ01)
+    , unk164(nullptr)
+    , unk16C(0)
+    , unk170(0)
+#endif
     , mLifeMeterBackground(nullptr)
     , mLifeMeterText(nullptr)
     , mLifeMeterRoot(nullptr)
@@ -565,6 +665,10 @@ TGCConsole2::TGCConsole2(const char* name)
     , mLifeCountText(nullptr)
     , mLifeCountIcon(nullptr)
     , mLifeCountX(nullptr)
+#if !defined(VERSION_GMSJ01)
+    , unk3AE(0)
+    , unk3AD(0)
+#endif
     , unk3CC(0)
     , mBalloonMessageLoader(nullptr)
     , unk3D4(nullptr)
@@ -576,10 +680,26 @@ TGCConsole2::TGCConsole2(const char* name)
     , unk3EC(0.7f)
     , unk3F0(0)
     , unk3F4(0xffffffff)
+#if !defined(VERSION_GMSJ01)
+    , unk3F8(0)
+    , unk3FC(nullptr)
+    , unk400(nullptr)
+    , unk404(nullptr)
+    , unk408(nullptr)
+    , unk40C(nullptr)
+    , unk410(nullptr)
+#endif
     , unk426(0)
     , unk444(0)
     , unk448(0)
+#if !defined(VERSION_GMSJ01)
+    , unk4FC(0)
+#endif
     , unk510(false)
+#if !defined(VERSION_GMSJ01)
+    , unk514(0)
+    , unk518(0)
+#endif
     , unk51C(0)
     , unk530(nullptr)
     , mTelopTextWidth(0)
@@ -602,6 +722,11 @@ TGCConsole2::TGCConsole2(const char* name)
 	for (int i = 0; i < 3; ++i)
 		mShineCountDigits[i] = nullptr;
 
+#if !defined(VERSION_GMSJ01)
+	for (int i = 0; i < 4; ++i)
+		unk414[i] = nullptr;
+#endif
+
 	unk90 = new THelpActor*[32];
 }
 
@@ -617,6 +742,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	mCoinCountIcon       = new TBoundPane(mHudScreen, 'c_ic');
 	mCoinCountX          = new TBoundPane(mHudScreen, '\0c_x');
 	mCoinCountRoot       = new TExPane(mHudScreen, '\0c_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(mCoinCountRoot, -84);
+#endif
 
 	for (int i = 0; i < 3; ++i)
 		mCoinCountDigits[i] = new TBlendPane(mHudScreen, 'c_n1' + i);
@@ -631,6 +759,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	mShineCountIcon       = new TBoundPane(mHudScreen, 's_ic');
 	mShineCountX          = new TBoundPane(mHudScreen, '\0s_x');
 	mShineCountRoot       = new TExPane(mHudScreen, '\0s_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(mShineCountRoot, -84);
+#endif
 
 	for (int i = 0; i < 3; ++i)
 		mShineCountDigits[i] = new TBlendPane(mHudScreen, 's_n1' + i);
@@ -642,10 +773,16 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 3; ++i)
 		mBlueCoinCountDigits[i] = new TBoundPane(mHudScreen, 'd_n1' + i);
 
-	unk160               = new TExPane(mHudScreen, '\0d_0');
+	unk160 = new TExPane(mHudScreen, '\0d_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(unk160, -84);
+#endif
 	mLifeMeterBackground = new TBoundPane(mHudScreen, 'l_ba');
 	mLifeMeterText       = new TBoundPane(mHudScreen, 'l_tx');
 	mLifeMeterRoot       = new TBoundPane(mHudScreen, '\0l_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(mLifeMeterRoot, 84);
+#endif
 	for (int i = 0; i < 9; ++i) {
 		mLifeMeterPetals[i * 2]     = mHudScreen->search('lm01' + (i << 8));
 		mLifeMeterPetals[i * 2 + 1] = mHudScreen->search('lm02' + (i << 8));
@@ -670,6 +807,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 
 	unk29C = new TBoundPane(mHudScreen, 'w_t0');
 	unk2F8 = new TExPane(mHudScreen, '\0w_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(unk2F8, 84);
+#endif
 	for (int i = 0; i < 3; ++i) {
 		unk2A0[i] = (J2DPicture*)mHudScreen->search('w_t1' + i);
 
@@ -690,6 +830,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 
 	for (int i = 0; i < 4; ++i)
 		unk314[i] = mHudScreen->search(i == 0 ? 'j_t0' : 'j_t1');
+#if defined(VERSION_GMSP01_NX)
+	unk314[0]->add(84, 0);
+#endif
 
 	unk324 = mHudScreen->search('j_ic');
 	unk328 = (J2DPicture*)mHudScreen->search('j_rq');
@@ -712,7 +855,13 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 		mLifeCountDigits[i] = new TBoundPane(mHudScreen, 'm_n1' + i);
 
 	unk3B0 = (J2DWindow*)mHudScreen->search('he_w');
+#if defined(VERSION_GMSP01_NX)
+	unk3B0->add(84, 0);
+#endif
 	unk3B8 = (J2DTextBox*)mHudScreen->search('he_2');
+#if defined(VERSION_GMSP01_NX)
+	unk3B8->add(84, 0);
+#endif
 	unk3B4 = (J2DTextBox*)mHudScreen->search('he_1');
 
 	SMSMakeTextBuffer(unk3B8, 0x401);
@@ -722,9 +871,14 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk3B4->setFont(gpSystemFont);
 
 	unk3B4->show();
-	mBalloonMessageLoader = new TMessageLoader("/common/2d/balloon.bmg");
+	mBalloonMessageLoader = new TMessageLoader(
+	    VERSION_SELECT("/common/2d/balloon.bmg", GMSP01("/cmn2d/balloon.bmg"),
+	                   GMSP01_NX("/cmn2d/balloon.bmg")));
 
 	unk3FC = new TExPane(mHudScreen, '\0b_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(unk3FC, -84);
+#endif
 	unk400 = new TBoundPane(mHudScreen, 'b_ba');
 	unk408 = new TBoundPane(mHudScreen, 'b_ic');
 	unk40C = new TBoundPane(mHudScreen, 'moic');
@@ -737,6 +891,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	    ->changeTexture(unkE0[8]->getTexInfo(), 0);
 
 	unk428 = new TExPane(mHudScreen, '\0r_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(unk428, -84);
+#endif
 	unk42C = new TBoundPane(mHudScreen, 'r_ba');
 	unk430 = new TBoundPane(mHudScreen, 'r_ic');
 	unk434 = new TBoundPane(mHudScreen, '\0r_x');
@@ -746,6 +903,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 		unk43C[i] = new TBoundPane(mHudScreen, 'r_n1' + i);
 
 	unk44C = new TExPane(mHudScreen, '\0t_0');
+#if defined(VERSION_GMSP01_NX)
+	shiftWidePane(unk44C, -84);
+#endif
 	unk450 = new TBoundPane(mHudScreen, 't_ba');
 	unk454 = new TBoundPane(mHudScreen, 't_tx');
 
@@ -770,7 +930,9 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	unk528 = (J2DTextBox*)mHudScreen->search('tet2');
 	unk52C = (J2DTextBox*)mHudScreen->search('tet1');
 
-	unk530 = new TMessageLoader("/common/2d/infomess.bmg");
+	unk530 = new TMessageLoader(
+	    VERSION_SELECT("/common/2d/infomess.bmg", GMSP01("/cmn2d/infomess.bmg"),
+	                   GMSP01_NX("/cmn2d/infomess.bmg")));
 	unk55C = 0;
 	SMSMakeTextBuffer(unk528, 0x401);
 	SMSMakeTextBuffer(unk52C, 0x401);
@@ -874,7 +1036,7 @@ void TGCConsole2::loadAfter()
 	int lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 	if (lives > 99)
 		lives = 99;
-	unk3AC[0] = lives;
+	unk3AC = lives;
 	setTwoDigits(mLifeCountDigits, unkE0, lives);
 
 	unk39 = 1;
@@ -903,9 +1065,18 @@ void TGCConsole2::loadAfter()
 
 	unk534.add(unk544.x2, unk544.y1 + unk528->getHeight());
 
+#if defined(VERSION_GMSP01_NX)
+	unk544.add(0, -16);
+	unk568    = unk544.x2;
+	unk544.x1 = (unk544.x1 + 110) * 640.0f / 820.0f;
+	unk544.x2 = (unk544.x2 + 110) * 640.0f / 820.0f;
+	unk544.y1 = unk544.y1 * 360.0f / 448.0f;
+	unk544.y2 = unk544.y2 * 360.0f / 448.0f;
+#else
 	unk544.resize(unk544.getWidth() * (16.0f / 15.0f), unk544.getHeight());
 	unk544.add(0, -16);
 	unk568 = unk544.x2;
+#endif
 
 	unk3BC = unk3B0->mBounds;
 	unk3CC = 30;
@@ -948,6 +1119,15 @@ void TGCConsole2::loadAfter()
 	unk28 = gpMarioOriginal->mWaterGun->getMaxWater();
 
 	unkBC = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
+#if !defined(VERSION_GMSJ01)
+	if (unkBC != nullptr) {
+		unk310 = TWaterGun::Rocket;
+		unk274 = unk278[2];
+		unk288 = unk28C[2];
+		unk274->getPane()->setBasePosition(J2DBasePosition_5);
+		unk288->show();
+	}
+#endif
 	unkC0 = static_cast<TBossEel*>(JDrama::TNameRefGen::search("めおとウナギ"));
 	unkC4 = JDrama::TNameRefGen::search("ピーチ姫");
 }
@@ -1015,7 +1195,13 @@ void TGCConsole2::startCameraDemo()
 		if (!unkC0->isInBossEelMoguDemo())
 			startDisappearTank();
 	} else {
+#if defined(VERSION_GMSJ01_01)
+		if (SMSGetMarDirector()->mMap != 0x3A
+		    || SMSGetMarDirector()->unk7D != 1)
+			startDisappearTank();
+#else
 		startDisappearTank();
+#endif
 	}
 
 	startDisappearMario();
@@ -1129,6 +1315,13 @@ void TGCConsole2::startDisappearTank()
 	unk274->setPanePosition(40, start, mid, end);
 	unk270->setPanePosition(40, start, mid, end);
 	unk26C->setPanePosition(40, start, mid, end);
+#if !defined(VERSION_GMSJ01)
+	if (gpMarioOriginal->mYoshi->onYoshi()) {
+		unk324->hide();
+		for (int i = 0; i < 4; ++i)
+			unk314[i]->hide();
+	}
+#endif
 }
 
 void TGCConsole2::startAppearCoin()
@@ -1211,6 +1404,9 @@ void TGCConsole2::startInsertLife(int param_1)
 
 	int offset = -(mLifeMeterRoot->unk4.y2 + 1);
 	mLifeMeterRoot->getPane()->show();
+#if !defined(VERSION_GMSJ01)
+	mLifeMeterRoot->getPane()->mAlpha = 0xFF;
+#endif
 	mLifeMeterRoot->setPanePosition(unk98, JUTPoint(0, offset),
 	                                JUTPoint(0, offset >> 1), JUTPoint(0, 0));
 	mLifeMeterBackground->setPanePosition(50, cDownTopPoint, cDownMidPoint,
@@ -1573,8 +1769,13 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	TMessageLoader::EntryInfo* entry
 	    = mBalloonMessageLoader->getMessageEntry(messageID & 0xffff);
 
+#if defined(VERSION_GMSJ01_01)
+	if (entry->unk4 <= unk3F0 || gpMarioOriginal->getHealth() == 0)
+		return false;
+#else
 	if (entry->unk4 <= unk3F0)
 		return false;
+#endif
 
 	if (unk10 != 0) {
 		if (unk3F4 == 0xffffffff) {
@@ -1609,7 +1810,7 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	unk3F8     = autoClose;
 	unk3E4     = (s32)(len * unk3EC + unk3E8);
 
-	if (unk3E0 == 0x000E002F)
+	if (unk3E0 == VERSION_SELECT(0x000E002C, GMSJ01(0x000E002F)))
 		unk3E4 = 0x96;
 
 	if (unk3E4 <= 0)
@@ -1855,11 +2056,11 @@ void TGCConsole2::startAppearMario(bool param_1)
 		    ->changeTexture(unkE0[lives % 10]->getTexInfo(), 0);
 	}
 
-	unk3A     = 1;
-	unk3AC[1] = param_1;
-	unk3B     = 0;
-	unk59     = 1;
-	unk70     = 0;
+	unk3A  = 1;
+	unk3AD = param_1;
+	unk3B  = 0;
+	unk59  = 1;
+	unk70  = 0;
 }
 
 void TGCConsole2::processMoveNozzle()
@@ -1899,6 +2100,291 @@ void TGCConsole2::changeNum(TBlendPane* pane, int num, int frames)
 	                          bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 	gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
 }
+
+#if !defined(VERSION_GMSJ01)
+u32* TGCConsole2::checkDolpic8()
+{
+	int pinnaNokiNews;
+	if (TFlagManager::getInstance()->getBool(MSF_PINNA_VISITED)) {
+		if (TFlagManager::getInstance()->getBool(MSF_NOKI_AVAILABLE)
+		    && !TFlagManager::getInstance()->getBool(MSF_NOKI_VISITED))
+			pinnaNokiNews = 2;
+		else
+			pinnaNokiNews = 3;
+	} else {
+		if (TFlagManager::getInstance()->getBool(MSF_NOKI_AVAILABLE)
+		    && !TFlagManager::getInstance()->getBool(MSF_NOKI_VISITED))
+			pinnaNokiNews = 1;
+		else
+			pinnaNokiNews = 0;
+	}
+
+	int shadowMarioNews;
+	switch (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT)) {
+	case 3:
+		if (TFlagManager::getInstance()->getNozzleRight(1, 0))
+			shadowMarioNews = 2;
+		else
+			shadowMarioNews = 1;
+		break;
+	case 2:
+		if (TFlagManager::getInstance()->getNozzleRight(1, 1))
+			shadowMarioNews = 2;
+		else
+			shadowMarioNews = 1;
+		break;
+	case 1:
+		if (TFlagManager::getInstance()->getFlag(MSF_YOSHI_UNLOCKED) != 0)
+			shadowMarioNews = 2;
+		else
+			shadowMarioNews = 0;
+		break;
+	default:
+		shadowMarioNews = 2;
+		break;
+	}
+
+	int yoshiNozzleNews;
+	if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) == 0
+	    && TFlagManager::getInstance()->getFlag(MSF_YOSHI_UNLOCKED) != 0) {
+		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) == 0
+		    && (TFlagManager::getInstance()->getNozzleRight(1, 0)
+		        || TFlagManager::getInstance()->getNozzleRight(1, 1)))
+			yoshiNozzleNews = 1;
+		else
+			yoshiNozzleNews = 0;
+	} else {
+		if (TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT) == 0
+		    && (TFlagManager::getInstance()->getNozzleRight(1, 0)
+		        || TFlagManager::getInstance()->getNozzleRight(1, 1)))
+			yoshiNozzleNews = 2;
+		else
+			yoshiNozzleNews = 3;
+	}
+
+	u32* news = unk570;
+	switch (pinnaNokiNews) {
+	case 0:
+		switch (shadowMarioNews) {
+		case 0:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Aa1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Aa2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Aa3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Aa4;
+				break;
+			}
+#if !defined(VERSION_GMSE01)
+			break;
+#endif
+		case 1:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ab1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ab2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ab3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ab4;
+				break;
+			}
+#if !defined(VERSION_GMSE01)
+			break;
+#endif
+		case 2:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ac1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ac2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ac3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ac4;
+				break;
+			}
+#if !defined(VERSION_GMSE01)
+			break;
+#endif
+		}
+#if !defined(VERSION_GMSE01)
+		break;
+#endif
+	case 1:
+		switch (shadowMarioNews) {
+		case 0:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ba1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ba2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ba3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ba4;
+				break;
+			}
+			break;
+		case 1:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Bb1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Bb2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Bb3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Bb4;
+				break;
+			}
+			break;
+		case 2:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Bc1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Bc2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Bc3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Bc4;
+				break;
+			}
+			break;
+		}
+		break;
+	case 2:
+		switch (shadowMarioNews) {
+		case 0:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Ca1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Ca2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Ca3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Ca4;
+				break;
+			}
+			break;
+		case 1:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Cb1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Cb2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Cb3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Cb4;
+				break;
+			}
+			break;
+		case 2:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Cc1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Cc2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Cc3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Cc4;
+				break;
+			}
+			break;
+		}
+		break;
+	case 3:
+		switch (shadowMarioNews) {
+		case 0:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Da1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Da2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Da3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Da4;
+				break;
+			}
+			break;
+		case 1:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Db1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Db2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Db3;
+				break;
+			case 3:
+				news = scDolpicNewsDolpic8_Db4;
+				break;
+			}
+			break;
+		case 2:
+			switch (yoshiNozzleNews) {
+			case 0:
+				news = scDolpicNewsDolpic8_Dc1;
+				break;
+			case 1:
+				news = scDolpicNewsDolpic8_Dc2;
+				break;
+			case 2:
+				news = scDolpicNewsDolpic8_Dc3;
+				break;
+			case 3:
+				news = nullptr;
+				break;
+			}
+			break;
+		}
+		break;
+	}
+
+	return news;
+}
+#endif
 
 void TGCConsole2::setTimer(s32 param_1)
 {
@@ -1971,6 +2457,160 @@ void TGCConsole2::setTimer(s32 param_1)
 
 	unk4FC = timerValue;
 }
+
+#if !defined(VERSION_GMSJ01)
+void TGCConsole2::countShine()
+{
+	int shines    = TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT);
+	int blueCoins = TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT);
+	if (unk8A == 0 && unk64 != shines)
+		unk8A = 1;
+
+	if (unk8A != 0) {
+		if (unk8A > 0xFB) {
+			int spentBlueCoins = 0;
+			for (int flag = 0x46; flag < 0x56; ++flag)
+				if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
+				    != 0)
+					++spentBlueCoins;
+			for (int flag = 0x6C; flag <= 0x73; ++flag)
+				if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
+				    != 0)
+					++spentBlueCoins;
+
+			if (unk170 != blueCoins - spentBlueCoins * 10) {
+				--unk170;
+				if (unk170 < 0) {
+					unk170 = 0;
+				} else if (SMSGetMSound()->gateCheck(0x405C)) {
+					MSoundSESystem::MSoundSE::startSoundSystemSE(0x405C, 0,
+					                                             nullptr, 0);
+				}
+				if (unk170 < 100) {
+					setDigitPane(mBlueCoinCountDigits[0], unkE0,
+					             (int)(unk170 * 0.1f));
+					setDigitPane(mBlueCoinCountDigits[1], unkE0, unk170 % 10);
+					if (mBlueCoinCountDigits[2]->getPane()->isVisible())
+						mBlueCoinCountDigits[2]->getPane()->hide();
+				} else {
+					setDigitPane(mBlueCoinCountDigits[0], unkE0,
+					             (int)(unk170 * 0.01f));
+					int remainder = unk170 - (int)(unk170 * 0.01f) * 100;
+					setDigitPane(mBlueCoinCountDigits[1], unkE0,
+					             (int)(remainder * 0.1f));
+					setDigitPane(mBlueCoinCountDigits[2], unkE0,
+					             remainder % 10);
+					if (!mBlueCoinCountDigits[2]->getPane()->isVisible())
+						mBlueCoinCountDigits[2]->getPane()->show();
+				}
+			}
+		}
+
+		if (unk8A == 0xFC) {
+			int value = unk64;
+			// TODO: never used here. The coin counter in performCalcAnim
+			// declares the same default JUTRect and uses it, so this one is
+			// probably left over from code that was moved into changeNum.
+			JUTRect bounds;
+
+			if (value < 100) {
+				if (mShineCountDigits[2]->getPane()->isVisible())
+					mShineCountDigits[2]->getPane()->hide();
+
+				if (value % 10 == 0)
+					changeNum(mShineCountDigits[0], value / 10, 10);
+
+				changeNum(mShineCountDigits[1], value - value / 10 * 10, 10);
+			} else {
+				if (value % 100 == 0) {
+					changeNum(mShineCountDigits[0], value / 100, 10);
+					if (!mShineCountDigits[0]->getPane()->isVisible())
+						mShineCountDigits[0]->getPane()->show();
+				}
+
+				int remainder = value - (int)(value * 0.01f) * 100;
+				if (remainder % 10 == 0)
+					changeNum(mShineCountDigits[1], remainder / 10, 10);
+
+				if (!mShineCountDigits[2]->getPane()->isVisible())
+					mShineCountDigits[2]->getPane()->show();
+				changeNum(mShineCountDigits[2], remainder % 10, 10);
+			}
+		} else if (unk8A == 0x106) {
+			if (shines > unk64) {
+				++unk64;
+				unk8A = 0xFB;
+			}
+		} else if (!unk34 && !unk35) {
+			mShineCountDigits[0]->update();
+			mShineCountDigits[1]->update();
+			mShineCountDigits[2]->update();
+		}
+
+		++unk8A;
+	}
+}
+
+void TGCConsole2::countBlueCoin()
+{
+	if (unk168 != TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT)) {
+		++unk168;
+
+		int spentBlueCoins = 0;
+		for (int flag = 0x46; flag < 0x56; ++flag)
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
+			    != 0)
+				++spentBlueCoins;
+		for (int flag = 0x6C; flag < 0x74; ++flag)
+			if (TFlagManager::getInstance()->getFlag(MSF_SHINE_BASE + flag)
+			    != 0)
+				++spentBlueCoins;
+
+		int value = unk168 - spentBlueCoins * 10;
+		if (value < 0)
+			value = 0;
+
+		if (value < 100) {
+			setDigitPane(mBlueCoinCountDigits[0], unkE0, (int)(value * 0.1f));
+			setDigitPane(mBlueCoinCountDigits[1], unkE0, value % 10);
+			if (mBlueCoinCountDigits[2]->getPane()->isVisible())
+				mBlueCoinCountDigits[2]->getPane()->hide();
+		} else {
+			setDigitPane(mBlueCoinCountDigits[0], unkE0, (int)(value * 0.01f));
+			int remainder = value - (int)(value * 0.01f) * 100;
+			setDigitPane(mBlueCoinCountDigits[1], unkE0,
+			             (int)(remainder * 0.1f));
+			setDigitPane(mBlueCoinCountDigits[2], unkE0, remainder % 10);
+			if (!mBlueCoinCountDigits[2]->getPane()->isVisible())
+				mBlueCoinCountDigits[2]->getPane()->show();
+		}
+		if (unk160->getPane()->isVisible()) {
+			JUTRect bounds(mBlueCoinCountDigits[1]->getPane()->mGlobalBounds);
+			JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
+			                          bounds.y1 + bounds.getHeight() * 0.5f,
+			                          0.0f);
+			gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
+			if (value % 10 == 0) {
+				bounds = mBlueCoinCountDigits[0]->getPane()->mGlobalBounds;
+				pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
+				        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+				gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
+				                                   nullptr);
+			}
+		} else {
+			startAppearStar();
+		}
+		unk170 = value;
+		unk16C = 1;
+	}
+
+	if (unk16C != 0) {
+		++unk16C;
+		if (unk16C > 400)
+			unk16C = 0;
+	}
+}
+#endif
 
 void TGCConsole2::startMoveTimer(int param_1)
 {
@@ -2065,8 +2705,22 @@ bool TGCConsole2::processAppearStar(int param_1)
 	for (int i = 0; i < 3; ++i) {
 		if (param_1 == i * 6 + 28) {
 			if (i == 2) {
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
 				if ((!unk50 && shines >= 100) || (shines > 100 && unk50))
 					mShineCountDigits[i]->getPane()->show();
+#else
+				if (!unk50 && shines >= 100) {
+					mShineCountDigits[i]->getPane()->show();
+				} else if (unk50) {
+					if (gpMarDirector->checkDemoFlag(
+					        TMarDirector::DEMO_FLAG_SHINE_ALREADY_COLLECTED)) {
+						if (shines > 99)
+							mShineCountDigits[i]->getPane()->show();
+					} else if (shines > 100) {
+						mShineCountDigits[i]->getPane()->show();
+					}
+				}
+#endif
 			} else {
 				mShineCountDigits[i]->getPane()->show();
 			}
@@ -2361,6 +3015,7 @@ void TGCConsole2::checkChangeTelopArray()
 					unk570 = scDolpicNewsDolpic5_1;
 			}
 			break;
+#if defined(VERSION_GMSJ01)
 		case 8: {
 			int eventState
 			    = TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT);
@@ -2400,6 +3055,11 @@ void TGCConsole2::checkChangeTelopArray()
 			}
 			break;
 		}
+#else
+		case 8:
+			unk570 = checkDolpic8();
+			break;
+#endif
 		default:
 			unk570 = nullptr;
 			break;
@@ -2844,7 +3504,7 @@ void TGCConsole2::performMovement()
 {
 	if (!unk50) {
 		if (gpCamera->isDemoCamera() || SMS_CheckMarioFlag(0x400)
-		    || (!unk3AC[1]
+		    || (!unk3AD
 		        && TFlagManager::getInstance()->getBool(
 		            MSF_LOST_LIFE_IN_PREV_STAGE)))
 			startCameraDemo();
@@ -2883,6 +3543,26 @@ void TGCConsole2::performMovement()
 		if (unkB4 == 0) {
 			startAppearCoin();
 			startAppearMario(false);
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+			int nozzle = gpMarioOriginal->mWaterGun->mCurrentNozzle;
+			if (nozzle == TWaterGun::Spray) {
+				unk274 = unk278[0];
+				unk288 = unk28C[0];
+			} else if (nozzle == TWaterGun::Rocket) {
+				unk274 = unk278[2];
+				unk288 = unk28C[2];
+			} else if (nozzle == TWaterGun::Hover) {
+				unk274 = unk278[1];
+				unk288 = unk28C[1];
+			} else if (nozzle == TWaterGun::Turbo) {
+				unk274 = unk278[3];
+				unk288 = unk28C[3];
+			} else if (nozzle == TWaterGun::Underwater) {
+				unk274 = unk278[1];
+				unk288 = unk28C[1];
+			}
+			unk310 = nozzle;
+#endif
 			mHudScreen->search('ROOT')->setAlpha(0);
 		} else {
 			mHudScreen->search('ROOT')->setAlpha(0xff);
@@ -2902,6 +3582,10 @@ void TGCConsole2::performMovement()
 	case LIFE_HEALTH_VISIBLE:
 	case LIFE_HEALTH_DISAPPEARING:
 	case LIFE_HEALTH_INSERTING:
+#if !defined(VERSION_GMSJ01)
+	case LIFE_CAMERA_DEMO:
+	default:
+#endif
 		airMode = false;
 		amount  = gpMarioOriginal->getHealth();
 		break;
@@ -2962,11 +3646,18 @@ void TGCConsole2::performMovement()
 			unk1CC = amount;
 			if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
 				mLifeMeterRoot->getPane()->mAlpha = 0;
+#if defined(VERSION_GMSJ01)
 			unk18 = LIFE_AIR_APPEARING;
 		}
 
 		if (unk1CC < 8 && !mLifeMeterRoot->getPane()->isVisible()
 		    && amount != 0) {
+#else
+			unk84 = 0;
+			unk18 = LIFE_AIR_APPEARING;
+		} else if (!airMode && unk1CC < 8
+		           && !mLifeMeterRoot->getPane()->isVisible() && amount != 0) {
+#endif
 			startAppearLife(0);
 			unk18 = LIFE_HEALTH_APPEARING;
 		}
@@ -3084,7 +3775,17 @@ void TGCConsole2::performMovement()
 			mLifeMeterPetals[unk1CC * 2]->show();
 			playLifeChangeSound(0x4801);
 		} else if (unk1CC != amount) {
+#if defined(VERSION_GMSJ01)
 			playLifeChangeSound(0x4823);
+#else
+			if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
+			    && SMSGetMarDirector()->unk124 == 0) {
+				if (airMode)
+					SMSGetMSound()->startSoundSystemSE(0x480C, 0, nullptr, 0);
+				else
+					SMSGetMSound()->startSoundSystemSE(0x4823, 0, nullptr, 0);
+			}
+#endif
 			mLifeMeterPetals[unk1CC * 2]->hide();
 			mLifeMeterPetals[unk1CC * 2]->setBounds(
 			    JUTRect(mLifeMeterPetalsOriginalBounds[unk1CC].x1,
@@ -3184,6 +3885,7 @@ void TGCConsole2::performMovement()
 		}
 	}
 
+#if defined(VERSION_GMSJ01)
 	int blueCoins = TFlagManager::getInstance()->getFlag(MSF_BLUE_COIN_COUNT);
 	if (unk168 != blueCoins) {
 		++unk168;
@@ -3329,6 +4031,11 @@ void TGCConsole2::performMovement()
 
 		++unk8A;
 	}
+
+#else
+	countBlueCoin();
+	countShine();
+#endif
 
 	if (unk34) {
 		bool done = true;
@@ -3495,7 +4202,7 @@ void TGCConsole2::performMovement()
 
 	if (unk3A) {
 		if (processAppearMario(unk70++)) {
-			if (unk3AC[1]) {
+			if (unk3AD) {
 				if (unk70 == 200) {
 					int lives
 					    = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
@@ -3512,12 +4219,13 @@ void TGCConsole2::performMovement()
 					unk3A = 0;
 				}
 			} else {
-				unk3AC[1] = 0;
-				unk70     = 0;
+				unk3AD = 0;
+				unk70  = 0;
 			}
 		}
 	}
 
+#if defined(VERSION_GMSJ01)
 	if (!unk3A && !unk3B && mLifeCountRoot->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
 	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
@@ -3525,12 +4233,21 @@ void TGCConsole2::performMovement()
 		if (unk70 > 400)
 			startDisappearMario();
 	}
+#else
+	if (mLifeCountRoot->getPane()->isVisible()
+	    && gpMarioOriginal->mStatus != 0xC400201
+	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
+		++unk3AE;
+		if (unk3AE > 400)
+			startDisappearMario();
+	}
+#endif
 
 	int lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
-	if (lives > unk3AC[0]) {
+	if (lives > unk3AC) {
 		if (lives > 99)
 			lives = 99;
-		unk3AC[0] = lives;
+		unk3AC = lives;
 		((J2DPicture*)mLifeCountDigits[0]->getPane())
 		    ->changeTexture(unkE0[(int)(lives * 0.1f)]->getTexInfo(), 0);
 		((J2DPicture*)mLifeCountDigits[1]->getPane())
@@ -3639,6 +4356,10 @@ void TGCConsole2::performMovement()
 		if (SMSGetMarDirector()->unk124 == 0
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
+#if !defined(VERSION_GMSJ01)
+		    && (SMSGetMarDirector()->mMap != 9
+		        || SMSGetMarDirector()->unk7D != 2)
+#endif
 		    && SMSGetMSound()->gateCheck(0x4819))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4819, 0, nullptr, 0);
 		unk59 = 0;
@@ -3648,6 +4369,10 @@ void TGCConsole2::performMovement()
 		if (SMSGetMarDirector()->unk124 == 0
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
+#if !defined(VERSION_GMSJ01)
+		    && (SMSGetMarDirector()->mMap != 9
+		        || SMSGetMarDirector()->unk7D != 2)
+#endif
 		    && SMSGetMSound()->gateCheck(0x481A))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x481A, 0, nullptr, 0);
 		unk5A = 0;
@@ -3691,7 +4416,14 @@ void TGCConsole2::performCalcAnim()
 					*unk3DC << c;
 					break;
 				default:
+#if defined(VERSION_GMSP01_NX)
+					if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5
+					    && c >= 0x80) {
+#elif defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 					if (c >= 0x80) {
+#endif
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
 						u8 trail = unk3D4->read8b();
 						u16 code = (c << 8) + trail;
 
@@ -3741,11 +4473,101 @@ void TGCConsole2::performCalcAnim()
 							unk3D8->write(buffer, 0x18);
 							unk3DC->write(buffer, 0x18);
 						}
+#if defined(VERSION_GMSP01_NX)
+					} else if (TFlagManager::getInstance()->getFlag(
+					               MSF_LANGUAGE)
+					           == 5) {
+						*unk3D8 << c;
+						*unk3DC << c;
+					} else {
+						char buffer[256];
+						JUtility::TColor color;
+						bool special = Helpers::IsSpecialChar(c);
+						if (special) {
+							color.set(255, 255, 255, 255);
+							snprintf(buffer, 255,
+							         "\033GM[0]\033CC[%02x%02x%02x]\033FX[22]"
+							         "\033FY[24]\033SH[0]\033CD[3]",
+							         color.r, color.g, color.b);
+							unk3D8->write(buffer, 0x2B);
+							unk3DC->write(buffer, 0x2B);
+						}
+
+						*unk3D8 << c;
+						*unk3DC << c;
+
+						if (special) {
+							snprintf(
+							    buffer, 255,
+							    "\033GM[0]\033CC\033FX\033FY\033SH\033CU[3]");
+							unk3D8->write(buffer, 0x18);
+							unk3DC->write(buffer, 0x18);
+						}
+					}
+#else
 					} else {
 						*unk3D8 << c;
 						*unk3DC << c;
 					}
+#endif
 					break;
+#else
+						{
+							char buffer[256];
+							JUtility::TColor color;
+							bool colored = true;
+							switch (c) {
+							case '@':
+								color.set(100, 255, 100, 255);
+								break;
+							case '#':
+								color.set(255, 160, 100, 255);
+								break;
+							case '%':
+								color.set(255, 255, 0, 255);
+								break;
+							case '+':
+							case '<':
+							case '>':
+							case 0xA5:
+								color.set(220, 220, 220, 255);
+								break;
+							case '$':
+								color.set(110, 230, 255, 255);
+								break;
+#if defined(VERSION_GMSP01)
+							case '*':
+								color.set(220, 220, 220, 255);
+								break;
+#endif
+							default:
+								colored = false;
+								break;
+							}
+
+							if (colored) {
+								snprintf(
+								    buffer, 255,
+								    "\033GM[0]\033CC[%02x%02x%02x]\033FX[30]"
+								    "\033FY[26]\033SH[3]\033CD[4]",
+								    color.r, color.g, color.b);
+								unk3D8->write(buffer, 0x2B);
+								unk3DC->write(buffer, 0x2B);
+							}
+
+							*unk3D8 << c;
+							*unk3DC << c;
+
+							if (colored) {
+								snprintf(buffer, 255,
+								         "\033GM[0]"
+								         "\033CC\033FX\033FY\033SH\033CU[4]");
+								unk3D8->write(buffer, 0x18);
+								unk3DC->write(buffer, 0x18);
+							}
+							break;
+						}
+#endif
 				}
 			}
 		} else {

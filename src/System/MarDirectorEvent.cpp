@@ -141,6 +141,10 @@ void TMarDirector::fireGetStar(TShine* shine)
 {
 	unk25C = shine;
 	onFlag(DIRECTOR_FLAG_SHINE_GET_PENDING);
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+	if (TFlagManager::getInstance()->getShineFlag(unk25C->getEventId()))
+		onDemoFlag(DEMO_FLAG_SHINE_ALREADY_COLLECTED);
+#endif
 	const JGeometry::TVec3<f32>& v = shine->getInitialRotation();
 	fireStartDemoCamera(!shine->unk190 ? cCameraBckNameShineGetOutside
 	                                   : cCameraBckNameShineGetInside,

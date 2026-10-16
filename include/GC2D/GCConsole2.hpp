@@ -2,6 +2,7 @@
 #define GCCONSOLE2_HPP
 
 #include <dolphin/types.h>
+#include <version.h>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JUtility/JUTColor.hpp>
 #include <JSystem/JUtility/JUTPoint.hpp>
@@ -78,7 +79,14 @@ public:
 	void startAppearMario(bool);
 	void processMoveNozzle();
 	void changeNum(TBlendPane*, int, int);
+#if !defined(VERSION_GMSJ01)
+	void countBlueCoin();
+	void countShine();
+#endif
 	void setTimer(s32);
+#if !defined(VERSION_GMSJ01)
+	u32* checkDolpic8();
+#endif
 	void startMoveTimer(int);
 	void stopMoveTimer();
 	int getFinishedTime();
@@ -266,7 +274,11 @@ public:
 	/* 0x398 */ TBoundPane* mLifeCountX;
 	/* 0x39C */ TBoundPane* mLifeCountDigits[3];
 	/* 0x3A8 */ TExPane* mLifeCountRoot;
-	/* 0x3AC */ u8 unk3AC[0x4];
+	/* 0x3AC */ u8 unk3AC;
+#if !defined(VERSION_GMSJ01)
+	/* 0x3AE */ u16 unk3AE;
+#endif
+	/* 0x3AD */ u8 unk3AD;
 	/* 0x3B0 */ J2DWindow* unk3B0;
 	/* 0x3B4 */ J2DTextBox* unk3B4;
 	/* 0x3B8 */ J2DTextBox* unk3B8;
