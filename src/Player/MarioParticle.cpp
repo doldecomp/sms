@@ -687,11 +687,11 @@ void TMario::rocketEffectStart()
 	gpMarioParticleManager->emit(PARTICLE_MS_HIPDROP_A, &mPosition, 0, nullptr);
 	if (mWaterGun != nullptr) {
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    PARTICLE_MS_M_ROCKET_A, &mWaterGun->getEmitPos0(), 0, this);
+		    PARTICLE_MS_M_ROCKET_A, &mWaterGun->getEmitPos(0), 0, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    PARTICLE_MS_M_ROCKET_B, &mWaterGun->getEmitPos0(), 0, this);
+		    PARTICLE_MS_M_ROCKET_B, &mWaterGun->getEmitPos(0), 0, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    PARTICLE_MS_M_ROCKET_B2, &mWaterGun->getEmitPos0(), 0, this);
+		    PARTICLE_MS_M_ROCKET_B2, &mWaterGun->getEmitPos(0), 0, this);
 	}
 }
 

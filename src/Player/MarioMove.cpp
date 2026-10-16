@@ -18,6 +18,7 @@
 #include <Map/PollutionManager.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Player/MarioCap.hpp>
+#include <Player/NozzleTurbo.hpp>
 #include <macros.h>
 
 // rogue includes needed for matching sinit & bss
@@ -1467,11 +1468,8 @@ void TMario::checkController(JDrama::TGraphics*)
 		    && ((mStatus + 0xF3C00000) == 0x201
 		        || ((mStatus + 0xFC000000) & 0xFFFFFFFF) == 0x440)) {
 			f32 propRot = mIntendedMag * 0.03125f;
-			// TODO: wrong??? Correct offset is 0x714 which is way past
-			// the end of a TNozzleTrigger???
-			((TNozzleTrigger*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
-			    ->mInsidePressure
-			    = propRot;
+
+			((TNozzleTurbo*)mWaterGun->getCurrentNozzle())->unk714 = propRot;
 		}
 	}
 

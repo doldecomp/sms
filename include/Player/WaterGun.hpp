@@ -12,32 +12,6 @@ class MActor;
 class TMario;
 class TMultiMtxEffect;
 
-class TWaterGunParams : public TParams {
-public:
-	TWaterGunParams(const char* prm)
-	    : TParams(prm)
-	    , PARAM_INIT(mRocketHeight, 1500.0f)
-	    , PARAM_INIT(mHoverHeight, 160.0f)
-	    , PARAM_INIT(mLAngleNormal, 60.0f)
-	    , PARAM_INIT(mNozzleAngleYSpeed, 1.0f)
-	    , PARAM_INIT(mNozzleAngleYBrake, 0.995f)
-	    , PARAM_INIT(mNozzleAngleYSpeedMax, 0x2000)
-	    , PARAM_INIT(mHoverRotMax, 0x2000)
-	    , PARAM_INIT(mHoverSmooth, 0.05f)
-	    , PARAM_INIT(mChangeSpeed, 0.1f)
-	{
-	}
-	TParamRT<f32> mRocketHeight;
-	TParamRT<f32> mHoverHeight;
-	TParamRT<f32> mLAngleNormal;
-	TParamRT<f32> mNozzleAngleYSpeed;
-	TParamRT<f32> mNozzleAngleYBrake;
-	TParamRT<s16> mNozzleAngleYSpeedMax;
-	TParamRT<s16> mHoverRotMax;
-	TParamRT<f32> mHoverSmooth;
-	TParamRT<f32> mChangeSpeed;
-};
-
 struct NozzleJointData {
 	u8 flags; // TODO: This is likely an enum. 0x1 is used, 0x4 is disabled.
 	u8 jointIndex;
@@ -76,9 +50,6 @@ public:
 		return mNozzles[index].mJoints[jointIndex].jointIndex = value;
 	}
 
-	const char* getPath(int index) const { return mNozzles[index].mPath; }
-	const char* getBmdPath(int index) const { return mNozzles[index].mBmdPath; }
-
 	NozzleData mNozzles[6];
 };
 
@@ -86,16 +57,24 @@ extern TNozzleBmdData nozzleBmdData;
 
 class TWaterGun {
 public:
-	// TODO: UNUSED parameter class; member layout is unknown.
-	class TDeParams {
+	class TDeParams : public TParams {
 	public:
 		TDeParams();
+		TParamRT<f32> mRocketHeight;
+		TParamRT<f32> mHHoverHeight;
+		TParamRT<f32> mLAngleNormal;
+		TParamRT<f32> mNozzleAngleYSpeed;
+		TParamRT<f32> mNozzleAngleYBrake;
+		TParamRT<s16> mNozzleAngleYSpeedMax;
+		TParamRT<s16> mHoverRotMax;
+		TParamRT<f32> mHoverSmooth;
+		TParamRT<f32> mChangeSpeed;
 	};
 
 	// TODO: UNUSED methods; return types still need reconstruction.
 	void endDashEffect();
 	void startDashEffect();
-	void getMarioUpperStatus();
+	s32 getMarioUpperStatus();
 	void getWillBeEmitted();
 	void getWaterGunAnmID(int);
 	void setEmitPt();
@@ -135,7 +114,6 @@ public:
 	void initInLoadAfter();
 	bool isEmitting()
 	{
-		// TODO: more inlines!
 		if (mCurrentWater == 0)
 			return false;
 
@@ -152,6 +130,7 @@ public:
 
 		return false;
 	}
+
 	BOOL isPressureOn();
 	void movement();
 	void rotateProp(f32);
@@ -236,29 +215,6 @@ public:
 	// Fabricated
 	s32 getMaxWater() const { return getCurrentNozzle()->mAmountMax.get(); }
 
-	// TODO: get rid of this -- it's real name is isEmitting() and it
-	// wasn't stripped in MarioRun.cpp
-	// //Fabricated
-	bool canSpray() const
-	{
-		if (mCurrentWater == 0)
-			return false;
-
-		if (getCurrentNozzle()->getNozzleKind() == 1) {
-			TNozzleTrigger* triggerNozzle = (TNozzleTrigger*)getCurrentNozzle();
-			if (triggerNozzle->getSprayState()
-			    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
-				return true;
-
-			return false;
-		}
-
-		if (getCurrentNozzle()->unk378 > 0.0f)
-			return true;
-
-		return false;
-	}
-
 	// Fabricated
 	bool isSwitchingToPrimaryNozzle()
 	{
@@ -286,11 +242,14 @@ public:
 	// Fabricated and fairly certainly fake
 	bool checkCurrentNozzleTriggerSprayState(s32 pState) const
 	{
-		return ((TNozzleTrigger*)getCurrentNozzle())->mSprayState == pState;
+		return ((TNozzleTrigger*)getCurrentNozzle())->getSprayState() == pState;
 	}
 
 	// Fabricated (maybe should be indexed?)
-	const JGeometry::TVec3<f32>& getEmitPos0() const { return mEmitPos[0]; }
+	const JGeometry::TVec3<f32>& getEmitPos(u8 emitterIdx) const
+	{
+		return mEmitPos[emitterIdx];
+	}
 
 	// Fabricated
 	s16 getPropellerAngle() const { return mPropellerAngle; }
@@ -340,7 +299,8 @@ public:
 	/* 0x1C8D */ u8 mPreviousPressure;
 	/* 0x1C8E */ u8 unk1C8E;
 	/* 0x1C8F */ u8 unk1C8F;
-	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[4];
+	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[3];
+	/* 0x1CB4 */ JGeometry::TVec3<f32> unk1CB4;
 	/* 0x1CC0 */ s16 unk1CC0;
 	/* 0x1CC2 */ s16 unk1CC2;
 	/* 0x1CC4 */ s16 unk1CC4;
@@ -350,26 +310,26 @@ public:
 	/* 0x1CD0 */ s16 mPropellerAngle;
 	/* 0x1CD2 */ s16 unk1CD2;
 	/* 0x1CD4 */ MActor* mFluddModel;
-	/* 0x1CD8 */ u8 unk1CD8; // mCurFluddTransformIdx
+	/* 0x1CD8 */ u8 mJointIdxNozzleCenter;
 	/* 0x1CD9 */ u8 unk1CD9;
 	/* 0x1CDA */ u16 unk1CDA;
-	/* 0x1CDC */ TMultiMtxEffect* unk1CDC;
+	/* 0x1CDC */ TMultiMtxEffect* mMultiMtxEffect;
 	/* 0x1CE0 */ f32 unk1CE0;
 	/* 0x1CE4 */ u32 unk1CE4;
 	/* 0x1CE8 */ u32 unk1CE8;
-	/* 0x1CEC */ f32 unk1CEC;
+	/* 0x1CEC */ f32 mHouseProgress;
 	/* 0x1CF0 */ f32 unk1CF0;
-	/* 0x1CF4 */ f32 unk1CF4;
-	/* 0x1CF8 */ u16 unk1CF8;
-	/* 0x1CFA */ u16 unk1CFA;
+	/* 0x1CF4 */ f32 mHouseSpeed;
+	/* 0x1CF8 */ u16 mHouseDelay;
+	/* 0x1CFA */ u16 mHouseTimer;
 	/* 0x1CFC */ f32 mSwitchToSecondNozzleProgress;
 	/* 0x1D00 */ f32 mSwitchToSecondNozzleSpeed;
-	/* 0x1D04 */ s16 unk1D04;
-	/* 0x1D06 */ s16 unk1D06;
+	/* 0x1D04 */ s16 mBaseTiltAngleMax;
+	/* 0x1D06 */ s16 mBaseTiltAngleMin;
 	/* 0x1D08 */ s16 unk1D08;
 	/* 0x1D0C */ TWaterEmitInfo* mEmitInfo; // TWaterEmitInfo
-	/* 0x1D10 */ TMirrorActor* unk1D10;
-	/* 0x1D14 */ TWaterGunParams mWatergunParams;
+	/* 0x1D10 */ TMirrorActor* mMirrorActor;
+	/* 0x1D14 */ TDeParams mWatergunParams;
 };
 
 #endif

@@ -15,6 +15,18 @@ public:
 	// Fabricated
 	s8 getSprayState() const { return mSprayState; }
 
+	// Fabricated
+	f32 getInsidePressure() const { return mInsidePressure; }
+
+	// Fabricated
+	void setSoundId(u32 soundId) { mSoundId = soundId; }
+
+	// Fabricated
+	void setRumbleOnCharge(bool rumbleOnCharge)
+	{
+		mRumbleOnCharge = rumbleOnCharge;
+	}
+
 	// Inactive = not holding R, Active = charging R, Dead = R Waiting to be
 	// depressed
 	enum SprayState {
@@ -23,6 +35,7 @@ public:
 		SPRAY_STATE_DEAD     = 2
 	};
 
+protected:
 	/* 0x384 */ bool mRumbleOnCharge;
 	/* 0x385 */ u8 mSprayState;
 	/* 0x386 */ s16 mSprayTimer;
