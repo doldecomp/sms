@@ -95,7 +95,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 		if (mNumItems == 2) {
 			mMenuItems[i]->add(0, 20);
 		}
-		mMenuItems[i]->mVisible = false;
+		mMenuItems[i]->hide();
 	}
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
@@ -159,13 +159,13 @@ void TPauseMenu2::loadAfter()
 
 	for (s32 i = 0; i < 5; i++) {
 		mOrigLetterBounds[i] = mPauseLetters[i]->getBounds();
-		mOrigLetterAngles[i] = mPauseLetters[i]->getRotation();
+		mOrigLetterAngles[i] = mPauseLetters[i]->getRotate();
 	}
 
-	mBackgroundAlpha       = mBackground->mAlpha;
+	mBackgroundAlpha       = mBackground->getAlpha();
 	mBackgroundFadeInSpeed = mBackgroundAlpha / 45.0f;
 
-	mFirstItemAngle = mMenuItems[0]->mRotation;
+	mFirstItemAngle = mMenuItems[0]->getRotate();
 
 	if (mFirstItemAngle > 180) {
 		mFirstItemAngle -= 360;
@@ -187,7 +187,7 @@ void TPauseMenu2::appearWindow()
 		// Fade in background.
 		s32 bgrAlpha = mBackgroundFadeInSpeed * mFadeAnim * 1.5f;
 		bgrAlpha = bgrAlpha > mBackgroundAlpha ? mBackgroundAlpha : bgrAlpha;
-		mBackground->mAlpha = bgrAlpha;
+		mBackground->setAlpha(bgrAlpha);
 	}
 
 	// Fade in stage/shine panel.
@@ -195,14 +195,14 @@ void TPauseMenu2::appearWindow()
 	if (stageAlpha > mBackgroundAlpha) {
 		stageAlpha = 0xFF;
 	}
-	mStagePane->mAlpha = stageAlpha;
+	mStagePane->setAlpha(stageAlpha);
 
 	// Animate in menu items.
 	if (mFadeAnim >= 30.0f) {
 		for (s32 i = 0; i < mNumItems; ++i) {
-			if (!mMenuItems[i]->mVisible) {
-				mMenuItems[i]->mVisible = true;
-				mMenuItems[i]->mAlpha   = 0;
+			if (!mMenuItems[i]->isVisible()) {
+				mMenuItems[i]->show();
+				mMenuItems[i]->setAlpha(0);
 			}
 
 			JUTRect rect = mOrigItemBounds[i];
@@ -212,7 +212,7 @@ void TPauseMenu2::appearWindow()
 				s32 hy = 1.5f * (mFadeAnim - 35.0f);
 				rect.reform(-hx, -hy, hx, hy);
 
-				mMenuItems[i]->setBounds(rect);
+				mMenuItems[i]->place(rect);
 
 				// TODO: This looks a bit fake...
 				f32 alphaF = 26.0f * (mFadeAnim - 30.0f);
@@ -220,19 +220,19 @@ void TPauseMenu2::appearWindow()
 				if ((s32)alphaF > 0xFF) {
 					alpha = 0xFF;
 				}
-				mMenuItems[i]->mAlpha = alpha;
+				mMenuItems[i]->setAlpha(alpha);
 
 				// The first item gets some extra "bounce".
 				if (i == 0) {
 					s16 angle = mFirstItemAngle * 0.1f * (mFadeAnim - 30.0f);
-					mMenuItems[i]->mRotation = angle;
+					mMenuItems[i]->rotate(angle);
 				}
 			} else if (mFadeAnim <= 45.0f) {
 				s32 hx = 3.0f * (mFadeAnim - 45.0f);
 				s32 hy = 1.5f * (mFadeAnim - 45.0f);
 				rect.reform(hx, hy, -hx, -hy);
 
-				mMenuItems[i]->setBounds(rect);
+				mMenuItems[i]->place(rect);
 			} else if (mFadeAnim >= 46.0f) {
 				// Fade in animation complete; set state to open.
 				if (mState != MENU_OPEN) {
@@ -250,7 +250,7 @@ void TPauseMenu2::disappearWindow()
 	// Delete emitter and reset selected item back to its original size.
 	if (mFadeAnim == 0.0f && mEmitter != 0) {
 		gpEmitterManager4D2->forceDeleteEmitter(mEmitter);
-		mMenuItems[mSelectedItem]->setBounds(mOrigItemBounds[mSelectedItem]);
+		mMenuItems[mSelectedItem]->place(mOrigItemBounds[mSelectedItem]);
 	}
 
 	if (mFadeAnim <= 10.0f) {
@@ -278,7 +278,7 @@ void TPauseMenu2::disappearWindow()
 
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
 
-			mPauseLetters[i]->setBounds(rect);
+			mPauseLetters[i]->place(rect);
 		}
 
 		// ... and now shrink the menu items in the same manner.
@@ -287,11 +287,11 @@ void TPauseMenu2::disappearWindow()
 			rect.add(0.025f * -rect.x1 + 0.01f * rect.getWidth(),
 			         0.025f * -rect.y1 + 0.01f * rect.getHeight());
 			rect.resize(0.98f * rect.getWidth(), 0.98f * rect.getHeight());
-			mMenuItems[i]->setBounds(rect);
+			mMenuItems[i]->place(rect);
 		}
 
 		// Rotate menu clockwise.
-		mMenuPane->mRotation = -mFadeAnim * 2.0f;
+		mMenuPane->rotate(-mFadeAnim * 2.0f);
 	} else {
 		// Fade out animation complete; set state to MENU_CLOSED.
 		mState = MENU_CLOSED;
@@ -395,7 +395,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							mMenuItems[mSelectedItem]->mWhite = mItemColor;
 							mMenuItems[curSelectedItem]->mWhite
 							    = JUtility::TColor();
-							mMenuItems[curSelectedItem]->setBounds(bounds);
+							mMenuItems[curSelectedItem]->place(bounds);
 
 							mBounceAnim = 0.0f; // reset animation
 
@@ -424,7 +424,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							mMenuItems[mSelectedItem]->mWhite = mItemColor;
 							mMenuItems[curSelectedItem]->mWhite
 							    = JUtility::TColor();
-							mMenuItems[curSelectedItem]->setBounds(bounds);
+							mMenuItems[curSelectedItem]->place(bounds);
 
 							mBounceAnim = 0.0f;
 
@@ -442,7 +442,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						f32 emitterWidth = width / mEffectStretch;
 
 						JUTRect itemBounds
-						    = mMenuItems[mSelectedItem]->getGlobalBounds();
+						    = mMenuItems[mSelectedItem]->getGlbBounds();
 
 						// TODO: This doesn't fully match.
 						gpEmitterManager4D2->createEmitter(
@@ -460,7 +460,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						s32 hw = mBounceAnim;
 						s32 hh = 0.5f * mBounceAnim;
 						animItemBounds.reform(-hw, -hh, hw, hh);
-						mMenuItems[mSelectedItem]->setBounds(animItemBounds);
+						mMenuItems[mSelectedItem]->place(animItemBounds);
 
 						s32 colorShift = 10.0f * mBounceAnim;
 						mMenuItems[mSelectedItem]->mWhite
@@ -469,7 +469,7 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						s32 hw = mBounceAnim - 35.0f;
 						s32 hh = 0.5f * (mBounceAnim - 35.0f);
 						animItemBounds.reform(hw, hh, -hw, -hh);
-						mMenuItems[mSelectedItem]->setBounds(animItemBounds);
+						mMenuItems[mSelectedItem]->place(animItemBounds);
 
 						s32 colorShift = (35.0f - mBounceAnim) * 10.0f;
 						mMenuItems[mSelectedItem]->mWhite
@@ -543,28 +543,28 @@ u8 TPauseMenu2::getNextState()
 
 void TPauseMenu2::setDrawStart()
 {
-	mPressedB               = false;
-	mSelectionConfirmed     = false;
-	mSelectedItem           = 0;
-	mFadeAnim               = 0.0f;
-	mState                  = MENU_APPEARING;
-	mBounceAnim             = 0.0f;
-	mMenuItems[0]->mWhite   = mItemColor;
-	mMenuItems[0]->mVisible = false;
+	mPressedB             = false;
+	mSelectionConfirmed   = false;
+	mSelectedItem         = 0;
+	mFadeAnim             = 0.0f;
+	mState                = MENU_APPEARING;
+	mBounceAnim           = 0.0f;
+	mMenuItems[0]->mWhite = mItemColor;
+	mMenuItems[0]->hide();
 
 	for (s32 i = 1; i < mNumItems; ++i) {
-		mMenuItems[i]->mWhite   = 0xFFFFFFFF;
-		mMenuItems[i]->mVisible = false;
+		mMenuItems[i]->mWhite = 0xFFFFFFFF;
+		mMenuItems[i]->hide();
 	}
 
-	mPauseLetters[0]->mRotation = u16(mOrigLetterAngles[0] + 180.0f);
-	mPauseLetters[1]->mRotation = u16(mOrigLetterAngles[1] + 180.0f);
-	mPauseLetters[2]->mRotation = u16(mOrigLetterAngles[2] + 180.0f);
-	mPauseLetters[3]->mRotation = u16(mOrigLetterAngles[3] + 180.0f);
-	mPauseLetters[4]->mRotation = u16(mOrigLetterAngles[4] + 180.0f);
+	mPauseLetters[0]->rotate(u16(mOrigLetterAngles[0] + 180.0f));
+	mPauseLetters[1]->rotate(u16(mOrigLetterAngles[1] + 180.0f));
+	mPauseLetters[2]->rotate(u16(mOrigLetterAngles[2] + 180.0f));
+	mPauseLetters[3]->rotate(u16(mOrigLetterAngles[3] + 180.0f));
+	mPauseLetters[4]->rotate(u16(mOrigLetterAngles[4] + 180.0f));
 
 	mMenuPane->setAlpha(255);
-	mMenuPane->mRotation = 0.0f;
+	mMenuPane->rotate(0.0f);
 	SMSGetMarDirector()->getConsole()->pauseIn();
 	SMSRumbleMgr->startPause();
 	gpMSound->pauseOn(true);
@@ -593,7 +593,7 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		}
 
 		if (anim == 2.0f) {
-			JUTRect rect = picture->getGlobalBounds();
+			JUTRect rect = picture->getGlbBounds();
 
 			// TODO: This doesn't fully match.
 			gpEmitterManager4D2->createEmitter(
@@ -605,9 +605,9 @@ void TPauseMenu2::drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 		f32 normalisedAngle = 0.05f * anim;
 		s32 shrink = 2.0f * normalisedAngle * (1.0f - normalisedAngle) * 80.0f;
 		s32 offset = 0.75f * (19.0f - anim);
-		picture->mRotation = rotation;
-		picture->setBounds(rect.x1 + offset, rect.y1 - shrink + offset,
-		                   rect.x2 - offset, rect.y2 - shrink - offset);
+		picture->rotate(rotation);
+		picture->place(JUTRect(rect.x1 + offset, rect.y1 - shrink + offset,
+		                       rect.x2 - offset, rect.y2 - shrink - offset));
 
 		u16 alpha = anim * 12.8f;
 		if (alpha > 255) {

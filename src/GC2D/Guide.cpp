@@ -517,9 +517,9 @@ void TGuide::rotatePattern(J2DPicture* picture, s16 period, u32 frame,
 {
 	if (frame % period == 0) {
 		if ((frame / period) % 2 == 0)
-			picture->mRotation = 0.0f;
+			picture->rotate(0.0f);
 		else
-			picture->mRotation = angle;
+			picture->rotate(angle);
 	}
 }
 

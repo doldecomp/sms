@@ -35,11 +35,11 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 	J2DTextBox* local_420[256];
 
 	JSUTreeIterator<J2DPane> iterator;
-	for (iterator = unk14->mPaneTree.getFirstChild();
-	     iterator != unk14->mPaneTree.getEndChild();) {
+	for (iterator = unk14->getPaneTree()->getFirstChild();
+	     iterator != unk14->getPaneTree()->getEndChild();) {
 		J2DPane* pane = iterator.getObject();
 
-		if (pane->mInfoTag == 0x13 && pane->mUserInfoTag != 'rset') {
+		if (pane->getTypeID() == 0x13 && pane->getUserInfo() != 'rset') {
 			J2DTextBox* textBox = (J2DTextBox*)pane;
 			local_420[unk28]    = textBox;
 			if (unk28 == 0) {
@@ -125,6 +125,6 @@ void TFlashPane::perform(u32 cue, JDrama::TGraphics*)
 			unk18 = -4;
 		}
 
-		unk10->mAlpha = unk14;
+		unk10->setAlpha(unk14);
 	}
 }

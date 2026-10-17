@@ -342,9 +342,9 @@ void TConsoleStr::startAppearReady()
 	mGoLetters[0]->unk0->hide();
 	mGoLetters[1]->unk0->hide();
 	mGoLetters[2]->unk0->hide();
-	mGoLetters[0]->unk0->mAlpha = 0xff;
-	mGoLetters[1]->unk0->mAlpha = 0xff;
-	mGoLetters[2]->unk0->mAlpha = 0xff;
+	mGoLetters[0]->unk0->setAlpha(0xff);
+	mGoLetters[1]->unk0->setAlpha(0xff);
+	mGoLetters[2]->unk0->setAlpha(0xff);
 }
 
 void TConsoleStr::startAppearGo()
@@ -499,8 +499,7 @@ bool TConsoleStr::processGo(float param_1)
 
 			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
 				for (int j = 0; j < 16; ++j) {
-					JUTRect bounds
-					    = mGoLetters[i]->getPane()->getGlobalBounds();
+					JUTRect bounds = mGoLetters[i]->getPane()->getGlbBounds();
 					unk34[i][j].set(bounds.x1, bounds.y1);
 				}
 
@@ -517,7 +516,7 @@ bool TConsoleStr::processGo(float param_1)
 				int alpha = mGoLetters[i]->getPane()->getAlpha() - 4;
 				if (alpha < 0)
 					alpha = 0;
-				JUTRect bounds = mGoLetters[i]->getPane()->getGlobalBounds();
+				JUTRect bounds = mGoLetters[i]->getPane()->getGlbBounds();
 				mGoLetters[i]->getPane()->setAlpha(alpha);
 				mGoLetters[i]->getPane()->resize(bounds.getWidth() + 2,
 				                                 bounds.getHeight() + 2);
@@ -637,7 +636,7 @@ bool TConsoleStr::processMiss(int param_1)
 		}
 
 		if (param_1 == i * 10 + 60) {
-			mMissLetters[i]->getPane()->mRotation = 0.0f;
+			mMissLetters[i]->getPane()->rotate(0.0f);
 			mMissLetters[i]->setPanePosition(
 			    0x28, JUTPoint(0, 30), JUTPoint(0, -80), JUTPoint(0, -80));
 		}
@@ -669,7 +668,7 @@ bool TConsoleStr::processMiss(int param_1)
 			}
 		} else {
 			if (param_1 < i * 10 + 60) {
-				mMissLetters[i]->getPane()->mRotation = (i * 10 - param_1) * 6;
+				mMissLetters[i]->getPane()->rotate((i * 10 - param_1) * 6);
 			}
 
 			result = false;

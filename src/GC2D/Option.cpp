@@ -136,7 +136,7 @@ void TArrowControl::updateAlpha()
 void TArrowControl::updateScale()
 {
 	int move = calcMoveX(mPhase);
-	mPane->setBounds(
+	mPane->place(
 	    JUTRect(mBounds.x1 - move, mBounds.y1, mBounds.x2, mBounds.y2));
 
 	mPhase = JGeometry::TUtil<int>::mod(mPhase + 101, 100);
@@ -215,8 +215,9 @@ void TPaneScalingControl::update()
 	int iVar10 = mInitialBounds.getWidth();
 	int iVar5  = mInitialBounds.getHeight();
 
-	f32 progress = (f32)mFrameCtrl.getFrame() / (f32)mFrameCtrl.getEnd();
-	f32 fVar2    = mAmplitude * MsSin(RAD_TO_DEG(progress * (2 * M_PI)));
+	f32 fVar2 = mAmplitude
+	            * MsSin(RAD_TO_DEG((f32)mFrameCtrl.getFrame()
+	                               / (f32)mFrameCtrl.getEnd() * (2 * M_PI)));
 
 	int uVar6 = fVar2 * iVar10;
 	int uVar1 = fVar2 * iVar5;
@@ -225,7 +226,7 @@ void TPaneScalingControl::update()
 	local_5c.move(mInitialBounds.x1 - uVar6 / 2, mInitialBounds.y1 - uVar1 / 2);
 	local_5c.resize(uVar6 + mInitialBounds.getWidth(),
 	                uVar1 + mInitialBounds.getHeight());
-	mPane->mBounds = local_5c;
+	mPane->place(local_5c);
 	mFrameCtrl.update();
 }
 
@@ -495,7 +496,7 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 {
 	for (JSUTreeIterator<J2DPane> it = pane->getPaneTree()->getFirstChild();
 	     it != pane->getPaneTree()->getEndChild(); ++it) {
-		it->setInfluenceAlpha(flag);
+		it->setInfluencedAlpha(flag);
 		setInfluencedAlphaRecursive(it.getObject(), flag);
 	}
 }
@@ -775,7 +776,7 @@ void TOptionSoundUnit::setInfluencedAlphaRecursive(J2DPane* pane, bool flag)
 {
 	for (JSUTreeIterator<J2DPane> it = pane->getPaneTree()->getFirstChild();
 	     it != pane->getPaneTree()->getEndChild(); ++it) {
-		it->setInfluenceAlpha(flag);
+		it->setInfluencedAlpha(flag);
 		setInfluencedAlphaRecursive(it.getObject(), flag);
 	}
 }

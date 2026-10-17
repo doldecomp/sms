@@ -4,7 +4,7 @@
 TBoundPane::TBoundPane(J2DScreen* param_1, u32 param_2)
 {
 	unk0  = param_1->search(param_2);
-	unk4  = unk0->mBounds;
+	unk4  = unk0->getBounds();
 	unk28 = 0.0f;
 	unk2C = 0.0f;
 	unk30 = 0.0f;

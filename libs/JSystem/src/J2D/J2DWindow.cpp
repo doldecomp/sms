@@ -244,7 +244,7 @@ void J2DWindow::resize(int width, int height)
 
 	for (JSUTreeIterator<J2DPane> iter(getPaneTree()->getFirstChild());
 	     iter != getPaneTree()->getEndChild(); iter++) {
-		if (iter->getTag() == 0x13 && iter->isConnectParent()) {
+		if (iter->getTypeID() == 0x13 && iter->isConnectParent()) {
 			int nw = width - oldW + iter->getWidth();
 			int nh = height - oldH + iter->getHeight();
 			iter->J2DPane::resize(nw, nh);

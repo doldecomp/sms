@@ -48,13 +48,13 @@ public:
 	void fade()
 	{
 		unk18 |= 0x4;
-		unk14->mAlpha = 160;
+		unk14->setAlpha(160);
 	}
 
 	void unfade()
 	{
-		unk18         = 0;
-		unk14->mAlpha = 255;
+		unk18 = 0;
+		unk14->setAlpha(255);
 	}
 
 	bool checkFlag(u32 flag) const { return unk18 & flag ? true : false; }

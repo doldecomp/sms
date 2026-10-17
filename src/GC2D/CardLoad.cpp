@@ -914,7 +914,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				f32 fVar2 = 1.0f - fVar1;
 				s16 iVar8 = fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2
 				            + fVar1 * fVar2;
-				mToSettingsArrow->setBounds(
+				mToSettingsArrow->place(
 				    JUTRect(mToSettingsArrowInitialBounds.x1,
 				            mToSettingsArrowInitialBounds.y1,
 				            mToSettingsArrowInitialBounds.x2 + iVar8,
@@ -1498,7 +1498,7 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			                               unk48C[unkB7].getHeight() * 0.5f,
 			                               unk48C[unkB7].getWidth(),
 			                               unk48C[unkB7].getHeight());
-			JUTRect bounds = unk484[unkB7]->getPane()->mGlobalBounds;
+			JUTRect bounds = unk484[unkB7]->getPane()->getGlbBounds();
 			JGeometry::TVec3<f32> local_108;
 			local_108.x = bounds.x1 + bounds.getWidth() * 0.5f;
 			local_108.y = bounds.y1 + bounds.getHeight() * 0.5f;
@@ -1529,7 +1529,7 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 
 			unkC4 = 0;
 
-			unk484[old]->getPane()->mBounds = unk48C[old];
+			unk484[old]->getPane()->place(unk48C[old]);
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
 			                                   nullptr, 0);
 			((J2DPicture*)unk484[old]->getPane())->mWhite   = 0xFFFFFFFF;
@@ -1545,8 +1545,8 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 		unk480->hide();
 		unk484[0]->getPane()->hide();
 		unk484[1]->getPane()->hide();
-		unk484[0]->getPane()->mBounds = unk48C[0];
-		unk484[1]->getPane()->mBounds = unk48C[1];
+		unk484[0]->getPane()->place(unk48C[0]);
+		unk484[1]->getPane()->place(unk48C[1]);
 
 		mWindowStep = WINDOW_CLOSING;
 		break;
@@ -1699,7 +1699,7 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			    mConfirmationYesNoInitialBounds[unkB7].getWidth(),
 			    mConfirmationYesNoInitialBounds[unkB7].getHeight());
 			JUTRect bounds
-			    = mConfirmationYesNo[unkB7]->getPane()->mGlobalBounds;
+			    = mConfirmationYesNo[unkB7]->getPane()->getGlbBounds();
 			JGeometry::TVec3<f32> local_108;
 			local_108.x = bounds.x1 + bounds.getWidth() * 0.5f;
 			local_108.y = bounds.y1 + bounds.getHeight() * 0.5f;
@@ -1731,8 +1731,8 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 			unkC4 = 0;
 
-			mConfirmationYesNo[old]->getPane()->mBounds
-			    = mConfirmationYesNoInitialBounds[old];
+			mConfirmationYesNo[old]->getPane()->place(
+			    mConfirmationYesNoInitialBounds[old]);
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
 			                                   nullptr, 0);
 			((J2DPicture*)mConfirmationYesNo[old]->getPane())->mWhite
@@ -1753,10 +1753,10 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		mConfirmationTextShadow->hide();
 		mConfirmationYesNo[0]->getPane()->hide();
 		mConfirmationYesNo[1]->getPane()->hide();
-		mConfirmationYesNo[0]->getPane()->mBounds
-		    = mConfirmationYesNoInitialBounds[0];
-		mConfirmationYesNo[1]->getPane()->mBounds
-		    = mConfirmationYesNoInitialBounds[1];
+		mConfirmationYesNo[0]->getPane()->place(
+		    mConfirmationYesNoInitialBounds[0]);
+		mConfirmationYesNo[1]->getPane()->place(
+		    mConfirmationYesNoInitialBounds[1]);
 
 		mWindowStep = WINDOW_CLOSING;
 	} break;
@@ -2670,7 +2670,7 @@ s8 TCardLoad::selectFunction()
 
 				JUTRect rect = mSaveManageOptionsEntries[unkB0][unkB6]
 				                   ->getPane()
-				                   ->getGlobalBounds();
+				                   ->getGlbBounds();
 				JGeometry::TVec3<f32> pos(rect.x1 + rect.getWidth() / 2.0f,
 				                          rect.y1 + rect.getHeight() / 2.0f,
 				                          0.0f);
@@ -2714,7 +2714,7 @@ s8 TCardLoad::selectFunction()
 
 			unkC4 = 0;
 
-			mSaveManageOptionsEntries[unkB0][bVar1]->getPane()->setBounds(
+			mSaveManageOptionsEntries[unkB0][bVar1]->getPane()->place(
 			    mSaveManageOptionsEntriesInitialBounds[unkB0][bVar1]);
 
 			((J2DPicture*)mSaveManageOptionsEntries[unkB0][bVar1]->getPane())

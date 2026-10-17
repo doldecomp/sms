@@ -227,7 +227,7 @@ bool J2DTextBox::setConnectParent(bool connected)
 {
 	if (getPaneTree()->getParent() == nullptr)
 		return false;
-	if (getPaneTree()->getParent()->getObject()->mInfoTag != 17)
+	if (getPaneTree()->getParent()->getObject()->getTypeID() != 17)
 		return false;
 	mConnected = connected;
 	return connected;
@@ -260,7 +260,7 @@ void J2DTextBox::resize(int w, int h)
 	    && getPaneTree()->getParent() != nullptr) {
 		J2DPane* pane = getPaneTree()->getParent()->getObject();
 
-		if (pane->mInfoTag == 0x11) {
+		if (pane->getTypeID() == 0x11) {
 			int newW = pane->getWidth() + (w - getWidth());
 			int newH = pane->getHeight() + (h - getHeight());
 			pane->resize(newW, newH);

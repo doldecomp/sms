@@ -315,10 +315,10 @@ void TTalk2D2::loadAfter()
 	unk244->mWrapT = 1;
 	unk244->mWrapS = 0;
 	unk90->move(393, 115);
-	unk90->mRotation = -18.0f;
-	unk330           = unk90->getBounds().x1;
-	unk332           = unk90->getBounds().y1;
-	unk334           = unk90->getRotation();
+	unk90->rotate(-18.0f);
+	unk330 = unk90->getBounds().x1;
+	unk332 = unk90->getBounds().y1;
+	unk334 = unk90->getRotate();
 	unk204->hide();
 	char* spaces = new char[0x5e];
 	for (int i = 0; i < 0x5d; i++)
@@ -538,10 +538,10 @@ void TTalk2D2::openTalkWindow(TBaseNPC* param_1)
 	}
 
 	unk90->move(unk330, unk332);
-	unk90->mRotation = unk334;
+	unk90->rotate(unk334);
 #if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
 	unk204->move(selectX, selectY);
-	unk204->mRotation = selectRotation;
+	unk204->rotate(selectRotation);
 #endif
 	unk250 = 1;
 
@@ -781,8 +781,8 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 		                 VERSION_SELECT(-0x25, GMSE01(-0x28)) - (s16)iy);
 #endif
 		unk9C[idx]->setBasePosition(J2DBasePosition_4);
-		unk9C[idx]->mRotation = 180.0f * ang / 3.1415927f;
-		unk30[param_1]->mPaneTree.appendChild(&unk9C[idx]->mPaneTree);
+		unk9C[idx]->rotate(180.0f * ang / 3.1415927f);
+		unk30[param_1]->appendChild(unk9C[idx]);
 		if (w > VERSION_SELECT(1.05f, GMSJ01(1.1f))) {
 			if (unk228[param_1] > charIdx)
 				unk228[param_1] = charIdx;
@@ -1358,7 +1358,7 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 					unk10->draw(0, 0, &ortho);
 				} else {
 					unk90->move(unk330, unk332);
-					unk90->mRotation = unk334;
+					unk90->rotate(unk334);
 					unk2C->draw(0, 0, &ortho);
 				}
 				break;
@@ -1829,19 +1829,19 @@ void TTalk2D2::openWindow(s8 param_1, f32 param_2)
 {
 	Mtx mtxA;
 	Mtx mtxB;
-	f32 x = unk90->getGlobalBounds().x1 + 5;
-	f32 y = unk90->getGlobalBounds().y1 + 5;
+	f32 x = unk90->getGlbBounds().x1 + 5;
+	f32 y = unk90->getGlbBounds().y1 + 5;
 
 	MTXTrans(mtxA, -x, -y, 0.0f);
 #if defined(VERSION_GMSP01_NX)
 	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5)
-		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotation()));
+		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate()));
 	else
-		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotation() - 1.0f));
+		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate() - 1.0f));
 #elif defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
-	MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotation()));
+	MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate()));
 #else
-	MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotation() - 1.0f));
+	MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate() - 1.0f));
 #endif
 	MTXConcat(mtxB, mtxA, mtxA);
 	MTXTrans(mtxB, x, y, 0.0f);
@@ -1896,7 +1896,7 @@ void TTalk2D2::openWindow(s8 param_1, f32 param_2)
 	                  GX_FALSE, GX_PTIDENTITY);
 	GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
 
-	JUTRect rect(unk3C[param_1]->getGlobalBounds());
+	JUTRect rect(unk3C[param_1]->getGlbBounds());
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	GXPosition2f32(rect.x1, rect.y1);

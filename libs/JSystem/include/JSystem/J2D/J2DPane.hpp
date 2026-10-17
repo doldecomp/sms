@@ -88,7 +88,7 @@ public:
 	void setMtx(Mtx m) { MTXCopy(m, mPositionMtx); }
 
 	u32 getKind() const { return mKind; }
-	u16 getTag() const { return mInfoTag; }
+	u16 getTypeID() const { return mInfoTag; }
 
 	bool isVisible() const { return mVisible; }
 
@@ -97,24 +97,25 @@ public:
 
 	bool isConnectParent() const { return mConnected; }
 
-	void setUserInfo(u64 info) { mUserInfoTag = info; }
+	u32 getUserInfo() const { return mUserInfoTag; }
+	void setUserInfo(u32 info) { mUserInfoTag = info; }
 	const Mtx* getMtx() const { return &mPositionMtx; }
 
-	// fabricated
 	const JUTRect& getBounds() const { return mBounds; }
-	void setBounds(const JUTRect& bounds) { mBounds = bounds; }
-	void setBounds(s32 x1, s32 x2, s32 y1, s32 y2)
+	const JUTRect& getGlbBounds() const { return mGlobalBounds; }
+	f32 getRotate() const { return mRotation; }
+	void rotate(f32 angle) { mRotation = angle; }
+	void place(const JUTRect& bounds) { mBounds = bounds; }
+	bool appendChild(J2DPane* child)
 	{
-		mBounds = JUTRect(x1, x2, y1, y2);
+		return mPaneTree.appendChild(&child->mPaneTree);
 	}
-	const JUTRect& getGlobalBounds() const { return mGlobalBounds; }
-	f32 getRotation() const { return mRotation; }
+	void setInfluencedAlpha(bool influence) { mIsInfluencedAlpha = influence; }
 
-	const JUTRect& getScissorBounds() const { return mScissorBounds; }
+	// fabricated
+	void removeFromParent() { mPaneTree.getParent()->removeChild(&mPaneTree); }
 
-	void setInfluenceAlpha(bool influence) { mIsInfluencedAlpha = influence; }
-
-public:
+protected:
 	/* 0x4 */ u16 mInfoTag;
 	/* 0x8 */ u32 mKind;
 	/* 0xC */ bool mVisible;

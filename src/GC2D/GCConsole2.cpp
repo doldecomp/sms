@@ -78,13 +78,7 @@ static inline void shiftWidePane(TBoundPane* pane, int x)
 // fabricated
 static inline void syncPaneBounds(TBoundPane* pane)
 {
-	pane->unk4 = pane->getPane()->mBounds;
-}
-
-// fabricated
-static inline void detachPaneFromParent(J2DPane* pane)
-{
-	pane->mPaneTree.getParent()->removeChild(&pane->mPaneTree);
+	pane->unk4 = pane->getPane()->getBounds();
 }
 
 // fabricated
@@ -176,7 +170,7 @@ static inline void playLifeChangeSound(u32 sound)
 // fabricated
 static inline void detachBoundPaneFromParent(TBoundPane* pane)
 {
-	detachPaneFromParent(pane->getPane());
+	pane->getPane()->removeFromParent();
 }
 
 // fabricated
@@ -945,7 +939,7 @@ void TGCConsole2::loadAfter()
 	unk94 = static_cast<TConsoleStr*>(
 	    JDrama::TNameRefGen::search("コンソール文字"));
 
-	JUTRect bounds(unk2F8->getPane()->mBounds);
+	JUTRect bounds(unk2F8->getPane()->getBounds());
 
 	unk2A0[0]->add(bounds.x1, bounds.y1);
 	unk270->getPane()->add(bounds.x1, bounds.y1);
@@ -955,12 +949,12 @@ void TGCConsole2::loadAfter()
 	unk328->add(bounds.x1, bounds.y1);
 
 	for (int i = 0; i < 3; ++i) {
-		unk2BC[i] = unk2A0[i]->mBounds;
+		unk2BC[i] = unk2A0[i]->getBounds();
 		unk2BC[i].add(bounds.x1, bounds.y1);
 	}
 
 	unk2A0[0]->show();
-	detachPaneFromParent(unk2A0[0]);
+	unk2A0[0]->removeFromParent();
 	detachBoundPaneFromParent(unk270);
 	for (int i = 0; i < 4; ++i) {
 		unk278[i]->getPane()->add(bounds.x1, bounds.y1);
@@ -968,7 +962,7 @@ void TGCConsole2::loadAfter()
 		detachBoundPaneFromParent(unk278[i]);
 	}
 	detachBoundPaneFromParent(unk26C);
-	detachPaneFromParent(unk328);
+	unk328->removeFromParent();
 	unk288->hide();
 
 	unk2EC[1] = JUtility::TColor(0x64DCFF00);
@@ -988,8 +982,8 @@ void TGCConsole2::loadAfter()
 	unk1CC = health;
 	unk1C  = health;
 
-	unk26A = mShineCountRoot->getPane()->mBounds.y1
-	         - mCoinCountRoot->getPane()->mBounds.y1;
+	unk26A = mShineCountRoot->getPane()->getBounds().y1
+	         - mCoinCountRoot->getPane()->getBounds().y1;
 
 	initHiddenPaneAbove(mShineCountRoot);
 	mShineCountRoot->getPane()->hide();
@@ -1050,15 +1044,15 @@ void TGCConsole2::loadAfter()
 	mTelop->getPane()->show();
 	unk528->hide();
 	unk528->setFont(gpSystemFont);
-	JUTRect textBounds(unk528->mBounds);
+	JUTRect textBounds(unk528->getBounds());
 	unk528->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
 
 	unk52C->hide();
 	unk52C->setFont(gpSystemFont);
 	unk52C->resize(gpSystemFont->getWidth() << 10, textBounds.getHeight());
 
-	JUTRect telopBounds(mTelop->getPane()->mBounds);
-	bounds = mTelopRoot->getPane()->mBounds;
+	JUTRect telopBounds(mTelop->getPane()->getBounds());
+	bounds = mTelopRoot->getPane()->getBounds();
 	telopBounds.add(bounds.x1, bounds.y1 - 3);
 	unk544.set(telopBounds.x1 + 8, telopBounds.y1 + 8, telopBounds.x2 - 8,
 	           telopBounds.y2 - 8);
@@ -1078,24 +1072,24 @@ void TGCConsole2::loadAfter()
 	unk568 = unk544.x2;
 #endif
 
-	unk3BC = unk3B0->mBounds;
+	unk3BC = unk3B0->getBounds();
 	unk3CC = 30;
 
 	unk3D8 = new JSUMemoryOutputStream(unk3B4->getStringPtr(), 0x400);
 	unk3DC = new JSUMemoryOutputStream(unk3B8->getStringPtr(), 0x400);
 	unk3D4 = new JSUMemoryInputStream(nullptr, 0x400);
 
-	unk48C = unk450->getPane()->mBounds;
-	unk49C = unk458[0]->getPane()->mBounds;
-	unk4AC = unk480[0]->getPane()->mBounds;
+	unk48C = unk450->getPane()->getBounds();
+	unk49C = unk458[0]->getPane()->getBounds();
+	unk4AC = unk480[0]->getPane()->getBounds();
 
 	for (int i = 0; i < 6; ++i) {
-		JUTRect bounds(unk458[i]->getPane()->mBounds);
+		JUTRect bounds(unk458[i]->getPane()->getBounds());
 		unk4BC[i].set(bounds.x1, bounds.y1);
 	}
 
 	for (int i = 0; i < 2; ++i) {
-		JUTRect bounds(unk480[i]->getPane()->mBounds);
+		JUTRect bounds(unk480[i]->getPane()->getBounds());
 		unk4EC[i].set(bounds.x1, bounds.y1);
 	}
 
@@ -1405,7 +1399,7 @@ void TGCConsole2::startInsertLife(int param_1)
 	int offset = -(mLifeMeterRoot->unk4.y2 + 1);
 	mLifeMeterRoot->getPane()->show();
 #if !defined(VERSION_GMSJ01)
-	mLifeMeterRoot->getPane()->mAlpha = 0xFF;
+	mLifeMeterRoot->getPane()->setAlpha(0xFF);
 #endif
 	mLifeMeterRoot->setPanePosition(unk98, JUTPoint(0, offset),
 	                                JUTPoint(0, offset >> 1), JUTPoint(0, 0));
@@ -1430,13 +1424,13 @@ void TGCConsole2::resetLife(int param_1)
 		                 mLifeMeterPetalsOriginalBounds[i].y1,
 		                 mLifeMeterPetalsOriginalBounds[i].x2,
 		                 mLifeMeterPetalsOriginalBounds[i].y2);
-		mLifeMeterPetals[2 * i]->setBounds(local_38);
+		mLifeMeterPetals[2 * i]->place(local_38);
 
 		JUTRect local_48(mLifeMeterPetalsOriginalBounds[i].x1,
 		                 mLifeMeterPetalsOriginalBounds[i].y1,
 		                 mLifeMeterPetalsOriginalBounds[i].x2,
 		                 mLifeMeterPetalsOriginalBounds[i].y2);
-		mLifeMeterPetals[2 * i + 1]->setBounds(local_48);
+		mLifeMeterPetals[2 * i + 1]->place(local_48);
 	}
 }
 
@@ -1789,8 +1783,8 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU || !unk46)
 		return false;
 
-	unk3F0         = entry->unk4;
-	unk3B0->mAlpha = 0;
+	unk3F0 = entry->unk4;
+	unk3B0->setAlpha(0);
 	unk3B0->show();
 
 	JUTRect contents(unk3B0->getContentsBounds());
@@ -1928,7 +1922,7 @@ void TGCConsole2::drawWaterBack()
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
 
 	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
-	JUTRect bounds(((J2DPicture*)unk26C->getPane())->mBounds);
+	JUTRect bounds(((J2DPicture*)unk26C->getPane())->getBounds());
 	GXSetTevColor(GX_TEVREG0, JUtility::TColor(0x0000ff78));
 	GXSetTevColor(GX_TEVREG1, JUtility::TColor(0x0000ff00));
 
@@ -2096,7 +2090,7 @@ void TGCConsole2::processMoveNozzle()
 void TGCConsole2::changeNum(TBlendPane* pane, int num, int frames)
 {
 	pane->setPaneBlend(frames, unkE0[num], nullptr);
-	JUTRect bounds(pane->getPane()->mGlobalBounds);
+	JUTRect bounds(pane->getPane()->getGlbBounds());
 	JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
 	                          bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 	gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
@@ -2586,13 +2580,13 @@ void TGCConsole2::countBlueCoin()
 				mBlueCoinCountDigits[2]->getPane()->show();
 		}
 		if (unk160->getPane()->isVisible()) {
-			JUTRect bounds(mBlueCoinCountDigits[1]->getPane()->mGlobalBounds);
+			JUTRect bounds(mBlueCoinCountDigits[1]->getPane()->getGlbBounds());
 			JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
 			                          bounds.y1 + bounds.getHeight() * 0.5f,
 			                          0.0f);
 			gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
 			if (value % 10 == 0) {
-				bounds = mBlueCoinCountDigits[0]->getPane()->mGlobalBounds;
+				bounds = mBlueCoinCountDigits[0]->getPane()->getGlbBounds();
 				pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 				        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 				gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
@@ -2771,11 +2765,11 @@ bool TGCConsole2::processAppearStar(int param_1)
 		updateDownPaneState(mBlueCoinCountDigits[i], isFinished);
 	}
 
-	JUTRect bounds = mShineCountIcon->getPane()->mGlobalBounds;
+	JUTRect bounds = mShineCountIcon->getPane()->getGlbBounds();
 	unk144->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
-	bounds = mBlueCoinCountIcon->getPane()->mGlobalBounds;
+	bounds = mBlueCoinCountIcon->getPane()->getGlbBounds();
 	unk164->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
@@ -2821,7 +2815,7 @@ bool TGCConsole2::processDownCoin(int param_1)
 
 	isFinished &= mCoinCountRoot->update();
 
-	JUTRect bounds(mCoinCountIcon->getPane()->mGlobalBounds);
+	JUTRect bounds(mCoinCountIcon->getPane()->getGlbBounds());
 	unk124->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
@@ -2904,7 +2898,7 @@ bool TGCConsole2::processAppearCoin(int param_1)
 			updateDownBlendPaneState(mCoinCountDigits[i], isFinished);
 	}
 
-	JUTRect bounds(mCoinCountIcon->getPane()->mGlobalBounds);
+	JUTRect bounds(mCoinCountIcon->getPane()->getGlbBounds());
 	unk124->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 	                             bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 
@@ -2961,8 +2955,8 @@ bool TGCConsole2::processDrawTelop(u32)
 {
 	bool isFinished = false;
 
-	JUTRect paneBounds(mTelop->getPane()->mGlobalBounds);
-	JUTRect textBounds(unk528->mBounds);
+	JUTRect paneBounds(mTelop->getPane()->getGlbBounds());
+	JUTRect textBounds(unk528->getBounds());
 
 	if (unk534.x1 < paneBounds.x1 - mTelopTextWidth) {
 		isFinished = true;
@@ -3246,7 +3240,7 @@ bool TGCConsole2::processAppearBalloon()
 
 		unk3B0->resize(unk3BC.getWidth(), nextHeight);
 
-		unk3B0->setBounds(
+		unk3B0->place(
 		    JUTRect(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2, unk3BC.y2));
 	}
 
@@ -3269,7 +3263,7 @@ bool TGCConsole2::processDisappearBalloon()
 
 		unk3B0->resize(unk3BC.getWidth(), nextHeight);
 
-		unk3B0->setBounds(
+		unk3B0->place(
 		    JUTRect(unk3BC.x1, unk3BC.y2 - nextHeight, unk3BC.x2, unk3BC.y2));
 	} else {
 		s16 alpha = unk3B0->getAlpha();
@@ -3322,7 +3316,7 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 	u8 selected = 0x17;
 	for (u8 i = 0x16; (u8)i != 0; --i) {
 		int threshold = (int)(64.0f * (1.0f - unk2B8));
-		if (unk334[i]->mBounds.y1 >= threshold) {
+		if (unk334[i]->getBounds().y1 >= threshold) {
 			selected = i + 1;
 			break;
 		}
@@ -3330,11 +3324,11 @@ void TGCConsole2::drawJuice(J2DOrthoGraph& graph, u32 color)
 
 	f32 translateY;
 	if (selected < 0x17)
-		translateY = 1.0f - (f32)unk334[selected]->mBounds.y1 * 0.015625f;
+		translateY = 1.0f - (f32)unk334[selected]->getBounds().y1 * 0.015625f;
 	else
 		translateY = 1.0f;
 
-	if (unk334[1]->mBounds.y1 < (int)(64.0f * (1.0f - unk2B8)))
+	if (unk334[1]->getBounds().y1 < (int)(64.0f * (1.0f - unk2B8)))
 		translateY = 0.0f;
 
 	MTXTrans(mtx, 0.0f, translateY, 0.0f);
@@ -3449,7 +3443,7 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 		                  GX_FALSE, GX_PTIDENTITY);
 		GXSetTevOrder(GX_TEVSTAGE1, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
 
-		f32 top    = unk29C->getPane()->mGlobalBounds.y1 + topDiff[layer - 1];
+		f32 top    = unk29C->getPane()->getGlbBounds().y1 + topDiff[layer - 1];
 		f32 bottom = top + unk2A0[layer]->getHeight();
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition2f32(unk2BC[layer].x1, top);
@@ -3467,7 +3461,7 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 
 	JUTRect bounds = unk2A0[0]->getBounds();
 	f32 hidden     = 47.0f * (1.0f - unk2B8) - 0.5f;
-	int top        = unk29C->getPane()->mGlobalBounds.y1 + (int)hidden;
+	int top        = unk29C->getPane()->getGlbBounds().y1 + (int)hidden;
 	int y          = ++top;
 	if (top < 0)
 		y = 0;
@@ -3604,19 +3598,19 @@ void TGCConsole2::performMovement()
 
 	if (airMode
 	    && SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
-		s16 alpha = mLifeMeterRoot->getPane()->mAlpha;
+		s16 alpha = mLifeMeterRoot->getPane()->getAlpha();
 		alpha -= 0x10;
 		if (alpha < 0)
 			alpha = 0;
-		mLifeMeterRoot->getPane()->mAlpha = alpha;
+		mLifeMeterRoot->getPane()->setAlpha(alpha);
 	}
 
-	if (mLifeMeterRoot->getPane()->mAlpha != 0xff
+	if (mLifeMeterRoot->getPane()->getAlpha() != 0xff
 	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
-		u16 alpha = mLifeMeterRoot->getPane()->mAlpha + 0x10;
+		u16 alpha = mLifeMeterRoot->getPane()->getAlpha() + 0x10;
 		if (alpha > 0xff)
 			alpha = 0xff;
-		mLifeMeterRoot->getPane()->mAlpha = alpha;
+		mLifeMeterRoot->getPane()->setAlpha(alpha);
 	}
 
 	bool airTimeout = false;
@@ -3646,7 +3640,7 @@ void TGCConsole2::performMovement()
 			amount = gpMarioOriginal->getAir();
 			unk1CC = amount;
 			if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
-				mLifeMeterRoot->getPane()->mAlpha = 0;
+				mLifeMeterRoot->getPane()->setAlpha(0);
 #if defined(VERSION_GMSJ01)
 			unk18 = LIFE_AIR_APPEARING;
 		}
@@ -3788,12 +3782,12 @@ void TGCConsole2::performMovement()
 			}
 #endif
 			mLifeMeterPetals[unk1CC * 2]->hide();
-			mLifeMeterPetals[unk1CC * 2]->setBounds(
+			mLifeMeterPetals[unk1CC * 2]->place(
 			    JUTRect(mLifeMeterPetalsOriginalBounds[unk1CC].x1,
 			            mLifeMeterPetalsOriginalBounds[unk1CC].y1,
 			            mLifeMeterPetalsOriginalBounds[unk1CC].x2,
 			            mLifeMeterPetalsOriginalBounds[unk1CC].y2));
-			mLifeMeterPetals[unk1CC * 2 + 1]->setBounds(
+			mLifeMeterPetals[unk1CC * 2 + 1]->place(
 			    JUTRect(mLifeMeterPetalsOriginalBounds[unk1CC].x1,
 			            mLifeMeterPetalsOriginalBounds[unk1CC].y1,
 			            mLifeMeterPetalsOriginalBounds[unk1CC].x2,
@@ -3801,12 +3795,12 @@ void TGCConsole2::performMovement()
 			--unk1CC;
 			if (unk1CC == 0) {
 				mLifeMeterPetals[0]->hide();
-				mLifeMeterPetals[0]->setBounds(
+				mLifeMeterPetals[0]->place(
 				    JUTRect(mLifeMeterPetalsOriginalBounds[0].x1,
 				            mLifeMeterPetalsOriginalBounds[0].y1,
 				            mLifeMeterPetalsOriginalBounds[0].x2,
 				            mLifeMeterPetalsOriginalBounds[0].y2));
-				mLifeMeterPetals[1]->setBounds(
+				mLifeMeterPetals[1]->place(
 				    JUTRect(mLifeMeterPetalsOriginalBounds[0].x1,
 				            mLifeMeterPetalsOriginalBounds[0].y1,
 				            mLifeMeterPetalsOriginalBounds[0].x2,
@@ -3864,15 +3858,15 @@ void TGCConsole2::performMovement()
 		done &= mShineCountRoot->update();
 		done &= unk160->update();
 
-		JUTRect bounds(mCoinCountIcon->getPane()->mGlobalBounds);
+		JUTRect bounds(mCoinCountIcon->getPane()->getGlbBounds());
 		unk124->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 		                             bounds.y1 + bounds.getHeight() * 0.5f,
 		                             0.0f);
-		bounds = mBlueCoinCountIcon->getPane()->mGlobalBounds;
+		bounds = mBlueCoinCountIcon->getPane()->getGlbBounds();
 		unk164->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 		                             bounds.y1 + bounds.getHeight() * 0.5f,
 		                             0.0f);
-		bounds = mShineCountIcon->getPane()->mGlobalBounds;
+		bounds = mShineCountIcon->getPane()->getGlbBounds();
 		unk144->setGlobalTranslation(bounds.x1 + bounds.getWidth() * 0.5f,
 		                             bounds.y1 + bounds.getHeight() * 0.5f,
 		                             0.0f);
@@ -3920,13 +3914,13 @@ void TGCConsole2::performMovement()
 				mBlueCoinCountDigits[2]->getPane()->show();
 		}
 		if (unk160->getPane()->isVisible()) {
-			JUTRect bounds(mBlueCoinCountDigits[1]->getPane()->mGlobalBounds);
+			JUTRect bounds(mBlueCoinCountDigits[1]->getPane()->getGlbBounds());
 			JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
 			                          bounds.y1 + bounds.getHeight() * 0.5f,
 			                          0.0f);
 			gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
 			if (value % 10 == 0) {
-				bounds = mBlueCoinCountDigits[0]->getPane()->mGlobalBounds;
+				bounds = mBlueCoinCountDigits[0]->getPane()->getGlbBounds();
 				pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 				        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 				gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
@@ -4092,11 +4086,11 @@ void TGCConsole2::performMovement()
 		unk2B8 = (f32)currentWater / (f32)maxWater;
 
 	if (unk2B8 >= 1.0f)
-		unk2A0[0]->mAlpha = 0xff;
+		unk2A0[0]->setAlpha(0xff);
 	else if (unk2B8 == 0.0f)
-		unk2A0[0]->mAlpha = 0;
+		unk2A0[0]->setAlpha(0);
 	else
-		unk2A0[0]->mAlpha = 0x50;
+		unk2A0[0]->setAlpha(0x50);
 
 	unk28 = currentWater;
 	if (!unk46) {
@@ -4118,9 +4112,9 @@ void TGCConsole2::performMovement()
 			unk7C = 0;
 
 		if (unk7C < 0x46)
-			unk288->mAlpha = 0;
+			unk288->setAlpha(0);
 		else if (unk7C < 0x10e)
-			unk288->mAlpha = 0xff;
+			unk288->setAlpha(0xff);
 		else
 			unk7C = 0;
 
@@ -4167,12 +4161,12 @@ void TGCConsole2::performMovement()
 			u8 offset = mul * (int)(0.5f + ratio);
 			for (int i = 0; i < 9; ++i) {
 				if (mLifeMeterPetals[i * 2]->isVisible()) {
-					mLifeMeterPetals[i * 2]->setBounds(
+					mLifeMeterPetals[i * 2]->place(
 					    JUTRect(mLifeMeterPetalsOriginalBounds[i].x1 - offset,
 					            mLifeMeterPetalsOriginalBounds[i].y1 - offset,
 					            mLifeMeterPetalsOriginalBounds[i].x2 + offset,
 					            mLifeMeterPetalsOriginalBounds[i].y2 + offset));
-					mLifeMeterPetals[i * 2 + 1]->setBounds(
+					mLifeMeterPetals[i * 2 + 1]->place(
 					    JUTRect(mLifeMeterPetalsOriginalBounds[i].x1 - offset,
 					            mLifeMeterPetalsOriginalBounds[i].y1 - offset,
 					            mLifeMeterPetalsOriginalBounds[i].x2 + offset,
@@ -4274,7 +4268,7 @@ void TGCConsole2::performMovement()
 
 	if (unk44 && mTelopRoot->getPane()->isVisible()) {
 		if (processDrawTelop(unk80++)) {
-			JUTRect bounds(mTelop->getPane()->mGlobalBounds);
+			JUTRect bounds(mTelop->getPane()->getGlbBounds());
 			unk568 = unk544.x2;
 			unk534.add(mTelopTextWidth + bounds.x2, 0);
 
@@ -4326,7 +4320,7 @@ void TGCConsole2::performMovement()
 		if (!unk428->getPane()->isVisible())
 			startAppearRedCoin();
 
-		JUTRect bounds(unk43C[0]->getPane()->mGlobalBounds);
+		JUTRect bounds(unk43C[0]->getPane()->getGlbBounds());
 		JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
 		                          bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 		gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
@@ -4684,7 +4678,7 @@ void TGCConsole2::performCalcAnim()
 				if (unk6C >= 100) {
 					if (unk6C % 100 == 0) {
 						setDigitPane(mCoinCountDigits[0], unkE0, unk6C / 100);
-						bounds = mCoinCountDigits[0]->getPane()->mGlobalBounds;
+						bounds = mCoinCountDigits[0]->getPane()->getGlbBounds();
 						pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 						        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 						gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
@@ -4696,7 +4690,7 @@ void TGCConsole2::performCalcAnim()
 					if (remainder % 10 == 0) {
 						setDigitPane(mCoinCountDigits[1], unkE0,
 						             remainder / 10);
-						bounds = mCoinCountDigits[1]->getPane()->mGlobalBounds;
+						bounds = mCoinCountDigits[1]->getPane()->getGlbBounds();
 						pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 						        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 						gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
@@ -4706,7 +4700,7 @@ void TGCConsole2::performCalcAnim()
 					if (!mCoinCountDigits[2]->getPane()->isVisible())
 						mCoinCountDigits[2]->getPane()->show();
 					setDigitPane(mCoinCountDigits[2], unkE0, remainder % 10);
-					bounds = mCoinCountDigits[2]->getPane()->mGlobalBounds;
+					bounds = mCoinCountDigits[2]->getPane()->getGlbBounds();
 					pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 					        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 					gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
@@ -4714,7 +4708,7 @@ void TGCConsole2::performCalcAnim()
 				} else {
 					if (unk6C % 10 == 0) {
 						setDigitPane(mCoinCountDigits[0], unkE0, unk6C / 10);
-						bounds = mCoinCountDigits[0]->getPane()->mGlobalBounds;
+						bounds = mCoinCountDigits[0]->getPane()->getGlbBounds();
 						pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 						        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 						gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,
@@ -4722,7 +4716,7 @@ void TGCConsole2::performCalcAnim()
 					}
 
 					setDigitPane(mCoinCountDigits[1], unkE0, unk6C % 10);
-					bounds = mCoinCountDigits[1]->getPane()->mGlobalBounds;
+					bounds = mCoinCountDigits[1]->getPane()->getGlbBounds();
 					pos.set(bounds.x1 + bounds.getWidth() * 0.5f,
 					        bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
 					gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr,

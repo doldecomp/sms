@@ -92,7 +92,7 @@ int TMenuDirector::rsetup()
 	J2DPane* statPane = unk3C->search('stat');
 	if (!statPane)
 		return 1;
-	if (statPane->mInfoTag != 0x12)
+	if (statPane->getTypeID() != 0x12)
 		return 1;
 
 	unk24 = new TFlashPane(statPane);

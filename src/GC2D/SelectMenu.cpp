@@ -538,7 +538,7 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
 			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
-			mShineMarks[i]->mVisible = true;
+			mShineMarks[i]->show();
 
 			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
 				JUTTexture* mark = mShineUnlockedMark;
