@@ -1820,7 +1820,8 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 	unk14 = 0;
 	unk10 = 1;
 
-	s32 soundID = scNozzleSoundList[(u8)entry->unk8[0]];
+	s32 soundID = scNozzleSoundList[(u8)entry->unk8[VERSION_SELECT(2, GMSJ01(0),
+	                                                               GMSE01(0))]];
 	if (soundID != -1)
 		SMSGetMSound()->startSoundSystemSE(soundID, 0, nullptr, 0);
 
