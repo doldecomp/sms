@@ -1006,8 +1006,8 @@ int TApplication::drawDVDErr()
 		if (gpSystemFont != nullptr)
 			font = gpSystemFont;
 		J2DPrint print(font, 0);
-		print.unk44  = (GXColor) { 0xff, 0xff, 0, 0xff };
-		print.unk48  = (GXColor) { 0xff, 0xff, 0, 0xff };
+		print.setCharColor((GXColor) { 0xff, 0xff, 0, 0xff });
+		print.setGradColor((GXColor) { 0xff, 0xff, 0, 0xff });
 		f32 msgWidth = print.getWidth(message);
 		print.print(0.5f * (600.0f - msgWidth), 230, message);
 	}

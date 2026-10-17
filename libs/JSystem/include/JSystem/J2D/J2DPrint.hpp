@@ -58,6 +58,9 @@ public:
 		mFontSizeY = sizeY > 0 ? sizeY : 0;
 	}
 
+	void setCharColor(JUtility::TColor color) { mCharColor = color; }
+	void setGradColor(JUtility::TColor color) { mGradColor = color; }
+
 	void setSomeColors(JUtility::TColor c1, JUtility::TColor c2)
 	{
 		unk3C = c1;
@@ -73,7 +76,7 @@ public:
 	static u8 mBufferNotEnough;
 	static OSMutex mMutex;
 
-public:
+protected:
 	/* 0x4 */ JUTFont* mFont;
 	/* 0x8 */ JUtility::TColor unk8;
 	/* 0xC */ JUtility::TColor unkC;
@@ -91,8 +94,8 @@ public:
 	/* 0x38 */ int unk38;
 	/* 0x3C */ JUtility::TColor unk3C;
 	/* 0x40 */ JUtility::TColor unk40;
-	/* 0x44 */ JUtility::TColor unk44;
-	/* 0x48 */ JUtility::TColor unk48;
+	/* 0x44 */ JUtility::TColor mCharColor;
+	/* 0x48 */ JUtility::TColor mGradColor;
 	/* 0x4C */ int unk4C;
 	/* 0x50 */ int unk50;
 	/* 0x54 */ int unk54;

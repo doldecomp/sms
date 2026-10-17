@@ -89,10 +89,10 @@ void J2DPrint::private_initiate(JUTFont* font, int param_2, int param_3,
 	}
 	unk60 = 1;
 	locate(0, 0);
-	unk44 = param_4;
-	unk48 = param_5;
-	unk3C = 0;
-	unk40 = 0xffffffff;
+	mCharColor = param_4;
+	mGradColor = param_5;
+	unk3C      = 0;
+	unk40      = 0xffffffff;
 	if (!mFont)
 		unk54 = 0x50;
 	else
@@ -539,7 +539,7 @@ u16 J2DPrint::doEscapeCode(const u8** param_1, u8 opacity)
 		break;
 	}
 	case 'CC': {
-		unk8       = getNumber(param_1, unk44, unk8, 16);
+		unk8       = getNumber(param_1, mCharColor, unk8, 16);
 		local_40   = unk8;
 		local_40.a = local_40.a * opacity / 0xff;
 		local_44.a = local_44.a * opacity / 0xff;
@@ -553,7 +553,7 @@ u16 J2DPrint::doEscapeCode(const u8** param_1, u8 opacity)
 		break;
 	}
 	case 'GC': {
-		unkC       = getNumber(param_1, unk48, unkC, 16);
+		unkC       = getNumber(param_1, mGradColor, unkC, 16);
 		local_44   = unkC;
 		local_40.a = local_40.a * opacity / 0xff;
 		local_44.a = local_44.a * opacity / 0xff;
@@ -611,8 +611,8 @@ u16 J2DPrint::doEscapeCode(const u8** param_1, u8 opacity)
 
 void J2DPrint::initchar()
 {
-	unk8  = unk44;
-	unkC  = unk48;
+	unk8  = mCharColor;
+	unkC  = mGradColor;
 	unk10 = unk4C;
 	unk14 = unk50;
 	unk18 = unk60;
