@@ -50,6 +50,11 @@ public:
 		mFontSizeY = y;
 	}
 
+	JUtility::TColor getCharColor() { return mCharColor; }
+	JUtility::TColor getGradColor() { return mGradColor; }
+	void setCharColor(JUtility::TColor color) { mCharColor.set(color); }
+	void setGradColor(JUtility::TColor color) { mGradColor.set(color); }
+
 	void setFontColor(JUtility::TColor charColor, JUtility::TColor gradColor)
 	{
 		mCharColor = charColor;
@@ -62,7 +67,7 @@ public:
 		mWhite = white;
 	}
 
-public:
+protected:
 	/* 0xEC */ JUTFont* mFont;
 	/* 0xF0 */ JUtility::TColor mCharColor;
 	/* 0xF4 */ JUtility::TColor mGradColor;

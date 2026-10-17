@@ -43,9 +43,9 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 			J2DTextBox* textBox = (J2DTextBox*)pane;
 			local_420[unk28]    = textBox;
 			if (unk28 == 0) {
-				unk24               = textBox->mCharColor.get();
-				textBox->mCharColor = unk1C.get();
-				textBox->mGradColor = unk20.get();
+				unk24 = textBox->getCharColor();
+				textBox->setCharColor(unk1C);
+				textBox->setGradColor(unk20);
 			}
 			++unk28;
 		}
@@ -79,8 +79,8 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 		                                | TMarioGamePad::MEANING_MENU_DOWN
 		                                | TMarioGamePad::MEANING_MENU_LEFT
 		                                | TMarioGamePad::MEANING_MENU_RIGHT)) {
-			unk30[unk2C]->mCharColor = unk24.get();
-			unk30[unk2C]->mGradColor = unk24.get();
+			unk30[unk2C]->setCharColor(unk24);
+			unk30[unk2C]->setGradColor(unk24);
 			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT
 			                             | TMarioGamePad::MEANING_MENU_RIGHT)) {
 				if (unk2C < unk3C) {
@@ -105,8 +105,8 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 					unk2C = 0;
 			}
 
-			unk30[unk2C]->mCharColor = unk1C.get();
-			unk30[unk2C]->mGradColor = unk20.get();
+			unk30[unk2C]->setCharColor(unk1C);
+			unk30[unk2C]->setGradColor(unk20);
 		}
 	}
 }
