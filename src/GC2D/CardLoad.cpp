@@ -153,11 +153,11 @@ void TCardLoad::changePattern(J2DPicture* picture, s16 period, u32 frame)
 {
 	if (frame % period == 0) {
 		if ((frame / period) % 2 == 0) {
-			picture->setBlendKonstColor(0.0f, 1.0f, 0.0f, 0.0f);
-			picture->setBlendKonstAlpha(0.0f, 1.0f, 0.0f, 0.0f);
+			picture->setBlendColorRatio(0.0f, 1.0f, 0.0f, 0.0f);
+			picture->setBlendAlphaRatio(0.0f, 1.0f, 0.0f, 0.0f);
 		} else {
-			picture->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
-			picture->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			picture->setBlendColorRatio(1.0f, 0.0f, 0.0f, 0.0f);
+			picture->setBlendAlphaRatio(1.0f, 0.0f, 0.0f, 0.0f);
 		}
 	}
 }
@@ -336,7 +336,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 
 		mGameLogoLetters[i] = new TExPane(mTitleScreen, key);
 
-		((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack = 0x00FFFF00;
+		((J2DPicture*)mGameLogoLetters[i]->getPane())->setBlack(0x00FFFF00);
 
 		mGameLogoLetters[i]->setPaneAlpha(20, 0xff, 0);
 	}
@@ -385,7 +385,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 		    = (J2DPicture*)mLoadScreen->search('np0c' + (i << 8));
 		unk32C[i] = (J2DPicture*)mLoadScreen->search('cra1' + (i << 8));
 
-		unk32C[i]->insert(pJVar5, unk32C[i]->mTextureNum, 0.0f);
+		unk32C[i]->append(pJVar5, 0.0f);
 		mLoadScreen->search('cra2' + (i << 8))->hide();
 	}
 
@@ -1252,14 +1252,14 @@ bool TCardLoad::titleDraw()
 			for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i) {
 				any &= mGameLogoLetters[i]->update();
 				JUtility::TColor col
-				    = ((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack;
+				    = ((J2DPicture*)mGameLogoLetters[i]->getPane())->getBlack();
 				u16 r = col.r;
 				r += 7;
 				if (r > 255)
 					r = 255;
 
-				((J2DPicture*)mGameLogoLetters[i]->getPane())->mBlack
-				    = (r << 24) + 0xFFFF00;
+				((J2DPicture*)mGameLogoLetters[i]->getPane())
+				    ->setBlack((r << 24) + 0xFFFF00);
 			}
 
 			if (any) {
@@ -1445,11 +1445,11 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 		unk468->getPane()->show();
 
 		if (param_3 == 1) {
-			((J2DPicture*)unk484[0]->getPane())->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)unk484[1]->getPane())->mWhite = 0x00FF00FF;
+			((J2DPicture*)unk484[0]->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)unk484[1]->getPane())->setWhite(0x00FF00FF);
 		} else {
-			((J2DPicture*)unk484[1]->getPane())->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)unk484[0]->getPane())->mWhite = 0x00FF00FF;
+			((J2DPicture*)unk484[1]->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)unk484[0]->getPane())->setWhite(0x00FF00FF);
 		}
 		unk480->hide();
 		unk484[0]->getPane()->hide();
@@ -1517,8 +1517,8 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 
 		int thing = unkC4 < 40 ? unkC4 : 80 - unkC4;
 		thing     = (thing * 255.0f) / 40.0f;
-		((J2DPicture*)unk484[unkB7]->getPane())->mWhite
-		    = (thing << 24) + 0xFF00FF;
+		((J2DPicture*)unk484[unkB7]->getPane())
+		    ->setWhite((thing << 24) + 0xFF00FF);
 		unk484[unkB7]->update();
 		unkC4 += 1;
 		if (unkC4 > 80)
@@ -1532,8 +1532,8 @@ s8 TCardLoad::waitForChoice(TEProgress param_1, TEProgress param_2, int param_3)
 			unk484[old]->getPane()->place(unk48C[old]);
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
 			                                   nullptr, 0);
-			((J2DPicture*)unk484[old]->getPane())->mWhite   = 0xFFFFFFFF;
-			((J2DPicture*)unk484[unkB7]->getPane())->mWhite = 0x00FF00FF;
+			((J2DPicture*)unk484[old]->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)unk484[unkB7]->getPane())->setWhite(0x00FF00FF);
 		}
 	} break;
 
@@ -1583,18 +1583,18 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 		mConfirmationWindow->getPane()->show();
 
 		if (param_3 == 1) {
-			((J2DPicture*)mConfirmationYesNo[0]->getPane())->mWhite
-			    = 0xFFFFFFFF;
+			((J2DPicture*)mConfirmationYesNo[0]->getPane())
+			    ->setWhite(0xFFFFFFFF);
 			mConfirmationYesNo[0]->getPane()->hide();
-			((J2DPicture*)mConfirmationYesNo[1]->getPane())->mWhite
-			    = 0x00FF00FF;
+			((J2DPicture*)mConfirmationYesNo[1]->getPane())
+			    ->setWhite(0x00FF00FF);
 			mConfirmationYesNo[1]->getPane()->hide();
 		} else {
-			((J2DPicture*)mConfirmationYesNo[1]->getPane())->mWhite
-			    = 0xFFFFFFFF;
+			((J2DPicture*)mConfirmationYesNo[1]->getPane())
+			    ->setWhite(0xFFFFFFFF);
 			mConfirmationYesNo[1]->getPane()->hide();
-			((J2DPicture*)mConfirmationYesNo[0]->getPane())->mWhite
-			    = 0x00FF00FF;
+			((J2DPicture*)mConfirmationYesNo[0]->getPane())
+			    ->setWhite(0x00FF00FF);
 			mConfirmationYesNo[0]->getPane()->hide();
 		}
 		mConfirmationShineCountOver100->hide();
@@ -1719,8 +1719,8 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 		int thing = unkC4 < 40 ? unkC4 : 80 - unkC4;
 		thing     = (thing * 255.0f) / 40.0f;
-		((J2DPicture*)mConfirmationYesNo[unkB7]->getPane())->mWhite
-		    = (thing << 24) + 0xFF00FF;
+		((J2DPicture*)mConfirmationYesNo[unkB7]->getPane())
+		    ->setWhite((thing << 24) + 0xFF00FF);
 		mConfirmationYesNo[unkB7]->update();
 		unkC4 += 1;
 		if (unkC4 > 80)
@@ -1735,10 +1735,10 @@ s8 TCardLoad::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			    mConfirmationYesNoInitialBounds[old]);
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_E3_MENU_CURSOR, 0,
 			                                   nullptr, 0);
-			((J2DPicture*)mConfirmationYesNo[old]->getPane())->mWhite
-			    = 0xFFFFFFFF;
-			((J2DPicture*)mConfirmationYesNo[unkB7]->getPane())->mWhite
-			    = 0x00FF00FF;
+			((J2DPicture*)mConfirmationYesNo[old]->getPane())
+			    ->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mConfirmationYesNo[unkB7]->getPane())
+			    ->setWhite(0x00FF00FF);
 		}
 	} break;
 
@@ -2563,19 +2563,16 @@ s8 TCardLoad::selectFunction()
 					if (i > 0)
 						((J2DPicture*)mSaveManageOptionsEntries[unkB0][i]
 						     ->getPane())
-						    ->mWhite
-						    = 0xFFFFFF7F;
+						    ->setWhite(0xFFFFFF7F);
 				} else {
 					((J2DPicture*)mSaveManageOptionsEntries[unkB0][i]
 					     ->getPane())
-					    ->mWhite
-					    = 0xFFFFFFFF;
+					    ->setWhite(0xFFFFFFFF);
 				}
 			}
 
 			((J2DPicture*)mSaveManageOptionsEntries[unkB0][unkB6]->getPane())
-			    ->mWhite
-			    = 0x00FF00FF;
+			    ->setWhite(0x00FF00FF);
 			for (int i = 0; i < 3; ++i) {
 				if (unk40[i].unk0 == 1) {
 #if defined(VERSION_GMSJ01)
@@ -2698,8 +2695,7 @@ s8 TCardLoad::selectFunction()
 			r     = r < 40 ? r : 80 - r;
 			r     = (r * 255.0f) / 40.0f;
 			((J2DPicture*)mSaveManageOptionsEntries[unkB0][unkB6]->getPane())
-			    ->mWhite
-			    = (r << 24) + 0xFF00FF;
+			    ->setWhite((r << 24) + 0xFF00FF);
 			mSaveManageOptionsEntries[unkB0][unkB6]->update();
 			unkC4 += 1;
 			if (unkC4 > 80)
@@ -2718,11 +2714,9 @@ s8 TCardLoad::selectFunction()
 			    mSaveManageOptionsEntriesInitialBounds[unkB0][bVar1]);
 
 			((J2DPicture*)mSaveManageOptionsEntries[unkB0][bVar1]->getPane())
-			    ->mWhite
-			    = 0xFFFFFFFF;
+			    ->setWhite(0xFFFFFFFF);
 			((J2DPicture*)mSaveManageOptionsEntries[unkB0][unkB6]->getPane())
-			    ->mWhite
-			    = 0x00FF00FF;
+			    ->setWhite(0x00FF00FF);
 		}
 		break;
 

@@ -29,11 +29,11 @@ J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* stream,
 
 		if (fields != 0) {
 			u8 mirror = stream->readU8();
-			mMirror   = (J2DMirror)(mirror & 3);
+			mMirror   = (J2DMirror)(mirror & J2DMirror_XY);
 			unk130    = mirror & 4;
 			fields -= 1;
 		} else {
-			mMirror = MIRROR0;
+			mMirror = J2DMirror_None;
 			unk130  = false;
 		}
 		if (fields != 0) {
@@ -72,7 +72,7 @@ J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* stream,
 
 		mBinding     = (J2DBinding)stream->readU8();
 		u8 mode      = stream->readU8();
-		mMirror      = (J2DMirror)(mode & 3);
+		mMirror      = (J2DMirror)(mode & J2DMirror_XY);
 		unk130       = mode & 4;
 		mWrapmodeHor = (J2DWrapmode)(mode >> 3 & 3);
 		mWrapmodeVer = mWrapmodeHor;
@@ -245,30 +245,30 @@ void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
 	int renderX = x;
 	int renderY = y;
 	float texSize;
-	if (wrap_hor == 0) {
+	if (wrap_hor == J2DWrapmode_NONE) {
 		texSize = !flip ? (float)mTextures[0]->getWidth()
 		                : (float)mTextures[0]->getHeight();
-		if (binding & 8) {
-			if (!(binding & 4) && texSize < (float)w) {
+		if (binding & J2DBind_Left) {
+			if (!(binding & J2DBind_Right) && texSize < (float)w) {
 				w = (int)texSize;
 			}
 		} else if (texSize < (float)w) {
-			renderX = (binding & 4) ? (x + w) - (int)texSize
-			                        : x + (w - (int)texSize) / 2;
+			renderX = (binding & J2DBind_Right) ? (x + w) - (int)texSize
+			                                    : x + (w - (int)texSize) / 2;
 			w       = (int)texSize;
 		}
 	}
-	if (wrap_vert == 0) {
+	if (wrap_vert == J2DWrapmode_NONE) {
 		texSize = !flip ? (float)mTextures[0]->getHeight()
 		                : (float)mTextures[0]->getWidth();
 
-		if (binding & 2) {
-			if (!(binding & 1) && texSize < (float)h) {
+		if (binding & J2DBind_Top) {
+			if (!(binding & J2DBind_Bottom) && texSize < (float)h) {
 				h = (int)texSize;
 			}
 		} else if (texSize < (float)h) {
-			renderY = (binding & 1) ? (y + h) - (int)texSize
-			                        : y + (h - (int)texSize) / 2;
+			renderY = (binding & J2DBind_Bottom) ? (y + h) - (int)texSize
+			                                     : y + (h - (int)texSize) / 2;
 			h       = (int)texSize;
 		}
 	}
@@ -278,15 +278,23 @@ void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
 	bool boolR4;
 	bool boolR5;
 	if (!flip) {
-		boolR0 = (mirror & 2) ? !!(binding & 4) : !!(binding & 8);
-		boolR3 = (mirror & 2) ? !!(binding & 8) : !!(binding & 4);
-		boolR4 = (mirror & 1) ? !!(binding & 1) : !!(binding & 2);
-		boolR5 = (mirror & 1) ? !!(binding & 2) : !!(binding & 1);
+		boolR0 = (mirror & J2DMirror_X) ? !!(binding & J2DBind_Right)
+		                                : !!(binding & J2DBind_Left);
+		boolR3 = (mirror & J2DMirror_X) ? !!(binding & J2DBind_Left)
+		                                : !!(binding & J2DBind_Right);
+		boolR4 = (mirror & J2DMirror_Y) ? !!(binding & J2DBind_Bottom)
+		                                : !!(binding & J2DBind_Top);
+		boolR5 = (mirror & J2DMirror_Y) ? !!(binding & J2DBind_Top)
+		                                : !!(binding & J2DBind_Bottom);
 	} else {
-		boolR0 = (mirror & 2) ? !!(binding & 1) : !!(binding & 2);
-		boolR3 = (mirror & 2) ? !!(binding & 2) : !!(binding & 1);
-		boolR4 = (mirror & 1) ? !!(binding & 8) : !!(binding & 4);
-		boolR5 = (mirror & 1) ? !!(binding & 4) : !!(binding & 8);
+		boolR0 = (mirror & J2DMirror_X) ? !!(binding & J2DBind_Bottom)
+		                                : !!(binding & J2DBind_Top);
+		boolR3 = (mirror & J2DMirror_X) ? !!(binding & J2DBind_Top)
+		                                : !!(binding & J2DBind_Bottom);
+		boolR4 = (mirror & J2DMirror_Y) ? !!(binding & J2DBind_Left)
+		                                : !!(binding & J2DBind_Right);
+		boolR5 = (mirror & J2DMirror_Y) ? !!(binding & J2DBind_Right)
+		                                : !!(binding & J2DBind_Left);
 	}
 
 	float fullWidth  = (float)mTextures[0]->getWidth();
@@ -320,10 +328,10 @@ void J2DPicture::drawFullSet(int x, int y, int w, int h, J2DBinding binding,
 		v2 = 0.5f + ((float)renderHeight / fullHeight) / 2.0f;
 	}
 
-	if (mirror & 2) {
+	if (mirror & J2DMirror_X) {
 		swap(u1, u2);
 	}
-	if (mirror & 1) {
+	if (mirror & J2DMirror_Y) {
 		swap(v1, v2);
 	}
 

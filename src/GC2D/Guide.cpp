@@ -86,7 +86,7 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 2; ++i) {
 		unk128[i]           = new TExPane(unkBC, 'cu_a' + i);
 		J2DPicture* picture = (J2DPicture*)unk128[i]->getPane();
-		picture->insert(cursor, picture->mTextureNum, 0.0f);
+		picture->append(cursor, 0.0f);
 	}
 
 	for (int i = 0; i < 13; ++i) {
@@ -114,27 +114,27 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	unk134              = (J2DPicture*)unkBC->search('10');
 	JUTTexture* texture = new JUTTexture(
 	    (const ResTIMG*)JKRGetResource("/guide/timg/guide_draw_sun_2.bti"));
-	unk134->insert(texture, unk134->mTextureNum, 0.0f);
+	unk134->append(texture, 0.0f);
 
 	unk138  = (J2DPicture*)unkBC->search('13');
 	texture = new JUTTexture(
 	    (const ResTIMG*)JKRGetResource("/guide/timg/guide_draw_ship_2.bti"));
-	unk138->insert(texture, unk138->mTextureNum, 0.0f);
+	unk138->append(texture, 0.0f);
 
 	unk13C  = (J2DPicture*)unkBC->search('16');
 	texture = new JUTTexture((const ResTIMG*)JKRGetResource(
 	    "/guide/timg/guide_draw_palmtree_2.bti"));
-	unk13C->insert(texture, unk13C->mTextureNum, 0.0f);
+	unk13C->append(texture, 0.0f);
 
 	unk140  = (J2DPicture*)unkBC->search('17');
 	texture = new JUTTexture((const ResTIMG*)JKRGetResource(
 	    "/guide/timg/guide_draw_palmtree_1.bti"));
-	unk140->insert(texture, unk140->mTextureNum, 0.0f);
+	unk140->append(texture, 0.0f);
 
 	unk144  = (J2DPicture*)unkBC->search('18');
 	texture = new JUTTexture(
 	    (const ResTIMG*)JKRGetResource("/guide/timg/guide_draw_fish_2.bti"));
-	unk144->insert(texture, unk144->mTextureNum, 0.0f);
+	unk144->append(texture, 0.0f);
 
 	unk148 = (J2DPicture*)unkBC->search('11');
 	unk14C = (J2DPicture*)unkBC->search('14');
@@ -445,11 +445,11 @@ void TGuide::linkSelect()
 			unk44C[unk480]->setAlpha(255);
 		if (stage == -1) {
 			J2DPicture* cursor = (J2DPicture*)unk128[0]->getPane();
-			cursor->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
-			cursor->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			cursor->setBlendColorRatio(1.0f, 0.0f, 0.0f, 0.0f);
+			cursor->setBlendAlphaRatio(1.0f, 0.0f, 0.0f, 0.0f);
 			cursor = (J2DPicture*)unk128[1]->getPane();
-			cursor->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
-			cursor->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			cursor->setBlendColorRatio(1.0f, 0.0f, 0.0f, 0.0f);
+			cursor->setBlendAlphaRatio(1.0f, 0.0f, 0.0f, 0.0f);
 		}
 		unk164 = 0;
 		unk480 = stage;
@@ -493,11 +493,11 @@ void TGuide::changePattern(J2DPicture* picture, s16 period, u32 frame)
 {
 	if (frame % period == 0) {
 		if ((frame / period) % 2 == 0) {
-			picture->setBlendKonstColor(0.0f, 1.0f, 0.0f, 0.0f);
-			picture->setBlendKonstAlpha(0.0f, 1.0f, 0.0f, 0.0f);
+			picture->setBlendColorRatio(0.0f, 1.0f, 0.0f, 0.0f);
+			picture->setBlendAlphaRatio(0.0f, 1.0f, 0.0f, 0.0f);
 		} else {
-			picture->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
-			picture->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			picture->setBlendColorRatio(1.0f, 0.0f, 0.0f, 0.0f);
+			picture->setBlendAlphaRatio(1.0f, 0.0f, 0.0f, 0.0f);
 		}
 	}
 }
@@ -506,9 +506,9 @@ void TGuide::mirrorPattern(J2DPicture* picture, s16 period, u32 frame)
 {
 	if (frame % period == 0) {
 		if ((frame / period) % 2 == 0)
-			picture->mMirror = MIRROR0;
+			picture->setMirror(J2DMirror_None);
 		else
-			picture->mMirror = J2DMirror_X;
+			picture->setMirror(J2DMirror_X);
 	}
 }
 

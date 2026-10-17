@@ -829,7 +829,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
 
-					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
+					mShineMarks[mSelectedShine]->setWhite(mMarkCol);
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
@@ -843,7 +843,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					    mScenarioBmg2, SMS_getNormalStage(shineID2));
 					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
 
-					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
+					mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
 					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
@@ -907,7 +907,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = false;
-					mShineMarks[mSelectedShine]->mWhite = mMarkCol;
+					mShineMarks[mSelectedShine]->setWhite(mMarkCol);
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
 
 					mSelectedShine = nextIndex;
@@ -921,7 +921,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = true;
 
-					mShineMarks[mSelectedShine]->mWhite = mSelectedMarkCol;
+					mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
 					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
 
 					if (mNumUnlockedShines > 1) {
@@ -1063,10 +1063,11 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			// TODO: recover the original color helper and remaining stack
 			// layout.
 			{
-				u32 ccol1
-				    = ((J2DPicture*)mLetterBoxTop->getPane())->mCornerColor[0];
-				u32 ccol2
-				    = ((J2DPicture*)mLetterBoxTop->getPane())->mCornerColor[2];
+				J2DPicture::TCornerColor corners;
+				((J2DPicture*)mLetterBoxTop->getPane())
+				    ->getCornerColor(corners);
+				u32 ccol1 = corners.mColor[0];
+				u32 ccol2 = corners.mColor[2];
 
 				u32 var1 = (ccol1 & 0xFFu) + 16u;
 
@@ -1101,10 +1102,11 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 			}
 
 			{
-				u32 ccol1 = ((J2DPicture*)mLetterBoxBottom->getPane())
-				                ->mCornerColor[0];
-				u32 ccol2 = ((J2DPicture*)mLetterBoxBottom->getPane())
-				                ->mCornerColor[2];
+				J2DPicture::TCornerColor corners;
+				((J2DPicture*)mLetterBoxBottom->getPane())
+				    ->getCornerColor(corners);
+				u32 ccol1 = corners.mColor[0];
+				u32 ccol2 = corners.mColor[2];
 
 				u32 var1 = (ccol1 & 0xFFu) + 16u;
 

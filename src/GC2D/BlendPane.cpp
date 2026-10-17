@@ -22,8 +22,8 @@ bool TBlendPane::update()
 		f32 progress;
 		inverseProgress     = 1.0f - (progress = mBlendProgress);
 		J2DPicture* picture = (J2DPicture*)getPane();
-		picture->setBlendKonstColor(progress, inverseProgress, 1.0f, 1.0f);
-		picture->setBlendKonstAlpha(progress, inverseProgress, 1.0f, 1.0f);
+		picture->setBlendColorRatio(progress, inverseProgress, 1.0f, 1.0f);
+		picture->setBlendAlphaRatio(progress, inverseProgress, 1.0f, 1.0f);
 		mBlendProgress += mBlendStep;
 	}
 

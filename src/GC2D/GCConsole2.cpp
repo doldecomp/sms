@@ -89,42 +89,6 @@ static inline bool isMountedYoshi(TMario* mario)
 }
 
 // fabricated
-static inline void updateLifeMeterColors(TGCConsole2* console, bool airMode)
-{
-	if (console->unk1CC >= 4) {
-		if (airMode) {
-			((J2DPicture*)console->mLifeMeterText->getPane())->mWhite
-			    = 0x00FFFFFF;
-			((J2DPicture*)console->mLifeMeterText->getPane())->mBlack
-			    = 0x003CFF00;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mWhite = 0x00FFFFFF;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mBlack = 0x003CFF00;
-		} else {
-			((J2DPicture*)console->mLifeMeterText->getPane())->mWhite
-			    = 0xFFFFFFFF;
-			((J2DPicture*)console->mLifeMeterText->getPane())->mBlack = 0;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mBlack = 0;
-		}
-	} else {
-		if (airMode) {
-			((J2DPicture*)console->mLifeMeterText->getPane())->mWhite
-			    = 0x0010FFFF;
-			((J2DPicture*)console->mLifeMeterText->getPane())->mBlack
-			    = 0x003CFF00;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mWhite = 0x0010FFFF;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mBlack = 0x003CFF00;
-		} else {
-			((J2DPicture*)console->mLifeMeterText->getPane())->mWhite
-			    = 0x7F7F7FFF;
-			((J2DPicture*)console->mLifeMeterText->getPane())->mBlack = 0;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mWhite = 0x7F7F7FFF;
-			((J2DPicture*)console->mLifeMeterPetals[0])->mBlack = 0;
-		}
-	}
-}
-
-// fabricated
 // TODO: the ROM calls TColor::set out of line in these two helpers, so their
 // colour writes are two inline levels below perform. The split is a guess.
 static inline void setLifeMeterWhiteHigh(TGCConsole2* console, bool airMode)
@@ -807,16 +771,16 @@ void TGCConsole2::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 3; ++i) {
 		unk2A0[i] = (J2DPicture*)mHudScreen->search('w_t1' + i);
 
-		unk2A0[i]->setBlendKonstColor(1.0f, 0.0f, 0.0f, 0.0f);
-		unk2A0[i]->setBlendKonstAlpha(0.0f, 0.0f, 0.0f, 0.0f);
+		unk2A0[i]->setBlendColorRatio(1.0f, 0.0f, 0.0f, 0.0f);
+		unk2A0[i]->setBlendAlphaRatio(0.0f, 0.0f, 0.0f, 0.0f);
 
 		unk2A0[i]->hide();
 
 		if (i != 0) {
 			unk2AC[i] = (J2DPicture*)mHudScreen->search('w_m1' + i);
 
-			unk2A0[i]->setBlendKonstColor(0.0f, 0.0f, 0.0f, 0.0f);
-			unk2A0[i]->setBlendKonstAlpha(1.0f, 0.0f, 0.0f, 0.0f);
+			unk2A0[i]->setBlendColorRatio(0.0f, 0.0f, 0.0f, 0.0f);
+			unk2A0[i]->setBlendAlphaRatio(1.0f, 0.0f, 0.0f, 0.0f);
 
 			unk2AC[i]->hide();
 		}
@@ -1367,30 +1331,50 @@ void TGCConsole2::startInsertLife(int param_1)
 {
 	if (param_1 == 0) {
 		for (int i = 1; i < 9; ++i) {
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mBlack = 0;
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setBlack(0);
 			if (gpMarioOriginal->getHealth() + 1 > i)
 				mLifeMeterPetals[i * 2]->show();
 			else
 				mLifeMeterPetals[i * 2]->hide();
 		}
-		((J2DPicture*)mLifeMeterText->getPane())->mWhite       = 0xFFFFFFFF;
-		((J2DPicture*)mLifeMeterText->getPane())->mBlack       = 0;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mWhite = 0xFF4C00C8;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mBlack = 0xFF4C0000;
-		updateLifeMeterColors(this, false);
+		((J2DPicture*)mLifeMeterText->getPane())->setWhite(0xFFFFFFFF);
+		((J2DPicture*)mLifeMeterText->getPane())->setBlack(0);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setWhite(0xFF4C00C8);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setBlack(0xFF4C0000);
+		if (unk1CC >= 4) {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0);
+		} else {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x7F7F7FFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0x7F7F7FFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0);
+		}
 	} else if (param_1 == 1) {
 		for (int i = 1; i < 9; ++i) {
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mWhite = 0x00FFFFFF;
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mBlack = 0x003CFF00;
-			if ((s16)gpMarioOriginal->mAir + 1 > i)
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setWhite(0x00FFFFFF);
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setBlack(0x003CFF00);
+			if (gpMarioOriginal->getAir() + 1 > i)
 				mLifeMeterPetals[i * 2]->show();
 			else
 				mLifeMeterPetals[i * 2]->hide();
 		}
-		((J2DPicture*)mLifeMeterBackground->getPane())->mWhite = 0x0000FF78;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mBlack = 0x0000FF00;
-		updateLifeMeterColors(this, true);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setWhite(0x0000FF78);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setBlack(0x0000FF00);
+		if (unk1CC >= 4) {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x00FFFFFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0x003CFF00);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0x00FFFFFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0x003CFF00);
+		} else {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x0010FFFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0x003CFF00);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0x0010FFFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0x003CFF00);
+		}
 	}
 
 	unk51 = 1;
@@ -1418,8 +1402,6 @@ void TGCConsole2::resetLife(int param_1)
 			mLifeMeterPetals[2 * i]->hide();
 		}
 
-		// TODO: This feels like a fakematch, is setBounds correct?
-
 		JUTRect local_38(mLifeMeterPetalsOriginalBounds[i].x1,
 		                 mLifeMeterPetalsOriginalBounds[i].y1,
 		                 mLifeMeterPetalsOriginalBounds[i].x2,
@@ -1441,32 +1423,52 @@ bool TGCConsole2::startAppearLife(int param_1)
 
 	if (param_1 == 0) {
 		for (int i = 0; i < 9; ++i) {
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mWhite = 0xFFFFFFFF;
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mBlack = 0;
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setBlack(0);
 			if (gpMarioOriginal->getHealth() + 1 > i)
 				mLifeMeterPetals[i * 2]->show();
 			else
 				mLifeMeterPetals[i * 2]->hide();
 		}
-		((J2DPicture*)mLifeMeterText->getPane())->mWhite       = 0xFFFFFFFF;
-		((J2DPicture*)mLifeMeterText->getPane())->mBlack       = 0;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mWhite = 0xFF4C00C8;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mBlack = 0xFF4C0000;
-		updateLifeMeterColors(this, false);
+		((J2DPicture*)mLifeMeterText->getPane())->setWhite(0xFFFFFFFF);
+		((J2DPicture*)mLifeMeterText->getPane())->setBlack(0);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setWhite(0xFF4C00C8);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setBlack(0xFF4C0000);
+		if (unk1CC >= 4) {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0xFFFFFFFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0);
+		} else {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x7F7F7FFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0x7F7F7FFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0);
+		}
 	} else if (param_1 == 1) {
 		for (int i = 0; i < 9; ++i) {
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mWhite = 0x00FFFFFF;
-			((J2DPicture*)mLifeMeterPetals[i * 2])->mBlack = 0x003CFF00;
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setWhite(0x00FFFFFF);
+			((J2DPicture*)mLifeMeterPetals[i * 2])->setBlack(0x003CFF00);
 			if (gpMarioOriginal->getAir() + 1 > i)
 				mLifeMeterPetals[i * 2]->show();
 			else
 				mLifeMeterPetals[i * 2]->hide();
 		}
-		((J2DPicture*)mLifeMeterText->getPane())->mWhite       = 0x00FFFFFF;
-		((J2DPicture*)mLifeMeterText->getPane())->mBlack       = 0x003CFF00;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mWhite = 0x0000FF78;
-		((J2DPicture*)mLifeMeterBackground->getPane())->mBlack = 0x0000FF00;
-		updateLifeMeterColors(this, true);
+		((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x00FFFFFF);
+		((J2DPicture*)mLifeMeterText->getPane())->setBlack(0x003CFF00);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setWhite(0x0000FF78);
+		((J2DPicture*)mLifeMeterBackground->getPane())->setBlack(0x0000FF00);
+		if (unk1CC >= 4) {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x00FFFFFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0x003CFF00);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0x00FFFFFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0x003CFF00);
+		} else {
+			((J2DPicture*)mLifeMeterText->getPane())->setWhite(0x0010FFFF);
+			((J2DPicture*)mLifeMeterText->getPane())->setBlack(0x003CFF00);
+			((J2DPicture*)mLifeMeterPetals[0])->setWhite(0x0010FFFF);
+			((J2DPicture*)mLifeMeterPetals[0])->setBlack(0x003CFF00);
+		}
 	}
 
 	unk38 = 1;
@@ -2431,9 +2433,9 @@ void TGCConsole2::setTimer(s32 param_1)
 		if (timerValue < 1000
 		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != unk508) {
 			for (int i = 6; i <= 9; i++) {
-				((J2DPicture*)unk458[i]->getPane())->mWhite = unk508;
+				((J2DPicture*)unk458[i]->getPane())->setWhite(unk508);
 			}
-			((J2DPicture*)unk480[2]->getPane())->mWhite = unk508;
+			((J2DPicture*)unk480[2]->getPane())->setWhite(unk508);
 		}
 		((J2DPicture*)unk458[6]->getPane())
 		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
@@ -3466,28 +3468,19 @@ void TGCConsole2::drawWater(J2DOrthoGraph& graph)
 	if (top < 0)
 		y = 0;
 
-	JUTTexture* texture = unk2A0[0]->mTextures[0];
-	unk2A0[0]->draw(bounds.x1, y, texture->getWidth(), texture->getHeight(),
-	                false, false, false);
+	unk2A0[0]->draw(bounds.x1, y, false, false, false);
 
-	bounds  = ((J2DPicture*)unk270->getPane())->getBounds();
-	texture = ((J2DPicture*)unk270->getPane())->mTextures[0];
+	bounds = ((J2DPicture*)unk270->getPane())->getBounds();
 	((J2DPicture*)unk270->getPane())
-	    ->draw(bounds.x1, bounds.y1, texture->getWidth(), texture->getHeight(),
-	           false, false, false);
+	    ->draw(bounds.x1, bounds.y1, false, false, false);
 
-	bounds  = ((J2DPicture*)unk274->getPane())->getBounds();
-	texture = ((J2DPicture*)unk274->getPane())->mTextures[0];
+	bounds = ((J2DPicture*)unk274->getPane())->getBounds();
 	((J2DPicture*)unk274->getPane())
-	    ->draw(bounds.x1, bounds.y1, texture->getWidth(), texture->getHeight(),
-	           false, false, false);
+	    ->draw(bounds.x1, bounds.y1, false, false, false);
 
 	JUTRect maskOffset = unk288->getBounds();
 	bounds.add(maskOffset.x1, maskOffset.y1);
-	texture = ((J2DPicture*)unk288)->mTextures[0];
-	((J2DPicture*)unk288)
-	    ->draw(bounds.x1, bounds.y1, texture->getWidth(), texture->getHeight(),
-	           false, false, false);
+	((J2DPicture*)unk288)->draw(bounds.x1, bounds.y1, false, false, false);
 }
 
 // fabricated

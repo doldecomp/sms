@@ -12,26 +12,33 @@ struct ResTIMG;
 struct ResTLUT;
 
 enum J2DMirror {
-	/* 0 */ MIRROR0, // temp, figure out later
-	/* 1 */ J2DMirror_Y = (1 << 0),
-	/* 2 */ J2DMirror_X = (1 << 1),
+	/* 0 */ J2DMirror_None = 0,
+	/* 1 */ J2DMirror_Y    = 1 << 0,
+	/* 2 */ J2DMirror_X    = 1 << 1,
+	/* 3 */ J2DMirror_XY   = J2DMirror_X | J2DMirror_Y,
 };
 
 enum J2DBinding {
-	/* 1 */ J2DBind_Bottom = (1 << 0),
-	/* 2 */ J2DBind_Top    = (1 << 1),
-	/* 4 */ J2DBind_Right  = (1 << 2),
-	/* 8 */ J2DBind_Left   = (1 << 3),
+	/* 0 */ J2DBind_None   = 0,
+	/* 1 */ J2DBind_Bottom = 1 << 0,
+	/* 2 */ J2DBind_Top    = 1 << 1,
+	/* 4 */ J2DBind_Right  = 1 << 2,
+	/* 8 */ J2DBind_Left   = 1 << 3,
 
-	/* 0xF */ BIND15 = 15, // temp, figure out later
+	/* 0xF */ J2DBind_All = 0xF,
 };
 
 enum J2DWrapmode {
-	/* 0 */ J2DWrapmode_NONE
+	/* 0 */ J2DWrapmode_NONE   = 0,
+	/* 1 */ J2DWrapmode_REPEAT = 1,
 };
 
 class J2DPicture : public J2DPane {
 public:
+	struct TCornerColor {
+		u32 mColor[4];
+	};
+
 	virtual ~J2DPicture();
 	virtual void drawSelf(int, int);
 	virtual void drawSelf(int, int, Mtx*);
@@ -71,6 +78,12 @@ public:
 		return idx < mTextureNum ? mTextures[idx] : nullptr;
 	}
 
+	void draw(int x, int y, bool mirrorX, bool mirrorY, bool tumble)
+	{
+		draw(x, y, mTextures[0]->getWidth(), mTextures[0]->getHeight(), mirrorX,
+		     mirrorY, tumble);
+	}
+
 	void load(GXTexMapID id, u8 idx)
 	{
 		if (idx < mTextureNum)
@@ -87,8 +100,7 @@ public:
 	}
 	void setCornerColor(JUtility::TColor c0) { setCornerColor(c0, c0, c0, c0); }
 
-	// fabricated
-	void setBlendKonstColor(f32 r, f32 g, f32 b, f32 a)
+	void setBlendColorRatio(f32 r, f32 g, f32 b, f32 a)
 	{
 		unk104[0] = r;
 		unk104[1] = g;
@@ -96,7 +108,7 @@ public:
 		unk104[3] = a;
 		setBlendKonstColor();
 	}
-	void setBlendKonstAlpha(f32 r, f32 g, f32 b, f32 a)
+	void setBlendAlphaRatio(f32 r, f32 g, f32 b, f32 a)
 	{
 		unk114[0] = r;
 		unk114[1] = g;
@@ -105,13 +117,33 @@ public:
 		setBlendKonstAlpha();
 	}
 
-	// fabricated
+	bool append(JUTTexture* texture, f32 param_2)
+	{
+		return insert(texture, mTextureNum, param_2);
+	}
+
 	JUtility::TColor getWhite() const { return mWhite; }
-
-	// fabricated
 	void setWhite(JUtility::TColor white) { mWhite = white; }
+	JUtility::TColor getBlack() const { return mBlack; }
+	void setBlack(JUtility::TColor black) { mBlack = black; }
+	void setBlackWhite(JUtility::TColor black, JUtility::TColor white)
+	{
+		mBlack = black;
+		mWhite = white;
+	}
 
-public:
+	void setMirror(J2DMirror mirror) { mMirror = mirror; }
+	J2DMirror getMirror() const { return mMirror; }
+
+	void getCornerColor(TCornerColor& color) const
+	{
+		color.mColor[0] = mCornerColor[0];
+		color.mColor[1] = mCornerColor[1];
+		color.mColor[2] = mCornerColor[2];
+		color.mColor[3] = mCornerColor[3];
+	}
+
+protected:
 	/* 0xEC */ JUTTexture* mTextures[4];
 	/* 0xFC */ u8 mTextureNum;
 	/* 0xFD */ u8 unkFD[4];

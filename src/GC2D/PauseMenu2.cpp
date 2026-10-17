@@ -392,9 +392,9 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							                                   0, nullptr, 0);
 
 							JUTRect& bounds = mOrigItemBounds[curSelectedItem];
-							mMenuItems[mSelectedItem]->mWhite = mItemColor;
-							mMenuItems[curSelectedItem]->mWhite
-							    = JUtility::TColor();
+							mMenuItems[mSelectedItem]->setWhite(mItemColor);
+							mMenuItems[curSelectedItem]->setWhite(
+							    JUtility::TColor());
 							mMenuItems[curSelectedItem]->place(bounds);
 
 							mBounceAnim = 0.0f; // reset animation
@@ -421,9 +421,9 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 							                                   0, nullptr, 0);
 
 							JUTRect& bounds = mOrigItemBounds[curSelectedItem];
-							mMenuItems[mSelectedItem]->mWhite = mItemColor;
-							mMenuItems[curSelectedItem]->mWhite
-							    = JUtility::TColor();
+							mMenuItems[mSelectedItem]->setWhite(mItemColor);
+							mMenuItems[curSelectedItem]->setWhite(
+							    JUtility::TColor());
 							mMenuItems[curSelectedItem]->place(bounds);
 
 							mBounceAnim = 0.0f;
@@ -463,8 +463,8 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						mMenuItems[mSelectedItem]->place(animItemBounds);
 
 						s32 colorShift = 10.0f * mBounceAnim;
-						mMenuItems[mSelectedItem]->mWhite
-						    = mItemColor + (colorShift << 24);
+						mMenuItems[mSelectedItem]->setWhite(
+						    mItemColor + (colorShift << 24));
 					} else if (mBounceAnim < 35.0f) {
 						s32 hw = mBounceAnim - 35.0f;
 						s32 hh = 0.5f * (mBounceAnim - 35.0f);
@@ -472,8 +472,8 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 						mMenuItems[mSelectedItem]->place(animItemBounds);
 
 						s32 colorShift = (35.0f - mBounceAnim) * 10.0f;
-						mMenuItems[mSelectedItem]->mWhite
-						    = mItemColor + (colorShift << 24);
+						mMenuItems[mSelectedItem]->setWhite(
+						    mItemColor + (colorShift << 24));
 					} else {
 						// Loop animation.
 						mBounceAnim = -0.5f;
@@ -543,17 +543,17 @@ u8 TPauseMenu2::getNextState()
 
 void TPauseMenu2::setDrawStart()
 {
-	mPressedB             = false;
-	mSelectionConfirmed   = false;
-	mSelectedItem         = 0;
-	mFadeAnim             = 0.0f;
-	mState                = MENU_APPEARING;
-	mBounceAnim           = 0.0f;
-	mMenuItems[0]->mWhite = mItemColor;
+	mPressedB           = false;
+	mSelectionConfirmed = false;
+	mSelectedItem       = 0;
+	mFadeAnim           = 0.0f;
+	mState              = MENU_APPEARING;
+	mBounceAnim         = 0.0f;
+	mMenuItems[0]->setWhite(mItemColor);
 	mMenuItems[0]->hide();
 
 	for (s32 i = 1; i < mNumItems; ++i) {
-		mMenuItems[i]->mWhite = 0xFFFFFFFF;
+		mMenuItems[i]->setWhite(0xFFFFFFFF);
 		mMenuItems[i]->hide();
 	}
 

@@ -624,15 +624,15 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 			unk2E9 = param_3;
 			if (param_3 == 0) {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
 			} else {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
 			}
 
 			mConfirmWindowYes->updateCenteredSize(
@@ -729,8 +729,8 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 
 		s32 thing = unk2FC < 40 ? unk2FC : 80 - unk2FC;
 		thing     = (s32)(thing * 255.0f / 40.0f);
-		((J2DPicture*)selectedPane->getPane())->mWhite
-		    = (thing << 24) + 0xFF00FF;
+		((J2DPicture*)selectedPane->getPane())
+		    ->setWhite((thing << 24) + 0xFF00FF);
 		selectedPane->update();
 
 		unk2FC += 1;
@@ -755,15 +755,15 @@ s8 TCardSave::waitForChoice(TEProgress param_1, TEProgress param_2, s8 param_3)
 			mConfirmWindowNo->update();
 
 			if (unk2E9 == 0) {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
 			} else {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
 			}
 		}
 		break;
@@ -894,15 +894,15 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			unk2E9 = param_3;
 
 			if (param_3 == 0) {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
 			} else {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
 			}
 
 			mWindowStep = WINDOW_SHOWN;
@@ -978,8 +978,8 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 
 		s32 thing = unk2FC < 40 ? unk2FC : 80 - unk2FC;
 		thing     = (s32)(thing * 255.0f / 40.0f);
-		((J2DPicture*)selectedPane->getPane())->mWhite
-		    = (thing << 24) + 0xFF00FF;
+		((J2DPicture*)selectedPane->getPane())
+		    ->setWhite((thing << 24) + 0xFF00FF);
 		selectedPane->update();
 
 		unk2FC += 1;
@@ -1003,15 +1003,15 @@ s8 TCardSave::waitForChoiceBM(TEProgress param_1, TEProgress param_2,
 			mConfirmWindowYes->update();
 			mConfirmWindowNo->update();
 			if (unk2E9 == 0) {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
 			} else {
-				((J2DPicture*)mConfirmWindowYes->getPane())->mWhite
-				    = JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF);
-				((J2DPicture*)mConfirmWindowNo->getPane())->mWhite
-				    = JUtility::TColor(0, 0xFF, 0, 0xFF);
+				((J2DPicture*)mConfirmWindowYes->getPane())
+				    ->setWhite(JUtility::TColor(0xFF, 0xFF, 0xFF, 0xFF));
+				((J2DPicture*)mConfirmWindowNo->getPane())
+				    ->setWhite(JUtility::TColor(0, 0xFF, 0, 0xFF));
 			}
 		}
 		break;
