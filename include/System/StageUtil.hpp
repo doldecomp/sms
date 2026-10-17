@@ -3,6 +3,7 @@
 
 #include <dolphin/types.h>
 #include <System/FlagManager.hpp>
+#include <System/MarDirector.hpp>
 
 u8 SMS_getShineIDofExStage(u8);
 u8 SMS_getShineStage(u8);
@@ -105,6 +106,12 @@ static bool SMS_isGetShine(u32 stage, u32 scenario, bool is_etc_shine)
 	if (shineId == -1)
 		return false;
 	return TFlagManager::getInstance()->getShineFlag(shineId);
+}
+
+inline bool SMS_isGetBlueCoin(u32 id)
+{
+	return TFlagManager::getInstance()->getBlueCoinFlag(
+	    SMSGetMarDirector()->getCurrentMap(), id);
 }
 
 #endif

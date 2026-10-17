@@ -1,4 +1,5 @@
 #include <MoveBG/MapObjGeneral.hpp>
+#include <System/StageUtil.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <Strategic/Binder.hpp>
@@ -349,9 +350,7 @@ void TMapObjGeneral::appear()
 		mScaling.z = mNormalAppearingScaleUp;
 	}
 
-	if (!isActorType(ACTOR_TYPE_COIN_BLUE)
-	    || !TFlagManager::smInstance->getBlueCoinFlag(
-	        SMSGetMarDirector()->getCurrentMap(), mEventId))
+	if (!isActorType(ACTOR_TYPE_COIN_BLUE) || !SMS_isGetBlueCoin(mEventId))
 		startSound(1);
 
 	appearing();

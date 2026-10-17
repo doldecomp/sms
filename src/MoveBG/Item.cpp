@@ -239,8 +239,7 @@ void TCoin::appearWithoutSound()
 void TCoin::appear()
 {
 	if (isActorType(ACTOR_TYPE_COIN_BLUE)) {
-		if (!TFlagManager::smInstance->getBlueCoinFlag(
-		        SMSGetMarDirector()->getCurrentMap(), mEventId))
+		if (!SMS_isGetBlueCoin(mEventId))
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 			                                   nullptr, 0);
 	} else {
@@ -369,8 +368,7 @@ TCoinRed::TCoinRed(const char* name)
 
 void TCoinBlue::makeObjAppeared()
 {
-	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        SMSGetMarDirector()->getCurrentMap(), getEventId()))
+	if (SMS_isGetBlueCoin(getEventId()))
 		return;
 
 	TCoin::makeObjAppeared();
@@ -398,8 +396,7 @@ void TCoinBlue::loadBeforeInit(JSUMemoryInputStream& stream)
 void TCoinBlue::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
-	if (TFlagManager::getInstance()->getBlueCoinFlag(
-	        SMSGetMarDirector()->getCurrentMap(), getEventId()))
+	if (SMS_isGetBlueCoin(getEventId()))
 		makeObjDead();
 }
 

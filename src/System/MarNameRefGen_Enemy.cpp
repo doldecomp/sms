@@ -26,6 +26,7 @@
 #include <Enemy/TobiPuku.hpp>
 #include <Animal/AnimalBase.hpp>
 #include <Animal/AnimalManager.hpp>
+#include <Animal/Bird.hpp>
 #include <Animal/Butterfly.hpp>
 #include <Animal/fishoid.hpp>
 #include <Enemy/EffectEnemy.hpp>
@@ -87,13 +88,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "MewManager") == 0)
 		return new TMewManager;
 
-	// TODO:
-	// if ( strcmp(name, "AnimalBird") == 0)
-	//     return new TAnimalBird;
+	if (strcmp(name, "AnimalBird") == 0)
+		return new TAnimalBird;
 
-	// TODO:
-	// if ( strcmp(name, "AnimalBirdManager") == 0)
-	//     return new TAnimalBirdManager;
+	if (strcmp(name, "AnimalBirdManager") == 0)
+		return new TAnimalBirdManager;
 
 	if (strcmp(name, "FishoidA") == 0)
 		return new TFishoid(0, "回遊魚Ａ");

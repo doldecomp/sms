@@ -1,4 +1,5 @@
 #include <MoveBG/MapObjHide.hpp>
+#include <System/StageUtil.hpp>
 
 #include <stdio.h>
 
@@ -91,8 +92,7 @@ void THideObjBase::loadAfter()
 	    = TMapObjBaseManager::newAndRegisterObjByEventID(mEventId, getName());
 	if (mHiddenObj != nullptr) {
 		if (mHiddenObj->isActorType(ACTOR_TYPE_COIN_BLUE)) {
-			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    SMSGetMarDirector()->getCurrentMap(), mEventId);
+			bool isBlueCollected = SMS_isGetBlueCoin(mEventId);
 			if (isBlueCollected)
 				mAllowReveal = false;
 		}
@@ -419,8 +419,7 @@ void TWaterHitPictureHideObj::loadAfter()
 
 	if (mHiddenObj != nullptr) {
 		if (mHiddenObj->isActorType(ACTOR_TYPE_COIN_BLUE)) {
-			bool isBlueCollected = TFlagManager::smInstance->getBlueCoinFlag(
-			    SMSGetMarDirector()->getCurrentMap(), mEventId);
+			bool isBlueCollected = SMS_isGetBlueCoin(mEventId);
 			if (isBlueCollected) {
 				makeObjDead();
 				return;

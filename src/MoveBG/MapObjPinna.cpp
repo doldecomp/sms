@@ -1,5 +1,6 @@
 // rogue includes needed for matching sinit & bss
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
+#include <System/StageUtil.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
@@ -465,8 +466,7 @@ void TShellCup::loadAfter()
 	unk49C = gpItemManager->newAndRegisterCoinReal();
 	unk4A0 = gpItemManager->newAndRegisterCoinReal();
 	unk498->setEventId(2);
-	if (!TFlagManager::getInstance()->getBlueCoinFlag(
-	        SMSGetMarDirector()->getCurrentMap(), unk498->getEventId())) {
+	if (!SMS_isGetBlueCoin(unk498->getEventId())) {
 		unk498->makeObjAppeared();
 		unk138[0].unk80 = unk498;
 	}
