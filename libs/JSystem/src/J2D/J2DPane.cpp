@@ -168,7 +168,7 @@ void J2DPane::draw(int x, int y, J2DGrafContext const* p_grafCtx,
 {
 	J2DGrafContext tmpGraf(*p_grafCtx);
 
-	if (tmpGraf.unk4 != 1)
+	if (tmpGraf.mGrafType != 1)
 		isOrthoGraf = false;
 
 	JSUTree<J2DPane>* parentTree = mPaneTree.getParent();

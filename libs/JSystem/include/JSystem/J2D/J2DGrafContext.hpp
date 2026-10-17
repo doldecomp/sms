@@ -8,6 +8,8 @@
 #include <dolphin/types.h>
 
 class J2DGrafContext {
+	friend class J2DPane;
+
 public:
 	struct Blend {
 		GXBlendMode mType;
@@ -43,8 +45,8 @@ public:
 	virtual void setScissor();
 	virtual void setLookat() { }
 
-public:
-	/* 0x04 */ s32 unk4; // PROBABLY graf type (is a virtual call in newer vers)
+protected:
+	/* 0x04 */ s32 mGrafType;
 	/* 0x08 */ JUTRect mBounds;
 	/* 0x18 */ JUTRect mScissorBounds;
 	/* 0x28 */ JUtility::TColor mColorTL;

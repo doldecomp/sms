@@ -5,7 +5,7 @@ J2DOrthoGraph::J2DOrthoGraph()
     : J2DGrafContext(0, 0, 0, 0)
 {
 	setLookat();
-	unk4 = 1;
+	mGrafType = 1;
 }
 
 J2DOrthoGraph::J2DOrthoGraph(const JUTRect& rect)
@@ -15,7 +15,7 @@ J2DOrthoGraph::J2DOrthoGraph(const JUTRect& rect)
 	mNear  = -1.0f;
 	mFar   = 1.0f;
 	setLookat();
-	unk4 = 1;
+	mGrafType = 1;
 }
 
 J2DOrthoGraph::J2DOrthoGraph(int x, int y, int width, int height)
@@ -25,7 +25,7 @@ J2DOrthoGraph::J2DOrthoGraph(int x, int y, int width, int height)
 	mNear  = -1.0f;
 	mFar   = 1.0f;
 	setLookat();
-	unk4 = 1;
+	mGrafType = 1;
 }
 
 void J2DOrthoGraph::setPort()
