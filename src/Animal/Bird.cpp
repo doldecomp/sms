@@ -299,7 +299,7 @@ bool TAnimalBird::isWantToFly() const
 
 bool TAnimalBird::isWantToAction() const
 {
-	s32 time = mSpine->getTime() - getSaveParam2()->mActionTimer.get();
+	int time = mSpine->getTime() - getSaveParam2()->mActionTimer.get();
 	if (time < 0)
 		return false;
 
@@ -429,7 +429,6 @@ bool TAnimalBird::doLanding(bool init)
 	f32 torque = getSaveParam2()->mLandingTorqueY.get();
 	torque *= SMSGetAnmFrameRate();
 	f32 diff     = MsAngleDiff(unk164.y, mRotation.y);
-	f32 clamped  = diff > torque ? torque : diff;
 	f32 rotDelta = diff < -torque ? -torque : diff > torque ? torque : diff;
 	mRotation.y  = MsWrap(mRotation.y + rotDelta, 0.0f, 360.0f);
 
@@ -732,7 +731,7 @@ DEFINE_NERVE(TNerveAnimalBirdPreLanding, TLiveActor)
 DEFINE_NERVE(TNerveAnimalBirdLanding, TLiveActor)
 {
 	TAnimalBird* self  = (TAnimalBird*)spine->getBody();
-	J3DFrameCtrl* ctrl = self->mMActor->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(0);
 	if (spine->getTime() == 0) {
 		self->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		self->setBckAnm(5);
