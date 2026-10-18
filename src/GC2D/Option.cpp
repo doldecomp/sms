@@ -442,7 +442,7 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 
 	for (int i = 0; i < ARRAY_COUNT(mRumbleTextures); i++) {
 		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], "sel1sel0");
+		         langArray[i], "select_rumble.bti");
 		mRumbleTextures[i] = new JUTTexture(
 		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
 	}
@@ -450,7 +450,7 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	const char* rumbleFileNames[2] = { "select_on.bti", "select_off.bti" };
 
 	for (int row = 0; row < 2; row++) {
-		for (int col = 0; col < 5; col++) {
+		for (int col = 0; col < GC2D_NUM_LANGUAGES; col++) {
 			snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
 			         langArray[col], rumbleFileNames[row]);
 			mRumbleGridTextures[row][col] = new JUTTexture(
@@ -695,15 +695,15 @@ TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
 
 	for (int i = 0; i < ARRAY_COUNT(mSubtitleTexture); i++) {
 		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], "sub_main_suffix");
+		         langArray[i], "select_subtitles.bti");
 		mSubtitleTexture[i] = new JUTTexture(
 		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
 	}
 
-	const char* subFileNames[2] = { "sub_grid_0", "sub_grid_1" };
+	const char* subFileNames[2] = { "select_on.bti", "select_off.bti" };
 
 	for (int row = 0; row < 2; row++) {
-		for (int col = 0; col < 5; col++) {
+		for (int col = 0; col < GC2D_NUM_LANGUAGES; col++) {
 			snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
 			         langArray[col], subFileNames[row]);
 			mSubtitleGridTextures[row][col] = new JUTTexture(
@@ -750,7 +750,7 @@ void TOptionSubtitleUnit::changeTexture(int arg0)
 
 	for (int row = 0; row < 2; row++) {
 		s32 currentWidth
-		    = replaceTexture('sel0' + row, mSubtitleGridTextures[row][arg0]);
+		    = replaceTexture('sel5' + row, mSubtitleGridTextures[row][arg0]);
 		if (currentWidth > maxTextWidth) {
 			maxTextWidth = currentWidth;
 		}
@@ -888,7 +888,7 @@ s32 TOptionLanguageUnit::replaceTexture(u32 tag, JUTTexture* texture)
 
 void TOptionLanguageUnit::changeTexture(int arg0)
 {
-	J2DPicture* picMain = (J2DPicture*)mScreen->search('m_3');
+	J2DPicture* picMain = (J2DPicture*)mScreen->search('m_4');
 	JUTTexture* subTex  = mLanguageTexture[arg0];
 
 	int mainWidthOffset = (subTex->getWidth() - (picMain->getWidth())) / 2;
@@ -901,7 +901,7 @@ void TOptionLanguageUnit::changeTexture(int arg0)
 
 	for (int row = 0; row < 2; row++) {
 		int gridWidthDelta
-		    = replaceTexture(row + 'sel5', mLanguageGridTextures[row][arg0]);
+		    = replaceTexture(row + 'lan0', mLanguageGridTextures[row][arg0]);
 		if (gridWidthDelta > maxGridWidth) {
 			maxGridWidth = gridWidthDelta;
 		}
@@ -1029,7 +1029,7 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	char pathBuffer[255];
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < GC2D_NUM_LANGUAGES; i++) {
 		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
 		         langArray[i], "select_sound.bti");
 		mSoundTextures[i] = new JUTTexture(
@@ -1040,7 +1040,7 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	    = { "select_stereo.bti", "select_mono.bti", "select_surround.bti" };
 
 	for (int row = 0; row < 3; row++) {
-		for (int col = 0; col < 5; col++) {
+		for (int col = 0; col < GC2D_NUM_LANGUAGES; col++) {
 			snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
 			         langArray[col], soundFileNames[row]);
 			mSoundGridTextures[row][col] = new JUTTexture(
@@ -1131,10 +1131,10 @@ s32 TOptionSoundUnit::replaceTexture(u32 tag, JUTTexture* texture)
 
 void TOptionSoundUnit::changeTexture(int arg0)
 {
-	int maxGridWidth = replaceTexture('m_3', mSoundTextures[arg0]);
+	int maxGridWidth = replaceTexture('m_2', mSoundTextures[arg0]);
 
 	for (int row = 0; row < 2; row++) {
-		u32 paneTag = row + 'sel5';
+		u32 paneTag = row + 'sel2';
 		int gridWidthDelta
 		    = replaceTexture(paneTag, mSoundGridTextures[row][arg0]);
 		if (gridWidthDelta > maxGridWidth) {
@@ -1353,12 +1353,19 @@ void TOptionControl::load()
 
 	mScreen = new J2DSetScreen("option.blo", optionArch);
 	mScreen->setCullBack(GX_CULL_BACK);
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	J2DTextBox* textBoxA = (J2DTextBox*)mScreen->search('m_0a');
 	J2DTextBox* textBoxB = (J2DTextBox*)mScreen->search('m_0b');
+
+	textBoxA->setFont((JUTFont*)gpSystemFont);
+	textBoxB->setFont((JUTFont*)gpSystemFont);
+#elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	textBoxA = (J2DTextBox*)mScreen->search('m_0a');
+	textBoxB = (J2DTextBox*)mScreen->search('m_0b');
 	textBoxA->setFont((JUTFont*)gpSystemFont);
 	textBoxB->setFont((JUTFont*)gpSystemFont);
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	SMSMakeTextBuffer(textBoxA, 0x200);
 	SMSMakeTextBuffer(textBoxB, 0x200);
 
@@ -1378,8 +1385,7 @@ void TOptionControl::load()
 	loadTexture(mBackArrow->mTextures, "select_quit.bti");
 #endif
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 	mBackArrow = new TArrowControl(mScreen->search('yaji'));
 #endif
 
@@ -1649,8 +1655,8 @@ void TOptionControl::changeTopMessage(int langId)
 
 #undef kJSYSTEM_SEQ
 
-	strncpy(unk28->getStringPtr(), stringBuffer, sizeof(stringBuffer));
-	strncpy(unk2C->getStringPtr(), stringBuffer, sizeof(stringBuffer));
+	strncpy(textBoxA->getStringPtr(), stringBuffer, sizeof(stringBuffer));
+	strncpy(textBoxB->getStringPtr(), stringBuffer, sizeof(stringBuffer));
 }
 #endif
 

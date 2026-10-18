@@ -31,7 +31,7 @@ public:
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	// different ctor??
 	TArrowControl(J2DScreen* screen, J2DPicture* picture)
-	    : mPane(nullptr)
+	    : mPane((J2DPane*)screen)
 	    , unk14(true)
 	    , mPhase(0)
 	{
@@ -457,8 +457,8 @@ public:
 	/* 0x1C */ int mInitialSoundValue;
 	/* 0x20 */ int mInitialSubtitleValue;
 	/* 0x24 */ int mInitialLanguageValue;
-	/* 0x28 */ J2DTextBox* unk28;
-	/* 0x2C */ J2DTextBox* unk2C;
+	/* 0x28 */ J2DTextBox* textBoxA;
+	/* 0x2C */ J2DTextBox* textBoxB;
 	/* 0x30 */ void* mMessageEntries[GC2D_NUM_LANGUAGES];
 	/* 0x3C */ SelectType mSelectedOption;
 	/* 0x40 */ bool mWasJumping;
