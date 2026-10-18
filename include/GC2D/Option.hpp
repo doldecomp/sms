@@ -51,7 +51,7 @@ public:
 	void updateScale();
 	int calcMoveX(int phase) const;
 
-public:
+private:
 #if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
 	/* 0x0 */ J2DScreen* mScreen;
 #endif
@@ -75,7 +75,7 @@ public:
 	void stopAnm();
 	void update();
 
-public:
+private:
 	struct UnknownBalloonControlStruct {
 		/* 0x0 */ TExPane* unk0;
 		/* 0x4 */ u8 unk4;
@@ -105,7 +105,7 @@ public:
 	void resize(int width);
 #endif
 
-public:
+private:
 	/* 0x0 */ J2DPane* mPane;
 	/* 0x4 */ J3DFrameCtrl mFrameCtrl;
 	/* 0x18 */ JUTRect mInitialBounds;
@@ -141,7 +141,7 @@ public:
 
 	u32 getCurrentPaneTag() const { return mCurrentChunk->mTag; }
 
-public:
+private:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ J3DFrameCtrl mFrameCtrl;
 	/* 0x18 */ ArrayWrapper<const TAnmChunk> mChunks;
@@ -163,7 +163,7 @@ public:
 	s32 getNumber() const;
 	void setNumber(int num);
 
-public:
+private:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ ArrayWrapper<u32> mItems;
 	/* 0xC */ const u32* mCurItem;
@@ -172,8 +172,8 @@ public:
 class TOptionRumbleUnit {
 public:
 	enum RumbleType {
-		RUMBLE_TYPE_UNK0 = 0,
-		RUMBLE_TYPE_UNK1 = 1,
+		RUMBLE_TYPE_OFF = 0,
+		RUMBLE_TYPE_ON  = 1,
 	};
 	enum State {
 		STATE_ACTIVE       = 0,
@@ -204,7 +204,7 @@ public:
 	void setState(State state);
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
-public:
+private:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
@@ -226,8 +226,8 @@ public:
 class TOptionSubtitleUnit {
 public:
 	enum SubtitleType {
-		SUBTITLE_TYPE_UNK0 = 0,
-		SUBTITLE_TYPE_UNK1 = 1,
+		SUBTITLE_TYPE_OFF = 0,
+		SUBTITLE_TYPE_ON  = 1,
 	};
 	enum State {
 		STATE_ACTIVE       = 0,
@@ -256,7 +256,7 @@ public:
 	void setState(State state);
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
-public:
+private:
 	/* 0x00 */ J2DScreen* mScreen;
 	/* 0x04 */ TExPane* mParentPane;
 	/* 0x08 */ u8 mInitialAlpha;
@@ -274,11 +274,11 @@ public:
 class TOptionLanguageUnit {
 public:
 	enum LanguageType {
-		LANGUAGE_TYPE_UNK0 = 0,
-		LANGUAGE_TYPE_UNK1 = 1,
-		LANGUAGE_TYPE_UNK2 = 2,
-		LANGUAGE_TYPE_UNK3 = 3,
-		LANGUAGE_TYPE_UNK4 = 4,
+		LANGUAGE_TYPE_ENGLISH = 0,
+		LANGUAGE_TYPE_GERMAN  = 1,
+		LANGUAGE_TYPE_FRENCH  = 2,
+		LANGUAGE_TYPE_SPANISH = 3,
+		LANGUAGE_TYPE_ITALIAN = 4,
 	};
 	enum State {
 		STATE_ACTIVE       = 0,
@@ -309,7 +309,7 @@ public:
 	void setState(State state);
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
-public:
+private:
 	/* 0x00 */ J2DScreen* mScreen;
 	/* 0x04 */ TExPane* mParentPane;
 	/* 0x08 */ u8 mInitialAlpha;
@@ -375,7 +375,7 @@ public:
 	};
 	const static FabricatedFlagInfo cFlagInfos[];
 
-public:
+private:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
@@ -424,7 +424,7 @@ public:
 	bool isChangedSetting() const;
 	void resetChangedSetting();
 
-public:
+private:
 	/* 0x00 */ J2DSetScreen* mScreen;
 	/* 0x04 */ TArrowControl* mBackArrow;
 	/* 0x08 */ TOptionRumbleUnit* mRumbleOption;

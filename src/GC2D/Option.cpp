@@ -546,11 +546,11 @@ void TOptionRumbleUnit::adjustView()
 {
 #if !defined(VERSION_GMSP01) && !defined(VERSION_GMSP01_NX)
 	switch (mSelectionText->getNumber()) {
-	case 0:
+	case RUMBLE_TYPE_OFF:
 		mGamepadIcon[1]->hide();
 		mGamepadIcon[0]->setupAnm();
 		break;
-	case 1:
+	case RUMBLE_TYPE_ON:
 		mGamepadIcon[0]->hide();
 		mGamepadIcon[1]->setupAnm();
 		break;
@@ -1332,11 +1332,11 @@ void TOptionControl::loadSetting()
 	}
 
 	switch (TFlagManager::getInstance()->getFlag(MSF_RUMBLE)) {
-	case TOptionRumbleUnit::RUMBLE_TYPE_UNK0:
-		mRumbleOption->setValue(TOptionRumbleUnit::RUMBLE_TYPE_UNK0);
+	case TOptionRumbleUnit::RUMBLE_TYPE_OFF:
+		mRumbleOption->setValue(TOptionRumbleUnit::RUMBLE_TYPE_OFF);
 		break;
-	case TOptionRumbleUnit::RUMBLE_TYPE_UNK1:
-		mRumbleOption->setValue(TOptionRumbleUnit::RUMBLE_TYPE_UNK1);
+	case TOptionRumbleUnit::RUMBLE_TYPE_ON:
+		mRumbleOption->setValue(TOptionRumbleUnit::RUMBLE_TYPE_ON);
 		break;
 	default:
 		break;
@@ -1344,11 +1344,11 @@ void TOptionControl::loadSetting()
 
 #if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 	switch (TFlagManager::getInstance()->getFlag(MSF_SUBTITLES)) {
-	case TOptionSubtitleUnit::SUBTITLE_TYPE_UNK0:
-		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_UNK0);
+	case TOptionSubtitleUnit::SUBTITLE_TYPE_OFF:
+		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_OFF);
 		break;
-	case TOptionSubtitleUnit::SUBTITLE_TYPE_UNK1:
-		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_UNK1);
+	case TOptionSubtitleUnit::SUBTITLE_TYPE_ON:
+		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_ON);
 		break;
 	default:
 		break;
@@ -1357,20 +1357,20 @@ void TOptionControl::loadSetting()
 
 #ifdef VERSION_GMSP01
 	switch (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)) {
-	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK0:
-		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK0);
+	case MSLANG_ENGLISH:
+		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_ENGLISH);
 		break;
-	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK1:
-		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK1);
+	case MSLANG_GERMAN:
+		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_GERMAN);
 		break;
-	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK2:
-		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK2);
+	case MSLANG_FRENCH:
+		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_FRENCH);
 		break;
-	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK3:
-		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK3);
+	case MSLANG_SPANISH:
+		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_SPANISH);
 		break;
-	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK4:
-		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK4);
+	case MSLANG_ITALIAN:
+		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_ITALIAN);
 		break;
 	default:
 		break;
