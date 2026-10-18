@@ -440,7 +440,8 @@ public:
 	/* 0x04 */ TArrowControl* mBackArrow;
 	/* 0x08 */ TOptionRumbleUnit* mRumbleOption;
 	/* 0x0C */ TOptionSoundUnit* mSoundOption;
-#if defined(VERSION_GMSJ01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	/* 0x10 */ SelectType mSelectedOption;
 	/* 0x14 */ bool mWasJumping;
 	/* 0x18 */ int mInitialRumbleValue;
