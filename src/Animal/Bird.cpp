@@ -182,8 +182,7 @@ BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_UNKB) {
 		mHolder = nullptr;
-		if (mSpine->getLatestNerve()
-		    != &TNerveAnimalBirdChangeToCoin::theNerve()) {
+		if (!isChanged()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveAnimalBirdChangeToCoin::theNerve());
 		} else {
@@ -194,8 +193,7 @@ BOOL TAnimalBird::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_TRAMPLE
 	    && sender->isActorType(ACTOR_TYPE_POPO)) {
-		if (mSpine->getLatestNerve()
-		    != &TNerveAnimalBirdChangeToCoin::theNerve()) {
+		if (!isChanged()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveAnimalBirdChangeToCoin::theNerve());
 		} else {
@@ -307,7 +305,10 @@ bool TAnimalBird::isWantToAction() const
 	return MsRandF() < rate;
 }
 
-bool TAnimalBird::isWantToRest() const { return false; }
+bool TAnimalBird::isWantToRest() const
+{
+	return getSaveParam2()->mReturnTimer.get() < mSpine->getTime();
+}
 
 bool TAnimalBird::isFindMario() const
 {
@@ -336,7 +337,11 @@ bool TAnimalBird::isCheckWithWireBinder() const
 	                  == &TNerveAnimalBirdPreLanding::theNerve());
 }
 
-bool TAnimalBird::isChanged() const { return false; }
+bool TAnimalBird::isChanged() const
+{
+	return mSpine->getLatestNerve()
+	       == &TNerveAnimalBirdChangeToCoin::theNerve();
+}
 
 bool TAnimalBird::isFlying() const
 {
@@ -562,7 +567,7 @@ DEFINE_NERVE(TNerveAnimalBirdWaitOnGround, TLiveActor)
 		return true;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isWantToAction()) {
 			spine->pushAfterCurrent(
 			    &TNerveAnimalBirdActionOnGround::theNerve());
@@ -583,7 +588,7 @@ DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor)
 			return true;
 		}
 
-		MActor* mactor = self->mMActor;
+		MActor* mactor = self->getMActor();
 		if (!mactor->checkCurBckFromIndex(anm))
 			mactor->setBckFromIndex(anm);
 	}
@@ -593,7 +598,7 @@ DEFINE_NERVE(TNerveAnimalBirdActionOnGround, TLiveActor)
 		return true;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdWaitOnGround::theNerve());
 		return true;
 	}
@@ -630,13 +635,13 @@ DEFINE_NERVE(TNerveAnimalBirdTakeoff, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
 		self->setParamsOnFloating();
-		J3DFrameCtrl* ctrl = self->mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		ctrl->setRate(3.0f * ctrl->getRate());
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_BIRD_DOL_TO_FLY1,
 		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdGraphWander::theNerve());
 		self->setParamsOnFloating();
 		return true;
@@ -662,9 +667,9 @@ DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 			self->setBckAnm(3);
 	}
 
-	self->checkCurAnmEnd(0);
+	self->checkCurAnmEnd(ANM_TYPE_BCK);
 
-	if (self->getSaveParam2()->mReturnTimer.get() < self->mSpine->getTime()) {
+	if (self->isWantToRest()) {
 		spine->pushAfterCurrent(&TNerveAnimalBirdComeback::theNerve());
 		return true;
 	}
@@ -710,7 +715,7 @@ DEFINE_NERVE(TNerveAnimalBirdPreLanding, TLiveActor)
 	TAnimalBird* self = (TAnimalBird*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(1);
-		J3DFrameCtrl* ctrl = self->mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 		ctrl->setRate(1.5f * ctrl->getRate());
 		self->doLanding(true);
 	}
@@ -731,7 +736,7 @@ DEFINE_NERVE(TNerveAnimalBirdPreLanding, TLiveActor)
 DEFINE_NERVE(TNerveAnimalBirdLanding, TLiveActor)
 {
 	TAnimalBird* self  = (TAnimalBird*)spine->getBody();
-	J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(0);
+	J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	if (spine->getTime() == 0) {
 		self->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		self->setBckAnm(5);
