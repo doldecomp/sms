@@ -571,9 +571,9 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 	char buf[254];
 	snprintf(buf, sizeof(buf),
-	         VERSION_SELECT("/common/2d/stagename.bmg",
-	                        GMSP01("/cmn2d/stagename.bmg"),
-	                        GMSP01_NX("/cmn2d/stagename.bmg")));
+	         VERSION_SELECT("/common/2d/scenarioname.bmg",
+	                        GMSP01("/cmn2d/scenarioname.bmg"),
+	                        GMSP01_NX("/cmn2d/scenarioname.bmg")));
 	mScenarioBmg2 = JKRGetResource(buf);
 
 	mScenarioText1->setFont((JUTFont*)gpSystemFont);

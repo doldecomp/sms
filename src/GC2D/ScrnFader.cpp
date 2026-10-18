@@ -419,9 +419,9 @@ void TSMSFader::getGameOverBtiResource()
 {
 	Hx_RemoveResource();
 	Hx_ProvideResource(
-	    JKRGetResource(VERSION_SELECT("/common/2d/wipe_gameover.bmg",
-	                                  GMSP01("/cmn2d/wipe_gameover.bmg"),
-	                                  GMSP01_NX("/cmn2d/wipe_gameover.bmg"))),
+	    JKRGetResource(VERSION_SELECT("/common/2d/wipe_gameover.bti",
+	                                  GMSP01("/cmn2d/wipe_gameover.bti"),
+	                                  GMSP01_NX("/cmn2d/wipe_gameover.bti"))),
 	    0);
 }
 
