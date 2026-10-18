@@ -198,7 +198,7 @@ void TFruitsBoat::init(TLiveManager* manager)
 	case 0:
 		mMapCollisionManager
 		    = new TMapCollisionManager(1, "/scene/fruitsboat", this);
-		mMActor = mMActorKeeper->createMActor("ShipDolpic.bmd", 0);
+		mMActor = getActorKeeper()->createMActor("ShipDolpic.bmd", 0);
 		mMapCollisionManager->init("ShipDolpic.col", 1, nullptr);
 		setAttackRadius(850.0f);
 		setAttackHeight(600.0f);
@@ -206,7 +206,7 @@ void TFruitsBoat::init(TLiveManager* manager)
 	case 1:
 		mMapCollisionManager
 		    = new TMapCollisionManager(1, "/scene/fruitsboatb", this);
-		mMActor = mMActorKeeper->createMActor("ShipDolpic2.bmd", 0);
+		mMActor = getActorKeeper()->createMActor("ShipDolpic2.bmd", 0);
 		mMapCollisionManager->init("ShipDolpic2.col", 1, nullptr);
 		setAttackRadius(750.0f);
 		setAttackHeight(480.0f);
@@ -214,7 +214,7 @@ void TFruitsBoat::init(TLiveManager* manager)
 	case 2:
 		mMapCollisionManager
 		    = new TMapCollisionManager(1, "/scene/fruitsboatc", this);
-		mMActor = mMActorKeeper->createMActor("ShipDolpic3.bmd", 0);
+		mMActor = getActorKeeper()->createMActor("ShipDolpic3.bmd", 0);
 		mMapCollisionManager->init("ShipDolpic3.col", 1, nullptr);
 		setAttackRadius(1000.0f);
 		setAttackHeight(300.0f);
@@ -223,7 +223,7 @@ void TFruitsBoat::init(TLiveManager* manager)
 	default:
 		mMapCollisionManager
 		    = new TMapCollisionManager(1, "/scene/fruitsboatd", this);
-		mMActor = mMActorKeeper->createMActor("ShipDolpic4.bmd", 0);
+		mMActor = getActorKeeper()->createMActor("ShipDolpic4.bmd", 0);
 		mMapCollisionManager->init("ShipDolpic4.col", 1, nullptr);
 		setAttackRadius(760.0f);
 		setAttackHeight(270.0f);
@@ -285,11 +285,19 @@ void TFruitsBoat::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
+// fabricated
 static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
 {
 	f32 c = radius * MsCos(theta);
 	f32 s = radius * MsSin(theta);
 	return JGeometry::TVec3<f32>(s, 0.0f, c);
+}
+
+// fabricated
+static inline void easeTo(f32& cur, f32 dst, f32 rate)
+{
+	f32 d = rate * (dst - cur);
+	cur += d;
 }
 
 void TFruitsBoat::moveObject()
@@ -324,7 +332,9 @@ void TFruitsBoat::moveObject()
 			if (dist != 0.0f) {
 				static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 				toMario.normalize();
-				unk164.cross(up, toMario);
+				unk164.set(up.y * toMario.z - up.z * toMario.y,
+				           up.z * toMario.x - up.x * toMario.z,
+				           up.x * toMario.y - up.y * toMario.x);
 				unk164.normalize();
 				unk174 += 0.0003f * dist;
 			}
@@ -347,12 +357,14 @@ void TFruitsBoat::moveObject()
 		if (toMario.length() != 0.0f) {
 			toMario.normalize();
 			static JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-			JGeometry::TVec3<f32> axis;
-			axis.cross(up, toMario);
+			f32 x = up.y * toMario.z - up.z * toMario.y;
+			f32 y = up.z * toMario.x - up.x * toMario.z;
+			f32 z = up.x * toMario.y - up.y * toMario.x;
+			JGeometry::TVec3<f32> axis(x, y, z);
 			axis.normalize();
-			axis.sub(unk164);
-			axis.scale(0.1f);
-			unk164.add(axis);
+			easeTo(unk164.x, axis.x, 0.1f);
+			easeTo(unk164.y, axis.y, 0.1f);
+			easeTo(unk164.z, axis.z, 0.1f);
 		}
 	}
 
