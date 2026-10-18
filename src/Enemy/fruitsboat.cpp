@@ -358,6 +358,10 @@ void TFruitsBoat::moveObject()
 
 	unk174 += 0.01f * -MsSin(unk170);
 	unk170 += unk174;
+#if defined(VERSION_GMSJ01)
+	if (unk170 < -10.0f || unk170 > 10.0f)
+		unk174 = -unk174;
+#else
 	if (unk170 < -8.0f) {
 		unk170 = -8.0f;
 		unk174 = -unk174;
@@ -365,6 +369,7 @@ void TFruitsBoat::moveObject()
 		unk170 = 8.0f;
 		unk174 = -unk174;
 	}
+#endif
 	unk174 *= 0.99f;
 
 	TLiveActor::moveObject();
