@@ -14,6 +14,13 @@ class J2DOrthoGraph;
 class J2DSetScreen;
 class TExPane;
 class JAISound;
+class JUTTexture;
+class J2DTextBox;
+class J2DPicture;
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#define GC2D_NUM_LANGUAGES 5
+#endif
 
 /**
  * @brief A control that makes a pane's left side
@@ -21,6 +28,16 @@ class JAISound;
  */
 class TArrowControl {
 public:
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	// different ctor??
+	TArrowControl(J2DScreen* screen, J2DPicture* picture)
+	    : mPane(nullptr)
+	    , unk14(true)
+	    , mPhase(0)
+	{
+		mBounds = mPane->getBounds();
+	}
+#else
 	TArrowControl(J2DPane* pane)
 	    : mPane(pane)
 	    , unk14(true)
@@ -28,7 +45,12 @@ public:
 	{
 		mBounds = mPane->getBounds();
 	}
+#endif
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	s32 replaceTexture(u32 tag, JUTTexture* texture);
+	void changeTexture(int);
+#endif
 	void update();
 	void updateAlpha();
 	void updateScale();
@@ -39,8 +61,13 @@ public:
 	/* 0x4 */ JUTRect mBounds;
 	/* 0x14 */ bool unk14;
 	/* 0x18 */ int mPhase;
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x1C */ JUTTexture* mTextures[GC2D_NUM_LANGUAGES];
+#endif
 };
 
+// this seems to be completely absent in other versions!
+#ifdef VERSION_GMSJ01
 class TBalloonControl {
 public:
 	TBalloonControl(int size);
@@ -63,6 +90,9 @@ public:
 	/* 0xC */ J3DFrameCtrl mFrameCtrl;
 	/* 0x20 */ u32 unk20;
 };
+#else
+struct TBalloonControl { };
+#endif
 
 /**
  * @brief Pulsating control for a pane.
@@ -76,6 +106,9 @@ public:
 	void startAnm();
 	void stopAnm();
 	void update();
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	void resize(int);
+#endif
 
 public:
 	/* 0x0 */ J2DPane* mPane;
@@ -155,6 +188,10 @@ public:
 
 	TOptionRumbleUnit(J2DScreen* screen);
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	s32 replaceTexture(u32 tag, JUTTexture* texture);
+	void changeTexture(int);
+#endif
 	void update();
 	void checkRumble();
 	void toggle();
@@ -172,22 +209,125 @@ public:
 	void setState(State state);
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
+#if defined(VERSION_GMSJ01)
 	TPatternAnmControl* getCurrentGamepadAnm() const
 	{
 		return mGamepadIcon[mSelectionText->getNumber()];
 	}
+#endif
 
 public:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
-	/* 0xC */ TBalloonControl* unkC;
+#if defined(VERSION_GMSJ01)
+	/* 0x0C */ TBalloonControl* unkC;
 	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
 	/* 0x14 */ TPatternAnmControl* mGamepadIcon[2];
 	/* 0x1C */ TToggleControl* mSelectionText;
 	/* 0x20 */ State mState;
 	/* 0x24 */ bool mShouldRumble;
+#elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x0C */ TPaneScalingControl* mSelectionBubble;
+	/* 0x10 */ TToggleControl* mSelectionText;
+	/* 0x14 */ State mState;
+	/* 0x18 */ bool mShouldRumble;
+	/* 0x24 */ JUTTexture* mRumbleTextures[GC2D_NUM_LANGUAGES];
+	/* 0x38 */ JUTTexture* mRumbleGridTextures[2][GC2D_NUM_LANGUAGES];
+#else
+	// @TODO: other layout
+#endif
 };
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+class TOptionSubtitleUnit {
+public:
+	enum SubtitleType {
+		SUBTITLE_TYPE_UNK0 = 0,
+		SUBTITLE_TYPE_UNK1 = 1,
+	};
+	enum State {
+		STATE_ACTIVE       = 0,
+		STATE_DEACTIVATING = 1,
+		STATE_INACTIVE     = 2,
+	};
+
+	TOptionSubtitleUnit(J2DScreen* screen);
+
+	s32 replaceTexture(u32 tag, JUTTexture* texture);
+	void changeTexture(int);
+	void update();
+	void toggle();
+	void adjust();
+	void show();
+	void hide();
+	void deactivate(bool);
+	void activate();
+	void setValue(SubtitleType);
+	SubtitleType getValue() const
+	{
+		return (SubtitleType)mSelectionText->getNumber();
+	}
+	void setState(State state);
+	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
+
+public:
+	/* 0x00 */ J2DScreen* mScreen;
+	/* 0x04 */ TExPane* mParentPane;
+	/* 0x08 */ u8 mInitialAlpha;
+	/* 0x0C */ TPaneScalingControl* mSelectionBubble;
+	/* 0x10 */ TToggleControl* mSelectionText;
+	/* 0x14 */ State mState;
+	/* 0x18 */ JUTTexture* mSubtitleTexture[GC2D_NUM_LANGUAGES];
+	/* 0x2C */ JUTTexture* mSubtitleGridTextures[2][GC2D_NUM_LANGUAGES];
+};
+
+class TOptionLanguageUnit {
+public:
+	enum LanguageType {
+		LANGUAGE_TYPE_UNK0 = 0,
+		LANGUAGE_TYPE_UNK1 = 1,
+		LANGUAGE_TYPE_UNK2 = 2,
+		LANGUAGE_TYPE_UNK3 = 3,
+		LANGUAGE_TYPE_UNK4 = 4,
+	};
+	enum State {
+		STATE_ACTIVE       = 0,
+		STATE_DEACTIVATING = 1,
+		STATE_INACTIVE     = 2,
+	};
+
+	TOptionLanguageUnit(J2DScreen* screen);
+
+	s32 replaceTexture(u32 tag, JUTTexture* texture);
+	void changeTexture(int);
+	void update();
+	void toggle();
+	void adjust();
+	void show();
+	void hide();
+	void deactivate(bool);
+	void activate();
+	void setValue(LanguageType);
+	LanguageType getValue() const
+	{
+		return (LanguageType)mSelectionText->getNumber();
+	}
+	void setState(State state);
+	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
+
+public:
+	/* 0x0 */ J2DScreen* mScreen;
+	/* 0x4 */ TExPane* mParentPane;
+	/* 0x8 */ u8 mInitialAlpha;
+	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
+	/* 0x14 */ JUTTexture* mLangTexture[GC2D_NUM_LANGUAGES];
+	/* 0x28 */ TToggleControl* mSelectionText;
+	/* 0x2C */ State mState;
+	/* 0x18 */ JUTTexture* mLanguageTexture[GC2D_NUM_LANGUAGES];
+	/* 0x2C */ JUTTexture* mLanguageGridTextures[2][GC2D_NUM_LANGUAGES];
+};
+#endif
 
 class TOptionSoundUnit {
 public:
@@ -207,6 +347,10 @@ public:
 	void initMonoAnm();
 	void initSteleoAnm();
 	void initSurroundAnm();
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	s32 replaceTexture(u32 tag, JUTTexture* texture);
+	void changeTexture(int);
+#endif
 	void update();
 	void updatePatternAnm();
 	void foreachPatternAnm(ArrayWrapper<TPatternAnmControl*>& ary,
@@ -243,7 +387,9 @@ public:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
+#if defined(VERSION_GMSJ01)
 	/* 0xC */ TBalloonControl* unkC;
+#endif
 	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
 	/* 0x14 */ TToggleControl* mSelectionText;
 	/* 0x18 */ State mState;
@@ -253,6 +399,10 @@ public:
 	/* 0x3C */ TPatternAnmControl* mStereoAnimations[3];
 	/* 0x48 */ TPatternAnmControl* mSurroundAnimations[5];
 	/* 0x5C */ ArrayWrapper<TPatternAnmControl*> mMonteIcons[3];
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x70 */ JUTTexture* mSoundTextures[GC2D_NUM_LANGUAGES];
+	/* 0x84 */ JUTTexture* mSoundGridTextures[3][GC2D_NUM_LANGUAGES];
+#endif
 };
 
 class TOptionControl {
@@ -260,6 +410,10 @@ public:
 	enum SelectType {
 		SELECT_TYPE_RUMBLE_OPTION = 0,
 		SELECT_TYPE_SOUND_OPTION  = 1,
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+		SELECT_TYPE_SUBTITLE_OPTION = 2,
+		SELECT_TYPE_LANGUAGE_OPTION = 3,
+#endif
 	};
 
 	void load();
@@ -270,6 +424,12 @@ public:
 	bool movementOption();
 	bool movementOption2Card();
 	void setType(TOptionControl::SelectType type, bool initial_options_entry);
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	void updateOptions();
+	void updateTexturesLanguage();
+	void changeTexture();
+	void changeTopMessage(int langId);
+#endif
 	void toggleCurType();
 	void checkInput();
 	void writeValue();
@@ -277,16 +437,26 @@ public:
 	void resetChangedSetting();
 
 public:
-	/* 0x0 */ J2DSetScreen* mScreen;
-	/* 0x4 */ TArrowControl* mBackArrow;
-	/* 0x8 */ TOptionRumbleUnit* mRumbleOption;
-	/* 0xC */ TOptionSoundUnit* mSoundOption;
-	/* 0x10 */ SelectType mSelectedOption;
-	/* 0x14 */ bool mWasJumping;
-	/* 0x18 */ int mInitialRumbleValue;
-	/* 0x1C */ int mInitialSoundValue;
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
-	/* 0x20 */ u8 unk20[VERSION_SELECT(0x8, GMSP01(0x2C), GMSP01_NX(0x58))];
+	/* 0x00 */ J2DSetScreen* mScreen;
+	/* 0x04 */ TArrowControl* mBackArrow;
+	/* 0x08 */ TOptionRumbleUnit* mRumbleOption;
+	/* 0x0C */ TOptionSoundUnit* mSoundOption;
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x10 */ TOptionSubtitleUnit* mSubtitleOption;
+#endif
+	/* 0x14 */ SelectType mSelectedOption;
+	/* 0x18 */ bool mWasJumping;
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x18 */ TOptionLanguageUnit* mLanguageOption;
+#endif
+	/* 0x1C */ int mInitialRumbleValue;
+	/* 0x20 */ int mInitialSoundValue;
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	/* 0x20 */ J2DTextBox* unk20;
+	/* 0x24 */ J2DTextBox* unk24;
+	int mInitialSubtitleValue;
+	int mInitialLanguageValue;
+	/* 0x28 */ void* mMessageEntries[GC2D_NUM_LANGUAGES];
 #endif
 };
 

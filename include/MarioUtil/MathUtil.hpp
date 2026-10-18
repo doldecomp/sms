@@ -236,8 +236,8 @@ inline f32 MsSqrtf(f32 x)
 }
 
 // NOTE: MsCos is **real**.
-inline f32 MsSin(f32 v) { return JMASSin(v * (65536.0f / 360.0f)); }
-inline f32 MsCos(f32 v) { return JMASCos(v * (65536.0f / 360.0f)); }
+inline f32 MsSin(f32 deg) { return JMASSin(deg * (65536.0f / 360.0f)); }
+inline f32 MsCos(f32 deg) { return JMASCos(deg * (65536.0f / 360.0f)); }
 
 inline void MsMtxSetRotX(MtxPtr mtx, f32 x)
 {
