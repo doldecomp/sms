@@ -109,7 +109,9 @@ void TGuide::load(JSUMemoryInputStream& stream)
 
 	unk430 = unkBC->search('01mi');
 	unk434 = unkBC->search('01_9')->getBounds();
-	unk474 = JKRGetResource("/common/2d/stagename.bmg");
+	unk474 = JKRGetResource(VERSION_SELECT("/common/2d/stagename.bmg",
+	                                       GMSP01("/cmn2d/stagename.bmg"),
+	                                       GMSP01_NX("/cmn2d/stagename.bmg")));
 
 	unk134              = (J2DPicture*)unkBC->search('10');
 	JUTTexture* texture = new JUTTexture(

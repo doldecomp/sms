@@ -21,6 +21,7 @@
 #include <System/FlagManager.hpp>
 #include <System/MarioGamePad.hpp>
 #include <System/Resolution.hpp>
+#include <version.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -29,6 +30,12 @@
 
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+static const char* selectNames[]
+    = { "/data/select_en.arc", "/data/select_ge.arc", "/data/select_fr.arc",
+	    "/data/select_sp.arc", "/data/select_it.arc" };
+#endif
 
 TSelectDir::TSelectDir()
     : unk20(0)
@@ -75,7 +82,13 @@ void* TSelectDir::setupThreadFunc(void* param_1)
 
 int TSelectDir::rsetup()
 {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	void* arcData = SMSLoadArchive(
+	    selectNames[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)], 0, 0,
+	    0);
+#else
 	void* arcData = SMSLoadArchive("/data/select.arc", 0, 0, 0);
+#endif
 
 	JKRMemArchive* archive = new JKRMemArchive;
 	if (!archive->mountFixed(arcData, MBF_0))

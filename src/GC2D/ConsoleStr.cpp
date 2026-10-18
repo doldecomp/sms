@@ -1,3 +1,4 @@
+#include "version.h"
 #include <GC2D/ConsoleStr.hpp>
 #include <GC2D/BoundPane.hpp>
 #include <GC2D/ExPane.hpp>
@@ -471,7 +472,11 @@ bool TConsoleStr::processGo(float param_1)
 	bool result = false;
 
 	if (param_1 < 90.0f) {
-		for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+
+		for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
+		                                   GMSP01(mGoLettersLength),
+		                                   GMSP01_NX(mGoLettersLength));
+		     ++i) {
 			if (param_1 == i * 10) {
 				mGoLetters[i]->setPanePosition(
 				    0x28, JUTPoint(0, 60), JUTPoint(0, -40), JUTPoint(0, -40));
@@ -479,7 +484,10 @@ bool TConsoleStr::processGo(float param_1)
 			}
 		}
 
-		for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+		for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
+		                                   GMSP01(mGoLettersLength),
+		                                   GMSP01_NX(mGoLettersLength));
+		     ++i) {
 			if (mGoLetters[i]->update()) {
 				if (mGoLetters[i]->unk14.x != 0 || mGoLetters[i]->unk14.y != 0)
 					mGoLetters[i]->setPanePosition(0x1E, JUTPoint(0, -40),
@@ -497,7 +505,10 @@ bool TConsoleStr::processGo(float param_1)
 			mGoLetters[2]->setPanePosition(
 			    0x50, JUTPoint(0, 0), JUTPoint(160, -180), JUTPoint(320, -360));
 
-			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+			for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
+			                                   GMSP01(mGoLettersLength),
+			                                   GMSP01_NX(mGoLettersLength));
+			     ++i) {
 				for (int j = 0; j < 16; ++j) {
 					JUTRect bounds = mGoLetters[i]->getPane()->getGlbBounds();
 					unk34[i][j].set(bounds.x1, bounds.y1);
@@ -512,7 +523,10 @@ bool TConsoleStr::processGo(float param_1)
 				unk2AC[i] = gpEmitterManager4D2->unkC8[0][0];
 			}
 		} else if (param_1 < 175.0f) {
-			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+			for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
+			                                   GMSP01(mGoLettersLength),
+			                                   GMSP01_NX(mGoLettersLength));
+			     ++i) {
 				int alpha = mGoLetters[i]->getPane()->getAlpha() - 4;
 				if (alpha < 0)
 					alpha = 0;
@@ -532,13 +546,19 @@ bool TConsoleStr::processGo(float param_1)
 				}
 			}
 		} else if (param_1 == 175.0f) {
-			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+			for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
+			                                   GMSP01(mGoLettersLength),
+			                                   GMSP01_NX(mGoLettersLength));
+			     ++i) {
 				JUTRect bounds = mGoLetters[i]->getPane()->getBounds();
 				mGoLetters[i]->getPane()->resize(bounds.getWidth() - 80,
 				                                 bounds.getHeight() - 80);
 			}
 		} else {
-			for (int i = 0; i < ARRAY_COUNT(mGoLetters); ++i) {
+			for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
+			                                   GMSP01(mGoLettersLength),
+			                                   GMSP01_NX(mGoLettersLength));
+			     ++i) {
 				mGoLetters[i]->getPane()->hide();
 				if (unk2AC[i])
 					unk2AC[i]->stopCreateParticle();
@@ -554,7 +574,10 @@ bool TConsoleStr::processShineGet(int param_1)
 {
 	bool result = true;
 
-	for (int i = 0; i < 9; ++i) {
+	for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mShineGetLetters),
+	                                   GMSP01(mShineLettersLength),
+	                                   GMSP01_NX(mShineLettersLength));
+	     ++i) {
 		if (param_1 == 6 * i) {
 			mShineGetLetters[i]->getPane()->show();
 			mShineGetLetters[i]->setPanePosition(
@@ -619,7 +642,10 @@ bool TConsoleStr::processMiss(int param_1)
 {
 	bool result = true;
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mMissLetters),
+	                                   GMSP01(mMissLettersLength),
+	                                   GMSP01_NX(mMissLettersLength));
+	     ++i) {
 		if (param_1 == i * 10) {
 			mMissLetters[i]->getPane()->show();
 			mMissLetters[i]->setPanePosition(

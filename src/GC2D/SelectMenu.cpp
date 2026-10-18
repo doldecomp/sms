@@ -437,7 +437,9 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	mStageBannerShadow = new TBoundPane(mMenuScreen, (tags[mStage] << 8) + 'b');
 	mStageBannerShadow->getPane()->show();
 
-	mStageNameBmg = JKRGetResource("/common/2d/stagename.bmg");
+	mStageNameBmg = JKRGetResource(VERSION_SELECT(
+	    "/common/2d/stagename.bmg", GMSP01("/cmn2d/stagename.bmg"),
+	    GMSP01_NX("/cmn2d/stagename.bmg")));
 
 	strncpy(mStageName->getStringPtr(),
 	        SMSGetMessageData(mStageNameBmg, stageNameIds[mStage] & 0xFFFF),
@@ -568,7 +570,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	mScenarioShadow1->remove(1);
 
 	char buf[254];
-	snprintf(buf, sizeof(buf), "/common/2d/scenarioname.bmg");
+	snprintf(buf, sizeof(buf),
+	         VERSION_SELECT("/common/2d/scenarioname.bmg",
+	                        GMSP01("/cmn2d/scenarioname.bmg"),
+	                        GMSP01_NX("/cmn2d/scenarioname.bmg")));
 	mScenarioBmg2 = JKRGetResource(buf);
 
 	mScenarioText1->setFont((JUTFont*)gpSystemFont);
