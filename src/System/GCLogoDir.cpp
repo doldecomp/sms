@@ -1,4 +1,3 @@
-#include "JSystem/JUtility/JUTGamePad.hpp"
 #include <System/GCLogoDir.hpp>
 #include <dolphin/vi.h>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
