@@ -2,6 +2,7 @@
 #include <GC2D/hx_wiper.h>
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <dolphin/gx.h>
+#include <version.h>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
@@ -417,7 +418,11 @@ void TSMSFader::setFadeStatus(TSMSFader::EFadeStatus param_1)
 void TSMSFader::getGameOverBtiResource()
 {
 	Hx_RemoveResource();
-	Hx_ProvideResource(JKRGetResource("/common/2d/wipe_gameover.bti"), 0);
+	Hx_ProvideResource(
+	    JKRGetResource(VERSION_SELECT("/common/2d/wipe_gameover.bmg",
+	                                  GMSP01("/cmn2d/wipe_gameover.bmg"),
+	                                  GMSP01_NX("/cmn2d/wipe_gameover.bmg"))),
+	    0);
 }
 
 void TSMSFader::getMmarkBtiResource()
