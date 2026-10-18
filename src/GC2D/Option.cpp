@@ -1461,7 +1461,32 @@ bool TOptionControl::movementCard2Option()
 		setType(mSelectedOption, true);
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-		updateTexturesLanguage();
+		TOptionLanguageUnit::LanguageType langId = mLanguageOption->getValue();
+		mBackArrow->replaceTexture('s_1', mBackArrow->mTextures[langId]);
+
+		mRumbleOption->changeTexture(langId);
+		mSoundOption->changeTexture(langId);
+		mSubtitleOption->changeTexture(langId);
+
+		s32 textWidth = mLanguageOption->replaceTexture(
+		    'm_4', mLanguageOption->mLanguageTexture[langId]);
+
+		J2DPane* langPane = mLanguageOption->mScreen->search('lan0' + langId);
+		if (langPane != nullptr) {
+			s32 paneWidth = (langPane->getBounds().getWidth());
+			if (paneWidth > textWidth) {
+				textWidth = paneWidth;
+			}
+
+			f32 scaleOffset = ((textWidth + 30)
+			                   - mLanguageOption->mSelectionBubble
+			                         ->mInitialBounds.getWidth())
+			                  / 2.0f;
+			mLanguageOption->mSelectionBubble->mInitialBounds.reform(
+			    -scaleOffset, 0, scaleOffset, 0);
+			mLanguageOption->mSelectionBubble->update();
+		}
+		changeTopMessage(langId);
 #endif
 
 		return true;
@@ -1473,7 +1498,12 @@ bool TOptionControl::movementCard2Option()
 bool TOptionControl::movementOption()
 {
 	mBackArrow->update();
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	updateOptions();
+#else
+	mRumbleOption->update();
+	mSoundOption->update();
+#endif
 	checkInput();
 	writeValue();
 
@@ -1559,36 +1589,6 @@ void TOptionControl::updateOptions()
 	mSubtitleOption->update();
 	mLanguageOption->update();
 }
-// fabricated
-void TOptionControl::updateTexturesLanguage()
-{
-	TOptionLanguageUnit::LanguageType langId = mLanguageOption->getValue();
-	mBackArrow->replaceTexture('s_1', mBackArrow->mTextures[langId]);
-
-	mRumbleOption->changeTexture(langId);
-	mSoundOption->changeTexture(langId);
-	mSubtitleOption->changeTexture(langId);
-
-	s32 textWidth = mLanguageOption->replaceTexture(
-	    'm_4', mLanguageOption->mLanguageTexture[langId]);
-
-	J2DPane* langPane = mLanguageOption->mScreen->search('lan0' + langId);
-	if (langPane != nullptr) {
-		s32 paneWidth = (langPane->getBounds().getWidth());
-		if (paneWidth > textWidth) {
-			textWidth = paneWidth;
-		}
-
-		f32 scaleOffset
-		    = ((textWidth + 30)
-		       - mLanguageOption->mSelectionBubble->mInitialBounds.getWidth())
-		      / 2.0f;
-		mLanguageOption->mSelectionBubble->mInitialBounds.reform(
-		    -scaleOffset, 0, scaleOffset, 0);
-		mLanguageOption->mSelectionBubble->update();
-	}
-	changeTopMessage(langId);
-}
 void TOptionControl::changeTexture() { }
 void TOptionControl::changeTopMessage(int langId)
 {
@@ -1634,8 +1634,8 @@ void TOptionControl::changeTopMessage(int langId)
 
 #undef kJSYSTEM_SEQ
 
-	strncpy(unk20->getStringPtr(), stringBuffer, sizeof(stringBuffer));
-	strncpy(unk24->getStringPtr(), stringBuffer, sizeof(stringBuffer));
+	strncpy(unk28->getStringPtr(), stringBuffer, sizeof(stringBuffer));
+	strncpy(unk2C->getStringPtr(), stringBuffer, sizeof(stringBuffer));
 }
 #endif
 
@@ -1654,28 +1654,87 @@ void TOptionControl::toggleCurType()
 		break;
 	case SELECT_TYPE_LANGUAGE_OPTION:
 		mLanguageOption->toggle();
-		updateTexturesLanguage();
+		TOptionLanguageUnit::LanguageType langId = mLanguageOption->getValue();
+		mBackArrow->replaceTexture('s_1', mBackArrow->mTextures[langId]);
+
+		mRumbleOption->changeTexture(langId);
+		mSoundOption->changeTexture(langId);
+		mSubtitleOption->changeTexture(langId);
+
+		s32 textWidth = mLanguageOption->replaceTexture(
+		    'm_4', mLanguageOption->mLanguageTexture[langId]);
+
+		J2DPane* langPane = mLanguageOption->mScreen->search('lan0' + langId);
+		if (langPane != nullptr) {
+			s32 paneWidth = (langPane->getBounds().getWidth());
+			if (paneWidth > textWidth) {
+				textWidth = paneWidth;
+			}
+
+			f32 scaleOffset = ((textWidth + 30)
+			                   - mLanguageOption->mSelectionBubble
+			                         ->mInitialBounds.getWidth())
+			                  / 2.0f;
+			mLanguageOption->mSelectionBubble->mInitialBounds.reform(
+			    -scaleOffset, 0, scaleOffset, 0);
+			mLanguageOption->mSelectionBubble->update();
+		}
+		changeTopMessage(langId);
 		break;
 #endif
 	}
 }
 
-#pragma dont_inline on
 void TOptionControl::checkInput()
 {
 	f32 fVar1
 	    = SMSGetMarDirector()->getGamePad()->getMainStickInDir(0.0f, 1.0f);
-	if (fVar1 >= 0.75f)
+	if (fVar1 >= 0.75f) {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (mSelectedOption) {
+			case 2:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
+				break;
+			case 3:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			default:
+				setType(SELECT_TYPE_RUMBLE_OPTION, false);
+				break;
+			}
+		}
+#else
 		setType(SELECT_TYPE_RUMBLE_OPTION, false);
-	else if (fVar1 <= -0.75f)
+#endif
+	} else if (fVar1 <= -0.75f) {
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (mSelectedOption) {
+			case 2:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
+				break;
+			case 3:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			default:
+				setType(SELECT_TYPE_LANGUAGE_OPTION, false);
+				break;
+			}
+		}
+#else
 		setType(SELECT_TYPE_SOUND_OPTION, false);
+#endif
+	}
 
 	bool jumping = SMS_IsMarioStatusTypeJumping();
 	if (!mWasJumping && jumping)
 		toggleCurType();
 	mWasJumping = jumping;
 }
-#pragma dont_inline off
 
 void TOptionControl::writeValue()
 {

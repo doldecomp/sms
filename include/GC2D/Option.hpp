@@ -426,7 +426,6 @@ public:
 	void setType(TOptionControl::SelectType type, bool initial_options_entry);
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	void updateOptions();
-	void updateTexturesLanguage();
 	void changeTexture();
 	void changeTopMessage(int langId);
 #endif
@@ -441,22 +440,24 @@ public:
 	/* 0x04 */ TArrowControl* mBackArrow;
 	/* 0x08 */ TOptionRumbleUnit* mRumbleOption;
 	/* 0x0C */ TOptionSoundUnit* mSoundOption;
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSJ01)
+	/* 0x10 */ SelectType mSelectedOption;
+	/* 0x14 */ bool mWasJumping;
+	/* 0x18 */ int mInitialRumbleValue;
+	/* 0x1C */ int mInitialSoundValue;
+#elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	/* 0x10 */ TOptionSubtitleUnit* mSubtitleOption;
-#endif
-	/* 0x14 */ SelectType mSelectedOption;
-	/* 0x18 */ bool mWasJumping;
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	/* 0x18 */ TOptionLanguageUnit* mLanguageOption;
-#endif
-	/* 0x1C */ int mInitialRumbleValue;
-	/* 0x20 */ int mInitialSoundValue;
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	/* 0x20 */ J2DTextBox* unk20;
-	/* 0x24 */ J2DTextBox* unk24;
-	int mInitialSubtitleValue;
-	int mInitialLanguageValue;
-	/* 0x28 */ void* mMessageEntries[GC2D_NUM_LANGUAGES];
+	/* 0x14 */ TOptionLanguageUnit* mLanguageOption;
+	/* 0x18 */ int mInitialRumbleValue;
+	/* 0x1C */ int mInitialSoundValue;
+	/* 0x20 */ int mInitialSubtitleValue;
+	/* 0x24 */ int mInitialLanguageValue;
+	/* 0x28 */ J2DTextBox* unk28;
+	/* 0x2C */ J2DTextBox* unk2C;
+	/* 0x30 */ void* mMessageEntries[GC2D_NUM_LANGUAGES];
+	/* 0x3C */ SelectType mSelectedOption;
+	/* 0x40 */ bool mWasJumping;
+	/* 0x41 */ bool mStickNeutral;
 #endif
 };
 
