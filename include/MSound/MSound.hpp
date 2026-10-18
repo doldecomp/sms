@@ -9,6 +9,7 @@
 #include <JSystem/JAudio/JASystem/JASWaveArcLoader.hpp>
 #include <JSystem/JAudio/JAInterface/JAISound.hpp>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
+#include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 #include <MSound/MSSceneWave.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <MSound/SoundEffects.hpp>
@@ -137,6 +138,12 @@ public:
 		if (gateCheck(id))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(id, param_2,
 			                                             out_handle, fade);
+	}
+
+	// fabricated
+	void setOutputMode(u32 mode)
+	{
+		JAIGlobalParameter::setParamSoundOutputMode(mode);
 	}
 
 	// Fabricated, very likely due to real startSoundSystemSE

@@ -27,11 +27,6 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-// prefix for path
-static const char* langArray[] = { "", "ge/", "fr/", "sp/", "it/" };
-#endif
-
 namespace {
 
 void tag_to_string(char*, u32) { }
@@ -103,7 +98,7 @@ const u32 cRumbleToggleItems[] = {
 	'sel0',
 };
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 const u32 cSubtitleToggleItems[] = {
 	'sel6',
 	'sel5',
@@ -116,25 +111,26 @@ const u32 cSoundToggleItems[] = {
 	'sel4',
 };
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#ifdef VERSION_GMSP01
 const u32 cLanguageToggleItems[] = {
 	'lan0', 'lan1', 'lan2', 'lan3', 'lan4',
 };
+#elif defined(VERSION_GMSP01_NX)
+const u32 cLanguageToggleItems[] = {
+	'lan0', 'lan1', 'lan2', 'lan3', 'lan4', 'lan5', 'lan6',
+};
+#endif
 
-#pragma dont_inline on
-void loadTexture(JUTTexture** out_textures, char* path)
+#ifdef VERSION_GMSP01
+void loadTexture(JUTTexture** textures, char* name)
 {
-	char pathBuffer[255];
-
-	for (int i = 0; i < ARRAY_COUNT(langArray); i++) {
-		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], path);
-		JUTTexture* texture = new JUTTexture(
-		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-		out_textures[i] = texture;
+	static const char* langArray[] = { "", "ge/", "fr/", "sp/", "it/" };
+	for (int i = 0; i < 5; ++i) {
+		char path[256];
+		snprintf(path, 255, "/option/timg/%s%s", langArray[i], name);
+		textures[i] = new JUTTexture((const ResTIMG*)JKRGetResource(path));
 	}
 }
-#pragma dont_inline off
 #endif
 
 } // namespace
@@ -153,23 +149,40 @@ const TOptionSoundUnit::FabricatedFlagInfo TOptionSoundUnit::cFlagInfos[] = {
 	{ TOptionSoundUnit::SOUND_TYPE_SURROUND, 2 },
 };
 
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+TArrowControl::TArrowControl(J2DScreen* screen, J2DPicture* picture)
+    : mScreen(screen)
+    , mPane(picture)
+    , unk14(true)
+    , mPhase(0)
+{
+	mBounds = mPane->getBounds();
+#ifdef VERSION_GMSP01
+	loadTexture(mTextures, "select_quit.bti");
+#endif
+}
+#endif
+
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-#pragma dont_inline on
 s32 TArrowControl::replaceTexture(u32 tag, JUTTexture* texture)
 {
-	J2DPicture* picture = (J2DPicture*)mPane->search(tag);
-	s32 widthDiff       = texture->getWidth() - picture->getWidth();
-
+	int offset;
+	J2DPicture* picture = (J2DPicture*)mScreen->search(tag);
+	JUT_ASSERT(picture);
+	offset = texture->getWidth() - picture->getWidth();
 	picture->changeTexture(texture->getTexInfo(), 0);
 
 	JUTRect rect(picture->getBounds());
-	rect.reform(0, 0, widthDiff, 0);
+	rect.reform(0, 0, offset, 0);
 	picture->place(rect);
 
 	return picture->getWidth();
 }
-#pragma dont_inline off
-void TArrowControl::changeTexture(int) { }
+
+void TArrowControl::changeTexture(int language)
+{
+	replaceTexture('s_1', mTextures[language]);
+}
 #endif
 
 void TArrowControl::update()
@@ -183,8 +196,9 @@ void TArrowControl::update()
 void TArrowControl::updateAlpha()
 {
 	int iVar3 = unk14 != 0 ? 1 : -1;
-	mPane->setAlpha(
-	    JGeometry::TUtil<s32>::clamp(iVar3 * 8 + mPane->getAlpha(), 0, 255));
+	u8 alpha
+	    = JGeometry::TUtil<s32>::clamp(iVar3 * 8 + mPane->getAlpha(), 0, 255);
+	mPane->setAlpha(alpha);
 }
 
 // incorrect
@@ -199,14 +213,12 @@ void TArrowControl::updateScale()
 
 int TArrowControl::calcMoveX(int phase) const
 {
-	int iVar3 = phase < 50 ? phase : 100 - phase;
-	f32 fVar1 = iVar3 / 50.0f;
+	f32 fVar1 = (phase < 50 ? phase : 100 - phase) / 50.0f;
 	f32 fVar2 = 1.0f - fVar1;
 	return fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2 + fVar1 * fVar2;
 }
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 TBalloonControl::TBalloonControl(int size)
     : unk4(size)
     , unk8(0)
@@ -253,7 +265,12 @@ TPaneScalingControl::TPaneScalingControl(J2DPane* pane)
 }
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-void TPaneScalingControl::resize(int) { }
+void TPaneScalingControl::resize(int width)
+{
+	int offset = ((width + 30) - mInitialBounds.getWidth()) / 2;
+	mInitialBounds.reform(-offset, 0, offset, 0);
+	update();
+}
 #endif
 
 void TPaneScalingControl::setupAnm(f32 amplitude, f32 speed)
@@ -273,15 +290,12 @@ void TPaneScalingControl::stopAnm()
 }
 void TPaneScalingControl::update()
 {
-	int iVar10 = mInitialBounds.getWidth();
-	int iVar5  = mInitialBounds.getHeight();
-
 	f32 fVar2 = mAmplitude
 	            * MsSin(RAD_TO_DEG((f32)mFrameCtrl.getFrame()
 	                               / (f32)mFrameCtrl.getEnd() * (2 * M_PI)));
 
-	int uVar6 = fVar2 * iVar10;
-	int uVar1 = fVar2 * iVar5;
+	int uVar6 = fVar2 * mInitialBounds.getWidth();
+	int uVar1 = fVar2 * mInitialBounds.getHeight();
 
 	JUTRect local_5c = mInitialBounds;
 	local_5c.move(mInitialBounds.x1 - uVar6 / 2, mInitialBounds.y1 - uVar1 / 2);
@@ -300,16 +314,8 @@ void TPatternAnmControl::set(const TPatternAnmControl::TAnmChunk* chunks,
                              int num_chunks)
 {
 	mChunks.set(chunks, num_chunks);
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
-	hide();
-#elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	for (const TAnmChunk* it = mChunks.begin(); it != mChunks.end(); ++it) {
+	for (const TAnmChunk* it = mChunks.begin(); it != mChunks.end(); ++it)
 		mScreen->search(it->mTag)->hide();
-	}
-#else
-	// @TODO: other version
-#endif
 }
 
 void TPatternAnmControl::setupAnm()
@@ -395,14 +401,12 @@ void TToggleControl::setNumber(int num)
 
 TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
     : mScreen(screen)
-    , mParentPane(nullptr)
     , mShouldRumble(false)
 {
 	mParentPane   = new TExPane(mScreen, 'oya1');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 	unkC = new TBalloonControl(3);
 	unkC->add(new TExPane(mScreen, 'bub0'));
 	unkC->add(new TExPane(mScreen, 'bub1'));
@@ -416,8 +420,7 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	mSelectionBubble->setupAnm(0.05f, 1.0f);
 	mSelectionBubble->stopAnm();
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSP01) && !defined(VERSION_GMSP01_NX)
 	// The image of a gamepad that either shakes occasionally or not based on
 	// whether rumble is enabled in the options.
 	mGamepadIcon[1] = new TPatternAnmControl(mScreen);
@@ -436,82 +439,45 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	mSelectionText->setupToggle(cRumbleToggleItems,
 	                            ARRAY_COUNT(cRumbleToggleItems));
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	// load rumble textures for PAL?
-	char pathBuffer[255];
-
-	for (int i = 0; i < ARRAY_COUNT(mRumbleTextures); i++) {
-		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], "select_rumble.bti");
-		mRumbleTextures[i] = new JUTTexture(
-		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-	}
-
-	const char* rumbleFileNames[2] = { "select_on.bti", "select_off.bti" };
-
-	for (int row = 0; row < 2; row++) {
-		for (int col = 0; col < GC2D_NUM_LANGUAGES; col++) {
-			snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-			         langArray[col], rumbleFileNames[row]);
-			mRumbleGridTextures[row][col] = new JUTTexture(
-			    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-		}
-	}
+#ifdef VERSION_GMSP01
+	loadTexture(mRumbleTextures, "select_rumble.bti");
+	char* names[2] = { "select_on.bti", "select_off.bti" };
+	for (int i = 0; i < 2; ++i)
+		loadTexture(mRumbleGridTextures[i], names[i]);
 #endif
 
 	setState(STATE_INACTIVE);
 }
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#ifdef VERSION_GMSP01
 s32 TOptionRumbleUnit::replaceTexture(u32 tag, JUTTexture* texture)
 {
-	J2DPicture* picture = (J2DPicture*)mParentPane->getPane()->search(tag);
-	s32 widthDiff       = texture->getWidth() - picture->getWidth();
-
+	int offset;
+	J2DPicture* picture = (J2DPicture*)mScreen->search(tag);
+	JUT_ASSERT(picture);
+	offset = (texture->getWidth() - picture->getWidth()) / 2;
 	picture->changeTexture(texture->getTexInfo(), 0);
 
 	JUTRect rect(picture->getBounds());
-	rect.reform(0, 0, widthDiff, 0);
+	rect.reform(-offset, 0, offset, 0);
 	picture->place(rect);
 
 	return picture->getWidth();
 }
-void TOptionRumbleUnit::changeTexture(int arg0)
+
+void TOptionRumbleUnit::changeTexture(int language)
 {
-	JUTTexture* langTexture = mRumbleTextures[arg0];
-	J2DPicture* picM1       = (J2DPicture*)mScreen->search('m_1');
-
-	s32 widthOffset = (langTexture->getWidth() - picM1->getWidth()) / 2;
-
-	picM1->changeTexture(langTexture->getTexInfo(), 0);
-
-	JUTRect sp110 = picM1->getBounds();
-	sp110.reform(-widthOffset, 0, widthOffset, 0);
-	picM1->place(sp110);
-
-	s32 maxTextWidth = replaceTexture('m_1', mRumbleTextures[arg0]);
-
-	for (int row = 0; row < 2; row++) {
-		s32 currentWidth
-		    = replaceTexture('sel0' + row, mRumbleGridTextures[row][arg0]);
-		if (currentWidth > maxTextWidth) {
-			maxTextWidth = currentWidth;
-		}
+	int width = replaceTexture('m_1', mRumbleTextures[language]);
+	for (int i = 0; i < 2; ++i) {
+		int itemWidth
+		    = replaceTexture('sel0' + i, mRumbleGridTextures[i][language]);
+		if (itemWidth > width)
+			width = itemWidth;
 	}
-
-	// if you inline this the accuracy tanks
-	TPaneScalingControl* scalingCtrl = mSelectionBubble;
-
-	s32 bubbleOffset
-	    = ((maxTextWidth + 30) - scalingCtrl->mInitialBounds.getWidth()) / 2;
-	scalingCtrl->mInitialBounds.reform(-bubbleOffset, 0, bubbleOffset, 0);
-
-	scalingCtrl->update();
-	scalingCtrl->mFrameCtrl.update();
+	mSelectionBubble->resize(width);
 }
 #endif
 
-#pragma dont_inline on
 void TOptionRumbleUnit::update()
 {
 	switch (mState) {
@@ -525,9 +491,7 @@ void TOptionRumbleUnit::update()
 	case STATE_ACTIVE:
 		mParentPane->update();
 		mSelectionBubble->update();
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
-		// why were these removed for PAL??
+#if !defined(VERSION_GMSP01) && !defined(VERSION_GMSP01_NX)
 		mGamepadIcon[getValue()]->update();
 		checkRumble();
 #endif
@@ -537,12 +501,10 @@ void TOptionRumbleUnit::update()
 		break;
 	}
 }
-#pragma dont_inline off
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
 void TOptionRumbleUnit::checkRumble()
 {
+#if !defined(VERSION_GMSP01) && !defined(VERSION_GMSP01_NX)
 	if (mShouldRumble) {
 		if (mGamepadIcon[mSelectionText->getNumber()]->checkCompletedOnce()) {
 			mShouldRumble = false;
@@ -561,10 +523,8 @@ void TOptionRumbleUnit::checkRumble()
 			}
 		}
 	}
-}
-#else
-void TOptionRumbleUnit::checkRumble() { }
 #endif
+}
 
 void TOptionRumbleUnit::toggle()
 {
@@ -584,8 +544,7 @@ void TOptionRumbleUnit::adjust()
 
 void TOptionRumbleUnit::adjustView()
 {
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSP01) && !defined(VERSION_GMSP01_NX)
 	switch (mSelectionText->getNumber()) {
 	case 0:
 		mGamepadIcon[1]->hide();
@@ -599,7 +558,7 @@ void TOptionRumbleUnit::adjustView()
 #endif
 }
 
-void TOptionRumbleUnit::show() { }
+void TOptionRumbleUnit::show() { mShouldRumble = false; }
 
 void TOptionRumbleUnit::hide() { }
 
@@ -631,8 +590,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 		unkC->stopAnm();
 #endif
 		mShouldRumble = false;
@@ -641,8 +599,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 		unkC->stopAnm();
 #endif
 		mShouldRumble = false;
@@ -652,8 +609,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 		unkC->setupAnm();
 		unkC->startAnm();
 #endif
@@ -672,100 +628,59 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane,
 	}
 }
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
     : mScreen(screen)
-    , mParentPane(nullptr)
-    , mInitialAlpha(0)
-    , mSelectionBubble(nullptr)
-    , mSelectionText(nullptr)
-    , mState(STATE_INACTIVE)
 {
-	mParentPane      = new TExPane(mScreen, 'txp2');
-	mInitialAlpha    = mParentPane->getPane()->getAlpha();
+	mParentPane   = new TExPane(mScreen, 'txp2');
+	mInitialAlpha = mParentPane->getPane()->getAlpha();
+
 	mSelectionBubble = new TPaneScalingControl(mScreen->search('me_2'));
 	mSelectionBubble->setupAnm(0.05f, 1.0f);
 	mSelectionBubble->stopAnm();
 
-	static const u32 cSubToggleItems[] = { 'sel5', 'sel6' };
-	mSelectionText                     = new TToggleControl(mScreen);
-	mSelectionText->setupToggle(cSubToggleItems, ARRAY_COUNT(cSubToggleItems));
+	mSelectionText = new TToggleControl(mScreen);
+	mSelectionText->setupToggle(cSubtitleToggleItems,
+	                            ARRAY_COUNT(cSubtitleToggleItems));
 
-	char pathBuffer[255];
-
-	for (int i = 0; i < ARRAY_COUNT(mSubtitleTexture); i++) {
-		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], "select_subtitles.bti");
-		mSubtitleTexture[i] = new JUTTexture(
-		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-	}
-
-	const char* subFileNames[2] = { "select_on.bti", "select_off.bti" };
-
-	for (int row = 0; row < 2; row++) {
-		for (int col = 0; col < GC2D_NUM_LANGUAGES; col++) {
-			snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-			         langArray[col], subFileNames[row]);
-			mSubtitleGridTextures[row][col] = new JUTTexture(
-			    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-		}
-	}
+#ifdef VERSION_GMSP01
+	loadTexture(mSubtitleTextures, "select_subtitles.bti");
+	char* names[2] = { "select_on.bti", "select_off.bti" };
+	for (int i = 0; i < 2; ++i)
+		loadTexture(mSubtitleGridTextures[i], names[i]);
+#endif
 
 	setState(STATE_INACTIVE);
-	mParentPane->getPane()->setAlpha(150);
-	// @NOTE: this is getting inlined...
-	setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-
-	mSelectionBubble->stopAnm();
 }
 
+#ifdef VERSION_GMSP01
 s32 TOptionSubtitleUnit::replaceTexture(u32 tag, JUTTexture* texture)
 {
-	J2DPicture* picture = (J2DPicture*)mParentPane->getPane()->search(tag);
-	s32 widthDiff       = texture->getWidth() - picture->getWidth();
-
+	int offset;
+	J2DPicture* picture = (J2DPicture*)mScreen->search(tag);
+	JUT_ASSERT(picture);
+	offset = (texture->getWidth() - picture->getWidth()) / 2;
 	picture->changeTexture(texture->getTexInfo(), 0);
 
 	JUTRect rect(picture->getBounds());
-	rect.reform(0, 0, widthDiff, 0);
+	rect.reform(-offset, 0, offset, 0);
 	picture->place(rect);
 
 	return picture->getWidth();
 }
 
-void TOptionSubtitleUnit::changeTexture(int arg0)
+void TOptionSubtitleUnit::changeTexture(int language)
 {
-	JUTTexture* langTexture = mSubtitleTexture[arg0];
-	J2DPicture* picM1       = (J2DPicture*)mScreen->search('m_3');
-
-	s32 widthOffset = (langTexture->getWidth() - picM1->getWidth()) / 2;
-
-	picM1->changeTexture(langTexture->getTexInfo(), 0);
-
-	JUTRect sp110 = picM1->getBounds();
-	sp110.reform(-widthOffset, 0, widthOffset, 0);
-	picM1->place(sp110);
-
-	s32 maxTextWidth = picM1->getWidth();
-
-	for (int row = 0; row < 2; row++) {
-		s32 currentWidth
-		    = replaceTexture('sel5' + row, mSubtitleGridTextures[row][arg0]);
-		if (currentWidth > maxTextWidth) {
-			maxTextWidth = currentWidth;
-		}
+	int width = replaceTexture('m_3', mSubtitleTextures[language]);
+	for (int i = 0; i < 2; ++i) {
+		int itemWidth
+		    = replaceTexture('sel5' + i, mSubtitleGridTextures[i][language]);
+		if (itemWidth > width)
+			width = itemWidth;
 	}
-
-	// if you inline this the accuracy tanks
-	TPaneScalingControl* scalingCtrl = mSelectionBubble;
-
-	s32 bubbleOffset
-	    = ((maxTextWidth + 30) - scalingCtrl->mInitialBounds.getWidth()) / 2;
-	scalingCtrl->mInitialBounds.reform(-bubbleOffset, 0, bubbleOffset, 0);
-
-	scalingCtrl->update();
-	scalingCtrl->mFrameCtrl.update();
+	mSelectionBubble->resize(width);
 }
+#endif
 
 void TOptionSubtitleUnit::update()
 {
@@ -793,9 +708,13 @@ void TOptionSubtitleUnit::toggle()
 	adjust();
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0, nullptr, 0);
 }
-void TOptionSubtitleUnit::adjust() { }
+
+void TOptionSubtitleUnit::adjust() { int value = mSelectionText->getNumber(); }
+
 void TOptionSubtitleUnit::show() { }
+
 void TOptionSubtitleUnit::hide() { }
+
 void TOptionSubtitleUnit::deactivate(bool force)
 {
 	if (force)
@@ -803,12 +722,19 @@ void TOptionSubtitleUnit::deactivate(bool force)
 	else
 		setState(TOptionSubtitleUnit::STATE_DEACTIVATING);
 }
+
 void TOptionSubtitleUnit::activate()
 {
 	setState(TOptionSubtitleUnit::STATE_ACTIVE);
 }
-void TOptionSubtitleUnit::setValue(SubtitleType) { }
-void TOptionSubtitleUnit::setState(State state)
+
+void TOptionSubtitleUnit::setValue(TOptionSubtitleUnit::SubtitleType type)
+{
+	mSelectionText->setNumber(type);
+	adjust();
+}
+
+void TOptionSubtitleUnit::setState(TOptionSubtitleUnit::State state)
 {
 	mState = state;
 	switch (state) {
@@ -830,6 +756,7 @@ void TOptionSubtitleUnit::setState(State state)
 		break;
 	}
 }
+
 void TOptionSubtitleUnit::setInfluencedAlphaRecursive(J2DPane* pane,
                                                       bool influenced_alpha)
 {
@@ -839,7 +766,9 @@ void TOptionSubtitleUnit::setInfluencedAlphaRecursive(J2DPane* pane,
 		setInfluencedAlphaRecursive(it.getObject(), influenced_alpha);
 	}
 }
+#endif
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 TOptionLanguageUnit::TOptionLanguageUnit(J2DScreen* screen)
     : mScreen(screen)
 {
@@ -854,66 +783,36 @@ TOptionLanguageUnit::TOptionLanguageUnit(J2DScreen* screen)
 	mSelectionText->setupToggle(cLanguageToggleItems,
 	                            ARRAY_COUNT(cLanguageToggleItems));
 
-	char pathBuffer[255];
-	for (int i = 0; i < ARRAY_COUNT(mLanguageTexture); i++) {
-		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], "select_language.bti");
-		mLanguageTexture[i] = new JUTTexture(
-		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-	}
+#ifdef VERSION_GMSP01
+	loadTexture(mLanguageTextures, "select_language.bti");
+#endif
 
 	setState(STATE_INACTIVE);
-
-	mParentPane->getPane()->setAlpha(150);
-	setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-
-	mSelectionBubble->stopAnm();
 }
 
-#pragma dont_inline on
 s32 TOptionLanguageUnit::replaceTexture(u32 tag, JUTTexture* texture)
 {
-	J2DPicture* picture = (J2DPicture*)mParentPane->getPane()->search(tag);
-	s32 widthDiff       = texture->getWidth() - picture->getWidth();
-
+	int offset;
+	J2DPicture* picture = (J2DPicture*)mScreen->search(tag);
+	JUT_ASSERT(picture);
+	offset = (texture->getWidth() - picture->getWidth()) / 2;
 	picture->changeTexture(texture->getTexInfo(), 0);
 
 	JUTRect rect(picture->getBounds());
-	rect.reform(0, 0, widthDiff, 0);
+	rect.reform(-offset, 0, offset, 0);
 	picture->place(rect);
 
 	return picture->getWidth();
 }
-#pragma dont_inline off
 
-void TOptionLanguageUnit::changeTexture(int arg0)
+void TOptionLanguageUnit::changeTexture(int language)
 {
-	J2DPicture* picMain = (J2DPicture*)mScreen->search('m_4');
-	JUTTexture* subTex  = mLanguageTexture[arg0];
-
-	int mainWidthOffset = (subTex->getWidth() - (picMain->getWidth())) / 2;
-	picMain->changeTexture(subTex->getTexInfo(), 0);
-
-	JUTRect rectMain = picMain->getBounds();
-	rectMain.reform(-mainWidthOffset, 0, mainWidthOffset, 0);
-
-	int maxGridWidth = picMain->getWidth();
-
-	for (int row = 0; row < 2; row++) {
-		int gridWidthDelta
-		    = replaceTexture(row + 'lan0', mLanguageGridTextures[row][arg0]);
-		if (gridWidthDelta > maxGridWidth) {
-			maxGridWidth = gridWidthDelta;
-		}
-	}
-
-	TPaneScalingControl* scalingCtrl = mSelectionBubble;
-	s32 bubbleOffset
-	    = ((maxGridWidth + 30) - scalingCtrl->mInitialBounds.getWidth()) / 2;
-	scalingCtrl->mInitialBounds.reform(-bubbleOffset, 0, bubbleOffset, 0);
-
-	scalingCtrl->update();
-	scalingCtrl->mFrameCtrl.update();
+	int width     = replaceTexture('m_4', mLanguageTextures[language]);
+	J2DPane* pane = mScreen->search('lan0' + getValue());
+	int itemWidth = pane->getWidth();
+	if (itemWidth > width)
+		width = itemWidth;
+	mSelectionBubble->resize(width);
 }
 
 void TOptionLanguageUnit::update()
@@ -935,16 +834,20 @@ void TOptionLanguageUnit::update()
 		break;
 	}
 }
+
 void TOptionLanguageUnit::toggle()
 {
 	mSelectionText->toggle();
 	adjust();
 	SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_SELECT_COMMON, 0, nullptr, 0);
-	// adjustSound();
 }
-void TOptionLanguageUnit::adjust() { }
+
+void TOptionLanguageUnit::adjust() { int value = mSelectionText->getNumber(); }
+
 void TOptionLanguageUnit::show() { }
+
 void TOptionLanguageUnit::hide() { }
+
 void TOptionLanguageUnit::deactivate(bool force)
 {
 	if (force)
@@ -952,12 +855,23 @@ void TOptionLanguageUnit::deactivate(bool force)
 	else
 		setState(TOptionLanguageUnit::STATE_DEACTIVATING);
 }
+
 void TOptionLanguageUnit::activate()
 {
 	setState(TOptionLanguageUnit::STATE_ACTIVE);
 }
-void TOptionLanguageUnit::setValue(LanguageType) { }
-void TOptionLanguageUnit::setState(State state)
+
+#ifdef VERSION_GMSP01
+void TOptionLanguageUnit::setValue(TOptionLanguageUnit::LanguageType type)
+#else
+void TOptionLanguageUnit::setValue(int type)
+#endif
+{
+	mSelectionText->setNumber(type);
+	adjust();
+}
+
+void TOptionLanguageUnit::setState(TOptionLanguageUnit::State state)
 {
 	mState = state;
 	switch (state) {
@@ -989,7 +903,6 @@ void TOptionLanguageUnit::setInfluencedAlphaRecursive(J2DPane* pane,
 		setInfluencedAlphaRecursive(it.getObject(), influenced_alpha);
 	}
 }
-
 #endif
 
 TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
@@ -998,8 +911,7 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mParentPane   = new TExPane(mScreen, 'oya2');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 	unkC = new TBalloonControl(2);
 	unkC->add(new TExPane(mScreen, 'bub3'));
 	unkC->add(new TExPane(mScreen, 'bub4'));
@@ -1026,27 +938,12 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mMusicFrameCtrl.setRate(1.0f);
 	mMusic = nullptr;
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	char pathBuffer[255];
-
-	for (int i = 0; i < GC2D_NUM_LANGUAGES; i++) {
-		snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-		         langArray[i], "select_sound.bti");
-		mSoundTextures[i] = new JUTTexture(
-		    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-	}
-
-	const char* soundFileNames[]
+#ifdef VERSION_GMSP01
+	loadTexture(mSoundTextures, "select_sound.bti");
+	char* names[3]
 	    = { "select_stereo.bti", "select_mono.bti", "select_surround.bti" };
-
-	for (int row = 0; row < 3; row++) {
-		for (int col = 0; col < GC2D_NUM_LANGUAGES; col++) {
-			snprintf(pathBuffer, sizeof(pathBuffer), "/option/timg/%s%s",
-			         langArray[col], soundFileNames[row]);
-			mSoundGridTextures[row][col] = new JUTTexture(
-			    (const ResTIMG*)JKRFileLoader::getGlbResource(pathBuffer));
-		}
-	}
+	for (int i = 0; i < 3; ++i)
+		loadTexture(mSoundGridTextures[i], names[i]);
 #endif
 
 	setState(STATE_INACTIVE);
@@ -1117,43 +1014,32 @@ void TOptionSoundUnit::initSurroundAnm()
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 s32 TOptionSoundUnit::replaceTexture(u32 tag, JUTTexture* texture)
 {
-	J2DPicture* picture = (J2DPicture*)mParentPane->getPane()->search(tag);
-	s32 widthDiff       = texture->getWidth() - picture->getWidth();
-
+	int offset;
+	J2DPicture* picture = (J2DPicture*)mScreen->search(tag);
+	JUT_ASSERT(picture);
+	offset = (texture->getWidth() - picture->getWidth()) / 2;
 	picture->changeTexture(texture->getTexInfo(), 0);
 
 	JUTRect rect(picture->getBounds());
-	rect.reform(0, 0, widthDiff, 0);
+	rect.reform(-offset, 0, offset, 0);
 	picture->place(rect);
 
 	return picture->getWidth();
 }
 
-void TOptionSoundUnit::changeTexture(int arg0)
+void TOptionSoundUnit::changeTexture(int language)
 {
-	int maxGridWidth = replaceTexture('m_2', mSoundTextures[arg0]);
-
-	for (int row = 0; row < 2; row++) {
-		u32 paneTag = row + 'sel2';
-		int gridWidthDelta
-		    = replaceTexture(paneTag, mSoundGridTextures[row][arg0]);
-		if (gridWidthDelta > maxGridWidth) {
-			maxGridWidth = gridWidthDelta;
-		}
+	int width = replaceTexture('m_2', mSoundTextures[language]);
+	for (int i = 0; i < 3; ++i) {
+		int itemWidth
+		    = replaceTexture('sel2' + i, mSoundGridTextures[i][language]);
+		if (itemWidth > width)
+			width = itemWidth;
 	}
-
-	TPaneScalingControl* scalingCtrl = mSelectionBubble;
-	s32 bubbleOffset
-	    = ((maxGridWidth + 30) - scalingCtrl->mInitialBounds.getWidth()) / 2;
-	scalingCtrl->mInitialBounds.reform(-bubbleOffset, 0, bubbleOffset, 0);
-
-	scalingCtrl->update();
-	scalingCtrl->mFrameCtrl.update();
+	mSelectionBubble->resize(width);
 }
-
 #endif
 
-#pragma dont_inline on
 void TOptionSoundUnit::update()
 {
 	switch (mState) {
@@ -1174,7 +1060,6 @@ void TOptionSoundUnit::update()
 		break;
 	}
 }
-#pragma dont_inline off
 
 void TOptionSoundUnit::updatePatternAnm()
 {
@@ -1208,12 +1093,12 @@ void TOptionSoundUnit::adjust()
 	adjustView();
 	const FabricatedSoundSettings& setting
 	    = cSoundSettings[mSelectionText->getNumber()];
-	JAIGlobalParameter::setParamSoundOutputMode(setting.mOutputMode);
+	SMSGetMSound()->setOutputMode(setting.mOutputMode);
 }
 
 void TOptionSoundUnit::show() { }
 
-void TOptionSoundUnit::hide() { }
+void TOptionSoundUnit::hide() { stopSound(); }
 
 void TOptionSoundUnit::deactivate(bool force)
 {
@@ -1272,8 +1157,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 		unkC->stopAnm();
 #endif
 		stopSound();
@@ -1282,8 +1166,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 		unkC->stopAnm();
 #endif
 		break;
@@ -1292,8 +1175,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
+#ifdef VERSION_GMSJ01
 		unkC->setupAnm();
 		unkC->startAnm();
 #endif
@@ -1329,7 +1211,8 @@ void TOptionSoundUnit::adjustView()
 
 void TOptionSoundUnit::adjustSound()
 {
-	stopSound();
+	if (mMusic)
+		mMusic->stop(1);
 
 	const FabricatedSoundSettings& setting
 	    = cSoundSettings[mSelectionText->getNumber()];
@@ -1351,16 +1234,42 @@ void TOptionControl::load()
 {
 	JKRArchive* optionArch = (JKRArchive*)JKRFileLoader::getVolume("option");
 
+#ifdef VERSION_GMSP01_NX
+	u32 language = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
+	OSReport("===> LANGUAGE: %d\n", language);
+	switch (language) {
+	case 5:
+		mScreen = new J2DSetScreen("option_jp.blo", optionArch);
+		break;
+	case 6:
+		mScreen = new J2DSetScreen("option_us.blo", optionArch);
+		break;
+	case 7:
+		mScreen = new J2DSetScreen("option_en.blo", optionArch);
+		break;
+	case 8:
+		mScreen = new J2DSetScreen("option_ge.blo", optionArch);
+		break;
+	case 9:
+		mScreen = new J2DSetScreen("option_fr.blo", optionArch);
+		break;
+	case 10:
+		mScreen = new J2DSetScreen("option_sp.blo", optionArch);
+		break;
+	case 11:
+		mScreen = new J2DSetScreen("option_it.blo", optionArch);
+		break;
+	default:
+		mScreen = new J2DSetScreen("option_us.blo", optionArch);
+		OSReport("===> Language overflow %d %s %d\n", language, "Option.cpp",
+		         2538);
+		break;
+	}
+#else
 	mScreen = new J2DSetScreen("option.blo", optionArch);
+#endif
 	mScreen->setCullBack(GX_CULL_BACK);
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
-    || defined(VERSION_GMSJ01_01)
-	J2DTextBox* textBoxA = (J2DTextBox*)mScreen->search('m_0a');
-	J2DTextBox* textBoxB = (J2DTextBox*)mScreen->search('m_0b');
-
-	textBoxA->setFont((JUTFont*)gpSystemFont);
-	textBoxB->setFont((JUTFont*)gpSystemFont);
-#elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#ifdef VERSION_GMSP01
 	textBoxA = (J2DTextBox*)mScreen->search('m_0a');
 	textBoxB = (J2DTextBox*)mScreen->search('m_0b');
 	textBoxA->setFont((JUTFont*)gpSystemFont);
@@ -1369,40 +1278,43 @@ void TOptionControl::load()
 	SMSMakeTextBuffer(textBoxA, 0x200);
 	SMSMakeTextBuffer(textBoxB, 0x200);
 
-	mMessageEntries[0]
-	    = JKRFileLoader::getGlbResource("/option/loadmessage_en.bmg");
-	mMessageEntries[1]
-	    = JKRFileLoader::getGlbResource("/option/loadmessage_ge.bmg");
-	mMessageEntries[2]
-	    = JKRFileLoader::getGlbResource("/option/loadmessage_fr.bmg");
-	mMessageEntries[3]
-	    = JKRFileLoader::getGlbResource("/option/loadmessage_sp.bmg");
-	mMessageEntries[4]
-	    = JKRFileLoader::getGlbResource("/option/loadmessage_it.bmg");
+	mMessageEntries[0] = JKRGetResource("/option/loadmessage_en.bmg");
+	mMessageEntries[1] = JKRGetResource("/option/loadmessage_ge.bmg");
+	mMessageEntries[2] = JKRGetResource("/option/loadmessage_fr.bmg");
+	mMessageEntries[3] = JKRGetResource("/option/loadmessage_sp.bmg");
+	mMessageEntries[4] = JKRGetResource("/option/loadmessage_it.bmg");
+#else
+	J2DTextBox* textBoxA = (J2DTextBox*)mScreen->search('m_0a');
+	J2DTextBox* textBoxB = (J2DTextBox*)mScreen->search('m_0b');
 
-	mBackArrow
-	    = new TArrowControl(mScreen, (J2DPicture*)mScreen->search('yaji'));
-	loadTexture(mBackArrow->mTextures, "select_quit.bti");
+	textBoxA->setFont((JUTFont*)gpSystemFont);
+	textBoxB->setFont((JUTFont*)gpSystemFont);
 #endif
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
 	mBackArrow = new TArrowControl(mScreen->search('yaji'));
+#else
+	mBackArrow
+	    = new TArrowControl(mScreen, (J2DPicture*)mScreen->search('yaji'));
 #endif
 
 	mRumbleOption = new TOptionRumbleUnit(mScreen);
 	mSoundOption  = new TOptionSoundUnit(mScreen);
-
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 	mSubtitleOption = new TOptionSubtitleUnit(mScreen);
+#endif
+#ifdef VERSION_GMSP01
 	mLanguageOption = new TOptionLanguageUnit(mScreen);
 #endif
 
 	setType(SELECT_TYPE_RUMBLE_OPTION, true);
 	loadSetting();
 	mWasJumping = false;
+#ifndef VERSION_GMSJ01
+	mStickNeutral = true;
+#endif
 }
 
-#pragma dont_inline on
 void TOptionControl::loadSetting()
 {
 	switch (TFlagManager::getInstance()->getFlag(MSF_SOUND_MODE)) {
@@ -1415,6 +1327,8 @@ void TOptionControl::loadSetting()
 	case TOptionSoundUnit::SOUND_TYPE_SURROUND:
 		mSoundOption->setValue(TOptionSoundUnit::SOUND_TYPE_SURROUND);
 		break;
+	default:
+		break;
 	}
 
 	switch (TFlagManager::getInstance()->getFlag(MSF_RUMBLE)) {
@@ -1424,9 +1338,11 @@ void TOptionControl::loadSetting()
 	case TOptionRumbleUnit::RUMBLE_TYPE_UNK1:
 		mRumbleOption->setValue(TOptionRumbleUnit::RUMBLE_TYPE_UNK1);
 		break;
+	default:
+		break;
 	}
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 	switch (TFlagManager::getInstance()->getFlag(MSF_SUBTITLES)) {
 	case TOptionSubtitleUnit::SUBTITLE_TYPE_UNK0:
 		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_UNK0);
@@ -1434,8 +1350,12 @@ void TOptionControl::loadSetting()
 	case TOptionSubtitleUnit::SUBTITLE_TYPE_UNK1:
 		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_UNK1);
 		break;
+	default:
+		break;
 	}
+#endif
 
+#ifdef VERSION_GMSP01
 	switch (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)) {
 	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK0:
 		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK0);
@@ -1452,14 +1372,26 @@ void TOptionControl::loadSetting()
 	case TOptionLanguageUnit::LANGUAGE_TYPE_UNK4:
 		mLanguageOption->setValue(TOptionLanguageUnit::LANGUAGE_TYPE_UNK4);
 		break;
+	default:
+		break;
 	}
 #endif
 
 	resetChangedSetting();
 }
-#pragma dont_inline off
 
-void TOptionControl::movementCommon() { }
+void TOptionControl::movementCommon()
+{
+	mBackArrow->update();
+	mRumbleOption->update();
+	mSoundOption->update();
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+	mSubtitleOption->update();
+#endif
+#ifdef VERSION_GMSP01
+	mLanguageOption->update();
+#endif
+}
 
 void TOptionControl::draw(J2DOrthoGraph* graph) { mScreen->draw(0, 0, graph); }
 
@@ -1467,10 +1399,12 @@ void TOptionControl::draw(J2DOrthoGraph* graph) { mScreen->draw(0, 0, graph); }
 bool TOptionControl::movementCard2Option()
 {
 	if (gpCameraOption->unk12 == 0) {
-		mRumbleOption->mShouldRumble = false;
+		mRumbleOption->show();
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 		mScreen->search('txp2')->show();
+#endif
+#ifdef VERSION_GMSP01
 		mScreen->search('txp3')->show();
 #endif
 
@@ -1480,34 +1414,8 @@ bool TOptionControl::movementCard2Option()
 
 		mWasJumping = false;
 		setType(mSelectedOption, true);
-
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-		TOptionLanguageUnit::LanguageType langId = mLanguageOption->getValue();
-		mBackArrow->replaceTexture('s_1', mBackArrow->mTextures[langId]);
-
-		mRumbleOption->changeTexture(langId);
-		mSoundOption->changeTexture(langId);
-		mSubtitleOption->changeTexture(langId);
-
-		s32 textWidth = mLanguageOption->replaceTexture(
-		    'm_4', mLanguageOption->mLanguageTexture[langId]);
-
-		J2DPane* langPane = mLanguageOption->mScreen->search('lan0' + langId);
-		if (langPane != nullptr) {
-			s32 paneWidth = (langPane->getBounds().getWidth());
-			if (paneWidth > textWidth) {
-				textWidth = paneWidth;
-			}
-
-			f32 scaleOffset = ((textWidth + 30)
-			                   - mLanguageOption->mSelectionBubble
-			                         ->mInitialBounds.getWidth())
-			                  / 2.0f;
-			mLanguageOption->mSelectionBubble->mInitialBounds.reform(
-			    -scaleOffset, 0, scaleOffset, 0);
-			mLanguageOption->mSelectionBubble->update();
-		}
-		changeTopMessage(langId);
+#ifdef VERSION_GMSP01
+		changeTexture();
 #endif
 
 		return true;
@@ -1518,19 +1426,12 @@ bool TOptionControl::movementCard2Option()
 
 bool TOptionControl::movementOption()
 {
-	mBackArrow->update();
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	updateOptions();
-#else
-	mRumbleOption->update();
-	mSoundOption->update();
-#endif
+	movementCommon();
 	checkInput();
 	writeValue();
 
-	// this has to be an inline on god
 	if (gpCameraOption->unk0 & 1) {
-		mSoundOption->stopSound();
+		mSoundOption->hide();
 		return true;
 	}
 
@@ -1562,8 +1463,10 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_RUMBLE_OPTION:
 			mRumbleOption->activate();
 			mSoundOption->deactivate(initial_options_entry);
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 			mSubtitleOption->deactivate(initial_options_entry);
+#endif
+#ifdef VERSION_GMSP01
 			mLanguageOption->deactivate(initial_options_entry);
 #endif
 			break;
@@ -1571,22 +1474,30 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_SOUND_OPTION:
 			mRumbleOption->deactivate(initial_options_entry);
 			mSoundOption->activate();
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 			mSubtitleOption->deactivate(initial_options_entry);
+#endif
+#ifdef VERSION_GMSP01
 			mLanguageOption->deactivate(initial_options_entry);
 #endif
 			break;
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 		case SELECT_TYPE_SUBTITLE_OPTION:
 			mSubtitleOption->activate();
 			mRumbleOption->deactivate(initial_options_entry);
 			mSoundOption->deactivate(initial_options_entry);
+#ifdef VERSION_GMSP01
 			mLanguageOption->deactivate(initial_options_entry);
+#endif
 			break;
+#endif
 
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		case SELECT_TYPE_LANGUAGE_OPTION:
+#ifdef VERSION_GMSP01
 			mLanguageOption->activate();
+#endif
 			mSubtitleOption->deactivate(initial_options_entry);
 			mRumbleOption->deactivate(initial_options_entry);
 			mSoundOption->deactivate(initial_options_entry);
@@ -1601,62 +1512,60 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 	}
 }
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-// fabricated
-void TOptionControl::updateOptions()
+#ifdef VERSION_GMSP01
+void TOptionControl::changeTexture()
 {
-	mRumbleOption->update();
-	mSoundOption->update();
-	mSubtitleOption->update();
-	mLanguageOption->update();
+	int language = mLanguageOption->getValue();
+	mBackArrow->changeTexture(language);
+	mRumbleOption->changeTexture(language);
+	mSoundOption->changeTexture(language);
+	mSubtitleOption->changeTexture(language);
+	mLanguageOption->changeTexture(language);
+	changeTopMessage(language);
 }
-void TOptionControl::changeTexture() { }
-void TOptionControl::changeTopMessage(int langId)
+
+void TOptionControl::changeTopMessage(int language)
 {
-	char stringBuffer[0x200];
+	char buffer[0x200];
 
-	BOOL valid = TRUE;
-	if (langId >= 0 && langId < 5) {
-		valid = FALSE;
-	}
-	// this seems to be intentional for whatever reason? the s32 temporary is
-	// allocated and used in this manner...
-	if (valid) {
-		langId = TOptionLanguageUnit::LANGUAGE_TYPE_UNK0;
-	}
+	bool outOfRange = true;
+	if (language >= 0
+	    && language < sizeof(mMessageEntries) / sizeof(mMessageEntries[0]))
+		outOfRange = false;
+	if (outOfRange)
+		language = 0;
 
-	const char* src = SMSGetMessageData(mMessageEntries[langId], 0x1CU);
-	char* dst       = stringBuffer;
+	const char* src = SMSGetMessageData(mMessageEntries[language], 0x1C);
+	char* dst       = buffer;
 
-// the string is intentionally written this way
 #define ESC "\x1B"
-#define kJSYSTEM_SEQ                                                           \
-	ESC "GM[0]" ESC "CC[64ff64]" ESC "FX[26]" ESC "FY[26]" ESC "SH[3]" ESC     \
-	    "CD[4]@" ESC "GM[0]" ESC "CC" ESC "FX" ESC "FY" ESC "SH" ESC "CU[4]"
+#define OPTION_HIGHLIGHT(color, mark)                                          \
+	ESC "GM[0]" ESC "CC[" color "]" ESC "FX[26]" ESC "FY[26]" ESC "SH[3]" ESC  \
+	    "CD[4]" mark ESC "GM[0]" ESC "CC" ESC "FX" ESC "FY" ESC "SH" ESC       \
+	    "CU[4]"
 
-	while (char current = *src) {
-		switch (current) {
-		case '@':
-			strncpy(dst, kJSYSTEM_SEQ, sizeof(kJSYSTEM_SEQ) - 1);
-			dst += sizeof(kJSYSTEM_SEQ) - 1;
-			break;
-		case '*':
-			strncpy(dst, kJSYSTEM_SEQ, sizeof(kJSYSTEM_SEQ) - 1);
-			dst += sizeof(kJSYSTEM_SEQ) - 1;
-			break;
-		default:
-			*dst = current;
-			dst += 1;
-			break;
+	while (char c = *src) {
+		if (c == '@') {
+			strncpy(dst, OPTION_HIGHLIGHT("64ff64", "@"),
+			        sizeof(OPTION_HIGHLIGHT("64ff64", "@")) - 1);
+			dst += sizeof(OPTION_HIGHLIGHT("64ff64", "@")) - 1;
+		} else if (c == '*') {
+			strncpy(dst, OPTION_HIGHLIGHT("dcdcdc", "*"),
+			        sizeof(OPTION_HIGHLIGHT("dcdcdc", "*")) - 1);
+			dst += sizeof(OPTION_HIGHLIGHT("dcdcdc", "*")) - 1;
+		} else {
+			*dst = c;
+			dst++;
 		}
 		src++;
 	}
-	*dst = 0;
+	*dst = '\0';
 
-#undef kJSYSTEM_SEQ
+#undef OPTION_HIGHLIGHT
+#undef ESC
 
-	strncpy(textBoxA->getStringPtr(), stringBuffer, sizeof(stringBuffer));
-	strncpy(textBoxB->getStringPtr(), stringBuffer, sizeof(stringBuffer));
+	strncpy(textBoxA->getStringPtr(), buffer, sizeof(buffer));
+	strncpy(textBoxB->getStringPtr(), buffer, sizeof(buffer));
 }
 #endif
 
@@ -1669,38 +1578,15 @@ void TOptionControl::toggleCurType()
 	case SELECT_TYPE_SOUND_OPTION:
 		mSoundOption->toggle();
 		break;
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 	case SELECT_TYPE_SUBTITLE_OPTION:
 		mSubtitleOption->toggle();
 		break;
+#endif
+#ifdef VERSION_GMSP01
 	case SELECT_TYPE_LANGUAGE_OPTION:
 		mLanguageOption->toggle();
-		TOptionLanguageUnit::LanguageType langId = mLanguageOption->getValue();
-		mBackArrow->replaceTexture('s_1', mBackArrow->mTextures[langId]);
-
-		mRumbleOption->changeTexture(langId);
-		mSoundOption->changeTexture(langId);
-		mSubtitleOption->changeTexture(langId);
-
-		s32 textWidth = mLanguageOption->replaceTexture(
-		    'm_4', mLanguageOption->mLanguageTexture[langId]);
-
-		J2DPane* langPane = mLanguageOption->mScreen->search('lan0' + langId);
-		if (langPane != nullptr) {
-			s32 paneWidth = (langPane->getBounds().getWidth());
-			if (paneWidth > textWidth) {
-				textWidth = paneWidth;
-			}
-
-			f32 scaleOffset = ((textWidth + 30)
-			                   - mLanguageOption->mSelectionBubble
-			                         ->mInitialBounds.getWidth())
-			                  / 2.0f;
-			mLanguageOption->mSelectionBubble->mInitialBounds.reform(
-			    -scaleOffset, 0, scaleOffset, 0);
-			mLanguageOption->mSelectionBubble->update();
-		}
-		changeTopMessage(langId);
+		changeTexture();
 		break;
 #endif
 	}
@@ -1710,46 +1596,122 @@ void TOptionControl::checkInput()
 {
 	f32 fVar1
 	    = SMSGetMarDirector()->getGamePad()->getMainStickInDir(0.0f, 1.0f);
-	if (fVar1 >= 0.75f) {
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
+	if (0.75f <= fVar1) {
+		setType(SELECT_TYPE_RUMBLE_OPTION, false);
+	} else if (fVar1 <= -0.75f) {
+		setType(SELECT_TYPE_SOUND_OPTION, false);
+	}
+#elif defined(VERSION_GMSE01)
+	SelectType selected = mSelectedOption;
+	if (0.75f <= fVar1) {
 		if (mStickNeutral) {
 			mStickNeutral = false;
-			switch (mSelectedOption) {
-			case 2:
-				setType(SELECT_TYPE_SOUND_OPTION, false);
-				break;
-			case 3:
-				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
-				break;
-			default:
+			switch (selected) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+			case SELECT_TYPE_SOUND_OPTION:
 				setType(SELECT_TYPE_RUMBLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SUBTITLE_OPTION:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
 				break;
 			}
 		}
-#else
-		setType(SELECT_TYPE_RUMBLE_OPTION, false);
-#endif
 	} else if (fVar1 <= -0.75f) {
-
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		if (mStickNeutral) {
 			mStickNeutral = false;
-			switch (mSelectedOption) {
-			case 2:
+			switch (selected) {
+			case SELECT_TYPE_RUMBLE_OPTION:
 				setType(SELECT_TYPE_SOUND_OPTION, false);
 				break;
-			case 3:
+			case SELECT_TYPE_SOUND_OPTION:
+			case SELECT_TYPE_SUBTITLE_OPTION:
 				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
 				break;
-			default:
+			}
+		}
+	} else {
+		mStickNeutral = true;
+	}
+#elif defined(VERSION_GMSP01)
+	SelectType selected = mSelectedOption;
+	if (0.75f <= fVar1) {
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (selected) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+			case SELECT_TYPE_SOUND_OPTION:
+				setType(SELECT_TYPE_RUMBLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SUBTITLE_OPTION:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
+				break;
+			case SELECT_TYPE_LANGUAGE_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			}
+		}
+	} else if (fVar1 <= -0.75f) {
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (selected) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+				setType(SELECT_TYPE_SOUND_OPTION, false);
+				break;
+			case SELECT_TYPE_SOUND_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SUBTITLE_OPTION:
+			case SELECT_TYPE_LANGUAGE_OPTION:
 				setType(SELECT_TYPE_LANGUAGE_OPTION, false);
 				break;
 			}
 		}
-#else
-		setType(SELECT_TYPE_SOUND_OPTION, false);
-#endif
+	} else {
+		mStickNeutral = true;
 	}
+#elif defined(VERSION_GMSP01_NX)
+	SelectType selected = mSelectedOption;
+	if (0.75f <= fVar1
+	    || SMSGetMarDirector()->getGamePad()->getButton()
+	           & JUTGamePad::DPAD_UP) {
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (selected) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+			case SELECT_TYPE_SOUND_OPTION:
+				setType(SELECT_TYPE_RUMBLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SUBTITLE_OPTION:
+				setType(SELECT_TYPE_RUMBLE_OPTION, false);
+				break;
+			case SELECT_TYPE_LANGUAGE_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			}
+		}
+	} else if (fVar1 <= -0.75f
+	           || SMSGetMarDirector()->getGamePad()->getButton()
+	                  & JUTGamePad::DPAD_DOWN) {
+		if (mStickNeutral) {
+			mStickNeutral = false;
+			switch (selected) {
+			case SELECT_TYPE_RUMBLE_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SOUND_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			case SELECT_TYPE_SUBTITLE_OPTION:
+			case SELECT_TYPE_LANGUAGE_OPTION:
+				setType(SELECT_TYPE_SUBTITLE_OPTION, false);
+				break;
+			}
+		}
+	} else {
+		mStickNeutral = true;
+	}
+#endif
 
 	bool jumping = SMS_IsMarioStatusTypeJumping();
 	if (!mWasJumping && jumping)
@@ -1762,9 +1724,11 @@ void TOptionControl::writeValue()
 	TFlagManager::getInstance()->setFlag(MSF_RUMBLE, mRumbleOption->getValue());
 	TFlagManager::getInstance()->setFlag(MSF_SOUND_MODE,
 	                                     mSoundOption->getValue());
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 	TFlagManager::getInstance()->setFlag(MSF_SUBTITLES,
 	                                     mSubtitleOption->getValue());
+#endif
+#ifdef VERSION_GMSP01
 	TFlagManager::getInstance()->setFlag(MSF_LANGUAGE,
 	                                     mLanguageOption->getValue());
 #endif
@@ -1774,14 +1738,29 @@ bool TOptionControl::isChangedSetting() const
 {
 	bool result = true;
 
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 	if (mInitialRumbleValue == mRumbleOption->getValue()
-	    && mInitialSoundValue == mSoundOption->getValue()
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	    && mInitialSubtitleValue == mSubtitleOption->getValue()
-	    && mInitialLanguageValue == mLanguageOption->getValue()
-#endif
-	)
+	    && mInitialSoundValue == mSoundOption->getValue())
 		result = false;
+#else
+	bool changed = true;
+#ifdef VERSION_GMSP01
+	bool changedBase = true;
+	if (mInitialRumbleValue == mRumbleOption->getValue()
+	    && mInitialSoundValue == mSoundOption->getValue())
+		changedBase = false;
+	if (!changedBase && mInitialSubtitleValue == mSubtitleOption->getValue())
+		changed = false;
+	if (!changed && mInitialLanguageValue == mLanguageOption->getValue())
+		result = false;
+#else
+	if (mInitialRumbleValue == mRumbleOption->getValue()
+	    && mInitialSoundValue == mSoundOption->getValue())
+		changed = false;
+	if (!changed && mInitialSubtitleValue == mSubtitleOption->getValue())
+		result = false;
+#endif
+#endif
 
 	return result;
 }
@@ -1790,8 +1769,10 @@ void TOptionControl::resetChangedSetting()
 {
 	mInitialRumbleValue = mRumbleOption->getValue();
 	mInitialSoundValue  = mSoundOption->getValue();
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 	mInitialSubtitleValue = mSubtitleOption->getValue();
+#endif
+#ifdef VERSION_GMSP01
 	mInitialLanguageValue = mLanguageOption->getValue();
 #endif
 }
