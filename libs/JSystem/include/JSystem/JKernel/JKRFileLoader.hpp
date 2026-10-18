@@ -36,8 +36,8 @@ public:
 
 	static void changeDirectory(const char* dir);
 
-	static void* getGlbResource(const char*);
-	static void* getGlbResource(const char*, JKRFileLoader* fileLoader);
+	static void* getGlbResource(const char* path);
+	static void* getGlbResource(const char* path, JKRFileLoader* fileLoader);
 	static s32 getResSize(void* resourceBuffer, JKRFileLoader* fileLoader);
 	static size_t readGlbResource(void* resourceBuffer, u32 bufferSize,
 	                              const char* path);
