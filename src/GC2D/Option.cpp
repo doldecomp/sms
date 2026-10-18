@@ -205,7 +205,8 @@ int TArrowControl::calcMoveX(int phase) const
 	return fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2 + fVar1 * fVar2;
 }
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 TBalloonControl::TBalloonControl(int size)
     : unk4(size)
     , unk8(0)
@@ -299,7 +300,8 @@ void TPatternAnmControl::set(const TPatternAnmControl::TAnmChunk* chunks,
                              int num_chunks)
 {
 	mChunks.set(chunks, num_chunks);
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	hide();
 #elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	for (const TAnmChunk* it = mChunks.begin(); it != mChunks.end(); ++it) {
@@ -399,7 +401,8 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	mParentPane   = new TExPane(mScreen, 'oya1');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	unkC = new TBalloonControl(3);
 	unkC->add(new TExPane(mScreen, 'bub0'));
 	unkC->add(new TExPane(mScreen, 'bub1'));
@@ -413,7 +416,8 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	mSelectionBubble->setupAnm(0.05f, 1.0f);
 	mSelectionBubble->stopAnm();
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	// The image of a gamepad that either shakes occasionally or not based on
 	// whether rumble is enabled in the options.
 	mGamepadIcon[1] = new TPatternAnmControl(mScreen);
@@ -521,7 +525,8 @@ void TOptionRumbleUnit::update()
 	case STATE_ACTIVE:
 		mParentPane->update();
 		mSelectionBubble->update();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		// why were these removed for PAL??
 		mGamepadIcon[getValue()]->update();
 		checkRumble();
@@ -534,7 +539,8 @@ void TOptionRumbleUnit::update()
 }
 #pragma dont_inline off
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 void TOptionRumbleUnit::checkRumble()
 {
 	if (mShouldRumble) {
@@ -578,7 +584,8 @@ void TOptionRumbleUnit::adjust()
 
 void TOptionRumbleUnit::adjustView()
 {
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	switch (mSelectionText->getNumber()) {
 	case 0:
 		mGamepadIcon[1]->hide();
@@ -624,7 +631,8 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		unkC->stopAnm();
 #endif
 		mShouldRumble = false;
@@ -633,7 +641,8 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		unkC->stopAnm();
 #endif
 		mShouldRumble = false;
@@ -643,7 +652,8 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		unkC->setupAnm();
 		unkC->startAnm();
 #endif
@@ -988,7 +998,8 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mParentPane   = new TExPane(mScreen, 'oya2');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	unkC = new TBalloonControl(2);
 	unkC->add(new TExPane(mScreen, 'bub3'));
 	unkC->add(new TExPane(mScreen, 'bub4'));
@@ -1261,7 +1272,8 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		unkC->stopAnm();
 #endif
 		stopSound();
@@ -1270,7 +1282,8 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		unkC->stopAnm();
 #endif
 		break;
@@ -1279,7 +1292,8 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 		unkC->setupAnm();
 		unkC->startAnm();
 #endif
@@ -1364,7 +1378,8 @@ void TOptionControl::load()
 	loadTexture(mBackArrow->mTextures, "select_quit.bti");
 #endif
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	mBackArrow = new TArrowControl(mScreen->search('yaji'));
 #endif
 

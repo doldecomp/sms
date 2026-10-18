@@ -67,7 +67,8 @@ public:
 };
 
 // this seems to be completely absent in other versions!
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 class TBalloonControl {
 public:
 	TBalloonControl(int size);
@@ -209,7 +210,8 @@ public:
 	void setState(State state);
 	void setInfluencedAlphaRecursive(J2DPane* pane, bool influenced_alpha);
 
-#if defined(VERSION_GMSJ01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	TPatternAnmControl* getCurrentGamepadAnm() const
 	{
 		return mGamepadIcon[mSelectionText->getNumber()];
@@ -220,7 +222,8 @@ public:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
-#if defined(VERSION_GMSJ01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	/* 0x0C */ TBalloonControl* unkC;
 	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
 	/* 0x14 */ TPatternAnmControl* mGamepadIcon[2];
@@ -387,7 +390,8 @@ public:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
-#if defined(VERSION_GMSJ01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_GMSJ01_01)
 	/* 0xC */ TBalloonControl* unkC;
 #endif
 	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
