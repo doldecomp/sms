@@ -1259,9 +1259,6 @@ public:
 	bool isStatus(u32 status) const { return mStatus == status; }
 
 	// Fabricated
-	const JGeometry::TVec3<f32>& getVelocity() const { return mVel; }
-
-	// Fabricated
 	bool isSleeping() const
 	{
 		bool sleepKind = true;
@@ -1322,6 +1319,12 @@ public:
 	}
 
 	// Fabricated
+	const JGeometry::TVec3<f32>& getFloorPosition() const
+	{
+		return mFloorPosition;
+	}
+
+	// Fabricated
 	TWaterGun* const getWaterGun() { return mWaterGun; }
 
 	// Fabricated
@@ -1338,6 +1341,9 @@ public:
 
 	// Fabricated
 	TYoshi* const getYoshi() { return mYoshi; }
+
+	// Fabricated
+	u16 getAnimationId() const { return mAnimationId; }
 
 public:
 	/* 0x74 */ u32 mInput;
