@@ -29,7 +29,7 @@ public:
 #endif
 #if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 	    , mColor(0, 70, 255, 255)
-#elif !defined (VERSION_GMSP01_NX)
+#elif !defined(VERSION_GMSP01_NX)
 	    , mColor(220, 0, 0, 255)
 #endif
 	{
