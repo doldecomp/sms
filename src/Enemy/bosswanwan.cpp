@@ -537,7 +537,11 @@ void TBossWanwanMtxCalc::calc(u16 index)
 	}
 }
 
+TBossWanwanMtxCalc::~TBossWanwanMtxCalc() { }
+
 void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics) { }
+
+TBWLeash::~TBWLeash() { }
 
 void TBWLeashNode::calcTemperature()
 {
@@ -871,6 +875,8 @@ void TBWBinder::bind(TLiveActor* actor)
 
 	boss->mLinearVelocity = vel;
 }
+
+TBWBinder::~TBWBinder() { }
 
 void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
