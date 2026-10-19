@@ -79,7 +79,7 @@ TGCLogoDir::TGCLogoDir()
 }
 
 #ifdef VERSION_GMSP01_NX
-JUTRect toWideScreen(s32 in_x1, s32 in_y1, s32 in_x2, s32 in_y2)
+inline JUTRect toWideScreen(s32 in_x1, s32 in_y1, s32 in_x2, s32 in_y2)
 {
 	f32 x1 = in_x1;
 	f32 y1 = in_y1;
