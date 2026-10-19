@@ -36,15 +36,6 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 #include <MSound/MSoundBGM.hpp>
 #include <System/DummyStrings.hpp>
 
-// fabricated
-void TPauseMenu2::draw(JDrama::TGraphics* gfx)
-{
-	J2DOrthoGraph graph(gfx->getViewport());
-	graph.setup2D();
-	mScreen->draw(0, 0, &graph);
-	gfx->setScissor(gfx->getScissor());
-}
-
 TPauseMenu2::TPauseMenu2(const char* pName)
     : JDrama::TViewObj(pName)
     , mState(MENU_CLOSED)
@@ -83,7 +74,13 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	}
 
 	mBackground = mScreen->search('mask');
-	mMenuPane   = mScreen->search('t_0');
+#ifdef VERSION_GMSP01_NX
+	J2DPane* mask  = mBackground;
+	JUTRect bounds = mask->getBounds();
+	mask->add(-110, 0);
+	mask->resize(bounds.getWidth() + 220, bounds.getHeight());
+#endif
+	mMenuPane = mScreen->search('t_0');
 
 	for (s32 i = 0; i < 5; i++) {
 		mPauseLetters[i] = (J2DPicture*)mScreen->search('pa00' + i);
@@ -98,7 +95,8 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 		mMenuItems[i]->hide();
 	}
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 	unk20 = mScreen->search('brek');
 #endif
 
@@ -111,14 +109,14 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 
 	mStagePane = mScreen->search('brek');
 
-	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->mMap);
+	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->getCurrentMap());
 	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
 	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
-	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/scenarioname.bmg")));
-	if (SMSGetMarDirector()->mMap == 0x14)
+	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/stagename.bmg")));
+	if (SMSGetMarDirector()->getCurrentMap() == 0x14)
 		shineStage = 0;
 	mStageName->setString(SMSGetMessageData(stageBmg, shineStage));
 #else
@@ -126,7 +124,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	    JKRFileLoader::getGlbResource("/common/2d/stagename.bmg"), shineStage));
 #endif
 
-	if (SMSGetMarDirector()->mMap != 0xF) {
+	if (SMSGetMarDirector()->getCurrentMap() != 0xF) {
 		void* scenarioBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
 		    "/common/2d/scenarioname.bmg", GMSP01("/cmn2d/scenarioname.bmg"),
 		    GMSP01_NX("/cmn2d/scenarioname.bmg")));
@@ -300,6 +298,182 @@ void TPauseMenu2::disappearWindow()
 	mFadeAnim += 0.5f;
 }
 
+void TPauseMenu2::movement()
+{
+	switch (mState) {
+	case MENU_APPEARING:
+		appearWindow();
+		break;
+	case MENU_OPEN: {
+		s32 curSelectedItem = mSelectedItem;
+		if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_START
+		                                | TMarioGamePad::MEANING_MENU_A)) {
+			// Confirm currently selected item.
+			switch (curSelectedItem) {
+			case 0:
+				mSelectionConfirmed = true;
+				setDrawEnd();
+				break;
+			case 2:
+				mSelectionConfirmed = true;
+				setDrawEnd();
+				break;
+			case 3:
+				mSelectionConfirmed = true;
+				setDrawEnd();
+				break;
+			case 1:
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_PAUSE_ON, 0,
+				                                   nullptr, 0);
+
+				mSelectionConfirmed = true;
+				mCardSave->init(TCardSave::PURPOSE_SAVE);
+				mState = MENU_SAVING;
+			default:
+				break;
+			}
+		} else if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)) {
+			// Close pause menu by pressing B.
+			mPressedB = true;
+			mFadeAnim = 0.0f;
+			setDrawEnd();
+		} else if (mGamePad->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_DOWN)) {
+			// Select the next item.
+			if (mNumItems > 2) {
+				mSelectedItem = curSelectedItem < (mNumItems - 1)
+				                    ? curSelectedItem + 1
+				                    : 0;
+			} else {
+				// don't loop back around with less than three items
+				mSelectedItem = mNumItems - 1;
+			}
+			if (mSelectedItem != curSelectedItem) {
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR, 0, nullptr,
+				                                   0);
+
+				JUTRect& bounds = mOrigItemBounds[curSelectedItem];
+				mMenuItems[mSelectedItem]->setWhite(mItemColor);
+				mMenuItems[curSelectedItem]->setWhite(JUtility::TColor());
+				mMenuItems[curSelectedItem]->place(bounds);
+
+				mBounceAnim = 0.0f; // reset animation
+
+				// Remove spark particles.
+				if (mEmitter != nullptr) {
+					gpEmitterManager4D2->forceDeleteEmitter(mEmitter);
+				}
+			}
+		} else if (mGamePad->checkFrameMeaning(
+		               TMarioGamePad::MEANING_MENU_UP)) {
+			// Select the previous item.
+			if (mNumItems > 2) {
+				mSelectedItem = (curSelectedItem == 0u) ? mNumItems - 1
+				                                        : curSelectedItem - 1;
+			} else {
+				mSelectedItem = 0;
+			}
+
+			if (mSelectedItem != curSelectedItem) {
+				SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR, 0, nullptr,
+				                                   0);
+
+				JUTRect& bounds = mOrigItemBounds[curSelectedItem];
+				mMenuItems[mSelectedItem]->setWhite(mItemColor);
+				mMenuItems[curSelectedItem]->setWhite(JUtility::TColor());
+				mMenuItems[curSelectedItem]->place(bounds);
+
+				mBounceAnim = 0.0f;
+
+				if (mEmitter != nullptr) {
+					gpEmitterManager4D2->forceDeleteEmitter(mEmitter);
+				}
+			}
+		}
+
+		JUTRect animItemBounds = mOrigItemBounds[mSelectedItem];
+		if (mBounceAnim == mEffectKeyFrame) {
+			// Spawn a "spark" effect from the selected item.
+			f32 width        = mMenuItems[mSelectedItem]->getWidth();
+			f32 emitterWidth = width / mEffectStretch;
+
+			JUTRect itemBounds = mMenuItems[mSelectedItem]->getGlbBounds();
+
+			// TODO: This doesn't fully match.
+			gpEmitterManager4D2->createEmitter(
+			    JGeometry::TVec3<f32>(
+			        itemBounds.x1 + 0.5f * itemBounds.getWidth(),
+			        itemBounds.y1 + 0.5f * itemBounds.getHeight(), 0.0f),
+			    0x1FA, nullptr, nullptr);
+
+			mEmitter = gpEmitterManager4D2->unkC8[0][0];
+			mEmitter->setEmitterScale(
+			    JGeometry::TVec3<f32>(4.0f * emitterWidth, 1.0f, 1.0f));
+		}
+
+		if (mBounceAnim < 18.0f) {
+			s32 hw = mBounceAnim;
+			s32 hh = 0.5f * mBounceAnim;
+			animItemBounds.reform(-hw, -hh, hw, hh);
+			mMenuItems[mSelectedItem]->place(animItemBounds);
+
+			s32 colorShift = 10.0f * mBounceAnim;
+			mMenuItems[mSelectedItem]->setWhite(mItemColor
+			                                    + (colorShift << 24));
+		} else if (mBounceAnim < 35.0f) {
+			s32 hw = mBounceAnim - 35.0f;
+			s32 hh = 0.5f * (mBounceAnim - 35.0f);
+			animItemBounds.reform(hw, hh, -hw, -hh);
+			mMenuItems[mSelectedItem]->place(animItemBounds);
+
+			s32 colorShift = (35.0f - mBounceAnim) * 10.0f;
+			mMenuItems[mSelectedItem]->setWhite(mItemColor
+			                                    + (colorShift << 24));
+		} else {
+			// Loop animation.
+			mBounceAnim = -0.5f;
+			unkFC *= -1;
+		}
+
+		mBounceAnim += 0.5f;
+	} break;
+	case MENU_DISAPPEARING:
+		disappearWindow();
+		break;
+	default:
+		break;
+	}
+}
+
+void TPauseMenu2::draw(JDrama::TGraphics* gfx)
+{
+	switch (mState) {
+	case MENU_APPEARING: {
+		const JDrama::TRect& viewport = gfx->getViewport();
+		J2DOrthoGraph graph(viewport);
+		graph.setup2D();
+		mScreen->draw(0, 0, &graph);
+		const JDrama::TRect& scissor = gfx->getScissor();
+		gfx->setScissor(scissor);
+	} break;
+
+	case MENU_OPEN:
+	case UNK2:
+	case MENU_SAVING:
+	case MENU_DISAPPEARING: {
+		const JDrama::TRect& viewport = gfx->getViewport();
+		J2DOrthoGraph graph(viewport);
+		graph.setup2D();
+		mScreen->draw(0, 0, &graph);
+		const JDrama::TRect& scissor = gfx->getScissor();
+		gfx->setScissor(scissor);
+	} break;
+
+	default:
+		break;
+	}
+}
+
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
@@ -318,193 +492,19 @@ void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 
 				mMenuPane->setAlpha(alpha);
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
+				unk20->setAlpha(alpha);
+#endif
 			}
-			if (cue & CUE_DRAW) {
-				switch (mState) {
-
-				case MENU_APPEARING:
-					draw(graphics);
-					break;
-				case MENU_OPEN:
-				case UNK2:
-				case MENU_SAVING:
-				case MENU_DISAPPEARING:
-					draw(graphics);
-					break;
-				default:
-					break;
-				}
-			}
+			if (cue & CUE_DRAW)
+				draw(graphics);
 		} else {
-			if (cue & CUE_MOVE) {
-				switch (mState) {
-				case MENU_APPEARING:
-					appearWindow();
-					break;
-				case MENU_OPEN: {
-					s32 curSelectedItem = mSelectedItem;
-					if (mGamePad->checkFrameMeaning(
-					        TMarioGamePad::MEANING_START
-					        | TMarioGamePad::MEANING_MENU_A)) {
-						// Confirm currently selected item.
-						switch (curSelectedItem) {
-						case 0:
-							mSelectionConfirmed = true;
-							setDrawEnd();
-							break;
-						case 2:
-							mSelectionConfirmed = true;
-							setDrawEnd();
-							break;
-						case 3:
-							mSelectionConfirmed = true;
-							setDrawEnd();
-							break;
-						case 1:
-							SMSGetMSound()->startSoundSystemSE(
-							    MSD_SE_SY_PAUSE_ON, 0, nullptr, 0);
+			if (cue & CUE_MOVE)
+				movement();
 
-							mSelectionConfirmed = true;
-							mCardSave->init(TCardSave::PURPOSE_SAVE);
-							mState = MENU_SAVING;
-						default:
-							break;
-						}
-					} else if (mGamePad->checkFrameMeaning(
-					               TMarioGamePad::MEANING_MENU_B)) {
-						// Close pause menu by pressing B.
-						mPressedB = true;
-						mFadeAnim = 0.0f;
-						setDrawEnd();
-					} else if (mGamePad->checkFrameMeaning(
-					               TMarioGamePad::MEANING_MENU_DOWN)) {
-						// Select the next item.
-						if (mNumItems > 2) {
-							mSelectedItem = curSelectedItem < (mNumItems - 1)
-							                    ? curSelectedItem + 1
-							                    : 0;
-						} else {
-							// don't loop back around with less than three items
-							mSelectedItem = mNumItems - 1;
-						}
-						if (mSelectedItem != curSelectedItem) {
-							SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR,
-							                                   0, nullptr, 0);
-
-							JUTRect& bounds = mOrigItemBounds[curSelectedItem];
-							mMenuItems[mSelectedItem]->setWhite(mItemColor);
-							mMenuItems[curSelectedItem]->setWhite(
-							    JUtility::TColor());
-							mMenuItems[curSelectedItem]->place(bounds);
-
-							mBounceAnim = 0.0f; // reset animation
-
-							// Remove spark particles.
-							if (mEmitter != nullptr) {
-								gpEmitterManager4D2->forceDeleteEmitter(
-								    mEmitter);
-							}
-						}
-					} else if (mGamePad->checkFrameMeaning(
-					               TMarioGamePad::MEANING_MENU_UP)) {
-						// Select the previous item.
-						if (mNumItems > 2) {
-							mSelectedItem = (curSelectedItem == 0u)
-							                    ? mNumItems - 1
-							                    : curSelectedItem - 1;
-						} else {
-							mSelectedItem = 0;
-						}
-
-						if (mSelectedItem != curSelectedItem) {
-							SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_CURSOR,
-							                                   0, nullptr, 0);
-
-							JUTRect& bounds = mOrigItemBounds[curSelectedItem];
-							mMenuItems[mSelectedItem]->setWhite(mItemColor);
-							mMenuItems[curSelectedItem]->setWhite(
-							    JUtility::TColor());
-							mMenuItems[curSelectedItem]->place(bounds);
-
-							mBounceAnim = 0.0f;
-
-							if (mEmitter != nullptr) {
-								gpEmitterManager4D2->forceDeleteEmitter(
-								    mEmitter);
-							}
-						}
-					}
-
-					JUTRect animItemBounds = mOrigItemBounds[mSelectedItem];
-					if (mBounceAnim == mEffectKeyFrame) {
-						// Spawn a "spark" effect from the selected item.
-						f32 width = mMenuItems[mSelectedItem]->getWidth();
-						f32 emitterWidth = width / mEffectStretch;
-
-						JUTRect itemBounds
-						    = mMenuItems[mSelectedItem]->getGlbBounds();
-
-						// TODO: This doesn't fully match.
-						gpEmitterManager4D2->createEmitter(
-						    JGeometry::TVec3<f32>(
-						        itemBounds.x1 + 0.5f * itemBounds.getWidth(),
-						        itemBounds.y1 + 0.5f * itemBounds.getHeight(),
-						        0.0f),
-						    0x1FA, nullptr, nullptr);
-
-						mEmitter = gpEmitterManager4D2->unkC8[0][0];
-						setEmitterScale(4.0f * emitterWidth, 1.0f, 1.0f);
-					}
-
-					if (mBounceAnim < 18.0f) {
-						s32 hw = mBounceAnim;
-						s32 hh = 0.5f * mBounceAnim;
-						animItemBounds.reform(-hw, -hh, hw, hh);
-						mMenuItems[mSelectedItem]->place(animItemBounds);
-
-						s32 colorShift = 10.0f * mBounceAnim;
-						mMenuItems[mSelectedItem]->setWhite(
-						    mItemColor + (colorShift << 24));
-					} else if (mBounceAnim < 35.0f) {
-						s32 hw = mBounceAnim - 35.0f;
-						s32 hh = 0.5f * (mBounceAnim - 35.0f);
-						animItemBounds.reform(hw, hh, -hw, -hh);
-						mMenuItems[mSelectedItem]->place(animItemBounds);
-
-						s32 colorShift = (35.0f - mBounceAnim) * 10.0f;
-						mMenuItems[mSelectedItem]->setWhite(
-						    mItemColor + (colorShift << 24));
-					} else {
-						// Loop animation.
-						mBounceAnim = -0.5f;
-						unkFC *= -1;
-					}
-
-					mBounceAnim += 0.5f;
-				} break;
-				case MENU_DISAPPEARING:
-					disappearWindow();
-					break;
-				default:
-					break;
-				}
-			}
-
-			if (cue & CUE_DRAW) {
-				switch (mState) {
-				case MENU_APPEARING:
-					draw(graphics);
-					break;
-				case MENU_OPEN:
-				case UNK2:
-				case MENU_SAVING:
-				case MENU_DISAPPEARING:
-					draw(graphics);
-					break;
-				default:
-					break;
-				}
-			}
+			if (cue & CUE_DRAW)
+				draw(graphics);
 		}
 	}
 }
@@ -557,15 +557,17 @@ void TPauseMenu2::setDrawStart()
 		mMenuItems[i]->hide();
 	}
 
-	mPauseLetters[0]->rotate(u16(mOrigLetterAngles[0] + 180.0f));
-	mPauseLetters[1]->rotate(u16(mOrigLetterAngles[1] + 180.0f));
-	mPauseLetters[2]->rotate(u16(mOrigLetterAngles[2] + 180.0f));
-	mPauseLetters[3]->rotate(u16(mOrigLetterAngles[3] + 180.0f));
-	mPauseLetters[4]->rotate(u16(mOrigLetterAngles[4] + 180.0f));
+	for (s32 i = 0; i < ARRAY_COUNT(mPauseLetters); ++i)
+		mPauseLetters[i]->rotate(u16(mOrigLetterAngles[i] + 180.0f));
 
 	mMenuPane->setAlpha(255);
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
+	unk20->setAlpha(255);
+#endif
 	mMenuPane->rotate(0.0f);
-	SMSGetMarDirector()->getConsole()->pauseIn();
+	TGCConsole2* console = SMSGetMarDirector()->getConsole();
+	console->pauseIn();
 	SMSRumbleMgr->startPause();
 	gpMSound->pauseOn(true);
 }
@@ -574,7 +576,8 @@ void TPauseMenu2::setDrawEnd()
 {
 	SMSRumbleMgr->finishPause();
 	gpMSound->pauseOff(0);
-	SMSGetMarDirector()->getConsole()->pauseOut();
+	TGCConsole2* console = SMSGetMarDirector()->getConsole();
+	console->pauseOut();
 	mFadeAnim = 0.0f;
 	mState    = MENU_DISAPPEARING;
 }

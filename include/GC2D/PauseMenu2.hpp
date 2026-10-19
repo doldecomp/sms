@@ -18,8 +18,8 @@ public:
 	TPauseMenu2(const char* = "<TPauseMenu>");
 	void load(JSUMemoryInputStream&);
 	void loadAfter();
-	void appearWindow();
-	void disappearWindow();
+	inline void appearWindow();
+	inline void disappearWindow();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	u8 getNextState();
 	void setDrawStart();
@@ -27,14 +27,10 @@ public:
 	void drawAppearPane(J2DPicture* picture, f32 anim, JUTRect& rect,
 	                    f32 rotation);
 
-	// fabricated; smells fake
-	void setEmitterScale(f32 x, f32 y, f32 z)
-	{
-		mEmitter->setEmitterScale(JGeometry::TVec3<f32>(x, y, z));
-	}
-
 	// fabricated
 	inline void draw(JDrama::TGraphics* gfx);
+	// fabricated
+	inline void movement();
 
 public:
 	enum PauseMenuState {
@@ -53,7 +49,8 @@ public:
 	/* 0x14 */ J2DSetScreen* mScreen;
 	/* 0x18 */ J2DPane* mBackground;
 	/* 0x1C */ J2DPane* mMenuPane;
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 	/* 0x20 */ J2DPane* unk20;
 #endif
 
