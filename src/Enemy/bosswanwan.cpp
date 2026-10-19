@@ -1,32 +1,25 @@
+#include <Enemy/BossWanwan.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
-#include <Enemy/BossWanwan.hpp>
 #include <Enemy/EffectObj.hpp>
 #include <Camera/CameraShake.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
-#include <MarioUtil/RandomUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Enemy/Conductor.hpp>
 #include <M3DUtil/MActor.hpp>
-#include <M3DUtil/MActorAnm.hpp>
-#include <M3DUtil/M3UJoint.hpp>
 #include <Strategic/ObjManager.hpp>
-#include <Strategic/Spine.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
-#include <Player/ModelWaterManager.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
 #include <System/EmitterViewObj.hpp>
-#include <System/Application.hpp>
 #include <System/Particles.hpp>
-#include <System/BaseParam.hpp>
-#include <System/ParamInst.hpp>
-#include <JSystem/JGeometry/JGUtil.hpp>
-#include <MarioUtil/MathUtil.hpp>
-#include <MarioUtil/MtxUtil.hpp>
 #include <GC2D/GCConsole2.hpp>
+#include <Map/Map.hpp>
+#include <Map/MapData.hpp>
+#include <Enemy/Graph.hpp>
+#include <JSystem/JDrama/JDRNameRefGen.hpp>
 
 // to match __sinit__
 #include <MSound/MSSetSound.hpp>
@@ -75,12 +68,58 @@ TBWParams::TBWParams(const char* path)
 	TParams::load(mPrmPath);
 }
 
+TBWLeashNode::TBWLeashNode(TBWLeash* leash, int index, const char* name)
+    : THitActor(name)
+    , mLeash(leash)
+    , mMActor(nullptr)
+    , mTemperature(0.0f)
+    , mIndex(index)
+{
+	TBossWanwan* owner = mLeash->mOwner;
+	mMActor = owner->getActorKeeper()->createMActor("bwanwan_chain.bmd", 0);
+	mMActor->setBrkFromIndex(2);
+
+	f32 hitRadius = owner->getSaveParam()->mSLChainHitRadius.value;
+	f32 hitHeight = owner->getSaveParam()->mSLChainHitHeight.value;
+	initHitActor(0x800000c, 1, -0x80000000, hitRadius * 2.0f, hitHeight * 2.0f,
+	             hitRadius, hitHeight);
+}
+
 TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
     : JDrama::TViewObj(name)
     , mOwner(owner)
     , mRope(nullptr)
     , mNodes(nullptr)
 {
+	f32 nodeLen      = mOwner->getSaveParam()->mSLLeashNodeLen.get();
+	f32 groundRadius = mOwner->getSaveParam()->mSLChainGroundRadius.get();
+
+	mRope = new TRope(nodeCount, mOwner->mPosition, nodeLen, groundRadius, 0.7,
+	                  -2.0f);
+
+	mNodes = new TBWLeashNode*[nodeCount];
+	for (int i = 0; i < nodeCount; i++) {
+		mNodes[i] = new TBWLeashNode(this, i, "鎖部品");
+	}
+
+	TIdxGroupObj* group
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
+
+	for (int i = 0; i < nodeCount; i++) {
+		group->getChildren().push_back(mNodes[i]);
+
+		if (i < (nodeCount - 2)) {
+			mNodes[i]->offHitFlag(HIT_FLAG_NO_COLLISION);
+		} else {
+			mNodes[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+		}
+
+		if (i < 2) {
+			mRope->mPoints[i].unk28 |= 1;
+		} else {
+			mRope->mPoints[i].unk28 &= 0xfffffffe;
+		}
+	}
 }
 
 TBossWanwan::TBossWanwan(const char* name)
@@ -157,20 +196,6 @@ void TBossWanwan::control()
 }
 
 void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics) { }
-
-// fabricated
-template <class T> T Wrap(T t, T l, T r)
-{
-	if (l >= r)
-		return l;
-
-	while (t >= r)
-		t -= r - l;
-	while (t < l)
-		t += r - l;
-
-	return t;
-}
 
 void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 {
@@ -673,7 +698,179 @@ BOOL TBWHit::receiveMessage(THitActor* sender, u32 message)
 	return mOwner->receiveMessage(sender, message);
 }
 
-void TBWBinder::bind(TLiveActor* actor) { }
+void TBWBinder::bind(TLiveActor* actor)
+{
+	TBossWanwan* boss = (TBossWanwan*)actor;
+
+	JGeometry::TVec3<f32> vel     = boss->mLinearVelocity;
+	JGeometry::TVec3<f32> nextPos = boss->mPosition;
+	nextPos += vel;
+
+	if (boss->isAirborne()) {
+		JGeometry::TVec3<f32> v = boss->mVelocity;
+		nextPos += v;
+		v.y -= boss->getGravityY();
+		if (v.y < TLiveActor::mVelocityMinY) {
+			v.y = TLiveActor::mVelocityMinY;
+		}
+		boss->mVelocity = v;
+	}
+
+	if (&TNerveBWJumpToBath::theNerve() == boss->mSpine->getLatestNerve()
+	    || &TNerveBWDie::theNerve() == boss->mSpine->getLatestNerve()) {
+
+		boss->mLinearVelocity = nextPos - boss->mPosition;
+		return;
+	}
+
+	if (boss->isAirborne()) {
+		const TBGCheckData* bgData;
+		f32 groundY = gpMap->checkGround(
+		    nextPos.x, nextPos.y + boss->getHeadHeight(), nextPos.z, &bgData);
+
+		groundY += 1.0f;
+
+		if (boss->mPosition.y > nextPos.y) {
+			if (!bgData->isEnemyThrough()) {
+				const TBGCheckData* bgData2;
+				f32 groundY2 = gpMap->checkGround(
+				    nextPos.x,
+				    boss->mPosition.y + boss->mHeadHeight * boss->mBodyScale,
+				    nextPos.z, &bgData2);
+				if (groundY2 + 1.0f > groundY) {
+					groundY = groundY2 + 1.0f;
+					bgData  = bgData2;
+				}
+			}
+		}
+
+		if (nextPos.y <= groundY && !bgData->checkFlag(0x10)
+		    && !bgData->isEnemyThrough()) {
+			nextPos.y       = groundY;
+			boss->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
+			boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
+			boss->offLiveFlag(0x8000);
+		} else {
+			boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
+		}
+
+		boss->mGroundHeight = groundY;
+		boss->mGroundPlane  = bgData;
+	}
+
+	vel = nextPos - boss->mPosition;
+
+	if (!boss->isAirborne()) {
+		TGraphTracer* tracer = boss->unk124;
+		if (tracer->unk0 != nullptr) {
+			int curIdx  = tracer->mCurrIdx;
+			int prevIdx = tracer->mPrevIdx;
+			if (curIdx >= 0 && prevIdx >= 0 && curIdx != prevIdx) {
+				TGraphNode& curNode  = tracer->unk0->getGraphNode(curIdx);
+				TGraphNode& prevNode = tracer->unk0->getGraphNode(prevIdx);
+
+				JGeometry::TVec3<f32> curPoint;
+				JGeometry::TVec3<f32> prevPoint;
+				curNode.getPoint(&curPoint);
+				prevNode.getPoint(&prevPoint);
+
+				curPoint -= prevPoint;
+				PSVECNormalize(&curPoint, &curPoint);
+
+				f32 proj  = 0.0f;
+				f32 lenSq = curPoint.squared();
+				if (lenSq == 0.0f) {
+				} else {
+					proj = vel.dot(curPoint) / lenSq;
+				}
+
+				proj = MsClamp<f32>(proj, -3.0f, 3.0f);
+
+				vel = curPoint;
+				vel.scale(proj);
+			}
+		}
+	}
+
+	if (!boss->isAirborne()) {
+		JGeometry::TVec3<f32> velCopy = vel;
+		f32 speed                     = PSVECMag(&velCopy);
+		if (speed != 0.0f) {
+			f32 deg = (speed / 3141.5928f) * 360.0f;
+
+			// set is wrapped in another fun because its emitted out-of-line
+			JGeometry::TVec3<f32> dir;
+			u16 angle = boss->mRotation.y * 182.04445f;
+			dir.set(JMASSin(angle), 0.0f, JMASCos(angle));
+			JGeometry::TVec3<f32> dirCopy = dir;
+
+			if (dirCopy.dot(vel) < 0.0f) {
+				deg = -deg;
+			}
+
+			f32 deltaAngle = deg * 2.0f;
+			if (boss->unk16C != 0) {
+				boss->unk168 = MsAngleWrap(deltaAngle + boss->unk168);
+			} else if (boss->unk168 != 0.0f) {
+				f32 nextAngle = boss->unk168 + deltaAngle;
+				if (nextAngle > 360.0f) {
+					nextAngle = 0.0f;
+				}
+				boss->unk168 = nextAngle;
+			}
+		}
+	}
+
+	if (boss->unk17C != 0) {
+		JGeometry::TVec3<f32> pos  = boss->getPosition();
+		JGeometry::TVec3<f32> diff = pos;
+		diff += vel;
+
+		JGeometry::TVec3<f32> anchorPos = boss->mLeash->mRope->mPoints[3].unkC;
+		diff -= anchorPos;
+
+		if (PSVECMag(&diff) > 860.0f) {
+			PSVECNormalize(&diff, &diff);
+			diff.scale(860.0f);
+			diff += anchorPos;
+			diff -= pos;
+			vel = diff;
+		}
+	}
+
+	if (!boss->isAirborne()) {
+		TGraphTracer* tracer = boss->unk124;
+		int prevIdx          = tracer->mPrevIdx;
+		TGraphNode& curNode  = tracer->unk0->getGraphNode(tracer->mCurrIdx);
+		TGraphNode& prevNode = tracer->unk0->getGraphNode(prevIdx);
+
+		JGeometry::TVec3<f32> curPoint;
+		JGeometry::TVec3<f32> prevPoint;
+		curNode.getPoint(&curPoint);
+		prevNode.getPoint(&prevPoint);
+
+		JGeometry::TVec3<f32> pull;
+		pull = MsPerpendicFootToLineR(prevPoint, curPoint, boss->mPosition);
+		curPoint -= prevPoint;
+		pull -= boss->mPosition;
+
+		f32 dist = PSVECMag(&pull);
+		if (dist > 10.0f) {
+			dist = 10.0f;
+		}
+
+		if (dist < 0.0001f) {
+			pull.zero();
+		} else {
+			PSVECNormalize(&pull, &pull);
+			pull.scale(dist);
+		}
+
+		vel += pull;
+	}
+
+	boss->mLinearVelocity = vel;
+}
 
 void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics) { }
 

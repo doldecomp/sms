@@ -76,7 +76,7 @@ public:
 
 class TBWLeashNode : public THitActor {
 public:
-	TBWLeashNode(int, const char*);
+	TBWLeashNode(TBWLeash*, int, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	void calcMatrix();
@@ -146,6 +146,10 @@ public:
 		           ? true
 				   : false;
 	};
+
+	// fabricated
+	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
+
 	bool isMarioInSight();
 	bool isTailBurning();
 	bool isBurning();
