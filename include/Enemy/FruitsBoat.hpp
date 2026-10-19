@@ -9,7 +9,7 @@ class J3DAnmTransformKey;
 
 class TFruitsBoat : public TSpineEnemy {
 public:
-	TFruitsBoat(const char* name);
+	TFruitsBoat(const char* name = "フルーツの船");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
@@ -48,7 +48,7 @@ public:
 
 class TFruitsBoatManager : public TEnemyManager {
 public:
-	TFruitsBoatManager(int, const char* name);
+	TFruitsBoatManager(int, const char* name = "フルーツの船マネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();

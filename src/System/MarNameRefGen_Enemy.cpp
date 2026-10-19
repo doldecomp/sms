@@ -24,6 +24,7 @@
 #include <Enemy/EggGen.hpp>
 #include <Enemy/Igaiga.hpp>
 #include <Enemy/TobiPuku.hpp>
+#include <Enemy/FruitsBoat.hpp>
 #include <Animal/AnimalBase.hpp>
 #include <Animal/AnimalManager.hpp>
 #include <Animal/Bird.hpp>
@@ -60,27 +61,21 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "EnemyManager") == 0)
 		return new TEnemyManager;
 
-	// TODO:
-	// if (strcmp(name, "FruitsBoat") == 0 || strcmp(name, "FruitsBoatG") == 0
-	// ||
-	//     strcmp(name, "FruitsBoatP") == 0 || strcmp(name, "FruitsBoatY") == 0)
-	//     return new TFruitsBoat("フルーツの船");
+	if (strcmp(name, "FruitsBoat") == 0 || strcmp(name, "FruitsBoatG") == 0
+	    || strcmp(name, "FruitsBoatP") == 0 || strcmp(name, "FruitsBoatY") == 0)
+		return new TFruitsBoat;
 
-	// TODO:
-	// if (strcmp(name, "FruitsBoatManager") == 0)
-	// 	return new TFruitsBoatManager(0, "フルーツの船マネージャー");
+	if (strcmp(name, "FruitsBoatManager") == 0)
+		return new TFruitsBoatManager(0);
 
-	// TODO:
-	// if (strcmp(name, "FruitsBoatGManager") == 0)
-	// 	return new TFruitsBoatManager(1, "フルーツの船マネージャー");
+	if (strcmp(name, "FruitsBoatGManager") == 0)
+		return new TFruitsBoatManager(1);
 
-	// TODO:
-	// if (strcmp(name, "FruitsBoatPManager") == 0)
-	// 	return new TFruitsBoatManager(2, "フルーツの船マネージャー");
+	if (strcmp(name, "FruitsBoatPManager") == 0)
+		return new TFruitsBoatManager(2);
 
-	// TODO:
-	// if (strcmp(name, "FruitsBoatYManager") == 0)
-	//     return new TFruitsBoatManager(3, "フルーツの船マネージャー");
+	if (strcmp(name, "FruitsBoatYManager") == 0)
+		return new TFruitsBoatManager(3);
 
 	if (strcmp(name, "AnimalMew") == 0)
 		return new TAnimalBase(ACTOR_TYPE_ANIMAL_MEW, "?");
