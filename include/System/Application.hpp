@@ -26,6 +26,9 @@ f32 SMSGetVSyncTimesPerSec();
 f32 SMSGetRealVSyncTimesPerSec();
 void load2DResource2Aram();
 #endif
+#ifdef VERSION_GMSP01_NX
+extern bool s_RunOnGC;
+#endif
 f32 SMSGetAnmFrameRate();
 void* SMSLoadArchive(const char*, void*, u32, JKRHeap*);
 

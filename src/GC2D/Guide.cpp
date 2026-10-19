@@ -21,6 +21,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <System/StageUtil.hpp>
+#include <System/DummyStrings.hpp>
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
@@ -389,8 +390,16 @@ void TGuide::startMoveCursor()
 
 void TGuide::startMoveCursor2()
 {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
+	u8 map    = SMSGetMarDirector()->getCurrentMap();
+	s16 stage = SMS_getShineStage(map);
+	if (map == 0x14)
+		stage = 0;
+#else
 	s16 stage = SMS_getShineStage(SMSGetMarDirector()->mMap);
-	unk42C    = stage;
+#endif
+	unk42C = stage;
 	resetObjects();
 	changeBotStatus(stage);
 	for (int i = 0; i < ARRAY_COUNT(unk3D0); ++i) {
@@ -405,19 +414,33 @@ void TGuide::startMoveCursor2()
 void TGuide::linkSelect()
 {
 	unkC0->onFlag(TMarioGamePad::PAD_FLAG_GUIDE_INPUT);
+#ifdef VERSION_GMSP01_NX
+	if (unkC0->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)
+	    || (s_RunOnGC && (unkC0->mButton.mTrigger & JUTGamePad::Z))
+	    || (!s_RunOnGC && (unkC0->mButton.mAnalogR & 2)))
+		unk10 = STATE_CLOSE;
+#else
 	if (unkC0->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)
 	    || (unkC0->mButton.mTrigger & JUTGamePad::Z))
 		unk10 = STATE_CLOSE;
-	s16 dx = unkC0->mCompSPos[8] * 3.2f;
-	s16 dy = -3.2f * unkC0->mCompSPos[9];
+#endif
+	s16 dx = unkC0->getCompSPos(4, 0) * 3.2f;
+	s16 dy = -3.2f * unkC0->getCompSPos(4, 1);
 	int x  = unk128[0]->getPane()->getBounds().x1;
 	int y  = unk128[0]->getPane()->getBounds().y1;
 	x += dx;
 	y += dy;
+#ifdef VERSION_GMSP01_NX
+	if (x > 678)
+		x = 678;
+	if (x < -110)
+		x = -110;
+#else
 	if (x > 568)
 		x = 568;
 	if (x < 0)
 		x = 0;
+#endif
 	if (y > 360)
 		y = 360;
 	if (y < 56)
@@ -591,8 +614,7 @@ void TGuide::changeBotStatus(int stage)
 	if (unk14[stage].unk0 == 0) {
 		unk124->show();
 		unkF4->show();
-		const char* name = SMSGetMessageData(unk474, stage);
-		strncpy(unk124->getStringPtr(), name, 0x1a);
+		strncpy(unk124->getStringPtr(), SMSGetMessageData(unk474, stage), 0x1a);
 		int shines = unk14[stage].shineCount;
 		if (shines < 0)
 			shines = 0;
@@ -693,14 +715,19 @@ void TGuide::changeBotStatus(int stage)
 		unkBC->search('sb_i')->show();
 		unkBC->search('sc_t')->hide();
 		unkBC->search('sq_i')->hide();
-		const char* name = SMSGetMessageData(unk474, stage);
-		strncpy(unk124->getStringPtr(), name, 0x1a);
+		strncpy(unk124->getStringPtr(), SMSGetMessageData(unk474, stage), 0x1a);
 	}
 }
 
 void TGuide::placeMario()
 {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
+	u8 map = SMSGetMarDirector()->getCurrentMap();
+	if (SMS_getShineStage(map) != 1 || map == 0x14) {
+#else
 	if (SMS_getShineStage(SMSGetMarDirector()->mMap) != 1) {
+#endif
 		unk430->hide();
 		return;
 	}
@@ -736,14 +763,7 @@ void TGuide::appearGuidePane(int index)
 	JUTRect bounds(unk218[index]);
 	JUTRect label(unk168[index]->getBounds());
 	unk424->getPane()->show();
-	int width     = bounds.getWidth();
-	int height    = bounds.getHeight();
-	TExPane* pane = unk424;
-	pane->setPaneSize(20, width, height, 0, 0);
-	const JUTRect& initial = pane->getInitialBounds();
-	pane->setPaneOffset(20, (initial.getWidth() - width) * 0.5f,
-	                    (initial.getHeight() - height) * 0.5f,
-	                    initial.getWidth() * 0.5f, initial.getHeight() * 0.5f);
+	unk424->setCenteredSize(20, bounds.getWidth(), bounds.getHeight(), 0, 0);
 	unk424->setPaneOffset(20, 0, 0, label.x1 - bounds.x1,
 	                      label.y1 - bounds.x1 - 40);
 	unk428->getPane()->setAlpha(0);
@@ -768,15 +788,7 @@ void TGuide::disappearGuidePane(int index)
 	JUTRect bounds(unk218[index]);
 	JUTRect label(unk168[index]->getBounds());
 	SMSGetMSound()->startSoundSystemSE(0x4805, 0, nullptr, 0);
-	int width     = bounds.getWidth();
-	int height    = bounds.getHeight();
-	TExPane* pane = unk424;
-	pane->setPaneSize(20, 0, 0, width, height);
-	const JUTRect& initial = pane->getInitialBounds();
-	pane->setPaneOffset(20, initial.getWidth() * 0.5f,
-	                    initial.getHeight() * 0.5f,
-	                    (initial.getWidth() - width) * 0.5f,
-	                    (initial.getHeight() - height) * 0.5f);
+	unk424->setCenteredSize(20, 0, 0, bounds.getWidth(), bounds.getHeight());
 	unk424->setPaneOffset(20, label.x1 - bounds.x1, label.y1 - bounds.x1 - 40,
 	                      0, 0);
 	unk128[0]->setPaneAlpha(20, 255, 0);
@@ -788,18 +800,21 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 {
 	if (setup_wait != 0) {
 		--setup_wait;
-		if (setup_wait != 0)
+		if (setup_wait == 0) {
+			setup2(nullptr);
+			startMoveCursor2();
+		} else {
 			return;
-		setup2(nullptr);
-		startMoveCursor2();
+		}
 	}
 	if ((flags & 8) && unk10 != STATE_OPEN && unk10 != STATE_CLOSED) {
-		J2DOrthoGraph graph(graphics->mViewportRect);
+		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 		unkBC->draw(0, 0, &graph);
 	}
 	if (!(flags & 1))
 		return;
+	int i;
 	bool done = true;
 	switch (unk10) {
 	case STATE_OPEN: {
@@ -807,8 +822,16 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 			gpApplication.getFader()->startWipe(5, 1.0f, 0.0f);
 			unk10 = STATE_OPENING;
 		}
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
+		u32 map = SMSGetMarDirector()->getCurrentMap();
+		if (map == 0x14)
+			map = 0;
+		JUTRect bounds(unk168[SMS_getShineStage(map)]->getBounds());
+#else
 		JUTRect bounds(
 		    unk168[SMS_getShineStage(SMSGetMarDirector()->mMap)]->getBounds());
+#endif
 		unk128[0]->getPane()->move(bounds.x1 + 6, bounds.y1 - 1);
 		unk128[1]->getPane()->move(bounds.x1 + 6, bounds.y1 - 1);
 		break;
@@ -827,7 +850,7 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 		break;
 	case STATE_APPEARING:
 		done &= unk424->update();
-		for (int i = 0; i < ARRAY_COUNT(unk128); ++i)
+		for (i = 0; i < ARRAY_COUNT(unk128); ++i)
 			done &= unk128[i]->update();
 		if (done && unk428->update())
 			unk10 = STATE_SELECTED;
@@ -835,14 +858,20 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 	case STATE_SELECTED:
 		if (unkC0->mEnabledFrameMeaning
 		    & (TMarioGamePad::MEANING_MENU_A | TMarioGamePad::MEANING_MENU_B))
-			disappearGuidePane(unk42C);
+			disappearSelectedPane();
+#ifdef VERSION_GMSP01_NX
+		else if ((s_RunOnGC && (unkC0->mButton.mTrigger & JUTGamePad::Z))
+		         || (!s_RunOnGC && (unkC0->mButton.mAnalogR & 2)))
+			unk10 = STATE_CLOSE;
+#else
 		else if (unkC0->mButton.mTrigger & JUTGamePad::Z)
 			unk10 = STATE_CLOSE;
+#endif
 		break;
 	case STATE_DISAPPEARING:
 		if (unk428->update()) {
 			done &= unk424->update();
-			for (int i = 0; i < ARRAY_COUNT(unk128); ++i)
+			for (i = 0; i < ARRAY_COUNT(unk128); ++i)
 				done &= unk128[i]->update();
 			if (done) {
 				unk424->getPane()->hide();

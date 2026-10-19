@@ -60,6 +60,10 @@ public:
 	void placeMario();
 	void appearGuidePane(int);
 	void disappearGuidePane(int);
+
+	// fabricated
+	void disappearSelectedPane() { disappearGuidePane(unk42C); }
+
 	void perform(u32, JDrama::TGraphics*);
 
 public:
