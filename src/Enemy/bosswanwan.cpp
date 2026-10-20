@@ -13,7 +13,6 @@
 #include <Strategic/Strategy.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
-#include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <Map/Map.hpp>
@@ -122,12 +121,23 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
 	}
 }
 
+inline void TBossWanwanMtxCalc::joinAnm(int i)
+{
+	J3DAnmTransformKey* newAnm
+	    = mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(i);
+
+	if (mNewAnm != newAnm) {
+		mOldAnm           = mNewAnm;
+		mNewAnm           = newAnm;
+		mMotionBlendRatio = 1.0f;
+	}
+}
+
 void TBossWanwan::changeBck(int index)
 {
-	mMtxCalc->joinAnm(index);
-	mMActor->mAnmBck->setFrameCtrl(index);
-	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-	unk178             = 10.0f / (f32)ctrl->getEnd();
+	setBckFromIndex(index);
+	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
+	unk178             = 10.0f / ctrl->getEnd();
 	setAnmSound(bwanwan_bastable[index]);
 }
 
@@ -903,15 +913,7 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 		if (message == HIT_MESSAGE_TAKE) {
 			TBossWanwan* owner = mOwner;
 
-			if (owner->unk17C != 0) {
-				JPABaseEmitter* emit = gpMarioParticleManager->emit(
-				    BWAN_JPA_JUMP_SMOKE, &owner->mPicket->mPosition, 0, 0);
-
-				if (emit != nullptr) {
-					JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
-					emit->setGlobalScale(scale);
-				}
-			}
+			owner->releasePicket();
 			owner->unk194 = 0;
 			owner->unk17C = 0;
 			mHolder       = (TTakeActor*)sender;
@@ -1068,15 +1070,8 @@ DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
 
 	if (spine->getTime() == 0) {
-		// TODO: setFrameCtrl and getAnmPtr are getting
-		// out-of-line even though inlining is necessary since they are
-		// defined in a template class (duplicate of TNerveBWBark)
-		boss->mMtxCalc->joinAnm(6);
-		boss->mMActor->mAnmBck->setFrameCtrl(6);
-		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
-		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
+		boss->changeBck(6);
 
-		boss->setAnmSound(bwanwan_bastable[6]);
 		boss->mMActor->setBtpFromIndex(2);
 		boss->unk16C = 0;
 		boss->unk168 = 0.0f;
@@ -1099,14 +1094,14 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 		    BW_BATH_POS, 10.0f, boss->getGravityY());
 
 		// resets
-		boss->unkF4.unk0  = nullptr;
-		boss->unkF4.unk4  = BW_BATH_POS;
-		boss->unk104      = nullptr;
-		boss->unk104.unk4 = BW_BATH_POS;
+		TPathNode goal(BW_HEAD_START);
+		boss->unkF4  = goal;
+		boss->unk104 = goal;
 		boss->unk114.clear();
-		boss->mLinearVelocity = vel;
+
+		boss->mVelocity = vel;
 		boss->mLiveFlag |= 0x80;
-		boss->unk1C = 0;
+		boss->unk16C = 0;
 	}
 
 	if (spine->getTime() > 120 && !boss->mHasSpawnedWater
@@ -1190,19 +1185,11 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 	MActor* actor     = boss->mMActor;
 
 	if (spine->getTime() == 0) {
-		// maybe "changeBck"
 		boss->changeBck(2);
 	}
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		if (boss->unk17C != 0) {
-			JPABaseEmitter* emit = gpMarioParticleManager->emit(
-			    BWAN_JPA_JUMP_SMOKE, &boss->mPicket->mPosition, 0, nullptr);
-			if (emit != nullptr) {
-				JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
-				emit->setGlobalScale(scale);
-			}
-		}
+		boss->releasePicket();
 
 		boss->unk194 = 0;
 		boss->unk17C = 0;

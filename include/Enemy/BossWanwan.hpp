@@ -18,6 +18,9 @@
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <GC2D/GCConsole2.hpp>
+#include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
+#include <M3DUtil/MActor.hpp>
 
 class TBossWanwan;
 class TBWParams;
@@ -121,6 +124,18 @@ public:
 	/* 0x1E8 */ TParamRT<f32> mSLShakeLengthMaxHP0;
 };
 
+class TBossWanwanMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
+public:
+	TBossWanwanMtxCalc(TBossWanwan*);
+	virtual ~TBossWanwanMtxCalc();
+	void calc(u16);
+
+	void joinAnm(int i);
+
+public:
+	/* 0x64 */ TBossWanwan* mOwner;
+};
+
 // TBossWanwan size: 0x1b8
 class TBossWanwan : public TSpineEnemy {
 public:
@@ -156,7 +171,19 @@ public:
 	bool isTailBurning();
 	bool isBurning();
 	void startGoldBrk();
-	void releasePicket();
+
+	void releasePicket()
+	{
+		if (unk17C != 0) {
+			JPABaseEmitter* emit = gpMarioParticleManager->emit(
+			    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
+			if (emit != nullptr) {
+				JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
+				emit->setGlobalScale(scale);
+			}
+		}
+	};
+
 	void takeBath();
 	void rollNextGraphNode();
 	void reverseNextGraphNode();
@@ -167,6 +194,13 @@ public:
 	const TNerveBase<TLiveActor>* getLatestNerve()
 	{
 		return mSpine->getLatestNerve();
+	}
+
+	// fabricated
+	void setBckFromIndex(int idx)
+	{
+		mMtxCalc->joinAnm(idx);
+		getMActor()->mAnmBck->setFrameCtrl(idx);
 	}
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
@@ -195,29 +229,6 @@ public:
 	/* 0x1AC */ f32 unk1AC;
 	/* 0x1B0 */ TBWParams* mParams;
 	/* 0x1B4 */ u16 unk1B4;
-};
-
-class TBossWanwanMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
-public:
-	TBossWanwanMtxCalc(TBossWanwan*);
-	virtual ~TBossWanwanMtxCalc();
-	void calc(u16);
-
-	void joinAnm(int i)
-	{
-		J3DAnmTransformKey* newAnm
-		    = mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(
-		        i);
-
-		if (mNewAnm != newAnm) {
-			mOldAnm           = mNewAnm;
-			mNewAnm           = newAnm;
-			mMotionBlendRatio = 1.0f;
-		}
-	}
-
-public:
-	/* 0x64 */ TBossWanwan* mOwner;
 };
 
 class TBossWanwanManager : public TEnemyManager {
