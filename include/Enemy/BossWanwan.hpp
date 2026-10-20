@@ -11,6 +11,7 @@
 #include <Strategic/LiveActor.hpp>
 #include <M3DUtil/M3UJoint.hpp>
 #include <M3DUtil/MActorData.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
@@ -20,7 +21,6 @@
 #include <GC2D/GCConsole2.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
-#include <M3DUtil/MActor.hpp>
 
 class TBossWanwan;
 class TBWParams;

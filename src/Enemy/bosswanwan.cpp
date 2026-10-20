@@ -7,13 +7,11 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Enemy/Conductor.hpp>
-#include <M3DUtil/MActor.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
 #include <System/FlagManager.hpp>
 #include <System/MarDirector.hpp>
-#include <System/Particles.hpp>
 #include <GC2D/GCConsole2.hpp>
 #include <Map/Map.hpp>
 #include <Map/MapData.hpp>
@@ -961,7 +959,12 @@ TBossWanwanManager::TBossWanwanManager(const char* name)
 {
 }
 
-DEFINE_NERVE(TNerveBWGraphWander, TLiveActor) { }
+DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+
+	if (spine->getTime() == 0) { }
+}
 
 DEFINE_NERVE(TNerveBWRoll, TLiveActor)
 {
@@ -1200,4 +1203,33 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 	return false;
 }
 
-DEFINE_NERVE(TNerveBWFall, TLiveActor) { }
+DEFINE_NERVE(TNerveBWFall, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+	if (spine->getTime() == 0) {
+		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
+		    boss->unk104.unk4, 5.0f, boss->getGravityY());
+
+		TPathNode goal(boss->unk104.unk4);
+		boss->unkF4  = goal;
+		boss->unk104 = goal;
+		boss->unk114.clear();
+
+		boss->mVelocity = vel;
+		boss->mLiveFlag |= 0x80;
+		boss->unk1C = 0;
+	}
+
+	if (boss->isReachedToGoal()) {
+
+		boss->mPosition        = boss->unk104.unk4;
+		boss->unk124->mPrevIdx = -1;
+		boss->unk124->mCurrIdx = -1;
+		boss->goToShortestNextGraphNode();
+
+		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
+		return true;
+	}
+
+	return false;
+}
