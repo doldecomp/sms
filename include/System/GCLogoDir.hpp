@@ -3,6 +3,7 @@
 
 #include <JSystem/JDrama/JDRDirector.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
+#include <System/FlagManager.hpp>
 
 namespace JDrama {
 class TDisplay;
@@ -12,14 +13,33 @@ class TMarioGamePad;
 class JUTTexture;
 class TProgSelect;
 
+#ifdef VERSION_GMSP01_NX
+JUTRect toWideScreen(s32 x1, s32 y1, s32 x2, s32 y2);
+#endif
+
 class TNintendo2D : public JDrama::TViewObj {
 public:
 	TNintendo2D(JUTTexture* tex, const char* name = "Nintendo2D")
 	    : JDrama::TViewObj(name)
 	    , mLogoTex(tex)
+#ifdef VERSION_GMSP01_NX
+	    , mRect(toWideScreen(133, 170, 509, 274))
+#else
 	    , mRect(133, 170, 509, 274)
+#endif
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 	    , mColor(0, 70, 255, 255)
+#elif !defined(VERSION_GMSP01_NX)
+	    , mColor(220, 0, 0, 255)
+#endif
 	{
+#ifdef VERSION_GMSP01_NX
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5) {
+			mColor = JUtility::TColor(0, 70, 255, 255);
+		} else {
+			mColor = JUtility::TColor(220, 0, 0, 255);
+		}
+#endif
 	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
