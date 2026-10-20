@@ -17,8 +17,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-
-	BOOL hasMapCollision() const { return false; }
+	virtual BOOL hasMapCollision() const { return false; }
 
 	TCoin* newAndRegisterCoinReal();
 	static TCoin* newAndRegisterCoin(u32);
@@ -29,8 +28,9 @@ public:
 	                                const char* demo_name, f32 x, f32 y, f32 z);
 	TShine* makeShineAppearWithTimeOffset(const char*, int, f32, f32, f32, int,
 	                                      int, int);
-	TShine* makeShineAppearWithTime(const char*, int, f32, f32, f32, int, int,
-	                                int);
+	TShine* makeShineAppearWithTime(const char* shine_name, int time, f32 x,
+	                                f32 y, f32 z, int appear_wait_time,
+	                                int move_up_time, int float_time);
 	void resetNozzleBoxesModel(int nozzle_type);
 
 public:

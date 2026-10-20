@@ -29,8 +29,8 @@ public:
 
 public:
 	/* 0x148 */ THitActor* mContainer;
-	/* 0x14C */ u32 unk14C;
-	/* 0x150 */ u32 unk150;
+	/* 0x14C */ u32 mDisappearAfterFrames;
+	/* 0x150 */ u32 mUntouchableFrames;
 };
 
 class TCoin : public TItem {
@@ -47,22 +47,22 @@ public:
 
 	void appearWithoutSound();
 
-public:
-	/* 0x154 */ TMirrorActor* unk154;
+private:
+	/* 0x154 */ TMirrorActor* mMirrorActor;
 };
 
 class TFlowerCoin : public TCoin {
 public:
 	TFlowerCoin(const char* name = "コイン(フラワー用)")
 	    : TCoin(name)
-	    , unk158(0)
+	    , mCoinUnitIndex(0)
 	{
 	}
 
 	virtual void load(JSUMemoryInputStream&);
 
 public:
-	/* 0x158 */ s32 unk158;
+	/* 0x158 */ s32 mCoinUnitIndex;
 };
 
 class TCoinEmpty : public TCoin {
@@ -115,7 +115,8 @@ public:
 	void appearWithDemo(const char*);
 	void appearSimple(int);
 	static s32 appearWithTimeCallback(uintptr_t, u32);
-	void appearWithTime(int, int, int, int);
+	void appearWithTime(int time, int appear_wait_time, int move_up_time,
+	                    int float_time);
 	void movingDown();
 	void movingUp();
 	void movingCircle();
@@ -129,38 +130,45 @@ public:
 	static f32 mSpeedDownRate;
 
 	enum {
-		STATE_UNKB          = 0xB,
+		STATE_APPEAR_WAIT   = 0xB,
 		STATE_MOVING_UP     = 0xC,
 		STATE_MOVING_CIRCLE = 0xD,
 		STATE_MOVING_DOWN   = 0xE,
-		STATE_UNKF          = 0xF,
-		STATE_UNK10         = 0x10,
-		STATE_UNK11         = 0x11,
-		STATE_UNK12         = 0x12,
+		STATE_FLOAT         = 0xF,
+		STATE_GOT           = 0x10,
+		STATE_WAIT          = 0x11,
+		STATE_QUICKLY_WAIT  = 0x12,
+	};
+
+	enum {
+		APPEAR_TYPE_NORMAL  = 0,
+		APPEAR_TYPE_DEAD    = 1,
+		APPEAR_TYPE_QUICKLY = 2,
+		APPEAR_TYPE_SIMPLE  = 3,
 	};
 
 public:
-	/* 0x154 */ u32 unk154;
-	/* 0x158 */ f32 unk158;
-	/* 0x15C */ f32 unk15C;
-	/* 0x160 */ f32 unk160;
-	/* 0x164 */ f32 unk164;
-	/* 0x168 */ int unk168;
-	/* 0x16C */ f32 unk16C;
-	/* 0x170 */ int unk170;
-	/* 0x174 */ int unk174;
-	/* 0x178 */ int unk178;
-	/* 0x17C */ JGeometry::TVec3<f32> unk17C;
-	/* 0x188 */ f32 unk188;
-	/* 0x18C */ u32 unk18C;
-	/* 0x190 */ u8 unk190;
-	/* 0x194 */ JPABaseEmitter* unk194;
-	/* 0x198 */ JPABaseEmitter* unk198;
-	/* 0x19C */ JPABaseEmitter* unk19C;
-	/* 0x1A0 */ JPABaseEmitter* unk1A0;
-	/* 0x1A4 */ u8 unk1A4;
-	/* 0x1A8 */ JGeometry::TVec3<f32> unk1A8;
-	/* 0x1B4 */ u8 unk1B4;
+	/* 0x154 */ u32 mAppearType;
+	/* 0x158 */ f32 mCircleAngle;
+	/* 0x15C */ f32 mCircleRadius;
+	/* 0x160 */ f32 mCircleHeight;
+	/* 0x164 */ f32 mCircleStartY;
+	/* 0x168 */ int mCircleTime;
+	/* 0x16C */ f32 mRotateSpeed;
+	/* 0x170 */ int mMoveUpTime;
+	/* 0x174 */ int mAppearWaitTime;
+	/* 0x178 */ int mFloatTime;
+	/* 0x17C */ JGeometry::TVec3<f32> mCircleStep;
+	/* 0x188 */ f32 mVelocityY;
+	/* 0x18C */ u32 mDemoLength;
+	/* 0x190 */ u8 mIsInside;
+	/* 0x194 */ JPABaseEmitter* mPromiEmitter;
+	/* 0x198 */ JPABaseEmitter* mSenkoEmitter;
+	/* 0x19C */ JPABaseEmitter* mKiraEmitter;
+	/* 0x1A0 */ JPABaseEmitter* mBowEmitter;
+	/* 0x1A4 */ u8 mEffectEmitted;
+	/* 0x1A8 */ JGeometry::TVec3<f32> mEffectScale;
+	/* 0x1B4 */ u8 mIsEmpty;
 };
 
 class MActor;
@@ -223,12 +231,12 @@ public:
 public:
 	/* 0x148 */ int mContainedNozzleType;
 	/* 0x14C */ TItemNozzle* mContainedNozzleItem;
-	/* 0x150 */ f32 unk150;
-	/* 0x154 */ f32 unk154;
+	/* 0x150 */ f32 mDropSpeed;
+	/* 0x154 */ f32 mDropYSpeed;
 	/* 0x158 */ const char* mContainedNozzleName;
-	/* 0x15C */ bool unk15C;
-	/* 0x15E */ GXColorS10 unk15E;
-	/* 0x166 */ bool unk166;
+	/* 0x15C */ bool mIsValid;
+	/* 0x15E */ GXColorS10 mBoxColor;
+	/* 0x166 */ bool mBalloonShown;
 };
 
 #endif

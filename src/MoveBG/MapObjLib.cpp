@@ -135,19 +135,19 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
 	}
 }
 
-void TMapObjBase::throwObjFromPointWithRot(TMapObjBase* param_1,
-                                           const JGeometry::TVec3<f32>& param_2,
-                                           const JGeometry::TVec3<f32>& param_3,
-                                           f32 param_4, f32 param_5)
+void TMapObjBase::throwObjFromPointWithRot(TMapObjBase* obj,
+                                           const JGeometry::TVec3<f32>& point,
+                                           const JGeometry::TVec3<f32>& rot,
+                                           f32 speed, f32 up_speed)
 {
-	param_1->appear();
-	param_1->mPosition.set(param_2);
+	obj->appear();
+	obj->mPosition.set(point);
 
 	Mtx mtx;
-	MsMtxSetRotRPH(mtx, param_3.x, param_3.y, param_3.z);
-	param_1->mVelocity.set(mtx[0][2] * param_4, mtx[1][2] * param_4 + param_5,
-	                       mtx[2][2] * param_4);
-	param_1->offLiveFlag(LIVE_FLAG_UNK10);
+	MsMtxSetRotRPH(mtx, rot.x, rot.y, rot.z);
+	obj->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + up_speed,
+	                   mtx[2][2] * speed);
+	obj->offLiveFlag(LIVE_FLAG_UNK10);
 }
 
 bool TMapObjBase::isCoin(THitActor* param_1)

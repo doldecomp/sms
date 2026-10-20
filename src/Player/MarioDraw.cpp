@@ -1391,18 +1391,21 @@ void TMario::initMirrorModel()
 		mCap->createMirrorCap();
 
 	TMirrorActor* mirrorActor = new TMirrorActor("マリオin鏡");
-	mirrorActor->init(mModel->getModel(), 4);
+	mirrorActor->init(mModel->getModel(),
+	                  TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 
 	for (int handIdx = 0; handIdx < 2; ++handIdx) {
 		for (int modelIdx = 0; modelIdx < 2; ++modelIdx) {
 			TMirrorActor* handMirrorActor = new TMirrorActor("マリオ手in鏡");
-			handMirrorActor->init(mHandModels[handIdx][modelIdx], 4);
+			handMirrorActor->init(mHandModels[handIdx][modelIdx],
+			                      TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 		}
 	}
 
 	if (mTorocco != nullptr) {
 		TMirrorActor* toroccoMirrorActor = new TMirrorActor("トロッコin鏡");
-		toroccoMirrorActor->init(mTorocco->getModel(), 2);
+		toroccoMirrorActor->init(mTorocco->getModel(),
+		                         TMirrorActor::MIRROR_ACTOR_FLAG_ALWAYS);
 	}
 }
 

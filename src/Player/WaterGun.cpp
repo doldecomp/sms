@@ -1350,7 +1350,8 @@ void TWaterGun::init()
 	mFluddModel->getModel()->calc();
 
 	unk1D10 = new TMirrorActor("水鉄砲in鏡");
-	unk1D10->init(mFluddModel->getModel(), 4);
+	unk1D10->init(mFluddModel->getModel(),
+	              TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 
 	// TODO: Definitely an inlined function
 	// Another function does the exact same thing

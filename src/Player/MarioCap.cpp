@@ -118,7 +118,7 @@ void TMarioCap::createMirrorCap()
 {
 	for (int i = 0; i < 2; ++i) {
 		unk28[i] = new TMirrorActor("マリオ帽子in鏡");
-		unk28[i]->init(unk10[i], 4);
+		unk28[i]->init(unk10[i], TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 	}
 }
 

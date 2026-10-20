@@ -311,6 +311,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	MAP_MAP_MS_MARE_GUNWAT_A              = 0x14C,
 	MAP_MAP_MS_MARE_GUNWAT_B              = 0x14D,
 	MAP_MAP_MS_MARE_GUNWAT_C              = 0x14E,
+	SCENE_MAPOBJ_MS_SHIB_CYL1             = 0x154,
+	SCENE_MAPOBJ_MS_SHIB_CUB1             = 0x155,
 	MAP_MAP_MS_MONTE_YUGE                 = 0x156,
 	MAPOBJ_ICEBLOCKA                      = 0x157,
 	MAPOBJ_ICEBLOCKB                      = 0x158,

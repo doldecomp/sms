@@ -56,9 +56,9 @@ void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 
 			throwObjToFrontFromPoint(obj, point, mAppearSpeed, mAppearYSpeed);
 			if (TMapObjBase::isCoin(obj)) {
-				TCoin* coin      = (TCoin*)obj;
-				coin->mContainer = this;
-				coin->unk14C     = unk148;
+				TCoin* coin                 = (TCoin*)obj;
+				coin->mContainer            = this;
+				coin->mDisappearAfterFrames = unk148;
 			}
 
 			if (TMapObjBase::isFruit(obj))
@@ -567,9 +567,9 @@ void THideObjPictureTwin::afterFinishedAnim()
 		obj->offLiveFlag(LIVE_FLAG_UNK10);
 
 		if (TMapObjBase::isCoin(obj)) {
-			TCoin* coin      = (TCoin*)obj;
-			coin->mContainer = this;
-			coin->unk14C     = unk148;
+			TCoin* coin                 = (TCoin*)obj;
+			coin->mContainer            = this;
+			coin->mDisappearAfterFrames = unk148;
 		}
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);

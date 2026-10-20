@@ -119,12 +119,12 @@ void TManhole::touchPlayer(THitActor*)
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MANHOLE_DOWN, &mPosition,
 			                                0, nullptr, 0, 4);
 		}
-		if (mPosition.y > mInitialPosition.y - mDownHeight)
+		if (mPosition.y > getInitialPosition().y - mDownHeight)
 			mPosition.y = mPosition.y - mDownSpeed;
 		else
-			mPosition.y = mInitialPosition.y - mDownHeight;
+			mPosition.y = getInitialPosition().y - mDownHeight;
 		unk148 = 1.0f;
-		unk14C = mInitialPosition.y - mPosition.y;
+		unk14C = getInitialPosition().y - mPosition.y;
 		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
 		return;
 	}
@@ -277,7 +277,7 @@ void TMapObjBillboard::swing(THitActor* param_1)
 		else
 			startAnim(1);
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_BILLBOARD_MOVE, &mPosition,
-		                                0, &unk150, 0, 4);
+		                                0, &mSwingSound, 0, 4);
 	}
 }
 
@@ -389,14 +389,15 @@ void TShadowObj::load(JSUMemoryInputStream&) { }
 void TMapObjWaterSpray::calc()
 {
 	JPABaseEmitter* em
-	    = gpMarioParticleManager->emit(unk138, &mPosition, 1, this);
+	    = gpMarioParticleManager->emit(mParticleId, &mPosition, 1, this);
 	if (em) {
 		em->setRotation(mRotation.x, mRotation.y, mRotation.z);
 		em->setGlobalScale(mScaling);
-		em->setRate(unk13C);
-		em->setGlobalParticleScale(unk140);
-		em->setGlobalPrmColor(unk14C.r, unk14C.g, unk14C.b);
-		em->setGlobalAlpha(unk14C.a);
+		em->setRate(mEmitRate);
+		em->setGlobalParticleScale(mParticleScale);
+		em->setGlobalPrmColor(mParticleColor.r, mParticleColor.g,
+		                      mParticleColor.b);
+		em->setGlobalAlpha(mParticleColor.a);
 	}
 }
 
@@ -404,18 +405,18 @@ void TMapObjWaterSpray::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
 	if (strcmp(mIndividualName, "WaterSprayCylinder") == 0) {
-		unk138 = 0x154;
-		SMS_LoadParticle("/scene/mapObj/ms_shib_cyl1.jpa", unk138);
+		mParticleId = SCENE_MAPOBJ_MS_SHIB_CYL1;
+		SMS_LoadParticle("/scene/mapObj/ms_shib_cyl1.jpa", mParticleId);
 	} else {
-		unk138 = 0x155;
-		SMS_LoadParticle("/scene/mapObj/ms_shib_cub1.jpa", unk138);
+		mParticleId = SCENE_MAPOBJ_MS_SHIB_CUB1;
+		SMS_LoadParticle("/scene/mapObj/ms_shib_cub1.jpa", mParticleId);
 	}
 
-	stream >> unk13C;
-	if (unk13C > 100.0f)
-		unk13C = 0.5f;
+	stream >> mEmitRate;
+	if (mEmitRate > 100.0f)
+		mEmitRate = 0.5f;
 	else
-		unk13C = unk13C / 100.0f;
+		mEmitRate = mEmitRate / 100.0f;
 
 	f32 scale;
 	stream >> scale;
@@ -423,27 +424,27 @@ void TMapObjWaterSpray::load(JSUMemoryInputStream& stream)
 		scale = 1.0f;
 	else
 		scale /= 100.0f;
-	unk140.set(scale, scale, scale);
+	mParticleScale.set(scale, scale, scale);
 
 	u32 cVal;
 	stream >> cVal;
-	unk14C.r = cVal;
+	mParticleColor.r = cVal;
 	stream >> cVal;
-	unk14C.g = cVal;
+	mParticleColor.g = cVal;
 	stream >> cVal;
-	unk14C.b = cVal;
+	mParticleColor.b = cVal;
 	stream >> cVal;
-	unk14C.a = cVal;
+	mParticleColor.a = cVal;
 }
 
 TMapObjWaterSpray::TMapObjWaterSpray(const char* name)
     : TMapObjBase(name)
-    , unk138(0x154)
-    , unk13C(0.0f)
-    , unk14C(-1)
+    , mParticleId(SCENE_MAPOBJ_MS_SHIB_CYL1)
+    , mEmitRate(0.0f)
+    , mParticleColor(-1)
 {
-	unk14C.set(0, 0, 0, 0);
-	unk140.zero();
+	mParticleColor.set(0, 0, 0, 0);
+	mParticleScale.zero();
 }
 
 void THideObjInfo::action(s32 param_1)
@@ -454,7 +455,7 @@ void THideObjInfo::action(s32 param_1)
 		TMapObjBase::throwObjFromPointWithRot(obj, mPosition, mRotation, unk48,
 		                                      unk4C);
 		if (obj->isActorType(ACTOR_TYPE_COIN))
-			((TItem*)obj)->unk14C = param_1;
+			((TItem*)obj)->mDisappearAfterFrames = param_1;
 	}
 }
 
@@ -604,11 +605,11 @@ void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 	u32 tmp;
 	stream >> tmp;
-	unk138 = tmp;
-	if (unk138 <= 0)
-		unk138 = 1200;
+	mRedCoinTimer = tmp;
+	if (mRedCoinTimer <= 0)
+		mRedCoinTimer = 1200;
 	else
-		unk138 *= 10;
+		mRedCoinTimer *= 10;
 
 	u8 shineId = SMS_getShineIDofExStage(SMSGetMarDirector()->getCurrentMap());
 	if (shineId != 0xFF
@@ -620,11 +621,11 @@ void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 TRedCoinSwitch::TRedCoinSwitch(const char* name)
     : TMapObjBase(name)
 {
-	unk138   = 0;
-	unk13C.r = 0xFF;
-	unk13C.g = 0xFF;
-	unk13C.b = 0xFF;
-	unk13C.a = 0xFF;
+	mRedCoinTimer = 0;
+	unk13C.r      = 0xFF;
+	unk13C.g      = 0xFF;
+	unk13C.b      = 0xFF;
+	unk13C.a      = 0xFF;
 }
 
 void TBasketReverse::kill()

@@ -1715,14 +1715,16 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mSpecialModel != nullptr) {
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				mSpecialModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
+				MTXCopy(mModel->getModel()->getAnmMtx(i),
+				        mSpecialModel->getAnmMtx(i));
 			}
 			mSpecialModel->calcWeightEnvelopeMtx();
 		} else {
 			emarioActor->calcAnm();
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				emarioModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
+				MTXCopy(mModel->getModel()->getAnmMtx(i),
+				        emarioModel->getAnmMtx(i));
 			}
 			emarioModel->calcWeightEnvelopeMtx();
 			mBrushModel->setBaseTRMtx(emarioModel->getAnmMtx(mJointIdHandL));

@@ -841,7 +841,9 @@ void TGorogoro::init(TLiveManager* param_1)
 	unk1A4 = (TRollEnemySaveLoadParams*)getSaveParam();
 
 	TMirrorActor* mirror = new TMirrorActor("ゴロゴロin鏡");
-	mirror->init(getMActor()->getModel(), 0x18);
+	mirror->init(getMActor()->getModel(),
+	             TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+	                 | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 	mTevKColor.a = 0xFF;
 
 	ResTIMG* img
@@ -849,14 +851,16 @@ void TGorogoro::init(TLiveManager* param_1)
 	if (img) {
 		SMS_ChangeTextureAll(getMActor()->getModel()->getModelData(), "M_dummy",
 		                     *img);
-		SMS_ChangeTextureAll(mirror->unk14->getModelData(), "M_dummy", *img);
+		SMS_ChangeTextureAll(mirror->mMirrorModel->getModelData(), "M_dummy",
+		                     *img);
 	}
 
 	for (u16 i = 0;
 	     i < getMActor()->getModel()->getModelData()->getMaterialNum(); ++i) {
 		SMS_InitPacket_OneTevKColor(getMActor()->getModel(), i, GX_KCOLOR0,
 		                            &mTevKColor);
-		SMS_InitPacket_OneTevKColor(mirror->unk14, i, GX_KCOLOR0, &mTevKColor);
+		SMS_InitPacket_OneTevKColor(mirror->mMirrorModel, i, GX_KCOLOR0,
+		                            &mTevKColor);
 	}
 
 	mMActor->setJointCallback(1, RollEnemyBodyCallback);

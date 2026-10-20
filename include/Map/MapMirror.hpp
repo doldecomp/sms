@@ -101,6 +101,7 @@ public:
 
 	// fabricated
 	MActorAnmData* getUnk20() { return unk20; }
+	int& getUnk18() { return unk18; }
 	bool isUnk18Present() { return unk18 != -1 ? true : false; }
 
 public:

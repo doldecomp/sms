@@ -1357,7 +1357,7 @@ void TBigWatermelon::startEvent()
 				item->mVelocity.y = randY;
 				item->mVelocity.z = randZ;
 				item->offLiveFlag(LIVE_FLAG_UNK10);
-				item->unk14C = 960;
+				item->mDisappearAfterFrames = 960;
 			}
 		}
 		makeObjDead();

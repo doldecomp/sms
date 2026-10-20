@@ -40,15 +40,15 @@ void TItemManager::resetNozzleBoxesModel(int nozzle_type)
 	}
 }
 
-TShine* TItemManager::makeShineAppearWithTime(const char* shine_name,
-                                              int param_2, f32 x, f32 y, f32 z,
-                                              int param_6, int param_7,
-                                              int param_8)
+TShine* TItemManager::makeShineAppearWithTime(const char* shine_name, int time,
+                                              f32 x, f32 y, f32 z,
+                                              int appear_wait_time,
+                                              int move_up_time, int float_time)
 {
 	TShine* shine
 	    = static_cast<TShine*>(JDrama::TNameRefGen::search(shine_name));
 	shine->mPosition.set(x, y, z);
-	shine->appearWithTime(param_2, param_6, param_7, param_8);
+	shine->appearWithTime(time, appear_wait_time, move_up_time, float_time);
 	return shine;
 }
 

@@ -895,7 +895,10 @@ void TShiningStone::load(JSUMemoryInputStream& stream)
 		    names[i], gpMapObjManager->getMActorAnmData(), 3, 0x10020000);
 		unk68[i]->getModel()->setBaseTRMtx(mtx);
 		TMirrorActor* mirror = new TMirrorActor("太陽石in鏡");
-		mirror->init(unk68[i]->getModel(), 0x1a);
+		mirror->init(unk68[i]->getModel(),
+		             TMirrorActor::MIRROR_ACTOR_FLAG_ALWAYS
+		                 | TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+		                 | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 	}
 	unk6C = SMS_MakeMActorWithAnmData("/scene/mapObj/ShiningStone.bmd",
 	                                  gpMapObjManager->getMActorAnmData(), 3,
@@ -1184,7 +1187,7 @@ void TMammaMirrorMapOperator::hide(int i)
 void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & 2) {
-		const int& mirrorIdx = gpMirrorModelManager->unk18;
+		const int& mirrorIdx = gpMirrorModelManager->getUnk18();
 		if (gpMirrorModelManager->isUnk18Present()) {
 			const JGeometry::TVec3<f32>& camPos
 			    = gpMirrorModelManager->unk24->getUnk98();

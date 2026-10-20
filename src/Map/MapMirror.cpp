@@ -379,6 +379,6 @@ TMirrorModelManager::TMirrorModelManager(const char* name)
 
 void TMirrorMapDrawBuf::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!(cue & CUE_DRAW) || (gpMirrorModelManager->unk18 != -1 ? true : false))
+	if (!(cue & CUE_DRAW) || gpMirrorModelManager->isUnk18Present())
 		JDrama::TDrawBufObj::perform(cue, graphics);
 }

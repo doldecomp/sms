@@ -311,10 +311,10 @@ public:
 	static void initPacketMatColor(J3DModel*, GXTevRegID, const GXColorS10*);
 	static bool isFruit(THitActor*);
 	static bool isCoin(THitActor*);
-	static void throwObjFromPointWithRot(TMapObjBase*,
-	                                     const JGeometry::TVec3<f32>&,
-	                                     const JGeometry::TVec3<f32>&, f32,
-	                                     f32);
+	static void throwObjFromPointWithRot(TMapObjBase* obj,
+	                                     const JGeometry::TVec3<f32>& point,
+	                                     const JGeometry::TVec3<f32>& rot,
+	                                     f32 speed, f32 up_speed);
 	void throwObjToFrontFromPoint(TMapObjBase*, const JGeometry::TVec3<f32>&,
 	                              f32, f32) const;
 	void throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,

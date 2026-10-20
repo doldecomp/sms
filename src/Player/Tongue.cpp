@@ -82,10 +82,10 @@ void TYoshiTongue::initInLoadAfter()
 	grp->getChildren().push_back(this);
 
 	TMirrorActor* ma = new TMirrorActor("ヨッシー舌in鏡");
-	ma->init(mModel, 4);
+	ma->init(mModel, TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 
 	TMirrorActor* mb = new TMirrorActor("ヨッシー舌先in鏡");
-	mb->init(mTipModel, 4);
+	mb->init(mTipModel, TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 }
 
 void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,

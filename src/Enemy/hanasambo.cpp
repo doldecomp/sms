@@ -300,8 +300,8 @@ void TSamboFlowerManager::loadAfter()
 	for (int i = 0; i < getObjNum(); i++) {
 		if (strstr(getObj(i)->getName(), "フラワー（コイン用）")) {
 			TSamboFlower* flower = (TSamboFlower*)getObj(i);
-			if (flower->unk158 < unk58)
-				counts[flower->unk158]++;
+			if (flower->mCoinUnitIndex < unk58)
+				counts[flower->mCoinUnitIndex]++;
 		}
 	}
 
@@ -312,7 +312,7 @@ void TSamboFlowerManager::loadAfter()
 		if (strstr(gpItemManager->getObj(i)->getName(),
 		           "コイン（フラワー用）")) {
 			TFlowerCoin* coin = (TFlowerCoin*)gpItemManager->getObj(i);
-			int idx           = coin->unk158;
+			int idx           = coin->mCoinUnitIndex;
 			if (idx < unk58) {
 				unk54[idx]->unk18 = coin;
 				unk54[idx]->unk4  = coin->mPosition;
@@ -324,8 +324,8 @@ void TSamboFlowerManager::loadAfter()
 	for (int i = 0; i < getObjNum(); i++) {
 		if (strstr(getObj(i)->getName(), "フラワー（コイン用）")) {
 			TSamboFlower* flower = (TSamboFlower*)getObj(i);
-			if (flower->unk158 < unk58)
-				unk54[flower->unk158]->add(flower);
+			if (flower->mCoinUnitIndex < unk58)
+				unk54[flower->mCoinUnitIndex]->add(flower);
 		}
 	}
 
@@ -384,7 +384,7 @@ void TSamboFlower::load(JSUMemoryInputStream& param_1)
 {
 	TSpineEnemy::load(param_1);
 	param_1 >> unk15C;
-	param_1 >> unk158;
+	param_1 >> mCoinUnitIndex;
 	unk160 = true;
 	reset();
 	offLiveFlag(LIVE_FLAG_UNK800);

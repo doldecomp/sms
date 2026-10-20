@@ -41,7 +41,7 @@ public:
 	static f32 mVibrationEndHeight;
 	static f32 mVibrationDecreaseRate;
 
-public:
+private:
 	/* 0x148 */ f32 unk148;
 	/* 0x14C */ f32 unk14C;
 	/* 0x150 */ u8 unk150;
@@ -55,7 +55,7 @@ class TMapObjBillboard : public THideObjBase {
 public:
 	TMapObjBillboard(const char* name = "看板")
 	    : THideObjBase(name)
-	    , unk150(nullptr)
+	    , mSwingSound(nullptr)
 	{
 	}
 
@@ -64,8 +64,8 @@ public:
 
 	void swing(THitActor*);
 
-public:
-	/* 0x150 */ JAISound* unk150;
+private:
+	/* 0x150 */ JAISound* mSwingSound;
 };
 
 class TMapObjChangeStage : public TMapObjBase {
@@ -105,7 +105,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void touchPlayer(THitActor*);
 
-public:
+private:
 	/* 0x138 */ u32 unk138;
 };
 
@@ -135,10 +135,10 @@ public:
 	virtual void calc();
 
 public:
-	/* 0x138 */ u32 unk138;
-	/* 0x13C */ f32 unk13C;
-	/* 0x140 */ JGeometry::TVec3<f32> unk140;
-	/* 0x14C */ JUtility::TColor unk14C;
+	/* 0x138 */ u32 mParticleId;
+	/* 0x13C */ f32 mEmitRate;
+	/* 0x140 */ JGeometry::TVec3<f32> mParticleScale;
+	/* 0x14C */ JUtility::TColor mParticleColor;
 };
 
 class THideObjInfo : public JDrama::TActor {
@@ -184,7 +184,7 @@ public:
 	virtual void control();
 
 public:
-	/* 0x138 */ s32 unk138;
+	/* 0x138 */ s32 mRedCoinTimer;
 	/* 0x13C */ GXColorS10 unk13C;
 };
 

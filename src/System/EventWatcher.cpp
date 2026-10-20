@@ -1197,11 +1197,11 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 	TRedCoinSwitch* swtch = static_cast<TRedCoinSwitch*>(
 	    JDrama::TNameRefGen::search("赤コイン用スイッチ"));
 
-	int iVar9 = swtch->unk138;
+	int timer = swtch->mRedCoinTimer;
 	for (int i = 0; i < 8; ++i) {
 		TCoinRed* coin
 		    = (TCoinRed*)gpItemManager->makeObjAppeared(ACTOR_TYPE_COIN_RED);
-		coin->killByTimer(iVar9 - coin->unk150);
+		coin->killByTimer(timer - coin->mUntouchableFrames);
 		coin->unk158.set(coin->mPosition.x, coin->mPosition.y + 70.0f,
 		                 coin->mPosition.z);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
@@ -1212,7 +1212,7 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 		                             &coin->getUnk158(), 0, nullptr);
 	}
 	SMSGetMarDirector()->getConsole()->startAppearTimer(1,
-	                                                    iVar9 * 0.008333334f);
+	                                                    timer * 0.008333334f);
 	SMSGetMarDirector()->startTimer();
 	SMSGetMarDirector()->getConsole()->startMoveTimer(10);
 	interp->push();
