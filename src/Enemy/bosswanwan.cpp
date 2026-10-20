@@ -1026,9 +1026,60 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 	return false;
 }
 
-DEFINE_NERVE(TNerveBWJump, TLiveActor) { }
+DEFINE_NERVE(TNerveBWJump, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+
+	if (spine->getTime() == 0) {
+		const JGeometry::TVec3<f32>& targetPos
+		    = boss->unk104.unk0 != nullptr ? boss->unk104.unk0->mPosition
+		                                   : boss->unk104.unk4;
+
+		f32 speed       = boss->unk124->unkC;
+		boss->mVelocity = boss->calcVelocityToJumpToY(targetPos, speed,
+		                                              boss->getGravityY());
+
+		boss->mLiveFlag |= 0x80;
+		boss->unk16C = 0;
+	}
+
+	if (boss->isReachedToGoal()) {
+		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
+		return true;
+	}
+
+	boss->walkToCurPathNode(0.0f, boss->mTurnSpeed, 0.0f);
+	return false;
+}
+
 DEFINE_NERVE(TNerveBWStun, TLiveActor) { }
-DEFINE_NERVE(TNerveBWWakeup, TLiveActor) { }
+
+DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+
+	if (spine->getTime() == 0) {
+		// TODO: setFrameCtrl and getAnmPtr are getting
+		// out-of-line even though inlining is necessary since they are
+		// defined in a template class (duplicate of TNerveBWBark)
+		boss->mMtxCalc->joinAnm(6);
+		boss->mMActor->mAnmBck->setFrameCtrl(6);
+		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
+
+		boss->setAnmSound(bwanwan_bastable[6]);
+		boss->mMActor->setBtpFromIndex(2);
+		boss->unk16C = 0;
+		boss->unk168 = 0.0f;
+	}
+
+	if (boss->mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
+		return true;
+	}
+
+	return false;
+}
 
 DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 {
@@ -1085,6 +1136,77 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 }
 
 DEFINE_NERVE(TNerveBWDie, TLiveActor) { }
-DEFINE_NERVE(TNerveBWJumpAway, TLiveActor) { }
-DEFINE_NERVE(TNerveBWShake, TLiveActor) { }
+
+DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+
+	if (spine->getTime() == 0) {
+		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
+		    BW_HEAD_START, 40.0f, boss->getGravityY());
+
+		TPathNode goal(BW_HEAD_START);
+		boss->unkF4  = goal;
+		boss->unk104 = goal;
+		boss->unk114.clear();
+
+		boss->mVelocity = vel;
+		boss->mLiveFlag |= 0x80;
+		boss->unk16C = 0;
+	}
+
+	if (boss->unk188) {
+		spine->pushAfterCurrent(&TNerveBWFall::theNerve());
+		return true;
+	}
+
+	if (boss->isReachedToGoal()) {
+		boss->mPosition = BW_HEAD_START;
+
+		boss->unk124->mPrevIdx = -1;
+		boss->unk124->mCurrIdx = -1;
+		boss->goToShortestNextGraphNode();
+
+		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
+		return true;
+	}
+
+	boss->walkToCurPathNode(0.0f, boss->mTurnSpeed, 0.0f);
+	return false;
+}
+
+DEFINE_NERVE(TNerveBWShake, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+	MActor* actor     = boss->mMActor;
+
+	if (spine->getTime() == 0) {
+
+		// maybe something like "joinAnmAndSetFrameCtrl"
+		boss->mMtxCalc->joinAnm(2);
+		boss->mMActor->mAnmBck->setFrameCtrl(2);
+		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
+		boss->setAnmSound(bwanwan_bastable[2]);
+	}
+
+	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+		if (boss->unk17C != 0) {
+			JPABaseEmitter* emit = gpMarioParticleManager->emit(
+			    BWAN_JPA_JUMP_SMOKE, &boss->mPicket->mPosition, 0, nullptr);
+			if (emit != nullptr) {
+				JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
+				emit->setGlobalScale(scale);
+			}
+		}
+
+		boss->unk194 = 0;
+		boss->unk17C = 0;
+		SMSGetMSound()->startSoundActor(0x2967, &boss->mPicket->mPosition, 0,
+		                                nullptr, 0, 4);
+		return true;
+	}
+	return false;
+}
+
 DEFINE_NERVE(TNerveBWFall, TLiveActor) { }

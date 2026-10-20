@@ -15,9 +15,9 @@
 #include <Enemy/Enemy.hpp>
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <MarioUtil/MtxUtil.hpp>
 #include <GC2D/GCConsole2.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 
 class TBossWanwan;
 class TBWParams;
@@ -167,6 +167,16 @@ public:
 	}
 
 	// fabricated
+	/*
+	const void joinAnmAndSetFrameCtrl(int index)
+	{
+	    mMtxCalc->joinAnm(index);
+	    mMActor->mAnmBck->setFrameCtrl(index);
+	    J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+	    unk178             = 10.0f / (f32)ctrl->getEnd();
+	    setAnmSound(bwanwan_bastable[index]);
+	}
+	*/
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
@@ -180,7 +190,7 @@ public:
 	/* 0x17C */ BOOL unk17C;
 	/* 0x180 */ u32 unk180;
 	/* 0x184 */ u32 unk184;
-	/* 0x188 */ u32 unk188;
+	/* 0x188 */ BOOL unk188;
 	/* 0x18C */ u8 msInvincible;
 	/* 0x18D */ u8 unk18D;
 	/* 0x190 */ s32 unk190;
