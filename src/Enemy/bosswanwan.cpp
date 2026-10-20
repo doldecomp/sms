@@ -122,6 +122,15 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
 	}
 }
 
+void TBossWanwan::changeBck(int index)
+{
+	mMtxCalc->joinAnm(index);
+	mMActor->mAnmBck->setFrameCtrl(index);
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
+	unk178             = 10.0f / (f32)ctrl->getEnd();
+	setAnmSound(bwanwan_bastable[index]);
+}
+
 TBossWanwan::TBossWanwan(const char* name)
     : TSpineEnemy(name)
     , mPicket(nullptr)
@@ -986,7 +995,7 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 		// defined in a template class
 		boss->mMtxCalc->joinAnm(0);
 		boss->mMActor->mAnmBck->setFrameCtrl(0);
-		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
 		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
 
 		boss->setAnmSound(bwanwan_bastable[0]);
@@ -1064,7 +1073,7 @@ DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
 		// defined in a template class (duplicate of TNerveBWBark)
 		boss->mMtxCalc->joinAnm(6);
 		boss->mMActor->mAnmBck->setFrameCtrl(6);
-		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
 		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
 
 		boss->setAnmSound(bwanwan_bastable[6]);
@@ -1181,13 +1190,8 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 	MActor* actor     = boss->mMActor;
 
 	if (spine->getTime() == 0) {
-
-		// maybe something like "joinAnmAndSetFrameCtrl"
-		boss->mMtxCalc->joinAnm(2);
-		boss->mMActor->mAnmBck->setFrameCtrl(2);
-		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
-		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
-		boss->setAnmSound(bwanwan_bastable[2]);
+		// maybe "changeBck"
+		boss->changeBck(2);
 	}
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {

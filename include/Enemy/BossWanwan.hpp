@@ -66,6 +66,8 @@ public:
 	virtual ~TBWLeash();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
+
+	// UNUSED
 	void pullTail(const JGeometry::TVec3<f32>& pos);
 	void invalidateAllCollisions();
 
@@ -139,6 +141,9 @@ public:
 	// fabricated
 	TBWParams* getSaveParam() const { return (TBWParams*)getSaveParam(); }
 
+	// fabricated
+	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
+
 	// UNUSED
 	bool isHeadPulled()
 	{
@@ -146,9 +151,6 @@ public:
 		           ? true
 				   : false;
 	};
-
-	// fabricated
-	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
 
 	bool isMarioInSight();
 	bool isTailBurning();
@@ -159,24 +161,13 @@ public:
 	void rollNextGraphNode();
 	void reverseNextGraphNode();
 	void showMessage();
+	void changeBck(int);
 
 	// fabricated
 	const TNerveBase<TLiveActor>* getLatestNerve()
 	{
 		return mSpine->getLatestNerve();
 	}
-
-	// fabricated
-	/*
-	const void joinAnmAndSetFrameCtrl(int index)
-	{
-	    mMtxCalc->joinAnm(index);
-	    mMActor->mAnmBck->setFrameCtrl(index);
-	    J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(0);
-	    unk178             = 10.0f / (f32)ctrl->getEnd();
-	    setAnmSound(bwanwan_bastable[index]);
-	}
-	*/
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
