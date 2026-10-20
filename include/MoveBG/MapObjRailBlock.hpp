@@ -31,7 +31,7 @@ public:
 	bool checkRailFlag(u32 flag) { return unk140 & flag ? TRUE : FALSE; }
 	f32 getUnk144() const { return unk144; }
 
-public:
+protected:
 	/* 0x138 */ TGraphTracer* unk138;
 	/* 0x13C */ int unk13C;
 	/* 0x140 */ u32 unk140;
@@ -52,7 +52,7 @@ public:
 	void setGroundCollision();
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 
-public:
+private:
 	/* 0x150 */ u16 unk150;
 	/* 0x152 */ u16 unk152;
 	/* 0x154 */ f32 unk154;
@@ -67,7 +67,7 @@ public:
 	void calcRootMatrix();
 	void control();
 
-public:
+private:
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;
@@ -85,7 +85,7 @@ public:
 	void calcRootMatrix();
 	void control();
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 };
@@ -96,7 +96,7 @@ public:
 	BOOL calcRecycle();
 	void load(JSUMemoryInputStream&);
 
-public:
+private:
 	/* 0x15C */ GXColorS10 unk15C;
 	/* 0x164 */ GXColorS10 unk164;
 };

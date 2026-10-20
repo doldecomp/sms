@@ -18,7 +18,7 @@ public:
 		STATE_UNK2 = 0x2,
 	};
 
-public:
+private:
 	/* 0x138 */ s32 unk138;
 	/* 0x13C */ TMapObjBase** unk13C;
 	/* 0x140 */ f32 unk140;
@@ -37,7 +37,7 @@ public:
 		STATE_UNK2 = 0x2,
 	};
 
-public:
+protected:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -64,7 +64,7 @@ public:
 		STATE_UNK4 = 0x4,
 	};
 
-public:
+private:
 	/* 0x14C */ s32 unk14C;
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ f32 unk154;
@@ -108,16 +108,16 @@ public:
 	virtual void initMapObj();
 	TShellCup(const char* name = "シェルカップ");
 
-public:
-	/* 0x138 */ TPinnaShell unk138[6];
-	/* 0x498 */ TCoin* unk498;
-	/* 0x49C */ TCoin* unk49C;
-	/* 0x4A0 */ TCoin* unk4A0;
-
 	static f32 mOpenRotMax;
 	static f32 mShellDamageRot;
 	static f32 mWaterOpenAccel;
 	static f32 mCloseAccel;
+
+private:
+	/* 0x138 */ TPinnaShell unk138[6];
+	/* 0x498 */ TCoin* unk498;
+	/* 0x49C */ TCoin* unk49C;
+	/* 0x4A0 */ TCoin* unk4A0;
 };
 
 class TMerrygoround : public TMapObjBase {
@@ -129,7 +129,7 @@ public:
 
 	static f32 mRotSpeed;
 
-public:
+private:
 	/* 0x138 */ TMapObjBase* unk138[2];
 	/* 0x140 */ u16 unk140[2];
 	/* 0x144 */ class TMerryPole* unk144[9];
@@ -150,7 +150,7 @@ public:
 	{
 	}
 
-public:
+private:
 	/* 0x13C */ u8 unk13C;
 };
 
@@ -165,7 +165,7 @@ public:
 		unk148.zero();
 	}
 
-public:
+private:
 	/* 0x148 */ JGeometry::TVec3<f32> unk148;
 };
 
@@ -206,7 +206,7 @@ public:
 	{
 	}
 
-public:
+private:
 	/* 0x138 */ u8 unk138;
 	/* 0x139 */ u8 unk139[3];
 	/* 0x13C */ JGeometry::TVec3<f32> unk13C;
@@ -218,7 +218,7 @@ public:
 	virtual void initMapObj();
 	TPinnaCoaster(const char* name = "コースター");
 
-public:
+private:
 	/* 0x138 */ MActor* unk138;
 	/* 0x13C */ s32 unk13C;
 	/* 0x140 */ JGeometry::TVec3<f32> unk140;

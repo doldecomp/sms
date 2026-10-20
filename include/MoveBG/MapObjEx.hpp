@@ -11,7 +11,7 @@ public:
 
 	static f32 mDownHeight;
 
-public:
+private:
 	/* 0x150 */ s32 unk150;
 };
 
@@ -27,7 +27,7 @@ public:
 
 	TJointCoin(const char* name = "ジョイントコイン");
 
-public:
+protected:
 	/* 0x138 */ MActor* unk138;
 	/* 0x13C */ s32 unk13C;
 	/* 0x140 */ TMapObjBase** unk140;

@@ -18,7 +18,7 @@ public:
 	virtual void appearObjFromPoint(const JGeometry::TVec3<f32>& point);
 	virtual void emitEffect();
 
-public:
+protected:
 	/* 0x138 */ TMapObjBase* mHiddenObj;
 	/* 0x13C */ f32 mAppearSpeed;
 	/* 0x140 */ f32 mAppearYSpeed;
@@ -72,7 +72,7 @@ public:
 	int getFruitNum(int param_1) const;
 	void reset();
 
-public:
+private:
 	/* 0x154 */ u32 unk154[5];
 };
 
@@ -112,6 +112,7 @@ public:
 		STATE_FINISHED      = 3,
 	};
 
+private:
 	/* 0x150 */ bool mReverse;
 	/* 0x154 */ f32 mSprayProgressSpeed;
 	/* 0x158 */ f32 mBarrelProgressSpeed;

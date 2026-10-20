@@ -192,7 +192,7 @@ public:
 	// fabricated
 	THitActor* getFruit() { return unk150; }
 
-public:
+private:
 	/* 0x148 */ MActor* unk148;
 	/* 0x14C */ u32 unk14C;
 	/* 0x150 */ THitActor* unk150;

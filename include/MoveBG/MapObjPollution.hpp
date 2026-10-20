@@ -12,7 +12,7 @@ public:
 
 	TPolluterBase(const char* name = "汚染オブジェ");
 
-public:
+private:
 	/* 0x138 */ MActor* unk138;
 };
 
@@ -24,7 +24,7 @@ public:
 
 	TRevivalPolluter();
 
-public:
+private:
 	/* 0x0 */ u32 mLayerIndex;
 	/* 0x4 */ ResTIMG* mRevivalStampTex;
 	/* 0x8 */ u16 unk8;
@@ -42,7 +42,7 @@ public:
 
 	TMapObjRevivalPollution(const char* name = "復活落書き");
 
-public:
+private:
 	/* 0x10 */ s32 unk10;
 	/* 0x14 */ TRevivalPolluter* unk14;
 };

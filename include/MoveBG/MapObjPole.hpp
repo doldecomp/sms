@@ -12,7 +12,7 @@ public:
 	void load(JSUMemoryInputStream&);
 	TMapObjPole(const char*);
 
-public:
+private:
 	/* 0x68 */ f32 unk68;
 	/* 0x6C */ f32 unk6C;
 };
@@ -46,7 +46,7 @@ public:
 	void registerObj(TMapObjPole*);
 	TMapObjPoleManager(const char* name = "旗管理");
 
-public:
+private:
 	/* 0x10 */ TMapObjPoleInfo unk10[1];
 };
 

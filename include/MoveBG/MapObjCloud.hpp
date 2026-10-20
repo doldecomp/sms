@@ -21,7 +21,7 @@ public:
 	static f32 mCushionSpeed;
 	static f32 mScaleSpeed;
 
-public:
+private:
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ int unk158;

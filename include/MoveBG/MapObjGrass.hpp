@@ -15,7 +15,7 @@ public:
 	bool shouldDrawNear() const { return unk78 == 0 ? true : false; }
 	bool shouldDrawFar() const { return unk78 == 1 ? true : false; }
 
-public:
+private:
 	/* 0x68 */ s32 unk68;
 	/* 0x6C */ JGeometry::TVec3<f32>* unk6C;
 	/* 0x70 */ JGeometry::TVec3<s16>* unk70;

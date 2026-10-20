@@ -73,7 +73,7 @@ public:
 	{
 	}
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -93,7 +93,7 @@ public:
 		STATE_UNK2 = 2,
 	};
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -109,7 +109,7 @@ public:
 	virtual void loadAfter();
 	TWireBell(const char* name = "ワイヤー鈴（紫）");
 
-public:
+private:
 	/* 0x138 */ s32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -133,7 +133,7 @@ public:
 		STATE_UNK2 = 2,
 	};
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 };
 
@@ -157,7 +157,7 @@ public:
 		STATE_UNK3 = 3,
 	};
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -200,7 +200,7 @@ public:
 	{
 	}
 
-public:
+private:
 	/* 0x138 */ TCannon* unk138;
 	/* 0x13C */ JGeometry::TVec3<f32> unk13C;
 	/* 0x148 */ JGeometry::TVec3<f32> unk148;
@@ -217,7 +217,7 @@ public:
 	{
 	}
 
-public:
+private:
 	/* 0x68 */ TMareEventDepressWall* unk68;
 };
 

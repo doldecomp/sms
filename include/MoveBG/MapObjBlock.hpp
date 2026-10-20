@@ -57,7 +57,7 @@ public:
 	// Fabricated
 	JGeometry::SMatrix34C<f32>& getDefaultMtx() { return mDefaultMtx; }
 
-public:
+protected:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -146,7 +146,7 @@ public:
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
-public:
+private:
 	/* 0x150 */ bool mMonteBlockBroken;
 };
 

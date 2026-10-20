@@ -65,7 +65,7 @@ public:
 	virtual f32 getRollAngY(int) const { return 0.0f; }
 	virtual f32 getRollAngZ(int) const { return 0.0f; }
 
-public:
+protected:
 	/* 0x138 */ f32* unk138;
 	/* 0x13C */ f32* unk13C;
 	/* 0x140 */ f32 unk140;
@@ -148,7 +148,7 @@ public:
 	virtual void initMapObj();
 	virtual u32 touchWater(THitActor*);
 
-public:
+private:
 	/* 0x138 */ TMapCollisionWarp* unk138;
 	/* 0x13C */ u8 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -167,7 +167,7 @@ public:
 	virtual u32 touchWater(THitActor*);
 	virtual f32 getRollAngY(int idx) const { return unk13C[idx]; }
 
-public:
+private:
 	/* 0x168 */ TMapCollisionWarp* mMapCollisionWarp;
 	/* 0x16C */ bool unk16C;
 	/* 0x16D */ u8 unk16D;
@@ -181,7 +181,7 @@ public:
 	virtual void calcRootMatrix();
 	virtual void initMapObj();
 
-public:
+private:
 	/* 0x138 */ TMapCollisionWarp* unk138;
 	/* 0x13C */ u8 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -201,7 +201,7 @@ public:
 	virtual void initMapObj();
 	virtual u32 getSDLModelFlag() const;
 
-public:
+private:
 	/* 0x138 */ TMultiBtk* mMultiBtk;
 };
 
@@ -217,7 +217,7 @@ public:
 	virtual void initMapObj();
 	virtual u32 getSDLModelFlag() const;
 
-public:
+private:
 	/* 0x138 */ TMultiBtk* mMultiBtk;
 };
 
@@ -228,7 +228,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
-public:
+private:
 	/* 0x68 */ s16 unk68;
 	/* 0x6A */ s16 unk6A;
 };
@@ -275,7 +275,7 @@ public:
 	virtual void touchActor(THitActor*);
 	virtual void afterFinishedAnim();
 
-public:
+private:
 	/* 0x174 */ bool unk174;
 };
 

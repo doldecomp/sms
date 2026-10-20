@@ -134,7 +134,7 @@ public:
 
 	virtual Mtx* getRootJointMtx() const;
 
-public:
+protected:
 	/* 0xF4 */ TBathtubGrip* unkF4;
 	/* 0xF8 */ int unkF8;
 };

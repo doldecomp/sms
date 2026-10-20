@@ -14,7 +14,7 @@ public:
 
 	TMapObjFloatOnSea(const char* name = "海に浮くオブジェ");
 
-public:
+private:
 	/* 0x194 */ TMapObjLibWave* unk194;
 	/* 0x198 */ int unk198;
 	/* 0x19C */ int unk19C;

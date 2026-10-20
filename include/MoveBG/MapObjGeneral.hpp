@@ -76,7 +76,7 @@ public:
 		STATE_WAITING_TO_APPEAR = 0xA,
 	};
 
-public:
+protected:
 	/* 0x138 */ const TBGCheckData* unk138; // TODO: maybe not const
 	/* 0x13C */ const TBGCheckData* unk13C;
 	/* 0x140 */ f32 unk140;

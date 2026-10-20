@@ -32,7 +32,7 @@ public:
 
 	static int mWaitTime;
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -62,7 +62,7 @@ public:
 	static f32 mRotSpeed;
 	static int mWaitTime;
 
-public:
+private:
 	/* 0x138 */ TMapObjBase* unk138;
 	/* 0x13C */ u32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -106,7 +106,7 @@ public:
 	static int mWaitTime;
 	static f32 mSubmarineSurfaceTransY;
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ TMapObjBase* unk13C;
 	/* 0x140 */ int unk140;
@@ -124,7 +124,7 @@ public:
 
 	virtual void initMapObj();
 
-public:
+private:
 	/* 0x154 */ GXColorS10 unk154;
 };
 
@@ -163,7 +163,7 @@ public:
 	static f32 mObjSpeedY;
 	static int mFruitLiveTime;
 
-public:
+private:
 	/* 0x138 */ TFruitSwitch* unk138[2];
 	/* 0x140 */ int unk140;
 };

@@ -30,7 +30,7 @@ public:
 	f32 getMoveTexPos1(float) const;
 	void initDraw();
 
-public:
+private:
 	/* 0x10 */ f32 unk10;
 	/* 0x14 */ f32 unk14;
 	/* 0x18 */ f32 unk18;

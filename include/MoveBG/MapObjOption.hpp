@@ -20,7 +20,7 @@ public:
 		STATE_ROCKING = 2,
 	};
 
-public:
+private:
 	/* 0x138 */ u8 unk138;
 	/* 0x13C */ TFileLoadBlock* unk13C;
 	/* 0x140 */ TFileLoadBlock* unk140;
@@ -34,7 +34,7 @@ public:
 	void init();
 	TMapObjOptionWall(const char*);
 
-public:
+private:
 	/* 0x68 */ TMapCollisionWarp* unk68;
 };
 

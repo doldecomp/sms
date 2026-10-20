@@ -17,7 +17,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void touchPlayer(THitActor*);
 
-public:
+private:
 	/* 0x138 */ bool unk138;
 };
 
@@ -134,7 +134,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void calc();
 
-public:
+private:
 	/* 0x138 */ u32 mParticleId;
 	/* 0x13C */ f32 mEmitRate;
 	/* 0x140 */ JGeometry::TVec3<f32> mParticleScale;
@@ -148,7 +148,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void action(s32);
 
-public:
+private:
 	/* 0x44 */ u32 unk44;
 	/* 0x48 */ f32 unk48;
 	/* 0x4C */ f32 unk4C;
@@ -164,7 +164,7 @@ public:
 
 	void registerObjInfo(THideObjInfo*);
 
-public:
+private:
 	/* 0x138 */ s32 unk138;
 	/* 0x13C */ s32 unk13C;
 	/* 0x140 */ s32 unk140;

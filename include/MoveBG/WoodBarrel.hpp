@@ -28,7 +28,7 @@ public:
 	static int mBreakTime;
 	static int mOilBarrelFlushTime;
 
-public:
+private:
 	/* 0x148 */ TWaterEmitInfo* unk148;
 };
 
