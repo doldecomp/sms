@@ -70,7 +70,7 @@ int TMarDirector::loadResource()
 
 	gpMarioParticleManager->createEffectInfoAry(effectNum);
 	gpResourceManager = new JPAResourceManager(0x201, 0x800, nullptr);
-	gpMarioParticleManager->unk3B8 = new JPAEmitterManager(
+	gpMarioParticleManager->mEmitterManager = new JPAEmitterManager(
 	    gpResourceManager, particleNum, emitterNum, emitterNum * 2, nullptr);
 	gpEmitterManager4D2 = new JPAEmitterManager(
 	    nullptr, VERSION_SELECT(270, GMSJ01(200)), 0x20, 0x40, nullptr);

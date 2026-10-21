@@ -17,9 +17,10 @@ TMarioEmitterCallBackBindToMtxPtr emitterCallBackBindToMtxPtr;
 TMarioEmitterCallBackBindToSRTMtxPtr emitterCallBackBindToSRTMtxPtr;
 TMarioParticleManager* gpMarioParticleManager = nullptr;
 
-TEmitterViewObj::TEmitterViewObj(JPAEmitterManager* param_1, const char* name)
+TEmitterViewObj::TEmitterViewObj(JPAEmitterManager* emitter_manager,
+                                 const char* name)
     : JDrama::TViewObj(name)
-    , unk10(param_1)
+    , unk10(emitter_manager)
 {
 }
 
@@ -77,10 +78,10 @@ void TMarioEmitterCallBackBindToSRTMtxPtr::execute(JPABaseEmitter* emitter)
 void TMarioEmitterCallBackBindToSRTMtxPtr::draw(JPABaseEmitter*) { }
 
 TMarioParticleManager::TInfo::TInfo()
-    : unk0(nullptr)
-    , unk4(nullptr)
 {
-	unk4            = nullptr;
+	mIdentity       = nullptr;
+	mBoundPos       = nullptr;
+	mBoundMtx       = nullptr;
 	mPrevFrameFlags = 0;
 	mFlags          = 0;
 	mEmitter        = nullptr;
@@ -88,80 +89,83 @@ TMarioParticleManager::TInfo::TInfo()
 
 TMarioParticleManager::TMarioParticleManager(const char* name)
     : JDrama::TViewObj(name)
-    , unk3B8(nullptr)
+    , mEmitterManager(nullptr)
 {
 }
 
-void TMarioParticleManager::createEffectInfoAry(int param_1)
+void TMarioParticleManager::createEffectInfoAry(
+    int max_simultaneous_loop_emitters)
 {
-	unk3B4 = param_1;
-	for (int i = 0; i < 214; ++i)
-		unk10[i] = new TInfo[unk3B4];
-	for (int i = 0; i < 19; ++i)
-		unk368[i] = new TInfo[unk3B4];
+	mMaxSimultaneousLoopEmitters = max_simultaneous_loop_emitters;
+	for (int i = 0; i < LOOP_NORMAL_COUNT; ++i)
+		mLoopNormalInfo[i] = new TInfo[mMaxSimultaneousLoopEmitters];
+	for (int i = 0; i < LOOP_INDIRECT_COUNT; ++i)
+		mLoopIndirectInfo[i] = new TInfo[mMaxSimultaneousLoopEmitters];
 }
 
 void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		for (int i = SMSGetAnmFrameRate(); i > 0; --i)
-			unk3B8->calc();
+			mEmitterManager->calc();
 
-		for (int i = 486; i < 505; ++i) {
-			for (int j = 0; j < unk3B4; ++j) {
-				TInfo* info = &unk368[i - 486][j];
-				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
-				    && (info->mFlags & INFO_FLAG_UNK4)) {
+		for (int i = LOOP_INDIRECT_FIRST;
+		     i < LOOP_INDIRECT_FIRST + LOOP_INDIRECT_COUNT; ++i) {
+			for (int j = 0; j < mMaxSimultaneousLoopEmitters; ++j) {
+				TInfo* info = &mLoopIndirectInfo[i - LOOP_INDIRECT_FIRST][j];
+				if ((info->mPrevFrameFlags & INFO_FLAG_KEEP_ALIVE)
+				    && (info->mFlags & INFO_FLAG_KEEP_ALIVE)) {
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
-						emitTry(i, info, 3);
+						emitTry(i, info, EFFECT_LOOP_INDIRECT);
 					} else if (emitter->isEnableDeleteEmitter()) {
 						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
-						emitTry(i, info, 3);
+						emitTry(i, info, EFFECT_LOOP_INDIRECT);
 					}
 				}
-				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
-				    && !(info->mFlags & INFO_FLAG_UNK4)) {
+				if ((info->mPrevFrameFlags & INFO_FLAG_KEEP_ALIVE)
+				    && !(info->mFlags & INFO_FLAG_KEEP_ALIVE)) {
 					if (JPABaseEmitter* emitter = info->mEmitter) {
 						emitter->becomeInvalidEmitter();
-						info->mEmitter = nullptr;
-						info->unk0     = nullptr;
-						info->unk4     = nullptr;
-						info->unk4     = nullptr;
+						info->mEmitter  = nullptr;
+						info->mIdentity = nullptr;
+						info->mBoundPos = nullptr;
+						info->mBoundMtx = nullptr;
 					}
 				}
 				info->mPrevFrameFlags = info->mFlags;
-				info->offFlag(INFO_FLAG_UNK4);
+				info->offFlag(INFO_FLAG_KEEP_ALIVE);
 			}
 		}
 
-		for (int i = 253; i < 467; ++i) {
-			for (int j = 0; j < unk3B4; ++j) {
-				TInfo* info = &unk10[i - 253][j];
-				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
-				    && (info->mFlags & INFO_FLAG_UNK4)) {
+		for (int i = LOOP_NORMAL_FIRST;
+		     i < LOOP_NORMAL_FIRST + LOOP_NORMAL_COUNT; ++i) {
+			for (int j = 0; j < mMaxSimultaneousLoopEmitters; ++j) {
+				TInfo* info = &mLoopNormalInfo[i - LOOP_NORMAL_FIRST][j];
+				if ((info->mPrevFrameFlags & INFO_FLAG_KEEP_ALIVE)
+				    && (info->mFlags & INFO_FLAG_KEEP_ALIVE)) {
 					JPABaseEmitter* emitter = info->mEmitter;
 					if (emitter == nullptr) {
-						emitTry(i, info, 1);
+						emitTry(i, info, EFFECT_LOOP_NORMAL);
 					} else if (emitter->isEnableDeleteEmitter()) {
 						emitter->becomeInvalidEmitter();
 						info->mEmitter = nullptr;
-						emitTry(i, info, 1);
+						emitTry(i, info, EFFECT_LOOP_NORMAL);
 					}
 				}
-				if ((info->mPrevFrameFlags & INFO_FLAG_UNK4)
-				    && !(info->mFlags & INFO_FLAG_UNK4)) {
+				if ((info->mPrevFrameFlags & INFO_FLAG_KEEP_ALIVE)
+				    && !(info->mFlags & INFO_FLAG_KEEP_ALIVE)) {
 					if (JPABaseEmitter* emitter = info->mEmitter) {
 						emitter->becomeInvalidEmitter();
-						info->mEmitter = nullptr;
-						info->unk0     = nullptr;
-						info->unk4     = nullptr;
-						info->unk4     = nullptr;
+						info->mEmitter  = nullptr;
+						info->mIdentity = nullptr;
+						info->mBoundPos = nullptr;
+						info->mBoundMtx = nullptr;
 					}
 				}
 				info->mPrevFrameFlags = info->mFlags;
-				info->offFlag(INFO_FLAG_UNK4);
+				info->offFlag(INFO_FLAG_KEEP_ALIVE);
 			}
 		}
 	}
@@ -172,64 +176,65 @@ void TMarioParticleManager::perform(u32 cue, JDrama::TGraphics* graphics)
 			JPADrawInfo drawInfo(graphics->getViewMtx());
 			drawInfo.setFovy(gpCamera->getFovy());
 			drawInfo.setAspect(gpCamera->getAspect());
-			unk3B8->draw(&drawInfo, 2);
-			unk3B8->draw(&drawInfo, 3);
+			mEmitterManager->draw(&drawInfo, EFFECT_ONETIME_INDIRECT);
+			mEmitterManager->draw(&drawInfo, EFFECT_LOOP_INDIRECT);
 		}
 
 		if (cue & CUE_UNK80000000) {
 			JPADrawInfo drawInfo(graphics->getViewMtx());
-			unk3B8->draw(&drawInfo, 0);
-			unk3B8->draw(&drawInfo, 1);
+			mEmitterManager->draw(&drawInfo, EFFECT_ONETIME_NORMAL);
+			mEmitterManager->draw(&drawInfo, EFFECT_LOOP_NORMAL);
 		}
 	}
 }
 
-JPABaseEmitter*
-TMarioParticleManager::emit(s32 param_1, const JGeometry::TVec3<f32>* param_2,
-                            u8 param_3, const void* param_4)
+JPABaseEmitter* TMarioParticleManager::emit(s32 id,
+                                            const JGeometry::TVec3<f32>* pos,
+                                            u8 effect_type,
+                                            const void* identity)
 {
-	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_3, 0, nullptr, nullptr))
+	if (effect_type == EFFECT_ONETIME_NORMAL)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        *pos, id, effect_type, 0, nullptr, nullptr))
 			return emitter;
 
-	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {
+	if (effect_type == EFFECT_ONETIME_INDIRECT)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        *pos, id, effect_type, 0, nullptr, nullptr)) {
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
 			    emitter->mDraw.getMainTextureID(0));
 			return emitter;
 		}
 
-	if (param_3 == 1) {
-		int tmp     = param_1 - 253;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk10[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_NORMAL) {
+		int table_idx = id - LOOP_NORMAL_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopNormalInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundPos = pos;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
 
-	if (param_3 == 3) {
-		int tmp     = param_1 - 486;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk368[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_INDIRECT) {
+		int table_idx = id - LOOP_INDIRECT_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopIndirectInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundPos = pos;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
@@ -237,22 +242,23 @@ TMarioParticleManager::emit(s32 param_1, const JGeometry::TVec3<f32>* param_2,
 	return nullptr;
 }
 
-JPABaseEmitter* TMarioParticleManager::emitWithRotate(
-    s32 param_1, const JGeometry::TVec3<f32>* param_2, s16 param_3, s16 param_4,
-    s16 param_5, u8 param_6, const void* param_7)
+JPABaseEmitter*
+TMarioParticleManager::emitWithRotate(s32 id, const JGeometry::TVec3<f32>* pos,
+                                      s16 rot_x, s16 rot_y, s16 rot_z,
+                                      u8 effect_type, const void* identity)
 {
 
-	if (param_6 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_6, 0, nullptr, nullptr)) {
-			emitter->setRotation(param_3, param_4, param_5);
+	if (effect_type == EFFECT_ONETIME_NORMAL)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        *pos, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setRotation(rot_x, rot_y, rot_z);
 			return emitter;
 		}
 
-	if (param_6 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_6, 0, nullptr, nullptr)) {
-			emitter->setRotation(param_3, param_4, param_5);
+	if (effect_type == EFFECT_ONETIME_INDIRECT)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        *pos, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setRotation(rot_x, rot_y, rot_z);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
 			    emitter->mDraw.getMainTextureID(0));
@@ -263,22 +269,22 @@ JPABaseEmitter* TMarioParticleManager::emitWithRotate(
 }
 
 JPABaseEmitter*
-TMarioParticleManager::emitAndBindToPosPtr(s32 param_1,
-                                           const JGeometry::TVec3<f32>* param_2,
-                                           u8 param_3, const void* param_4)
+TMarioParticleManager::emitAndBindToPosPtr(s32 id,
+                                           const JGeometry::TVec3<f32>* pos,
+                                           u8 effect_type, const void* identity)
 {
-	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setUserWork((uintptr_t)param_2);
+	if (effect_type == EFFECT_ONETIME_NORMAL)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        *pos, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setUserWork((uintptr_t)pos);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToPosPtr);
 			return emitter;
 		}
 
-	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        *param_2, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setUserWork((uintptr_t)param_2);
+	if (effect_type == EFFECT_ONETIME_INDIRECT)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        *pos, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setUserWork((uintptr_t)pos);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToPosPtr);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
@@ -286,34 +292,34 @@ TMarioParticleManager::emitAndBindToPosPtr(s32 param_1,
 			return emitter;
 		}
 
-	if (param_3 == 1) {
-		int tmp     = param_1 - 253;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk10[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_NORMAL) {
+		int table_idx = id - LOOP_NORMAL_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopNormalInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->onFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundPos = pos;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
 
-	if (param_3 == 3) {
-		int tmp     = param_1 - 486;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk368[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_INDIRECT) {
+		int table_idx = id - LOOP_INDIRECT_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopIndirectInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->onFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundPos = pos;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
@@ -321,28 +327,27 @@ TMarioParticleManager::emitAndBindToPosPtr(s32 param_1,
 	return nullptr;
 }
 
-JPABaseEmitter* TMarioParticleManager::emitAndBindToMtxPtr(s32 param_1,
-                                                           MtxPtr param_2,
-                                                           u8 param_3,
-                                                           const void* param_4)
+JPABaseEmitter* TMarioParticleManager::emitAndBindToMtxPtr(s32 id, MtxPtr mtx,
+                                                           u8 effect_type,
+                                                           const void* identity)
 {
 	JGeometry::TVec3<f32> local_24;
-	local_24.x = param_2[0][3];
-	local_24.y = param_2[1][3];
-	local_24.z = param_2[2][3];
+	local_24.x = mtx[0][3];
+	local_24.y = mtx[1][3];
+	local_24.z = mtx[2][3];
 
-	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setUserWork((uintptr_t)param_2);
+	if (effect_type == EFFECT_ONETIME_NORMAL)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        local_24, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setUserWork((uintptr_t)mtx);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToMtxPtr);
 			return emitter;
 		}
 
-	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setUserWork((uintptr_t)param_2);
+	if (effect_type == EFFECT_ONETIME_INDIRECT)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        local_24, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setUserWork((uintptr_t)mtx);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToMtxPtr);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
@@ -350,34 +355,34 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtxPtr(s32 param_1,
 			return emitter;
 		}
 
-	if (param_3 == 1) {
-		int tmp     = param_1 - 253;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk10[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_NORMAL) {
+		int table_idx = id - LOOP_NORMAL_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopNormalInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->onFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundMtx = mtx;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
 
-	if (param_3 == 3) {
-		int tmp     = param_1 - 486;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk368[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_INDIRECT) {
+		int table_idx = id - LOOP_INDIRECT_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopIndirectInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->onFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundMtx = mtx;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
@@ -385,27 +390,26 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtxPtr(s32 param_1,
 	return nullptr;
 }
 
-JPABaseEmitter*
-TMarioParticleManager::emitAndBindToSRTMtxPtr(s32 param_1, MtxPtr param_2,
-                                              u8 param_3, const void* param_4)
+JPABaseEmitter* TMarioParticleManager::emitAndBindToSRTMtxPtr(
+    s32 id, MtxPtr mtx, u8 effect_type, const void* identity)
 {
 	JGeometry::TVec3<f32> local_24;
-	local_24.x = param_2[0][3];
-	local_24.y = param_2[1][3];
-	local_24.z = param_2[2][3];
+	local_24.x = mtx[0][3];
+	local_24.y = mtx[1][3];
+	local_24.z = mtx[2][3];
 
-	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setUserWork((uintptr_t)param_2);
+	if (effect_type == EFFECT_ONETIME_NORMAL)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        local_24, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setUserWork((uintptr_t)mtx);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToSRTMtxPtr);
 			return emitter;
 		}
 
-	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setUserWork((uintptr_t)param_2);
+	if (effect_type == EFFECT_ONETIME_INDIRECT)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        local_24, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setUserWork((uintptr_t)mtx);
 			emitter->setEmitterCallBackPtr(&emitterCallBackBindToSRTMtxPtr);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
@@ -413,34 +417,34 @@ TMarioParticleManager::emitAndBindToSRTMtxPtr(s32 param_1, MtxPtr param_2,
 			return emitter;
 		}
 
-	if (param_3 == 1) {
-		int tmp     = param_1 - 253;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk10[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_NORMAL) {
+		int table_idx = id - LOOP_NORMAL_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopNormalInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->onFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundMtx = mtx;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
 
-	if (param_3 == 3) {
-		int tmp     = param_1 - 486;
-		int idx     = getAvailableIdx(tmp, param_3, param_4);
-		TInfo* info = &unk368[tmp][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_INDIRECT) {
+		int table_idx = id - LOOP_INDIRECT_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopIndirectInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->onFlag(INFO_FLAG_BIND_TO_SRT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
-		info->unk4 = param_2;
-		info->unk0 = param_4;
+		info->mBoundMtx = mtx;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr)
 			return info->mEmitter;
 	}
@@ -448,27 +452,26 @@ TMarioParticleManager::emitAndBindToSRTMtxPtr(s32 param_1, MtxPtr param_2,
 	return nullptr;
 }
 
-JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 param_1,
-                                                        MtxPtr param_2,
-                                                        u8 param_3,
-                                                        const void* param_4)
+JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 id, MtxPtr mtx,
+                                                        u8 effect_type,
+                                                        const void* identity)
 {
 	JGeometry::TVec3<f32> local_24;
-	local_24.x = param_2[0][3];
-	local_24.y = param_2[1][3];
-	local_24.z = param_2[2][3];
+	local_24.x = mtx[0][3];
+	local_24.y = mtx[1][3];
+	local_24.z = mtx[2][3];
 
-	if (param_3 == 0)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setGlobalRTMatrix(param_2);
+	if (effect_type == EFFECT_ONETIME_NORMAL)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        local_24, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setGlobalRTMatrix(mtx);
 			return emitter;
 		}
 
-	if (param_3 == 2)
-		if (JPABaseEmitter* emitter = unk3B8->createSimpleEmitterID(
-		        local_24, param_1, param_3, 0, nullptr, nullptr)) {
-			emitter->setGlobalRTMatrix(param_2);
+	if (effect_type == EFFECT_ONETIME_INDIRECT)
+		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		        local_24, id, effect_type, 0, nullptr, nullptr)) {
+			emitter->setGlobalRTMatrix(mtx);
 			emitter->mDraw.swapImage(
 			    gpScreenTexture->getTexture()->getTexInfo(),
 			    emitter->mDraw.getMainTextureID(0));
@@ -479,42 +482,42 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 param_1,
 }
 
 JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
-    s32 param_1, const JGeometry::TVec3<f32>* param_2, u8 param_3,
-    JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* param_4,
-    const void* param_5)
+    s32 id, const JGeometry::TVec3<f32>* pos, u8 effect_type,
+    JPACallBackBase2<JPABaseEmitter*, JPABaseParticle*>* callback,
+    const void* identity)
 {
-	if (param_3 == 1) {
-		int type    = param_1 - 253;
-		int idx     = getAvailableIdx(type, param_3, param_5);
-		TInfo* info = &unk10[type][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_NORMAL) {
+		int table_idx = id - LOOP_NORMAL_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopNormalInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
-		info->unk4 = param_2;
-		info->unk0 = param_5;
+		info->mBoundPos = pos;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr) {
-			info->mEmitter->setParticleCallBackPtr(param_4);
+			info->mEmitter->setParticleCallBackPtr(callback);
 			return info->mEmitter;
 		}
 	}
 
-	if (param_3 == 3) {
-		int type    = param_1 - 486;
-		int idx     = getAvailableIdx(type, param_3, param_5);
-		TInfo* info = &unk368[type][idx];
-		info->onFlag(INFO_FLAG_UNK4);
+	if (effect_type == EFFECT_LOOP_INDIRECT) {
+		int table_idx = id - LOOP_INDIRECT_FIRST;
+		int idx       = getAvailableIdx(table_idx, effect_type, identity);
+		TInfo* info   = &mLoopIndirectInfo[table_idx][idx];
+		info->onFlag(INFO_FLAG_KEEP_ALIVE);
 		info->offFlag(INFO_FLAG_BIND_TO_POS);
 		info->offFlag(INFO_FLAG_BIND_TO_RT_MTX);
 		info->offFlag(INFO_FLAG_BIND_TO_SRT_MTX);
-		info->unk4 = param_2;
-		info->unk0 = param_5;
+		info->mBoundPos = pos;
+		info->mIdentity = identity;
 		if (info->mEmitter == nullptr)
-			emitTry(param_1, info, param_3);
+			emitTry(id, info, effect_type);
 		if (info->mEmitter != nullptr) {
-			info->mEmitter->setParticleCallBackPtr(param_4);
+			info->mEmitter->setParticleCallBackPtr(callback);
 			return info->mEmitter;
 		}
 	}
@@ -522,72 +525,72 @@ JPABaseEmitter* TMarioParticleManager::emitParticleCallBack(
 	return nullptr;
 }
 
-void TMarioParticleManager::emitTry(s32 param_1,
-                                    TMarioParticleManager::TInfo* param_2,
-                                    u8 param_3)
+void TMarioParticleManager::emitTry(s32 id, TMarioParticleManager::TInfo* info,
+                                    u8 effect_type)
 {
-	if (param_2->checkFlag(INFO_FLAG_BIND_TO_POS)) {
-		param_2->mEmitter = unk3B8->createSimpleEmitterID(
-		    *(const JGeometry::TVec3<f32>*)param_2->unk4, param_1, param_3, 0,
-		    nullptr, nullptr);
+	if (info->checkFlag(INFO_FLAG_BIND_TO_POS)) {
+		info->mEmitter = mEmitterManager->createSimpleEmitterID(
+		    *info->mBoundPos, id, effect_type, 0, nullptr, nullptr);
 
-		if (param_2->mEmitter != nullptr) {
-			param_2->mEmitter->setUserWork((uintptr_t)param_2->unk4);
-			param_2->mEmitter->setEmitterCallBackPtr(
-			    &emitterCallBackBindToPosPtr);
+		if (info->mEmitter != nullptr) {
+			info->mEmitter->setUserWork((uintptr_t)info->mBoundPos);
+			info->mEmitter->setEmitterCallBackPtr(&emitterCallBackBindToPosPtr);
 		}
 	} else {
-		if (param_2->checkFlag(INFO_FLAG_BIND_TO_RT_MTX
-		                       | INFO_FLAG_BIND_TO_SRT_MTX)) {
+		if (info->checkFlag(INFO_FLAG_BIND_TO_RT_MTX
+		                    | INFO_FLAG_BIND_TO_SRT_MTX)) {
 			JGeometry::TVec3<f32> local_14;
-			local_14.x = ((MtxPtr)param_2->unk4)[0][3];
-			local_14.y = ((MtxPtr)param_2->unk4)[1][3];
-			local_14.z = ((MtxPtr)param_2->unk4)[2][3];
+			local_14.x = info->mBoundMtx[0][3];
+			local_14.y = info->mBoundMtx[1][3];
+			local_14.z = info->mBoundMtx[2][3];
 
-			param_2->mEmitter = unk3B8->createSimpleEmitterID(
-			    local_14, param_1, param_3, 0, nullptr, nullptr);
+			info->mEmitter = mEmitterManager->createSimpleEmitterID(
+			    local_14, id, effect_type, 0, nullptr, nullptr);
 
-			if (param_2->mEmitter != nullptr) {
-				param_2->mEmitter->setUserWork((uintptr_t)param_2->unk4);
-				if (param_2->checkFlag(0x10))
-					param_2->mEmitter->setEmitterCallBackPtr(
-					    &emitterCallBackBindToSRTMtxPtr);
+			if (info->mEmitter != nullptr) {
+				info->mEmitter->setUserWork((uintptr_t)info->mBoundMtx);
+				if (info->checkFlag(INFO_FLAG_BIND_TO_RT_MTX))
+					info->mEmitter->setEmitterCallBackPtr(
+					    &emitterCallBackBindToMtxPtr);
 				else
-					param_2->mEmitter->setEmitterCallBackPtr(
+					info->mEmitter->setEmitterCallBackPtr(
 					    &emitterCallBackBindToSRTMtxPtr);
 			}
 		} else {
-			param_2->mEmitter = unk3B8->createSimpleEmitterID(
-			    *(const JGeometry::TVec3<f32>*)param_2->unk4, param_1, param_3,
-			    0, nullptr, nullptr);
+			info->mEmitter = mEmitterManager->createSimpleEmitterID(
+			    *info->mBoundPos, id, effect_type, 0, nullptr, nullptr);
 		}
 	}
 
-	if (param_3 == 3 && param_2->mEmitter != nullptr) {
-		JPABaseEmitter* emitter = param_2->mEmitter;
+	if (effect_type == EFFECT_LOOP_INDIRECT && info->mEmitter != nullptr) {
+		JPABaseEmitter* emitter = info->mEmitter;
 		emitter->mDraw.swapImage(gpScreenTexture->getTexture()->getTexInfo(),
 		                         emitter->mDraw.getMainTextureID(0));
 	}
 }
 
-int TMarioParticleManager::getAvailableIdx(s32 param_1, u8 param_2,
-                                           const void* param_3)
+int TMarioParticleManager::getAvailableIdx(s32 table_idx, u8 effect_type,
+                                           const void* identity)
 {
-	for (int i = 0; i < unk3B4; ++i) {
-		if (param_2 == 3 && unk368[param_1][i].mEmitter != nullptr
-		    && unk368[param_1][i].unk0 == param_3)
+	for (int i = 0; i < mMaxSimultaneousLoopEmitters; ++i) {
+		if (effect_type == EFFECT_LOOP_INDIRECT
+		    && mLoopIndirectInfo[table_idx][i].mEmitter != nullptr
+		    && mLoopIndirectInfo[table_idx][i].mIdentity == identity)
 			return i;
-		if (param_2 == 1 && unk10[param_1][i].mEmitter != nullptr
-		    && unk10[param_1][i].unk0 == param_3)
+		if (effect_type == EFFECT_LOOP_NORMAL
+		    && mLoopNormalInfo[table_idx][i].mEmitter != nullptr
+		    && mLoopNormalInfo[table_idx][i].mIdentity == identity)
 			return i;
 	}
 
-	for (int i = 0; i < unk3B4; ++i) {
-		if (param_2 == 3 && !unk368[param_1][i].checkFlag(0x4)
-		    && unk368[param_1][i].mEmitter == nullptr)
+	for (int i = 0; i < mMaxSimultaneousLoopEmitters; ++i) {
+		if (effect_type == EFFECT_LOOP_INDIRECT
+		    && !mLoopIndirectInfo[table_idx][i].checkFlag(INFO_FLAG_KEEP_ALIVE)
+		    && mLoopIndirectInfo[table_idx][i].mEmitter == nullptr)
 			return i;
-		if (param_2 == 1 && !unk10[param_1][i].checkFlag(0x4)
-		    && unk10[param_1][i].mEmitter == nullptr)
+		if (effect_type == EFFECT_LOOP_NORMAL
+		    && !mLoopNormalInfo[table_idx][i].checkFlag(INFO_FLAG_KEEP_ALIVE)
+		    && mLoopNormalInfo[table_idx][i].mEmitter == nullptr)
 			return i;
 	}
 

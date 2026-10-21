@@ -427,9 +427,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_MPK_FIRE_B                = 0x1D2,
 };
 
-// TODO: what is "type 2"?
-enum /* 2 */
-{
+// NOTE: name fabricated, the map has no instantiation for this type.
+enum E_SMS_EFFECT_ONETIME_INDIRECT /* 2 */ {
 	PARTICLE_MS_M_TOBIKOMI_C        = 0x1D4,
 	PARTICLE_MS_M_TOBIKOMI_S_C      = 0x1D5,
 	PARTICLE_MS_MARI_RAKUBALL       = 0x1D8,
@@ -467,38 +466,37 @@ enum E_SMS_EFFECT_LOOP_INDIRECT /* 3 */ {
 // NOTE: doing this makes inlining work out, specializations DON'T.
 template <class T> struct FabricatedParticleTypeToFlag;
 template <> struct FabricatedParticleTypeToFlag<E_SMS_EFFECT_ONETIME_NORMAL> {
-	enum { value = 0 };
+	enum { value = TMarioParticleManager::EFFECT_ONETIME_NORMAL };
 };
 template <> struct FabricatedParticleTypeToFlag<E_SMS_EFFECT_LOOP_NORMAL> {
-	enum { value = 1 };
+	enum { value = TMarioParticleManager::EFFECT_LOOP_NORMAL };
 };
 template <> struct FabricatedParticleTypeToFlag<E_SMS_EFFECT_LOOP_INDIRECT> {
-	enum { value = 3 };
+	enum { value = TMarioParticleManager::EFFECT_LOOP_INDIRECT };
 };
 
 // TODO: the fabricated setScale inline is most likely incorrect.
 
 template <class T>
-JPABaseEmitter*
-SMS_EasyEmitParticle(T param_1, const JGeometry::TVec3<f32>* param_2,
-                     const void* param_3, const JGeometry::TVec3<f32>& param_4)
+JPABaseEmitter* SMS_EasyEmitParticle(T id, const JGeometry::TVec3<f32>* pos_ptr,
+                                     const void* identity,
+                                     const JGeometry::TVec3<f32>& scale)
 {
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-	    param_1, param_2, FabricatedParticleTypeToFlag<T>::value, param_3);
+	    id, pos_ptr, FabricatedParticleTypeToFlag<T>::value, identity);
 	if (emitter)
-		emitter->setGlobalScale(param_4);
+		emitter->setGlobalScale(scale);
 	return emitter;
 }
 
 template <class T>
-JPABaseEmitter* SMS_EasyEmitParticle(T param_1, MtxPtr param_2,
-                                     const void* param_3,
-                                     const JGeometry::TVec3<f32>& param_4)
+JPABaseEmitter* SMS_EasyEmitParticle(T id, MtxPtr mtx_ptr, const void* identity,
+                                     const JGeometry::TVec3<f32>& scale)
 {
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    param_1, param_2, FabricatedParticleTypeToFlag<T>::value, param_3);
+	    id, mtx_ptr, FabricatedParticleTypeToFlag<T>::value, identity);
 	if (emitter)
-		emitter->setGlobalScale(param_4);
+		emitter->setGlobalScale(scale);
 	return emitter;
 }
 
