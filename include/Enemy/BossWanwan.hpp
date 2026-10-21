@@ -201,7 +201,6 @@ public:
 			showMessage();
 		}
 
-		// possible another inline?
 		int next = graph->getEscapeDirLimited(
 		    curr, prev, getRotDirY(mRotation.y), mPosition, 100.0f, -1);
 

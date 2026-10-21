@@ -820,11 +820,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		if (speed != 0.0f) {
 			f32 deg = (speed / 3141.5928f) * 360.0f;
 
-			// set is wrapped in another fun because its emitted out-of-line
-			JGeometry::TVec3<f32> dir;
-			u16 angle = boss->mRotation.y * 182.04445f;
-			dir.set(JMASSin(angle), 0.0f, JMASCos(angle));
-			JGeometry::TVec3<f32> dirCopy = dir;
+			JGeometry::TVec3<f32> dirCopy = boss->getRotDirY(boss->mRotation.y);
 
 			if (dirCopy.dot(vel) < 0.0f) {
 				deg = -deg;
@@ -896,7 +892,97 @@ void TBWBinder::bind(TLiveActor* actor)
 
 TBWBinder::~TBWBinder() { }
 
-void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics) { }
+void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
+{
+	if (cue & 1) {
+		mPosition = mOwner->mLeash->mRope
+		                ->mPoints[mOwner->mLeash->mRope->mNumPoints - 1]
+		                .unkC;
+
+		if (mHolder != nullptr) {
+			JGeometry::TVec3<f32> side, up, dir;
+
+			dir.set(mHolder->mPosition);
+			dir.sub(mOwner->mLeash->mRope->mPoints[0].unkC);
+			up.set(0.0f, 1.0f, 0.0f);
+
+			side.cross2(up, dir);
+			PSVECNormalize(&side, &side);
+			up.cross2(dir, side);
+			PSVECNormalize(&up, &up);
+			dir.cross2(side, up);
+			PSVECNormalize(&dir, &dir);
+
+			unk74.mMtx[0][0] = side.x;
+			unk74.mMtx[1][0] = side.y;
+			unk74.mMtx[2][0] = side.z;
+			unk74.mMtx[0][1] = up.x;
+			unk74.mMtx[1][1] = up.y;
+			unk74.mMtx[2][1] = up.z;
+			unk74.mMtx[0][2] = dir.x;
+			unk74.mMtx[1][2] = dir.y;
+			unk74.mMtx[2][2] = dir.z;
+			unk74.mMtx[0][3] = mPosition.x;
+			unk74.mMtx[1][3] = mPosition.y;
+			unk74.mMtx[2][3] = mPosition.z;
+
+			mHolder->moveRequest(mPosition);
+		}
+	}
+
+	if (cue & 2) {
+		MtxPtr mtx = mOwner->getModel()->getBaseTRMtx();
+		PSMTXIdentity(mtx);
+		JGeometry::TVec3<f32> side, up, dir;
+
+		dir.x = mPosition.x;
+		dir.y = mPosition.y;
+		dir.z = mPosition.z;
+		dir.sub(mOwner->mLeash->mRope
+		            ->mPoints[mOwner->mLeash->mRope->mNumPoints - 3]
+		            .unkC);
+
+		if (dir.squared() <= JGeometry::TUtil<f32>::epsilon()) {
+			dir.set(0.0f, 0.0f, 1.0f);
+		}
+
+		up.set(0.0f, 1.0f, 0.0f);
+		side.cross2(up, dir);
+		PSVECNormalize(&side, &side);
+		up.cross2(dir, side);
+		PSVECNormalize(&up, &up);
+		dir.cross2(side, up);
+		PSVECNormalize(&dir, &dir);
+
+		mtx[0][0] = side.x;
+		mtx[1][0] = side.y;
+		mtx[2][0] = side.z;
+		mtx[0][1] = up.x;
+		mtx[1][1] = up.y;
+		mtx[2][1] = up.z;
+		mtx[0][2] = dir.x;
+		mtx[1][2] = dir.y;
+		mtx[2][2] = dir.z;
+		mtx[0][3] = mPosition.x;
+		mtx[1][3] = mPosition.y;
+		mtx[2][3] = mPosition.z;
+
+		if (mOwner->unk17C == 0) {
+			mtx[1][3] += 70.0f;
+		}
+
+		if (isHolding()) {
+			mtx[0][3] -= dir.x * 50.0f;
+			mtx[2][3] -= dir.z * 50.0f;
+		} else {
+			mtx[0][3] -= dir.x * 60.0f;
+			mtx[2][3] -= dir.z * 60.0f;
+		}
+	}
+
+	mOwner->getMActor()->perform(cue, graphics);
+	THitActor::perform(cue, graphics);
+}
 
 BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 {
