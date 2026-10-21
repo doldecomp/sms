@@ -24,7 +24,7 @@ public:
 		u8 getGroupId() const { return mGroupID; }
 		static CMemBlock* getBlock(void* data)
 		{
-			return (CMemBlock*)((uintptr_t)data + -0x10);
+			return static_cast<CMemBlock*>(data) - 1;
 		}
 
 		u16 mUsageHeader;    // _00
