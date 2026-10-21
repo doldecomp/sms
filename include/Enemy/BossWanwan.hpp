@@ -21,6 +21,9 @@
 #include <GC2D/GCConsole2.hpp>
 #include <System/EmitterViewObj.hpp>
 #include <System/Particles.hpp>
+#include <Enemy/Graph.hpp>
+#include <Player/MarioAccess.hpp>
+#include <System/MarDirector.hpp>
 
 class TBossWanwan;
 class TBWParams;
@@ -160,11 +163,11 @@ public:
 	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
 
 	// UNUSED
-	bool isHeadPulled()
+	BOOL isHeadPulled()
 	{
-		return mPicketPullDelta.squared() >= getSaveParam()->mSLPullLimit.get()
-		           ? true
-				   : false;
+		return mPicketPullDelta.squared() < getSaveParam()->mSLPullLimit.get()
+		           ? FALSE
+				   : TRUE;
 	};
 
 	bool isMarioInSight();
@@ -185,9 +188,56 @@ public:
 	};
 
 	void takeBath();
-	void rollNextGraphNode();
-	void reverseNextGraphNode();
-	void showMessage();
+
+	void rollNextGraphNode()
+	{
+		int prev         = unk124->mPrevIdx;
+		int curr         = unk124->mCurrIdx;
+		TGraphWeb* graph = unk124->unk0;
+
+		if (prev >= 0
+		    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
+		    && gpMarDirector->mMoveTickCount >= 14400) {
+			showMessage();
+		}
+
+		// possible another inline?
+		int next = graph->getEscapeDirLimited(
+		    curr, prev, getRotDirY(mRotation.y), mPosition, 100.0f, -1);
+
+		unk124->moveTo(next);
+		setGoalPathFromGraph();
+		unk128 = 0;
+		unk12C = 0.0f;
+	}
+
+	void reverseNextGraphNode()
+	{
+		int prev         = unk124->mPrevIdx;
+		int curr         = unk124->mCurrIdx;
+		TGraphWeb* graph = unk124->unk0;
+
+		JGeometry::TVec3<f32> toMario = *gpMarioPos;
+		toMario -= mPosition;
+
+		int next
+		    = graph->getAimToDirNextIndex(prev, curr, toMario, mPosition, -1);
+		unk124->mPrevIdx = next;
+		unk124->mCurrIdx = prev;
+
+		setGoalPathFromGraph();
+		unk128 = 0;
+		unk12C = 0.0f;
+	}
+
+	void showMessage()
+	{
+		if (!(unk198 & 4)) {
+			gpMarDirector->getConsole()->startAppearBalloon(0xE001C, true);
+		}
+		unk198 |= 4;
+	}
+
 	void changeBck(int);
 
 	// fabricated
@@ -201,6 +251,22 @@ public:
 	{
 		mMtxCalc->joinAnm(idx);
 		getMActor()->mAnmBck->setFrameCtrl(idx);
+	}
+
+	// fabricated
+	static inline void setRotDirY(JGeometry::TVec3<f32>& dir, f32 rot,
+	                              f32 scale)
+	{
+		u16 angle = (int)(rot * 182.04445f);
+		dir.set(scale * JMASSin(angle), 0.0f, scale * JMASCos(angle));
+	}
+
+	// fabricated
+	JGeometry::TVec3<f32> getRotDirY(f32 rot) const
+	{
+		JGeometry::TVec3<f32> dir;
+		setRotDirY(dir, rot, 1.0f);
+		return dir;
 	}
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;

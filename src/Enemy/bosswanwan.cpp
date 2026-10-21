@@ -6,6 +6,7 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Player/MarioAccess.hpp>
+#include <Player/Mario.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Strategic/ObjManager.hpp>
 #include <Strategic/ObjModel.hpp>
@@ -963,7 +964,103 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 {
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
 
-	if (spine->getTime() == 0) { }
+	if (spine->getTime() == 0) {
+		boss->unk16C = 0;
+
+		if (!boss->mMActor->checkCurBckFromIndex(4)
+		    && !boss->mMActor->checkCurBckFromIndex(4)) {
+			if (boss->mHitPoints == 0) {
+				boss->changeBck(5);
+			} else {
+				boss->changeBck(4);
+			}
+			J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+			ctrl->setFrame(0.0f);
+			ctrl->setRate(SMSGetAnmFrameRate());
+		}
+
+		boss->mMActor->setBtpFromIndex(0);
+		J3DFrameCtrl* btpCtrl = boss->mMActor->getFrameCtrl(3);
+		btpCtrl->setFrame(0.0f);
+		btpCtrl->setRate(0.0f);
+	}
+
+	if (boss->mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)
+	    && boss->mHitPoints == 0 && !boss->mMActor->checkCurBckFromIndex(5)) {
+		boss->changeBck(5);
+		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+		ctrl->setFrame(0.0f);
+		ctrl->setRate(SMSGetAnmFrameRate());
+	}
+
+	if (boss->unk17C == 0 && boss->mPicket->isHolding()
+	    && boss->isHeadPulled()) {
+		TGraphTracer* tracer = boss->unk124;
+		TGraphWeb* graph     = tracer->unk0;
+		int prevIdx          = tracer->mPrevIdx;
+
+		JGeometry::TVec3<f32> nodePos;
+		graph->getGraphNode(prevIdx).getPoint(&nodePos);
+		nodePos -= boss->mPosition;
+
+		if (PSVECMag(&nodePos) < 400.0f && prevIdx == graph->unk10) {
+			spine->pushAfterCurrent(&TNerveBWJumpToBath::theNerve());
+			return true;
+		}
+
+		if (PSVECMag(&nodePos) < 400.0f) {
+			boss->reverseNextGraphNode();
+		}
+
+		u8 maxHp = boss->getSaveParam()->mSLBWHitPointMax.value;
+		boss->slideToCurPathNode(
+		    3.0f * (((f32)boss->mHitPoints / (f32)maxHp) * boss->mMarchSpeed),
+		    boss->mTurnSpeed);
+		return false;
+	}
+
+	if (boss->isReachedToGoal()) {
+		if (boss->jumpToNextGraphNode() >= 0) {
+			spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
+			spine->pushAfterCurrent(&TNerveBWJump::theNerve());
+		} else {
+			spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
+			boss->rollNextGraphNode();
+		}
+		return true;
+	}
+
+	boss->unk16C = 0;
+	f32 hpRatio  = (f32)boss->mHitPoints
+	               / (f32)boss->getSaveParam()->mSLBWHitPointMax.value;
+
+	if (boss->mPicket->isHolding()) {
+		f32 marioYaw = (f32)gpMarioOriginal->mIntendedYaw * (180.0f / 32768.0f);
+
+		JGeometry::TVec3<f32> marioDir = boss->getRotDirY(marioYaw);
+
+		JGeometry::TVec3<f32> diff = boss->mPosition;
+		diff -= gpMarioOriginal->mPosition;
+		PSVECNormalize(&diff, &diff);
+
+		f32 pullFactor = 1.0f;
+		pullFactor -= (f32)((gpMarioOriginal->mIntendedMag / 32.0f) * 0.75)
+		              * -diff.dot(marioDir);
+
+		if (pullFactor < 0.0f) {
+			pullFactor = 0.0f;
+		} else if (1.5f < pullFactor) {
+			pullFactor = 1.5f;
+		}
+
+		boss->slideToCurPathNode(pullFactor * (hpRatio * boss->mMarchSpeed),
+		                         boss->mTurnSpeed);
+	} else {
+		boss->slideToCurPathNode(hpRatio * boss->mMarchSpeed + 0.2f,
+		                         boss->mTurnSpeed);
+	}
+
+	return false;
 }
 
 DEFINE_NERVE(TNerveBWRoll, TLiveActor)
@@ -995,15 +1092,7 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 
 	if (spine->getTime() == 0) {
 
-		// TODO: setFrameCtrl and getAnmPtr are getting
-		// out-of-line even though inlining is necessary since they are
-		// defined in a template class
-		boss->mMtxCalc->joinAnm(0);
-		boss->mMActor->mAnmBck->setFrameCtrl(0);
-		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
-		boss->unk178       = 10.0f / (f32)ctrl->getEnd();
-
-		boss->setAnmSound(bwanwan_bastable[0]);
+		boss->changeBck(0);
 		boss->unk16C = 0;
 		boss->unk168 = 0.0f;
 
@@ -1066,7 +1155,36 @@ DEFINE_NERVE(TNerveBWJump, TLiveActor)
 	return false;
 }
 
-DEFINE_NERVE(TNerveBWStun, TLiveActor) { }
+DEFINE_NERVE(TNerveBWStun, TLiveActor)
+{
+	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
+
+	if (boss->mPicket->isHolding() && boss->isHeadPulled()) {
+		TGraphWeb* graph = boss->unk124->unk0;
+		int prevIdx      = boss->unk124->mPrevIdx;
+
+		TGraphNode& prevNode = graph->getGraphNode(prevIdx);
+		JGeometry::TVec3<f32> prevPoint;
+		prevNode.getPoint(&prevPoint);
+		prevPoint -= boss->mPosition;
+
+		if (PSVECMag(&prevPoint) < 100.0f) {
+			if (prevIdx == graph->unk10) {
+				spine->pushAfterCurrent(&TNerveBWJumpToBath::theNerve());
+				return true;
+			}
+			boss->reverseNextGraphNode();
+		}
+
+		return false;
+	} else if (spine->getTime() > boss->getSaveParam()->mSLStunTimer.get()) {
+		boss->mHitPoints = boss->getSaveParam()->mSLBWHitPointMax.get();
+		spine->pushAfterCurrent(&TNerveBWWakeup::theNerve());
+		return true;
+	}
+
+	return false;
+}
 
 DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
 {
