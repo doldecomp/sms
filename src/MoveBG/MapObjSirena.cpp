@@ -1083,7 +1083,7 @@ void TSirenabossWall::initMapObj()
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(3, getModel()->getModelData());
 	for (int i = 0; i <= 2; ++i)
-		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
+		mMultiBtk->setNthData(i, anmData->getBtkAnmData()->getAnmPtr(i));
 }
 
 void TSirenabossWall::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -1107,7 +1107,7 @@ void TSirenaCasinoRoof::initMapObj()
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(3, getModel()->getModelData());
 	for (int i = 0; i <= 2; ++i)
-		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
+		mMultiBtk->setNthData(i, anmData->getBtkAnmData()->getAnmPtr(i));
 
 	mMActor->setBrk("casino_lighting");
 }

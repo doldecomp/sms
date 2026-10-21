@@ -76,8 +76,8 @@ public:
 };
 
 struct MActorSubAnmInfo {
-	/* 0x0 */ u16 unk0;
-	/* 0x4 */ const char* unk4;
+	/* 0x0 */ u16 mJointIdx;
+	/* 0x4 */ const char* mPartsName;
 };
 
 /**
@@ -97,24 +97,24 @@ public:
 	u32 partsNameToIdx(const char*);
 
 	// fabricated
-	s32 getUnk0() { return unk0; }
-	SampleCtrlModelData* getUnk48() { return unk48; }
-	MActorAnmDataEach<J3DAnmTransformKey>* getUnk2C() { return mBckAnms; }
-	MActorAnmDataEach<J3DAnmColorKey>* getUnk30() { return mBpkAnms; }
-	MActorAnmDataEach<J3DAnmTexPattern>* getUnk34() { return mBtpAnms; }
-	MActorAnmDataEach<J3DAnmTextureSRTKey>* getUnk38() { return mBtkAnms; }
-	MActorAnmDataEach<J3DAnmTevRegKey>* getUnk3C() { return mBrkAnms; }
-	MActorAnmDataEach<J3DAnmClusterKey>* getUnk40() { return mBlkAnms; }
+	s32 getIncidentalAnmNum() { return mIncidentalAnmNum; }
+	SampleCtrlModelData* getSampleModelData() { return mSampleModelData; }
+	MActorAnmDataEach<J3DAnmTransformKey>* getBckAnmData() { return mBckAnms; }
+	MActorAnmDataEach<J3DAnmColorKey>* getBpkAnmData() { return mBpkAnms; }
+	MActorAnmDataEach<J3DAnmTexPattern>* getBtpAnmData() { return mBtpAnms; }
+	MActorAnmDataEach<J3DAnmTextureSRTKey>* getBtkAnmData() { return mBtkAnms; }
+	MActorAnmDataEach<J3DAnmTevRegKey>* getBrkAnmData() { return mBrkAnms; }
+	MActorAnmDataEach<J3DAnmClusterKey>* getBlkAnmData() { return mBlkAnms; }
 
 public:
-	/* 0x0 */ int unk0;
+	/* 0x0 */ int mIncidentalAnmNum;
 	/* 0x4 */ int mBckNum;
 	/* 0x8 */ int mBlkNum;
 	/* 0xC */ int mBpkNum;
 	/* 0x10 */ int mBtpNum;
 	/* 0x14 */ int mBtkNum;
 	/* 0x18 */ int mBrkNum;
-	/* 0x1C */ JGadget::TList<MActorSubAnmInfo> unk1C;
+	/* 0x1C */ JGadget::TList<MActorSubAnmInfo> mIncidentalAnms;
 	/* 0x2C */ MActorAnmDataEach<J3DAnmTransformKey>* mBckAnms;
 	/* 0x30 */ MActorAnmDataEach<J3DAnmColorKey>* mBpkAnms;
 	/* 0x34 */ MActorAnmDataEach<J3DAnmTexPattern>* mBtpAnms;
@@ -122,7 +122,7 @@ public:
 	/* 0x3C */ MActorAnmDataEach<J3DAnmTevRegKey>* mBrkAnms;
 	/* 0x40 */ MActorAnmDataEach<J3DAnmClusterKey>* mBlkAnms;
 	/* 0x44 */ u32 unk44;
-	/* 0x48 */ SampleCtrlModelData* unk48;
+	/* 0x48 */ SampleCtrlModelData* mSampleModelData;
 };
 
 u16 MActorCalcKeyCode(const char* name);

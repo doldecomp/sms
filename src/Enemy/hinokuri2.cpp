@@ -709,13 +709,15 @@ void THinokuri2::changeBck(int param_1)
 		    || curBck == 0xE && param_1 == 0x18
 		    || curBck == 0x16 && param_1 == 0xB
 		    || curBck == 0xB && param_1 == 0x18) {
-			unk1A0->addTransform(
-			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-			        param_1));
+			unk1A0->addTransform(getActorKeeper()
+			                         ->getMActorAnmData()
+			                         ->getBckAnmData()
+			                         ->getAnmPtr(param_1));
 		} else {
-			unk1A0->setAnmTransform(
-			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-			        param_1));
+			unk1A0->setAnmTransform(getActorKeeper()
+			                            ->getMActorAnmData()
+			                            ->getBckAnmData()
+			                            ->getAnmPtr(param_1));
 		}
 
 		getMActor()->getAnmBck()->setFrameCtrl(param_1);

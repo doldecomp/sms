@@ -691,9 +691,10 @@ void TBossPakkunMtxCalc::calcHeadDir(u16 jointIndex)
 
 void TBossPakkunMtxCalc::joinAnm(int index)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        index);
+	J3DAnmTransformKey* anm = mOwner->getActorKeeper()
+	                              ->getMActorAnmData()
+	                              ->getBckAnmData()
+	                              ->getAnmPtr(index);
 
 	if (mNewAnm == anm)
 		return;
@@ -705,9 +706,10 @@ void TBossPakkunMtxCalc::joinAnm(int index)
 
 void TBossPakkunMtxCalc::setAnm(int index)
 {
-	J3DAnmTransformKey* anm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        index);
+	J3DAnmTransformKey* anm = mOwner->getActorKeeper()
+	                              ->getMActorAnmData()
+	                              ->getBckAnmData()
+	                              ->getAnmPtr(index);
 
 	mNewAnm           = anm;
 	mOldAnm           = nullptr;
