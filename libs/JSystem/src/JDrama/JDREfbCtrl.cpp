@@ -75,7 +75,7 @@ void TEfbCtrlTex::setTexAttb(const GXTexObj& param_1)
 	GXTexWrapMode wrap_t;
 	u16 width;
 	u16 height;
-	u8 mipmap;
+	GXBool mipmap;
 
 	GXGetTexObjAll(&param_1, &mImagePtr, &width, &height, &mTexFmt, &wrap_s,
 	               &wrap_t, &mipmap);

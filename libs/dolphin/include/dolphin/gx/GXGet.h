@@ -38,7 +38,7 @@ void* GXGetTexObjData(const GXTexObj* to);
 ;
 void GXGetTexObjAll(const GXTexObj* obj, void** image_ptr, u16* width,
                     u16* height, GXTexFmt* format, GXTexWrapMode* wrap_s,
-                    GXTexWrapMode* wrap_t, u8* mipmap);
+                    GXTexWrapMode* wrap_t, GXBool* mipmap);
 void GXGetTexObjLODAll(const GXTexObj* tex_obj, GXTexFilter* min_filt,
                        GXTexFilter* mag_filt, f32* min_lod, f32* max_lod,
                        f32* lod_bias, u8* bias_clamp, u8* do_edge_lod,
