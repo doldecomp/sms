@@ -15,11 +15,11 @@ void MActorAnmBck::changeMtxCalcType(u8 type)
 {
 	mMtxCalcType = type;
 	switch (type) {
-	case MACTOR_MTX_CALC_SOFTIMAGE:
+	case MActorMtxCalcType_Softimage:
 		if (mMtxCalcSoftimage == nullptr)
 			mMtxCalcSoftimage = new J3DMtxCalcSoftimageAnm(nullptr);
 		break;
-	case MACTOR_MTX_CALC_BASIC:
+	case MActorMtxCalcType_Basic:
 		if (mMtxCalcBasic == nullptr)
 			mMtxCalcBasic = new J3DMtxCalcBasicAnm(nullptr);
 		break;
@@ -30,22 +30,22 @@ void MActorAnmBck::initSimpleMotionBlend(int param_1)
 {
 	if (!mMotionBlendCtrl) {
 		bool thing = false;
-		if (mMtxCalcType == MACTOR_MTX_CALC_BASIC)
+		if (mMtxCalcType == MActorMtxCalcType_Basic)
 			thing = true;
 		mMotionBlendCtrl = new TMotionBlendCtrl(thing, param_1);
 	}
-	mMtxCalcType = MACTOR_MTX_CALC_MOTION_BLEND;
+	mMtxCalcType = MActorMtxCalcType_MotionBlend;
 }
 
 void MActorAnmBck::initNormalMotionBlend()
 {
 	if (!mMotionBlendCtrl) {
 		bool thing = false;
-		if (mMtxCalcType == MACTOR_MTX_CALC_BASIC)
+		if (mMtxCalcType == MActorMtxCalcType_Basic)
 			thing = true;
 		mMotionBlendCtrl = new TMotionBlendCtrl(thing);
 	}
-	mMtxCalcType = MACTOR_MTX_CALC_MOTION_BLEND;
+	mMtxCalcType = MActorMtxCalcType_MotionBlend;
 }
 
 f32 MActorAnmBck::getMotionBlendRatio() const
@@ -86,10 +86,10 @@ f32 MActorAnmBck::getOldMotionBlendFrame() const
 
 void MActorAnmBck::setModel(J3DModel* model)
 {
-	u8 type = MACTOR_MTX_CALC_BASIC;
+	u8 type = MActorMtxCalcType_Basic;
 	mModel  = model;
 	if (model->getModelData()->getFlag() & J3DMLF_MtxCalcSoftImage)
-		type = MACTOR_MTX_CALC_SOFTIMAGE;
+		type = MActorMtxCalcType_Softimage;
 	changeMtxCalcType(type);
 }
 
@@ -98,19 +98,19 @@ void MActorAnmBck::updateIn()
 	J3DJoint* joint = mModel->getModelData()->getJointNodePointer(mJointIndex);
 	mCurAnmPtr->setFrame(mFrameCtrl.getFrame());
 	switch (getMtxCalcType()) {
-	case MACTOR_MTX_CALC_BASIC:
+	case MActorMtxCalcType_Basic:
 		mMtxCalcBasic->setAnmTransform(mCurAnmPtr);
 		joint->setMtxCalc(mMtxCalcBasic);
 		break;
-	case MACTOR_MTX_CALC_SOFTIMAGE:
+	case MActorMtxCalcType_Softimage:
 		mMtxCalcSoftimage->setAnmTransform(mCurAnmPtr);
 		joint->setMtxCalc(mMtxCalcSoftimage);
 		break;
-	case MACTOR_MTX_CALC_MOTION_BLEND:
+	case MActorMtxCalcType_MotionBlend:
 		joint->setMtxCalc(mMotionBlendCtrl->getMtxCalc());
 		mMotionBlendCtrl->execSimpleMotionBlend();
 		break;
-	case MACTOR_MTX_CALC_USER:
+	case MActorMtxCalcType_User:
 		joint->setMtxCalc(mUserMtxCalc);
 		break;
 	}
@@ -125,13 +125,13 @@ void MActorAnmBck::updateOut()
 
 void MActorAnmBck::setAnmFromIndex(int param_1, u16*)
 {
-	if (getMtxCalcType() == MACTOR_MTX_CALC_MOTION_BLEND && mCurAnmIdx != -1)
+	if (getMtxCalcType() == MActorMtxCalcType_MotionBlend && mCurAnmIdx != -1)
 		mMotionBlendCtrl->keepCurAnm(getData()->getAnmPtr(mCurAnmIdx),
 		                             mFrameCtrl.getFrame());
 
 	setFrameCtrl(param_1);
 
-	if (getMtxCalcType() == MACTOR_MTX_CALC_MOTION_BLEND)
+	if (getMtxCalcType() == MActorMtxCalcType_MotionBlend)
 		mMotionBlendCtrl->setNewAnm(getData()->getAnmPtr(mCurAnmIdx));
 }
 

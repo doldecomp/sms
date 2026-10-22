@@ -265,10 +265,10 @@ private:
 };
 
 enum MActorMtxCalcType {
-	MACTOR_MTX_CALC_BASIC,
-	MACTOR_MTX_CALC_SOFTIMAGE,
-	MACTOR_MTX_CALC_MOTION_BLEND,
-	MACTOR_MTX_CALC_USER,
+	MActorMtxCalcType_Basic,
+	MActorMtxCalcType_Softimage,
+	MActorMtxCalcType_MotionBlend,
+	MActorMtxCalcType_User,
 };
 
 class MActorAnmBck : public MActorAnmEach<J3DAnmTransformKey> {
@@ -276,7 +276,7 @@ public:
 	MActorAnmBck()
 	{
 		mJointIndex       = 0;
-		mMtxCalcType      = MACTOR_MTX_CALC_SOFTIMAGE;
+		mMtxCalcType      = MActorMtxCalcType_Softimage;
 		mMtxCalcBasic     = nullptr;
 		mMtxCalcSoftimage = nullptr;
 		mMotionBlendCtrl  = nullptr;
@@ -308,7 +308,7 @@ public:
 	void setCalc(J3DMtxCalc* calc)
 	{
 		mUserMtxCalc = calc;
-		mMtxCalcType = MACTOR_MTX_CALC_USER;
+		mMtxCalcType = MActorMtxCalcType_User;
 	}
 
 	void setJointIndex(u16 value) { mJointIndex = value; }
