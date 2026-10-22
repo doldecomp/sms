@@ -4,7 +4,6 @@
 #include <System/Particles.hpp>
 #include <Map/MapData.hpp>
 #include <MarioUtil/MathUtil.hpp>
-#include <M3DUtil/M3UModelMario.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <MSound/MSound.hpp>
@@ -17,9 +16,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/MActorAnm.hpp>
-
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 BOOL TMario::considerRotateStart()
 {

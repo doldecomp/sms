@@ -12,6 +12,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 void TMapWarp::changeModel(int i)
 {

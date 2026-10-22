@@ -12,6 +12,7 @@
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <M3DUtil/MActor.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>

@@ -20,8 +20,7 @@
 #include <macros.h>
 #include <stdio.h>
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 CPolarSubCamera* gpCamera;
 

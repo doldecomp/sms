@@ -52,8 +52,7 @@
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 static void dummy(Vec* v)
 {

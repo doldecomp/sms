@@ -33,9 +33,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
 static const GXColor bodyColor[4] = {
 	{ 0x40, 0xA1, 0x24, 0xFF },
 	{ 0xFF, 0x8C, 0x1C, 0xFF },

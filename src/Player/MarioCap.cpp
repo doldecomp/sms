@@ -4,16 +4,13 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <System/MarDirector.hpp>
-#include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <System/Application.hpp>
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 TMarioCap::TMarioCap(TMario* mario)
 {

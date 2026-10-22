@@ -20,9 +20,6 @@ bool SMS_isMultiPlayerMap();
 static JGeometry::TVec3<f32> cDeformedTerrainCenter(0.0f, 5000.0f, 0.0f);
 #include <System/Application.hpp>
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
 TMario::TMario()
     : TTakeActor("HitActor")
     , mYoshi(nullptr)
