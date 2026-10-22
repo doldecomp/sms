@@ -1382,7 +1382,8 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 {
 	MtxPtr result = nullptr;
 	if (mMario->onYoshi()) {
-		result = mMario->getYoshi()->getTongueMtx();
+		result = mMario->getYoshi()->mActor->getModel()->getAnmMtx(
+		    mMario->getYoshi()->mJointIdxTongue);
 	} else {
 		// This entire block is likely an inlined function.
 		s32 flag = nozzleBmdData.getFlags(mCurrentNozzle, jointIndex);
@@ -1394,7 +1395,8 @@ MtxPtr TWaterGun::getEmitMtx(int jointIndex)
 			    nozzleBmdData.getJointIndex(mCurrentNozzle, jointIndex));
 			break;
 		case 3:
-			result = mMario->getYoshi()->getTongueMtx();
+			result = mMario->getYoshi()->mActor->getModel()->getAnmMtx(
+			    mMario->getYoshi()->mJointIdxTongue);
 			break;
 		default:
 			break;

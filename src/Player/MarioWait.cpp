@@ -1,5 +1,6 @@
 #include <Player/Mario.hpp>
 #include <Player/Yoshi.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Player/WaterGun.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>

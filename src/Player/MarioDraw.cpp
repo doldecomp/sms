@@ -1513,13 +1513,12 @@ void TMario::calcBaseMtxTorocco(MtxPtr mtx)
 {
 	if (mRailType == 0) {
 		mPinaRail->calcAnm();
-		MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-		        mTorocco->getModel()->getBaseTRMtx());
+		mTorocco->getModel()->setBaseTRMtx(mPinaRail->getModel()->getAnmMtx(0));
 	}
 	if (mRailType == 1) {
 		mKoopaRail->calcAnm();
-		MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-		        mTorocco->getModel()->getBaseTRMtx());
+		mTorocco->getModel()->setBaseTRMtx(
+		    mKoopaRail->getModel()->getAnmMtx(0));
 	}
 
 	mTorocco->calcAnm();
@@ -1542,7 +1541,7 @@ void TMario::calcBaseMtxPole(MtxPtr mtx)
 	ti.mRotation.y  = mModelFaceAngle;
 	ti.mRotation.z  = 0;
 	f32 radiusAtY   = mHolder->getRadiusAtY(mPosition.y);
-	ti.mTranslate.x = mPosition.x - (radiusAtY * JMASSin(mModelFaceAngle));
+	ti.mTranslate.x = mPosition.x - radiusAtY * JMASSin(mModelFaceAngle);
 	ti.mTranslate.y = mPosition.y;
 	ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
 	J3DGetTranslateRotateMtx(ti, mtx);

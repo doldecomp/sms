@@ -1,5 +1,6 @@
 #include <Player/Mario.hpp>
 #include <Player/Yoshi.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Player/MarioEffect.hpp>
 #include <System/Particles.hpp>
 #include <System/EmitterViewObj.hpp>
