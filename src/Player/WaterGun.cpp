@@ -20,6 +20,7 @@
 #include <System/MarDirector.hpp>
 #include <System/StageUtil.hpp>
 #include <System/EmitterViewObj.hpp>
+#include <System/Particles.hpp>
 
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
@@ -778,7 +779,8 @@ void TNozzleTrigger::animation(int nozzleType)
 		     ++emitterIndex) {
 			if (mFludd->getEmitMtx(emitterIndex) != nullptr) {
 				gpMarioParticleManager->emitAndBindToMtxPtr(
-				    0x10D, mFludd->getEmitMtx(emitterIndex), 1,
+				    PARTICLE_MS_NOZZLESMOKE, mFludd->getEmitMtx(emitterIndex),
+				    1,
 				    &this[emitterIndex]); // Wth?
 			}
 		}
@@ -1125,7 +1127,7 @@ void TNozzleDeform::animation(int param)
 	if (mFludd->mEmittedWaterCount != 0) {
 		if (mFludd->getEmitMtx(0) != nullptr) {
 			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    0x10D, mFludd->getEmitMtx(0), 1, this);
+			    PARTICLE_MS_NOZZLESMOKE, mFludd->getEmitMtx(0), 1, this);
 		}
 	}
 }
@@ -1133,88 +1135,69 @@ void TNozzleDeform::animation(int param)
 TNozzleTurbo::TNozzleTurbo(const char* name, const char* prm, TWaterGun* fludd)
     : TNozzleDeform(name, prm, fludd)
 {
-	init();
 }
 
 void TNozzleTurbo::movement(const TMarioControllerWork& controllerWork)
 {
-	if (!mFludd->hasWater())
+	if (mFludd->hasWater())
 		return;
-	TNozzleBase::movement(controllerWork);
-	unk378 *= mEmitPowScale.get();
-	if (unk378 > 1.0f)
-		unk378 = 1.0f;
 
-	if (unk378 > 0.0f) {
-		f32 motorPowMin = mMotorPowMin.get();
-		f32 motorPowMax = mMotorPowMax.get();
-		f32 motorPow    = unk378 * (motorPowMax - motorPowMin) + motorPowMin;
-		mFludd->getMario()->addVelocity(motorPow * unk714);
-	}
+	TNozzleBase::movement(controllerWork);
+	unk378 = unk714;
+	mFludd->depleteWater(mDecRate.get());
+	mBomb.movement(controllerWork);
 }
 
 void TNozzleTurbo::animation(int nozzleType)
 {
-	int bckIdleOut;
-	int bckIdle;
-	int bckStart;
-	int bckSwapOut;
-	int bckSwapIn;
-
-	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
-
-	switch (nozzleType) {
-	case TWaterGun::Turbo:
-		bckIdleOut = 4;
-		bckIdle    = 2;
-		bckStart   = 3;
-		bckSwapOut = 1;
-		bckSwapIn  = 0;
-		break;
-	default:
-		return;
-	}
-
+	// The demo retains this state graph, with constant back_wg clip indices.
 	if (mFludd->isSwitchingToSecondaryNozzle())
 		mAnimationState = 4;
 	if (mFludd->isSwitchingToPrimaryNozzle())
 		mAnimationState = 3;
 
+	J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+
 	switch (mAnimationState) {
 	case 0:
-		mMActor->setBck(bckIdleOut);
-		if (!isAnmEnd())
-			return;
-		mAnimationState = 1;
+		mMActor->setBck(4);
+		if (isAnmEnd())
+			mAnimationState = 1;
 		break;
 	case 1:
-		mMActor->setBck(bckIdle);
-		if (mFludd->isEmitting())
-			return;
-		mAnimationState = 2;
-		mFludd->endDashEffect();
+		mMActor->setBck(2);
+		if (!mFludd->isEmitting())
+			mAnimationState = 2;
 		break;
 	case 2:
-		mMActor->setBck(bckStart);
-		if (mFludd->isEmitting() && unk714 > 0.0f) {
+		mMActor->setBck(3);
+		if (mFludd->isEmitting() == true)
 			mAnimationState = 0;
-			mFludd->startDashEffect();
-		}
 		break;
 	case 3:
-		mMActor->setBck(bckSwapOut);
+		mMActor->setBck(1);
 		ctrl->setFrame(-(2.0f * (mFludd->getSwitchProgress() - 0.5f) - 1.0f)
 		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		break;
 	case 4:
-		mMActor->setBck(bckSwapIn);
+		mMActor->setBck(0);
 		ctrl->setFrame(2.0f * (mFludd->getSwitchProgress() - 0.5f)
 		               * ctrl->getEnd());
 		ctrl->setRate(0.0f);
 		if (mFludd->getSwitchProgress() >= 1.0f)
 			mAnimationState = 0;
 		break;
+	}
+
+	if (mFludd->getEmittedWaterCount() != 0) {
+		// All nozzle animations in the demo disc is missing this if check
+		// TODO: add game specific checks once we have the demo disc set up as a
+		// target
+		// if (mFludd->getEmitMtx(0) != nullptr) {
+		gpMarioParticleManager->emitAndBindToMtxPtr(
+		    PARTICLE_MS_NOZZLESMOKE, mFludd->getEmitMtx(0), 1, this);
+		// }
 	}
 }
 

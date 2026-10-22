@@ -253,6 +253,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_M_MZBHAMON_A              = 0x10A,
 	PARTICLE_MS_M_MZBHAMON_C              = 0x10B,
 	PARTICLE_MS_M_AWA                     = 0x10C,
+	PARTICLE_MS_NOZZLESMOKE               = 0x10D,
 	PARTICLE_MS_M_BLUR1                   = 0x10E,
 	PARTICLE_MS_M_SLIDESAND_A             = 0x10F,
 	PARTICLE_MS_M_SLIDESAND_B             = 0x110,
