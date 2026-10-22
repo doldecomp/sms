@@ -1,4 +1,5 @@
 #include <Player/WaterGun.hpp>
+#include <Player/Yoshi.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleBase.hpp>
 #include <Player/NozzleDeform.hpp>
@@ -1407,6 +1408,8 @@ MtxPtr TWaterGun::getNozzleMtx()
 {
 	return mFluddModel->getModel()->getAnmMtx(unk1CD8);
 }
+
+J3DModel* TWaterGun::getModel() { return mFluddModel->getModel(); }
 
 void TWaterGun::setEmitPt() { }
 

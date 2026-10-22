@@ -1,4 +1,5 @@
 #include <Player/Mario.hpp>
+#include <Player/Yoshi.hpp>
 #include <JSystem/JMath.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <MarioUtil/MathUtil.hpp>

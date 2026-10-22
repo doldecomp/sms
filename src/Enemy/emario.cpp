@@ -8,6 +8,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <Player/Mario.hpp>

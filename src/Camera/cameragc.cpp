@@ -12,6 +12,7 @@
 #include <Camera/CameraJetCoaster.hpp>
 #include <Camera/CameraMapTool.hpp>
 #include <Camera/CameraMarioData.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Map/Map.hpp>

@@ -11,7 +11,6 @@
 #include <Player/MarioFlags.hpp>
 
 class TLiveActor;
-class TWaterGun;
 class TBGCheckData;
 class J3DAnmTexPattern;
 class J3DModelData;

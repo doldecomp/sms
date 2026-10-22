@@ -15,6 +15,7 @@
 #include <Player/MarioAccess.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <M3DUtil/MActorData.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>

@@ -1,5 +1,5 @@
 #include <Player/Mario.hpp>
-
+#include <Player/Yoshi.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>

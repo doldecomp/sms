@@ -1,10 +1,10 @@
 #ifndef NOZZLEBASE_HPP
 #define NOZZLEBASE_HPP
 
-#include <M3DUtil/MActor.hpp>
 #include <Player/ModelWaterManager.hpp>
 #include <System/MarioGamePad.hpp>
 
+class MActor;
 class TWaterGun;
 
 class TNozzleBase : public TParams {

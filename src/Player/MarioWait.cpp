@@ -1,4 +1,5 @@
 #include <Player/Mario.hpp>
+#include <Player/Yoshi.hpp>
 #include <Player/WaterGun.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>

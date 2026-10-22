@@ -4,11 +4,12 @@
 #include <Player/NozzleBase.hpp>
 #include <Player/NozzleTrigger.hpp>
 #include <Player/NozzleDeform.hpp>
-#include <Player/Yoshi.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundSE.hpp>
 #include <Strategic/MirrorActor.hpp>
 
+class MActor;
+class TMario;
 class TMultiMtxEffect;
 
 class TWaterGunParams : public TParams {
@@ -159,7 +160,7 @@ public:
 	BOOL suck();
 	void triggerPressureMovement(const TMarioControllerWork&);
 
-	J3DModel* getModel() { return mFluddModel->getModel(); }
+	J3DModel* getModel();
 
 	// Fabricated
 	inline BOOL hasFlag(u16 flag)

@@ -1,9 +1,9 @@
 #include <Player/Mario.hpp>
+#include <Player/Yoshi.hpp>
 #include <M3DUtil/InfectiousStrings.hpp>
 #include <Player/MarioAnimeData.hpp>
 #include <Player/MarioCap.hpp>
 #include <Player/WaterGun.hpp>
-
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
