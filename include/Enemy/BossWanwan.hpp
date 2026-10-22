@@ -32,11 +32,9 @@ class TBWLeashNode;
 class TRope;
 class TBossWanwanMtxCalc;
 
-// fabricated
-template <class T> T Wrap(T t, T l, T r);
-
 class TBWHit : public THitActor {
 public:
+	TBWHit(TBossWanwan* owner, s32 jointIndex);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
@@ -47,7 +45,7 @@ private:
 
 class TBWPicket : public TTakeActor {
 public:
-	TBWPicket(const char* name = "ボスワンワン杭");
+	TBWPicket(TBossWanwan* owner, const char* name = "ボスワンワン杭");
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
@@ -56,6 +54,7 @@ public:
 private:
 	/* 0x70 */ TBossWanwan* mOwner;
 	/* 0x74 */ TMtx34f unk74;
+	/* 0xA8 */ MActor* mActor;
 };
 
 class TBWBinder : public TBinder {
@@ -90,7 +89,6 @@ public:
 	void calcMatrix();
 	void calcTemperature();
 
-private:
 	TBWLeash* mLeash; // +0x68
 	MActor* mMActor;  // +0x6C
 	f32 mTemperature; // +0x70
@@ -274,14 +272,13 @@ public:
 	/* 0x15C */ JGeometry::TVec3<f32> mPicketPullDelta; // guessed name
 	/* 0x168 */ f32 unk168;
 	/* 0x16C */ s32 unk16C;
-	/* 0x170 */ u32 unk170;
-	/* 0x174 */ u32 unk174;
+	/* 0x170 */ TBWHit* mHits[2];
 	/* 0x178 */ f32 unk178;
 	/* 0x17C */ BOOL unk17C;
 	/* 0x180 */ u32 unk180;
 	/* 0x184 */ u32 unk184;
 	/* 0x188 */ BOOL unk188;
-	/* 0x18C */ u8 msInvincible;
+	/* 0x18C */ s8 msInvincible;
 	/* 0x18D */ u8 unk18D;
 	/* 0x190 */ s32 unk190;
 	/* 0x194 */ s8 unk194;
@@ -289,8 +286,8 @@ public:
 	/* 0x198 */ u32 unk198;
 	/* 0x19C */ u32 unk19C;
 	/* 0x1A0 */ u8 unk1A0;
-	/* 0x1A4 */ f32 unk1A4;
-	/* 0x1A8 */ f32 mWaterHitCount;
+	/* 0x1A4 */ JGeometry::TVec3<f32> unk1A4;
+	/* 0x1A8 */ s8 mWaterHitCount;
 	/* 0x1AC */ f32 unk1AC;
 	/* 0x1B0 */ TBWParams* mParams;
 	/* 0x1B4 */ u16 unk1B4;
