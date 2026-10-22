@@ -7,6 +7,13 @@
 #include <System/Application.hpp>
 #include <string.h>
 
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
 class J3DModel;
 class J3DAnmClusterKey;
 class J3DAnmTevRegKey;

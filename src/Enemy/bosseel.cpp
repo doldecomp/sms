@@ -511,7 +511,8 @@ DEFINE_NERVE(TNerveBEelTearsGenerate, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->changeMActor("tears.bmd", 2);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
+		tears->mMActor->setBckFromIndex(2);
 	}
 
 	if (tears->checkCurAnmEnd(0)) {
@@ -525,7 +526,8 @@ DEFINE_NERVE(TNerveBEelTearsMoveUp, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->changeMActor("tears.bmd", 1);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
+		tears->mMActor->setBckFromIndex(1);
 	}
 	tears->mPosition.y += tears->getTearsParams()->mSLTearsUpSpeed.get();
 	return false;
@@ -537,7 +539,8 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
-		tears->changeMActor("tears_waterhit.bmd", 3);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
+		tears->mMActor->setBckFromIndex(3);
 	}
 
 	--tears->mStateTimer;
@@ -598,7 +601,8 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
-		tears->changeMActor("tears_waterhit.bmd", 3);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
+		tears->mMActor->setBckFromIndex(3);
 		MActor* actor = tears->getMActor();
 		f32 frameRate = tears->getTearsParams()->mSLHitAnmFrameRate.get();
 		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -673,7 +677,8 @@ DEFINE_NERVE(TNerveOilBallStay, TLiveActor)
 	if (oilBall->getMActor()->checkCurBckFromIndex(3)
 	    || (oilBall->checkCurAnmEnd(0)
 	        && !oilBall->getMActor()->checkCurBckFromIndex(1))) {
-		oilBall->changeMActor("tears.bmd", 1);
+		oilBall->mMActor = oilBall->mMActorKeeper->getMActor("tears.bmd");
+		oilBall->mMActor->setBckFromIndex(1);
 	}
 	return false;
 }

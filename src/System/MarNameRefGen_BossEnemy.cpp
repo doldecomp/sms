@@ -12,6 +12,7 @@
 #include <Enemy/BossTelesa.hpp>
 #include <Enemy/BossHanachan.hpp>
 #include <System/MarNameRefGen.hpp>
+#include <M3DUtil/InfectiousStrings.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 {
