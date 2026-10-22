@@ -36,18 +36,12 @@
 // TODO: this definitely means that the no memory msg & zeros are from a
 // different header than mtx calc types
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/DummyStrings.hpp>
 
 // NOTE: has to be here for proper rodata order
 #include <Map/MapCollisionEntry.hpp>
 
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
+#include <M3DUtil/InfectiousStrings.hpp>
 
 int TSmallEnemyManager::mBlockWaitTime   = 400;
 f32 TSmallEnemyManager::mBlockMoveSpeed  = 2.0f;

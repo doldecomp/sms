@@ -9,8 +9,7 @@
 #include <Camera/Camera.hpp>
 
 // TODO: place in correct header
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/DummyStrings.hpp>
 
 TMarioEmitterCallBackBindToPosPtr emitterCallBackBindToPosPtr;
 TMarioEmitterCallBackBindToMtxPtr emitterCallBackBindToMtxPtr;

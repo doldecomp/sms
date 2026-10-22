@@ -1,8 +1,7 @@
 #include <NPC/NpcInitAnmData.hpp>
 #include <dolphin/types.h>
 
-static const char dummy3[] = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char dummy4[] = "メモリが足りません\n";
+#include <System/DummyStrings.hpp>
 
 static const TLodAnmIndex sMonteM_AnmIndex[] = {
 	{ { 19, -1 }, { 66, -1 } }, { { 14, -1 }, { 66, -1 } },

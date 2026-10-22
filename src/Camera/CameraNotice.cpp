@@ -14,8 +14,7 @@
 #include <JSystem/JMath.hpp>
 #include <Enemy/Enemy.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/DummyStrings.hpp>
 
 static const char* sNoticeActorManagerName[] = {
 	"ヒノクリマネージャー",
