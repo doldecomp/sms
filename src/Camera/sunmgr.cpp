@@ -12,7 +12,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 const char* cSunWarpPointName = "太陽ワープポイント";
 

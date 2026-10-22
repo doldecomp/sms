@@ -27,7 +27,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 #pragma dont_inline on

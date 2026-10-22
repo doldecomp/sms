@@ -34,7 +34,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)

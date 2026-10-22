@@ -16,7 +16,6 @@
 #endif
 
 // TODO: removeme
-#include <System/DummyStrings.hpp>
 
 namespace {
 

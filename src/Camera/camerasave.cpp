@@ -1,6 +1,6 @@
 #include <Camera/camerasave.hpp>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TCamSaveNotice::TCamSaveNotice()
     : TParams("/Camera/camera_bossA.prm")

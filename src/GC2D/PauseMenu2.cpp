@@ -34,7 +34,6 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 TPauseMenu2::TPauseMenu2(const char* pName)
     : JDrama::TViewObj(pName)

@@ -1,7 +1,7 @@
 #include <NPC/NpcInitAnmData.hpp>
 #include <dolphin/types.h>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 static const TLodAnmIndex sMonteM_AnmIndex[] = {
 	{ { 19, -1 }, { 66, -1 } }, { { 14, -1 }, { 66, -1 } },

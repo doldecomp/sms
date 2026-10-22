@@ -1,6 +1,6 @@
 #include "Animal/AnimalSave.hpp"
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TAnimalSaveIndividual::TAnimalSaveIndividual(const char* prm)
     : TParams(prm)

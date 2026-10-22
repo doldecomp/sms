@@ -1,7 +1,7 @@
 #include <Camera/Camera.hpp>
 #include <Camera/CameraJetCoaster.hpp>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 const char* CPolarSubCamera::mCamKindNameSaveFile[73] = {
 	"/Camera/kindFollow.prm",

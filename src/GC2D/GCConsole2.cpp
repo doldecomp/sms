@@ -47,7 +47,6 @@ bool SMS_isDivingMap();
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 JUTPoint TGCConsole2::cDownTopPoint(0, -100);
 JUTPoint TGCConsole2::cDownMidPoint(0, 30);

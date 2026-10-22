@@ -14,8 +14,7 @@
 #include <JSystem/JMath.hpp>
 #include <Enemy/Enemy.hpp>
 
-#include <System/DummyStrings.hpp>
-
+#include <System/Application.hpp>
 static const char* sNoticeActorManagerName[] = {
 	"ヒノクリマネージャー",
 	"ヒノクリ２マネージャー",

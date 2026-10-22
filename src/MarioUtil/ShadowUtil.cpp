@@ -23,8 +23,6 @@
 #include <dolphin/gx.h>
 #include <math.h>
 
-#include <System/DummyStrings.hpp>
-
 TMBindShadowParts::TMBindShadowParts(J3DModel* param_1, u8 param_2,
                                      TMBindShadowBody* param_3, f32 param_4)
     : mMinRadius(0.01f)

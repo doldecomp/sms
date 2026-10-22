@@ -9,7 +9,6 @@
 #include <Camera/Camera.hpp>
 
 // TODO: place in correct header
-#include <System/DummyStrings.hpp>
 
 TMarioEmitterCallBackBindToPosPtr emitterCallBackBindToPosPtr;
 TMarioEmitterCallBackBindToMtxPtr emitterCallBackBindToMtxPtr;

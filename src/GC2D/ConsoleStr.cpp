@@ -21,8 +21,6 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-#include <System/DummyStrings.hpp>
-
 JUTPoint TConsoleStr::cShineGetRight1(150, -50);
 JUTPoint TConsoleStr::cShineGetLeft1(-21, 7);
 JUTPoint TConsoleStr::cShineGetRight2(0, 0);

@@ -1,6 +1,6 @@
 #include <Enemy/BossHanachanChangeSaveParams.hpp>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TBossHanachanCommonSaveParams::TBossHanachanCommonSaveParams(const char* path)
     : TParams(path)

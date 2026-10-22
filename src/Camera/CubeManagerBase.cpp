@@ -5,7 +5,7 @@
 #include <Player/MarioAccess.hpp>
 #include <string.h>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TCubeManagerBase* gpCubeCamera;
 TCubeManagerBase* gpCubeMirror;

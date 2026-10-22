@@ -1,5 +1,5 @@
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapCollisionData.hpp>

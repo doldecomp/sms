@@ -11,7 +11,6 @@
 #include <version.h>
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-#include <System/DummyStrings.hpp>
 #endif
 
 TProgSelect::TProgSelect(u8 param_1, const char* name)

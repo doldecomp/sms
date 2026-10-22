@@ -10,7 +10,7 @@
 #include <MarioUtil/PacketUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";

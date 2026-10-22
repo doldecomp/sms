@@ -15,7 +15,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <stdio.h>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TSunModel* gpSunModel;
 

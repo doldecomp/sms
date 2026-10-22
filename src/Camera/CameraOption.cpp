@@ -7,7 +7,7 @@
 #include <Player/MarioAccess.hpp>
 #include <JSystem/JMath.hpp>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TCameraOption* gpCameraOption;
 const char* cLoadCamName = "左サイドカメラ";

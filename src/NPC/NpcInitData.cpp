@@ -2,7 +2,7 @@
 #include <dolphin/types.h>
 
 // pch issues
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 static const char dummy5[] = "__ROOT_JOINT__";
 // pch issues end
 

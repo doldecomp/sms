@@ -36,8 +36,6 @@
 // TODO: this definitely means that the no memory msg & zeros are from a
 // different header than mtx calc types
 
-#include <System/DummyStrings.hpp>
-
 // NOTE: has to be here for proper rodata order
 #include <Map/MapCollisionEntry.hpp>
 

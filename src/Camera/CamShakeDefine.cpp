@@ -1,6 +1,6 @@
 #include <Camera/CameraShake.hpp>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 const char* TCameraShake::mCamShakeNameSave[] = {
 	"/Camera/shakeHipDrop.prm",

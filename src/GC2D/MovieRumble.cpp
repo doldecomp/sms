@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 // TODO: removeme
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TMovieRumble::TMovieRumble(const TTHPRender* param_1)
     : unk10(param_1)

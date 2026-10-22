@@ -2,9 +2,9 @@
 #define M3DUTIL_INFECTIOUS_STRINGS_HPP
 
 // Every retail TU carrying these mtx calc type names also carries the pair in
-// System/DummyStrings.hpp, and always ahead of them, so that header comes
+// System/Application.hpp, and always ahead of them, so that header comes
 // first here.
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 static const char* MtxCalcTypeName[] = {
 	"MActorMtxCalcType_Basic クラシックスケールＯＮ",

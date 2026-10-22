@@ -16,7 +16,7 @@
 #include <System/Resolution.hpp>
 #include <stdio.h>
 
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 TLensGlow::TLensGlow(bool param_1, const char* name)
     : JDrama::TViewObj(name)

@@ -24,7 +24,6 @@
 #include <stdio.h>
 
 // TODO: get rid of this
-#include <System/DummyStrings.hpp>
 
 namespace {
 
