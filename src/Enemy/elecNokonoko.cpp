@@ -24,7 +24,6 @@
 #include <Map/MapData.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <M3DUtil/MActor.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>

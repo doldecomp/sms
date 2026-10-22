@@ -27,7 +27,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // NOTE: rodata ordering says this has to go here
 #include <Map/MapCollisionEntry.hpp>

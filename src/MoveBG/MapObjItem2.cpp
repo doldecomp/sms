@@ -17,7 +17,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMushroom1up::TMushroom1up(int param_1, const char* name)
     : TMapObjBase(name)

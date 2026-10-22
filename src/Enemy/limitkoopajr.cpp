@@ -1,6 +1,6 @@
 #include <Enemy/LimitKoopaJr.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MSound/MSSetSound.hpp>

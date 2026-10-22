@@ -27,7 +27,6 @@
 #include <NPC/NpcNerve.hpp>
 
 // rogue
-#include <M3DUtil/InfectiousStrings.hpp>
 static const char dummy5[] = "__ROOT_JOINT__";
 
 static const char* cManiyaParentViewObjName    = "マニ屋親タヌキ";

@@ -23,7 +23,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* poihana_bastable[] = {
 	"/scene/poihana/bas/poihana_dash.bas",

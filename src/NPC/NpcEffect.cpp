@@ -10,7 +10,6 @@
 #include <NPC/NpcParts.hpp>
 
 // rogue
-#include <M3DUtil/InfectiousStrings.hpp>
 static const char dummy[] = "__ROOT_JOINT__";
 
 void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)

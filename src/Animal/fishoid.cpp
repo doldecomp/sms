@@ -14,9 +14,6 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Spine.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 namespace {
 const char* const cFishoidMdlNames[]
     = { "fishA.bmd", "fishB.bmd", "fishC.bmd", "fishD.bmd" };

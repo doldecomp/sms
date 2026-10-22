@@ -9,6 +9,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 f32 TMapObjGrassManager::mWidth      = 12.0f;
 f32 TMapObjGrassManager::mSwingWidth = 50.0f;

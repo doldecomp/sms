@@ -20,7 +20,7 @@
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/ShadowUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorData.hpp>
 #include <MoveBG/ItemManager.hpp>

@@ -42,6 +42,7 @@
 #include <Enemy/AmiNoko.hpp>
 #include <Enemy/Seal.hpp>
 #include <Enemy/Kazekun.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {

@@ -16,6 +16,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 u32 TMapObjGeneral::mNormalLivingTime       = 960;
 u32 TMapObjGeneral::mNormalFlushTime        = 360;

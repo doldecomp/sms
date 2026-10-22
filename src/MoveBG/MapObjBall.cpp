@@ -27,7 +27,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 u32 TResetFruit::mFruitLivingTime       = 14400;
 f32 TResetFruit::mScaleUpSpeed          = 1.05f;

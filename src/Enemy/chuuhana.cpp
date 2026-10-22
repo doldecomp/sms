@@ -17,7 +17,7 @@
 #include <JSystem/JStage/JSGActor.hpp>
 #include <JSystem/JStage/JSGObject.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <MSound/MSound.hpp>

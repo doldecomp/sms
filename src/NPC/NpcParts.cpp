@@ -18,9 +18,6 @@
 #include <NPC/NpcBase.hpp>
 #include <NPC/NpcManager.hpp>
 
-// rogue
-#include <M3DUtil/InfectiousStrings.hpp>
-
 // TODO: figure out the odr violations with this symbol
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
 const char* cPeachPartsTextureName = "H_peach_main_dummy";

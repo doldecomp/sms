@@ -15,9 +15,6 @@
 #include <System/Particles.hpp>
 #include <System/EmitterViewObj.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 namespace {
 const char* const cButterflyMdlNames[]
     = { "butterflyA.bmd", "butterflyB.bmd", "butterflyC.bmd" };

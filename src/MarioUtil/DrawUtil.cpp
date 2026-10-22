@@ -22,6 +22,7 @@
 #include <dolphin/mtx.h>
 #include <dolphin/os/OSCache.h>
 #include <stdlib.h>
+#include <M3DUtil/MActorAnm.hpp>
 
 TSilhouette* gpSilhouetteManager;
 

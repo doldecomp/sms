@@ -2,7 +2,6 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <M3DUtil/MActor.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>

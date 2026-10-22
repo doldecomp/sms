@@ -37,7 +37,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 TNameKuriManager::mExplosionSpeed    = 1.2f;
 int TNameKuriManager::mStopMinScaleFrame = 8;

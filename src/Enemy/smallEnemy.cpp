@@ -39,8 +39,6 @@
 // NOTE: has to be here for proper rodata order
 #include <Map/MapCollisionEntry.hpp>
 
-#include <M3DUtil/InfectiousStrings.hpp>
-
 int TSmallEnemyManager::mBlockWaitTime   = 400;
 f32 TSmallEnemyManager::mBlockMoveSpeed  = 2.0f;
 f32 TSmallEnemyManager::mBlockWaitMoveY  = 200.0f;

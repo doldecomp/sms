@@ -19,7 +19,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // TODO: should be in a header and violate ODR
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";

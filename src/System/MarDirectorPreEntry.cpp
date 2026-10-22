@@ -5,7 +5,6 @@
 #include <JSystem/JDrama/JDRViewport.hpp>
 
 // TODO: which headers are these infections strings from?
-// See InfectiousStrings.hpp also
 #include <System/Application.hpp>
 
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";

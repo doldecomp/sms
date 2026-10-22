@@ -6,6 +6,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 bool TMapEvent::isFinishedAll() const { return stateIs(0) ? true : false; }
 

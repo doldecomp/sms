@@ -19,6 +19,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 f32 TMareWallRock::mAppearSpeed       = 3.0f;
 f32 TMareWallRock::mDepressSpeed      = 3.0f;

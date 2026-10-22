@@ -11,7 +11,7 @@
 #include <Camera/CameraKindParam.hpp>
 #include <Camera/CameraMarioData.hpp>
 
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 // TODO: this should be an inline that doesn't get inlined,
 // but it actually gets inlined :(

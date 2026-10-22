@@ -24,9 +24,6 @@
 #include <Strategic/TakeActor.hpp>
 #include <System/FlagManager.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 static const char* sleepBossHanachan_bastable[2] = {
 	"/scene/sleepBossHanachan/bas/demohanatyan_fall.bas",
 	nullptr,

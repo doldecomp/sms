@@ -1,7 +1,7 @@
 #include <Enemy/BossHanachanParts.hpp>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static const char* bosshanachan_bastable[] = {
 	"/scene/bosshanachan/bas/hanabody_damage.bas",

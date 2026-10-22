@@ -24,7 +24,6 @@
 #include <GC2D/GCConsole2.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <stdio.h>
 
 TBathtubParams::TBathtubParams()

@@ -13,7 +13,7 @@
 #include <System/MarNameRefGen.hpp>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Map(const char* name) const
 {

@@ -5,6 +5,7 @@
 #include <MoveBG/MapObjBase.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <version.h>
+#include <M3DUtil/MActorAnm.hpp>
 
 THelpActor::THelpActor(const char* name)
     : THitActor(name)

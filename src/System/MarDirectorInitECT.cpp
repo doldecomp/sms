@@ -14,7 +14,7 @@
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
 
 // rogue includes
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 void TMarDirector::initECTGft(
     TPerformList* param_1, TPerformList* param_2,

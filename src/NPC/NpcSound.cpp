@@ -1,9 +1,5 @@
 #include <NPC/NpcBase.hpp>
 
-// pch issues with J3DJoint and co
-#include <M3DUtil/InfectiousStrings.hpp>
-// end of issues
-
 static const char* monteMCommon_bastable[] = {
 	"/scene/monteMCommon/bas/mom_appear.bas",
 	"/scene/monteMCommon/bas/mom_dance.bas",

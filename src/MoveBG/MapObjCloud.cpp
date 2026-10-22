@@ -11,6 +11,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 f32 TRideCloud::mMoveSpeedDefault = 2.0f;
 f32 TRideCloud::mCushionLen       = 80.0f;

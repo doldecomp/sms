@@ -8,7 +8,7 @@
 #include <dolphin/types.h>
 
 // rogue include
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TGraphNode::TGraphNode()
     : unk0(nullptr)

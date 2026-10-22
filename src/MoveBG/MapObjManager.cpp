@@ -28,7 +28,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static void dummy(Vec* v) { *v = (Vec) { 0.0f, 0.0f, 0.0f }; }
 static void dummy2(Vec* v) { *v = (Vec) { 1.0f, 1.0f, 1.0f }; }

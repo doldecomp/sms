@@ -6,7 +6,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 int TPollutionManager::mFlushTime = 200;
 u8 TPollutionManager::mEdgeAlpha  = 50;

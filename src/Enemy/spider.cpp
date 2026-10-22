@@ -3,6 +3,7 @@
 #include <Map/MapData.hpp>
 #include <Map/MapCollisionData.hpp>
 #include <Map/Map.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TSpider::TSpider()
     : unk4(0)

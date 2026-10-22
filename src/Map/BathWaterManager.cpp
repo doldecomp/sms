@@ -27,7 +27,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 // NOTE: the main tragedy of this file is that it looks like a bunch of classes
 // were defined right inside of the cpp file and all their methods were defined

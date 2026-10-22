@@ -1,7 +1,7 @@
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjBase.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>

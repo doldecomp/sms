@@ -14,7 +14,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* kumokun_bastable[] = {
 	"/scene/kumokun/bas/kumo_down1.bas",

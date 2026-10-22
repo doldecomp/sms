@@ -14,9 +14,6 @@
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 static const char* amenbo_bastable[] = {
 	nullptr, "/scene/amenbo/bas/amenbo_hit1_loop.bas",
 	nullptr, "/scene/amenbo/bas/amenbo_run1.bas",

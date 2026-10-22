@@ -9,8 +9,6 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 
-#include <M3DUtil/InfectiousStrings.hpp>
-
 static const char* dummy[] = {
 	"/common/camera/camera_demo_shine_get_inside",
 	"/common/camera/camera_demo_shine_get_outside",

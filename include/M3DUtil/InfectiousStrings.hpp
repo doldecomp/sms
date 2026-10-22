@@ -1,6 +1,0 @@
-#ifndef M3DUTIL_INFECTIOUS_STRINGS_HPP
-#define M3DUTIL_INFECTIOUS_STRINGS_HPP
-
-#include <M3DUtil/MActorAnm.hpp>
-
-#endif

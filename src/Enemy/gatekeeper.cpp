@@ -30,7 +30,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* gatekeeper_bastable[] = {
 	"/scene/gatekeeper/bas/gene_pakkun_appear1.bas",

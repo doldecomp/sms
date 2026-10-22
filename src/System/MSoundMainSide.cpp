@@ -12,6 +12,9 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#ifndef VERSION_GMSJ01
+#include <M3DUtil/MActorAnm.hpp>
+#endif
 
 MSStage* MSStage::smMSStage;
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)

@@ -2,6 +2,7 @@
 #include <M3DUtil/SampleCtrlModel.hpp>
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static int to_upper_hack(int c)
 {

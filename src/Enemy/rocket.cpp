@@ -12,7 +12,6 @@
 #include <JSystem/JStage/JSGObject.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
 #include <M3DUtil/MActor.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundBGM.hpp>

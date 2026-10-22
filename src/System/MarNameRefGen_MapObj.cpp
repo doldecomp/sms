@@ -42,7 +42,7 @@
 #include <Enemy/BossTelesa.hpp>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <Map/MapCollisionEntry.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const

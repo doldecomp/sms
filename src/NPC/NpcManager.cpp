@@ -21,7 +21,6 @@
 #include <NPC/NpcSave.hpp>
 
 // rogue
-#include <M3DUtil/InfectiousStrings.hpp>
 static const char dummy[] = "__ROOT_JOINT__";
 
 extern bool isNowInbetween__15CPolarSubCameraCFv(const CPolarSubCamera*);

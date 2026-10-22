@@ -1,5 +1,6 @@
 #include <Enemy/EnemyInterp.hpp>
 #include <Strategic/LiveActor.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static void einGetLengthToMario(TSpcTypedInterp<TLiveActor>* interp,
                                 u32 arg_num)

@@ -19,7 +19,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static JGeometry::TVec3<f32> submarineCranePos_forSound(1956.0f, 1000.0f,
                                                         6425.0f);

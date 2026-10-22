@@ -1,5 +1,5 @@
 #include <Enemy/Kazekun.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/MtxUtil.hpp>

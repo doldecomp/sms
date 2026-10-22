@@ -31,7 +31,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 THamuKuri::mCapGravityY         = 0.15f;
 f32 THamuKuri::mCapSpeed            = 12.0f;

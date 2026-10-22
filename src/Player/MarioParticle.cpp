@@ -21,8 +21,6 @@
 const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
 const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
-#include <M3DUtil/InfectiousStrings.hpp>
-
 const char* cParticleFileNames[] = {
 	"/scene/map/pollution/ms_m_ashios.jpa",
 	"/scene/map/pollution/ms_m_spinos.jpa",

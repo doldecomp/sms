@@ -5,7 +5,7 @@
 #include <JSystem/JDrama/JDRNameRef.hpp>
 #include <JSystem/JStage/JSGActor.hpp>
 #include <JSystem/JStage/JSGObject.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Map/Map.hpp>
 #include <Strategic/LiveActor.hpp>

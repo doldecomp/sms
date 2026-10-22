@@ -506,7 +506,7 @@ static u32 scDolpicNewsDolpic9[]  = { 0x000E000A, 0x000E000B, 0xFFFFFFFF };
 static u32 scDolpicNewsDolpic10[] = { 0x000E000C, 0x000E000D, 0xFFFFFFFF };
 
 // rogue include
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TGCConsole2::TGCConsole2(const char* name)
     : JDrama::TViewObj(name)

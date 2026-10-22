@@ -32,7 +32,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // TODO: these come from some header...
 static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";

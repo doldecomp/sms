@@ -26,6 +26,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static int sWaitTime                      = 1;
 f32 TMapObjTreeScale::mScaleMin           = 0.1f;
