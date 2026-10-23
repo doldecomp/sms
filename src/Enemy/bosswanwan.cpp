@@ -1721,7 +1721,7 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	}
 
 	if (spine->getTime() > 60 && boss->unk18D == 0
-	    && gpMarDirector->unk124 != 3) {
+	    && gpMarDirector->mGameMode != 3) {
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（ボスワンワン用）", "ボスワンワンシャインカメラ",
 		    boss->mPosition.x, boss->mPosition.y, boss->mPosition.z);
