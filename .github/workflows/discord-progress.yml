@@ -1,0 +1,45 @@
+name: Discord progress
+
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  post:
+    if: github.event_name == 'workflow_dispatch' || github.repository == 'doldecomp/sms'
+    container: ghcr.io/doldecomp/sms-build:main
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Git config
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+    - name: Prepare
+      run: cp -a /orig .
+
+    - name: Build and post
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      run: |
+        uv run --no-project --with matplotlib --with requests \
+          python tools/discord_progress.py --version GMSJ01 \
+          --binutils /binutils --compilers /compilers
+
+    - name: Upload graph
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: discord_progress
+        path: build/discord_progress.png
+        if-no-files-found: ignore
