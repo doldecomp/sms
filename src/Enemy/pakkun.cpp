@@ -59,10 +59,11 @@ static int PakkunSeedCallback(J3DNode* node, int type)
             joint->getJntNo());
 
 		Mtx rotation;
-		MsMtxSetRotZ(rotation, gpCurPakkunSeed->unk170);
+		MtxPtr rotationMtx = rotation;
+		MsMtxSetRotZ(rotationMtx, gpCurPakkunSeed->unk170);
 
-		MTXConcat(anmMtx, rotation, anmMtx);
-		MTXConcat(J3DSys::mCurrentMtx, rotation, J3DSys::mCurrentMtx);
+		MTXConcat(anmMtx, rotationMtx, anmMtx);
+		MTXConcat(J3DSys::mCurrentMtx, rotationMtx, J3DSys::mCurrentMtx);
 	}
 
 	return true;
@@ -816,10 +817,8 @@ DEFINE_NERVE(TNervePakkunGenerate, TLiveActor)
 	if (self->getHolder() != nullptr)
 		return false;
 
-	TPakkunSeed* seed = self->unk194;
-
-	if (seed->isState(PAKKUN_SEED_STATE_APPEAR)) {
-		seed->seedSet();
+	if (self->unk194->isState(PAKKUN_SEED_STATE_APPEAR)) {
+		self->unk194->seedSet();
 
 		if (spine->getTime() % 5 == 0) {
 			self->updateSquareToMario();
@@ -902,9 +901,8 @@ DEFINE_NERVE(TNervePakkunStay, TLiveActor)
 			JGeometry::TVec3<f32> goal = self->unk104.getPoint();
 			if (goal.distance(self->mPosition)
 			    > self->unk1A0->mSLLimitMove.get()) {
-				goal.x = SMS_GetMarioPos().x - self->mPosition.x;
-				goal.y = 0.0f;
-				goal.z = SMS_GetMarioPos().z - self->mPosition.z;
+				goal.set(SMS_GetMarioPos().x - self->mPosition.x, 0.0f,
+				         SMS_GetMarioPos().z - self->mPosition.z);
 				if (goal.x == 0.0f && goal.y == 0.0f && goal.z == 0.0f)
 					goal.x += 1.0f;
 				MsVECNormalize(&goal, &goal);
