@@ -4406,7 +4406,8 @@ void TGCConsole2::performCalcAnim()
 					break;
 				default:
 #if defined(VERSION_GMSP01_NX)
-					if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5
+					if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+					        == MSLANG_NX_JAPANESE
 					    && c >= 0x80) {
 #elif defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 					if (c >= 0x80) {

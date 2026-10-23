@@ -295,7 +295,7 @@ TSmallEnemy* TIgaigaManager::createEnemyInstance() { return new TIgaiga; }
 
 void TIgaigaManager::initSetEnemies()
 {
-	unk60 = new TIgaigaPolluteModelManager;
+	unk60 = new TIgaigaPolluteModelManager("イガイガモデル汚染");
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
@@ -313,7 +313,7 @@ void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& param_1,
 
 static BOOL RollEnemyBodyCallback(J3DNode* param_1, BOOL param_2)
 {
-	if (param_2 == 0) {
+	if (param_2 == FALSE) {
 		if (gpCurRollEnemy == nullptr || !gpCurRollEnemy->isRolling())
 			return TRUE;
 
@@ -736,7 +736,7 @@ TSmallEnemy* TGorogoroManager::createEnemyInstance() { return new TGorogoro; }
 
 void TGorogoroManager::initSetEnemies()
 {
-	unk6C = new TGorogoroPolluteModelManager;
+	unk6C = new TGorogoroPolluteModelManager("ゴロゴロモデル汚染");
 	unk6C->init((TLiveActor*)unk18[0]);
 
 	static const char* graphlist[] = { "gorogoro0", "gorogoro1" };

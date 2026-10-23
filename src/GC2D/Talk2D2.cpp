@@ -299,7 +299,8 @@ void TTalk2D2::loadAfter()
 		                          gpSystemFont->getResFont(), "あ", HBIND_LEFT,
 		                          VBIND_CENTER);
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE)
 			unk9C[i]->setFontSize(20, 24);
 #elif !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 		unk9C[i]->setFontSize(20, 24);
@@ -684,7 +685,8 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 		char* str = unk9C[idx]->getStringPtr();
 		u16 code  = str[0];
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		        == MSLANG_NX_JAPANESE
 		    && code >= 0x80)
 #else
 		if (code >= 0x80)
@@ -766,7 +768,8 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 			unk9C[idx]->setFontSize(20, 22);
 		unk9C[idx]->move((s16)ix, -0x26 - (s16)iy + yOffset);
 #elif defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    == MSLANG_NX_JAPANESE) {
 			unk9C[idx]->move((s16)ix, -0x25 - (s16)iy);
 		} else {
 			static Offsetter offset;
@@ -1546,7 +1549,8 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 			}
 #else
 #if defined(VERSION_GMSP01_NX)
-			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5) {
+			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+			    == MSLANG_NX_JAPANESE) {
 #endif
 				if ((u8)dest[0] >= 0x80) {
 					dest[1] = stream.readU8();
@@ -1833,7 +1837,8 @@ void TTalk2D2::openWindow(s8 param_1, f32 param_2)
 
 	MTXTrans(mtxA, -x, -y, 0.0f);
 #if defined(VERSION_GMSP01_NX)
-	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5)
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+	    == MSLANG_NX_JAPANESE)
 		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate()));
 	else
 		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate() - 1.0f));

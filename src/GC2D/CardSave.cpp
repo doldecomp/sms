@@ -395,7 +395,8 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 void TCardSave::setMessageC(J2DTextBox* text_box, s32 message, u32 size)
 {
 #if defined(VERSION_GMSP01_NX)
-	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+	    != MSLANG_NX_JAPANESE) {
 		JSUMemoryInputStream in(SMSGetMessageData(unk2E4, (u16)message), size);
 		JSUMemoryOutputStream out(text_box->getStringPtr(), size);
 		while (in.getAvailable() != 0 && out.getAvailable() != 0) {

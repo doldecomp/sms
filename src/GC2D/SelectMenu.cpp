@@ -1,4 +1,3 @@
-
 #include <dolphin/gx.h>
 #include <dolphin/gx/GXGeometry.h>
 #include <dolphin/gx/GXLighting.h>
@@ -440,10 +439,20 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	    "/common/2d/stagename.bmg", GMSP01("/cmn2d/stagename.bmg"),
 	    GMSP01_NX("/cmn2d/stagename.bmg")));
 
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 	strncpy(mStageName->getStringPtr(),
 	        SMSGetMessageData(mStageNameBmg, stageNameIds[mStage] & 0xFFFF),
 	        0x11);
 	mStageName->setFont((JUTFont*)gpSystemFont);
+#elif defined(VERSION_GMSP01_NX)
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+	    == MSLANG_NX_JAPANESE) {
+		strncpy(mStageName->getStringPtr(),
+		        SMSGetMessageData(mStageNameBmg, stageNameIds[mStage] & 0xFFFF),
+		        0x11);
+		mStageName->setFont((JUTFont*)gpSystemFont);
+	}
+#endif
 
 	mShineUnlockStates[0] = 2;
 	mShineUnlockStates[1] = 2;
