@@ -34,13 +34,13 @@ int TMarDirector::loadResource()
 	int emitterNum  = 0x100;
 	int effectNum   = 0x20;
 
-	switch (SMSGetMarDirector()->getCurrentMap()) {
+	switch (SMSGetMarDirector()->getCurrentStage()) {
 	case 33:
 		particleNum = 3000;
 		effectNum   = 120;
 		break;
 	case 5:
-		if (SMSGetMarDirector()->getCurrentStage() == 1)
+		if (SMSGetMarDirector()->getCurrentScenario() == 1)
 			particleNum = 1500;
 		break;
 	case 58:
@@ -53,14 +53,14 @@ int TMarDirector::loadResource()
 	case 59:
 		break;
 	case 9:
-		if (SMSGetMarDirector()->getCurrentStage() == 0)
+		if (SMSGetMarDirector()->getCurrentScenario() == 0)
 			particleNum = 1500;
 		break;
 	case 52:
 		particleNum = 3000;
 		break;
 	case 4:
-		if (SMSGetMarDirector()->getCurrentStage() == 2)
+		if (SMSGetMarDirector()->getCurrentScenario() == 2)
 			particleNum = 3000;
 		break;
 	case 60:
@@ -116,8 +116,8 @@ int TMarDirector::loadResource()
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	load2DResource2Aram();
 #endif
-	unkD4 = new (0x20) char[0x64000];
-	unkD8 = new JKRMemArchive;
+	m2DArchiveBuffer = new (0x20) char[0x64000];
+	m2DArchive       = new JKRMemArchive;
 
 	int errc = thpInit();
 	if (errc)
@@ -271,7 +271,7 @@ void TMarDirector::loadParticle()
 	gpEmitterManager4D2->unkA4[0] = gpResourceManager;
 	this_00->unmountFixed();
 
-	if (mMap == 4 && unk7D == 2) {
+	if (mStage == 4 && mScenario == 2) {
 		SMSLoadArchive("/data/bosshanachanJpa.arc", pvVar1, 0x200000, nullptr);
 		this_00->mountFixed(pvVar1, MBF_0);
 		this_00->becomeCurrent("/");
@@ -403,7 +403,7 @@ void TMarDirector::loadParticleMario()
 
 int TMarDirector::thpInit()
 {
-	if (mMap == 1) {
+	if (mStage == 1) {
 		THPPlayerInit(0);
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		const char* path = "/data/ex128x144_q0.thp";

@@ -878,7 +878,7 @@ void TMuddyBoat::initMapObj()
 	unk13C = 0.01f;
 	unk168 = 600;
 
-	if (SMSGetMarDirector()->getCurrentMap() == 0x34) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0x34) {
 		unk158 = 126.0f;
 		unk154 = 185.0f;
 		unk15C = 150.0f;

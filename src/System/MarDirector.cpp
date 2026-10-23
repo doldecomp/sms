@@ -36,13 +36,13 @@ TMarDirector::TMarDirector()
     , unkB8(nullptr)
     , unkBC(nullptr)
     , unkC8(0)
-    , unkD4(0)
-    , unkD8(0)
+    , m2DArchiveBuffer(0)
+    , m2DArchive(0)
     , unkDC(nullptr)
-    , unk128(0)
+    , mTalkFlags(0)
     , mDemoQueueTail(0)
     , mDemoQueueHead(0)
-    , unk250(0)
+    , mGateDemoActor(0)
     , unk25C(nullptr)
     , mSetupDone(false)
 {
@@ -52,9 +52,9 @@ TMarDirector::TMarDirector()
 	mState         = STATE_UNK0;
 	unk88.reserve(100);
 	initLoadParticle();
-	unk126 = 0;
-	unk125 = 0;
-	unk124 = 0;
+	mNextGameMode = GAME_MODE_NORMAL;
+	mPrevGameMode = GAME_MODE_NORMAL;
+	mGameMode     = GAME_MODE_NORMAL;
 	OSInitStopwatch(&unkE8, "イベント用ストップウォッチ");
 }
 
@@ -66,13 +66,13 @@ void* TMarDirector::setupThreadFunc(void* param_1)
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
 
-u32 TMarDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad** param_2,
-                        u8 param_3, u8 param_4)
+u32 TMarDirector::setup(JDrama::TDisplay* display, TMarioGamePad** game_pads,
+                        u8 stage, u8 scenario)
 {
-	unkC0     = param_1;
-	mGamePads = param_2;
-	mMap      = param_3;
-	unk7D     = param_4;
+	mDisplay  = display;
+	mGamePads = game_pads;
+	mStage    = stage;
+	mScenario = scenario;
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
 	               (void*)(gpSetupThreadStack + 0x10000), 0x10000, 0x11, 0);
 	OSResumeThread(&gSetupThread);

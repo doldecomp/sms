@@ -105,7 +105,7 @@ bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 		return true;
 
 	// Presumably hotel delphino floor transitions?
-	if (SMSGetMarDirector()->getCurrentMap() == 7 && unk1C != -1
+	if (SMSGetMarDirector()->getCurrentStage() == 7 && unk1C != -1
 	    && found != -1) {
 		const char* curName = (*unk14)[unk1C].getName();
 		const char* newName = (*unk14)[found].getName();

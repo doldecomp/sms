@@ -166,7 +166,7 @@ void TCardLoad::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
 
-	if (SMSGetMarDirector()->mMap != 15)
+	if (SMSGetMarDirector()->getCurrentStage() != 15)
 		return;
 
 	JKRArchive* optionVolume = (JKRArchive*)JKRFileLoader::getVolume("option");

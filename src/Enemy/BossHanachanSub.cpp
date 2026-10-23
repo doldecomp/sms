@@ -61,7 +61,7 @@ BOOL TWaterHitActor::receiveMessage(THitActor* sender, u32 message)
 	BOOL result = false;
 
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		if (SMSGetMarDirector()->isThing()) {
+		if (SMSGetMarDirector()->isInTalkNow()) {
 			mWaterHitCounter = 0;
 		} else {
 			onWaterHitCounter();

@@ -635,10 +635,10 @@ TMapObjBall::TMapObjBall(const char* name)
 
 void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 {
-	if (SMSGetMarDirector()->getCurrentMap() != 7
-	    && SMSGetMarDirector()->getCurrentMap() != 4) {
+	if (SMSGetMarDirector()->getCurrentStage() != 7
+	    && SMSGetMarDirector()->getCurrentStage() != 4) {
 		TMapObjGeneral::checkGroundCollision(ground);
-	} else if (SMSGetMarDirector()->getCurrentMap() == 4) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 4) {
 		mGroundHeight = gpMap->checkGround(ground->x, ground->y + 200.0f,
 		                                   ground->z, &mGroundPlane);
 		mGroundHeight += 1.0f;
@@ -676,7 +676,7 @@ void TResetFruit::checkGroundCollision(JGeometry::TVec3<f32>* ground)
 
 void TResetFruit::waitingToAppear()
 {
-	if (SMSGetMarDirector()->getCurrentMap() == 3 && unk1A4 != 0) {
+	if (SMSGetMarDirector()->getCurrentStage() == 3 && unk1A4 != 0) {
 		makeObjDead();
 	}
 
@@ -708,7 +708,7 @@ void TResetFruit::makeObjWaitingToAppear()
 	startStateTimer(mFruitWaitTimeToAppear);
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 	mState = STATE_WAITING_TO_APPEAR;
-	if (gpMarDirector->getCurrentMap() == 3 && unk1A4 != 0)
+	if (gpMarDirector->getCurrentStage() == 3 && unk1A4 != 0)
 		makeObjDead();
 }
 
@@ -903,7 +903,7 @@ void TResetFruit::control()
 	}
 	case STATE_LIVING: {
 		offHitFilter(HIT_FILTER_NO_COLLISION);
-		if (SMSGetMarDirector()->getCurrentMap() == 4
+		if (SMSGetMarDirector()->getCurrentStage() == 4
 		    && checkLiveFlag(LIVE_FLAG_UNK10)) {
 			offLiveFlag(LIVE_FLAG_UNK10);
 		}
@@ -956,7 +956,7 @@ void TResetFruit::control()
 
 void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (SMSGetMarDirector()->getCurrentMap() == 7) {
+	if (SMSGetMarDirector()->getCurrentStage() == 7) {
 		if (isState(STATE_HOLDING) || !getVelocity().isZero()) {
 			if (checkLiveFlag(LIVE_FLAG_UNK200)) {
 				offLiveFlag(LIVE_FLAG_UNK200);

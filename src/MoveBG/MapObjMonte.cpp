@@ -395,7 +395,7 @@ void THangingBridge::initDraw() const
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
 	                  GX_FALSE, GX_PTIDENTITY);
-	if (SMSGetMarDirector()->getCurrentMap() == 13) {
+	if (SMSGetMarDirector()->getCurrentStage() == 13) {
 		JUTTexture texture(gpMapObjManager->getBridgeRopeTexture());
 		texture.load(GX_TEXMAP0);
 	} else {
@@ -474,7 +474,7 @@ void THangingBridge::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
 	f32 rotY = 0.0f;
-	if (SMSGetMarDirector()->getCurrentMap() == 13) {
+	if (SMSGetMarDirector()->getCurrentStage() == 13) {
 		unk10 = 14;
 		unk18.set(1550.0f, 2980.0f, -9410.0f);
 		unk24.set(3570.0f, 2455.0f, -9410.0f);
@@ -483,7 +483,7 @@ void THangingBridge::loadAfter()
 		unk40       = 0.8f;
 		unk44       = 0.5f;
 		unk3C       = 150.0f;
-	} else if (SMSGetMarDirector()->getCurrentMap() == 8) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 8) {
 		unk10 = 19;
 		unk18.set(0.0f, 0.0f, 11356.0f);
 		unk24.set(0.0f, -750.0f, 17743.0f);
@@ -504,7 +504,7 @@ void THangingBridge::loadAfter()
 		pos.y    = t * (unk24.y - unk18.y) + unk18.y - wave;
 		pos.z    = t * (unk24.z - unk18.z) + unk18.z;
 		JGeometry::TVec3<f32> rot(15.0f, rotY, 0.0f);
-		if (SMSGetMarDirector()->getCurrentMap() == 8)
+		if (SMSGetMarDirector()->getCurrentStage() == 8)
 			unk14[i]
 			    = (THangingBridgeBoard*)TMapObjBaseManager::newAndRegisterObj(
 			        "HangingBridgeBoard", pos, rot,
@@ -517,9 +517,9 @@ void THangingBridge::loadAfter()
 		unk14[i]->unk1BC = this;
 		unk14[i]->appear();
 	}
-	if (SMSGetMarDirector()->getCurrentMap() == 8)
+	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		initMonte();
-	if (SMSGetMarDirector()->getCurrentMap() == 13) {
+	if (SMSGetMarDirector()->getCurrentStage() == 13) {
 		unk18.set(1350.0f, 2980.0f, -9410.0f);
 		unk24.set(3650.0f, 2455.0f, -9410.0f);
 	}

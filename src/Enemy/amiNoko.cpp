@@ -135,7 +135,7 @@ void TAmiNoko::init(TLiveManager* param_1)
 	setWalkAnm();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	initialGraphNode();
-	if (SMSGetMarDirector()->getCurrentMap() == 8)
+	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		unk210 = 0;
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	unkE8 = 0;

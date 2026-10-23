@@ -134,7 +134,7 @@ TNPCManager::TNPCManager(const char* name)
 	unk5C = nullptr;
 	unk60 = nullptr;
 
-	u8 area                   = SMSGetMarDirector()->getCurrentMap();
+	u8 area                   = SMSGetMarDirector()->getCurrentStage();
 	TNpcSaveStageFarClip* ptr = gpConductor->getNpcParams()->unk0;
 
 	switch (area) {
@@ -299,7 +299,7 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 	f32 nearClip = unk54;
 	f32 farClip  = *unk58;
 
-	if (SMSGetMarDirector()->mMap == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		if (gpCamera->isDemoCamera()
 		    || gpCamera->mMode == CAMERA_MODE_UNDER_GROUND
 		    || (gpCamera->mPrevMode == CAMERA_MODE_UNDER_GROUND

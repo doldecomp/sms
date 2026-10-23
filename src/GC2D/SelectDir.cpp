@@ -250,7 +250,7 @@ int TSelectDir::direct()
 			return TApplication::APP_STATE_DONE;
 
 		if (unk20->mCloseMenu) {
-			SMSGetApplication()->mNextArea.unk1 = unk20->mSelectedShine;
+			SMSGetApplication()->mNextArea.mScenario = unk20->mSelectedShine;
 			TFlagManager::getInstance()->setFlag(MSF_EPISODE,
 			                                     unk20->mSelectedShine);
 			SMSGetApplication()->getFader()->startWipe(0xf, 1.0f, 0.0f);

@@ -526,7 +526,7 @@ void TTurboNozzleDoor::touchPlayer(THitActor* player)
 	if (!SMS_IsMarioDashing())
 		return;
 
-	if (SMSGetMarDirector()->mMap == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		startBck("nozzledoor");
 	} else {
 		makeObjDead();

@@ -371,7 +371,7 @@ int TMarDirector::changeState()
 		break;
 
 	case STATE_GUIDE:
-		if (unk78->unkC4 && SMSGetApplication()->getFader()->isFullyFadedIn())
+		if (mGuide->unkC4 && SMSGetApplication()->getFader()->isFullyFadedIn())
 			nextState = STATE_UNK4;
 		break;
 
@@ -487,7 +487,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		break;
 
 	case STATE_UNK4:
-		if (unk124 == 0)
+		if (mGameMode == GAME_MODE_NORMAL)
 			OSStopStopwatch(&unkE8);
 		mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_GAME_INPUT);
 		break;
@@ -701,12 +701,12 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 			setMario();
 			onTransitionFlag(TRANSITION_FLAG_STAGE_BGM_STARTED);
 		}
-		if (mMap != 0xf)
+		if (mStage != 0xf)
 			getConsole()->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		break;
 
 	case STATE_UNK4:
-		if (mState <= STATE_UNK3 && mMap != 0xf)
+		if (mState <= STATE_UNK3 && mStage != 0xf)
 			getConsole()->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		if (checkTransitionFlag(TRANSITION_FLAG_GO_BANNER_PENDING)) {
 			getConsole()->unk94->startAppearGo();
@@ -718,7 +718,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 			setMario();
 			onTransitionFlag(TRANSITION_FLAG_STAGE_BGM_STARTED);
 		}
-		if (!unk124)
+		if (mGameMode == GAME_MODE_NORMAL)
 			OSStartStopwatch(&unkE8);
 		mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_GAME_INPUT);
 		break;
@@ -763,8 +763,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr, 0);
 		SMSGetApplication()->getFader()->startWipe(6, 1.0f, 0.0f);
-		unk78->setup(nullptr);
-		unk78->startMoveCursor();
+		mGuide->setup(nullptr);
+		mGuide->startMoveCursor();
 		break;
 
 	case STATE_CARD_SAVE:
@@ -801,8 +801,8 @@ u8 TMarDirector::updateGameMode()
 {
 	u8 r29 = mState;
 
-	switch (unk124) {
-	case 0:
+	switch (mGameMode) {
+	case GAME_MODE_NORMAL:
 		if (!checkFlag(~(DIRECTOR_FLAG_SHINE_TAKEN
 		                 | DIRECTOR_FLAG_LAST_SIMULATION_TICK
 		                 | DIRECTOR_FLAG_FIRST_SIMULATION_TICK))) {
@@ -811,7 +811,7 @@ u8 TMarDirector::updateGameMode()
 				break;
 			}
 
-			if (mMap != 15) {
+			if (mStage != 15) {
 				if (mGamePads[0]->testTrigger(0x10)) {
 					r29 = STATE_GUIDE;
 					break;
@@ -838,7 +838,7 @@ u8 TMarDirector::updateGameMode()
 
 			if (checkFlag(DIRECTOR_FLAG_SHINE_GET_PENDING)) {
 				offFlag(DIRECTOR_FLAG_SHINE_GET_PENDING);
-				unk126 = 3;
+				mNextGameMode = GAME_MODE_INNER_DEMO;
 
 				TGCConsole2* console = SMSGetMarDirector()->getConsole();
 				console->unk94->startAppearShineGet();
@@ -859,7 +859,7 @@ u8 TMarDirector::updateGameMode()
 			}
 
 			if (checkFlag(DIRECTOR_FLAG_DEMO_PENDING)) {
-				unk126 = 3;
+				mNextGameMode = GAME_MODE_INNER_DEMO;
 				break;
 			}
 
@@ -872,7 +872,7 @@ u8 TMarDirector::updateGameMode()
 			if (checkFlag(DIRECTOR_FLAG_GATE_DEMO_STAGE_TRANSITION_PENDING)) {
 				offFlag(DIRECTOR_FLAG_GATE_DEMO_STAGE_TRANSITION_PENDING);
 				onFlag(DIRECTOR_FLAG_STAGE_TRANSITION_PENDING);
-				unk126                        = 3;
+				mNextGameMode                 = GAME_MODE_INNER_DEMO;
 				const TGameSequence& nextArea = SMSGetApplication()->mNextArea;
 				if (nextArea.getStage() == 5) {
 					fireStartDemoCamera("hodai_dpt_pinna1", nullptr, -1, 0.0f,
@@ -900,9 +900,9 @@ u8 TMarDirector::updateGameMode()
 			if (checkFlag(DIRECTOR_FLAG_ACTOR_DEMO_STAGE_TRANSITION_PENDING)) {
 				offFlag(DIRECTOR_FLAG_ACTOR_DEMO_STAGE_TRANSITION_PENDING);
 				onFlag(DIRECTOR_FLAG_STAGE_TRANSITION_PENDING);
-				unk126 = 3;
+				mNextGameMode = GAME_MODE_INNER_DEMO;
 				fireStartDemoCamera(nullptr, nullptr, -1, 0.0f, false, nullptr,
-				                    0, unk250, 1);
+				                    0, mGateDemoActor, 1);
 				break;
 			}
 
@@ -914,17 +914,17 @@ u8 TMarDirector::updateGameMode()
 		}
 		break;
 
-	case 2:
+	case GAME_MODE_TALK:
 		if (checkFlag(DIRECTOR_FLAG_DEMO_PENDING)) {
-			unk126 = 4;
+			mNextGameMode = GAME_MODE_TALKING_DEMO;
 		} else {
 			if (unkB0->unk248 == 0)
-				unk126 = 0;
+				mNextGameMode = GAME_MODE_NORMAL;
 		}
 		break;
 
-	case 3:
-	case 4: {
+	case GAME_MODE_INNER_DEMO:
+	case GAME_MODE_TALKING_DEMO: {
 		bool bVar5  = false;
 		bool uVar15 = 0;
 		if (checkFlag(DIRECTOR_FLAG_END_DEMO_PENDING)) {
@@ -956,7 +956,9 @@ u8 TMarDirector::updateGameMode()
 					(*next->unk14)(next->unk18, 0);
 			} else {
 				offFlag(DIRECTOR_FLAG_DEMO_PENDING);
-				unk126 = unk124 == 4 ? 2 : 0;
+				mNextGameMode = mGameMode == GAME_MODE_TALKING_DEMO
+				                    ? GAME_MODE_TALK
+				                    : GAME_MODE_NORMAL;
 				if (uVar15 != 0)
 					gpCamera->endDemoCamera();
 				if (info->unk14 != nullptr)
@@ -969,12 +971,12 @@ u8 TMarDirector::updateGameMode()
 	if (mDemoQueueHead == mDemoQueueTail)
 		offFlag(DIRECTOR_FLAG_DEMO_PENDING);
 
-	unk125 = unk124;
+	mPrevGameMode = mGameMode;
 
-	if (unk124 != unk126) {
-		switch (unk124) {
-		case 2:
-			if (unk126 == 0) {
+	if (mGameMode != mNextGameMode) {
+		switch (mGameMode) {
+		case GAME_MODE_TALK:
+			if (mNextGameMode == GAME_MODE_NORMAL) {
 				unkA0 = 0;
 				unkA4 = 0;
 				mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
@@ -982,10 +984,11 @@ u8 TMarDirector::updateGameMode()
 			}
 			break;
 
-		case 3:
-		case 4:
-			if (unk124 == 4)
-				MSMainProc::fromTalkingCameraDemo(unk124 == 4);
+		case GAME_MODE_INNER_DEMO:
+		case GAME_MODE_TALKING_DEMO:
+			if (mGameMode == GAME_MODE_TALKING_DEMO)
+				MSMainProc::fromTalkingCameraDemo(mGameMode
+				                                  == GAME_MODE_TALKING_DEMO);
 			else
 				MSMainProc::fromInnerCameraDemo();
 			mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_NO_INPUT);
@@ -993,25 +996,25 @@ u8 TMarDirector::updateGameMode()
 			break;
 		}
 
-		switch (unk126) {
-		case 0:
+		switch (mNextGameMode) {
+		case GAME_MODE_NORMAL:
 			break;
 
-		case 1:
+		case GAME_MODE_TALK_START:
 			unkA0->onLiveFlag(LIVE_FLAG_UNK40000);
 			unkA0->unkC.off(CUE_MOVE | CUE_CALC_ANIM);
 			mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
 			OSStopStopwatch(&unkE8);
 			break;
 
-		case 2:
-			if (unk124 == 1)
+		case GAME_MODE_TALK:
+			if (mGameMode == GAME_MODE_TALK_START)
 				unkB0->openTalkWindow(unkA0);
 			break;
 
-		case 3:
-		case 4:
-			if (unk126 == 4)
+		case GAME_MODE_INNER_DEMO:
+		case GAME_MODE_TALKING_DEMO:
+			if (mNextGameMode == GAME_MODE_TALKING_DEMO)
 				MSMainProc::toTalkingCameraDemo();
 			else
 				MSMainProc::toInnerCameraDemo();
@@ -1033,14 +1036,14 @@ u8 TMarDirector::updateGameMode()
 			break;
 		}
 
-		unk124 = unk126;
+		mGameMode = mNextGameMode;
 	}
 
-	if (unk128 & 0x1) {
-		unk128 &= ~0x1;
-		unk128 |= 0x2;
+	if (mTalkFlags & TALK_FLAG_NPC_NEAR_THIS_FRAME) {
+		mTalkFlags &= ~TALK_FLAG_NPC_NEAR_THIS_FRAME;
+		mTalkFlags |= TALK_FLAG_NPC_NEAR_LAST_FRAME;
 	} else {
-		unk128 &= ~0x2;
+		mTalkFlags &= ~TALK_FLAG_NPC_NEAR_LAST_FRAME;
 	}
 
 	return r29;
@@ -1062,8 +1065,8 @@ void TMarDirector::moveStage()
 	if (nextArea.getScenario() == 0xff)
 		switch (nextArea.getStage()) {
 		case 1:
-			unkE4         = 2;
-			nextArea.unk1 = decideNextScenario(nextArea.getStage());
+			unkE4              = 2;
+			nextArea.mScenario = decideNextScenario(nextArea.getStage());
 			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
@@ -1090,7 +1093,7 @@ void TMarDirector::moveStage()
 				thing = 5;
 				break;
 			}
-			nextArea.unk1 = thing;
+			nextArea.mScenario = thing;
 			break;
 		}
 
@@ -1105,7 +1108,7 @@ void TMarDirector::moveStage()
 				thing = 0;
 				break;
 			}
-			nextArea.unk1 = thing;
+			nextArea.mScenario = thing;
 			break;
 		}
 
@@ -1130,7 +1133,7 @@ void TMarDirector::moveStage()
 				thing = 4;
 				break;
 			}
-			nextArea.unk1 = thing;
+			nextArea.mScenario = thing;
 			break;
 		}
 
@@ -1145,7 +1148,7 @@ void TMarDirector::moveStage()
 				thing = 1;
 				break;
 			}
-			nextArea.unk1 = thing;
+			nextArea.mScenario = thing;
 			break;
 		}
 
@@ -1166,19 +1169,19 @@ void TMarDirector::moveStage()
 			break;
 
 		case 0x34:
-			unkE4         = 8;
-			nextArea.unk1 = 0;
+			unkE4              = 8;
+			nextArea.mScenario = 0;
 			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
 		case 0:
-			nextArea.unk1 = 0;
+			nextArea.mScenario = 0;
 			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
 		default:
-			unkE4         = 2;
-			nextArea.unk1 = 0;
+			unkE4              = 2;
+			nextArea.mScenario = 0;
 			break;
 		}
 

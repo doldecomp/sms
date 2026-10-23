@@ -492,8 +492,8 @@ void THinokuri2::init(TLiveManager* param_1)
 
 	getMActor()->setJointCallback(0x17, &Hino2HeadCallback);
 
-	if (SMSGetMarDirector()->mMap == 1) {
-		switch (SMSGetMarDirector()->unk7D) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
+		switch (SMSGetMarDirector()->getCurrentScenario()) {
 		case 4:
 			setLevel(2);
 			break;
@@ -508,8 +508,8 @@ void THinokuri2::init(TLiveManager* param_1)
 			setLevel(1);
 			break;
 		}
-	} else if (SMSGetMarDirector()->mMap == 0) {
-		switch (SMSGetMarDirector()->unk7D) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 0) {
+		switch (SMSGetMarDirector()->getCurrentScenario()) {
 		case 7:
 			setLevel(2);
 			break;
@@ -1061,7 +1061,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		}
 	}
 
-	if (SMSGetMarDirector()->unk7D >= 2 && self->unk164 <= 0) {
+	if (SMSGetMarDirector()->getCurrentScenario() >= 2 && self->unk164 <= 0) {
 		if (self->getLevel() >= 1) {
 			spine->pushAfterCurrent(&TNerveHino2PrePol::theNerve());
 			return 1;

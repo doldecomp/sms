@@ -399,7 +399,7 @@ void TBaseNPC::npcWaitIn()
 			if (!unk124->unk0->isDummy()) {
 				if (mSpine->getLatestNerve()
 				    == &TNerveNPCGraphWait::theNerve()) {
-					if (!SMSGetMarDirector()->isThing())
+					if (!SMSGetMarDirector()->isInTalkNow())
 						kind = getNpcWaitAnmBase_();
 				}
 			} else {

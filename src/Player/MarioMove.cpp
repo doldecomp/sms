@@ -74,7 +74,8 @@ bool TMario::isInvincible() const
 	if (mStatus == 0x89C)
 		return true;
 
-	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	if (SMSGetMarDirector()->isInnerDemoModeNow()
+	    || SMSGetMarDirector()->isTalkingDemoModeNow()
 	    || SMSGetMarDirector()->isTalkModeNow()
 	    || checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		return true;
@@ -155,7 +156,7 @@ void TMario::warpRequest(const JGeometry::TVec3<f32>& pos, f32 angle)
 	mFaceAngle.y    = (s16)DEG2SHORTANGLE(angle);
 	mModelFaceAngle = mFaceAngle.y;
 	gpCamera->addMoveCameraAndMario(offset);
-	if (SMSGetMarDirector()->mMap != 7)
+	if (SMSGetMarDirector()->getCurrentStage() != 7)
 		mGamePad->onNeutralMarioKey();
 	changePlayerStatus(MARIO_STATUS_WAIT, 0, 1);
 }
@@ -1936,7 +1937,8 @@ void TMario::thinkSituation()
 
 	calcGroundMtx(mPosition);
 
-	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	if (SMSGetMarDirector()->isInnerDemoModeNow()
+	    || SMSGetMarDirector()->isTalkingDemoModeNow()
 	    || SMSGetMarDirector()->isTalkModeNow()
 	    || checkStatusType(MARIO_STATUS_FLAG_UNK1000))
 		onFlag(MARIO_FLAG_NPC_TALKING);
@@ -2352,7 +2354,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_UNK8);
 
-	if (SMSGetMarDirector()->unk124 == 1
+	if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_TALK_START
 	    && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
@@ -2362,7 +2364,8 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		                >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
-		    && SMSGetMarDirector()->unk124 != 1) {
+		    && SMSGetMarDirector()->mGameMode
+		           != TMarDirector::GAME_MODE_TALK_START) {
 			mFaceAngle.y = (gpCamera->getUnk258() + 0x8000)
 			               - gpCamera->getOffsetAngleY();
 		}

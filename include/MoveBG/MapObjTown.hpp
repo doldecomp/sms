@@ -72,7 +72,7 @@ class TMapObjChangeStage : public TMapObjBase {
 public:
 	TMapObjChangeStage(const char* name = "ステージ切り替え")
 	    : TMapObjBase(name)
-	    , unk138(0)
+	    , mDestinationStage(0)
 	{
 	}
 
@@ -80,7 +80,7 @@ public:
 	virtual void touchPlayer(THitActor*);
 
 public:
-	/* 0x138 */ u16 unk138;
+	/* 0x138 */ u16 mDestinationStage;
 };
 
 class TMapObjChangeStageHipDrop : public TMapObjChangeStage {

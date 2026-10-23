@@ -71,7 +71,7 @@ public:
 	/* 0x14 */ TGuideStageData unk14[10];
 	/* 0x64 */ char unk64[0xBC - 0x64];
 	/* 0xBC */ J2DSetScreen* unkBC;
-	/* 0xC0 */ TMarioGamePad* unkC0;
+	/* 0xC0 */ TMarioGamePad* mGamePad;
 	/* 0xC4 */ u8 unkC4;
 	/* 0xC5 */ u8 unkC5;
 	/* 0xC8 */ JUTTexture* unkC8[10];

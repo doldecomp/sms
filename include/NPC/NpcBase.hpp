@@ -343,7 +343,7 @@ private:
 			        || mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK4)
 			    && !SMS_IsMarioOpeningDoor()) {
 				bool inCameraCube = true;
-				if (SMSGetMarDirector()->mMap == 7) {
+				if (SMSGetMarDirector()->getCurrentStage() == 7) {
 					JGeometry::TVec3<f32> local_58 = mPosition;
 					local_58.y += 75.0f;
 					inCameraCube = SMS_IsInSameCameraCube(local_58);

@@ -77,7 +77,8 @@ public:
 	};
 
 	void registerEventWatcher(TEventWatcher*);
-	u32 setup(JDrama::TDisplay*, TMarioGamePad**, u8, u8);
+	u32 setup(JDrama::TDisplay* display, TMarioGamePad** game_pads, u8 stage,
+	          u8 scenario);
 	static void* setupThreadFunc(void*);
 	TMarDirector();
 	void moveStage();
@@ -92,7 +93,7 @@ public:
 	                         f32, bool, s32 (*)(uintptr_t, u32), uintptr_t,
 	                         JDrama::TActor*, JDrama::TFlagT<u16>);
 	void fireStageEvent(TMapObjBase*);
-	void setNextStage(u16, JDrama::TActor*);
+	void setNextStage(u16 stage, JDrama::TActor* gate_demo_actor);
 	void movement();
 	void fireDemoMovie(u32, TLiveActor*);
 	void fireDefeatEnemy(TSpineEnemy*);
@@ -135,8 +136,8 @@ public:
 	void decideMarioPosIdx();
 
 	// fabricated
-	u8 getCurrentMap() { return mMap; }
-	u8 getCurrentStage() { return unk7D; }
+	u8 getCurrentStage() { return mStage; }
+	u8 getCurrentScenario() { return mScenario; }
 	BOOL checkFlag(u16 flag) const { return mFlags & flag; }
 	void onFlag(u16 flag) { mFlags |= flag; }
 	void offFlag(u16 flag) { mFlags &= ~flag; }
@@ -148,22 +149,35 @@ public:
 	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
-	bool isGameplayModeNow() const { return unk124 == 0; }
-	bool isTalkModeNow() const { return unk124 == 1 || unk124 == 2; }
-	bool isDemoModeNow() const { return unk124 == 3 || unk124 == 4; }
-
-	// TODO: better names
-	bool isDemoMode3() const { return unk124 == 3; }
-	bool isDemoMode4() const { return unk124 == 4; }
-
+	bool isGameplayModeNow() const { return mGameMode == GAME_MODE_NORMAL; }
+	bool isTalkModeNow() const
+	{
+		return mGameMode == GAME_MODE_TALK_START || mGameMode == GAME_MODE_TALK;
+	}
+	bool isDemoModeNow() const
+	{
+		return mGameMode == GAME_MODE_INNER_DEMO
+		       || mGameMode == GAME_MODE_TALKING_DEMO;
+	}
+	bool isInnerDemoModeNow() const
+	{
+		return mGameMode == GAME_MODE_INNER_DEMO;
+	}
+	bool isTalkingDemoModeNow() const
+	{
+		return mGameMode == GAME_MODE_TALKING_DEMO;
+	}
 	bool isTalkOrDemoModeNow() const
 	{
 		return isTalkModeNow() || isDemoModeNow();
 	}
+	bool isInTalkNow() const
+	{
+		return isTalkModeNow() || mGameMode == GAME_MODE_TALKING_DEMO;
+	}
 
-	bool isThing() const { return isTalkModeNow() || unk124 == 4; }
-
-	void* getUnkD4() { return unkD4; }
+	void* get2DArchiveBuffer() { return m2DArchiveBuffer; }
+	JKRMemArchive* get2DArchive() { return m2DArchive; }
 	TBaseNPC* getTalkingNPC() { return unkA0; }
 
 	int getRestTime()
@@ -180,6 +194,19 @@ public:
 	int getMoveTickCount() const { return mMoveTickCount; }
 
 public:
+	enum {
+		GAME_MODE_NORMAL       = 0,
+		GAME_MODE_TALK_START   = 1,
+		GAME_MODE_TALK         = 2,
+		GAME_MODE_INNER_DEMO   = 3,
+		GAME_MODE_TALKING_DEMO = 4,
+	};
+
+	enum {
+		TALK_FLAG_NPC_NEAR_THIS_FRAME = 0x1,
+		TALK_FLAG_NPC_NEAR_LAST_FRAME = 0x2,
+	};
+
 	enum {
 		STATE_UNK0       = 0,
 		STATE_UNK1       = 1,
@@ -248,13 +275,11 @@ public:
 	/* 0x64 */ u8 mState;
 	/* 0x68 */ u32 unk68;
 	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ TCardLoad* unk70;
+	/* 0x70 */ TCardLoad* mCardLoad;
 	/* 0x74 */ TGCConsole2* mConsole;
-	/* 0x78 */ TGuide* unk78;
-	/* 0x7C */ u8 mMap;
-	/* 0x7D */ u8 unk7D; // Scenario
-	/* 0x7E */ u8 unk7E;
-	/* 0x7F */ u8 unk7F;
+	/* 0x78 */ TGuide* mGuide;
+	/* 0x7C */ u8 mStage;
+	/* 0x7D */ u8 mScenario;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
 	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
@@ -266,26 +291,26 @@ public:
 	/* 0xB4 */ u8 unkB4;
 	/* 0xB8 */ JKRMemArchive* unkB8;
 	/* 0xBC */ TNameRefAryT<TStageEventInfo>* unkBC;
-	/* 0xC0 */ JDrama::TDisplay* unkC0;
+	/* 0xC0 */ JDrama::TDisplay* mDisplay;
 	/* 0xC4 */ char unkC4[0x4];
 	/* 0xC8 */ s64 unkC8;
 	/* 0xD0 */ u8 unkD0;
 	/* 0xD1 */ u8 unkD1;
-	/* 0xD4 */ void* unkD4;
-	/* 0xD8 */ JKRMemArchive* unkD8;
+	/* 0xD4 */ void* m2DArchiveBuffer;
+	/* 0xD8 */ JKRMemArchive* m2DArchive;
 	/* 0xDC */ TShineFader* unkDC;
 	/* 0xE0 */ TSunGlass* unkE0;
 	/* 0xE4 */ u32 unkE4;
 	/* 0xE8 */ OSStopwatch unkE8;
 	/* 0x120 */ int unk120;
-	/* 0x124 */ u8 unk124; // Game state, paused, shine animation, 2=talking
-	/* 0x125 */ u8 unk125;
-	/* 0x126 */ u8 unk126; // Next game state
-	/* 0x128 */ u16 unk128;
+	/* 0x124 */ u8 mGameMode;
+	/* 0x125 */ u8 mPrevGameMode;
+	/* 0x126 */ u8 mNextGameMode;
+	/* 0x128 */ u16 mTalkFlags;
 	/* 0x12C */ TDemoInfo mDemoQueue[8];
 	/* 0x24C */ u8 mDemoQueueTail;
 	/* 0x24D */ u8 mDemoQueueHead;
-	/* 0x250 */ JDrama::TActor* unk250;
+	/* 0x250 */ JDrama::TActor* mGateDemoActor;
 	/* 0x254 */ TDemoCannon* unk254;
 	/* 0x258 */ MSStage* unk258;
 	/* 0x25C */ TShine* unk25C;

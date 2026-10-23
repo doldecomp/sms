@@ -800,8 +800,8 @@ void TYoshi::thinkHoldOut()
 
 void TYoshi::movement()
 {
-	if (!SMSGetMarDirector()->isDemoMode3()
-	    && !SMSGetMarDirector()->isDemoMode4()
+	if (!SMSGetMarDirector()->isInnerDemoModeNow()
+	    && !SMSGetMarDirector()->isTalkingDemoModeNow()
 	    && !SMSGetMarDirector()->isTalkModeNow()) {
 		if (!mMario->checkStatusType(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;

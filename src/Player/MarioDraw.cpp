@@ -1280,9 +1280,9 @@ void TMario::initModel()
 	}
 
 	mSurfGesso = nullptr;
-	if (SMSGetMarDirector()->mMap == 58
-	    && (SMSGetMarDirector()->unk7D == 0
-	        || SMSGetMarDirector()->unk7D == 1)) {
+	if (SMSGetMarDirector()->getCurrentStage() == 58
+	    && (SMSGetMarDirector()->getCurrentScenario() == 0
+	        || SMSGetMarDirector()->getCurrentScenario() == 1)) {
 		MActorAnmData* anmData = new MActorAnmData();
 		anmData->init("/scene/map/map/Torocco", nullptr);
 		mTorocco = new MActor(anmData);
@@ -1295,7 +1295,7 @@ void TMario::initModel()
 		                                     | (4 << J3DMLF_TevStageNumShift)),
 		                 0, 1),
 		    0);
-		if (SMSGetMarDirector()->unk7D == 0) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 0) {
 			mRailType              = 0;
 			MActorAnmData* anmData = new MActorAnmData();
 			anmData->init("/scene/map/map/Pinna_rail", nullptr);
@@ -1320,7 +1320,7 @@ void TMario::initModel()
 			mTorocco->getModel()->setBaseTRMtx(
 			    mPinaRail->getModel()->getAnmMtx(0));
 		}
-		if (SMSGetMarDirector()->unk7D == 1) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 1) {
 			mRailType              = 1;
 			MActorAnmData* anmData = new MActorAnmData();
 			anmData->init("/scene/map/map/Koopa_rail", nullptr);

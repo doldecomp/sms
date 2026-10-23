@@ -97,8 +97,8 @@ static void unitVecTo(const JGeometry::TVec3<f32>& from,
 // RotateAboutAxis copy, 0xA8 in the temps after it.
 void CPolarSubCamera::ctrlJetCoasterCamera_()
 {
-	if (SMSGetMarDirector()->getCurrentMap() == 0x3A
-	    && SMSGetMarDirector()->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentStage() == 0x3A
+	    && SMSGetMarDirector()->getCurrentScenario() == 0)
 		drawJetCoasterBalloonMessage_();
 
 	bool startedLButton = false;

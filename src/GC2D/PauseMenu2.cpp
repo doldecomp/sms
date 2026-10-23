@@ -108,14 +108,14 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 
 	mStagePane = mScreen->search('brek');
 
-	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->getCurrentMap());
+	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
 	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
 	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
 	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/stagename.bmg")));
-	if (SMSGetMarDirector()->getCurrentMap() == 0x14)
+	if (SMSGetMarDirector()->getCurrentStage() == 0x14)
 		shineStage = 0;
 	mStageName->setString(SMSGetMessageData(stageBmg, shineStage));
 #else
@@ -123,7 +123,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	    JKRFileLoader::getGlbResource("/common/2d/stagename.bmg"), shineStage));
 #endif
 
-	if (SMSGetMarDirector()->getCurrentMap() != 0xF) {
+	if (SMSGetMarDirector()->getCurrentStage() != 0xF) {
 		void* scenarioBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
 		    "/common/2d/scenarioname.bmg", GMSP01("/cmn2d/scenarioname.bmg"),
 		    GMSP01_NX("/cmn2d/scenarioname.bmg")));

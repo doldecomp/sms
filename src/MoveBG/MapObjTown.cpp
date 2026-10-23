@@ -305,7 +305,7 @@ u32 TMapObjBillboard::touchWater(THitActor* param_1)
 
 void TMapObjChangeStage::touchPlayer(THitActor*)
 {
-	SMSGetMarDirector()->setNextStage(unk138, nullptr);
+	SMSGetMarDirector()->setNextStage(mDestinationStage, nullptr);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mColCount = 0;
 	gpMSound->startSoundActor(MSD_SE_MA_WARP_EX, &mPosition, 0, nullptr, 0, 4);
@@ -316,14 +316,14 @@ void TMapObjChangeStage::load(JSUMemoryInputStream& stream)
 	TMapObjBase::load(stream);
 	u32 val;
 	stream >> val;
-	unk138 = val;
+	mDestinationStage = val;
 }
 
 void TMapObjChangeStageHipDrop::touchPlayer(THitActor*)
 {
 	if (SMS_IsMarioStatusHipDrop()
 	    && SMS_GetMarioPos().y + SMS_GetMarioSpeedY() < SMS_GetMarioGrLevel()) {
-		SMSGetMarDirector()->setNextStage(unk138, nullptr);
+		SMSGetMarDirector()->setNextStage(mDestinationStage, nullptr);
 		gpMarioParticleManager->emit(MAPOBJ_MS_EX_HAHEN, &mPosition, 0,
 		                             nullptr);
 	}
@@ -610,7 +610,8 @@ void TRedCoinSwitch::load(JSUMemoryInputStream& stream)
 	else
 		mRedCoinTimer *= 10;
 
-	u8 shineId = SMS_getShineIDofExStage(SMSGetMarDirector()->getCurrentMap());
+	u8 shineId
+	    = SMS_getShineIDofExStage(SMSGetMarDirector()->getCurrentStage());
 	if (shineId != 0xFF
 	    && !TFlagManager::getInstance()->getShineFlag(shineId)) {
 		makeObjDead();

@@ -77,8 +77,8 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 void TMarDirector::movement_game()
 {
 	unk84->associateNPC(nullptr);
-	switch (unk124) {
-	case 0:
+	switch (mGameMode) {
+	case GAME_MODE_NORMAL:
 		mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
 		if (gpMarioOriginal->isHolding() || gpCamera->isLButtonCamera())
 			break;
@@ -92,11 +92,11 @@ void TMarDirector::movement_game()
 					unkA0 = talkNpc;
 					unk84->associateNPC(talkNpc);
 					mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
-					unk128 |= 0x1;
-					if ((unk128 & 2)
+					mTalkFlags |= TALK_FLAG_NPC_NEAR_THIS_FRAME;
+					if ((mTalkFlags & TALK_FLAG_NPC_NEAR_LAST_FRAME)
 					    && (mGamePads[0]->checkFrameMeaning(
 					        TMarioGamePad::MEANING_TALK_B)))
-						unk126 = 1;
+						mNextGameMode = GAME_MODE_TALK_START;
 				}
 			}
 		}
@@ -177,26 +177,25 @@ void TMarDirector::movement()
 	}
 }
 
-void TMarDirector::setNextStage(u16 param_1, JDrama::TActor* param_2)
+void TMarDirector::setNextStage(u16 stage, JDrama::TActor* gate_demo_actor)
 {
 	if (checkFlag(DIRECTOR_FLAG_STAGE_TRANSITION_PENDING))
 		return;
 
 	TGameSequence local;
-	int stage = param_1;
-	if (param_1 >= 0x100) {
-		local.unk0 = (stage >> 8) - 1;
-		local.unk1 = stage;
+	if (stage >= 0x100) {
+		local.mStage    = (stage >> 8) - 1;
+		local.mScenario = stage & 0xFF;
 	} else {
-		local.unk0 = param_1;
-		local.unk1 = 0xff;
+		local.mStage    = stage;
+		local.mScenario = 0xff;
 	}
 	SMSGetApplication()->setNextArea(local);
 
 	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
-	if (param_2) {
+	if (gate_demo_actor) {
 		onFlag(DIRECTOR_FLAG_ACTOR_DEMO_STAGE_TRANSITION_PENDING);
-		unk250 = param_2;
+		mGateDemoActor = gate_demo_actor;
 	} else {
 		if ((curArea.getStage() == 1 && local.getStage() == 5)
 		    || (curArea.getStage() == 1 && local.getStage() == 6)

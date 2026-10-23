@@ -762,7 +762,7 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	stream >> size;
 	unk138 = 100.0f * size / 2.0f;
 	unk13C = unk138;
-	if (SMSGetMarDirector()->unk7D == 1) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 1) {
 		char buffer[0x40];
 		stream.readString(buffer, sizeof(buffer));
 		stream >> unk1A0.x >> unk1A0.y >> unk1A0.z;
@@ -773,7 +773,7 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	snprintf(path, sizeof(path), "/scene/mapObj/%sTop.bmd", mIndividualName);
 	mirror->init(path);
 	mirror->unk28 = getModel();
-	if (SMSGetMarDirector()->unk7D != 1)
+	if (SMSGetMarDirector()->getCurrentScenario() != 1)
 		mState = STATE_DONE;
 }
 
