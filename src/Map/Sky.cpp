@@ -35,7 +35,7 @@ void TSky::perform(u32 cue, JDrama::TGraphics* graphics)
 		                 - local_EC[2][1] * mtx[1][3]
 		                 - local_EC[2][2] * mtx[2][3];
 
-		if (SMSGetMarDirector()->getCurrentMap() == 15) {
+		if (SMSGetMarDirector()->getCurrentStage() == 15) {
 			Mtx local_8C;
 			f32 fVar2 = sinf(unk48 * 0.017453294f);
 			f32 fVar3 = cosf(unk48 * 0.017453294f);
@@ -107,7 +107,7 @@ void TSky::load(JSUMemoryInputStream& stream)
 		unk44->initDL();
 	}
 
-	if (SMSGetMarDirector()->mMap != 15)
+	if (SMSGetMarDirector()->getCurrentStage() != 15)
 		TMapObjBase::startAllAnim(unk44, "sky");
 }
 

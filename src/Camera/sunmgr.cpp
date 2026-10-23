@@ -53,7 +53,7 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 		}
 	}
 
-	if (unk14 != 0 && SMSGetMarDirector()->getCurrentMap() == 1
+	if (unk14 != 0 && SMSGetMarDirector()->getCurrentStage() == 1
 	    && TFlagManager::getInstance()->getBool(MSF_NOKI_AVAILABLE)) {
 		unk15 |= 0x1;
 		TStagePositionInfo* sunWarpPoint

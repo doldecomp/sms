@@ -130,7 +130,7 @@ void TConductor::polluterExterminated() { }
 
 BOOL TConductor::isBossDefeated()
 {
-	switch (SMSGetMarDirector()->getCurrentMap()) {
+	switch (SMSGetMarDirector()->getCurrentStage()) {
 	default:
 	case 1: {
 		TEnemyManager* mgr

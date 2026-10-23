@@ -304,7 +304,7 @@ void TCoin::loadAfter()
 	if (!gpMirrorModelManager->isInMirror(mPosition))
 		return;
 
-	if (SMSGetMarDirector()->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentStage() == 2) {
 		const TBGCheckData* check;
 		gpMap->checkGround(mPosition, &check);
 		if (!check->isWaterSurface())
@@ -858,9 +858,9 @@ TShine::TShine(const char* name)
 
 void TEggYoshi::decideRandomLoveFruit()
 {
-	u8 map = SMSGetMarDirector()->mMap;
+	u8 map = SMSGetMarDirector()->getCurrentStage();
 
-	if (map == 7 && SMSGetMarDirector()->unk7D == 1) {
+	if (map == 7 && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		unk14C = ACTOR_TYPE_FRUIT_PINE;
 		return;
 	}
@@ -1072,7 +1072,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 			makeObjDead();
 			return;
 		}
-	} else if (SMSGetMarDirector()->mMap == 1) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		if (!TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 			makeObjDead();
 			return;
@@ -1239,9 +1239,9 @@ void TNozzleBox::touchPlayer(THitActor*)
 {
 	if (mContainedNozzleType == TWaterGun::Hover
 	    && !TFlagManager::getInstance()->getNozzleRight(
-	        SMSGetMarDirector()->getCurrentMap(), 0)
+	        SMSGetMarDirector()->getCurrentStage(), 0)
 	    && !TFlagManager::getInstance()->getNozzleRight(
-	        SMSGetMarDirector()->getCurrentMap(), 1)
+	        SMSGetMarDirector()->getCurrentStage(), 1)
 	    && !mBalloonShown) {
 		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0057, true);
 		mBalloonShown = true;
@@ -1303,7 +1303,7 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 		mBoxColor.g          = 0;
 		mBoxColor.b          = 0;
 		if (TFlagManager::getInstance()->getNozzleRight(
-		        SMSGetMarDirector()->mMap, 0)) {
+		        SMSGetMarDirector()->getCurrentStage(), 0)) {
 			mIsValid      = true;
 			mBalloonShown = true;
 		}
@@ -1313,7 +1313,7 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 		mBoxColor.g          = 0x5A;
 		mBoxColor.b          = 0x78;
 		if (TFlagManager::getInstance()->getNozzleRight(
-		        SMSGetMarDirector()->mMap, 1)) {
+		        SMSGetMarDirector()->getCurrentStage(), 1)) {
 			mIsValid      = true;
 			mBalloonShown = true;
 		}

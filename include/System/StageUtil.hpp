@@ -122,7 +122,7 @@ static bool SMS_isGetShine(u32 stage, u32 scenario, bool is_etc_shine)
 inline bool SMS_isGetBlueCoin(u32 id)
 {
 	return TFlagManager::getInstance()->getBlueCoinFlag(
-	    SMSGetMarDirector()->getCurrentMap(), id);
+	    SMSGetMarDirector()->getCurrentStage(), id);
 }
 
 #endif

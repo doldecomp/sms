@@ -235,7 +235,7 @@ void TMapObjTreeScale::control()
 {
 	switch (mState) {
 	case STATE_SMALL:
-		if (SMSGetMarDirector()->getCurrentMap() != 4
+		if (SMSGetMarDirector()->getCurrentStage() != 4
 		    && !gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z))
 			startScaleUp();
 		break;
@@ -279,7 +279,7 @@ void TMapObjTreeScale::control()
 
 	if (isState(STATE_SCALING_UP_Y_ONLY) || isState(STATE_SCALING_UP)) {
 		setObjHitData(0);
-		if (SMSGetMarDirector()->getCurrentMap() != 2
+		if (SMSGetMarDirector()->getCurrentStage() != 2
 		    || (!SMSGetMarDirector()->isDemoModeNow()
 		        && (unk2E0 == nullptr || unk2E0->isBuried(1)))) {
 			SMSRumbleMgr->start(0x13, &mPosition);
@@ -326,7 +326,7 @@ void TMapObjTreeScale::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
 
-	if (SMSGetMarDirector()->getCurrentMap() == 4
+	if (SMSGetMarDirector()->getCurrentStage() == 4
 	    || gpPollution->isPolluted(mPosition.x, mPosition.y, mPosition.z)) {
 		beSmall();
 	}

@@ -20,8 +20,7 @@
 #include <macros.h>
 #include <stdio.h>
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 CPolarSubCamera* gpCamera;
 
@@ -92,8 +91,8 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	int stage = SMSGetMarDirector()->getCurrentStage();
-	if (SMSGetMarDirector()->getCurrentMap() == 58
+	int stage = SMSGetMarDirector()->getCurrentScenario();
+	if (SMSGetMarDirector()->getCurrentStage() == 58
 	    && (stage == 0 || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
@@ -127,7 +126,7 @@ void CPolarSubCamera::loadAfter()
 {
 	JDrama::TLookAtCamera::loadAfter();
 	mInitialMode = CAMERA_MODE_FOLLOW;
-	if (SMSGetMarDirector()->getCurrentMap() == 7) {
+	if (SMSGetMarDirector()->getCurrentStage() == 7) {
 		mInitialMode = CAMERA_MODE_DELFINO;
 	} else if (SMS_isExMap()) {
 		mInitialMode = CAMERA_MODE_EX_MAP_0;
@@ -235,7 +234,7 @@ void CPolarSubCamera::loadAfter()
 	calcExternalData_();
 
 	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE)
-	    && SMSGetMarDirector()->unk7D == 1) {
+	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    cJetCoasterDemoBckName, nullptr, -1, 0.0f, true,
 		    &JetCoasterDemoCallBack, (uintptr_t)this, nullptr,

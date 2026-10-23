@@ -5,6 +5,9 @@
 #include <M3DUtil/M3UJoint.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
 
+static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
+static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+
 class M3UMtxCalcSIAnmBlendQuat;
 
 class M3UModelCommonMario : public M3UModelCommon {

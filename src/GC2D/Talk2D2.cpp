@@ -1214,8 +1214,8 @@ bool TTalk2D2::appearBoardBoxWindow()
 void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 {
 	if (param_1 & CUE_MOVE) {
-		switch (SMSGetMarDirector()->unk124) {
-		case 2:
+		switch (SMSGetMarDirector()->mGameMode) {
+		case TMarDirector::GAME_MODE_TALK:
 			switch (unk248) {
 			case STATE_UNK2:
 				if (gpCamera->isThing()) {
@@ -1268,8 +1268,8 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & CUE_CALC_ANIM) {
-		switch (SMSGetMarDirector()->unk124) {
-		case 2:
+		switch (SMSGetMarDirector()->mGameMode) {
+		case TMarDirector::GAME_MODE_TALK:
 			switch (unk248) {
 			case STATE_UNK2:
 				break;
@@ -1322,8 +1322,8 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	if (param_1 & CUE_DRAW) {
-		switch (SMSGetMarDirector()->unk124) {
-		case 2: {
+		switch (SMSGetMarDirector()->mGameMode) {
+		case TMarDirector::GAME_MODE_TALK: {
 			ReInitializeGX();
 			SMS_DrawInit();
 

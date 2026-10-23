@@ -33,9 +33,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
 static const GXColor bodyColor[4] = {
 	{ 0x40, 0xA1, 0x24, 0xFF },
 	{ 0xFF, 0x8C, 0x1C, 0xFF },
@@ -803,8 +800,8 @@ void TYoshi::thinkHoldOut()
 
 void TYoshi::movement()
 {
-	if (!SMSGetMarDirector()->isDemoMode3()
-	    && !SMSGetMarDirector()->isDemoMode4()
+	if (!SMSGetMarDirector()->isInnerDemoModeNow()
+	    && !SMSGetMarDirector()->isTalkingDemoModeNow()
 	    && !SMSGetMarDirector()->isTalkModeNow()) {
 		if (!mMario->checkStatusType(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;

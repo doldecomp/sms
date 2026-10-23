@@ -791,9 +791,9 @@ void TBossPakkun::init(TLiveManager* manager)
 
 	if (static_cast<TBossPakkunManager*>(mManager)->unk54 != 0) {
 		mSpine->initWith(&TNerveBPWaitL::theNerve());
-	} else if (SMSGetMarDirector()->mMap == 0x37) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 0x37) {
 		mSpine->initWith(&TNerveBPFall::theNerve());
-	} else if (SMSGetMarDirector()->unk7D == 4) {
+	} else if (SMSGetMarDirector()->getCurrentScenario() == 4) {
 		mSpine->initWith(&TNerveBPSleep::theNerve());
 	} else {
 		mSpine->initWith(&TNerveBPWait::theNerve());
@@ -912,8 +912,8 @@ void TBossPakkun::showMessage(u32 message)
 
 bool TBossPakkun::is2ndFightNow() const
 {
-	if (SMSGetMarDirector()->getCurrentMap() == 2
-	    && SMSGetMarDirector()->getCurrentStage() == 4)
+	if (SMSGetMarDirector()->getCurrentStage() == 2
+	    && SMSGetMarDirector()->getCurrentScenario() == 4)
 		return true;
 	return false;
 }
@@ -995,7 +995,7 @@ void TBossPakkun::gotHipDropDamage()
 	} else if (!mSpine->isNerve(&TNerveBPTumbleOut::theNerve())) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_BSPAKU_DAMAGE, &mPosition, 0,
 		                                nullptr, 0, 4);
-		if (SMSGetMarDirector()->getCurrentStage() == 4) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 4) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPTakeOff::theNerve());
 			mSpine->pushNerve(&TNerveBPGetUp::theNerve());
@@ -1420,9 +1420,9 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 
 	if (spine->getTime() >= boss->getBossPakkunParams()->mSLWaitFrameStg0.get()
 	    && boss->getMActor()->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
-		if (SMSGetMarDirector()->mMap == 2
-		    && (SMSGetMarDirector()->unk7D == 0
-		        || SMSGetMarDirector()->unk7D == 1)) {
+		if (SMSGetMarDirector()->getCurrentStage() == 2
+		    && (SMSGetMarDirector()->getCurrentScenario() == 0
+		        || SMSGetMarDirector()->getCurrentScenario() == 1)) {
 			BOOL marioInArea = boss->inArea(SMS_GetMarioPos());
 			if (marioInArea && !SMS_GetMarioGroundPlane()->isWaterSurface()) {
 				spine->pushAfterCurrent(&TNerveBPCannon::theNerve());
@@ -1432,7 +1432,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 			return true;
 		}
 
-		if (SMSGetMarDirector()->unk7D == 4) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 4) {
 			f32 tornadoProp = boss->getBossPakkunParams()->mSLTornadoProp.get();
 			if (boss->mTornado->unk98 != 0
 			    || rand() * (1.0f / 32768.0f) < tornadoProp) {

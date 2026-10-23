@@ -125,7 +125,7 @@ static inline void setLifeMeterWhiteLow(TGCConsole2* console, bool airMode)
 static inline void playLifeChangeSound(u32 sound)
 {
 	if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-	    && SMSGetMarDirector()->unk124 == 0) {
+	    && SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL) {
 		SMSGetMSound()->startSoundSystemSE(sound, 0, nullptr, 0);
 	}
 }
@@ -1153,8 +1153,8 @@ void TGCConsole2::startCameraDemo()
 			startDisappearTank();
 	} else {
 #if defined(VERSION_GMSJ01_01)
-		if (SMSGetMarDirector()->mMap != 0x3A
-		    || SMSGetMarDirector()->unk7D != 1)
+		if (SMSGetMarDirector()->getCurrentStage() != 0x3A
+		    || SMSGetMarDirector()->getCurrentScenario() != 1)
 			startDisappearTank();
 #else
 		startDisappearTank();
@@ -2973,8 +2973,8 @@ void TGCConsole2::checkChangeTelopArray()
 {
 	u32* oldArray = unk570;
 
-	if (SMSGetMarDirector()->mMap == 1) {
-		switch (SMSGetMarDirector()->unk7D) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
+		switch (SMSGetMarDirector()->getCurrentScenario()) {
 		case 0:
 			unk570 = scDolpicNewsDolpic0;
 			break;
@@ -3766,7 +3766,8 @@ void TGCConsole2::performMovement()
 			playLifeChangeSound(0x4823);
 #else
 			if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-			    && SMSGetMarDirector()->unk124 == 0) {
+			    && SMSGetMarDirector()->mGameMode
+			           == TMarDirector::GAME_MODE_NORMAL) {
 				if (airMode)
 					SMSGetMSound()->startSoundSystemSE(0x480C, 0, nullptr, 0);
 				else
@@ -3837,7 +3838,7 @@ void TGCConsole2::performMovement()
 		    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
 		    && SMSGetMarDirector()->mState != TMarDirector::STATE_CARD_SAVE
 		    && !unk50 && unk16C == 0 && unk8A == 0
-		    && SMSGetMarDirector()->unk124 != 2) {
+		    && SMSGetMarDirector()->mGameMode != TMarDirector::GAME_MODE_TALK) {
 			startDisappearStar();
 			startDisappearMario();
 			unk5A = 0;
@@ -4137,7 +4138,8 @@ void TGCConsole2::performMovement()
 		if ((f32)unk86 < rate * 2.0f) {
 			if (unk1CC <= 3 && unk1CC != 0 && unk86 == (int)(1.5f * rate)
 			    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-			    && SMSGetMarDirector()->unk124 == 0
+			    && SMSGetMarDirector()->mGameMode
+			           == TMarDirector::GAME_MODE_NORMAL
 			    && SMSGetMSound()->gateCheck(0x4800)) {
 				MSoundSESystem::MSoundSE::startSoundSystemSE(0x4800, 0, nullptr,
 				                                             0);
@@ -4290,7 +4292,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
-	    && SMSGetMarDirector()->unk124 == 0) {
+	    && SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL) {
 		if (unk55C < 0xffffffff)
 			++unk55C;
 	}
@@ -4340,12 +4342,12 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk59) {
-		if (SMSGetMarDirector()->unk124 == 0
+		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
 #if !defined(VERSION_GMSJ01)
-		    && (SMSGetMarDirector()->mMap != 9
-		        || SMSGetMarDirector()->unk7D != 2)
+		    && (SMSGetMarDirector()->getCurrentStage() != 9
+		        || SMSGetMarDirector()->getCurrentScenario() != 2)
 #endif
 		    && SMSGetMSound()->gateCheck(0x4819))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x4819, 0, nullptr, 0);
@@ -4353,12 +4355,12 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk5A) {
-		if (SMSGetMarDirector()->unk124 == 0
+		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
 #if !defined(VERSION_GMSJ01)
-		    && (SMSGetMarDirector()->mMap != 9
-		        || SMSGetMarDirector()->unk7D != 2)
+		    && (SMSGetMarDirector()->getCurrentStage() != 9
+		        || SMSGetMarDirector()->getCurrentScenario() != 2)
 #endif
 		    && SMSGetMSound()->gateCheck(0x481A))
 			MSoundSESystem::MSoundSE::startSoundSystemSE(0x481A, 0, nullptr, 0);

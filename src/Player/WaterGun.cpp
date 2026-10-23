@@ -33,10 +33,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// TODO: these come from some header...
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
 // rogue include needed for matching rodata: zero/unit Vec literals
 #include <Map/MapCollisionEntry.hpp>
 
@@ -944,7 +940,7 @@ void TNozzleDeform::animation(int param)
 	if (param == 3)
 		return;
 
-	if (gpMarDirector->unk124 == 3)
+	if (gpMarDirector->mGameMode == TMarDirector::GAME_MODE_INNER_DEMO)
 		return;
 
 	if (mFludd->isSwitchingToSecondaryNozzle()) {

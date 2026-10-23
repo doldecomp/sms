@@ -281,7 +281,7 @@ void TMapObjFlagManager::load(JSUMemoryInputStream& stream)
 	char buf[8];
 	stream.readString(buf, 8);
 
-	switch (SMSGetMarDirector()->getCurrentMap()) {
+	switch (SMSGetMarDirector()->getCurrentStage()) {
 	case 0:
 		TMapObjFlag::mFlutterSpeed = 16.0f;
 		break;

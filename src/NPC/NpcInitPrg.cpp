@@ -168,7 +168,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	onLiveFlag(LIVE_FLAG_UNK1000000);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	onLiveFlag(LIVE_FLAG_UNK1000);
-	if (SMSGetMarDirector()->mMap != 8
+	if (SMSGetMarDirector()->getCurrentStage() != 8
 	    || (strcmp(mName, cNotUseFastCubeViewObjName0) != 0
 	        && strcmp(mName, cNotUseFastCubeViewObjName1) != 0)) {
 		onLiveFlag(LIVE_FLAG_UNK2000);

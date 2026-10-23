@@ -502,7 +502,7 @@ bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
 
 BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 {
-	if (gpMarDirector->isThing())
+	if (gpMarDirector->isInTalkNow())
 		return false;
 	bool result = false;
 	if (isReactToTrampleOrHipDrop_()) {
@@ -546,7 +546,7 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 
 BOOL TBossHanachanPartsHead::receiveMessage(THitActor*, u32 message)
 {
-	if (gpMarDirector->isThing())
+	if (gpMarDirector->isInTalkNow())
 		return false;
 	bool result = false;
 	if (isReactToTrampleOrHipDrop_()) {

@@ -327,7 +327,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 		if (!TFlagManager::getInstance()->getBool(MSF_GELATO_UNLOCKABLE))
 			onLiveFlag(LIVE_FLAG_DEAD);
 	} else {
-		u8 map = SMSGetMarDirector()->getCurrentMap();
+		u8 map = SMSGetMarDirector()->getCurrentStage();
 		if (map == 0)
 			mVariant = VARIANT_AIRPORT;
 		else if (map == 1)
@@ -336,7 +336,7 @@ void TBiancoGateKeeper::init(TLiveManager* manager)
 			mVariant = VARIANT_GENERIC;
 	}
 
-	if (SMSGetMarDirector()->getCurrentMap() == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		mStampModel = mMActorKeeper->createMActor("stamp_keeper_model1.bmd", 3);
 		mStampModel->setBckFromIndex(0x13);
 		if (mVariant == VARIANT_DOLPIC_TOWN)
@@ -772,7 +772,7 @@ DEFINE_NERVE(TNerveBGKSleep, TLiveActor)
 		}
 	}
 
-	if (SMSGetMarDirector()->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentStage() == 2) {
 		if (self->unk298 > 0)
 			self->unk298--;
 		if (self->unk298 == 0) {
@@ -826,7 +826,7 @@ DEFINE_NERVE(TNerveBGKAppear, TLiveActor)
 	}
 
 	if (self->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
-		if (SMSGetMarDirector()->getCurrentMap() == 0)
+		if (SMSGetMarDirector()->getCurrentStage() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
 			spine->pushAfterCurrent(&TNerveBGKWait::theNerve());
@@ -933,7 +933,7 @@ DEFINE_NERVE(TNerveBGKWait2, TLiveActor)
 		} else if (actor->checkCurBckFromIndex(0x10)) {
 			self->unk288++;
 			if (self->unk288 == 2 && self->unk28A == 1
-			    && SMSGetMarDirector()->getCurrentMap() == 0)
+			    && SMSGetMarDirector()->getCurrentStage() == 0)
 				SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0000,
 				                                                      true);
 			if (self->unk288 > self->getSaveParams()->mSLLoop2Dive.get()) {
@@ -986,7 +986,7 @@ DEFINE_NERVE(TNerveBGKAwakeDamage, TLiveActor)
 		self->changeBck(3);
 
 	if (self->curBckFinished()) {
-		if (SMSGetMarDirector()->getCurrentMap() == 0)
+		if (SMSGetMarDirector()->getCurrentStage() == 0)
 			spine->pushAfterCurrent(&TNerveBGKWait2::theNerve());
 		else
 			spine->pushAfterCurrent(&TNerveBGKWait::theNerve());

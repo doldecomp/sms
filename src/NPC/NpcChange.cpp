@@ -171,7 +171,7 @@ bool TBaseNPC::isNerveCanGoToBlown() const
 	    || nerve == &TNerveNPCTurnToMario::theNerve()
 	    || nerve == &TNerveNPCWet::theNerve()
 	    || nerve == &TNerveNPCMareStand::theNerve())
-		if (!SMSGetMarDirector()->isThing())
+		if (!SMSGetMarDirector()->isInTalkNow())
 			result = true;
 	return result;
 }

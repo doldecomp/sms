@@ -95,7 +95,7 @@ void TSunGlass::perform(u32 cue, JDrama::TGraphics* graphics)
 u8 TSunGlass::getShineAlpha()
 {
 	u8 alpha = 0;
-	if (SMSGetMarDirector()->getCurrentMap() == 1)
+	if (SMSGetMarDirector()->getCurrentStage() == 1)
 		alpha = (u8)((f32)(unk1E - unk1F)
 		             * (1.0f
 		                - (f32)TFlagManager::getInstance()->getFlag(
@@ -133,7 +133,7 @@ void TSunShine::perform(u32 cue, JDrama::TGraphics* graphics)
 void TSunShine::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	if (SMSGetMarDirector()->getCurrentMap() == 6) {
+	if (SMSGetMarDirector()->getCurrentStage() == 6) {
 		unk14.r = 0x48;
 		unk14.g = 0x30;
 		unk14.b = 0;

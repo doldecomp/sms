@@ -254,7 +254,7 @@ DEFINE_NERVE(TNerveNPCTalk, TLiveActor)
 {
 	TBaseNPC* self = (TBaseNPC*)spine->getBody();
 
-	if (SMSGetMarDirector()->isThing()) {
+	if (SMSGetMarDirector()->isInTalkNow()) {
 		if (spine->getTime() == 0)
 			self->npcTalkIn();
 		self->npcTalking();

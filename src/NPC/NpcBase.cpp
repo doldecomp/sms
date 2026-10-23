@@ -107,8 +107,8 @@ void TBaseNPC::loadAfter()
 {
 	TSpineEnemy::loadAfter();
 	if (mActorType == ACTOR_TYPE_NPC_PEACH
-	    && SMSGetMarDirector()->getCurrentMap() == 1
-	    && SMSGetMarDirector()->getCurrentStage() == 1) {
+	    && SMSGetMarDirector()->getCurrentStage() == 1
+	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		mBalloonCtrl = new TNpcBalloon;
 	}
 	SMSGetMarDirector()->entryNPC(this);

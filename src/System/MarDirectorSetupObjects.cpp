@@ -223,7 +223,7 @@ bool TMarDirector::setupObjects()
 	u32 flag = SMS_getShineStage(curArea.getStage()) + MSF_VISITED_BASE;
 	TFlagManager::getInstance()->setBool(true, flag);
 
-	MSMainProc::setMSoundEnterStage(mMap, unk7D);
+	MSMainProc::setMSoundEnterStage(mStage, mScenario);
 	if (!TFlagManager::getInstance()->getBool(MSF_MSOUND_WAVE_LOADED)) {
 		TFlagManager::getInstance()->setBool(true, MSF_MSOUND_WAVE_LOADED);
 		gpMSound->loadWave(MS_WAVE_DEFAULT);
@@ -386,7 +386,7 @@ bool TMarDirector::setupObjects()
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* perfEventGroup
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("PERF Event Group");
 	root->getChildren().push_back(perfEventGroup);
-	JDrama::TFrmGXSet* drawInit = new JDrama::TFrmGXSet(unkC0);
+	JDrama::TFrmGXSet* drawInit = new JDrama::TFrmGXSet(mDisplay);
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* drawBufferGroup
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(

@@ -31,7 +31,7 @@ TGuide::TGuide(const char* name)
     : JDrama::TViewObj(name)
     , unk10(STATE_CLOSED)
     , unkBC(nullptr)
-    , unkC0(nullptr)
+    , mGamePad(nullptr)
     , unkC4(0)
     , unkC5(0)
     , unk160(0xff)
@@ -47,7 +47,7 @@ void TGuide::load(JSUMemoryInputStream& stream)
 	unkC5 = 0;
 	JDrama::TNameRef::load(stream);
 
-	JKRMemArchive* archive = setup(SMSGetMarDirector()->unkD8);
+	JKRMemArchive* archive = setup(SMSGetMarDirector()->get2DArchive());
 
 	unkBC = new J2DSetScreen("guide_1.blo", archive);
 	((J2DTextBox*)unkBC->search('a_ic'))->setFont(gpSystemFont);
@@ -391,12 +391,12 @@ void TGuide::startMoveCursor2()
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
-	u8 map    = SMSGetMarDirector()->getCurrentMap();
+	u8 map    = SMSGetMarDirector()->getCurrentStage();
 	s16 stage = SMS_getShineStage(map);
 	if (map == 0x14)
 		stage = 0;
 #else
-	s16 stage = SMS_getShineStage(SMSGetMarDirector()->mMap);
+	s16 stage = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
 #endif
 	unk42C = stage;
 	resetObjects();
@@ -412,19 +412,19 @@ void TGuide::startMoveCursor2()
 
 void TGuide::linkSelect()
 {
-	unkC0->onFlag(TMarioGamePad::PAD_FLAG_GUIDE_INPUT);
+	mGamePad->onFlag(TMarioGamePad::PAD_FLAG_GUIDE_INPUT);
 #ifdef VERSION_GMSP01_NX
-	if (unkC0->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)
-	    || (s_RunOnGC && (unkC0->mButton.mTrigger & JUTGamePad::Z))
-	    || (!s_RunOnGC && (unkC0->mButton.mAnalogR & 2)))
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)
+	    || (s_RunOnGC && (mGamePad->mButton.mTrigger & JUTGamePad::Z))
+	    || (!s_RunOnGC && (mGamePad->mButton.mAnalogR & 2)))
 		unk10 = STATE_CLOSE;
 #else
-	if (unkC0->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)
-	    || (unkC0->mButton.mTrigger & JUTGamePad::Z))
+	if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_B)
+	    || (mGamePad->mButton.mTrigger & JUTGamePad::Z))
 		unk10 = STATE_CLOSE;
 #endif
-	s16 dx = unkC0->getCompSPos(4, 0) * 3.2f;
-	s16 dy = -3.2f * unkC0->getCompSPos(4, 1);
+	s16 dx = mGamePad->getCompSPos(4, 0) * 3.2f;
+	s16 dy = -3.2f * mGamePad->getCompSPos(4, 1);
 	int x  = unk128[0]->getPane()->getBounds().x1;
 	int y  = unk128[0]->getPane()->getBounds().y1;
 	x += dx;
@@ -447,7 +447,7 @@ void TGuide::linkSelect()
 	unk128[0]->getPane()->move(x, y);
 	unk128[1]->getPane()->move(x + 7, y + 4);
 	int stage = checkPoint(x - 2, y + 10);
-	if (stage != -1 && unkC0->checkMeaning(TMarioGamePad::MEANING_MENU_A))
+	if (stage != -1 && mGamePad->checkMeaning(TMarioGamePad::MEANING_MENU_A))
 		appearGuidePane(stage);
 	if (stage != -1 && stage < 10) {
 		int alpha = unk44C[stage]->getAlpha();
@@ -722,10 +722,10 @@ void TGuide::placeMario()
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
-	u8 map = SMSGetMarDirector()->getCurrentMap();
+	u8 map = SMSGetMarDirector()->getCurrentStage();
 	if (SMS_getShineStage(map) != 1 || map == 0x14) {
 #else
-	if (SMS_getShineStage(SMSGetMarDirector()->mMap) != 1) {
+	if (SMS_getShineStage(SMSGetMarDirector()->getCurrentStage()) != 1) {
 #endif
 		unk430->hide();
 		return;
@@ -823,13 +823,14 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
-		u32 map = SMSGetMarDirector()->getCurrentMap();
+		u32 map = SMSGetMarDirector()->getCurrentStage();
 		if (map == 0x14)
 			map = 0;
 		JUTRect bounds(unk168[SMS_getShineStage(map)]->getBounds());
 #else
 		JUTRect bounds(
-		    unk168[SMS_getShineStage(SMSGetMarDirector()->mMap)]->getBounds());
+		    unk168[SMS_getShineStage(SMSGetMarDirector()->getCurrentStage())]
+		        ->getBounds());
 #endif
 		unk128[0]->getPane()->move(bounds.x1 + 6, bounds.y1 - 1);
 		unk128[1]->getPane()->move(bounds.x1 + 6, bounds.y1 - 1);
@@ -855,15 +856,15 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 			unk10 = STATE_SELECTED;
 		break;
 	case STATE_SELECTED:
-		if (unkC0->mEnabledFrameMeaning
+		if (mGamePad->mEnabledFrameMeaning
 		    & (TMarioGamePad::MEANING_MENU_A | TMarioGamePad::MEANING_MENU_B))
 			disappearSelectedPane();
 #ifdef VERSION_GMSP01_NX
-		else if ((s_RunOnGC && (unkC0->mButton.mTrigger & JUTGamePad::Z))
-		         || (!s_RunOnGC && (unkC0->mButton.mAnalogR & 2)))
+		else if ((s_RunOnGC && (mGamePad->mButton.mTrigger & JUTGamePad::Z))
+		         || (!s_RunOnGC && (mGamePad->mButton.mAnalogR & 2)))
 			unk10 = STATE_CLOSE;
 #else
-		else if (unkC0->mButton.mTrigger & JUTGamePad::Z)
+		else if (mGamePad->mButton.mTrigger & JUTGamePad::Z)
 			unk10 = STATE_CLOSE;
 #endif
 		break;
@@ -882,7 +883,7 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 		break;
 	case STATE_CLOSE:
 		gpApplication.getFader()->startWipe(6, 1.0f, 0.0f);
-		unkC0->offFlag(TMarioGamePad::PAD_FLAG_GUIDE_INPUT);
+		mGamePad->offFlag(TMarioGamePad::PAD_FLAG_GUIDE_INPUT);
 		SMSGetMSound()->startSoundSystemSE(0x4818, 0, nullptr, 0);
 		unk10 = STATE_CLOSING;
 		break;

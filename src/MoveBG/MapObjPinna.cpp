@@ -93,12 +93,12 @@ void TFerrisWheel::initMapObj()
 		unk13C[i]->appear();
 	}
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	if ((SMSGetMarDirector()->getCurrentMap() == 13
-	     && SMSGetMarDirector()->getCurrentStage() == 2)
-	    || (SMSGetMarDirector()->getCurrentMap() == 5
-	        && SMSGetMarDirector()->getCurrentStage() == 4)) {
+	if ((SMSGetMarDirector()->getCurrentStage() == 13
+	     && SMSGetMarDirector()->getCurrentScenario() == 2)
+	    || (SMSGetMarDirector()->getCurrentStage() == 5
+	        && SMSGetMarDirector()->getCurrentScenario() == 4)) {
 #else
-	if (SMSGetMarDirector()->getCurrentStage() == 2) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 2) {
 #endif
 		unk140 = 10.0f;
 	} else {
@@ -573,7 +573,7 @@ void TMerrygoround::initMapObj()
 	}
 	unk1A0 = static_cast<TMapObjChangeStage*>(
 	    TMapObjBaseManager::newAndRegisterObj("ChangeStageMerrygoround"));
-	unk1A0->unk138 = 0x29;
+	unk1A0->mDestinationStage = 0x29;
 	unk1A0->mScaling.y *= 1.5f;
 	unk1A0->makeObjAppeared();
 	TMapObjBase::joinToGroup("マップグループ", unk1A0);

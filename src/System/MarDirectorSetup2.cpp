@@ -77,25 +77,25 @@ void TMarDirector::setup2()
 
 	unkE0 = static_cast<TSunGlass*>(
 	    JDrama::TNameRefGen::search("サングラスフェーダ"));
-	unk78 = static_cast<TGuide*>(JDrama::TNameRefGen::search("ガイド画面"));
-	unkAC = static_cast<TPauseMenu2*>(
-	    JDrama::TNameRefGen::search("ポーズメニュー"));
+	mGuide = static_cast<TGuide*>(JDrama::TNameRefGen::search("ガイド画面"));
+	unkAC  = static_cast<TPauseMenu2*>(
+        JDrama::TNameRefGen::search("ポーズメニュー"));
 	unkAC->mGamePad = mGamePads[0];
 	unkB0 = static_cast<TTalk2D2*>(JDrama::TNameRefGen::search("会話表示"));
 	unkB0->unk24C = mGamePads[0];
-	unk70
+	mCardLoad
 	    = static_cast<TCardLoad*>(JDrama::TNameRefGen::search("データロード"));
 
-	unk70->mGamePad = mGamePads[0];
-	unk78->unkC0    = mGamePads[0];
+	mCardLoad->mGamePad = mGamePads[0];
+	mGuide->mGamePad    = mGamePads[0];
 
 	mGamePads[0]->mFlags = 0;
-	if (mMap == 15) {
+	if (mStage == 15) {
 		unkAC->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		unkB0->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 		mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_NO_B);
 	} else {
-		unk70->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
+		mCardLoad->unkC = CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW;
 	}
 
 	unk254 = static_cast<TDemoCannon*>(JDrama::TNameRefGen::search("デモ砲台"));
@@ -110,7 +110,7 @@ void TMarDirector::setup2()
 	gpMSound->setCameraInfo(&gpCamera->unk124, gpCamera->unk13C,
 	                        gpCamera->unk1EC, 0);
 
-	unk258 = MSStage::init(getCurrentMap(), getCurrentStage());
+	unk258 = MSStage::init(getCurrentStage(), getCurrentScenario());
 
 	JDrama::TGraphics graphics;
 	graphics.unk0 = 0;
@@ -160,7 +160,7 @@ TMarDirector::~TMarDirector()
 		arch->unmountFixed();
 
 	mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_NO_B);
-	if (mMap == 1 || (mMap == 0 && unk7D == 0)) {
+	if (mStage == 1 || (mStage == 0 && mScenario == 0)) {
 		THPPlayerStop();
 		THPPlayerClose();
 		THPPlayerQuit();

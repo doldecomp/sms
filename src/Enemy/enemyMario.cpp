@@ -40,9 +40,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
 #include <Player/MarioAnimeData.hpp>
 
 static const TEnemyMario::TReplayLink replayLinkMonteMan[6] = {
@@ -506,7 +503,8 @@ void TEnemyMario::initEnemyValues()
 		mInputReplays = nullptr;
 	}
 
-	if (SMSGetMarDirector()->mMap == 1 && SMSGetMarDirector()->unk7D == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		mRunAwayInputReplays = new TMarioInputReplay*[8];
 		for (int i = 0; i < 8; ++i) {
 			if (recordFileNamesDolpic1[i] != nullptr) {
@@ -530,7 +528,7 @@ void TEnemyMario::initEnemyValues()
 		mGateReplay          = nullptr;
 	}
 
-	if (SMSGetMarDirector()->mMap == 12) {
+	if (SMSGetMarDirector()->getCurrentStage() == 12) {
 		if (strcmp(mEMario->getName(), "マリオ２Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P2;
 			mGamePad    = SMSGetMarDirector()->getGamePad(1);
@@ -804,8 +802,8 @@ void TEnemyMario::startDisappear(u16 doing)
 {
 	mDisappearPosition = mPosition;
 
-	u8 currentMap      = SMSGetMarDirector()->getCurrentMap();
-	u8 currentStage    = SMSGetMarDirector()->getCurrentStage();
+	u8 currentMap      = SMSGetMarDirector()->getCurrentStage();
+	u8 currentStage    = SMSGetMarDirector()->getCurrentScenario();
 	bool keepBossLives = false;
 	if (currentMap == 1 && currentStage == 1) {
 		keepBossLives = true;
@@ -1066,7 +1064,8 @@ void TEnemyMario::emDownAnimation()
 	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
 	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
 
-	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	if (SMSGetMarDirector()->isInnerDemoModeNow()
+	    || SMSGetMarDirector()->isTalkingDemoModeNow()
 	    || SMSGetMarDirector()->isTalkModeNow()) {
 		mReferencePosition = mPosition;
 		mDisappearPosition = mReferencePosition;
@@ -1076,7 +1075,7 @@ void TEnemyMario::emDownAnimation()
 	++mEMDoingTimer;
 	mReferencePosition = mPosition;
 	mDisappearPosition = mReferencePosition;
-	if (SMSGetMarDirector()->getCurrentMap() != 1
+	if (SMSGetMarDirector()->getCurrentStage() != 1
 	    && mEMDoingTimer > mSettingParams->mDownTime.get()) {
 		mWaterCounter = mSettingParams->mWaterCtMax.get();
 		changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
@@ -1181,7 +1180,7 @@ void TEnemyMario::emRunAwayToNearestNode()
 		                                0, nullptr, 0, 4);
 		break;
 	case 300:
-		if (SMSGetMarDirector()->getCurrentMap() == 1) {
+		if (SMSGetMarDirector()->getCurrentStage() == 1) {
 			JGeometry::TVec3<f32> waitingPoint;
 			graph->getGraphNode(7).getPoint(&waitingPoint);
 			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,

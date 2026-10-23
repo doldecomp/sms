@@ -140,12 +140,12 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk298[0] = new TExPane(unk14, 'wp_l');
 	unk298[1] = new TExPane(unk14, 'wp_r');
 
-	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->mMap);
+	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
 	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 	void* pvVar10 = JKRGetResource(COMMON2D "/stagename.bmg");
 	mMapStoryTitles[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
-	if (SMSGetMarDirector()->mMap != 15) {
+	if (SMSGetMarDirector()->getCurrentStage() != 15) {
 		void* pvVar10 = JKRGetResource(COMMON2D "/scenarioname.bmg");
 
 		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);

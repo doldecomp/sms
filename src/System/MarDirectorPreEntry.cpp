@@ -7,8 +7,7 @@
 // TODO: which headers are these infections strings from?
 #include <System/Application.hpp>
 
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 void TMarDirector::preEntry(TPerformList* list)
 {

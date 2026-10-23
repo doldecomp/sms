@@ -12,6 +12,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 void TMapWarp::changeModel(int i)
 {
@@ -159,7 +160,7 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		unk4[2 * i + 1].unk4 = local_180[i];
 	}
 
-	if (SMSGetMarDirector()->mMap == 4) {
+	if (SMSGetMarDirector()->getCurrentStage() == 4) {
 		unkC = 8.0f;
 	}
 }

@@ -169,8 +169,8 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	setMActorAndKeeper();
 
 	onLiveFlag(LIVE_FLAG_DEAD);
-	if (SMSGetMarDirector()->getCurrentMap() == 2
-	    && SMSGetMarDirector()->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentStage() == 2
+	    && SMSGetMarDirector()->getCurrentScenario() == 0)
 		onLiveFlag(LIVE_FLAG_UNK2000);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk158 = 1.0f;
