@@ -247,7 +247,7 @@ public:
 	void setBckFromIndex(int idx)
 	{
 		mMtxCalc->joinAnm(idx);
-		getMActor()->mAnmBck->setFrameCtrl(idx);
+		getMActor()->getAnmBck()->setFrameCtrl(idx);
 	}
 
 	// fabricated

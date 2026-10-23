@@ -28,13 +28,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
-
 static const char* bwanwan_bastable[]
     = { "/scene/bwanwan/bas/bwanwan_bark.bas",
         nullptr,
@@ -112,9 +105,10 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
 		group->getChildren().push_back(mNodes[i]);
 
 		if (i < (nodeCount - 2)) {
-			mNodes[i]->offHitFlag(HIT_FLAG_NO_COLLISION);
+			mNodes[i]->offHitFilter(HIT_FILTER_NO_COLLISION);
+
 		} else {
-			mNodes[i]->onHitFlag(HIT_FLAG_NO_COLLISION);
+			mNodes[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
 		}
 
 		if (i < 2) {
@@ -192,7 +186,7 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 		hitGroup->getChildren().push_back(this);
 	}
 
-	offHitFlag(1);
+	offHitFilter(1);
 	mActor = mOwner->mMActorKeeper->createMActor("bwanwan_picket.bmd", 0);
 }
 
@@ -226,8 +220,8 @@ void TBossWanwan::init(TLiveManager* manager)
 
 	mSpine->initWith(&TNerveBWGraphWander::theNerve());
 
-	mMarchSpeed = ((TBWParams*)getSaveParam())->mSLMarchSpeed.get();
-	mTurnSpeed  = ((TBWParams*)getSaveParam())->mSLTurnSpeed.get();
+	mMarchSpeed = getSaveParam()->mSLMarchSpeed.get();
+	mTurnSpeed  = getSaveParam()->mSLTurnSpeed.get();
 
 	mPosition = BW_HEAD_START;
 	calcRootMatrix();
@@ -253,7 +247,7 @@ void TBossWanwan::init(TLiveManager* manager)
 	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	for (int i = 0; i < 2; i++) {
 		hitGroup->getChildren().push_back(mHits[i]);
-		mHits[i]->offHitFlag(1);
+		mHits[i]->offHitFilter(1);
 	}
 
 	initAnmSound();
@@ -261,15 +255,14 @@ void TBossWanwan::init(TLiveManager* manager)
 
 	mMtxCalc          = new TBossWanwanMtxCalc(this);
 	J3DMtxCalc* calc  = mMtxCalc;
-	MActorAnmBck* bck = mMActor->mAnmBck;
+	MActorAnmBck* bck = mMActor->getAnmBck();
 
 	if (bck != nullptr) {
 		bck->setCalc(mMtxCalc);
-		bck->unk2A = 3;
+		bck->setCalcType(MActorMtxCalcType_User);
 	}
 	mMActor->calc();
-	offHitFlag(0x100);
-
+	offHitFilter(0x100);
 	changeBck(4);
 
 	mMActor->setBrkFromIndex(0);
@@ -291,12 +284,11 @@ void TBossWanwan::init(TLiveManager* manager)
 	Mtx mtx;
 	MsMtxSetTRS(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	            mRotation.y, mRotation.z, mScaling.x, mScaling.y, mScaling.z);
-	TMapCollisionBase* base = col->unk8;
-	PSMTXCopy(mtx, base->unk20);
-	base->setUp();
+	TMapCollisionBase* base = col->getActiveCollision();
+	base->setUpMtx(mtx);
 
-	if (mMapCollisionManager->unk8 != nullptr) {
-		mMapCollisionManager->unk8->remove();
+	if (mMapCollisionManager->getActiveCollision() != nullptr) {
+		mMapCollisionManager->getActiveCollision()->remove();
 	}
 }
 
@@ -305,7 +297,7 @@ void TBossWanwan::control()
 	TLiveActor::control();
 
 	if (this->unk17C != 0 || (mPicket->isHolding() && isHeadPulled())) {
-		mLinearVelocity += mPicketPullDelta;
+		mVelocity += mPicketPullDelta;
 
 		JGeometry::TVec3<f32> pos = mPosition;
 
@@ -506,14 +498,14 @@ void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 
 	mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f);
 
-	JGeometry::TVec3<f32> vel = mLinearVelocity;
+	JGeometry::TVec3<f32> vel = mVelocity;
 
 	if (dist > 0.0f) {
 		pos.scale(speed / dist);
 	}
 
 	vel.add(pos);
-	mLinearVelocity = vel;
+	mVelocity = vel;
 }
 
 void TBossWanwan::calcRootMatrix()
@@ -985,7 +977,7 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 			for (int i = 0; i < mColCount; i++) {
 				THitActor* elem = mCollisions[i];
 				if (elem->mActorType == -0x7fffffff) {
-					elem->receiveMessage(this, HIT_MESSAGE_UNKA);
+					elem->receiveMessage(this, HIT_MESSAGE_BURN);
 				}
 			}
 		}
@@ -1029,7 +1021,7 @@ void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		for (int i = 0; i < mColCount; i++) {
 			THitActor* elem = mCollisions[i];
 			if (mOwner->mHitPoints != 0 && elem->mActorType == -0x7fffffff) {
-				elem->receiveMessage(mOwner, HIT_MESSAGE_UNKA);
+				elem->receiveMessage(mOwner, HIT_MESSAGE_BURN);
 			}
 		}
 	}
@@ -1046,7 +1038,7 @@ void TBWBinder::bind(TLiveActor* actor)
 {
 	TBossWanwan* boss = (TBossWanwan*)actor;
 
-	JGeometry::TVec3<f32> vel     = boss->mLinearVelocity;
+	JGeometry::TVec3<f32> vel     = boss->mVelocity;
 	JGeometry::TVec3<f32> nextPos = boss->mPosition;
 	nextPos += vel;
 
@@ -1063,7 +1055,7 @@ void TBWBinder::bind(TLiveActor* actor)
 	if (&TNerveBWJumpToBath::theNerve() == boss->mSpine->getLatestNerve()
 	    || &TNerveBWDie::theNerve() == boss->mSpine->getLatestNerve()) {
 
-		boss->mLinearVelocity = nextPos - boss->mPosition;
+		boss->mVelocity = nextPos - boss->mPosition;
 		return;
 	}
 
@@ -1209,7 +1201,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		vel += pull;
 	}
 
-	boss->mLinearVelocity = vel;
+	boss->mVelocity = vel;
 }
 
 TBWBinder::~TBWBinder() { }
@@ -1326,7 +1318,7 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 			mHolder       = (TTakeActor*)sender;
 			return TRUE;
 		}
-		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_UNK8) {
+		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 			mHolder = nullptr;
 			return TRUE;
 		}
@@ -1674,12 +1666,9 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	MActor* actor     = boss->mMActor;
 
 	if (spine->getTime() == 0) {
-		JGeometry::TVec3<f32> zero;
-		zero.zero();
-		boss->mVelocity       = zero;
-		boss->mLinearVelocity = zero;
-		boss->mLiveFlag |= 0x10;
-		boss->mLiveFlag &= ~0x80;
+		boss->mVelocity.zero();
+		boss->onLiveFlag(LIVE_FLAG_UNK10);
+		boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		gpMarioParticleManager->emit(0xB1, &boss->mPosition, 0, nullptr);
 	}
 
@@ -1713,18 +1702,18 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		MsMtxSetTRS(mtx, colPos.x, colPos.y, colPos.z, boss->mRotation.x,
 		            boss->mRotation.y, boss->mRotation.z, colScale.x,
 		            colScale.y, colScale.z);
-		TMapCollisionBase* base = col->unk8;
+		TMapCollisionBase* base = col->getActiveCollision();
 		base->setMtx(mtx);
 		base->setUp();
 
-		boss->mHits[0]->mHitFlags |= 1;
-		boss->mHits[1]->mHitFlags |= 1;
+		boss->mHits[0]->mHitFilter |= 1;
+		boss->mHits[1]->mHitFilter |= 1;
 
 		TBWLeash* leash = boss->mLeash;
 		for (int i = 0; i < leash->mRope->mNumPoints; i++) {
-			leash->mNodes[i]->mHitFlags |= 1;
+			leash->mNodes[i]->onHitFilter(1);
 		}
-		boss->mPicket->mHitFlags |= 1;
+		boss->mPicket->onHitFilter(1);
 
 		boss->changeBck(1);
 		actor->setBtpFromIndex(0);

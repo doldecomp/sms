@@ -318,6 +318,9 @@ public:
 		mMtxCalcType = MActorMtxCalcType_User;
 	}
 
+	// fabricated for bosswanwan.cpp
+	void setCalcType(u8 type) { mMtxCalcType = type; }
+
 	void setJointIndex(u16 value) { mJointIndex = value; }
 
 private:
