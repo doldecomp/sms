@@ -30,12 +30,6 @@
 extern OSThread gSetupThread;
 extern u8* gpSetupThreadStack;
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-static const char* selectNames[]
-    = { "/data/select_en.arc", "/data/select_ge.arc", "/data/select_fr.arc",
-	    "/data/select_sp.arc", "/data/select_it.arc" };
-#endif
-
 TSelectDir::TSelectDir()
     : unk20(0)
     , unk24(0)
@@ -81,6 +75,27 @@ void* TSelectDir::setupThreadFunc(void* param_1)
 
 int TSelectDir::rsetup()
 {
+#ifdef VERSION_GMSP01
+	static const char* selectNames[] = {
+		"/data/select_en.arc", "/data/select_ge.arc", "/data/select_fr.arc",
+		"/data/select_sp.arc", "/data/select_it.arc",
+	};
+#elif defined(VERSION_GMSP01_NX)
+	static const char* selectNames[] = {
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		"/data/select_jp.arc",
+		"/data/select_us.arc",
+		"/data/select_en.arc",
+		"/data/select_ge.arc",
+		"/data/select_fr.arc",
+		"/data/select_sp.arc",
+		"/data/select_it.arc",
+	};
+#endif
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	void* arcData = SMSLoadArchive(
 	    selectNames[TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)], 0, 0,

@@ -725,19 +725,32 @@ TBossEelSaveParams::TBossEelSaveParams()
 
 void TBossEelManager::loadAfter()
 {
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_tooth.jpa", 0xD3);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_mouth.jpa", 0xD4);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_eyeblur.jpa", 0x192);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke.jpa", 0x193);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke_l.jpa", 0x194);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa.jpa", 0x195);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa_l.jpa", 0x196);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_body.jpa", 0x197);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_dead.jpa", 0x198);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_suikomi.jpa", 0x199);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_wash.jpa", 0x19A);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_kira.jpa", 0x19B);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_always.jpa", 0x19C);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_tooth.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_TOOTH);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_mouth.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_MOUTH);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_eyeblur.jpa",
+	                 BOSSEEL_JPA_MS_MEO_EYEBLUR);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_SMOKE);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke_l.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_SMOKE_L);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_AWA);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa_l.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_AWA_L);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_body.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_BODY);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_dead.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_DEAD);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_suikomi.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SUIKOMI);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_wash.jpa",
+	                 BOSSEEL_JPA_MS_MEO_TOOTH_WASH);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_kira.jpa",
+	                 BOSSEEL_JPA_MS_MEO_TOOTH_KIRA);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_always.jpa",
+	                 BOSSEEL_JPA_MS_MEO_TOOTH_ALWAYS);
 }
 
 void TBossEelManager::createModelData()

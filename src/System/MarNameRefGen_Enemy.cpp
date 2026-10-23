@@ -46,7 +46,6 @@
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
-
 	if (strcmp(name, "TypicalEnemy") == 0)
 		return new TTypicalEnemy;
 

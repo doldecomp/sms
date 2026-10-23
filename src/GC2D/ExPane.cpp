@@ -1,9 +1,9 @@
 #include <GC2D/ExPane.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
 
-TExPane::TExPane(J2DScreen* param_1, u32 param_2)
+TExPane::TExPane(J2DScreen* screen, u32 tag)
 {
-	mPane              = param_1->search(param_2);
+	mPane              = screen->search(tag);
 	mInitialBounds     = mPane->getBounds();
 	mCurrentAlpha      = 255.0f;
 	mAlphaStep         = 0.0f;
@@ -13,7 +13,7 @@ TExPane::TExPane(J2DScreen* param_1, u32 param_2)
 	mAlphaAnimPending  = false;
 }
 
-TExPane::TExPane(JUTTexture*, GXCullMode) { }
+TExPane::TExPane(JUTTexture* texture, GXCullMode cullMode) { }
 
 bool TExPane::update()
 {
@@ -40,13 +40,13 @@ bool TExPane::update()
 		mCurrentAlpha += mAlphaStep;
 
 		// TODO: this is a fakematch, need to figure out the real inline
-		s16 fVar1 = mCurrentAlpha < 0.0f ? 0.0f : mCurrentAlpha;
-		s16 fVar2;
-		if (fVar1 > 255)
-			fVar2 = (int)255;
+		s16 computedAlpha = mCurrentAlpha < 0.0f ? 0.0f : mCurrentAlpha;
+		s16 finalAlpha;
+		if (computedAlpha > 255)
+			finalAlpha = (int)255;
 		else
-			fVar2 = (int)fVar1;
-		mPane->setAlpha((int)fVar2);
+			finalAlpha = (int)computedAlpha;
+		mPane->setAlpha((int)finalAlpha);
 	}
 
 	if (isThing2())

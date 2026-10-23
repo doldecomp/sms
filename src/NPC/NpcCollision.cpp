@@ -8,25 +8,25 @@
 
 void TBaseNPC::initNpcObjCollision_(const TNpcInitInfo* init_info)
 {
-	u32 iVar4 = 0x4000000;
-	u16 uVar5 = 2;
+	u32 hitFilter     = HIT_CATEGORY_NPC;
+	u16 maxCollisions = 2;
 	switch (mActorType) {
 	case ACTOR_TYPE_NPC_MONTE_ME:
 	case ACTOR_TYPE_NPC_SUNFLOWER_L:
 	case ACTOR_TYPE_NPC_SUNFLOWER_S:
 	case ACTOR_TYPE_NPC_BOARD:
-		uVar5 = 0;
-		iVar4 = 0;
+		maxCollisions = 0;
+		hitFilter     = 0;
 		break;
 	}
 
-	initHitActor(getActorType(), uVar5, iVar4,
+	initHitActor(getActorType(), maxCollisions, hitFilter,
 	             init_info->mAttackRadius * mScaling.x,
 	             init_info->mAttackHeight * mScaling.y,
 	             init_info->mDamageRadius * mScaling.x,
 	             init_info->mDamageHeight * mScaling.y);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	if (uVar5 == 0)
+	if (maxCollisions == 0)
 		onHitFilter(HIT_FILTER_NO_ATTACK);
 }
 
