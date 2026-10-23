@@ -27,8 +27,8 @@ public:
 
 class TGessoPolluteModelManager : public TEnemyPolluteModelManager {
 public:
-	TGessoPolluteModelManager(const char* name = "ゲッソーモデル汚染")
-	    : TEnemyPolluteModelManager(name)
+	TGessoPolluteModelManager()
+	    : TEnemyPolluteModelManager("ゲッソーモデル汚染")
 	{
 	}
 
@@ -125,17 +125,8 @@ public:
 		if (mState == STATE_WANDERING)
 			return 0.0f;
 
-		if (unk1A1 != 0) {
-			if (unk1C4 != 0)
-				return 0.0f;
-			else
-				return 180.0f;
-		} else {
-			if (unk1C4 != 0)
-				return 90.0f;
-			else
-				return 270.0f;
-		}
+		return unk1A1 != 0 ? (unk1C4 != 0 ? 0.0f : 180.0f)
+		                   : (unk1C4 != 0 ? 90.0f : 270.0f);
 	}
 
 	f32 getUnk1B0() const { return mTurnAngle; }
