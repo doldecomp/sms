@@ -54,10 +54,11 @@ static BOOL TobiPukuRollCallback(J3DNode* param_1, BOOL param_2)
 			    ((J3DJoint*)param_1)->getJntNo());
 
 			Mtx mtx;
-			MsMtxSetRotZ(mtx, gpCurTobiPuku->unk1EC);
+			MtxPtr rot = mtx;
+			MsMtxSetRotZ(rot, gpCurTobiPuku->unk1EC);
 
-			MTXConcat(mA, mtx, mA);
-			MTXConcat(J3DSys::mCurrentMtx, mtx, J3DSys::mCurrentMtx);
+			MTXConcat(mA, rot, mA);
+			MTXConcat(J3DSys::mCurrentMtx, rot, J3DSys::mCurrentMtx);
 		}
 	}
 	return true;
@@ -215,20 +216,20 @@ void TTobiPukuLaunchPad::forceLaunch(TTobiPuku* param_1)
 	} else {
 		JGeometry::TVec3<f32> direction(sinY, 1.0f, cosY);
 		direction.scale(unk19C);
-		s16 pitch = mRotation.x * 16384.0f / 90.0f;
-		f32 cosX  = JMASCos(pitch);
-		velocity.set(direction.x * cosX, direction.y * JMASSin(pitch),
-		             direction.z * cosX);
+		s16 pitch  = mRotation.x * 16384.0f / 90.0f;
+		f32 cosX   = JMASCos(pitch);
+		velocity.x = direction.x * cosX;
+		velocity.y = direction.y * JMASSin(pitch);
+		velocity.z = direction.z * cosX;
 	}
 
 	param_1->reset();
-	param_1->mPosition                = mPosition;
-	param_1->mRotation                = mRotation;
-	param_1->unk1D0                   = velocity;
-	param_1->unk1B0                   = mPosition.y;
-	param_1->unk1DC                   = this;
-	JGeometry::TVec3<f32> padVelocity = mVelocity;
-	param_1->unk1B4                   = MsGetRotFromZaxis(padVelocity).x;
+	param_1->mPosition = mPosition;
+	param_1->mRotation = mRotation;
+	param_1->unk1D0    = velocity;
+	param_1->unk1B0    = mPosition.y;
+	param_1->unk1DC    = this;
+	param_1->unk1B4    = MsGetRotFromZaxis(getVelocity()).x;
 }
 
 void TMoePukuLaunchPad::launch()
@@ -819,8 +820,7 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 		self->mPosition.y -= 300.0f;
-		JGeometry::TVec3<f32> velocity = self->mVelocity;
-		self->mRotation.x              = MsGetRotFromZaxis(velocity).x;
+		self->mRotation.x = MsGetRotFromZaxis(self->getVelocity()).x;
 		self->setJumpAnm();
 	}
 
@@ -849,10 +849,9 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 		return true;
 	}
 
-	JGeometry::TVec3<f32> velocity  = self->mVelocity;
-	self->unk1E4                    = velocity.y;
-	JGeometry::TVec3<f32> velocity2 = self->mVelocity;
-	self->mRotation.x               = MsGetRotFromZaxis(velocity2).x;
+	JGeometry::TVec3<f32> velocity = self->mVelocity;
+	self->unk1E4                   = velocity.y;
+	self->mRotation.x              = MsGetRotFromZaxis(self->getVelocity()).x;
 	return false;
 }
 
@@ -1130,10 +1129,11 @@ DEFINE_NERVE(TNerveTobiPukuReturnLaunch, TLiveActor)
 	JGeometry::TVec3<f32> dir = diff;
 	dir.y                     = 0.0f;
 	MsVECNormalize(&dir, &dir);
+	f32 speed = self->getMarchSpeed();
 	self->unk1D0.x *= 0.99f;
 	self->unk1D0.z *= 0.99f;
-	self->mPosition.x += dir.x * self->getMarchSpeed() - self->unk1D0.x;
-	self->mPosition.z += dir.z * self->getMarchSpeed() - self->unk1D0.z;
+	self->mPosition.x += dir.x * speed - self->unk1D0.x;
+	self->mPosition.z += dir.z * speed - self->unk1D0.z;
 	self->unk1EC = MsClamp(self->unk1EC + 1.0f, 0.0f, 180.0f);
 	return false;
 }
