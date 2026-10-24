@@ -1203,6 +1203,7 @@ public:
 	THitActor* getFloorHitActor() { return &mFloorHitActor; }
 	s16 getHealth() const { return mHealth; }
 	s16 getAir() const { return mAir; }
+	void setPlayerType(int type) { mPlayerType = type; }
 
 	// fabricated
 	bool isTouchGround4cm() const
