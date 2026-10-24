@@ -95,6 +95,8 @@ public:
 	// Fabricated
 	s32 getAmountMax() { return mAmountMax.get(); }
 	// Fabricated
+	s16 getDecRate() { return mDecRate.get(); }
+	// Fabricated
 	f32 getInsidePressureMax() { return mInsidePressureMax.get(); }
 	// Fabricated
 	void setMActor(MActor* actor) { mMActor = actor; }

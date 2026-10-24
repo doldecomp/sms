@@ -275,7 +275,7 @@ bool TMario::isUnUsualStageStart()
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->changeNozzle(
-			    (TWaterGun::TNozzleType)mWaterGun->mSecondNozzle, true);
+			    (TWaterGun::TNozzleType)mWaterGun->getSecondNozzleType(), true);
 
 		if (mCap != nullptr)
 			mCap->unk4 |= 2;

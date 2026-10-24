@@ -964,7 +964,7 @@ s16 TMario::getNozzleEmitVX()
 		return 0;
 
 	int rotSp;
-	switch (mWaterGun->mCurrentNozzle) {
+	switch (mWaterGun->getCurrentNozzleType()) {
 	case TWaterGun::Rocket:
 		rotSp = mWireParams.mRotSpeedTrgRocket.get();
 		break;

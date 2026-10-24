@@ -118,8 +118,7 @@ BOOL TMario::waitingCommonEvents()
 		return changePlayerStatus(MARIO_STATUS_TAKE_POSE, 0, false);
 
 	if (rocketCheck()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
+		unk314 = mFloorPosition.y + mWaterGun->getParams()->mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
@@ -327,7 +326,8 @@ BOOL TMario::squating()
 
 	if (mInput & 0x2) {
 		if ((mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
-		    && mWaterGun != nullptr && (int)mWaterGun->mCurrentNozzle == 0) {
+		    && mWaterGun != nullptr
+		    && mWaterGun->getCurrentNozzleType() == TWaterGun::Spray) {
 			rumbleStart(0x15, mMotorParams.mMotorHipDrop.get());
 			return changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
 		}
@@ -335,8 +335,7 @@ BOOL TMario::squating()
 
 	if (mWaterGun->getCurrentNozzle()->mRocketType.get() == 1
 	    && mWaterGun->isEmitting()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHHoverHeight.get();
+		unk314 = mFloorPosition.y + mWaterGun->getParams()->mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 

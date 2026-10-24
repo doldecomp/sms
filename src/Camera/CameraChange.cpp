@@ -706,7 +706,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 					newMode = CAMERA_MODE_INDOOR;
 			} else if (gpCameraMario->isMarioRocketing()
 			           && param_1 != CAMERA_MODE_TOWER_E) {
-				if ((int)SMS_GetMarioWaterGun()->mCurrentNozzle == 4)
+				if (SMS_GetMarioWaterGun()->getCurrentNozzleType()
+				    == TWaterGun::Hover)
 					newMode = CAMERA_MODE_HOVERING;
 				else
 					newMode = CAMERA_MODE_ROCKET_JUMP;

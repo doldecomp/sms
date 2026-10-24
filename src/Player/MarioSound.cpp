@@ -330,19 +330,19 @@ void TMario::soundMovement()
 			mSoundValues.unk04 |= 8;
 		}
 
-		if ((mInput & 0x100) && mWaterGun->mCurrentWater == 0) {
+		if ((mInput & 0x100) && mWaterGun->getCurrentWater() == 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_ACTION_ON_EMPTY,
 			                                &mPosition, 0, nullptr, 0, 4);
 		}
 
 		const TWaterGun* gun = mWaterGun;
-		s32 pressureScale    = (s32)(100.0f * gun->mHouseProgress);
+		s32 pressureScale    = (s32)(100.0f * gun->getHouseProgress());
 		if (mSoundValues.unk2A == 0 && (u8)pressureScale != 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_HAND_OFF, &mPosition, 0,
 			                                nullptr, 0, 4);
 		}
 		if (mSoundValues.unk2A == 0x12 && (u8)pressureScale == 0x13
-		    && (s32)gun->mCurrentNozzle == 0) {
+		    && gun->getCurrentNozzleType() == 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_NOZZLE_OFF, &mPosition, 0,
 			                                nullptr, 0, 4);
 		}

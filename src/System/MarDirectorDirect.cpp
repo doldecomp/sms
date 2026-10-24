@@ -1197,7 +1197,7 @@ void TMarDirector::moveStage()
 	}
 
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		int nozzle = gpMarioOriginal->mWaterGun->mSecondNozzle;
+		int nozzle = gpMarioOriginal->getWaterGun()->getSecondNozzleType();
 		if (nozzle == TWaterGun::Yoshi)
 			nozzle = TWaterGun::Hover;
 		TFlagManager::getInstance()->setFlag(MSF_SECONDARY_NOZZLE, nozzle);

@@ -274,7 +274,7 @@ void TBathtubKiller::generateItemBathtubKiller()
 	TBathtubKillerManager* manager = (TBathtubKillerManager*)mManager;
 	s32 lives = TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT);
 
-	if (SMS_GetMarioWaterGun()->mCurrentWater == 0) {
+	if (SMS_GetMarioWaterGun()->getCurrentWater() == 0) {
 		item = gpItemManager->makeObjAppear(mPosition.x, mPosition.y,
 		                                    mPosition.z,
 		                                    ACTOR_TYPE_BOTTLE_LARGE, true);

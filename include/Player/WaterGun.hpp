@@ -176,6 +176,9 @@ public:
 	bool hasWater() const { return mCurrentWater > 0; }
 
 	// Fabricated
+	void setWater(s32 amount) { mCurrentWater = amount; }
+
+	// Fabricated
 	void depleteWater(s32 amount)
 	{
 		mCurrentWater -= amount;
@@ -204,12 +207,10 @@ public:
 	void updateUnk1C88(u8 emittedWater)
 	{
 		mEmittedWaterCount = emittedWater;
-		// TODO: one more inline for getting emit params
-		// rather than separate getMaxWater, getDecRate, etc. functions?
-		f32 decRate = getCurrentNozzle()->mDecRate.get();
-		unk1C88
-		    += 10.0f
-		       * (emittedWater * decRate / mNozzleList[0]->mAmountMax.get());
+		// Is this a friend class?
+		unk1C88 += 10.0f
+		           * (emittedWater * (f32)getCurrentNozzle()->mDecRate.get()
+		              / mNozzleList[0]->mAmountMax.get());
 	}
 
 	// Fabricated
@@ -265,6 +266,9 @@ public:
 	int getCurrentNozzleType() const { return mCurrentNozzle; }
 
 	// Fabricated
+	int getSecondNozzleType() const { return mSecondNozzle; }
+
+	// Fabricated
 	TWaterEmitInfo* getEmitInfo() const { return mEmitInfo; }
 
 	// Fabricated
@@ -273,13 +277,33 @@ public:
 	// Fabricated
 	u8 getEmittedWaterCount() const { return mEmittedWaterCount; }
 
-public:
+	// Fabricated
+	f32 getHouseProgress() const { return mHouseProgress; }
+	void resetHouseProgress() { mHouseProgress = 0.0f; }
+
+	// Fabricated and i suspect it to be fake
+	TDeParams* getParams() { return &mWatergunParams; }
+
+	// Fabricated
+	TMultiMtxEffect* getMultiMtxEffect() { return mMultiMtxEffect; }
+
+	// Fabricated, might be single function?
+	void setHoverAngleTargetL(s16 angle) { mHoverAngleTargetL = angle; }
+	void setHoverAngleTargetR(s16 angle) { mHoverAngleTargetR = angle; }
+
+	// Fabricated and likely fake
+	f32 getUsedRatio()
+	{
+		return mCurrentWater / getCurrentNozzle()->mAmountMax.get();
+	}
+
 	enum {
 		WATER_GUN_FLAG_UNK2  = 0x2,
 		WATER_GUN_FLAG_UNK4  = 0x4,
 		WATER_GUN_FLAG_UNK10 = 0x10,
 	};
 
+private:
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;
@@ -302,8 +326,8 @@ public:
 	/* 0x1C90 */ JGeometry::TVec3<f32> mEmitPos[3];
 	/* 0x1CB4 */ JGeometry::TVec3<f32> unk1CB4;
 	/* 0x1CC0 */ s16 unk1CC0;
-	/* 0x1CC2 */ s16 unk1CC2;
-	/* 0x1CC4 */ s16 unk1CC4;
+	/* 0x1CC2 */ s16 mHoverAngleTargetL;
+	/* 0x1CC4 */ s16 mHoverAngleTargetR;
 	/* 0x1CC6 */ s16 unk1CC6;
 	/* 0x1CC8 */ f32 mHoverAngleL;
 	/* 0x1CCC */ f32 mHoverAngleR;

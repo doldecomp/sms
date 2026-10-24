@@ -365,7 +365,7 @@ bool TPopo::checkTrigger()
 {
 	unk1BC = 0;
 	if (gpMarioOriginal->onYoshi()
-	    || (int)SMS_GetMarioWaterGun()->mCurrentNozzle != 0) {
+	    || (int)SMS_GetMarioWaterGun()->getCurrentNozzleType() != 0) {
 		kill();
 		return false;
 	}
@@ -466,7 +466,7 @@ void TPopo::behaveToFindMario()
 {
 	TPopoManager* manager = (TPopoManager*)mManager;
 	if (SMS_CheckMarioFlag(MARIO_FLAG_HAS_FLUDD) && manager->unk60
-	    && (int)SMS_GetMarioWaterGun()->mCurrentNozzle == 0
+	    && (int)SMS_GetMarioWaterGun()->getCurrentNozzleType() == 0
 	    && !gpMarioOriginal->onYoshi()) {
 		setGoalPath(TPathNode((THitActor*)gpMarioAddress));
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
