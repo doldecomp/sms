@@ -541,7 +541,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case ACTOR_TYPE_FIRE_WANWAN:
 		case ACTOR_TYPE_FIRE_HAMU_KURI:
 		case ACTOR_TYPE_BOMB_HEI:
-		case ACTOR_TYPE_ENEMY_UNK26:
+		case ACTOR_TYPE_WIRE_TRAP:
 			if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
 				damageExec(sender, mDmgParamsFire.mDamage.get(),
 				           mDmgParamsFire.mDownType.get(),
