@@ -179,12 +179,14 @@ public:
 	void moveHeadAndTail(const JGeometry::TVec3<f32>&,
 	                     const JGeometry::TVec3<f32>&);
 
-private:
 	/* 0x00 */ u16 mNumPoints;
 	/* 0x04 */ TRopePoint* mPoints;
 	/* 0x08 */ f32 unk8;
 	/* 0x0C */ f32 unkC;
 	/* 0x10 */ f32 unk10;
+
+private:
+	// Made attributes public to match bosswanwan.cpp
 };
 
 void SMS_GetActorMtx(const THitActor&, MtxPtr);
