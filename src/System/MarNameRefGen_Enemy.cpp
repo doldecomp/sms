@@ -43,6 +43,7 @@
 #include <Enemy/Seal.hpp>
 #include <Enemy/Kazekun.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <Enemy/WireTrap.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
@@ -345,13 +346,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	// if ( strcmp(name, "TabePuku") == 0)
 	//     return new TTabePuku;
 
-	// TODO:
-	// if ( strcmp(name, "WireTrapManager") == 0)
-	//     return new TWireTrapManager;
+	if (strcmp(name, "WireTrapManager") == 0)
+		return new TWireTrapManager;
 
-	// TODO:
-	// if ( strcmp(name, "WireTrap") == 0)
-	//     return new TWireTrap;
+	if (strcmp(name, "WireTrap") == 0)
+		return new TWireTrap;
 
 	if (strcmp(name, "RocketManager") == 0)
 		return new TRocketManager("ロケットマネージャー");
