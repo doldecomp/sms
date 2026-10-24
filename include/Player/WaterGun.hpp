@@ -175,9 +175,6 @@ public:
 	bool hasWater() const { return mCurrentWater > 0; }
 
 	// Fabricated
-	void setWater(s32 amount) { mCurrentWater = amount; }
-
-	// Fabricated
 	void depleteWater(s32 amount)
 	{
 		mCurrentWater -= amount;
@@ -206,7 +203,6 @@ public:
 	void updateUnk1C88(u8 emittedWater)
 	{
 		mEmittedWaterCount = emittedWater;
-		// Is this a friend class?
 		unk1C88 += 10.0f
 		           * (emittedWater * (f32)getCurrentNozzle()->mDecRate.get()
 		              / mNozzleList[0]->mAmountMax.get());
