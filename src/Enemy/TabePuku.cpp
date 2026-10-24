@@ -174,7 +174,7 @@ void TTPHitActor::checkHitActors()
 	THitActor** end = mCollisions + mColCount;
 	for (THitActor** it = mCollisions; it != end; ++it) {
 		switch ((*it)->mActorType) {
-		case 0x80000001:
+		case ACTOR_TYPE_MARIO:
 			mOwner->attackToMario();
 			break;
 		}
