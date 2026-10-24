@@ -448,7 +448,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
 		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET
-		           && gpMarioForCallBack->mWaterGun->canSpray() == true) {
+		           && gpMarioForCallBack->mWaterGun->isEmitting() == true) {
 			s16 headAngle
 			    = gpMarioForCallBack->mUpperBodyParams.mHoverHeadAngle.get();
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
@@ -977,7 +977,7 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		}
 
 		bool check = false;
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->canSpray()) {
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->isEmitting()) {
 			check = true;
 		}
 
@@ -1797,7 +1797,7 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 		}
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CDC->mMtxEffectTbl[1]->offFlag(1);
+			mWaterGun->getMultiMtxEffect()->mMtxEffectTbl[1]->offFlag(1);
 		}
 
 		if (mCap != nullptr) {
@@ -1823,10 +1823,10 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0
 	    && mUpperState == UPPER_STATE_IDLE) {
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CDC->mMtxEffectTbl[1]->onFlag(1);
+			mWaterGun->getMultiMtxEffect()->mMtxEffectTbl[1]->onFlag(1);
 		}
 	} else if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		mWaterGun->unk1CDC->mMtxEffectTbl[1]->offFlag(1);
+		mWaterGun->getMultiMtxEffect()->mMtxEffectTbl[1]->offFlag(1);
 	}
 
 	if ((graphics->unk0 & 2) != 0) {
@@ -1888,7 +1888,7 @@ void TMario::addUpper()
 			frameCtrl.setAttribute(J3DFrameCtrl::ATTR_PING_PONG_LOOP);
 			mPumpAnmRate
 			    = mGamePad->mCompSPos[3] * mUpperBodyParams.mPumpAnmSpeed.get();
-			if (mWaterGun->mCurrentWater <= 0) {
+			if (mWaterGun->getCurrentWater() <= 0) {
 				if (frameCtrl.getRate() >= 0.0f) {
 					frameCtrl.setRate(mPumpAnmRate);
 					if (frameCtrl.checkPass(8.0f)) {

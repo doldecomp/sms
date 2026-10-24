@@ -4038,10 +4038,11 @@ void TGCConsole2::performMovement()
 		++unk5C;
 	}
 
-	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
+	TWaterGun* waterGun = gpMarioOriginal->getWaterGun();
 	s32 currentWater    = waterGun->getCurrentWater();
 	s32 maxWater        = waterGun->getMaxWater();
-	int currentNozzle   = waterGun->mCurrentNozzle;
+	TWaterGun::TNozzleType currentNozzle
+	    = (TWaterGun::TNozzleType)waterGun->getCurrentNozzleType();
 
 	if (unk2F8->isInterpolatorAtZero() && !unk45 && currentNozzle != unk310) {
 		unk274->getPane()->hide();

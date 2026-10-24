@@ -120,10 +120,7 @@ void TMario::hitBarrel(THitActor* actor)
 	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			TWaterGun* wg     = mWaterGun;
-			wg->mCurrentWater = (s32)((const TWaterGun*)wg)
-			                        ->getCurrentNozzle()
-			                        ->mAmountMax.get();
+			mWaterGun->resetWaterToFull();
 		}
 	}
 }
@@ -267,10 +264,8 @@ void TMario::checkCollision()
 				mModelFaceAngle = mFaceAngle.y;
 
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-					unk3E8              = mWaterGun->mSecondNozzle;
-					const TWaterGun* wg = mWaterGun;
-					unk3EC              = (f32)(wg->mCurrentWater
-                                   / wg->getCurrentNozzle()->mAmountMax.get());
+					unk3E8 = mWaterGun->getSecondNozzleType();
+					unk3EC = mWaterGun->getUsedRatio();
 				}
 				mYoshi->ride();
 				onFlag(MARIO_FLAG_HAS_FLUDD);
