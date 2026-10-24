@@ -269,7 +269,7 @@ public:
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
 	/* 0x158 */ TBWPicket* mPicket;
-	/* 0x15C */ JGeometry::TVec3<f32> mPicketPullDelta; // guessed name
+	/* 0x15C */ JGeometry::TVec3<f32> mPicketPullDelta;
 	/* 0x168 */ f32 unk168;
 	/* 0x16C */ s32 unk16C;
 	/* 0x170 */ TBWHit* mHits[2];
