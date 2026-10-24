@@ -2343,7 +2343,6 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 			JGeometry::TVec3<f32> marioPosition = SMS_GetMarioPos();
 			eel->generateBubble(marioPosition);
 
-<<<<<<< HEAD
 			s32 jointIndex = eel->getMActor()
 			                     ->getModel()
 			                     ->getModelData()
@@ -2351,13 +2350,6 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 			                     ->getIndex("ha7");
 			MtxPtr shineMtx
 			    = eel->getMActor()->getModel()->getAnmMtx(jointIndex);
-=======
-			s32 jointIndex  = eel->mMActor->getModel()
-			                      ->getModelData()
-			                      ->getJointName()
-			                      ->getIndex("ha7");
-			MtxPtr shineMtx = eel->mMActor->getModel()->getAnmMtx(jointIndex);
->>>>>>> f6d417c1 (why I decided to do this)
 			gpItemManager->makeShineAppearWithDemo(
 			    "シャイン（ボス用）", "めおとウナギシャインカメラ",
 			    shineMtx[0][3], shineMtx[1][3], shineMtx[2][3]);
