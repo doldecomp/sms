@@ -53,14 +53,14 @@ public:
 	                       const JGeometry::TVec3<float>& dir,
 	                       const JGeometry::TVec3<float>& otherDir); // UNUSED
 	void moveObject();
-	void calcMomentum();     // UNUSED
-	f32 getWaterPow() const; // UNUSED
-	bool doReturnMove();     // UNUSED
-	bool doOnewayMove();     // UNUSED
-	bool doSearchMove();     // UNUSED
-	bool doScaleUp();        // UNUSED
-	bool doScaleDown();      // UNUSED
-	void doResetToEdge();    // UNUSED
+	const JGeometry::TVec3<f32> calcMomentum(); // UNUSED
+	f32 getWaterPow() const;                    // UNUSED
+	bool doReturnMove();                        // UNUSED
+	bool doOnewayMove();                        // UNUSED
+	bool doSearchMove();                        // UNUSED
+	bool doScaleUp();                           // UNUSED
+	bool doScaleDown();                         // UNUSED
+	void doResetToEdge();                       // UNUSED
 	void checkHitActors();
 	void updateCollision();                              // UNUSED
 	void emitEffects();                                  // UNUSED
@@ -68,8 +68,9 @@ public:
 	const JGeometry::TVec3<f32> getDirAtWirePos() const; // UNUSED
 	const JGeometry::TVec3<f32>& getWireDir() const;
 	bool isReflect() const; // UNUSED
-	const TNerveBase<TLiveActor>* getNerveFromMode(int mode);
+	static const TNerveBase<TLiveActor>* getNerveFromMode(int mode);
 	f32 getRangePosInWire() const; // UNUSED
+	TWireBinder* getWireBinder();  // UNUSED
 	TWireBinder* getWireBinder() const;
 	bool isStartWire() const; // UNUSED
 	bool isEndWire() const;   // UNUSED
