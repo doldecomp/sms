@@ -806,6 +806,14 @@ void TNozzleButton::animation(int) { }
 
 void TNozzleButton::emit(int) { }
 
+TNozzleDeform::TNozzleDeform(const char* name, const char* prm,
+                             TWaterGun* fludd)
+    : TNozzleBase(name, prm, fludd)
+    , mBomb(name, "/Mario/WaterGun/NozzleDeformBomb.prm", fludd)
+{
+	init();
+}
+
 void TNozzleDeform::movement(const TMarioControllerWork& controllerWork)
 {
 	if (!mFludd->hasWater()) {
@@ -1358,6 +1366,10 @@ void TWaterGun::createGunBody()
 
 void TWaterGun::initInLoadAfter() { }
 
+void TWaterGun::entryAll() { }
+
+void TWaterGun::finalDrawInitialize() { }
+
 // Unused
 TWaterGun::TDeParams::TDeParams()
     : TParams("/Mario/WaterGun.prm")
@@ -1373,10 +1385,6 @@ TWaterGun::TDeParams::TDeParams()
 {
 	load(mPrmPath);
 }
-
-void TWaterGun::entryAll() { }
-
-void TWaterGun::finalDrawInitialize() { }
 
 // TODO: Do i really need to explcitly say this?
 #pragma dont_inline on
@@ -1413,8 +1421,6 @@ MtxPtr TWaterGun::getNozzleMtx()
 	return mFluddModel->getModel()->getAnmMtx(mJointIdxNozzleCenter);
 }
 
-J3DModel* TWaterGun::getModel() { return mFluddModel->getModel(); }
-
 void TWaterGun::setEmitPt()
 {
 	for (s32 emitterIndex = 0;
@@ -1428,6 +1434,8 @@ void TWaterGun::setEmitPt()
 		}
 	}
 }
+
+J3DModel* TWaterGun::getModel() { return mFluddModel->getModel(); }
 
 void TWaterGun::getWaterGunAnmID(int) { }
 

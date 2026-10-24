@@ -6,12 +6,7 @@
 
 class TNozzleDeform : public TNozzleBase {
 public:
-	TNozzleDeform(const char* name, const char* prm, TWaterGun* fludd)
-	    : TNozzleBase(name, prm, fludd)
-	    , mBomb(name, "/Mario/WaterGun/NozzleDeformBomb.prm", fludd)
-	{
-		init();
-	}
+	TNozzleDeform(const char* name, const char* prm, TWaterGun* fludd);
 
 	virtual s32 getNozzleKind() const { return 3; }
 	virtual void movement(const TMarioControllerWork&);
