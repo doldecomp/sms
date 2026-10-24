@@ -291,7 +291,7 @@ public:
 	void setHoverAngleTargetL(s16 angle) { mHoverAngleTargetL = angle; }
 	void setHoverAngleTargetR(s16 angle) { mHoverAngleTargetR = angle; }
 
-	// Fabricated and likely fake
+	// Fabricated
 	f32 getUsedRatio()
 	{
 		return mCurrentWater / getCurrentNozzle()->mAmountMax.get();
@@ -303,7 +303,7 @@ public:
 		WATER_GUN_FLAG_UNK10 = 0x10,
 	};
 
-private:
+public:
 	/* 0x0004 */ u16 mFlags;
 	/* 0x0008 */ TMario* mMario;
 	/* 0x000C */ TNozzleDeform mNozzleDeform;

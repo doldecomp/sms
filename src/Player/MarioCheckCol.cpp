@@ -120,7 +120,7 @@ void TMario::hitBarrel(THitActor* actor)
 	    && mStatus == MARIO_STATUS_HIP_DROP) {
 		actor->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->setWater(mWaterGun->getCurrentNozzle()->getAmountMax());
+			mWaterGun->resetWaterToFull();
 		}
 	}
 }

@@ -1151,7 +1151,7 @@ void TWaterGun::init()
 	mSecondNozzle           = Hover;
 	mNozzleRocket.setSoundId(MSD_SE_PO_ROCKET_TRIGGER);
 	mNozzleDeform.getBomb()->setSoundId(MSD_SE_PO_SHOTGUN_TRIGGER);
-	mCurrentWater                 = getCurrentNozzle()->getAmountMax();
+	mCurrentWater                 = getCurrentNozzle()->mAmountMax.get();
 	mEmittedWaterCount            = 0;
 	unk1C88                       = 0.0f;
 	mCurrentPressure              = 0;
@@ -1433,7 +1433,11 @@ void TWaterGun::getWaterGunAnmID(int) { }
 
 void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 {
-	f32 usedRatio = (f32)mCurrentWater / getCurrentNozzle()->getAmountMax();
+	// Cast and fact that it is defined so early makes me suspicious
+	// Could this entire thing be an inline or am i going crazy?
+	// I tried re-using getUsedRatio, which would make sense, but that
+	// breaks it's used in MarioCheckCol...
+	f32 usedRatio = (f32)mCurrentWater / getCurrentNozzle()->mAmountMax.get();
 	if (nozzleType == Spray) {
 		if (animate == true) {
 			mSwitchToSecondNozzleProgress = 0.0f;
@@ -1449,7 +1453,7 @@ void TWaterGun::changeNozzle(TNozzleType nozzleType, bool animate)
 	if (nozzleType == Yoshi) {
 		mCurrentWater = mMario->getYoshi()->getUnkD4();
 	} else {
-		mCurrentWater = usedRatio * getCurrentNozzle()->getAmountMax();
+		mCurrentWater = usedRatio * getCurrentNozzle()->mAmountMax.get();
 	}
 }
 
@@ -1816,28 +1820,21 @@ void TWaterGun::emit()
 }
 BOOL TWaterGun::suck()
 {
-	// TODO: Missing stack space
-	// volatile u32 unused1[7];
-	if (mCurrentNozzle == (s8)Yoshi) {
+	if (getCurrentNozzleType() == Yoshi) {
 		return false;
-	} else {
-		s32 suckRate = getSuckRate();
-		if (suckRate > 0) {
-			mCurrentWater += suckRate;
-
-			s32 currentWater = mCurrentWater;
-			s32 maxWater     = getCurrentNozzle()->getAmountMax();
-			if (currentWater > maxWater) {
-				mCurrentWater = maxWater;
-			}
-
-			if (!(mCurrentWater >= getCurrentNozzle()->getAmountMax())) {
-				SMSGetMSound()->startSoundActor(
-				    MSD_SE_PO_SUCK_WATER_B, &getEmitPos(0), 0, nullptr, 0, 4);
-			}
-			return true;
-		}
 	}
+
+	s32 suckRate = getSuckRate();
+	if (suckRate > 0) {
+		addWater(suckRate);
+
+		if (mCurrentWater < getCurrentNozzle()->mAmountMax.get()) {
+			SMSGetMSound()->startSoundActor(MSD_SE_PO_SUCK_WATER_B,
+			                                &getEmitPos(0), 0, nullptr, 0, 4);
+		}
+		return true;
+	}
+
 	return false;
 }
 
