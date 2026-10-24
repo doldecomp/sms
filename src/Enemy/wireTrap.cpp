@@ -570,7 +570,6 @@ DEFINE_NERVE(TNerveWireTrapSearch, TLiveActor)
 		return true;
 	}
 	return false;
-
 }
 
 DEFINE_NERVE(TNerveWireTrapWait, TLiveActor)
