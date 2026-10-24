@@ -622,7 +622,7 @@ void TYoshi::thinkUpper()
 	J3DJoint* joint
 	    = mActor->getModel()->getModelData()->getJointNodePointer(18);
 	if (mTongue->mState != TYoshiTongue::STATE_IDLE
-	    || mMario->mWaterGun->isEmitting()) {
+	    || mMario->getWaterGun()->isEmitting()) {
 		if (joint->getMtxCalc() != unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);

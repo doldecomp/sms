@@ -601,7 +601,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 void TNozzleTrigger::emit(int param_1)
 {
 	if (mFludd->hasWater()
-	    && (u8)mSprayState == TNozzleTrigger::SPRAY_STATE_ACTIVE) {
+	    && mSprayState == TNozzleTrigger::SPRAY_STATE_ACTIVE) {
 		TWaterEmitInfo* emitInfo = mFludd->getEmitInfo();
 		emitCommon(param_1, emitInfo);
 
@@ -646,7 +646,7 @@ void TNozzleTrigger::emit(int param_1)
 			mFludd->depleteWater(emittedWater * mDecRate.get());
 
 			if ((mFludd->getCurrentNozzleType() == TWaterGun::Hover)
-			    && ((SMSGetMarDirector()->mMoveTickCount & 0x7u) == 0u)) {
+			    && ((SMSGetMarDirector()->getMoveTickCount() & 0x7u) == 0u)) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
 
@@ -656,7 +656,7 @@ void TNozzleTrigger::emit(int param_1)
 			f32 reaction
 			    = pressure * (reactionPow - reactionPowMin) + reactionPowMin;
 
-			s16 faceAngleY     = mFludd->getMario()->mFaceAngle.y;
+			s16 faceAngleY     = mFludd->mMario->mFaceAngle.y;
 			f32 dirX           = emitInfo->mDir.get().x;
 			f32 dirZ           = emitInfo->mDir.get().z;
 			f32 cosAngle       = JMASCos(faceAngleY);
@@ -1488,15 +1488,15 @@ void TWaterGun::movement()
 
 	// Yoshi nozzle
 	if (mCurrentNozzle == Yoshi) {
-		mCurrentWater = getCurrentNozzle()->getAmountMax();
+		resetWaterToFull();
 	}
 
 	if (SMS_isDivingMap()) {
-		mCurrentWater = getCurrentNozzle()->getAmountMax();
+		resetWaterToFull();
 	}
 
 	if (mCurrentNozzle == Yoshi) {
-		mHouseProgress = 0.0f;
+		resetHouseProgress();
 	}
 
 	// Nozzle swapping
@@ -1648,12 +1648,10 @@ TNozzleBase* TWaterGun::getCurrentNozzle() const
 
 void TWaterGun::setAmountToRate(f32 rate)
 {
-	// volatile u32 unused2[7]; // TODO: possibly inlined function
 	if (mCurrentNozzle == Yoshi) {
-		mCurrentWater = getCurrentNozzle()->getAmountMax();
+		mCurrentWater = getCurrentNozzle()->mAmountMax.get();
 	} else {
-		TNozzleBase* currentNozzle = getCurrentNozzle();
-		mCurrentWater              = rate * currentNozzle->getAmountMax();
+		mCurrentWater = rate * getCurrentNozzle()->mAmountMax.get();
 	}
 }
 
@@ -1686,7 +1684,7 @@ f32 TWaterGun::getPressureMax()
 	// volatile u32 unused2[6];
 
 	if (getCurrentNozzle()->getNozzleKind() == 1) {
-		return getCurrentNozzle()->getInsidePressureMax();
+		return getCurrentNozzle()->mInsidePressureMax.get();
 	}
 
 	return 0.0f;
@@ -1843,7 +1841,7 @@ BOOL TWaterGun::damage()
 	if (hasWater()) {
 		TNozzleBase* nozzle = getCurrentNozzle();
 
-		mCurrentWater -= nozzle->getDamageLoss();
+		mCurrentWater -= nozzle->mDamageLoss.get();
 
 		if (mCurrentWater < 0) {
 			mCurrentWater = 0;
