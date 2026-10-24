@@ -867,7 +867,7 @@ config.libs = [
             PCHObject(NonMatching, "System/FlagManager.cpp"),
             PCHObject(NonMatching, "System/GCLogoDir.cpp"),
             PCHObject(Matching, "System/J3DSysFlag.cpp"),
-            Object(NonMatching, "System/MarDirector.cpp"),
+            Object(Matching, "System/MarDirector.cpp"),
             PCHObject(NonMatching, "System/MarDirectorDirect.cpp"),
             PCHObject(NonMatching, "System/MarDirectorEvent.cpp"),
             PCHObject(NonMatching, "System/MarDirectorInitECT.cpp"),
