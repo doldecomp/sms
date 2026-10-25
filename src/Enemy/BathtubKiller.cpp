@@ -807,8 +807,10 @@ TBathtubKillerManager::TBathtubKillerManager(const char* name)
 
 void TBathtubKillerManager::load(JSUMemoryInputStream& stream)
 {
+	getActiveObjNum();
 	TSmallEnemyManager::load(stream);
 	unk38 = new TBathtubKillerParams("/enemy/bathtubkiller.prm");
+	getActiveObjNum();
 }
 
 void TBathtubKillerManager::loadAfter()
@@ -822,6 +824,7 @@ void TBathtubKillerManager::loadAfter()
 	mMushroom         = nullptr;
 	mFinalMushroomRequested = 0;
 	mEarlyMushroomRequests  = 0;
+	getActiveObjNum();
 
 	static const char* loopFilenames[1] = {
 		"/scene/map/map/ms_kp_kill_smoke.jpa",

@@ -1046,11 +1046,10 @@ public:
 		unk800AC = unk80134->meshTexWidth.get() & ~3;
 		unk800B0 = 1.0f / (f32)unk800AC;
 
-		// Half-stripped crap
 		JGeometry::TVec3<f32> v1;
 		v1.set(data.getThing());
-		if (data.unk3C * data.unk3C - data.unk44 * data.unk44 <= 0)
-			(void)(data.unk3C * data.unk3C - data.unk44 * data.unk44);
+		JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
+		                            - data.unk44 * data.unk44);
 
 		JGeometry::TVec3<f32> v2;
 		v2.set(data.getThing());

@@ -127,6 +127,16 @@ public:
 	BOOL checkMessage(THitActor*, u32);
 	void prepareGenerate();
 
+	// fabricated
+	int getRollingRouletteNum() const
+	{
+		int num = 0;
+		for (int i = 0; i < 3; ++i)
+			if (mRoulettes[i]->unk13C != 0.0f)
+				++num;
+		return num;
+	}
+
 	static f32 mEnemyGenRate;
 	static f32 mItemGenRate;
 	static u8 mNormalAlpha;

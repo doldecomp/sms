@@ -362,22 +362,18 @@ TCoasterKillerManager::TCoasterKillerManager(const char* name)
 {
 }
 
-#define ASSERT_MSG(msg, line) (void)((msg), (line))
-#define ASSERT_TEST(expr)                                                      \
-	(void)((expr) ? true : (ASSERT_MSG(__FILE__, __LINE__), false));
-
 void TCoasterKillerManager::load(JSUMemoryInputStream& stream)
 {
-	(void)(unk38 ? unk38 : unk38); // @hack to force cmplwi
+	getActiveObjNum();
 	TSmallEnemyManager::load(stream);
 	unk38 = new TCoasterKillerSaveLoadParams("/enemy/coasterkiller.prm");
-	unk38 = unk38 ? unk38 : unk38; // @hack to force cmplwi
+	getActiveObjNum();
 }
 
 void TCoasterKillerManager::loadAfter()
 {
 	TSmallEnemyManager::loadAfter();
-	ASSERT_TEST(unk38);
+	getActiveObjNum();
 }
 
 void TCoasterKillerManager::createModelData()

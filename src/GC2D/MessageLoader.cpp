@@ -12,16 +12,7 @@ TMessageLoader::TMessageLoader(const char* param_1)
     : unk0(0)
     , unk4(0)
 {
-	u8* res = (u8*)JKRGetResource(param_1);
-	if (res) {
-		u32 a;
-		u32 b;
-		readHeader(&a, &b, res);
-		unk4 = parseBlock(a, b, res + 0x20);
-		// NOTE: assert but in an if?
-		if (unk4)
-			(void)unk4;
-	}
+	loadMessageData(param_1);
 }
 
 u32 TMessageLoader::loadMessageData(const char* param_1)
@@ -30,7 +21,9 @@ u32 TMessageLoader::loadMessageData(const char* param_1)
 	if (!res)
 		return -1;
 
-	unk4 = parseBlock(*(int*)(res + 0x8) * 32, *(int*)(res + 0xC), res + 0x20);
+	u32 a, b;
+	readHeader(&a, &b, res);
+	unk4 = parseBlock(a, b, res + 0x20);
 	if (!unk4)
 		return -1;
 
@@ -39,10 +32,8 @@ u32 TMessageLoader::loadMessageData(const char* param_1)
 
 void TMessageLoader::readHeader(u32* a, u32* b, void* header)
 {
-	u32* casted = (u32*)header;
-
-	*a = *(casted + 2) * 32;
-	*b = *(casted + 3);
+	*a = *(u32*)((u8*)header + 0x8) * 32;
+	*b = *(u32*)((u8*)header + 0xC);
 }
 
 void* TMessageLoader::parseBlock(u32 param_1, u32 param_2, void* param_3)

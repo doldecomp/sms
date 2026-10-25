@@ -704,24 +704,22 @@ void TTinKoopa::resetTinKoopa()
 	if (!unk1F0)
 		unk1F0 = (TCoasterKillerManager*)JDrama::TNameRefGen::search(
 		    "コースターキラーマネージャー");
+	unk1F0->getActiveObjNum();
 
-	mTruckActor                    = gpMarioOriginal->mKoopaRail;
-	mBreakCount                    = 0;
-	unk154                         = 0;
-	unk158                         = 0;
-	mLap                           = 0;
-	mFirstFlameMessageShown        = false;
-	mPartsHp                       = getSaveParam2()->mSLPartsHP.get();
-	unk1E4                         = nullptr;
-	mQueuedKillerNum               = 0;
-	mQueuedKillersLaunchedNum      = 0;
-	mQueuedKillerDirs[0]           = 0;
-	mQueuedKillerDirs[1]           = 0;
-	mQueuedKillerDirs[2]           = 0;
-	mQueuedKillerDirs[3]           = 0;
-	mTimers[TIMER_KILLER_INTERVAL] = 0;
-	mTimers[TIMER_FLAME_REVIVAL]   = 0;
-	mTimers[TIMER_DEFEAT_WAIT]     = 0;
+	mTruckActor               = gpMarioOriginal->mKoopaRail;
+	mBreakCount               = 0;
+	unk154                    = 0;
+	unk158                    = 0;
+	mLap                      = 0;
+	mFirstFlameMessageShown   = false;
+	mPartsHp                  = getSaveParam2()->mSLPartsHP.get();
+	unk1E4                    = nullptr;
+	mQueuedKillerNum          = 0;
+	mQueuedKillersLaunchedNum = 0;
+	for (int i = 0; i < 4; ++i)
+		mQueuedKillerDirs[i] = 0;
+	for (int i = 0; i < 3; ++i)
+		mTimers[i] = 0;
 	mTimers[TIMER_KILLER_INTERVAL] = 0;
 	unk1B4                         = 0.0f;
 	unk1B8                         = 30.0f;

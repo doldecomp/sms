@@ -1177,15 +1177,7 @@ void TBossTelesa::moveObject()
 	unk19C.x += 0.67f * cameraDiff.x;
 	unk19C.z += 0.67f * cameraDiff.z;
 
-	int movingRoulettes = 0;
-	if (mRoulettes[0]->unk13C != 0.0f)
-		++movingRoulettes;
-	if (mRoulettes[1]->unk13C != 0.0f)
-		++movingRoulettes;
-	if (mRoulettes[2]->unk13C != 0.0f)
-		++movingRoulettes;
-
-	switch (movingRoulettes) {
+	switch (getRollingRouletteNum()) {
 	case 1:
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE1, &unk19C, 0,
 		                                nullptr, 0, 4);
@@ -1774,8 +1766,11 @@ bool TBossTelesa::isInDamage()
 	return false;
 }
 
+// TODO: frame is 0x10 bytes short; a getter for TRoulette::unk13C closes it
+// here but makes slotFall 8 bytes too big.
 void TBossTelesa::rouletteStart()
 {
+	getRollingRouletteNum();
 	TMsRange<f32> speedRange(0.05f, 0.1f);
 	TMsRange<f32> directionRange(-1.0f, 1.0f);
 	f32 dir = directionRange.rand();
