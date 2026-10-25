@@ -2353,7 +2353,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_UNK8);
 
-	if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_TALK_START
+	if (SMSGetMarDirector()->isTalkStartModeNow()
 	    && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
@@ -2363,8 +2363,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		                >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
-		    && SMSGetMarDirector()->mGameMode
-		           != TMarDirector::GAME_MODE_TALK_START) {
+		    && !SMSGetMarDirector()->isTalkStartModeNow()) {
 			mFaceAngle.y = (gpCamera->getUnk258() + 0x8000)
 			               - gpCamera->getOffsetAngleY();
 		}

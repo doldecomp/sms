@@ -125,7 +125,7 @@ static inline void setLifeMeterWhiteLow(TGCConsole2* console, bool airMode)
 static inline void playLifeChangeSound(u32 sound)
 {
 	if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-	    && SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL) {
+	    && SMSGetMarDirector()->isGameplayModeNow()) {
 		SMSGetMSound()->startSoundSystemSE(sound, 0, nullptr, 0);
 	}
 }
@@ -3766,8 +3766,7 @@ void TGCConsole2::performMovement()
 			playLifeChangeSound(0x4823);
 #else
 			if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-			    && SMSGetMarDirector()->mGameMode
-			           == TMarDirector::GAME_MODE_NORMAL) {
+			    && SMSGetMarDirector()->isGameplayModeNow()) {
 				if (airMode)
 					SMSGetMSound()->startSoundSystemSE(0x480C, 0, nullptr, 0);
 				else
@@ -3838,7 +3837,7 @@ void TGCConsole2::performMovement()
 		    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
 		    && SMSGetMarDirector()->mState != TMarDirector::STATE_CARD_SAVE
 		    && !unk50 && unk16C == 0 && unk8A == 0
-		    && SMSGetMarDirector()->mGameMode != TMarDirector::GAME_MODE_TALK) {
+		    && !SMSGetMarDirector()->isTalkMainModeNow()) {
 			startDisappearStar();
 			startDisappearMario();
 			unk5A = 0;
@@ -4139,8 +4138,7 @@ void TGCConsole2::performMovement()
 		if ((f32)unk86 < rate * 2.0f) {
 			if (unk1CC <= 3 && unk1CC != 0 && unk86 == (int)(1.5f * rate)
 			    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-			    && SMSGetMarDirector()->mGameMode
-			           == TMarDirector::GAME_MODE_NORMAL
+			    && SMSGetMarDirector()->isGameplayModeNow()
 			    && SMSGetMSound()->gateCheck(0x4800)) {
 				MSoundSESystem::MSoundSE::startSoundSystemSE(0x4800, 0, nullptr,
 				                                             0);
@@ -4293,7 +4291,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
-	    && SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL) {
+	    && SMSGetMarDirector()->isGameplayModeNow()) {
 		if (unk55C < 0xffffffff)
 			++unk55C;
 	}
@@ -4343,7 +4341,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk59) {
-		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
+		if (SMSGetMarDirector()->isGameplayModeNow()
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
 #if !defined(VERSION_GMSJ01)
@@ -4356,7 +4354,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk5A) {
-		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
+		if (SMSGetMarDirector()->isGameplayModeNow()
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
 #if !defined(VERSION_GMSJ01)

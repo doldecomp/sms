@@ -80,8 +80,8 @@ BOOL TMario::readBillboard()
 		break;
 	}
 	case 2:
-		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
-		    || SMSGetMarDirector()->mGameMode == 5) {
+		if (SMSGetMarDirector()->isGameplayModeNow()
+		    || SMSGetMarDirector()->getGameMode() == 5) {
 			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		}
 		break;

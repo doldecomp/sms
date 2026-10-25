@@ -160,8 +160,7 @@ BOOL TMario::waiting()
 
 	if (mStatusState & 0x2) {
 		setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
-	} else if (SMSGetMarDirector()->mGameMode
-	           == TMarDirector::GAME_MODE_INNER_DEMO) {
+	} else if (SMSGetMarDirector()->isInnerDemoModeNow()) {
 		setAnimation(ANIM_T_WAIT, 1.0f);
 	} else if (isSinking()) {
 		setAnimation(ANIM_SINKING, 1.0f);

@@ -952,7 +952,7 @@ void TNozzleDeform::animation(int param)
 	if (param == 3)
 		return;
 
-	if (gpMarDirector->mGameMode == TMarDirector::GAME_MODE_INNER_DEMO)
+	if (gpMarDirector->isInnerDemoModeNow())
 		return;
 
 	if (mFludd->isSwitchingToSecondaryNozzle()) {

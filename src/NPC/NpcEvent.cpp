@@ -81,7 +81,7 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL)
+	if (SMSGetMarDirector()->isGameplayModeNow())
 		result = 1;
 	interp->push(result);
 }

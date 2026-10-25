@@ -1922,9 +1922,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (self->isReachedToGoal()
-	    && SMSGetMarDirector()->mGameMode
-	           != TMarDirector::GAME_MODE_INNER_DEMO) {
+	if (self->isReachedToGoal() && !SMSGetMarDirector()->isInnerDemoModeNow()) {
 
 		self->changeAllTentacleState(0);
 		self->kill();

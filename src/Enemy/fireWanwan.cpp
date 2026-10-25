@@ -367,7 +367,7 @@ void TFireWanwanManager::checkShineAppear()
 		return;
 
 	if (mWanwansKilled == getActiveObjNum()
-	    && SMSGetMarDirector()->mGameMode != TMarDirector::GAME_MODE_INNER_DEMO
+	    && !SMSGetMarDirector()->isInnerDemoModeNow()
 	    && SMSGetMarDirector()->getConsole()->unk10 == 0) {
 		mShineAppeared = true;
 		gpItemManager->makeShineAppearWithDemo(

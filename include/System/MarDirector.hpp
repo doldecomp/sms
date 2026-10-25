@@ -149,7 +149,17 @@ public:
 	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
 	TGCConsole2* getConsole() { return mConsole; }
 
+	// Fabricated
+	u8 getGameMode() const { return mGameMode; }
+
 	bool isGameplayModeNow() const { return mGameMode == GAME_MODE_NORMAL; }
+	// Fabricated
+	bool isTalkStartModeNow() const
+	{
+		return mGameMode == GAME_MODE_TALK_START;
+	}
+	// Fabricated
+	bool isTalkMainModeNow() const { return mGameMode == GAME_MODE_TALK; }
 	bool isTalkModeNow() const
 	{
 		return mGameMode == GAME_MODE_TALK_START || mGameMode == GAME_MODE_TALK;
