@@ -475,7 +475,7 @@ void TPauseMenu2::draw(JDrama::TGraphics* gfx)
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
+	if (SMSGetMarDirector()->getState() == TMarDirector::STATE_PAUSE_MENU) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {

@@ -754,7 +754,7 @@ void TCannon::killerShoot()
 		killer->mRotation.set(
 		    0.0f, MsWrap(MsGetRotFromZaxisY(velocity), 0.0f, 360.0f), 0.0f);
 		killer->mScaling.set(0.1f, 0.1f, 0.1f);
-		if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK1) {
+		if (SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK1) {
 			velocity.x *= 0.2f;
 			velocity.y *= 0.4f;
 			velocity.z *= 0.2f;
@@ -933,7 +933,7 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 		                                &cannon->mPosition, 0, nullptr, 0, 4);
 	}
 	if (SMSGetApplication()->mCurrArea.getStage() == 5
-	    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK1) {
+	    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK1) {
 		JGeometry::TVec3<f32> delta
 		    = SMS_DistanceFromMarioVec(cannon->mPosition);
 		cannon->mRotation.y = MsGetRotFromZaxis(delta).y;

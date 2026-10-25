@@ -71,19 +71,19 @@ public:
 	TSpcSlice()
 	    : mType(TYPE_INT)
 	{
-		(int&)mData = 0;
+		mData.asInt = 0;
 	}
 
 	TSpcSlice(int value)
 	    : mType(TYPE_INT)
 	{
-		(int&)mData = value;
+		mData.asInt = value;
 	}
 
 	TSpcSlice(f32 value)
 	    : mType(TYPE_FLOAT)
 	{
-		(float&)mData = value;
+		mData.asFloat = value;
 	}
 
 	TSpcSlice(const char* value)

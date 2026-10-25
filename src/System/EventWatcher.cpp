@@ -413,8 +413,8 @@ static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int time = TSpcSlice(interp->pop()).getDataInt();
-	OSResetStopwatch(&SMSGetMarDirector()->unkE8);
-	SMSGetMarDirector()->unk120 = time;
+	SMSGetMarDirector()->resetStopwatch();
+	SMSGetMarDirector()->setTimeLimit(time);
 	interp->push();
 }
 

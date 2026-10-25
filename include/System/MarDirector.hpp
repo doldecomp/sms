@@ -147,6 +147,8 @@ public:
 	BOOL checkTransitionFlag(int flag) const { return mTransitionFlags & flag; }
 	void onTransitionFlag(int flag) { mTransitionFlags |= flag; }
 	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
+	// Fabricated
+	u8 getState() const { return mState; }
 	TGCConsole2* getConsole() { return mConsole; }
 
 	// Fabricated
@@ -190,14 +192,28 @@ public:
 	JKRMemArchive* get2DArchive() { return m2DArchive; }
 	TBaseNPC* getTalkingNPC() { return unkA0; }
 
-	int getRestTime()
+	// fabricated
+	int getTime()
 	{
 		s64 ticks = OSCheckStopwatch(&unkE8);
-		int time  = OSTicksToMilliseconds(ticks) / 10;
-		return unk120 - time;
+		return OSTicksToMilliseconds(ticks) / 10;
 	}
-
+	int getRestTime() { return unk120 - getTime(); }
+	s64 checkStopwatch() { return OSCheckStopwatch(&unkE8); }
+	s64 getStartTime() { return unkC8; }
+	// TODO: very likely a fakematch
+	static s64 diffMs(s64 now, s64 start)
+	{
+		return OSTicksToMilliseconds(now) - OSTicksToMilliseconds(start);
+	}
+	f32 getTimerTime()
+	{
+		return diffMs(checkStopwatch(), getStartTime()) * 0.1f;
+	}
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
+	void resetStopwatch() { OSResetStopwatch(&unkE8); }
+	void setTimeLimit(int time) { unk120 = time; }
+
 	TMarioGamePad* getGamePad(int i = 0) { return mGamePads[i]; }
 
 	// Fabricated
