@@ -217,10 +217,10 @@ void TTabePuku::initParams()
 	mMouthJointIndex = jointIndex;
 }
 
-void TTabePuku::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTabePuku::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	unk194->perform(param_1, param_2);
-	TSmallEnemy::perform(param_1, param_2);
+	unk194->perform(cue, param_2);
+	TSmallEnemy::perform(cue, param_2);
 }
 
 void TTabePuku::control()

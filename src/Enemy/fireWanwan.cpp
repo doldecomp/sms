@@ -584,7 +584,7 @@ void TFireWanwanTailHit::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
+void TFireWanwanTailHit::performNodes(u32 cue, JDrama::TGraphics* param_2)
 {
 	for (int i = 0; i < 5; ++i) {
 		JGeometry::TVec3<f32> local_68 = getBodyNthPos(i);
@@ -596,7 +596,7 @@ void TFireWanwanTailHit::performNodes(u32 param_1, JDrama::TGraphics* param_2)
 			local_74 -= local_68;
 			local_74.normalize();
 		}
-		unkA8[i]->perform(param_1, param_2, local_68, local_74);
+		unkA8[i]->perform(cue, param_2, local_68, local_74);
 	}
 
 	for (int i = 0; i < 4; ++i) {

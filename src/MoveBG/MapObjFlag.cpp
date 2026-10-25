@@ -179,15 +179,15 @@ void TMapObjFlagManager::initDraw()
 	GXSetCullMode(GX_CULL_NONE);
 }
 
-void TMapObjFlagManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TMapObjFlagManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		for (s32 i = 0; i < ARRAY_COUNT(unk10); ++i) {
 			for (s32 j = 0; j < unk10[i].unk0; ++j)
 				unk10[i].unk4[j]->update();
 		}
 	}
-	if (param_1 & CUE_DRAW) {
+	if (cue & CUE_DRAW) {
 		initDraw();
 		for (s32 i = 0; i < ARRAY_COUNT(unk10); ++i) {
 			if (unk10[i].unk0 != 0) {

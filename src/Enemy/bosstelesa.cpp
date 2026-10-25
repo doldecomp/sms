@@ -451,9 +451,9 @@ const f32 bossTelesaDirectionTable[] = {
 	1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
 };
 
-void TBossTelesaManager::perform(u32 flags, JDrama::TGraphics* gfx)
+void TBossTelesaManager::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	TEnemyManager::perform(flags, gfx);
+	TEnemyManager::perform(cue, gfx);
 }
 
 BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
@@ -1370,9 +1370,9 @@ void TBossTelesa::calcRootMatrix()
 	}
 }
 
-void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
+void TBossTelesa::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	if ((flags & 0x200)
+	if ((cue & CUE_ENTRY)
 	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
 		    && mIsSpicy) {
@@ -1383,15 +1383,15 @@ void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	TSpineEnemy::perform(flags, gfx);
+	TSpineEnemy::perform(cue, gfx);
 
-	mBodyCollision->THitActor::perform(flags, gfx);
-	mTongueCollision->THitActor::perform(flags, gfx);
-	mKillSmallEnemyCollision->THitActor::perform(flags, gfx);
+	mBodyCollision->THitActor::perform(cue, gfx);
+	mTongueCollision->THitActor::perform(cue, gfx);
+	mKillSmallEnemyCollision->THitActor::perform(cue, gfx);
 	if (mSlot)
-		mSlot->testPerform(flags, gfx);
+		mSlot->testPerform(cue, gfx);
 	if (mSlotParts)
-		mSlotParts->testPerform(flags, gfx);
+		mSlotParts->testPerform(cue, gfx);
 }
 
 BOOL TBossTelesa::receiveMessage(THitActor*, u32) { return FALSE; }

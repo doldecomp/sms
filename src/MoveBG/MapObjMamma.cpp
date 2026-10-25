@@ -1186,7 +1186,7 @@ void TMammaMirrorMapOperator::hide(int i)
 
 void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (cue & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		const int& mirrorIdx = gpMirrorModelManager->getUnk18();
 		if (gpMirrorModelManager->isUnk18Present()) {
 			const JGeometry::TVec3<f32>& camPos

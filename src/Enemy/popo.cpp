@@ -135,9 +135,9 @@ void TPopoManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TPopoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPopoManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < getActiveObjNum(); i++) {
 			TPopo* popo = (TPopo*)getObj(i);
 			if (popo->unk1A4 && popo->checkLiveFlag(LIVE_FLAG_DEAD))
@@ -145,7 +145,7 @@ void TPopoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, param_2);
 }
 
 BOOL TPopoCollision::receiveMessage(THitActor* param_1, u32 param_2)
@@ -323,10 +323,10 @@ void TPopo::init(TLiveManager* param_1)
 	unk23C->unk68 = this;
 }
 
-void TPopo::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TPopo::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
-	unk23C->THitActor::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
+	unk23C->THitActor::perform(cue, param_2);
 }
 
 void TPopo::setMActorAndKeeper()

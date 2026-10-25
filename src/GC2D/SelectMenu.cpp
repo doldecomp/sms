@@ -106,9 +106,9 @@ void TSelectGrad::setStageColor(u8 stage)
 	}
 }
 
-void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
+void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	if (flags & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		bool nextCycle = false;
 		for (s32 i = 0; i < 3; i++) {
 			u8* value = (i == 0) ? &mBottomRightCol.r
@@ -173,7 +173,7 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 	}
 
-	if (flags & 0x8) {
+	if (cue & CUE_DRAW) {
 		GXSetDither(GX_TRUE);
 
 		Mtx mtx;
@@ -609,9 +609,9 @@ static inline JUtility::TColor makeBlackCornerColor(u8 alpha)
 	return JUtility::TColor(0, 0, 0, alpha);
 }
 
-void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
+void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	if (flags & 0x1) {
+	if (cue & CUE_MOVE) {
 		switch (mMenuState) {
 		case LETTERBOX_ANIMATION: {
 			bool updated = true;
@@ -1167,7 +1167,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 	}
 
-	if (flags & 0x8) {
+	if (cue & CUE_DRAW) {
 		switch (mMenuState) {
 		case CLOSE_MENU:
 		case LETTERBOX_ANIMATION:

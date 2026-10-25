@@ -1918,11 +1918,11 @@ void TMario::removeCallBack()
 	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 }
 
-void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
+void TMario::calcAnim(u32 cue, JDrama::TGraphics* graphics)
 {
 	addCallBack(graphics);
 	addUpper();
-	calcAnimBody(param_1, graphics);
+	calcAnimBody(cue, graphics);
 	removeCallBack();
 
 	calcAnimHands();

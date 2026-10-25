@@ -4782,15 +4782,15 @@ void TGCConsole2::performCalcAnim()
 	}
 }
 
-void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
+void TGCConsole2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & 1)
+	if (cue & CUE_MOVE)
 		performMovement();
 
-	if (flags & 2)
+	if (cue & CUE_CALC_ANIM)
 		performCalcAnim();
 
-	if (flags & 8) {
+	if (cue & CUE_DRAW) {
 		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 

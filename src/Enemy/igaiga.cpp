@@ -299,10 +299,10 @@ void TIgaigaManager::initSetEnemies()
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
-void TIgaigaManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TEnemyManager::perform(param_1, param_2);
-	unk60->perform(param_1, param_2);
+	TEnemyManager::perform(cue, param_2);
+	unk60->perform(cue, param_2);
 }
 
 void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& param_1,
@@ -365,9 +365,9 @@ void TIgaiga::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("igaiga_model1.bmd", 0);
 }
 
-void TIgaiga::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TIgaiga::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 }
 
 void TIgaiga::calcRootMatrix()
@@ -773,9 +773,9 @@ BOOL TGorogoroManager::inArea(const JGeometry::TVec3<f32>& param_1)
 	return unk70 ? unk70->contain(param_1) : TRUE;
 }
 
-void TGorogoroManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		++unk60;
 		s32 interval
 		    = ((TRollEnemySaveLoadParams*)unk38)->mSLGenerateInterval.get();
@@ -811,8 +811,8 @@ void TGorogoroManager::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TEnemyManager::perform(param_1, param_2);
-	unk6C->perform(param_1, param_2);
+	TEnemyManager::perform(cue, param_2);
+	unk6C->perform(cue, param_2);
 }
 
 void TGorogoroManager::requestPolluteModel(JGeometry::TVec3<f32>& param_1,
@@ -867,16 +867,16 @@ void TGorogoro::init(TLiveManager* param_1)
 	unk130 = 1;
 }
 
-void TGorogoro::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TGorogoro::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (gpMirrorModelManager->isInMirror(mPosition)) {
-			if (param_1 & CUE_CALC_ANIM) {
+			if (cue & CUE_CALC_ANIM) {
 				calcRootMatrix();
 				mMActor->calc();
 			}
-			if (param_1 & CUE_CALC_VIEW)
+			if (cue & CUE_CALC_VIEW)
 				mMActor->viewCalc();
 		}
 	}

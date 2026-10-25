@@ -109,10 +109,10 @@ TSpineEnemy* TTobiPukuLaunchPadManager::createEnemyInstance()
 	return new TTobiPukuLaunchPad("とびプク発射台");
 }
 
-void TTobiPukuLaunchPadManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTobiPukuLaunchPadManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	for (int i = 0; i < getActiveObjNum(); ++i)
-		TLiveManager::getObj(i)->perform(param_1, param_2);
+		TLiveManager::getObj(i)->perform(cue, param_2);
 }
 
 TSpineEnemy* TMoePukuLaunchPadManager::createEnemyInstance()
@@ -146,10 +146,10 @@ TTobiPukuLaunchPad::TTobiPukuLaunchPad(const char* param_1)
 {
 }
 
-void TTobiPukuLaunchPad::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTobiPukuLaunchPad::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (!checkLiveFlag(LIVE_FLAG_UNK200) && !checkLiveFlag(LIVE_FLAG_DEAD)
-	    && (param_1 & 1)) {
+	    && (cue & CUE_MOVE)) {
 		if (TTobiPuku::mReturnLaunchSw) {
 			if (!unk1A8)
 				launch();

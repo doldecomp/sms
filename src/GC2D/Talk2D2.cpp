@@ -1214,9 +1214,9 @@ bool TTalk2D2::appearBoardBoxWindow()
 	return result;
 }
 
-void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTalk2D2::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		switch (SMSGetMarDirector()->getGameMode()) {
 		case TMarDirector::GAME_MODE_TALK:
 			switch (unk248) {
@@ -1270,7 +1270,7 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		switch (SMSGetMarDirector()->getGameMode()) {
 		case TMarDirector::GAME_MODE_TALK:
 			switch (unk248) {
@@ -1324,7 +1324,7 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & CUE_DRAW) {
+	if (cue & CUE_DRAW) {
 		switch (SMSGetMarDirector()->getGameMode()) {
 		case TMarDirector::GAME_MODE_TALK: {
 			ReInitializeGX();

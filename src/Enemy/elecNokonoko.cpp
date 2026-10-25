@@ -153,11 +153,11 @@ void TElecNokonokoManager::clipEnemies(JDrama::TGraphics* param_1)
 	}
 }
 
-void TElecNokonokoManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TElecNokonokoManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, param_2);
 	for (int i = 0; i < getActiveObjNum(); ++i) {
-		((TElecNokonoko*)getObj(i))->unk194->perform(param_1, param_2);
+		((TElecNokonoko*)getObj(i))->unk194->perform(cue, param_2);
 	}
 }
 
@@ -507,11 +507,11 @@ void TElecCarapace::loadInit(TSpineEnemy* param_1, const char* param_2)
 	mHeadHeight = 80.0f;
 }
 
-void TElecCarapace::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TElecCarapace::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TEnemyAttachment::perform(param_1, param_2);
+	TEnemyAttachment::perform(cue, param_2);
 
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		if (unk180 != 0) {
 			unk180++;
 			if (unk180 > 5)
@@ -519,7 +519,7 @@ void TElecCarapace::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & 0x200) {
+	if (cue & CUE_ENTRY) {
 		if (isState(0) || unk16C->checkLiveFlag(LIVE_FLAG_DEAD)
 		    || checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN))
 			return;

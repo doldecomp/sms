@@ -24,7 +24,7 @@ public:
 
 	void setStageColor(u8 param1);
 
-	void perform(u32 flags, JDrama::TGraphics* gfx);
+	void perform(u32 cue, JDrama::TGraphics* gfx);
 
 	/* 0x10 */ s32 mRgbAnimCycle[3];
 	/* 0x1C */ JUtility::TColor mTopLeftCol;
@@ -37,7 +37,7 @@ public:
 	void initData(u8 stage, JKRArchive* pArch, TSelectShineManager* pShineMgr,
 	              TSelectDir* pSelectDir);
 	void startMove();
-	void perform(u32 flags, JDrama::TGraphics* gfx);
+	void perform(u32 cue, JDrama::TGraphics* gfx);
 
 	s8 getNextIndex();
 	s8 getPrevIndex();

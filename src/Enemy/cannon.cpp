@@ -93,7 +93,7 @@ TChorobei::TChorobei(TCannon* param_1, int param_2, const char* param_3)
 	unk74->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TChorobei::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (unk68->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                         | LIVE_FLAG_CLIPPED_OUT))
@@ -102,7 +102,7 @@ void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (unk70)
 		return;
 
-	if (param_1 & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		if (unk74 != nullptr && unk78 != nullptr) {
 			J3DFrameCtrl* ctrl = unk6C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			unk74->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0,
@@ -119,8 +119,8 @@ void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
 		mPosition.z = mtx[2][3];
 	}
 
-	THitActor::perform(param_1, param_2);
-	unk6C->getMActor()->perform(param_1, param_2);
+	THitActor::perform(cue, param_2);
+	unk6C->getMActor()->perform(cue, param_2);
 }
 
 void TChorobei::setBckAnm(int param_1)
@@ -195,13 +195,13 @@ TCannonDom::TCannonDom(TLiveActor* param_1, int param_2, SDLModelData* param_3,
 	unk1C->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCannonDom::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (unk10->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                         | LIVE_FLAG_CLIPPED_OUT))
 		return;
 
-	if (param_1 == CUE_CALC_ANIM) {
+	if (cue == CUE_CALC_ANIM) {
 		if (unk1C != nullptr && unk20 != nullptr) {
 			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
 			unk1C->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(),
@@ -216,7 +216,7 @@ void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk18->getModel()->setBaseTRMtx(mtx);
 	}
 
-	unk18->perform(param_1, param_2);
+	unk18->perform(cue, param_2);
 }
 
 void TCannonDom::setBckAnm(int param_1)
@@ -459,14 +459,14 @@ void TCannon::entryObjCollision()
 
 const char** TCannon::getBasNameTable() const { return cannon_bastable; }
 
-void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCannon::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 	if (unk238) {
-		unk1BC->getMActor()->perform(param_1, param_2);
-		if ((param_1 & CUE_MOVE) && unk1BC->getMActor()->curAnmEndsNext())
+		unk1BC->getMActor()->perform(cue, param_2);
+		if ((cue & CUE_MOVE) && unk1BC->getMActor()->curAnmEndsNext())
 			unk238 = 0;
-		if ((param_1 & CUE_CALC_ANIM) && unk230 == 1) {
+		if ((cue & CUE_CALC_ANIM) && unk230 == 1) {
 			if (unk1BC->getMActor()
 			        ->getFrameCtrl(ANM_TYPE_BCK)
 			        ->checkPass(174.0f)) {
@@ -491,8 +491,8 @@ void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 	if (unk230 == 5 || unk230 == 9) {
-		unk1A8->perform(param_1, param_2);
-		if ((param_1 & CUE_ENTRY)
+		unk1A8->perform(cue, param_2);
+		if ((cue & CUE_ENTRY)
 		    && mSpine->getCurrentNerve() == &TNerveCannonDamage::theNerve()) {
 			unk1A8->unk6C->getMActor()->offMakeDL();
 			SMS_AddDamageFogEffect(
@@ -502,7 +502,7 @@ void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
 		for (int i = 0; i < ARRAY_COUNT(unk1AC); i++) {
 			if (unk1AC[i]->unk24)
 				continue;
-			if (param_1 == CUE_MOVE) {
+			if (cue == CUE_MOVE) {
 				f32 dist = unk28C->mSLBombDist.get();
 				if (dist * dist < mDistToMarioSquared && unk230 == 5) {
 					unk1AC[i]->unk2C = unk224[i];
@@ -527,10 +527,10 @@ void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
 					unk1C0[i]->moveMtx(unk1AC[i]->getConnectedMtx());
 				}
 			}
-			unk1AC[i]->perform(param_1, param_2);
+			unk1AC[i]->perform(cue, param_2);
 		}
 	} else if (!unk1B8->unk24) {
-		unk1B8->perform(param_1, param_2);
+		unk1B8->perform(cue, param_2);
 	}
 }
 
