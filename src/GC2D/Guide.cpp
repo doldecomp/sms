@@ -340,7 +340,7 @@ void TGuide::resetScore()
 		tens->changeTexture(unkC8[shines / 10]->getTexInfo(), 0);
 		ones->changeTexture(unkC8[shines % 10]->getTexInfo(), 0);
 	}
-	switch (gpApplication.mSaveFile) {
+	switch (gpApplication.getSaveFile()) {
 	case 0:
 		unkBC->search('ld_a')->show();
 		unkBC->search('ld_b')->hide();

@@ -1772,7 +1772,7 @@ void TCardSave::execMovement_()
 
 	switch (unk310) {
 	case PROGRESS_UNK0:
-		unk2EA = SMSGetApplication()->mSaveFile;
+		unk2EA = SMSGetApplication()->getSaveFile();
 
 		if (mDialogPurpose == PURPOSE_GAME_OVER) {
 			unk310 = PROGRESS_UNK2E;

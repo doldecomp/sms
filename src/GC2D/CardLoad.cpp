@@ -3058,8 +3058,8 @@ void TCardLoad::changeScene()
 			gpCardManager->probe();
 			switch (c) {
 			case 0: {
-				SMSGetApplication()->mSaveFile = unkB0;
-				TCardBookmarkInfo* bm          = &unk40[unkB0];
+				SMSGetApplication()->setSaveFile(unkB0);
+				TCardBookmarkInfo* bm = &unk40[unkB0];
 				if (bm->unk18 == 0) {
 					TFlagManager::getInstance()->firstStart();
 					unk1C = PROGRESS_UNK29;

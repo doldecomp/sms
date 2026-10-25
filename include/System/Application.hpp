@@ -74,9 +74,12 @@ public:
 	u32 getMovie() const { return mMovie; }
 	void setMovie(u32 v) { mMovie = v; }
 
+	// Fabricated
+	s8 getSaveFile() const { return mSaveFile; }
+	// Fabricated
+	void setSaveFile(s8 file) { mSaveFile = file; }
 	TSMSFader* getFader() const { return mFader; }
 
-public:
 	enum {
 		APP_STATE_WAIT     = 0,
 		APP_STATE_DEFAULT  = 1,
@@ -90,6 +93,7 @@ public:
 		APP_STATE_MENU     = 9,
 	};
 
+private:
 	/* 0x00 */ TApplication* mSelf;
 	/* 0x04 */ JDrama::TDirector* mDirector;
 	/* 0x08 */ u8 mAppState;
