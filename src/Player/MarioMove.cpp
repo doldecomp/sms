@@ -1199,7 +1199,7 @@ void TMario::checkSink()
 				             * mGraffitoParams.mSinkDmgDepth.get();
 			}
 
-			if (SMSGetMarDirector()->mMoveTickCount
+			if (SMSGetMarDirector()->getMoveTickCount()
 			        % mGraffitoParams.mSinkDmgTime.get()
 			    == 0) {
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorReturn.get());

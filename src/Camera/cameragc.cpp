@@ -111,7 +111,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 void CPolarSubCamera::startJetCoasterCam1()
 {
 	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
-	unk2B0->setFrame(SMSGetMarDirector()->mMoveTickCount * 0.5f);
+	unk2B0->setFrame(SMSGetMarDirector()->getMoveTickCount() * 0.5f);
 }
 
 static s32 JetCoasterDemoCallBack(uintptr_t param_1, u32 param_2)

@@ -1791,7 +1791,8 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	modelData->getJointNodePointer(mJointIdChnChest)
 	    ->setCallBack(MarioWaistCtrl);
 
-	if (0x4B0 > SMSGetMarDirector()->mMoveTickCount || isUpperPumpingStyle()) {
+	if (0x4B0 > SMSGetMarDirector()->getMoveTickCount()
+	    || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
 			mMultiMtxEffect->flagOff(0x1);
 		}

@@ -919,7 +919,7 @@ void TBossGesso::doAttackSingle()
 		unk17C = 0;
 	}
 
-	if (SMSGetMarDirector()->mMoveTickCount < 0x1E0)
+	if (SMSGetMarDirector()->getMoveTickCount() < 0x1E0)
 		return;
 
 	if (SMSGetMarDirector()->isTalkOrDemoModeNow())

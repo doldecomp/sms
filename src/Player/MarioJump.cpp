@@ -1013,7 +1013,7 @@ BOOL TMario::rotateJumping()
 	else
 		mModelFaceAngle = -(mStatusTimer * 4096);
 
-	if (!(SMSGetMarDirector()->mMoveTickCount & 0x3F))
+	if (!(SMSGetMarDirector()->getMoveTickCount() & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
 
 	return 0;

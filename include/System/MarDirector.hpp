@@ -278,6 +278,7 @@ public:
 		TRANSITION_FLAG_RESET_HANDLED                = 0x10,
 	};
 
+public:
 	/* 0x18 */ TMarioGamePad** mGamePads;
 	/* 0x1C */ TPerformList* mPerformListGX;
 	/* 0x20 */ TPerformList* mPerformListSilhouette;

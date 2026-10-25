@@ -104,7 +104,7 @@ void TMario::emitSweat(s16 rot)
 void TMario::emitSweatSometimes()
 {
 	s16 angle = mFaceAngle.y;
-	if (!(SMSGetMarDirector()->mMoveTickCount & 0xF))
+	if (!(SMSGetMarDirector()->getMoveTickCount() & 0xF))
 		emitSweat(angle);
 }
 

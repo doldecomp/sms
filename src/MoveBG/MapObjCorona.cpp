@@ -544,7 +544,7 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		int ticks = SMSGetMarDirector()->mMoveTickCount;
+		int ticks = SMSGetMarDirector()->getMoveTickCount();
 		switch (getNumGripsDead()) {
 		case 0:
 			if (ticks >= 7200)

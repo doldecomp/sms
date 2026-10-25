@@ -910,7 +910,7 @@ void TNozzleDeform::emit(int param_1)
 		if (emittedWater != 0) {
 			mFludd->depleteWater(emittedWater * mDecRate.get());
 
-			if ((SMSGetMarDirector()->mMoveTickCount & 0x7u) == 0u) {
+			if ((SMSGetMarDirector()->getMoveTickCount() & 0x7u) == 0u) {
 				SMSRumbleMgr->start(20, 2, (f32*)nullptr);
 			}
 
