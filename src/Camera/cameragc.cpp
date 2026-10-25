@@ -150,7 +150,7 @@ void CPolarSubCamera::loadAfter()
 
 	char acStack_54[0x40];
 	snprintf(acStack_54, 0x40, "%s%d", cStartAfterCamName,
-	         SMSGetMarDirector()->unkD0);
+	         SMSGetMarDirector()->getMarioPosIdx());
 	TCameraMapTool* tool2 = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(acStack_54), acStack_54);
 	if (tool2) {

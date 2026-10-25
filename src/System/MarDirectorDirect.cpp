@@ -540,7 +540,7 @@ void TMarDirector::setMario()
 		cVar4 = true;
 	}
 
-	u8 uVar10 = unkD0;
+	u8 uVar10 = mMarioPosIdx;
 
 	TMarioPositionObj* marioSetPosition = static_cast<TMarioPositionObj*>(
 	    JDrama::TNameRefGen::search("マリオセット位置"));
@@ -977,8 +977,8 @@ u8 TMarDirector::updateGameMode()
 		switch (mGameMode) {
 		case GAME_MODE_TALK:
 			if (mNextGameMode == GAME_MODE_NORMAL) {
-				unkA0 = 0;
-				unkA4 = 0;
+				mTalkingNPC = 0;
+				unkA4       = 0;
 				mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
 				OSStartStopwatch(&unkE8);
 			}
@@ -1001,15 +1001,15 @@ u8 TMarDirector::updateGameMode()
 			break;
 
 		case GAME_MODE_TALK_START:
-			unkA0->onLiveFlag(LIVE_FLAG_UNK40000);
-			unkA0->unkC.off(CUE_MOVE | CUE_CALC_ANIM);
+			mTalkingNPC->onLiveFlag(LIVE_FLAG_UNK40000);
+			mTalkingNPC->unkC.off(CUE_MOVE | CUE_CALC_ANIM);
 			mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
 			OSStopStopwatch(&unkE8);
 			break;
 
 		case GAME_MODE_TALK:
 			if (mGameMode == GAME_MODE_TALK_START)
-				unkB0->openTalkWindow(unkA0);
+				unkB0->openTalkWindow(mTalkingNPC);
 			break;
 
 		case GAME_MODE_INNER_DEMO:

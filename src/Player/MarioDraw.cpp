@@ -434,7 +434,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	Mtx transform;
 	if (param_2 == 0) {
 		if (gpMarioForCallBack->mStatus == MARIO_STATUS_READ_BILLBOARD) {
-			TBaseNPC* npc = SMSGetMarDirector()->unkA0;
+			TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 			if (npc == nullptr)
 				return 0;
 

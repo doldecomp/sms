@@ -74,8 +74,8 @@ BOOL TMario::readBillboard()
 		                  mAutoDemoParams.mReadRotSp.get());
 		mFaceAngle.y = convAngle;
 		if (attackAngle == mFaceAngle.y) {
-			SMSGetMarDirector()->mNextGameMode = TMarDirector::GAME_MODE_TALK;
-			mStatusState                       = 2;
+			SMSGetMarDirector()->setNextGameMode(TMarDirector::GAME_MODE_TALK);
+			mStatusState = 2;
 		}
 		break;
 	}

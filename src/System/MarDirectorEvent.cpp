@@ -21,7 +21,7 @@ const char* cCameraBckNameShineGetOutside
     = "/common/camera/camera_demo_shine_get_outside";
 const char* cCameraBckNameGate = "/common/camera/camera_demo_gate_in";
 
-void TMarDirector::entryNPC(TBaseNPC* npc) { unk88.push_back(npc); }
+void TMarDirector::entryNPC(TBaseNPC* npc) { mNPCList.push_back(npc); }
 
 void isNearMapObj(const JDrama::TActor&, const char*, f32) { }
 
@@ -39,7 +39,7 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 		JGadget::TVector_pointer<TBaseNPC>::iterator it;
 
-		for (it = unk88.begin(); it != unk88.end(); ++it) {
+		for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 			TBaseNPC* npc = *it;
 			if (npc->checkLiveFlag(LIVE_FLAG_UNK100000)
 			    || !npc->checkLiveFlag(LIVE_FLAG_UNK20000))
@@ -65,7 +65,7 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 	TBaseNPC* result = nullptr;
 	JGadget::TVector_pointer<TBaseNPC>::iterator it;
 
-	for (it = unk88.begin(); it != unk88.end(); ++it) {
+	for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 		TBaseNPC* npc = *it;
 
 		if (npc->isNowCanTaken() && gpMarioOriginal->isTakeSituation(npc))
@@ -89,7 +89,7 @@ void TMarDirector::movement_game()
 			} else {
 				TBaseNPC* talkNpc = findNearestTalkNPC();
 				if (talkNpc != nullptr) {
-					unkA0 = talkNpc;
+					mTalkingNPC = talkNpc;
 					unk84->associateNPC(talkNpc);
 					mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
 					mTalkFlags |= TALK_FLAG_NPC_NEAR_THIS_FRAME;
