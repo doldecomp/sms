@@ -186,28 +186,7 @@ public:
 	};
 
 	void takeBath();
-
-	void rollNextGraphNode()
-	{
-		int prev         = unk124->mPrevIdx;
-		int curr         = unk124->mCurrIdx;
-		TGraphWeb* graph = unk124->unk0;
-
-		if (prev >= 0
-		    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
-		    && gpMarDirector->mMoveTickCount >= 14400) {
-			showMessage();
-		}
-
-		int next = graph->getEscapeDirLimited(
-		    curr, prev, getRotDirY(mRotation.y), mPosition, 100.0f, -1);
-
-		unk124->moveTo(next);
-		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
-	}
-
+	void rollNextGraphNode();
 	void reverseNextGraphNode()
 	{
 		int prev         = unk124->mPrevIdx;

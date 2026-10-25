@@ -185,7 +185,7 @@ public:
 	/* 0x0C */ f32 unkC;
 	/* 0x10 */ f32 unk10;
 
-private:
+public:
 	// Made attributes public to match bosswanwan.cpp
 };
 

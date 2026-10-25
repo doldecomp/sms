@@ -269,8 +269,8 @@ void TMario::checkCollision()
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 					unk3E8              = mWaterGun->mSecondNozzle;
 					const TWaterGun* wg = mWaterGun;
-					unk3EC              = (f32)(wg->mCurrentWater
-                                   / wg->getCurrentNozzle()->mAmountMax.get());
+					unk3EC = (f32)(wg->mCurrentWater
+					               / wg->getCurrentNozzle()->mAmountMax.get());
 				}
 				mYoshi->ride();
 				onFlag(MARIO_FLAG_HAS_FLUDD);
@@ -416,7 +416,7 @@ void TMario::checkCollision()
 
 		case ACTOR_TYPE_BOSS_GESSO_TENTACLE:
 		case ACTOR_TYPE_BOSS_UNK8:
-		case ACTOR_TYPE_BOSS_UNKD:
+		case ACTOR_TYPE_BOSS_WANWAN:
 		case ACTOR_TYPE_YOSHI_TONGUE:
 		case ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT:
 			hitNoKeepPull(mCollisions[i]);
