@@ -333,7 +333,7 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 	} else if (SMSGetApplication()->getMovie() == 0x13) {
 		*param_1 = 4;
 	} else if (SMSGetApplication()->getMovie() == 0xc) {
-		TGameSequence& nextArea = SMSGetApplication()->mNextArea;
+		TGameSequence& nextArea = SMSGetApplication()->getNextArea();
 		nextArea.set(15, 0, 0);
 		nextMode = 5;
 	} else if (SMSGetApplication()->getMovie() == 0xe) {

@@ -257,7 +257,7 @@ void TCannon::load(JSUMemoryInputStream& param_1)
 	TSmallEnemy::load(param_1);
 	reset();
 	resetHitPoints();
-	unk230 = SMSGetApplication()->mCurrArea.getStage();
+	unk230 = SMSGetApplication()->getCurrArea().getStage();
 	unk23C = mPosition;
 }
 
@@ -294,7 +294,7 @@ void TCannon::init(TLiveManager* param_1)
 	SDLModelData* modelData
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10050000));
 	unk234 = mRotation.y;
-	unk230 = SMSGetApplication()->mCurrArea.getStage();
+	unk230 = SMSGetApplication()->getCurrArea().getStage();
 	if (unk230 == 5 || unk230 == 9) {
 		mSpine->initWith(&TNerveCannonSearch::theNerve());
 		if (unk230 == 9) {
@@ -932,7 +932,7 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_MOVE,
 		                                &cannon->mPosition, 0, nullptr, 0, 4);
 	}
-	if (SMSGetApplication()->mCurrArea.getStage() == 5
+	if (SMSGetApplication()->getCurrArea().getStage() == 5
 	    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK1) {
 		JGeometry::TVec3<f32> delta
 		    = SMS_DistanceFromMarioVec(cannon->mPosition);
@@ -1076,7 +1076,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 		if (cannon->getHitPoints() == 0) {
 			cannon->killShootAct();
 			cannon->unk1A8->setBckAnm(13);
-			if (SMSGetApplication()->mCurrArea.getStage() == 5)
+			if (SMSGetApplication()->getCurrArea().getStage() == 5)
 				SMSRumbleMgr->start(24, static_cast<f32*>(nullptr));
 			else
 				SMSRumbleMgr->start(23, static_cast<f32*>(nullptr));
@@ -1090,7 +1090,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 			    PARTICLE_MS_CHO_MOKU_A, &cannon->unk294, 0, nullptr);
 			if (next)
 				next->setGlobalScale(cannon->unk1A8->mScaling);
-			if (SMSGetApplication()->mCurrArea.getStage() == 5) {
+			if (SMSGetApplication()->getCurrArea().getStage() == 5) {
 				cannon->unk2A0   = cannon->mPosition;
 				cannon->unk2A0.y = 0.0f;
 				SMSGetMarDirector()->fireStartDemoCamera(

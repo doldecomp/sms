@@ -110,7 +110,7 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 		return;
 
 	TFlagManager::getInstance()->setBlueCoinFlag(
-	    SMSGetApplication()->mCurrArea.getStage(), coin->getEventId());
+	    SMSGetApplication()->getCurrArea().getStage(), coin->getEventId());
 	onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
 	unk261 = TCardSave::PURPOSE_BLUE_COIN_GET;
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition,
@@ -122,7 +122,7 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
-	u8 stage = SMSGetApplication()->mCurrArea.getStage();
+	u8 stage = SMSGetApplication()->getCurrArea().getStage();
 	if (nozzle->isActorType(ACTOR_TYPE_ROCKET_NOZZLE_ITEM)
 	    && !TFlagManager::getInstance()->getNozzleRight(stage, 0)) {
 		TFlagManager::getInstance()->setNozzleRight(stage, 0);
@@ -156,7 +156,7 @@ void TMarDirector::fireRideYoshi(TYoshi* yoshi)
 	if (!yoshi)
 		return;
 
-	if (SMSGetApplication()->mCurrArea.getStage() == 1
+	if (SMSGetApplication()->getCurrArea().getStage() == 1
 	    && !TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 		TFlagManager::getInstance()->setBool(true, MSF_YOSHI_UNLOCKED);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
@@ -192,7 +192,7 @@ void TMarDirector::setNextStage(u16 stage, JDrama::TActor* gate_demo_actor)
 	}
 	SMSGetApplication()->setNextArea(local);
 
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	if (gate_demo_actor) {
 		onFlag(DIRECTOR_FLAG_ACTOR_DEMO_STAGE_TRANSITION_PENDING);
 		mGateDemoActor = gate_demo_actor;

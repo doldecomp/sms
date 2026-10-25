@@ -67,7 +67,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mScreen          = new J2DSetScreen("pause_1.blo", arch);
 	mScreen->setCullBack(GX_CULL_BACK);
 
-	if (SMSGetApplication()->mCurrArea.getStage() <= 1) {
+	if (SMSGetApplication()->getCurrArea().getStage() <= 1) {
 		// Hide "Exit Area" option in Delfino Plaza.
 		mNumItems = 2;
 	}

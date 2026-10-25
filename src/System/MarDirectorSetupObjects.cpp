@@ -43,8 +43,8 @@ void TMarDirector::decideMarioPosIdx()
 	unkD1        = 0;
 	unkE4        = 1;
 
-	const TGameSequence& prevArea = SMSGetApplication()->mPrevArea;
-	switch (SMSGetApplication()->mCurrArea.getStage()) {
+	const TGameSequence& prevArea = SMSGetApplication()->getPrevArea();
+	switch (SMSGetApplication()->getCurrArea().getStage()) {
 	case 15:
 		unkE4 = 14;
 		SMSGetApplication()->getFader()->setColor(
@@ -132,7 +132,7 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(MSF_SHADOW_MARIO_EVENT, 1);
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	switch (curArea.getStage()) {
 	case 1: {
 		TFlagManager::getInstance()->setBool(false,

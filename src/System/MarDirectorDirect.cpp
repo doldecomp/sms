@@ -187,7 +187,8 @@ static void decideNextStage()
 {
 	TGameSequence local_3C;
 
-	int stage = SMS_getShineStage(SMSGetApplication()->mCurrArea.getStage());
+	int stage
+	    = SMS_getShineStage(SMSGetApplication()->getCurrArea().getStage());
 	switch (stage) {
 	case 0:
 		local_3C.set(1, 0xff, JDrama::TFlagT<u16>());
@@ -203,9 +204,9 @@ static void decideNextStage()
 
 static void decideNextStageOfMiss()
 {
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	if (SMS_isExMap() || curArea.getStage() == 0 || curArea.getStage() == 60)
-		SMSGetApplication()->mNextArea.set(curArea.getStage(), 0, 0);
+		SMSGetApplication()->getNextArea().set(curArea.getStage(), 0, 0);
 	else
 		decideNextStage();
 }
@@ -261,7 +262,7 @@ int TMarDirector::changeState()
 	u8 nextState        = mState;
 	switch (mState) {
 	case STATE_UNK0:
-		switch (SMSGetApplication()->mCurrArea.getStage()) {
+		switch (SMSGetApplication()->getCurrArea().getStage()) {
 		case 0xf:
 			nextState = STATE_UNK4;
 			onTransitionFlag(TRANSITION_FLAG_STAGE_BGM_STARTED);
@@ -310,9 +311,9 @@ int TMarDirector::changeState()
 				offDemoFlag(DEMO_FLAG_CAMERA_DEMO_WIPE_STARTED);
 			}
 		} else {
-			TGameSequence& curArea = SMSGetApplication()->mCurrArea;
-			TConsoleStr* str       = getConsole()->unk94;
-			f32 iVar2              = gpCamera->getRestDemoFrames() / 120.0f;
+			const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
+			TConsoleStr* str             = getConsole()->unk94;
+			f32 iVar2 = gpCamera->getRestDemoFrames() / 120.0f;
 			if (iVar2 <= str->getWipeCloseTime()
 			    || ((curArea.getStage() != 1 || curArea.getScenario() != 1)
 			        && (curArea.getStage() != 1 || curArea.getScenario() != 9)
@@ -330,7 +331,7 @@ int TMarDirector::changeState()
 		break;
 
 	case STATE_UNK3:
-		if (SMSGetApplication()->mCurrArea.getStage() == 1) {
+		if (SMSGetApplication()->getCurrArea().getStage() == 1) {
 			if (getConsole()->unk94->unk2BC == 6)
 				nextState = STATE_UNK2;
 		} else if (getConsole()->unk94->unk2BC == 6
@@ -382,9 +383,9 @@ int TMarDirector::changeState()
 				TFlagManager::getInstance()->restore();
 				TFlagManager::getInstance()->setBool(true, MSF_UNK30001);
 				if (!TFlagManager::getInstance()->getFlag(MSF_SHINE_COUNT)) {
-					SMSGetApplication()->mNextArea.set(0, 0, 0);
+					SMSGetApplication()->getNextArea().set(0, 0, 0);
 				} else {
-					SMSGetApplication()->mNextArea.set(1, 0xff, 0);
+					SMSGetApplication()->getNextArea().set(1, 0xff, 0);
 				}
 				mFlags &= ~DIRECTOR_FLAG_MOVIE_PENDING;
 				moveStage();
@@ -473,7 +474,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 
 		SMSGetApplication()->getFader()->startWipe(unkE4, 0.4f, 0.0f);
 		SMSRumbleMgr->reset();
-		if (SMSGetApplication()->mCurrArea.getStage() == 1)
+		if (SMSGetApplication()->getCurrArea().getStage() == 1)
 			THPPlayerPlay();
 		break;
 
@@ -482,8 +483,8 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		gpCamera->endDemoCamera();
 		getConsole()->unk94->startOpenWipe();
 		MSMainProc::endStageEntranceDemo(
-		    SMSGetApplication()->mCurrArea.getStage(),
-		    SMSGetApplication()->mCurrArea.getScenario());
+		    SMSGetApplication()->getCurrArea().getStage(),
+		    SMSGetApplication()->getCurrArea().getScenario());
 		break;
 
 	case STATE_UNK4:
@@ -495,7 +496,7 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 	case STATE_PAUSE_MENU:
 		mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		SMSRumbleMgr->finishPause();
-		if (SMSGetApplication()->mCurrArea.getStage() == 1)
+		if (SMSGetApplication()->getCurrArea().getStage() == 1)
 			THPPlayerPlay();
 		break;
 
@@ -509,14 +510,14 @@ void TMarDirector::currentStateFinalize(u8 next_state)
 		    ->unkC.on(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 
 		SMSSwitch2DArchive("guide", gArBkConsole);
-		if (SMSGetApplication()->mCurrArea.getStage() == 1)
+		if (SMSGetApplication()->getCurrArea().getStage() == 1)
 			THPPlayerPlay();
 		break;
 
 	case STATE_CARD_SAVE:
 		mGamePads[0]->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
 		SMSRumbleMgr->finishPause();
-		if (SMSGetApplication()->mCurrArea.getStage() == 1)
+		if (SMSGetApplication()->getCurrArea().getStage() == 1)
 			THPPlayerPlay();
 		switch (unk261) {
 		case TCardSave::PURPOSE_ROCKET_NOZZLE_GET:
@@ -562,7 +563,8 @@ void TMarDirector::setMario()
 
 	case 2: {
 		int iVar9 = 0;
-		switch (SMS_getShineStage(SMSGetApplication()->mPrevArea.getStage())) {
+		switch (
+		    SMS_getShineStage(SMSGetApplication()->getPrevArea().getStage())) {
 		case 5:
 		case 6:
 		case 7:
@@ -597,7 +599,7 @@ void TMarDirector::setMario()
 	}
 
 	TMario* mario                = gpMarioOriginal;
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	if (mario->checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		switch (curArea.getStage()) {
 		case 1:
@@ -636,7 +638,7 @@ void TMarDirector::setMario()
 
 void TMarDirector::nextStateInitialize(u8 next_state)
 {
-	TGameSequence& currSeq = SMSGetApplication()->mCurrArea;
+	const TGameSequence& currSeq = SMSGetApplication()->getCurrArea();
 
 	switch (next_state) {
 	case STATE_UNK1: {
@@ -872,8 +874,9 @@ u8 TMarDirector::updateGameMode()
 			if (checkFlag(DIRECTOR_FLAG_GATE_DEMO_STAGE_TRANSITION_PENDING)) {
 				offFlag(DIRECTOR_FLAG_GATE_DEMO_STAGE_TRANSITION_PENDING);
 				onFlag(DIRECTOR_FLAG_STAGE_TRANSITION_PENDING);
-				mNextGameMode                 = GAME_MODE_INNER_DEMO;
-				const TGameSequence& nextArea = SMSGetApplication()->mNextArea;
+				mNextGameMode = GAME_MODE_INNER_DEMO;
+				const TGameSequence& nextArea
+				    = SMSGetApplication()->getNextArea();
 				if (nextArea.getStage() == 5) {
 					fireStartDemoCamera("hodai_dpt_pinna1", nullptr, -1, 0.0f,
 					                    false, nullptr, 0, nullptr, 0);
@@ -1055,12 +1058,12 @@ void TMarDirector::moveStage()
 	unkE4 = 15;
 	SMSGetApplication()->getFader()->setColor(JUtility::TColor(0, 0, 0, 0xff));
 
-	u8 sVar4 = SMS_getShineStage(SMSGetApplication()->mNextArea.getStage());
-	u8 sVar5 = SMS_getShineStage(SMSGetApplication()->mCurrArea.getStage());
+	u8 sVar4 = SMS_getShineStage(SMSGetApplication()->getNextArea().getStage());
+	u8 sVar5 = SMS_getShineStage(SMSGetApplication()->getCurrArea().getStage());
 	if (sVar4 != sVar5)
 		TFlagManager::getInstance()->setFlag(MSF_GOLD_COIN_COUNT, 0);
 
-	TGameSequence& nextArea = SMSGetApplication()->mNextArea;
+	TGameSequence& nextArea = SMSGetApplication()->getNextArea();
 
 	if (nextArea.getScenario() == 0xff)
 		switch (nextArea.getStage()) {

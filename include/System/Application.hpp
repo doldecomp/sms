@@ -62,12 +62,19 @@ public:
 	int drawDVDErr();
 	JKRMemArchive* mountStageArchive();
 
+	// Fabricated
+	const TGameSequence& getPrevArea() const { return mPrevArea; }
+	// Fabricated
+	const TGameSequence& getCurrArea() const { return mCurrArea; }
+	// Fabricated
+	TGameSequence& getNextArea() { return mNextArea; }
 	// fabricated
 	void setNextArea(const TGameSequence& next_area) { mNextArea = next_area; }
+
 	u32 getMovie() const { return mMovie; }
+	void setMovie(u32 v) { mMovie = v; }
 
 	TSMSFader* getFader() const { return mFader; }
-	void setMovie(u32 v) { mMovie = v; }
 
 public:
 	enum {
