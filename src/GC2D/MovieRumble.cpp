@@ -57,24 +57,26 @@ void TMovieRumble::checkRumbleOn()
 	}
 }
 
-#pragma dont_inline on
 void TMovieRumble::checkRumbleOff()
 {
-	if (mRumbleType != -1 && mEndFrame <= mThpRenderer->getFrameNumber()) {
-		SMSRumbleMgr->stop();
-		mTooldataIndex += 1;
-		readCurInfo();
-		mIsDoingRumble = false;
-	}
+	if (mRumbleType == -1)
+		return;
+
+	if (mEndFrame > mThpRenderer->getFrameNumber())
+		return;
+
+	SMSRumbleMgr->stop();
+	mTooldataIndex += 1;
+	readCurInfo();
+	mIsDoingRumble = false;
 }
-#pragma dont_inline off
 
 void TMovieRumble::readCurInfo()
 {
-	int group = mTooldataIndex;
+	Koga::ToolData* toolData = mToolData;
+	int group                = mTooldataIndex;
 
-	if (isValid() && mToolData->isIndexValid(group)) {
-		Koga::ToolData* toolData = mToolData;
+	if (isValid() && toolData->isIndexValid(group)) {
 		toolData->GetValue(group, "start_frame", mStartFrame);
 		toolData->GetValue(group, "end_frame", mEndFrame);
 		const char* type;
