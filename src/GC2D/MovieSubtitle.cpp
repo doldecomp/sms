@@ -117,7 +117,7 @@ void TMovieSubTitle::hide()
 	unk14->hide();
 }
 
-const TMessageLoader::EntryInfo* TMovieSubTitle::getCurEntry() const
+const JMSMesgEntry* TMovieSubTitle::getCurEntry() const
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	if (unk20->getMessageNum() <= unk24

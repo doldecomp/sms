@@ -163,9 +163,8 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 void TConsoleStr::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	unk2AC[0] = nullptr;
-	unk2AC[1] = nullptr;
-	unk2AC[2] = nullptr;
+	for (int i = 0; i < 3; ++i)
+		unk2AC[i] = nullptr;
 }
 
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)

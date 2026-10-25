@@ -1761,7 +1761,7 @@ bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 
 bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 {
-	TMessageLoader::EntryInfo* entry
+	JMSMesgEntry* entry
 	    = mBalloonMessageLoader->getMessageEntry(messageID & 0xffff);
 
 #if defined(VERSION_GMSJ01_01)
