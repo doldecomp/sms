@@ -4441,10 +4441,16 @@ void TGCConsole2::performCalcAnim()
 						}
 
 						if (colored) {
+							// clang-format off
 							snprintf(buffer, 255,
-							         "\033GM[0]\033CC[%02x%02x%02x]\033FX[28]"
-							         "\033FY[28]\033SH[3]\033CD[4]",
-							         color.r, color.g, color.b);
+								J2DPRINT_GRADIENT_MODE(0)
+								J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+							  J2DPRINT_FONT_WIDTH(28)
+							  J2DPRINT_FONT_HEIGHT(28)
+							  J2DPRINT_CHAR_SPACING(3)
+							  J2DPRINT_CURSOR_DOWN(4),
+							  color.r, color.g, color.b);
+							// clang-format on
 							unk3D8->write(buffer, 0x2B);
 							unk3DC->write(buffer, 0x2B);
 						}
@@ -4453,9 +4459,15 @@ void TGCConsole2::performCalcAnim()
 						*unk3DC << code;
 
 						if (colored) {
-							snprintf(
-							    buffer, 255,
-							    "\033GM[0]\033CC\033FX\033FY\033SH\033CU[4]");
+							// clang-format off
+							snprintf(buffer, 255,
+								J2DPRINT_GRADIENT_MODE(0)
+							  J2DPRINT_CHAR_COLOR_RESET
+							  J2DPRINT_FONT_WIDTH_RESET
+							  J2DPRINT_FONT_HEIGHT_RESET
+							  J2DPRINT_CHAR_SPACING_RESET
+							  J2DPRINT_CURSOR_UP(4));
+							// clang-format on
 							unk3D8->write(buffer, 0x18);
 							unk3DC->write(buffer, 0x18);
 						}
@@ -4471,10 +4483,16 @@ void TGCConsole2::performCalcAnim()
 						bool special = Helpers::IsSpecialChar(c);
 						if (special) {
 							color.set(255, 255, 255, 255);
+							// clang-format off
 							snprintf(buffer, 255,
-							         "\033GM[0]\033CC[%02x%02x%02x]\033FX[22]"
-							         "\033FY[24]\033SH[0]\033CD[3]",
-							         color.r, color.g, color.b);
+								J2DPRINT_GRADIENT_MODE(0)
+								J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+							  J2DPRINT_FONT_WIDTH(22)
+							  J2DPRINT_FONT_HEIGHT(24)
+							  J2DPRINT_CHAR_SPACING(0)
+							  J2DPRINT_CURSOR_DOWN(3),
+							  color.r, color.g, color.b);
+							// clang-format on
 							unk3D8->write(buffer, 0x2B);
 							unk3DC->write(buffer, 0x2B);
 						}
@@ -4483,9 +4501,15 @@ void TGCConsole2::performCalcAnim()
 						*unk3DC << c;
 
 						if (special) {
-							snprintf(
-							    buffer, 255,
-							    "\033GM[0]\033CC\033FX\033FY\033SH\033CU[3]");
+							// clang-format off
+							snprintf(buffer, 255,
+								J2DPRINT_GRADIENT_MODE(0)
+							  J2DPRINT_CHAR_COLOR_RESET
+							  J2DPRINT_FONT_WIDTH_RESET
+							  J2DPRINT_FONT_HEIGHT_RESET
+							  J2DPRINT_CHAR_SPACING_RESET
+							  J2DPRINT_CURSOR_UP(3));
+							// clang-format on
 							unk3D8->write(buffer, 0x18);
 							unk3DC->write(buffer, 0x18);
 						}
@@ -4532,11 +4556,16 @@ void TGCConsole2::performCalcAnim()
 							}
 
 							if (colored) {
-								snprintf(
-								    buffer, 255,
-								    "\033GM[0]\033CC[%02x%02x%02x]\033FX[30]"
-								    "\033FY[26]\033SH[3]\033CD[4]",
-								    color.r, color.g, color.b);
+								// clang-format off
+								snprintf(buffer, 255,
+								  J2DPRINT_GRADIENT_MODE(0)
+								  J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+								  J2DPRINT_FONT_WIDTH(30)
+								  J2DPRINT_FONT_HEIGHT(26)
+								  J2DPRINT_CHAR_SPACING(3)
+								  J2DPRINT_CURSOR_DOWN(4),
+								  color.r, color.g, color.b);
+								// clang-format on
 								unk3D8->write(buffer, 0x2B);
 								unk3DC->write(buffer, 0x2B);
 							}
@@ -4545,9 +4574,15 @@ void TGCConsole2::performCalcAnim()
 							*unk3DC << c;
 
 							if (colored) {
+								// clang-format off
 								snprintf(buffer, 255,
-								         "\033GM[0]"
-								         "\033CC\033FX\033FY\033SH\033CU[4]");
+								  J2DPRINT_GRADIENT_MODE(0)
+									J2DPRINT_CHAR_COLOR_RESET
+								  J2DPRINT_FONT_WIDTH_RESET
+								  J2DPRINT_FONT_HEIGHT_RESET
+								  J2DPRINT_CHAR_SPACING_RESET
+								  J2DPRINT_CURSOR_UP(4));
+								// clang-format on
 								unk3D8->write(buffer, 0x18);
 								unk3DC->write(buffer, 0x18);
 							}

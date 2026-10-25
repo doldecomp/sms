@@ -9,6 +9,7 @@
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/J2D/J2DPane.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
@@ -1037,17 +1038,27 @@ void TTalk2D2::moveTalkWindow()
 
 		u8 color = fadeAlpha;
 		if (unk214 == 1) {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "\x1B"
-			         "CC[ffffff60]\x1BGC[ffffff60]%s\x1B"
-			         "CC[ffffff%02x]\x1BGC[ffffff%02x]\n%s",
-			         unk218[0], color, color, unk218[1]);
+				J2DPRINT_CHAR_COLOR("ffffff60")
+				J2DPRINT_GRADIENT_COLOR("ffffff60")
+				"%s"
+				J2DPRINT_CHAR_COLOR("ffffff%02x")
+			  J2DPRINT_GRADIENT_COLOR("ffffff%02x")
+				"\n%s",
+				unk218[0], color, color, unk218[1]);
+			// clang-format on
 		} else if (unk214 == 0) {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "\x1B"
-			         "CC[ffffff%02x]\x1BGC[ffffff%02x]%s\n\x1B"
-			         "CC[ffffff60]\x1BGC[ffffff60]%s",
-			         color, color, unk218[0], unk218[1]);
+			  J2DPRINT_CHAR_COLOR("ffffff%02x")
+				J2DPRINT_GRADIENT_COLOR("ffffff%02x")
+				"%s\n"
+				J2DPRINT_CHAR_COLOR("ffffff60")
+			  J2DPRINT_GRADIENT_COLOR("ffffff60")
+				"%s",
+			  color, color, unk218[0], unk218[1]);
+			// clang-format on
 		}
 	} else {
 		pane->show();
@@ -1593,20 +1604,27 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 	}
 
 	if (unk214 != -1) {
-		if (unk214 == 0)
+		if (unk214 == 0) {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "%s\n\x1B"
-			         "CC[7f7f7f]\x1B"
-			         "GC[7f7f7f]%s",
-			         unk218[0], unk218[1]);
-		else
+			  "%s\n"
+				J2DPRINT_CHAR_COLOR("7f7f7f")
+			  J2DPRINT_GRADIENT_COLOR("7f7f7f")
+				"%s",
+			  unk218[0], unk218[1]);
+			// clang-format on
+		} else {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "\x1B"
-			         "CC[7f7f7f]\x1B"
-			         "GC[7f7f7f]%s\x1B"
-			         "CC[ffffff]\x1B"
-			         "GC[ffffff]\n%s",
-			         unk218[0], unk218[1]);
+			  J2DPRINT_CHAR_COLOR("7f7f7f")
+				J2DPRINT_GRADIENT_COLOR("7f7f7f")
+				"%s"
+				J2DPRINT_CHAR_COLOR("ffffff")
+			  J2DPRINT_GRADIENT_COLOR("ffffff")
+				"\n%s",
+			  unk218[0], unk218[1]);
+			// clang-format on
+		}
 	}
 
 	unk278 += stream.getPosition();
