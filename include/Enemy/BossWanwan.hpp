@@ -55,7 +55,7 @@ public:
 private:
 	/* 0x70 */ TBossWanwan* mOwner;
 	/* 0x74 */ TMtx34f unk74;
-	/* 0xA8 */ MActor* mActor;
+	/* 0xA4 */ MActor* mActor;
 };
 
 class TBWBinder : public TBinder {

@@ -464,7 +464,7 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		MtxPtr mtx = mOwner->getModel()->getBaseTRMtx();
+		MtxPtr mtx = mActor->getModel()->getBaseTRMtx();
 		PSMTXIdentity(mtx);
 		JGeometry::TVec3<f32> side, up, dir;
 
