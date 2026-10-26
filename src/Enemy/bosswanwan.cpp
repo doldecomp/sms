@@ -199,10 +199,11 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			f32 progress;
 			if (mIndex < 5) {
-				progress = (f32)mIndex * 0.25f
-				           + ((f32)mLeash->mOwner->mHitPoints
-				              / (f32)mLeash->mOwner->getSaveParam()
-				                    ->mSLHitPointMax.get());
+				progress
+				    = (f32)mIndex * 0.25f
+				      + ((f32)mLeash->mOwner->mHitPoints
+				         / (f32)((TBWParams*)mLeash->mOwner->getSaveParam())
+				               ->mSLBWHitPointMax.get());
 			} else if (mIndex < (this->mLeash->mRope->mNumPoints - 10)) {
 				progress = 1.0f;
 			} else {
@@ -254,7 +255,7 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
 		if (i < 2) {
 			mRope->mPoints[i].unk28 |= 0x1;
 		} else {
-			mRope->mPoints[i].unk28 &= -0x1;
+			mRope->mPoints[i].unk28 &= ~0x1;
 		}
 	}
 }
@@ -358,8 +359,8 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 	             ((TBWParams*)mOwner->getSaveParam())->mSLPicketRadius.get(),
 	             ((TBWParams*)mOwner->getSaveParam())->mSLPicketHeight.get());
 
-	TIdxGroupObj* hitGroup = static_cast<TIdxGroupObj*>(
-	    JDrama::TNameRefGen::search("ボスワンワンつかみ"));
+	TIdxGroupObj* hitGroup
+	    = static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"));
 	if (hitGroup != nullptr) {
 		hitGroup->getChildren().push_back(this);
 	}
@@ -432,6 +433,7 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		                ->mPoints[mOwner->mLeash->mRope->mNumPoints - 1]
 		                .unkC;
 
+		ensureTakeSituation();
 		if (mHolder != nullptr) {
 			JGeometry::TVec3<f32> side, up, dir;
 
@@ -504,7 +506,7 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 			mtx[1][3] += 70.0f;
 		}
 
-		if (isHolding()) {
+		if (isTaken()) {
 			mtx[0][3] -= dir.x * 50.0f;
 			mtx[2][3] -= dir.z * 50.0f;
 		} else {
@@ -556,7 +558,7 @@ void TBWBinder::bind(TLiveActor* actor)
 {
 	TBossWanwan* boss = (TBossWanwan*)actor;
 
-	JGeometry::TVec3<f32> vel     = boss->mVelocity;
+	JGeometry::TVec3<f32> vel     = boss->mPositionDelta;
 	JGeometry::TVec3<f32> nextPos = boss->mPosition;
 	nextPos += vel;
 
@@ -573,7 +575,7 @@ void TBWBinder::bind(TLiveActor* actor)
 	if (&TNerveBWJumpToBath::theNerve() == boss->mSpine->getLatestNerve()
 	    || &TNerveBWDie::theNerve() == boss->mSpine->getLatestNerve()) {
 
-		boss->mVelocity = nextPos - boss->mPosition;
+		boss->mPositionDelta = nextPos - boss->mPosition;
 		return;
 	}
 
@@ -638,7 +640,13 @@ void TBWBinder::bind(TLiveActor* actor)
 					proj = vel.dot(curPoint) / lenSq;
 				}
 
-				proj = MsClamp<f32>(proj, -3.0f, 3.0f);
+				if (proj < 0.0f) {
+					if (proj > -3.0f)
+						proj = -3.0f;
+				} else if (proj > 0.0f) {
+					if (proj < 3.0f)
+						proj = 3.0f;
+				}
 
 				vel = curPoint;
 				vel.scale(proj);
@@ -719,7 +727,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		vel += pull;
 	}
 
-	boss->mVelocity = vel;
+	boss->mPositionDelta = vel;
 }
 
 TBossWanwanMtxCalc::TBossWanwanMtxCalc(TBossWanwan* owner)
@@ -813,8 +821,6 @@ TBossWanwan::TBossWanwan(const char* name)
     , unk19C(0)
     , unk1A0(0)
     , unk1A4(0.0f)
-    , mWaterHitCount(0.0f)
-    , unk1AC(0.0f)
     , mParams(nullptr)
     , unk1B4(0)
 {
@@ -839,7 +845,7 @@ void TBossWanwan::init(TLiveManager* manager)
 	mTurnSpeed  = ((TBWParams*)getSaveParam())->mSLTurnSpeed.get();
 
 	mPosition = BW_HEAD_START;
-	calcRootMatrix();
+	reset();
 
 	mLeash             = new TBWLeash(this, 15);
 	mPicket            = new TBWPicket(this);
@@ -880,7 +886,7 @@ void TBossWanwan::init(TLiveManager* manager)
 		bck->setCalcType(MActorMtxCalcType_User);
 	}
 	mMActor->calc();
-	offHitFilter(0x100);
+	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	changeBck(4);
 
 	mMActor->setBrkFromIndex(0);
@@ -969,8 +975,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			                                &this->mPosition, 0, nullptr, 0, 4);
 		} else if (this->mHitPoints == 1) {
 			MtxPtr iVar3 = this->getModel()->getAnmMtx(1);
-			gpMarioParticleManager->emitAndBindToMtxPtr(
-			    BWAN_JPA_MS_DOWNYUGE, (iVar3 + 0x58) + 0x30, 0, 0);
+			gpMarioParticleManager->emitAndBindToMtxPtr(BWAN_JPA_MS_DOWNYUGE,
+			                                            iVar3, 0, 0);
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
 			                                &this->mPosition, 0, nullptr, 0, 4);
 		} else {
@@ -1090,7 +1096,7 @@ void TBossWanwan::rollNextGraphNode()
 	if (prev >= 0
 	    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
 	    && gpMarDirector->getMoveTickCount() >= 14400) {
-		showMessage(0x1EEC);
+		showMessage(TBossWanwan::BOSS_WANWAN_FLAGS_UNK3);
 	}
 
 	int next = graph->getEscapeDirLimited(curr, prev, getRotDirY(mRotation.y),
@@ -1109,7 +1115,7 @@ void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 	pos.sub(mPosition);
 
 	f32 dist        = PSVECMag(&pos);
-	f32 targetAngle = MsGetRotFromYaxisZ(pos);
+	f32 targetAngle = MsGetRotFromZaxisY(pos);
 	targetAngle     = MsWrap<f32>(targetAngle, 0.0f, 360.0f);
 
 	f32 diff = MsAngleDiff(targetAngle, mRotation.y);
@@ -1122,28 +1128,28 @@ void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 
 	mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f);
 
-	JGeometry::TVec3<f32> vel = mVelocity;
+	JGeometry::TVec3<f32> vel = mPositionDelta;
 
 	if (dist > 0.0f) {
 		pos.scale(speed / dist);
 	}
 
 	vel.add(pos);
-	mVelocity = vel;
+	mPositionDelta = vel;
 }
 
 void TBossWanwan::control()
 {
 	TLiveActor::control();
 
-	if (this->unk17C != 0 || (mPicket->isHolding() && isHeadPulled())) {
-		mVelocity += mPicketPullDelta;
+	if (this->unk17C != 0 || (mPicket->isTaken() && isHeadPulled())) {
+		mPositionDelta += mPicketPullDelta;
 
 		JGeometry::TVec3<f32> pos = mPosition;
 
 		pos -= this->mLeash->mRope->mPoints[3].unkC;
 
-		f32 targetAngle = MsGetRotFromYaxisZ(pos);
+		f32 targetAngle = MsGetRotFromZaxisY(pos);
 		targetAngle     = MsWrap<f32>(targetAngle, 0.0f, 360.0f);
 
 		f32 diff    = MsAngleDiff(targetAngle, mRotation.y);
@@ -1387,7 +1393,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_MOVE) {
 		if (&TNerveBWGraphWander::theNerve() == mSpine->getLatestNerve()
-		    && mPicket->isHolding()) {
+		    && mPicket->isTaken()) {
 			f32 pullDist       = MsSqrtf(mPicketPullDelta.squared());
 			TRopePoint* points = mLeash->mRope->mPoints;
 			SMSGetMSound()->startSoundActorWithInfo(
@@ -1453,7 +1459,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	if (spine->getTime() == 0) {
 		boss->unk16C = 0;
 
-		if (!boss->getMActor()->checkCurBckFromIndex(4)) {
+		if (!boss->getMActor()->checkCurBckFromIndex(4)
+		    && !boss->mMActor->checkCurBckFromIndex(4)) {
 			if (boss->mHitPoints == 0) {
 				boss->changeBck(5);
 			} else {
@@ -1478,8 +1485,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		ctrl->setRate(SMSGetAnmFrameRate());
 	}
 
-	if (boss->unk17C == 0 && boss->mPicket->isHolding()
-	    && boss->isHeadPulled()) {
+	if (boss->unk17C == 0 && boss->mPicket->isTaken() && boss->isHeadPulled()) {
 		TGraphTracer* tracer = boss->unk124;
 		TGraphWeb* graph     = tracer->unk0;
 		int prevIdx          = tracer->mPrevIdx;
@@ -1520,7 +1526,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	    = (f32)boss->mHitPoints
 	      / (f32)((TBWParams*)boss->getSaveParam())->mSLBWHitPointMax.value;
 
-	if (boss->mPicket->isHolding()) {
+	if (boss->mPicket->isTaken()) {
 		f32 marioYaw = (f32)gpMarioOriginal->mIntendedYaw * (180.0f / 32768.0f);
 
 		JGeometry::TVec3<f32> marioDir = boss->getRotDirY(marioYaw);
@@ -1648,7 +1654,7 @@ DEFINE_NERVE(TNerveBWStun, TLiveActor)
 {
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
 
-	if (boss->mPicket->isHolding() && boss->isHeadPulled()) {
+	if (boss->mPicket->isTaken() && boss->isHeadPulled()) {
 		TGraphWeb* graph = boss->unk124->unk0;
 		int prevIdx      = boss->unk124->mPrevIdx;
 
@@ -1705,7 +1711,7 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
 		    BW_BATH_POS, 10.0f, boss->getGravityY());
 
-		TPathNode goal(BW_HEAD_START);
+		TPathNode goal(BW_BATH_POS);
 		boss->unkF4  = goal;
 		boss->unk104 = goal;
 		boss->unk114.clear();
@@ -1740,7 +1746,7 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 	JGeometry::TVec3<f32> diff      = targetPos;
 	diff.sub(boss->mPosition);
 
-	if (diff.squared() < 10000.0f && boss->mPosition.y > BW_BATH_POS.y) {
+	if (diff.squared() < 10000.0f && boss->mPosition.y <= BW_BATH_POS.y) {
 		boss->mPosition = BW_BATH_POS;
 		spine->pushAfterCurrent(&TNerveBWDie::theNerve());
 		return true;
@@ -1756,7 +1762,9 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	MActor* actor     = boss->mMActor;
 
 	if (spine->getTime() == 0) {
-		boss->mVelocity.zero();
+		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
+		boss->mVelocity      = zero;
+		boss->mPositionDelta = zero;
 		boss->onLiveFlag(LIVE_FLAG_UNK10);
 		boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		gpMarioParticleManager->emit(0xB1, &boss->mPosition, 0, nullptr);
@@ -1813,8 +1821,8 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	if (spine->getTime() > 60 && boss->unk18D == 0
 	    && gpMarDirector->getGameMode() != TMarDirector::GAME_MODE_INNER_DEMO) {
 		gpItemManager->makeShineAppearWithDemo(
-		    "シャイン（ボスワンワン用）", "ボスワンワンシャインカメラ",
-		    boss->mPosition.x, boss->mPosition.y, boss->mPosition.z);
+		    "シャイン（ボス用）", "ボスシャインカメラ", boss->mPosition.x,
+		    boss->mPosition.y, boss->mPosition.z);
 		boss->unk18D = 1;
 	}
 
@@ -1890,21 +1898,21 @@ DEFINE_NERVE(TNerveBWFall, TLiveActor)
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
 	if (spine->getTime() == 0) {
 		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
-		    boss->unk104.unk4, 5.0f, boss->getGravityY());
+		    boss->mPicket->mPosition, 5.0f, boss->getGravityY());
 
-		TPathNode goal(boss->unk104.unk4);
+		TPathNode goal(boss->mPicket->mPosition);
 		boss->unkF4  = goal;
 		boss->unk104 = goal;
 		boss->unk114.clear();
 
 		boss->mVelocity = vel;
 		boss->mLiveFlag |= 0x80;
-		boss->unk1C = 0;
+		boss->unk16C = 0;
 	}
 
 	if (boss->isReachedToGoal()) {
 
-		boss->mPosition        = boss->unk104.unk4;
+		boss->mPosition        = boss->mPicket->mPosition;
 		boss->unk124->mPrevIdx = -1;
 		boss->unk124->mCurrIdx = -1;
 		boss->goToShortestNextGraphNode();
