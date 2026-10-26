@@ -99,6 +99,7 @@ class TMapObjStartDemo : public TMapObjBase {
 public:
 	TMapObjStartDemo(const char* name = "デモ開始オブジェ")
 	    : TMapObjBase(name)
+	    , unk138(0)
 	{
 	}
 

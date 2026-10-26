@@ -268,6 +268,7 @@ class TPictureTelesa : public TWaterHitPictureHideObj {
 public:
 	TPictureTelesa(const char* name = "テルサの絵")
 	    : TWaterHitPictureHideObj(name)
+	    , unk174(false)
 	{
 	}
 
