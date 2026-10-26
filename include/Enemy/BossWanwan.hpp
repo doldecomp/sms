@@ -161,59 +161,16 @@ public:
 	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
 
 	// UNUSED
-	BOOL isHeadPulled()
-	{
-		return mPicketPullDelta.squared() < getSaveParam()->mSLPullLimit.get()
-		           ? FALSE
-				   : TRUE;
-	};
-
+	BOOL isHeadPulled();
 	bool isMarioInSight();
 	bool isTailBurning();
 	bool isBurning();
 	void startGoldBrk();
-
-	void releasePicket()
-	{
-		if (unk17C != 0) {
-			JPABaseEmitter* emit = gpMarioParticleManager->emit(
-			    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
-			if (emit != nullptr) {
-				JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
-				emit->setGlobalScale(scale);
-			}
-		}
-	};
-
+	void releasePicket();
 	void takeBath();
 	void rollNextGraphNode();
-	void reverseNextGraphNode()
-	{
-		int prev         = unk124->mPrevIdx;
-		int curr         = unk124->mCurrIdx;
-		TGraphWeb* graph = unk124->unk0;
-
-		JGeometry::TVec3<f32> toMario = *gpMarioPos;
-		toMario -= mPosition;
-
-		int next
-		    = graph->getAimToDirNextIndex(prev, curr, toMario, mPosition, -1);
-		unk124->mPrevIdx = next;
-		unk124->mCurrIdx = prev;
-
-		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
-	}
-
-	void showMessage()
-	{
-		if (!(unk198 & 4)) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE001C, true);
-		}
-		unk198 |= 4;
-	}
-
+	void reverseNextGraphNode();
+	void showMessage();
 	void changeBck(int);
 
 	// fabricated
@@ -244,6 +201,13 @@ public:
 		setRotDirY(dir, rot, 1.0f);
 		return dir;
 	}
+
+	enum {
+		BOSS_WANWAN_FLAGS_UNK1 = 0xE001A,
+		BOSS_WANWAN_FLAGS_UNK2 = 0xE001B,
+		BOSS_WANWAN_FLAGS_UNK3 = 0xE001C,
+		BOSS_WANWAN_FLAGS_UNK4 = 0xE001D,
+	};
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;

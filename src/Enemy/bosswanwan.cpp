@@ -168,6 +168,52 @@ TBossWanwan::TBossWanwan(const char* name)
 	mBinder = new TBWBinder;
 }
 
+void TBossWanwan::showMessage()
+{
+	if (!(unk198 & 4)) {
+		gpMarDirector->getConsole()->startAppearBalloon(
+		    TBossWanwan::BOSS_WANWAN_FLAGS_UNK3, true);
+	}
+	unk198 |= 4;
+}
+
+void TBossWanwan::reverseNextGraphNode()
+{
+	int prev         = unk124->mPrevIdx;
+	int curr         = unk124->mCurrIdx;
+	TGraphWeb* graph = unk124->unk0;
+
+	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	toMario -= mPosition;
+
+	int next = graph->getAimToDirNextIndex(prev, curr, toMario, mPosition, -1);
+	unk124->mPrevIdx = next;
+	unk124->mCurrIdx = prev;
+
+	setGoalPathFromGraph();
+	unk128 = 0;
+	unk12C = 0.0f;
+}
+
+BOOL TBossWanwan::isHeadPulled()
+{
+	return mPicketPullDelta.squared() < getSaveParam()->mSLPullLimit.get()
+	           ? FALSE
+			   : TRUE;
+};
+
+void TBossWanwan::releasePicket()
+{
+	if (unk17C != 0) {
+		JPABaseEmitter* emit = gpMarioParticleManager->emit(
+		    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
+		if (emit != nullptr) {
+			JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
+			emit->setGlobalScale(scale);
+		}
+	}
+};
+
 void TBossWanwan::rollNextGraphNode()
 {
 	int prev         = unk124->mPrevIdx;
@@ -176,7 +222,7 @@ void TBossWanwan::rollNextGraphNode()
 
 	if (prev >= 0
 	    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
-	    && gpMarDirector->mMoveTickCount >= 14400) {
+	    && gpMarDirector->getMoveTickCount() >= 14400) {
 		showMessage();
 	}
 
@@ -405,16 +451,18 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (unk19C > 600) {
 			if (!(unk198 & 1)) {
-				gpMarDirector->getConsole()->startAppearBalloon(0xE001A, true);
+				gpMarDirector->getConsole()->startAppearBalloon(
+				    TBossWanwan::BOSS_WANWAN_FLAGS_UNK1, true);
 			}
 			unk198 |= 1;
 		}
 	}
 
 	if ((cue & CUE_MOVE) && unk1A0 == 0
-	    && gpMarDirector->mMoveTickCount >= 28800) {
+	    && gpMarDirector->getMoveTickCount() >= 28800) {
 		if (!(unk198 & 8)) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE001D, true);
+			gpMarDirector->getConsole()->startAppearBalloon(
+			    TBossWanwan::BOSS_WANWAN_FLAGS_UNK4, true);
 		}
 		unk198 |= 8;
 	}
@@ -443,7 +491,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 					}
 				}
 			} else {
-				if (gpMarDirector->mMoveTickCount % 20 == 0) {
+				if (gpMarDirector->getMoveTickCount() % 20 == 0) {
 					if (mHitPoints < getSaveParam()->mSLBWHitPointMax.value) {
 						mHitPoints++;
 					}
@@ -1522,7 +1570,8 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
 
 		if (!(boss->unk198 & 2)) {
-			gpMarDirector->getConsole()->startAppearBalloon(0xE001B, true);
+			gpMarDirector->getConsole()->startAppearBalloon(
+			    TBossWanwan::BOSS_WANWAN_FLAGS_UNK2, true);
 		}
 		boss->unk198 |= 2;
 		return true;
@@ -1721,7 +1770,7 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 	}
 
 	if (spine->getTime() > 60 && boss->unk18D == 0
-	    && gpMarDirector->mGameMode != TMarDirector::GAME_MODE_INNER_DEMO) {
+	    && gpMarDirector->getGameMode() != TMarDirector::GAME_MODE_INNER_DEMO) {
 		gpItemManager->makeShineAppearWithDemo(
 		    "シャイン（ボスワンワン用）", "ボスワンワンシャインカメラ",
 		    boss->mPosition.x, boss->mPosition.y, boss->mPosition.z);
