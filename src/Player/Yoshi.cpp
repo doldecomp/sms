@@ -532,8 +532,9 @@ void TYoshi::thinkAnimation()
 				newIdx = 12;
 		}
 	} else if ((status & MARIO_STATUS_FLAG_UNK200)
-	           && (status == MARIO_STATUS_CATCH_LOST || status == 0xC000023D
-	               || status == 0xC000023E)) {
+	           && (status == MARIO_STATUS_CATCH_LOST
+	               || status == MARIO_STATUS_BRAKE_END
+	               || status == MARIO_STATUS_SLIP_END)) {
 		newIdx = 18;
 	} else {
 		bool sliding = (status & MARIO_STATUS_FLAG_UNK8000) ? true : false;
@@ -562,7 +563,7 @@ void TYoshi::thinkAnimation()
 		} else {
 		walking:
 			u32 act = mMario->mStatus;
-			if (act == 0x8023C)
+			if (act == MARIO_STATUS_HIP_ATTACK_END)
 				newIdx = 6;
 			else if (act == MARIO_STATUS_WIN_DEMO)
 				newIdx = 2;
