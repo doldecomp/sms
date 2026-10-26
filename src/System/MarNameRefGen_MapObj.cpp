@@ -624,7 +624,7 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 		return new TCoinBlue;
 
 	if (strcmp(name, "HideObj") == 0)
-		return new THideObjBase;
+		return new THideObj;
 
 	if (strcmp(name, "WaterHitHideObj") == 0)
 		return new TWaterHitHideObj;
