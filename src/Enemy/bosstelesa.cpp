@@ -335,20 +335,21 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 	}
 
 	if (!bubble->unk1D0) {
-		if (bubble->unk1CC < bubble->unk194->mSLAddPosBase.get())
+		if (bubble->unk194->mSLAddPosBase.get() > bubble->unk1CC)
 			bubble->unk1CC += 1.0f;
 	} else {
 		if (spine->getTime() > 40 && bubble->unk1D1) {
-			JGeometry::TVec3<f32> velocity = bubble->mVelocity;
-			velocity.scale(0.98f);
+			JGeometry::TVec3<f32> velocity;
+			velocity.set(bubble->getVelocity());
+			velocity *= 0.98f;
 			bubble->mVelocity = velocity;
 		} else {
 			bubble->walkBehavior(0, 0.8f);
 		}
 
 		if (spine->getTime() == 80) {
-			bubble->unk1D1 = 0;
-			bubble->mVelocity.set(0.0f, 0.0f, 0.0f);
+			bubble->unk1D1    = 0;
+			bubble->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 		}
 	}
 
@@ -553,13 +554,10 @@ void TTelesaSlot::randomReset()
 void TTelesaSlot::calcRootMatrix()
 {
 	bool rolling = false;
-
-	if (unk138[0] != 0.0f)
-		rolling = true;
-	if (unk138[1] != 0.0f)
-		rolling = true;
-	if (unk138[2] != 0.0f)
-		rolling = true;
+	for (int i = 0; i < 3; ++i) {
+		if (0.0f != unk138[i])
+			rolling = true;
+	}
 
 	if (rolling) {
 		if (unk1E0) {
@@ -625,9 +623,8 @@ void TTelesaSlot::moveObject()
 
 			for (int j = 0; j < unk148; ++j) {
 				if (unk198[j]) {
-					f32 rate = unk1A0->unk15C->mSLSlotHitCollectRate.get();
-
 					TMsRange<f32> collectRange(0.0f, 1.0f);
+					f32 rate = unk1A0->unk15C->mSLSlotHitCollectRate.get();
 					if (collectRange.rand() <= rate) {
 						unk1A8[j] = true;
 					} else {
@@ -637,12 +634,10 @@ void TTelesaSlot::moveObject()
 			}
 
 			bool allStopped = true;
-			if (unk138[0] != 0.0f)
-				allStopped = false;
-			if (unk138[1] != 0.0f)
-				allStopped = false;
-			if (unk138[2] != 0.0f)
-				allStopped = false;
+			for (int j = 0; j < 3; ++j) {
+				if (0.0f != unk138[j])
+					allStopped = false;
+			}
 
 			if (allStopped)
 				unk1A0->fanfale();
@@ -1113,9 +1108,11 @@ void TBossTelesa::reset()
 
 	unk18C = 0;
 
-	TBossTelesaSaveLoadParams* params = unk15C;
-	setHitParams(params->mSLAttackRadius.get(), params->mSLAttackHeight.get(),
-	             params->mSLDamageRadius.get(), params->mSLDamageHeight.get());
+	f32 attackRadius = unk15C->mSLAttackRadius.get();
+	f32 attackHeight = unk15C->mSLAttackHeight.get();
+	f32 damageRadius = unk15C->mSLDamageRadius.get();
+	f32 damageHeight = unk15C->mSLDamageHeight.get();
+	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 
 	SMSGetMarDirector()->fireStartDemoCamera("btelesa_roll_camera", nullptr, -1,
 	                                         0.0f, true, nullptr, 0, nullptr,
@@ -1614,61 +1611,30 @@ void TBossTelesa::flashItem(int result)
 {
 	int phase = result % 16;
 
-	int index = 0;
-	for (int i = 0; i < 5; ++i) {
-		TLiveActor* actor = mFruits[index++];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && actor->mHolder == nullptr) {
+	for (int i = 0; i < 20; ++i) {
+		if (!mFruits[i]->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && mFruits[i]->mHolder == nullptr) {
 			if (phase < 8)
-				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
+				mFruits[i]->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
-		}
-
-		actor = mFruits[index++];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && actor->mHolder == nullptr) {
-			if (phase < 8)
-				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
-			else
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
-		}
-
-		actor = mFruits[index++];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && actor->mHolder == nullptr) {
-			if (phase < 8)
-				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
-			else
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
-		}
-
-		actor = mFruits[index++];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && actor->mHolder == nullptr) {
-			if (phase < 8)
-				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
-			else
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
+				mFruits[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 	}
 
 	for (int i = 0; i < 10; ++i) {
-		TLiveActor* actor = mRedPeppers[i];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && actor->mHolder == nullptr) {
+		if (!mRedPeppers[i]->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && mRedPeppers[i]->mHolder == nullptr) {
 			if (phase < 8)
-				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
+				mRedPeppers[i]->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
+				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 
-		actor = mCoins[i];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)) {
+		if (!mCoins[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
 			if (phase < 8)
-				actor->onLiveFlag(LIVE_FLAG_HIDDEN);
+				mCoins[i]->onLiveFlag(LIVE_FLAG_HIDDEN);
 			else
-				actor->offLiveFlag(LIVE_FLAG_HIDDEN);
+				mCoins[i]->offLiveFlag(LIVE_FLAG_HIDDEN);
 		}
 	}
 }
@@ -2419,8 +2385,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				u8 maxHp = boss->getMaxHitPoints();
 				u8 alpha = TBossTelesa::mNormalAlpha
 				           + (maxHp - boss->getHitPoints()) * 30;
-				if (alpha > 0xFE)
-					alpha = 0xFE;
+				alpha = MsClamp<u8>(alpha, 0, 0xFE);
 
 				boss->unk34C.a = alpha;
 
