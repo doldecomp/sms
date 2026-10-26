@@ -194,7 +194,7 @@ public:
 	// Fabricated
 	void setTalkingNPC(TBaseNPC* npc) { mTalkingNPC = npc; }
 	// Fabricated
-	JGadget::TVector_pointer<TBaseNPC>& getNPCList() { return mNPCList; }
+	JGadget::TVector_pointer<TBaseNPC*>& getNPCList() { return mNPCList; }
 	// Fabricated
 	u8 getMarioPosIdx() const { return mMarioPosIdx; }
 	// Fabricated
@@ -316,7 +316,7 @@ private:
 	/* 0x7D */ u8 mScenario;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
-	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> mNPCList;
+	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC*> mNPCList;
 	/* 0xA0 */ TBaseNPC* mTalkingNPC;
 	/* 0xA4 */ u32 unkA4;
 	/* 0xA8 */ char unkA8[0x4];
