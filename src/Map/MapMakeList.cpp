@@ -21,42 +21,39 @@ u32 TMapCollisionData::getEntryID()
 	return result;
 }
 
-#pragma dont_inline on
 TBGCheckList* TMapCollisionData::allocCheckList(int kind, int count)
 {
 	TBGCheckList* result;
 	switch (kind) {
 	case TMapCollisionBase::KIND_MOVE:
-		result = &unk2C[unk3C];
-		unk3C -= count;
+		result = &mCheckListPool[mMoveListTop];
+		mMoveListTop -= count;
 		break;
 	case TMapCollisionBase::KIND_WARP:
-		result = &unk30[unk40];
+		result = &mWarpCheckListPool[unk40];
 		unk40 += count;
 		break;
 	default:
-		result = &unk2C[unk38];
-		unk38 += count;
+		result = &mCheckListPool[mStaticListUsed];
+		mStaticListUsed += count;
 		break;
 	}
 	return result;
 }
-#pragma dont_inline off
 
 TBGCheckList* TMapCollisionData::getListRoot(int i, int j, int kind,
-                                             int param_4) const
+                                             int planeType) const
 {
 	switch (kind) {
 	case TMapCollisionBase::KIND_WARP:
 	case TMapCollisionBase::KIND_STATIC:
-		return &unk14[j + i * unk8].unk0[param_4];
+		return &mStaticGrid[getCellIndex(j, i)].unk0[planeType];
 	case TMapCollisionBase::KIND_MOVE:
-		return &unk18[j + i * unk8].unk0[param_4];
+		return &mMoveGrid[getCellIndex(j, i)].unk0[planeType];
 	}
 	return nullptr;
 }
 
-#pragma dont_inline on
 static void addAfterPreNode(int param_1, int param_2, TBGCheckList* param_3,
                             TBGCheckList* param_4, int kind)
 {
@@ -80,9 +77,9 @@ static TBGCheckList* addWallNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	TBGCheckList* next;
 	while (param_1->getNext()) {
 		next = param_1->getNext();
-		if (param_2->mMaxY > next->unk8->mMaxY
-		    || (param_2->mMaxY == next->unk8->mMaxY
-		        && param_2->mMinY > next->unk8->mMinY))
+		if (param_2->mMaxY > next->mData->mMaxY
+		    || (param_2->mMaxY == next->mData->mMaxY
+		        && param_2->mMinY > next->mData->mMinY))
 			return param_1;
 		param_1 = next;
 	}
@@ -94,9 +91,9 @@ static TBGCheckList* addRoofNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	TBGCheckList* next;
 	while (param_1->getNext()) {
 		next = param_1->getNext();
-		if (param_2->mMaxY < next->unk8->mMaxY
-		    || (param_2->mMaxY == next->unk8->mMaxY
-		        && param_2->mMinY < next->unk8->mMinY))
+		if (param_2->mMaxY < next->mData->mMaxY
+		    || (param_2->mMaxY == next->mData->mMaxY
+		        && param_2->mMinY < next->mData->mMinY))
 			return param_1;
 		param_1 = next;
 	}
@@ -108,109 +105,108 @@ static TBGCheckList* addGroundNode(TBGCheckList* param_1, TBGCheckData* param_2)
 	TBGCheckList* next;
 	while (param_1->getNext()) {
 		next = param_1->getNext();
-		if (param_2->mMinY > next->unk8->mMinY
-		    || (param_2->mMinY == next->unk8->mMinY
-		        && param_2->mMaxY > next->unk8->mMaxY))
+		if (param_2->mMinY > next->mData->mMinY
+		    || (param_2->mMinY == next->mData->mMinY
+		        && param_2->mMaxY > next->mData->mMaxY))
 			return param_1;
 		param_1 = next;
 	}
 	return param_1;
 }
-#pragma dont_inline off
 
 void TMapCollisionData::addCheckDataToList(int i, int j, int param_3,
-                                           int param_4, TBGCheckData* param_5)
+                                           int planeType, TBGCheckData* param_5)
 {
-	TBGCheckList* list = getListRoot(i, j, param_3, param_4);
+	TBGCheckList* list = getListRoot(i, j, param_3, planeType);
 	TBGCheckList* list2;
-	switch (param_4) {
-	case 0:
+	switch (planeType) {
+	case BG_PLANE_TYPE_GROUND:
 		list2 = addGroundNode(list, param_5);
 		break;
-	case 1:
+	case BG_PLANE_TYPE_ROOF:
 		list2 = addRoofNode(list, param_5);
 		break;
-	case 2:
+	case BG_PLANE_TYPE_WALL:
 		list2 = addWallNode(list, param_5);
 		break;
 	}
 	TBGCheckList* list3 = allocCheckList(param_3, 1);
-	list3->unk8         = param_5;
+	list3->mData        = param_5;
 	addAfterPreNode(j, i, list2, list3, param_3);
 }
 
-bool TMapCollisionData::getGridArea(const TBGCheckData* param_1, int param_2,
-                                    int* param_3, int* param_4, int* param_5,
-                                    int* param_6)
+bool TMapCollisionData::getGridArea(const TBGCheckData* data, int plane_type,
+                                    int* grid_min_x, int* grid_min_z,
+                                    int* grid_max_x, int* grid_max_z)
 {
-	f32 minX = MsMin(param_1->mPoint1.x,
-	                 MsMin(param_1->mPoint2.x, param_1->mPoint3.x));
-	f32 minZ = MsMin(param_1->mPoint1.z,
-	                 MsMin(param_1->mPoint3.z, param_1->mPoint2.z));
+	f32 minX = MsMin(data->getPoint1().x,
+	                 MsMin(data->getPoint2().x, data->getPoint3().x));
+	f32 minZ = MsMin(data->getPoint1().z,
+	                 MsMin(data->getPoint2().z, data->getPoint3().z));
 
-	f32 maxX = MsMax(param_1->mPoint1.x,
-	                 MsMax(param_1->mPoint2.x, param_1->mPoint3.x));
-	f32 maxZ = MsMax(param_1->mPoint1.z,
-	                 MsMax(param_1->mPoint2.z, param_1->mPoint3.z));
+	f32 maxX = MsMax(data->getPoint1().x,
+	                 MsMax(data->getPoint2().x, data->getPoint3().x));
+	f32 maxZ = MsMax(data->getPoint1().z,
+	                 MsMax(data->getPoint2().z, data->getPoint3().z));
 
 	if (maxX < -mGridExtentX || maxZ < -mGridExtentY || minX > mGridExtentX
 	    || minZ > mGridExtentY)
 		return false;
 
-	if (param_2 == 2) {
+	if (plane_type == BG_PLANE_TYPE_WALL) {
 		minX -= 80.0f;
 		minZ -= 80.0f;
 		maxX += 80.0f;
 		maxZ += 80.0f;
 	}
 
-	*param_3 = (minX + mGridExtentX) * 0.0009765625f;
-	if (*param_3 < 0)
-		*param_3 = 0;
+	*grid_min_x = worldToGridX(minX);
+	if (*grid_min_x < 0)
+		*grid_min_x = 0;
 
-	*param_5 = (maxX + mGridExtentX) * 0.0009765625f;
-	if (*param_5 >= unk8)
-		*param_5 = unk8 - 1;
+	*grid_max_x = worldToGridX(maxX);
+	if (*grid_max_x >= mGridSizeX)
+		*grid_max_x = mGridSizeX - 1;
 
-	*param_4 = (minZ + mGridExtentY) * 0.0009765625f;
-	if (*param_4 < 0)
-		*param_4 = 0;
+	*grid_min_z = worldToGridZ(minZ);
+	if (*grid_min_z < 0)
+		*grid_min_z = 0;
 
-	*param_6 = (maxZ + mGridExtentY) * 0.0009765625f;
-	if (*param_6 >= unkC)
-		*param_6 = unkC - 1;
+	*grid_max_z = worldToGridZ(maxZ);
+	if (*grid_max_z >= mGridSizeZ)
+		*grid_max_z = mGridSizeZ - 1;
 
 	return true;
 }
 
-void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
+void TMapCollisionData::addCheckDataToGrid(TBGCheckData* data, int kind)
 {
-	int iVar7 = param_1->getPlaneType();
-	int local_ac;
-	int local_b4;
-	int local_b0;
-	int local_b8;
-	if (getGridArea(param_1, iVar7, &local_ac, &local_b4, &local_b0,
-	                &local_b8)) {
-		for (int i = local_b4; i <= local_b8; ++i) {
-			for (int j = local_ac; j <= local_b0; ++j) {
+	int planeType = data->getPlaneType();
+	int gridMinX;
+	int gridMinZ;
+	int gridMaxX;
+	int gridMaxZ;
+	if (getGridArea(data, planeType, &gridMinX, &gridMinZ, &gridMaxX,
+	                &gridMaxZ)) {
+		for (int z = gridMinZ; z <= gridMaxZ; ++z) {
+			for (int x = gridMinX; x <= gridMaxX; ++x) {
 				if (kind == TMapCollisionBase::KIND_MOVE) {
-					addCheckDataToList(i, j, kind, iVar7, param_1);
-				} else if (iVar7 != 2) {
-					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
-					int iVar2 = (i * 1024.0f) - mGridExtentY;
-					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
-					int iVar4 = j * 1024.0f - mGridExtentX;
-					if (polygonIsInGrid(iVar4, iVar2, iVar3, iVar1, param_1))
-						addCheckDataToList(i, j, kind, iVar7, param_1);
+					addCheckDataToList(z, x, kind, planeType, data);
+				} else if (planeType != BG_PLANE_TYPE_WALL) {
+					f32 maxZ = gridToWorldZ(z + 1);
+					f32 maxX = gridToWorldX(x + 1);
+					f32 minZ = gridToWorldZ(z);
+					f32 minX = gridToWorldX(x);
+					if (polygonIsInGrid(minX, minZ, maxX, maxZ, data))
+						addCheckDataToList(z, x, kind, planeType, data);
 				} else {
-					int iVar1 = (i + 1) * 1024.0f - mGridExtentY;
-					int iVar2 = (i * 1024.0f) - mGridExtentY;
-					int iVar3 = (j + 1) * 1024.0f - mGridExtentX;
-					int iVar4 = j * 1024.0f - mGridExtentX;
-					if (polygonIsInGrid(iVar4 - 80.0f, iVar2 - 80.0f,
-					                    iVar3 + 80.0f, iVar1 + 80.0f, param_1))
-						addCheckDataToList(i, j, kind, iVar7, param_1);
+					f32 maxZ = gridToWorldZ(z + 1);
+					f32 maxX = gridToWorldX(x + 1);
+					f32 minZ = gridToWorldZ(z);
+					f32 minX = gridToWorldX(x);
+					if (polygonIsInGrid(minX - 80.0f, minZ - 80.0f,
+					                    maxX + 80.0f, maxZ + 80.0f, data))
+						addCheckDataToList(z, x, kind, planeType, data);
 				}
 			}
 		}
@@ -220,26 +216,26 @@ void TMapCollisionData::addCheckDataToGrid(TBGCheckData* param_1, int kind)
 void TMapCollisionData::removeCheckListNode(s32 start, s32 end)
 {
 	for (s32 i = start; i < end; ++i) {
-		TBGCheckListWarp* curr = &unk30[i];
+		TBGCheckListWarp* curr = &mWarpCheckListPool[i];
 		curr->getPreNode()->setNext(curr->getNext());
 		if (curr->getNext() != nullptr)
 			curr->getNext()->setPreNode(curr->getPreNode());
-		curr->unk8 = nullptr;
+		curr->mData = nullptr;
 	}
 }
 
 void TMapCollisionData::updateCheckListNode(s32 param_1, s32 param_2,
                                             s32 param_3)
 {
-	TBGCheckListWarp* l   = &unk30[param_3];
-	TBGCheckListWarp* r   = &unk30[param_1];
-	TBGCheckListWarp* end = &unk30[param_3 + param_2];
+	TBGCheckListWarp* l   = &mWarpCheckListPool[param_3];
+	TBGCheckListWarp* r   = &mWarpCheckListPool[param_1];
+	TBGCheckListWarp* end = &mWarpCheckListPool[param_3 + param_2];
 
 	// TODO: I think this is a fakematch.
 	u32 offset = ((u32)l - (u32)r);
 
 	for (int i = param_1; i < param_1 + param_2; ++i) {
-		TBGCheckListWarp* warp2 = &unk30[i];
+		TBGCheckListWarp* warp2 = &mWarpCheckListPool[i];
 		TBGCheckListWarp* warp3 = (TBGCheckListWarp*)warp2->getNext();
 		if (l <= warp3 && warp3 < end)
 			warp2->setNext((TBGCheckListWarp*)((char*)warp3 - offset));
@@ -250,7 +246,7 @@ void TMapCollisionData::updateCheckListNode(s32 param_1, s32 param_2,
 	}
 
 	for (int i = param_1; i < param_1 + param_2; ++i) {
-		TBGCheckListWarp* warp4 = &unk30[i];
+		TBGCheckListWarp* warp4 = &mWarpCheckListPool[i];
 		warp4->getPreNode()->setNext(warp4);
 		if (warp4->getNext())
 			warp4->getNext()->setPreNode(warp4);
@@ -280,7 +276,7 @@ void TMapCollisionData::removeCheckListData(u16 start, s32 count)
 
 	unk40 -= count;
 
-	memmove(&unk30[rangeStart], &unk30[rangeEnd],
+	memmove(&mWarpCheckListPool[rangeStart], &mWarpCheckListPool[rangeEnd],
 	        (unk40 + count - rangeStart) * sizeof(TBGCheckListWarp));
 
 	updateCheckListNode(rangeStart, unk40 - rangeStart, rangeEnd);

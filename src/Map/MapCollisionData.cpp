@@ -12,13 +12,12 @@ TMapCollisionData* gpMapCollisionData;
 
 TBGCheckList::TBGCheckList()
     : mNext(nullptr)
-    , unk8(0)
+    , mData(nullptr)
 {
 }
 
-// TODO: inline deferred or nah?
 TBGCheckListWarp::TBGCheckListWarp()
-    : unkC(0)
+    : unkC(nullptr)
     , unk10(0)
     , unk12(0)
 {
@@ -26,53 +25,28 @@ TBGCheckListWarp::TBGCheckListWarp()
 
 void TMapCollisionData::initGrid(TBGCheckListRoot* roots)
 {
-	int x = unk10;
+	int x = mGridCellNum;
 	while (x--) {
-		roots->unk0[0].setNext(nullptr);
-		roots->unk0[1].setNext(nullptr);
-		roots->unk0[2].setNext(nullptr);
+		roots->unk0[BG_PLANE_TYPE_GROUND].setNext(nullptr);
+		roots->unk0[BG_PLANE_TYPE_ROOF].setNext(nullptr);
+		roots->unk0[BG_PLANE_TYPE_WALL].setNext(nullptr);
 		roots++;
 	}
 }
 
 void TMapCollisionData::initMoveCollision()
 {
-	unk3C = unk20 - 1;
-	memset(unk18, 0, unk10 * sizeof(*unk18));
+	mMoveListTop = unk20 - 1;
+	memset(mMoveGrid, 0, mGridCellNum * sizeof(*mMoveGrid));
 }
 
-void TMapCollisionData::initAllCheckDataAndList() { }
-
-void TMapCollisionData::init(JSUMemoryInputStream& stream)
+void TMapCollisionData::initAllCheckDataAndList()
 {
-	s32 value;
-	stream >> value;
-	unk8 = value;
-	stream >> value;
-	unkC = value;
-	stream >> value;
-	unk1C = value;
-	stream >> value;
-	unk20 = value;
-	stream >> value;
-	unk24 = value;
+	initGrid(mStaticGrid);
 
-	mGridExtentX = (unk8 / 2) * 1024.0f;
-	mGridExtentY = (unkC / 2) * 1024.0f;
-
-	unk10 = unk8 * unkC;
-
-	unk14 = new TBGCheckListRoot[unk10];
-	unk18 = new TBGCheckListRoot[unk10];
-	unk28 = new TBGCheckData[unk1C];
-	unk2C = new TBGCheckList[unk20];
-	unk30 = new TBGCheckListWarp[unk24];
-
-	initGrid(unk14);
-
-	unk34 = 0;
-	unk38 = 0;
-	unk40 = 0;
+	unk34           = 0;
+	mStaticListUsed = 0;
+	unk40           = 0;
 
 	initMoveCollision();
 
@@ -80,30 +54,58 @@ void TMapCollisionData::init(JSUMemoryInputStream& stream)
 		unk42[i] = 9999;
 }
 
+void TMapCollisionData::init(JSUMemoryInputStream& stream)
+{
+	s32 value;
+	stream >> value;
+	mGridSizeX = value;
+	stream >> value;
+	mGridSizeZ = value;
+	stream >> value;
+	unk1C = value;
+	stream >> value;
+	unk20 = value;
+	stream >> value;
+	unk24 = value;
+
+	mGridExtentX = (mGridSizeX / 2) * 1024.0f;
+	mGridExtentY = (mGridSizeZ / 2) * 1024.0f;
+
+	mGridCellNum = mGridSizeX * mGridSizeZ;
+
+	mStaticGrid        = new TBGCheckListRoot[mGridCellNum];
+	mMoveGrid          = new TBGCheckListRoot[mGridCellNum];
+	unk28              = new TBGCheckData[unk1C];
+	mCheckListPool     = new TBGCheckList[unk20];
+	mWarpCheckListPool = new TBGCheckListWarp[unk24];
+
+	initAllCheckDataAndList();
+}
+
 TMapCollisionData::TMapCollisionData()
     : mGridExtentX(0.0f)
     , mGridExtentY(0.0f)
-    , unk8(0)
-    , unkC(0)
-    , unk10(0)
-    , unk14(nullptr)
-    , unk18(nullptr)
+    , mGridSizeX(0)
+    , mGridSizeZ(0)
+    , mGridCellNum(0)
+    , mStaticGrid(nullptr)
+    , mMoveGrid(nullptr)
     , unk1C(0)
     , unk20(0)
     , unk24(0)
     , unk28(nullptr)
-    , unk2C(nullptr)
-    , unk30(nullptr)
+    , mCheckListPool(nullptr)
+    , mWarpCheckListPool(nullptr)
     , unk34(0)
-    , unk38(0)
-    , unk3C(0)
+    , mStaticListUsed(0)
+    , mMoveListTop(0)
     , unk40(0)
     , unk242(0)
     , mGroundPlane(nullptr)
 {
-	JGeometry::TVec3<float> v1(-32767.0f, -32767.0f, -32767.0f);
-	JGeometry::TVec3<float> v2(-32767.0f, -32767.0f, 32767.0f);
-	JGeometry::TVec3<float> v3(32767.0f, -32767.0f, 32767.0f);
+	JGeometry::TVec3<f32> v1(-32767.0f, -32767.0f, -32767.0f);
+	JGeometry::TVec3<f32> v2(-32767.0f, -32767.0f, 32767.0f);
+	JGeometry::TVec3<f32> v3(32767.0f, -32767.0f, 32767.0f);
 	mIllegalCheckData.setVertex(v1, v2, v3);
 	mIllegalCheckData.mBGType = 0;
 	mIllegalCheckData.mFlags |= BG_CHECK_FLAG_ILLEGAL;

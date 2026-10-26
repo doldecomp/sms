@@ -7,6 +7,12 @@ class TLiveActor;
 class JSUMemoryInputStream;
 
 // fabricated
+enum BGPlaneType {
+	BG_PLANE_TYPE_GROUND = 0,
+	BG_PLANE_TYPE_ROOF   = 1,
+	BG_PLANE_TYPE_WALL   = 2,
+};
+
 enum BGCheckFlagBits {
 	BG_CHECK_FLAG_X_FACING = 0x8,
 	BG_CHECK_FLAG_ILLEGAL  = 0x10,
@@ -131,7 +137,7 @@ public:
 		return mFlags & BG_CHECK_FLAG_ILLEGAL ? true : false;
 	}
 	f32 getActiveJumpPower() const;
-	u32 getPlaneType();
+	BGPlaneType getPlaneType();
 	void setVertex(const JGeometry::TVec3<f32>& point1,
 	               const JGeometry::TVec3<f32>& point2,
 	               const JGeometry::TVec3<f32>& point3);
