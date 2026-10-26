@@ -17,6 +17,7 @@
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/Strategy.hpp>
 #include <Strategic/NameRefAry.hpp>
+#include <Strategic/NameRefAry.tpp>
 #include <Strategic/SmplCharacter.hpp>
 #include <GC2D/Talk2D2.hpp>
 #include <GC2D/ScrnFader.hpp>
@@ -60,9 +61,12 @@ static void dummy(Vec* v)
 	*v = (Vec) { 1.0f, 1.0f, 1.0f };
 }
 
+template class TNameRefAryT<TScenarioArchiveName>;
+template class TNameRefAryT<TCameraMapTool>;
 namespace JDrama {
 template class TViewObjPtrListT<THitActor, TViewObj>;
 }
+template class TNameRefAryT<TStagePositionInfo>;
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 {
