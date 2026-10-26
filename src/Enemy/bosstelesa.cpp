@@ -674,6 +674,7 @@ u32 TTelesaSlot::touchWater(THitActor*) { return FALSE; }
 void TTelesaSlot::forceStopSlot(int idx)
 {
 	f32 collectRate;
+	TMsRange<f32> collectRange(0.0f, 1.0f);
 
 	if (!unk19C)
 		return;
@@ -683,7 +684,6 @@ void TTelesaSlot::forceStopSlot(int idx)
 	if (SMS_GetMarioHP() == 1)
 		collectRate = 0.9f;
 
-	TMsRange<f32> collectRange(0.0f, 1.0f);
 	f32 randomValue = collectRange.rand();
 	if (randomValue <= collectRate) {
 		unk1A4 = 2;
@@ -1203,7 +1203,6 @@ void TBossTelesa::moveObject()
 
 	bind();
 	mPosition += mPositionDelta;
-	mRotation += mRotationDelta;
 	mPosition.y = mGroundHeight + 300.0f;
 
 	unk168 = MsClamp(unk168 - 0.05f, 0.0f, 1.0f);
@@ -1548,18 +1547,15 @@ void TBossTelesa::tongueHitWater()
 
 bool TBossTelesa::rouletteFall()
 {
-	TRoulette* roulette0 = mRoulettes[0];
-	TRoulette* roulette1 = mRoulettes[1];
-
-	if (roulette0->mPosition.y > roulette1->mPosition.y) {
-		roulette0->mPosition.y -= 1.0f;
-		roulette0->mMActor->setBck("rulet00");
+	if (mRoulettes[0]->mPosition.y > mRoulettes[1]->mPosition.y) {
+		mRoulettes[0]->mPosition.y -= 1.0f;
+		mRoulettes[0]->mMActor->setBck("rulet00");
 	} else {
-		roulette0->mPosition.y = roulette1->mPosition.y;
+		mRoulettes[0]->mPosition.y = mRoulettes[1]->mPosition.y;
 		return TRUE;
 	}
 
-	if (roulette0->mPosition.y > roulette1->mPosition.y + 3.0f) {
+	if (mRoulettes[0]->mPosition.y > mRoulettes[1]->mPosition.y + 3.0f) {
 		if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE))
 			mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
 	} else {
@@ -2067,25 +2063,6 @@ bool TBossTelesa::checkAllItemDead()
 	return true;
 }
 
-void TBossTelesa::forceAllItemKill()
-{
-	for (int i = 0; i < mSpitObjNum; ++i) {
-		if (mSpitObjs[i]->mHolder) {
-			SMS_SendMessageToMario(mSpitObjs[i], HIT_MESSAGE_DETACH);
-			mSpitObjs[i]->mHolder = nullptr;
-		}
-
-		mSpitObjs[i]->mPosition.set(0.0f, 0.0f, 0.0f);
-		mSpitObjs[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
-
-		if (!mSpitObjs[i]->checkLiveFlag(LIVE_FLAG_DEAD)) {
-			mSpitObjs[i]->kill();
-			gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
-			                             &mSpitObjs[i]->mPosition, 0, nullptr);
-		}
-	}
-}
-
 void TBossTelesa::rollRouletteCircle()
 {
 	for (int i = 0; i < 3; ++i)
@@ -2117,6 +2094,26 @@ void TBossTelesa::forceHide()
 
 	mSpine->reset();
 	mSpine->setNext(&TNerveBossTelesaHide::theNerve());
+}
+
+void TBossTelesa::forceAllItemKill()
+{
+	for (int i = 0; i < mSpitObjNum; ++i) {
+		if (mSpitObjs[i]->mHolder) {
+			SMS_SendMessageToMario(mSpitObjs[i], HIT_MESSAGE_DETACH);
+			mSpitObjs[i]->mHolder = nullptr;
+		}
+
+		mSpitObjs[i]->mPosition.set(0.0f, 0.0f, 0.0f);
+		mSpitObjs[i]->onHitFilter(HIT_FILTER_NO_COLLISION);
+
+		if (mSpitObjs[i]->checkLiveFlag(LIVE_FLAG_DEAD))
+			continue;
+
+		mSpitObjs[i]->kill();
+		gpMarioParticleManager->emit(PARTICLE_MS_TLS_CHANGE,
+		                             &mSpitObjs[i]->mPosition, 0, nullptr);
+	}
 }
 
 void TBossTelesa::fanfale()
@@ -2234,6 +2231,8 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 
 				boss->setBckAnm(15);
 				boss->getMActor()->setBtpFromIndex(2);
+				spine->reset();
+				spine->setNext(&TNerveBossTelesaPrepareSlot::theNerve());
 				spine->pushAfterCurrent(
 				    &TNerveBossTelesaPrepareSlot::theNerve());
 			} else {
@@ -2461,6 +2460,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 				                                4);
 			}
 
+			spine->reset();
 			spine->setNext(&TNerveBossTelesaHide::theNerve());
 			spine->pushAfterCurrent(&TNerveBossTelesaHide::theNerve());
 			return TRUE;
