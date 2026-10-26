@@ -212,10 +212,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TSunShine;
 
 	if (strcmp(name, "CubeCamera") == 0) {
-		TCubeManagerBase* mgr
-		    = new TCubeManagerBase("?", "カメラキューブテーブル");
-		gpCubeCamera = mgr;
-		return mgr;
+		return gpCubeCamera
+		       = new TCubeManagerBase("?", "カメラキューブテーブル");
 	}
 
 	if (strcmp(name, "CubeMirror") == 0)

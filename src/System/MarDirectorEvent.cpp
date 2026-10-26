@@ -21,7 +21,7 @@ const char* cCameraBckNameShineGetOutside
     = "/common/camera/camera_demo_shine_get_outside";
 const char* cCameraBckNameGate = "/common/camera/camera_demo_gate_in";
 
-void TMarDirector::entryNPC(TBaseNPC* npc) { unk88.push_back(npc); }
+void TMarDirector::entryNPC(TBaseNPC* npc) { mNPCList.push_back(npc); }
 
 void isNearMapObj(const JDrama::TActor&, const char*, f32) { }
 
@@ -39,7 +39,7 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 		JGadget::TVector_pointer<TBaseNPC>::iterator it;
 
-		for (it = unk88.begin(); it != unk88.end(); ++it) {
+		for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 			TBaseNPC* npc = *it;
 			if (npc->checkLiveFlag(LIVE_FLAG_UNK100000)
 			    || !npc->checkLiveFlag(LIVE_FLAG_UNK20000))
@@ -65,7 +65,7 @@ TBaseNPC* TMarDirector::findNearestTakeNPC()
 	TBaseNPC* result = nullptr;
 	JGadget::TVector_pointer<TBaseNPC>::iterator it;
 
-	for (it = unk88.begin(); it != unk88.end(); ++it) {
+	for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 		TBaseNPC* npc = *it;
 
 		if (npc->isNowCanTaken() && gpMarioOriginal->isTakeSituation(npc))
@@ -89,7 +89,7 @@ void TMarDirector::movement_game()
 			} else {
 				TBaseNPC* talkNpc = findNearestTalkNPC();
 				if (talkNpc != nullptr) {
-					unkA0 = talkNpc;
+					mTalkingNPC = talkNpc;
 					unk84->associateNPC(talkNpc);
 					mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_NPC);
 					mTalkFlags |= TALK_FLAG_NPC_NEAR_THIS_FRAME;
@@ -110,7 +110,7 @@ void TMarDirector::fireGetBlueCoin(TCoin* coin)
 		return;
 
 	TFlagManager::getInstance()->setBlueCoinFlag(
-	    SMSGetApplication()->mCurrArea.getStage(), coin->getEventId());
+	    SMSGetApplication()->getCurrArea().getStage(), coin->getEventId());
 	onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
 	unk261 = TCardSave::PURPOSE_BLUE_COIN_GET;
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_BLUE_COIN_GET, &coin->mPosition,
@@ -122,7 +122,7 @@ void TMarDirector::fireGetNozzle(TItemNozzle* nozzle)
 	if (!nozzle)
 		return;
 
-	u8 stage = SMSGetApplication()->mCurrArea.getStage();
+	u8 stage = SMSGetApplication()->getCurrArea().getStage();
 	if (nozzle->isActorType(ACTOR_TYPE_ROCKET_NOZZLE_ITEM)
 	    && !TFlagManager::getInstance()->getNozzleRight(stage, 0)) {
 		TFlagManager::getInstance()->setNozzleRight(stage, 0);
@@ -156,7 +156,7 @@ void TMarDirector::fireRideYoshi(TYoshi* yoshi)
 	if (!yoshi)
 		return;
 
-	if (SMSGetApplication()->mCurrArea.getStage() == 1
+	if (SMSGetApplication()->getCurrArea().getStage() == 1
 	    && !TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 		TFlagManager::getInstance()->setBool(true, MSF_YOSHI_UNLOCKED);
 		onFlag(DIRECTOR_FLAG_CARD_SAVE_PENDING);
@@ -192,7 +192,7 @@ void TMarDirector::setNextStage(u16 stage, JDrama::TActor* gate_demo_actor)
 	}
 	SMSGetApplication()->setNextArea(local);
 
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	if (gate_demo_actor) {
 		onFlag(DIRECTOR_FLAG_ACTOR_DEMO_STAGE_TRANSITION_PENDING);
 		mGateDemoActor = gate_demo_actor;

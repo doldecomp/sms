@@ -455,19 +455,20 @@ JPABaseEmitter* TMarioParticleManager::emitAndBindToMtx(s32 id, MtxPtr mtx,
                                                         const void* identity)
 {
 	JGeometry::TVec3<f32> local_24;
+	JPABaseEmitter* emitter;
 	local_24.x = mtx[0][3];
 	local_24.y = mtx[1][3];
 	local_24.z = mtx[2][3];
 
 	if (effect_type == EFFECT_ONETIME_NORMAL)
-		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		if (emitter = mEmitterManager->createSimpleEmitterID(
 		        local_24, id, effect_type, 0, nullptr, nullptr)) {
 			emitter->setGlobalRTMatrix(mtx);
 			return emitter;
 		}
 
 	if (effect_type == EFFECT_ONETIME_INDIRECT)
-		if (JPABaseEmitter* emitter = mEmitterManager->createSimpleEmitterID(
+		if (emitter = mEmitterManager->createSimpleEmitterID(
 		        local_24, id, effect_type, 0, nullptr, nullptr)) {
 			emitter->setGlobalRTMatrix(mtx);
 			emitter->mDraw.swapImage(

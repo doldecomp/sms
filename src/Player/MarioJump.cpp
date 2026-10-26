@@ -86,7 +86,7 @@ void TMario::doJumping()
 
 		if (mStatus == MARIO_STATUS_ROCKET
 		    && checkFlag(MARIO_STATUS_FLAG_UNK8000)) {
-			if (mWaterGun->canSpray())
+			if (mWaterGun->isEmitting())
 				mag = 2.5f * mIntendedMag;
 		}
 
@@ -167,7 +167,7 @@ BOOL TMario::jumpingBasic(int statusOnGround, int animation, int processArg)
 				return changePlayerStatus(MARIO_STATUS_FOOT_DOWN, 0, 0);
 			}
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)
-			    && (int)mWaterGun->mCurrentNozzle != 2) {
+			    && mWaterGun->getCurrentNozzleType() != TWaterGun::Underwater) {
 				mTrembleModelEffect->tremble(mJumpParams.mTremblePower.get(),
 				                             mJumpParams.mTrembleAccele.get(),
 				                             mJumpParams.mTrembleBrake.get(),
@@ -893,14 +893,14 @@ BOOL TMario::rocketCheck()
 		if (!isUpperState(UPPER_STATE_PUMPING))
 			bVar2 = false;
 
-		if (!mWaterGun->canSpray())
+		if (!mWaterGun->isEmitting())
 			bVar2 = false;
 	} else {
 		bVar2 = false;
 	}
 
 	if (bVar2 == true) {
-		unk314 = mPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		unk314 = mPosition.y + mWaterGun->getParams()->mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
@@ -915,11 +915,11 @@ BOOL TMario::rocketing()
 	if (mWaterGun->getCurrentNozzle()->mRocketType.get() != 1)
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
-	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->canSpray())
+	if (!isUpperState(UPPER_STATE_PUMPING) || !mWaterGun->isEmitting())
 		return changePlayerStatus(MARIO_STATUS_ROCKET_LANDING, 0, 0);
 
 	if (mInput & 1) {
-		switch (mWaterGun->mCurrentNozzle) {
+		switch (mWaterGun->getCurrentNozzleType()) {
 		case TWaterGun::Hover:
 			f32 mag       = mIntendedMag;
 			s16 angleDiff = mIntendedYaw - mFaceAngle.y;
@@ -938,8 +938,8 @@ BOOL TMario::rocketing()
 					                          ->getSideAngleMaxBack()
 					                    * JMASCos(angleDiff));
 				}
-				mWaterGun->unk1CC2 = nozzleAngle;
-				mWaterGun->unk1CC4 = nozzleAngle;
+				mWaterGun->setHoverAngleTargetL(nozzleAngle);
+				mWaterGun->setHoverAngleTargetR(nozzleAngle);
 				mForwardVel += mag * JMASCos(angleDiff)
 				               * mDivingParams.mAccelControl.get();
 			} else {
@@ -948,9 +948,9 @@ BOOL TMario::rocketing()
 				                              ->getSideAngleMaxSide()
 				                        * JMASSin(angleDiff));
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-					mWaterGun->unk1CC2 = -nozzleAngle;
-					mWaterGun->unk1CC4 = nozzleAngle;
-					s16 rotSp          = mHoverParams.mRotSp.get();
+					mWaterGun->setHoverAngleTargetL(-nozzleAngle);
+					mWaterGun->setHoverAngleTargetR(nozzleAngle);
+					s16 rotSp = mHoverParams.mRotSp.get();
 					mFaceAngle.y
 					    = mIntendedYaw
 					      - IConverge((s16)(mIntendedYaw - mFaceAngle.y), 0,
@@ -960,8 +960,8 @@ BOOL TMario::rocketing()
 			break;
 		}
 	} else {
-		mWaterGun->unk1CC2 = 0;
-		mWaterGun->unk1CC4 = 0;
+		mWaterGun->setHoverAngleTargetL(0);
+		mWaterGun->setHoverAngleTargetR(0);
 	}
 
 	mSlideVelX = mForwardVel * JMASSin(mFaceAngle.y);
@@ -1013,7 +1013,7 @@ BOOL TMario::rotateJumping()
 	else
 		mModelFaceAngle = -(mStatusTimer * 4096);
 
-	if (!(SMSGetMarDirector()->mMoveTickCount & 0x3F))
+	if (!(SMSGetMarDirector()->getMoveTickCount() & 0x3F))
 		rumbleStart(0x14, mMotorParams.mMotorWall.get() / 2);
 
 	return 0;
@@ -1218,8 +1218,8 @@ BOOL TMario::diving()
 			            * mWaterGun->getCurrentNozzle()->getSideAngleMaxSide()
 			            * JMASCos(angleDiff));
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-				mWaterGun->unk1CC2 = nozzleAngle;
-				mWaterGun->unk1CC4 = nozzleAngle;
+				mWaterGun->setHoverAngleTargetL(nozzleAngle);
+				mWaterGun->setHoverAngleTargetR(nozzleAngle);
 				mForwardVel += mag * JMASCos(angleDiff)
 				               * mDivingParams.mAccelControl.get();
 			}
@@ -1229,9 +1229,9 @@ BOOL TMario::diving()
 			      * mWaterGun->getCurrentNozzle()->getSideAngleMaxSide()
 			      * JMASSin(angleDiff);
 			if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-				mWaterGun->unk1CC2 = -nozzleAngle;
-				mWaterGun->unk1CC4 = nozzleAngle;
-				mFaceAngle.y       = mIntendedYaw
+				mWaterGun->setHoverAngleTargetL(-nozzleAngle);
+				mWaterGun->setHoverAngleTargetR(nozzleAngle);
+				mFaceAngle.y = mIntendedYaw
 				               - IConverge((s16)(mIntendedYaw - mFaceAngle.y),
 				                           0, mDivingParams.mRotSp.get(),
 				                           mDivingParams.mRotSp.get());
@@ -1256,8 +1256,8 @@ BOOL TMario::diving()
 			setAnimation(ANIM_DIVE_WAIT, 1.0f);
 		}
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CC2 = 0;
-			mWaterGun->unk1CC4 = 0;
+			mWaterGun->setHoverAngleTargetL(0);
+			mWaterGun->setHoverAngleTargetR(0);
 		}
 	}
 

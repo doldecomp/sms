@@ -2,27 +2,24 @@
 #include <Map/MapWire.hpp>
 #include <Map/MapWireManager.hpp>
 
-bool TWireBinder::init(const JGeometry::TVec3<f32>& param_1)
+bool TWireBinder::init(const JGeometry::TVec3<f32>& wireNumber)
 {
-	return reset(param_1);
+	return reset(wireNumber);
 }
 
-bool TWireBinder::reset(const JGeometry::TVec3<f32>& param_1)
+bool TWireBinder::reset(const JGeometry::TVec3<f32>& wireNumber)
 {
-	JGeometry::TVec3<f32> local24;
-	JGeometry::TVec3<f32> local30;
-
-	mWireNumber = gpMapWireManager->getWireNo(param_1);
+	mWireNumber = gpMapWireManager->getWireNo(wireNumber);
 	if (mWireNumber == -1)
 		return false;
 
 	TMapWire* wire = gpMapWireManager->getWire(mWireNumber);
 
-	local24 = wire->getStartPoint();
-	local30 = wire->getEndPoint();
-	local30 -= local24;
+	JGeometry::TVec3<f32> wireStart = wire->getStartPoint();
+	JGeometry::TVec3<f32> wireEnd   = wire->getEndPoint();
+	wireEnd -= wireStart;
 
-	mDir.normalize(local30);
+	mDir.normalize(wireEnd);
 	return true;
 }
 
@@ -48,11 +45,10 @@ void TWireBinder::bind(TLiveActor* actor)
 	actor->setPositionDelta(unk_20 - actor->getPosition());
 }
 
-JGeometry::TVec3<f32>
-TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
-                         f32 param_2) const
+JGeometry::TVec3<f32> TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& pos,
+                                               f32 param_2) const
 {
-	f32 posInWire = getRangePos(param_1);
+	f32 posInWire = getRangePos(pos);
 
 	f32 fVar1;
 	f32 fVar2;
@@ -76,25 +72,25 @@ TWireBinder::getDirAtPos(const JGeometry::TVec3<f32>& param_1,
 	return vec2;
 }
 
-void TWireBinder::getPoint(JGeometry::TVec3<f32>* param_1, f32 param_2) const
+void TWireBinder::getPoint(JGeometry::TVec3<f32>* out, f32 pos) const
 {
-	getWire()->getPointPosOnWire(param_2, param_1);
+	getWire()->getPointPosOnWire(pos, out);
 }
 
-void TWireBinder::getPoint(JGeometry::TVec3<f32>* param_1,
-                           const JGeometry::TVec3<f32>& param_2) const
+void TWireBinder::getPoint(JGeometry::TVec3<f32>* out,
+                           const JGeometry::TVec3<f32>& point) const
 {
-	getPoint(param_1, getRangePos(param_2));
+	getPoint(out, getRangePos(point));
 }
 
-bool TWireBinder::isOnWire(const JGeometry::TVec3<f32>& param_1)
+bool TWireBinder::isOnWire(const JGeometry::TVec3<f32>& wireNumber)
 {
-	return gpMapWireManager->getWireNo(param_1) != -1;
+	return gpMapWireManager->getWireNo(wireNumber) != -1;
 }
 
-f32 TWireBinder::getRangePos(const JGeometry::TVec3<f32>& param_1) const
+f32 TWireBinder::getRangePos(const JGeometry::TVec3<f32>& point) const
 {
-	return getWire()->getPosInWire(param_1);
+	return getWire()->getPosInWire(point);
 }
 
 TMapWire* TWireBinder::getWire() const
@@ -102,16 +98,16 @@ TMapWire* TWireBinder::getWire() const
 	return gpMapWireManager->getWire(mWireNumber);
 }
 
-void TWireBinder::isStartWire(const JGeometry::TVec3<f32>&, f32) const { }
+bool TWireBinder::isStartWire(const JGeometry::TVec3<f32>&, f32) const { }
 
-bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& param_1,
-                            f32 param_2) const
+bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& point,
+                            f32 direction) const
 {
-	f32 posInWire = getRangePos(param_1);
-	return fabsf(posInWire - getEndRangePos(param_2)) < 0.015f;
+	f32 posInWire = getRangePos(point);
+	return fabsf(posInWire - getEndRangePos(direction)) < 0.015f;
 }
 
-void TWireBinder::getStartRangePos(f32) { }
+void TWireBinder::getStartRangePos(f32 direction) { }
 
 f32 TWireBinder::getEndRangePos(f32 direction)
 {

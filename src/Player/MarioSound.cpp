@@ -31,8 +31,7 @@ void TMario::soundMovement()
 
 	if (onYoshi()) {
 		if (mWaterGun->isEmitting()
-		    && ((const TWaterGun*)mWaterGun)->getCurrentNozzle()->unk378
-		           > 0.0f) {
+		    && mWaterGun->getCurrentNozzle()->getUnk378() > 0.0f) {
 			SMSGetMSound()->startSoundActor(
 			    MSD_SE_YV_WATER, &mYoshi->mTranslation, 0, nullptr, 0, 4);
 		}
@@ -331,19 +330,19 @@ void TMario::soundMovement()
 			mSoundValues.unk04 |= 8;
 		}
 
-		if ((mInput & 0x100) && mWaterGun->mCurrentWater == 0) {
+		if ((mInput & 0x100) && mWaterGun->getCurrentWater() == 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_ACTION_ON_EMPTY,
 			                                &mPosition, 0, nullptr, 0, 4);
 		}
 
 		const TWaterGun* gun = mWaterGun;
-		s32 pressureScale    = (s32)(100.0f * gun->unk1CEC);
+		s32 pressureScale    = (s32)(100.0f * gun->getHouseProgress());
 		if (mSoundValues.unk2A == 0 && (u8)pressureScale != 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_HAND_OFF, &mPosition, 0,
 			                                nullptr, 0, 4);
 		}
 		if (mSoundValues.unk2A == 0x12 && (u8)pressureScale == 0x13
-		    && (s32)gun->mCurrentNozzle == 0) {
+		    && gun->getCurrentNozzleType() == 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_PO_NOZZLE_OFF, &mPosition, 0,
 			                                nullptr, 0, 4);
 		}
@@ -483,7 +482,7 @@ void TMario::soundMovement()
 			}
 		} else if (curStatus == MARIO_STATUS_FORCE_JUMP
 		           && mSoundValues.unk00 != MARIO_STATUS_FORCE_JUMP
-		           && SMSGetApplication()->mCurrArea.getStage() == 2) {
+		           && SMSGetApplication()->getCurrArea().getStage() == 2) {
 			SMSGetMSound()->startSoundActor(MSD_SE_MA_ROPE_JUMP_C, &mPosition,
 			                                0, nullptr, 0, 4);
 			if (mHealth > 2) {

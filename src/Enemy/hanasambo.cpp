@@ -184,12 +184,12 @@ TSamboLeaf::TSamboLeaf(TSamboFlowerManager* param_1, SDLModelData* param_2,
 	unk10 = new SDLModel(param_2, 3, 1);
 }
 
-void TSamboLeaf::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSamboLeaf::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (!unk44)
 		return;
 
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		unk14 += unk38;
 
 		if (unk38.y > -20.0f)
@@ -202,7 +202,7 @@ void TSamboLeaf::perform(u32 param_1, JDrama::TGraphics* param_2)
 			unk44 = false;
 	}
 
-	if (param_1 & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		Mtx mtx;
 		MsMtxSetXYZRPH(mtx, unk14.x, unk14.y, unk14.z, 0.0f, unk20.y, 0.0f);
 
@@ -216,10 +216,10 @@ void TSamboLeaf::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk10->calc();
 	}
 
-	if (param_1 & CUE_CALC_VIEW)
+	if (cue & CUE_CALC_VIEW)
 		unk10->viewCalc();
 
-	if (param_1 & CUE_ENTRY)
+	if (cue & CUE_ENTRY)
 		unk10->entry();
 }
 
@@ -332,17 +332,17 @@ void TSamboFlowerManager::loadAfter()
 	JDrama::TNameRef::loadAfter();
 }
 
-void TSamboFlowerManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSamboFlowerManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (unk58 > 0 && param_1 & 2) {
+	if (unk58 > 0 && cue & CUE_CALC_ANIM) {
 		for (int i = 0; i < unk58; i++)
 			unk54[i]->checkGenCoin();
 	}
 
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, param_2);
 
 	for (int i = 0; i < 0x12; ++i)
-		unk60[i]->perform(param_1, param_2);
+		unk60[i]->perform(cue, param_2);
 }
 
 void TSamboFlowerManager::dropLeaf(JGeometry::TVec3<f32>& param_1,
@@ -753,12 +753,12 @@ void THanaSambo::waterDamage()
 
 const char** THanaSambo::getBasNameTable() const { return sambo_bastable; }
 
-void THanaSambo::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THanaSambo::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                   | LIVE_FLAG_CLIPPED_OUT))
-		unk194->THitActor::perform(param_1, param_2);
+		unk194->THitActor::perform(cue, param_2);
 }
 
 void THanaSambo::createPollen()

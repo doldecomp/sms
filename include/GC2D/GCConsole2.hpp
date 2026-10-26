@@ -115,6 +115,8 @@ public:
 	// fabricated
 	inline void performCalcAnim();
 
+	u32 getUnk508() { return unk508; }
+
 	static JUTPoint cDownTopPoint;
 	static JUTPoint cDownMidPoint;
 	static JUTPoint cDownBotPoint;
@@ -325,7 +327,7 @@ public:
 	/* 0x4EC */ JUTPoint unk4EC[2];
 	/* 0x4FC */ int unk4FC;
 	/* 0x500 */ J2DPane* unk500[2];
-	/* 0x508 */ int unk508;
+	/* 0x508 */ u32 unk508;
 	/* 0x50C */ int unk50C;
 	/* 0x510 */ bool unk510;
 	/* 0x514 */ s32 unk514;

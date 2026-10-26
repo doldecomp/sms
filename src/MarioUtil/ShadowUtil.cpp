@@ -335,7 +335,7 @@ TMBindShadowManager::TMBindShadowManager(const char* name)
 	mShadowColor.b = 115;
 	mShadowColor.a = 180;
 
-	switch (SMSGetApplication()->mCurrArea.getStage()) {
+	switch (SMSGetApplication()->getCurrArea().getStage()) {
 	case 6:
 		mShadowColor.r = 9;
 		mShadowColor.g = 9;
@@ -742,7 +742,7 @@ void TMBindShadowManager::drawShadowVolume(bool param_1,
 		SMS_SettingDrawShape(mModelDatas[1]->getModelData(), 0);
 }
 
-void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
+void TMBindShadowManager::drawShadowGD(u32 cue, JDrama::TGraphics* param_2)
 {
 	class TCylinder : public TGDLStatic {
 	public:
@@ -836,7 +836,7 @@ void TMBindShadowManager::drawShadowGD(u32 param_1, JDrama::TGraphics* param_2)
 		if (ary->mQuadHead == nullptr || ary->mBlendHead == nullptr)
 			continue;
 
-		if (!(param_1 & ary->unk0))
+		if (!(cue & ary->unk0))
 			continue;
 
 		class TSetup2 : public TGDLStatic {
@@ -1046,7 +1046,7 @@ static inline void initShadowGX(const GXColor& color,
 	GXLoadNrmMtxImm(graphics->getViewMtx(), GX_PNMTX0);
 }
 
-void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
+void TMBindShadowManager::drawShadow(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (!mTestSw) {
 		initShadowGX(mShadowColor, param_2);
@@ -1059,7 +1059,7 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 			if (ary->mQuadHead == nullptr || ary->mBlendHead == nullptr)
 				continue;
 
-			if (!(param_1 & ary->unk0))
+			if (!(cue & ary->unk0))
 				continue;
 
 			GXSetCullMode(GX_CULL_NONE);
@@ -1175,7 +1175,7 @@ void TMBindShadowManager::drawShadow(u32 param_1, JDrama::TGraphics* param_2)
 		SMS_SettingDrawShape(mModelDatas[0]->getModelData(), 0);
 
 		for (int i = 0; i < mRequestNum; i++) {
-			if (param_1 & 0x40000000) {
+			if (cue & 0x40000000) {
 				if (!(mQuads[i].mRequest->mActorType & HIT_CATEGORY_MAP_OBJECT))
 					continue;
 			} else if (mQuads[i].mRequest->mActorType

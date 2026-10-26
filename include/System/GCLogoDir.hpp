@@ -34,7 +34,8 @@ public:
 #endif
 	{
 #ifdef VERSION_GMSP01_NX
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    == MSLANG_NX_JAPANESE) {
 			mColor = JUtility::TColor(0, 70, 255, 255);
 		} else {
 			mColor = JUtility::TColor(220, 0, 0, 255);

@@ -147,9 +147,21 @@ public:
 	BOOL checkTransitionFlag(int flag) const { return mTransitionFlags & flag; }
 	void onTransitionFlag(int flag) { mTransitionFlags |= flag; }
 	void offTransitionFlag(int flag) { mTransitionFlags &= ~flag; }
+	// Fabricated
+	u8 getState() const { return mState; }
 	TGCConsole2* getConsole() { return mConsole; }
 
+	// Fabricated
+	u8 getGameMode() const { return mGameMode; }
+
 	bool isGameplayModeNow() const { return mGameMode == GAME_MODE_NORMAL; }
+	// Fabricated
+	bool isTalkStartModeNow() const
+	{
+		return mGameMode == GAME_MODE_TALK_START;
+	}
+	// Fabricated
+	bool isTalkMainModeNow() const { return mGameMode == GAME_MODE_TALK; }
 	bool isTalkModeNow() const
 	{
 		return mGameMode == GAME_MODE_TALK_START || mGameMode == GAME_MODE_TALK;
@@ -178,22 +190,43 @@ public:
 
 	void* get2DArchiveBuffer() { return m2DArchiveBuffer; }
 	JKRMemArchive* get2DArchive() { return m2DArchive; }
-	TBaseNPC* getTalkingNPC() { return unkA0; }
+	TBaseNPC* getTalkingNPC() { return mTalkingNPC; }
+	// Fabricated
+	void setTalkingNPC(TBaseNPC* npc) { mTalkingNPC = npc; }
+	// Fabricated
+	JGadget::TVector_pointer<TBaseNPC>& getNPCList() { return mNPCList; }
+	// Fabricated
+	u8 getMarioPosIdx() const { return mMarioPosIdx; }
+	// Fabricated
+	void setNextGameMode(u8 mode) { mNextGameMode = mode; }
 
-	int getRestTime()
+	// fabricated
+	int getTime()
 	{
 		s64 ticks = OSCheckStopwatch(&unkE8);
-		int time  = OSTicksToMilliseconds(ticks) / 10;
-		return unk120 - time;
+		return OSTicksToMilliseconds(ticks) / 10;
 	}
-
+	int getRestTime() { return unk120 - getTime(); }
+	s64 checkStopwatch() { return OSCheckStopwatch(&unkE8); }
+	s64 getStartTime() { return unkC8; }
+	// TODO: very likely a fakematch
+	static s64 diffMs(s64 now, s64 start)
+	{
+		return OSTicksToMilliseconds(now) - OSTicksToMilliseconds(start);
+	}
+	f32 getTimerTime()
+	{
+		return diffMs(checkStopwatch(), getStartTime()) * 0.1f;
+	}
 	void startTimer() { unkC8 = OSCheckStopwatch(&unkE8); }
+	void resetStopwatch() { OSResetStopwatch(&unkE8); }
+	void setTimeLimit(int time) { unk120 = time; }
+
 	TMarioGamePad* getGamePad(int i = 0) { return mGamePads[i]; }
 
 	// Fabricated
 	int getMoveTickCount() const { return mMoveTickCount; }
 
-public:
 	enum {
 		GAME_MODE_NORMAL       = 0,
 		GAME_MODE_TALK_START   = 1,
@@ -252,6 +285,7 @@ public:
 		TRANSITION_FLAG_RESET_HANDLED                = 0x10,
 	};
 
+private:
 	/* 0x18 */ TMarioGamePad** mGamePads;
 	/* 0x1C */ TPerformList* mPerformListGX;
 	/* 0x20 */ TPerformList* mPerformListSilhouette;
@@ -282,8 +316,8 @@ public:
 	/* 0x7D */ u8 mScenario;
 	/* 0x80 */ JDrama::TViewObjPtrListT<JDrama::TViewObj>* unk80;
 	/* 0x84 */ TTalkCursor* unk84;
-	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> unk88;
-	/* 0xA0 */ TBaseNPC* unkA0; // talking NPC
+	/* 0x88 */ JGadget::TVector_pointer<TBaseNPC> mNPCList;
+	/* 0xA0 */ TBaseNPC* mTalkingNPC;
 	/* 0xA4 */ u32 unkA4;
 	/* 0xA8 */ char unkA8[0x4];
 	/* 0xAC */ TPauseMenu2* unkAC;
@@ -294,7 +328,7 @@ public:
 	/* 0xC0 */ JDrama::TDisplay* mDisplay;
 	/* 0xC4 */ char unkC4[0x4];
 	/* 0xC8 */ s64 unkC8;
-	/* 0xD0 */ u8 unkD0;
+	/* 0xD0 */ u8 mMarioPosIdx;
 	/* 0xD1 */ u8 unkD1;
 	/* 0xD4 */ void* m2DArchiveBuffer;
 	/* 0xD8 */ JKRMemArchive* m2DArchive;

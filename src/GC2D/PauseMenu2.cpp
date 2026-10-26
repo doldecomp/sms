@@ -67,7 +67,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mScreen          = new J2DSetScreen("pause_1.blo", arch);
 	mScreen->setCullBack(GX_CULL_BACK);
 
-	if (SMSGetApplication()->mCurrArea.getStage() <= 1) {
+	if (SMSGetApplication()->getCurrArea().getStage() <= 1) {
 		// Hide "Exit Area" option in Delfino Plaza.
 		mNumItems = 2;
 	}
@@ -475,7 +475,7 @@ void TPauseMenu2::draw(JDrama::TGraphics* gfx)
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
+	if (SMSGetMarDirector()->getState() == TMarDirector::STATE_PAUSE_MENU) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {

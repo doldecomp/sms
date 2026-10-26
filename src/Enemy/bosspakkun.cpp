@@ -204,17 +204,17 @@ void TBPPolDrop::launch(const JGeometry::TVec3<f32>& position,
 	unk88 = position.y;
 }
 
-void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBPPolDrop::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk80 == 0)
 		return;
 
-	if (flags & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		move();
 		++unk84;
 	}
 
-	if (flags & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		for (s32 i = 0; i < mColCount; ++i) {
 			THitActor* collision = mCollisions[i];
 			if (!collision->isActorType(ACTOR_TYPE_MARIO))
@@ -229,7 +229,7 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (flags & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		MtxPtr mtx = unk78->getModel()->getBaseTRMtx();
 		MTXIdentity(mtx);
 		mtx[0][3] = mPosition.x;
@@ -247,9 +247,9 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 	}
 
 	if (unk80 == 1) {
-		unk78->perform(flags, graphics);
+		unk78->perform(cue, graphics);
 
-		if (flags & CUE_CALC_VIEW) {
+		if (cue & CUE_CALC_VIEW) {
 			TCircleShadowRequest request;
 			request.mPosition   = mPosition;
 			request.mRadiusX    = 400.0f;
@@ -261,9 +261,9 @@ void TBPPolDrop::perform(u32 flags, JDrama::TGraphics* graphics)
 	}
 
 	if (unk80 == 2) {
-		if (flags & CUE_CALC_ANIM)
+		if (cue & CUE_CALC_ANIM)
 			unk7C->calcAnm();
-		if (flags & CUE_ENTRY)
+		if (cue & CUE_ENTRY)
 			gpPollution->stampModel(unk7C->getModel());
 	}
 }
@@ -295,23 +295,23 @@ void TBPVomit::vomitFinished()
 	unk18->setBckFromIndex(-1);
 }
 
-void TBPVomit::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBPVomit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk14->getCurAnmIdx(ANM_TYPE_BCK) < 0)
 		return;
 
-	if (flags & CUE_CALC_ANIM && unk14->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (cue & CUE_CALC_ANIM && unk14->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		vomitFinished();
 		return;
 	}
 
-	if (flags & CUE_CALC_ANIM)
+	if (cue & CUE_CALC_ANIM)
 		unk18->calcAnm();
 
-	if (flags & CUE_ENTRY)
+	if (cue & CUE_ENTRY)
 		gpPollution->stampModel(unk18->getModel());
 
-	unk14->perform(flags, graphics);
+	unk14->perform(cue, graphics);
 }
 
 TBPTornado::TBPTornado(TBossPakkun* owner, const char* name)
@@ -341,16 +341,16 @@ void TBPTornado::vanish()
 	frameCtrl->setRate(SMSGetAnmFrameRate());
 }
 
-void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBPTornado::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	THitActor::perform(flags, graphics);
+	THitActor::perform(cue, graphics);
 
 	if (mOwner->checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 	if (unk98 == 0)
 		return;
 
-	if (flags & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		if (unk98 == 2) {
 			mPosition += unk88;
 			if (mActor->curAnmEndsNext(ANM_TYPE_BRK, nullptr)) {
@@ -413,7 +413,7 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (flags & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		J3DModel* model = mActor->getModel();
 		MtxPtr mtx      = model->getBaseTRMtx();
 		MTXIdentity(mtx);
@@ -423,7 +423,7 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 		model->setBaseScale(mScaling);
 	}
 
-	if (flags & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		MtxPtr mtx              = mActor->getModel()->getBaseTRMtx();
 		JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_ROCK, mtx, 1, this);
@@ -441,7 +441,7 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 			emitter->setGlobalScale(mScaling);
 	}
 
-	if (flags & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		JGeometry::TVec3<f32> toMario = mPosition;
 		toMario -= SMS_GetMarioPos();
 		SMSGetMSound()->startSoundActorWithInfo(
@@ -449,7 +449,7 @@ void TBPTornado::perform(u32 flags, JDrama::TGraphics* graphics)
 		    0, nullptr, 0, 4);
 	}
 
-	mActor->perform(flags, graphics);
+	mActor->perform(cue, graphics);
 }
 
 void TBPTornado::launch(const JGeometry::TVec3<f32>& target)
@@ -541,9 +541,9 @@ void TBPHeadHit::throwActor(THitActor* actor)
 	SMS_ThrowMario(perpendicular, 100.0f);
 }
 
-void TBPHeadHit::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBPHeadHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((flags & CUE_MOVE)
+	if ((cue & CUE_MOVE)
 	    && mOwner->mWeakPoint != TBossPakkun::WEAK_POINT_NAVEL) {
 		for (int i = 0; i < mColCount; ++i) {
 			THitActor* actor = mCollisions[i];
@@ -552,10 +552,10 @@ void TBPHeadHit::perform(u32 flags, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (flags & CUE_CALC_ANIM)
+	if (cue & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(1, &mPosition);
 
-	THitActor::perform(flags, graphics);
+	THitActor::perform(cue, graphics);
 }
 
 TBPNavel::TBPNavel(TBossPakkun* owner, const char* name)
@@ -588,12 +588,12 @@ BOOL TBPNavel::receiveMessage(THitActor* sender, u32 message)
 	return true;
 }
 
-void TBPNavel::perform(u32 flags, JDrama::TGraphics* graphics)
+void TBPNavel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & CUE_CALC_ANIM)
+	if (cue & CUE_CALC_ANIM)
 		mOwner->getJointTransByIndex(6, &mPosition);
 
-	THitActor::perform(flags, graphics);
+	THitActor::perform(cue, graphics);
 }
 
 TBossPakkunMtxCalc::TBossPakkunMtxCalc(TBossPakkun* owner)

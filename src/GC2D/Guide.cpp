@@ -340,7 +340,7 @@ void TGuide::resetScore()
 		tens->changeTexture(unkC8[shines / 10]->getTexInfo(), 0);
 		ones->changeTexture(unkC8[shines % 10]->getTexInfo(), 0);
 	}
-	switch (gpApplication.mSaveFile) {
+	switch (gpApplication.getSaveFile()) {
 	case 0:
 		unkBC->search('ld_a')->show();
 		unkBC->search('ld_b')->hide();
@@ -795,7 +795,7 @@ void TGuide::disappearGuidePane(int index)
 	unk10 = STATE_DISAPPEARING;
 }
 
-void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
+void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (setup_wait != 0) {
 		--setup_wait;
@@ -806,12 +806,12 @@ void TGuide::perform(u32 flags, JDrama::TGraphics* graphics)
 			return;
 		}
 	}
-	if ((flags & 8) && unk10 != STATE_OPEN && unk10 != STATE_CLOSED) {
+	if ((cue & CUE_DRAW) && unk10 != STATE_OPEN && unk10 != STATE_CLOSED) {
 		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 		unkBC->draw(0, 0, &graph);
 	}
-	if (!(flags & 1))
+	if (!(cue & CUE_MOVE))
 		return;
 	int i;
 	bool done = true;

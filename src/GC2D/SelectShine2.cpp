@@ -208,7 +208,7 @@ inline void TSelectShineManager::updateShine(int i)
 
 void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & 1) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < mShineNum; ++i)
 			mShines[i]->move();
 
@@ -232,7 +232,7 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (cue & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		for (int i = 0; i < mShineNum; ++i) {
 			mShines[i]->mAnmColor->setFrame(mShines[i]->mAnmFrame);
 			mShines[i]->mModel->update();
@@ -240,7 +240,7 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 	}
 
-	if (cue & 8) {
+	if (cue & CUE_DRAW) {
 		j3dSys.setViewMtx(graphics->mViewMtx);
 		j3dSys.drawInit();
 		j3dSys.unk4C = 3;

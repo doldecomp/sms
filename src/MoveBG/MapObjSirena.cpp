@@ -63,12 +63,12 @@ TRoulette::TRoulette(const char* name)
 	unk148.g = 0;
 	unk148.b = 0;
 	unk148.a = 255;
-	if (SMSGetApplication()->mCurrArea.getStage() == 14
+	if (SMSGetApplication()->getCurrArea().getStage() == 14
 	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		unk141   = 1;
 		unk148.b = 255;
 	}
-	if (SMSGetApplication()->mCurrArea.getStage() == 56) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 56) {
 		unk148.b = 255;
 		unk142   = 1;
 	}
@@ -94,7 +94,7 @@ void TRoulette::initMapObj()
 	objGroup->getChildren().push_back(unk150);
 	f32 attackR = 500.0f;
 	f32 attackH = 100.0f;
-	if (SMSGetApplication()->mCurrArea.getStage() == 14) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 14) {
 		attackR = 40.0f;
 		attackH = 80.0f;
 	}
@@ -824,7 +824,7 @@ void TDonchou::initMapObj()
 void TDonchou::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (SMSGetApplication()->mCurrArea.getStage() == 14
+	if (SMSGetApplication()->getCurrArea().getStage() == 14
 	    && SMSGetMarDirector()->getCurrentScenario() == 0) {
 		unk144
 		    = static_cast<TSlotDrum*>(JDrama::TNameRefGen::search("srotdram"));

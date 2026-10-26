@@ -163,15 +163,14 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 void TConsoleStr::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	unk2AC[0] = nullptr;
-	unk2AC[1] = nullptr;
-	unk2AC[2] = nullptr;
+	for (int i = 0; i < 3; ++i)
+		unk2AC[i] = nullptr;
 }
 
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
-		if (SMSGetMarDirector()->mState != 5) {
+		if (SMSGetMarDirector()->getState() != 5) {
 			bool bVar6 = false;
 
 			switch (unk2B8) {
@@ -264,14 +263,15 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (!unk2A9
-		    && SMSGetMarDirector()->mState != TMarDirector::STATE_UNK4) {
+		    && SMSGetMarDirector()->getState() != TMarDirector::STATE_UNK4) {
 			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->stopCreateParticle();
 			unk2A9 = true;
 		}
 
-		if (unk2A9 && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4) {
+		if (unk2A9
+		    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4) {
 			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->playCreateParticle();

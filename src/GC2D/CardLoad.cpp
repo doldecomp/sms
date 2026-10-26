@@ -1789,7 +1789,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		setMessage(mErasedText, 0x400, (u16)cMessageID[unk1C]);
 		setMessage(mErasedTextShadow, 0x400, (u16)cMessageID[unk1C]);
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE)
 			resizeBox((J2DWindow*)mErasedWindow->getPane(), mErasedTextShadow,
 			          mErasedText);
 #elif defined(VERSION_GMSP01)
@@ -1800,7 +1801,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 		mErasedTextShadow->hide();
 		mErasedWindow->getPane()->show();
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE) {
 			JUTRect bounds = mErasedWindow->getPane()->getBounds();
 			mErasedWindow->setCenteredSize(20, bounds.getWidth(),
 			                               bounds.getHeight(), 0, 0);
@@ -1845,7 +1847,8 @@ s8 TCardLoad::waitForAnyKey(TEProgress progress)
 
 	case WINDOW_CLOSE: {
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE) {
 			JUTRect bounds = mErasedWindow->getPane()->getBounds();
 			mErasedWindow->setCenteredSize(20, 0, 0, bounds.getWidth(),
 			                               bounds.getHeight());
@@ -2025,7 +2028,8 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 		setMessage(unk560, 0x400, 12);
 		setMessage(unk564, 0x400, 12);
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE)
 			resizeBox((J2DWindow*)unk524->getPane(), unk53C, unk538);
 #elif defined(VERSION_GMSP01)
 		resizeBox((J2DWindow*)unk524->getPane(), unk53C, unk538);
@@ -2033,7 +2037,8 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 
 		unk524->getPane()->show();
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE) {
 			JUTRect bounds = unk524->getPane()->getBounds();
 			unk524->setCenteredSize(20, bounds.getWidth(), bounds.getHeight(),
 			                        0, 0);
@@ -2086,7 +2091,8 @@ s8 TCardLoad::waitForStart(TEProgress param_1)
 		for (int i = 0; i < 3; ++i)
 			unk540[i]->hide();
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE) {
 			JUTRect bounds = unk524->getPane()->getBounds();
 			unk524->setCenteredSize(20, 0, 0, bounds.getWidth(),
 			                        bounds.getHeight());
@@ -2137,7 +2143,8 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 		setMessage(mErasedText, 0x400, (u16)cMessageID[unk1C]);
 		setMessage(mErasedTextShadow, 0x400, (u16)cMessageID[unk1C]);
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE)
 			resizeBox((J2DWindow*)mErasedWindow->getPane(), mErasedTextShadow,
 			          mErasedText);
 #elif defined(VERSION_GMSP01)
@@ -2148,7 +2155,8 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 		mErasedWindow->getPane()->show();
 		mErasedTextShadow->hide();
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE) {
 			JUTRect bounds = mErasedWindow->getPane()->getBounds();
 			mErasedWindow->setCenteredSize(20, bounds.getWidth(),
 			                               bounds.getHeight(), 0, 0);
@@ -2182,7 +2190,8 @@ s8 TCardLoad::drawMessage(TEProgress param_1)
 	case WINDOW_CLOSE:
 		if (unkB4 > 180) {
 #if defined(VERSION_GMSP01_NX)
-			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+			    != MSLANG_NX_JAPANESE) {
 				JUTRect bounds = mErasedWindow->getPane()->getBounds();
 				mErasedWindow->setCenteredSize(20, 0, 0, bounds.getWidth(),
 				                               bounds.getHeight());
@@ -3049,8 +3058,8 @@ void TCardLoad::changeScene()
 			gpCardManager->probe();
 			switch (c) {
 			case 0: {
-				SMSGetApplication()->mSaveFile = unkB0;
-				TCardBookmarkInfo* bm          = &unk40[unkB0];
+				SMSGetApplication()->setSaveFile(unkB0);
+				TCardBookmarkInfo* bm = &unk40[unkB0];
 				if (bm->unk18 == 0) {
 					TFlagManager::getInstance()->firstStart();
 					unk1C = PROGRESS_UNK29;

@@ -161,7 +161,7 @@ void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* body)
 
 void TBossHanachan::emitCamShake_()
 {
-	if (gpMarDirector->mState == TMarDirector::STATE_UNK1)
+	if (gpMarDirector->getState() == TMarDirector::STATE_UNK1)
 		return;
 	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
 	J3DFrameCtrl* frameCtrl = mBodyParts[0]->getMActor()->getFrameCtrl(0);

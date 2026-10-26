@@ -10,6 +10,7 @@
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
@@ -395,7 +396,8 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 void TCardSave::setMessageC(J2DTextBox* text_box, s32 message, u32 size)
 {
 #if defined(VERSION_GMSP01_NX)
-	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5) {
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+	    != MSLANG_NX_JAPANESE) {
 		JSUMemoryInputStream in(SMSGetMessageData(unk2E4, (u16)message), size);
 		JSUMemoryOutputStream out(text_box->getStringPtr(), size);
 		while (in.getAvailable() != 0 && out.getAvailable() != 0) {
@@ -468,21 +470,27 @@ void TCardSave::setMessageC(J2DTextBox* text_box, s32 message, u32 size)
 		}
 
 		if (colored) {
+			// clang-format off
 			snprintf(buffer, 255,
-			         "\x1BGM[0]\x1B"
-			         "CC[%02x%02x%02x]\x1BSH[3]\x1B"
-			         "CD[4]",
-			         color.r, color.g, color.b);
+				J2DPRINT_GRADIENT_MODE(0)
+			  J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+			  J2DPRINT_CHAR_SPACING(3)
+				J2DPRINT_CURSOR_DOWN(4),
+			  color.r, color.g, color.b);
+			// clang-format on
 			out.write(buffer, 29);
 		}
 		out << c;
 		if (colored) {
+			// clang-format off
 			snprintf(buffer, 255,
-			         "\x1BGM[0]\x1B"
-			         "CC\x1B"
-			         "FX\x1B"
-			         "FY\x1BSH\x1B"
-			         "CU[4]");
+				J2DPRINT_GRADIENT_MODE(0)
+				J2DPRINT_CHAR_COLOR_RESET
+			  J2DPRINT_FONT_WIDTH_RESET
+				J2DPRINT_FONT_HEIGHT_RESET
+			  J2DPRINT_CHAR_SPACING_RESET
+				J2DPRINT_CURSOR_UP(4));
+			// clang-format on
 			out.write(buffer, 24);
 		}
 	}
@@ -1771,7 +1779,7 @@ void TCardSave::execMovement_()
 
 	switch (unk310) {
 	case PROGRESS_UNK0:
-		unk2EA = SMSGetApplication()->mSaveFile;
+		unk2EA = SMSGetApplication()->getSaveFile();
 
 		if (mDialogPurpose == PURPOSE_GAME_OVER) {
 			unk310 = PROGRESS_UNK2E;

@@ -55,7 +55,7 @@ void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->isIllegalData()
 	    && (mInstanceIndex & 0xF)
-	           == (SMSGetMarDirector()->mMoveTickCount & 0xF)) {
+	           == (SMSGetMarDirector()->getMoveTickCount() & 0xF)) {
 		doShortCut();
 	}
 

@@ -909,7 +909,7 @@ void THinokuri2::moveObject()
 		unk194 = 1.0f;
 	}
 
-	if (SMSGetMarDirector()->mMoveTickCount % 600 == 0)
+	if (SMSGetMarDirector()->getMoveTickCount() % 600 == 0)
 		generateEnemy();
 
 	doShortCut();

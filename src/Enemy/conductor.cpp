@@ -268,7 +268,8 @@ void TConductor::genEnemyFromPollution()
 	if (!mStageEnemyInfoTable)
 		return;
 
-	if (SMSGetMarDirector()->mMoveTickCount % mCondParams.mGenerateTime.get()
+	if (SMSGetMarDirector()->getMoveTickCount()
+	        % mCondParams.mGenerateTime.get()
 	    != 1)
 		return;
 

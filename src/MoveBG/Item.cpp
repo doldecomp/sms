@@ -197,7 +197,7 @@ TItem::TItem(const char* name)
 
 void TCoin::taken(THitActor* param_1)
 {
-	u8 thing = SMSGetApplication()->mCurrArea.getStage();
+	u8 thing = SMSGetApplication()->getCurrArea().getStage();
 	TFlagManager::getInstance()->incGoldCoinFlag(SMS_getShineStage(thing), 1);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN, &mPosition, 0, nullptr, 0,

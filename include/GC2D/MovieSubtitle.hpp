@@ -23,7 +23,7 @@ public:
 	void checkSubTitleOn();
 	void show();
 	void hide();
-	const TMessageLoader::EntryInfo* getCurEntry() const;
+	const JMSMesgEntry* getCurEntry() const;
 	void setCurMessage();
 	void makeBmgName(char*, int, const char*);
 	void draw(JDrama::TGraphics*);

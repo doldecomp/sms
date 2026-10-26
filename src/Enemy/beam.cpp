@@ -24,7 +24,9 @@ static void coneInPlane(const JGeometry::TVec3<f32>& origin, f32 angle,
 	f32 t = -(plane.mDist + plane.mNormal.dot(origin)) / plane.mNormal.dot(dir);
 
 	// Compute intersection point
-	*outPos = dir;
+	// TODO: likely a fakematch. Figure out what this really is!!!
+	Vec& out = *outPos;
+	out      = dir;
 	outPos->scale(t);
 	*outPos += origin;
 }
@@ -78,20 +80,20 @@ void TConeBeam::drawConeBeamAux(const GXColor& color, bool unk)
 // TODO: @non-matching
 void TConeBeam::calcVertices(int count)
 {
+	JGeometry::TVec3<f32> local_140;
 	JGeometry::TVec3<f32> local_134(0.0f, 1.0f, 0.0f);
 
 	JGeometry::TVec3<f32> local_128 = unk0C;
-	JGeometry::TVec3<f32> local_140;
 
 	mVtxCount = count;
-	local_128.sub(unk00);
-	local_140.cross(local_128, local_134);
+	local_128 -= unk00;
+	local_140.cross2(local_128, local_134);
 
 	if (local_140.isZero()) {
 		local_134.set(1.0f, 0.0f, 0.0f);
 		local_140.set(0.0f, 0.0f, 1.0f);
 	} else {
-		local_134.cross(local_140, local_128);
+		local_134.cross2(local_140, local_128);
 
 		PSVECNormalize(&local_140, &local_140);
 		PSVECNormalize(&local_134, &local_134);
@@ -99,10 +101,12 @@ void TConeBeam::calcVertices(int count)
 
 	if (mBGCheckData == nullptr) {
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 s = mScale * MsSin(i * (360.0f / mVtxCount)) / 2.0f;
-			f32 c = mScale * MsCos(i * (360.0f / mVtxCount)) / 2.0f;
-
 			JGeometry::TVec3<f32> local_11c;
+
+			f32 angle = i * (360.0f / mVtxCount);
+			f32 s     = mScale * MsSin(angle) * 0.5f;
+			f32 c     = mScale * MsCos(angle) * 0.5f;
+
 			local_11c.zero();
 
 			local_11c += local_140 * c;
@@ -117,23 +121,24 @@ void TConeBeam::calcVertices(int count)
 		partition.mDist = mBGCheckData->getPlaneDistance();
 		partition.mNormal.set(mBGCheckData->getNormal());
 		f32 local_128Len = PSVECMag(&local_128);
-		f32 angle        = matan(local_128Len, mScale)
-		            * (360.0f / 65536.0f); // this is SHORT2DEGANGLE constant
+		f32 coneAngle    = MsAtan2(local_128Len, mScale);
 
 		PSVECNormalize(&local_128, &local_128);
 
 		for (int i = 0; i <= mVtxCount; i++) {
-			f32 sinA = MsSin(i * (360.0f / mVtxCount));
-			f32 cosA = MsCos(i * (360.0f / mVtxCount));
-
+			JGeometry::TVec3<f32> local_f8;
 			JGeometry::TVec3<f32> local_ec;
+
+			f32 angle = i * (360.0f / mVtxCount);
+			f32 sinA  = MsSin(angle);
+			f32 cosA  = MsCos(angle);
+
 			local_ec.zero();
 
 			local_ec += local_140 * cosA;
 			local_ec += local_134 * sinA;
 
-			JGeometry::TVec3<f32> local_f8;
-			coneInPlane(unk00, angle, local_128, local_ec, partition,
+			coneInPlane(unk00, coneAngle, local_128, local_ec, partition,
 			            &local_f8);
 			mVtx[i] = local_f8;
 		}

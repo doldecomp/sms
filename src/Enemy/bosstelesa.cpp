@@ -451,9 +451,9 @@ const f32 bossTelesaDirectionTable[] = {
 	1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
 };
 
-void TBossTelesaManager::perform(u32 flags, JDrama::TGraphics* gfx)
+void TBossTelesaManager::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	TEnemyManager::perform(flags, gfx);
+	TEnemyManager::perform(cue, gfx);
 }
 
 BOOL TBossTelesaBody::receiveMessage(THitActor* sender, u32 message)
@@ -1177,15 +1177,7 @@ void TBossTelesa::moveObject()
 	unk19C.x += 0.67f * cameraDiff.x;
 	unk19C.z += 0.67f * cameraDiff.z;
 
-	int movingRoulettes = 0;
-	if (mRoulettes[0]->unk13C != 0.0f)
-		++movingRoulettes;
-	if (mRoulettes[1]->unk13C != 0.0f)
-		++movingRoulettes;
-	if (mRoulettes[2]->unk13C != 0.0f)
-		++movingRoulettes;
-
-	switch (movingRoulettes) {
+	switch (getRollingRouletteNum()) {
 	case 1:
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_MOVE1, &unk19C, 0,
 		                                nullptr, 0, 4);
@@ -1370,9 +1362,9 @@ void TBossTelesa::calcRootMatrix()
 	}
 }
 
-void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
+void TBossTelesa::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	if ((flags & 0x200)
+	if ((cue & CUE_ENTRY)
 	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_CLIPPED_OUT)) {
 		if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve()
 		    && mIsSpicy) {
@@ -1383,15 +1375,15 @@ void TBossTelesa::perform(u32 flags, JDrama::TGraphics* gfx)
 	}
 
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	TSpineEnemy::perform(flags, gfx);
+	TSpineEnemy::perform(cue, gfx);
 
-	mBodyCollision->THitActor::perform(flags, gfx);
-	mTongueCollision->THitActor::perform(flags, gfx);
-	mKillSmallEnemyCollision->THitActor::perform(flags, gfx);
+	mBodyCollision->THitActor::perform(cue, gfx);
+	mTongueCollision->THitActor::perform(cue, gfx);
+	mKillSmallEnemyCollision->THitActor::perform(cue, gfx);
 	if (mSlot)
-		mSlot->testPerform(flags, gfx);
+		mSlot->testPerform(cue, gfx);
 	if (mSlotParts)
-		mSlotParts->testPerform(flags, gfx);
+		mSlotParts->testPerform(cue, gfx);
 }
 
 BOOL TBossTelesa::receiveMessage(THitActor*, u32) { return FALSE; }
@@ -1774,8 +1766,11 @@ bool TBossTelesa::isInDamage()
 	return false;
 }
 
+// TODO: frame is 0x10 bytes short; a getter for TRoulette::unk13C closes it
+// here but makes slotFall 8 bytes too big.
 void TBossTelesa::rouletteStart()
 {
+	getRollingRouletteNum();
 	TMsRange<f32> speedRange(0.05f, 0.1f);
 	TMsRange<f32> directionRange(-1.0f, 1.0f);
 	f32 dir = directionRange.rand();

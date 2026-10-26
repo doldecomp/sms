@@ -25,7 +25,7 @@ public:
 	}
 	void init();
 	void stop();
-	void update(f32, bool);
+	void update(f32 power, bool stopHard);
 
 	f32 mPower;
 	f32 mAccumulator;
@@ -39,7 +39,7 @@ public:
 	{
 	}
 	void init();
-	RumbleChannelDataTbl* getChannelDataTbl(int);
+	RumbleChannelDataTbl* getChannelDataTbl(int index);
 
 	RumbleChannelDataTbl* mChannelDataTbl;
 };
@@ -47,11 +47,11 @@ public:
 class RumbleChannelMgr {
 public:
 	RumbleChannelMgr();
-	void init(RumbleChannelDataMgr*);
+	void init(RumbleChannelDataMgr* dataMgr);
 	void reset();
 	void repeat();
-	void start(int, int, f32*);
-	void start(int, int, Vec*);
+	void start(int channelDataIdx, int repeatCount, f32* multiplierF);
+	void start(int channelDataIdx, int repeatCount, Vec* worldPos);
 	f32 update();
 
 	f32 mElapsedTime;
@@ -69,10 +69,10 @@ public:
 	RumbleControllerMgr();
 	void init();
 	void reset();
-	void start(int, int, f32*);
-	void start(int, int, Vec*);
+	void start(int channelDataIdx, int repeatCount, f32* multiplierF);
+	void start(int channelDataIdx, int repeatCount, Vec* worldPos);
 	void stop();
-	void stop(int);
+	void stop(int channelDataIdx);
 	bool channelMgrIsAllFree();
 	void updateMotorCount();
 	f32 update();
@@ -91,23 +91,27 @@ extern RumbleMgr* SMSRumbleMgr;
 
 class RumbleMgr {
 public:
-	RumbleMgr(bool, bool, bool, bool);
+	RumbleMgr(bool controller1, bool controller2, bool controller3,
+	          bool controller4);
 	void init();
 	void reset();
-	void start(int, f32*);
-	void start(int, Vec*);
-	void start(int, MtxPtr);
-	void start(int, int, f32*);
-	void start(int, int, Vec*);
-	void start(int, int, MtxPtr);
-	void start(int, int, int, f32*);
-	void start(int, int, int, Vec*);
-	void start(int, int, int, MtxPtr);
+	void start(int channelDataIdx, f32* multiplierF);
+	void start(int channelDataIdx, Vec* worldPos);
+	void start(int channelDataIdx, MtxPtr mtx);
+	void start(int channelDataIdx, int repeatCount, f32* multiplierF);
+	void start(int channelDataIdx, int repeatCount, Vec* worldPos);
+	void start(int channelDataIdx, int repeatCount, MtxPtr mtx);
+	void start(int controllerIdx, int channelDataIdx, int repeatCount,
+	           f32* multiplierF);
+	void start(int controllerIdx, int channelDataIdx, int repeatCount,
+	           Vec* worldPos);
+	void start(int controllerIdx, int channelDataIdx, int repeatCount,
+	           MtxPtr mtx);
 	void stop();
-	void stop(int);
-	void stop(int, int);
+	void stop(int channelDataIdx);
+	void stop(int controllerIdx, int channelDataIdx);
 	void update();
-	void setActive(bool);
+	void setActive(bool active);
 	void startPause();
 	void finishPause();
 	void changePause();

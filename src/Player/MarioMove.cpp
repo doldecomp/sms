@@ -18,6 +18,7 @@
 #include <Map/PollutionManager.hpp>
 #include <Camera/CubeManagerBase.hpp>
 #include <Player/MarioCap.hpp>
+#include <Player/NozzleTurbo.hpp>
 #include <macros.h>
 
 // rogue includes needed for matching sinit & bss
@@ -48,7 +49,8 @@ bool TMario::canSquat() const
 {
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
 	    && mWaterGun->getCurrentNozzle()->mRocketType.get() != 1
-	    && (int)mWaterGun->mCurrentNozzle != 5 && (mInput & 0x200))
+	    && mWaterGun->getCurrentNozzleType() != TWaterGun::Turbo
+	    && (mInput & 0x200))
 		return true;
 	else
 		return false;
@@ -575,13 +577,13 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	case MARIO_STATUS_ROCKET: {
 		if (mWaterGun != nullptr) {
-			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Rocket) {
+			if (mWaterGun->getCurrentNozzleType() == TWaterGun::Rocket) {
 				startVoice(MSD_SE_MV24_JUMP_SPECIAL_01);
 				rocketEffectStart();
 			}
-			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Turbo)
+			if (mWaterGun->getCurrentNozzleType() == TWaterGun::Turbo)
 				startVoice(MSD_SE_MV15_EXERT_INST_01);
-			if ((int)mWaterGun->mCurrentNozzle == TWaterGun::Hover)
+			if (mWaterGun->getCurrentNozzleType() == TWaterGun::Hover)
 				startVoice(MSD_SE_MV21_JUMP_SMALL_01);
 			setPlayerJumpSpeed(0.0f, 10.0f);
 		}
@@ -1197,7 +1199,7 @@ void TMario::checkSink()
 				             * mGraffitoParams.mSinkDmgDepth.get();
 			}
 
-			if (SMSGetMarDirector()->mMoveTickCount
+			if (SMSGetMarDirector()->getMoveTickCount()
 			        % mGraffitoParams.mSinkDmgTime.get()
 			    == 0) {
 				floorDamageExec(1, 3, 0, mMotorParams.mMotorReturn.get());
@@ -1415,7 +1417,7 @@ void TMario::checkController(JDrama::TGraphics*)
 
 	// Rocket-nozzle pump rotation latch
 	if (mWaterGun != nullptr) {
-		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
+		if (mWaterGun->getCurrentNozzleType() == TWaterGun::Turbo
 		    && isUpperState(UPPER_STATE_PUMPING)
 		    && mGamePad->mCompSPos[3] > 0.0f
 		    && (f32)mWaterGun->getCurrentWater() > 0.0f) {
@@ -1463,15 +1465,12 @@ void TMario::checkController(JDrama::TGraphics*)
 			offFlag(MARIO_FLAG_FLUDD_EMITTING);
 		}
 
-		if ((s32)mWaterGun->mCurrentNozzle == TWaterGun::Turbo
+		if (mWaterGun->getCurrentNozzleType() == TWaterGun::Turbo
 		    && ((mStatus + 0xF3C00000) == 0x201
 		        || ((mStatus + 0xFC000000) & 0xFFFFFFFF) == 0x440)) {
 			f32 propRot = mIntendedMag * 0.03125f;
-			// TODO: wrong??? Correct offset is 0x714 which is way past
-			// the end of a TNozzleTrigger???
-			((TNozzleTrigger*)((const TWaterGun*)mWaterGun)->getCurrentNozzle())
-			    ->mInsidePressure
-			    = propRot;
+
+			((TNozzleTurbo*)mWaterGun->getCurrentNozzle())->unk714 = propRot;
 		}
 	}
 
@@ -2312,7 +2311,7 @@ void TMario::gunExec()
 				gpPoolManager->subWaterLevel(mGroundPlane);
 		}
 
-		if (mWaterGun->mCurrentWater == mWaterGun->getMaxWater()
+		if (mWaterGun->getCurrentWater() == mWaterGun->getMaxWater()
 		    && mUpperState == UPPER_STATE_PUMPING) {
 			mWaterGun->emit();
 			mWaterGun->resetWaterToFull();
@@ -2332,7 +2331,7 @@ void TMario::gunExec()
 	    && mStatus != MARIO_STATUS_TOROCCO)
 		mWaterGun->changeBackup();
 
-	if ((int)mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
+	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
 	    && mWaterGun->getEmittedWaterCount() != 0) {
 		JGeometry::TVec3<f32> local_34;
 		local_34.x = JMASSin(mFaceAngle.y);
@@ -2354,7 +2353,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	mPrevPosition = mPosition;
 	offUnk114(UNK114_FLAG_UNK8);
 
-	if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_TALK_START
+	if (SMSGetMarDirector()->isTalkStartModeNow()
 	    && mStatus != MARIO_STATUS_READ_BILLBOARD)
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
@@ -2364,8 +2363,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 		             >= (MARIO_STATUS_HANGING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		         && (MARIO_STATUS_HANG_JUMPING & MARIO_STATUS_TYPE_AND_ID_MASK)
 		                >= (mStatus & MARIO_STATUS_TYPE_AND_ID_MASK))
-		    && SMSGetMarDirector()->mGameMode
-		           != TMarDirector::GAME_MODE_TALK_START) {
+		    && !SMSGetMarDirector()->isTalkStartModeNow()) {
 			mFaceAngle.y = (gpCamera->getUnk258() + 0x8000)
 			               - gpCamera->getOffsetAngleY();
 		}

@@ -39,12 +39,12 @@ extern int gpSceneCmnDatSize;
 
 void TMarDirector::decideMarioPosIdx()
 {
-	unkD0 = 0;
-	unkD1 = 0;
-	unkE4 = 1;
+	mMarioPosIdx = 0;
+	unkD1        = 0;
+	unkE4        = 1;
 
-	const TGameSequence& prevArea = SMSGetApplication()->mPrevArea;
-	switch (SMSGetApplication()->mCurrArea.getStage()) {
+	const TGameSequence& prevArea = SMSGetApplication()->getPrevArea();
+	switch (SMSGetApplication()->getCurrArea().getStage()) {
 	case 15:
 		unkE4 = 14;
 		SMSGetApplication()->getFader()->setColor(
@@ -77,49 +77,49 @@ void TMarDirector::decideMarioPosIdx()
 			        MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET)) {
 				TFlagManager::getInstance()->setBool(
 				    false, MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET);
-				unkD0 = 4;
+				mMarioPosIdx = 4;
 			} else {
 				switch (SMS_getShineStage(prevArea.getStage())) {
 				case 2:
-					unkD0 = 1;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 1;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 3:
-					unkD0 = 2;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 2;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 4:
-					unkD0 = 3;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 3;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 5:
-					unkD0 = 4;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 4;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 6:
-					unkD0 = 5;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 5;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 7:
-					unkD0 = 6;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 6;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 8:
-					unkD0 = 7;
-					unkD1 = 2;
-					unkE4 = 0xe;
+					mMarioPosIdx = 7;
+					unkD1        = 2;
+					unkE4        = 0xe;
 					SMSGetApplication()->getFader()->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
-					unkD0 = 8;
-					unkE4 = 7;
+					mMarioPosIdx = 8;
+					unkE4        = 7;
 					break;
 				}
 			}
@@ -132,7 +132,7 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(MSF_SHADOW_MARIO_EVENT, 1);
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	switch (curArea.getStage()) {
 	case 1: {
 		TFlagManager::getInstance()->setBool(false,

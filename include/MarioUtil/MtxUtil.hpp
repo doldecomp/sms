@@ -191,7 +191,8 @@ public:
 
 void SMS_GetActorMtx(const THitActor&, MtxPtr);
 
-void SMS_CalcToDirMatrix(TPosition3f&, const JGeometry::TVec3<f32>&,
-                         const JGeometry::TVec3<f32>&);
+void SMS_CalcToDirMatrix(TPosition3f& outMatrix,
+                         const JGeometry::TVec3<f32>& dir,
+                         const JGeometry::TVec3<f32>& up);
 
 #endif

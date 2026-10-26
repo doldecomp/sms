@@ -32,7 +32,7 @@ TMarDirector::TMarDirector()
     , unk68(0)
     , unk6C(120.0f)
     , unk80(nullptr)
-    , unkA0(nullptr)
+    , mTalkingNPC(nullptr)
     , unkB8(nullptr)
     , unkBC(nullptr)
     , unkC8(0)
@@ -50,7 +50,7 @@ TMarDirector::TMarDirector()
 	mMoveTickCount = 0;
 	mTickCount     = 0;
 	mState         = STATE_UNK0;
-	unk88.reserve(100);
+	mNPCList.reserve(100);
 	initLoadParticle();
 	mNextGameMode = GAME_MODE_NORMAL;
 	mPrevGameMode = GAME_MODE_NORMAL;

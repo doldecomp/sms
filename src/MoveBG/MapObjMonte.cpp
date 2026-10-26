@@ -418,9 +418,9 @@ void THangingBridge::initDraw() const
 	GXSetCullMode(GX_CULL_BACK);
 }
 
-void THangingBridge::perform(u32 param_1, JDrama::TGraphics* param_2)
+void THangingBridge::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_DRAW) {
+	if (cue & CUE_DRAW) {
 		initDraw();
 		for (int i = 0; i < unk10; i++)
 			unk14[i]->drawRopes();

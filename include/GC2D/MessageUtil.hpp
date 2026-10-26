@@ -5,7 +5,7 @@
 
 class J2DTextBox;
 
-const char* SMSGetMessageData(void*, u32);
-void SMSMakeTextBuffer(J2DTextBox*, int);
+const char* SMSGetMessageData(void* messageArchive, u32 messageIndex);
+void SMSMakeTextBuffer(J2DTextBox* textbox, int size);
 
 #endif // GC2D_MESSAGE_UTIL_HPP

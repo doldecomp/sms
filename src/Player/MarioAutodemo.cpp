@@ -74,14 +74,14 @@ BOOL TMario::readBillboard()
 		                  mAutoDemoParams.mReadRotSp.get());
 		mFaceAngle.y = convAngle;
 		if (attackAngle == mFaceAngle.y) {
-			SMSGetMarDirector()->mNextGameMode = TMarDirector::GAME_MODE_TALK;
-			mStatusState                       = 2;
+			SMSGetMarDirector()->setNextGameMode(TMarDirector::GAME_MODE_TALK);
+			mStatusState = 2;
 		}
 		break;
 	}
 	case 2:
-		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
-		    || SMSGetMarDirector()->mGameMode == 5) {
+		if (SMSGetMarDirector()->isGameplayModeNow()
+		    || SMSGetMarDirector()->getGameMode() == 5) {
 			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		}
 		break;
@@ -275,7 +275,7 @@ bool TMario::isUnUsualStageStart()
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->changeNozzle(
-			    (TWaterGun::TNozzleType)mWaterGun->mSecondNozzle, true);
+			    (TWaterGun::TNozzleType)mWaterGun->getSecondNozzleType(), true);
 
 		if (mCap != nullptr)
 			mCap->unk4 |= 2;

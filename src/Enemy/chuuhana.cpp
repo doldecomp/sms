@@ -115,9 +115,9 @@ void TChuuHanaManager::load(JSUMemoryInputStream& param_1)
 	unk38 = new TChuuHanaSaveLoadParams("/enemy/chuuhana.prm");
 }
 
-void TChuuHanaManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TChuuHanaManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TEnemyManager::perform(param_1, param_2);
+	TEnemyManager::perform(cue, param_2);
 }
 
 TSpineEnemy* TChuuHanaManager::createEnemyInstance() { return new TChuuHana; }
@@ -263,19 +263,19 @@ void TChuuHana::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("default.bmd", 3);
 }
 
-void TChuuHana::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TChuuHana::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 
 	JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (gpMirrorModelManager->isInMirror(mPosition)
 		    || gpMirrorModelManager->isInMirror(marioPos)) {
-			if (param_1 & CUE_CALC_ANIM) {
+			if (cue & CUE_CALC_ANIM) {
 				calcRootMatrix();
 				mMActor->calc();
 			}
-			if (param_1 & CUE_CALC_VIEW)
+			if (cue & CUE_CALC_VIEW)
 				mMActor->viewCalc();
 		}
 	}

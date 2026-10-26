@@ -9,6 +9,7 @@
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
 #include <JSystem/J2D/J2DPane.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/J2D/J2DScreen.hpp>
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
@@ -299,7 +300,8 @@ void TTalk2D2::loadAfter()
 		                          gpSystemFont->getResFont(), "あ", HBIND_LEFT,
 		                          VBIND_CENTER);
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) != 5)
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    != MSLANG_NX_JAPANESE)
 			unk9C[i]->setFontSize(20, 24);
 #elif !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
 		unk9C[i]->setFontSize(20, 24);
@@ -684,7 +686,8 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 		char* str = unk9C[idx]->getStringPtr();
 		u16 code  = str[0];
 #if defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		        == MSLANG_NX_JAPANESE
 		    && code >= 0x80)
 #else
 		if (code >= 0x80)
@@ -766,7 +769,8 @@ void TTalk2D2::makeBoxLine(s8 param_1, char* param_2)
 			unk9C[idx]->setFontSize(20, 22);
 		unk9C[idx]->move((s16)ix, -0x26 - (s16)iy + yOffset);
 #elif defined(VERSION_GMSP01_NX)
-		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5) {
+		if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+		    == MSLANG_NX_JAPANESE) {
 			unk9C[idx]->move((s16)ix, -0x25 - (s16)iy);
 		} else {
 			static Offsetter offset;
@@ -1034,17 +1038,27 @@ void TTalk2D2::moveTalkWindow()
 
 		u8 color = fadeAlpha;
 		if (unk214 == 1) {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "\x1B"
-			         "CC[ffffff60]\x1BGC[ffffff60]%s\x1B"
-			         "CC[ffffff%02x]\x1BGC[ffffff%02x]\n%s",
-			         unk218[0], color, color, unk218[1]);
+				J2DPRINT_CHAR_COLOR("ffffff60")
+				J2DPRINT_GRADIENT_COLOR("ffffff60")
+				"%s"
+				J2DPRINT_CHAR_COLOR("ffffff%02x")
+			  J2DPRINT_GRADIENT_COLOR("ffffff%02x")
+				"\n%s",
+				unk218[0], color, color, unk218[1]);
+			// clang-format on
 		} else if (unk214 == 0) {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "\x1B"
-			         "CC[ffffff%02x]\x1BGC[ffffff%02x]%s\n\x1B"
-			         "CC[ffffff60]\x1BGC[ffffff60]%s",
-			         color, color, unk218[0], unk218[1]);
+			  J2DPRINT_CHAR_COLOR("ffffff%02x")
+				J2DPRINT_GRADIENT_COLOR("ffffff%02x")
+				"%s\n"
+				J2DPRINT_CHAR_COLOR("ffffff60")
+			  J2DPRINT_GRADIENT_COLOR("ffffff60")
+				"%s",
+			  color, color, unk218[0], unk218[1]);
+			// clang-format on
 		}
 	} else {
 		pane->show();
@@ -1211,10 +1225,10 @@ bool TTalk2D2::appearBoardBoxWindow()
 	return result;
 }
 
-void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TTalk2D2::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_MOVE) {
-		switch (SMSGetMarDirector()->mGameMode) {
+	if (cue & CUE_MOVE) {
+		switch (SMSGetMarDirector()->getGameMode()) {
 		case TMarDirector::GAME_MODE_TALK:
 			switch (unk248) {
 			case STATE_UNK2:
@@ -1267,8 +1281,8 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & CUE_CALC_ANIM) {
-		switch (SMSGetMarDirector()->mGameMode) {
+	if (cue & CUE_CALC_ANIM) {
+		switch (SMSGetMarDirector()->getGameMode()) {
 		case TMarDirector::GAME_MODE_TALK:
 			switch (unk248) {
 			case STATE_UNK2:
@@ -1321,8 +1335,8 @@ void TTalk2D2::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	if (param_1 & CUE_DRAW) {
-		switch (SMSGetMarDirector()->mGameMode) {
+	if (cue & CUE_DRAW) {
+		switch (SMSGetMarDirector()->getGameMode()) {
 		case TMarDirector::GAME_MODE_TALK: {
 			ReInitializeGX();
 			SMS_DrawInit();
@@ -1546,7 +1560,8 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 			}
 #else
 #if defined(VERSION_GMSP01_NX)
-			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5) {
+			if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+			    == MSLANG_NX_JAPANESE) {
 #endif
 				if ((u8)dest[0] >= 0x80) {
 					dest[1] = stream.readU8();
@@ -1589,20 +1604,27 @@ void TTalk2D2::setupTextBox(const void* param_1, JMSMesgEntry* param_2)
 	}
 
 	if (unk214 != -1) {
-		if (unk214 == 0)
+		if (unk214 == 0) {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "%s\n\x1B"
-			         "CC[7f7f7f]\x1B"
-			         "GC[7f7f7f]%s",
-			         unk218[0], unk218[1]);
-		else
+			  "%s\n"
+				J2DPRINT_CHAR_COLOR("7f7f7f")
+			  J2DPRINT_GRADIENT_COLOR("7f7f7f")
+				"%s",
+			  unk218[0], unk218[1]);
+			// clang-format on
+		} else {
+			// clang-format off
 			snprintf(unk208->getStringPtr(), 0x5E,
-			         "\x1B"
-			         "CC[7f7f7f]\x1B"
-			         "GC[7f7f7f]%s\x1B"
-			         "CC[ffffff]\x1B"
-			         "GC[ffffff]\n%s",
-			         unk218[0], unk218[1]);
+			  J2DPRINT_CHAR_COLOR("7f7f7f")
+				J2DPRINT_GRADIENT_COLOR("7f7f7f")
+				"%s"
+				J2DPRINT_CHAR_COLOR("ffffff")
+			  J2DPRINT_GRADIENT_COLOR("ffffff")
+				"\n%s",
+			  unk218[0], unk218[1]);
+			// clang-format on
+		}
 	}
 
 	unk278 += stream.getPosition();
@@ -1833,7 +1855,8 @@ void TTalk2D2::openWindow(s8 param_1, f32 param_2)
 
 	MTXTrans(mtxA, -x, -y, 0.0f);
 #if defined(VERSION_GMSP01_NX)
-	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5)
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+	    == MSLANG_NX_JAPANESE)
 		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate()));
 	else
 		MTXRotRad(mtxB, 'Z', DEG_TO_RAD(-unk90->getRotate() - 1.0f));

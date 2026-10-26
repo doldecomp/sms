@@ -919,7 +919,7 @@ void TBossGesso::doAttackSingle()
 		unk17C = 0;
 	}
 
-	if (SMSGetMarDirector()->mMoveTickCount < 0x1E0)
+	if (SMSGetMarDirector()->getMoveTickCount() < 0x1E0)
 		return;
 
 	if (SMSGetMarDirector()->isTalkOrDemoModeNow())
@@ -1922,9 +1922,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (self->isReachedToGoal()
-	    && SMSGetMarDirector()->mGameMode
-	           != TMarDirector::GAME_MODE_INNER_DEMO) {
+	if (self->isReachedToGoal() && !SMSGetMarDirector()->isInnerDemoModeNow()) {
 
 		self->changeAllTentacleState(0);
 		self->kill();

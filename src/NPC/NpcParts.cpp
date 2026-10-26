@@ -221,7 +221,7 @@ void TNpcParts::partsFrameUpdate()
 			(*it)->getMActor()->frameUpdate();
 }
 
-void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
+void TNpcParts::partsPerform(u32 cue, JDrama::TGraphics* param_2)
 {
 	int i = 0;
 
@@ -263,7 +263,7 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 				continue;
 		}
 
-		if (param_1 & 2) {
+		if (cue & CUE_CALC_ANIM) {
 			if (unk60->isJellyFishMare() && i == 11) {
 				MActor* mactor = (*it)->getMActor();
 				Mtx44 mtx;
@@ -282,6 +282,6 @@ void TNpcParts::partsPerform(u32 param_1, JDrama::TGraphics* param_2)
 			}
 		}
 
-		(*it)->perform(param_1, param_2);
+		(*it)->perform(cue, param_2);
 	}
 }

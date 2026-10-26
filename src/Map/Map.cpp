@@ -245,7 +245,7 @@ void TMap::update()
 		break;
 	}
 
-	if (SMSGetMarDirector()->mGameMode != TMarDirector::GAME_MODE_NORMAL)
+	if (!SMSGetMarDirector()->isGameplayModeNow())
 		return;
 
 	if (gpCamera->isDemoCamera())

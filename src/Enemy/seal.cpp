@@ -90,9 +90,9 @@ void TSeal::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-void TSeal::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TSeal::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) && (param_1 & 1)) {
+	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) && (cue & CUE_MOVE)) {
 		for (int i = 0; i < getColNum(); ++i) {
 			THitActor* actor = getCollision(i);
 			if (actor->isActorType(ACTOR_TYPE_MARIO))
@@ -100,12 +100,13 @@ void TSeal::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TSpineEnemy::perform(param_1, param_2);
-	if (param_1 & 1) {
+	TSpineEnemy::perform(cue, param_2);
+	if (cue & CUE_MOVE) {
 		updateSquareToMario();
 		unk150 = 0;
 	}
-	if ((param_1 & 2) && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN)
+	if ((cue & CUE_CALC_ANIM)
+	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN)
 	    && getDistToMarioSquared() < 2250000.0f)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_ORANGESEAL_WAIT, &mPosition,
 		                                0, nullptr, 0, 4);

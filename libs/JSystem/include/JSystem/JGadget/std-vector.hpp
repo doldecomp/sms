@@ -352,7 +352,10 @@ template <class T> class TVector_pointer : public TVector_pointer_void {
 public:
 	typedef T** iterator;
 
-	TVector_pointer() { }
+	TVector_pointer(const TAllocator<void*>& allocator = TAllocator<void*>())
+	    : Base(allocator)
+	{
+	}
 
 	~TVector_pointer() { }
 

@@ -60,11 +60,11 @@ void TYumboSeed::init()
 	group->getChildren().push_back(this);
 }
 
-void TYumboSeed::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TYumboSeed::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (unk70 & 1)
 		return;
-	if (param_1 & 2) {
+	if (cue & CUE_CALC_ANIM) {
 		TPosition3f matrix;
 		matrix.identity33();
 		matrix.setTrans(mPosition);
@@ -72,7 +72,7 @@ void TYumboSeed::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk6C->getModel()->setBaseTRMtx(matrix);
 		unk6C->getModel()->calc();
 	}
-	if (param_1 & 1) {
+	if (cue & CUE_MOVE) {
 		unk78.y -= ((TYumboParams*)unk68->getSaveParam())->mSeedGravityY.get();
 		mPosition += unk78;
 		unk78.scale(((TYumboParams*)unk68->getSaveParam())->mSeedAirFric.get());
@@ -83,7 +83,7 @@ void TYumboSeed::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 	if (!(unk70 & 4))
-		unk6C->perform(param_1, param_2);
+		unk6C->perform(cue, param_2);
 }
 
 void TYumboSeed::checkHitActors()
@@ -206,12 +206,12 @@ void TYumbo::moveObject()
 	TSmallEnemy::moveObject();
 }
 
-void TYumbo::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TYumbo::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 	TYumboSeed** end = unk194 + ARRAY_COUNT(unk194);
 	for (TYumboSeed** it = unk194; it != end; ++it)
-		(*it)->perform(param_1, param_2);
+		(*it)->perform(cue, param_2);
 }
 
 void TYumbo::behaveToWater(THitActor* param_1)

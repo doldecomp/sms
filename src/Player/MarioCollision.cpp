@@ -366,7 +366,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		for (int i = 0; i < waterEmit; ++i) {
 			if (mWaterGun->damage()) {
-				unk154->mPos.value = mWaterGun->mEmitPos[0];
+				unk154->mPos.value = mWaterGun->getEmitPos(0);
 				gpModelWaterManager->emitRequest(*unk154);
 			}
 		}

@@ -48,7 +48,7 @@ inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 		unk2B8->unk38 = 300;
 		balloonCode   = 0xE002D;
 	} else {
-		switch (SMSGetMarDirector()->mMoveTickCount) {
+		switch (SMSGetMarDirector()->getMoveTickCount()) {
 		case 0x3C:
 			SMSGetMarDirector()->getConsole()->startAppearJetBalloon(0,
 			                                                         objCount);

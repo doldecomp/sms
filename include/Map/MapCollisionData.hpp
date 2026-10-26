@@ -18,10 +18,11 @@ public:
 	TBGCheckList* getNext() { return mNext; }
 	const TBGCheckList* getNext() const { return mNext; }
 	void setNext(TBGCheckList* v) { mNext = v; }
+	const TBGCheckData* getData() const { return mData; }
 
 public:
 	/* 0x4 */ TBGCheckList* mNext;
-	/* 0x8 */ TBGCheckData* unk8;
+	/* 0x8 */ TBGCheckData* mData;
 };
 
 class TBGCheckListWarp : public TBGCheckList {
@@ -48,9 +49,18 @@ public:
 	TBGCheckListRoot() { }
 
 	// fabricated
-	const TBGCheckList* getGroundList() const { return unk0[0].getNext(); }
-	const TBGCheckList* getWallList() const { return unk0[2].getNext(); }
-	const TBGCheckList* getRoofList() const { return unk0[1].getNext(); }
+	const TBGCheckList* getGroundList() const
+	{
+		return unk0[BG_PLANE_TYPE_GROUND].getNext();
+	}
+	const TBGCheckList* getWallList() const
+	{
+		return unk0[BG_PLANE_TYPE_WALL].getNext();
+	}
+	const TBGCheckList* getRoofList() const
+	{
+		return unk0[BG_PLANE_TYPE_ROOF].getNext();
+	}
 
 public:
 	/* 0x0 */ TBGCheckList unk0[3];
@@ -107,6 +117,10 @@ struct TBGWallCheckRecord {
 		mMaxResults = max_results;
 		mFlags      = flags;
 	}
+
+	// fabricated
+	const JGeometry::TVec3<f32>& getCenter() const { return mCenter; }
+	int getMaxResults() const { return mMaxResults; }
 
 	/* 0x0 */ JGeometry::TVec3<f32> mCenter;
 	/* 0xC */ f32 mRadius;
@@ -173,14 +187,20 @@ public:
 
 	// fabricated
 	u32 getEntrySize(u16 entry_id) const { return unk40 - unk42[entry_id]; }
-	const TBGCheckListRoot& getGridRoot14(int x, int z) const
+	int getCellIndex(int x, int z) const { return x + z * mGridSizeX; }
+	const TBGCheckListRoot& getStaticCheckList(int x, int z) const
 	{
-		return unk14[x + z * unk8];
+		return mStaticGrid[getCellIndex(x, z)];
 	}
-	const TBGCheckListRoot& getGridRoot18(int x, int z) const
+	const TBGCheckListRoot& getMoveCheckList(int x, int z) const
 	{
-		return unk18[x + z * unk8];
+		return mMoveGrid[getCellIndex(x, z)];
 	}
+	// fabricated
+	int worldToGridX(f32 x) const { return (x + mGridExtentX) * (1.0f / 1024); }
+	int worldToGridZ(f32 z) const { return (z + mGridExtentY) * (1.0f / 1024); }
+	int gridToWorldX(int x) const { return x * 1024.0f - mGridExtentX; }
+	int gridToWorldZ(int z) const { return z * 1024.0f - mGridExtentY; }
 	void setGroundPlane(TMapCheckGroundPlane* plane) { mGroundPlane = plane; }
 
 	TBGCheckData* getCheckDataPoolTop() { return &unk28[unk34]; }
@@ -188,20 +208,20 @@ public:
 public:
 	/* 0x0 */ f32 mGridExtentX;
 	/* 0x4 */ f32 mGridExtentY;
-	/* 0x8 */ int unk8;
-	/* 0xC */ int unkC;
-	/* 0x10 */ int unk10;
-	/* 0x14 */ TBGCheckListRoot* unk14;
-	/* 0x18 */ TBGCheckListRoot* unk18;
+	/* 0x8 */ int mGridSizeX;
+	/* 0xC */ int mGridSizeZ;
+	/* 0x10 */ int mGridCellNum;
+	/* 0x14 */ TBGCheckListRoot* mStaticGrid;
+	/* 0x18 */ TBGCheckListRoot* mMoveGrid;
 	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ u32 unk20;
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ TBGCheckData* unk28;
-	/* 0x2C */ TBGCheckList* unk2C;
-	/* 0x30 */ TBGCheckListWarp* unk30;
+	/* 0x2C */ TBGCheckList* mCheckListPool;
+	/* 0x30 */ TBGCheckListWarp* mWarpCheckListPool;
 	/* 0x34 */ u32 unk34;
-	/* 0x38 */ u32 unk38;
-	/* 0x3C */ u32 unk3C;
+	/* 0x38 */ u32 mStaticListUsed;
+	/* 0x3C */ u32 mMoveListTop;
 	/* 0x40 */ u16 unk40;
 	/* 0x42 */ u16 unk42[256];
 	/* 0x242 */ u16 unk242;

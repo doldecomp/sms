@@ -124,8 +124,8 @@ static inline void setLifeMeterWhiteLow(TGCConsole2* console, bool airMode)
 // fabricated
 static inline void playLifeChangeSound(u32 sound)
 {
-	if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-	    && SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL) {
+	if (SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4
+	    && SMSGetMarDirector()->isGameplayModeNow()) {
 		SMSGetMSound()->startSoundSystemSE(sound, 0, nullptr, 0);
 	}
 }
@@ -1761,7 +1761,7 @@ bool TGCConsole2::startDisappearBalloon(u32 param_1, bool param_2)
 
 bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 {
-	TMessageLoader::EntryInfo* entry
+	JMSMesgEntry* entry
 	    = mBalloonMessageLoader->getMessageEntry(messageID & 0xffff);
 
 #if defined(VERSION_GMSJ01_01)
@@ -1781,7 +1781,8 @@ bool TGCConsole2::startAppearBalloon(u32 messageID, bool autoClose)
 		return false;
 	}
 
-	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU || !unk46)
+	if (SMSGetMarDirector()->getState() == TMarDirector::STATE_PAUSE_MENU
+	    || !unk46)
 		return false;
 
 	unk3F0 = entry->unk4;
@@ -2387,12 +2388,7 @@ void TGCConsole2::setTimer(s32 param_1)
 	u32 timerValue;
 
 	if (param_1 == -1) {
-		s64 uVar3 = SMSGetMarDirector()->unkC8;
-		s64 uVar5 = OSCheckStopwatch(&SMSGetMarDirector()->unkE8);
-		s64 uVar9 = OSTicksToMilliseconds(uVar3);
-		s64 uVar8 = OSTicksToMilliseconds(uVar5);
-
-		timerValue = (uVar8 - uVar9) * 0.1f;
+		timerValue = SMSGetMarDirector()->getTimerTime();
 
 		if (!unk510) {
 			if (unk514 < timerValue) {
@@ -2430,11 +2426,11 @@ void TGCConsole2::setTimer(s32 param_1)
 		    ->changeTexture(unkE0[centis % 10]->getTexInfo(), 0);
 	} else {
 		if (timerValue < 1000
-		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != unk508) {
+		    && ((J2DPicture*)unk458[9]->getPane())->getWhite() != getUnk508()) {
 			for (int i = 6; i <= 9; i++) {
-				((J2DPicture*)unk458[i]->getPane())->setWhite(unk508);
+				((J2DPicture*)unk458[i]->getPane())->setWhite(getUnk508());
 			}
-			((J2DPicture*)unk480[2]->getPane())->setWhite(unk508);
+			((J2DPicture*)unk480[2]->getPane())->setWhite(getUnk508());
 		}
 		((J2DPicture*)unk458[6]->getPane())
 		    ->changeTexture(unkE0[seconds / 10]->getTexInfo(), 0);
@@ -2447,7 +2443,7 @@ void TGCConsole2::setTimer(s32 param_1)
 	}
 
 	if (timerValue != 0 && timerValue < unk518
-	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU) {
 		SMSGetMSound()->playTimer(timerValue * 10);
 	}
 
@@ -3589,7 +3585,7 @@ void TGCConsole2::performMovement()
 		amount = 8;
 
 	if (airMode
-	    && SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->getState() == TMarDirector::STATE_PAUSE_MENU) {
 		s16 alpha = mLifeMeterRoot->getPane()->getAlpha();
 		alpha -= 0x10;
 		if (alpha < 0)
@@ -3598,7 +3594,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (mLifeMeterRoot->getPane()->getAlpha() != 0xff
-	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU) {
 		u16 alpha = mLifeMeterRoot->getPane()->getAlpha() + 0x10;
 		if (alpha > 0xff)
 			alpha = 0xff;
@@ -3631,7 +3627,8 @@ void TGCConsole2::performMovement()
 			startAppearLife(1);
 			amount = gpMarioOriginal->getAir();
 			unk1CC = amount;
-			if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
+			if (SMSGetMarDirector()->getState()
+			    == TMarDirector::STATE_PAUSE_MENU)
 				mLifeMeterRoot->getPane()->setAlpha(0);
 #if defined(VERSION_GMSJ01)
 			unk18 = LIFE_AIR_APPEARING;
@@ -3765,9 +3762,8 @@ void TGCConsole2::performMovement()
 #if defined(VERSION_GMSJ01)
 			playLifeChangeSound(0x4823);
 #else
-			if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-			    && SMSGetMarDirector()->mGameMode
-			           == TMarDirector::GAME_MODE_NORMAL) {
+			if (SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4
+			    && SMSGetMarDirector()->isGameplayModeNow()) {
 				if (airMode)
 					SMSGetMSound()->startSoundSystemSE(0x480C, 0, nullptr, 0);
 				else
@@ -3820,7 +3816,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (gpMarioOriginal->mStatus == 0xC400201
-	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
+	    && SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU
 	    && !unk50) {
 		if (!mShineCountRoot->isInterpolatorAtZero()) {
 			++unk30;
@@ -3835,10 +3831,10 @@ void TGCConsole2::performMovement()
 	} else {
 		unk30 = 0;
 		if (!unk34 && mShineCountRoot->isInterpolatorAtZero() && !unk60
-		    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
-		    && SMSGetMarDirector()->mState != TMarDirector::STATE_CARD_SAVE
+		    && SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU
+		    && SMSGetMarDirector()->getState() != TMarDirector::STATE_CARD_SAVE
 		    && !unk50 && unk16C == 0 && unk8A == 0
-		    && SMSGetMarDirector()->mGameMode != TMarDirector::GAME_MODE_TALK) {
+		    && !SMSGetMarDirector()->isTalkMainModeNow()) {
 			startDisappearStar();
 			startDisappearMario();
 			unk5A = 0;
@@ -4038,10 +4034,11 @@ void TGCConsole2::performMovement()
 		++unk5C;
 	}
 
-	TWaterGun* waterGun = gpMarioOriginal->mWaterGun;
+	TWaterGun* waterGun = gpMarioOriginal->getWaterGun();
 	s32 currentWater    = waterGun->getCurrentWater();
 	s32 maxWater        = waterGun->getMaxWater();
-	int currentNozzle   = waterGun->mCurrentNozzle;
+	TWaterGun::TNozzleType currentNozzle
+	    = (TWaterGun::TNozzleType)waterGun->getCurrentNozzleType();
 
 	if (unk2F8->isInterpolatorAtZero() && !unk45 && currentNozzle != unk310) {
 		unk274->getPane()->hide();
@@ -4101,7 +4098,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk46) {
-		if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU)
+		if (SMSGetMarDirector()->getState() == TMarDirector::STATE_PAUSE_MENU)
 			unk7C = 0;
 
 		if (unk7C < 0x46)
@@ -4137,9 +4134,8 @@ void TGCConsole2::performMovement()
 
 		if ((f32)unk86 < rate * 2.0f) {
 			if (unk1CC <= 3 && unk1CC != 0 && unk86 == (int)(1.5f * rate)
-			    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4
-			    && SMSGetMarDirector()->mGameMode
-			           == TMarDirector::GAME_MODE_NORMAL
+			    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4
+			    && SMSGetMarDirector()->isGameplayModeNow()
 			    && SMSGetMSound()->gateCheck(0x4800)) {
 				MSoundSESystem::MSoundSE::startSoundSystemSE(0x4800, 0, nullptr,
 				                                             0);
@@ -4217,7 +4213,7 @@ void TGCConsole2::performMovement()
 #if defined(VERSION_GMSJ01)
 	if (!unk3A && !unk3B && mLifeCountRoot->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
-	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU) {
 		++unk70;
 		if (unk70 > 400)
 			startDisappearMario();
@@ -4225,7 +4221,7 @@ void TGCConsole2::performMovement()
 #else
 	if (mLifeCountRoot->getPane()->isVisible()
 	    && gpMarioOriginal->mStatus != 0xC400201
-	    && SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU) {
+	    && SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU) {
 		++unk3AE;
 		if (unk3AE > 400)
 			startDisappearMario();
@@ -4291,8 +4287,8 @@ void TGCConsole2::performMovement()
 		startAppearTelop(true);
 	}
 
-	if (SMSGetMarDirector()->mState != TMarDirector::STATE_PAUSE_MENU
-	    && SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL) {
+	if (SMSGetMarDirector()->getState() != TMarDirector::STATE_PAUSE_MENU
+	    && SMSGetMarDirector()->isGameplayModeNow()) {
 		if (unk55C < 0xffffffff)
 			++unk55C;
 	}
@@ -4342,7 +4338,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk59) {
-		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
+		if (SMSGetMarDirector()->isGameplayModeNow()
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
 #if !defined(VERSION_GMSJ01)
@@ -4355,7 +4351,7 @@ void TGCConsole2::performMovement()
 	}
 
 	if (unk5A) {
-		if (SMSGetMarDirector()->mGameMode == TMarDirector::GAME_MODE_NORMAL
+		if (SMSGetMarDirector()->isGameplayModeNow()
 		    && gpMarioOriginal->getHealth() != 0
 		    && gpMarioOriginal->getAir() != 0
 #if !defined(VERSION_GMSJ01)
@@ -4406,7 +4402,8 @@ void TGCConsole2::performCalcAnim()
 					break;
 				default:
 #if defined(VERSION_GMSP01_NX)
-					if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE) == 5
+					if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+					        == MSLANG_NX_JAPANESE
 					    && c >= 0x80) {
 #elif defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 					if (c >= 0x80) {
@@ -4444,10 +4441,16 @@ void TGCConsole2::performCalcAnim()
 						}
 
 						if (colored) {
+							// clang-format off
 							snprintf(buffer, 255,
-							         "\033GM[0]\033CC[%02x%02x%02x]\033FX[28]"
-							         "\033FY[28]\033SH[3]\033CD[4]",
-							         color.r, color.g, color.b);
+								J2DPRINT_GRADIENT_MODE(0)
+								J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+							  J2DPRINT_FONT_WIDTH(28)
+							  J2DPRINT_FONT_HEIGHT(28)
+							  J2DPRINT_CHAR_SPACING(3)
+							  J2DPRINT_CURSOR_DOWN(4),
+							  color.r, color.g, color.b);
+							// clang-format on
 							unk3D8->write(buffer, 0x2B);
 							unk3DC->write(buffer, 0x2B);
 						}
@@ -4456,9 +4459,15 @@ void TGCConsole2::performCalcAnim()
 						*unk3DC << code;
 
 						if (colored) {
-							snprintf(
-							    buffer, 255,
-							    "\033GM[0]\033CC\033FX\033FY\033SH\033CU[4]");
+							// clang-format off
+							snprintf(buffer, 255,
+								J2DPRINT_GRADIENT_MODE(0)
+							  J2DPRINT_CHAR_COLOR_RESET
+							  J2DPRINT_FONT_WIDTH_RESET
+							  J2DPRINT_FONT_HEIGHT_RESET
+							  J2DPRINT_CHAR_SPACING_RESET
+							  J2DPRINT_CURSOR_UP(4));
+							// clang-format on
 							unk3D8->write(buffer, 0x18);
 							unk3DC->write(buffer, 0x18);
 						}
@@ -4474,10 +4483,16 @@ void TGCConsole2::performCalcAnim()
 						bool special = Helpers::IsSpecialChar(c);
 						if (special) {
 							color.set(255, 255, 255, 255);
+							// clang-format off
 							snprintf(buffer, 255,
-							         "\033GM[0]\033CC[%02x%02x%02x]\033FX[22]"
-							         "\033FY[24]\033SH[0]\033CD[3]",
-							         color.r, color.g, color.b);
+								J2DPRINT_GRADIENT_MODE(0)
+								J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+							  J2DPRINT_FONT_WIDTH(22)
+							  J2DPRINT_FONT_HEIGHT(24)
+							  J2DPRINT_CHAR_SPACING(0)
+							  J2DPRINT_CURSOR_DOWN(3),
+							  color.r, color.g, color.b);
+							// clang-format on
 							unk3D8->write(buffer, 0x2B);
 							unk3DC->write(buffer, 0x2B);
 						}
@@ -4486,9 +4501,15 @@ void TGCConsole2::performCalcAnim()
 						*unk3DC << c;
 
 						if (special) {
-							snprintf(
-							    buffer, 255,
-							    "\033GM[0]\033CC\033FX\033FY\033SH\033CU[3]");
+							// clang-format off
+							snprintf(buffer, 255,
+								J2DPRINT_GRADIENT_MODE(0)
+							  J2DPRINT_CHAR_COLOR_RESET
+							  J2DPRINT_FONT_WIDTH_RESET
+							  J2DPRINT_FONT_HEIGHT_RESET
+							  J2DPRINT_CHAR_SPACING_RESET
+							  J2DPRINT_CURSOR_UP(3));
+							// clang-format on
 							unk3D8->write(buffer, 0x18);
 							unk3DC->write(buffer, 0x18);
 						}
@@ -4535,11 +4556,16 @@ void TGCConsole2::performCalcAnim()
 							}
 
 							if (colored) {
-								snprintf(
-								    buffer, 255,
-								    "\033GM[0]\033CC[%02x%02x%02x]\033FX[30]"
-								    "\033FY[26]\033SH[3]\033CD[4]",
-								    color.r, color.g, color.b);
+								// clang-format off
+								snprintf(buffer, 255,
+								  J2DPRINT_GRADIENT_MODE(0)
+								  J2DPRINT_CHAR_COLOR("%02x%02x%02x")
+								  J2DPRINT_FONT_WIDTH(30)
+								  J2DPRINT_FONT_HEIGHT(26)
+								  J2DPRINT_CHAR_SPACING(3)
+								  J2DPRINT_CURSOR_DOWN(4),
+								  color.r, color.g, color.b);
+								// clang-format on
 								unk3D8->write(buffer, 0x2B);
 								unk3DC->write(buffer, 0x2B);
 							}
@@ -4548,9 +4574,15 @@ void TGCConsole2::performCalcAnim()
 							*unk3DC << c;
 
 							if (colored) {
+								// clang-format off
 								snprintf(buffer, 255,
-								         "\033GM[0]"
-								         "\033CC\033FX\033FY\033SH\033CU[4]");
+								  J2DPRINT_GRADIENT_MODE(0)
+									J2DPRINT_CHAR_COLOR_RESET
+								  J2DPRINT_FONT_WIDTH_RESET
+								  J2DPRINT_FONT_HEIGHT_RESET
+								  J2DPRINT_CHAR_SPACING_RESET
+								  J2DPRINT_CURSOR_UP(4));
+								// clang-format on
 								unk3D8->write(buffer, 0x18);
 								unk3DC->write(buffer, 0x18);
 							}
@@ -4785,15 +4817,15 @@ void TGCConsole2::performCalcAnim()
 	}
 }
 
-void TGCConsole2::perform(u32 flags, JDrama::TGraphics* graphics)
+void TGCConsole2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (flags & 1)
+	if (cue & CUE_MOVE)
 		performMovement();
 
-	if (flags & 2)
+	if (cue & CUE_CALC_ANIM)
 		performCalcAnim();
 
-	if (flags & 8) {
+	if (cue & CUE_DRAW) {
 		J2DOrthoGraph graph(graphics->getViewport());
 		graph.setup2D();
 

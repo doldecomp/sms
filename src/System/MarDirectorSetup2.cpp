@@ -140,7 +140,7 @@ void TMarDirector::setup2()
 TMarDirector::~TMarDirector()
 {
 	gpMSound->exitStage();
-	if (SMSGetApplication()->mCurrArea.getStage() == 15) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 15) {
 		if (JKRMemArchive* arch
 		    = (JKRMemArchive*)JKRFileLoader::getVolume("option"))
 			arch->unmountFixed();
