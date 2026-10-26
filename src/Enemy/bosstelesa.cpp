@@ -1441,7 +1441,7 @@ void TBossTelesa::checkHitObject(THitActor* actor)
 		return;
 	}
 
-	if (!mIsSpicy && !actor->isActorType(ACTOR_TYPE_RED_PEPPER)) {
+	if (!mIsSpicy && actor->mActorType != ACTOR_TYPE_RED_PEPPER) {
 		if (unk35A) {
 			unk35A = 0;
 			SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE000F,
@@ -1741,11 +1741,16 @@ void TBossTelesa::rouletteStart()
 	f32 hpSpeed = (maxHitPoints - mHitPoints) * TBossTelesa::mRouletteUpRate;
 
 	for (int i = 0; i < 3; ++i) {
-		f32 direction = 1.0f;
-		if (dir > 0.0f)
+		f32 direction;
+		if (dir > 0.0f) {
 			direction = -1.0f;
-		if (i == 0 || i == 2)
-			direction = -direction;
+			if (i == 0 || i == 2)
+				direction = 1.0f;
+		} else {
+			direction = 1.0f;
+			if (i == 0 || i == 2)
+				direction = -1.0f;
+		}
 
 		f32 speed             = speedRange.rand();
 		mRoulettes[i]->unk144 = direction * (hpSpeed + speed);
