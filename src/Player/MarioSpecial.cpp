@@ -537,7 +537,7 @@ BOOL TMario::hanging()
 				for (int j = 0; j < record4.mResultWallsNum; j++) {
 					TBGCheckData* w = record4.mResultWalls[j];
 					s16 ang         = matan(w->mNormal.z, w->mNormal.x)
-					                  - (mFaceAngle.y + 0x8000);
+					          - (mFaceAngle.y + 0x8000);
 					if (ang > -0x2000 && ang < 0x2000) {
 						JGeometry::TVec3<f32> pos = mPosition;
 						f32 d = w->mNormal.x * pos.x + w->mNormal.y * pos.y
@@ -1233,7 +1233,7 @@ BOOL TMario::pulling()
 		JGeometry::TVec3<f32> delta;
 		if ((mHeldObject->getActorType() == ACTOR_TYPE_BOSS_GESSO_TENTACLE
 		         ? true
-				 : false)
+		         : false)
 		    || (mHeldObject->getActorType() == ACTOR_TYPE_BOSS_UNK8 ? true
 		                                                            : false)) {
 			delta = pos - mPrevPosition;

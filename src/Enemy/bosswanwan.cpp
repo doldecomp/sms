@@ -1047,7 +1047,7 @@ BOOL TBossWanwan::isHeadPulled()
 {
 	return mPicketPullDelta.squared() < getSaveParam()->mSLPullLimit.get()
 	           ? FALSE
-			   : TRUE;
+	           : TRUE;
 };
 
 void TBossWanwan::calcRootMatrix()
@@ -1510,7 +1510,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 
 	boss->unk16C = 0;
 	f32 hpRatio  = (f32)boss->mHitPoints
-	               / (f32)boss->getSaveParam()->mSLBWHitPointMax.value;
+	              / (f32)boss->getSaveParam()->mSLBWHitPointMax.value;
 
 	if (boss->mPicket->isHolding()) {
 		f32 marioYaw = (f32)gpMarioOriginal->mIntendedYaw * (180.0f / 32768.0f);
