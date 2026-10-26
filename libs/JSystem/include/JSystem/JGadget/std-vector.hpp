@@ -347,10 +347,10 @@ public:
 
 template <class T> class TVector_pointer : public TVector_pointer_void {
 	typedef TVector_pointer_void Base;
-	typedef T* value_type;
+	typedef T value_type;
 
 public:
-	typedef T** iterator;
+	typedef T* iterator;
 
 	TVector_pointer(const TAllocator<void*>& allocator = TAllocator<void*>())
 	    : Base(allocator)
@@ -363,10 +363,13 @@ public:
 	iterator end() { return iterator(Base::end()); }
 	size_t size() const { return Base::size(); }
 
-	T& operator[](size_t i) { return *static_cast<T*>(Base::operator[](i)); }
+	T& operator[](size_t i)
+	{
+		return reinterpret_cast<T&>(Base::operator[](i));
+	}
 	const T& operator[](size_t i) const
 	{
-		return *static_cast<T*>(Base::operator[](i));
+		return reinterpret_cast<const T&>(Base::operator[](i));
 	}
 
 	void push_back(const value_type& value) { Base::push_back(value); }

@@ -37,7 +37,7 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 	if (gpMarioOriginal->mStatus == MARIO_STATUS_WAIT) {
 		f32 bestDist                   = 5000000.0f;
 		JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-		JGadget::TVector_pointer<TBaseNPC>::iterator it;
+		JGadget::TVector_pointer<TBaseNPC*>::iterator it;
 
 		for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 			TBaseNPC* npc = *it;
@@ -63,7 +63,7 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 TBaseNPC* TMarDirector::findNearestTakeNPC()
 {
 	TBaseNPC* result = nullptr;
-	JGadget::TVector_pointer<TBaseNPC>::iterator it;
+	JGadget::TVector_pointer<TBaseNPC*>::iterator it;
 
 	for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 		TBaseNPC* npc = *it;
