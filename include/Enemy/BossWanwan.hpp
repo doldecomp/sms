@@ -156,9 +156,6 @@ public:
 	f32 getUnk168() const { return unk168; }
 
 	// fabricated
-	TBWParams* getSaveParam() const { return (TBWParams*)getSaveParam(); }
-
-	// fabricated
 	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
 
 	// UNUSED

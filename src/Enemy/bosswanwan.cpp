@@ -76,8 +76,10 @@ TBWLeashNode::TBWLeashNode(TBWLeash* leash, int index, const char* name)
 	mMActor = owner->getActorKeeper()->createMActor("bwanwan_chain.bmd", 0);
 	mMActor->setBrkFromIndex(2);
 
-	f32 hitRadius = owner->getSaveParam()->mSLChainHitRadius.value;
-	f32 hitHeight = owner->getSaveParam()->mSLChainHitHeight.value;
+	f32 hitRadius
+	    = ((TBWParams*)owner->getSaveParam())->mSLChainHitRadius.value;
+	f32 hitHeight
+	    = ((TBWParams*)owner->getSaveParam())->mSLChainHitHeight.value;
 	initHitActor(0x800000c, 1, -0x80000000, hitRadius * 2.0f, hitHeight * 2.0f,
 	             hitRadius, hitHeight);
 }
@@ -224,8 +226,9 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
     , mRope(nullptr)
     , mNodes(nullptr)
 {
-	f32 nodeLen      = mOwner->getSaveParam()->mSLLeashNodeLen.get();
-	f32 groundRadius = mOwner->getSaveParam()->mSLChainGroundRadius.get();
+	f32 nodeLen = ((TBWParams*)mOwner->getSaveParam())->mSLLeashNodeLen.get();
+	f32 groundRadius
+	    = ((TBWParams*)mOwner->getSaveParam())->mSLChainGroundRadius.get();
 
 	mRope = new TRope(nodeCount, mOwner->mPosition, nodeLen, groundRadius, 0.7,
 	                  -2.0f);
@@ -832,8 +835,8 @@ void TBossWanwan::init(TLiveManager* manager)
 
 	mSpine->initWith(&TNerveBWGraphWander::theNerve());
 
-	mMarchSpeed = getSaveParam()->mSLMarchSpeed.get();
-	mTurnSpeed  = getSaveParam()->mSLTurnSpeed.get();
+	mMarchSpeed = ((TBWParams*)getSaveParam())->mSLMarchSpeed.get();
+	mTurnSpeed  = ((TBWParams*)getSaveParam())->mSLTurnSpeed.get();
 
 	mPosition = BW_HEAD_START;
 	calcRootMatrix();
@@ -889,7 +892,7 @@ void TBossWanwan::init(TLiveManager* manager)
 		model->setSkinDeform(skinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	}
 
-	mHitPoints         = getSaveParam()->mSLBWHitPointMax.get();
+	mHitPoints         = ((TBWParams*)getSaveParam())->mSLBWHitPointMax.get();
 	mPicketPullDelta.x = mPicketPullDelta.y = mPicketPullDelta.z = 0.0f;
 
 	mMapCollisionManager = new TMapCollisionManager(1, "/scene/bwanwan", this);
@@ -917,10 +920,10 @@ void TBossWanwan::shakeCamera(int shakeType)
 
 	dist = MsSqrtf(dist);
 
-	TBWParams* params  = this->getSaveParam();
+	TBWParams* params  = (TBWParams*)this->getSaveParam();
 	f32 shakeLengthMax = params->mSLShakeLengthMax.get();
 
-	TBWParams* params2    = this->getSaveParam();
+	TBWParams* params2    = (TBWParams*)this->getSaveParam();
 	f32 shakeLengthMaxHP0 = params2->mSLShakeLengthMaxHP0.get();
 
 	f32 ratio;
@@ -1045,7 +1048,8 @@ bool TBossWanwan::isMarioInSight()
 
 BOOL TBossWanwan::isHeadPulled()
 {
-	return mPicketPullDelta.squared() < getSaveParam()->mSLPullLimit.get()
+	return mPicketPullDelta.squared()
+	               < ((TBWParams*)getSaveParam())->mSLPullLimit.get()
 	           ? FALSE
 	           : TRUE;
 };
@@ -1296,14 +1300,15 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(5);
-		TBWParams* params  = getSaveParam();
+		TBWParams* params  = (TBWParams*)getSaveParam();
 		f32 hpRatio = (f32)mHitPoints / (f32)params->mSLBWHitPointMax.value;
 
 		ctrl->setFrame(hpRatio * (f32)(ctrl->getEnd() - 1));
 		ctrl->setRate(0.0f);
 
 		if (mHitPoints == 0
-		    || mHitPoints == getSaveParam()->mSLBWHitPointMax.value) {
+		    || mHitPoints
+		           == ((TBWParams*)getSaveParam())->mSLBWHitPointMax.value) {
 			mLeash->mNodes[0]->mTemperature = hpRatio;
 		}
 
@@ -1370,7 +1375,8 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 			} else {
 				if (gpMarDirector->getMoveTickCount() % 20 == 0) {
-					if (mHitPoints < getSaveParam()->mSLBWHitPointMax.value) {
+					if (mHitPoints < ((TBWParams*)getSaveParam())
+					                     ->mSLBWHitPointMax.value) {
 						mHitPoints++;
 					}
 				}
@@ -1491,7 +1497,7 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 			boss->reverseNextGraphNode();
 		}
 
-		u8 maxHp = boss->getSaveParam()->mSLBWHitPointMax.value;
+		u8 maxHp = ((TBWParams*)boss->getSaveParam())->mSLBWHitPointMax.value;
 		boss->slideToCurPathNode(
 		    3.0f * (((f32)boss->mHitPoints / (f32)maxHp) * boss->mMarchSpeed),
 		    boss->mTurnSpeed);
@@ -1510,8 +1516,9 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	}
 
 	boss->unk16C = 0;
-	f32 hpRatio  = (f32)boss->mHitPoints
-	              / (f32)boss->getSaveParam()->mSLBWHitPointMax.value;
+	f32 hpRatio
+	    = (f32)boss->mHitPoints
+	      / (f32)((TBWParams*)boss->getSaveParam())->mSLBWHitPointMax.value;
 
 	if (boss->mPicket->isHolding()) {
 		f32 marioYaw = (f32)gpMarioOriginal->mIntendedYaw * (180.0f / 32768.0f);
@@ -1559,7 +1566,7 @@ DEFINE_NERVE(TNerveBWRoll, TLiveActor)
 		ctrl->setRate(SMSGetAnmFrameRate());
 		return true;
 	} else {
-		f32 speed = boss->getSaveParam()->mSLAttackSpeed.get();
+		f32 speed = ((TBWParams*)boss->getSaveParam())->mSLAttackSpeed.get();
 		boss->walkToCurPathNode(speed, boss->mTurnSpeed, 0.0f);
 		return false;
 	}
@@ -1594,7 +1601,8 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 	}
 
 	if (spine->getTime() == 280) {
-		boss->mHitPoints = boss->getSaveParam()->mSLBWHitPointMax.get();
+		boss->mHitPoints
+		    = ((TBWParams*)boss->getSaveParam())->mSLBWHitPointMax.get();
 	}
 
 	if (boss->mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
@@ -1658,8 +1666,10 @@ DEFINE_NERVE(TNerveBWStun, TLiveActor)
 		}
 
 		return false;
-	} else if (spine->getTime() > boss->getSaveParam()->mSLStunTimer.get()) {
-		boss->mHitPoints = boss->getSaveParam()->mSLBWHitPointMax.get();
+	} else if (spine->getTime()
+	           > ((TBWParams*)boss->getSaveParam())->mSLStunTimer.get()) {
+		boss->mHitPoints
+		    = ((TBWParams*)boss->getSaveParam())->mSLBWHitPointMax.get();
 		spine->pushAfterCurrent(&TNerveBWWakeup::theNerve());
 		return true;
 	}
