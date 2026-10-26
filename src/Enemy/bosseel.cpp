@@ -1187,10 +1187,17 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	u32 calcAnim = cue & CUE_CALC_ANIM;
 	if (calcAnim) {
+<<<<<<< HEAD
 		s32 jointIndex  = mOwner->mMActor->getModel()
 		                      ->getModelData()
 		                      ->getJointName()
 		                      ->getIndex("ha7");
+=======
+		s32 jointIndex = mOwner->mMActor->getModel()
+		                     ->getModelData()
+		                     ->getJointName()
+		                     ->getIndex("ha7");
+>>>>>>> a484de837b3bdb12dbfff97e157f590526aed2d4
 		MtxPtr jointMtx = mOwner->mMActor->getModel()->getAnmMtx(jointIndex);
 		if (mOwner->mMActor->checkCurBckFromIndex(3)
 		    && mOwner->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()

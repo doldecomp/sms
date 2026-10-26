@@ -46,7 +46,7 @@ private:
 
 class TBWPicket : public TTakeActor {
 public:
-	TBWPicket(TBossWanwan* owner, const char* name = "ボスワンワン杭");
+	TBWPicket(TBossWanwan* owner, const char* name = "ボスワンワンつかみ");
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
@@ -55,7 +55,7 @@ public:
 private:
 	/* 0x70 */ TBossWanwan* mOwner;
 	/* 0x74 */ TMtx34f unk74;
-	/* 0xA8 */ MActor* mActor;
+	/* 0xA4 */ MActor* mActor;
 };
 
 class TBWBinder : public TBinder {
@@ -68,7 +68,7 @@ public:
 class TBWLeash : public JDrama::TViewObj {
 public:
 	TBWLeash(TBossWanwan* owner, int nodeCount,
-	         const char* name = "ボスワンワンリーシュ");
+	         const char* name = "ボスワンワン鎖");
 	virtual ~TBWLeash() { };
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
@@ -156,9 +156,6 @@ public:
 	f32 getUnk168() const { return unk168; }
 
 	// fabricated
-	TBWParams* getSaveParam() const { return (TBWParams*)getSaveParam(); }
-
-	// fabricated
 	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
 
 	// UNUSED
@@ -203,13 +200,6 @@ public:
 		return dir;
 	}
 
-	enum {
-		BOSS_WANWAN_FLAGS_UNK1 = 0xE001A,
-		BOSS_WANWAN_FLAGS_UNK2 = 0xE001B,
-		BOSS_WANWAN_FLAGS_UNK3 = 0xE001C,
-		BOSS_WANWAN_FLAGS_UNK4 = 0xE001D,
-	};
-
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
 	/* 0x158 */ TBWPicket* mPicket;
@@ -219,20 +209,18 @@ public:
 	/* 0x170 */ TBWHit* mHits[2];
 	/* 0x178 */ f32 unk178;
 	/* 0x17C */ BOOL unk17C;
-	/* 0x180 */ u32 unk180;
-	/* 0x184 */ u32 unk184;
+	/* 0x180 */ s32 unk180;
+	/* 0x184 */ s32 unk184;
 	/* 0x188 */ BOOL unk188;
 	/* 0x18C */ s8 msInvincible;
 	/* 0x18D */ u8 unk18D;
 	/* 0x190 */ s32 unk190;
 	/* 0x194 */ s8 unk194;
-	/* 0x195 */ u8 mHasSpawnedWater;
+	/* 0x195 */ s8 mHasSpawnedWater;
 	/* 0x198 */ u32 unk198;
-	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ u8 unk1A0;
+	/* 0x19C */ s32 unk19C;
+	/* 0x1A0 */ s8 unk1A0;
 	/* 0x1A4 */ JGeometry::TVec3<f32> unk1A4;
-	/* 0x1A8 */ s8 mWaterHitCount;
-	/* 0x1AC */ f32 unk1AC;
 	/* 0x1B0 */ TBWParams* mParams;
 	/* 0x1B4 */ u16 unk1B4;
 };

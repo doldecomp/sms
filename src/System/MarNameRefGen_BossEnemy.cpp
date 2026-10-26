@@ -11,6 +11,7 @@
 #include <Enemy/TinKoopa.hpp>
 #include <Enemy/BossTelesa.hpp>
 #include <Enemy/BossHanachan.hpp>
+#include <Enemy/BossWanwan.hpp>
 #include <System/MarNameRefGen.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <M3DUtil/MActorAnm.hpp>
@@ -121,13 +122,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	// if ( strcmp( name, "BathtubPeach" ) == 0 )
 	//     return new TBathtubPeach("バスタブピーチ");
 
-	// TODO:
-	// if ( strcmp( name, "BossWanwan" ) == 0 )
-	//     return new TBossWanwan("ボスワンワン");
+	if (strcmp(name, "BossWanwan") == 0)
+		return new TBossWanwan;
 
-	// TODO:
-	// if ( strcmp( name, "BossWanwanManager" ) == 0 )
-	//     return new TBossWanwanManager("ボスワンワンマネージャ");
+	if (strcmp(name, "BossWanwanManager") == 0)
+		return new TBossWanwanManager;
 
 	if (strcmp(name, "BossPakkun") == 0)
 		return new TBossPakkun("ボスパックン改");
