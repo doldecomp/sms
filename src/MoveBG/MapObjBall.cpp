@@ -364,8 +364,8 @@ void TMapObjBall::checkWallCollision(JGeometry::TVec3<f32>* wall)
 	                              mMapObjData->mPhysical->mWallCheckFlags);
 	if (gpMap->isTouchedWallsAndMoveXZ(&wallRecord)) {
 		unk138  = wallRecord.mResultWalls[0];
-		wall->x = wallRecord.mCenter.x;
-		wall->z = wallRecord.mCenter.z;
+		wall->x = center.x;
+		wall->z = center.z;
 		touchWall(wall, &wallRecord);
 	} else {
 		unk138 = nullptr;
