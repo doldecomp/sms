@@ -200,13 +200,6 @@ public:
 		return dir;
 	}
 
-	enum {
-		BOSS_WANWAN_FLAGS_UNK1 = 0xE001A,
-		BOSS_WANWAN_FLAGS_UNK2 = 0xE001B,
-		BOSS_WANWAN_FLAGS_UNK3 = 0xE001C,
-		BOSS_WANWAN_FLAGS_UNK4 = 0xE001D,
-	};
-
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
 	/* 0x158 */ TBWPicket* mPicket;

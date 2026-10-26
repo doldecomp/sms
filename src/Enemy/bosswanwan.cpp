@@ -1096,7 +1096,7 @@ void TBossWanwan::rollNextGraphNode()
 	if (prev >= 0
 	    && graph->getGraphNode(prev).getRailNode()->mConnectionNum >= 2
 	    && gpMarDirector->getMoveTickCount() >= 14400) {
-		showMessage(TBossWanwan::BOSS_WANWAN_FLAGS_UNK3);
+		showMessage(0xE001C);
 	}
 
 	int next = graph->getEscapeDirLimited(curr, prev, getRotDirY(mRotation.y),
@@ -1340,8 +1340,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (unk19C > 600) {
 			if (!(unk198 & 1)) {
-				gpMarDirector->getConsole()->startAppearBalloon(
-				    TBossWanwan::BOSS_WANWAN_FLAGS_UNK1, true);
+				gpMarDirector->getConsole()->startAppearBalloon(0xE001A, true);
 			}
 			unk198 |= 1;
 		}
@@ -1350,8 +1349,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 	if ((cue & CUE_MOVE) && unk1A0 == 0
 	    && gpMarDirector->getMoveTickCount() >= 28800) {
 		if (!(unk198 & 8)) {
-			gpMarDirector->getConsole()->startAppearBalloon(
-			    TBossWanwan::BOSS_WANWAN_FLAGS_UNK4, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0xE001D, true);
 		}
 		unk198 |= 8;
 	}
@@ -1615,8 +1613,7 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
 
 		if (!(boss->unk198 & 2)) {
-			gpMarDirector->getConsole()->startAppearBalloon(
-			    TBossWanwan::BOSS_WANWAN_FLAGS_UNK2, true);
+			gpMarDirector->getConsole()->startAppearBalloon(0xE001B, true);
 		}
 		boss->unk198 |= 2;
 		return true;
