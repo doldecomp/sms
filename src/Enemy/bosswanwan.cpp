@@ -1427,6 +1427,7 @@ void TBossWanwanManager::createModelData()
 		{ "bwanwan_body.bmd", 0, 0 },
 		{ "bwanwan_chain.bmd", 0, 0 },
 		{ "bwanwan_picket.bmd", 0, 0 },
+		{ nullptr, 0, 0 },
 	};
 
 	createModelDataArray(entry);
