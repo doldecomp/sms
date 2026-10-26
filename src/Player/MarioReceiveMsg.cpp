@@ -665,7 +665,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 
 	case ACTOR_TYPE_BOSS_UNKB:
 	case ACTOR_TYPE_BOSS_UNKC:
-	case ACTOR_TYPE_BOSS_UNKD:
+	case ACTOR_TYPE_BOSS_WANWAN:
 	case ACTOR_TYPE_BOSS_UNKE:
 		if (message == HIT_MESSAGE_BURN && !isInvincible()) {
 			damageExec(sender, mDmgParamsFire.mDamage.get(),

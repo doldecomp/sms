@@ -169,6 +169,10 @@ enum E_SMS_EFFECT_ONETIME_NORMAL /* 0 */ {
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_DOWN     = 0xAA,
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING1   = 0xAB,
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING2   = 0xAC,
+	BWAN_JPA_JUMP_ROCK                    = 0xAD,
+	BWAN_JPA_JUMP_SMOKE                   = 0xAE,
+	BWAN_JPA_MS_HIBANA                    = 0xAF,
+	BWAN_JPA_MS_DOWNYUGE                  = 0xB0,
 	PARTICLE_MS_SMB_KAFUN_OW              = 0xB2,
 	PARTICLE_MS_SMB_KAFUN_OA              = 0xB3,
 	PARTICLE_MS_SMB_AP_ROCK               = 0xB6,
@@ -330,6 +334,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_WEED  = 0x164,
 	PARTICLE_MS_GESO_KISEKI               = 0x165,
 	CANNON_JPA_MS_CANNON_SMOKE            = 0x166,
+	BWANWAN_JPA_MS_BWAN_HITYUGE           = 0x167,
 	BWANWAN_JPA_MS_BWAN_KIRA              = 0x168,
 	PARTICLE_MS_BOHA_JOUKI2_R_A           = 0x169,
 	PARTICLE_MS_BOHA_JOUKI2_R_B           = 0x16A,
@@ -464,6 +469,7 @@ enum E_SMS_EFFECT_LOOP_INDIRECT /* 3 */ {
 	PARTICLE_MS_GESOSURF_A            = 0x1E7,
 	PARTICLE_MS_M_WATSLIDE_A          = 0x1EA,
 	PARTICLE_MS_MOE_FIRE_C            = 0x1ED,
+	BWAN_JPA_MS_YUGAMI                = 0x1EE,
 };
 
 // NOTE: doing this makes inlining work out, specializations DON'T.
