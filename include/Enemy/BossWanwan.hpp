@@ -34,7 +34,8 @@ class TBossWanwanMtxCalc;
 
 class TBWHit : public THitActor {
 public:
-	TBWHit(TBossWanwan* owner, s32 jointIndex);
+	TBWHit(TBossWanwan* owner, int jointIndex,
+	       const char* name = "ボスワンワンヒット");
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
@@ -59,8 +60,8 @@ private:
 
 class TBWBinder : public TBinder {
 public:
-	TBWBinder() { };
-	virtual ~TBWBinder();
+	TBWBinder();
+	virtual ~TBWBinder() { };
 	virtual void bind(TLiveActor*);
 };
 
@@ -68,13 +69,13 @@ class TBWLeash : public JDrama::TViewObj {
 public:
 	TBWLeash(TBossWanwan* owner, int nodeCount,
 	         const char* name = "ボスワンワンリーシュ");
-	virtual ~TBWLeash();
+	virtual ~TBWLeash() { };
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 	TBWLeashNode* getNode(s32 idx) const { return mNodes[idx]; } // fabricated
 
 	// UNUSED
 	void pullTail(const JGeometry::TVec3<f32>& pos);
-	void invalidateAllCollisions();
+	void invalidateAllCollision();
 
 	/* 0x10 */ TBossWanwan* mOwner;
 	/* 0x14 */ TRope* mRope;
@@ -128,7 +129,7 @@ public:
 class TBossWanwanMtxCalc : public M3UMtxCalcSIAnmBlendQuat {
 public:
 	TBossWanwanMtxCalc(TBossWanwan*);
-	virtual ~TBossWanwanMtxCalc();
+	virtual ~TBossWanwanMtxCalc() { };
 	void calc(u16);
 
 	void joinAnm(int i);
@@ -142,7 +143,7 @@ class TBossWanwan : public TSpineEnemy {
 public:
 	TBossWanwan(const char* name = "ボスワンワン");
 
-	virtual void kill();
+	virtual void kill() { };
 	virtual void init(TLiveManager*);
 	void shakeCamera(int shakeType);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
@@ -170,7 +171,7 @@ public:
 	void takeBath();
 	void rollNextGraphNode();
 	void reverseNextGraphNode();
-	void showMessage();
+	void showMessage(u32 msg);
 	void changeBck(int);
 
 	// fabricated
