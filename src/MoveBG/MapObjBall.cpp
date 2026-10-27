@@ -220,7 +220,7 @@ u32 TMapObjBall::touchWater(THitActor* water)
 
 	JGeometry::TVec3<f32> vel;
 	vel.set(getVelocity());
-	vel.scaleAdd(unk17C, vel, getWaterSpeed(water));
+	vel.scaleAdd(unk17C, getWaterSpeed(water), vel);
 	setVelocity(vel);
 	offLiveFlag(LIVE_FLAG_UNK10);
 	return 1;

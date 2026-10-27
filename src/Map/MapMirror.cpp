@@ -23,15 +23,15 @@ void TMirrorCamera::makeMirrorViewMtx()
 	local_24.set(unk84);
 
 	f32 fVar1 = (local_24.dot(gpCamera->unk124) + unk90) * -2.0f;
-	unk98.scaleAdd(fVar1, gpCamera->unk124, local_24);
+	unk98.scaleAdd(fVar1, local_24, gpCamera->unk124);
 
 	JGeometry::TVec3<f32> local_30;
 	fVar1 = (local_24.dot(gpCamera->unk148) + unk90) * -2.0f;
-	local_30.scaleAdd(fVar1, gpCamera->unk148, local_24);
+	local_30.scaleAdd(fVar1, local_24, gpCamera->unk148);
 
 	JGeometry::TVec3<f32> local_3C;
 	fVar1 = (local_24.dot(gpCamera->mUp) + unk90) * -2.0f;
-	local_3C.scaleAdd(fVar1, gpCamera->mUp, local_24);
+	local_3C.scaleAdd(fVar1, local_24, gpCamera->mUp);
 	C_MTXLookAt(unk30, &unk98, &local_3C, &local_30);
 }
 

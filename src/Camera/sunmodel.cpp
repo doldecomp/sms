@@ -233,7 +233,7 @@ void TSunModel::perform(u32 cue, JDrama::TGraphics*)
 
 		JGeometry::TVec3<f32> camPos;
 		camPos.set(gpCamera->getUnk124());
-		unk198.scaleAdd(250000.0f, camPos, dir);
+		unk198.scaleAdd(250000.0f, dir, camPos);
 
 		if (unk64)
 			unk64->mPosition = unk198;

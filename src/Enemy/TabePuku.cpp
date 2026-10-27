@@ -148,7 +148,7 @@ void TTPHitActor::bind()
 		                  JGeometry::TVec3<f32>(pos.x, y, z))
 		              - mGroundPlane->getNormal().dot(ground));
 		if (push > 0.0f)
-			pos.scaleAdd(push, pos, mGroundPlane->getNormal());
+			pos.scaleAdd(push, mGroundPlane->getNormal(), pos);
 		pos.y = ground.y;
 	} else {
 		mAirborne = true;
@@ -304,9 +304,9 @@ MtxPtr TTabePuku::getTakingMtx()
 	mTakeMtx.getZDir(forward);
 	mTakeMtx.getYDir(up);
 	forward.scaleAdd(((TTabePukuParams*)getSaveParam())->mCorrectZ.value,
-	                 mPosition, forward);
-	up.scaleAdd(((TTabePukuParams*)getSaveParam())->mCorrectY.value, forward,
-	            up);
+	                 forward, mPosition);
+	up.scaleAdd(((TTabePukuParams*)getSaveParam())->mCorrectY.value, up,
+	            forward);
 	mTakeMtx.setTrans(up);
 	return mTakeMtx;
 }

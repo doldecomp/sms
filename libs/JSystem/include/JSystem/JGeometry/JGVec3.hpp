@@ -291,9 +291,9 @@ public:
 
 	void scaleAdd(f32 scale, const TVec3& b, const TVec3& c)
 	{
-		x = b.x + c.x * scale;
-		y = b.y + c.y * scale;
-		z = b.z + c.z * scale;
+		x = b.x * scale + c.x;
+		y = b.y * scale + c.y;
+		z = b.z * scale + c.z;
 	}
 
 	// === length stuff ===

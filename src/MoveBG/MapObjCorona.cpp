@@ -876,7 +876,7 @@ f32 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos,
 	JGeometry::TVec3<f32> normal;
 	normal.normalize(delta);
 	JGeometry::TVec3<f32> tangent;
-	tangent.scaleAdd(-normal.dot(direction), direction, normal);
+	tangent.scaleAdd(-normal.dot(direction), normal, direction);
 	delta += tangent;
 	f32 localZ = zDir.dot(delta);
 	f32 localX = xDir.dot(delta);
@@ -981,7 +981,7 @@ void TBathtub::updatePosture_()
 		axis.normalize();
 		f32 rebound = unk16C->rebound.get();
 		axis.scale(rebound * (rate * -acosf(y.dot(up))));
-		unk1E8.scaleAdd(unk16C->angleVelDamp.get(), axis, unk1E8);
+		unk1E8.scaleAdd(unk16C->angleVelDamp.get(), unk1E8, axis);
 	} else {
 		unk250--;
 	}
