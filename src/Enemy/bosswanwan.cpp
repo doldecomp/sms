@@ -80,8 +80,8 @@ TBWLeashNode::TBWLeashNode(TBWLeash* leash, int index, const char* name)
 	    = ((TBWParams*)owner->getSaveParam())->mSLChainHitRadius.value;
 	f32 hitHeight
 	    = ((TBWParams*)owner->getSaveParam())->mSLChainHitHeight.value;
-	initHitActor(ACTOR_TYPE_BOSS_UNKC, 1, HIT_CATEGORY_PLAYER, hitRadius * 2.0f,
-	             hitHeight * 2.0f, hitRadius, hitHeight);
+	initHitActor(ACTOR_TYPE_BOSS_UNKC, 1, HIT_CATEGORY_PLAYER, hitRadius * 2.0f, hitHeight * 2.0f,
+	             hitRadius, hitHeight);
 }
 
 void TBWLeashNode::calcTemperature()
@@ -107,14 +107,14 @@ void TBWLeashNode::calcTemperature()
 		}
 	}
 
-	this->mTemperature += step;
+	mTemperature += step;
 
-	if (this->mTemperature < 0.0f) {
-		this->mTemperature = 0.0f;
+	if (mTemperature < 0.0f) {
+		mTemperature = 0.0f;
 	}
 
-	if (this->mTemperature > 1.0f) {
-		this->mTemperature = 1.0f;
+	if (mTemperature > 1.0f) {
+		mTemperature = 1.0f;
 	}
 }
 
@@ -177,12 +177,10 @@ void TBWLeashNode::calcMatrix()
 
 void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-
 	if (cue & CUE_MOVE) {
 		calcTemperature();
 		calcMatrix();
-		if (this->mLeash->mOwner->mHitPoints != 0 && mIndex < 8) {
-			u32 i = 0;
+		if (mLeash->mOwner->mHitPoints != 0 && mIndex < 8) {
 			for (int i = 0; i < mColCount; i++) {
 				THitActor* elem = mCollisions[i];
 				if (elem->mActorType == ACTOR_TYPE_MARIO) {
@@ -193,17 +191,15 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((cue & CUE_CALC_ANIM)) {
-		J3DFrameCtrl* frameCtrl = this->mMActor->getFrameCtrl(5);
+		J3DFrameCtrl* frameCtrl = mMActor->getFrameCtrl(5);
 		if (frameCtrl) {
-			f32 animDuration = (f32)(frameCtrl->getEnd() - 1) * mTemperature;
+			f32 frame = (frameCtrl->getEnd() - 1) * mTemperature;
 
 			f32 progress;
 			if (mIndex < 5) {
 				progress
-				    = ((f32)mIndex * 0.25f)
-				      + ((f32)mLeash->mOwner->mHitPoints
-				         / (f32)((TBWParams*)mLeash->mOwner->getSaveParam())
-				               ->mSLBWHitPointMax.get());
+				    = ((f32)mIndex * 0.25f) + ((f32)mLeash->mOwner->mHitPoints / (f32)((TBWParams*)mLeash->mOwner->getSaveParam())
+				                   ->mSLBWHitPointMax.get());
 			} else if (mIndex >= (mLeash->mRope->mNumPoints - 10)) {
 				progress = (f32)(mLeash->mRope->mNumPoints - mIndex) / 10.0f;
 			} else {
@@ -211,13 +207,14 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 
 			progress = MsClamp(progress, 0.0f, 1.0f);
-			frameCtrl->setFrame(animDuration * progress);
+			frame *= progress;
+			frameCtrl->setFrame(frame);
 			frameCtrl->setRate(0.0f);
 		}
 	}
 
-	if (mIndex < this->mLeash->mRope->mNumPoints - 1) {
-		this->mMActor->perform(cue, graphics);
+	if (mIndex < mLeash->mRope->mNumPoints - 1) {
+		mMActor->perform(cue, graphics);
 	}
 }
 
@@ -748,7 +745,7 @@ void TBossWanwanMtxCalc::calc(u16 index)
 	Mtx rotMtx;
 	MtxPtr pRotMtx = rotMtx;
 
-	if (index == 0 && this->mOwner->isAirborne()) {
+	if (index == 0 && mOwner->isAirborne()) {
 		j3dSys.setCurrentMtxCalc(this);
 
 		if (mNewAnm != nullptr) {
@@ -915,22 +912,22 @@ void TBossWanwan::shakeCamera(int shakeType)
 		return;
 	}
 
-	f32 dist = this->mDistToMarioSquared;
+	f32 dist = getDistToMarioSquared();
 
 	dist = MsSqrtf(dist);
 
-	TBWParams* params  = (TBWParams*)this->getSaveParam();
+	TBWParams* params  = (TBWParams*)getSaveParam();
 	f32 shakeLengthMax = params->mSLShakeLengthMax.get();
 
-	TBWParams* params2    = (TBWParams*)this->getSaveParam();
+	TBWParams* params2    = (TBWParams*)getSaveParam();
 	f32 shakeLengthMaxHP0 = params2->mSLShakeLengthMaxHP0.get();
 
 	f32 ratio;
-	if (this->mMActor->checkCurBckFromIndex(0)) {
+	if (getMActor()->checkCurBckFromIndex(0)) {
 		ratio = 1.0f;
 	} else {
-		TBWParams* params3 = (TBWParams*)this->getSaveParam();
-		ratio = (f32)this->mHitPoints / (f32)params3->mSLBWHitPointMax.get();
+		TBWParams* params3 = (TBWParams*)getSaveParam();
+		ratio = (f32)mHitPoints / (f32)params3->mSLBWHitPointMax.get();
 	}
 
 	f32 effectiveDist
@@ -948,7 +945,7 @@ void TBossWanwan::shakeCamera(int shakeType)
 	}
 
 	gpCameraShake->startShake((EnumCamShakeMode)shakeType, power * ratio);
-	SMSRumbleMgr->start(8, &this->mPosition);
+	SMSRumbleMgr->start(8, &mPosition);
 }
 
 BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
@@ -957,24 +954,24 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 	if (actorType == ACTOR_TYPE_MARIO) {
 		return false;
 	} else if (actorType == ACTOR_TYPE_WATER) {
-		if (this->msInvincible) {
+		if (msInvincible) {
 			return TRUE;
 		}
 
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
 		                             0, 0);
-		if (this->mHitPoints == 0) {
+		if (mHitPoints == 0) {
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL_MORE,
-			                                &this->mPosition, 0, nullptr, 0, 4);
-		} else if (this->mHitPoints == 1) {
-			MtxPtr iVar3 = this->getModel()->getAnmMtx(1);
+			                                &mPosition, 0, nullptr, 0, 4);
+		} else if (mHitPoints == 1) {
+			MtxPtr iVar3 = getModel()->getAnmMtx(1);
 			gpMarioParticleManager->emitAndBindToMtxPtr(BWAN_JPA_MS_DOWNYUGE,
 			                                            iVar3, 0, 0);
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
-			                                &this->mPosition, 0, nullptr, 0, 4);
+			                                &mPosition, 0, nullptr, 0, 4);
 		} else {
-			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL, &mPosition,
-			                                0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL,
+			                                &mPosition, 0, nullptr, 0, 4);
 		}
 
 		decHitPoints();
@@ -984,17 +981,17 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 
 	if (isActorType(ACTOR_TYPE_WOOD_BARREL)) {
 		sender->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
-		this->mHitPoints = 0;
-		this->unk190++;
-		if (this->unk1A0 == 0) {
-			this->unk1A0++;
+		mHitPoints = 0;
+		unk190++;
+		if (unk1A0 == 0) {
+			unk1A0++;
 		}
 
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    BWAN_JPA_MS_DOWNYUGE, this->getModel()->getAnmMtx(1), 0, nullptr);
+		    BWAN_JPA_MS_DOWNYUGE, getModel()->getAnmMtx(1), 0, nullptr);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
-		                                nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
+		                                &mPosition, 0, nullptr, 0, 4);
 	}
 
 	return TSpineEnemy::receiveMessage(sender, message);
@@ -1044,7 +1041,7 @@ void TBossWanwan::changeBck(int index)
 	setBckFromIndex(index);
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
 	unk178             = 10.0f / ctrl->getEnd();
-	const char* path   = bwanwan_bastable[index];
+	const char* path = bwanwan_bastable[index];
 	setAnmSound(path);
 }
 
@@ -1158,26 +1155,26 @@ void TBossWanwan::control()
 
 		JGeometry::TVec3<f32> pos = mPosition;
 
-		pos -= this->mLeash->mRope->mPoints[3].unkC;
+		pos -= mLeash->mRope->mPoints[3].unkC;
 
 		f32 targetAngle = MsGetRotFromZaxisY(pos);
 		targetAngle     = MsWrap<f32>(targetAngle, 0.0f, 360.0f);
 
-		f32 diff = MsAngleDiff(targetAngle, mRotation.y);
-
+		f32 diff    = MsAngleDiff(targetAngle, mRotation.y);
+		
 		if (diff > 0.0f) {
 			f32 maxStep = mTurnSpeed * 4.0f;
-			diff        = (diff > maxStep) ? diff : maxStep;
+    		diff = (diff > maxStep) ? diff : maxStep;
 		} else {
 			f32 minStep = -mTurnSpeed * 4.0f;
-			diff        = (diff > minStep) ? diff : minStep;
+			diff = (diff > minStep) ? diff : minStep;
 		}
 
 		mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f);
 	}
 
 	mPicketPullDelta.zero();
-	this->updateSquareToMario();
+	updateSquareToMario();
 }
 
 void TBossWanwan::emitEffects()
@@ -1277,11 +1274,11 @@ void TBossWanwan::emitEffects()
 		                                            jointMtx, 3, this);
 	}
 
-	if (this->unk190 != 0 && mHitPoints != 0) {
+	if (unk190 != 0 && mHitPoints != 0) {
 		MtxPtr jointMtx = getModel()->getAnmMtx(1);
 		gpMarioParticleManager->emitAndBindToMtxPtr(BWANWAN_JPA_MS_BWAN_HITYUGE,
 		                                            jointMtx, 1, this);
-		this->unk190 = 0;
+		unk190 = 0;
 	}
 }
 
@@ -1470,28 +1467,27 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		boss->unk16C = 0;
 
 		if (!boss->getMActor()->checkCurBckFromIndex(4)
-		    && !boss->mMActor->checkCurBckFromIndex(4)) {
+		    && !boss->getMActor()->checkCurBckFromIndex(4)) {
 			if (boss->mHitPoints == 0) {
 				boss->changeBck(5);
 			} else {
 				boss->changeBck(4);
 			}
-			J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+			J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
 			ctrl->setFrame(0.0f);
 			ctrl->setRate(SMSGetAnmFrameRate());
 		}
 
-		boss->mMActor->setBtpFromIndex(0);
-		J3DFrameCtrl* btpCtrl = boss->mMActor->getFrameCtrl(3);
+		boss->getMActor()->setBtpFromIndex(0);
+		J3DFrameCtrl* btpCtrl = boss->getMActor()->getFrameCtrl(3);
 		btpCtrl->setFrame(0.0f);
 		btpCtrl->setRate(0.0f);
 	}
 
 	if (boss->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)
-	    && boss->mHitPoints == 0
-	    && !boss->getMActor()->checkCurBckFromIndex(5)) {
+	    && boss->mHitPoints == 0 && !boss->getMActor()->checkCurBckFromIndex(5)) {
 		boss->changeBck(5);
-		J3DFrameCtrl* ctrl = boss->mMActor->getFrameCtrl(0);
+		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
 		ctrl->setFrame(0.0f);
 		ctrl->setRate(SMSGetAnmFrameRate());
 	}
@@ -1700,13 +1696,12 @@ DEFINE_NERVE(TNerveBWWakeup, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(6);
-
-		boss->mMActor->setBtpFromIndex(2);
+		boss->getMActor()->setBtpFromIndex(2);
 		boss->unk16C = 0;
 		boss->unk168 = 0.0f;
 	}
 
-	if (boss->mMActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
+	if (boss->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		spine->pushAfterCurrent(&TNerveBWGraphWander::theNerve());
 		return true;
 	}
@@ -1885,7 +1880,7 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 DEFINE_NERVE(TNerveBWShake, TLiveActor)
 {
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0) {
 		boss->changeBck(2);
