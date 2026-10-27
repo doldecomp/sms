@@ -81,7 +81,7 @@ void TBossHanachanManager::loadAfter()
 {
 	J3DMaterialTable* table = gpMapObjManager->getSandBombBaseMatTable();
 	const ResTIMG& texture  = *table->getTexture()->getResTIMG(
-        (u16)table->getTextureName()->getIndex(cSandTextureName));
+	    (u16)table->getTextureName()->getIndex(cSandTextureName));
 	for (int i = 0; i < 2; ++i)
 		SMS_ChangeTextureAll(
 		    getModelDataKeeper()->getNthData(i)->getModelData(),
@@ -156,11 +156,11 @@ void TBossHanachan::init(TLiveManager* manager)
 	position.x -= JMASSin(direction) * unk1BC->mSLHeadLength.get();
 	position.z -= JMASCos(direction) * unk1BC->mSLHeadLength.get();
 
-	unk178           = new TSphereLink(8, position, unk1BC->mSLBodyLength.get(),
-	                                   unk1BC->mSLBodyAttackRadius.get(), 0.2f, -2.0f,
-	                                   -3.5f, mRotation.y);
-	mHead->mPosition = mPosition;
-	mHead->mRotation = mRotation;
+	unk178 = new TSphereLink(8, position, unk1BC->mSLBodyLength.get(),
+	                         unk1BC->mSLBodyAttackRadius.get(), 0.2f, -2.0f,
+	                         -3.5f, mRotation.y);
+	mHead->mPosition    = mPosition;
+	mHead->mRotation    = mRotation;
 	mHead->mGroundPlane = mGroundPlane;
 	for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
 		TBossHanachanPartsBody* body = mBodyParts[i];
@@ -277,7 +277,7 @@ void TBossHanachan::bind()
 	unk17C.z += z;
 	JGeometry::TVec3<f32> old = unk17C;
 	mGroundHeight             = gpMap->checkGroundIgnoreWaterSurface(
-        unk17C.x, unk17C.y + mHeadHeight, unk17C.z, &mGroundPlane);
+	    unk17C.x, unk17C.y + mHeadHeight, unk17C.z, &mGroundPlane);
 	mGroundHeight += 1.0f;
 	if (unk17C.y <= 0.05f + mGroundHeight) {
 		if (mGroundPlane && mGroundPlane->isLegal()) {
@@ -492,7 +492,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 					f32 invSpacing = 1.0f / (spacing * spacing);
 					f32 invDamping = 1.0f / (1.0f + damping);
 					f32 oldDamping = 1.0f - damping;
-					f32 wave       = (1.0f / 120.0f)
+					f32 wave = (1.0f / 120.0f)
 					           * ((1.0f / 120.0f) * (velocity * velocity));
 					for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
 						TBossHanachanPartsBody* body = mBodyParts[i];
@@ -880,8 +880,8 @@ void TBossHanachan::execDamage()
 	} else {
 		mSpine->setNext(&TNerveBossHanachanDamage::theNerve());
 		setAnmTimerWhenDamage();
-		unk1C0 = ((TBossHanachanManager*)mManager)
-		             ->getChangeSaveParams(3 - mHitPoints);
+		unk1C0               = ((TBossHanachanManager*)mManager)
+		                           ->getChangeSaveParams(3 - mHitPoints);
 		const char* railName = cHitPoint1_RailName;
 		switch (mHitPoints) {
 		case 1:
