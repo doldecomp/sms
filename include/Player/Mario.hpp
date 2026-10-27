@@ -1206,6 +1206,16 @@ public:
 	void setPlayerType(int type) { mPlayerType = type; }
 
 	// fabricated
+	bool isOnWire() const
+	{
+		if (mHolder != nullptr
+		    && mHolder->getActorType() == ACTOR_TYPE_MAP_WIRE_ACTOR)
+			return true;
+		else
+			return false;
+	}
+
+	// fabricated
 	bool isTouchGround4cm() const
 	{
 		return mPosition.y <= mFloorPosition.y + 4.0f ? true : false;

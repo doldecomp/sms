@@ -1,3 +1,4 @@
+#include "Player/MarioStatus.hpp"
 #include <Player/MarioAccess.hpp>
 
 #include <Strategic/LiveActor.hpp>
@@ -125,10 +126,7 @@ void SMS_GetMarioJumpIntoWaterModelData() { }
 
 bool SMS_SendMessageToMario(THitActor* m, u32 mesg)
 {
-	if (gpMarioOriginal->receiveMessage(m, mesg))
-		return true;
-
-	return false;
+	return gpMarioOriginal->receiveMessage(m, mesg) ? true : false;
 }
 
 void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
@@ -138,31 +136,21 @@ void SMS_ThrowMario(const JGeometry::TVec3<float>& vec, float f)
 
 bool SMS_IsMarioTouchGround4cm()
 {
-	if (gpMarioOriginal->isTouchGround4cm())
-		return true;
-	else
-		return false;
+	return gpMarioOriginal->isTouchGround4cm() ? true : false;
 }
 
 void SMS_IsMarioSpeedZero() { }
 
 bool SMS_IsMarioOnWire()
 {
-	bool ret;
-	if (gpMarioOriginal->getHolder()
-	    && gpMarioOriginal->getHolder()->mActorType
-	           == ACTOR_TYPE_MAP_WIRE_ACTOR)
-		ret = true;
-	else
-		ret = false;
-
-	return !!ret;
+	return !!gpMarioOriginal->isOnWire();
 }
 
 bool SMS_IsMarioOpeningDoor()
 {
-	if (gpMarioOriginal->mStatus == MARIO_STATUS_DOOR_OPEN_R
-	    || gpMarioOriginal->mStatus == MARIO_STATUS_DOOR_OPEN_L) {
+
+	if (gpMarioOriginal->isStatus(MARIO_STATUS_DOOR_OPEN_R)
+	    || gpMarioOriginal->isStatus(MARIO_STATUS_DOOR_OPEN_L)) {
 		return true;
 	} else {
 		return false;
