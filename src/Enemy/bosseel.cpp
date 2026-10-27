@@ -828,9 +828,9 @@ BOOL TBossEelTooth::receiveMessage(THitActor* sender, u32 message)
 			actor->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 			mOwner->mToothDamaged = true;
 			mColor.a              = static_cast<u8>(
-                static_cast<f32>(mHitPoints * 0xFF)
-                / static_cast<f32>(
-                    mOwner->getBossEelParams().mSLToothMaxHitPoint.get()));
+			    static_cast<f32>(mHitPoints * 0xFF)
+			    / static_cast<f32>(
+			        mOwner->getBossEelParams().mSLToothMaxHitPoint.get()));
 
 			if (mToothType == 1 && mHitPoints % 20 == 1)
 				mOwner->forceShedTears(mCanShedTears);
@@ -1043,7 +1043,7 @@ void TBossEelVortex::perform(u32 cue, JDrama::TGraphics* graphics)
 
 					f32 power = mOwner->mSaveParams->mSLBreathInPower.get();
 					f32 wave  = fabsf(JMASSin(
-                        static_cast<s16>(182.04445f * (0.9f * mTimer))));
+					    static_cast<s16>(182.04445f * (0.9f * mTimer))));
 					if (wave > 1.0f)
 						wave = 1.0f;
 					else if (wave < 0.1f)
@@ -1187,10 +1187,10 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	u32 calcAnim = cue & CUE_CALC_ANIM;
 	if (calcAnim) {
-		s32 jointIndex = mOwner->mMActor->getModel()
-		                     ->getModelData()
-		                     ->getJointName()
-		                     ->getIndex("ha7");
+		s32 jointIndex  = mOwner->mMActor->getModel()
+		                      ->getModelData()
+		                      ->getJointName()
+		                      ->getIndex("ha7");
 		MtxPtr jointMtx = mOwner->mMActor->getModel()->getAnmMtx(jointIndex);
 		if (mOwner->mMActor->checkCurBckFromIndex(3)
 		    && mOwner->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
@@ -1529,7 +1529,7 @@ void TBossEel::init(TLiveManager* manager)
 		    = { "headcol1", "headcol2", "sebone5", "sebone5" };
 		static const char* sCollisionFileTable[]
 		    = { "/bosseel/meoto_head", "/bosseel/meoto_head2",
-			    "/bosseel/meoto_camera", "/bosseel/meoto_out_loop" };
+		        "/bosseel/meoto_camera", "/bosseel/meoto_out_loop" };
 
 		for (s32 i = 0; i < 4; ++i) {
 			mMapCollisionJointIndices[i]
