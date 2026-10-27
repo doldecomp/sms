@@ -262,12 +262,20 @@ TBWLeash::TBWLeash(TBossWanwan* owner, int nodeCount, const char* name)
 
 void TBWLeash::invalidateAllCollision()
 {
-	// TODO
+	for (int i = 0; i < mRope->mNumPoints; i++) {
+		mNodes[i]->onHitFilter(1);
+	}
 }
 
 void TBWLeash::pullTail(const JGeometry::TVec3<f32>& pos)
 {
-	// TODO
+	JGeometry::TVec3<f32> delta = mRope->mPoints->unkC;
+	mRope->constraintTail(pos);
+
+	delta.sub(mRope->mPoints->unkC);
+	delta.negate();
+
+	mOwner->mPicketPullDelta = delta;
 }
 
 void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -276,20 +284,13 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 		JGeometry::TVec3<f32> headPos;
 		mOwner->getJointTransByIndex(5, &headPos);
 		mRope->moveHead(headPos);
-		mOwner->unk188 = 0;
+		mOwner->mIsBurnt = 0;
 
-		if (mOwner->unk17C != 0) {
-			TRope* rope                            = mRope;
-			const JGeometry::TVec3<f32>& picketPos = mOwner->mPicket->mPosition;
+		if (mOwner->isMarioInSight()) {
 
-			JGeometry::TVec3<f32> pullDelta = rope->mPoints[0].unkC;
-			rope->constraintTail(picketPos);
+			pullTail(mOwner->mPicket->mPosition);
 
-			pullDelta -= rope->mPoints[0].unkC;
-			pullDelta.negate();
-			mOwner->mPicketPullDelta = pullDelta;
-
-			JGeometry::TVec3<f32> diff      = rope->mPoints[0].unkC;
+			JGeometry::TVec3<f32> diff      = mRope->mPoints[0].unkC;
 			JGeometry::TVec3<f32> centerPos = mOwner->mPosition;
 			centerPos.y += 500.0f;
 			diff -= centerPos;
@@ -299,7 +300,7 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 				diff.scale(20.0f);
 				diff.y = 0.0f;
 				mOwner->mPosition.add(diff);
-				mOwner->unk188 = 1;
+				mOwner->mIsBurnt = 1;
 			}
 
 			f32 targetAngle
@@ -371,11 +372,11 @@ TBWPicket::TBWPicket(TBossWanwan* owner, const char* name)
 
 BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 {
-	if (sender->mActorType == 0x80000001) {
+	if (sender->mActorType == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_HIP_DROP) {
-			TBossWanwan* owner = mOwner;
-			owner->unk17C      = 1;
-			owner->unk184      = 0;
+			TBossWanwan* owner  = mOwner;
+			owner->mIsNearMario = 1;
+			owner->unk184       = 0;
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition,
 			                                0, nullptr, 0, 4);
 			return TRUE;
@@ -384,9 +385,9 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 			TBossWanwan* owner = mOwner;
 
 			owner->releasePicket();
-			owner->unk194 = 0;
-			owner->unk17C = 0;
-			mHolder       = (TTakeActor*)sender;
+			owner->unk194       = 0;
+			owner->mIsNearMario = 0;
+			mHolder             = (TTakeActor*)sender;
 			return TRUE;
 		}
 		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
@@ -410,16 +411,7 @@ BOOL TBWPicket::moveRequest(const JGeometry::TVec3<float>& pos)
 	}
 
 	TBWLeash* leash = mOwner->mLeash;
-	TRope* rope     = leash->mRope;
-
-	JGeometry::TVec3<f32> delta = rope->mPoints->unkC;
-
-	rope->constraintTail(pos);
-
-	delta.sub(rope->mPoints->unkC);
-	delta.negate();
-
-	leash->mOwner->mPicketPullDelta = delta;
+	leash->pullTail(pos);
 
 	return TRUE;
 }
@@ -502,7 +494,7 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		mtx[1][3] = mPosition.y;
 		mtx[2][3] = mPosition.z;
 
-		if (mOwner->unk17C == 0) {
+		if (!mOwner->isMarioInSight()) {
 			mtx[1][3] += 70.0f;
 		}
 
@@ -540,7 +532,8 @@ void TBWHit::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 		for (int i = 0; i < mColCount; i++) {
 			THitActor* elem = mCollisions[i];
-			if (mOwner->mHitPoints != 0 && elem->mActorType == -0x7fffffff) {
+			if (mOwner->mHitPoints != 0
+			    && elem->mActorType == ACTOR_TYPE_MARIO) {
 				elem->receiveMessage(mOwner, HIT_MESSAGE_BURN);
 			}
 		}
@@ -679,7 +672,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		}
 	}
 
-	if (boss->unk17C != 0) {
+	if (boss->isMarioInSight()) {
 		JGeometry::TVec3<f32> pos  = boss->getPosition();
 		JGeometry::TVec3<f32> diff = pos;
 		diff += vel;
@@ -808,10 +801,10 @@ TBossWanwan::TBossWanwan(const char* name)
     , unk16C(0)
     , unk168(0.0f)
     , mMtxCalc(nullptr)
-    , unk17C(0)
+    , mIsNearMario(0)
     , unk180(0)
     , unk184(0)
-    , unk188(0)
+    , mIsBurnt(0)
     , msInvincible(0)
     , unk18D(0)
     , unk190(0)
@@ -850,7 +843,7 @@ void TBossWanwan::init(TLiveManager* manager)
 	mLeash             = new TBWLeash(this, 15);
 	mPicket            = new TBWPicket(this);
 	mPicket->mPosition = BW_PICKET_START;
-	unk17C             = 1;
+	mIsNearMario       = 1;
 	unk184             = 0;
 	goToRandomNextGraphNode();
 
@@ -989,7 +982,7 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (isActorType(0x4000005a)) {
+	if (isActorType(ACTOR_TYPE_WOOD_BARREL)) {
 		sender->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		this->mHitPoints = 0;
 		this->unk190++;
@@ -1007,14 +1000,36 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 
+// size match
 void TBossWanwan::takeBath()
 {
-	// TODO
+	msInvincible = 1;
+	mPosition    = BW_BATH_POS;
+	JGeometry::TVec3<f32> colScale;
+	JGeometry::TVec3<f32> colPos = mPosition;
+	colPos.y += 500.0f;
+	colScale = mScaling;
+	colScale.scale(1.1f);
+
+	TMapCollisionManager* col = mMapCollisionManager;
+	Mtx mtx;
+	MsMtxSetTRS(mtx, colPos.x, colPos.y, colPos.z, mRotation.x, mRotation.y,
+	            mRotation.z, colScale.x, colScale.y, colScale.z);
+	TMapCollisionBase* base = col->getActiveCollision();
+	base->setMtx(mtx);
+	base->setUp();
+
+	mHits[0]->mHitFilter |= 1;
+	mHits[1]->mHitFilter |= 1;
+
+	TBWLeash* leash = mLeash;
+	leash->invalidateAllCollision();
+	mPicket->onHitFilter(1);
 }
 
 void TBossWanwan::releasePicket()
 {
-	if (unk17C != 0) {
+	if (!isMarioInSight()) {
 		JPABaseEmitter* emit = gpMarioParticleManager->emit(
 		    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
 		if (emit != nullptr) {
@@ -1034,23 +1049,18 @@ void TBossWanwan::changeBck(int index)
 
 void TBossWanwan::startGoldBrk()
 {
-	// TODO
+	// Empty body
 }
 
-bool TBossWanwan::isBurning()
-{
-	// TODO:
-}
+bool TBossWanwan::isBurning() { return mIsBurnt; }
 
 bool TBossWanwan::isTailBurning()
 {
 	// TODO
+	// return (check on mTemperature?)
 }
 
-bool TBossWanwan::isMarioInSight()
-{
-	// TODO
-}
+bool TBossWanwan::isMarioInSight() { return mIsNearMario; }
 
 BOOL TBossWanwan::isHeadPulled()
 {
@@ -1058,7 +1068,7 @@ BOOL TBossWanwan::isHeadPulled()
 	               < ((TBWParams*)getSaveParam())->mSLPullLimit.get()
 	           ? FALSE
 	           : TRUE;
-};
+}
 
 void TBossWanwan::calcRootMatrix()
 {
@@ -1142,7 +1152,7 @@ void TBossWanwan::control()
 {
 	TLiveActor::control();
 
-	if (this->unk17C != 0 || (mPicket->isTaken() && isHeadPulled())) {
+	if (isMarioInSight() || (mPicket->isTaken() && isHeadPulled())) {
 		mPositionDelta += mPicketPullDelta;
 
 		JGeometry::TVec3<f32> pos = mPosition;
@@ -1358,7 +1368,7 @@ void TBossWanwan::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (&TNerveBWDie::theNerve() != mSpine->getLatestNerve()
 		    && &TNerveBWJumpToBath::theNerve() != mSpine->getLatestNerve()) {
 			if (mHitPoints != 0) {
-				if (unk17C != 0 && unk194 == 0) {
+				if (isMarioInSight() && unk194 == 0) {
 					unk184++;
 					if (unk184 > 600) {
 						mSpine->pushNerve(&TNerveBWShake::theNerve());
@@ -1483,7 +1493,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 		ctrl->setRate(SMSGetAnmFrameRate());
 	}
 
-	if (boss->unk17C == 0 && boss->mPicket->isTaken() && boss->isHeadPulled()) {
+	if (!boss->isMarioInSight() && boss->mPicket->isTaken()
+	    && boss->isHeadPulled()) {
 		TGraphTracer* tracer = boss->unk124;
 		TGraphWeb* graph     = tracer->unk0;
 		int prevIdx          = tracer->mPrevIdx;
@@ -1587,7 +1598,7 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 		boss->unk168 = 0.0f;
 
 		if (!boss->unk194) {
-			if (boss->unk17C) {
+			if (boss->isMarioInSight()) {
 				JPABaseEmitter* emit = gpMarioParticleManager->emit(
 				    BWAN_JPA_JUMP_SMOKE, &boss->mPicket->mPosition, 0, 0);
 				if (emit != nullptr) {
@@ -1595,8 +1606,8 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 					emit->setGlobalScale(scale);
 				}
 
-				boss->unk194 = 0;
-				boss->unk17C = 0;
+				boss->unk194       = 0;
+				boss->mIsNearMario = 0;
 				SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
 				                                &boss->mPicket->mPosition, 0,
 				                                nullptr, 0, 4);
@@ -1756,7 +1767,7 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 DEFINE_NERVE(TNerveBWDie, TLiveActor)
 {
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
-	MActor* actor     = boss->mMActor;
+	MActor* actor     = boss->getMActor();
 
 	if (spine->getTime() == 0) {
 		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
@@ -1781,15 +1792,16 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		                                   0.0f, true, nullptr, 0, nullptr,
 		                                   JDrama::TFlagT<u16>(0));
 
-		boss->unk16C       = 0;
-		boss->unk168       = 0.0f;
+		boss->unk16C = 0;
+		boss->unk168 = 0.0f;
+
+		// boss->takeBath(); from here*
 		boss->msInvincible = 1;
 		boss->mPosition    = BW_BATH_POS;
-
+		JGeometry::TVec3<f32> colScale;
 		JGeometry::TVec3<f32> colPos = boss->mPosition;
 		colPos.y += 500.0f;
-
-		JGeometry::TVec3<f32> colScale = boss->mScaling;
+		colScale = boss->mScaling;
 		colScale.scale(1.1f);
 
 		TMapCollisionManager* col = boss->mMapCollisionManager;
@@ -1805,10 +1817,9 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		boss->mHits[1]->mHitFilter |= 1;
 
 		TBWLeash* leash = boss->mLeash;
-		for (int i = 0; i < leash->mRope->mNumPoints; i++) {
-			leash->mNodes[i]->onHitFilter(1);
-		}
+		leash->invalidateAllCollision();
 		boss->mPicket->onHitFilter(1);
+		// to here*
 
 		boss->changeBck(1);
 		actor->setBtpFromIndex(0);
@@ -1848,7 +1859,7 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 		boss->unk16C = 0;
 	}
 
-	if (boss->unk188) {
+	if (boss->isBurning()) {
 		spine->pushAfterCurrent(&TNerveBWFall::theNerve());
 		return true;
 	}
@@ -1880,8 +1891,8 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		boss->releasePicket();
 
-		boss->unk194 = 0;
-		boss->unk17C = 0;
+		boss->unk194       = 0;
+		boss->mIsNearMario = 0;
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE2,
 		                                &boss->mPicket->mPosition, 0, nullptr,
 		                                0, 4);
