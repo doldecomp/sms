@@ -19,20 +19,14 @@
 
 void TMirrorCamera::makeMirrorViewMtx()
 {
-	JGeometry::TVec3<f32> local_24;
-	local_24.set(unk84);
-
-	f32 fVar1 = (local_24.dot(gpCamera->unk124) + unk90) * -2.0f;
-	unk98.scaleAdd(fVar1, local_24, gpCamera->unk124);
-
-	JGeometry::TVec3<f32> local_30;
-	fVar1 = (local_24.dot(gpCamera->unk148) + unk90) * -2.0f;
-	local_30.scaleAdd(fVar1, local_24, gpCamera->unk148);
-
-	JGeometry::TVec3<f32> local_3C;
-	fVar1 = (local_24.dot(gpCamera->mUp) + unk90) * -2.0f;
-	local_3C.scaleAdd(fVar1, local_24, gpCamera->mUp);
-	C_MTXLookAt(unk30, &unk98, &local_3C, &local_30);
+	// TODO: this bastard need to call TVec3() out of line >:(
+	JGeometry::TPartition3<f32> plane(unk84.x, unk84.y, unk84.z, -unk90);
+	plane.reflect(unk98, gpCamera->unk124);
+	JGeometry::TVec3<f32> at;
+	plane.reflect(at, gpCamera->unk148);
+	JGeometry::TVec3<f32> up;
+	plane.reflect(up, gpCamera->mUp);
+	C_MTXLookAt(unk30, &unk98, &up, &at);
 }
 
 void TMirrorCamera::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -63,7 +57,13 @@ void TMirrorCamera::drawSetting(MtxPtr param_1)
 	GXLoadTexMtxImm(afStack_98, 0x1E, GX_MTX3x4);
 }
 
-void TMirrorCamera::calcEffectMtx(MtxPtr) { }
+void TMirrorCamera::calcEffectMtx(MtxPtr mtx)
+{
+	Mtx lightPerspective;
+	C_MTXLightPerspective(lightPerspective, unk80 * gpCamera->getFovy(),
+	                      gpCamera->getAspect(), 0.5f, -0.5f, 0.5f, 0.5f);
+	MTXConcat(lightPerspective, getUnk30(), mtx);
+}
 
 TMirrorCamera::TMirrorCamera(const char* name)
     : JDrama::TCamera(10.0f, 300000.0f, name)
@@ -159,11 +159,24 @@ void TMirrorModel::initPlaneInfo()
 	}
 }
 
-void TMirrorModel::entry() { }
+void TMirrorModel::entry()
+{
+	unk8->makeMirrorViewMtx();
+	Mtx effectMtx;
+	unk8->calcEffectMtx(effectMtx);
+	J3DMaterial* material
+	    = unk4->getModel()->getModelData()->getMaterialNodePointer(0);
+	material->change();
+	material->getTexGenBlock()->getTexMtx(0)->setEffectMtx(effectMtx);
+	unk4->entry();
+}
 
-void TMirrorModel::calcView() { }
+void TMirrorModel::calcView() { unk4->viewCalc(); }
 
-void TMirrorModel::getMirrorTexInfo() { }
+ResTIMG* TMirrorModel::getMirrorTexInfo()
+{
+	return unk4->getModel()->getModelData()->getTexture()->getResTIMG(0);
+}
 
 inline static void identity34(MtxPtr mtx)
 {
@@ -266,39 +279,24 @@ void TMirrorModelManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> local_44 = SMS_GetMarioPos();
 		unk18 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_44));
-		if (!(unk18 != -1 ? true : false)
-		    && !gpMarioGroundPlane[0]->isIllegalData()) {
-			unk24->unk84 = gpMarioGroundPlane[1]->mNormal;
-			unk24->unk90 = gpMarioGroundPlane[1]->mPlaneDistance;
+		if (!isUnk18Present() && !SMS_GetMarioGroundPlane()->isIllegalData()) {
+			const TBGCheckData* plane = SMS_GetMarioGroundPlane();
+			unk24->setUnk84AndUnk90(plane->mNormal.x, plane->mNormal.y,
+			                        plane->mNormal.z, plane->mPlaneDistance);
 			unk24->makeMirrorViewMtx();
 		}
 	}
 
-	if (unk18 != -1) {
+	if (isUnk18Present()) {
 		if (cue & CUE_CALC_ANIM)
 			unk1C[unk18]->calc();
 
 		if (cue & CUE_CALC_VIEW)
-			unk1C[unk18]->unk4->viewCalc();
+			unk1C[unk18]->calcView();
 
 		if (cue & CUE_ENTRY) {
-			TMirrorModel* model = unk1C[unk18];
-			model->setPlane();
-
-			model->unk8->makeMirrorViewMtx();
-
-			Mtx lightPerspective;
-			C_MTXLightPerspective(
-			    lightPerspective, model->unk8->unk80 * gpCamera->getFovy(),
-			    gpCamera->getAspect(), 0.5f, -0.5f, 0.5f, 0.5f);
-			Mtx effectMtx;
-			MTXConcat(lightPerspective, model->unk8->getUnk30(), effectMtx);
-			J3DMaterial* material = model->unk4->getModel()
-			                            ->getModelData()
-			                            ->getMaterialNodePointer(0);
-			material->change();
-			material->getTexGenBlock()->getTexMtx(0)->setEffectMtx(effectMtx);
-			model->unk4->entry();
+			unk1C[unk18]->setPlane();
+			unk1C[unk18]->entry();
 		}
 	}
 }
@@ -315,10 +313,7 @@ void TMirrorModelManager::loadAfter()
 		findMirrorCamera();
 
 	for (int i = 0; i < unk10; ++i) {
-		J3DTexture* texture
-		    = unk1C[i]->getUnk4()->getModel()->getModelData()->getTexture();
-
-		ResTIMG& target       = *texture->getResTIMG(0);
+		ResTIMG& target       = *unk1C[i]->getMirrorTexInfo();
 		const ResTIMG& source = *unk24->getUnk94();
 
 		target = source;

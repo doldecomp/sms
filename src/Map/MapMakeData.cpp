@@ -71,9 +71,9 @@ void TBGCheckData::updateTrans(const JGeometry::TVec3<f32>& translate_by)
 	                   + mNormal.z * mPoint1.z);
 }
 
-void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
+void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& trans)
 {
-	JGeometry::TVec3<f32> delta = param_1 - mPrevTranslation;
+	JGeometry::TVec3<f32> delta = trans - mPrevTranslation;
 
 	TBGCheckData* checkDataIt = mCheckDatas;
 	for (int i = 0; i < mCheckDataNum; ++checkDataIt, ++i) {
@@ -81,12 +81,12 @@ void TMapCollisionBase::updateTrans(const JGeometry::TVec3<f32>& param_1)
 		gpMapCollisionData->addCheckDataToGrid(checkDataIt, getKind());
 	}
 
-	mPrevTranslation = param_1;
+	mPrevTranslation = trans;
 }
 
 void TMapCollisionBase::updateVertexPos(f32* vecs)
 {
-	MTXMultVecArray(unk20, mVertices, (Vec*)vecs, mVertexNum);
+	MTXMultVecArray(mTransformMtx, mVertices, (Vec*)vecs, mVertexNum);
 }
 
 void TMapCollisionBase::updateCheckData(const f32* data)
@@ -156,9 +156,9 @@ void TMapCollisionBase::initAllCheckData(s16 default_additional_data,
 void TMapCollisionBase::initCheckData(s16 param_1, u16 param_2,
                                       const TLiveActor* owner_actor)
 {
-	mPrevTranslation.x = unk20[0][3];
-	mPrevTranslation.y = unk20[1][3];
-	mPrevTranslation.z = unk20[2][3];
+	mPrevTranslation.x = mTransformMtx[0][3];
+	mPrevTranslation.y = mTransformMtx[1][3];
+	mPrevTranslation.z = mTransformMtx[2][3];
 
 	if (param_2 & 4) {
 		initAllCheckData(param_1, &mVertices->x, param_2, owner_actor);

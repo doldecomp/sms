@@ -20,6 +20,8 @@ public:
 	{
 		set(param_1, param_2);
 	}
+	// fabricated
+	TPartition3(T x, T y, T z, T dist) { set(x, y, z, dist); }
 
 	void set(const TVec3<T>& param_1, const TVec3<f32>& param_2,
 	         const TVec3<f32>& param_3)
@@ -35,6 +37,25 @@ public:
 	{
 		mNormal.set(param_1);
 		mDist = mNormal.dot(param_2);
+	}
+
+	// fabricated
+	void set(T x, T y, T z, T dist)
+	{
+		mNormal.set(x, y, z);
+		mDist = dist;
+	}
+
+	// fabricated
+	T getDistance(const TVec3<T>& point) const
+	{
+		return mNormal.dot(point) - mDist;
+	}
+
+	// fabricated
+	void reflect(TVec3<T>& dst, const TVec3<T>& point) const
+	{
+		dst.scaleAdd(-2.0f * getDistance(point), mNormal, point);
 	}
 
 	TVec3<T> mNormal; // plane normal

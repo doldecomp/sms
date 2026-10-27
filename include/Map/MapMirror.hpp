@@ -46,7 +46,7 @@ public:
 	void initPlaneInfo();
 	void entry();
 	void calcView();
-	void getMirrorTexInfo();
+	ResTIMG* getMirrorTexInfo();
 
 	virtual void init(const char*);
 	virtual void calc() { }
@@ -55,9 +55,6 @@ public:
 	virtual f32 getD() const { return unk24; }
 
 	TMirrorModel();
-
-	// fabricated
-	MActor* getUnk4() { return unk4; }
 
 public:
 	/* 0x4 */ MActor* unk4;
