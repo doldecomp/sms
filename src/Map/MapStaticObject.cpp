@@ -234,7 +234,7 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((!(cue & CUE_ENTRY) || !(mActorData->mFlags & TActorData::FLAG_UNK10)
-	     || gpMirrorModelManager->isUnk18Present())
+	     || gpMirrorModelManager->isMirrorActive())
 	    && mMActor) {
 		if (cue & CUE_CALC_ANIM) {
 			MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,

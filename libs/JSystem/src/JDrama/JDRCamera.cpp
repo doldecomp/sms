@@ -26,8 +26,8 @@ void TPolarCamera::perform(u32 cue, TGraphics* graphics)
 
 	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXPerspective(projMtx, mFovy, mAspect, mNear, mFar);
-	graphics->mNearPlane = mNear;
-	graphics->mFarPlane  = mFar;
+	graphics->setNearPlane(mNear);
+	graphics->setFarPlane(mFar);
 
 	TPosition3f tmp;
 	tmp.identity33();
@@ -69,8 +69,8 @@ void TLookAtCamera::perform(u32 cue, TGraphics* graphics)
 
 	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXPerspective(projMtx, mFovy, mAspect, mNear, mFar);
-	graphics->mNearPlane = mNear;
-	graphics->mFarPlane  = mFar;
+	graphics->setNearPlane(mNear);
+	graphics->setFarPlane(mFar);
 	C_MTXLookAt(graphics->mViewMtx, &mPosition, &mUp, &mTarget);
 
 	if (cue & CUE_SET_PROJECTION)
@@ -108,8 +108,8 @@ void TOrthoProj::perform(u32 cue, TGraphics* graphics)
 	MtxPtr projMtx = graphics->mProjMtx.mMtx;
 	C_MTXOrtho(projMtx, mField[1], mField[3], mField[0], mField[2], mNear,
 	           mFar);
-	graphics->mNearPlane = mNear;
-	graphics->mFarPlane  = mFar;
+	graphics->setNearPlane(mNear);
+	graphics->setFarPlane(mFar);
 	MTXTrans(graphics->mViewMtx, mPosition.x, mPosition.y, mPosition.z);
 
 	if (cue & CUE_SET_PROJECTION)

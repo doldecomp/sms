@@ -25,7 +25,7 @@ void TMirrorActor::checkIsInMirror()
 	}
 
 	if (mFlags & MIRROR_ACTOR_FLAG_ALWAYS) {
-		if (!gpMirrorModelManager->isUnk18Present()
+		if (!gpMirrorModelManager->isMirrorActive()
 		    && !(mFlags & MIRROR_ACTOR_FLAG_MARIO)) {
 			if (mMirrorModel->getShapePacket(0)->isVisible())
 				SMS_HideAllShapePacket(mMirrorModel);
@@ -40,21 +40,22 @@ void TMirrorActor::checkIsInMirror()
 	}
 
 	MtxPtr mtx = mNormalModel->getAnmMtx(0);
-	JGeometry::TVec3<f32> local_18;
+	JGeometry::TVec3<f32> position;
 	if (!(mFlags & MIRROR_ACTOR_FLAG_MARIO)) {
-		local_18.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+		position.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	} else {
-		local_18.set(SMS_GetMarioPos());
+		position.set(SMS_GetMarioPos());
 	}
 
-	int uVar4 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_18));
-	if (uVar4 != gpMirrorModelManager->getUnk18()) {
+	int mirrorIdx
+	    = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(position));
+	if (mirrorIdx != gpMirrorModelManager->getActiveMirrorIdx()) {
 		mIsInMirror = false;
-	} else if (!gpMirrorModelManager->isUnk18Present()
+	} else if (!gpMirrorModelManager->isMirrorActive()
 	           && !(mFlags & MIRROR_ACTOR_FLAG_MARIO)) {
 		mIsInMirror = false;
-	} else if (gpMirrorModelManager->isUnk18Present()
-	           && !gpMirrorModelManager->isUpperThanMirrorPlane(local_18)) {
+	} else if (gpMirrorModelManager->isMirrorActive()
+	           && !gpMirrorModelManager->isUpperThanMirrorPlane(position)) {
 		mIsInMirror = false;
 	} else {
 		mIsInMirror = true;

@@ -4,6 +4,7 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <JSystem/JDrama/JDRCamera.hpp>
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
+#include <JSystem/JGeometry/JGPartition3.hpp>
 
 struct ResTIMG;
 class MActor;
@@ -20,29 +21,28 @@ public:
 	void drawSetting(MtxPtr);
 	void calcEffectMtx(MtxPtr);
 
-	MtxPtr getUnk30() { return unk30; }
-	void setUnk84AndUnk90(f32 x, f32 y, f32 z, f32 dot)
-	{
-		unk84.set(x, y, z);
-		unk90 = dot;
-	}
-
-	const ResTIMG* getUnk94() const { return unk94; }
+	MtxPtr getViewMtx() { return mViewMtx; }
 	// fabricated
-	const JGeometry::TVec3<f32>& getUnk98() const { return unk98; }
+	void setPlane(f32 x, f32 y, f32 z, f32 dist) { mPlane.set(x, y, z, dist); }
 
-public:
-	/* 0x30 */ Mtx unk30;
-	/* 0x60 */ GXTexObj unk60;
-	/* 0x80 */ f32 unk80;
-	/* 0x84 */ JGeometry::TVec3<f32> unk84;
-	/* 0x90 */ f32 unk90;
-	/* 0x94 */ ResTIMG* unk94;
-	/* 0x98 */ JGeometry::TVec3<f32> unk98;
+	const ResTIMG* getFrameBuffer() const { return mFrameBuffer; }
+	// fabricated
+	const JGeometry::TVec3<f32>& getUnk98() const { return mPosition; }
+	const GXTexObj& getFrameBufferTexObj() const { return mFrameBufferTexObj; }
+
+private:
+	/* 0x30 */ Mtx mViewMtx;
+	/* 0x60 */ GXTexObj mFrameBufferTexObj;
+	/* 0x80 */ f32 mFovyMultiplier;
+	/* 0x84 */ JGeometry::TPartition3<f32> mPlane;
+	/* 0x94 */ ResTIMG* mFrameBuffer;
+	/* 0x98 */ JGeometry::TVec3<f32> mPosition;
 };
 
 class TMirrorModel {
 public:
+	TMirrorModel();
+
 	void initPlaneInfo();
 	void entry();
 	void calcView();
@@ -51,23 +51,23 @@ public:
 	virtual void init(const char*);
 	virtual void calc() { }
 	virtual void setPlane();
-	virtual const JGeometry::TVec3<f32>& getNormalVec() const { return unk18; }
-	virtual f32 getD() const { return unk24; }
+	virtual const JGeometry::TVec3<f32>& getNormalVec() const
+	{
+		return mPlane.mNormal;
+	}
+	virtual f32 getD() const { return mPlane.mDist; }
 
-	TMirrorModel();
-
-public:
-	/* 0x4 */ MActor* unk4;
-	/* 0x8 */ TMirrorCamera* unk8;
-	/* 0xC */ JGeometry::TVec3<f32> unkC;
-	/* 0x18 */ JGeometry::TVec3<f32> unk18;
-	/* 0x24 */ f32 unk24;
+protected:
+	/* 0x4 */ MActor* mMActor;
+	/* 0x8 */ TMirrorCamera* mMirrorCamera;
+	/* 0xC */ JGeometry::TVec3<f32> mModelVertexSample;
+	/* 0x18 */ JGeometry::TPartition3<f32> mPlane;
 };
 
 class TMirrorModelObj : public TMirrorModel {
 public:
 	TMirrorModelObj()
-	    : unk28(nullptr)
+	    : mModel(nullptr)
 	{
 	}
 
@@ -75,8 +75,10 @@ public:
 	virtual void calc();
 	virtual void setPlane();
 
+	void setModel(J3DModel* model) { mModel = model; }
+
 public:
-	/* 0x28 */ J3DModel* unk28;
+	/* 0x28 */ J3DModel* mModel;
 };
 
 class TMirrorModelManager;
@@ -97,17 +99,18 @@ public:
 	void registerObjMirror(TMirrorModel*);
 
 	// fabricated
-	MActorAnmData* getUnk20() { return unk20; }
-	int& getUnk18() { return unk18; }
-	bool isUnk18Present() { return unk18 != -1 ? true : false; }
+	MActorAnmData* getSharedAnmData() { return mSharedEmptyAnmData; }
+	int& getActiveMirrorIdx() { return mActiveMirrorModelIdx; }
+	bool isMirrorActive() { return mActiveMirrorModelIdx != -1 ? true : false; }
+	TMirrorCamera* getMirrorCamera() { return mMirrorCamera; }
 
 public:
-	/* 0x10 */ int unk10;
-	/* 0x14 */ int unk14;
-	/* 0x18 */ int unk18;
-	/* 0x1C */ TMirrorModel** unk1C;
-	/* 0x20 */ MActorAnmData* unk20;
-	/* 0x24 */ TMirrorCamera* unk24;
+	/* 0x10 */ int mMirrorModelNum;
+	/* 0x14 */ int mMirrorModelMax;
+	/* 0x18 */ int mActiveMirrorModelIdx;
+	/* 0x1C */ TMirrorModel** mMirrorModels;
+	/* 0x20 */ MActorAnmData* mSharedEmptyAnmData;
+	/* 0x24 */ TMirrorCamera* mMirrorCamera;
 	/* 0x28 */ u16 unk28;
 };
 

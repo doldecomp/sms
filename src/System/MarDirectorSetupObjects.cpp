@@ -412,7 +412,13 @@ bool TMarDirector::setupObjects()
 	JDrama::TEfbCtrlTex* normalSceneDrawStage
 	    = static_cast<JDrama::TEfbCtrlTex*>(
 	        JDrama::TNameRefGen::search("通常シーン描画ステージ"));
-	normalSceneDrawStage->unk20.on(0x122F);
+	normalSceneDrawStage->unk20.on(JDrama::TEfbCtrl::EFB_FLAG_NO_CLEAR_COLOR
+	                               | JDrama::TEfbCtrl::EFB_FLAG_NO_CLEAR_ALPHA
+	                               | JDrama::TEfbCtrl::EFB_FLAG_NO_CLEAR_Z
+	                               | JDrama::TEfbCtrl::EFB_FLAG_PIXEL_FMT_RGBA6
+	                               | JDrama::TEfbCtrl::EFB_FLAG_VFILTER
+	                               | JDrama::TEfbCtrl::EFB_FLAG_NO_ALPHA_UPDATE
+	                               | JDrama::TEfbCtrl::EFB_FLAG_MIPMAP);
 	normalSceneDrawStage->mVFilter = SMSVFilter_flicker;
 	TScreenTexture* screenTex
 	    = (TScreenTexture*)sceneCommon->search("スクリーンテクスチャ");
