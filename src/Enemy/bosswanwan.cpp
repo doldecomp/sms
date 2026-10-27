@@ -374,9 +374,9 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 {
 	if (sender->mActorType == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_HIP_DROP) {
-			TBossWanwan* owner = mOwner;
-			owner->mIsNearMario      = 1;
-			owner->unk184      = 0;
+			TBossWanwan* owner  = mOwner;
+			owner->mIsNearMario = 1;
+			owner->unk184       = 0;
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition,
 			                                0, nullptr, 0, 4);
 			return TRUE;
@@ -385,9 +385,9 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 			TBossWanwan* owner = mOwner;
 
 			owner->releasePicket();
-			owner->unk194 = 0;
+			owner->unk194       = 0;
 			owner->mIsNearMario = 0;
-			mHolder       = (TTakeActor*)sender;
+			mHolder             = (TTakeActor*)sender;
 			return TRUE;
 		}
 		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
@@ -843,7 +843,7 @@ void TBossWanwan::init(TLiveManager* manager)
 	mLeash             = new TBWLeash(this, 15);
 	mPicket            = new TBWPicket(this);
 	mPicket->mPosition = BW_PICKET_START;
-	mIsNearMario             = 1;
+	mIsNearMario       = 1;
 	unk184             = 0;
 	goToRandomNextGraphNode();
 
@@ -1052,7 +1052,7 @@ void TBossWanwan::startGoldBrk()
 	// Empty body
 }
 
-bool TBossWanwan::isBurning() { return mIsBurnt; } 
+bool TBossWanwan::isBurning() { return mIsBurnt; }
 
 bool TBossWanwan::isTailBurning()
 {
@@ -1067,7 +1067,7 @@ BOOL TBossWanwan::isHeadPulled()
 	return mPicketPullDelta.squared()
 	               < ((TBWParams*)getSaveParam())->mSLPullLimit.get()
 	           ? FALSE
-			   : TRUE;
+	           : TRUE;
 }
 
 void TBossWanwan::calcRootMatrix()
@@ -1606,7 +1606,7 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 					emit->setGlobalScale(scale);
 				}
 
-				boss->unk194 = 0;
+				boss->unk194       = 0;
 				boss->mIsNearMario = 0;
 				SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
 				                                &boss->mPicket->mPosition, 0,
@@ -1891,7 +1891,7 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		boss->releasePicket();
 
-		boss->unk194 = 0;
+		boss->unk194       = 0;
 		boss->mIsNearMario = 0;
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE2,
 		                                &boss->mPicket->mPosition, 0, nullptr,
