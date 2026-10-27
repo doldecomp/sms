@@ -284,9 +284,9 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 		JGeometry::TVec3<f32> headPos;
 		mOwner->getJointTransByIndex(5, &headPos);
 		mRope->moveHead(headPos);
-		mOwner->unk188 = 0;
+		mOwner->mIsBurnt = 0;
 
-		if (mOwner->unk17C) {
+		if (mOwner->mIsNearMario) {
 
 			pullTail(mOwner->mPicket->mPosition);
 
@@ -300,7 +300,7 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 				diff.scale(20.0f);
 				diff.y = 0.0f;
 				mOwner->mPosition.add(diff);
-				mOwner->unk188 = 1;
+				mOwner->mIsBurnt = 1;
 			}
 
 			f32 targetAngle
@@ -375,7 +375,7 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 	if (sender->mActorType == ACTOR_TYPE_MARIO) {
 		if (message == HIT_MESSAGE_HIP_DROP) {
 			TBossWanwan* owner = mOwner;
-			owner->unk17C      = 1;
+			owner->mIsNearMario      = 1;
 			owner->unk184      = 0;
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_LOCK, &mPosition,
 			                                0, nullptr, 0, 4);
@@ -386,7 +386,7 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 
 			owner->releasePicket();
 			owner->unk194 = 0;
-			owner->unk17C = 0;
+			owner->mIsNearMario = 0;
 			mHolder       = (TTakeActor*)sender;
 			return TRUE;
 		}
@@ -494,7 +494,7 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		mtx[1][3] = mPosition.y;
 		mtx[2][3] = mPosition.z;
 
-		if (mOwner->unk17C == 0) {
+		if (mOwner->mIsNearMario == 0) {
 			mtx[1][3] += 70.0f;
 		}
 
@@ -801,10 +801,10 @@ TBossWanwan::TBossWanwan(const char* name)
     , unk16C(0)
     , unk168(0.0f)
     , mMtxCalc(nullptr)
-    , unk17C(0)
+    , mIsNearMario(0)
     , unk180(0)
     , unk184(0)
-    , unk188(0)
+    , mIsBurnt(0)
     , msInvincible(0)
     , unk18D(0)
     , unk190(0)
@@ -843,7 +843,7 @@ void TBossWanwan::init(TLiveManager* manager)
 	mLeash             = new TBWLeash(this, 15);
 	mPicket            = new TBWPicket(this);
 	mPicket->mPosition = BW_PICKET_START;
-	unk17C             = 1;
+	mIsNearMario             = 1;
 	unk184             = 0;
 	goToRandomNextGraphNode();
 
@@ -1052,7 +1052,7 @@ void TBossWanwan::startGoldBrk()
 	// Empty body
 }
 
-bool TBossWanwan::isBurning() { return unk188; } // seems to match size?
+bool TBossWanwan::isBurning() { return mIsBurnt; } 
 
 bool TBossWanwan::isTailBurning()
 {
@@ -1060,7 +1060,7 @@ bool TBossWanwan::isTailBurning()
 	// return (check on mTemperature?)
 }
 
-bool TBossWanwan::isMarioInSight() { return unk17C; }
+bool TBossWanwan::isMarioInSight() { return mIsNearMario; }
 
 BOOL TBossWanwan::isHeadPulled()
 {
@@ -1607,7 +1607,7 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 				}
 
 				boss->unk194 = 0;
-				boss->unk17C = 0;
+				boss->mIsNearMario = 0;
 				SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
 				                                &boss->mPicket->mPosition, 0,
 				                                nullptr, 0, 4);
@@ -1892,7 +1892,7 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 		boss->releasePicket();
 
 		boss->unk194 = 0;
-		boss->unk17C = 0;
+		boss->mIsNearMario = 0;
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE2,
 		                                &boss->mPicket->mPosition, 0, nullptr,
 		                                0, 4);
