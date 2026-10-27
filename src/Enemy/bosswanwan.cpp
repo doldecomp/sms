@@ -286,7 +286,7 @@ void TBWLeash::perform(u32 cue, JDrama::TGraphics* graphics)
 		mRope->moveHead(headPos);
 		mOwner->mIsBurnt = 0;
 
-		if (mOwner->mIsNearMario) {
+		if (mOwner->isMarioInSight()) {
 
 			pullTail(mOwner->mPicket->mPosition);
 
@@ -494,7 +494,7 @@ void TBWPicket::perform(u32 cue, JDrama::TGraphics* graphics)
 		mtx[1][3] = mPosition.y;
 		mtx[2][3] = mPosition.z;
 
-		if (mOwner->mIsNearMario == 0) {
+		if (!mOwner->isMarioInSight()) {
 			mtx[1][3] += 70.0f;
 		}
 
@@ -1029,7 +1029,7 @@ void TBossWanwan::takeBath()
 
 void TBossWanwan::releasePicket()
 {
-	if (!mIsNearMario) {
+	if (!isMarioInSight()) {
 		JPABaseEmitter* emit = gpMarioParticleManager->emit(
 		    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
 		if (emit != nullptr) {
