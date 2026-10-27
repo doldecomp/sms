@@ -208,7 +208,7 @@ public:
 	/* 0x16C */ s32 unk16C;
 	/* 0x170 */ TBWHit* mHits[2];
 	/* 0x178 */ f32 unk178;
-	/* 0x17C */ bool mIsNearMario;
+	/* 0x17C */ BOOL mIsNearMario;
 	/* 0x180 */ s32 unk180;
 	/* 0x184 */ s32 unk184;
 	/* 0x188 */ BOOL mIsBurnt;

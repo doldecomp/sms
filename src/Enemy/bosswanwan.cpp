@@ -1029,7 +1029,7 @@ void TBossWanwan::takeBath()
 
 void TBossWanwan::releasePicket()
 {
-	if (isMarioInSight()) {
+	if (!mIsNearMario) {
 		JPABaseEmitter* emit = gpMarioParticleManager->emit(
 		    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
 		if (emit != nullptr) {
