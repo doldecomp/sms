@@ -76,6 +76,14 @@ void TPollutionCounterBase::initCounters(int max_counters)
 	}
 }
 
+TPollutionCounterBase::TPollutionCounterBase()
+    : mCounterCapacity(0)
+    , mCounterNum(0)
+    , mCounters(nullptr)
+    , mPolygonCount(nullptr)
+{
+}
+
 void loadPollutionLayer(const u8* param_1, u16 param_2, u16 param_3,
                         GXTexMapID param_4)
 {

@@ -96,6 +96,22 @@ void TMapCollisionBase::init(const char* col_file_path, u16 param_2,
 	}
 }
 
+TMapCollisionBase::TMapCollisionBase()
+    : mCheckDatas(nullptr)
+    , mKind(0)
+    , mCheckDataNum(0)
+    , mVertexNum(0)
+    , mVertices(nullptr)
+    , mCollisionGroupNum(0)
+    , mCollisionGroups(nullptr)
+    , mFlags(0)
+{
+	MTXIdentity(mTransformMtx);
+	mPrevTranslation.x = 0.0f;
+	mPrevTranslation.y = 0.0f;
+	mPrevTranslation.z = 0.0f;
+}
+
 void TMapCollisionStatic::setUp()
 {
 	if (mCheckDatas)
