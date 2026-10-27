@@ -960,7 +960,7 @@ config.libs = [
             PCHObject(NonMatching, "Player/Yoshi.cpp"),
             PCHObject(NonMatching, "Player/MarioEffect.cpp"),
             Object(NonMatching, "Player/MarioSwim.cpp"),
-            Object(NonMatching, "Player/MarioAccess.cpp"),
+            Object(Matching, "Player/MarioAccess.cpp"),
             PCHObject(NonMatching, "Player/MarioInit.cpp"),
             PCHObject(NonMatching, "Player/ModelWaterManager.cpp"),
             PCHObject(Matching, "Player/MarioPositionObj.cpp"),
