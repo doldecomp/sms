@@ -141,10 +141,7 @@ bool SMS_IsMarioTouchGround4cm()
 
 void SMS_IsMarioSpeedZero() { }
 
-bool SMS_IsMarioOnWire()
-{
-	return !!gpMarioOriginal->isOnWire();
-}
+bool SMS_IsMarioOnWire() { return !!gpMarioOriginal->isOnWire(); }
 
 bool SMS_IsMarioOpeningDoor()
 {
