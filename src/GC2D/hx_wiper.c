@@ -6,7 +6,14 @@
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 #include <dolphin/os/OSCache.h>
+#include <dolphin/vi.h>
 #include <fake_tgmath.h>
+#include <version.h>
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_GMSP01_NX)
+#define HX_TV_FORMAT_TIMING
+#endif
 
 f32 sinf(f32);
 f32 cosf(f32);
@@ -44,6 +51,9 @@ typedef struct HxWiper {
 	s32 animationState;
 	u32 timer;
 	HxMotion motion;
+#ifdef HX_TV_FORMAT_TIMING
+	u8 isPal;
+#endif
 } HxWiper;
 
 typedef struct HxDrawPath {
@@ -55,6 +65,10 @@ typedef struct HxDrawPath {
 static void Hx_SetVFilter(f32);
 static void __Hx_FrBufferMorf(u32, u32);
 static void Hx_CameraInit(void);
+#ifdef VERSION_GMSP01_NX
+static void Hx_CameraInitWide(void);
+static void Hx_CameraInitWide2(void);
+#endif
 static void Hx_GxInit(int, int);
 static void Hx_Circle(void);
 static void Hx_Test1(void);
@@ -80,6 +94,64 @@ static u16 img_wx;
 static u16 img_wy;
 static u8 vtable[7];
 
+#ifdef VERSION_GMSP01_NX
+static void Hx_CameraInitParam(int wide, int wide2)
+{
+	static Vec camLoc;
+	static Vec objPt;
+	static Vec up = { 0.0f, -10.0f, 0.0f };
+	Mtx44 projection;
+	Mtx view;
+	f32 extraWidth;
+	f32 halfWidth  = (f32)(hx.width >> 1);
+	f32 halfHeight = (f32)(hx.height >> 1);
+	f32 near       = 0.0f;
+	f32 far        = 100.0f;
+
+	camLoc.x = halfWidth;
+	camLoc.y = halfHeight;
+	camLoc.z = -30.0f;
+	objPt.x  = halfWidth;
+	objPt.y  = halfHeight;
+	objPt.z  = 0.0f;
+	if (wide != 0)
+		extraWidth = 0.0f;
+	else
+		extraWidth = 110.0f;
+	C_MTXOrtho(projection, halfHeight, -halfHeight, -halfWidth - extraWidth,
+	           halfWidth + extraWidth, near, far);
+	GXSetProjection(projection, GX_ORTHOGRAPHIC);
+	GXSetViewport(0.0f, 0.0f, 640.0f, wide2 != 0 ? 480.0f : 385.71429f, 0.0f,
+	              1.0f);
+	C_MTXLookAt(view, &camLoc, &up, &objPt);
+	GXSetCullMode(GX_CULL_NONE);
+	GXSetCoPlanar(GX_DISABLE);
+	GXSetZMode(GX_DISABLE, GX_ALWAYS, GX_DISABLE);
+	GXSetNumTexGens(0);
+	GXSetNumTevStages(1);
+	GXSetNumIndStages(0);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+	GXSetLineWidth(6, GX_TO_ZERO);
+	GXLoadPosMtxImm(view, GX_PNMTX0);
+	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX,
+	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+	GXSetChanCtrl(GX_COLOR1A1, GX_DISABLE, GX_SRC_REG, GX_SRC_REG,
+	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+	GXSetNumChans(1);
+}
+
+static void Hx_CameraInitWide2(void) { Hx_CameraInitParam(1, 1); }
+
+static void Hx_CameraInitWide(void) { Hx_CameraInitParam(1, 0); }
+
+static void Hx_CameraInit(void) { Hx_CameraInitParam(0, 0); }
+#else
 static void Hx_CameraInit(void)
 {
 	static Vec camLoc = { 320.0f, 240.0f, -30.0f };
@@ -122,6 +194,7 @@ static void Hx_CameraInit(void)
 	              GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
 	GXSetNumChans(1);
 }
+#endif
 
 static void (*handle_table[15])(void) = {
 	dummy_handler, Hx_Circle, Hx_Circle, Hx_Test1,    Hx_Test1,
@@ -201,8 +274,12 @@ static void Hgx_ReadTexture(const char* path, void* destination)
 	DVDFileInfo fileInfo;
 	s32 readSize;
 
+#ifdef VERSION_GMSP01_NX
+	if (hx.hasResource == 0) {
+#else
 	switch (hx.hasResource) {
 	case 0:
+#endif
 		if (DVDOpen(path, &fileInfo) != 0) {
 			readSize
 			    = DVDReadPrio(&fileInfo, destination, fileInfo.length, 0, 2);
@@ -290,7 +367,11 @@ static void Hx_FrBufferMorf(f32 strength)
 
 static void Frb2_InitGx(GXTexObj* texObj)
 {
+#ifdef VERSION_GMSP01_NX
+	Hx_CameraInitWide2();
+#else
 	Hx_CameraInit();
+#endif
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
@@ -382,6 +463,12 @@ void Hx_RemoveResource(void)
 
 void Hx_StartWipe(int type, int resourceArg)
 {
+#ifdef HX_TV_FORMAT_TIMING
+	if (VIGetTvFormat() == VI_PAL)
+		hx.isPal = 1;
+	else
+		hx.isPal = 0;
+#endif
 	if (hx.hasResource == 0) {
 		hx.resource     = hx_buffer;
 		hx.resourceSize = sizeof(hx_buffer);
@@ -468,6 +555,11 @@ static f32 Hx_MotionUpdate(HxMotion* motion)
 	return motion->unk20;
 }
 
+#ifdef HX_TV_FORMAT_TIMING
+static u32 HX_CIRCLE_STATE1_TIME;
+static u32 HX_CIRCLE_STATE1_TIME2;
+#endif
+
 static void Hx_Circle(void)
 {
 	static f32 r;
@@ -478,6 +570,19 @@ static void Hx_Circle(void)
 	static u16 a2;
 	static u16 a3;
 	static f32 boke;
+
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		HX_CIRCLE_STATE1_TIME  = 25;
+		HX_CIRCLE_STATE1_TIME2 = 20;
+		break;
+	default:
+		HX_CIRCLE_STATE1_TIME  = 30;
+		HX_CIRCLE_STATE1_TIME2 = 25;
+		break;
+	}
+#endif
 
 	switch (hx.animationState) {
 	case 0:
@@ -491,12 +596,24 @@ static void Hx_Circle(void)
 		boke = 0.0f;
 		switch (hx.direction) {
 		case 0:
+#ifdef HX_TV_FORMAT_TIMING
+			Hx_MotionSet(&hx.motion, VERSION_SELECT(400.0f, GMSP01_NX(533.0f)),
+			             2.0f, HX_CIRCLE_STATE1_TIME2 - 12, 10.0f);
+			hx.timer = HX_CIRCLE_STATE1_TIME2;
+#else
 			Hx_MotionSet(&hx.motion, 400.0f, 2.0f, 13.0f, 10.0f);
 			hx.timer = 25;
+#endif
 			break;
 		case 1:
+#ifdef HX_TV_FORMAT_TIMING
+			Hx_MotionSet(&hx.motion, VERSION_SELECT(400.0f, GMSP01_NX(533.0f)),
+			             5.0f, HX_CIRCLE_STATE1_TIME - 20, 15.0f);
+			hx.timer = HX_CIRCLE_STATE1_TIME;
+#else
 			Hx_MotionSet(&hx.motion, 400.0f, 5.0f, 10.0f, 15.0f);
 			hx.timer = 30;
+#endif
 			break;
 		}
 		hx.animationState++;
@@ -505,10 +622,16 @@ static void Hx_Circle(void)
 		r = Hx_MotionUpdate(&hx.motion);
 		switch (hx.direction) {
 		case 1:
+#ifdef HX_TV_FORMAT_TIMING
+			boke += 2.0f / HX_CIRCLE_STATE1_TIME;
+#else
 			boke += 0.06666667f;
+#endif
 			if (boke > 1.0f)
 				boke = 1.0f;
+#ifndef VERSION_GMSP01_NX
 			Hx_FrBufferMorf(boke);
+#endif
 			Hx_SetVFilter(1.0f);
 			break;
 		case 0:
@@ -569,8 +692,8 @@ static void Hxs1_Circle(f32 radius)
 		y2       = i;
 		if (hx.halfHeight - i >= radius) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			x1 = 0.0f;
-			x2 = hx.width;
+			x1 = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
+			x2 = hx.width + VERSION_SELECT(0, GMSP01_NX(110));
 			GXPosition3f32(x1, y1, 1.0f);
 			GXColor1u32(0xFF);
 			GXPosition3f32(x2, y2, 1.0f);
@@ -586,14 +709,14 @@ static void Hxs1_Circle(f32 radius)
 			f32 offset = sqrtf(radiusSquared - distance * distance);
 
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			x1 = 0.0f;
+			x1 = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
 			x2 = hx.halfWidth - offset;
 			GXPosition3f32(x1, y1, 1.0f);
 			GXColor1u32(0xFF);
 			GXPosition3f32(x2, y2, 1.0f);
 			GXColor1u32(0xFF);
 			x1 = hx.halfWidth + offset;
-			x2 = hx.width;
+			x2 = hx.width + VERSION_SELECT(0, GMSP01_NX(110));
 			GXPosition3f32(x1, y1, 1.0f);
 			GXColor1u32(0xFF);
 			GXPosition3f32(x2, y2, 1.0f);
@@ -604,7 +727,7 @@ static void Hxs1_Circle(f32 radius)
 			GXColor1u32(0xFF);
 			GXPosition3f32(x2, y2, 1.0f);
 			GXColor1u32(0xFF);
-			x1 = 0.0f;
+			x1 = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
 			x2 = hx.halfWidth - offset;
 			GXPosition3f32(x1, y1, 1.0f);
 			GXColor1u32(0xFF);
@@ -808,7 +931,12 @@ static void Hxs_GameOver(u8 alpha, f32 mag, f32 rot)
 	f32 v3;
 	f32 aspect;
 
+#ifdef VERSION_GMSP01_NX
+	Hx_CameraInitWide();
+	mag *= 4.0f / 3.0f;
+#else
 	Hx_CameraInit();
+#endif
 	gmover_tex_buffer = hx.resource;
 	Hgx_init_tobj_resource(&texObj, (struct ResTIMG*)gmover_tex_buffer);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
@@ -866,6 +994,18 @@ static void Hxs_GameOver(u8 alpha, f32 mag, f32 rot)
 	u3  = aspect * (-dir.y * len) + cx;
 	v3  = dir.x * len + cy;
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+#ifdef VERSION_GMSP01_NX
+	GXPosition3f32(0.0f, -80.0f, 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(u0, v0);
+	GXPosition3f32((f32)hx.width, -80.0f, 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(u1, v1);
+	GXPosition3f32((f32)hx.width, (f32)(hx.height + 80), 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(u2, v2);
+	GXPosition3f32(0.0f, (f32)(hx.height + 80), 0.0f);
+#else
 	GXPosition3f32(0.0f, 0.0f, 0.0f);
 	GXColor1u32(0);
 	GXTexCoord2f32(u0, v0);
@@ -876,6 +1016,7 @@ static void Hxs_GameOver(u8 alpha, f32 mag, f32 rot)
 	GXColor1u32(0);
 	GXTexCoord2f32(u2, v2);
 	GXPosition3f32(0.0f, (f32)hx.height, 0.0f);
+#endif
 	GXColor1u32(0);
 	GXTexCoord2f32(u3, v3);
 	GXEnd();
@@ -883,6 +1024,15 @@ static void Hxs_GameOver(u8 alpha, f32 mag, f32 rot)
 }
 
 void InitWipe(void) { }
+
+#ifdef HX_TV_FORMAT_TIMING
+static u32 STATE1_TIME;
+static u32 STATE1_TIME1;
+static u32 STATE1_TIME2;
+static u32 STATE1_TIME3;
+static u32 STATE2_TIME;
+static u32 STATE3_TIME;
+#endif
 
 static void Hx_GameOver(void)
 {
@@ -898,6 +1048,27 @@ static void Hx_GameOver(void)
 	static f32 bounddelta;
 	static u8 alpha;
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		STATE1_TIME  = 50;
+		STATE1_TIME1 = 10;
+		STATE1_TIME2 = 15;
+		STATE1_TIME3 = 25;
+		STATE2_TIME  = 10;
+		STATE3_TIME  = 32;
+		break;
+	default:
+		STATE1_TIME  = 50;
+		STATE1_TIME1 = 10;
+		STATE1_TIME2 = 15;
+		STATE1_TIME3 = 25;
+		STATE2_TIME  = 10;
+		STATE3_TIME  = 32;
+		break;
+	}
+#endif
+
 	switch (hx.animationState) {
 	case 0:
 		Hgx_ReadTexture("/data/wipe_gameover.bti", gmover_tex_buffer);
@@ -905,17 +1076,33 @@ static void Hx_GameOver(void)
 		rot  = 0.0f;
 		fade = 0.0f;
 		hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+		hx.timer = STATE1_TIME;
+		Hx_MotionSet(&hx.motion, -12.566371f, STATE1_TIME1, STATE1_TIME2,
+		             STATE1_TIME3);
+#else
 		hx.timer = 50;
 		Hx_MotionSet(&hx.motion, -12.566371f, 10.0f, 15.0f, 25.0f);
+#endif
 		break;
 	case 1:
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = STATE2_TIME;
+#else
 			hx.timer = 10;
+#endif
 		}
+#ifdef HX_TV_FORMAT_TIMING
+		mag  = mag + 3.7f / STATE1_TIME;
+		rot  = Hx_MotionUpdate(&hx.motion);
+		fade = fade + 255.0f / STATE1_TIME;
+#else
 		mag  = 0.074f + mag;
 		rot  = Hx_MotionUpdate(&hx.motion);
 		fade = 5.1f + fade;
+#endif
 		break;
 	case 2:
 		if (Hx_TimerCountDown() == 0) {
@@ -934,8 +1121,12 @@ static void Hx_GameOver(void)
 			boundtimer = boundtable[boundstate++];
 			if (boundtimer == 0) {
 				hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+				hx.timer = STATE3_TIME;
+#else
 				hx.timer = 32;
-				alpha    = 255;
+#endif
+				alpha = 255;
 				break;
 			}
 		}
@@ -1006,9 +1197,40 @@ static void Hx_GameOver(void)
 		Hxs_GameOver(fade, 2.0f * mag, rot);
 }
 
+#ifdef HX_TV_FORMAT_TIMING
+static u32 HX_LOGO_TIMER1;
+static u32 HX_LOGO_TIMER2;
+#endif
 static s32 hxs_logo_resetflag;
 static s32 hxs_logodraw_resetflag;
 
+#ifdef HX_TV_FORMAT_TIMING
+static HxDrawPath drawpath_table_NTSC[] = {
+	{ 49.0f, 277.0f, 0 },  { 20.0f, 294.0f, 1 },  { 22.0f, 234.0f, 1 },
+	{ 50.0f, 175.0f, 1 },  { 110.0f, 112.0f, 1 }, { 128.0f, 106.0f, 1 },
+	{ 138.0f, 110.0f, 1 }, { 134.0f, 113.0f, 1 }, { 135.0f, 128.0f, 1 },
+	{ 117.0f, 166.0f, 1 }, { 119.0f, 201.0f, 1 }, { 129.0f, 229.0f, 1 },
+	{ 140.0f, 219.0f, 1 }, { 149.0f, 172.0f, 1 }, { 178.0f, 137.0f, 1 },
+	{ 192.0f, 114.0f, 1 }, { 216.0f, 104.0f, 1 }, { 227.0f, 109.0f, 1 },
+	{ 224.0f, 130.0f, 1 }, { 183.0f, 265.0f, 3 }, { 161.0f, 18.0f, 0 },
+	{ 161.0f, 18.01f, 8 }, { 141.0f, 79.0f, 3 },  { 255.0f, 3.0f, 0 },
+	{ 255.0f, 3.01f, 8 },  { 220.0f, 71.0f, 4 },  { -1.0f, -1.0f, -1 },
+};
+
+static HxDrawPath drawpath_table_PAL[] = {
+	{ 49.0f, 277.0f, 0 },   { 20.0f, 294.0f, 1 },  { 22.0f, 234.0f, 2 },
+	{ 50.0f, 175.0f, 2 },   { 110.0f, 112.0f, 1 }, { 128.0f, 106.0f, 2 },
+	{ 138.0f, 110.0f, 2 },  { 134.0f, 113.0f, 1 }, { 135.0f, 128.0f, 2 },
+	{ 117.0f, 166.0f, 2 },  { 119.0f, 201.0f, 1 }, { 129.0f, 229.0f, 2 },
+	{ 140.0f, 219.0f, 2 },  { 149.0f, 172.0f, 1 }, { 178.0f, 137.0f, 2 },
+	{ 192.0f, 114.0f, 2 },  { 216.0f, 104.0f, 1 }, { 227.0f, 109.0f, 2 },
+	{ 224.0f, 130.0f, 2 },  { 183.0f, 265.0f, 5 }, { 161.0f, 18.0f, 0 },
+	{ 161.0f, 18.01f, 13 }, { 141.0f, 79.0f, 5 },  { 255.0f, 3.0f, 0 },
+	{ 255.0f, 3.01f, 13 },  { 220.0f, 71.0f, 6 },  { -1.0f, -1.0f, -1 },
+};
+
+static HxDrawPath* drawpath_table;
+#else
 static HxDrawPath drawpath_table[] = {
 	{ 49.0f, 277.0f, 0 },  { 20.0f, 294.0f, 1 },  { 22.0f, 234.0f, 1 },
 	{ 50.0f, 175.0f, 1 },  { 110.0f, 112.0f, 1 }, { 128.0f, 106.0f, 1 },
@@ -1020,6 +1242,7 @@ static HxDrawPath drawpath_table[] = {
 	{ 161.0f, 18.01f, 8 }, { 141.0f, 79.0f, 3 },  { 255.0f, 3.0f, 0 },
 	{ 255.0f, 3.01f, 8 },  { 220.0f, 71.0f, 4 },  { -1.0f, -1.0f, -1 },
 };
+#endif
 
 static void Hxs_Logo_ExtraDraw(u8 alpha, struct ResTIMG* resource)
 {
@@ -1112,8 +1335,8 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 width,
 	f32 posX3;
 	f32 posY3;
 
-	height = height / 1.924138f;
 	width  = width / 1.9230769f;
+	height = height / 1.924138f;
 	y1     = y1 / height;
 	y2     = y2 / height;
 	x1     = x1 / width;
@@ -1121,8 +1344,8 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 width,
 	left   = (f32)(hx.width >> 1) - width * 0.5f;
 	top    = (f32)(hx.height >> 1) - height * 0.5f - 32.0f;
 
-	direction.x = -(y2 - y1);
 	direction.y = x2 - x1;
+	direction.x = -(y2 - y1);
 	direction.z = 0.0f;
 	if (direction.y != 0.0f || direction.x != 0.0f) {
 		VECNormalize(&direction, &direction);
@@ -1167,19 +1390,36 @@ static void Hxs_Logo_MagDraw(f32 scale, f32 width, f32 height)
 	f32 right;
 	f32 bottom;
 
+#ifdef VERSION_GMSP01_NX
+	scaledHalfWidth  = ((width * 0.74418604f) / 1.9230769f) * scale * 0.5f;
+	scaledHalfHeight = ((height * 0.875f) / 1.924138f) * scale * 0.5f;
+#else
 	scaledHalfWidth  = (width / 1.9230769f) * scale * 0.5f;
 	scaledHalfHeight = (height / 1.924138f) * scale * 0.5f;
-	halfWidth        = (f32)(hx.width >> 1);
-	halfHeight       = (f32)(hx.height >> 1);
-	left             = halfWidth - scaledHalfWidth;
-	right            = halfWidth + scaledHalfWidth;
-	top              = halfHeight - scaledHalfHeight;
-	bottom           = halfHeight + scaledHalfHeight;
-	texLeft          = left / (left - right);
-	texTop           = top / (top - bottom);
+#endif
+	halfWidth  = (f32)(hx.width >> 1);
+	halfHeight = (f32)(hx.height >> 1);
+	left       = halfWidth - scaledHalfWidth;
+	right      = halfWidth + scaledHalfWidth;
+	top        = halfHeight - scaledHalfHeight;
+	bottom     = halfHeight + scaledHalfHeight;
+	texLeft    = left / (left - right);
+	texTop     = top / (top - bottom);
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	texRight  = 1.0f - texLeft;
 	texBottom = 1.0f - texTop;
+#ifdef VERSION_GMSP01_NX
+	GXPosition3f32(-110.0f, -64.0f, 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(texLeft, texTop);
+	GXPosition3f32((f32)(hx.width + 110), -64.0f, 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(texRight, texTop);
+	GXPosition3f32((f32)(hx.width + 110), (f32)hx.height, 0.0f);
+	GXColor1u32(0);
+	GXTexCoord2f32(texRight, texBottom);
+	GXPosition3f32(-110.0f, (f32)hx.height, 0.0f);
+#else
 	GXPosition3f32(0.0f, -32.0f, 0.0f);
 	GXColor1u32(0);
 	GXTexCoord2f32(texLeft, texTop);
@@ -1190,12 +1430,13 @@ static void Hxs_Logo_MagDraw(f32 scale, f32 width, f32 height)
 	GXColor1u32(0);
 	GXTexCoord2f32(texRight, texBottom);
 	GXPosition3f32(0.0f, (f32)(hx.height - 32), 0.0f);
+#endif
 	GXColor1u32(0);
 	GXTexCoord2f32(texLeft, texBottom);
 	GXEnd();
 }
 
-static void Hxs_PenDraw(u32 count, HxDrawPath* target, f32 startX, f32 startY)
+static void Hxs_PenDraw(f32 startX, f32 startY, u32 count, HxDrawPath* target)
 {
 	Vec direction;
 	f32 prevX;
@@ -1237,10 +1478,29 @@ static void Hx_Logo(void)
 	static f32 bx;
 	static f32 by;
 	static u32 count;
-	struct ResTIMG* resource = (struct ResTIMG*)hx.resource;
+	struct ResTIMG* resource;
 	struct ResTIMG* extraResource;
 	u32 i;
+#ifdef HX_TV_FORMAT_TIMING
+	u32 countDownNum;
+#endif
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		drawpath_table = drawpath_table_PAL;
+		HX_LOGO_TIMER1 = 8;
+		HX_LOGO_TIMER2 = 42;
+		break;
+	default:
+		drawpath_table = drawpath_table_NTSC;
+		HX_LOGO_TIMER1 = 5;
+		HX_LOGO_TIMER2 = 25;
+		break;
+	}
+#endif
+
+	resource = (struct ResTIMG*)hx.resource;
 	if (hx.hasResourceEx != 0)
 		extraResource = (struct ResTIMG*)hx.resourceEx;
 	else
@@ -1262,7 +1522,12 @@ static void Hx_Logo(void)
 			Hxs_Logo_ExtraDraw(255, extraResource);
 		else
 			Hxs_Logo_ExtraDraw((u8)((256 - hx.timer) * 4), extraResource);
+#ifdef HX_TV_FORMAT_TIMING
+		if (hx.isPal == 0)
+			Hx_TimerCountDown();
+#else
 		Hx_TimerCountDown();
+#endif
 		Hx_TimerCountDown();
 		Hx_TimerCountDown();
 		if (Hx_TimerCountDown() == 0)
@@ -1286,7 +1551,7 @@ static void Hx_Logo(void)
 	case 3:
 		Hxs_Logo_ExtraDraw(255, extraResource);
 		Hxs_Logo_TexSetup(255, 255, resource);
-		Hxs_PenDraw(count, dp, bx, by);
+		Hxs_PenDraw(bx, by, count, dp);
 		if (Hx_TimerCountDown() == 0) {
 			bx = dp->x;
 			by = dp->y;
@@ -1297,13 +1562,17 @@ static void Hx_Logo(void)
 		break;
 	case 4:
 	begin_fade:
+#ifdef HX_TV_FORMAT_TIMING
+		hx.timer = HX_LOGO_TIMER1;
+#else
 		hx.timer = 5;
+#endif
 		hx.animationState++;
 		/* fall through */
 	case 5:
 		Hxs_Logo_ExtraDraw(255, extraResource);
 		Hxs_Logo_TexSetup(255, 255, resource);
-		Hxs_PenDraw(count, dp, bx, by);
+		Hxs_PenDraw(bx, by, count, dp);
 		if (Hx_TimerCountDown() == 0) {
 			hx.timer = 255;
 			hx.animationState++;
@@ -1314,18 +1583,30 @@ static void Hx_Logo(void)
 			Hxs_Logo_ExtraDraw(255, extraResource);
 			Hxs_Logo_TexSetup((u8)hx.timer, (u8)hx.timer, resource);
 			if (hx.timer > 248)
-				Hxs_PenDraw(count, dp, bx, by);
+				Hxs_PenDraw(bx, by, count, dp);
 			else
 				Hxs_Logo_MagDraw(1.0f, (f32)img_wx, (f32)img_wy);
 		} else {
 			Hxs_Logo_TexSetup((u8)hx.timer, (u8)hx.timer, resource);
 			Hxs_Logo_MagDraw(1.0f, (f32)img_wx, (f32)img_wy);
 		}
+#ifdef HX_TV_FORMAT_TIMING
+		if (hx.isPal == 0)
+			countDownNum = 3;
+		else
+			countDownNum = 2;
+		for (i = 0; i < countDownNum; ++i)
+			Hx_TimerCountDown();
+		if (Hx_TimerCountDown() == 0) {
+			hx.timer = HX_LOGO_TIMER2;
+			Hx_MotionSet(&hx.motion, 30.0f, 12.0f, HX_LOGO_TIMER2 - 17, 5.0f);
+#else
 		for (i = 0; i < 3; ++i)
 			Hx_TimerCountDown();
 		if (Hx_TimerCountDown() == 0) {
 			hx.timer = 25;
 			Hx_MotionSet(&hx.motion, 30.0f, 12.0f, 8.0f, 5.0f);
+#endif
 			hx.animationState++;
 		}
 		break;
@@ -1365,12 +1646,41 @@ int Hx_MovieStartSyncEx(void)
 	return 0;
 }
 
+#ifdef HX_TV_FORMAT_TIMING
+static u32 HX_TEST1_TIMER;
+static u32 HX_TEST1_TIMER2;
+#endif
+
 static void Hx_Test1(void)
 {
 	static f32 r;
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		HX_TEST1_TIMER  = 25;
+		HX_TEST1_TIMER2 = 30;
+		break;
+	default:
+		HX_TEST1_TIMER  = 25;
+		HX_TEST1_TIMER2 = 30;
+		break;
+	}
+#endif
+
 	switch (hx.animationState) {
 	case 0:
+#ifdef HX_TV_FORMAT_TIMING
+		if (hx.direction == 1) {
+			r = 400.0f;
+			Hx_MotionSet(&hx.motion, 400.0f, 10.0f, HX_TEST1_TIMER2 - 18, 8.0f);
+		} else {
+			r = 1.0f;
+			Hx_MotionSet(&hx.motion, 400.0f, 5.0f, HX_TEST1_TIMER - 15, 10.0f);
+		}
+		hx.animationState++;
+		hx.timer = HX_TEST1_TIMER;
+#else
 		if (hx.direction == 1) {
 			r = 400.0f;
 			Hx_MotionSet(&hx.motion, 400.0f, 10.0f, 12.0f, 8.0f);
@@ -1380,6 +1690,7 @@ static void Hx_Test1(void)
 		}
 		hx.animationState++;
 		hx.timer = 25;
+#endif
 		break;
 	case 1:
 		if (Hx_TimerCountDown() == 0)
@@ -1403,7 +1714,11 @@ static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 	f32 radiusSquared;
 	u32 i;
 
+#ifdef VERSION_GMSP01_NX
+	Hx_CameraInitWide();
+#else
 	Hx_CameraInit();
+#endif
 	Hx_GxInit(0, 1);
 	GXSetLineWidth(7, GX_TO_ZERO);
 	radiusSquared = radius * radius;
@@ -1439,24 +1754,59 @@ static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 	GXEnd();
 }
 
+#ifdef HX_TV_FORMAT_TIMING
+static u32 HX_Test2_STATE1_TIME;
+static u32 HX_Test2_STATE2_TIME;
+static u32 HX_Test2_STATE3_TIME;
+static u32 HX_Test2_STATE4_TIME;
+#endif
+
 static void Hx_Test2(void)
 {
 	static f32 r;
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		HX_Test2_STATE1_TIME = 8;
+		HX_Test2_STATE2_TIME = 8;
+		HX_Test2_STATE3_TIME = 7;
+		HX_Test2_STATE4_TIME = 9;
+		break;
+	default:
+		HX_Test2_STATE1_TIME = 8;
+		HX_Test2_STATE2_TIME = 8;
+		HX_Test2_STATE3_TIME = 7;
+		HX_Test2_STATE4_TIME = 9;
+		break;
+	}
+#endif
+
 	switch (hx.animationState) {
 	case 0:
 		r = 1.0f;
+#ifdef HX_TV_FORMAT_TIMING
+		Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE1_TIME, 1.0f);
+		hx.animationState++;
+		hx.timer = HX_Test2_STATE1_TIME + 3;
+#else
 		Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 8.0f, 1.0f);
 		hx.animationState++;
 		hx.timer = 11;
+#endif
 		break;
 	case 1:
 		r = Hx_MotionUpdate(&hx.motion);
 		Hxs1_Test2((u32)r, 1, (f32)(hx.width + 200), 300.0f, 900.0f, 650.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = HX_Test2_STATE2_TIME + 3;
+			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE2_TIME, 1.0f);
+#else
 			hx.timer = 11;
 			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 8.0f, 1.0f);
+#endif
 		}
 		break;
 	case 2:
@@ -1465,8 +1815,13 @@ static void Hx_Test2(void)
 		Hxs1_Test2((u32)r, 0, (f32)(hx.width + 200), 150.0f, 700.0f, 450.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = HX_Test2_STATE3_TIME + 3;
+			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE3_TIME, 1.0f);
+#else
 			hx.timer = 10;
 			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 7.0f, 1.0f);
+#endif
 		}
 		break;
 	case 3:
@@ -1476,8 +1831,13 @@ static void Hx_Test2(void)
 		Hxs1_Test2((u32)r, 1, (f32)(hx.width + 250), 370.0f, 650.0f, 400.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = HX_Test2_STATE4_TIME + 3;
+			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE4_TIME, 1.0f);
+#else
 			hx.timer = 12;
 			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 9.0f, 1.0f);
+#endif
 		}
 		break;
 	case 4:
@@ -1501,12 +1861,35 @@ static void Hx_Test2R(void)
 {
 	static f32 r;
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		HX_Test2_STATE1_TIME = 8;
+		HX_Test2_STATE2_TIME = 8;
+		HX_Test2_STATE3_TIME = 7;
+		HX_Test2_STATE4_TIME = 9;
+		break;
+	default:
+		HX_Test2_STATE1_TIME = 8;
+		HX_Test2_STATE2_TIME = 8;
+		HX_Test2_STATE3_TIME = 7;
+		HX_Test2_STATE4_TIME = 9;
+		break;
+	}
+#endif
+
 	switch (hx.animationState) {
 	case 0:
 		r = 1.0f;
+#ifdef HX_TV_FORMAT_TIMING
+		Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE1_TIME, 1.0f);
+		hx.animationState++;
+		hx.timer = HX_Test2_STATE1_TIME + 3;
+#else
 		Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 8.0f, 1.0f);
 		hx.animationState++;
 		hx.timer = 11;
+#endif
 	case 1:
 		Hxs1_Test2(600, 0, (f32)(hx.width + 200), 150.0f, 700.0f, 450.0f);
 		Hxs1_Test2(600, 1, (f32)(hx.width + 250), 370.0f, 650.0f, 400.0f);
@@ -1516,8 +1899,13 @@ static void Hx_Test2R(void)
 		Hxs1_Test2((u32)r, 0, (f32)(hx.width + 200), 300.0f, 900.0f, 650.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = HX_Test2_STATE2_TIME + 3;
+			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE2_TIME, 1.0f);
+#else
 			hx.timer = 11;
 			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 8.0f, 1.0f);
+#endif
 		}
 		break;
 	case 2:
@@ -1528,8 +1916,13 @@ static void Hx_Test2R(void)
 		Hxs1_Test2((u32)r, 1, (f32)(hx.width + 200), 150.0f, 700.0f, 450.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = HX_Test2_STATE3_TIME + 3;
+			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE3_TIME, 1.0f);
+#else
 			hx.timer = 10;
 			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 7.0f, 1.0f);
+#endif
 		}
 		break;
 	case 3:
@@ -1539,8 +1932,13 @@ static void Hx_Test2R(void)
 		Hxs1_Test2((u32)r, 0, (f32)(hx.width + 250), 370.0f, 650.0f, 400.0f);
 		if (Hx_TimerCountDown() == 0) {
 			hx.animationState++;
+#ifdef HX_TV_FORMAT_TIMING
+			hx.timer = HX_Test2_STATE4_TIME + 3;
+			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, HX_Test2_STATE4_TIME, 1.0f);
+#else
 			hx.timer = 12;
 			Hx_MotionSet(&hx.motion, 500.0f, 2.0f, 9.0f, 1.0f);
+#endif
 		}
 		break;
 	case 4:
@@ -1569,7 +1967,11 @@ static void Hxs1_Test2(u32 count, u32 direction, f32 centerX, f32 centerY,
 	s32 end;
 	s32 i;
 
+#ifdef VERSION_GMSP01_NX
+	Hx_CameraInitWide();
+#else
 	Hx_CameraInit();
+#endif
 	Hx_GxInit(0, 1);
 	outerRadiusSquared = outerRadius * outerRadius;
 	innerRadiusSquared = innerRadius * innerRadius;
@@ -1612,6 +2014,10 @@ static void Hxs1_Test2(u32 count, u32 direction, f32 centerX, f32 centerY,
 	}
 }
 
+#ifdef HX_TV_FORMAT_TIMING
+static u32 HX_TEST4_TIME;
+#endif
+
 static void Hx_Test4(void)
 {
 	static f32 thin;
@@ -1633,8 +2039,36 @@ static void Hx_Test4(void)
 	f32 innerRadius;
 	u32 i;
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		HX_TEST4_TIME = 31;
+		break;
+	default:
+		HX_TEST4_TIME = 38;
+		break;
+	}
+#endif
+
 	switch (hx.animationState) {
 	case 0:
+#ifdef HX_TV_FORMAT_TIMING
+		switch (hx.direction) {
+		case 0:
+			rstep   = 0;
+			thin    = 130.0f - 0.15f * HX_TEST4_TIME;
+			rstep_d = 200.0f / HX_TEST4_TIME;
+			thin_d  = 0.15f;
+			break;
+		case 1:
+			rstep   = 230;
+			thin    = 100.0f;
+			rstep_d = -200.0f / HX_TEST4_TIME;
+			thin_d  = -0.15f;
+			break;
+		}
+		hx.timer = HX_TEST4_TIME;
+#else
 		switch (hx.direction) {
 		case 0:
 			rstep   = 0;
@@ -1650,6 +2084,7 @@ static void Hx_Test4(void)
 			break;
 		}
 		hx.timer = 38;
+#endif
 		hx.animationState++;
 	case 1:
 		rstep = rstep + rstep_d;
@@ -1702,6 +2137,10 @@ static void Hx_Test4(void)
 	}
 }
 
+#ifdef HX_TV_FORMAT_TIMING
+static u32 HX_TEST5_FADETIME;
+#endif
+
 static void Hx_Test5(void)
 {
 	u8* buffer = hx_buffer;
@@ -1720,7 +2159,22 @@ static void Hx_Test5(void)
 	u32 y;
 	u32 i;
 
+#ifdef HX_TV_FORMAT_TIMING
+	switch (hx.isPal) {
+	case 1:
+		HX_TEST5_FADETIME = 16;
+		break;
+	default:
+		HX_TEST5_FADETIME = 20;
+		break;
+	}
+#endif
+
+#ifdef VERSION_GMSP01_NX
+	Hx_CameraInitWide2();
+#else
 	Hx_CameraInit();
+#endif
 	Hx_GxInit(1, 0);
 	GXClearVtxDesc();
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
@@ -1732,7 +2186,11 @@ static void Hx_Test5(void)
 
 	switch (hx.animationState) {
 	case 0:
+#ifdef HX_TV_FORMAT_TIMING
+		hx.timer = HX_TEST5_FADETIME;
+#else
 		hx.timer = 20;
+#endif
 		hx.animationState++;
 	case 1:
 		GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY,
@@ -1746,8 +2204,13 @@ static void Hx_Test5(void)
 		             GX_FALSE);
 		GXInitTexObjLOD(&texObj, GX_LINEAR, GX_LINEAR, 0.0f, 10.0f, 0.0f,
 		                GX_DISABLE, GX_ENABLE, GX_ANISO_1);
+#ifdef HX_TV_FORMAT_TIMING
+		outScale = 1.41f - 1.41f * (hx.timer / (f32)HX_TEST5_FADETIME);
+		inScale  = 0.1f + 1.41f * (hx.timer / (f32)HX_TEST5_FADETIME);
+#else
 		outScale = 1.41f - 1.41f * (hx.timer / 20.0f);
 		inScale  = 0.1f + 1.41f * (hx.timer / 20.0f);
+#endif
 		for (y = 0; y < hx.height; y += 64) {
 			for (x = 0; x < hx.width; x += 64) {
 				centerX = x;
