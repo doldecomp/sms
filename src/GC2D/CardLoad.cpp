@@ -42,12 +42,6 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 #define CARD_LOAD_PRESS_START_NUM ARRAY_COUNT(mPressStartTextLetters)
 #endif
 
-#if defined(VERSION_GMSP01_NX)
-#define CARD_LOAD_GAME_LOGO_NUM mGameLogoLetterNum
-#else
-#define CARD_LOAD_GAME_LOGO_NUM ARRAY_COUNT(mGameLogoLetters)
-#endif
-
 #define CARD_LOAD_FORMAT_CANCEL                                                \
 	VERSION_SELECT(PROGRESS_CONTINUE_WITHOUT_SAVING,                           \
 	               GMSJ01(PROGRESS_WRONG_DEVICE))
@@ -885,44 +879,65 @@ void TCardLoad::loadAfter()
 	    JDrama::TNameRefGen::search("オプション用壁"));
 }
 
+// fabricated and very questionable
+inline void TCardLoad::updateEnterScore()
+{
+	bool done = true;
+	int rc    = gpCardManager->getLastStatus();
+	if (rc != CARD_RESULT_BUSY) {
+		if (rc == CARD_RESULT_READY) {
+			if (!unkB8) {
+				loadBookmark();
+				setupScoreScreen();
+				unkB8 = true;
+			}
+		} else {
+			mScreenState = SCREEN_FILE_SELECT;
+			unk1C        = PROGRESS_NO_CARD;
+			mWindowStep  = WINDOW_OPENING;
+		}
+	}
+
+	if (gpCameraOption->unk16 != 0)
+		unkB8 = false;
+
+	if (unkB8) {
+		J2DPane* root1 = mScoreScreen->search('ROOT');
+		J2DPane* root2 = mLoadScreen->search('ROOT');
+
+		int alpha1 = root1->getAlpha();
+		alpha1 += 4;
+		if (alpha1 > 255)
+			alpha1 = 255;
+		else
+			done = false;
+		root1->setAlpha(alpha1);
+		for (int i = 0; i < 7; ++i)
+			mScoreTableStageRows[i].mRoot->setAlpha(alpha1);
+		mScoreTotal->setAlpha(alpha1);
+		mScoreTableHeader->setAlpha(alpha1);
+
+		int alpha2 = root2->getAlpha() - 4;
+		if (alpha2 < 0)
+			alpha2 = 0;
+		else
+			done = false;
+		root2->setAlpha(alpha2);
+
+		if (done)
+			mScreenState = SCREEN_SCORE;
+	}
+}
+
 void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		switch (mScreenState) {
 		case SCREEN_FILE_SELECT: {
 			changeScene();
-			int alpha = mToSettingsArrow->getAlpha();
-			if (unk275 && alpha < 255) {
-				alpha += 8;
-				if (alpha > 255)
-					alpha = 255;
-				mToSettingsArrow->setAlpha(alpha);
-			}
-
-			if (!unk275 && alpha > 0) {
-				alpha -= 8;
-				if (alpha < 0)
-					alpha = 0;
-				mToSettingsArrow->setAlpha(alpha);
-			}
-
-			if (alpha != 0) {
-				// TODO: copy-pasta from TArrowControl::calcMoveX? inline?
-				int iVar9 = unk274;
-				int iVar3 = unk274 < 50 ? iVar9 : 100 - iVar9;
-				f32 fVar1 = iVar3 / 50.0f;
-				f32 fVar2 = 1.0f - fVar1;
-				s16 iVar8 = fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2
-				            + fVar1 * fVar2;
-				mToSettingsArrow->place(
-				    JUTRect(mToSettingsArrowInitialBounds.x1,
-				            mToSettingsArrowInitialBounds.y1,
-				            mToSettingsArrowInitialBounds.x2 + iVar8,
-				            mToSettingsArrowInitialBounds.y2));
-				unk274 += 1;
-				if (unk274 > 100)
-					unk274 = 0;
-			}
+			int alpha = updateToSettingsArrowAlpha();
+			if (alpha != 0)
+				updateToSettingsArrowScale();
 
 			if (unk1C == PROGRESS_SELECT_FILE
 			    || unk1C == PROGRESS_INSUFFICIENT_SPACE
@@ -944,52 +959,9 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		} break;
 
-		case SCREEN_ENTER_SCORE: {
-			int rc = gpCardManager->getLastStatus();
-			if (rc != CARD_RESULT_BUSY) {
-				if (rc == CARD_RESULT_READY) {
-					if (!unkB8) {
-						loadBookmark();
-						setupScoreScreen();
-						unkB8 = true;
-					}
-				} else {
-					mScreenState = SCREEN_FILE_SELECT;
-					unk1C        = PROGRESS_NO_CARD;
-					mWindowStep  = WINDOW_OPENING;
-				}
-			}
-
-			if (gpCameraOption->unk16 != 0)
-				unkB8 = false;
-
-			if (unkB8) {
-				J2DPane* root1 = mScoreScreen->search('ROOT');
-				J2DPane* root2 = mLoadScreen->search('ROOT');
-
-				bool done  = true;
-				int alpha1 = root1->getAlpha() + 4;
-				if (alpha1 > 255)
-					alpha1 = 255;
-				else
-					done = false;
-				root1->setAlpha(alpha1);
-				for (int i = 0; i < 7; ++i)
-					mScoreTableStageRows[i].mRoot->setAlpha(alpha1);
-				mScoreTotal->setAlpha(alpha1);
-				mScoreTableHeader->setAlpha(alpha1);
-
-				int alpha2 = root2->getAlpha() - 4;
-				if (alpha2 < 0)
-					alpha2 = 0;
-				else
-					done = false;
-				root2->setAlpha(alpha2);
-
-				if (done)
-					mScreenState = SCREEN_SCORE;
-			}
-		} break;
+		case SCREEN_ENTER_SCORE:
+			updateEnterScore();
+			break;
 
 		case SCREEN_EXIT_SCORE: {
 			bool done      = true;
@@ -1080,7 +1052,8 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 			break;
 
 		case SCREEN_EXIT_TITLE: {
-			int alpha = (s16)(mTitleScreenRoot->getAlpha() - 4);
+			s16 alpha = mTitleScreenRoot->getAlpha();
+			alpha -= 4;
 			if (alpha < 0)
 				alpha = 0;
 			mTitleScreenRoot->setAlpha(alpha);
@@ -1114,8 +1087,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				    10, 255, mGameLogoPicture->getPane()->getAlpha());
 				mNintendoLogoPicture->setPaneAlpha(
 				    10, 255, mNintendoLogoPicture->getPane()->getAlpha());
-				for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
-					mGameLogoLetters[i]->getPane()->setAlpha(0);
+				hideGameLogoLetters();
 				mTitleAnimTimer = 0;
 				if (unk18 < 4)
 					unk18 = 4;
@@ -1146,8 +1118,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 				    10, 255, mGameLogoPicture->getPane()->getAlpha());
 				mNintendoLogoPicture->setPaneAlpha(
 				    10, 255, mNintendoLogoPicture->getPane()->getAlpha());
-				for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
-					mGameLogoLetters[i]->getPane()->setAlpha(0);
+				hideGameLogoLetters();
 				mTitleAnimTimer = 0;
 				unkBC           = 0;
 				unk18           = 4;
@@ -1159,7 +1130,7 @@ void TCardLoad::perform(u32 cue, JDrama::TGraphics* graphics)
 		case SCREEN_INIT_TITLE:
 			MSBgm::startBGM(MSD_BGM_CHUBOSS2);
 			mGamePad->onFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
-			gpMarioOriginal->offFlag(MARIO_FLAG_GAME_OVER);
+			gpMarioOriginal->offFlag(MARIO_FLAG_HAS_FLUDD);
 			mScreenState = SCREEN_ENTER_TITLE;
 			unk18        = 1;
 			mGameLogoPicture->getPane()->setAlpha(0);

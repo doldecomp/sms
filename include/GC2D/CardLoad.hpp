@@ -4,7 +4,15 @@
 #include <JSystem/JDrama/JDRViewObj.hpp>
 #include <System/CardManager.hpp>
 #include <GC2D/Progress.hpp>
+#include <GC2D/ExPane.hpp>
+#include <macros.h>
 #include <version.h>
+
+#if defined(VERSION_GMSP01_NX)
+#define CARD_LOAD_GAME_LOGO_NUM mGameLogoLetterNum
+#else
+#define CARD_LOAD_GAME_LOGO_NUM ARRAY_COUNT(mGameLogoLetters)
+#endif
 
 class J2DPane;
 class J2DPicture;
@@ -85,6 +93,57 @@ public:
 	s8 selectFunction();
 	void setSelected(u8);
 	void changeScene();
+
+	// fabricated
+	int updateToSettingsArrowAlpha()
+	{
+		int alpha = mToSettingsArrow->getAlpha();
+		if (unk275 && alpha < 255) {
+			alpha += 8;
+			if (alpha > 255)
+				alpha = 255;
+			mToSettingsArrow->setAlpha(alpha);
+		}
+
+		if (!unk275 && alpha > 0) {
+			alpha -= 8;
+			if (alpha < 0)
+				alpha = 0;
+			mToSettingsArrow->setAlpha(alpha);
+		}
+		return alpha;
+	}
+
+	// fabricated
+	int calcToSettingsArrowMoveX(u8 phase) const
+	{
+		f32 fVar1 = (phase < 50 ? phase : 100 - phase) / 50.0f;
+		f32 fVar2 = 1.0f - fVar1;
+		return fVar1 * 8.0f * fVar1 + (fVar2 * -8.0f * fVar2 + fVar1 * fVar2);
+	}
+
+	// fabricated
+	void updateToSettingsArrowScale()
+	{
+		s16 move = calcToSettingsArrowMoveX(unk274);
+		mToSettingsArrow->place(JUTRect(mToSettingsArrowInitialBounds.x1,
+		                                mToSettingsArrowInitialBounds.y1,
+		                                mToSettingsArrowInitialBounds.x2 + move,
+		                                mToSettingsArrowInitialBounds.y2));
+		unk274 += 1;
+		if (unk274 > 100)
+			unk274 = 0;
+	}
+
+	// fabricated
+	void hideGameLogoLetters()
+	{
+		for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i)
+			mGameLogoLetters[i]->getPane()->setAlpha(0);
+	}
+
+	// fabricated
+	void updateEnterScore();
 
 	static const char* cToOptionFileName;
 	static const char* cBMarkNewFileName;
