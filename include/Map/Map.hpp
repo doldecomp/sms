@@ -16,7 +16,6 @@ extern TMap* gpMap;
 
 class TMap : public JDrama::TViewObj {
 public:
-	~TMap();
 	TMap(const char* name = "マップ");
 
 	void load(JSUMemoryInputStream&);

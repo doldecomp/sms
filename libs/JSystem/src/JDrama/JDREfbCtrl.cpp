@@ -8,9 +8,9 @@ using namespace JDrama;
 void TEfbCtrl::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW_INIT) {
-		GXSetColorUpdate(!unk20.check(0x100));
-		GXSetAlphaUpdate(!unk20.check(0x200));
-		GXSetZMode(!unk20.check(0x400), GX_LEQUAL, GX_TRUE);
+		GXSetColorUpdate(!unk20.check(EFB_FLAG_NO_COLOR_UPDATE));
+		GXSetAlphaUpdate(!unk20.check(EFB_FLAG_NO_ALPHA_UPDATE));
+		GXSetZMode(!unk20.check(EFB_FLAG_NO_Z_COMPARE), GX_LEQUAL, GX_TRUE);
 		graphics->setDisplayRect(unk10);
 	}
 
@@ -86,16 +86,17 @@ void TEfbCtrlTex::setTexAttb(const GXTexObj& param_1)
 void TEfbCtrlTex::perform(u32 cue, TGraphics* graphics)
 {
 	if (cue & CUE_DRAW_INIT) {
-		IssueGXPixelFormatSetting(unk20.check(0x800), unk20.check(0x8),
-		                          unk20.check(0x10), false, false);
+		IssueGXPixelFormatSetting(unk20.check(EFB_FLAG_ANTIALIAS),
+		                          unk20.check(EFB_FLAG_PIXEL_FMT_RGBA6),
+		                          unk20.check(EFB_FLAG_DITHER), false, false);
 	}
 
 	TEfbCtrl::perform(cue, graphics);
 
 	if (cue & CUE_DRAW) {
 		GXSetCopyClamp(mFbClamp);
-		IssueGXSetCopyFilter(unk20.check(0x800), mSamplePattern,
-		                     unk20.check(0x20), mVFilter);
+		IssueGXSetCopyFilter(unk20.check(EFB_FLAG_ANTIALIAS), mSamplePattern,
+		                     unk20.check(EFB_FLAG_VFILTER), mVFilter);
 
 		if (mImagePtr != nullptr) {
 			bool doClear
@@ -103,7 +104,7 @@ void TEfbCtrlTex::perform(u32 cue, TGraphics* graphics)
 			GXSetTexCopySrc(unk10.x1, unk10.y1, unk10.getWidth(),
 			                unk10.getHeight());
 			GXSetTexCopyDst(mSize.mWidth, mSize.mHeight, mTexFmt,
-			                unk20.check(0x1000));
+			                unk20.check(EFB_FLAG_MIPMAP));
 			GXCopyTex(mImagePtr, doClear);
 		}
 	}

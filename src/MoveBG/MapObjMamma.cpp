@@ -772,7 +772,7 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	char path[0x40];
 	snprintf(path, sizeof(path), "/scene/mapObj/%sTop.bmd", mIndividualName);
 	mirror->init(path);
-	mirror->unk28 = getModel();
+	mirror->setModel(getModel());
 	if (SMSGetMarDirector()->getCurrentScenario() != 1)
 		mState = STATE_DONE;
 }
@@ -1187,10 +1187,10 @@ void TMammaMirrorMapOperator::hide(int i)
 void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & CUE_CALC_ANIM) {
-		const int& mirrorIdx = gpMirrorModelManager->getUnk18();
-		if (gpMirrorModelManager->isUnk18Present()) {
+		const int& mirrorIdx = gpMirrorModelManager->getActiveMirrorIdx();
+		if (gpMirrorModelManager->isMirrorActive()) {
 			const JGeometry::TVec3<f32>& camPos
-			    = gpMirrorModelManager->unk24->getUnk98();
+			    = gpMirrorModelManager->mMirrorCamera->getUnk98();
 			const JGeometry::TVec3<f32>& mirror = unkB8[mirrorIdx];
 			f32 dist                            = camPos.distance(mirror);
 			for (int i = 0; i < 8; ++i) {

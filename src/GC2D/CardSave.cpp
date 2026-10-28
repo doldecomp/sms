@@ -392,7 +392,9 @@ void TCardSave::setMessage(J2DTextBox* text_box, s32 param_2, u32 param_3)
 	        param_2);
 }
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if defined(VERSION_GMSJ01_01)
+void TCardSave::setMessageC(J2DTextBox*, s32, u32) { }
+#elif !defined(VERSION_GMSJ01)
 void TCardSave::setMessageC(J2DTextBox* text_box, s32 message, u32 size)
 {
 #if defined(VERSION_GMSP01_NX)

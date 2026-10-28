@@ -208,10 +208,10 @@ public:
 	/* 0x16C */ s32 unk16C;
 	/* 0x170 */ TBWHit* mHits[2];
 	/* 0x178 */ f32 unk178;
-	/* 0x17C */ bool unk17C;
+	/* 0x17C */ BOOL mIsNearMario;
 	/* 0x180 */ s32 unk180;
 	/* 0x184 */ s32 unk184;
-	/* 0x188 */ BOOL unk188;
+	/* 0x188 */ BOOL mIsBurnt;
 	/* 0x18C */ s8 msInvincible;
 	/* 0x18D */ s8 unk18D;
 	/* 0x190 */ s32 unk190;

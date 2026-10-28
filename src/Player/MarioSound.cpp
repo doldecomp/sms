@@ -652,13 +652,7 @@ void TMario::animSound()
 			mSoundFlags |= 0x300;
 	}
 
-	// TODO: inline
-	bool b;
-	if (mHolder && mHolder->getActorType() == ACTOR_TYPE_MAP_WIRE_ACTOR)
-		b = true;
-	else
-		b = false;
-	if (b)
+	if (isOnWire())
 		mSoundFlags |= 0x15;
 
 	// TODO: huh?

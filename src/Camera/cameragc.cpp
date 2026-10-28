@@ -988,8 +988,8 @@ void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 			for (int j = 0; j < 4; ++j)
 				graphics->mProjMtx.mMtx[i][j] = unk16C[i][j];
 		graphics->setViewMtx(unk1EC);
-		graphics->mNearPlane = mNear;
-		graphics->mFarPlane  = mFar;
+		graphics->setNearPlane(mNear);
+		graphics->setFarPlane(mFar);
 		if (cue & CUE_SET_PROJECTION)
 			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 	}

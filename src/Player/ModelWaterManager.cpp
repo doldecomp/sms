@@ -1242,7 +1242,7 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 	Mtx afStack_ec;
 	MTXIdentity(afStack_ec);
-	gpMirrorModelManager->unk24->drawSetting(afStack_ec);
+	gpMirrorModelManager->mMirrorCamera->drawSetting(afStack_ec);
 	GXSetCullMode(GX_CULL_NONE);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXLoadPosMtxImm(param_1, GX_PNMTX0);
@@ -1930,7 +1930,7 @@ void TModelWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		drawSilhouette(r29);
 		drawWaterVolume(r29);
 
-		if ((unk5D60 & 0x1) && !gpMirrorModelManager->isUnk18Present())
+		if ((unk5D60 & 0x1) && !gpMirrorModelManager->isMirrorActive())
 			drawMirror(r29);
 
 		MTXCopy(r29, unk5E10);
