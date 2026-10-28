@@ -732,7 +732,7 @@ TBossWanwanMtxCalc::TBossWanwanMtxCalc(TBossWanwan* owner)
 void TBossWanwanMtxCalc::joinAnm(int i)
 {
 	J3DAnmTransformKey* newAnm
-	    = mOwner->getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(i);
+	    = mOwner->getMActorAnmData()->mBckAnms->getAnmPtr(i);
 
 	if (mNewAnm != newAnm) {
 		mOldAnm           = mNewAnm;
@@ -966,9 +966,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL_MORE,
 			                                &mPosition, 0, nullptr, 0, 4);
 		} else if (mHitPoints == 1) {
-			MtxPtr iVar3 = getModel()->getAnmMtx(1);
-			gpMarioParticleManager->emitAndBindToMtxPtr(BWAN_JPA_MS_DOWNYUGE,
-			                                            iVar3, 0, 0);
+			gpMarioParticleManager->emitAndBindToMtxPtr(
+			    BWAN_JPA_MS_DOWNYUGE, getModel()->getAnmMtx(1), 0, 0);
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
 			                                &mPosition, 0, nullptr, 0, 4);
 		} else {
@@ -981,7 +980,7 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 		return TRUE;
 	}
 
-	if (isActorType(ACTOR_TYPE_WOOD_BARREL)) {
+	if (sender->isActorType(ACTOR_TYPE_WOOD_BARREL)) {
 		sender->receiveMessage(this, HIT_MESSAGE_HIP_DROP);
 		mHitPoints = 0;
 		unk190++;
@@ -1856,7 +1855,7 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 		boss->unk114.clear();
 
 		boss->mVelocity = vel;
-		boss->mLiveFlag |= 0x80;
+		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->unk16C = 0;
 	}
 
@@ -1866,8 +1865,7 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 	}
 
 	if (boss->isReachedToGoal()) {
-		boss->mPosition = BW_HEAD_START;
-
+		boss->mPosition        = BW_HEAD_START;
 		boss->unk124->mPrevIdx = -1;
 		boss->unk124->mCurrIdx = -1;
 		boss->goToShortestNextGraphNode();

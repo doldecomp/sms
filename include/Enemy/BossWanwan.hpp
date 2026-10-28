@@ -177,6 +177,12 @@ public:
 		return mSpine->getLatestNerve();
 	}
 
+	// fabricated!!!
+	MActorAnmData* getMActorAnmData() const
+	{
+		return mMActorKeeper->getMActorAnmData();
+	}
+
 	// fabricated
 	void setBckFromIndex(int idx)
 	{
