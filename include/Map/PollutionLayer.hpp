@@ -59,15 +59,9 @@ class TPollutionLayer : public TJointModel {
 public:
 	TPollutionLayer();
 
-	virtual TJointObj* newJointObj() const { return new TPollutionObj; }
 	virtual void initJointModel(TJointModelManager*, const char*,
 	                            MActorAnmData*);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual u32 getJ3DModelDataFlag() const
-	{
-		return J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
-		       | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
-	}
 	virtual int getPlaneType() const { return 0; }
 	virtual int getTexPosS(f32 param_1) const
 	{
@@ -81,6 +75,12 @@ public:
 	virtual ResTIMG* getTexResource(const char*)
 	{
 		return getModelData()->getTexture()->getResTIMG(0);
+	}
+	virtual TJointObj* newJointObj() const { return new TPollutionObj; }
+	virtual u32 getJ3DModelDataFlag() const
+	{
+		return J3DMLF_MaterialPEFull | J3DMLF_MaterialUseIndirect
+		       | J3DMLF_UseUniqueMaterials | (2 << J3DMLF_TevStageNumShift);
 	}
 	virtual void stamp(u16, f32 x, f32 y, f32 z, f32 range);
 	virtual void stampModel(J3DModel*);

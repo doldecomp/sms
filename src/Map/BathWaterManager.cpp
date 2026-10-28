@@ -1029,12 +1029,15 @@ public:
 		clearHeightMap();
 	}
 
-	void clearEFB(GXColor, u16, u16, bool) { }
+	void clearHeightMap()
+	{
+		for (int i = 0; i < 128; ++i)
+			for (int j = 0; j < 128; ++j)
+				unk20[i][j].y = 0;
 
-	void makeHeightMap(f32 h);
-	void makeNormalMap();
-	void calcCoord();
-	void clearHeightMap();
+		unk80080.set(1.0f, 1.0f, 1.0f);
+		unk80050.identity();
+	}
 
 	virtual void prerender(JDrama::TGraphics* graphics,
 	                       const TBathtubData& data, TBathWater** waters,
@@ -1439,9 +1442,7 @@ public:
 		else
 			GXSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_OR, GX_ALWAYS, 0);
 
-		makeHeightMap(unk80080.y);
-		makeNormalMap();
-		calcCoord();
+		updateMesh();
 		DCStoreRange(&unk20, 0x30000);
 		DCStoreRange(&unk30020, 0x30000);
 		GXClearVtxDesc();
@@ -1478,6 +1479,107 @@ public:
 			j = n - 1;
 
 		return unk20[i][j].y + unk80050.at(1, 3);
+	}
+
+	void clearEFB(GXColor, u16, u16, bool) { }
+
+	void makeHeightMap(f32 h)
+	{
+		// GX_TF_Z24X8 depth texture (unk800AC^2 texels, 0x10000 buf): prerender
+		// copies the drop-ball Z-buffer here; makeHeightMap decodes it (raw 4x4
+		// GX tile layout: 64B/tile, two u16 planes) into the height field.
+
+		s16 n = unk800AC >> 2;
+		for (s16 br = 0; br < n; ++br) {
+			for (s16 bc = 0; bc < n; ++bc) {
+				u16* block = (u16*)unk800A4 + ((br + bc * n) << 5);
+				for (s16 sr = 0; sr < 4; ++sr) {
+					for (s16 sc = 0; sc < 4; ++sc) {
+						s32 v = (((block + sr + sc * 4)[0] << 16) & 0xFF0000)
+						        | (block + sr + sc * 4)[0x10];
+						unk20[sr + br * 4][sc + bc * 4].y
+						    = h * ((f32)v * (1.0f / 16777216.0f));
+					}
+				}
+			}
+		}
+	}
+
+	void makeNormalMap()
+	{
+		f32 scale = -unk80134->meshWidth.get() / (f32)unk800AC;
+		if (!unk80134->bendsNormal.get())
+			scale *= 2.0f;
+
+		for (int r = 0; r < unk800AC; ++r) {
+			for (int c = 0; c < unk800AC; ++c) {
+				f32 a  = unk20[r > 0 ? r - 1 : 0][c].y;
+				f32 b  = unk20[r < unk800AC - 1 ? r + 1 : r][c].y;
+				f32 a2 = unk20[r][c > 0 ? c - 1 : 0].y;
+				f32 b2 = unk20[r][c < unk800AC - 1 ? c + 1 : c].y;
+
+				unk30020[r][c].x = scale * (b - a);
+				unk30020[r][c].y = scale * scale;
+				unk30020[r][c].z = scale * (b2 - a2);
+				unk30020[r][c].normalize();
+			}
+		}
+	}
+
+	void calcCoord()
+	{
+		if (unk800AE != unk800AC) {
+			unk800AE = unk800AC;
+
+			for (int r = 0; r < unk800AE; ++r)
+				for (int c = 0; c < unk800AE; ++c)
+					unk60020[r][c].set((f32)r * unk800B0, (f32)c * unk800B0);
+
+			DCStoreRange(&unk60020, 0x20000);
+
+			for (int r = 0; r < unk800AE; ++r) {
+				for (int c = 0; c < unk800AE; ++c) {
+					unk20[r][c].x = unk80080.x * (f32)r;
+					unk20[r][c].z = unk80080.z * (f32)c;
+				}
+			}
+
+			GDLObj list;
+			GDInitGDLObj(&list, unk80154, 0x30040);
+			GDSetCurrent(&list);
+
+			u16 vtxCount = unk800AC * (unk800AC - 1) * 2;
+			GDBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vtxCount);
+
+			for (int r = unk800AC - 1; r > 0; --r) {
+				int rm = r - 1;
+				for (int c = 0; c < unk800AC; ++c) {
+					int a = r + c * 128;
+					int b = rm + c * 128;
+					GDPosition1x16(a);
+					GDNormal1x16(a);
+					GDTexCoord1x16(a);
+					GDPosition1x16(b);
+					GDNormal1x16(b);
+					GDTexCoord1x16(b);
+				}
+			}
+
+			GDEnd();
+
+			GDPadCurr32();
+			GDFlushCurrToMem();
+			unk80158 = GDGetCurrOffset();
+			GDSetCurrent(nullptr);
+		}
+	}
+
+	// fabricated
+	void updateMesh()
+	{
+		makeHeightMap(unk80080.y);
+		makeNormalMap();
+		calcCoord();
 	}
 
 	void tmpFake(const JGeometry::TVec3<f32>& dir,
@@ -1556,107 +1658,6 @@ void TBathWaterManager::load(JSUMemoryInputStream& stream)
 	unk18 = new TBathWaterGlobalParams();
 	for (int i = 0; i < 2; ++i)
 		unk14[i] = new TBathWaterParams(fileNames[i]);
-}
-
-void TBathWaterMeshRenderer::clearHeightMap()
-{
-	for (int i = 0; i < 128; ++i)
-		for (int j = 0; j < 128; ++j)
-			unk20[i][j].y = 0;
-
-	unk80080.set(1.0f, 1.0f, 1.0f);
-	unk80050.identity();
-}
-
-void TBathWaterMeshRenderer::makeHeightMap(f32 h)
-{
-	// GX_TF_Z24X8 depth texture (unk800AC^2 texels, 0x10000 buf): prerender
-	// copies the drop-ball Z-buffer here; makeHeightMap decodes it (raw 4x4
-	// GX tile layout: 64B/tile, two u16 planes) into the height field.
-
-	s16 n = unk800AC >> 2;
-	for (s16 br = 0; br < n; ++br) {
-		for (s16 bc = 0; bc < n; ++bc) {
-			u16* block = (u16*)unk800A4 + ((br + bc * n) << 5);
-			for (s16 sr = 0; sr < 4; ++sr) {
-				for (s16 sc = 0; sc < 4; ++sc) {
-					s32 v = (((block + sr + sc * 4)[0] << 16) & 0xFF0000)
-					        | (block + sr + sc * 4)[0x10];
-					unk20[sr + br * 4][sc + bc * 4].y
-					    = h * ((f32)v * (1.0f / 16777216.0f));
-				}
-			}
-		}
-	}
-}
-
-void TBathWaterMeshRenderer::makeNormalMap()
-{
-	f32 scale = -unk80134->meshWidth.get() / (f32)unk800AC;
-	if (!unk80134->bendsNormal.get())
-		scale *= 2.0f;
-
-	for (int r = 0; r < unk800AC; ++r) {
-		for (int c = 0; c < unk800AC; ++c) {
-			f32 a  = unk20[r > 0 ? r - 1 : 0][c].y;
-			f32 b  = unk20[r < unk800AC - 1 ? r + 1 : r][c].y;
-			f32 a2 = unk20[r][c > 0 ? c - 1 : 0].y;
-			f32 b2 = unk20[r][c < unk800AC - 1 ? c + 1 : c].y;
-
-			unk30020[r][c].x = scale * (b - a);
-			unk30020[r][c].y = scale * scale;
-			unk30020[r][c].z = scale * (b2 - a2);
-			unk30020[r][c].normalize();
-		}
-	}
-}
-
-void TBathWaterMeshRenderer::calcCoord()
-{
-	if (unk800AE != unk800AC) {
-		unk800AE = unk800AC;
-
-		for (int r = 0; r < unk800AE; ++r)
-			for (int c = 0; c < unk800AE; ++c)
-				unk60020[r][c].set((f32)r * unk800B0, (f32)c * unk800B0);
-
-		DCStoreRange(&unk60020, 0x20000);
-
-		for (int r = 0; r < unk800AE; ++r) {
-			for (int c = 0; c < unk800AE; ++c) {
-				unk20[r][c].x = unk80080.x * (f32)r;
-				unk20[r][c].z = unk80080.z * (f32)c;
-			}
-		}
-
-		GDLObj list;
-		GDInitGDLObj(&list, unk80154, 0x30040);
-		GDSetCurrent(&list);
-
-		u16 vtxCount = unk800AC * (unk800AC - 1) * 2;
-		GDBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, vtxCount);
-
-		for (int r = unk800AC - 1; r > 0; --r) {
-			int rm = r - 1;
-			for (int c = 0; c < unk800AC; ++c) {
-				int a = r + c * 128;
-				int b = rm + c * 128;
-				GDPosition1x16(a);
-				GDNormal1x16(a);
-				GDTexCoord1x16(a);
-				GDPosition1x16(b);
-				GDNormal1x16(b);
-				GDTexCoord1x16(b);
-			}
-		}
-
-		GDEnd();
-
-		GDPadCurr32();
-		GDFlushCurrToMem();
-		unk80158 = GDGetCurrOffset();
-		GDSetCurrent(nullptr);
-	}
 }
 
 void TBathWaterManager::loadAfter()

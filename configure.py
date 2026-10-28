@@ -1127,7 +1127,7 @@ config.libs = [
             PCHObject(NonMatching, "GC2D/ScrnFader.cpp"),
             PCHObject(NonMatching, "GC2D/GCConsole2.cpp"),
             PCHObject(NonMatching, "GC2D/Talk2D2.cpp"),
-            Object(NonMatching, "GC2D/BoundPane.cpp"),
+            Object(Matching, "GC2D/BoundPane.cpp"),
             PCHObject(NonMatching, "GC2D/PauseMenu2.cpp"),
             Object(NonMatching, "GC2D/MessageLoader.cpp"),
             PCHObject(Matching, "GC2D/HelpActor.cpp"),
