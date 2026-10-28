@@ -2,6 +2,7 @@
 #include <M3DUtil/SampleCtrlModel.hpp>
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static int to_upper_hack(int c)
 {
@@ -78,7 +79,7 @@ void MActorAnmDataBase::sortByFileNameRaw(void** anms)
 }
 
 MActorAnmData::MActorAnmData()
-    : unk0(0)
+    : mIncidentalAnmNum(0)
 {
 	mBckAnms = nullptr;
 	mBpkAnms = nullptr;
@@ -87,8 +88,8 @@ MActorAnmData::MActorAnmData()
 	mBrkAnms = nullptr;
 	mBlkAnms = nullptr;
 
-	unk44 = 0;
-	unk48 = nullptr;
+	unk44            = 0;
+	mSampleModelData = nullptr;
 
 	mBckNum = 0;
 	mBlkNum = 0;
@@ -111,8 +112,9 @@ u32 MActorAnmData::partsNameToIdx(const char* name)
 {
 	typedef JGadget::TList<MActorSubAnmInfo>::iterator I;
 	u32 idx = 0;
-	for (I it = unk1C.begin(), e = unk1C.end(); it != e; ++idx, ++it)
-		if (strcmp((*it).unk4, name) == 0)
+	for (I it = mIncidentalAnms.begin(), e = mIncidentalAnms.end(); it != e;
+	     ++idx, ++it)
+		if (strcmp((*it).mPartsName, name) == 0)
 			return idx;
 	return -1;
 }
@@ -120,10 +122,10 @@ u32 MActorAnmData::partsNameToIdx(const char* name)
 void MActorAnmData::addIncidentalAnm(const char* parts_name, int joint_index)
 {
 	MActorSubAnmInfo info;
-	info.unk0 = joint_index;
-	info.unk4 = parts_name;
-	++unk0;
-	unk1C.push_back(info);
+	info.mJointIdx  = joint_index;
+	info.mPartsName = parts_name;
+	++mIncidentalAnmNum;
+	mIncidentalAnms.push_back(info);
 }
 
 void MActorAnmData::init(const char* anm_folder, const char** additional_files)
@@ -274,5 +276,5 @@ void MActorAnmData::addFileTable(const char* param_1)
 
 void MActorAnmData::createSampleModelData(J3DModelData* data)
 {
-	unk48 = new SampleCtrlModelData(data);
+	mSampleModelData = new SampleCtrlModelData(data);
 }

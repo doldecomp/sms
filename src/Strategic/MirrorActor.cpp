@@ -13,49 +13,52 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
-void TMirrorActor::isInMirror() const { }
+bool TMirrorActor::isInMirror() const { return mIsInMirror; }
 
 void TMirrorActor::checkIsInMirror()
 {
-	if (unk1A & 1) {
-		unk18 = 0;
+	if (mFlags & MIRROR_ACTOR_FLAG_HIDDEN) {
+		mIsInMirror = false;
 		return;
 	}
 
-	if (unk1A & 2) {
-		if (!gpMirrorModelManager->isUnk18Present() && !(unk1A & 4)) {
-			if (unk14->getShapePacket(0)->isVisible())
-				SMS_HideAllShapePacket(unk14);
-			unk18 = 0;
+	if (mFlags & MIRROR_ACTOR_FLAG_ALWAYS) {
+		if (!gpMirrorModelManager->isMirrorActive()
+		    && !(mFlags & MIRROR_ACTOR_FLAG_MARIO)) {
+			if (mMirrorModel->getShapePacket(0)->isVisible())
+				SMS_HideAllShapePacket(mMirrorModel);
+			mIsInMirror = false;
 		} else {
-			if (!unk14->getShapePacket(0)->isVisible())
-				SMS_ShowAllShapePacket(unk14);
-			unk18 = 1;
+			if (!mMirrorModel->getShapePacket(0)->isVisible())
+				SMS_ShowAllShapePacket(mMirrorModel);
+			mIsInMirror = true;
 		}
 
 		return;
 	}
 
-	MtxPtr mtx = unk10->getAnmMtx(0);
-	JGeometry::TVec3<f32> local_18;
-	if (!(unk1A & 4)) {
-		local_18.set(mtx[0][3], mtx[1][3], mtx[2][3]);
+	MtxPtr mtx = mNormalModel->getAnmMtx(0);
+	JGeometry::TVec3<f32> position;
+	if (!(mFlags & MIRROR_ACTOR_FLAG_MARIO)) {
+		position.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 	} else {
-		local_18.set(SMS_GetMarioPos());
+		position.set(SMS_GetMarioPos());
 	}
 
-	int uVar4 = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(local_18));
-	if (uVar4 != gpMirrorModelManager->unk18) {
-		unk18 = 0;
-	} else if (!gpMirrorModelManager->isUnk18Present() && !(unk1A & 4)) {
-		unk18 = 0;
-	} else if (gpMirrorModelManager->isUnk18Present()
-	           && !gpMirrorModelManager->isUpperThanMirrorPlane(local_18)) {
-		unk18 = 0;
+	int mirrorIdx
+	    = gpCubeMirror->getDataNo(gpCubeMirror->getInCubeNo(position));
+	if (mirrorIdx != gpMirrorModelManager->getActiveMirrorIdx()) {
+		mIsInMirror = false;
+	} else if (!gpMirrorModelManager->isMirrorActive()
+	           && !(mFlags & MIRROR_ACTOR_FLAG_MARIO)) {
+		mIsInMirror = false;
+	} else if (gpMirrorModelManager->isMirrorActive()
+	           && !gpMirrorModelManager->isUpperThanMirrorPlane(position)) {
+		mIsInMirror = false;
 	} else {
-		unk18 = 1;
+		mIsInMirror = true;
 	}
 }
 
@@ -63,21 +66,23 @@ void TMirrorActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		checkIsInMirror();
-		if (unk18 == 0)
+		if (!isInMirror())
 			return;
 
-		for (u16 i = 0; i < unk10->getModelData()->getJointNum(); ++i)
-			unk14->setAnmMtx(i, unk10->getAnmMtx(i));
+		for (u16 i = 0; i < mNormalModel->getModelData()->getJointNum(); ++i)
+			MTXCopy(mNormalModel->getAnmMtx(i), mMirrorModel->getAnmMtx(i));
 
-		for (u16 i = 0; i < unk10->getModelData()->getWEvlpMtxNum(); ++i)
-			unk14->setWeightAnmMtx(i, unk10->getWeightAnmMtx(i));
+		for (u16 i = 0; i < mNormalModel->getModelData()->getWEvlpMtxNum(); ++i)
+			MTXCopy(mNormalModel->getWeightAnmMtx(i),
+			        mMirrorModel->getWeightAnmMtx(i));
 	}
 
-	if ((cue & CUE_CALC_VIEW) && unk18 != 0)
-		unk14->viewCalc();
+	if ((cue & CUE_CALC_VIEW) && isInMirror())
+		mMirrorModel->viewCalc();
 
-	if ((cue & CUE_ENTRY) && unk18 && !(unk1A & 2))
-		unk14->entry();
+	if ((cue & CUE_ENTRY) && isInMirror()
+	    && !(mFlags & MIRROR_ACTOR_FLAG_ALWAYS))
+		mMirrorModel->entry();
 }
 
 void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
@@ -93,16 +98,17 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 	model->entry();
 }
 
-void TMirrorActor::init(J3DModel* param_1, u16 param_2)
+void TMirrorActor::init(J3DModel* model, u16 flags)
 {
-	unk1A = param_2;
-	unk10 = param_1;
+	mFlags       = flags;
+	mNormalModel = model;
 
-	if (unk1A & 8)
-		unk14 = new SDLModel(((SDLModel*)param_1)->getSDLModelData(), 3, 1);
+	if (mFlags & MIRROR_ACTOR_FLAG_SDL_MODEL)
+		mMirrorModel
+		    = new SDLModel(((SDLModel*)model)->getSDLModelData(), 3, 1);
 	else {
-		J3DModelData* modelData = unk10->getModelData();
-		unk14                   = new J3DModel(modelData, 0, 1);
+		J3DModelData* modelData = mNormalModel->getModelData();
+		mMirrorModel            = new J3DModel(modelData, 0, 1);
 	}
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* mirrorScene
@@ -110,15 +116,15 @@ void TMirrorActor::init(J3DModel* param_1, u16 param_2)
 	        JDrama::TNameRefGen::search("鏡シーン"));
 	mirrorScene->getChildren().push_back(this);
 
-	if (unk1A & 2)
-		entryMirrorDrawBufferAlways(unk14);
+	if (mFlags & MIRROR_ACTOR_FLAG_ALWAYS)
+		entryMirrorDrawBufferAlways(mMirrorModel);
 }
 
 TMirrorActor::TMirrorActor(const char* name)
     : JDrama::TViewObj(name)
-    , unk10(nullptr)
-    , unk14(0)
-    , unk18(0)
-    , unk1A(0)
+    , mNormalModel(nullptr)
+    , mMirrorModel(nullptr)
+    , mIsInMirror(false)
+    , mFlags(0)
 {
 }

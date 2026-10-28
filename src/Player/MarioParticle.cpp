@@ -1,4 +1,6 @@
 #include <Player/Mario.hpp>
+#include <Player/Yoshi.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Player/MarioEffect.hpp>
 #include <System/Particles.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -15,18 +17,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
+#include <System/Application.hpp>
 
 const char* cParticleFileNames[] = {
 	"/scene/map/pollution/ms_m_ashios.jpa",
@@ -113,7 +104,7 @@ void TMario::emitSweat(s16 rot)
 void TMario::emitSweatSometimes()
 {
 	s16 angle = mFaceAngle.y;
-	if (!(SMSGetMarDirector()->mMoveTickCount & 0xF))
+	if (!(SMSGetMarDirector()->getMoveTickCount() & 0xF))
 		emitSweat(angle);
 }
 
@@ -696,11 +687,11 @@ void TMario::rocketEffectStart()
 	gpMarioParticleManager->emit(PARTICLE_MS_HIPDROP_A, &mPosition, 0, nullptr);
 	if (mWaterGun != nullptr) {
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    PARTICLE_MS_M_ROCKET_A, &mWaterGun->getEmitPos0(), 0, this);
+		    PARTICLE_MS_M_ROCKET_A, &mWaterGun->getEmitPos(0), 0, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    PARTICLE_MS_M_ROCKET_B, &mWaterGun->getEmitPos0(), 0, this);
+		    PARTICLE_MS_M_ROCKET_B, &mWaterGun->getEmitPos(0), 0, this);
 		gpMarioParticleManager->emitAndBindToPosPtr(
-		    PARTICLE_MS_M_ROCKET_B2, &mWaterGun->getEmitPos0(), 0, this);
+		    PARTICLE_MS_M_ROCKET_B2, &mWaterGun->getEmitPos(0), 0, this);
 	}
 }
 

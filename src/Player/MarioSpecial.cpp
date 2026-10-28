@@ -1,4 +1,5 @@
 #include <Player/Mario.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
@@ -73,7 +74,7 @@ BOOL TMario::barWait()
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
-		u8 map = SMSGetMarDirector()->getCurrentMap();
+		u8 map = SMSGetMarDirector()->getCurrentStage();
 		if (map == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
@@ -152,7 +153,7 @@ BOOL TMario::barClimb()
 	}
 
 	if (mHolder->getActorType() == ACTOR_TYPE_MONTE_GOAL_FLAG) {
-		u8 state = SMSGetMarDirector()->mMap;
+		u8 state = SMSGetMarDirector()->getCurrentStage();
 		if (state == 8) {
 			if (mHolderHeightDiff > 750.0f) {
 				mHolderHeightDiff = 750.0f;
@@ -942,7 +943,7 @@ BOOL TMario::wireHanging()
 	}
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
-	    && mWaterGun->canSpray()) {
+	    && mWaterGun->isEmitting()) {
 		s16 rotSp = getNozzleEmitVX();
 		if (rotSp > 0)
 			unkF6 += 2 * mWireParams.mRotStop.get();
@@ -963,7 +964,7 @@ s16 TMario::getNozzleEmitVX()
 		return 0;
 
 	int rotSp;
-	switch (mWaterGun->mCurrentNozzle) {
+	switch (mWaterGun->getCurrentNozzleType()) {
 	case TWaterGun::Rocket:
 		rotSp = mWireParams.mRotSpeedTrgRocket.get();
 		break;
@@ -1013,7 +1014,7 @@ BOOL TMario::wireRolling()
 	}
 
 	if (mUpperState == UPPER_STATE_PUMPING && mWaterGun != nullptr
-	    && mWaterGun->canSpray()) {
+	    && mWaterGun->isEmitting()) {
 		unkF6 += getNozzleEmitVX();
 	}
 
@@ -1143,7 +1144,7 @@ void TMario::getCurrentPullParams(f32* outV, f32* outH)
 	case ACTOR_TYPE_BOSS_GESSO_TENTACLE:
 		params = &mPullParamsBGTentacle;
 		break;
-	case ACTOR_TYPE_BOSS_UNKD:
+	case ACTOR_TYPE_BOSS_WANWAN:
 		params = &mPullParamsBGFireWanWanBossTail;
 		break;
 	case ACTOR_TYPE_FIRE_WANWAN_TAIL_HIT:

@@ -10,10 +10,6 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <version.h>
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-#include <System/DummyStrings.hpp>
-#endif
-
 TProgSelect::TProgSelect(u8 param_1, const char* name)
     : JDrama::TViewObj(name)
     , mPulsingTimer(255)
@@ -109,20 +105,34 @@ void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 #else
 				if (!mSelection) {
+					// clang-format off
 					snprintf(unk1C, 256,
-					         "GM[0]画面表示モードは\n"
-					         "FX[24]FY[24]CC[ffff00]"
-					         "プログレッシブモード"
-					         "FX[20]FY[20]CC[ffffff]に\n"
-					         "セットされました。");
+						J2DPRINT_GRADIENT_MODE(0)
+						"画面表示モードは\n"
+						J2DPRINT_FONT_WIDTH(24)
+						J2DPRINT_FONT_HEIGHT(24)
+						J2DPRINT_CHAR_COLOR("ffff00")
+						"プログレッシブモード"
+						J2DPRINT_FONT_WIDTH(20)
+						J2DPRINT_FONT_HEIGHT(20)
+						J2DPRINT_CHAR_COLOR("ffffff")
+						"に\nセットされました。");
+					// clang-format on
 					OSSetProgressiveMode(1);
 				} else {
+					// clang-format off
 					snprintf(unk1C, 256,
-					         "GM[0]画面表示モードは\n"
-					         "FX[24]FY[24]CC[ffff00]"
-					         "インターレースモード"
-					         "FX[20]FY[20]CC[ffffff]に\n"
-					         "セットされました。");
+						J2DPRINT_GRADIENT_MODE(0)
+						"画面表示モードは\n"
+						J2DPRINT_FONT_WIDTH(24)
+						J2DPRINT_FONT_HEIGHT(24)
+						J2DPRINT_CHAR_COLOR("ffff00")
+						"インターレースモード"
+						J2DPRINT_FONT_WIDTH(20)
+						J2DPRINT_FONT_HEIGHT(20)
+						J2DPRINT_CHAR_COLOR("ffffff")
+						"に\nセットされました。");
+					// clang-format on
 					OSSetProgressiveMode(0);
 				}
 #endif
@@ -142,18 +152,16 @@ void TProgSelect::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_DRAW) {
-		J2DOrthoGraph local_110(graphics->getViewport());
-		local_110.setup2D();
-		J2DPrint JStack_174(gpSystemFont, 0);
-		JStack_174.setUnk50(32);
-		JStack_174.printReturn(unk1C, VERSION_SELECT(580, GMSJ01(300)), 160,
-		                       HBIND_CENTER, VBIND_TOP,
-		                       VERSION_SELECT(35, GMSJ01(175)), 300, 255);
+		J2DOrthoGraph graph(graphics->getViewport());
+		graph.setup2D();
+		J2DPrint printer(gpSystemFont, 0);
+		printer.setUnk50(32);
+		printer.printReturn(unk1C, VERSION_SELECT(580, GMSJ01(300)), 160,
+		                    HBIND_CENTER, VBIND_TOP,
+		                    VERSION_SELECT(35, GMSJ01(175)), 300, 255);
 		if (!mHideTextBoxes) {
 			unk120[0]->draw(240, 400);
 			unk120[1]->draw(340, 400);
 		}
 	}
-
-	char trahs[0x10];
 }

@@ -38,7 +38,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 const char* bgeso_bastable[] = {
 	nullptr,
@@ -363,9 +362,10 @@ TBossGessoMtxCalc::TBossGessoMtxCalc(TBossGesso* owner)
 
 void TBossGessoMtxCalc::joinAnm(int param_1)
 {
-	M3UMtxCalcSIAnmBlendQuat::joinAnm(
-	    mOwner->getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-	        param_1));
+	M3UMtxCalcSIAnmBlendQuat::joinAnm(mOwner->getActorKeeper()
+	                                      ->getMActorAnmData()
+	                                      ->getBckAnmData()
+	                                      ->getAnmPtr(param_1));
 }
 
 void TBossGessoMtxCalc::setAnm(int param_1) { }
@@ -437,7 +437,7 @@ void TBGBinder::bind(TLiveActor* param_1)
 
 		gesso->mPositionDelta = local_3c - gesso->mPosition;
 
-		if (SMSGetMarDirector()->mMap != 9
+		if (SMSGetMarDirector()->getCurrentStage() != 9
 		    && gesso->mPosition.y - local_3c.y > 0.0f) {
 
 			const TBGCheckData* pTStack_4c;
@@ -737,7 +737,7 @@ f32 TBossGesso::inSight()
 
 BOOL TBossGesso::is2ndFightNow() const
 {
-	if (SMSGetMarDirector()->unk7D == 4)
+	if (SMSGetMarDirector()->getCurrentScenario() == 4)
 		return TRUE;
 
 	return FALSE;
@@ -919,7 +919,7 @@ void TBossGesso::doAttackSingle()
 		unk17C = 0;
 	}
 
-	if (SMSGetMarDirector()->mMoveTickCount < 0x1E0)
+	if (SMSGetMarDirector()->getMoveTickCount() < 0x1E0)
 		return;
 
 	if (SMSGetMarDirector()->isTalkOrDemoModeNow())
@@ -930,7 +930,7 @@ void TBossGesso::doAttackSingle()
 		return;
 	}
 
-	if (SMSGetMarDirector()->unk7D == 4 ? 1 : 0) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 4 ? 1 : 0) {
 
 		JGeometry::TVec3<f32> delta = SMS_GetMarioPos();
 
@@ -965,7 +965,7 @@ void TBossGesso::doAttackSingle()
 		if (mTimeInCurrentAttackMode <= getSaveParams()->mSLUnisonInter.get())
 			return;
 
-		if (SMSGetMarDirector()->unk7D != 4)
+		if (SMSGetMarDirector()->getCurrentScenario() != 4)
 			return;
 
 		changeAttackMode(ASTATE_ROLL);
@@ -1003,7 +1003,7 @@ void TBossGesso::doAttackSingle()
 
 	if (dist < unisonLen && gpMarioOriginal->isTouchGround4cm()) {
 		if (mTimeInCurrentAttackMode > getSaveParams()->mSLUnisonInter.get()) {
-			if (SMSGetMarDirector()->unk7D == 4)
+			if (SMSGetMarDirector()->getCurrentScenario() == 4)
 				changeAttackMode(ASTATE_ROLL);
 			else
 				changeAttackMode(ASTATE_UNISON);
@@ -1027,7 +1027,7 @@ void TBossGesso::doAttackSingle()
 		}
 	}
 
-	if (SMSGetMarDirector()->unk7D == 4
+	if (SMSGetMarDirector()->getCurrentScenario() == 4
 	    && inSightAngle(getSaveParams()->mSLSightAngle.get() * 0.5f)
 	    && mTimeInCurrentAttackMode > getSaveParams()->mSLUnisonInter.get()) {
 		changeAttackMode(ASTATE_ROLL);
@@ -1272,8 +1272,8 @@ void TBossGesso::reset()
 		mTentacles[i]->getFirstNode()->onUnk24();
 	}
 
-	if (SMSGetMarDirector()->getCurrentMap() == 3
-	    && SMSGetMarDirector()->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentStage() == 3
+	    && SMSGetMarDirector()->getCurrentScenario() == 0)
 		changeAttackMode(ASTATE_UNK6);
 	else
 		changeAttackMode(ASTATE_SINGLE);
@@ -1666,7 +1666,8 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 
 		self->getMActor()->resetDL();
 
-		if (SMSGetMarDirector()->mMap == 3 || SMSGetMarDirector()->mMap == 59) {
+		if (SMSGetMarDirector()->getCurrentStage() == 3
+		    || SMSGetMarDirector()->getCurrentStage() == 59) {
 			MSBgm::stopBGM(MSD_BGM_MAP_SELECT, 10);
 			MSMainProc::setBossNotDamagedFlag(false);
 		}
@@ -1731,7 +1732,8 @@ DEFINE_NERVE(TNerveBGBeakDamage, TLiveActor)
 		ctrl4->setFrame(0.0f);
 
 		spine->pushAfterCurrent(&TNerveBGPollute::theNerve());
-		if (SMSGetMarDirector()->mMap == 3 || SMSGetMarDirector()->mMap == 59)
+		if (SMSGetMarDirector()->getCurrentStage() == 3
+		    || SMSGetMarDirector()->getCurrentStage() == 59)
 			MSBgm::startBGM(MSD_BGM_CHUBOSS_MANTA);
 
 		return true;
@@ -1839,19 +1841,20 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 
 		self->getMActor()->resetDL();
 
-		if (SMSGetMarDirector()->mMap == 3 || SMSGetMarDirector()->mMap == 59) {
+		if (SMSGetMarDirector()->getCurrentStage() == 3
+		    || SMSGetMarDirector()->getCurrentStage() == 59) {
 			MSBgm::stopTrackBGMs(7, 10);
 			MSMainProc::setBossLivesFlag(false);
-		} else if (SMSGetMarDirector()->mMap == 9) {
+		} else if (SMSGetMarDirector()->getCurrentStage() == 9) {
 			MSBgm::stopTrackBGM(1, 10);
 			MSMainProc::setBossLivesFlagOnlyFlag(false);
 		}
 
-		if (SMSGetMarDirector()->mMap == 9) {
+		if (SMSGetMarDirector()->getCurrentStage() == 9) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "bgeso_fall_camera3", nullptr, -1, 0.0f, true, nullptr, 0,
 			    nullptr, JDrama::TFlagT<u16>(0));
-		} else if (SMSGetMarDirector()->unk7D == 4) {
+		} else if (SMSGetMarDirector()->getCurrentScenario() == 4) {
 			SMSGetMarDirector()->fireStartDemoCamera(
 			    "bgeso_fall_camera2", nullptr, -1, 0.0f, true, nullptr, 0,
 			    nullptr, JDrama::TFlagT<u16>(0));
@@ -1861,7 +1864,8 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 			    nullptr, JDrama::TFlagT<u16>(0));
 		}
 
-		if (SMSGetMarDirector()->mMap == 3 || SMSGetMarDirector()->mMap == 59) {
+		if (SMSGetMarDirector()->getCurrentStage() == 3
+		    || SMSGetMarDirector()->getCurrentStage() == 59) {
 			gpItemManager->makeShineAppearWithDemo(
 			    "シャイン（ボス用）", "ボスシャインカメラ", self->mPosition.x,
 			    self->mPosition.y + 6000.0f, self->mPosition.z);
@@ -1876,7 +1880,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
-	if (SMSGetMarDirector()->mMap == 9 && spine->getTime() >= 740
+	if (SMSGetMarDirector()->getCurrentStage() == 9 && spine->getTime() >= 740
 	    && spine->getTime() <= 750) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, &self->mPosition, 0,
 		                                nullptr, 0, 4);
@@ -1918,7 +1922,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_UNK10);
 	}
 
-	if (self->isReachedToGoal() && SMSGetMarDirector()->unk124 != 3) {
+	if (self->isReachedToGoal() && !SMSGetMarDirector()->isInnerDemoModeNow()) {
 
 		self->changeAllTentacleState(0);
 		self->kill();

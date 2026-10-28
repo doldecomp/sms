@@ -4,8 +4,11 @@
 #include <JSystem/JGeometry.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <MSound/MAnmSound.hpp>
-#include <M3DUtil/MActor.hpp>
 
+class MActor;
+class MActorAnmData;
+class J3DMtxCalc;
+class J3DDrawBuffer;
 class TMario;
 class TEggYoshi;
 class TYoshiTongue;
@@ -61,14 +64,12 @@ public:
 	void startVoice(u32);
 
 	// fabricated
-	MtxPtr getTongueMtx() const
-	{
-		return mActor->getModel()->getAnmMtx(mJointIdxTongue);
-	}
-
 	BOOL isHatched() const { return mState == STATE_EGG ? FALSE : TRUE; }
 
 	const JGeometry::TVec3<f32>& getTranslation() const { return mTranslation; }
+
+	// fabricated
+	u32 getUnkD4() const { return unkD4; }
 
 public:
 	/* 0x0 */ u8 mState;

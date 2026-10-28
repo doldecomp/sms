@@ -48,7 +48,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 TMarDirector* gpMarDirector;
 MSound* gpMSound;
@@ -191,14 +190,14 @@ void SMSMountAramArchive(JKRMemArchive* archive, TARAMBlock& block)
 {
 	if (block.mIsCompressed) {
 		JKRAram::aramToMainRam(
-		    block.mBlock, (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
+		    block.mBlock, (u8*)SMSGetMarDirector()->get2DArchiveBuffer(), 0, 0,
 		    EXPAND_SWITCH_DECOMPRESS, 0x64000, nullptr, -1, nullptr);
 	} else {
-		JKRAram::aramToMainRam(block.mBlock,
-		                       (u8*)SMSGetMarDirector()->getUnkD4(), 0, 0,
-		                       EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
+		JKRAram::aramToMainRam(
+		    block.mBlock, (u8*)SMSGetMarDirector()->get2DArchiveBuffer(), 0, 0,
+		    EXPAND_SWITCH_DEFAULT, 0, nullptr, -1, nullptr);
 	}
-	archive->mountFixed(SMSGetMarDirector()->getUnkD4(), MBF_0);
+	archive->mountFixed(SMSGetMarDirector()->get2DArchiveBuffer(), MBF_0);
 }
 
 JKRArchive* SMSSwitch2DArchive(const char* arc_path, TARAMBlock& block)

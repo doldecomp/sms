@@ -1,5 +1,5 @@
 #include <Enemy/Kazekun.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/MtxUtil.hpp>
@@ -11,18 +11,18 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void SMS_CalcToDirMatrix(TPosition3f& param_1,
-                         const JGeometry::TVec3<f32>& param_2,
-                         const JGeometry::TVec3<f32>& param_3)
+void SMS_CalcToDirMatrix(TPosition3f& outMatrix,
+                         const JGeometry::TVec3<f32>& dir,
+                         const JGeometry::TVec3<f32>& up)
 {
-	JGeometry::TVec3<f32> zDir = param_2;
+	JGeometry::TVec3<f32> zDir = dir;
 	if (zDir.isZero())
 		zDir.set(0.0f, 0.0f, 1.0f);
 	else
 		zDir.normalize();
 
 	JGeometry::TVec3<f32> xDir;
-	xDir.cross(param_3, zDir);
+	xDir.cross(up, zDir);
 	if (xDir.isZero())
 		xDir.set(1.0f, 0.0f, 0.0f);
 	else
@@ -32,9 +32,9 @@ void SMS_CalcToDirMatrix(TPosition3f& param_1,
 	yDir.cross2(zDir, xDir);
 	yDir.normalize();
 
-	param_1.setXDir(xDir);
-	param_1.setYDir(yDir);
-	param_1.setZDir(zDir);
+	outMatrix.setXDir(xDir);
+	outMatrix.setYDir(yDir);
+	outMatrix.setZDir(zDir);
 }
 
 TKazekun::TKazekun(const char* param_1)

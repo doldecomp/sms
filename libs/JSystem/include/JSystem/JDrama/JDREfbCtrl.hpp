@@ -27,6 +27,20 @@ public:
 
 	void setSrcRect(const TRect&);
 
+	enum {
+		EFB_FLAG_NO_CLEAR_COLOR  = 0x1,
+		EFB_FLAG_NO_CLEAR_ALPHA  = 0x2,
+		EFB_FLAG_NO_CLEAR_Z      = 0x4,
+		EFB_FLAG_PIXEL_FMT_RGBA6 = 0x8,
+		EFB_FLAG_DITHER          = 0x10,
+		EFB_FLAG_VFILTER         = 0x20,
+		EFB_FLAG_NO_COLOR_UPDATE = 0x100,
+		EFB_FLAG_NO_ALPHA_UPDATE = 0x200,
+		EFB_FLAG_NO_Z_COMPARE    = 0x400,
+		EFB_FLAG_ANTIALIAS       = 0x800,
+		EFB_FLAG_MIPMAP          = 0x1000,
+	};
+
 public:
 	/* 0x10 */ TRect unk10;
 	/* 0x20 */ TFlagT<u16> unk20;

@@ -35,7 +35,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* telesa_bastable[] = {
 	nullptr,
@@ -1041,8 +1040,8 @@ DEFINE_NERVE(TNerveTelesaImitate, TLiveActor)
 
 	TSharedParts* imitatedItem = self->mImitatedBmd;
 
-	if (SMSGetApplication()->mCurrArea.getStage() != 7
-	    && SMSGetApplication()->mCurrArea.getStage() != 14) {
+	if (SMSGetApplication()->getCurrArea().getStage() != 7
+	    && SMSGetApplication()->getCurrArea().getStage() != 14) {
 		if (spine->getTime() == 0 && imitatedItem != nullptr) {
 			((TMarioModokiTelesa*)self)->imitateAnm();
 			imitatedItem->getMActor()->setBckFromIndex(0);

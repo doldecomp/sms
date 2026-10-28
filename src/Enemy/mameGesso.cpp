@@ -10,7 +10,6 @@
 
 // rogue includes needed for matching sinit & bss
 #include <JSystem/JAudio/JALibrary/JALModSe.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // has to be here for rodata ordering
 #include <Map/MapCollisionEntry.hpp>

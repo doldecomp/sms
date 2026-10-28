@@ -16,7 +16,7 @@ public:
 
 	void hitByWater(THitActor*);
 
-public:
+private:
 	/* 0x138 */ GXColor unk138;
 	/* 0x13C */ int unk13C;
 	/* 0x140 */ f32 unk140;
@@ -37,7 +37,7 @@ public:
 
 	void ring(const JGeometry::TVec3<f32>&);
 
-public:
+private:
 	/* 0x138 */ GXColor unk138;
 	/* 0x13C */ int unk13C;
 	/* 0x140 */ JGeometry::TVec3<f32> unk140;
@@ -97,7 +97,7 @@ public:
 
 	void startDemo();
 
-public:
+private:
 	/* 0x138 */ TSharedParts* unk138;
 	/* 0x13C */ TSharedParts* unk13C;
 	/* 0x140 */ u8 pad140[0xC];
@@ -116,7 +116,7 @@ public:
 	virtual void loadAfter();
 	virtual void touchPlayer(THitActor*);
 
-public:
+private:
 	/* 0x138 */ JGeometry::TVec3<f32> unk138;
 	/* 0x144 */ TLiveActor* unk144;
 };

@@ -3,9 +3,6 @@
 #include "Strategic/LiveManager.hpp"
 #include <System/MarNameRefGen.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 JDrama::TNameRef* TMarNameRefGen::getNameRef_NPC(const char* name) const
 {
 	if (strcmp(name, "NPCMonteM") == 0)

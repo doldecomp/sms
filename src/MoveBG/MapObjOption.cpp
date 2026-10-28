@@ -10,7 +10,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 void TFileLoadBlock::makeBlockNoCard() { }
 

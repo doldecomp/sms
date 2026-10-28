@@ -11,7 +11,6 @@
 #include <stdlib.h>
 
 // rogue include
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 

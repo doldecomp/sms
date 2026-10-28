@@ -18,11 +18,9 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <System/Application.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 void TYoshiTongue::init(TYoshi* yoshi)
 {
@@ -82,10 +80,10 @@ void TYoshiTongue::initInLoadAfter()
 	grp->getChildren().push_back(this);
 
 	TMirrorActor* ma = new TMirrorActor("ヨッシー舌in鏡");
-	ma->init(mModel, 4);
+	ma->init(mModel, TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 
 	TMirrorActor* mb = new TMirrorActor("ヨッシー舌先in鏡");
-	mb->init(mTipModel, 4);
+	mb->init(mTipModel, TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 }
 
 void TYoshiTongue::emit(const JGeometry::TVec3<f32>& src,

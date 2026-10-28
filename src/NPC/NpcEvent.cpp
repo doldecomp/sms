@@ -14,7 +14,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 extern const TNerveBase<TLiveActor>* NerveGetByIndex(int index);
 
@@ -82,7 +81,7 @@ static void evIsGameModeNormal(TSpcTypedInterp<TEventWatcher>* interp,
 {
 	interp->verifyArgNum(0, &arg_num);
 	int result = 0;
-	if (SMSGetMarDirector()->unk124 == 0)
+	if (SMSGetMarDirector()->isGameplayModeNow())
 		result = 1;
 	interp->push(result);
 }
@@ -98,8 +97,10 @@ static void ev__ForceStartTalk(TSpcTypedInterp<TEventWatcher>* interp,
 	    && SMS_IsMarioTouchGround4cm()
 	    && !gpMarioOriginal->checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 
-		SMSGetMarDirector()->unkA0  = (TBaseNPC*)interp->pop().getDataInt();
-		SMSGetMarDirector()->unk126 = 1;
+		SMSGetMarDirector()->setTalkingNPC(
+		    (TBaseNPC*)interp->pop().getDataInt());
+		SMSGetMarDirector()->setNextGameMode(
+		    TMarDirector::GAME_MODE_TALK_START);
 
 		result = 1;
 	} else {
@@ -125,8 +126,9 @@ static void ev__ForceStartTalkExceptNpc(TSpcTypedInterp<TEventWatcher>* interp,
 		    JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 
 		if (dummyNpc) {
-			SMSGetMarDirector()->unkA0  = dummyNpc;
-			SMSGetMarDirector()->unk126 = 1;
+			SMSGetMarDirector()->setTalkingNPC(dummyNpc);
+			SMSGetMarDirector()->setNextGameMode(
+			    TMarDirector::GAME_MODE_TALK_START);
 
 			result = 1;
 		}

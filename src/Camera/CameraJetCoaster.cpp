@@ -48,7 +48,7 @@ inline void CPolarSubCamera::drawJetCoasterBalloonMessage_()
 		unk2B8->unk38 = 300;
 		balloonCode   = 0xE002D;
 	} else {
-		switch (SMSGetMarDirector()->mMoveTickCount) {
+		switch (SMSGetMarDirector()->getMoveTickCount()) {
 		case 0x3C:
 			SMSGetMarDirector()->getConsole()->startAppearJetBalloon(0,
 			                                                         objCount);
@@ -97,8 +97,8 @@ static void unitVecTo(const JGeometry::TVec3<f32>& from,
 // RotateAboutAxis copy, 0xA8 in the temps after it.
 void CPolarSubCamera::ctrlJetCoasterCamera_()
 {
-	if (SMSGetMarDirector()->getCurrentMap() == 0x3A
-	    && SMSGetMarDirector()->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentStage() == 0x3A
+	    && SMSGetMarDirector()->getCurrentScenario() == 0)
 		drawJetCoasterBalloonMessage_();
 
 	bool startedLButton = false;
@@ -143,8 +143,8 @@ void CPolarSubCamera::ctrlJetCoasterCamera_()
 		toroccoAxisZ.z = toroccoMtx[2][2];
 		mUp.set(toroccoAxisY);
 
-		mCurrentTarget.unk18.scaleAdd(-calcDistFromXRotRatio_(), newTarget,
-		                              toroccoAxisZ);
+		mCurrentTarget.unk18.scaleAdd(-calcDistFromXRotRatio_(), toroccoAxisZ,
+		                              newTarget);
 
 		CLBRotatePosAndUp(angleX, angleY, toroccoAxisX, toroccoAxisY, newTarget,
 		                  &mCurrentTarget.unk18, &mUp);

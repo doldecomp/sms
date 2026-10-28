@@ -16,8 +16,8 @@ bool TBaseNPC::isCanWalk() const
 
 void TBaseNPC::execWalk(bool param_1)
 {
-	if (mWalkForbidCount != 0 || SMSGetMarDirector()->isThing() || !isClean()
-	    || checkActionFlag(NPC_ACTION_HAPPY)) {
+	if (mWalkForbidCount != 0 || SMSGetMarDirector()->isInTalkNow()
+	    || !isClean() || checkActionFlag(NPC_ACTION_HAPPY)) {
 		mMarchSpeed = 0.0f;
 		mTurnSpeed  = 0.0f;
 		return;

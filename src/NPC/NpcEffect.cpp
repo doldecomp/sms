@@ -10,7 +10,6 @@
 #include <NPC/NpcParts.hpp>
 
 // rogue
-#include <M3DUtil/InfectiousStrings.hpp>
 static const char dummy[] = "__ROOT_JOINT__";
 
 void TBaseNPC::setHappyEffectMtxPtr_(const JUTNameTab* tab)
@@ -258,7 +257,7 @@ void TBaseNPC::emitParticle_()
 	}
 
 	if (mActorType == ACTOR_TYPE_NPC_MONTE_MF
-	    || SMSGetMarDirector()->mMap == 4) {
+	    || SMSGetMarDirector()->getCurrentStage() == 4) {
 		f32 dVar11                  = 0.0f;
 		bool doEmit                 = false;
 		JGeometry::TVec3<f32> scale = getEffectScale_();

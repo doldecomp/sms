@@ -11,7 +11,7 @@ public:
 	void init();
 	TMapObjSeaIndirect(const char*);
 
-public:
+private:
 	/* 0x44 */ MActor* unk44;
 };
 
@@ -21,7 +21,7 @@ public:
 	void init();
 	TMapObjWaterFilter(const char*);
 
-public:
+private:
 	/* 0x44 */ MActor* unk44;
 };
 

@@ -4,7 +4,6 @@
 #include <System/Particles.hpp>
 #include <Map/MapData.hpp>
 #include <MarioUtil/MathUtil.hpp>
-#include <M3DUtil/M3UModelMario.hpp>
 #include <JSystem/JMath.hpp>
 #include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <MSound/MSound.hpp>
@@ -16,10 +15,8 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
-
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 BOOL TMario::considerRotateStart()
 {
@@ -695,8 +692,7 @@ BOOL TMario::running()
 	}
 
 	if (rocketCheck()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		unk314 = mFloorPosition.y + mWaterGun->getParams()->mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 

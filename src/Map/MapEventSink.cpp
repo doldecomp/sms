@@ -23,7 +23,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 u32 TMapEventSink::mCleanedDegree = 10;
 
@@ -100,11 +99,12 @@ bool TMapEventSink::control()
 	    info.mTranslate.x, info.mTranslate.y, info.mTranslate.z));
 
 	if (unk4C > unk48
-	    && (gpMarDirector->mMap != 2 || mIsBuildingRecovered[1 - unk24] == 0
+	    && (SMSGetMarDirector()->getCurrentStage() != 2
+	        || mIsBuildingRecovered[1 - unk24] == 0
 	        || mRaisingBuildingIdx != 1)) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
 		SMSGetMSound()->startSoundActor(
-		    MSD_SE_OBJ_QUAKE, unk50[mRaisingBuildingIdx], 0, nullptr, 0, 4);
+		    MSD_SE_OBJ_QUAKE, &unk50[mRaisingBuildingIdx], 0, nullptr, 0, 4);
 	}
 
 	if (unk4C > 0) {
@@ -181,10 +181,10 @@ void TMapEventSink::load(JSUMemoryInputStream& stream)
 		initBuilding(i, stream);
 	}
 
-	if (SMSGetMarDirector()->mMap == 0) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0) {
 		mCleanedDegree = 30;
 		unk38          = 200.0f;
-	} else if (SMSGetMarDirector()->mMap == 2) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 2) {
 		mCleanedDegree = 30;
 	}
 }

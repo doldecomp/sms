@@ -23,7 +23,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 const char* tstatestr[] = {
 	"TSTATE_WAIT",     "TSTATE_ATTACK", "TSTATE_REST", "TSTATE_HELD",
@@ -925,15 +924,15 @@ void TBGTentacle::moveNode()
 
 		const TBGCheckData* pTStack_b0;
 		f32 dVar16;
-		if ((SMSGetMarDirector()->getCurrentMap() == 3
-		     && SMSGetMarDirector()->getCurrentStage() == 0)
-		    || SMSGetMarDirector()->getCurrentMap() == 59) {
+		if ((SMSGetMarDirector()->getCurrentStage() == 3
+		     && SMSGetMarDirector()->getCurrentScenario() == 0)
+		    || SMSGetMarDirector()->getCurrentStage() == 59) {
 			dVar16 = gpMap->checkGround(local_ac.x, local_ac.y + 200.0f,
 			                            local_ac.z, &pTStack_b0);
 		} else if (mOwner->is2ndFightNow()) {
 			dVar16 = mOwner->mPosition.y;
-		} else if (SMSGetMarDirector()->getCurrentMap() == 9
-		           && SMSGetMarDirector()->getCurrentStage() == 1) {
+		} else if (SMSGetMarDirector()->getCurrentStage() == 9
+		           && SMSGetMarDirector()->getCurrentScenario() == 1) {
 			dVar16
 			    = gpMap->checkGround(local_ac.x, mOwner->mPosition.y + 500.0f,
 			                         local_ac.z, &pTStack_b0);

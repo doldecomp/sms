@@ -33,6 +33,8 @@ struct TGraphics {
 	MtxPtr getViewMtx() const { return (MtxPtr)mViewMtx.mMtx; }
 	void setViewMtx(MtxPtr m) { MTXCopy(m, mViewMtx.mMtx); }
 	f32 getNearPlane() { return mNearPlane; }
+	void setNearPlane(f32 near) { mNearPlane = near; }
+	void setFarPlane(f32 far) { mFarPlane = far; }
 
 	GXFBClamp getFBClamp() { return mFBClamp; }
 	JUtility::TColor getClearColor() { return mClearColor; }

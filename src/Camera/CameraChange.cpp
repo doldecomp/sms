@@ -16,6 +16,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 void CPolarSubCamera::getLButtonCameraModeByNozzle_() { }
 
@@ -639,7 +640,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 
 	u32 status     = SMS_GetMarioStatus();
 	u32 prevStatus = gpMarioOriginal->getPreviousStatus();
-	int currentMap = SMSGetMarDirector()->getCurrentMap();
+	int currentMap = SMSGetMarDirector()->getCurrentStage();
 
 	int newMode;
 	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HELMET_FLW_CAMERA)) {
@@ -705,7 +706,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 					newMode = CAMERA_MODE_INDOOR;
 			} else if (gpCameraMario->isMarioRocketing()
 			           && param_1 != CAMERA_MODE_TOWER_E) {
-				if ((int)SMS_GetMarioWaterGun()->mCurrentNozzle == 4)
+				if (SMS_GetMarioWaterGun()->getCurrentNozzleType()
+				    == TWaterGun::Hover)
 					newMode = CAMERA_MODE_HOVERING;
 				else
 					newMode = CAMERA_MODE_ROCKET_JUMP;
@@ -750,8 +752,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 							} else {
 								bool exMap = false;
 								if (SMS_isExMap()) {
-									switch (
-									    SMSGetMarDirector()->getCurrentMap()) {
+									switch (SMSGetMarDirector()
+									            ->getCurrentStage()) {
 									case 0x1D:
 									case 0x1E:
 										break;
@@ -783,7 +785,7 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 									bool exMap = false;
 									if (SMS_isExMap()) {
 										switch (SMSGetMarDirector()
-										            ->getCurrentMap()) {
+										            ->getCurrentStage()) {
 										case 0x1D:
 										case 0x1E:
 											break;
@@ -802,8 +804,8 @@ void CPolarSubCamera::execCameraModeChangeProc_(int param_1)
 							default:
 								bool exMap = false;
 								if (SMS_isExMap()) {
-									switch (
-									    SMSGetMarDirector()->getCurrentMap()) {
+									switch (SMSGetMarDirector()
+									            ->getCurrentStage()) {
 									case 0x1D:
 									case 0x1E:
 										break;

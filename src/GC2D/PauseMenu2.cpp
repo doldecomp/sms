@@ -34,7 +34,6 @@ extern JPAEmitterManager* gpEmitterManager4D2;
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 TPauseMenu2::TPauseMenu2(const char* pName)
     : JDrama::TViewObj(pName)
@@ -68,7 +67,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	mScreen          = new J2DSetScreen("pause_1.blo", arch);
 	mScreen->setCullBack(GX_CULL_BACK);
 
-	if (SMSGetApplication()->mCurrArea.getStage() <= 1) {
+	if (SMSGetApplication()->getCurrArea().getStage() <= 1) {
 		// Hide "Exit Area" option in Delfino Plaza.
 		mNumItems = 2;
 	}
@@ -109,14 +108,14 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 
 	mStagePane = mScreen->search('brek');
 
-	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->getCurrentMap());
+	u32 shineStage = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
 	s32 flag       = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_GMSP01_NX)
 	void* stageBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
 	    "/cmn2d/stagename.bmg", GMSJ01_01("/common/2d/stagename.bmg")));
-	if (SMSGetMarDirector()->getCurrentMap() == 0x14)
+	if (SMSGetMarDirector()->getCurrentStage() == 0x14)
 		shineStage = 0;
 	mStageName->setString(SMSGetMessageData(stageBmg, shineStage));
 #else
@@ -124,7 +123,7 @@ void TPauseMenu2::load(JSUMemoryInputStream& pStream)
 	    JKRFileLoader::getGlbResource("/common/2d/stagename.bmg"), shineStage));
 #endif
 
-	if (SMSGetMarDirector()->getCurrentMap() != 0xF) {
+	if (SMSGetMarDirector()->getCurrentStage() != 0xF) {
 		void* scenarioBmg = JKRFileLoader::getGlbResource(VERSION_SELECT(
 		    "/common/2d/scenarioname.bmg", GMSP01("/cmn2d/scenarioname.bmg"),
 		    GMSP01_NX("/cmn2d/scenarioname.bmg")));
@@ -476,7 +475,7 @@ void TPauseMenu2::draw(JDrama::TGraphics* gfx)
 
 void TPauseMenu2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (SMSGetMarDirector()->mState == TMarDirector::STATE_PAUSE_MENU) {
+	if (SMSGetMarDirector()->getState() == TMarDirector::STATE_PAUSE_MENU) {
 		if (mState == MENU_SAVING) {
 			if (cue & CUE_MOVE) {
 				if (mCardSave->unk2DF != 0) {

@@ -35,7 +35,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 TItem::mAppearedScaleSpeed = 0.01f;
 
@@ -142,8 +141,8 @@ void TItem::appearing()
 
 void TItem::killByTimer(int param_1)
 {
-	unk14C      = param_1;
-	mStateTimer = unk150;
+	mDisappearAfterFrames = param_1;
+	mStateTimer           = mUntouchableFrames;
 
 	offMapObjFlag(MAP_OBJ_FLAG_UNK10000000);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
@@ -154,7 +153,7 @@ void TItem::appear()
 {
 	TMapObjGeneral::appear();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mStateTimer = unk150;
+	mStateTimer = mUntouchableFrames;
 	offMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 }
 
@@ -168,7 +167,7 @@ void TItem::perform(u32 cue, JDrama::TGraphics* graphics)
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
 			onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-			mStateTimer = unk14C;
+			mStateTimer = mDisappearAfterFrames;
 		}
 	}
 
@@ -178,8 +177,8 @@ void TItem::perform(u32 cue, JDrama::TGraphics* graphics)
 void TItem::initMapObj()
 {
 	TMapObjGeneral::initMapObj();
-	unk14C = 480;
-	unk150 = 120;
+	mDisappearAfterFrames = 480;
+	mUntouchableFrames    = 120;
 }
 
 void TItem::load(JSUMemoryInputStream& stream)
@@ -191,14 +190,14 @@ void TItem::load(JSUMemoryInputStream& stream)
 TItem::TItem(const char* name)
     : TMapObjGeneral(name)
     , mContainer(nullptr)
-    , unk14C(0)
-    , unk150(0)
+    , mDisappearAfterFrames(0)
+    , mUntouchableFrames(0)
 {
 }
 
 void TCoin::taken(THitActor* param_1)
 {
-	u8 thing = SMSGetApplication()->mCurrArea.getStage();
+	u8 thing = SMSGetApplication()->getCurrArea().getStage();
 	TFlagManager::getInstance()->incGoldCoinFlag(SMS_getShineStage(thing), 1);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SY_COIN, &mPosition, 0, nullptr, 0,
@@ -223,8 +222,8 @@ void TCoin::taken(THitActor* param_1)
 void TCoin::makeObjDead()
 {
 	TItem::makeObjDead();
-	if (unk154)
-		unk154->unk1A |= 1;
+	if (mMirrorActor)
+		mMirrorActor->onFlag(TMirrorActor::MIRROR_ACTOR_FLAG_HIDDEN);
 }
 
 void TCoin::appearWithoutSound()
@@ -253,8 +252,8 @@ void TCoin::appear()
 void TCoin::makeObjAppeared()
 {
 	TItem::makeObjAppeared();
-	if (unk154)
-		unk154->unk1A &= ~1;
+	if (mMirrorActor)
+		mMirrorActor->offFlag(TMirrorActor::MIRROR_ACTOR_FLAG_HIDDEN);
 }
 
 void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -275,7 +274,7 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 				offHitFilter(HIT_FILTER_NO_COLLISION);
 				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
 					onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
-					mStateTimer = unk14C;
+					mStateTimer = mDisappearAfterFrames;
 				}
 			} else {
 				if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK10000000)) {
@@ -305,15 +304,16 @@ void TCoin::loadAfter()
 	if (!gpMirrorModelManager->isInMirror(mPosition))
 		return;
 
-	if (SMSGetMarDirector()->getCurrentMap() == 2) {
+	if (SMSGetMarDirector()->getCurrentStage() == 2) {
 		const TBGCheckData* check;
 		gpMap->checkGround(mPosition, &check);
 		if (!check->isWaterSurface())
 			return;
 	}
 
-	unk154 = new TMirrorActor("コインin鏡");
-	unk154->init(getModel(), 0x18);
+	mMirrorActor = new TMirrorActor("コインin鏡");
+	mMirrorActor->init(getModel(), TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+	                                   | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 }
 
 void TCoin::initMapObj()
@@ -324,14 +324,14 @@ void TCoin::initMapObj()
 
 TCoin::TCoin(const char* name)
     : TItem(name)
-    , unk154(0)
+    , mMirrorActor(0)
 {
 }
 
 void TFlowerCoin::load(JSUMemoryInputStream& stream)
 {
 	TCoin::load(stream);
-	stream >> unk158;
+	stream >> mCoinUnitIndex;
 }
 
 void TCoinEmpty::warning() { }
@@ -421,14 +421,14 @@ void TShine::calc()
 	                  | LIVE_FLAG_DEAD))
 		return;
 
-	unk198 = gpMarioParticleManager->emitAndBindToMtxPtr(
+	mSenkoEmitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_SHINE_SENKO, mtxPos, 1, this);
-	unk19C = gpMarioParticleManager->emitAndBindToMtxPtr(PARTICLE_MS_SHINE_KIRA,
-	                                                     mtxPos, 1, this);
-	if (unk1B4 == 0) {
-		unk194 = gpMarioParticleManager->emitAndBindToMtxPtr(
+	mKiraEmitter = gpMarioParticleManager->emitAndBindToMtxPtr(
+	    PARTICLE_MS_SHINE_KIRA, mtxPos, 1, this);
+	if (mIsEmpty == 0) {
+		mPromiEmitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_SHINE_PROMI, mtxPos, 1, this);
-		unk1A0 = gpMarioParticleManager->emitAndBindToMtxPtr(
+		mBowEmitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 		    PARTICLE_MS_SHINE_BOW, mtxPos, 1, this);
 	}
 
@@ -459,23 +459,23 @@ void TShine::calc()
 		senkoRate = mSenkoRate[3];
 	}
 
-	if (unk194) {
-		unk194->setLifeTime(promiLife);
-		unk194->setGlobalScale(unk1A8);
+	if (mPromiEmitter) {
+		mPromiEmitter->setLifeTime(promiLife);
+		mPromiEmitter->setGlobalScale(mEffectScale);
 	}
-	if (unk198) {
-		unk198->setRate(senkoRate);
-		unk198->setGlobalScale(unk1A8);
+	if (mSenkoEmitter) {
+		mSenkoEmitter->setRate(senkoRate);
+		mSenkoEmitter->setGlobalScale(mEffectScale);
 	}
-	if (unk19C) {
-		unk19C->setRate(kiraRate);
-		unk19C->setGlobalScale(unk1A8);
+	if (mKiraEmitter) {
+		mKiraEmitter->setRate(kiraRate);
+		mKiraEmitter->setGlobalScale(mEffectScale);
 	}
-	if (unk1A0) {
-		unk1A0->setRate(bowRate);
-		unk1A0->setGlobalScale(unk1A8);
+	if (mBowEmitter) {
+		mBowEmitter->setRate(bowRate);
+		mBowEmitter->setGlobalScale(mEffectScale);
 	}
-	unk1A4 = 1;
+	mEffectEmitted = 1;
 }
 
 void TShine::movingCircle()
@@ -485,24 +485,25 @@ void TShine::movingCircle()
 	(void)0;
 
 	f32 prevY = mPosition.y;
-	unk158 += 180.0f / (f32)unk168;
+	mCircleAngle += 180.0f / (f32)mCircleTime;
 
-	f32 tmp = (f32)(unk168 - mStateTimer) / (f32)unk168;
+	f32 tmp = (f32)(mCircleTime - mStateTimer) / (f32)mCircleTime;
 
-	mPosition.x += unk17C.x;
+	mPosition.x += mCircleStep.x;
 
-	mPosition.y = unk160 * MsSin(unk158)
-	              + (tmp * (mInitialPosition.y - unk164) + unk164);
-	unk188 = mPosition.y - prevY;
+	mPosition.y
+	    = mCircleHeight * MsSin(mCircleAngle)
+	      + (tmp * (getInitialPosition().y - mCircleStartY) + mCircleStartY);
+	mVelocityY = mPosition.y - prevY;
 
-	mPosition.z += unk17C.z;
+	mPosition.z += mCircleStep.z;
 	mRotation.y += 7.0f;
 	MsWrap(mRotation.y, 0.0f, 360.0f);
 
 	if (!isStateTimerEngaged()) {
-		unk16C      = 7.0f;
-		mStateTimer = unk178;
-		mState      = STATE_UNKF;
+		mRotateSpeed = 7.0f;
+		mStateTimer  = mFloatTime;
+		mState       = STATE_FLOAT;
 	}
 }
 
@@ -512,13 +513,13 @@ void TShine::movingUp()
 	if (isStateTimerEngaged())
 		return;
 
-	if (unk154 == 3) {
-		mStateTimer = unk170;
+	if (mAppearType == APPEAR_TYPE_SIMPLE) {
+		mStateTimer = mMoveUpTime;
 		mState      = STATE_MOVING_DOWN;
 	} else {
-		unk164      = mPosition.y;
-		mStateTimer = unk168;
-		mState      = STATE_MOVING_CIRCLE;
+		mCircleStartY = mPosition.y;
+		mStateTimer   = mCircleTime;
+		mState        = STATE_MOVING_CIRCLE;
 	}
 }
 
@@ -527,24 +528,24 @@ void TShine::movingDown()
 	mPosition.y -= mUpSpeed;
 	if (isStateTimerEngaged())
 		return;
-	unk16C      = 7.0f;
-	mStateTimer = unk178;
-	mState      = STATE_UNKF;
+	mRotateSpeed = 7.0f;
+	mStateTimer  = mFloatTime;
+	mState       = STATE_FLOAT;
 }
 
 void TShine::control()
 {
-	if (!isState(0x10))
+	if (!isState(STATE_GOT))
 		TMapObjGeneral::control();
 
-	if (isState(0x10)) {
+	if (isState(STATE_GOT)) {
 		mPosition.set(SMS_GetMarioPos());
 		return;
 	}
 
 	switch (mState) {
 	case STATE_NORMAL: {
-		mRotation.y += unk16C;
+		mRotation.y += mRotateSpeed;
 		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
 		                                nullptr, 0, 4);
 
@@ -556,11 +557,11 @@ void TShine::control()
 		gpLightManager->setEffectLightPos(trans);
 	} break;
 
-	case STATE_UNKB:
+	case STATE_APPEAR_WAIT:
 		if (isStateTimerEngaged())
 			break;
 		offMapObjFlag(MAP_OBJ_FLAG_UNK8000000 | MAP_OBJ_FLAG_NO_ANIMATIONS);
-		mStateTimer = unk170;
+		mStateTimer = mMoveUpTime;
 		mState      = STATE_MOVING_UP;
 		break;
 
@@ -582,20 +583,20 @@ void TShine::control()
 		movingCircle();
 		break;
 
-	case STATE_UNKF: {
+	case STATE_FLOAT: {
 		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
 		                                nullptr, 0, 4);
-		if (mPosition.y > mInitialPosition.y) {
-			mPosition.y += unk188;
-			unk188 *= mSpeedDownRate;
+		if (mPosition.y > getInitialPosition().y) {
+			mPosition.y += mVelocityY;
+			mVelocityY *= mSpeedDownRate;
 		} else {
-			mPosition.y = mInitialPosition.y;
+			mPosition.y = getInitialPosition().y;
 		}
-		if (unk16C > 2.0f)
-			unk16C -= 0.1f;
+		if (mRotateSpeed > 2.0f)
+			mRotateSpeed -= 0.1f;
 		else
-			unk16C = 2.0f;
-		mRotation.y += unk16C;
+			mRotateSpeed = 2.0f;
+		mRotation.y += mRotateSpeed;
 		// Huh? Result discarded?
 		MsWrap(mRotation.y, 0.0f, 360.0f);
 
@@ -604,24 +605,24 @@ void TShine::control()
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20000000))
 			MSBgm::setTrackVolume(0, 1.0f, 10, 0);
 		offHitFilter(HIT_FILTER_NO_COLLISION);
-		mState = STATE_UNK11;
+		mState = STATE_WAIT;
 	} break;
 
-	case STATE_UNK11:
-		mRotation.y += unk16C;
+	case STATE_WAIT:
+		mRotation.y += mRotateSpeed;
 		// Huh? Result discarded?
 		MsWrap(mRotation.y, 0.0f, 360.0f);
 		SMSGetMSound()->startSoundActor(MSD_SE_SHINE_EXIST, &mPosition, 0,
 		                                nullptr, 0, 4);
 		break;
 
-	case STATE_UNK12: {
+	case STATE_QUICKLY_WAIT: {
 		if (gpCamera->isDemoCamera())
 			break;
 		if (isStateTimerEngaged())
 			break;
 		appearWithDemo("シャイン（いきなり出現）カメラ");
-		mState = STATE_UNK11;
+		mState = STATE_WAIT;
 	} break;
 	}
 }
@@ -646,19 +647,19 @@ BOOL TShine::receiveMessage(THitActor* sender, u32 message)
 	               mRotation.y, mRotation.z);
 
 	if (SMS_IsMarioOnYoshi()) {
-		if (unk1B4)
+		if (mIsEmpty)
 			getMActor()->setBck("shine_empty_demo_shine_get_yo");
 		else
 			getMActor()->setBck("shine_demo_shine_get_yo");
 	} else {
-		if (unk1B4)
+		if (mIsEmpty)
 			getMActor()->setBck("shine_empty_demo_shine_get");
 		else
 			getMActor()->setBck("shine_demo_shine_get");
 	}
 
-	unk1A8.set(0.5f, 0.5f, 0.5f);
-	mState = STATE_UNK10;
+	mEffectScale.set(0.5f, 0.5f, 0.5f);
+	mState = STATE_GOT;
 	return TRUE;
 }
 
@@ -672,39 +673,44 @@ void TShine::touchPlayer(THitActor* actor)
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
-void TShine::appearWithTime(int param_1, int param_2, int param_3, int param_4)
+void TShine::appearWithTime(int time, int appear_wait_time, int move_up_time,
+                            int float_time)
 {
 	TItem::appear();
 	TFlagManager::getInstance()->setBool(true, MSF_SHINE_SPAWNED);
 
-	if (param_2 >= 0)
-		unk174 = param_2;
-	if (param_3 >= 0)
-		unk170 = param_3;
-	if (param_4 >= 0)
-		unk178 = param_4;
+	if (appear_wait_time >= 0)
+		mAppearWaitTime = appear_wait_time;
+	if (move_up_time >= 0)
+		mMoveUpTime = move_up_time;
+	if (float_time >= 0)
+		mFloatTime = float_time;
 
-	unk168 = param_1 - (unk174 + unk170 + unk178);
-	unk158 = 0.0f;
+	mCircleTime  = time - (mAppearWaitTime + mMoveUpTime + mFloatTime);
+	mCircleAngle = 0.0f;
 
-	f32 yDelta = mInitialPosition.y - (mUpSpeed * (f32)unk170 + mPosition.y);
+	f32 yDelta
+	    = getInitialPosition().y - (mUpSpeed * (f32)mMoveUpTime + mPosition.y);
 
-	unk17C.x = (mInitialPosition.x - mPosition.x) / (f32)unk168;
-	unk17C.y = yDelta / (f32)unk168;
-	unk17C.z = (mInitialPosition.z - mPosition.z) / (f32)unk168;
+	mCircleStep.x = (getInitialPosition().x - mPosition.x) / (f32)mCircleTime;
+	mCircleStep.y = yDelta / (f32)mCircleTime;
+	mCircleStep.z = (getInitialPosition().z - mPosition.z) / (f32)mCircleTime;
 
-	unk15C = getDistanceXZ(mInitialPosition);
-	if (unk15C == 0.0f)
-		unk15C = 1000.0f;
+	mCircleRadius = getDistanceXZ(getInitialPosition());
+	if (mCircleRadius == 0.0f)
+		mCircleRadius = 1000.0f;
 	if (yDelta > 0.0f)
-		unk15C += fabsf(yDelta);
-	unk160 = unk15C * mCircleRateY;
+		mCircleRadius += fabsf(yDelta);
+	mCircleHeight = mCircleRadius * mCircleRateY;
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
 	                                0, 4);
+#if !defined(VERSION_GMSJ01)
+	MSBgm::startBGM(0x8001002D);
+#endif
 
-	mStateTimer = unk174;
-	mState      = STATE_UNKB;
+	mStateTimer = mAppearWaitTime;
+	mState      = STATE_APPEAR_WAIT;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
@@ -712,7 +718,7 @@ s32 TShine::appearWithTimeCallback(uintptr_t param_1, u32 param_2)
 {
 	TShine* shine = (TShine*)param_1;
 	if (param_2 == 0) {
-		shine->appearWithTime(shine->unk18C, -1, -1, -1);
+		shine->appearWithTime(shine->mDemoLength, -1, -1, -1);
 		SMSGetMarDirector()->onDemoFlag(
 		    TMarDirector::DEMO_FLAG_SHINE_GET_STOP_THE_WORLD);
 	} else if (param_2 == 1) {
@@ -727,29 +733,33 @@ void TShine::appearSimple(int param_1)
 	TItem::appear();
 	TFlagManager::getInstance()->setBool(true, MSF_SHINE_SPAWNED);
 
-	unk174   = 60;
-	unk170   = param_1;
-	unk178   = 60;
-	unk154   = 3;
-	unk158   = 0.0f;
-	unk15C   = 0.0f;
-	unk160   = 0.0f;
-	mUpSpeed = 2.0f;
+	mAppearWaitTime = 60;
+	mMoveUpTime     = param_1;
+	mFloatTime      = 60;
+	mAppearType     = APPEAR_TYPE_SIMPLE;
+	mCircleAngle    = 0.0f;
+	mCircleRadius   = 0.0f;
+	mCircleHeight   = 0.0f;
+	mUpSpeed        = 2.0f;
 
 	mInitialPosition = mPosition;
 
 	SMSGetMSound()->startSoundActor(MSD_SE_SHINE_APPEAR, &mPosition, 0, nullptr,
 	                                0, 4);
+#if !defined(VERSION_GMSJ01)
+	MSBgm::startBGM(0x8001002D);
+#endif
 
-	mStateTimer = unk174;
-	mState      = STATE_UNKB;
+	mStateTimer = mAppearWaitTime;
+	mState      = STATE_APPEAR_WAIT;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TShine::appearWithDemo(const char* param_1)
 {
-	unk18C = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1))
-	             ->mDemoLengthFrames;
+	mDemoLength
+	    = static_cast<TCameraMapTool*>(JDrama::TNameRefGen::search(param_1))
+	          ->mDemoLengthFrames;
 	SMSGetMarDirector()->fireStartDemoCamera(
 	    param_1, &mPosition, -1, 0.0f, true, appearWithTimeCallback,
 	    (uintptr_t)this, nullptr, JDrama::TFlagT<u16>());
@@ -758,7 +768,7 @@ void TShine::appearWithDemo(const char* param_1)
 void TShine::kill()
 {
 	TMapObjGeneral::kill();
-	unk154 = 1;
+	mAppearType = APPEAR_TYPE_DEAD;
 }
 
 void TShine::makeMActors()
@@ -770,8 +780,8 @@ void TShine::makeMActors()
 	MActor* result;
 	if (TFlagManager::getInstance()->getShineFlag(mEventId)
 	    && strcmp("シャイン（マニ屋用）", getName()) != 0) {
-		result = initMActor("shine_empty.bmd", nullptr, getSDLModelFlag());
-		unk1B4 = 1;
+		result   = initMActor("shine_empty.bmd", nullptr, getSDLModelFlag());
+		mIsEmpty = 1;
 	} else {
 		result = initMActor("shine.bmd", nullptr, getSDLModelFlag());
 	}
@@ -781,20 +791,20 @@ void TShine::makeMActors()
 void TShine::initMapObj()
 {
 	TItem::initMapObj();
-	unk1A4 = 0;
-	unk1A8.set(1.0f, 1.0f, 1.0f);
-	unk170 = 240;
-	unk174 = 0;
-	unk178 = 240;
+	mEffectEmitted = 0;
+	mEffectScale.set(1.0f, 1.0f, 1.0f);
+	mMoveUpTime     = 240;
+	mAppearWaitTime = 0;
+	mFloatTime      = 240;
 }
 
 void TShine::loadAfter()
 {
 	TMapObjGeneral::loadAfter();
-	if (unk154 == 2) {
+	if (mAppearType == APPEAR_TYPE_QUICKLY) {
 		mStateTimer = 240;
-		mState      = STATE_UNK12;
-	} else if (unk154 == 1) {
+		mState      = STATE_QUICKLY_WAIT;
+	} else if (mAppearType == APPEAR_TYPE_DEAD) {
 		makeObjDead();
 	}
 }
@@ -804,11 +814,11 @@ void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 	char name[0x20];
 	stream.readString(name, sizeof(name));
 	if (strcmp("normal", name) == 0)
-		unk154 = 0;
+		mAppearType = APPEAR_TYPE_NORMAL;
 	else if (strcmp("quickly", name) == 0)
-		unk154 = 2;
+		mAppearType = APPEAR_TYPE_QUICKLY;
 	else
-		unk154 = 1;
+		mAppearType = APPEAR_TYPE_DEAD;
 
 	s32 eventId;
 	stream >> eventId;
@@ -821,36 +831,36 @@ void TShine::loadBeforeInit(JSUMemoryInputStream& stream)
 	eventId = v;
 	if (v + 1 >= 2)
 		eventId = -1;
-	unk190 = eventId + 1;
+	mIsInside = eventId + 1;
 }
 
 TShine::TShine(const char* name)
     : TItem(name)
-    , unk154(0)
-    , unk158(0.0f)
-    , unk15C(0.0f)
-    , unk160(0.0f)
-    , unk164(0.0f)
-    , unk168(0)
-    , unk16C(2.0f)
-    , unk188(0.0f)
-    , unk18C(0)
-    , unk190(0)
-    , unk194(0)
-    , unk198(0)
-    , unk19C(0)
-    , unk1A0(0)
-    , unk1B4(0)
+    , mAppearType(APPEAR_TYPE_NORMAL)
+    , mCircleAngle(0.0f)
+    , mCircleRadius(0.0f)
+    , mCircleHeight(0.0f)
+    , mCircleStartY(0.0f)
+    , mCircleTime(0)
+    , mRotateSpeed(2.0f)
+    , mVelocityY(0.0f)
+    , mDemoLength(0)
+    , mIsInside(0)
+    , mPromiEmitter(0)
+    , mSenkoEmitter(0)
+    , mKiraEmitter(0)
+    , mBowEmitter(0)
+    , mIsEmpty(0)
 {
-	unk17C.zero();
-	unk1A8.zero();
+	mCircleStep.zero();
+	mEffectScale.zero();
 }
 
 void TEggYoshi::decideRandomLoveFruit()
 {
-	u8 map = SMSGetMarDirector()->mMap;
+	u8 map = SMSGetMarDirector()->getCurrentStage();
 
-	if (map == 7 && SMSGetMarDirector()->unk7D == 1) {
+	if (map == 7 && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		unk14C = ACTOR_TYPE_FRUIT_PINE;
 		return;
 	}
@@ -1062,7 +1072,7 @@ void TEggYoshi::load(JSUMemoryInputStream& stream)
 			makeObjDead();
 			return;
 		}
-	} else if (SMSGetMarDirector()->mMap == 1) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		if (!TFlagManager::getInstance()->getBool(MSF_YOSHI_UNLOCKED)) {
 			makeObjDead();
 			return;
@@ -1163,7 +1173,7 @@ void TItemNozzle::control() { TMapObjGeneral::control(); }
 void TItemNozzle::initMapObj()
 {
 	TItem::initMapObj();
-	unk14C = 7200;
+	mDisappearAfterFrames = 7200;
 }
 
 void TItemNozzle::load(JSUMemoryInputStream& stream)
@@ -1188,7 +1198,7 @@ void TNozzleBox::makeModelValid()
 	makeObjAppeared();
 	offHitFilter(HIT_FILTER_NO_DAMAGE);
 	SMS_ShowAllShapePacket(getModel());
-	unk15C = true;
+	mIsValid = true;
 }
 
 void TNozzleBox::makeModelInvalid()
@@ -1199,7 +1209,7 @@ void TNozzleBox::makeModelInvalid()
 	}
 	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	startAnim(3);
-	unk15C = false;
+	mIsValid = false;
 }
 
 void TNozzleBox::breaking()
@@ -1210,11 +1220,11 @@ void TNozzleBox::breaking()
 
 BOOL TNozzleBox::receiveMessage(THitActor* sender, u32 message)
 {
-	if (unk15C && sender->isActorType(ACTOR_TYPE_MARIO)
+	if (mIsValid && sender->isActorType(ACTOR_TYPE_MARIO)
 	    && message == HIT_MESSAGE_TRAMPLE && !SMS_IsMarioHeadSlideAttack()) {
 		sender->receiveMessage(this, HIT_MESSAGE_ATTACK);
-		throwObjToFront(mContainedNozzleItem, 50.0f, unk150, unk154);
-		SMSGetMSound()->startSoundSystemSE(0x3801, 0, nullptr, 0);
+		throwObjToFront(mContainedNozzleItem, 50.0f, mDropSpeed, mDropYSpeed);
+		SMSGetMSound()->startSoundSystemSE(MSD_SE_IT_EGG_APPEAR, 0, nullptr, 0);
 		kill();
 		return TRUE;
 	}
@@ -1229,24 +1239,25 @@ void TNozzleBox::touchPlayer(THitActor*)
 {
 	if (mContainedNozzleType == TWaterGun::Hover
 	    && !TFlagManager::getInstance()->getNozzleRight(
-	        SMSGetMarDirector()->getCurrentMap(), 0)
+	        SMSGetMarDirector()->getCurrentStage(), 0)
 	    && !TFlagManager::getInstance()->getNozzleRight(
-	        SMSGetMarDirector()->getCurrentMap(), 1)
-	    && !unk166) {
+	        SMSGetMarDirector()->getCurrentStage(), 1)
+	    && !mBalloonShown) {
 		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0057, true);
-		unk166 = true;
+		mBalloonShown = true;
 	}
-	if (!unk15C && !unk166) {
+	if (!mIsValid && !mBalloonShown) {
 		SMSGetMarDirector()->getConsole()->startAppearBalloon(0xE0056, true);
-		unk166 = true;
+		mBalloonShown = true;
 	}
 }
 
 void TNozzleBox::control()
 {
 	TMapObjGeneral::control();
-	if (mContainedNozzleType != TWaterGun::Hover && unk166 && mColCount == 0)
-		unk166 = false;
+	if (mContainedNozzleType != TWaterGun::Hover && mBalloonShown
+	    && mColCount == 0)
+		mBalloonShown = false;
 }
 
 void TNozzleBox::loadAfter()
@@ -1261,7 +1272,7 @@ void TNozzleBox::loadAfter()
 		break;
 	case TWaterGun::Rocket:
 	case TWaterGun::Turbo:
-		if (unk15C) {
+		if (mIsValid) {
 			makeModelValid();
 		} else {
 			makeModelInvalid();
@@ -1277,48 +1288,48 @@ void TNozzleBox::load(JSUMemoryInputStream& stream)
 	mContainedNozzleName = stream.readString();
 	stream.readString(strBuf, 0x20);
 	if (strcmp(strBuf, "valid") == 0)
-		unk15C = true;
+		mIsValid = true;
 	else
-		unk15C = false;
+		mIsValid = false;
 
 	if (strcmp(mContainedNozzleName, "normal_nozzle_item") == 0) {
 		mContainedNozzleType = TWaterGun::Hover;
-		unk15E.r             = 0;
-		unk15E.g             = 0;
-		unk15E.b             = 0xFF;
+		mBoxColor.r          = 0;
+		mBoxColor.g          = 0;
+		mBoxColor.b          = 0xFF;
 	} else if (strcmp(mContainedNozzleName, "rocket_nozzle_item") == 0) {
 		mContainedNozzleType = TWaterGun::Rocket;
-		unk15E.r             = 0xFF;
-		unk15E.g             = 0;
-		unk15E.b             = 0;
+		mBoxColor.r          = 0xFF;
+		mBoxColor.g          = 0;
+		mBoxColor.b          = 0;
 		if (TFlagManager::getInstance()->getNozzleRight(
-		        SMSGetMarDirector()->mMap, 0)) {
-			unk15C = true;
-			unk166 = true;
+		        SMSGetMarDirector()->getCurrentStage(), 0)) {
+			mIsValid      = true;
+			mBalloonShown = true;
 		}
 	} else if (strcmp(mContainedNozzleName, "back_nozzle_item") == 0) {
 		mContainedNozzleType = TWaterGun::Turbo;
-		unk15E.r             = 0x5A;
-		unk15E.g             = 0x5A;
-		unk15E.b             = 0x78;
+		mBoxColor.r          = 0x5A;
+		mBoxColor.g          = 0x5A;
+		mBoxColor.b          = 0x78;
 		if (TFlagManager::getInstance()->getNozzleRight(
-		        SMSGetMarDirector()->mMap, 1)) {
-			unk15C = true;
-			unk166 = true;
+		        SMSGetMarDirector()->getCurrentStage(), 1)) {
+			mIsValid      = true;
+			mBalloonShown = true;
 		}
 	}
 
-	stream >> unk150;
-	unk150 *= 0.02f;
-	stream >> unk154;
-	if (unk154 < 0.0f)
-		unk154 = 20.0f;
+	stream >> mDropSpeed;
+	mDropSpeed *= 0.02f;
+	stream >> mDropYSpeed;
+	if (mDropYSpeed < 0.0f)
+		mDropYSpeed = 20.0f;
 
-	initPacketMatColor(getModel(), GX_TEVREG1, &unk15E);
+	initPacketMatColor(getModel(), GX_TEVREG1, &mBoxColor);
 	startAnim(3);
-	initPacketMatColor(getModel(), GX_TEVREG1, &unk15E);
+	initPacketMatColor(getModel(), GX_TEVREG1, &mBoxColor);
 	startAnim(2);
-	initPacketMatColor(getModel(), GX_TEVREG1, &unk15E);
+	initPacketMatColor(getModel(), GX_TEVREG1, &mBoxColor);
 	startAnim(0);
 }
 
@@ -1326,14 +1337,14 @@ TNozzleBox::TNozzleBox(const char* name)
     : TMapObjGeneral(name)
     , mContainedNozzleType(0)
     , mContainedNozzleItem(nullptr)
-    , unk150(0.0f)
-    , unk154(0.0f)
+    , mDropSpeed(0.0f)
+    , mDropYSpeed(0.0f)
     , mContainedNozzleName(nullptr)
-    , unk15C(true)
-    , unk166(false)
+    , mIsValid(true)
+    , mBalloonShown(false)
 {
-	unk15E.r = 0xFF;
-	unk15E.g = 0xFF;
-	unk15E.b = 0xFF;
-	unk15E.a = 0x64;
+	mBoxColor.r = 0xFF;
+	mBoxColor.g = 0xFF;
+	mBoxColor.b = 0xFF;
+	mBoxColor.a = 0x64;
 }

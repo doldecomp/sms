@@ -21,7 +21,7 @@ public:
 	void draw();
 	static f32 mFlutterSpeed;
 
-public:
+private:
 	/* 0x68 */ f32 unk68;
 	/* 0x6C */ f32 unk6C;
 	/* 0x70 */ s32 unk70;
@@ -59,6 +59,7 @@ public:
 	void loadFlag(TMapObjFlagInfo*, TMapObjFlag*, const char*);
 	void initDraw();
 
+private:
 	/* 0x10 */ TMapObjFlagInfo unk10[15];
 };
 

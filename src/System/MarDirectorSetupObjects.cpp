@@ -33,19 +33,18 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 extern void* gpSceneCmnDat;
 extern int gpSceneCmnDatSize;
 
 void TMarDirector::decideMarioPosIdx()
 {
-	unkD0 = 0;
-	unkD1 = 0;
-	unkE4 = 1;
+	mMarioPosIdx = 0;
+	unkD1        = 0;
+	unkE4        = 1;
 
-	const TGameSequence& prevArea = SMSGetApplication()->mPrevArea;
-	switch (SMSGetApplication()->mCurrArea.getStage()) {
+	const TGameSequence& prevArea = SMSGetApplication()->getPrevArea();
+	switch (SMSGetApplication()->getCurrArea().getStage()) {
 	case 15:
 		unkE4 = 14;
 		SMSGetApplication()->getFader()->setColor(
@@ -78,49 +77,49 @@ void TMarDirector::decideMarioPosIdx()
 			        MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET)) {
 				TFlagManager::getInstance()->setBool(
 				    false, MSF_PEACH_KIDNAP_FMV_WATCHED_SINCE_RESET);
-				unkD0 = 4;
+				mMarioPosIdx = 4;
 			} else {
 				switch (SMS_getShineStage(prevArea.getStage())) {
 				case 2:
-					unkD0 = 1;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 1;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 3:
-					unkD0 = 2;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 2;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 4:
-					unkD0 = 3;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 3;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 5:
-					unkD0 = 4;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 4;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 6:
-					unkD0 = 5;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 5;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 7:
-					unkD0 = 6;
-					unkD1 = 2;
-					unkE4 = 7;
+					mMarioPosIdx = 6;
+					unkD1        = 2;
+					unkE4        = 7;
 					break;
 				case 8:
-					unkD0 = 7;
-					unkD1 = 2;
-					unkE4 = 0xe;
+					mMarioPosIdx = 7;
+					unkD1        = 2;
+					unkE4        = 0xe;
 					SMSGetApplication()->getFader()->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
-					unkD0 = 8;
-					unkE4 = 7;
+					mMarioPosIdx = 8;
+					unkE4        = 7;
 					break;
 				}
 			}
@@ -133,7 +132,7 @@ bool TMarDirector::setupObjects()
 {
 	TFlagManager::getInstance()->resetStage();
 	TFlagManager::getInstance()->setFlag(MSF_SHADOW_MARIO_EVENT, 1);
-	const TGameSequence& curArea = SMSGetApplication()->mCurrArea;
+	const TGameSequence& curArea = SMSGetApplication()->getCurrArea();
 	switch (curArea.getStage()) {
 	case 1: {
 		TFlagManager::getInstance()->setBool(false,
@@ -224,7 +223,7 @@ bool TMarDirector::setupObjects()
 	u32 flag = SMS_getShineStage(curArea.getStage()) + MSF_VISITED_BASE;
 	TFlagManager::getInstance()->setBool(true, flag);
 
-	MSMainProc::setMSoundEnterStage(mMap, unk7D);
+	MSMainProc::setMSoundEnterStage(mStage, mScenario);
 	if (!TFlagManager::getInstance()->getBool(MSF_MSOUND_WAVE_LOADED)) {
 		TFlagManager::getInstance()->setBool(true, MSF_MSOUND_WAVE_LOADED);
 		gpMSound->loadWave(MS_WAVE_DEFAULT);
@@ -387,7 +386,7 @@ bool TMarDirector::setupObjects()
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* perfEventGroup
 	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("PERF Event Group");
 	root->getChildren().push_back(perfEventGroup);
-	JDrama::TFrmGXSet* drawInit = new JDrama::TFrmGXSet(unkC0);
+	JDrama::TFrmGXSet* drawInit = new JDrama::TFrmGXSet(mDisplay);
 
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* drawBufferGroup
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
@@ -413,7 +412,13 @@ bool TMarDirector::setupObjects()
 	JDrama::TEfbCtrlTex* normalSceneDrawStage
 	    = static_cast<JDrama::TEfbCtrlTex*>(
 	        JDrama::TNameRefGen::search("通常シーン描画ステージ"));
-	normalSceneDrawStage->unk20.on(0x122F);
+	normalSceneDrawStage->unk20.on(JDrama::TEfbCtrl::EFB_FLAG_NO_CLEAR_COLOR
+	                               | JDrama::TEfbCtrl::EFB_FLAG_NO_CLEAR_ALPHA
+	                               | JDrama::TEfbCtrl::EFB_FLAG_NO_CLEAR_Z
+	                               | JDrama::TEfbCtrl::EFB_FLAG_PIXEL_FMT_RGBA6
+	                               | JDrama::TEfbCtrl::EFB_FLAG_VFILTER
+	                               | JDrama::TEfbCtrl::EFB_FLAG_NO_ALPHA_UPDATE
+	                               | JDrama::TEfbCtrl::EFB_FLAG_MIPMAP);
 	normalSceneDrawStage->mVFilter = SMSVFilter_flicker;
 	TScreenTexture* screenTex
 	    = (TScreenTexture*)sceneCommon->search("スクリーンテクスチャ");

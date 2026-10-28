@@ -29,12 +29,13 @@ public:
 	void checkCollision();
 	void execKill();
 
-public:
+	u32 getInitialState() const { return mInitialState; }
+	u32 getStartIndex(int i) const { return mStartIndex[i]; }
+
+private:
 	/* 0x150 */ TEnemyMario* mEnemyMario;
 	/* 0x154 */ u32 mInitialState;
-	/* 0x158 */ u32 unk158;
-	/* 0x15C */ u32 unk15C;
-	/* 0x160 */ u32 unk160;
+	/* 0x158 */ u32 mStartIndex[3];
 };
 
 class TEMarioManager : public TEnemyManager {

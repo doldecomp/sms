@@ -1,7 +1,7 @@
 #include <MoveBG/MapObjManager.hpp>
 #include <MoveBG/MapObjGeneral.hpp>
 #include <MoveBG/MapObjBase.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <Map/MapCollisionManager.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapData.hpp>
@@ -11249,9 +11249,12 @@ void TMapObjBase::initModelData()
 	    || checkMapObjFlag(MAP_OBJ_FLAG_UNK20)) {
 		TMirrorActor* ma = new TMirrorActor(getName());
 		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK20))
-			ma->init(getModel(), 0x1A);
+			ma->init(getModel(), TMirrorActor::MIRROR_ACTOR_FLAG_ALWAYS
+			                         | TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+			                         | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 		else
-			ma->init(getModel(), 0x18);
+			ma->init(getModel(), TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+			                         | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 	}
 }
 

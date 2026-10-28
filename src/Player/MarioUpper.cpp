@@ -80,7 +80,7 @@ void TMario::stateMachineUpper()
 		}
 		if (!checkFlag(MARIO_FLAG_IN_ANY_WATER) && mWaterGun != nullptr) {
 			s32 flag;
-			if (mWaterGun->mCurrentWater == 0) {
+			if (mWaterGun->getCurrentWater() == 0) {
 				flag = 0;
 			} else {
 				TWaterGun const* waterGun = mWaterGun;
@@ -91,7 +91,7 @@ void TMario::stateMachineUpper()
 						flag = 0;
 					}
 				} else {
-					if (waterGun->getCurrentNozzle()->unk378 > 0.0f) {
+					if (waterGun->getCurrentNozzle()->getUnk378() > 0.0f) {
 						flag = 1;
 					} else {
 						flag = 0;

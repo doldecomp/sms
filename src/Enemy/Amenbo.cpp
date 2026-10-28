@@ -14,9 +14,6 @@
 #include <Player/MarioAccess.hpp>
 #include <Player/ModelWaterManager.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 static const char* amenbo_bastable[] = {
 	nullptr, "/scene/amenbo/bas/amenbo_hit1_loop.bas",
 	nullptr, "/scene/amenbo/bas/amenbo_run1.bas",
@@ -54,7 +51,8 @@ void TAmenbo::init(TLiveManager* manager)
 	initParticle();
 	initAnmSound();
 	unk1E8 = new TMirrorActor("アメンボくんin鏡");
-	unk1E8->init(getModel(), 0x18);
+	unk1E8->init(getModel(), TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+	                             | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 	mInitialPosition.set(mPosition);
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mIsChasingMario        = false;
@@ -72,7 +70,7 @@ void TAmenbo::reset() { }
 
 void TAmenbo::kill()
 {
-	unk1E8->unk1A |= 0x1;
+	unk1E8->onFlag(TMirrorActor::MIRROR_ACTOR_FLAG_HIDDEN);
 	TSmallEnemy::kill();
 }
 
@@ -265,7 +263,7 @@ bool TAmenbo::changeByJuice()
 	if (!TSmallEnemy::changeByJuice())
 		return false;
 
-	unk1E8->unk1A |= 0x1;
+	unk1E8->onFlag(TMirrorActor::MIRROR_ACTOR_FLAG_HIDDEN);
 	return true;
 }
 

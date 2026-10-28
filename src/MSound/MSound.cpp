@@ -24,7 +24,7 @@
 #include <math.h>
 
 // rogue
-#include <System/DummyStrings.hpp>
+#include <System/Application.hpp>
 
 // TODO: place in correct header
 template <class T> static inline T min(T a, T b) { return a < b ? a : b; }

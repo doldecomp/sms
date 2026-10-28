@@ -42,7 +42,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 TBossEel::mOpenRollSpeed    = 0.3f;
 bool TBossEel::mUseObjCollision = true;
@@ -511,7 +510,8 @@ DEFINE_NERVE(TNerveBEelTearsGenerate, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->changeMActor("tears.bmd", 2);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
+		tears->mMActor->setBckFromIndex(2);
 	}
 
 	if (tears->checkCurAnmEnd(0)) {
@@ -525,7 +525,8 @@ DEFINE_NERVE(TNerveBEelTearsMoveUp, TLiveActor)
 {
 	TBEelTears* tears = static_cast<TBEelTears*>(spine->getBody());
 	if (spine->getTime() == 0) {
-		tears->changeMActor("tears.bmd", 1);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears.bmd");
+		tears->mMActor->setBckFromIndex(1);
 	}
 	tears->mPosition.y += tears->getTearsParams()->mSLTearsUpSpeed.get();
 	return false;
@@ -537,7 +538,8 @@ DEFINE_NERVE(TNerveBEelTearsWaterHit, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
-		tears->changeMActor("tears_waterhit.bmd", 3);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
+		tears->mMActor->setBckFromIndex(3);
 	}
 
 	--tears->mStateTimer;
@@ -598,7 +600,8 @@ DEFINE_NERVE(TNerveBEelTearsSplit, TLiveActor)
 	if (spine->getTime() == 0) {
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_UNG_TEAR_TREMBLE,
 		                                &tears->mPosition, 0, nullptr, 0, 4);
-		tears->changeMActor("tears_waterhit.bmd", 3);
+		tears->mMActor = tears->mMActorKeeper->getMActor("tears_waterhit.bmd");
+		tears->mMActor->setBckFromIndex(3);
 		MActor* actor = tears->getMActor();
 		f32 frameRate = tears->getTearsParams()->mSLHitAnmFrameRate.get();
 		actor->setFrameRate(frameRate * SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -673,7 +676,8 @@ DEFINE_NERVE(TNerveOilBallStay, TLiveActor)
 	if (oilBall->getMActor()->checkCurBckFromIndex(3)
 	    || (oilBall->checkCurAnmEnd(0)
 	        && !oilBall->getMActor()->checkCurBckFromIndex(1))) {
-		oilBall->changeMActor("tears.bmd", 1);
+		oilBall->mMActor = oilBall->mMActorKeeper->getMActor("tears.bmd");
+		oilBall->mMActor->setBckFromIndex(1);
 	}
 	return false;
 }
@@ -721,19 +725,32 @@ TBossEelSaveParams::TBossEelSaveParams()
 
 void TBossEelManager::loadAfter()
 {
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_tooth.jpa", 0xD3);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_mouth.jpa", 0xD4);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_eyeblur.jpa", 0x192);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke.jpa", 0x193);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke_l.jpa", 0x194);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa.jpa", 0x195);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa_l.jpa", 0x196);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_body.jpa", 0x197);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_dead.jpa", 0x198);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_suikomi.jpa", 0x199);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_wash.jpa", 0x19A);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_kira.jpa", 0x19B);
-	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_always.jpa", 0x19C);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_tooth.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_TOOTH);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_mouth.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_MOUTH);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_eyeblur.jpa",
+	                 BOSSEEL_JPA_MS_MEO_EYEBLUR);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_SMOKE);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_smoke_l.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_SMOKE_L);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_AWA);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_spin_awa_l.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SPIN_AWA_L);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_body.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_BODY);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_awa_dead.jpa",
+	                 BOSSEEL_JPA_MS_MEO_AWA_DEAD);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_suikomi.jpa",
+	                 BOSSEEL_JPA_MS_MEO_SUIKOMI);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_wash.jpa",
+	                 BOSSEEL_JPA_MS_MEO_TOOTH_WASH);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_kira.jpa",
+	                 BOSSEEL_JPA_MS_MEO_TOOTH_KIRA);
+	SMS_LoadParticle("/scene/bosseel/jpa/ms_meo_tooth_always.jpa",
+	                 BOSSEEL_JPA_MS_MEO_TOOTH_ALWAYS);
 }
 
 void TBossEelManager::createModelData()
@@ -1170,15 +1187,13 @@ void TBossEelHeartCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	u32 calcAnim = cue & CUE_CALC_ANIM;
 	if (calcAnim) {
-		s32 jointIndex = mOwner->getMActor()
-		                     ->getModel()
+		s32 jointIndex = mOwner->mMActor->getModel()
 		                     ->getModelData()
 		                     ->getJointName()
 		                     ->getIndex("ha7");
-		MtxPtr jointMtx
-		    = mOwner->getMActor()->getModel()->getAnmMtx(jointIndex);
-		if (mOwner->getMActor()->checkCurBckFromIndex(3)
-		    && mOwner->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
+		MtxPtr jointMtx = mOwner->mMActor->getModel()->getAnmMtx(jointIndex);
+		if (mOwner->mMActor->checkCurBckFromIndex(3)
+		    && mOwner->mMActor->getFrameCtrl(ANM_TYPE_BCK)->getFrame()
 		           < 700.0f) {
 			mPosition.set(jointMtx[0][3], jointMtx[1][3], jointMtx[2][3]);
 		}

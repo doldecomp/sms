@@ -10,8 +10,6 @@
 #include <dolphin/os.h>
 #include <stdio.h>
 
-#include <M3DUtil/InfectiousStrings.hpp> // TODO: removeme
-
 void TObjChara::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TCharacter::load(stream);

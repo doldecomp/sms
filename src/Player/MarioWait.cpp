@@ -1,4 +1,6 @@
 #include <Player/Mario.hpp>
+#include <Player/Yoshi.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Player/WaterGun.hpp>
 #include <System/MarDirector.hpp>
 #include <System/MarioGamePad.hpp>
@@ -116,8 +118,7 @@ BOOL TMario::waitingCommonEvents()
 		return changePlayerStatus(MARIO_STATUS_TAKE_POSE, 0, false);
 
 	if (rocketCheck()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		unk314 = mFloorPosition.y + mWaterGun->getParams()->mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 
@@ -159,7 +160,7 @@ BOOL TMario::waiting()
 
 	if (mStatusState & 0x2) {
 		setAnimation(ANIM_MONTEMAN_WAIT, 1.0f);
-	} else if (SMSGetMarDirector()->unk124 == 3) {
+	} else if (SMSGetMarDirector()->isInnerDemoModeNow()) {
 		setAnimation(ANIM_T_WAIT, 1.0f);
 	} else if (isSinking()) {
 		setAnimation(ANIM_SINKING, 1.0f);
@@ -324,7 +325,8 @@ BOOL TMario::squating()
 
 	if (mInput & 0x2) {
 		if ((mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
-		    && mWaterGun != nullptr && (int)mWaterGun->mCurrentNozzle == 0) {
+		    && mWaterGun != nullptr
+		    && mWaterGun->getCurrentNozzleType() == TWaterGun::Spray) {
 			rumbleStart(0x15, mMotorParams.mMotorHipDrop.get());
 			return changePlayerStatus(MARIO_STATUS_BACK_JUMP, 0, false);
 		}
@@ -332,8 +334,7 @@ BOOL TMario::squating()
 
 	if (mWaterGun->getCurrentNozzle()->mRocketType.get() == 1
 	    && mWaterGun->isEmitting()) {
-		unk314
-		    = mFloorPosition.y + mWaterGun->mWatergunParams.mHoverHeight.get();
+		unk314 = mFloorPosition.y + mWaterGun->getParams()->mHHoverHeight.get();
 		return changePlayerStatus(MARIO_STATUS_ROCKET, 0, false);
 	}
 

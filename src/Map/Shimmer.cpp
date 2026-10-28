@@ -80,7 +80,8 @@ void TShimmer::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_ENTRY) {
-		if (SMSGetMarDirector()->mMap == 2 || !(gpCamera->unk124.y < 0.0f))
+		if (SMSGetMarDirector()->getCurrentStage() == 2
+		    || !(gpCamera->unk124.y < 0.0f))
 			unk48->entry();
 	}
 }

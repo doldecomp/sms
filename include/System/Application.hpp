@@ -6,6 +6,9 @@
 #include <System/GameSequence.hpp>
 #include <dolphin/types.h>
 
+static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
+static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+
 namespace JDrama {
 class TDisplay;
 class TDirector;
@@ -59,14 +62,24 @@ public:
 	int drawDVDErr();
 	JKRMemArchive* mountStageArchive();
 
+	// Fabricated
+	const TGameSequence& getPrevArea() const { return mPrevArea; }
+	// Fabricated
+	const TGameSequence& getCurrArea() const { return mCurrArea; }
+	// Fabricated
+	TGameSequence& getNextArea() { return mNextArea; }
 	// fabricated
 	void setNextArea(const TGameSequence& next_area) { mNextArea = next_area; }
-	u32 getMovie() const { return mMovie; }
 
-	TSMSFader* getFader() const { return mFader; }
+	u32 getMovie() const { return mMovie; }
 	void setMovie(u32 v) { mMovie = v; }
 
-public:
+	// Fabricated
+	s8 getSaveFile() const { return mSaveFile; }
+	// Fabricated
+	void setSaveFile(s8 file) { mSaveFile = file; }
+	TSMSFader* getFader() const { return mFader; }
+
 	enum {
 		APP_STATE_WAIT     = 0,
 		APP_STATE_DEFAULT  = 1,
@@ -80,6 +93,7 @@ public:
 		APP_STATE_MENU     = 9,
 	};
 
+private:
 	/* 0x00 */ TApplication* mSelf;
 	/* 0x04 */ JDrama::TDirector* mDirector;
 	/* 0x08 */ u8 mAppState;

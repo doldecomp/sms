@@ -2,75 +2,78 @@
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 
-void SMSMakeTextBuffer(J2DTextBox* param_1, int param_2)
+void SMSMakeTextBuffer(J2DTextBox* textbox, int size)
 {
-	char* buffer = new char[param_2];
-	for (int i = 0; i < param_2 - 1; ++i)
+	char* buffer = new char[size];
+	for (int i = 0; i < size - 1; ++i)
 		buffer[i] = ' ';
-	buffer[param_2 - 1] = '\0';
-	param_1->setString(buffer);
+	buffer[size - 1] = '\0';
+	textbox->setString(buffer);
 }
 
-const char* SMSGetMessageData(void* param_1, u32 param_2)
+const char* SMSGetMessageData(void* messageArchive, u32 messageIndex)
 {
-	if (!param_1)
+	if (!messageArchive)
 		return nullptr;
 
-	s32 local_88 = 0;
-	s32 local_84 = 0;
+	s32 numSections = 0;
+	s32 fileSize    = 0;
 
 	{
-		JSUMemoryInputStream local_40(param_1, 0x20);
-		local_40.skip(8);
-		local_40 >> local_88;
-		local_40 >> local_84;
+		JSUMemoryInputStream headerStream(messageArchive, 0x20);
+		headerStream.skip(8);
+		headerStream >> numSections;
+		headerStream >> fileSize;
 	}
 
 	char trash2[0x4];
 
-	int r30      = 0;
-	u32 local_68 = 0;
+	int dataSectionPos = 0;
+	u32 messageOffset  = 0;
 
-	JSUMemoryInputStream local_74((u8*)param_1 + 0x20, local_88 * 0x20 - 0x20);
+	JSUMemoryInputStream sectionStream((u8*)messageArchive + 0x20,
+	                                   numSections * 0x20 - 0x20);
 
-	const char* r31 = nullptr;
+	const char* messageDataPtr = nullptr;
 
-	while ((r30 == 0 || local_68 == 0) && local_74.isNotDrained()) {
-		int iVar3 = local_74.readS32();
-		s32 r27   = local_74.readS32();
-		switch (iVar3) {
+	while ((dataSectionPos == 0 || messageOffset == 0)
+	       && sectionStream.isNotDrained()) {
+		int sectionMagic = sectionStream.readS32();
+		s32 sectionSize  = sectionStream.readS32();
+		switch (sectionMagic) {
 		case 'INF1': {
-			if (param_2 >= local_74.readU16())
+			if (messageIndex >= sectionStream.readU16())
 				return nullptr;
 
-			u32 r24 = local_74.readU16();
-			local_74.skip(4);
-			r24 = param_2 * r24;
-			local_74.skip(r24);
-			local_74 >> local_68;
-			if (!local_68)
+			u32 recordSize = sectionStream.readU16();
+			sectionStream.skip(4);
+			recordSize = messageIndex * recordSize;
+			sectionStream.skip(recordSize);
+			sectionStream >> messageOffset;
+			if (!messageOffset)
 				return nullptr;
-			local_74.skip(r27 - r24 - 0x14);
+			sectionStream.skip(sectionSize - recordSize - 0x14);
 			break;
 		}
 
 		case 'DAT1':
 			// TODO: using the virtual method and letting it devirtualize
 			// results in too much stack... one more getter? Or s32/int memes?
-			r30 = local_74.mPosition;
-			local_74.skip(r27 - 8);
+			dataSectionPos = sectionStream.mPosition;
+			sectionStream.skip(sectionSize - 8);
 			break;
 
 		default:
-			local_74.skip(r27 - 8);
+			sectionStream.skip(sectionSize - 8);
 			break;
 		}
 	}
 
 	char trash[0x4];
 
-	if (r30 != 0 && local_68 != 0)
-		r31 = (const char*)param_1 + r30 + local_68 + 0x20;
+	if (dataSectionPos != 0 && messageOffset != 0)
+		messageDataPtr = (const char*)messageArchive + dataSectionPos
+		                 + messageOffset + 0x20;
 
-	return r31;
+	return messageDataPtr;
 }

@@ -12,7 +12,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TWalkerEnemyParams::TWalkerEnemyParams(const char* path)
     : TSmallEnemyParams(path)
@@ -55,7 +55,7 @@ void TWalkerEnemy::moveObject()
 {
 	if (!mGroundPlane->isIllegalData()
 	    && (mInstanceIndex & 0xF)
-	           == (SMSGetMarDirector()->mMoveTickCount & 0xF)) {
+	           == (SMSGetMarDirector()->getMoveTickCount() & 0xF)) {
 		doShortCut();
 	}
 

@@ -1,6 +1,5 @@
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/Application.hpp>
 
 #include <Map/MapCollisionEntry.hpp>
 #include <Map/MapCollisionData.hpp>
@@ -64,10 +63,11 @@ struct CollisionDataHeader {
 	/* 0xC */ u32 unkC;
 };
 
-void TMapCollisionBase::init(const char* path, u16 param_2,
+void TMapCollisionBase::init(const char* col_file_path, u16 param_2,
                              const TLiveActor* param_3)
 {
-	CollisionDataHeader* hdr = (CollisionDataHeader*)loadCollisionData(path);
+	CollisionDataHeader* hdr
+	    = (CollisionDataHeader*)loadCollisionData(col_file_path);
 
 	mVertexNum         = hdr->unk0;
 	mVertices          = (Vec*)((u8*)hdr + hdr->unk4);
@@ -96,6 +96,22 @@ void TMapCollisionBase::init(const char* path, u16 param_2,
 	}
 }
 
+TMapCollisionBase::TMapCollisionBase()
+    : mCheckDatas(nullptr)
+    , mKind(0)
+    , mCheckDataNum(0)
+    , mVertexNum(0)
+    , mVertices(nullptr)
+    , mCollisionGroupNum(0)
+    , mCollisionGroups(nullptr)
+    , mFlags(0)
+{
+	MTXIdentity(mTransformMtx);
+	mPrevTranslation.x = 0.0f;
+	mPrevTranslation.y = 0.0f;
+	mPrevTranslation.z = 0.0f;
+}
+
 void TMapCollisionStatic::setUp()
 {
 	if (mCheckDatas)
@@ -109,10 +125,10 @@ void TMapCollisionStatic::setUp()
 	TMapCollisionBase::initCheckData(-9999, thing, mOwnerActor);
 }
 
-void TMapCollisionStatic::init(const char* param_1, u16 param_2,
+void TMapCollisionStatic::init(const char* col_file_path, u16 param_2,
                                const TLiveActor* param_3)
 {
-	TMapCollisionBase::init(param_1, param_2, param_3);
+	TMapCollisionBase::init(col_file_path, param_2, param_3);
 	mKind = KIND_STATIC;
 	if (!(param_2 & 2)) {
 		initCheckData(-9999, param_2, param_3);
@@ -139,16 +155,16 @@ void TMapCollisionMove::move()
 
 	if (checkFlag(FLAG_UNK8000)) {
 		JGeometry::TVec3<f32> local_18;
-		local_18.x = unk20[0][3];
-		local_18.y = unk20[1][3];
-		local_18.z = unk20[2][3];
+		local_18.x = mTransformMtx[0][3];
+		local_18.y = mTransformMtx[1][3];
+		local_18.z = mTransformMtx[2][3];
 		TMapCollisionBase::updateTrans(local_18);
 	} else {
 		TMapCollisionBase::update();
 	}
 }
 
-void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
+void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& trans)
 {
 	if (checkFlag(FLAG_NEEDS_SETUP))
 		return;
@@ -158,26 +174,26 @@ void TMapCollisionMove::moveTrans(const JGeometry::TVec3<f32>& param_1)
 		return;
 	}
 
-	TMapCollisionBase::updateTrans(param_1);
+	TMapCollisionBase::updateTrans(trans);
 }
 
-void TMapCollisionMove::init(u32 param_1, u16 bg_type, s16 data,
+void TMapCollisionMove::init(u32 check_data_num, u16 bg_type, s16 data,
                              const TLiveActor* actor)
 {
 	mKind         = 1;
-	mCheckDataNum = param_1;
-	mCheckDatas   = gpMapCollisionData->allocCheckData(getUnkC());
-	for (int i = 0; i < getUnkC(); ++i) {
+	mCheckDataNum = check_data_num;
+	mCheckDatas   = gpMapCollisionData->allocCheckData(getCheckDataNum());
+	for (int i = 0; i < getCheckDataNum(); ++i) {
 		mCheckDatas[i].mBGType = bg_type;
 		mCheckDatas[i].mData   = data;
 		mCheckDatas[i].mActor  = actor;
 	}
 }
 
-void TMapCollisionMove::init(const char* param_1, u16 param_2,
+void TMapCollisionMove::init(const char* col_file_path, u16 param_2,
                              const TLiveActor* param_3)
 {
-	TMapCollisionBase::init(param_1, param_2, param_3);
+	TMapCollisionBase::init(col_file_path, param_2, param_3);
 	mKind = 1;
 	TMapCollisionBase::initCheckData(-9999, param_2 | 2, param_3);
 	onFlag(FLAG_NEEDS_SETUP);
@@ -195,7 +211,8 @@ void TMapCollisionWarp::setUp()
 	mEntryId = gpMapCollisionData->getEntryID();
 
 	if (checkFlag(FLAG_UNK8000)) {
-		JGeometry::TVec3<f32> local_18(unk20[0][3], unk20[1][3], unk20[2][3]);
+		JGeometry::TVec3<f32> local_18(mTransformMtx[0][3], mTransformMtx[1][3],
+		                               mTransformMtx[2][3]);
 		TMapCollisionBase::updateTrans(local_18);
 	} else {
 		TMapCollisionBase::update();
@@ -225,10 +242,10 @@ void TMapCollisionWarp::remove()
 	gpMapCollisionData->removeCheckListData(mEntryId, mEntrySize);
 }
 
-void TMapCollisionWarp::init(const char* param_1, u16 param_2,
+void TMapCollisionWarp::init(const char* col_file_path, u16 param_2,
                              const TLiveActor* param_3)
 {
-	TMapCollisionBase::init(param_1, param_2, param_3);
+	TMapCollisionBase::init(col_file_path, param_2, param_3);
 	mKind = 2;
 	TMapCollisionBase::initCheckData(-9999, param_2 | 2, param_3);
 	onFlag(FLAG_NEEDS_SETUP);

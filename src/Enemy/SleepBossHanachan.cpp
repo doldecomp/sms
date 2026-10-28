@@ -24,9 +24,6 @@
 #include <Strategic/TakeActor.hpp>
 #include <System/FlagManager.hpp>
 
-// rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
-
 static const char* sleepBossHanachan_bastable[2] = {
 	"/scene/sleepBossHanachan/bas/demohanatyan_fall.bas",
 	nullptr,
@@ -54,7 +51,8 @@ void TSleepBossHanachan::init(TLiveManager* param_1)
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
 	unk15C = new TMirrorActor("寝てるボスハナチャンin鏡");
-	unk15C->init(getModel(), 10);
+	unk15C->init(getModel(), TMirrorActor::MIRROR_ACTOR_FLAG_ALWAYS
+	                             | TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL);
 }
 
 void TSleepBossHanachan::calcRootMatrix() { }
@@ -85,8 +83,8 @@ DEFINE_NERVE(TNerveSBH_Fall, TLiveActor)
 		shine->onMapObjFlag(TMapObjBase::MAP_OBJ_FLAG_UNK20000000);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		TMirrorActor* mirror = self->unk15C;
-		mirror->unk1A |= 1;
-		SMS_HideAllShapePacket(mirror->unk14);
+		mirror->onFlag(TMirrorActor::MIRROR_ACTOR_FLAG_HIDDEN);
+		SMS_HideAllShapePacket(mirror->mMirrorModel);
 		spine->pushAfterCurrent(&TNerveSBH_SleepContinue::theNerve());
 		return true;
 	}

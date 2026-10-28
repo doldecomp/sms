@@ -2,6 +2,7 @@
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <dolphin/mtx.h>
+#include <M3DUtil/MActorAnm.hpp>
 
 TBoid::TBoid()
 {

@@ -34,7 +34,7 @@ public:
 	static f32 mMiddleFar;
 	static f32 mBananaTreeJumpPower;
 
-public:
+private:
 	/* 0x148 */ f32 mMinCanopyRadius;
 	/* 0x14C */ f32 mMaxCanopyRadius;
 	/* 0x150 */ s32 mLeafNum;
@@ -70,7 +70,7 @@ public:
 	static f32 mScaleSpeedXZ;
 	static f32 mScaleMin;
 
-public:
+private:
 	/* 0x170 */ JGeometry::TVec3<f32> mParticlePositions[30];
 	/* 0x2D8 */ s32 mNextFreeParticlePos;
 	/* 0x2DC */ s32 mParticleEmitTimer;

@@ -6,6 +6,7 @@
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <JSystem/J2D/J2DPicture.hpp>
 #include <JSystem/J2D/J2DOrthoGraph.hpp>
+#include <JSystem/J2D/J2DPrint.hpp>
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
 #include <System/Application.hpp>
 #include <System/FlagManager.hpp>
@@ -24,8 +25,6 @@
 #include <stdio.h>
 
 // TODO: get rid of this
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
 namespace {
 
@@ -1538,11 +1537,22 @@ void TOptionControl::changeTopMessage(int language)
 	const char* src = SMSGetMessageData(mMessageEntries[language], 0x1C);
 	char* dst       = buffer;
 
-#define ESC "\x1B"
-#define OPTION_HIGHLIGHT(color, mark)                                          \
-	ESC "GM[0]" ESC "CC[" color "]" ESC "FX[26]" ESC "FY[26]" ESC "SH[3]" ESC  \
-	    "CD[4]" mark ESC "GM[0]" ESC "CC" ESC "FX" ESC "FY" ESC "SH" ESC       \
-	    "CU[4]"
+	// clang-format off
+#define OPTION_HIGHLIGHT(color, mark) \
+	J2DPRINT_GRADIENT_MODE(0)           \
+	J2DPRINT_CHAR_COLOR(color)          \
+	J2DPRINT_FONT_WIDTH(26)             \
+	J2DPRINT_FONT_HEIGHT(26)            \
+	J2DPRINT_CHAR_SPACING(3)            \
+	J2DPRINT_CURSOR_DOWN(4)             \
+	mark                                \
+	J2DPRINT_GRADIENT_MODE(0)           \
+	J2DPRINT_CHAR_COLOR_RESET           \
+	J2DPRINT_FONT_WIDTH_RESET           \
+	J2DPRINT_FONT_HEIGHT_RESET          \
+	J2DPRINT_CHAR_SPACING_RESET         \
+	J2DPRINT_CURSOR_UP(4)
+	// clang-format on
 
 	while (char c = *src) {
 		if (c == '@') {
@@ -1562,7 +1572,6 @@ void TOptionControl::changeTopMessage(int language)
 	*dst = '\0';
 
 #undef OPTION_HIGHLIGHT
-#undef ESC
 
 	strncpy(textBoxA->getStringPtr(), buffer, sizeof(buffer));
 	strncpy(textBoxB->getStringPtr(), buffer, sizeof(buffer));

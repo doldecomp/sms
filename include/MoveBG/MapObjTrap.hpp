@@ -12,7 +12,7 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
-public:
+private:
 	/* 0x68 */ TLampTrapSpike* unk68;
 };
 
@@ -41,7 +41,7 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
-public:
+private:
 	/* 0x68 */ TLampTrapIron* unk68;
 };
 

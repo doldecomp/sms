@@ -12,7 +12,7 @@ public:
 
 	static f32 mWaveSpeed;
 
-public:
+private:
 	/* 0x0 */ f32 unk0;
 	/* 0x4 */ f32 unk4;
 	/* 0x8 */ f32 unk8;

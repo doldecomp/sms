@@ -4,9 +4,6 @@
 #include <M3DUtil/MActor.hpp>
 #include <NPC/NpcBase.hpp>
 
-// rogue
-#include <M3DUtil/InfectiousStrings.hpp>
-
 void TTalkCursor::loadAfter()
 {
 	MActorAnmData* anmData = new MActorAnmData;

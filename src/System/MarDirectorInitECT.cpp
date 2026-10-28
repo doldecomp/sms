@@ -14,7 +14,7 @@
 #include <JSystem/JDrama/JDREfbCtrl.hpp>
 
 // rogue includes
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 void TMarDirector::initECTGft(
     TPerformList* param_1, TPerformList* param_2,
@@ -87,13 +87,15 @@ JDrama::TViewObj* TMarDirector::initECTMir(
 	JDrama::TEfbCtrlTex* mirrorTex = static_cast<JDrama::TEfbCtrlTex*>(
 	    JDrama::TNameRefGen::search("鏡描画ステージ"));
 
-	mirrorTex->unk20.set(0x228);
+	mirrorTex->unk20.set(JDrama::TEfbCtrl::EFB_FLAG_PIXEL_FMT_RGBA6
+	                     | JDrama::TEfbCtrl::EFB_FLAG_VFILTER
+	                     | JDrama::TEfbCtrl::EFB_FLAG_NO_ALPHA_UPDATE);
 	mirrorTex->mVFilter = SMSVFilter_flicker;
 
 	TMirrorCamera* mirrorCam
 	    = static_cast<TMirrorCamera*>(JDrama::TNameRefGen::search("鏡カメラ"));
 
-	GXTexObj& obj = mirrorCam->unk60;
+	const GXTexObj& obj = mirrorCam->getFrameBufferTexObj();
 	mirrorTex->setTexAttb(obj);
 	JDrama::TRect rect(0, 0, GXGetTexObjWidth(&obj), GXGetTexObjHeight(&obj));
 	mirrorTex->setSrcRect(rect);

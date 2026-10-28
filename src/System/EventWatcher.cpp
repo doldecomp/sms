@@ -32,7 +32,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // TODO: from M3UJoint or J3DJoint?
 static void dummy()
@@ -414,8 +413,8 @@ static void evSetTimeLimit(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {
 	interp->verifyArgNum(1, &arg_num);
 	int time = TSpcSlice(interp->pop()).getDataInt();
-	OSResetStopwatch(&SMSGetMarDirector()->unkE8);
-	SMSGetMarDirector()->unk120 = time;
+	SMSGetMarDirector()->resetStopwatch();
+	SMSGetMarDirector()->setTimeLimit(time);
 	interp->push();
 }
 
@@ -468,9 +467,6 @@ static void evSetNextStage(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 	int scenario = TSpcSlice(interp->pop()).getDataInt();
 	int stage    = TSpcSlice(interp->pop()).getDataInt();
 
-	// This function reads the global directly. The rest of the file goes
-	// through SMSGetMarDirector(), but here the accessor makes the match worse
-	// (94.8% -> 92.4%), so the original must have had the bare global.
 	SMSGetMarDirector()->setNextStage((scenario & 0xff) + ((stage + 1) << 8),
 	                                  nullptr);
 
@@ -1197,11 +1193,11 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 	TRedCoinSwitch* swtch = static_cast<TRedCoinSwitch*>(
 	    JDrama::TNameRefGen::search("赤コイン用スイッチ"));
 
-	int iVar9 = swtch->unk138;
+	int timer = swtch->mRedCoinTimer;
 	for (int i = 0; i < 8; ++i) {
 		TCoinRed* coin
 		    = (TCoinRed*)gpItemManager->makeObjAppeared(ACTOR_TYPE_COIN_RED);
-		coin->killByTimer(iVar9 - coin->unk150);
+		coin->killByTimer(timer - coin->mUntouchableFrames);
 		coin->unk158.set(coin->mPosition.x, coin->mPosition.y + 70.0f,
 		                 coin->mPosition.z);
 		gpMarioParticleManager->emitAndBindToMtxPtr(
@@ -1212,7 +1208,7 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 		                             &coin->getUnk158(), 0, nullptr);
 	}
 	SMSGetMarDirector()->getConsole()->startAppearTimer(1,
-	                                                    iVar9 * 0.008333334f);
+	                                                    timer * 0.008333334f);
 	SMSGetMarDirector()->startTimer();
 	SMSGetMarDirector()->getConsole()->startMoveTimer(10);
 	interp->push();

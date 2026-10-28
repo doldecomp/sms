@@ -37,7 +37,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 TPakkunManager::mRootExplosionScaleRate = 2.0f;
 f32 TPakkunManager::mTestFlyAngX            = 30.0f;

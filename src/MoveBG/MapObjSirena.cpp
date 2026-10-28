@@ -13,8 +13,9 @@
 #include <MSound/MSoundBGM.hpp>
 #include <MSound/BackgroundMusic.hpp>
 #include <Player/MarioAccess.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActorData.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
@@ -62,12 +63,12 @@ TRoulette::TRoulette(const char* name)
 	unk148.g = 0;
 	unk148.b = 0;
 	unk148.a = 255;
-	if (SMSGetApplication()->mCurrArea.getStage() == 14
-	    && SMSGetMarDirector()->getCurrentStage() == 1) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 14
+	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		unk141   = 1;
 		unk148.b = 255;
 	}
-	if (SMSGetApplication()->mCurrArea.getStage() == 56) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 56) {
 		unk148.b = 255;
 		unk142   = 1;
 	}
@@ -93,7 +94,7 @@ void TRoulette::initMapObj()
 	objGroup->getChildren().push_back(unk150);
 	f32 attackR = 500.0f;
 	f32 attackH = 100.0f;
-	if (SMSGetApplication()->mCurrArea.getStage() == 14) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 14) {
 		attackR = 40.0f;
 		attackH = 80.0f;
 	}
@@ -823,8 +824,8 @@ void TDonchou::initMapObj()
 void TDonchou::loadAfter()
 {
 	TMapObjBase::loadAfter();
-	if (SMSGetApplication()->mCurrArea.getStage() == 14
-	    && SMSGetMarDirector()->getCurrentStage() == 0) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 14
+	    && SMSGetMarDirector()->getCurrentScenario() == 0) {
 		unk144
 		    = static_cast<TSlotDrum*>(JDrama::TNameRefGen::search("srotdram"));
 		unk148 = static_cast<TItemSlotDrum*>(
@@ -1083,7 +1084,7 @@ void TSirenabossWall::initMapObj()
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(3, getModel()->getModelData());
 	for (int i = 0; i <= 2; ++i)
-		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
+		mMultiBtk->setNthData(i, anmData->getBtkAnmData()->getAnmPtr(i));
 }
 
 void TSirenabossWall::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -1107,7 +1108,7 @@ void TSirenaCasinoRoof::initMapObj()
 	MActorAnmData* anmData = mMActorKeeper->getMActorAnmData();
 	mMultiBtk              = new TMultiBtk(3, getModel()->getModelData());
 	for (int i = 0; i <= 2; ++i)
-		mMultiBtk->setNthData(i, anmData->getUnk38()->getAnmPtr(i));
+		mMultiBtk->setNthData(i, anmData->getBtkAnmData()->getAnmPtr(i));
 
 	mMActor->setBrk("casino_lighting");
 }

@@ -193,7 +193,18 @@ bool TMapObjBase::animIsFinished() const
 		return false;
 }
 
-void TMapObjBase::stopAnim() { }
+void TMapObjBase::stopAnim()
+{
+	if (mActiveAnimIndex != 0xffff && mMapObjData->mAnim
+	    && mMapObjData->mAnim->mEntryNum != 0
+	    && mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmName) {
+		u8 anmType = mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmType;
+		mMActor->getFrameCtrl(anmType)->setRate(0.0f);
+		mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
+		mMActor->getAnmByType(anmType)->stopAnm();
+		mActiveAnimIndex = 0xffff;
+	}
+}
 
 void TMapObjBase::startControlAnim(u16 param_1)
 {
@@ -215,30 +226,17 @@ void TMapObjBase::startAnim(u16 index)
 		setAnmSound(nullptr);
 
 	if (!mMActor) {
-		const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-		if (anim->mEntryNum != 0)
-			mMActor = mMActorKeeper->getMActor(anim->mEntries[0].mBmdFileName);
+		if (mMapObjData->mAnim->mEntryNum != 0)
+			mMActor = mMActorKeeper->getMActor(
+			    mMapObjData->mAnim->mEntries[0].mBmdFileName);
 	}
 
-	const TMapObjAnimDataInfo* anim = mMapObjData->mAnim;
-	if (!anim)
+	if (!mMapObjData->mAnim || mMapObjData->mAnim->mEntryNum <= index)
 		return;
 
-	if (index >= anim->mEntryNum)
-		return;
-
-	const TMapObjAnimData* data = &anim->mEntries[index];
+	const TMapObjAnimData* data = &mMapObjData->mAnim->mEntries[index];
 	if (data->mAnmType == 0) {
-		if (mActiveAnimIndex != 0xffff && anim && anim->mEntryNum != 0) {
-			const TMapObjAnimData* d2 = &anim->mEntries[mActiveAnimIndex];
-			if (d2->mAnmName != nullptr) {
-				u8 anmType = d2->mAnmType;
-				mMActor->getFrameCtrl(anmType)->setRate(0.0f);
-				mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
-				mMActor->getUnk28(anmType)->unk0 = 0xffffffff;
-				mActiveAnimIndex                 = 0xffff;
-			}
-		}
+		stopAnim();
 		stopAnmSound();
 		if (mActiveAnimIndex != index) {
 			mActiveAnimIndex = index;
@@ -255,6 +253,7 @@ void TMapObjBase::startAnim(u16 index)
 		if (data->mBasFilePath)
 			setAnmSound(data->mBasFilePath);
 	} else {
+		// TODO: is this an inline on mMActor?
 		MActor* actor = mMActor;
 		actor->getModel()->getModelData()->getJointNodePointer(0)->setMtxCalc(
 		    actor->getMtxCalc());
@@ -283,15 +282,7 @@ void TMapObjBase::makeObjDead()
 	mVelocity.zero();
 	onLiveFlag(LIVE_FLAG_UNK10);
 
-	if (mActiveAnimIndex != 0xffff && mMapObjData->mAnim
-	    && mMapObjData->mAnim->mEntryNum > 0
-	    && mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmName) {
-		u32 anmType = mMapObjData->mAnim->mEntries[mActiveAnimIndex].mAnmType;
-		mMActor->getFrameCtrl(anmType)->setRate(0.0f);
-		mMActor->getFrameCtrl(anmType)->setFrame(0.0f);
-		mMActor->getUnk28(anmType)->unk0 = 0xffffffff;
-		mActiveAnimIndex                 = 0xffff;
-	}
+	stopAnim();
 
 	mActiveSoundIndex = 0xffff;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
@@ -346,7 +337,26 @@ void TMapObjBase::makeObjAppeared()
 	mState = STATE_NORMAL;
 }
 
-void TMapObjBase::moveByBck() { }
+void TMapObjBase::moveByBck()
+{
+	if (mMapObjData->mMove) {
+		TMapObjMoveData* move = mMapObjData->mMove;
+
+		move->mBckAnm->setFrame(move->mFrameCtrl->getFrame());
+		move->mFrameCtrl->update();
+		J3DTransformInfo info;
+		move->mBckAnm->getTransform(1, &info);
+		mPositionDelta.x = info.mTranslate.x + mInitialPosition.x - mPosition.x;
+		mPositionDelta.y = info.mTranslate.y + mInitialPosition.y - mPosition.y;
+		mPositionDelta.z = info.mTranslate.z + mInitialPosition.z - mPosition.z;
+		mRotation.x
+		    = info.mRotation.x * (360.0f / 65536.0f) + mInitialRotation.x;
+		mRotation.y
+		    = info.mRotation.y * (360.0f / 65536.0f) + mInitialRotation.y;
+		mRotation.z
+		    = info.mRotation.z * (360.0f / 65536.0f) + mInitialRotation.z;
+	}
+}
 
 void TMapObjBase::touchBoss(THitActor* boss)
 {
@@ -391,60 +401,45 @@ void TMapObjBase::control()
 	for (int i = 0; i < mColCount; ++i)
 		touchActor(getCollision(i));
 
-	if (mMapObjData->mMove) {
-		TMapObjMoveData* move = mMapObjData->mMove;
-
-		move->mBckAnm->setFrame(move->mFrameCtrl->getFrame());
-		move->mFrameCtrl->update();
-		J3DTransformInfo info;
-		move->mBckAnm->getTransform(1, &info);
-		mPositionDelta.x = info.mTranslate.x + mInitialPosition.x - mPosition.x;
-		mPositionDelta.y = info.mTranslate.y + mInitialPosition.y - mPosition.y;
-		mPositionDelta.z = info.mTranslate.z + mInitialPosition.z - mPosition.z;
-		mRotation.x
-		    = info.mRotation.x * (360.0f / 65536.0f) + mInitialRotation.x;
-		mRotation.y
-		    = info.mRotation.y * (360.0f / 65536.0f) + mInitialRotation.y;
-		mRotation.z
-		    = info.mRotation.z * (360.0f / 65536.0f) + mInitialRotation.z;
-	}
+	moveByBck();
 }
 
 void TMapObjBase::setGroundCollision()
 {
 	if (!mMapCollisionManager)
 		return;
-	if (mMapCollisionManager->getActiveCollision()->getKind()
-	    != TMapCollisionBase::KIND_MOVE)
-		return;
 
-	if (checkMapObjFlag(MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT)) {
-		if (mColCount == 0 && mMoveCollisionOnContactGraceTimer == 0)
-			return;
-		--mMoveCollisionOnContactGraceTimer;
-		if (mColCount != 0)
-			mMoveCollisionOnContactGraceTimer
-			    = MOVE_COLLISION_ON_CONTACT_GRACE_TIMER;
-	}
-
-	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
-		MtxPtr mtx = getModel()->getAnmMtx(0);
-		mMapCollisionManager->moveActiveCollisionMtx(mtx);
-	} else {
-		JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
-		                          mPosition.z);
-		if (checkMapObjFlag(MAP_OBJ_FLAG_SCALE_AND_ROTATE_COLLISION)) {
-			mMapCollisionManager->getActiveCollision()->offFlag(
-			    TMapCollisionBase::FLAG_UNK8000);
-			mMapCollisionManager->getActiveCollision()->offFlag(
-			    TMapCollisionBase::FLAG_UNK4000);
-			mMapCollisionManager->moveActiveCollisionSRT(pos, mRotation,
-			                                             mScaling);
-		} else {
-			mMapCollisionManager->getActiveCollision()->offFlag(
-			    TMapCollisionBase::FLAG_UNK4000);
-			mMapCollisionManager->moveActiveCollisionTrans(pos);
+	switch (mMapCollisionManager->getActiveCollision()->getKind()) {
+	case TMapCollisionBase::KIND_MOVE:
+		if (checkMapObjFlag(MAP_OBJ_FLAG_MOVE_COLLISION_ON_CONTACT)) {
+			if (mColCount == 0 && mMoveCollisionOnContactGraceTimer == 0)
+				return;
+			--mMoveCollisionOnContactGraceTimer;
+			if (mColCount != 0)
+				mMoveCollisionOnContactGraceTimer
+				    = MOVE_COLLISION_ON_CONTACT_GRACE_TIMER;
 		}
+
+		if (checkMapObjFlag(MAP_OBJ_FLAG_UNK8)) {
+			mMapCollisionManager->moveActiveCollisionMtx(
+			    getModel()->getAnmMtx(0));
+		} else {
+			JGeometry::TVec3<f32> pos(mPosition.x, mPosition.y - mYOffset,
+			                          mPosition.z);
+			if (checkMapObjFlag(MAP_OBJ_FLAG_SCALE_AND_ROTATE_COLLISION)) {
+				mMapCollisionManager->getActiveCollision()->offFlag(
+				    TMapCollisionBase::FLAG_UNK8000);
+				mMapCollisionManager->getActiveCollision()->offFlag(
+				    TMapCollisionBase::FLAG_UNK4000);
+				mMapCollisionManager->moveActiveCollisionSRT(pos, mRotation,
+				                                             mScaling);
+			} else {
+				mMapCollisionManager->getActiveCollision()->offFlag(
+				    TMapCollisionBase::FLAG_UNK4000);
+				mMapCollisionManager->moveActiveCollisionTrans(pos);
+			}
+		}
+		break;
 	}
 }
 
@@ -452,10 +447,8 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (SMSGetMarDirector()->isTalkModeNow()
 	    && !SMSGetMarDirector()->isDemoModeNow()) {
-		if (checkLiveFlag(LIVE_FLAG_DEAD))
-			return;
-
-		if (isActorType(ACTOR_TYPE_MAP_OBJ_TREE_SCALE))
+		if (checkLiveFlag(LIVE_FLAG_DEAD)
+		    || isActorType(ACTOR_TYPE_MAP_OBJ_TREE_SCALE))
 			return;
 
 		if (cue & CUE_MOVE) {

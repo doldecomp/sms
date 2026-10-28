@@ -32,10 +32,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
-
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 static const GXColor bodyColor[4] = {
 	{ 0x40, 0xA1, 0x24, 0xFF },
@@ -255,11 +251,11 @@ void TYoshi::initInLoadAfter()
 	mTongue->initInLoadAfter();
 
 	TMirrorActor* mirrorMain = new TMirrorActor("ヨッシーin鏡");
-	mirrorMain->init(mActor->getModel(), 4);
+	mirrorMain->init(mActor->getModel(), TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 
 	for (int i = 0; i < 2; ++i) {
 		TMirrorActor* mirror = new TMirrorActor("ヨッシー手in鏡");
-		mirror->init(mMirrorModels[i], 4);
+		mirror->init(mMirrorModels[i], TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 	}
 
 	mActor->getModel()->getModelData()->getJointNodePointer(21)->setCallBack(
@@ -536,8 +532,9 @@ void TYoshi::thinkAnimation()
 				newIdx = 12;
 		}
 	} else if ((status & MARIO_STATUS_FLAG_UNK200)
-	           && (status == MARIO_STATUS_CATCH_LOST || status == 0xC000023D
-	               || status == 0xC000023E)) {
+	           && (status == MARIO_STATUS_CATCH_LOST
+	               || status == MARIO_STATUS_BRAKE_END
+	               || status == MARIO_STATUS_SLIP_END)) {
 		newIdx = 18;
 	} else {
 		bool sliding = (status & MARIO_STATUS_FLAG_UNK8000) ? true : false;
@@ -566,7 +563,7 @@ void TYoshi::thinkAnimation()
 		} else {
 		walking:
 			u32 act = mMario->mStatus;
-			if (act == 0x8023C)
+			if (act == MARIO_STATUS_HIP_ATTACK_END)
 				newIdx = 6;
 			else if (act == MARIO_STATUS_WIN_DEMO)
 				newIdx = 2;
@@ -626,7 +623,7 @@ void TYoshi::thinkUpper()
 	J3DJoint* joint
 	    = mActor->getModel()->getModelData()->getJointNodePointer(18);
 	if (mTongue->mState != TYoshiTongue::STATE_IDLE
-	    || mMario->mWaterGun->isEmitting()) {
+	    || mMario->getWaterGun()->isEmitting()) {
 		if (joint->getMtxCalc() != unk54) {
 			unk5C.setFrame(unk5C.getStart());
 			unk5C.setRate(1.0f);
@@ -776,7 +773,7 @@ void TYoshi::thinkHoldOut()
 	switch (mFlutterState) {
 	case 0:
 		if (mMario->mVel.y < mMaxVSpdStartFlutter
-		    && mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
+		    && mMario->getGamePad()->checkMeaning(TMarioGamePad::MEANING_A))
 			mFlutterState = 1;
 		break;
 	case 1:
@@ -793,7 +790,7 @@ void TYoshi::thinkHoldOut()
 			mFlutterState = 2;
 		}
 
-		if (!mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_A))
+		if (!mMario->getGamePad()->checkMeaning(TMarioGamePad::MEANING_A))
 			mFlutterState = 2;
 		break;
 	case 2:
@@ -804,8 +801,8 @@ void TYoshi::thinkHoldOut()
 
 void TYoshi::movement()
 {
-	if (!SMSGetMarDirector()->isDemoMode3()
-	    && !SMSGetMarDirector()->isDemoMode4()
+	if (!SMSGetMarDirector()->isInnerDemoModeNow()
+	    && !SMSGetMarDirector()->isTalkingDemoModeNow()
 	    && !SMSGetMarDirector()->isTalkModeNow()) {
 		if (!mMario->checkStatusType(MARIO_STATUS_FLAG_UNK1000) && unkC > 0) {
 			unkC -= 1;

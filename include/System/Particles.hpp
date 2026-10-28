@@ -169,6 +169,10 @@ enum E_SMS_EFFECT_ONETIME_NORMAL /* 0 */ {
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_DOWN     = 0xAA,
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING1   = 0xAB,
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_SWING2   = 0xAC,
+	BWAN_JPA_JUMP_ROCK                    = 0xAD,
+	BWAN_JPA_JUMP_SMOKE                   = 0xAE,
+	BWAN_JPA_MS_HIBANA                    = 0xAF,
+	BWAN_JPA_MS_DOWNYUGE                  = 0xB0,
 	PARTICLE_MS_SMB_KAFUN_OW              = 0xB2,
 	PARTICLE_MS_SMB_KAFUN_OA              = 0xB3,
 	PARTICLE_MS_SMB_AP_ROCK               = 0xB6,
@@ -253,6 +257,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_M_MZBHAMON_A              = 0x10A,
 	PARTICLE_MS_M_MZBHAMON_C              = 0x10B,
 	PARTICLE_MS_M_AWA                     = 0x10C,
+	PARTICLE_MS_NOZZLESMOKE               = 0x10D,
 	PARTICLE_MS_M_BLUR1                   = 0x10E,
 	PARTICLE_MS_M_SLIDESAND_A             = 0x10F,
 	PARTICLE_MS_M_SLIDESAND_B             = 0x110,
@@ -311,6 +316,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	MAP_MAP_MS_MARE_GUNWAT_A              = 0x14C,
 	MAP_MAP_MS_MARE_GUNWAT_B              = 0x14D,
 	MAP_MAP_MS_MARE_GUNWAT_C              = 0x14E,
+	SCENE_MAPOBJ_MS_SHIB_CYL1             = 0x154,
+	SCENE_MAPOBJ_MS_SHIB_CUB1             = 0x155,
 	MAP_MAP_MS_MONTE_YUGE                 = 0x156,
 	MAPOBJ_ICEBLOCKA                      = 0x157,
 	MAPOBJ_ICEBLOCKB                      = 0x158,
@@ -327,6 +334,7 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	SCENE_BOSSPAKKUN_JPA_MS_BOPA_TR_WEED  = 0x164,
 	PARTICLE_MS_GESO_KISEKI               = 0x165,
 	CANNON_JPA_MS_CANNON_SMOKE            = 0x166,
+	BWANWAN_JPA_MS_BWAN_HITYUGE           = 0x167,
 	BWANWAN_JPA_MS_BWAN_KIRA              = 0x168,
 	PARTICLE_MS_BOHA_JOUKI2_R_A           = 0x169,
 	PARTICLE_MS_BOHA_JOUKI2_R_B           = 0x16A,
@@ -365,6 +373,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_YNB_ONPU                  = 0x18B,
 	AMENBO_JPA_MS_AME_HAMON               = 0x18E,
 	FIREWANWAN_JPA_MS_CAN_HITYUGE         = 0x18F,
+	WIRETRAP_JPA_NS_WRT_BIRI_A            = 0x190,
+	WIRETRAP_JPA_NS_WRT_BIRI_B            = 0x191,
 	BOSSEEL_JPA_MS_MEO_EYEBLUR            = 0x192,
 	BOSSEEL_JPA_MS_MEO_SPIN_SMOKE         = 0x193,
 	BOSSEEL_JPA_MS_MEO_SPIN_SMOKE_L       = 0x194,
@@ -425,9 +435,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	PARTICLE_MS_MPK_FIRE_B                = 0x1D2,
 };
 
-// TODO: what is "type 2"?
-enum /* 2 */
-{
+// NOTE: name fabricated, the map has no instantiation for this type.
+enum E_SMS_EFFECT_ONETIME_INDIRECT /* 2 */ {
 	PARTICLE_MS_M_TOBIKOMI_C        = 0x1D4,
 	PARTICLE_MS_M_TOBIKOMI_S_C      = 0x1D5,
 	PARTICLE_MS_MARI_RAKUBALL       = 0x1D8,
@@ -460,43 +469,43 @@ enum E_SMS_EFFECT_LOOP_INDIRECT /* 3 */ {
 	PARTICLE_MS_GESOSURF_A            = 0x1E7,
 	PARTICLE_MS_M_WATSLIDE_A          = 0x1EA,
 	PARTICLE_MS_MOE_FIRE_C            = 0x1ED,
+	BWAN_JPA_MS_YUGAMI                = 0x1EE,
 };
 
 // NOTE: doing this makes inlining work out, specializations DON'T.
 template <class T> struct FabricatedParticleTypeToFlag;
 template <> struct FabricatedParticleTypeToFlag<E_SMS_EFFECT_ONETIME_NORMAL> {
-	enum { value = 0 };
+	enum { value = TMarioParticleManager::EFFECT_ONETIME_NORMAL };
 };
 template <> struct FabricatedParticleTypeToFlag<E_SMS_EFFECT_LOOP_NORMAL> {
-	enum { value = 1 };
+	enum { value = TMarioParticleManager::EFFECT_LOOP_NORMAL };
 };
 template <> struct FabricatedParticleTypeToFlag<E_SMS_EFFECT_LOOP_INDIRECT> {
-	enum { value = 3 };
+	enum { value = TMarioParticleManager::EFFECT_LOOP_INDIRECT };
 };
 
 // TODO: the fabricated setScale inline is most likely incorrect.
 
 template <class T>
-JPABaseEmitter*
-SMS_EasyEmitParticle(T param_1, const JGeometry::TVec3<f32>* param_2,
-                     const void* param_3, const JGeometry::TVec3<f32>& param_4)
+JPABaseEmitter* SMS_EasyEmitParticle(T id, const JGeometry::TVec3<f32>* pos_ptr,
+                                     const void* identity,
+                                     const JGeometry::TVec3<f32>& scale)
 {
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-	    param_1, param_2, FabricatedParticleTypeToFlag<T>::value, param_3);
+	    id, pos_ptr, FabricatedParticleTypeToFlag<T>::value, identity);
 	if (emitter)
-		emitter->setGlobalScale(param_4);
+		emitter->setGlobalScale(scale);
 	return emitter;
 }
 
 template <class T>
-JPABaseEmitter* SMS_EasyEmitParticle(T param_1, MtxPtr param_2,
-                                     const void* param_3,
-                                     const JGeometry::TVec3<f32>& param_4)
+JPABaseEmitter* SMS_EasyEmitParticle(T id, MtxPtr mtx_ptr, const void* identity,
+                                     const JGeometry::TVec3<f32>& scale)
 {
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
-	    param_1, param_2, FabricatedParticleTypeToFlag<T>::value, param_3);
+	    id, mtx_ptr, FabricatedParticleTypeToFlag<T>::value, identity);
 	if (emitter)
-		emitter->setGlobalScale(param_4);
+		emitter->setGlobalScale(scale);
 	return emitter;
 }
 

@@ -12,40 +12,26 @@ class TBGCheckData;
 
 class TMapCollisionBase {
 public:
-	TMapCollisionBase()
-	    : mCheckDatas(nullptr)
-	    , mKind(0)
-	    , mCheckDataNum(0)
-	    , mVertexNum(0)
-	    , mVertices(nullptr)
-	    , mCollisionGroupNum(0)
-	    , mCollisionGroups(nullptr)
-	    , mFlags(0)
-	{
-		MTXIdentity(unk20);
-		mPrevTranslation.x = 0.0f;
-		mPrevTranslation.y = 0.0f;
-		mPrevTranslation.z = 0.0f;
-	}
+	TMapCollisionBase();
 
-	virtual void init(const char*, u16, const TLiveActor*);
-	virtual void moveSRT(const JGeometry::TVec3<f32>&,
-	                     const JGeometry::TVec3<f32>&,
-	                     const JGeometry::TVec3<f32>&)
+	virtual void init(const char* col_file_path, u16, const TLiveActor*);
+	virtual void moveSRT(const JGeometry::TVec3<f32>& trans,
+	                     const JGeometry::TVec3<f32>& rot,
+	                     const JGeometry::TVec3<f32>& scale)
 	{
 	}
-	virtual void moveTrans(const JGeometry::TVec3<f32>&) { }
-	virtual void moveMtx(MtxPtr) { }
+	virtual void moveTrans(const JGeometry::TVec3<f32>& trans) { }
+	virtual void moveMtx(MtxPtr mtx) { }
 	virtual void setUp() { offFlag(FLAG_NEEDS_SETUP); }
 	virtual void setUpTrans(const JGeometry::TVec3<f32>& param_1)
 	{
-		MsMtxSetTRS(unk20, param_1, (Vec) { 0.0f, 0.0f, 0.0f },
+		MsMtxSetTRS(mTransformMtx, param_1, (Vec) { 0.0f, 0.0f, 0.0f },
 		            (Vec) { 1.0f, 1.0f, 1.0f });
 		setUp();
 	}
 	virtual void remove() { onFlag(FLAG_NEEDS_SETUP); }
 
-	void setMtx(MtxPtr mtx) { MTXCopy(mtx, unk20); }
+	void setMtx(MtxPtr mtx) { MTXCopy(mtx, mTransformMtx); }
 	void setAllActor(const TLiveActor*);
 	void setAllData(s16);
 	void setAllBGType(u16);
@@ -57,7 +43,7 @@ public:
 	void update();
 	void updateCheckData(const f32*);
 	void updateVertexPos(f32*);
-	void updateTrans(const JGeometry::TVec3<f32>&);
+	void updateTrans(const JGeometry::TVec3<f32>& trans);
 	void setCheckData(const f32*, const s16*, TBGCheckData*, int);
 	bool isSetUp() const
 	{
@@ -76,7 +62,7 @@ public:
 	void onFlag(u16 flag) { mFlags |= flag; }
 	void offFlag(u16 flag) { mFlags &= ~flag; }
 	s32 getKind() const { return mKind; }
-	u32 getUnkC() const { return mCheckDataNum; }
+	u32 getCheckDataNum() const { return mCheckDataNum; }
 	void setUpMtx(MtxPtr mtx)
 	{
 		setMtx(mtx);
@@ -119,7 +105,7 @@ protected:
 
 	/* 0x18 */ u32 mCollisionGroupNum;
 	/* 0x1C */ TMapCollisionGroup* mCollisionGroups;
-	/* 0x20 */ Mtx unk20;
+	/* 0x20 */ Mtx mTransformMtx;
 	/* 0x50 */ JGeometry::TVec3<f32> mPrevTranslation;
 	/* 0x5C */ u16 mFlags;
 };
@@ -128,7 +114,7 @@ class TMapCollisionStatic : public TMapCollisionBase {
 public:
 	TMapCollisionStatic();
 
-	virtual void init(const char*, u16, const TLiveActor*);
+	virtual void init(const char* col_file_path, u16, const TLiveActor*);
 	virtual void setUp();
 	virtual void remove() { }
 
@@ -140,7 +126,7 @@ class TMapCollisionWarp : public TMapCollisionBase {
 public:
 	TMapCollisionWarp();
 
-	virtual void init(const char*, u16, const TLiveActor*);
+	virtual void init(const char* col_file_path, u16, const TLiveActor*);
 	virtual void setUp();
 	virtual void setUpTrans(const JGeometry::TVec3<f32>&);
 	virtual void remove();
@@ -154,22 +140,23 @@ class TMapCollisionMove : public TMapCollisionBase {
 public:
 	TMapCollisionMove();
 
-	virtual void init(const char*, u16, const TLiveActor*);
-	virtual void moveSRT(const JGeometry::TVec3<f32>& param_1,
-	                     const JGeometry::TVec3<f32>& param_2,
-	                     const JGeometry::TVec3<f32>& param_3)
+	virtual void init(const char* col_file_path, u16, const TLiveActor*);
+	virtual void moveSRT(const JGeometry::TVec3<f32>& trans,
+	                     const JGeometry::TVec3<f32>& rot,
+	                     const JGeometry::TVec3<f32>& scale)
 	{
-		MsMtxSetTRS(unk20, param_1, param_2, param_3);
+		MsMtxSetTRS(mTransformMtx, trans, rot, scale);
 		move();
 	}
-	virtual void moveTrans(const JGeometry::TVec3<f32>&);
+	virtual void moveTrans(const JGeometry::TVec3<f32>& trans);
 	virtual void moveMtx(MtxPtr mtx)
 	{
-		MTXCopy(mtx, unk20);
+		MTXCopy(mtx, mTransformMtx);
 		move();
 	}
 
-	void init(u32, u16 bg_type, s16 data, const TLiveActor* actor);
+	void init(u32 check_data_num, u16 bg_type, s16 data,
+	          const TLiveActor* actor);
 	void move();
 	void setList();
 };

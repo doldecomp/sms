@@ -1,16 +1,5 @@
 #include <NPC/NpcBase.hpp>
 
-// pch issues with J3DJoint and co
-static const char dummy3[]           = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char dummy4[]           = "メモリが足りません\n";
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
-// end of issues
-
 static const char* monteMCommon_bastable[] = {
 	"/scene/monteMCommon/bas/mom_appear.bas",
 	"/scene/monteMCommon/bas/mom_dance.bas",

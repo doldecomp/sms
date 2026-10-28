@@ -17,7 +17,7 @@ MActor::MActor(MActorAnmData* anm_data)
 	mModel     = nullptr;
 	unk8       = nullptr;
 	mAnmBck    = nullptr;
-	unk10      = nullptr;
+	mSubBcks   = nullptr;
 	mAnmBpk    = nullptr;
 	mAnmBtp    = nullptr;
 	mAnmBtk    = nullptr;
@@ -34,76 +34,74 @@ MActor::MActor(MActorAnmData* anm_data)
 	unk40        = true;
 	unk44        = 1;
 
-	mAnmData      = anm_data;
-	mAnmByType    = new MActorAnmBase*[6];
-	mAnmByType[0] = nullptr;
-	mAnmByType[1] = nullptr;
-	mAnmByType[2] = nullptr;
-	mAnmByType[3] = nullptr;
-	mAnmByType[4] = nullptr;
-	mAnmByType[5] = nullptr;
+	mAnmData   = anm_data;
+	mAnmByType = new MActorAnmBase*[6];
+	for (int i = 0; i < 6; ++i)
+		mAnmByType[i] = nullptr;
 
-	if (anm_data->getUnk2C()) {
+	if (anm_data->getBckAnmData()) {
 		mAnmBck = new MActorAnmBck;
-		mAnmBck->setUnk1C(anm_data->getUnk2C());
+		mAnmBck->setAnmData(anm_data->getBckAnmData());
 		mAnmByType[ANM_TYPE_BCK] = mAnmBck;
 	}
 
-	if (anm_data->getUnk30()) {
+	if (anm_data->getBpkAnmData()) {
 		mAnmBpk = new MActorAnmBpk;
-		mAnmBpk->setUnk1C(anm_data->getUnk30());
+		mAnmBpk->setAnmData(anm_data->getBpkAnmData());
 		mAnmBpk->setMatColorAnmKeyPtr();
 		mAnmByType[ANM_TYPE_BPK] = mAnmBpk;
 	}
 
-	if (anm_data->getUnk34()) {
+	if (anm_data->getBtpAnmData()) {
 		mAnmBtp = new MActorAnmBtp;
-		mAnmBtp->setUnk1C(anm_data->getUnk34());
+		mAnmBtp->setAnmData(anm_data->getBtpAnmData());
 		mAnmBtp->setTexNoAnmFullPtr();
 		mAnmByType[ANM_TYPE_BTP] = mAnmBtp;
 	}
 
-	if (anm_data->getUnk38()) {
+	if (anm_data->getBtkAnmData()) {
 		mAnmBtk = new MActorAnmBtk;
-		mAnmBtk->setUnk1C(anm_data->getUnk38());
+		mAnmBtk->setAnmData(anm_data->getBtkAnmData());
 		mAnmBtk->setTexMtxAnmKeyPtr();
 		mAnmByType[ANM_TYPE_BTK] = mAnmBtk;
 	}
 
-	if (anm_data->getUnk3C()) {
+	if (anm_data->getBrkAnmData()) {
 		mAnmBrk = new MActorAnmBrk;
-		mAnmBrk->setUnk1C(anm_data->getUnk3C());
+		mAnmBrk->setAnmData(anm_data->getBrkAnmData());
 		mAnmBrk->setTevColorAnmKeyPtr();
 		mAnmBrk->setTevKColorAnmKeyPtr();
 		mAnmByType[ANM_TYPE_BRK] = mAnmBrk;
 	}
 
-	if (anm_data->getUnk40()) {
+	if (anm_data->getBlkAnmData()) {
 		mAnmBlk = new MActorAnmBlk;
-		mAnmBlk->setUnk1C(anm_data->getUnk40());
+		mAnmBlk->setAnmData(anm_data->getBlkAnmData());
 		mAnmByType[ANM_TYPE_BLK] = mAnmBlk;
 	}
 
-	if (anm_data->getUnk0() > 0) {
-		unk10 = new MActorAnmBck*[anm_data->getUnk0()];
+	if (anm_data->getIncidentalAnmNum() > 0) {
+		mSubBcks = new MActorAnmBck*[anm_data->getIncidentalAnmNum()];
 
-		JGadget::TList<MActorSubAnmInfo>::iterator it = mAnmData->unk1C.begin();
-		JGadget::TList<MActorSubAnmInfo>::iterator e  = mAnmData->unk1C.end();
+		JGadget::TList<MActorSubAnmInfo>::iterator it
+		    = mAnmData->mIncidentalAnms.begin();
+		JGadget::TList<MActorSubAnmInfo>::iterator e
+		    = mAnmData->mIncidentalAnms.end();
 
 		for (int i = 0; it != e; ++it, ++i) {
-			unk10[i] = new MActorAnmBck;
-			unk10[i]->setUnk1C(anm_data->getUnk2C());
-			unk10[i]->setUnk28(it->unk0);
+			mSubBcks[i] = new MActorAnmBck;
+			mSubBcks[i]->setAnmData(anm_data->getBckAnmData());
+			mSubBcks[i]->setJointIndex(it->mJointIdx);
 		}
 	}
 }
 
 void MActor::setMActorAnmData(MActorAnmData* anm_data) { mAnmData = anm_data; }
 
-void MActor::setModel(J3DModel* param_1, u32 param_2)
+void MActor::setModel(J3DModel* model, u32 param_2)
 {
-	mModel       = param_1;
-	mMaterialNum = param_1->getModelData()->getMaterialNum();
+	mModel       = model;
+	mMaterialNum = model->getModelData()->getMaterialNum();
 	unk2C        = new u16[mMaterialNum];
 	unk30        = new u16[mMaterialNum];
 	if ((~param_2 & 0x10000) != 0)
@@ -129,12 +127,13 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 		}
 	}
 
-	if (mAnmData->getUnk0() > 0) {
-		JGadget::TList<MActorSubAnmInfo>::iterator it = mAnmData->unk1C.begin();
-		JGadget::TList<MActorSubAnmInfo>::iterator e  = mAnmData->unk1C.end();
-		for (int i = 0; it != e; ++it, ++i) {
-			unk10[i]->setModel(mModel);
-		}
+	if (mAnmData->getIncidentalAnmNum() > 0) {
+		JGadget::TList<MActorSubAnmInfo>::iterator it
+		    = mAnmData->mIncidentalAnms.begin();
+		JGadget::TList<MActorSubAnmInfo>::iterator e
+		    = mAnmData->mIncidentalAnms.end();
+		for (int i = 0; it != e; ++it, ++i)
+			mSubBcks[i]->setModel(mModel);
 	}
 
 	for (u16 i = 0; i < mMaterialNum; ++i) {
@@ -151,7 +150,7 @@ void MActor::setModel(J3DModel* param_1, u32 param_2)
 
 	initDL();
 
-	if (!mAnmData->getUnk48())
+	if (!mAnmData->getSampleModelData())
 		mAnmData->createSampleModelData(mModel->getModelData());
 }
 
@@ -178,11 +177,11 @@ BOOL MActor::curAnmEndsNext(int type, char* part_name)
 		if (!part_name)
 			return mAnmByType[type]->endsNext();
 
-		if (!unk10)
+		if (!mSubBcks)
 			return true;
 
 		int idx = mAnmData->partsNameToIdx(part_name);
-		return unk10[idx]->endsNext();
+		return mSubBcks[idx]->endsNext();
 	}
 
 	return mAnmByType[type]->endsNext();
@@ -190,10 +189,10 @@ BOOL MActor::curAnmEndsNext(int type, char* part_name)
 
 BOOL MActor::curSubAnmEndsNext(int idx)
 {
-	if (!unk10)
+	if (!mSubBcks)
 		return true;
 
-	return unk10[idx]->endsNext();
+	return mSubBcks[idx]->endsNext();
 }
 
 void MActor::setAnimation(const char* name, int type)
@@ -277,29 +276,30 @@ void MActor::offMakeDL()
 
 const char* MActor::getCurAnmName(int) const { }
 
-void MActor::setJointCallback(int param_1, J3DNodeCallBack param_2)
+void MActor::setJointCallback(int joint_idx, J3DNodeCallBack callback)
 {
-	mModel->getModelData()->getJointNodePointer(param_1)->setCallBack(param_2);
+	mModel->getModelData()->getJointNodePointer(joint_idx)->setCallBack(
+	    callback);
 }
 
 void MActor::updateInSubBck()
 {
-	if (!unk10)
+	if (!mSubBcks)
 		return;
 
-	for (int i = 0; i < mAnmData->getUnk0(); ++i)
-		if (unk10[i]->getCurIdx() >= 0)
-			unk10[i]->updateIn();
+	for (int i = 0; i < mAnmData->getIncidentalAnmNum(); ++i)
+		if (mSubBcks[i]->getCurAnmIdx() >= 0)
+			mSubBcks[i]->updateIn();
 }
 
 void MActor::updateOutSubBck()
 {
-	if (!unk10)
+	if (!mSubBcks)
 		return;
 
-	for (int i = 0; i < mAnmData->getUnk0(); ++i)
-		if (unk10[i]->getCurIdx() >= 0)
-			unk10[i]->updateOut();
+	for (int i = 0; i < mAnmData->getIncidentalAnmNum(); ++i)
+		if (mSubBcks[i]->getCurAnmIdx() >= 0)
+			mSubBcks[i]->updateOut();
 }
 
 void MActor::calcAnm()
@@ -399,19 +399,19 @@ void MActor::entry()
 void MActor::frameUpdate()
 {
 	for (int i = ANM_TYPE_FIRST; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && mAnmByType[i]->getCurAnmIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
 
-	if (unk10)
-		for (int i = 0; i < mAnmData->getUnk0(); ++i)
-			if (unk10[i]->getCurIdx() >= 0)
-				unk10[i]->getFrameCtrl()->update();
+	if (mSubBcks)
+		for (int i = 0; i < mAnmData->getIncidentalAnmNum(); ++i)
+			if (mSubBcks[i]->getCurAnmIdx() >= 0)
+				mSubBcks[i]->getFrameCtrl()->update();
 }
 
 void MActor::matAnmFrameUpdate()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && mAnmByType[i]->getCurAnmIdx() >= 0)
 			mAnmByType[i]->getFrameCtrl()->update();
 }
 
@@ -432,7 +432,7 @@ BOOL MActor::checkCurAnm(const char* name, int type)
 	if (!mAnmByType[type])
 		return false;
 
-	if (mAnmByType[type]->findName2(name) == mAnmByType[type]->getCurIdx())
+	if (mAnmByType[type]->findName2(name) == mAnmByType[type]->getCurAnmIdx())
 		return true;
 
 	return false;
@@ -443,7 +443,7 @@ bool MActor::checkCurAnmFromIndex(int index, int type)
 	if (!mAnmByType[type])
 		return false;
 
-	if (index == mAnmByType[type]->getCurIdx())
+	if (index == mAnmByType[type]->getCurAnmIdx())
 		return true;
 
 	return false;
@@ -481,7 +481,7 @@ int MActor::getCurAnmIdx(int type) const
 {
 	if (!mAnmByType[type])
 		return -1;
-	return mAnmByType[type]->unk0;
+	return mAnmByType[type]->getCurAnmIdx();
 }
 
 void MActor::setFrameRate(f32 rate, int type)
@@ -489,7 +489,7 @@ void MActor::setFrameRate(f32 rate, int type)
 	if (!mAnmByType[type])
 		return;
 
-	mAnmByType[type]->unk4.setRate(rate);
+	mAnmByType[type]->getFrameCtrl()->setRate(rate);
 }
 
 void MActor::setBck(const char* name)
@@ -508,16 +508,16 @@ void MActor::setBckFromIndex(int index)
 
 void MActor::setSubBckFromIndex(int index, int part_idx)
 {
-	if (!unk10)
+	if (!mSubBcks)
 		return;
-	unk10[part_idx]->setAnmFromIndex(index, 0);
+	mSubBcks[part_idx]->setAnmFromIndex(index, 0);
 }
 
 BOOL MActor::checkCurBckFromIndex(int index)
 {
 	if (!mAnmBck)
 		return false;
-	if (index == mAnmBck->unk0)
+	if (index == mAnmBck->getCurAnmIdx())
 		return true;
 	return false;
 }
@@ -527,11 +527,11 @@ void MActor::setSubBck(const char* part_name, const char* anm_name)
 	if (!mAnmBck)
 		return;
 
-	if (!unk10)
+	if (!mSubBcks)
 		return;
 
 	int idx = mAnmData->partsNameToIdx(part_name);
-	unk10[idx]->setAnm(anm_name, 0);
+	mSubBcks[idx]->setAnm(anm_name, 0);
 }
 
 void MActor::setBpk(const char* name)
@@ -618,37 +618,41 @@ void MActor::setBrkFromIndex(int index)
 
 void MActor::updateIn()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK]
+	    && mAnmByType[ANM_TYPE_BCK]->getCurAnmIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateIn();
 
 	updateInSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BLK]
+	    && mAnmByType[ANM_TYPE_BLK]->getCurAnmIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateIn();
 }
 
 void MActor::updateOut()
 {
-	if (mAnmByType[ANM_TYPE_BCK] && mAnmByType[ANM_TYPE_BCK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BCK]
+	    && mAnmByType[ANM_TYPE_BCK]->getCurAnmIdx() >= 0)
 		mAnmByType[ANM_TYPE_BCK]->updateOut();
 
 	updateOutSubBck();
 
-	if (mAnmByType[ANM_TYPE_BLK] && mAnmByType[ANM_TYPE_BLK]->getCurIdx() >= 0)
+	if (mAnmByType[ANM_TYPE_BLK]
+	    && mAnmByType[ANM_TYPE_BLK]->getCurAnmIdx() >= 0)
 		mAnmByType[ANM_TYPE_BLK]->updateOut();
 }
 
 void MActor::entryIn()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && mAnmByType[i]->getCurAnmIdx() >= 0)
 			mAnmByType[i]->updateIn();
 }
 
 void MActor::entryOut()
 {
 	for (int i = ANM_TYPE_BPK; i < ANM_TYPE_COUNT; ++i)
-		if (mAnmByType[i] && mAnmByType[i]->getCurIdx() >= 0)
+		if (mAnmByType[i] && mAnmByType[i]->getCurAnmIdx() >= 0)
 			mAnmByType[i]->updateOut();
 }
 

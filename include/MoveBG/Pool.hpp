@@ -19,7 +19,7 @@ public:
 
 	f32 getWaterLevel() const { return mPosition.y + unk13C; }
 
-public:
+private:
 	/* 0x138 */ u32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;

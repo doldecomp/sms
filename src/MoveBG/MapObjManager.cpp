@@ -28,7 +28,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static void dummy(Vec* v) { *v = (Vec) { 0.0f, 0.0f, 0.0f }; }
 static void dummy2(Vec* v) { *v = (Vec) { 1.0f, 1.0f, 1.0f }; }
@@ -109,15 +108,15 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	mBrickBlockMatTable = loadMatTable("/scene/mapObj/BrickBlock.bmt");
 	mWaterMelonBlockMatTable
 	    = loadMatTable("/scene/mapObj/WaterMelonBlock.bmt");
-	if (SMSGetMarDirector()->getCurrentMap() == 2)
+	if (SMSGetMarDirector()->getCurrentStage() == 2)
 		mBiancoMatTable = loadMatTable("/scene/mapObj/bianco.bmt");
 	mLeafBoatMatTable  = loadMatTable("/scene/mapObj/LeafBoat.bmt");
 	mRiccoShipMatTable = loadMatTable("/scene/mapObj/riccoShip.bmt");
 
-	if ((SMSGetMarDirector()->getCurrentMap() == 3
-	     && (SMSGetMarDirector()->unk7D == 1
-	         || SMSGetMarDirector()->unk7D == 5))
-	    || SMSGetMarDirector()->getCurrentMap() == 0x1E) {
+	if ((SMSGetMarDirector()->getCurrentStage() == 3
+	     && (SMSGetMarDirector()->getCurrentScenario() == 1
+	         || SMSGetMarDirector()->getCurrentScenario() == 5))
+	    || SMSGetMarDirector()->getCurrentStage() == 0x1E) {
 		mSurfGessoModelData = SMS_MakeSDLModelData(
 		    "/scene/mapObj/surfgeso.bmd", J3DMLF_MaterialPEFull
 		                                      | J3DMLF_UseUniqueMaterials
@@ -139,16 +138,16 @@ void TMapObjManager::load(JSUMemoryInputStream& stream)
 	mSandBombBaseMatTable = loadMatTable("/scene/mapObj/SandBombBase.bmt");
 	mMirrorMatTable       = loadMatTable("/scene/mapObj/mirror.bmt");
 
-	if (SMSGetMarDirector()->getCurrentMap() == 4)
+	if (SMSGetMarDirector()->getCurrentStage() == 4)
 		mBridgeRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
-	if (SMSGetMarDirector()->getCurrentMap() == 13)
+	if (SMSGetMarDirector()->getCurrentStage() == 13)
 		mBridgeRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
-	if (SMSGetMarDirector()->getCurrentMap() == 9)
+	if (SMSGetMarDirector()->getCurrentStage() == 9)
 		mCogwheelRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/cogwheel_rope.bti");
-	if (SMSGetMarDirector()->getCurrentMap() == 8)
+	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		mBridgeRopeTexture
 		    = (ResTIMG*)JKRGetResource("/scene/mapObj/mon_bri_rope.bti");
 }

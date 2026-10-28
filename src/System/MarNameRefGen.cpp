@@ -17,6 +17,8 @@
 #include <Strategic/LiveActor.hpp>
 #include <Strategic/Strategy.hpp>
 #include <Strategic/NameRefAry.hpp>
+#include <Strategic/NameRefAry.tpp>
+#include <Strategic/NameRefPtrAry.tpp>
 #include <Strategic/SmplCharacter.hpp>
 #include <GC2D/Talk2D2.hpp>
 #include <GC2D/ScrnFader.hpp>
@@ -50,10 +52,9 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 static void dummy(Vec* v)
 {
@@ -61,9 +62,15 @@ static void dummy(Vec* v)
 	*v = (Vec) { 1.0f, 1.0f, 1.0f };
 }
 
+template class TNameRefPtrAryT<TStageEventInfo>;
+template class TNameRefAryT<TScenarioArchiveName>;
+template class TNameRefPtrAryT<TNameRefAryT<TScenarioArchiveName> >;
+template class TNameRefAryT<TCameraMapTool>;
 namespace JDrama {
 template class TViewObjPtrListT<THitActor, TViewObj>;
 }
+template class TNameRefPtrAryT<TCubeGeneralInfo>;
+template class TNameRefAryT<TStagePositionInfo>;
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 {
@@ -213,10 +220,8 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef(const char* name) const
 		return new TSunShine;
 
 	if (strcmp(name, "CubeCamera") == 0) {
-		TCubeManagerBase* mgr
-		    = new TCubeManagerBase("?", "カメラキューブテーブル");
-		gpCubeCamera = mgr;
-		return mgr;
+		return gpCubeCamera
+		       = new TCubeManagerBase("?", "カメラキューブテーブル");
 	}
 
 	if (strcmp(name, "CubeMirror") == 0)

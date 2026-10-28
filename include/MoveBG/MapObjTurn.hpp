@@ -14,7 +14,7 @@ public:
 	virtual u32 touchWater(THitActor*);
 	virtual void turn();
 
-public:
+protected:
 	/* 0x150 */ u32 unk150;
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;

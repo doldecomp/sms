@@ -27,7 +27,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 #pragma dont_inline on
@@ -334,7 +333,7 @@ u32 TMovieDirector::decideNextMode(s32* param_1)
 	} else if (SMSGetApplication()->getMovie() == 0x13) {
 		*param_1 = 4;
 	} else if (SMSGetApplication()->getMovie() == 0xc) {
-		TGameSequence& nextArea = SMSGetApplication()->mNextArea;
+		TGameSequence& nextArea = SMSGetApplication()->getNextArea();
 		nextArea.set(15, 0, 0);
 		nextMode = 5;
 	} else if (SMSGetApplication()->getMovie() == 0xe) {

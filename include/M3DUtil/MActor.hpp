@@ -42,8 +42,8 @@ class MActor {
 public:
 	MActor(MActorAnmData* anm_data);
 
-	void setMActorAnmData(MActorAnmData*);
-	void setModel(J3DModel*, u32);
+	void setMActorAnmData(MActorAnmData* anm_data);
+	void setModel(J3DModel* model, u32);
 
 	bool isCurAnmAlreadyEnd(int type);
 	BOOL curAnmEndsNext(int type, char* part_name);
@@ -56,14 +56,14 @@ public:
 	void onMakeDL();
 	void offMakeDL();
 	const char* getCurAnmName(int) const;
-	void setJointCallback(int, J3DNodeCallBack);
+	void setJointCallback(int joint_idx, J3DNodeCallBack callback);
 	void updateInSubBck();
 	void updateOutSubBck();
 	void calcAnm();
 	void calc();
 	void viewCalc();
 	void loadSetDeformData(const char*);
-	void setLightID(s16);
+	void setLightID(s16 light_id);
 	void setLightData(const TBGCheckData*, const JGeometry::TVec3<f32>&);
 	void setLightType(int);
 	void update();
@@ -102,7 +102,7 @@ public:
 	void dumpReport();
 
 	// fabricated
-	MActorAnmBase* getUnk28(int i) { return mAnmByType[i]; }
+	MActorAnmBase* getAnmByType(int i) { return mAnmByType[i]; }
 	MActorAnmBck* getAnmBck() { return mAnmBck; }
 	J3DModel* getModel() const { return mModel; }
 	void unmarkUnk40() { unk40 = false; }
@@ -178,10 +178,11 @@ public:
 
 	J3DAnmTransformKey* getCurBckAnmPtr()
 	{
-		if (!mAnmBck)
+		MActorAnmBck* bck = mAnmBck;
+		if (!bck)
 			return nullptr;
 
-		return mAnmBck->unk24;
+		return bck->getCurAnmPtr();
 	}
 
 	void setBck(int index)
@@ -201,7 +202,7 @@ private:
 	/* 0x04 */ J3DModel* mModel;
 	/* 0x08 */ J3DMtxCalc* unk8;
 	/* 0x0C */ MActorAnmBck* mAnmBck;
-	/* 0x10 */ MActorAnmBck** unk10;
+	/* 0x10 */ MActorAnmBck** mSubBcks;
 	/* 0x14 */ MActorAnmBpk* mAnmBpk;
 	/* 0x18 */ MActorAnmBtp* mAnmBtp;
 	/* 0x1C */ MActorAnmBtk* mAnmBtk;

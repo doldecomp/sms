@@ -39,7 +39,7 @@ public:
 	void ring();
 	void stopToRing();
 
-public:
+private:
 	/* 0x138 */ u16 unk138;
 	/* 0x13A */ u8 unk13A;
 };
@@ -52,7 +52,7 @@ public:
 	virtual void control();
 	virtual u32 touchWater(THitActor*);
 
-public:
+private:
 	/* 0x16C */ f32 unk16C;
 	/* 0x170 */ f32 unk170;
 	/* 0x174 */ f32 unk174;
@@ -100,7 +100,7 @@ public:
 		STATE_UNK3 = 0x3,
 	};
 
-public:
+private:
 	/* 0x144 */ f32 unk144;
 	/* 0x148 */ f32 unk148;
 	/* 0x14C */ f32 unk14C;
@@ -119,7 +119,7 @@ public:
 
 	void touchWall(JGeometry::TVec3<f32>*, TBGWallCheckRecord*);
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -151,7 +151,7 @@ public:
 		STATE_UNK3 = 0x3,
 	};
 
-public:
+private:
 	/* 0x170 */ s32 unk170;
 	/* 0x174 */ f32 unk174;
 	/* 0x178 */ GXColorS10 unk178;
@@ -170,7 +170,7 @@ public:
 	static f32 mFriction;
 	static f32 mRotSpeedMax;
 
-public:
+private:
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ f32 unk154;
 	/* 0x158 */ f32 unk158;
@@ -193,7 +193,7 @@ public:
 	static f32 mRotSpeedMax;
 	static f32 mBridgeRotRate;
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ TMapObjBase* unk140;
@@ -213,7 +213,7 @@ public:
 	void turn(const JGeometry::TVec3<f32>&, const TBGCheckData*, f32);
 	void turnByEnemy(THitActor*, const TBGCheckData*);
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ JAISound* unk13C;
 };
@@ -234,7 +234,7 @@ public:
 	static f32 mTrembleBrake;
 	static int mTrembleTime;
 
-public:
+private:
 	/* 0x138 */ TTrembleModelEffect* unk138;
 };
 
@@ -249,7 +249,7 @@ public:
 	virtual void load(JSUMemoryInputStream&);
 	virtual void control();
 
-public:
+private:
 	/* 0x138 */ TMapObjBase* unk138[4];
 	/* 0x148 */ JAISound* unk148;
 };

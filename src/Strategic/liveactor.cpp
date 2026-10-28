@@ -60,7 +60,7 @@ TLiveActor::TLiveActor(const char* name)
 	mRidePos.zero();
 
 	mGroundPlane = TMap::getIllegalCheckData();
-	if (SMSGetMarDirector()->getCurrentMap() != 8)
+	if (SMSGetMarDirector()->getCurrentStage() != 8)
 		mLiveFlag |= LIVE_FLAG_UNK2000;
 }
 

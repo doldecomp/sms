@@ -11,15 +11,7 @@
 #include <Camera/CameraKindParam.hpp>
 #include <Camera/CameraMarioData.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
+#include <M3DUtil/MActorAnm.hpp>
 
 // TODO: this should be an inline that doesn't get inlined,
 // but it actually gets inlined :(

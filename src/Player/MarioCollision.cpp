@@ -1,5 +1,5 @@
 #include <Player/Mario.hpp>
-
+#include <Player/Yoshi.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/MathUtil.hpp>
@@ -352,8 +352,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 			// I don't think this is correct, but was the closest i could get
 			u32 statusIdx = animationTypes[damageAnimType + animOffset1 * 4
 			                               + animOffset2 * 8];
-			if (mHolder != nullptr
-			    && mHolder->isActorType(ACTOR_TYPE_MAP_WIRE_ACTOR)) {
+			if (isOnWire()) {
 				// Knocked from a wire hang by damage?
 				changePlayerDropping(MARIO_STATUS_WIRE_HANG_LAND_SAFE_DOWN, 0);
 			} else {
@@ -366,7 +365,7 @@ void TMario::damageExec(THitActor* hittingActor, int damage, int damageAnimType,
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
 		for (int i = 0; i < waterEmit; ++i) {
 			if (mWaterGun->damage()) {
-				unk154->mPos.value = mWaterGun->mEmitPos[0];
+				unk154->mPos.value = mWaterGun->getEmitPos(0);
 				gpModelWaterManager->emitRequest(*unk154);
 			}
 		}

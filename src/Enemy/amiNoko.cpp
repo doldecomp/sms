@@ -2,7 +2,6 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <M3DUtil/MActor.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSound.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <Map/Map.hpp>
@@ -86,9 +85,9 @@ BOOL TAmiHit::receiveMessage(THitActor* param_1, u32 param_2)
 	return unk68->receiveMessage(param_1, param_2);
 }
 
-void TAmiHit::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TAmiHit::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> vec = unk68->unk19C;
 		vec.normalize();
 		vec.scale(100.0f);
@@ -104,7 +103,7 @@ void TAmiHit::perform(u32 param_1, JDrama::TGraphics* param_2)
 			}
 		}
 	}
-	THitActor::perform(param_1, param_2);
+	THitActor::perform(cue, param_2);
 }
 
 TAmiNoko::TAmiNoko(const char* name)
@@ -136,7 +135,7 @@ void TAmiNoko::init(TLiveManager* param_1)
 	setWalkAnm();
 	onLiveFlag(LIVE_FLAG_UNK10);
 	initialGraphNode();
-	if (SMSGetMarDirector()->getCurrentMap() == 8)
+	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		unk210 = 0;
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	unkE8 = 0;
@@ -618,14 +617,14 @@ void TAmiNoko::bind()
 	}
 }
 
-void TAmiNoko::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TAmiNoko::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	if (param_1 & CUE_CALC_ANIM)
+	if (cue & CUE_CALC_ANIM)
 		calcDirection();
 #endif
-	TSmallEnemy::perform(param_1, param_2);
-	unk208->perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
+	unk208->perform(cue, param_2);
 }
 
 f32 TAmiNoko::getGravityY() const

@@ -26,9 +26,21 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMap* gpMap;
+
+static void initOption()
+{
+	TMapObjOptionWall* wall = new TMapObjOptionWall("オプション用壁");
+	wall->init();
+	TMapObjBase::joinToGroup("マップグループ", wall);
+}
+
+static void initSirena()
+{
+	if (SMSGetMarDirector()->getCurrentScenario() != 0)
+		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+}
 
 static void initMonte()
 {
@@ -40,18 +52,18 @@ static void initMonte()
 	obj->init("SeaIndirect");
 	group->getChildren().push_back(obj);
 
-	if (SMSGetMarDirector()->getCurrentStage() == 0
-	    || SMSGetMarDirector()->getCurrentStage() == 2
-	    || SMSGetMarDirector()->getCurrentStage() == 5
-	    || SMSGetMarDirector()->getCurrentStage() == 6) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 0
+	    || SMSGetMarDirector()->getCurrentScenario() == 2
+	    || SMSGetMarDirector()->getCurrentScenario() == 5
+	    || SMSGetMarDirector()->getCurrentScenario() == 6) {
 		SMS_LoadParticle("/scene/map/pollution/ms_newfire_b.jpa", 0x1DC);
 		SMS_LoadParticle("/scene/map/pollution/ms_newfire_a.jpa", 0x65);
 	}
 
-	if (SMSGetMarDirector()->getCurrentStage() == 1
-	    || SMSGetMarDirector()->getCurrentStage() == 3
-	    || SMSGetMarDirector()->getCurrentStage() == 5
-	    || SMSGetMarDirector()->getCurrentStage() == 7) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 1
+	    || SMSGetMarDirector()->getCurrentScenario() == 3
+	    || SMSGetMarDirector()->getCurrentScenario() == 5
+	    || SMSGetMarDirector()->getCurrentScenario() == 7) {
 		SMS_LoadParticle("/scene/map/map/ms_monte_yuge.jpa", 0x156);
 	}
 }
@@ -62,21 +74,21 @@ static void initMare()
 	    = static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
 	        JDrama::TNameRefGen::search("マップグループ"));
 
-	if (SMSGetMarDirector()->getCurrentStage() == 5) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 5) {
 		TMapStaticObj* gate = new TMapStaticObj("マーレ５ＥＸゲート");
 		gate->init("Mare5ExGate");
 		group->getChildren().push_back(gate);
 	}
 
-	if (SMSGetMarDirector()->getCurrentStage() == 0) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 0) {
 		SMS_LoadParticle("/scene/map/map/ms_mare_objup_a.jpa",
 		                 MAP_MAP_MS_MARE_OBJUP_A);
 		SMS_LoadParticle("/scene/map/map/ms_mare_objup_b.jpa",
 		                 MAP_MAP_MS_MARE_OBJUP_B);
 	}
 
-	if (SMSGetMarDirector()->getCurrentStage() != 0
-	    && SMSGetMarDirector()->getCurrentStage() != 0) {
+	if (SMSGetMarDirector()->getCurrentScenario() != 0
+	    && SMSGetMarDirector()->getCurrentScenario() != 0) {
 		for (int i = 1; i < 8; ++i)
 			TMapObjBase::newAndInitBuildingCollisionWarp(i, nullptr)->setUp();
 	}
@@ -114,6 +126,28 @@ static void initPinnaParco()
 }
 #pragma dont_inline off
 
+static void initPinnaBeach()
+{
+	SMS_LoadParticle("/scene/mapObj/SandSteam.jpa", 0x6A);
+}
+
+static void initBianco()
+{
+	if (SMSGetMarDirector()->getCurrentScenario() != 0) {
+		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	}
+}
+
+static void initDolpic()
+{
+	if (SMSGetMarDirector()->getCurrentScenario() != 5
+	    && SMSGetMarDirector()->getCurrentScenario() != 9) {
+		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	}
+}
+
 static void initStageCommon()
 {
 	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group
@@ -122,14 +156,14 @@ static void initStageCommon()
 	static_cast<JDrama::TViewObjPtrListT<JDrama::TViewObj>*>(
 	    JDrama::TNameRefGen::search("マップグループ"));
 
-	if (SMSGetMarDirector()->getCurrentMap() == 4
-	    || SMSGetMarDirector()->getCurrentMap() == 3
-	    || SMSGetMarDirector()->getCurrentMap() == 0xD
-	    || SMSGetMarDirector()->getCurrentMap() == 9
-	    || SMSGetMarDirector()->getCurrentMap() == 5
-	    || SMSGetMarDirector()->getCurrentMap() == 6
-	    || SMSGetMarDirector()->getCurrentMap() == 0x14
-	    || SMSGetMarDirector()->getCurrentMap() <= 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 4
+	    || SMSGetMarDirector()->getCurrentStage() == 3
+	    || SMSGetMarDirector()->getCurrentStage() == 0xD
+	    || SMSGetMarDirector()->getCurrentStage() == 9
+	    || SMSGetMarDirector()->getCurrentStage() == 5
+	    || SMSGetMarDirector()->getCurrentStage() == 6
+	    || SMSGetMarDirector()->getCurrentStage() == 0x14
+	    || SMSGetMarDirector()->getCurrentStage() <= 1) {
 		TMapStaticObj* sea = new TMapStaticObj("波（遠景）");
 		sea->init("sea");
 
@@ -147,7 +181,7 @@ static void initStageCommon()
 		sceneIndirect->init();
 		group->getChildren().push_back(sceneIndirect);
 	}
-	if (SMSGetMarDirector()->mMap == 2) {
+	if (SMSGetMarDirector()->getCurrentStage() == 2) {
 		TMapObjSeaIndirect* sceneIndirect
 		    = new TMapObjSeaIndirect("水中カメラインダイレクト");
 		sceneIndirect->init();
@@ -157,49 +191,36 @@ static void initStageCommon()
 
 static void initStage()
 {
-	if (SMSGetMarDirector()->getCurrentStage() > 9)
+	if (SMSGetMarDirector()->getCurrentScenario() > 9)
 		return;
 
 	initStageCommon();
 
-	switch (SMSGetMarDirector()->getCurrentMap()) {
-	case 1: { // Bianco
-		if (SMSGetMarDirector()->getCurrentStage() == 5
-		    || SMSGetMarDirector()->getCurrentStage() == 9)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
-		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	switch (SMSGetMarDirector()->getCurrentStage()) {
+	case 1:
+		initDolpic();
 		break;
-	}
-	case 2: // Ricco
-		if (SMSGetMarDirector()->getCurrentStage() == 0)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
-		TMapObjBase::newAndInitBuildingCollisionWarp(2, nullptr)->setUp();
+	case 2:
+		initBianco();
 		break;
-	case 9: // Mare
+	case 9:
 		initMare();
 		break;
-	case 8: // Monte
+	case 8:
 		initMonte();
 		break;
-	case 6: // Pinna
-		if (SMSGetMarDirector()->getCurrentStage() == 0)
-			break;
-		TMapObjBase::newAndInitBuildingCollisionWarp(1, nullptr)->setUp();
+	case 6:
+		initSirena();
 		break;
-	case 5: // Sirena
-		SMS_LoadParticle("/scene/mapObj/SandSteam.jpa", 0x6A);
+	case 5:
+		initPinnaBeach();
 		break;
-	case 13: // Pinna Parco
+	case 13:
 		initPinnaParco();
 		break;
-	case 15: { // Option
-		TMapObjOptionWall* wall = new TMapObjOptionWall("オプション用壁");
-		wall->init();
-		TMapObjBase::joinToGroup("マップグループ", wall);
+	case 15:
+		initOption();
 		break;
-	}
 	}
 }
 
@@ -209,17 +230,17 @@ void TMap::updateDelfino()
 	if (cube != mWarp->unk8) {
 		if (cube != -1)
 			mWarp->changeModel(cube);
-		else if (SMSGetMarDirector()->getCurrentStage() != 0)
+		else if (SMSGetMarDirector()->getCurrentScenario() != 0)
 			mWarp->changeModel(3);
 	}
 }
 
 void TMap::updateMonte()
 {
-	if (SMSGetMarDirector()->getCurrentStage() == 1
-	    || SMSGetMarDirector()->getCurrentStage() == 3
-	    || SMSGetMarDirector()->getCurrentStage() == 5
-	    || SMSGetMarDirector()->getCurrentStage() == 7)
+	if (SMSGetMarDirector()->getCurrentScenario() == 1
+	    || SMSGetMarDirector()->getCurrentScenario() == 3
+	    || SMSGetMarDirector()->getCurrentScenario() == 5
+	    || SMSGetMarDirector()->getCurrentScenario() == 7)
 		gpMarioParticleManager->emit(MAP_MAP_MS_MONTE_YUGE,
 		                             &gpMapObjManager->getUnk44(), 1, this);
 }
@@ -232,7 +253,7 @@ static void updateRicco()
 
 void TMap::update()
 {
-	switch (SMSGetMarDirector()->mMap) {
+	switch (SMSGetMarDirector()->getCurrentStage()) {
 	case 3:
 		updateRicco();
 		break;
@@ -246,14 +267,14 @@ void TMap::update()
 		break;
 	}
 
-	if (SMSGetMarDirector()->unk124 != 0)
+	if (!SMSGetMarDirector()->isGameplayModeNow())
 		return;
 
 	if (gpCamera->isDemoCamera())
 		return;
 
-	if (SMSGetMarDirector()->getCurrentMap() == 0x39
-	    || SMSGetMarDirector()->getCurrentMap() == 0x10)
+	if (SMSGetMarDirector()->getCurrentStage() == 0x39
+	    || SMSGetMarDirector()->getCurrentStage() == 0x10)
 		return;
 
 	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE))
@@ -294,6 +315,11 @@ const TBGCheckData* TMap::intersectLine(const JGeometry::TVec3<f32>& param_1,
                                         JGeometry::TVec3<f32>* param_4) const
 {
 	return mCollisionData->intersectLine(param_1, param_2, param_3, param_4);
+}
+
+bool TMap::isTouchedOneWall(const JGeometry::TVec3<f32>& pos, f32 radius) const
+{
+	return isTouchedOneWall(pos.x, pos.y, pos.z, radius);
 }
 
 bool TMap::isTouchedOneWall(f32 x, f32 y, f32 z, f32 radius) const
@@ -365,6 +391,12 @@ f32 TMap::checkGroundExactY(f32 x, f32 y, f32 z,
 	return mCollisionData->checkGround(x, y - -78.0f, z, 0, result);
 }
 
+f32 TMap::checkGroundExactY(const JGeometry::TVec3<f32>& pos,
+                            const TBGCheckData** result) const
+{
+	return mCollisionData->checkGround(pos.x, pos.y - -78.0f, pos.z, 0, result);
+}
+
 f32 TMap::checkGround(const JGeometry::TVec3<f32>& pos,
                       const TBGCheckData** result) const
 {
@@ -432,5 +464,3 @@ TMap::TMap(const char* name)
 
 	gpMap = this;
 }
-
-TMap::~TMap() { }

@@ -3,7 +3,7 @@
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoaderFlags.hpp>
 #include <MSound/SoundEffects.hpp>
 #include <MSound/MSoundSE.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <Camera/Camera.hpp>
 #include <Camera/CubeManagerBase.hpp>

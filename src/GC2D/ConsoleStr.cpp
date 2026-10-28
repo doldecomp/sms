@@ -21,9 +21,6 @@
 
 extern JPAEmitterManager* gpEmitterManager4D2;
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
 JUTPoint TConsoleStr::cShineGetRight1(150, -50);
 JUTPoint TConsoleStr::cShineGetLeft1(-21, 7);
 JUTPoint TConsoleStr::cShineGetRight2(0, 0);
@@ -143,12 +140,12 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	unk298[0] = new TExPane(unk14, 'wp_l');
 	unk298[1] = new TExPane(unk14, 'wp_r');
 
-	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->mMap);
+	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
 	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
 	void* pvVar10 = JKRGetResource(COMMON2D "/stagename.bmg");
 	mMapStoryTitles[0]->setString(SMSGetMessageData(pvVar10, uVar1));
 
-	if (SMSGetMarDirector()->mMap != 15) {
+	if (SMSGetMarDirector()->getCurrentStage() != 15) {
 		void* pvVar10 = JKRGetResource(COMMON2D "/scenarioname.bmg");
 
 		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
@@ -166,15 +163,14 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 void TConsoleStr::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	unk2AC[0] = nullptr;
-	unk2AC[1] = nullptr;
-	unk2AC[2] = nullptr;
+	for (int i = 0; i < 3; ++i)
+		unk2AC[i] = nullptr;
 }
 
 void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
-		if (SMSGetMarDirector()->mState != 5) {
+		if (SMSGetMarDirector()->getState() != 5) {
 			bool bVar6 = false;
 
 			switch (unk2B8) {
@@ -267,14 +263,15 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if (!unk2A9
-		    && SMSGetMarDirector()->mState != TMarDirector::STATE_UNK4) {
+		    && SMSGetMarDirector()->getState() != TMarDirector::STATE_UNK4) {
 			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->stopCreateParticle();
 			unk2A9 = true;
 		}
 
-		if (unk2A9 && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK4) {
+		if (unk2A9
+		    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4) {
 			for (int i = 0; i < ARRAY_COUNT(unk2AC); ++i)
 				if (unk2AC[i])
 					unk2AC[i]->playCreateParticle();

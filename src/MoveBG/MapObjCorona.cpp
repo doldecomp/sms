@@ -24,7 +24,6 @@
 #include <GC2D/GCConsole2.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/SoundEffects.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <stdio.h>
 
 TBathtubParams::TBathtubParams()
@@ -545,7 +544,7 @@ void TBathtub::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_MOVE) {
-		int ticks = SMSGetMarDirector()->mMoveTickCount;
+		int ticks = SMSGetMarDirector()->getMoveTickCount();
 		switch (getNumGripsDead()) {
 		case 0:
 			if (ticks >= 7200)
@@ -817,7 +816,7 @@ bool TBathtub::allowsTumble() const
 		TNozzleTrigger* nozzle
 		    = static_cast<TNozzleTrigger*>(fludd->getCurrentNozzle());
 		if (nozzle != nullptr && nozzle->getNozzleKind() == TWaterGun::Rocket
-		    && nozzle->mInsidePressure > 0.0f)
+		    && nozzle->getInsidePressure() > 0.0f)
 			return false;
 	}
 	return manager->countActiveKillers() == 0;
@@ -877,7 +876,7 @@ f32 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos,
 	JGeometry::TVec3<f32> normal;
 	normal.normalize(delta);
 	JGeometry::TVec3<f32> tangent;
-	tangent.scaleAdd(-normal.dot(direction), direction, normal);
+	tangent.scaleAdd(-normal.dot(direction), normal, direction);
 	delta += tangent;
 	f32 localZ = zDir.dot(delta);
 	f32 localX = xDir.dot(delta);
@@ -982,7 +981,7 @@ void TBathtub::updatePosture_()
 		axis.normalize();
 		f32 rebound = unk16C->rebound.get();
 		axis.scale(rebound * (rate * -acosf(y.dot(up))));
-		unk1E8.scaleAdd(unk16C->angleVelDamp.get(), axis, unk1E8);
+		unk1E8.scaleAdd(unk16C->angleVelDamp.get(), unk1E8, axis);
 	} else {
 		unk250--;
 	}

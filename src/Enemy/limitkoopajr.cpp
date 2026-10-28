@@ -1,6 +1,6 @@
 #include <Enemy/LimitKoopaJr.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Map/MapCollisionEntry.hpp>
 #include <MSound/MSSetSound.hpp>
@@ -87,7 +87,7 @@ void TLimitKoopaJr::resetLimitKoopaJr()
 	unk170.unk0 = 0.0f;
 }
 
-void TLimitKoopaJr::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLimitKoopaJr::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (mKoopa == nullptr) {
 		TEnemyManager* manager = static_cast<TEnemyManager*>(
@@ -97,11 +97,11 @@ void TLimitKoopaJr::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (mBathtub == nullptr)
 		mBathtub
 		    = static_cast<TBathtub*>(JDrama::TNameRefGen::search("バスタブ"));
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		updateTimers();
 		checkNerve();
 	}
-	TSpineEnemy::perform(param_1, param_2);
+	TSpineEnemy::perform(cue, param_2);
 }
 
 void TLimitKoopaJr::bind() { }

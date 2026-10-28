@@ -16,7 +16,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 bool TEnemyManager::mIsCopyAnmMtx = true;
 
@@ -260,7 +259,7 @@ void TEnemyManager::copyFromShared()
 	j3dSys.setViewMtx(afStack_88);
 }
 
-void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
+void TEnemyManager::performShared(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (unk30 & 1)
 		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
@@ -277,7 +276,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		return;
 	}
 
-	if (param_1 & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		clipEnemies(param_2);
 		for (int i = 0; i < unk44; ++i)
 			for (int j = 0; j < unk40[i].unk4; ++j)
@@ -286,7 +285,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		updateAnmSoundShared();
 	}
 
-	if (param_1 & CUE_CALC_VIEW)
+	if (cue & CUE_CALC_VIEW)
 		copyFromShared();
 
 	if (unk30 & 1) {
@@ -295,7 +294,7 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 	}
 
 	int num = getActiveObjNum();
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		for (int i = num; i < mObjNum; ++i)
 			getObj(i)->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
@@ -305,10 +304,10 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 		if (enemy->checkLiveFlag(LIVE_FLAG_DEAD))
 			continue;
 
-		if (param_1 & CUE_MOVE)
+		if (cue & CUE_MOVE)
 			enemy->moveObject();
 
-		if (param_1 & CUE_CALC_ANIM) {
+		if (cue & CUE_CALC_ANIM) {
 			enemy->updateSquareToMario();
 			enemy->calcRootMatrix();
 			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)) {
@@ -322,15 +321,15 @@ void TEnemyManager::performShared(u32 param_1, JDrama::TGraphics* param_2)
 				enemy->getMActor()->matAnmFrameUpdate();
 			}
 
-			if (param_1 & CUE_CALC_VIEW)
+			if (cue & CUE_CALC_VIEW)
 				enemy->requestShadow();
 
 			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
 			                          | LIVE_FLAG_CLIPPED_OUT)) {
-				if ((param_1 & CUE_CALC_VIEW)
+				if ((cue & CUE_CALC_VIEW)
 				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
 					enemy->getMActor()->viewCalc();
-				if (param_1 & CUE_ENTRY) {
+				if (cue & CUE_ENTRY) {
 					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
 					                                 enemy->mPosition);
 					enemy->getMActor()->entry();

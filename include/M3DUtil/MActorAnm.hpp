@@ -7,6 +7,13 @@
 #include <System/Application.hpp>
 #include <string.h>
 
+static const char* MtxCalcTypeName[] = {
+	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
+	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
+	"MActorMtxCalcType_MotionBlend モーションブレンド",
+	"MActorMtxCalcType_User ユーザー定義",
+};
+
 class J3DModel;
 class J3DAnmClusterKey;
 class J3DAnmTevRegKey;
@@ -27,29 +34,31 @@ class J3DMtxCalcSoftimageAnm;
 class TMotionBlendCtrl;
 
 class MActorAnmBase {
-public:
-	/* 0x0 */ s32 unk0;
-	/* 0x4 */ J3DFrameCtrl unk4;
-	/* 0x18 */ J3DModel* unk18;
-	/* 0x1C */ MActorAnmDataBase* unk1C;
+protected:
+	/* 0x0 */ s32 mCurAnmIdx;
+	/* 0x4 */ J3DFrameCtrl mFrameCtrl;
+	/* 0x18 */ J3DModel* mModel;
+	/* 0x1C */ MActorAnmDataBase* mAnmData;
 
 public:
 	MActorAnmBase()
-	    : unk0(-1)
-	    , unk18(nullptr)
-	    , unk1C(nullptr)
+	    : mCurAnmIdx(-1)
+	    , mModel(nullptr)
+	    , mAnmData(nullptr)
 	{
 	}
 	~MActorAnmBase() { }
 
 	// fabricated
-	J3DFrameCtrl* getFrameCtrl() { return &unk4; }
-	s32 getCurIdx() { return unk0; }
-	void setUnk1C(MActorAnmDataBase* param_1) { unk1C = param_1; }
+	J3DFrameCtrl* getFrameCtrl() { return &mFrameCtrl; }
+	s32 getCurAnmIdx() { return mCurAnmIdx; }
+	void setAnmData(MActorAnmDataBase* param_1) { mAnmData = param_1; }
+	void stopAnm() { mCurAnmIdx = -1; }
 
 	BOOL endsNext()
 	{
-		if (unk4.getFrame() + unk4.getRate() + 0.1f >= unk4.getEnd())
+		if (mFrameCtrl.getFrame() + mFrameCtrl.getRate() + 0.1f
+		    >= mFrameCtrl.getEnd())
 			return true;
 		else
 			return false;
@@ -61,8 +70,8 @@ public:
 
 		int totalKeyMatches = 0;
 		int match           = -1;
-		for (int i = 0; i < unk1C->getAnmNum(); ++i)
-			if (key == unk1C->getKeyCode(i)) {
+		for (int i = 0; i < mAnmData->getAnmNum(); ++i)
+			if (key == mAnmData->getKeyCode(i)) {
 				++totalKeyMatches;
 				match = i;
 			}
@@ -70,12 +79,12 @@ public:
 		if (totalKeyMatches == 1)
 			return match;
 
-		for (int i = 0; i < unk1C->getAnmNum(); ++i)
-			if (key == unk1C->getKeyCode(i)
-			    && strcmp(name, unk1C->getName(i)) == 0)
+		for (int i = 0; i < mAnmData->getAnmNum(); ++i)
+			if (key == mAnmData->getKeyCode(i)
+			    && strcmp(name, mAnmData->getName(i)) == 0)
 				return i;
 
-		unk1C->checkLower(name);
+		mAnmData->checkLower(name);
 		verifySuffix(name);
 		return -1;
 	}
@@ -86,8 +95,8 @@ public:
 
 		int totalKeyMatches = 0;
 		int match           = -1;
-		for (int i = 0; i < unk1C->getAnmNum(); ++i)
-			if (key == unk1C->getKeyCode(i)) {
+		for (int i = 0; i < mAnmData->getAnmNum(); ++i)
+			if (key == mAnmData->getKeyCode(i)) {
 				++totalKeyMatches;
 				match = i;
 			}
@@ -98,15 +107,15 @@ public:
 		if (totalKeyMatches == 1)
 			return match;
 
-		for (int i = 0; i < unk1C->getAnmNum(); ++i)
-			if (key == unk1C->getKeyCode(i)
-			    && strcmp(name, unk1C->getName(i)) == 0)
+		for (int i = 0; i < mAnmData->getAnmNum(); ++i)
+			if (key == mAnmData->getKeyCode(i)
+			    && strcmp(name, mAnmData->getName(i)) == 0)
 				return i;
 
 		return -1;
 	}
 
-	virtual void setModel(J3DModel* model) { unk18 = model; }
+	virtual void setModel(J3DModel* model) { mModel = model; }
 	virtual void updateIn() { }
 	virtual void updateOut() { }
 	virtual void checkUseMaterialIDInit(u16*);
@@ -118,7 +127,7 @@ public:
 
 template <class T> class MActorAnmEach : public MActorAnmBase {
 public:
-	MActorAnmEach() { unk24 = nullptr; }
+	MActorAnmEach() { mCurAnmPtr = nullptr; }
 	~MActorAnmEach() { }
 
 	virtual void setAnm(const char* name, u16* param_2)
@@ -127,17 +136,17 @@ public:
 	}
 
 	// matches in bossgesso.cpp
-	bool setFrameCtrl(int param_1)
+	bool setFrameCtrl(int anm_idx)
 	{
-		unk0 = param_1;
+		mCurAnmIdx = anm_idx;
 
-		if (param_1 < 0)
+		if (anm_idx < 0)
 			return false;
 
-		unk24 = getData()->getAnmPtr(param_1);
-		unk4.init(unk24->getFrameMax());
-		unk4.setAttribute(unk24->getAttribute());
-		unk4.setRate(SMSGetAnmFrameRate());
+		mCurAnmPtr = getData()->getAnmPtr(anm_idx);
+		mFrameCtrl.init(mCurAnmPtr->getFrameMax());
+		mFrameCtrl.setAttribute(mCurAnmPtr->getAttribute());
+		mFrameCtrl.setRate(SMSGetAnmFrameRate());
 
 		return true;
 	}
@@ -145,33 +154,24 @@ public:
 	// fabricated
 	MActorAnmDataEach<T>* getData()
 	{
-		return static_cast<MActorAnmDataEach<T>*>(unk1C);
+		return static_cast<MActorAnmDataEach<T>*>(mAnmData);
 	}
 
-public:
-	/* 0x24 */ T* unk24;
+	T* getCurAnmPtr() { return mCurAnmPtr; }
+
+protected:
+	/* 0x24 */ T* mCurAnmPtr;
 };
 
 template <class T> class MActorAnmMatEach : public MActorAnmEach<T> {
 public:
 	~MActorAnmMatEach() { }
 
-	virtual void setAnmFromIndex(int param_1, u16* param_2)
+	virtual void setAnmFromIndex(int anm_idx, u16* param_2)
 	{
-		this->unk0 = param_1;
-		bool thing;
-		if (param_1 < 0) {
-			thing = false;
-		} else {
-			this->unk24 = this->getData()->getAnmPtr(param_1);
-			this->unk4.init(this->unk24->getFrameMax());
-			this->unk4.setAttribute(this->unk24->getAttribute());
-			this->unk4.setRate(SMSGetAnmFrameRate());
-			thing = true;
-		}
-
-		if (thing) {
-			this->unk24->searchUpdateMaterialID(this->unk18->getModelData());
+		if (this->setFrameCtrl(anm_idx)) {
+			this->mCurAnmPtr->searchUpdateMaterialID(
+			    this->mModel->getModelData());
 			this->checkUseMaterialID(param_2);
 		}
 	}
@@ -179,7 +179,7 @@ public:
 
 class MActorAnmBlk : public MActorAnmEach<J3DAnmClusterKey> {
 public:
-	MActorAnmBlk() { unk28 = nullptr; }
+	MActorAnmBlk() { mDeformData = nullptr; }
 
 	virtual void updateIn();
 	virtual void updateOut();
@@ -189,8 +189,8 @@ public:
 		return strstr(param_1, ".blk");
 	}
 
-public:
-	/* 0x28 */ J3DDeformData* unk28;
+private:
+	/* 0x28 */ J3DDeformData* mDeformData;
 };
 
 class MActorAnmBrk : public MActorAnmMatEach<J3DAnmTevRegKey> {
@@ -209,14 +209,14 @@ public:
 	void setTevKColorAnmKeyPtr();
 	void setTevColorAnmKeyPtr();
 
-public:
-	/* 0x28 */ J3DTevColorAnm** unk28;
-	/* 0x2C */ J3DTevKColorAnm** unk2C;
+private:
+	/* 0x28 */ J3DTevColorAnm** mTevColorAnms;
+	/* 0x2C */ J3DTevKColorAnm** mTevKColorAnms;
 };
 
 class MActorAnmBpk : public MActorAnmMatEach<J3DAnmColorKey> {
 public:
-	MActorAnmBpk() { unk28 = nullptr; }
+	MActorAnmBpk() { mMatColorAnms = nullptr; }
 
 	virtual void updateIn();
 	virtual void updateOut();
@@ -229,13 +229,13 @@ public:
 
 	void setMatColorAnmKeyPtr();
 
-public:
-	/* 0x28 */ J3DMatColorAnm** unk28;
+private:
+	/* 0x28 */ J3DMatColorAnm** mMatColorAnms;
 };
 
 class MActorAnmBtk : public MActorAnmMatEach<J3DAnmTextureSRTKey> {
 public:
-	MActorAnmBtk() { unk28 = nullptr; }
+	MActorAnmBtk() { mTexMtxAnms = nullptr; }
 
 	virtual void updateIn();
 	virtual void updateOut();
@@ -248,13 +248,13 @@ public:
 
 	void setTexMtxAnmKeyPtr();
 
-public:
-	/* 0x28 */ J3DTexMtxAnm** unk28;
+private:
+	/* 0x28 */ J3DTexMtxAnm** mTexMtxAnms;
 };
 
 class MActorAnmBtp : public MActorAnmMatEach<J3DAnmTexPattern> {
 public:
-	MActorAnmBtp() { unk28 = nullptr; }
+	MActorAnmBtp() { mTexNoAnms = nullptr; }
 
 	virtual void updateIn();
 	virtual void updateOut();
@@ -267,27 +267,27 @@ public:
 
 	void setTexNoAnmFullPtr();
 
-public:
-	/* 0x28 */ J3DTexNoAnm** unk28;
+private:
+	/* 0x28 */ J3DTexNoAnm** mTexNoAnms;
 };
 
 enum MActorMtxCalcType {
-	MACTOR_MTX_CALC_BASIC,
-	MACTOR_MTX_CALC_SOFTIMAGE,
-	MACTOR_MTX_CALC_MOTION_BLEND,
-	MACTOR_MTX_CALC_USER,
+	MActorMtxCalcType_Basic,
+	MActorMtxCalcType_Softimage,
+	MActorMtxCalcType_MotionBlend,
+	MActorMtxCalcType_User,
 };
 
 class MActorAnmBck : public MActorAnmEach<J3DAnmTransformKey> {
 public:
 	MActorAnmBck()
 	{
-		unk28 = 0;
-		unk2A = MACTOR_MTX_CALC_SOFTIMAGE;
-		unk2C = nullptr;
-		unk30 = nullptr;
-		unk34 = nullptr;
-		unk38 = nullptr;
+		mJointIndex       = 0;
+		mMtxCalcType      = MActorMtxCalcType_Softimage;
+		mMtxCalcBasic     = nullptr;
+		mMtxCalcSoftimage = nullptr;
+		mMotionBlendCtrl  = nullptr;
+		mUserMtxCalc      = nullptr;
 	}
 
 	virtual void updateIn();
@@ -299,34 +299,37 @@ public:
 	}
 
 	void setModel(J3DModel* model);
-	float getOldMotionBlendFrame() const;
-	void setOldMotionBlendAnmPtr(J3DAnmTransform*);
+	f32 getOldMotionBlendFrame() const;
+	void setOldMotionBlendAnmPtr(J3DAnmTransform* anm_ptr);
 	J3DAnmTransform* getOldMotionBlendAnmPtr() const;
-	void setMotionBlendRatio(float);
-	float getMotionBlendRatio() const;
+	void setMotionBlendRatio(f32 ratio);
+	f32 getMotionBlendRatio() const;
 	void initNormalMotionBlend();
 	void initSimpleMotionBlend(int);
 	void changeMtxCalcType(u8);
 
 	// fabricated
-	u8 getMtxCalcType() const { return unk2A; }
+	u8 getMtxCalcType() const { return mMtxCalcType; }
 
 	// fabricated
 	void setCalc(J3DMtxCalc* calc)
 	{
-		unk38 = calc;
-		unk2A = MACTOR_MTX_CALC_USER;
+		mUserMtxCalc = calc;
+		mMtxCalcType = MActorMtxCalcType_User;
 	}
 
-	void setUnk28(u16 value) { unk28 = value; }
+	// fabricated for bosswanwan.cpp
+	void setCalcType(u8 type) { mMtxCalcType = type; }
+
+	void setJointIndex(u16 value) { mJointIndex = value; }
 
 private:
-	/* 0x28 */ u16 unk28;
-	/* 0x2A */ u8 unk2A;
-	/* 0x2C */ J3DMtxCalcBasicAnm* unk2C;
-	/* 0x30 */ J3DMtxCalcSoftimageAnm* unk30;
-	/* 0x34 */ TMotionBlendCtrl* unk34;
-	/* 0x38 */ J3DMtxCalc* unk38;
+	/* 0x28 */ u16 mJointIndex;
+	/* 0x2A */ u8 mMtxCalcType;
+	/* 0x2C */ J3DMtxCalcBasicAnm* mMtxCalcBasic;
+	/* 0x30 */ J3DMtxCalcSoftimageAnm* mMtxCalcSoftimage;
+	/* 0x34 */ TMotionBlendCtrl* mMotionBlendCtrl;
+	/* 0x38 */ J3DMtxCalc* mUserMtxCalc;
 };
 
 #endif

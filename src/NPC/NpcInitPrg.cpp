@@ -27,7 +27,6 @@
 #include <NPC/NpcNerve.hpp>
 
 // rogue
-#include <M3DUtil/InfectiousStrings.hpp>
 static const char dummy5[] = "__ROOT_JOINT__";
 
 static const char* cManiyaParentViewObjName    = "マニ屋親タヌキ";
@@ -169,7 +168,7 @@ void TBaseNPC::init(TLiveManager* param_1)
 	onLiveFlag(LIVE_FLAG_UNK1000000);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	onLiveFlag(LIVE_FLAG_UNK1000);
-	if (SMSGetMarDirector()->mMap != 8
+	if (SMSGetMarDirector()->getCurrentStage() != 8
 	    || (strcmp(mName, cNotUseFastCubeViewObjName0) != 0
 	        && strcmp(mName, cNotUseFastCubeViewObjName1) != 0)) {
 		onLiveFlag(LIVE_FLAG_UNK2000);
@@ -455,12 +454,12 @@ void TBaseNPC::setIndividualDifference_(JSUMemoryInputStream& stream)
 	bool bVar3 = true;
 	if (local_a8 == 2000 || local_a8 == 200
 	    || (local_a8 >= 0 && local_a8 < 50)) {
-		bool bVar5
-		    = local_a8 >= 0 && local_a8 < 50
-		              && TFlagManager::getInstance()->getBlueCoinFlag(
-		                  SMSGetApplication()->mCurrArea.getStage(), local_a8)
-		          ? true
-		          : false;
+		bool bVar5 = local_a8 >= 0 && local_a8 < 50
+		                     && TFlagManager::getInstance()->getBlueCoinFlag(
+		                         SMSGetApplication()->getCurrArea().getStage(),
+		                         local_a8)
+		                 ? true
+		                 : false;
 
 		if (bVar4 && bVar5) {
 			bVar3 = false;

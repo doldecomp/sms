@@ -31,7 +31,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 f32 THamuKuri::mCapGravityY         = 0.15f;
 f32 THamuKuri::mCapSpeed            = 12.0f;
@@ -776,7 +775,7 @@ bool THamuKuri::isFindMario(f32 param_1)
 		return false;
 
 	if (gpMarioOriginal->mUpperState == TMario::UPPER_STATE_PUMPING
-	    && gpMarioOriginal->mWaterGun->mCurrentWater == 0) {
+	    && gpMarioOriginal->getWaterGun()->getCurrentWater() == 0) {
 		unk194 = unk1F4->mSLGiveUpLength.get();
 		unk194 *= 3.0f;
 		return TSmallEnemy::isFindMario(param_1 * 5.0f);

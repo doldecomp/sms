@@ -28,7 +28,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TModelWaterManager* gpModelWaterManager;
 TWaterHitActor TModelWaterManager::mStaticHitActor;
@@ -215,8 +215,8 @@ void TModelWaterManager::loadAfter()
 
 	f32 fVar1 = flag / 60.0f;
 
-	if (SMSGetMarDirector()->getCurrentMap() == 1
-	    && SMSGetMarDirector()->getCurrentStage() == 2)
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    && SMSGetMarDirector()->getCurrentScenario() == 2)
 		fVar1 = 1.0f;
 
 	if (fVar1 < 1.0f)
@@ -266,8 +266,7 @@ void TModelWaterManager::makeEmit(const TWaterEmitInfo& param_1)
 		local_3c.y = rand11();
 		local_3c.z = rand11();
 
-		f32 dirScale = param_1.mDirTremble.get();
-		VECScale(&local_3c, &local_3c, dirScale);
+		VECScale(&local_3c, &local_3c, param_1.mDirTremble.get());
 		VECAdd(param_1.mDir.get(), &local_3c, &local_3c);
 		if (local_3c.x == 0.0f && local_3c.y == 0.0f && local_3c.z == 0.0f)
 			local_3c.y = -1.0f;
@@ -741,37 +740,31 @@ void TModelWaterManager::calcWorldMinMax()
 		return;
 	}
 
-	JGeometry::TVec3<f32> min;
-	JGeometry::TVec3<f32> max;
-	min.x = mParticlePositionSOA[0].x - 1.0f;
-	min.y = mParticlePositionSOA[0].y - 1.0f;
-	min.z = mParticlePositionSOA[0].z - 1.0f;
-	max.x = 1.0f + mParticlePositionSOA[0].x;
-	max.y = 1.0f + mParticlePositionSOA[0].y;
-	max.z = 1.0f + mParticlePositionSOA[0].z;
+	f32 minX = mParticlePositionSOA[0].x - 1.0f;
+	f32 minY = mParticlePositionSOA[0].y - 1.0f;
+	f32 minZ = mParticlePositionSOA[0].z - 1.0f;
+	f32 maxX = 1.0f + mParticlePositionSOA[0].x;
+	f32 maxY = 1.0f + mParticlePositionSOA[0].y;
+	f32 maxZ = 1.0f + mParticlePositionSOA[0].z;
 
 	for (int i = 1; i < mParticleCount; ++i) {
-		if (min.x > mParticlePositionSOA[i].x)
-			min.x = mParticlePositionSOA[i].x;
-		if (min.y > mParticlePositionSOA[i].y)
-			min.y = mParticlePositionSOA[i].y;
-		if (min.z > mParticlePositionSOA[i].z)
-			min.z = mParticlePositionSOA[i].z;
+		if (minX > mParticlePositionSOA[i].x)
+			minX = mParticlePositionSOA[i].x;
+		if (minY > mParticlePositionSOA[i].y)
+			minY = mParticlePositionSOA[i].y;
+		if (minZ > mParticlePositionSOA[i].z)
+			minZ = mParticlePositionSOA[i].z;
 
-		if (max.x < mParticlePositionSOA[i].x)
-			max.x = mParticlePositionSOA[i].x;
-		if (max.y < mParticlePositionSOA[i].y)
-			max.y = mParticlePositionSOA[i].y;
-		if (max.z < mParticlePositionSOA[i].z)
-			max.z = mParticlePositionSOA[i].z;
+		if (maxX < mParticlePositionSOA[i].x)
+			maxX = mParticlePositionSOA[i].x;
+		if (maxY < mParticlePositionSOA[i].y)
+			maxY = mParticlePositionSOA[i].y;
+		if (maxZ < mParticlePositionSOA[i].z)
+			maxZ = mParticlePositionSOA[i].z;
 	}
 
-	unk5D70.x = min.x - 200.0f;
-	unk5D70.y = min.y - 200.0f;
-	unk5D70.z = min.z - 200.0f;
-	unk5D7C.x = 200.0f + max.x;
-	unk5D7C.y = 200.0f + max.y;
-	unk5D7C.z = 200.0f + max.z;
+	unk5D70.set(minX - 200.0f, minY - 200.0f, minZ - 200.0f);
+	unk5D7C.set(200.0f + maxX, 200.0f + maxY, 200.0f + maxZ);
 }
 
 void TModelWaterManager::calcDrawVtx(MtxPtr viewMtx)
@@ -1249,7 +1242,7 @@ void TModelWaterManager::drawMirror(MtxPtr param_1)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 	Mtx afStack_ec;
 	MTXIdentity(afStack_ec);
-	gpMirrorModelManager->unk24->drawSetting(afStack_ec);
+	gpMirrorModelManager->mMirrorCamera->drawSetting(afStack_ec);
 	GXSetCullMode(GX_CULL_NONE);
 	GXSetCurrentMtx(GX_PNMTX0);
 	GXLoadPosMtxImm(param_1, GX_PNMTX0);
@@ -1679,14 +1672,14 @@ void init_sphere_glist()
 
 void TModelWaterManager::drawShineShadowVolume(MtxPtr param_1)
 {
-	if (SMSGetMarDirector()->getCurrentMap() == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
 		static bool initialized = false;
 		if (!initialized) {
 			init_sphere_glist();
 			initialized = 1;
 		}
 
-		Vec shinePos = { 0.0f, 3600.0f, -7458.0f };
+		Vec shinePos = (Vec) { 0.0f, 3600.0f, -7458.0f };
 
 		int r31 = unk5E44;
 		f32 f30 = (((unk5E0C + unk5E40) - unk5E0C) / f32(r31 - 1));
@@ -1937,7 +1930,7 @@ void TModelWaterManager::perform(u32 cue, JDrama::TGraphics* graphics)
 		drawSilhouette(r29);
 		drawWaterVolume(r29);
 
-		if ((unk5D60 & 0x1) && !gpMirrorModelManager->isUnk18Present())
+		if ((unk5D60 & 0x1) && !gpMirrorModelManager->isMirrorActive())
 			drawMirror(r29);
 
 		MTXCopy(r29, unk5E10);

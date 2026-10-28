@@ -4,7 +4,7 @@
 #include <Enemy/Graph.hpp>
 #include <Strategic/Spine.hpp>
 
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TTypicalEnemy::TTypicalEnemy(const char* name)
     : TSpineEnemy(name)

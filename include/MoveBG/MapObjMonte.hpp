@@ -111,7 +111,7 @@ public:
 	static f32 mReturnAccelRate;
 	static f32 mSpeedDownRate;
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
@@ -192,7 +192,7 @@ public:
 		STATE_UNK3 = 0x3,
 	};
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;

@@ -12,6 +12,7 @@
 #include <Camera/CameraJetCoaster.hpp>
 #include <Camera/CameraMapTool.hpp>
 #include <Camera/CameraMarioData.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <Player/Mario.hpp>
 #include <Player/MarioAccess.hpp>
 #include <Map/Map.hpp>
@@ -19,18 +20,7 @@
 #include <macros.h>
 #include <stdio.h>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 CPolarSubCamera* gpCamera;
 
@@ -101,8 +91,8 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 		mSaveKindParam[i] = new TCamSaveKindParam(mCamKindNameSaveFile[i]);
 	if (SMS_isMultiPlayerMap())
 		createMultiPlayer(4);
-	int stage = SMSGetMarDirector()->getCurrentStage();
-	if (SMSGetMarDirector()->getCurrentMap() == 58
+	int stage = SMSGetMarDirector()->getCurrentScenario();
+	if (SMSGetMarDirector()->getCurrentStage() == 58
 	    && (stage == 0 || stage == 1)) {
 		unk64 |= CAMERA_FLAG_JET_COASTER_SCENE;
 		unk2B8 = new TCameraJetCoaster;
@@ -121,7 +111,7 @@ CPolarSubCamera::CPolarSubCamera(const char* name)
 void CPolarSubCamera::startJetCoasterCam1()
 {
 	unk2B0->startDemo(cJetCoasterCam1BckName, nullptr);
-	unk2B0->setFrame(SMSGetMarDirector()->mMoveTickCount * 0.5f);
+	unk2B0->setFrame(SMSGetMarDirector()->getMoveTickCount() * 0.5f);
 }
 
 static s32 JetCoasterDemoCallBack(uintptr_t param_1, u32 param_2)
@@ -136,7 +126,7 @@ void CPolarSubCamera::loadAfter()
 {
 	JDrama::TLookAtCamera::loadAfter();
 	mInitialMode = CAMERA_MODE_FOLLOW;
-	if (SMSGetMarDirector()->getCurrentMap() == 7) {
+	if (SMSGetMarDirector()->getCurrentStage() == 7) {
 		mInitialMode = CAMERA_MODE_DELFINO;
 	} else if (SMS_isExMap()) {
 		mInitialMode = CAMERA_MODE_EX_MAP_0;
@@ -160,7 +150,7 @@ void CPolarSubCamera::loadAfter()
 
 	char acStack_54[0x40];
 	snprintf(acStack_54, 0x40, "%s%d", cStartAfterCamName,
-	         SMSGetMarDirector()->unkD0);
+	         SMSGetMarDirector()->getMarioPosIdx());
 	TCameraMapTool* tool2 = (TCameraMapTool*)gpCamMapToolTable->searchF(
 	    JDrama::TNameRef::calcKeyCode(acStack_54), acStack_54);
 	if (tool2) {
@@ -244,7 +234,7 @@ void CPolarSubCamera::loadAfter()
 	calcExternalData_();
 
 	if ((unk64 & CAMERA_FLAG_JET_COASTER_SCENE)
-	    && SMSGetMarDirector()->unk7D == 1) {
+	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		SMSGetMarDirector()->fireStartDemoCamera(
 		    cJetCoasterDemoBckName, nullptr, -1, 0.0f, true,
 		    &JetCoasterDemoCallBack, (uintptr_t)this, nullptr,
@@ -888,7 +878,8 @@ void CPolarSubCamera::ctrlGameCamera_()
 
 	mPreviousTarget = mCurrentTarget;
 
-	if (SMSGetMarDirector()->mState == 4 && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
+	if (SMSGetMarDirector()->getState() == 4
+	    && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
 			if (!SMSGetMarDirector()->isTalkModeNow())
 				changeCamMode_(mInitialMode);
@@ -997,8 +988,8 @@ void CPolarSubCamera::perform(u32 cue, JDrama::TGraphics* graphics)
 			for (int j = 0; j < 4; ++j)
 				graphics->mProjMtx.mMtx[i][j] = unk16C[i][j];
 		graphics->setViewMtx(unk1EC);
-		graphics->mNearPlane = mNear;
-		graphics->mFarPlane  = mFar;
+		graphics->setNearPlane(mNear);
+		graphics->setFarPlane(mFar);
 		if (cue & CUE_SET_PROJECTION)
 			GXSetProjection(graphics->mProjMtx.mMtx, GX_PERSPECTIVE);
 	}

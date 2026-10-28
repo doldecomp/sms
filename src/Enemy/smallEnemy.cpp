@@ -36,18 +36,8 @@
 // TODO: this definitely means that the no memory msg & zeros are from a
 // different header than mtx calc types
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
 // NOTE: has to be here for proper rodata order
 #include <Map/MapCollisionEntry.hpp>
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
 
 int TSmallEnemyManager::mBlockWaitTime   = 400;
 f32 TSmallEnemyManager::mBlockMoveSpeed  = 2.0f;
@@ -179,8 +169,8 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	setMActorAndKeeper();
 
 	onLiveFlag(LIVE_FLAG_DEAD);
-	if (SMSGetMarDirector()->getCurrentMap() == 2
-	    && SMSGetMarDirector()->getCurrentStage() == 0)
+	if (SMSGetMarDirector()->getCurrentStage() == 2
+	    && SMSGetMarDirector()->getCurrentScenario() == 0)
 		onLiveFlag(LIVE_FLAG_UNK2000);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk158 = 1.0f;
@@ -246,8 +236,9 @@ void TSmallEnemy::attackToMario()
 	// TODO: wtf
 	JGeometry::TVec3<f32> local_14(0, 0, 0);
 
-	JGeometry::TVec3<f32> local_20;
-	local_20.sub(mPosition, SMS_GetMarioPos());
+	JGeometry::TVec3<f32> local_20(mPosition.x - SMS_GetMarioPos().x,
+	                               mPosition.y - SMS_GetMarioPos().y,
+	                               mPosition.z - SMS_GetMarioPos().z);
 	MsVECNormalize(&local_20, &local_20);
 	mVelocity.x = local_20.x;
 	mVelocity.z = local_20.z;
@@ -783,12 +774,7 @@ bool TSmallEnemy::isFindMario(float param_1)
 	if (isAirborne())
 		return false;
 
-	bool result = false;
-
-	if (!isMarioInWater() && isFindMarioFromParam(param_1))
-		result = true;
-
-	return result;
+	return !isMarioInWater() && isFindMarioFromParam(param_1);
 }
 
 bool TSmallEnemy::isMarioInWater() const
@@ -814,8 +800,10 @@ bool TSmallEnemy::isFindMarioFromParam(float param_1) const
 		f32 searchAngle  = prms->mSLSearchAngle.get();
 		f32 searchAware  = prms->mSLSearchAware.get();
 
-		if (isInSight(marioPos, searchLength * param_1, searchAngle * param_1,
-		              searchAware * param_1))
+		searchLength *= param_1;
+		searchAngle *= param_1;
+		searchAware *= param_1;
+		if (isInSight(marioPos, searchLength, searchAngle, searchAware))
 			return true;
 		else
 			return false;
@@ -857,12 +845,9 @@ void TSmallEnemy::expandCollision()
 	f32 damageRadius = getSaveParams()->getSLDamageRadius();
 	f32 damageHeight = getSaveParams()->getSLDamageHeight();
 
-	attackRadius *= unk190 / unk154;
-	attackHeight *= unk190 / unk154;
-	damageRadius *= unk190 / unk154;
-	damageHeight *= unk190 / unk154;
-
-	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
+	f32 scale = unk190 / unk154;
+	setHitParams(attackRadius * scale, attackHeight * scale,
+	             damageRadius * scale, damageHeight * scale);
 }
 
 bool TSmallEnemy::isEaten()

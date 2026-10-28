@@ -3,7 +3,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRDrawBufObj.hpp>
@@ -234,7 +234,7 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if ((!(cue & CUE_ENTRY) || !(mActorData->mFlags & TActorData::FLAG_UNK10)
-	     || gpMirrorModelManager->isUnk18Present())
+	     || gpMirrorModelManager->isMirrorActive())
 	    && mMActor) {
 		if (cue & CUE_CALC_ANIM) {
 			MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
@@ -263,7 +263,7 @@ void TMapStaticObj::initUnique()
 {
 	switch (getActorType()) {
 	case ACTOR_TYPE_TOP_OF_CORONA:
-		if (gpMarDirector->getCurrentMap() == 4)
+		if (gpMarDirector->getCurrentStage() == 4)
 			mEffectCoronaScale = 1.8f;
 		else
 			mEffectCoronaScale = 1.8f;

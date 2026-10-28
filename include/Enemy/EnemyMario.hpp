@@ -167,6 +167,8 @@ public:
 
 	TSettingParams* getSettingsParams() { return mSettingParams; }
 
+	void setEMario(TEMario* em) { mEMario = em; }
+
 public:
 	/* 0x4290 */ u16 mEMFlags;
 	/* 0x4292 */ u16 mEMDoing;      // ok

@@ -17,7 +17,7 @@
 #include <JSystem/JMath.hpp>
 
 // rogue include
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 TConductor* gpConductor;
 
@@ -130,7 +130,7 @@ void TConductor::polluterExterminated() { }
 
 BOOL TConductor::isBossDefeated()
 {
-	switch (SMSGetMarDirector()->getCurrentMap()) {
+	switch (SMSGetMarDirector()->getCurrentStage()) {
 	default:
 	case 1: {
 		TEnemyManager* mgr
@@ -268,7 +268,8 @@ void TConductor::genEnemyFromPollution()
 	if (!mStageEnemyInfoTable)
 		return;
 
-	if (SMSGetMarDirector()->mMoveTickCount % mCondParams.mGenerateTime.get()
+	if (SMSGetMarDirector()->getMoveTickCount()
+	        % mCondParams.mGenerateTime.get()
 	    != 1)
 		return;
 

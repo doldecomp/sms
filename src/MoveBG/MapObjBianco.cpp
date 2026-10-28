@@ -27,7 +27,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static f32 sRadius = 2380.0f;
 static f32 sSubZ   = 150.0f;
@@ -497,9 +496,9 @@ void TLeafBoatRotten::control()
 	}
 }
 
-void TLeafBoatRotten::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TLeafBoatRotten::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TMapObjBase::perform(param_1, param_2);
+	TMapObjBase::perform(cue, param_2);
 }
 
 void TLeafBoatRotten::load(JSUMemoryInputStream& param_1)

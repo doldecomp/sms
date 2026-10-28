@@ -1,7 +1,6 @@
 #include <Camera/camerasave.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/Application.hpp>
 
 TCamSaveNotice::TCamSaveNotice()
     : TParams("/Camera/camera_bossA.prm")

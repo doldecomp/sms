@@ -5,6 +5,7 @@
 #include <Map/Map.hpp>
 #include <Strategic/LiveActor.hpp>
 #include <Map/MapData.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static f32 calcFarthestVertex(const TBGCheckData* param_1,
                               const JGeometry::TVec3<f32>& param_2,

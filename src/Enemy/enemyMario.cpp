@@ -39,10 +39,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
-
-static const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-static const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 #include <Player/MarioAnimeData.hpp>
 
@@ -257,14 +253,19 @@ void TEnemyMario::initModel()
 	mMultiMtxEffect->setup(mModel->getModel(), "Mario");
 }
 
-// TODO: wrong! off by 1 instruction!
+// TODO: wrong, fake!
+static inline const TGraphWeb* getTracerGraph(const TGraphTracer* tracer)
+{
+	return tracer->getGraph();
+}
+
 BOOL TEnemyMario::canJumpToNode() const
 {
-	// TODO: missing some inlines which getGraph should live inside of
-	int nodeIndex
-	    = mEMario->getTracer()->getGraph()->findNearestNodeIndex(mPosition, -1);
-	return mEMario->getTracer()->getGraph()->getGraphNode(nodeIndex).checkFlag(
-	    2);
+	int nodeIndex = getTracerGraph(mEMario->getTracer())
+	                    ->findNearestNodeIndex(mPosition, -1);
+	return getTracerGraph(mEMario->getTracer())
+	    ->getGraphNode(nodeIndex)
+	    .checkFlag(2);
 }
 
 bool TEnemyMario::isDispPencil() const { return false; }
@@ -316,12 +317,18 @@ void TEnemyMario::initEnemyValues()
 	}
 
 	J3DModelData* specialModelData = nullptr;
-	if (modelIndex >= 0 && modelIndex < 4) {
+	switch (modelIndex) {
+	case 0:
+	case 1:
+	case 2:
+	case 3:
 		mPlayerType = PLAYER_TYPE_SHADOW_MARIO;
-	} else if (modelIndex == 4) {
+		break;
+	case 4:
 		specialModelData = J3DModelLoaderDataBase::load(
 		    JKRGetResource(bmdFileNames[modelIndex]), 0x10040000);
 		mPlayerType = PLAYER_TYPE_MONTE_MAN;
+		break;
 	}
 
 	mBrushModel                = nullptr;
@@ -335,8 +342,9 @@ void TEnemyMario::initEnemyValues()
 		mSpecialModel                 = nullptr;
 		J3DModelData* pencilModelData = J3DModelLoaderDataBase::load(
 		    JKRGetResource("/scene/kagemario/kagemario_brush.bmd"), 0x11040000);
-		mBrushModel           = new J3DModel(pencilModelData, 0, 1);
-		ResTIMG* dirtyTexture = (ResTIMG*)JKRGetResource(cDirtyFileName);
+		mBrushModel = new J3DModel(pencilModelData, 0, 1);
+		ResTIMG* dirtyTexture
+		    = (ResTIMG*)JKRFileLoader::getGlbResource(cDirtyFileName);
 		if (dirtyTexture != nullptr)
 			SMS_ChangeTextureAll(pencilModelData, cDirtyTexName, *dirtyTexture);
 
@@ -352,9 +360,7 @@ void TEnemyMario::initEnemyValues()
 		                 SCENE_KAGEMARIO_JPA_MS_KGM_MOVE_B);
 	}
 
-	mDisappearPosition.z = 0.0f;
-	mDisappearPosition.y = 0.0f;
-	mDisappearPosition.x = 0.0f;
+	mDisappearPosition.zero();
 	int shadowMarioEvent
 	    = TFlagManager::getInstance()->getFlag(MSF_SHADOW_MARIO_EVENT);
 	if (shadowMarioEvent == 0) {
@@ -365,15 +371,20 @@ void TEnemyMario::initEnemyValues()
 		mEMario->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (shadowMarioEvent == 2) {
-		mPadIndex      = 1;
-		mSettingParams = new TSettingParams("/../map/pad2/Setting.prm");
-	} else if (shadowMarioEvent == 3) {
-		mPadIndex      = 2;
-		mSettingParams = new TSettingParams("/../map/pad3/Setting.prm");
-	} else if (shadowMarioEvent == 0 || shadowMarioEvent == 1) {
+	switch (shadowMarioEvent) {
+	case 0:
+	case 1:
 		mPadIndex      = 0;
 		mSettingParams = new TSettingParams("/../map/pad/Setting.prm");
+		break;
+	case 2:
+		mPadIndex      = 1;
+		mSettingParams = new TSettingParams("/../map/pad2/Setting.prm");
+		break;
+	case 3:
+		mPadIndex      = 2;
+		mSettingParams = new TSettingParams("/../map/pad3/Setting.prm");
+		break;
 	}
 
 	mWaterCounter          = mSettingParams->mWaterCtMax.get();
@@ -388,7 +399,7 @@ void TEnemyMario::initEnemyValues()
 		         "/scene/map/map/pad%d/linkdata.bin", mPadIndex);
 	}
 
-	void* linkData = JKRGetResource(linkDataPath);
+	void* linkData = JKRFileLoader::getGlbResource(linkDataPath);
 	if (linkData != nullptr) {
 		s32 linkDataSize
 		    = JKRFileLoader::getVolume("scene")->getResSize(linkData);
@@ -398,14 +409,14 @@ void TEnemyMario::initEnemyValues()
 		stream.skip(2);
 		stream.readString();
 
-		u32 nodeCount;
-		stream.read(&nodeCount, sizeof(nodeCount));
+		u32 nodeCount   = stream.readU32();
 		mReplayLinks    = new TReplayLink[nodeCount][3];
 		replayFileNames = new char*[nodeCount * 3];
 		for (u32 i = 0; i < nodeCount * 3; ++i) {
 			replayFileNames[i] = new char[3];
 		}
 
+		int count = 0;
 		for (u32 node = 0; node < nodeCount; ++node) {
 			stream.skip(6);
 			stream.readString();
@@ -413,20 +424,19 @@ void TEnemyMario::initEnemyValues()
 			stream.readString();
 			for (int link = 0; link < 3; ++link) {
 				stream.skip(2);
-				u8 replayLetter;
-				stream.read(&replayLetter, sizeof(replayLetter));
+				char replayLetter = stream.readS8();
 				if (replayLetter == '*') {
 					mReplayLinks[node][link].mNodeIndex   = 0xff;
 					mReplayLinks[node][link].mReplayIndex = 0xff;
 				} else {
-					snprintf(replayFileNames[replayCount], 3, "%c%c",
-					         (char)(node + 'A'), (char)replayLetter);
+					snprintf(replayFileNames[count], 3, "%c%c",
+					         (char)(node + 'A'), replayLetter);
 					mReplayLinks[node][link].mNodeIndex   = replayLetter - 'A';
-					mReplayLinks[node][link].mReplayIndex = replayCount;
-					++replayCount;
+					mReplayLinks[node][link].mReplayIndex = count++;
 				}
 			}
 		}
+		replayCount = count;
 	}
 
 	if (mPadIndex != 0) {
@@ -435,15 +445,16 @@ void TEnemyMario::initEnemyValues()
 		mEMario->getTracer()->setGraph(gpConductor->getGraphByName(graphName));
 	}
 
+	int numReplays   = replayCount;
 	mTrembleStrength = 2.5f;
 	if (mPlayerType == PLAYER_TYPE_MONTE_MAN) {
 		replayFileNames = (char**)recordFileNamesMonteMan;
-		replayCount     = 3;
+		numReplays      = 3;
 	}
 
-	if (replayCount > 0) {
-		mInputReplays = new TMarioInputReplay*[replayCount];
-		for (int i = 0; i < replayCount; ++i) {
+	if (numReplays > 0) {
+		mInputReplays = new TMarioInputReplay*[numReplays];
+		for (int i = 0; i < numReplays; ++i) {
 			char replayPath[0x100];
 			if (mPadIndex == 0) {
 				snprintf(replayPath, sizeof(replayPath),
@@ -462,7 +473,7 @@ void TEnemyMario::initEnemyValues()
 
 	mGamePad = SMSGetMarDirector()->getGamePad(1);
 	mEMFlags = EM_FLAG_DISP_PENCIL;
-	switch (mEMario->mInitialState) {
+	switch (mEMario->getInitialState()) {
 	case 0:
 		mEMDoing = EM_DOING_REPLAY_WAITING;
 		break;
@@ -486,13 +497,13 @@ void TEnemyMario::initEnemyValues()
 	switch (shadowMarioEvent) {
 	case 0:
 	case 1:
-		mReplayIndex = mEMario->unk158;
+		mReplayIndex = mEMario->getStartIndex(0);
 		break;
 	case 2:
-		mReplayIndex = mEMario->unk15C;
+		mReplayIndex = mEMario->getStartIndex(1);
 		break;
 	case 3:
-		mReplayIndex = mEMario->unk160;
+		mReplayIndex = mEMario->getStartIndex(2);
 		break;
 	}
 	mEMario->getTracer()
@@ -500,14 +511,15 @@ void TEnemyMario::initEnemyValues()
 	    ->getGraphNode(mReplayIndex)
 	    .getPoint(&mPosition);
 	mEMario->mPosition = mPosition;
-	if (replayCount > 0) {
+	if (numReplays > 0) {
 		mInputReplays[mReplayIndex]->reset();
 		mInputReplays[mReplayIndex]->start();
 	} else {
 		mInputReplays = nullptr;
 	}
 
-	if (SMSGetMarDirector()->mMap == 1 && SMSGetMarDirector()->unk7D == 1) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1
+	    && SMSGetMarDirector()->getCurrentScenario() == 1) {
 		mRunAwayInputReplays = new TMarioInputReplay*[8];
 		for (int i = 0; i < 8; ++i) {
 			if (recordFileNamesDolpic1[i] != nullptr) {
@@ -531,7 +543,7 @@ void TEnemyMario::initEnemyValues()
 		mGateReplay          = nullptr;
 	}
 
-	if (SMSGetMarDirector()->mMap == 12) {
+	if (SMSGetMarDirector()->getCurrentStage() == 12) {
 		if (strcmp(mEMario->getName(), "マリオ２Ｐ") == 0) {
 			mPlayerType = TMario::PLAYER_TYPE_P2;
 			mGamePad    = SMSGetMarDirector()->getGamePad(1);
@@ -701,8 +713,7 @@ void TEnemyMario::emJumping()
 			unk108->mInput |= TMarioControllerWork::A;
 		}
 	} else if (mStatus & 0x600) {
-		TPollutionManager* pollution = gpPollution;
-		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 384.0f);
 		changeEMDoing(EM_DOING_WAITING);
 	}
 }
@@ -730,7 +741,7 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 100) {
-		mTargetAngle = rand();
+		mTargetAngle = (u16)rand();
 		changeEMDoing(EM_DOING_TURNING);
 		return;
 	}
@@ -739,8 +750,7 @@ void TEnemyMario::emWalkAround()
 		return;
 	}
 	if (rand() < 50) {
-		TPollutionManager* pollution = gpPollution;
-		pollution->stamp(1, mPosition.x, mPosition.y, mPosition.z, 384.0f);
+		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 384.0f);
 		changeEMDoing(EM_DOING_HIDE);
 	}
 	if (mWallPlane != nullptr) {
@@ -750,10 +760,16 @@ void TEnemyMario::emWalkAround()
 	setStickToAngle(mFaceAngle.y, 0.5f);
 }
 
+// TODO: this sure feels like it should be a method of TSpineEnemy
+// fabricated
+static inline f32 getGoalDistance(const TSpineEnemy* enemy)
+{
+	return (enemy->getUnk104().getPoint() - enemy->mPosition).length();
+}
+
 void TEnemyMario::emWalkGraph()
 {
-	if ((mEMario->getUnk104().getPoint() - mEMario->mPosition).length()
-	    < 100.0f) {
+	if (getGoalDistance(mEMario) < 100.0f) {
 		if (mDistanceToMario > 3000.0f)
 			mEMario->goToRandomNextGraphNode();
 		else
@@ -805,8 +821,8 @@ void TEnemyMario::startDisappear(u16 doing)
 {
 	mDisappearPosition = mPosition;
 
-	u8 currentMap      = SMSGetMarDirector()->getCurrentMap();
-	u8 currentStage    = SMSGetMarDirector()->getCurrentStage();
+	u8 currentMap      = SMSGetMarDirector()->getCurrentStage();
+	u8 currentStage    = SMSGetMarDirector()->getCurrentScenario();
 	bool keepBossLives = false;
 	if (currentMap == 1 && currentStage == 1) {
 		keepBossLives = true;
@@ -961,10 +977,10 @@ void TEnemyMario::emReplayJumpToNearestNode()
 	JGeometry::TVec3<f32> marioDirection(*gpMarioPos - currentPoint);
 	marioDirection.normalize();
 	TGraphNode* nextNode = nullptr;
+	f32 smallestDot      = 1.0f;
 
 	if (mSettingParams->mRandomFlag.get() == 0) {
 		TReplayLink* links = replayLinks[nodeIndex];
-		f32 smallestDot    = 1.0f;
 		for (int i = 0; i < 3; ++i) {
 			TReplayLink& link = links[i];
 			if (link.mNodeIndex == 0xFF) {
@@ -992,16 +1008,15 @@ void TEnemyMario::emReplayJumpToNearestNode()
 		int validLinks[3];
 		int validCount = 0;
 		for (int i = 0; i < 3; ++i) {
-			dots[i]           = 0.0f;
-			TReplayLink& link = links[i];
-			if (link.mNodeIndex == 0xFF) {
+			dots[i] = 0.0f;
+			if (links[i].mNodeIndex == 0xFF) {
 				continue;
 			}
 
 			JGeometry::TVec3<f32> candidatePoint;
 			mEMario->getTracer()
 			    ->getGraph()
-			    ->getGraphNode(link.mNodeIndex)
+			    ->getGraphNode(links[i].mNodeIndex)
 			    .getPoint(&candidatePoint);
 			JGeometry::TVec3<f32> candidateDirection(candidatePoint
 			                                         - currentPoint);
@@ -1032,10 +1047,10 @@ void TEnemyMario::emReplayJumpToNearestNode()
 			}
 		}
 
-		TReplayLink& link = links[validLinks[selected]];
-		mReplayIndex      = link.mReplayIndex;
-		nextNode
-		    = &mEMario->getTracer()->getGraph()->getGraphNode(link.mNodeIndex);
+		mReplayIndex
+		    = replayLinks[nodeIndex][validLinks[selected]].mReplayIndex;
+		nextNode = &mEMario->getTracer()->getGraph()->getGraphNode(
+		    links[validLinks[selected]].mNodeIndex);
 	}
 
 	JGeometry::TVec3<f32> nextPoint;
@@ -1067,7 +1082,8 @@ void TEnemyMario::emDownAnimation()
 	changePlayerStatus(MARIO_STATUS_NOMOTION, 0, true);
 	setAnimation(ANIM_FALL_DOWN_WAIT, 1.0f);
 
-	if (SMSGetMarDirector()->isDemoMode3() || SMSGetMarDirector()->isDemoMode4()
+	if (SMSGetMarDirector()->isInnerDemoModeNow()
+	    || SMSGetMarDirector()->isTalkingDemoModeNow()
 	    || SMSGetMarDirector()->isTalkModeNow()) {
 		mReferencePosition = mPosition;
 		mDisappearPosition = mReferencePosition;
@@ -1077,7 +1093,7 @@ void TEnemyMario::emDownAnimation()
 	++mEMDoingTimer;
 	mReferencePosition = mPosition;
 	mDisappearPosition = mReferencePosition;
-	if (SMSGetMarDirector()->getCurrentMap() != 1
+	if (SMSGetMarDirector()->getCurrentStage() != 1
 	    && mEMDoingTimer > mSettingParams->mDownTime.get()) {
 		mWaterCounter = mSettingParams->mWaterCtMax.get();
 		changeEMDoing(EM_DOING_RUN_AWAY_TO_NEAREST_NODE);
@@ -1101,7 +1117,8 @@ void TEnemyMario::findRunAwayNearestNode()
 
 	for (int i = 0; i < mEMario->getTracer()->getGraph()->getNodeNum(); ++i) {
 		JGeometry::TVec3<f32> point;
-		mEMario->getTracer()->getGraph()->getGraphNode(i).getPoint(&point);
+		TGraphWeb* graph = mEMario->getTracer()->getGraph();
+		graph->getGraphNode(i).getPoint(&point);
 		f32 distance = JGeometry::TVec3<f32>(point - mPosition).length();
 		if (distance < nearestDistance) {
 			secondDistance  = nearestDistance;
@@ -1135,9 +1152,11 @@ void TEnemyMario::runAwayMoveEffect()
 
 void TEnemyMario::emRunAwayToNearestNode()
 {
-	TGraphWeb* graph = mEMario->getTracer()->getGraph();
 	JGeometry::TVec3<f32> targetPoint;
-	graph->getGraphNode(mRunAwayNodeIndex).getPoint(&targetPoint);
+	mEMario->getTracer()
+	    ->getGraph()
+	    ->getGraphNode(mRunAwayNodeIndex)
+	    .getPoint(&targetPoint);
 	runAwayMoveEffect();
 
 	if (mEMDoingTimer >= 8 && mEMDoingTimer < 300) {
@@ -1182,9 +1201,10 @@ void TEnemyMario::emRunAwayToNearestNode()
 		                                0, nullptr, 0, 4);
 		break;
 	case 300:
-		if (SMSGetMarDirector()->getCurrentMap() == 1) {
+		if (SMSGetMarDirector()->getCurrentStage() == 1) {
 			JGeometry::TVec3<f32> waitingPoint;
-			graph->getGraphNode(7).getPoint(&waitingPoint);
+			mEMario->getTracer()->getGraph()->getGraphNode(7).getPoint(
+			    &waitingPoint);
 			mFaceAngle.y    = matan(waitingPoint.z - targetPoint.z,
 			                        waitingPoint.x - targetPoint.x);
 			mModelFaceAngle = mFaceAngle.y;
@@ -1518,7 +1538,7 @@ u8 TEnemyMario::thinkTrample()
 
 void TEnemyMario::reachGoal()
 {
-	onEMFlag(EM_FLAG_GOAL_REACHED);
+	mEMFlags |= EM_FLAG_GOAL_REACHED;
 	changeEMDoing(EM_DOING_WAITING_MARIO);
 }
 
@@ -1715,14 +1735,16 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (mSpecialModel != nullptr) {
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				mSpecialModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
+				MTXCopy(mModel->getModel()->getAnmMtx(i),
+				        mSpecialModel->getAnmMtx(i));
 			}
 			mSpecialModel->calcWeightEnvelopeMtx();
 		} else {
 			emarioActor->calcAnm();
 			for (u16 i = 0;
 			     i < mModel->getModel()->getModelData()->getJointNum(); ++i) {
-				emarioModel->setAnmMtx(i, mModel->getModel()->getAnmMtx(i));
+				MTXCopy(mModel->getModel()->getAnmMtx(i),
+				        emarioModel->getAnmMtx(i));
 			}
 			emarioModel->calcWeightEnvelopeMtx();
 			mBrushModel->setBaseTRMtx(emarioModel->getAnmMtx(mJointIdHandL));

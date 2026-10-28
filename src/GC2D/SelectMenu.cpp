@@ -1,4 +1,3 @@
-
 #include <dolphin/gx.h>
 #include <dolphin/gx/GXGeometry.h>
 #include <dolphin/gx/GXLighting.h>
@@ -34,7 +33,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <System/DummyStrings.hpp>
 
 // fabricated and not matching
 inline void bzero(void* pDst, u32 len)
@@ -108,9 +106,9 @@ void TSelectGrad::setStageColor(u8 stage)
 	}
 }
 
-void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
+void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	if (flags & 0x2) {
+	if (cue & CUE_CALC_ANIM) {
 		bool nextCycle = false;
 		for (s32 i = 0; i < 3; i++) {
 			u8* value = (i == 0) ? &mBottomRightCol.r
@@ -175,7 +173,7 @@ void TSelectGrad::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 	}
 
-	if (flags & 0x8) {
+	if (cue & CUE_DRAW) {
 		GXSetDither(GX_TRUE);
 
 		Mtx mtx;
@@ -441,10 +439,20 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	    "/common/2d/stagename.bmg", GMSP01("/cmn2d/stagename.bmg"),
 	    GMSP01_NX("/cmn2d/stagename.bmg")));
 
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
 	strncpy(mStageName->getStringPtr(),
 	        SMSGetMessageData(mStageNameBmg, stageNameIds[mStage] & 0xFFFF),
 	        0x11);
 	mStageName->setFont((JUTFont*)gpSystemFont);
+#elif defined(VERSION_GMSP01_NX)
+	if (TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)
+	    == MSLANG_NX_JAPANESE) {
+		strncpy(mStageName->getStringPtr(),
+		        SMSGetMessageData(mStageNameBmg, stageNameIds[mStage] & 0xFFFF),
+		        0x11);
+		mStageName->setFont((JUTFont*)gpSystemFont);
+	}
+#endif
 
 	mShineUnlockStates[0] = 2;
 	mShineUnlockStates[1] = 2;
@@ -601,9 +609,9 @@ static inline JUtility::TColor makeBlackCornerColor(u8 alpha)
 	return JUtility::TColor(0, 0, 0, alpha);
 }
 
-void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
+void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 {
-	if (flags & 0x1) {
+	if (cue & CUE_MOVE) {
 		switch (mMenuState) {
 		case LETTERBOX_ANIMATION: {
 			bool updated = true;
@@ -1159,7 +1167,7 @@ void TSelectMenu::perform(u32 flags, JDrama::TGraphics* gfx)
 		}
 	}
 
-	if (flags & 0x8) {
+	if (cue & CUE_DRAW) {
 		switch (mMenuState) {
 		case CLOSE_MENU:
 		case LETTERBOX_ANIMATION:

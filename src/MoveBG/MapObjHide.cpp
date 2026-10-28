@@ -28,7 +28,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 void THideObjBase::appearObj(f32 y_offset)
 {
@@ -56,9 +55,9 @@ void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 
 			throwObjToFrontFromPoint(obj, point, mAppearSpeed, mAppearYSpeed);
 			if (TMapObjBase::isCoin(obj)) {
-				TCoin* coin      = (TCoin*)obj;
-				coin->mContainer = this;
-				coin->unk14C     = unk148;
+				TCoin* coin                 = (TCoin*)obj;
+				coin->mContainer            = this;
+				coin->mDisappearAfterFrames = unk148;
 			}
 
 			if (TMapObjBase::isFruit(obj))
@@ -151,11 +150,6 @@ void TWaterHitHideObj::load(JSUMemoryInputStream& stream)
 	THideObjBase::load(stream);
 }
 
-TWaterHitHideObj::TWaterHitHideObj(const char* name)
-    : THideObjBase(name)
-{
-}
-
 void TFruitHitHideObj::touchFruit(THitActor* param_1)
 {
 	if (mHiddenObj != nullptr) {
@@ -176,11 +170,6 @@ void TFruitHitHideObj::touchActor(THitActor* param_1)
 void TFruitHitHideObj::load(JSUMemoryInputStream& stream)
 {
 	THideObjBase::load(stream);
-}
-
-TFruitHitHideObj::TFruitHitHideObj(const char* name)
-    : THideObjBase(name)
-{
 }
 
 void TFruitBasket::countFruit(THitActor* param_1)
@@ -240,12 +229,6 @@ void TFruitBasket::loadAfter()
 	}
 }
 
-TFruitBasket::TFruitBasket(const char* name)
-    : TFruitHitHideObj(name)
-    , unk150(0)
-{
-}
-
 void TFruitBasketEvent::countFruit(THitActor* fruit)
 {
 	TFruitBasket::countFruit(fruit);
@@ -296,11 +279,6 @@ void THipDropHideObj::touchPlayer(THitActor* param_1)
 		appearObj(0.0f);
 		makeObjDead();
 	}
-}
-
-THipDropHideObj::THipDropHideObj(const char* name)
-    : THideObjBase(name)
-{
 }
 
 void TWaterHitPictureHideObj::afterFinishedAnim()
@@ -567,9 +545,9 @@ void THideObjPictureTwin::afterFinishedAnim()
 		obj->offLiveFlag(LIVE_FLAG_UNK10);
 
 		if (TMapObjBase::isCoin(obj)) {
-			TCoin* coin      = (TCoin*)obj;
-			coin->mContainer = this;
-			coin->unk14C     = unk148;
+			TCoin* coin                 = (TCoin*)obj;
+			coin->mContainer            = this;
+			coin->mDisappearAfterFrames = unk148;
 		}
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_TIMECOIN_APPEAR, 0,
 		                                   nullptr, 0);

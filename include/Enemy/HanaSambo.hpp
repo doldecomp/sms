@@ -204,7 +204,7 @@ public:
 	    : TSpineEnemy(name)
 	    , unk150(0)
 	    , unk154(0)
-	    , unk158(-1)
+	    , mCoinUnitIndex(-1)
 	    , unk15C(-1)
 	    , unk160(0)
 	    , unk164(nullptr)
@@ -230,7 +230,7 @@ public:
 	/* 0x150 */ u8 unk150;
 	/* 0x151 */ char unk151[0x3];
 	/* 0x154 */ s32 unk154;
-	/* 0x158 */ s32 unk158;
+	/* 0x158 */ s32 mCoinUnitIndex;
 	/* 0x15C */ s32 unk15C;
 	/* 0x160 */ u8 unk160;
 	/* 0x161 */ char unk161[0x3];

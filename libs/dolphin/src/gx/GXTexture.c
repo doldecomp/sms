@@ -280,7 +280,7 @@ void GXInitTexObjLOD(GXTexObj* obj, GXTexFilter min_filt, GXTexFilter mag_filt,
 
 void GXGetTexObjAll(const GXTexObj* obj, void** image_ptr, u16* width,
                     u16* height, GXTexFmt* format, GXTexWrapMode* wrap_s,
-                    GXTexWrapMode* wrap_t, u8* mipmap)
+                    GXTexWrapMode* wrap_t, GXBool* mipmap)
 {
 	const __GXTexObjInt* t = (const __GXTexObjInt*)obj;
 

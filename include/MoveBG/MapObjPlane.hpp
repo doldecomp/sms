@@ -38,7 +38,7 @@ public:
 	static f32 mWeatherRate;
 	static u8 mAmbColor;
 
-public:
+protected:
 	/* 0xF4 */ f32 unkF4;
 	/* 0xF8 */ f32 unkF8;
 	/* 0xFC */ f32 unkFC;

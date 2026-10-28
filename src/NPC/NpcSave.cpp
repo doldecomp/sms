@@ -1,5 +1,5 @@
 #include <NPC/NpcSave.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <NPC/NpcBase.hpp>
 #include <NPC/NpcManager.hpp>
 #include <NPC/NpcEvent.hpp>

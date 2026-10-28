@@ -41,8 +41,8 @@ void CPolarSubCamera::makeMtxForPrevTalk()
 
 		unk120->onNeutralMarioKey();
 
-		JGadget::TVector_pointer<TBaseNPC>& npcList
-		    = SMSGetMarDirector()->unk88;
+		JGadget::TVector_pointer<TBaseNPC*>& npcList
+		    = SMSGetMarDirector()->getNPCList();
 		for (TBaseNPC** it = npcList.begin(); it != npcList.end(); ++it)
 			(*it)->npcTalkOut();
 	}

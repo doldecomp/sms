@@ -44,7 +44,7 @@ public:
 	static s32 mWitherTime;
 	static f32 mScaleMin;
 
-public:
+protected:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ s32 unk140;
@@ -120,7 +120,7 @@ public:
 	static f32 mMarioJumpRate;
 	static s32 mExlodingRumbleTime;
 
-public:
+protected:
 	/* 0x148 */ s32 unk148;
 	/* 0x14C */ f32 unk14C;
 	/* 0x150 */ f32 unk150;
@@ -142,7 +142,7 @@ public:
 
 	static f32 mCollisionRate;
 
-public:
+private:
 	/* 0x158 */ TMapObjBase* unk158;
 	/* 0x15C */ u8 unk15C;
 };
@@ -180,7 +180,7 @@ public:
 	static s32 mDemoWaitTime;
 	static s32 mDemoLightTime;
 
-public:
+private:
 	/* 0x138 */ f32 unk138;
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ JGeometry::TVec3<f32> unk140;
@@ -248,7 +248,7 @@ public:
 	static f32 mMapBackSpeed;
 	static s32 mWaitTime;
 
-public:
+private:
 	/* 0x138 */ TJointModel* unk138;
 	/* 0x13C */ TJointObj* unk13C;
 	/* 0x140 */ TJointObj* unk140;
@@ -266,7 +266,7 @@ public:
 	virtual void control();
 	virtual void initMapObj();
 
-public:
+private:
 	/* 0x138 */ TMapObjFlag* unk138;
 };
 
@@ -279,7 +279,7 @@ public:
 	virtual bool nameIsObj(const char*);
 	virtual TMapObjBase* makeObjFromJointName(const char*, u16);
 
-public:
+private:
 	/* 0x148 */ u32 unk148;
 	/* 0x14C */ u32 unk14C;
 	/* 0x150 */ u8 unk150;
@@ -305,7 +305,7 @@ public:
 		STATE_SHINE  = 0x3,
 	};
 
-public:
+private:
 	/* 0x138 */ TMapObjBase* unk138;
 	/* 0x13C */ TMapObjBase* unk13C;
 	/* 0x140 */ JGeometry::TVec3<f32> unk140;
@@ -321,7 +321,7 @@ public:
 	void show(int);
 	void hide(int);
 
-public:
+private:
 	/* 0x10 */ J3DJoint* unk10[8];
 	/* 0x30 */ JGeometry::TVec3<f32> unk30[8];
 	/* 0x90 */ f32 unk90[8];

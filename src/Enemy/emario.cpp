@@ -8,6 +8,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JGeometry/JGVec3.hpp>
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/ScreenUtil.hpp>
 #include <Player/Mario.hpp>
@@ -20,18 +21,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
-
-static const char* MtxCalcTypeName[] = {
-	"MActorMtxCalcType_Basic クラシックスケールＯＮ",
-	"MActorMtxCalcType_Softimage クラシックスケールＯＦＦ",
-	"MActorMtxCalcType_MotionBlend モーションブレンド",
-	"MActorMtxCalcType_User ユーザー定義",
-};
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <M3DUtil/M3UModelMario.hpp>
 
 TEMario::TEMario(const char* name)
     : TSpineEnemy(name)
@@ -42,42 +32,41 @@ void TEMario::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 
-	stream >> mInitialState >> unk158 >> unk15C >> unk160;
-
-	stream.readU32();
-	stream.readU32();
+	f32 tmp1, tmp2;
+	stream >> mInitialState >> mStartIndex[0] >> mStartIndex[1]
+	    >> mStartIndex[2] >> tmp1 >> tmp2;
 
 	if (mInitialState == 0xFF)
 		mInitialState = 0;
 
-	if (unk158 == 0xFF)
-		unk158 = 0;
+	if (mStartIndex[0] == 0xFF)
+		mStartIndex[0] = 0;
 
-	if (unk15C == 0xFF)
-		unk15C = 0;
+	if (mStartIndex[1] == 0xFF)
+		mStartIndex[1] = 0;
 
-	if (unk160 == 0xFF)
-		unk160 = 0;
+	if (mStartIndex[2] == 0xFF)
+		mStartIndex[2] = 0;
 
-	mEnemyMario          = new TEnemyMario;
-	mEnemyMario->mEMario = this;
+	mEnemyMario = new TEnemyMario;
+	mEnemyMario->setEMario(this);
 
 	// "Mario 2 P"
 	if (strcmp(mName, "マリオ２Ｐ") == 0) {
 		mEnemyMario->setGamePad(SMSGetMarDirector()->getGamePad(1));
-		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P2;
+		mEnemyMario->setPlayerType(TMario::PLAYER_TYPE_P2);
 	}
 
 	// "Mario 3 P"
 	if (strcmp(mName, "マリオ３Ｐ") == 0) {
 		mEnemyMario->setGamePad(SMSGetMarDirector()->getGamePad(2));
-		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P3;
+		mEnemyMario->setPlayerType(TMario::PLAYER_TYPE_P3);
 	}
 
 	// "Mario 4 P
 	if (strcmp(mName, "マリオ４Ｐ") == 0) {
 		mEnemyMario->setGamePad(SMSGetMarDirector()->getGamePad(3));
-		mEnemyMario->mPlayerType = TMario::PLAYER_TYPE_P4;
+		mEnemyMario->setPlayerType(TMario::PLAYER_TYPE_P4);
 	}
 
 	// "Mario Character"
@@ -87,11 +76,11 @@ void TEMario::load(JSUMemoryInputStream& stream)
 
 	mEnemyMario->initValues();
 
-	mEnemyMario->mPosition = getPosition();
-	mEnemyMario->mRotation = getRotation();
-	mEnemyMario->mScaling  = getScaling();
+	mEnemyMario->mPosition = mPosition;
+	mEnemyMario->mRotation = mRotation;
+	mEnemyMario->mScaling  = mScaling;
 
-	mEnemyMario->mFaceAngle.y = getRotation().y * 0.0027777778f * 65536.0f;
+	mEnemyMario->mFaceAngle.y = mRotation.y * 0.0027777778f * 65536.0f;
 
 	mEnemyMario->initEnemyValues();
 
@@ -116,11 +105,11 @@ void TEMario::init(TLiveManager* manager)
 			mMActor = mMActorKeeper->createMActorFromDefaultBmd(
 			    chara->getFolder(), 0);
 			for (int i = 0;
-			     i < mMActor->getModel()->getModelData()->getMaterialNum();
+			     i < getMActor()->getModel()->getModelData()->getMaterialNum();
 			     i++) {
-				SMS_InitPacket_Fog(mMActor->getModel(), i);
+				SMS_InitPacket_Fog(getMActor()->getModel(), i);
 			}
-			mMActor->setBtk("kagemario_scroll");
+			getMActor()->setBtk("kagemario_scroll");
 		}
 		gpConductor->registerAloneActor(this);
 	} else {
@@ -130,8 +119,8 @@ void TEMario::init(TLiveManager* manager)
 		mMActor = mMActorKeeper->createMActorFromNthData(0, 0);
 	}
 
-	if (mMActor != nullptr) {
-		gpScreenTexture->replace(mMActor->getModel()->getModelData(),
+	if (getMActor() != nullptr) {
+		gpScreenTexture->replace(getMActor()->getModel()->getModelData(),
 		                         "H_kagemario_dummy");
 	}
 

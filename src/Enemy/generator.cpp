@@ -8,6 +8,7 @@
 #include <MarioUtil/RandomUtil.hpp>
 #include <Strategic/Strategy.hpp>
 #include <dolphin/mtx.h>
+#include <M3DUtil/MActorAnm.hpp>
 
 TGenerator::TGenerator(const char* name)
     : JDrama::TViewObj(name)

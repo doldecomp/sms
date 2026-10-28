@@ -17,7 +17,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMushroom1up::TMushroom1up(int param_1, const char* name)
     : TMapObjBase(name)
@@ -145,7 +144,7 @@ void TMushroom1up::control()
 void TMushroom1up::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk139 != 2 && mStateTimer < 240 && (cue & CUE_ENTRY)
-	    && SMSGetMarDirector()->mMoveTickCount % 6 > 2)
+	    && SMSGetMarDirector()->getMoveTickCount() % 6 > 2)
 		cue &= ~CUE_ENTRY;
 
 	if ((cue & CUE_MOVE) && unk13A == 0 && unk139 != 2 && mStateTimer <= 0)

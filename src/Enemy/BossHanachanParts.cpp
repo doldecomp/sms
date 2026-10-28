@@ -21,7 +21,6 @@
 #include <macros.h>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -503,7 +502,7 @@ bool TBossHanachanPartsHead::setAnm_(EnumBossHanachanAnmKind anm,
 
 BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 {
-	if (gpMarDirector->isThing())
+	if (gpMarDirector->isInTalkNow())
 		return false;
 	bool result = false;
 	if (isReactToTrampleOrHipDrop_()) {
@@ -547,7 +546,7 @@ BOOL TBossHanachanPartsBody::receiveMessage(THitActor*, u32 message)
 
 BOOL TBossHanachanPartsHead::receiveMessage(THitActor*, u32 message)
 {
-	if (gpMarDirector->isThing())
+	if (gpMarDirector->isInTalkNow())
 		return false;
 	bool result = false;
 	if (isReactToTrampleOrHipDrop_()) {

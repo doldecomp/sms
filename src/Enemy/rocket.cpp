@@ -11,7 +11,7 @@
 #include <JSystem/JStage/JSGActor.hpp>
 #include <JSystem/JStage/JSGObject.hpp>
 #include <JSystem/JSupport/JSUList.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSound.hpp>
 #include <MSound/MSoundBGM.hpp>
@@ -105,16 +105,16 @@ void TRocketManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TRocketManager::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TRocketManager::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (param_1 & CUE_MOVE) {
+	if (cue & CUE_MOVE) {
 		for (int i = 0; i < getActiveObjNum(); ++i) {
 			TRocket* rocket = (TRocket*)getObj(i);
 			if (rocket->checkLiveFlag(LIVE_FLAG_DEAD))
 				rocket->reset();
 		}
 	}
-	TSmallEnemyManager::perform(param_1, param_2);
+	TSmallEnemyManager::perform(cue, param_2);
 }
 
 TRocket::TRocket(const char* param_1)

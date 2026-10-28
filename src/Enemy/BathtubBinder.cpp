@@ -1,5 +1,5 @@
 #include <Enemy/BathtubBinder.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JGeometry/JGUtil.hpp>
 #include <Map/BathWaterManager.hpp>

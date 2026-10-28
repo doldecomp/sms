@@ -22,6 +22,7 @@
 #include <dolphin/mtx.h>
 #include <dolphin/os/OSCache.h>
 #include <stdlib.h>
+#include <M3DUtil/MActorAnm.hpp>
 
 TSilhouette* gpSilhouetteManager;
 
@@ -427,9 +428,9 @@ void SMS_AddDamageFogEffect(J3DModelData* param_1,
 
 	f32 startBase = -700.0f;
 	f32 endBase   = 500.0f;
-	f32 s         = JMASSin((s16)(SMSGetMarDirector()->mMoveTickCount * 0x888));
-	f32 startOsc  = (-400.0f - startBase) * s;
-	f32 endOsc    = (800.0f - endBase) * s;
+	f32 s = JMASSin((s16)(SMSGetMarDirector()->getMoveTickCount() * 0x888));
+	f32 startOsc = (-400.0f - startBase) * s;
+	f32 endOsc   = (800.0f - endBase) * s;
 
 	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
 		J3DFog* fog

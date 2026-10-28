@@ -15,7 +15,6 @@
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/Strategy.hpp>
 
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 

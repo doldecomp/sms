@@ -16,6 +16,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 static void drawBlack(u16 param_1, u16 param_2)
 {
@@ -50,18 +51,18 @@ static void drawBlack(u16 param_1, u16 param_2)
 void TPollutionCounterBase::setCallback(int param_1) const
 {
 	TDrawSyncManager::smInstance->pushBreakPoint();
-	GXSetDrawSync(getCounterNo(param_1));
+	GXSetDrawSync(getTokenNo(param_1));
 	TDrawSyncManager::smInstance->pushBreakPoint();
 	GXSetDrawSync(0);
 }
 
 void TPollutionCounterBase::drawSyncCallback(u16 param_1)
 {
-	int token = getTokenNo(param_1);
+	int counter = getCounterNo(param_1);
 	u32 discard;
-	GXReadPixMetric(&discard, &discard, &discard, &discard, mCounters[token],
+	GXReadPixMetric(&discard, &discard, &discard, &discard, mCounters[counter],
 	                &discard);
-	*mCounters[token] -= mPolygonCount[token] * 4;
+	*mCounters[counter] -= mPolygonCount[counter] * 4;
 }
 
 void TPollutionCounterBase::initCounters(int max_counters)
@@ -73,6 +74,14 @@ void TPollutionCounterBase::initCounters(int max_counters)
 		mCounters[i]     = nullptr;
 		mPolygonCount[i] = 0;
 	}
+}
+
+TPollutionCounterBase::TPollutionCounterBase()
+    : mCounterCapacity(0)
+    , mCounterNum(0)
+    , mCounters(nullptr)
+    , mPolygonCount(nullptr)
+{
 }
 
 void loadPollutionLayer(const u8* param_1, u16 param_2, u16 param_3,

@@ -2,7 +2,7 @@
 #include <Strategic/Spine.hpp>
 #include <Enemy/Graph.hpp>
 #include <MarioUtil/MathUtil.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 // @non-matching -- the issue seems to stem from the JDrama TNameRefGen
 // search/push_back calls.

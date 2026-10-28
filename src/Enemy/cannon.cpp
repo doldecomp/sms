@@ -34,7 +34,6 @@
 #include <math.h>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -94,7 +93,7 @@ TChorobei::TChorobei(TCannon* param_1, int param_2, const char* param_3)
 	unk74->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TChorobei::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (unk68->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                         | LIVE_FLAG_CLIPPED_OUT))
@@ -103,7 +102,7 @@ void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
 	if (unk70)
 		return;
 
-	if (param_1 & CUE_CALC_ANIM) {
+	if (cue & CUE_CALC_ANIM) {
 		if (unk74 != nullptr && unk78 != nullptr) {
 			J3DFrameCtrl* ctrl = unk6C->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 			unk74->animeLoop(&mPosition, ctrl->getFrame(), ctrl->getRate(), 0,
@@ -120,8 +119,8 @@ void TChorobei::perform(u32 param_1, JDrama::TGraphics* param_2)
 		mPosition.z = mtx[2][3];
 	}
 
-	THitActor::perform(param_1, param_2);
-	unk6C->getMActor()->perform(param_1, param_2);
+	THitActor::perform(cue, param_2);
+	unk6C->getMActor()->perform(cue, param_2);
 }
 
 void TChorobei::setBckAnm(int param_1)
@@ -196,13 +195,13 @@ TCannonDom::TCannonDom(TLiveActor* param_1, int param_2, SDLModelData* param_3,
 	unk1C->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCannonDom::perform(u32 cue, JDrama::TGraphics* param_2)
 {
 	if (unk10->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                         | LIVE_FLAG_CLIPPED_OUT))
 		return;
 
-	if (param_1 == CUE_CALC_ANIM) {
+	if (cue == CUE_CALC_ANIM) {
 		if (unk1C != nullptr && unk20 != nullptr) {
 			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
 			unk1C->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(),
@@ -217,7 +216,7 @@ void TCannonDom::perform(u32 param_1, JDrama::TGraphics* param_2)
 		unk18->getModel()->setBaseTRMtx(mtx);
 	}
 
-	unk18->perform(param_1, param_2);
+	unk18->perform(cue, param_2);
 }
 
 void TCannonDom::setBckAnm(int param_1)
@@ -258,7 +257,7 @@ void TCannon::load(JSUMemoryInputStream& param_1)
 	TSmallEnemy::load(param_1);
 	reset();
 	resetHitPoints();
-	unk230 = SMSGetApplication()->mCurrArea.getStage();
+	unk230 = SMSGetApplication()->getCurrArea().getStage();
 	unk23C = mPosition;
 }
 
@@ -295,7 +294,7 @@ void TCannon::init(TLiveManager* param_1)
 	SDLModelData* modelData
 	    = new SDLModelData(J3DModelLoaderDataBase::load(resource, 0x10050000));
 	unk234 = mRotation.y;
-	unk230 = SMSGetApplication()->mCurrArea.getStage();
+	unk230 = SMSGetApplication()->getCurrArea().getStage();
 	if (unk230 == 5 || unk230 == 9) {
 		mSpine->initWith(&TNerveCannonSearch::theNerve());
 		if (unk230 == 9) {
@@ -460,14 +459,14 @@ void TCannon::entryObjCollision()
 
 const char** TCannon::getBasNameTable() const { return cannon_bastable; }
 
-void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
+void TCannon::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	TSmallEnemy::perform(param_1, param_2);
+	TSmallEnemy::perform(cue, param_2);
 	if (unk238) {
-		unk1BC->getMActor()->perform(param_1, param_2);
-		if ((param_1 & CUE_MOVE) && unk1BC->getMActor()->curAnmEndsNext())
+		unk1BC->getMActor()->perform(cue, param_2);
+		if ((cue & CUE_MOVE) && unk1BC->getMActor()->curAnmEndsNext())
 			unk238 = 0;
-		if ((param_1 & CUE_CALC_ANIM) && unk230 == 1) {
+		if ((cue & CUE_CALC_ANIM) && unk230 == 1) {
 			if (unk1BC->getMActor()
 			        ->getFrameCtrl(ANM_TYPE_BCK)
 			        ->checkPass(174.0f)) {
@@ -492,8 +491,8 @@ void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
 		}
 	}
 	if (unk230 == 5 || unk230 == 9) {
-		unk1A8->perform(param_1, param_2);
-		if ((param_1 & CUE_ENTRY)
+		unk1A8->perform(cue, param_2);
+		if ((cue & CUE_ENTRY)
 		    && mSpine->getCurrentNerve() == &TNerveCannonDamage::theNerve()) {
 			unk1A8->unk6C->getMActor()->offMakeDL();
 			SMS_AddDamageFogEffect(
@@ -503,7 +502,7 @@ void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
 		for (int i = 0; i < ARRAY_COUNT(unk1AC); i++) {
 			if (unk1AC[i]->unk24)
 				continue;
-			if (param_1 == CUE_MOVE) {
+			if (cue == CUE_MOVE) {
 				f32 dist = unk28C->mSLBombDist.get();
 				if (dist * dist < mDistToMarioSquared && unk230 == 5) {
 					unk1AC[i]->unk2C = unk224[i];
@@ -528,10 +527,10 @@ void TCannon::perform(u32 param_1, JDrama::TGraphics* param_2)
 					unk1C0[i]->moveMtx(unk1AC[i]->getConnectedMtx());
 				}
 			}
-			unk1AC[i]->perform(param_1, param_2);
+			unk1AC[i]->perform(cue, param_2);
 		}
 	} else if (!unk1B8->unk24) {
-		unk1B8->perform(param_1, param_2);
+		unk1B8->perform(cue, param_2);
 	}
 }
 
@@ -755,7 +754,7 @@ void TCannon::killerShoot()
 		killer->mRotation.set(
 		    0.0f, MsWrap(MsGetRotFromZaxisY(velocity), 0.0f, 360.0f), 0.0f);
 		killer->mScaling.set(0.1f, 0.1f, 0.1f);
-		if (SMSGetMarDirector()->mState == TMarDirector::STATE_UNK1) {
+		if (SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK1) {
 			velocity.x *= 0.2f;
 			velocity.y *= 0.4f;
 			velocity.z *= 0.2f;
@@ -933,8 +932,8 @@ DEFINE_NERVE(TNerveCannonSearch, TLiveActor)
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_CANNON_MOVE,
 		                                &cannon->mPosition, 0, nullptr, 0, 4);
 	}
-	if (SMSGetApplication()->mCurrArea.getStage() == 5
-	    && SMSGetMarDirector()->mState == TMarDirector::STATE_UNK1) {
+	if (SMSGetApplication()->getCurrArea().getStage() == 5
+	    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK1) {
 		JGeometry::TVec3<f32> delta
 		    = SMS_DistanceFromMarioVec(cannon->mPosition);
 		cannon->mRotation.y = MsGetRotFromZaxis(delta).y;
@@ -1077,7 +1076,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 		if (cannon->getHitPoints() == 0) {
 			cannon->killShootAct();
 			cannon->unk1A8->setBckAnm(13);
-			if (SMSGetApplication()->mCurrArea.getStage() == 5)
+			if (SMSGetApplication()->getCurrArea().getStage() == 5)
 				SMSRumbleMgr->start(24, static_cast<f32*>(nullptr));
 			else
 				SMSRumbleMgr->start(23, static_cast<f32*>(nullptr));
@@ -1091,7 +1090,7 @@ DEFINE_NERVE(TNerveCannonDamage, TLiveActor)
 			    PARTICLE_MS_CHO_MOKU_A, &cannon->unk294, 0, nullptr);
 			if (next)
 				next->setGlobalScale(cannon->unk1A8->mScaling);
-			if (SMSGetApplication()->mCurrArea.getStage() == 5) {
+			if (SMSGetApplication()->getCurrArea().getStage() == 5) {
 				cannon->unk2A0   = cannon->mPosition;
 				cannon->unk2A0.y = 0.0f;
 				SMSGetMarDirector()->fireStartDemoCamera(

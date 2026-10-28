@@ -11,6 +11,8 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 void TMapWarp::changeModel(int i)
 {
@@ -23,7 +25,18 @@ void TMapWarp::changeModel(int i)
 	unk8 = i;
 }
 
-void TMapWarp::warp(int) { }
+void TMapWarp::warp(int idx)
+{
+	int no = unk4[idx].unk0;
+	if (unk8 != no) {
+		gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
+		gpMap->getModelManager()->getJointModel(0)->getChild(no)->awake();
+		unk8 = unk4[idx].unk0;
+
+		JGeometry::TVec3<f32> pos = SMS_GetMarioPos() + unk4[idx].unk8;
+		SMS_MarioWarpRequest(pos, (SMS_GetMarioAngleY() * 180.0f) / 32768.0f);
+	}
+}
 
 void TMapWarp::watchToWarp()
 {
@@ -32,32 +45,11 @@ void TMapWarp::watchToWarp()
 	                                     SMS_GetMarioPos().y + 30.0f,
 	                                     SMS_GetMarioPos().z, &checkData);
 
-	if (checkData->isWarp()) {
-		int warp = unk4[checkData->getData()].unk0;
-		if (warp != unk8) {
-			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-			gpMap->getModelManager()->getJointModel(0)->getChild(warp)->awake();
-			unk8 = warp;
+	if (checkData->isWarp())
+		warp(checkData->getData());
 
-			// TODO: inlines
-			JGeometry::TVec3<f32> marioPos = SMS_GetMarioPos();
-			marioPos += unk4[checkData->getData()].unk8;
-			SMS_MarioWarpRequest(marioPos,
-			                     (SMS_GetMarioAngleY() * 180.0f) / 32768.0f);
-		}
-	}
-
-	if (checkData->isMapChange()) {
-		if (checkData->getData() != unk8) {
-			gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-			gpMap->getModelManager()
-			    ->getJointModel(0)
-			    ->getChild(checkData->getData())
-			    ->awake();
-
-			unk8 = checkData->getData();
-		}
-	}
+	if (checkData->isMapChange())
+		changeModel(checkData->getData());
 
 	int no = gpCubeStream->getInCubeNo(SMS_GetMarioPos());
 	if (no == -1)
@@ -68,7 +60,8 @@ void TMapWarp::watchToWarp()
 	MsMtxSetXYZRPH(mtx, 0.0f, 0.0f, 0.0f, info.unk18.x, info.unk18.y,
 	               info.unk18.z);
 
-	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, info.unk40 * 0.01f);
+	JGeometry::TVec3<f32> vec2(0.0f, 0.0f, 0.0f);
+	vec2.z = 0.01f * info.unk40;
 	MTXMultVec(mtx, &vec2, &vec2);
 	if ((info.unk38 == 0 ? true : false) || (info.unk38 == 1 ? true : false))
 		SMS_FlowMoveMario(vec2);
@@ -158,7 +151,7 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 		unk4[2 * i + 1].unk4 = local_180[i];
 	}
 
-	if (SMSGetMarDirector()->mMap == 4) {
+	if (SMSGetMarDirector()->getCurrentStage() == 4) {
 		unkC = 8.0f;
 	}
 }

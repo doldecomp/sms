@@ -28,26 +28,27 @@ bool SMS_isExMap(u8 stage) { return stage > 0x14 && stage < 0x35; }
 
 bool SMS_isExMap()
 {
-	return (SMSGetApplication()->mCurrArea.getStage() > 0x14
-	        && SMSGetApplication()->mCurrArea.getStage() < 0x35);
+	return (SMSGetApplication()->getCurrArea().getStage() > 0x14
+	        && SMSGetApplication()->getCurrArea().getStage() < 0x35);
 }
 
 bool SMS_isMultiPlayerMap()
 {
-	return (SMSGetMarDirector()->mMap == 12 && SMSGetMarDirector()->unk7D == 0);
+	return (SMSGetMarDirector()->getCurrentStage() == 12
+	        && SMSGetMarDirector()->getCurrentScenario() == 0);
 }
 
 bool SMS_isDivingMap()
 {
 	bool ret = false;
 
-	if (SMSGetMarDirector()->mMap == 0x39) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0x39) {
 		ret = true;
 	}
-	if (SMSGetMarDirector()->mMap == 0x2C) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0x2C) {
 		ret = true;
 	}
-	if (SMSGetMarDirector()->mMap == 0x10) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0x10) {
 		ret = true;
 	}
 
@@ -58,7 +59,7 @@ bool SMS_isOptionMap()
 {
 	bool ret = false;
 
-	if (SMSGetMarDirector()->mMap == 15) {
+	if (SMSGetMarDirector()->getCurrentStage() == 15) {
 		ret = true;
 	}
 	return ret;

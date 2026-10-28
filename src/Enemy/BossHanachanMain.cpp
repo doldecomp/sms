@@ -41,7 +41,6 @@
 #include <stdlib.h>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -317,7 +316,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 		if ((cue & CUE_MOVE) && (graphics->unk0 & 2)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_WT_BOSS_FADEAWAY, &mPosition,
 			                                0, nullptr, 0, 4);
-			if (!gpMarDirector->isThing()
+			if (!gpMarDirector->isInTalkNow()
 			    && (checkLiveFlag(LIVE_FLAG_UNK100000)
 			        || gpMSound->unk98->modBgm(1, 1) == 0)) {
 				onLiveFlag(LIVE_FLAG_UNK40 | LIVE_FLAG_DEAD);
@@ -329,7 +328,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 		return;
 	}
 	if (cue & CUE_MOVE) {
-		if (gpMarDirector->isThing()) {
+		if (gpMarDirector->isInTalkNow()) {
 			mPositionDelta.zero();
 			mRotationDelta.zero();
 			if ((graphics->unk0 & 2)
@@ -344,7 +343,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			    && mMarchSpeed != 0.0f
 			    && !(mSpine->getLatestNerve()
 			         == &TNerveBossHanachanTumble::theNerve())) {
-				if (unk1B8 == -1 && gpMarDirector->mState == 4)
+				if (unk1B8 == -1 && gpMarDirector->getState() == 4)
 					unk1B8 = 7200;
 				else if (unk1B8 > 0) {
 					--unk1B8;
@@ -624,7 +623,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 	if (cue & CUE_CALC_ANIM) {
 		gpTargetArrow->unk14 = 0;
-		if (!gpMarDirector->isThing()) {
+		if (!gpMarDirector->isInTalkNow()) {
 			bool walking = false;
 			if ((mSpine->getLatestNerve()
 			     == &TNerveBossHanachanGraphWander::theNerve())
@@ -678,7 +677,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 		if (checkLiveFlag(LIVE_FLAG_UNK10000)
 		    && unk19C->curAnmEndsNext(0, nullptr))
 			offLiveFlag(LIVE_FLAG_UNK10000);
-		if (!gpMarDirector->isThing())
+		if (!gpMarDirector->isInTalkNow())
 			changeAnmRateAndFrameUpdate_();
 		mHead->unk110->execMotionBlend(mHead->getMActor());
 		for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
@@ -687,7 +686,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_CALC_ANIM) {
 		execHeadCalcAnim_();
 		execBodyCalcAnim_();
-		if (!gpMarDirector->isThing()
+		if (!gpMarDirector->isInTalkNow()
 		    && ((mSpine->getLatestNerve()
 		         == &TNerveBossHanachanTumble::theNerve())
 		        || (mSpine->getLatestNerve()

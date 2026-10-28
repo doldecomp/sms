@@ -17,7 +17,7 @@ public:
 	{
 	}
 
-public:
+protected:
 	/* 0x138 */ u8 unk138;
 };
 
@@ -31,7 +31,7 @@ public:
 	{
 	}
 
-public:
+private:
 	/* 0x13C */ TMapObjBase* unk13C;
 };
 
@@ -64,7 +64,7 @@ public:
 		STATE_UNK6 = 0x6,
 	};
 
-public:
+private:
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ u8 unk140;
 };
@@ -97,7 +97,7 @@ public:
 		STATE_UNK4 = 0x4,
 	};
 
-public:
+protected:
 	/* 0x13C */ f32 unk13C;
 	/* 0x140 */ f32 unk140;
 	/* 0x144 */ TMapObjMessenger* unk144;
@@ -134,7 +134,7 @@ public:
 		STATE_UNK4 = 0x4,
 	};
 
-public:
+private:
 	/* 0x13C */ TGraphTracer* unk13C;
 	/* 0x140 */ f32 unk140;
 };

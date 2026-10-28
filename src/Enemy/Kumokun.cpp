@@ -14,7 +14,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* kumokun_bastable[] = {
 	"/scene/kumokun/bas/kumo_down1.bas",
@@ -68,7 +67,7 @@ public:
 		tmp.set(*param_2);
 		f32 dist = wall->mNormal.dot(tmp) - wall->mDist;
 		if (param_3 - dist > 0.0f) {
-			param_2->scaleAdd(param_3 - dist, tmp, wall->mNormal);
+			param_2->scaleAdd(param_3 - dist, wall->mNormal, tmp);
 			return true;
 		}
 		return false;
@@ -94,15 +93,14 @@ bool TWallAtGraph::init(const TGraphWeb* param_1,
 	unk0   = new TPartition3f[sz];
 
 	for (int i = 0; i < sz; ++i) {
-		JGeometry::TVec3<f32> diff
-		    = param_1->indexToPoint(i + 1 - ((i + 1) / sz) * sz);
+		JGeometry::TVec3<f32> diff = param_1->indexToPoint((i + 1) % sz);
 		diff -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_54 = param_2;
 		local_54 -= param_1->indexToPoint(i);
 
 		JGeometry::TVec3<f32> local_70;
-		local_70.cross(param_3, diff);
+		local_70.cross2(param_3, diff);
 		local_70.normalize();
 		if (local_70.dot(local_54) < 0.0f)
 			local_70.negate();
@@ -285,7 +283,7 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 	bool result = false;
 
 	JGeometry::TVec3<f32> local_30 = getPlaneNormal();
-	local_30.scaleAdd(100.0f, param_3, local_30);
+	local_30.scaleAdd(100.0f, local_30, param_3);
 
 	JGeometry::TVec3<f32> local_3C = local_30;
 	local_3C += param_4;
@@ -301,7 +299,7 @@ bool TKumokun::checkOnMovingWall(JGeometry::TVec3<f32>* param_1,
 	}
 
 	JGeometry::TVec3<f32> local_48 = getPlaneNormal();
-	local_48.scaleAdd(-10.0f, local_3C, local_48);
+	local_48.scaleAdd(-10.0f, local_48, local_3C);
 
 	const TBGCheckData* wall = checkWallPlane(&local_48, mHeadHeight, 100.0f);
 
@@ -915,10 +913,10 @@ JGeometry::TVec3<f32> TKumokun::getPlaneNormal() const
 const TBGCheckData* TKumokun::checkWallPlane(JGeometry::TVec3<f32>* param_1,
                                              f32 param_2, f32 param_3)
 {
+	const TBGCheckData* wall = nullptr;
 	TBGWallCheckRecord record(param_1->x, param_1->y + param_2, param_1->z,
 	                          param_3, 1, 0);
 
-	const TBGCheckData* wall = nullptr;
 	if (gpMap->isTouchedWallsAndMoveXZ(&record))
 		wall = record.mResultWalls[0];
 
@@ -980,7 +978,7 @@ bool TKumokun::isFenceSound(const TBGCheckData* wall)
 		return false;
 
 	if (wall->isFence()) {
-		if (SMSGetMarDirector()->mMap == 8)
+		if (SMSGetMarDirector()->getCurrentStage() == 8)
 			return false;
 	} else {
 		return false;

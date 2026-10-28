@@ -42,7 +42,6 @@
 #include <string.h>
 
 // rogue includes needed for matching sinit & bss
-#include <M3DUtil/InfectiousStrings.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -672,7 +671,7 @@ void TMapObjPuncher::load(JSUMemoryInputStream& param_1)
 
 void TMuddyBoat::moveByWater()
 {
-	if (SMS_GetMarioWaterGun()->mEmittedWaterCount != 0) {
+	if (SMS_GetMarioWaterGun()->getEmittedWaterCount() != 0) {
 		MtxPtr emitMtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 		JGeometry::TVec3<f32> dir(-emitMtx[0][0], 0.0f, -emitMtx[2][0]);
 		MsVECNormalize(&dir, &dir);
@@ -879,7 +878,7 @@ void TMuddyBoat::initMapObj()
 	unk13C = 0.01f;
 	unk168 = 600;
 
-	if (SMSGetMarDirector()->getCurrentMap() == 0x34) {
+	if (SMSGetMarDirector()->getCurrentStage() == 0x34) {
 		unk158 = 126.0f;
 		unk154 = 185.0f;
 		unk15C = 150.0f;

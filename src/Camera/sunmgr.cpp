@@ -12,8 +12,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#include <System/Application.hpp>
 
 const char* cSunWarpPointName = "太陽ワープポイント";
 
@@ -54,7 +53,7 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 		}
 	}
 
-	if (unk14 != 0 && SMSGetMarDirector()->getCurrentMap() == 1
+	if (unk14 != 0 && SMSGetMarDirector()->getCurrentStage() == 1
 	    && TFlagManager::getInstance()->getBool(MSF_NOKI_AVAILABLE)) {
 		unk15 |= 0x1;
 		TStagePositionInfo* sunWarpPoint

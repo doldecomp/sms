@@ -4,16 +4,13 @@
 #include <JSystem/J3D/J3DGraphBase/J3DTexture.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DMaterial.hpp>
 #include <System/MarDirector.hpp>
-#include <M3DUtil/M3UModelMario.hpp>
 #include <MarioUtil/DrawUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 
 // rogue includes needed for matching sinit & bss
-#include <System/DummyStrings.hpp>
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
+#include <System/Application.hpp>
+#include <M3DUtil/M3UModelMario.hpp>
 
 TMarioCap::TMarioCap(TMario* mario)
 {
@@ -118,7 +115,7 @@ void TMarioCap::createMirrorCap()
 {
 	for (int i = 0; i < 2; ++i) {
 		unk28[i] = new TMirrorActor("マリオ帽子in鏡");
-		unk28[i]->init(unk10[i], 4);
+		unk28[i]->init(unk10[i], TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 	}
 }
 

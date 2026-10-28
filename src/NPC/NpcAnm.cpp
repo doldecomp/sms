@@ -19,7 +19,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // TODO: should be in a header and violate ODR
 const char* cNpcPartsNameRootJoint = "__ROOT_JOINT__";
@@ -400,7 +399,7 @@ void TBaseNPC::npcWaitIn()
 			if (!unk124->unk0->isDummy()) {
 				if (mSpine->getLatestNerve()
 				    == &TNerveNPCGraphWait::theNerve()) {
-					if (!SMSGetMarDirector()->isThing())
+					if (!SMSGetMarDirector()->isInTalkNow())
 						kind = getNpcWaitAnmBase_();
 				}
 			} else {

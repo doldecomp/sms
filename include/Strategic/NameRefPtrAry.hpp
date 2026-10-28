@@ -5,7 +5,7 @@
 #include <JSystem/JGadget/std-vector.hpp>
 
 template <class T, class U = JDrama::TNameRef>
-class TNameRefPtrAryT : public U, public JGadget::TVector_pointer<T> {
+class TNameRefPtrAryT : public U, public JGadget::TVector_pointer<T*> {
 public:
 	TNameRefPtrAryT(const char* name = "<NameRefPtrAryT>")
 	    : U(name)
@@ -15,43 +15,16 @@ public:
 	virtual ~TNameRefPtrAryT() { }
 
 	// fabricated
-	JGadget::TVector_pointer<T>& getChildren() { return *this; }
+	JGadget::TVector_pointer<T*>& getChildren() { return *this; }
 
-	virtual void load(JSUMemoryInputStream& stream)
+	T& operator[](size_t i)
 	{
-		U::load(stream);
-		u32 local_44 = stream.readU32();
-		getChildren().reserve(local_44);
-		for (int i = 0; i < local_44; ++i) {
-			JSUMemoryInputStream stream2;
-			JDrama::TNameRef* ref
-			    = JDrama::TNameRef::genObject(stream, stream2);
-			if (ref) {
-				getChildren().push_back((T*)ref);
-				ref->load(stream2);
-			}
-		}
+		return *JGadget::TVector_pointer<T*>::operator[](i);
 	}
 
-	virtual void loadAfter()
-	{
-		U::loadAfter();
-
-		for (T** it = getChildren().begin(); it != getChildren().end(); ++it)
-			(*it)->loadAfter();
-	}
-
-	virtual JDrama::TNameRef* searchF(u16 key, char const* name)
-	{
-		if (JDrama::TNameRef* ref = JDrama::TNameRef::searchF(key, name))
-			return ref;
-
-		for (T** it = getChildren().begin(); it != getChildren().end(); ++it)
-			if (JDrama::TNameRef* ref = (*it)->searchF(key, name))
-				return ref;
-
-		return nullptr;
-	}
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void loadAfter();
+	virtual JDrama::TNameRef* searchF(u16 key, char const* name);
 };
 
 #endif

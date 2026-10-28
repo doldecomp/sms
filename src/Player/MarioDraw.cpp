@@ -1,9 +1,9 @@
 #include <Player/Mario.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <Player/Yoshi.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <Player/MarioAnimeData.hpp>
 #include <Player/MarioCap.hpp>
 #include <Player/WaterGun.hpp>
-
 #include <MarioUtil/MathUtil.hpp>
 #include <MarioUtil/PacketUtil.hpp>
 #include <MarioUtil/TexUtil.hpp>
@@ -29,12 +29,8 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 TMario* gpMarioForCallBack;
-
-const char cDirtyFileName[] = "/scene/map/pollution/H_ma_rak.bti";
-const char cDirtyTexName[]  = "H_ma_rak_dummy";
 
 // clang-format off
 TMarioAnimeData gMarioAnimeData[336] = {
@@ -438,7 +434,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 	Mtx transform;
 	if (param_2 == 0) {
 		if (gpMarioForCallBack->mStatus == MARIO_STATUS_READ_BILLBOARD) {
-			TBaseNPC* npc = SMSGetMarDirector()->unkA0;
+			TBaseNPC* npc = SMSGetMarDirector()->getTalkingNPC();
 			if (npc == nullptr)
 				return 0;
 
@@ -452,7 +448,7 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 			s16 angle = -matan(mult, other.y);
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(angle));
 		} else if (gpMarioForCallBack->mStatus == MARIO_STATUS_ROCKET
-		           && gpMarioForCallBack->mWaterGun->canSpray() == true) {
+		           && gpMarioForCallBack->mWaterGun->isEmitting() == true) {
 			s16 headAngle
 			    = gpMarioForCallBack->mUpperBodyParams.mHoverHeadAngle.get();
 			MsMtxSetRotRPH(transform, 0.0f, 0.0f, SHORTANGLE2DEG(headAngle));
@@ -922,66 +918,65 @@ f32 TMario::setAnimation(int anm_id, f32 rate)
 		}
 
 		switch (mYoshi->mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
-		case 0x1:
+		case 0x16:
 			anm_id = 0xB6;
 			break;
-		case 0x2:
+		case 0x18:
 			anm_id = 0xB7;
 			break;
-		case 0x3:
+		case 0xF:
 			anm_id = 0xB8;
 			break;
-		case 0x4:
+		case 0x3:
 			anm_id = 0xB9;
 			break;
-		case 0x6:
+		case 0xE:
 			anm_id = 0xBF;
 			break;
-		case 0x7:
+		case 0x4:
 			anm_id = 0xBA;
 			break;
-		case 0x8:
+		case 0xA:
 			anm_id = 0xBB;
 			break;
-		case 0x9:
+		case 0xC:
 			anm_id = 0xBC;
 			break;
-		case 0xA:
+		case 0xB:
 			anm_id = 0xBD;
 			break;
-		case 0xB:
+		case 0x9:
 			anm_id = 0xBE;
-			break;
-		case 0xC:
-			anm_id = 0xB8;
-			break;
-		case 0xE:
-			anm_id = 0xC0;
-			break;
-		case 0xF:
-			anm_id = 0xC1;
 			break;
 		case 0x10:
 		case 0x11:
+			anm_id = 0xB8;
+			break;
+		case 0x8:
+			anm_id = 0xC0;
+			break;
+		case 0x7:
+			anm_id = 0xC1;
+			break;
+		case 0x6:
 			anm_id = 0xC2;
 			break;
-		case 0x12:
+		case 0x2:
 			anm_id = 0xC4;
 			break;
 		case 0x13:
 			anm_id = 0xC5;
 			break;
-		case 0x16:
+		case 0x12:
 			anm_id = 0xC6;
 			break;
-		case 0x18:
 		default:
 			anm_id = 0xB6;
 			break;
 		}
 
 		bool check = false;
-		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->canSpray()) {
+		if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun->isEmitting()) {
 			check = true;
 		}
 
@@ -1284,9 +1279,9 @@ void TMario::initModel()
 	}
 
 	mSurfGesso = nullptr;
-	if (SMSGetMarDirector()->mMap == 58
-	    && (SMSGetMarDirector()->unk7D == 0
-	        || SMSGetMarDirector()->unk7D == 1)) {
+	if (SMSGetMarDirector()->getCurrentStage() == 58
+	    && (SMSGetMarDirector()->getCurrentScenario() == 0
+	        || SMSGetMarDirector()->getCurrentScenario() == 1)) {
 		MActorAnmData* anmData = new MActorAnmData();
 		anmData->init("/scene/map/map/Torocco", nullptr);
 		mTorocco = new MActor(anmData);
@@ -1299,7 +1294,7 @@ void TMario::initModel()
 		                                     | (4 << J3DMLF_TevStageNumShift)),
 		                 0, 1),
 		    0);
-		if (SMSGetMarDirector()->unk7D == 0) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 0) {
 			mRailType              = 0;
 			MActorAnmData* anmData = new MActorAnmData();
 			anmData->init("/scene/map/map/Pinna_rail", nullptr);
@@ -1324,7 +1319,7 @@ void TMario::initModel()
 			mTorocco->getModel()->setBaseTRMtx(
 			    mPinaRail->getModel()->getAnmMtx(0));
 		}
-		if (SMSGetMarDirector()->unk7D == 1) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 1) {
 			mRailType              = 1;
 			MActorAnmData* anmData = new MActorAnmData();
 			anmData->init("/scene/map/map/Koopa_rail", nullptr);
@@ -1391,18 +1386,21 @@ void TMario::initMirrorModel()
 		mCap->createMirrorCap();
 
 	TMirrorActor* mirrorActor = new TMirrorActor("マリオin鏡");
-	mirrorActor->init(mModel->getModel(), 4);
+	mirrorActor->init(mModel->getModel(),
+	                  TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 
 	for (int handIdx = 0; handIdx < 2; ++handIdx) {
 		for (int modelIdx = 0; modelIdx < 2; ++modelIdx) {
 			TMirrorActor* handMirrorActor = new TMirrorActor("マリオ手in鏡");
-			handMirrorActor->init(mHandModels[handIdx][modelIdx], 4);
+			handMirrorActor->init(mHandModels[handIdx][modelIdx],
+			                      TMirrorActor::MIRROR_ACTOR_FLAG_MARIO);
 		}
 	}
 
 	if (mTorocco != nullptr) {
 		TMirrorActor* toroccoMirrorActor = new TMirrorActor("トロッコin鏡");
-		toroccoMirrorActor->init(mTorocco->getModel(), 2);
+		toroccoMirrorActor->init(mTorocco->getModel(),
+		                         TMirrorActor::MIRROR_ACTOR_FLAG_ALWAYS);
 	}
 }
 
@@ -1510,13 +1508,12 @@ void TMario::calcBaseMtxTorocco(MtxPtr mtx)
 {
 	if (mRailType == 0) {
 		mPinaRail->calcAnm();
-		MTXCopy(mPinaRail->getModel()->getAnmMtx(0),
-		        mTorocco->getModel()->getBaseTRMtx());
+		mTorocco->getModel()->setBaseTRMtx(mPinaRail->getModel()->getAnmMtx(0));
 	}
 	if (mRailType == 1) {
 		mKoopaRail->calcAnm();
-		MTXCopy(mKoopaRail->getModel()->getAnmMtx(0),
-		        mTorocco->getModel()->getBaseTRMtx());
+		mTorocco->getModel()->setBaseTRMtx(
+		    mKoopaRail->getModel()->getAnmMtx(0));
 	}
 
 	mTorocco->calcAnm();
@@ -1539,7 +1536,7 @@ void TMario::calcBaseMtxPole(MtxPtr mtx)
 	ti.mRotation.y  = mModelFaceAngle;
 	ti.mRotation.z  = 0;
 	f32 radiusAtY   = mHolder->getRadiusAtY(mPosition.y);
-	ti.mTranslate.x = mPosition.x - (radiusAtY * JMASSin(mModelFaceAngle));
+	ti.mTranslate.x = mPosition.x - radiusAtY * JMASSin(mModelFaceAngle);
 	ti.mTranslate.y = mPosition.y;
 	ti.mTranslate.z = mPosition.z - radiusAtY * JMASCos(mModelFaceAngle);
 	J3DGetTranslateRotateMtx(ti, mtx);
@@ -1793,13 +1790,14 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	modelData->getJointNodePointer(mJointIdChnChest)
 	    ->setCallBack(MarioWaistCtrl);
 
-	if (0x4B0 > SMSGetMarDirector()->mMoveTickCount || isUpperPumpingStyle()) {
+	if (0x4B0 > SMSGetMarDirector()->getMoveTickCount()
+	    || isUpperPumpingStyle()) {
 		if (mMultiMtxEffect != nullptr) {
 			mMultiMtxEffect->flagOff(0x1);
 		}
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CDC->mMtxEffectTbl[1]->offFlag(1);
+			mWaterGun->getMultiMtxEffect()->mMtxEffectTbl[1]->offFlag(1);
 		}
 
 		if (mCap != nullptr) {
@@ -1825,10 +1823,10 @@ void TMario::addCallBack(JDrama::TGraphics* graphics)
 	if ((gMarioAnimeData[mAnimationId].unk6 & 4) != 0
 	    && mUpperState == UPPER_STATE_IDLE) {
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-			mWaterGun->unk1CDC->mMtxEffectTbl[1]->onFlag(1);
+			mWaterGun->getMultiMtxEffect()->mMtxEffectTbl[1]->onFlag(1);
 		}
 	} else if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {
-		mWaterGun->unk1CDC->mMtxEffectTbl[1]->offFlag(1);
+		mWaterGun->getMultiMtxEffect()->mMtxEffectTbl[1]->offFlag(1);
 	}
 
 	if ((graphics->unk0 & 2) != 0) {
@@ -1890,7 +1888,7 @@ void TMario::addUpper()
 			frameCtrl.setAttribute(J3DFrameCtrl::ATTR_PING_PONG_LOOP);
 			mPumpAnmRate
 			    = mGamePad->mCompSPos[3] * mUpperBodyParams.mPumpAnmSpeed.get();
-			if (mWaterGun->mCurrentWater <= 0) {
+			if (mWaterGun->getCurrentWater() <= 0) {
 				if (frameCtrl.getRate() >= 0.0f) {
 					frameCtrl.setRate(mPumpAnmRate);
 					if (frameCtrl.checkPass(8.0f)) {
@@ -1920,11 +1918,11 @@ void TMario::removeCallBack()
 	modelData->getJointNodePointer(mJointIdFootL)->setCallBack(nullptr);
 }
 
-void TMario::calcAnim(u32 param_1, JDrama::TGraphics* graphics)
+void TMario::calcAnim(u32 cue, JDrama::TGraphics* graphics)
 {
 	addCallBack(graphics);
 	addUpper();
-	calcAnimBody(param_1, graphics);
+	calcAnimBody(cue, graphics);
 	removeCallBack();
 
 	calcAnimHands();
@@ -2093,7 +2091,7 @@ void TMario::boxDrawPrepare(MtxPtr mtx)
 	f32 psave[7];
 	GXGetProjectionv(psave);
 
-	f32 wpsave[5];
+	f32 wpsave[6];
 	GXGetViewportv(wpsave);
 
 	JGeometry::TVec3<f32> pos = mPosition;

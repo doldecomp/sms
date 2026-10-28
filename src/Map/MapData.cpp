@@ -16,23 +16,23 @@ f32 TBGCheckData::getActiveJumpPower() const
 	return mData;
 }
 
-u32 TBGCheckData::getPlaneType()
+BGPlaneType TBGCheckData::getPlaneType()
 {
 	if (isEverythingButMapObjectsThrough())
-		return 0;
+		return BG_PLANE_TYPE_GROUND;
 
 	if (mNormal.y > 0.2f)
-		return 0;
+		return BG_PLANE_TYPE_GROUND;
 
 	if (mNormal.y < -0.2f)
-		return 1;
+		return BG_PLANE_TYPE_ROOF;
 
 	if (mNormal.x < -0.707f || 0.707f < mNormal.x)
 		mFlags |= BG_CHECK_FLAG_X_FACING;
 	else
 		mFlags &= ~BG_CHECK_FLAG_X_FACING;
 
-	return 2;
+	return BG_PLANE_TYPE_WALL;
 }
 
 TBGCheckData::TBGCheckData()

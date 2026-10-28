@@ -23,7 +23,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 static const char* poihana_bastable[] = {
 	"/scene/poihana/bas/poihana_dash.bas",
@@ -70,7 +69,7 @@ void TPoiHanaManager::load(JSUMemoryInputStream& stream)
 
 TSmallEnemy* TPoiHanaManager::createEnemyInstance()
 {
-	if (SMSGetApplication()->mCurrArea.getStage() == 0x38)
+	if (SMSGetApplication()->getCurrArea().getStage() == 0x38)
 		return new TPoiHana;
 	return nullptr;
 }

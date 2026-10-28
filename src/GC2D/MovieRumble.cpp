@@ -6,41 +6,43 @@
 #include <System/THPRender.hpp>
 #include <stdio.h>
 
-// TODO: removeme
-static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
-static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
+#define MOVIE_RUMBLE_DATA_INVALID (-1)
 
-TMovieRumble::TMovieRumble(const TTHPRender* param_1)
-    : unk10(param_1)
+// TODO: removeme
+#include <System/Application.hpp>
+
+TMovieRumble::TMovieRumble(const TTHPRender* thpRenderer)
+    : mThpRenderer(thpRenderer)
 {
 }
 
-void TMovieRumble::init(const char* param_1)
+void TMovieRumble::init(const char* movieRumbleFile)
 {
-	char acStack_90[128];
-	makeBcrName(acStack_90, 128, param_1);
+	char bcrName[128];
+	makeBcrName(bcrName, sizeof(bcrName), movieRumbleFile);
 
-	unk14     = new Koga::ToolData;
-	void* bcr = JKRGetResource(acStack_90);
-	unk14->Attach(bcr);
-	if (!unk14->dataExists())
-		unk18 = -1;
+	mToolData = new Koga::ToolData;
+	void* bcr = JKRGetResource(bcrName);
+	mToolData->Attach(bcr);
+	if (!mToolData->dataExists())
+		mTooldataIndex = MOVIE_RUMBLE_DATA_INVALID;
 	else
-		unk18 = 0;
+		mTooldataIndex = 0;
 
 	readCurInfo();
-	unk28 = false;
+	mIsDoingRumble = false;
 }
 
-void TMovieRumble::perform(u32 cue, JDrama::TGraphics*)
+void TMovieRumble::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (cue & CUE_MOVE)
+	bool isPerform = cue & CUE_MOVE;
+	if (isPerform)
 		movement();
 }
 
 void TMovieRumble::movement()
 {
-	if (unk28) {
+	if (mIsDoingRumble) {
 		checkRumbleOff();
 	} else {
 		checkRumbleOn();
@@ -49,43 +51,46 @@ void TMovieRumble::movement()
 
 void TMovieRumble::checkRumbleOn()
 {
-	if (unk24 != -1 && unk1C <= unk10->getFrameNumber()) {
-		SMSRumbleMgr->start(unk24, -1, (f32*)nullptr);
-		unk28 = true;
+	if (mRumbleType != -1 && mStartFrame <= mThpRenderer->getFrameNumber()) {
+		SMSRumbleMgr->start(mRumbleType, -1, (f32*)nullptr);
+		mIsDoingRumble = true;
 	}
 }
 
-#pragma dont_inline on
 void TMovieRumble::checkRumbleOff()
 {
-	if (unk24 != -1 && unk20 <= unk10->getFrameNumber()) {
-		SMSRumbleMgr->stop();
-		unk18 += 1;
-		readCurInfo();
-		unk28 = false;
-	}
+	if (mRumbleType == -1)
+		return;
+
+	if (mEndFrame > mThpRenderer->getFrameNumber())
+		return;
+
+	SMSRumbleMgr->stop();
+	mTooldataIndex += 1;
+	readCurInfo();
+	mIsDoingRumble = false;
 }
-#pragma dont_inline off
 
 void TMovieRumble::readCurInfo()
 {
-	int group = unk18;
+	Koga::ToolData* toolData = mToolData;
+	int group                = mTooldataIndex;
 
-	if (isValid() && unk14->isIndexValid(group)) {
-		Koga::ToolData* toolData = unk14;
-		toolData->GetValue(group, "start_frame", unk1C);
-		toolData->GetValue(group, "end_frame", unk20);
+	if (isValid() && toolData->isIndexValid(group)) {
+		toolData->GetValue(group, "start_frame", mStartFrame);
+		toolData->GetValue(group, "end_frame", mEndFrame);
 		const char* type;
 		toolData->GetValue(group, "type", type);
-		unk24 = RumbleType::getIndex((char*)type);
+		mRumbleType = RumbleType::getIndex((char*)type);
 	} else {
-		unk24 = -1;
+		mRumbleType = -1;
 	}
 }
 
-void TMovieRumble::makeBcrName(char* acStack_90, int, const char* param_1)
+void TMovieRumble::makeBcrName(char* out_bcrName, int,
+                               const char* movieRumbleFile)
 {
-	sprintf(acStack_90, "/subtitle/rnbl/%s", param_1);
-	char* it = strrchr(acStack_90, '.');
+	sprintf(out_bcrName, "/subtitle/rnbl/%s", movieRumbleFile);
+	char* it = strrchr(out_bcrName, '.');
 	strcpy(it, ".bcr");
 }

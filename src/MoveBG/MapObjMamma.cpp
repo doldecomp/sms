@@ -1,5 +1,5 @@
 #include <JSystem/JAudio/JALibrary/JALSystem.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
@@ -762,7 +762,7 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	stream >> size;
 	unk138 = 100.0f * size / 2.0f;
 	unk13C = unk138;
-	if (SMSGetMarDirector()->unk7D == 1) {
+	if (SMSGetMarDirector()->getCurrentScenario() == 1) {
 		char buffer[0x40];
 		stream.readString(buffer, sizeof(buffer));
 		stream >> unk1A0.x >> unk1A0.y >> unk1A0.z;
@@ -772,8 +772,8 @@ void TLeanMirror::load(JSUMemoryInputStream& stream)
 	char path[0x40];
 	snprintf(path, sizeof(path), "/scene/mapObj/%sTop.bmd", mIndividualName);
 	mirror->init(path);
-	mirror->unk28 = getModel();
-	if (SMSGetMarDirector()->unk7D != 1)
+	mirror->setModel(getModel());
+	if (SMSGetMarDirector()->getCurrentScenario() != 1)
 		mState = STATE_DONE;
 }
 
@@ -895,7 +895,10 @@ void TShiningStone::load(JSUMemoryInputStream& stream)
 		    names[i], gpMapObjManager->getMActorAnmData(), 3, 0x10020000);
 		unk68[i]->getModel()->setBaseTRMtx(mtx);
 		TMirrorActor* mirror = new TMirrorActor("太陽石in鏡");
-		mirror->init(unk68[i]->getModel(), 0x1a);
+		mirror->init(unk68[i]->getModel(),
+		             TMirrorActor::MIRROR_ACTOR_FLAG_ALWAYS
+		                 | TMirrorActor::MIRROR_ACTOR_FLAG_SDL_MODEL
+		                 | TMirrorActor::MIRROR_ACTOR_FLAG_UNK10);
 	}
 	unk6C = SMS_MakeMActorWithAnmData("/scene/mapObj/ShiningStone.bmd",
 	                                  gpMapObjManager->getMActorAnmData(), 3,
@@ -1183,11 +1186,11 @@ void TMammaMirrorMapOperator::hide(int i)
 
 void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (cue & 2) {
-		const int& mirrorIdx = gpMirrorModelManager->unk18;
-		if (gpMirrorModelManager->isUnk18Present()) {
+	if (cue & CUE_CALC_ANIM) {
+		const int& mirrorIdx = gpMirrorModelManager->getActiveMirrorIdx();
+		if (gpMirrorModelManager->isMirrorActive()) {
 			const JGeometry::TVec3<f32>& camPos
-			    = gpMirrorModelManager->unk24->getUnk98();
+			    = gpMirrorModelManager->mMirrorCamera->getUnk98();
 			const JGeometry::TVec3<f32>& mirror = unkB8[mirrorIdx];
 			f32 dist                            = camPos.distance(mirror);
 			for (int i = 0; i < 8; ++i) {

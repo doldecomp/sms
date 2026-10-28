@@ -1,4 +1,5 @@
 #include <Player/Mario.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
 #include <MarioUtil/MathUtil.hpp>
 #include <System/Particles.hpp>
 #include <Map/MapData.hpp>

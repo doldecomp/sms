@@ -27,7 +27,6 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-#include <M3DUtil/InfectiousStrings.hpp>
 
 // NOTE: rodata ordering says this has to go here
 #include <Map/MapCollisionEntry.hpp>
@@ -493,8 +492,8 @@ void THinokuri2::init(TLiveManager* param_1)
 
 	getMActor()->setJointCallback(0x17, &Hino2HeadCallback);
 
-	if (SMSGetMarDirector()->mMap == 1) {
-		switch (SMSGetMarDirector()->unk7D) {
+	if (SMSGetMarDirector()->getCurrentStage() == 1) {
+		switch (SMSGetMarDirector()->getCurrentScenario()) {
 		case 4:
 			setLevel(2);
 			break;
@@ -509,8 +508,8 @@ void THinokuri2::init(TLiveManager* param_1)
 			setLevel(1);
 			break;
 		}
-	} else if (SMSGetMarDirector()->mMap == 0) {
-		switch (SMSGetMarDirector()->unk7D) {
+	} else if (SMSGetMarDirector()->getCurrentStage() == 0) {
+		switch (SMSGetMarDirector()->getCurrentScenario()) {
 		case 7:
 			setLevel(2);
 			break;
@@ -709,13 +708,15 @@ void THinokuri2::changeBck(int param_1)
 		    || curBck == 0xE && param_1 == 0x18
 		    || curBck == 0x16 && param_1 == 0xB
 		    || curBck == 0xB && param_1 == 0x18) {
-			unk1A0->addTransform(
-			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-			        param_1));
+			unk1A0->addTransform(getActorKeeper()
+			                         ->getMActorAnmData()
+			                         ->getBckAnmData()
+			                         ->getAnmPtr(param_1));
 		} else {
-			unk1A0->setAnmTransform(
-			    getActorKeeper()->getMActorAnmData()->getUnk2C()->getAnmPtr(
-			        param_1));
+			unk1A0->setAnmTransform(getActorKeeper()
+			                            ->getMActorAnmData()
+			                            ->getBckAnmData()
+			                            ->getAnmPtr(param_1));
 		}
 
 		getMActor()->getAnmBck()->setFrameCtrl(param_1);
@@ -908,7 +909,7 @@ void THinokuri2::moveObject()
 		unk194 = 1.0f;
 	}
 
-	if (SMSGetMarDirector()->mMoveTickCount % 600 == 0)
+	if (SMSGetMarDirector()->getMoveTickCount() % 600 == 0)
 		generateEnemy();
 
 	doShortCut();
@@ -1060,7 +1061,7 @@ DEFINE_NERVE(TNerveHino2GraphWander, TLiveActor)
 		}
 	}
 
-	if (SMSGetMarDirector()->unk7D >= 2 && self->unk164 <= 0) {
+	if (SMSGetMarDirector()->getCurrentScenario() >= 2 && self->unk164 <= 0) {
 		if (self->getLevel() >= 1) {
 			spine->pushAfterCurrent(&TNerveHino2PrePol::theNerve());
 			return 1;

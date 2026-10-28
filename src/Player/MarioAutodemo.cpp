@@ -74,14 +74,14 @@ BOOL TMario::readBillboard()
 		                  mAutoDemoParams.mReadRotSp.get());
 		mFaceAngle.y = convAngle;
 		if (attackAngle == mFaceAngle.y) {
-			SMSGetMarDirector()->unk126 = 2;
-			mStatusState                = 2;
+			SMSGetMarDirector()->setNextGameMode(TMarDirector::GAME_MODE_TALK);
+			mStatusState = 2;
 		}
 		break;
 	}
 	case 2:
-		if (SMSGetMarDirector()->unk124 == 0
-		    || SMSGetMarDirector()->unk124 == 5) {
+		if (SMSGetMarDirector()->isGameplayModeNow()
+		    || SMSGetMarDirector()->getGameMode() == 5) {
 			changePlayerStatus(MARIO_STATUS_WAIT, 0, true);
 		}
 		break;
@@ -256,9 +256,9 @@ bool TMario::isUnUsualStageStart()
 	// volatile u32 padding[14];
 
 	// Pinna rollercoaster
-	if ((SMSGetMarDirector()->getCurrentMap() == 0x3A)
-	    && (SMSGetMarDirector()->getCurrentStage() == 0
-	        || SMSGetMarDirector()->getCurrentStage() == 1))
+	if ((SMSGetMarDirector()->getCurrentStage() == 0x3A)
+	    && (SMSGetMarDirector()->getCurrentScenario() == 0
+	        || SMSGetMarDirector()->getCurrentScenario() == 1))
 		return toroccoStart();
 
 	if (SMS_isDivingMap()) {
@@ -275,7 +275,7 @@ bool TMario::isUnUsualStageStart()
 
 		if (checkFlag(MARIO_FLAG_HAS_FLUDD))
 			mWaterGun->changeNozzle(
-			    (TWaterGun::TNozzleType)mWaterGun->mSecondNozzle, true);
+			    (TWaterGun::TNozzleType)mWaterGun->getSecondNozzleType(), true);
 
 		if (mCap != nullptr)
 			mCap->unk4 |= 2;
