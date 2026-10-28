@@ -20,14 +20,15 @@ public:
 	bool updateDemo(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*,
 	                JGeometry::TVec3<f32>*, f32*);
 	void setFrame(f32);
+	void setRate(f32);
 
-public:
-	/* 0x0 */ MActor* unk0;
-	/* 0x4 */ MActorAnmData* unk4;
-	/* 0x8 */ u32 unk8;
-	/* 0xC */ MtxPtr unkC;
-	/* 0x10 */ MtxPtr unk10;
-	/* 0x14 */ const JGeometry::TVec3<f32>* unk14;
+private:
+	/* 0x0 */ MActor* mActor;
+	/* 0x4 */ MActorAnmData* mAnmData;
+	/* 0x8 */ u32 mPositionJointIndex;
+	/* 0xC */ MtxPtr mPositionJointMtx;
+	/* 0x10 */ MtxPtr mLookatJointMtx;
+	/* 0x14 */ const JGeometry::TVec3<f32>* mTranslationOffset;
 };
 
 #endif
