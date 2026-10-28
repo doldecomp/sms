@@ -80,8 +80,8 @@ TBWLeashNode::TBWLeashNode(TBWLeash* leash, int index, const char* name)
 	    = ((TBWParams*)owner->getSaveParam())->mSLChainHitRadius.value;
 	f32 hitHeight
 	    = ((TBWParams*)owner->getSaveParam())->mSLChainHitHeight.value;
-	initHitActor(ACTOR_TYPE_BOSS_UNKC, 1, HIT_CATEGORY_PLAYER, hitRadius * 2.0f, hitHeight * 2.0f,
-	             hitRadius, hitHeight);
+	initHitActor(ACTOR_TYPE_BOSS_UNKC, 1, HIT_CATEGORY_PLAYER, hitRadius * 2.0f,
+	             hitHeight * 2.0f, hitRadius, hitHeight);
 }
 
 void TBWLeashNode::calcTemperature()
@@ -198,8 +198,10 @@ void TBWLeashNode::perform(u32 cue, JDrama::TGraphics* graphics)
 			f32 progress;
 			if (mIndex < 5) {
 				progress
-				    = ((f32)mIndex * 0.25f) + ((f32)mLeash->mOwner->mHitPoints / (f32)((TBWParams*)mLeash->mOwner->getSaveParam())
-				                   ->mSLBWHitPointMax.get());
+				    = ((f32)mIndex * 0.25f)
+				      + ((f32)mLeash->mOwner->mHitPoints
+				         / (f32)((TBWParams*)mLeash->mOwner->getSaveParam())
+				               ->mSLBWHitPointMax.get());
 			} else if (mIndex >= (mLeash->mRope->mNumPoints - 10)) {
 				progress = (f32)(mLeash->mRope->mNumPoints - mIndex) / 10.0f;
 			} else {
@@ -970,8 +972,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
 			                                &mPosition, 0, nullptr, 0, 4);
 		} else {
-			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL,
-			                                &mPosition, 0, nullptr, 0, 4);
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_COOL, &mPosition,
+			                                0, nullptr, 0, 4);
 		}
 
 		decHitPoints();
@@ -990,8 +992,8 @@ BOOL TBossWanwan::receiveMessage(THitActor* sender, u32 message)
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    BWAN_JPA_MS_DOWNYUGE, getModel()->getAnmMtx(1), 0, nullptr);
 
-		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL,
-		                                &mPosition, 0, nullptr, 0, 4);
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
+		                                nullptr, 0, 4);
 	}
 
 	return TSpineEnemy::receiveMessage(sender, message);
@@ -1041,7 +1043,7 @@ void TBossWanwan::changeBck(int index)
 	setBckFromIndex(index);
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
 	unk178             = 10.0f / ctrl->getEnd();
-	const char* path = bwanwan_bastable[index];
+	const char* path   = bwanwan_bastable[index];
 	setAnmSound(path);
 }
 
@@ -1065,7 +1067,7 @@ BOOL TBossWanwan::isHeadPulled()
 	return mPicketPullDelta.squared()
 	               < ((TBWParams*)getSaveParam())->mSLPullLimit.get()
 	           ? FALSE
-			   : TRUE;
+	           : TRUE;
 }
 
 void TBossWanwan::calcRootMatrix()
@@ -1160,14 +1162,14 @@ void TBossWanwan::control()
 		f32 targetAngle = MsGetRotFromZaxisY(pos);
 		targetAngle     = MsWrap<f32>(targetAngle, 0.0f, 360.0f);
 
-		f32 diff    = MsAngleDiff(targetAngle, mRotation.y);
-		
+		f32 diff = MsAngleDiff(targetAngle, mRotation.y);
+
 		if (diff > 0.0f) {
 			f32 maxStep = mTurnSpeed * 4.0f;
-    		diff = (diff > maxStep) ? diff : maxStep;
+			diff        = (diff > maxStep) ? diff : maxStep;
 		} else {
 			f32 minStep = -mTurnSpeed * 4.0f;
-			diff = (diff > minStep) ? diff : minStep;
+			diff        = (diff > minStep) ? diff : minStep;
 		}
 
 		mRotation.y = MsWrap<f32>(mRotation.y + diff, 0.0f, 360.0f);
@@ -1485,7 +1487,8 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 	}
 
 	if (boss->getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)
-	    && boss->mHitPoints == 0 && !boss->getMActor()->checkCurBckFromIndex(5)) {
+	    && boss->mHitPoints == 0
+	    && !boss->getMActor()->checkCurBckFromIndex(5)) {
 		boss->changeBck(5);
 		J3DFrameCtrl* ctrl = boss->getMActor()->getFrameCtrl(0);
 		ctrl->setFrame(0.0f);
