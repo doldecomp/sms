@@ -1272,7 +1272,7 @@ config.libs = [
             PCHObject(Matching, "Camera/CubeMapTool.cpp"),
             Object(NonMatching, "Camera/CameraMultiPlayer.cpp"),
             PCHObject(NonMatching, "Camera/CameraJetCoaster.cpp"),
-            PCHObject(NonMatching, "Camera/CameraBck.cpp"),
+            PCHObject(Matching, "Camera/CameraBck.cpp"),
             PCHObject(NonMatching, "Camera/CameraOption.cpp"),
             PCHObject(NonMatching, "Camera/CameraDemo.cpp"),
             Object(NonMatching, "Camera/CameraWarp.cpp"),

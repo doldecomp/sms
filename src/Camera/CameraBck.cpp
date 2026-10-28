@@ -28,30 +28,30 @@ static const char* sAddBckFileNameTable[] = {
 
 TCameraBck::TCameraBck()
 {
-	unk14 = nullptr;
+	mTranslationOffset = nullptr;
 	SDLModel* sdlMdl
 	    = SMS_CreateMinimumSDLModel("/common/camera/camera_model.bmd");
-	unk4 = new MActorAnmData;
-	unk4->init(cCameraBckVolumeName, sAddBckFileNameTable);
-	unk0 = new MActor(unk4);
-	unk0->setModel(sdlMdl, 0);
+	mAnmData = new MActorAnmData;
+	mAnmData->init(cCameraBckVolumeName, sAddBckFileNameTable);
+	mActor = new MActor(mAnmData);
+	mActor->setModel(sdlMdl, 0);
 	JUTNameTab* nameTab = sdlMdl->getModelData()->getJointName();
-	unk8                = nameTab->getIndex(cPositionJointName);
-	unkC                = sdlMdl->getAnmMtx((u16)unk8);
+	mPositionJointIndex = nameTab->getIndex(cPositionJointName);
+	mPositionJointMtx   = sdlMdl->getAnmMtx((u16)mPositionJointIndex);
 	u16 idx             = nameTab->getIndex(cLookatJointName);
-	unk10               = sdlMdl->getAnmMtx(idx);
+	mLookatJointMtx     = sdlMdl->getAnmMtx(idx);
 }
 
 bool TCameraBck::isFileExist(const char* name) const
 {
-	return unk0->checkAnmFileExist(name, ANM_TYPE_BCK);
+	return mActor->checkAnmFileExist(name, ANM_TYPE_BCK);
 }
 
 void TCameraBck::getDemoFileName() const { }
 
 bool TCameraBck::isNowDemo() const
 {
-	if (unk0->getCurAnmIdx(ANM_TYPE_BCK) != -1)
+	if (mActor->getCurAnmIdx(ANM_TYPE_BCK) != -1)
 		return true;
 	return false;
 }
@@ -59,14 +59,14 @@ bool TCameraBck::isNowDemo() const
 void TCameraBck::startDemo(const char* name,
                            const JGeometry::TVec3<f32>* offset)
 {
-	unk0->setBck(name);
-	unk14 = offset;
+	mActor->setBck(name);
+	mTranslationOffset = offset;
 }
 
 int TCameraBck::getTotalDemoFrames() const
 {
 	int total              = 0;
-	const J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
+	const J3DFrameCtrl* fc = mActor->getFrameCtrl(ANM_TYPE_BCK);
 	if (fc != nullptr) {
 		if (fc->getAttribute() != 0)
 			total = -1;
@@ -79,17 +79,15 @@ int TCameraBck::getTotalDemoFrames() const
 bool TCameraBck::isDemoFinished() const
 {
 	bool result      = true;
-	J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
+	J3DFrameCtrl* fc = mActor->getFrameCtrl(ANM_TYPE_BCK);
 	if (fc != nullptr) {
-		if (fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE))
-			result = true;
-		else
-			result = false;
+		result
+		    = fc->checkState(J3DFrameCtrl::STATE_COMPLETED_ONCE) ? true : false;
 	}
 	return result;
 }
 
-void TCameraBck::endDemo() { unk0->setBckFromIndex(-1); }
+void TCameraBck::endDemo() { mActor->setBckFromIndex(-1); }
 
 void TCameraBck::restartDemo() { }
 
@@ -97,32 +95,34 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
                             JGeometry::TVec3<f32>* lookat,
                             JGeometry::TVec3<f32>* up, f32* out_y_scale)
 {
-
-	unk0->calcAnm();
+	mActor->calcAnm();
 
 	if (pos != nullptr)
-		pos->set(unkC[0][3], unkC[1][3], unkC[2][3]);
+		pos->set(mPositionJointMtx[0][3], mPositionJointMtx[1][3],
+		         mPositionJointMtx[2][3]);
 
 	if (lookat != nullptr)
-		lookat->set(unk10[0][3], unk10[1][3], unk10[2][3]);
+		lookat->set(mLookatJointMtx[0][3], mLookatJointMtx[1][3],
+		            mLookatJointMtx[2][3]);
 
 	if (up != nullptr)
-		up->set(unkC[0][1], unkC[1][1], unkC[2][1]);
+		up->set(mPositionJointMtx[0][1], mPositionJointMtx[1][1],
+		        mPositionJointMtx[2][1]);
 
 	if (out_y_scale != nullptr) {
-		J3DAnmTransformKey* anm = unk0->getCurBckAnmPtr();
+		J3DAnmTransformKey* anm = mActor->getCurBckAnmPtr();
 		if (anm != nullptr) {
 			J3DTransformInfo info;
-			anm->getTransform((u16)unk8, &info);
+			anm->getTransform(mPositionJointIndex, &info);
 			*out_y_scale = info.mScale.y;
 		}
 	}
 
-	if (unk14 != nullptr) {
+	if (mTranslationOffset != nullptr) {
 		if (pos != nullptr)
-			*pos += *unk14;
+			pos->add(*mTranslationOffset);
 		if (lookat != nullptr)
-			*lookat += *unk14;
+			lookat->add(*mTranslationOffset);
 	}
 
 	return isDemoFinished();
@@ -131,8 +131,10 @@ bool TCameraBck::updateDemo(JGeometry::TVec3<f32>* pos,
 void TCameraBck::setFrame(f32 frame)
 {
 	if (isNowDemo()) {
-		J3DFrameCtrl* fc = unk0->getFrameCtrl(ANM_TYPE_BCK);
+		J3DFrameCtrl* fc = mActor->getFrameCtrl(ANM_TYPE_BCK);
 		if (fc != nullptr)
 			fc->setFrame(frame);
 	}
 }
+
+void TCameraBck::setRate(f32) { }

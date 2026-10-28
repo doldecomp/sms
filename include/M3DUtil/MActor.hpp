@@ -178,10 +178,11 @@ public:
 
 	J3DAnmTransformKey* getCurBckAnmPtr()
 	{
-		if (!mAnmBck)
+		MActorAnmBck* bck = mAnmBck;
+		if (!bck)
 			return nullptr;
 
-		return mAnmBck->getCurAnmPtr();
+		return bck->getCurAnmPtr();
 	}
 
 	void setBck(int index)
