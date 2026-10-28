@@ -2089,15 +2089,6 @@ void TGCConsole2::processMoveNozzle()
 	}
 }
 
-void TGCConsole2::changeNum(TBlendPane* pane, int num, int frames)
-{
-	pane->setPaneBlend(frames, unkE0[num], nullptr);
-	JUTRect bounds(pane->getPane()->getGlbBounds());
-	JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
-	                          bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
-	gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
-}
-
 #if !defined(VERSION_GMSJ01)
 u32* TGCConsole2::checkDolpic8()
 {
@@ -2382,6 +2373,15 @@ u32* TGCConsole2::checkDolpic8()
 	return news;
 }
 #endif
+
+void TGCConsole2::changeNum(TBlendPane* pane, int num, int frames)
+{
+	pane->setPaneBlend(frames, unkE0[num], nullptr);
+	JUTRect bounds(pane->getPane()->getGlbBounds());
+	JGeometry::TVec3<f32> pos(bounds.x1 + bounds.getWidth() * 0.5f,
+	                          bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+	gpEmitterManager4D2->createEmitter(pos, 0x1FC, nullptr, nullptr);
+}
 
 void TGCConsole2::setTimer(s32 param_1)
 {
