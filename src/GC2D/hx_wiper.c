@@ -675,10 +675,8 @@ static void Hx_Circle(void)
 
 static void Hxs1_Circle(f32 radius)
 {
-	f32 x1;
-	f32 y1;
-	f32 x2;
-	f32 y2;
+	f32 x[2];
+	f32 y[2];
 	f32 radiusSquared;
 	f32 distance;
 	u32 i;
@@ -688,50 +686,50 @@ static void Hxs1_Circle(f32 radius)
 	radiusSquared = radius * radius;
 	for (i = 0; i <= hx.halfHeight; ++i) {
 		distance = hx.halfHeight - i;
-		y1       = i;
-		y2       = i;
+		y[0]     = i;
+		y[1]     = i;
 		if (hx.halfHeight - i >= radius) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			x1 = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
-			x2 = hx.width + VERSION_SELECT(0, GMSP01_NX(110));
-			GXPosition3f32(x1, y1, 1.0f);
+			x[0] = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
+			x[1] = hx.width + VERSION_SELECT(0, GMSP01_NX(110));
+			GXPosition3f32(x[0], y[0], 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(x2, y2, 1.0f);
+			GXPosition3f32(x[1], y[1], 1.0f);
 			GXColor1u32(0xFF);
-			y1 = hx.height - i;
-			y2 = hx.height - i;
-			GXPosition3f32(x1, y1, 1.0f);
+			y[0] = hx.height - i;
+			y[1] = hx.height - i;
+			GXPosition3f32(x[0], y[0], 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(x2, y2, 1.0f);
+			GXPosition3f32(x[1], y[1], 1.0f);
 			GXColor1u32(0xFF);
 			GXEnd();
 		} else {
 			f32 offset = sqrtf(radiusSquared - distance * distance);
 
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			x1 = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
-			x2 = hx.halfWidth - offset;
-			GXPosition3f32(x1, y1, 1.0f);
+			x[0] = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
+			x[1] = hx.halfWidth - offset;
+			GXPosition3f32(x[0], y[0], 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(x2, y2, 1.0f);
+			GXPosition3f32(x[1], y[1], 1.0f);
 			GXColor1u32(0xFF);
-			x1 = hx.halfWidth + offset;
-			x2 = hx.width + VERSION_SELECT(0, GMSP01_NX(110));
-			GXPosition3f32(x1, y1, 1.0f);
+			x[0] = hx.halfWidth + offset;
+			x[1] = hx.width + VERSION_SELECT(0, GMSP01_NX(110));
+			GXPosition3f32(x[0], y[0], 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(x2, y2, 1.0f);
+			GXPosition3f32(x[1], y[1], 1.0f);
 			GXColor1u32(0xFF);
-			y1 = hx.height - i;
-			y2 = hx.height - i;
-			GXPosition3f32(x1, y1, 1.0f);
+			y[0] = hx.height - i;
+			y[1] = hx.height - i;
+			GXPosition3f32(x[0], y[0], 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(x2, y2, 1.0f);
+			GXPosition3f32(x[1], y[1], 1.0f);
 			GXColor1u32(0xFF);
-			x1 = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
-			x2 = hx.halfWidth - offset;
-			GXPosition3f32(x1, y1, 1.0f);
+			x[0] = VERSION_SELECT(0.0f, GMSP01_NX(-110.0f));
+			x[1] = hx.halfWidth - offset;
+			GXPosition3f32(x[0], y[0], 1.0f);
 			GXColor1u32(0xFF);
-			GXPosition3f32(x2, y2, 1.0f);
+			GXPosition3f32(x[1], y[1], 1.0f);
 			GXColor1u32(0xFF);
 			GXEnd();
 		}
@@ -740,65 +738,69 @@ static void Hxs1_Circle(f32 radius)
 
 static void Hxs2_Circle(u8 color, f32 innerRadius, f32 outerRadius)
 {
-	f32 x1;
-	f32 y1;
-	f32 x2;
-	f32 y2;
+	f32 x[2];
+	f32 y[2];
 	f32 outerOffset;
 	f32 innerOffset;
 	f32 distance;
+	f32 innerRadiusSquared;
+	f32 outerRadiusSquared;
 	u32 i;
+	u32 rgba[2];
 
 	Hx_CameraInit();
 	Hx_GxInit(0, 1);
+	rgba[0]            = color;
+	rgba[1]            = color;
+	innerRadiusSquared = innerRadius * innerRadius;
+	outerRadiusSquared = outerRadius * outerRadius;
 	for (i = hx.halfHeight - outerRadius; i <= hx.halfHeight; ++i) {
 		distance    = hx.halfHeight - i;
-		outerOffset = sqrtf(outerRadius * outerRadius - distance * distance);
-		y1          = i;
-		y2          = i;
+		outerOffset = sqrtf(outerRadiusSquared - distance * distance);
+		y[0]        = i;
+		y[1]        = i;
 		if (distance >= innerRadius) {
 			GXBegin(GX_LINES, GX_VTXFMT0, 4);
-			x1 = hx.halfWidth - outerOffset;
-			x2 = hx.halfWidth + outerOffset;
-			GXPosition3f32(x1, y1, 1.0f);
-			GXColor1u32(color);
-			GXPosition3f32(x2, y2, 1.0f);
-			GXColor1u32(color);
-			y1 = hx.height - i;
-			y2 = hx.height - i;
-			GXPosition3f32(x1, y1, 1.0f);
-			GXColor1u32(color);
-			GXPosition3f32(x2, y2, 1.0f);
-			GXColor1u32(color);
+			x[0] = hx.halfWidth - outerOffset;
+			x[1] = hx.halfWidth + outerOffset;
+			GXPosition3f32(x[0], y[0], 1.0f);
+			GXColor1u32(rgba[0]);
+			GXPosition3f32(x[1], y[1], 1.0f);
+			GXColor1u32(rgba[1]);
+			y[0] = hx.height - i;
+			y[1] = hx.height - i;
+			GXPosition3f32(x[0], y[0], 1.0f);
+			GXColor1u32(rgba[0]);
+			GXPosition3f32(x[1], y[1], 1.0f);
+			GXColor1u32(rgba[1]);
 			GXEnd();
 		} else {
-			innerOffset
-			    = sqrtf(innerRadius * innerRadius - distance * distance);
+			innerOffset = sqrtf(innerRadiusSquared - distance * distance);
 			GXBegin(GX_LINES, GX_VTXFMT0, 8);
-			x1 = hx.halfWidth - outerOffset;
-			x2 = hx.halfWidth - innerOffset;
-			GXPosition3f32(x1, y1, 1.0f);
-			GXColor1u32(color);
-			GXPosition3f32(x2, y2, 1.0f);
-			GXColor1u32(color);
-			x1 = hx.halfWidth + innerOffset;
-			x2 = hx.halfWidth + outerOffset;
-			GXPosition3f32(x1, y1, 1.0f);
-			GXColor1u32(color);
-			GXPosition3f32(x2, y2, 1.0f);
-			GXColor1u32(color);
-			y1 = hx.height - i;
-			y2 = hx.height - i;
-			GXPosition3f32(x1, y1, 1.0f);
-			GXColor1u32(color);
-			GXPosition3f32(x2, y2, 1.0f);
-			GXColor1u32(color);
-			x1 = hx.halfWidth - outerOffset;
-			x2 = hx.halfWidth - innerOffset;
-			GXPosition3f32(x1, y1, 1.0f);
-			GXColor1u32(color);
-			GXPosition3f32(x2, y2, 1.0f);
-			GXColor1u32(color);
+			x[0] = hx.halfWidth - outerOffset;
+			x[1] = hx.halfWidth - innerOffset;
+			GXPosition3f32(x[0], y[0], 1.0f);
+			GXColor1u32(rgba[0]);
+			GXPosition3f32(x[1], y[1], 1.0f);
+			GXColor1u32(rgba[1]);
+			x[0] = hx.halfWidth + innerOffset;
+			x[1] = hx.halfWidth + outerOffset;
+			GXPosition3f32(x[0], y[0], 1.0f);
+			GXColor1u32(rgba[0]);
+			GXPosition3f32(x[1], y[1], 1.0f);
+			GXColor1u32(rgba[1]);
+			y[0] = hx.height - i;
+			y[1] = hx.height - i;
+			GXPosition3f32(x[0], y[0], 1.0f);
+			GXColor1u32(rgba[0]);
+			GXPosition3f32(x[1], y[1], 1.0f);
+			GXColor1u32(rgba[1]);
+			x[0] = hx.halfWidth - outerOffset;
+			x[1] = hx.halfWidth - innerOffset;
+			GXPosition3f32(x[0], y[0], 1.0f);
+			GXColor1u32(rgba[0]);
+			GXPosition3f32(x[1], y[1], 1.0f);
+			GXColor1u32(rgba[1]);
 			GXEnd();
 		}
 	}
@@ -984,12 +986,18 @@ static void Hxs_GameOver(u8 alpha, f32 mag, f32 rot)
 	len = mag * sqrtf(cx * cx + cy * cy);
 	u0  = aspect * (-dir.x * len) + cx;
 	v0  = -dir.y * len + cy;
+	cx  = 0.5f;
+	cy  = 0.5f;
 	len = mag * sqrtf(cx * cx + cy * cy);
 	u1  = aspect * (dir.y * len) + cx;
 	v1  = -dir.x * len + cy;
+	cx  = 0.5f;
+	cy  = 0.5f;
 	len = mag * sqrtf(cx * cx + cy * cy);
 	u2  = aspect * (dir.x * len) + cx;
 	v2  = dir.y * len + cy;
+	cx  = 0.5f;
+	cy  = 0.5f;
 	len = mag * sqrtf(cx * cx + cy * cy);
 	u3  = aspect * (-dir.y * len) + cx;
 	v3  = dir.x * len + cy;
@@ -1327,13 +1335,21 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 width,
 	f32 left;
 	f32 top;
 	f32 posX0;
-	f32 posY0;
 	f32 posX1;
-	f32 posY1;
 	f32 posX2;
-	f32 posY2;
 	f32 posX3;
+	f32 posY0;
+	f32 posY1;
+	f32 posY2;
 	f32 posY3;
+	f32 texX0;
+	f32 texY0;
+	f32 texX1;
+	f32 texY1;
+	f32 texX2;
+	f32 texY2;
+	f32 texX3;
+	f32 texY3;
 
 	width  = width / 1.9230769f;
 	height = height / 1.924138f;
@@ -1341,8 +1357,8 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 width,
 	y2     = y2 / height;
 	x1     = x1 / width;
 	x2     = x2 / width;
-	left   = (f32)(hx.width >> 1) - width * 0.5f;
-	top    = (f32)(hx.height >> 1) - height * 0.5f - 32.0f;
+	left   = (f32)(hx.width >> 1) - width / 2.0f;
+	top    = (f32)(hx.height >> 1) - height / 2.0f - 32.0f;
 
 	direction.y = x2 - x1;
 	direction.x = -(y2 - y1);
@@ -1359,52 +1375,61 @@ static void Hxs_Logo_TexDraw(f32 x1, f32 y1, f32 x2, f32 y2, f32 width,
 		posX3 = width * (x1 - direction.x) + left;
 		posY3 = height * (y1 - direction.y) + top;
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+		texY0 = y1 + direction.y;
+		texX0 = x1 + direction.x;
 		GXPosition3f32(posX0, posY0, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(x1 + direction.x, y1 + direction.y);
+		GXTexCoord2f32(texX0, texY0);
+		texY1 = y2 + direction.y;
+		texX1 = x2 + direction.x;
 		GXPosition3f32(posX1, posY1, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(x2 + direction.x, y2 + direction.y);
+		GXTexCoord2f32(texX1, texY1);
+		texY2 = y2 - direction.y;
+		texX2 = x2 - direction.x;
 		GXPosition3f32(posX2, posY2, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(x2 - direction.x, y2 - direction.y);
+		GXTexCoord2f32(texX2, texY2);
+		texY3 = y1 - direction.y;
+		texX3 = x1 - direction.x;
 		GXPosition3f32(posX3, posY3, 0.0f);
 		GXColor1u32(0);
-		GXTexCoord2f32(x1 - direction.x, y1 - direction.y);
+		GXTexCoord2f32(texX3, texY3);
 		GXEnd();
 	}
 }
 
 static void Hxs_Logo_MagDraw(f32 scale, f32 width, f32 height)
 {
-	f32 scaledHalfWidth;
-	f32 scaledHalfHeight;
-	f32 halfWidth;
-	f32 halfHeight;
+	f32 scaledWidth;
+	f32 scaledHeight;
 	f32 left;
 	f32 top;
+	f32 right;
+	f32 bottom;
+	f32 halfWidth;
+	f32 halfHeight;
 	f32 texLeft;
 	f32 texTop;
 	f32 texRight;
 	f32 texBottom;
-	f32 right;
-	f32 bottom;
 
-#ifdef VERSION_GMSP01_NX
-	scaledHalfWidth  = ((width * 0.74418604f) / 1.9230769f) * scale * 0.5f;
-	scaledHalfHeight = ((height * 0.875f) / 1.924138f) * scale * 0.5f;
-#else
-	scaledHalfWidth  = (width / 1.9230769f) * scale * 0.5f;
-	scaledHalfHeight = (height / 1.924138f) * scale * 0.5f;
-#endif
 	halfWidth  = (f32)(hx.width >> 1);
 	halfHeight = (f32)(hx.height >> 1);
-	left       = halfWidth - scaledHalfWidth;
-	right      = halfWidth + scaledHalfWidth;
-	top        = halfHeight - scaledHalfHeight;
-	bottom     = halfHeight + scaledHalfHeight;
-	texLeft    = left / (left - right);
-	texTop     = top / (top - bottom);
+#ifdef VERSION_GMSP01_NX
+	width *= 0.74418604f;
+	height *= 0.875f;
+#endif
+	width /= 1.9230769f;
+	height /= 1.924138f;
+	scaledWidth  = width * scale;
+	scaledHeight = height * scale;
+	left         = halfWidth - scaledWidth / 2.0f;
+	top          = halfHeight - scaledHeight / 2.0f;
+	right        = halfWidth + scaledWidth / 2.0f;
+	bottom       = halfHeight + scaledHeight / 2.0f;
+	texLeft      = left / (left - right);
+	texTop       = top / (top - bottom);
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 	texRight  = 1.0f - texLeft;
 	texBottom = 1.0f - texTop;
@@ -1444,6 +1469,8 @@ static void Hxs_PenDraw(f32 startX, f32 startY, u32 count, HxDrawPath* target)
 	f32 prevY;
 	f32 nextY;
 	f32 progress;
+	f32 x[2];
+	f32 y[2];
 	u32 i;
 
 	if (count != 0) {
@@ -1467,9 +1494,14 @@ static void Hxs_PenDraw(f32 startX, f32 startY, u32 count, HxDrawPath* target)
 			prevY = nextY;
 		}
 	}
+	x[0]     = startX;
+	y[0]     = startY;
+	y[1]     = target->y;
+	x[1]     = target->x;
 	progress = (f32)(target->type - hx.timer) / (f32)target->type;
-	Hxs_Logo_TexDraw(startX, startY, progress * (target->x - startX) + startX,
-	                 progress * (target->y - startY) + startY, img_wx, img_wy);
+	x[1]     = progress * (x[1] - x[0]) + x[0];
+	y[1]     = progress * (y[1] - y[0]) + y[0];
+	Hxs_Logo_TexDraw(startX, startY, x[1], y[1], img_wx, img_wy);
 }
 
 static void Hx_Logo(void)
@@ -1711,6 +1743,9 @@ static void Hx_Test1(void)
 
 static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 {
+	f32 x[2];
+	f32 y[2];
+	f32 offset;
 	f32 radiusSquared;
 	u32 i;
 
@@ -1724,31 +1759,27 @@ static void Hxs1_Test1(f32 centerX, f32 centerY, f32 radius)
 	radiusSquared = radius * radius;
 	GXBegin(GX_LINES, GX_VTXFMT0, (u32)radius * 2 + 2);
 	for (i = 0; i <= (u32)radius; ++i) {
-		f32 offset = sqrtf(radiusSquared - (f32)(i * i));
-		f32 y1;
-		f32 y2;
-		f32 x1;
-		f32 x2;
+		offset = sqrtf(radiusSquared - (f32)(i * i));
 
 		if (centerY < (f32)hx.halfHeight) {
-			y1 = centerY + (f32)i;
-			y2 = y1;
+			y[0] = centerY + i;
+			y[1] = centerY + i;
 		} else {
-			y1 = centerY - (f32)i;
-			y2 = y1;
+			y[0] = centerY - i;
+			y[1] = centerY - i;
 		}
 
 		if (centerX < (f32)hx.halfWidth) {
-			x1 = centerX;
-			x2 = centerX + offset;
+			x[0] = centerX;
+			x[1] = centerX + offset;
 		} else {
-			x1 = centerX - offset;
-			x2 = centerX;
+			x[0] = centerX - offset;
+			x[1] = centerX;
 		}
 
-		GXPosition3f32(x1, y1, 1.0f);
+		GXPosition3f32(x[0], y[0], 1.0f);
 		GXColor1u32(0xFF);
-		GXPosition3f32(x2, y2, 1.0f);
+		GXPosition3f32(x[1], y[1], 1.0f);
 		GXColor1u32(0xFF);
 	}
 	GXEnd();
@@ -1959,13 +1990,16 @@ static void Hx_Test2R(void)
 static void Hxs1_Test2(u32 count, u32 direction, f32 centerX, f32 centerY,
                        f32 outerRadius, f32 innerRadius)
 {
+	f32 x[2];
+	f32 y[2];
 	f32 outerRadiusSquared;
 	f32 innerRadiusSquared;
-	f32 y;
 	f32 outerOffset;
 	f32 innerOffset;
+	s32 start;
+	int i;
 	s32 end;
-	s32 i;
+	s32 step;
 
 #ifdef VERSION_GMSP01_NX
 	Hx_CameraInitWide();
@@ -1976,18 +2010,19 @@ static void Hxs1_Test2(u32 count, u32 direction, f32 centerX, f32 centerY,
 	outerRadiusSquared = outerRadius * outerRadius;
 	innerRadiusSquared = innerRadius * innerRadius;
 	if (direction == 0) {
-		direction = 1;
-		end       = outerRadius;
-		i         = -centerY;
+		step  = 1;
+		start = -centerY;
+		end   = outerRadius;
 	} else {
-		direction = -1;
-		i         = outerRadius;
-		end       = -centerY;
+		step  = -1;
+		start = outerRadius;
+		end   = -centerY;
 	}
 
-	for (; i != end; i += direction) {
-		y = centerY + i;
-		if (y < 0.0f || y > hx.height)
+	for (i = start; i != end; i += step) {
+		y[0] = centerY + i;
+		y[1] = centerY + i;
+		if (y[0] < 0.0f || y[0] > hx.height)
 			continue;
 		if (count == 0)
 			break;
@@ -1995,20 +2030,20 @@ static void Hxs1_Test2(u32 count, u32 direction, f32 centerX, f32 centerY,
 		outerOffset = sqrtf(outerRadiusSquared - i * i);
 		innerOffset = sqrtf(innerRadiusSquared - i * i);
 		if (centerX < hx.halfWidth) {
-			outerRadius = centerX + outerOffset;
-			innerRadius = centerX + innerOffset;
-			if (outerRadius < 0.0f)
+			x[1] = centerX + outerOffset;
+			x[0] = centerX + innerOffset;
+			if (x[1] < 0.0f)
 				continue;
 		} else {
-			innerRadius = centerX - outerOffset;
-			outerRadius = centerX - innerOffset;
-			if (innerRadius > hx.width)
+			x[0] = centerX - outerOffset;
+			x[1] = centerX - innerOffset;
+			if (x[0] > hx.width)
 				continue;
 		}
 		GXBegin(GX_LINES, GX_VTXFMT0, 2);
-		GXPosition3f32(innerRadius, y, 1.0f);
+		GXPosition3f32(x[0], y[0], 1.0f);
 		GXColor1u32(0xFF);
-		GXPosition3f32(outerRadius, y, 1.0f);
+		GXPosition3f32(x[1], y[1], 1.0f);
 		GXColor1u32(0xFF);
 		GXEnd();
 	}
@@ -2025,7 +2060,6 @@ static void Hx_Test4(void)
 	static f32 thin_d;
 	static f32 rstep_d;
 	f32 angle;
-	f32 startAngle;
 	f32 outerX;
 	f32 outerY;
 	f32 innerX;
@@ -2051,6 +2085,9 @@ static void Hx_Test4(void)
 #endif
 
 	switch (hx.animationState) {
+	case 2:
+	default:
+		break;
 	case 0:
 #ifdef HX_TV_FORMAT_TIMING
 		switch (hx.direction) {
@@ -2090,13 +2127,13 @@ static void Hx_Test4(void)
 		rstep = rstep + rstep_d;
 		thin += thin_d;
 		radius      = (hx.width >> 1) + 200;
-		startAngle  = 0.0f;
+		angle       = 0.0f;
 		outerRadius = radius + thin;
-		outerX      = outerRadius * sinf(startAngle) + hx.halfWidth;
-		outerY      = outerRadius * cosf(startAngle) + hx.halfHeight;
+		outerX      = outerRadius * sinf(angle) + hx.halfWidth;
+		outerY      = outerRadius * cosf(angle) + hx.halfHeight;
 		innerRadius = radius - thin;
-		innerX      = innerRadius * sinf(startAngle) + hx.halfWidth;
-		innerY      = innerRadius * cosf(startAngle) + hx.halfHeight;
+		innerX      = innerRadius * sinf(angle) + hx.halfWidth;
+		innerY      = innerRadius * cosf(angle) + hx.halfHeight;
 		angle       = 0.0f;
 		Hx_CameraInit();
 		Hx_GxInit(0, 1);
@@ -2131,8 +2168,6 @@ static void Hx_Test4(void)
 			hx.state = 3;
 			hx.animationState++;
 		}
-		break;
-	default:
 		break;
 	}
 }
@@ -2185,6 +2220,9 @@ static void Hx_Test5(void)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 
 	switch (hx.animationState) {
+	case 2:
+	default:
+		break;
 	case 0:
 #ifdef HX_TV_FORMAT_TIMING
 		hx.timer = HX_TEST5_FADETIME;
@@ -2240,8 +2278,8 @@ static void Hx_Test5(void)
 					f32 py    = scale * cosf(angle + twist);
 
 					if (scale >= 1.0f) {
-						u = scale * sinf(angle) * 0.5f + 0.5f;
-						v = scale * cosf(angle) * 0.5f + 0.5f;
+						u = scale * sinf(angle) / 2.0f + 0.5f;
+						v = scale * cosf(angle) / 2.0f + 0.5f;
 					}
 					if (px < -1.0f) {
 						u  = 0.0f;
@@ -2289,9 +2327,7 @@ static void Hx_Test5(void)
 			hx.animationState++;
 			hx.state = 3;
 		}
-		break;
-	default:
-		hx.state = 3;
-		break;
+		return;
 	}
+	hx.state = 3;
 }
