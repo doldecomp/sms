@@ -184,7 +184,7 @@ int TMenuDirector::direct()
 
 	switch (unk18) {
 	case 0:
-		if (unk40->checkFlag(0x1)) {
+		if (unk40->checkFlag(TMenuPlane::FLAG_CONFIRMED)) {
 			if (!(unk2C->getButton() & JUTGamePad::X)) {
 				TFlagManager::getInstance()->firstStart();
 				for (u8 i = 0; i < 30; ++i)
@@ -196,9 +196,10 @@ int TMenuDirector::direct()
 
 			unk40->fade();
 
-			unk38->setString(unk40->unk30[unk40->unk2C]->getStringPtr());
+			unk38->setString(
+			    unk40->mItems[unk40->mSelectedIndex]->getStringPtr());
 
-			if (unk40->unk2C == 6) {
+			if (unk40->mSelectedIndex == 6) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
 					if (i == 9)
@@ -222,7 +223,7 @@ int TMenuDirector::direct()
 				         22, "カジノ 1");
 				snprintf(((J2DTextBox*)unk3C->search('st_k'))->getStringPtr(),
 				         22, "ボス");
-			} else if (unk40->unk2C == 5) {
+			} else if (unk40->mSelectedIndex == 5) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
 					if (i == 9)
@@ -249,7 +250,7 @@ int TMenuDirector::direct()
 				         22, "デモ 0");
 				snprintf(((J2DTextBox*)unk3C->search('st_k'))->getStringPtr(),
 				         22, "デモ 1");
-			} else if (unk40->unk2C == 8) {
+			} else if (unk40->mSelectedIndex == 8) {
 				for (int i = 0; i < 10; ++i) {
 					int code = i + 'st_1';
 					if (i == 9)
@@ -262,7 +263,8 @@ int TMenuDirector::direct()
 					if (i == 9)
 						snprintf(box->getStringPtr(), 22, "ボス");
 				}
-			} else if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12) {
+			} else if (unk40->mSelectedIndex == 0x11
+			           || unk40->mSelectedIndex == 0x12) {
 				for (int i = 0; i < 20; ++i) {
 					int code;
 					if (i < 9)
@@ -274,7 +276,7 @@ int TMenuDirector::direct()
 
 					int movie = i;
 
-					if (unk40->unk2C == 0x12)
+					if (unk40->mSelectedIndex == 0x12)
 						movie += 20;
 
 					const char* movieName
@@ -315,12 +317,12 @@ int TMenuDirector::direct()
 		break;
 
 	case 1:
-		if (unk44->checkFlag(0x1)) {
+		if (unk44->checkFlag(TMenuPlane::FLAG_CONFIRMED)) {
 			setFixedStageValue();
 			unk18 = 2;
 			SMSGetApplication()->getFader()->startFadeoutT(0.25f);
 			SMSGetApplication()->setNextArea(TGameSequence(unk48, unk4C));
-		} else if (unk44->checkFlag(0x2)) {
+		} else if (unk44->checkFlag(TMenuPlane::FLAG_CANCELLED)) {
 			unk18 = 0;
 			unk40->unfade();
 			unk38->hide();
@@ -331,7 +333,7 @@ int TMenuDirector::direct()
 	case 2:
 		if (SMSGetApplication()->getFader()->isFullyFadedOut()
 		    && SMSGetMSound()->checkWaveOnAram(MS_WAVE_DEFAULT)) {
-			if (unk40->unk2C == 0x11 || unk40->unk2C == 0x12)
+			if (unk40->mSelectedIndex == 0x11 || unk40->mSelectedIndex == 0x12)
 				uVar13 = TApplication::APP_STATE_MOVIE;
 			else
 				uVar13 = TApplication::APP_STATE_GAMEPLAY;
@@ -349,8 +351,8 @@ int TMenuDirector::direct()
 
 void TMenuDirector::setFixedStageValue()
 {
-	unk48 = unk40->unk2C;
-	unk4C = unk44->unk2C;
+	unk48 = unk40->mSelectedIndex;
+	unk4C = unk44->mSelectedIndex;
 	int local_30[]
 	    = { 0, 0x14, 0x1c, 0x1e, 0x20, 0x22, 0x28, 0, 0x2a, 0x2c, 0x2e };
 

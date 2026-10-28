@@ -10,7 +10,7 @@ void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_DRAW) {
 		J2DOrthoGraph orthoGraph(graphics->getViewport());
 		orthoGraph.setup2D();
-		unk10->draw(0, 0, &orthoGraph);
+		mScreen->draw(0, 0, &orthoGraph);
 		const JUTRect& rect = graphics->getScissor();
 		GXSetScissor(rect.x1, rect.y1, rect.getWidth(), rect.getHeight());
 	}
@@ -19,94 +19,93 @@ void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
                        u32 param_3, u32 param_4)
     : JDrama::TViewObj("<TMenuPlane>")
-    , unk10(param_1)
-    , unk14(param_2)
-    , unk18(0)
-    , unk1C(255, 60, 0, 255)
-    , unk20(255, 255, 0, 255)
-    , unk24(255, 255, 255, 255)
-    , unk28(0)
-    , unk2C(0)
-    , unk30(nullptr)
-    , unk34(param_3)
-    , unk38(param_4)
-    , unk3C(0)
+    , mGamePad(param_1)
+    , mRootPane(param_2)
+    , mFlags(0)
+    , mSelectedCharColor(255, 60, 0, 255)
+    , mSelectedGradColor(255, 255, 0, 255)
+    , mNormalColor(255, 255, 255, 255)
+    , mItemCount(0)
+    , mSelectedIndex(0)
+    , mItems(nullptr)
+    , mConfirmInputMask(param_3)
+    , mCancelInputMask(param_4)
+    , mColumnStride(0)
 {
-	J2DTextBox* local_420[256];
+	J2DTextBox* foundTextBoxes[256];
 
 	JSUTreeIterator<J2DPane> iterator;
-	for (iterator = unk14->getPaneTree()->getFirstChild();
-	     iterator != unk14->getPaneTree()->getEndChild();) {
-		J2DPane* pane = iterator.getObject();
-
-		if (pane->getTypeID() == 0x13 && pane->getUserInfo() != 'rset') {
-			J2DTextBox* textBox = (J2DTextBox*)pane;
-			local_420[unk28]    = textBox;
-			if (unk28 == 0) {
-				unk24 = textBox->getCharColor();
-				textBox->setCharColor(unk1C);
-				textBox->setGradColor(unk20);
+	for (iterator = mRootPane->getPaneTree()->getFirstChild();
+	     iterator != mRootPane->getPaneTree()->getEndChild(); ++iterator) {
+		if (iterator->getTypeID() == 0x13
+		    && iterator->getUserInfo() != 'rset') {
+			J2DTextBox* textBox        = (J2DTextBox*)iterator.getObject();
+			foundTextBoxes[mItemCount] = textBox;
+			if (mItemCount == 0) {
+				mNormalColor = textBox->getCharColor();
+				textBox->setCharColor(mSelectedCharColor);
+				textBox->setGradColor(mSelectedGradColor);
 			}
-			++unk28;
+			++mItemCount;
 		}
-
-		++iterator;
 	}
 
-	unk30 = new J2DTextBox*[unk28];
-	for (u32 i = 0; i < unk28; ++i)
-		unk30[i] = local_420[i];
+	mItems = new J2DTextBox*[mItemCount];
+	for (int i = 0; i < mItemCount; ++i)
+		mItems[i] = foundTextBoxes[i];
 }
 
 void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 {
-	if (unk18 & 0x4)
+	if (mFlags & FLAG_INPUT_DISABLED)
 		return;
 
 	if (cue & CUE_MOVE) {
-		if (unk10->checkFrameMeaning(unk34)) {
-			unk18 |= 0x1;
+		if (mGamePad->checkFrameMeaning(mConfirmInputMask)) {
+			mFlags |= FLAG_CONFIRMED;
 			return;
 		}
 
-		if (unk10->checkFrameMeaning(unk38)) {
-			unk18 |= 0x2;
+		if (mGamePad->checkFrameMeaning(mCancelInputMask)) {
+			mFlags |= FLAG_CANCELLED;
 			return;
 		}
 
-		if (unk28 > 1
-		    && unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP
-		                                | TMarioGamePad::MEANING_MENU_DOWN
-		                                | TMarioGamePad::MEANING_MENU_LEFT
-		                                | TMarioGamePad::MEANING_MENU_RIGHT)) {
-			unk30[unk2C]->setCharColor(unk24);
-			unk30[unk2C]->setGradColor(unk24);
-			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_LEFT
-			                             | TMarioGamePad::MEANING_MENU_RIGHT)) {
-				if (unk2C < unk3C) {
-					if (unk28 > unk2C + unk3C) {
-						unk2C += unk3C;
+		if (mItemCount > 1
+		    && mGamePad->checkFrameMeaning(
+		        TMarioGamePad::MEANING_MENU_UP
+		        | TMarioGamePad::MEANING_MENU_DOWN
+		        | TMarioGamePad::MEANING_MENU_LEFT
+		        | TMarioGamePad::MEANING_MENU_RIGHT)) {
+			mItems[mSelectedIndex]->setCharColor(mNormalColor);
+			mItems[mSelectedIndex]->setGradColor(mNormalColor);
+			if (mGamePad->checkFrameMeaning(
+			        TMarioGamePad::MEANING_MENU_LEFT
+			        | TMarioGamePad::MEANING_MENU_RIGHT)) {
+				if (mSelectedIndex < mColumnStride) {
+					if (mItemCount > mSelectedIndex + mColumnStride) {
+						mSelectedIndex += mColumnStride;
 					}
 				} else {
-					unk2C -= unk3C;
+					mSelectedIndex -= mColumnStride;
 				}
 			}
 
-			if (unk10->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP)) {
+			if (mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_MENU_UP)) {
 				{
-					if (unk2C == 0)
-						unk2C = unk28;
-					unk2C -= 1;
+					if (mSelectedIndex == 0)
+						mSelectedIndex = mItemCount;
+					mSelectedIndex -= 1;
 				}
-			} else if (unk10->checkFrameMeaning(
+			} else if (mGamePad->checkFrameMeaning(
 			               TMarioGamePad::MEANING_MENU_DOWN)) {
-				unk2C += 1;
-				if (unk2C >= unk28)
-					unk2C = 0;
+				mSelectedIndex += 1;
+				if (mSelectedIndex >= mItemCount)
+					mSelectedIndex = 0;
 			}
 
-			unk30[unk2C]->setCharColor(unk1C);
-			unk30[unk2C]->setGradColor(unk20);
+			mItems[mSelectedIndex]->setCharColor(mSelectedCharColor);
+			mItems[mSelectedIndex]->setGradColor(mSelectedGradColor);
 		}
 	}
 }
@@ -114,17 +113,17 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 void TFlashPane::perform(u32 cue, JDrama::TGraphics*)
 {
 	if (cue & CUE_MOVE) {
-		unk14 += unk18;
-		if (unk18 < 0) {
-			if (unk14 <= 0) {
-				unk14 = 0;
-				unk18 = 4;
+		mAlpha += mAlphaStep;
+		if (mAlphaStep < 0) {
+			if (mAlpha <= 0) {
+				mAlpha     = 0;
+				mAlphaStep = 4;
 			}
-		} else if (unk14 >= 255) {
-			unk14 = 255;
-			unk18 = -4;
+		} else if (mAlpha >= 255) {
+			mAlpha     = 255;
+			mAlphaStep = -4;
 		}
 
-		unk10->setAlpha(unk14);
+		mPane->setAlpha(mAlpha);
 	}
 }
