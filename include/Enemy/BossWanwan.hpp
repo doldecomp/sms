@@ -177,6 +177,12 @@ public:
 		return mSpine->getLatestNerve();
 	}
 
+	// fabricated!!!
+	MActorAnmData* getMActorAnmData() const
+	{
+		return mMActorKeeper->getMActorAnmData();
+	}
+
 	// fabricated
 	void setBckFromIndex(int idx)
 	{
@@ -185,19 +191,18 @@ public:
 	}
 
 	// fabricated
-	static inline void setRotDirY(JGeometry::TVec3<f32>& dir, f32 rot,
-	                              f32 scale)
+	static inline void setRotDirY(JGeometry::TVec3<f32>& dir, f32 rot)
 	{
 		u16 angle = (int)(rot * 182.04445f);
-		dir.set(scale * JMASSin(angle), 0.0f, scale * JMASCos(angle));
+		dir.set(JMASSin(angle), 0.0f, JMASCos(angle));
 	}
 
 	// fabricated
 	JGeometry::TVec3<f32> getRotDirY(f32 rot) const
 	{
-		JGeometry::TVec3<f32> dir;
-		setRotDirY(dir, rot, 1.0f);
-		return dir;
+		JGeometry::TVec3<f32> rotdir;
+		setRotDirY(rotdir, rot);
+		return rotdir;
 	}
 
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
