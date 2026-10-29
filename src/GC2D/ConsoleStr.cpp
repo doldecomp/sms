@@ -148,7 +148,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	if (SMSGetMarDirector()->getCurrentStage() != 15) {
 		void* pvVar10 = JKRGetResource(COMMON2D "/scenarioname.bmg");
 
-		s16 uVar2 = SMS_getShineID(uVar1, uVar9, false);
+		s16 uVar2 = SMS_getShineID(uVar1, (u8)uVar9, false);
 
 		const void* puVar15;
 		if (pvVar10 == nullptr || uVar2 == -1)
@@ -487,14 +487,17 @@ bool TConsoleStr::processGo(f32 param_1)
 		                                   GMSP01(mGoLettersLength),
 		                                   GMSP01_NX(mGoLettersLength));
 		     ++i) {
+			JUTRect local_204 = mGoLetters[i]->getPane()->getBounds();
 			if (mGoLetters[i]->update()) {
-				if (mGoLetters[i]->unk14.x != 0 || mGoLetters[i]->unk14.y != 0)
+				bool atOrigin = mGoLetters[i]->unk14.x == 0
+				                && mGoLetters[i]->unk14.y == 0;
+				if (!atOrigin)
 					mGoLetters[i]->setPanePosition(0x1E, JUTPoint(0, -40),
 					                               JUTPoint(0, -40),
 					                               JUTPoint(0, 0));
 			}
 		}
-	} else if (param_1 >= 95.0f) {
+	} else if (!(param_1 < 95.0f)) {
 		if (param_1 == 95.0f) {
 			mGoLetters[0]->setPanePosition(0x50, JUTPoint(0, 0),
 			                               JUTPoint(-170, -180),
@@ -610,14 +613,16 @@ bool TConsoleStr::processShineGet(int param_1)
 		}
 
 		if (param_1 < i * 6 + 40) {
-			u16 alpha = mShineGetLetters[i]->getPane()->getAlpha() + 7;
+			u16 alpha = mShineGetLetters[i]->getPane()->getAlpha();
+			alpha += 7;
 			if (alpha > 0xff)
 				alpha = 0xff;
 			mShineGetLetters[i]->getPane()->setAlpha(alpha);
 		}
 
 		if (param_1 > i * 6 + 200) {
-			s16 alpha = mShineGetLetters[i]->getPane()->getAlpha() - 7;
+			s16 alpha = mShineGetLetters[i]->getPane()->getAlpha();
+			alpha -= 7;
 			if (alpha < 0)
 				alpha = 0;
 			mShineGetLetters[i]->getPane()->setAlpha(alpha);
