@@ -16,6 +16,9 @@
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JUtility/JUTResFont.hpp>
 #include <dolphin/gx/GXCull.h>
+#if defined(VERSION_GMSP01_NX)
+#include <dolphin/os.h>
+#endif
 #include <macros.h>
 #include <stdio.h>
 
@@ -35,6 +38,10 @@ TConsoleStr::TConsoleStr(const char* name)
     , mShineGetDelay(180)
     , unk24(0)
     , mCloseWipeRequested(false)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
+    , mParticlesStopped(false)
+#endif
     , mDisplayState(DISPLAY_NONE)
     , mScenarioDemoState(SCENARIO_DEMO_IDLE)
 {
@@ -48,46 +55,63 @@ f32 TConsoleStr::getWipeCloseTime() { return 30.0f / SMSGetVSyncTimesPerSec(); }
 #define MISS_LETTERS_LENGTH      (this->mMissLettersLength)
 #define COMMON2D                 "/cmn2d"
 #else
-#define GO_LETTERS_LENGTH        (3)
-#define SHINE_GET_LETTERS_LENGTH (9)
-#define MISS_LETTERS_LENGTH      (5)
+#define GO_LETTERS_LENGTH        (GO_LETTERS_CAPACITY)
+#define SHINE_GET_LETTERS_LENGTH (SHINE_LETTERS_CAPACITY)
+#define MISS_LETTERS_LENGTH      (MISS_LETTERS_CAPACITY)
 #define COMMON2D                 "/common/2d"
 #endif
 
 void TConsoleStr::load(JSUMemoryInputStream& stream)
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	// what is default??
 	mGoLettersLength      = 11;
 	mShineLettersLength   = 11;
 	mMissLettersLength    = 12;
 	u32 sLoadResourceLang = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
 	switch (sLoadResourceLang) {
-	case MSLANG_ENGLISH:
+#if defined(VERSION_GMSP01_NX)
+	case MSLANG_NX_JAPANESE:
+		mGoLettersLength    = 3;
+		mShineLettersLength = 9;
+		mMissLettersLength  = 5;
+		break;
+	case MSLANG_NX_EN_US:
 		mGoLettersLength    = 3;
 		mShineLettersLength = 6;
 		mMissLettersLength  = 7;
 		break;
-	case MSLANG_GERMAN:
+#endif
+	case VERSION_SELECT(MSLANG_ENGLISH, GMSP01_NX(MSLANG_NX_EN_GB)):
+		mGoLettersLength    = 3;
+		mShineLettersLength = 6;
+		mMissLettersLength  = 7;
+		break;
+	case VERSION_SELECT(MSLANG_GERMAN, GMSP01_NX(MSLANG_NX_GERMAN)):
 		mGoLettersLength    = 4;
 		mShineLettersLength = 11;
 		mMissLettersLength  = 12;
 		break;
-	case MSLANG_FRENCH:
+	case VERSION_SELECT(MSLANG_FRENCH, GMSP01_NX(MSLANG_NX_FRENCH)):
 		mGoLettersLength    = 11;
 		mShineLettersLength = 11;
 		mMissLettersLength  = 8;
 		break;
-	case MSLANG_SPANISH:
+	case VERSION_SELECT(MSLANG_SPANISH, GMSP01_NX(MSLANG_NX_SPANISH)):
 		mGoLettersLength    = 10;
 		mShineLettersLength = 11;
 		mMissLettersLength  = 10;
 		break;
-	case MSLANG_ITALIAN:
+	case VERSION_SELECT(MSLANG_ITALIAN, GMSP01_NX(MSLANG_NX_ITALIAN)):
 		mGoLettersLength    = 4;
 		mShineLettersLength = 10;
 		mMissLettersLength  = 7;
 		break;
+#if defined(VERSION_GMSP01_NX)
+	default:
+		OSReport("Language overflow %d %s %d\n", sLoadResourceLang,
+		         "ConsoleStr.cpp", 109);
+		break;
+#endif
 	}
 #endif
 
@@ -102,7 +126,8 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 		mGoLetters[i] = new TBoundPane(
 		    mSplashTextScreen,
 		    VERSION_SELECT(('go00' + i),
-		                   GMSP01(((i / 10) << 8) + 'go00' + (i % 10))));
+		                   GMSP01(((i / 10) << 8) + 'go00' + (i % 10)),
+		                   GMSP01_NX(((i / 10) << 8) + 'go00' + (i % 10))));
 		mGoLetters[i]->unk0->hide();
 	}
 
@@ -110,16 +135,18 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 		mShineGetLetters[i] = new TBoundPane(
 		    mSplashTextScreen,
 		    VERSION_SELECT(('sg00' + i),
-		                   GMSP01(((i / 10) << 8) + 'sg00' + (i % 10))));
+		                   GMSP01(((i / 10) << 8) + 'sg00' + (i % 10)),
+		                   GMSP01_NX(((i / 10) << 8) + 'sg00' + (i % 10))));
 	}
 
 	for (int i = 0; i < MISS_LETTERS_LENGTH; ++i) {
 		mMissLetters[i] = new TBoundPane(
 		    mSplashTextScreen,
 		    VERSION_SELECT(('ms00' + i),
-		                   GMSP01(((i / 10) << 8) + 'ms00' + (i % 10))));
+		                   GMSP01(((i / 10) << 8) + 'ms00' + (i % 10)),
+		                   GMSP01_NX(((i / 10) << 8) + 'ms00' + (i % 10))));
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-		mMissLetters[i]->unk0->hide();
+		mMissInitialRotations[i] = mMissLetters[i]->getPane()->getRotate();
 #endif
 	}
 
@@ -134,11 +161,38 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 
 	for (int i = 0; i < 2; ++i) {
 		mHeaderFooterMasks[i] = new TExPane(mScenarioDemoScreen, 'msk1' + i);
+#if defined(VERSION_GMSP01_NX)
+		TExPane* mask  = mHeaderFooterMasks[i];
+		J2DPane* pane  = mask->mPane;
+		JUTRect bounds = pane->getBounds();
+		pane->add(-110, 0);
+		pane->resize(bounds.getWidth() + 220, bounds.getHeight());
+		mask->mInitialBounds = mask->getPane()->getBounds();
+#endif
 		mMapStoryTitles[i]->setFont(gpSystemFont);
 	}
 
 	mLeftRightWipers[0] = new TExPane(mScenarioDemoScreen, 'wp_l');
 	mLeftRightWipers[1] = new TExPane(mScenarioDemoScreen, 'wp_r');
+
+#if defined(VERSION_GMSP01_NX)
+	{
+		TExPane* wiper = mLeftRightWipers[0];
+		J2DPane* pane  = wiper->mPane;
+		JUTRect bounds = pane->getBounds();
+		pane->add(-110, 0);
+		pane->resize(bounds.getWidth() + 110, bounds.getHeight());
+		wiper->mInitialBounds = wiper->getPane()->getBounds();
+	}
+	{
+		TExPane* wiper = mLeftRightWipers[1];
+		J2DPane* pane  = wiper->mPane;
+		JUTRect bounds = pane->getBounds();
+		pane->add(0, 0);
+		pane->resize(bounds.getWidth() + 110, bounds.getHeight());
+		wiper->mInitialBounds = wiper->getPane()->getBounds();
+	}
+#endif
 
 	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
 	u32 uVar9     = TFlagManager::getInstance()->getFlag(MSF_EPISODE);
@@ -163,7 +217,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 void TConsoleStr::loadAfter()
 {
 	JDrama::TViewObj::loadAfter();
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < GO_LETTERS_LENGTH; ++i)
 		mGoSplashEmitters[i] = nullptr;
 }
 
@@ -201,12 +255,19 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 				bVar6 = processReady(mAnimationTimer * 2.0f);
 				if (mAnimationTimer >= 60.0f) {
 					if (mAnimationTimer == 60.0f) {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+						for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
+							mGoLetters[i]->getPane()->hide();
+							mGoLetters[i]->getPane()->setAlpha(0xff);
+						}
+#else
 						mGoLetters[0]->getPane()->hide();
 						mGoLetters[1]->getPane()->hide();
 						mGoLetters[2]->getPane()->hide();
 						mGoLetters[0]->getPane()->setAlpha(0xff);
 						mGoLetters[1]->getPane()->setAlpha(0xff);
 						mGoLetters[2]->getPane()->setAlpha(0xff);
+#endif
 					}
 					bVar6 &= processGo(mAnimationTimer - 60.0f);
 				}
@@ -266,7 +327,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (!mParticlesStopped
 		    && SMSGetMarDirector()->getState() != TMarDirector::STATE_UNK4) {
-			for (int i = 0; i < ARRAY_COUNT(mGoSplashEmitters); ++i)
+			for (int i = 0; i < GO_LETTERS_LENGTH; ++i)
 				if (mGoSplashEmitters[i])
 					mGoSplashEmitters[i]->stopCreateParticle();
 			mParticlesStopped = true;
@@ -274,7 +335,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if (mParticlesStopped
 		    && SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4) {
-			for (int i = 0; i < ARRAY_COUNT(mGoSplashEmitters); ++i)
+			for (int i = 0; i < GO_LETTERS_LENGTH; ++i)
 				if (mGoSplashEmitters[i])
 					mGoSplashEmitters[i]->playCreateParticle();
 			mParticlesStopped = false;
@@ -288,7 +349,7 @@ void TConsoleStr::perform(u32 cue, JDrama::TGraphics* graphics)
 		local_1a0.setup2D();
 
 		if (mDisplayState == DISPLAY_GO && mAnimationTimer > 60.0f) {
-			for (int i = 0; i < 3; ++i) {
+			for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
 				int local_b0[3] = { 4, 10, 20 };
 
 				u8 alpha         = mGoLetters[i]->getPane()->getAlpha();
@@ -339,12 +400,19 @@ void TConsoleStr::startAppearReady()
 	mDisplayState     = DISPLAY_GO;
 	mAnimationTimer   = 0.0f;
 	mParticlesStopped = false;
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
+		mGoLetters[i]->getPane()->hide();
+		mGoLetters[i]->getPane()->setAlpha(0xff);
+	}
+#else
 	mGoLetters[0]->getPane()->hide();
 	mGoLetters[1]->getPane()->hide();
 	mGoLetters[2]->getPane()->hide();
 	mGoLetters[0]->getPane()->setAlpha(0xff);
 	mGoLetters[1]->getPane()->setAlpha(0xff);
 	mGoLetters[2]->getPane()->setAlpha(0xff);
+#endif
 }
 
 void TConsoleStr::startAppearGo()
@@ -355,12 +423,19 @@ void TConsoleStr::startAppearGo()
 	mDisplayState     = DISPLAY_GO;
 	mAnimationTimer   = 0.0f;
 	mParticlesStopped = false;
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
+		mGoLetters[i]->getPane()->hide();
+		mGoLetters[i]->getPane()->setAlpha(0xff);
+	}
+#else
 	mGoLetters[0]->getPane()->hide();
 	mGoLetters[1]->getPane()->hide();
 	mGoLetters[2]->getPane()->hide();
 	mGoLetters[0]->getPane()->setAlpha(0xff);
 	mGoLetters[1]->getPane()->setAlpha(0xff);
 	mGoLetters[2]->getPane()->setAlpha(0xff);
+#endif
 }
 
 void TConsoleStr::startAppearShineGet()
@@ -379,15 +454,20 @@ void TConsoleStr::startAppearMiss()
 		return;
 
 	if (mDisplayState == DISPLAY_GO) {
+#if defined(VERSION_GMSJ01)
 		mGoLetters[0]->getPane()->hide();
 		mGoLetters[1]->getPane()->hide();
 		mGoLetters[2]->getPane()->hide();
+#else
+		for (int i = 0; i < GO_LETTERS_LENGTH; ++i)
+			mGoLetters[i]->getPane()->hide();
+#endif
 	}
 
 	mDisplayState   = DISPLAY_MISS;
 	mAnimationTimer = 0.0f;
 
-	for (int i = 0; i < 5; ++i) {
+	for (int i = 0; i < MISS_LETTERS_LENGTH; ++i) {
 		mMissLetters[i]->getPane()->hide();
 		mMissLetters[i]->getPane()->setAlpha(0);
 	}
@@ -476,7 +556,7 @@ bool TConsoleStr::processGo(f32 param_1)
 		                                   GMSP01(mGoLettersLength),
 		                                   GMSP01_NX(mGoLettersLength));
 		     ++i) {
-			if (param_1 == i * 10) {
+			if (param_1 == i * VERSION_SELECT(10, GMSP01(5), GMSP01_NX(5))) {
 				mGoLetters[i]->setPanePosition(
 				    0x28, JUTPoint(0, 60), JUTPoint(0, -40), JUTPoint(0, -40));
 				mGoLetters[i]->getPane()->show();
@@ -499,6 +579,23 @@ bool TConsoleStr::processGo(f32 param_1)
 		}
 	} else if (!(param_1 < 95.0f)) {
 		if (param_1 == 95.0f) {
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+			for (int i = 0; i < GO_LETTERS_LENGTH; ++i) {
+				if (i % 3 == 0) {
+					mGoLetters[i]->setPanePosition(0x50, JUTPoint(0, 0),
+					                               JUTPoint(-170, -180),
+					                               JUTPoint(-340, -360));
+				} else if (i % 3 == 1) {
+					mGoLetters[i]->setPanePosition(0x50, JUTPoint(0, 0),
+					                               JUTPoint(0, -220),
+					                               JUTPoint(0, -440));
+				} else {
+					mGoLetters[i]->setPanePosition(0x50, JUTPoint(0, 0),
+					                               JUTPoint(160, -180),
+					                               JUTPoint(320, -360));
+				}
+			}
+#else
 			mGoLetters[0]->setPanePosition(0x50, JUTPoint(0, 0),
 			                               JUTPoint(-170, -180),
 			                               JUTPoint(-340, -360));
@@ -506,6 +603,7 @@ bool TConsoleStr::processGo(f32 param_1)
 			    0x50, JUTPoint(0, 0), JUTPoint(0, -220), JUTPoint(0, -440));
 			mGoLetters[2]->setPanePosition(
 			    0x50, JUTPoint(0, 0), JUTPoint(160, -180), JUTPoint(320, -360));
+#endif
 
 			for (int i = 0; i < VERSION_SELECT(ARRAY_COUNT(mGoLetters),
 			                                   GMSP01(mGoLettersLength),
@@ -536,10 +634,22 @@ bool TConsoleStr::processGo(f32 param_1)
 				mGoLetters[i]->getPane()->setAlpha(alpha);
 				mGoLetters[i]->getPane()->resize(bounds.getWidth() + 2,
 				                                 bounds.getHeight() + 2);
-				mGoSplashEmitters[i]->setGlobalTranslation(
-				    bounds.x1 + bounds.getWidth() * 0.5f,
-				    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+				if (mGoSplashEmitters[i])
+#endif
+					mGoSplashEmitters[i]->setGlobalTranslation(
+					    bounds.x1 + bounds.getWidth() * 0.5f,
+					    bounds.y1 + bounds.getHeight() * 0.5f, 0.0f);
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+				if (mGoLetters[i]->update()) {
+					if (mGoSplashEmitters[i]) {
+						mGoSplashEmitters[i]->stopCreateParticle();
+						mGoSplashEmitters[i] = nullptr;
+					}
+				}
+#else
 				mGoLetters[i]->update();
+#endif
 
 				if ((int)param_1 % 2 == 0) {
 					for (int j = 14; j >= 0; --j)
@@ -667,7 +777,9 @@ bool TConsoleStr::processMiss(int param_1)
 		}
 
 		if (param_1 == i * 10 + 60) {
-			mMissLetters[i]->getPane()->rotate(0.0f);
+			mMissLetters[i]->getPane()->rotate(
+			    VERSION_SELECT(0.0f, GMSP01(mMissInitialRotations[i]),
+			                   GMSP01_NX(mMissInitialRotations[i])));
 			mMissLetters[i]->setPanePosition(
 			    0x28, JUTPoint(0, 30), JUTPoint(0, -80), JUTPoint(0, -80));
 		}
@@ -699,7 +811,10 @@ bool TConsoleStr::processMiss(int param_1)
 			}
 		} else {
 			if (param_1 < i * 10 + 60) {
-				mMissLetters[i]->getPane()->rotate((i * 10 - param_1) * 6);
+				mMissLetters[i]->getPane()->rotate(
+				    (i * 10 - param_1) * 6
+				    + VERSION_SELECT(0, GMSP01(mMissInitialRotations[i]),
+				                     GMSP01_NX(mMissInitialRotations[i])));
 			}
 
 			result = false;

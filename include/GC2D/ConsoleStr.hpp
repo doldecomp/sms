@@ -61,9 +61,28 @@ public:
 
 public:
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	enum {
+		GO_LETTERS_CAPACITY    = 11,
+		SHINE_LETTERS_CAPACITY = 11,
+		MISS_LETTERS_CAPACITY  = 12,
+	};
+
 	/* 0x010 */ s32 mGoLettersLength;
 	/* 0x014 */ s32 mShineLettersLength;
 	/* 0x018 */ s32 mMissLettersLength;
+	/* 0x01C */ s32 mMissInitialRotations[MISS_LETTERS_CAPACITY];
+#elif defined(VERSION_GMSE01)
+	enum {
+		GO_LETTERS_CAPACITY    = 3,
+		SHINE_LETTERS_CAPACITY = 6,
+		MISS_LETTERS_CAPACITY  = 7,
+	};
+#else
+	enum {
+		GO_LETTERS_CAPACITY    = 3,
+		SHINE_LETTERS_CAPACITY = 9,
+		MISS_LETTERS_CAPACITY  = 5,
+	};
 #endif
 	/* 0x10 */ J2DSetScreen* mSplashTextScreen;
 	/* 0x14 */ J2DSetScreen* mScenarioDemoScreen;
@@ -71,17 +90,17 @@ public:
 	/* 0x1C */ int mTitleFadeCounter;
 	/* 0x20 */ s32 mShineGetDelay;
 	/* 0x24 */ u32 unk24;
-	/* 0x28 */ TBoundPane* mGoLetters[3];
-	/* 0x34 */ JUTPoint mGoLetterPositionHistory[3][22];
-	/* 0x244 */ TBoundPane* mShineGetLetters[9];
-	/* 0x268 */ TBoundPane* mMissLetters[5];
+	/* 0x28 */ TBoundPane* mGoLetters[GO_LETTERS_CAPACITY];
+	/* 0x34 */ JUTPoint mGoLetterPositionHistory[GO_LETTERS_CAPACITY][22];
+	/* 0x244 */ TBoundPane* mShineGetLetters[SHINE_LETTERS_CAPACITY];
+	/* 0x268 */ TBoundPane* mMissLetters[MISS_LETTERS_CAPACITY];
 	/* 0x27C */ TExPane* mReadyLetters[5];
 	/* 0x290 */ TExPane* mHeaderFooterMasks[2];
 	/* 0x298 */ TExPane* mLeftRightWipers[2];
 	/* 0x2A0 */ J2DTextBox* mMapStoryTitles[2];
 	/* 0x2A8 */ bool mCloseWipeRequested;
 	/* 0x2A9 */ bool mParticlesStopped;
-	/* 0x2AC */ JPABaseEmitter* mGoSplashEmitters[3];
+	/* 0x2AC */ JPABaseEmitter* mGoSplashEmitters[GO_LETTERS_CAPACITY];
 	/* 0x2B8 */ int mDisplayState;
 	/* 0x2BC */ int mScenarioDemoState;
 };
