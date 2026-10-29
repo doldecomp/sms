@@ -26,7 +26,7 @@ public:
 
 class TKillerManager : public TSmallEnemyManager {
 public:
-	TKillerManager(const char*);
+	TKillerManager(const char* = "キラーマネージャー");
 	virtual ~TKillerManager() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();

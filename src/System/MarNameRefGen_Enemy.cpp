@@ -15,6 +15,7 @@
 #include <Enemy/Telesa.hpp>
 #include <Enemy/DebuTelesa.hpp>
 #include <Enemy/GateKeeper.hpp>
+#include <Enemy/Killer.hpp>
 #include <Enemy/TypicalEnemy.hpp>
 #include <Enemy/WalkerEnemy.hpp>
 #include <Enemy/FireWanwan.hpp>
@@ -372,13 +373,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "BombHei") == 0)
 		return new TBombHei;
 
-	// TODO:
-	// if ( strcmp(name, "KillerManager") == 0)
-	//     return new TKillerManager;
+	if (strcmp(name, "KillerManager") == 0)
+		return new TKillerManager;
 
-	// TODO:
-	// if ( strcmp( name, "Killer" ) == 0 )
-	//     return new TKiller;
+	if (strcmp(name, "Killer") == 0)
+		return new TKiller;
 
 	if (strcmp(name, "AmiNokoManager") == 0)
 		return new TAmiNokoManager;
