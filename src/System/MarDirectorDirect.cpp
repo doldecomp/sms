@@ -306,7 +306,8 @@ int TMarDirector::changeState()
 
 	case STATE_UNK1:
 		if (checkDemoFlag(DEMO_FLAG_CAMERA_DEMO_WIPE_STARTED)) {
-			if (getConsole()->unk94->unk2BC == 4) {
+			if (getConsole()->unk94->mScenarioDemoState
+			    == TConsoleStr::SCENARIO_DEMO_TITLE_CLOSED) {
 				nextState = STATE_UNK3;
 				offDemoFlag(DEMO_FLAG_CAMERA_DEMO_WIPE_STARTED);
 			}
@@ -332,9 +333,11 @@ int TMarDirector::changeState()
 
 	case STATE_UNK3:
 		if (SMSGetApplication()->getCurrArea().getStage() == 1) {
-			if (getConsole()->unk94->unk2BC == 6)
+			if (getConsole()->unk94->mScenarioDemoState
+			    == TConsoleStr::SCENARIO_DEMO_WIPER_OPENED)
 				nextState = STATE_UNK2;
-		} else if (getConsole()->unk94->unk2BC == 6
+		} else if (getConsole()->unk94->mScenarioDemoState
+		               == TConsoleStr::SCENARIO_DEMO_WIPER_OPENED
 		           && !gpMarioOriginal->checkStatusType(
 		               MARIO_STATUS_FLAG_UNK1000)) {
 			nextState = STATE_UNK4;

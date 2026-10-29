@@ -343,7 +343,8 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			    && mMarchSpeed != 0.0f
 			    && !(mSpine->getLatestNerve()
 			         == &TNerveBossHanachanTumble::theNerve())) {
-				if (unk1B8 == -1 && gpMarDirector->getState() == 4)
+				if (unk1B8 == -1
+				    && gpMarDirector->getState() == TMarDirector::STATE_UNK4)
 					unk1B8 = 7200;
 				else if (unk1B8 > 0) {
 					--unk1B8;
