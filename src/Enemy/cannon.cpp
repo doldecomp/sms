@@ -735,10 +735,10 @@ void TCannon::killerShoot()
 		JGeometry::TVec3<f32> delta = goal;
 		delta -= mPosition;
 		f32 time = fabsf(MsVECMag2(&delta) / (velocity.x * mVelocityRate));
-		killer->unk1A5 = 0;
-		f32 rate       = mVelocityRate;
+		killer->setHoming(false);
+		f32 rate = mVelocityRate;
 		if (TMsRange<s32>(0, 100).rand() % 5 == 0) {
-			killer->unk1A5 = 1;
+			killer->setHoming(true);
 		} else {
 			if (SMS_GetMarioSpeedX() > 2.0f)
 				rate = 0.55f;
@@ -761,7 +761,7 @@ void TCannon::killerShoot()
 			killer->mScaling.set(0.6f, 0.6f, 0.6f);
 		}
 		killer->setColorType();
-		killer->unk1A8 = velocity;
+		killer->mLaunchVelocity = velocity;
 		killer->setVelocity(velocity);
 		killer->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		JGeometry::TVec3<f32> marioDelta = SMS_DistanceFromMarioVec(mPosition);
