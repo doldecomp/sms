@@ -37,6 +37,8 @@ public:
 	TBoid* getBoid(int idx) { return &mBoids[idx]; }
 	int getBoidNum() const { return mNumBoids; }
 
+	// fabricated
+	void setGoal(const TPathNode& goal) { mGoal = goal; }
 	void setFleeTarget(const TPathNode& target) { mFleeTarget = target; }
 
 public:

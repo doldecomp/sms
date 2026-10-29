@@ -23,6 +23,7 @@ public:
 	void loadDefault(JSUMemoryInputStream&, const char*, int);
 
 	TRealoidActor* getRealoid(int idx) { return unk154[idx]; }
+	TBoidLeader* getBoidLeader() const { return unk150; }
 
 public:
 	/* 0x150 */ TBoidLeader* unk150;
@@ -43,6 +44,8 @@ public:
 
 	void onFlag(int flag) { mFlags |= flag; }
 	void offFlag(int flag) { mFlags &= ~flag; }
+	// fabricated
+	u32 checkFlag(int flag) const { return mFlags & flag; }
 
 public:
 	enum {
