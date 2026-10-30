@@ -1067,7 +1067,7 @@ BOOL TBossWanwan::isHeadPulled()
 	return mPicketPullDelta.squared()
 	               < ((TBWParams*)getSaveParam())->mSLPullLimit.get()
 	           ? FALSE
-			   : TRUE;
+	           : TRUE;
 }
 
 void TBossWanwan::calcRootMatrix()
