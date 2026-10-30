@@ -11,6 +11,13 @@ class J3DDrawBuffer;
 class JPAEmitterManager;
 class JPABaseEmitter;
 
+enum SelectShineState {
+	SELECT_SHINE_LOCKED    = 0,
+	SELECT_SHINE_UNKNOWN_1 = 1,
+	SELECT_SHINE_UNLOCKED  = 2,
+	SELECT_SHINE_COLLECTED = 3,
+};
+
 class TSelectShine {
 public:
 	TSelectShine(J3DModelData*, J3DAnmColor*, JPAEmitterManager*,

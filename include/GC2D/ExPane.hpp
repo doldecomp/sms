@@ -95,6 +95,16 @@ public:
 	J2DPane* getPane() const { return mPane; }
 	const JUTRect& getInitialBounds() const { return mInitialBounds; }
 
+	// fabricated
+	void adjustBounds(int x, int y, int width, int height)
+	{
+		J2DPane* pane  = getPane();
+		JUTRect bounds = pane->getBounds();
+		pane->add(x, y);
+		pane->resize(bounds.getWidth() + width, bounds.getHeight() + height);
+		mInitialBounds = mPane->getBounds();
+	}
+
 	bool isBoundsAnimationCompleted() const
 	{
 		bool result = false;

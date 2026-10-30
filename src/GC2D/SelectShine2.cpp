@@ -85,12 +85,13 @@ void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
 	for (int i = 0; i < 8; ++i) {
 		JGeometry::TVec3<f32> pos = getPosition(mRingAngle + i * 40);
 		s16 angle                 = getAngle(pos);
-		if (states[i] == 3) {
+		if (states[i] == SELECT_SHINE_COLLECTED) {
 			mShines[i] = new TSelectShine(
 			    modelData, anmColor, emitter_manager, pos, angle, 0,
 			    (s32)(4000.0f * (rand() * (1.0f / 32768.0f))) / 1000.0f, 0.01f,
 			    10.0f);
-		} else if (states[i] == 1 || states[i] == 2) {
+		} else if (states[i] == SELECT_SHINE_UNKNOWN_1
+		           || states[i] == SELECT_SHINE_UNLOCKED) {
 			mShines[i] = new TSelectShine(
 			    emptyModelData, emptyAnmColor, emitter_manager, pos, angle, 1,
 			    (s32)(4000.0f * (rand() * (1.0f / 32768.0f))) / 1000.0f, 0.01f,

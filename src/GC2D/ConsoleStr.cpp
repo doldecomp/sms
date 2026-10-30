@@ -162,12 +162,7 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	for (int i = 0; i < 2; ++i) {
 		mHeaderFooterMasks[i] = new TExPane(mScenarioDemoScreen, 'msk1' + i);
 #if defined(VERSION_GMSP01_NX)
-		TExPane* mask  = mHeaderFooterMasks[i];
-		J2DPane* pane  = mask->mPane;
-		JUTRect bounds = pane->getBounds();
-		pane->add(-110, 0);
-		pane->resize(bounds.getWidth() + 220, bounds.getHeight());
-		mask->mInitialBounds = mask->getPane()->getBounds();
+		mHeaderFooterMasks[i]->adjustBounds(-110, 0, 220, 0);
 #endif
 		mMapStoryTitles[i]->setFont(gpSystemFont);
 	}
@@ -176,22 +171,8 @@ void TConsoleStr::load(JSUMemoryInputStream& stream)
 	mLeftRightWipers[1] = new TExPane(mScenarioDemoScreen, 'wp_r');
 
 #if defined(VERSION_GMSP01_NX)
-	{
-		TExPane* wiper = mLeftRightWipers[0];
-		J2DPane* pane  = wiper->mPane;
-		JUTRect bounds = pane->getBounds();
-		pane->add(-110, 0);
-		pane->resize(bounds.getWidth() + 110, bounds.getHeight());
-		wiper->mInitialBounds = wiper->getPane()->getBounds();
-	}
-	{
-		TExPane* wiper = mLeftRightWipers[1];
-		J2DPane* pane  = wiper->mPane;
-		JUTRect bounds = pane->getBounds();
-		pane->add(0, 0);
-		pane->resize(bounds.getWidth() + 110, bounds.getHeight());
-		wiper->mInitialBounds = wiper->getPane()->getBounds();
-	}
+	mLeftRightWipers[0]->adjustBounds(-110, 0, 110, 0);
+	mLeftRightWipers[1]->adjustBounds(0, 0, 110, 0);
 #endif
 
 	u32 uVar1     = SMS_getShineStage(SMSGetMarDirector()->getCurrentStage());
