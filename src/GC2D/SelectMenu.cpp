@@ -34,34 +34,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// fabricated and not matching
-inline void bzero(void* pDst, u32 len)
-{
-	u8* dst           = (u8*)pDst;
-	u32 alignedBlocks = len / 8;
-	if (alignedBlocks > 0) {
-		for (; alignedBlocks > 0; alignedBlocks--) {
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-		}
-
-		len = len % 8;
-		if (len == 0) {
-			return;
-		}
-	}
-
-	for (; len != 0; len--) {
-		*dst++ = 0;
-	}
-}
-
 TSelectGrad::TSelectGrad(const char* pName)
     : JDrama::TViewObj(pName)
 {
@@ -134,7 +106,7 @@ void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 			} break;
 			}
 
-			s32 topLeftAnimCycle = mRgbAnimCycle[i] - 1;
+			int topLeftAnimCycle = mRgbAnimCycle[i] - 1;
 			if (topLeftAnimCycle < 0) {
 				topLeftAnimCycle = 5;
 			}
@@ -161,15 +133,11 @@ void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 		}
 
 		if (nextCycle) {
-			// TODO: This doesn't fully match.
-			mRgbAnimCycle[0]++;
-			mRgbAnimCycle[0] = (mRgbAnimCycle[0] >= 6) ? 0 : mRgbAnimCycle[0];
-
-			mRgbAnimCycle[1]++;
-			mRgbAnimCycle[1] = (mRgbAnimCycle[1] >= 6) ? 0 : mRgbAnimCycle[1];
-
-			mRgbAnimCycle[2]++;
-			mRgbAnimCycle[2] = (mRgbAnimCycle[2] >= 6) ? 0 : mRgbAnimCycle[2];
+			for (int i = 0; i < 3; ++i) {
+				mRgbAnimCycle[i]++;
+				if (mRgbAnimCycle[i] >= 6)
+					mRgbAnimCycle[i] = 0;
+			}
 		}
 	}
 
@@ -200,9 +168,12 @@ void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 
-		u8 midR = (mTopLeftCol.r + mBottomRightCol.r) >> 1;
-		u8 midG = (mTopLeftCol.g + mBottomRightCol.g) >> 1;
-		u8 midB = (mTopLeftCol.b + mBottomRightCol.b) >> 1;
+		u8 midB;
+		u8 midG;
+		u8 midR;
+		midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
+		midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
+		midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(0.0f, 16.0f, -100.0f);
@@ -343,26 +314,27 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	s32 const stageNameIds[]
 	    = { 0x0, 0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x0, 0x7, 0x8, 0x0 };
 
-	const u8* const stages[] = { nullptr,
-		                         nullptr,
-		                         scShineTableBiancoEtc,
-		                         scShineTableRiccoEtc,
-		                         scShineTableMammaEtc,
-		                         scShineTablePinnaEtc,
-		                         scShineTableSirenaEtc,
-		                         nullptr,
-		                         scShineTableMonteEtc,
-		                         scShineTableMareEtc,
-		                         nullptr };
+	const u8* const stages[] = {
+		nullptr,
+		nullptr,
+		scShineTableBiancoEtc,
+		scShineTableRiccoEtc,
+		scShineTableMammaEtc,
+		scShineTablePinnaEtc,
+		scShineTableSirenaEtc,
+		nullptr,
+		scShineTableMonteEtc,
+		scShineTableMareEtc,
+		nullptr,
+	};
 
 	s32 numCoins = TFlagManager::getInstance()->getFlag(SMS_getShineStage(stage)
 	                                                    + MSF_COIN_RECORD_BASE);
-	if (numCoins > 999) {
+	if (numCoins > 999)
 		numCoins = 999;
-	}
-	if (numCoins < 0) {
+	if (numCoins < 0)
 		numCoins = 0;
-	}
+
 	mMenuScreen->search('sc_s')->hide();
 
 	if (numCoins < 100) {
@@ -379,7 +351,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		s32 digit0 = hundreds;
 		coinDigits[0]->changeTexture(mCoinNumTex[digit0]->getTexInfo(), 0);
 
-		s32 digit1 = 0.1f * (numCoins - 100 * (s32)(hundreds));
+		numCoins -= 100 * (s32)hundreds;
+		s32 digit1 = 0.1f * numCoins;
 		coinDigits[1]->changeTexture(mCoinNumTex[digit1]->getTexInfo(), 0);
 
 		s32 digit2 = numCoins % 10;
@@ -391,11 +364,9 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	}
 
 	s8 count = 0;
-	for (s32 i = 1; i < 3; i++) {
-		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i])) {
+	for (s32 i = 1; i < 3; i++)
+		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i]))
 			count++;
-		}
-	}
 
 	if (count == 0) {
 		mMenuScreen->search('sc_0')->add(83, 0);
@@ -486,11 +457,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	}
 	mSelectedShine = lastShineIdx;
 
-	if (mNumUnlockedShines < 8) {
-		// TODO: I tried matching this as best as I could but the compiler
-		// keeps unrolling the loops and I'm running out of ideas...
-		bzero(mShineUnlockStates + mNumUnlockedShines, 8 - mNumUnlockedShines);
-	}
+	for (s32 i = mNumUnlockedShines; i < 8; ++i)
+		mShineUnlockStates[i] = 0;
 
 	// Show arrows if we have more than one shine unlocked.
 	if (mNumUnlockedShines > 1) {
@@ -501,23 +469,15 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		mArrowLBounds = mArrowL->getBounds();
 		mArrowRBounds = mArrowR->getBounds();
 
-		if (mSelectedShine != 0) {
+		if (mSelectedShine != 0)
 			mArrowL->show();
-		}
 
-		if (mSelectedShine != (mNumUnlockedShines - 1)) {
+		if (mSelectedShine != mNumUnlockedShines - 1)
 			mArrowR->show();
-		}
 	}
 
-	mShineMarks[0] = nullptr;
-	mShineMarks[1] = nullptr;
-	mShineMarks[2] = nullptr;
-	mShineMarks[3] = nullptr;
-	mShineMarks[4] = nullptr;
-	mShineMarks[5] = nullptr;
-	mShineMarks[6] = nullptr;
-	mShineMarks[7] = nullptr;
+	for (int i = 0; i < 8; ++i)
+		mShineMarks[i] = nullptr;
 
 	// This code displays the icons of the unlocked shines at the bottom of
 	// the screen. It handles even and odd numbers differently to centre
@@ -525,10 +485,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	s32 i = 0;
 	if ((mNumUnlockedShines & 1) == 1) {
 		// Odd number of shines.
-		s32 firstSlot = (7 - mNumUnlockedShines) / 2;
-		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+		s32 slot     = (7 - mNumUnlockedShines) / 2;
+		s32 lastSlot = slot + mNumUnlockedShines - 1;
 
-		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+		for (; slot <= lastSlot; slot++) {
 			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
 			mShineMarks[i]->show();
 
@@ -543,10 +503,10 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		}
 	} else {
 		// Even number of shines.
-		s32 firstSlot = (8 - mNumUnlockedShines) / 2;
-		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+		s32 slot     = (8 - mNumUnlockedShines) / 2;
+		s32 lastSlot = slot + mNumUnlockedShines - 1;
 
-		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+		for (; slot <= lastSlot; slot++) {
 			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
 			mShineMarks[i]->show();
 
