@@ -294,7 +294,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	unk150     = 0x3A;
 	getWalker()->setMode(1);
 	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND_AND_WALL;
-	unk1A4 = (TNameKuriSaveLoadParams*)getSaveParam();
+	unk1A4                = (TNameKuriSaveLoadParams*)getSaveParam();
 
 	if (mInstanceIndex == 0) {
 		for (u8 i = 0;

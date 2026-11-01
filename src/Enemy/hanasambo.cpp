@@ -407,7 +407,7 @@ void TSamboFlower::init(TLiveManager* param_1)
 	param_1->manageActor(this);
 	setMActorAndKeeper();
 	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND;
-	unk16C = (TSamboFlowerSaveLoadParams*)getSaveParam();
+	unk16C                = (TSamboFlowerSaveLoadParams*)getSaveParam();
 	if (unk16C) {
 		mBodyRadius       = unk16C->mSLBodyRadius.get();
 		mWallRadius       = unk16C->mSLWallRadius.get();
