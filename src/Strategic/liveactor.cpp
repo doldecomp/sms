@@ -53,7 +53,7 @@ TLiveActor::TLiveActor(const char* name)
 	mLodAnm              = nullptr;
 	mGroundActor         = nullptr;
 	mGroundActorYaw      = 0.0f;
-	unkE8                = 1;
+	mRideMode            = RIDE_MODE_POSITION;
 	mMapCollisionManager = nullptr;
 	mLiveFlag            = LIVE_FLAG_ENABLE_CLIPPING;
 
@@ -91,7 +91,7 @@ BOOL TLiveActor::belongToGround() const
 
 void TLiveActor::calcRideMomentum()
 {
-	if (unkE8 == 0)
+	if (mRideMode == RIDE_MODE_NONE)
 		return;
 
 	if (belongToGround()) {
@@ -100,7 +100,8 @@ void TLiveActor::calcRideMomentum()
 			mGroundActor = mGroundPlane->getActor();
 			calcRidePos();
 
-			if (unkE8 >= 2 && mGroundActor != nullptr)
+			if (mRideMode >= RIDE_MODE_POSITION_AND_YAW
+			    && mGroundActor != nullptr)
 				mGroundActorYaw = mGroundActor->mRotation.y;
 		} else {
 			Mtx mtx;
@@ -117,7 +118,7 @@ void TLiveActor::calcRideMomentum()
 			rideVelocity -= mPosition;
 			mPositionDelta += rideVelocity;
 
-			if (unkE8 >= 2) {
+			if (mRideMode >= RIDE_MODE_POSITION_AND_YAW) {
 				mRotationDelta.y
 				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
 				mGroundActorYaw = mGroundActor->mRotation.y;

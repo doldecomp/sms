@@ -138,7 +138,7 @@ void TAmiNoko::init(TLiveManager* param_1)
 	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		unk210 = 0;
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	unkE8 = 0;
+	mRideMode = RIDE_MODE_NONE;
 #endif
 	unk208 = new TAmiHit(this);
 }

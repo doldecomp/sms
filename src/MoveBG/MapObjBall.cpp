@@ -402,7 +402,7 @@ void TMapObjBall::makeObjAppeared()
 		nodeMatrix[1][3] -= 10.0f * (1.0f - nodeMatrix[1][1]);
 	}
 
-	unkE8 = 0;
+	mRideMode = RIDE_MODE_NONE;
 }
 
 void TMapObjBall::control()
@@ -1003,7 +1003,7 @@ void TResetFruit::makeObjAppeared()
 		nodeMat[1][3] -= 10.0f * (1.0f - nodeMat[1][1]);
 	}
 
-	unkE8 = 0;
+	mRideMode = RIDE_MODE_NONE;
 	if (checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000)) {
 		mState = STATE_LIVING;
 	}

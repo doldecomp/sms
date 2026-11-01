@@ -227,6 +227,12 @@ public:
 		return basTable[idx];
 	}
 
+	enum {
+		RIDE_MODE_NONE             = 0,
+		RIDE_MODE_POSITION         = 1,
+		RIDE_MODE_POSITION_AND_YAW = 2,
+	};
+
 public:
 	/* 0x70 */ TLiveManager* mManager;
 	/* 0x74 */ MActor* mMActor;
@@ -250,7 +256,7 @@ public:
 	/* 0xD4 */ const TLiveActor* mGroundActor;
 	/* 0xD8 */ JGeometry::TVec3<f32> mRidePos;
 	/* 0xE4 */ f32 mGroundActorYaw;
-	/* 0xE8 */ s8 unkE8; // riding mode?
+	/* 0xE8 */ s8 mRideMode;
 	/* 0xEC */ TMapCollisionManager* mMapCollisionManager;
 	/* 0xF0 */ u32 mLiveFlag;
 };

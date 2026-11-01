@@ -11284,7 +11284,7 @@ void TMapObjBase::initActorData()
 	if (checkMapObjFlag(MAP_OBJ_FLAG_NO_CLIPPING))
 		offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	if (checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE))
-		unkE8 = 2;
+		mRideMode = RIDE_MODE_POSITION_AND_YAW;
 }
 
 void TMapObjBase::initMapObj()

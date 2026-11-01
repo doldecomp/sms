@@ -168,7 +168,7 @@ void TJumpBase::initMapObj()
 		base->setAllActor(this);
 		base->setAllData(0x2710);
 	}
-	unkE8 = 0;
+	mRideMode = RIDE_MODE_NONE;
 }
 
 void TJumpBase::ensureTakeSituation()
