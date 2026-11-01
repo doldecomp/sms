@@ -47,8 +47,8 @@ void BHSCalcRevisionDistXZByRotateZ(f32 direction, f32 degreeZ,
 {
 	JGeometry::TVec2<f32> offset(revisionScale * degreeZ, 0.0f);
 	s16 angle = CLBDegToShortAngle(direction);
-	f32 s     = JMASSin(angle);
 	f32 c     = JMASCos(angle);
+	f32 s     = JMASSin(angle);
 	*x        = offset.x * c + offset.y * s;
 	*z        = -offset.x * s + offset.y * c;
 }

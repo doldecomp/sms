@@ -692,7 +692,7 @@ BOOL TMario::wireMove(f32 param_1)
 		mWirePosRatio = margin;
 		clean         = false;
 	}
-	if (clean)
+	if (clean == true)
 		mWirePosRatio += delta;
 	return clean;
 }
@@ -1241,9 +1241,11 @@ BOOL TMario::pulling()
 		break;
 
 	default:
+		// TODO: this should be storing the delta via the constructor and not
+		// assignment operator, but it is not clear how to achieve that
 		JGeometry::TVec3<f32> delta;
-		if (mHeldObject->isActorType(ACTOR_TYPE_BOSS_GESSO_TENTACLE)
-		    || mHeldObject->isActorType(ACTOR_TYPE_BOSS_UNK8)) {
+		if (getHeldObject()->isActorType(ACTOR_TYPE_BOSS_GESSO_TENTACLE)
+		    || getHeldObject()->isActorType(ACTOR_TYPE_BOSS_UNK8)) {
 			delta = pos - mPrevPosition;
 		} else {
 			delta = mPosition - mPrevPosition;
