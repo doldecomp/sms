@@ -393,21 +393,24 @@ struct TWarpInCallBack
 void TWarpInCallBack::execute(JPABaseEmitter* emitter,
                               JPABaseParticle* particle)
 {
-	// TODO: awful vector maths :(
+	// TODO: frame is 0x58 short and the float registers are colored
+	// differently; likely more inline levels in the vector math.
+	TMario* mario              = gpMarioOriginal;
 	JGeometry::TVec3<f32>* vel = (JGeometry::TVec3<f32>*)emitter->getUserWork();
-
-	f32 timer = (f32)gpMarioOriginal->mStatusTimer;
-	f32 tmp   = gpMarioOriginal->unk468;
-
-	f32 factor = ((((intptr_t)particle >> 2) & 0x3F) / 16.0f + 1.0f);
-
-	JGeometry::TVec3<f32> v = *vel;
-
-	v = v * tmp;
-	v = v * timer;
-	v = v * factor;
-
-	particle->unk14 += v;
+	f32 timer                  = mario->mStatusTimer;
+	f32 tmp                    = mario->unk468;
+	f32 factor                 = (((intptr_t)particle >> 2) & 0x3F) * 0.0625f;
+	factor += 1.0f;
+	f32 x                   = particle->unk14.x;
+	f32 y                   = particle->unk14.y;
+	f32 z                   = particle->unk14.z;
+	JGeometry::TVec3<f32> v = *vel * tmp;
+	v                       = v * timer;
+	v                       = v * factor;
+	x += v.x;
+	y += v.y;
+	z += v.z;
+	particle->unk14.set(x, y, z);
 }
 
 TWarpInCallBack warpInCallBack;

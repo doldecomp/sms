@@ -3,6 +3,8 @@
 
 #include <Enemy/Enemy.hpp>
 
+JGeometry::TQuat4<f32> SMS_Eular2Quat(const JGeometry::TVec3<f32>& rot);
+
 struct TAnimalBaseUnk150 {
 	TAnimalBaseUnk150()
 	{

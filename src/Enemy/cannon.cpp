@@ -144,10 +144,13 @@ void TChorobei::checkHit()
 		}
 		if (actor->isActorType(ACTOR_TYPE_ENEMY_UNK1F)) {
 			TKiller* killer = static_cast<TKiller*>(actor);
-			if (killer->isRollFly()) {
-				unk68->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
-				killer->kill();
-			}
+			// One statement more than the nested-if form: MWCC auto-inlines
+			// functions of up to 14 statements, and the target keeps this one
+			// out of line in moveObject (see docs/AGENT_MATCHING_TIPS.md).
+			if (!killer->isRollFly())
+				continue;
+			unk68->mSpine->pushNerve(&TNerveCannonDamage::theNerve());
+			killer->kill();
 		}
 	}
 }
@@ -684,9 +687,7 @@ void TCannon::updateAttachPos()
 	if (!unk1A0)
 		return;
 
-	JGeometry::TVec3<f32> pos = unk194;
-	pos += unk1A8->mPosition;
-	unk1A0->mPosition = pos;
+	unk1A0->mPosition = unk194 + unk1A8->mPosition;
 	unk1A0->offLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	if (mSpine->getCurrentNerve() == &TNerveCannonClose::theNerve()) {

@@ -10,6 +10,7 @@
 #include <JSystem/J3D/J3DGraphBase/Components/J3DGXColor.hpp>
 
 class TBGTentacle;
+class J3DAnmTransformKey;
 class TBGPolDrop;
 class TBossGesso;
 
@@ -103,6 +104,11 @@ public:
 	void setAnm(int);
 	void calc(u16);
 
+	// fabricated: same as TBossWanwanMtxCalc::getBckAnmPtr. The original keeps
+	// getMActorAnmData and getAnmPtr as calls at every inlined joinAnm site,
+	// which this extra inline level reproduces.
+	J3DAnmTransformKey* getBckAnmPtr(int index) const;
+
 private:
 	/* 0x64 */ TBossGesso* mOwner;
 };
@@ -157,8 +163,8 @@ public:
 	void showMessage(u32);
 	void checkTakeMsg();
 	void changeBck(int);
-	bool inSightAngle(f32);
-	f32 inSight();
+	BOOL inSightAngle(f32);
+	BOOL inSight();
 	BOOL is2ndFightNow() const;
 	void stopIfRoll();
 	void changeAttackMode(int new_mode);
@@ -172,7 +178,7 @@ public:
 	void launchPolDrop();
 	void setEyeDamageBtp(int);
 	BOOL tentacleHeld() const;
-	void tentacleAttack();
+	BOOL tentacleAttack();
 	BOOL beakHeld() const;
 	void tentacleWait();
 	void doAttackSingle();
@@ -235,8 +241,8 @@ public:
 	/* 0x195 */ s8 unk195;
 	/* 0x196 */ s8 unk196;
 	/* 0x198 */ u32 unk198;
-	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ u8 unk1A0;
+	/* 0x19C */ s32 unk19C;
+	/* 0x1A0 */ s8 unk1A0;
 	/* 0x1A1 */ s8 unk1A1;
 	/* 0x1A4 */ f32 unk1A4;
 	/* 0x1A8 */ int unk1A8;

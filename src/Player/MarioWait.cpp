@@ -96,10 +96,9 @@ BOOL TMario::waitingCommonEvents()
 		return changePlayerStatus(0xc000227, 0, false);
 
 	if (mInput & 0x1) {
-		s16 diff      = mIntendedYaw - mFaceAngle.y;
-		s16 rotSp     = mDeParams.mWaitingRotSp.get();
-		s16 converged = IConverge(diff, 0, rotSp, rotSp);
-		mFaceAngle.y  = mIntendedYaw - converged;
+		s16 diff     = mIntendedYaw - mFaceAngle.y;
+		s16 rotSp    = mDeParams.mWaitingRotSp.get();
+		mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 		if (mIntendedMag > mControllerParams.mStartToWalkLevel.get()) {
 			emitSmoke(mFaceAngle.y);
 			return changePlayerStatus(MARIO_STATUS_RUN, 0, false);

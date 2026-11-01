@@ -126,27 +126,7 @@ public:
 		);
 	}
 
-	void concat(const T& b)
-	{
-		this->set(
-		    // clang-format off
-		this->at(0, 0) * b.at(0, 0) + this->at(1, 0) * b.at(0, 1) + this->at(2, 0) * b.at(0, 2),
-		this->at(0, 0) * b.at(1, 0) + this->at(1, 0) * b.at(1, 1) + this->at(2, 0) * b.at(1, 2),
-		this->at(0, 0) * b.at(2, 0) + this->at(1, 0) * b.at(2, 1) + this->at(2, 0) * b.at(2, 2),
-		this->at(0, 3) + this->at(0, 0) * b.at(0, 3) + this->at(0, 1) * b.at(1, 3) + this->at(0, 2) * b.at(2, 3),
-
-		this->at(0, 1) * b.at(0, 0) + this->at(1, 1) * b.at(0, 1) + this->at(2, 1) * b.at(0, 2),
-		this->at(0, 1) * b.at(1, 0) + this->at(1, 1) * b.at(1, 1) + this->at(2, 1) * b.at(1, 2),
-		this->at(0, 1) * b.at(2, 0) + this->at(1, 1) * b.at(2, 1) + this->at(2, 1) * b.at(2, 2),
-		this->at(1, 3) + this->at(1, 0) * b.at(0, 3) + this->at(1, 1) * b.at(1, 3) + this->at(1, 2) * b.at(2, 3),
-
-		this->at(0, 2) * b.at(0, 0) + this->at(1, 2) * b.at(0, 1) + this->at(2, 2) * b.at(0, 2),
-		this->at(0, 2) * b.at(1, 0) + this->at(1, 2) * b.at(1, 1) + this->at(2, 2) * b.at(1, 2),
-		this->at(0, 2) * b.at(2, 0) + this->at(1, 2) * b.at(2, 1) + this->at(2, 2) * b.at(2, 2),
-		this->at(2, 3) + this->at(2, 0) * b.at(0, 3) + this->at(2, 1) * b.at(1, 3) + this->at(2, 2) * b.at(2, 3)
-		    // clang-format on
-		);
-	}
+	void concat(const T& b) { concat(*this, b); }
 
 	void invert(const TMatrix34& mtx);
 

@@ -323,14 +323,14 @@ void TMario::slideProcess(f32 baseAcc, f32 friction)
 	f32 slopeUp;
 	f32 slopeDown;
 	getSlopeSlideAccele(&slopeUp, &slopeDown);
-	f32 acc;
 	if (angDiff > -0x4000 && angDiff < 0x4000)
-		acc = slopeUp * mag + baseAcc;
+		baseAcc += slopeUp * mag;
 	else
-		acc = slopeDown * mag + baseAcc;
+		baseAcc += slopeDown * mag;
 
-	mSlideVelX += acc * JMASSin(dirAng);
-	mSlideVelZ += acc * JMASCos(dirAng);
+	mSlideVelX += baseAcc * JMASSin(dirAng);
+	mSlideVelZ += baseAcc * JMASCos(dirAng);
+
 	mSlideVelX *= friction;
 	mSlideVelZ *= friction;
 	unk9E = matan(mSlideVelZ, mSlideVelX);
@@ -407,14 +407,14 @@ BOOL TMario::doSliding(f32 stopThreshold)
 		}
 	}
 
-	f32 mult   = (0.02f * (mIntendedMag * 0.03125f * cs)) + slipFr;
+	f32 mult   = (0.02f * ((mIntendedMag / 32.0f) * cs)) + slipFr;
 	f32 oldMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 
 	mSlideVelX
-	    += sn * (mSlideVelZ * (mIntendedMag * 0.03125f)) * getSlideStickMult();
-	mSlideVelZ = -(
-	    (sn * (mSlideVelX * (mIntendedMag * 0.03125f)) * getSlideStickMult())
-	    - mSlideVelZ);
+	    += sn * (mSlideVelZ * ((mIntendedMag / 32.0f))) * getSlideStickMult();
+	mSlideVelZ
+	    = -((sn * (mSlideVelX * ((mIntendedMag / 32.0f))) * getSlideStickMult())
+	        - mSlideVelZ);
 
 	f32 newMag = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
 	if (oldMag > 0.0f && newMag > 0.0f) {
@@ -464,13 +464,22 @@ void TMario::slopeProcess()
 
 void TMario::doSlipping(f32) { }
 
-void TMario::doStopping() { }
+BOOL TMario::doStopping()
+{
+	BOOL zeroed = false;
+	f32 v       = FConverge(mForwardVel, 0.0f, 1.0f, 1.0f);
+	mForwardVel = v;
+	if (v == 0.0f)
+		zeroed = true;
+
+	setPlayerVelocity(mForwardVel);
+	return zeroed;
+}
 
 void TMario::doRunning()
 {
-	f32 sp = mIntendedMag < mRunParams.mMaxSpeed.get()
-	             ? mIntendedMag
-	             : mRunParams.mMaxSpeed.get();
+	f32 maxSpeed = mRunParams.mMaxSpeed.get();
+	f32 sp       = mIntendedMag < maxSpeed ? mIntendedMag : maxSpeed;
 
 	if (onYoshi())
 		sp *= mYoshiParams.mRunYoshiMult.get();
@@ -549,6 +558,7 @@ void TMario::doSurfing()
 	const TBGCheckData* below;
 	gpMap->checkGround(mPosition.x, mPosition.y - mVel.y, mPosition.z, &below);
 
+	f32 want;
 	f32 rotMin;
 	f32 rotMax;
 	f32 powMin;
@@ -566,7 +576,7 @@ void TMario::doSurfing()
 		powMax = getSurfingParamsGround()->mPowMax.get();
 	}
 
-	f32 want = 2.0f * mIntendedMag;
+	want = 2.0f * mIntendedMag;
 	if (want > powMax)
 		want = powMax;
 	if (want < powMin)
@@ -588,8 +598,8 @@ void TMario::doSurfing()
 	if (mForwardVel > powMax)
 		mForwardVel = powMax;
 
-	s16 rotSp
-	    = (((want - powMin) / (powMax - powMin)) * (rotMax - rotMin)) + rotMin;
+	f32 rate = (want - powMin) / (powMax - powMin);
+	s16 rotSp = rate * (rotMax - rotMin) + rotMin;
 	s16 diff     = mIntendedYaw - mFaceAngle.y;
 	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 	slopeProcess();
@@ -648,7 +658,7 @@ BOOL TMario::running()
 			return changePlayerStatus(0xC400209, 0, false);
 		}
 		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y <= 0.17364818f) {
+		    && mGroundPlane->mNormal.y >= 0.17364818f) {
 			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
 		}
 		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
@@ -673,7 +683,7 @@ BOOL TMario::running()
 			return changePlayerStatus(0xC400209, 0, false);
 		}
 		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y <= 0.17364818f) {
+		    && mGroundPlane->mNormal.y >= 0.17364818f) {
 			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
 		}
 		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
@@ -1004,16 +1014,8 @@ BOOL TMario::walkEnd()
 	if (considerRotateStart())
 		return true;
 
-	// TODO: inline
-	BOOL zeroed = false;
-	f32 v       = FConverge(mForwardVel, 0.0f, 1.0f, 1.0f);
-	mForwardVel = v;
-	if (v == 0.0f)
-		zeroed = true;
-
-	setPlayerVelocity(mForwardVel);
-
-	if (zeroed)
+	BOOL stopped = doStopping();
+	if (stopped)
 		return changePlayerStatus(MARIO_STATUS_WAIT, 0, false);
 
 	switch (walkProcess()) {
@@ -1025,7 +1027,7 @@ BOOL TMario::walkEnd()
 		break;
 	}
 
-	f32 rate = 0.25f * mForwardVel;
+	f32 rate = mForwardVel / 4.0f;
 	if (rate < 0.1f)
 		rate = 0.1f;
 	setAnimation(ANIM_RUN1, rate);
@@ -1115,8 +1117,8 @@ void TMario::slippingBasic(int statusOnStop, int statusOnFall, int slipAnim)
 				                    mWallPlane->getNormal().x);
 
 				f32 newMag
-				    = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ)
-				      * 0.9;
+				    = MsSqrtf(mSlideVelX * mSlideVelX + mSlideVelZ * mSlideVelZ);
+				newMag *= 0.9;
 				if (newMag < 4.0f)
 					newMag = 4.0f;
 
@@ -1189,7 +1191,7 @@ BOOL TMario::catching()
 	(void)0;
 
 	if (!(mInput & 0x8) && (mInput & 0x2)) {
-		if (mForwardVel > mDeParams.mClashSpeed.get())
+		if (mForwardVel > mJumpParams.mRotBroadEnableV.get())
 			return changePlayerStatus(MARIO_STATUS_ROTATE_BROAD_JUMP, 0, false);
 
 		return changePlayerStatus(MARIO_STATUS_CATCH_STOP, 0, false);

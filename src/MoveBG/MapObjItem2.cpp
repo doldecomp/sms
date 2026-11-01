@@ -92,10 +92,10 @@ void TMushroom1up::control()
 		}
 
 		JGeometry::TVec3<f32> pos = SMS_GetMarioPos();
-		pos.x += 1.5f * (50.0f * MsCos(5.0f * t));
 		pos.y += 200.0f;
+		pos.x += 1.5f * (50.0f * MsCos(5.0f * t));
 		pos.z += 1.5f * (50.0f * MsSin(5.0f * t));
-		mPosition.set(pos);
+		mPosition = pos;
 
 		mScaling.set(1.5f, 1.5f, 1.5f);
 		mPositionDelta.zero();

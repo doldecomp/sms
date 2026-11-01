@@ -1,46 +1,47 @@
-#include <Enemy/Enemy.hpp>
-#include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
-#include <Strategic/Spine.hpp>
-#include "Enemy/Launcher.hpp"
-#include "JSystem/J3D/J3DGraphAnimator/J3DModel.hpp"
-#include "JSystem/JGeometry/JGVec3.hpp"
-#include "JSystem/JUtility/JUTNameTab.hpp"
-#include "MSound/MSound.hpp"
-#include "MarioUtil/MathUtil.hpp"
-#include "MarioUtil/MtxUtil.hpp"
-#include "MarioUtil/PacketUtil.hpp"
-#include "Player/MarioAccess.hpp"
-#include "Strategic/ActorTypes.hpp"
-#include "Strategic/LiveActor.hpp"
-#include "Strategic/Nerve.hpp"
-#include "Strategic/ObjModel.hpp"
-#include "Strategic/TakeActor.hpp"
-#include "System/Particles.hpp"
-#include "dolphin/gx/GXEnum.h"
-#include "dolphin/mtx.h"
-#include "macros.h"
 #include <Enemy/WireTrap.hpp>
-#include <Enemy/WireBinder.hpp>
-#include <M3DUtil/MActorAnm.hpp>
+#include <Enemy/Launcher.hpp>
+#include <JSystem/JGeometry.hpp>
+#include <JSystem/JSupport/JSUInputStream.hpp>
+#include <JSystem/J3D/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
+#include <M3DUtil/MActor.hpp>
+#include <MSound/MSound.hpp>
+#include <MSound/SoundEffects.hpp>
+#include <MarioUtil/MathUtil.hpp>
+#include <MarioUtil/MtxUtil.hpp>
+#include <MarioUtil/PacketUtil.hpp>
+#include <Player/MarioAccess.hpp>
+#include <Strategic/ObjModel.hpp>
+#include <System/Particles.hpp>
 
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#include <M3DUtil/MActorAnm.hpp>
 
 namespace {
 
-const char cMatName[7]      = "_mat_1";
-const GXColorS10 cRedColor  = { 210, 20, 15, 0 };
-const GXColorS10 cBlueColor = { 15, 20, 210, 0 };
+const char cMatName[]       = "_mat_1";
+const GXColorS10 cRedColor  = { 0xD2, 0x14, 0x0F, 0x00 };
+const GXColorS10 cBlueColor = { 0x0F, 0x14, 0xD2, 0x00 };
 
-void SMSReportVec(const char*, const JGeometry::TVec3<float>&) { }
+// Debug output that was compiled out of the release build.
+void SMSReportVec(const char*, const JGeometry::TVec3<f32>&) { }
 
 } // namespace
+
+// TODO: fake inline, the same one as in enemy.cpp and riccohook.cpp
+static inline JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
+{
+	f32 c = radius * MsCos(theta);
+	f32 s = radius * MsSin(theta);
+	return JGeometry::TVec3<f32>(s, 0.0f, c);
+}
 
 TWireTrap::TWireTrap(const char* name)
     : TSpineEnemy(name)
     , unk160(0)
-    , mHitCooldownTimer(0)
+    , mWaterTimer(0)
 {
 }
 
@@ -48,57 +49,43 @@ void TWireTrap::init(TLiveManager* manager)
 {
 	mManager = manager;
 	mManager->manageActor(this);
-
-	initWire();
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("wire_trap.bmd", 0);
+	mBinder       = new TWireBinder;
+	mSpine->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 	initCollision();
 	initParticle();
 }
 
-// TODO: fake
-static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
-{
-	return JGeometry::TVec3<f32>(radius * MsSin(theta), 0.0f,
-	                             radius * MsCos(theta));
-}
-
+// TODO: frame-only, ours is 0x10 bytes smaller.
 void TWireTrap::load(JSUMemoryInputStream& stream)
 {
 	TSpineEnemy::load(stream);
 
-	s32 param1;
-	stream >> param1;
-	s32 fInitialMode;
-	stream >> fInitialMode;
-	stream >> mTargetValue;
-	s32 isBlue;
-	stream >> isBlue;
+	s32 speed;
+	stream.read(&speed, 4);
+	s32 mode;
+	stream.read(&mode, 4);
+	stream.read(&mWaitTime, 4);
+	s32 color;
+	stream.read(&color, 4);
 
-	unk17C = param1 / 10.0f;
-	if (fInitialMode == -1) {
-		fInitialMode = WIRETRAP_MODE_RETURN_MOVE;
-	}
-	mInitialMode = fInitialMode;
+	mMoveSpeed = speed / 10.0f;
+	if (mode == -1)
+		mode = 0;
+	mMoveMode = mode;
 
-	if (isBlue == -1) {
+	if (color == -1)
 		initThisColor(&cRedColor);
-	} else {
+	else
 		initThisColor(&cBlueColor);
-	}
 
-	getWireBinder()->init(getPosition());
-
-	setMoveMode(mInitialMode);
-
-	mWireDirectionMultiplier
-	    = 0.0f <= fromPolar(mRotation.y, 1.0f).dot(getWireDir()) ? 1.0f : -1.0f;
-
-	mModelScaleMultiplier = 1.0f;
+	initWire();
 }
 
 void TWireTrap::initCollision()
 {
-	initHitActor(ACTOR_TYPE_WIRE_TRAP, 2,
-	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY, 20.0f, 30.0f, 40.0f,
+	initHitActor(ACTOR_TYPE_WIRE_TRAP, 2, 0x90000000, 20.0f, 30.0f, 40.0f,
 	             40.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
@@ -106,29 +93,30 @@ void TWireTrap::initCollision()
 void TWireTrap::initParticle()
 {
 	SMS_LoadParticle("/scene/wireTrap/jpa/ms_wrt_biri_a.jpa",
-	                 WIRETRAP_JPA_NS_WRT_BIRI_A);
+	                 WIRETRAP_JPA_MS_WRT_BIRI_A);
 	SMS_LoadParticle("/scene/wireTrap/jpa/ms_wrt_biri_b.jpa",
-	                 WIRETRAP_JPA_NS_WRT_BIRI_B);
+	                 WIRETRAP_JPA_MS_WRT_BIRI_B);
 }
 
 void TWireTrap::initWire()
 {
-	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActor("wire_trap.bmd", 0);
-	mBinder       = new TWireBinder;
-	// inline getter?
-	const TNerveBase<TLiveActor>* pNerve
-	    = &TNerveWaitForever<TLiveActor>::theNerve();
-	mSpine->initWith(pNerve);
+	getWireBinder()->init(mPosition);
+	setMoveMode(mMoveMode);
+
+	// Start moving the way the trap faces in the scene file.
+	mMoveDir
+	    = 0.0f <= polarXZ(mRotation.y, 1.0f).dot(getWireDir()) ? 1.0f : -1.0f;
+	mAppearScale = 1.0f;
 }
 
 void TWireTrap::initThisColor(const GXColorS10* color)
 {
-	int matIdx
+	s32 index
 	    = getModel()->getModelData()->getMaterialName()->getIndex(cMatName);
-	SMS_InitPacket_OneTevColor(getModel(), matIdx, GX_TEVREG2, color);
+	SMS_InitPacket_OneTevColor(getModel(), index, GX_TEVREG2, color);
 }
 
+// TODO: frame-only, ours is 8 bytes smaller.
 BOOL TWireTrap::receiveMessage(THitActor* sender, u32 message)
 {
 	switch (message) {
@@ -137,178 +125,153 @@ BOOL TWireTrap::receiveMessage(THitActor* sender, u32 message)
 		return true;
 
 	case HIT_MESSAGE_TAKE:
-		if (mHolder)
-			break;
-		onHitFilter(HIT_FILTER_NO_COLLISION);
-		mHolder = (TTakeActor*)sender;
-		return true;
+		if (mHolder == nullptr) {
+			onHitFilter(HIT_FILTER_NO_COLLISION);
+			mHolder = (TTakeActor*)sender;
+			return true;
+		}
+		break;
 
 	case HIT_MESSAGE_THROWN:
 	case HIT_MESSAGE_DETACH:
-		if (!mHolder)
-			break;
-		mHolder = nullptr;
-		return true;
+		if (mHolder != nullptr) {
+			mHolder = nullptr;
+			return true;
+		}
+		break;
 
 	case HIT_MESSAGE_UNKB:
 		kill();
 		return true;
 	}
+
 	return TSpineEnemy::receiveMessage(sender, message);
 }
 
-void TWireTrap::behaveHitWater(THitActor* actor)
+// Water pushes the trap along its wire, away from Mario, for a while.
+void TWireTrap::behaveHitWater(THitActor* sender)
 {
 	SMS_EasyEmitParticle(PARTICLE_MS_ENM_WATHIT, &mPosition, nullptr,
 	                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-	SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
-	                              0.0f, 0, 0, 4);
-	mHitCooldownTimer = 30;
+	gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0, 0.0f, 0,
+	                        0, 4);
+	mWaterTimer = 30;
 
-	JGeometry::TVec3<f32> diff = mPosition;
-	diff -= SMS_GetMarioPos();
-
+	JGeometry::TVec3<f32> fromMario = mPosition;
+	fromMario -= *gpMarioPos;
 	JGeometry::TVec3<f32> dir = getWireDir();
-	dir *= mWireDirectionMultiplier;
-
-	if (0.0f <= diff.dot(dir)) {
-		mHitCooldownSpeed = getWaterPow();
-	} else {
-		mHitCooldownSpeed = -getWaterPow();
-	}
+	dir.scale(mMoveDir);
+	if (0.0f <= fromMario.dot(dir))
+		mWaterPow = getParam()->mInWaterPowerRate.get();
+	else
+		mWaterPow = -getParam()->mInWaterPowerRate.get();
 }
 
 void TWireTrap::kill()
 {
-	if (!checkLiveFlag(LIVE_FLAG_DEAD)) {
-		onLiveFlag(LIVE_FLAG_DEAD);
-		onHitFilter(HIT_FILTER_NO_COLLISION);
+	if (checkLiveFlag(LIVE_FLAG_DEAD))
+		return;
 
-		mSpine->reset();
-		mSpine->setNext(&TNerveWaitForever<TLiveActor>::theNerve());
-
-		SMS_EasyEmitParticle(PARTICLE_MS_ENM_DISAP_A, &mPosition, nullptr,
-		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-		SMS_EasyEmitParticle(PARTICLE_MS_ENM_DISAP_B, &mPosition, nullptr,
-		                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-	}
+	onLiveFlag(LIVE_FLAG_DEAD);
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	mSpine->reset();
+	mSpine->setNext(&TNerveWaitForever<TLiveActor>::theNerve());
+	SMS_EasyEmitParticle(PARTICLE_MS_ENM_DISAP_A, &mPosition, nullptr,
+	                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
+	SMS_EasyEmitParticle(PARTICLE_MS_ENM_DISAP_B, &mPosition, nullptr,
+	                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 }
 
-void TWireTrap::behaveHitWireTrap(TWireTrap* otherTrap,
-                                  const JGeometry::TVec3<float>& dir,
-                                  const JGeometry::TVec3<float>& otherDir)
+// Two traps that bump into each other bounce apart, unless they were already
+// heading the same way.
+void TWireTrap::behaveHitWireTrap(TWireTrap* other,
+                                  const JGeometry::TVec3<f32>& momentum,
+                                  const JGeometry::TVec3<f32>& other_momentum)
 {
-	if (!isReflect() && mInitialMode == WIRETRAP_MODE_RETURN_MOVE) {
-		unk16C = 30;
-		SMSReportVec("", calcMomentum());
-		SMSReportVec("", otherTrap->calcMomentum());
-
-		if (dir.dot(otherDir) < 0.0f) {
-			mWireDirectionMultiplier *= -1.0f;
-		}
-
+	if (mHitTimer <= 0 && isReflect()) {
+		mHitTimer = 30;
+		// The labels are made up: the strings were dropped with the calls.
+		SMSReportVec("my momentum", calcMomentum());
+		SMSReportVec("other momentum", other->calcMomentum());
+		if (momentum.dot(other_momentum) < 0.0f)
+			mMoveDir *= -1.0f;
 		mSpine->pushNerve(&TNerveWireTrapWait::theNerve());
 	}
 }
 
+// TODO: nonmatching (94%). The float registers in the matrix-to-quaternion
+// part are swapped (see the regswap note on TRotation3::getQuat), and the
+// target keeps the address of `mtx` in r31 and `this` in r30.
 void TWireTrap::calcRootMatrix()
 {
-	if (mHolder) {
+	if (mHolder != nullptr) {
 		TSpineEnemy::calcRootMatrix();
 		return;
 	}
 
 	emitEffects();
 
+	// Face along the wire, spinning around that direction.
 	JGeometry::TVec3<f32> dir = getDirAtWirePos();
-	dir.scale(mWireDirectionMultiplier);
+	dir.scale(mMoveDir);
+	TPosition3f mtx;
+	SMS_CalcToDirMatrix(mtx, dir, JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
+	JGeometry::TQuat4<f32> rot;
+	mtx.getQuat(rot);
 
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
-	TPosition3f matrix;
-	SMS_CalcToDirMatrix(matrix, dir, up);
-
-	JGeometry::TQuat4<f32> quat;
-	matrix.getQuat(quat);
-
-	// Spin about the wire. The angle is the float at +0x38 on the base.
 	mRotation.z += -17.75f;
-	mRotation.z = std::fmodf(360.0f + mRotation.z, 360.0f);
-	f32 halfRad = 0.5f * DEG_TO_RAD(mRotation.z);
-	f32 s       = sinf(halfRad);
-	f32 c       = cosf(halfRad);
+	mRotation.z = MsWrapFmodf(mRotation.z, 0.0f, 360.0f);
+	JGeometry::TQuat4<f32> spin;
+	spin.setRotate(JGeometry::TVec3<f32>(0.0f, 0.0f, 1.0f),
+	               0.017453294f * mRotation.z);
+	JGeometry::TQuat4<f32> result;
+	result.mul(rot, spin);
 
-	// quat * (0, 0, s, c), expanded.
-	f32 rx = quat.x * c + quat.y * s;
-	f32 ry = quat.y * c - quat.x * s;
-	f32 rz = quat.z * c + quat.w * s;
-	f32 rw = quat.w * c - quat.z * s;
+	mtx.setQuat(result);
+	mtx.setTrans(mPosition);
+	getModel()->setBaseTRMtx(mtx);
 
-	matrix.mMtx[0][0] = 1.0f - 2.0f * ry * ry - 2.0f * rz * rz;
-	matrix.mMtx[0][1] = 2.0f * rx * ry - 2.0f * rw * rz;
-	matrix.mMtx[0][2] = 2.0f * rx * rz + 2.0f * rw * ry;
-	matrix.mMtx[1][0] = 2.0f * rx * ry + 2.0f * rw * rz;
-	matrix.mMtx[1][1] = 1.0f - 2.0f * rx * rx - 2.0f * rz * rz;
-	matrix.mMtx[1][2] = 2.0f * ry * rz - 2.0f * rw * rx;
-	matrix.mMtx[2][0] = 2.0f * rx * rz - 2.0f * rw * ry;
-	matrix.mMtx[2][1] = 2.0f * ry * rz + 2.0f * rw * rx;
-	matrix.mMtx[2][2] = 1.0f - 2.0f * rx * rx - 2.0f * ry * ry;
-
-	matrix.mMtx[0][3] = mPosition.x;
-	matrix.mMtx[1][3] = mPosition.y;
-	matrix.mMtx[2][3] = mPosition.z;
-
-	MTXCopy(matrix.mMtx, getModel()->getBaseTRMtx());
-
-	JGeometry::TVec3<f32> baseScale = mScaling;
-	baseScale *= mModelScaleMultiplier;
-	getModel()->setBaseScale(baseScale);
+	JGeometry::TVec3<f32> scale = mScaling;
+	scale.scale(mAppearScale);
+	getModel()->setBaseScale(scale);
 }
 
 void TWireTrap::moveObject()
 {
-	if (mHitCooldownTimer > 0) {
-		mHitCooldownTimer -= 1;
-		if (mHitCooldownTimer <= 0) {
-			mHitCooldownSpeed = 0.0f;
-		}
+	if (getWaterTimer() > 0) {
+		--mWaterTimer;
+		if (mWaterTimer <= 0)
+			mWaterPow = 0.0f;
 	}
 
 	updateCollision();
-
 	checkHitActors();
 	TLiveActor::moveObject();
-
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_WIRETRAP_WAIT, &mPosition, 0,
 	                                nullptr, 0, 4);
 }
 
-const JGeometry::TVec3<f32> TWireTrap::calcMomentum()
+JGeometry::TVec3<f32> TWireTrap::calcMomentum()
 {
-	JGeometry::TVec3<f32> dir = getWireDir();
+	JGeometry::TVec3<f32> momentum = getWireDir();
+	momentum
+	    *= mMoveDir
+	       * (mWaterTimer > 0 ? 1.0f + mWaterPow * mWaterTimer / 30.0f : 1.0f);
+	momentum *= mMoveSpeed;
 
-	f32 speedScale
-	    = mHitCooldownTimer > 0
-	          ? 1.0f + ((mHitCooldownSpeed * (f32)mHitCooldownTimer) / 30.0f)
-	          : 1.0f;
-
-	dir *= mWireDirectionMultiplier * speedScale;
-	dir *= unk17C;
-	return dir;
+	return momentum;
 }
 
-f32 TWireTrap::getWaterPow() const
-{
-	return getDataParams()->mInWaterPowerRate.get();
-}
+// Right after being sprayed, the trap gets pushed along for a while.
+f32 TWireTrap::getWaterPow() const { return mWaterPow * mWaterTimer / 30.0f; }
 
 bool TWireTrap::doReturnMove()
 {
-	if (isReflect()) {
-		unk16C--;
-	}
+	if (getHitTimer() > 0)
+		--mHitTimer;
 
-	if (isEndWire()) {
-		mWireDirectionMultiplier *= -1.0f;
+	if (getWireBinder()->isEndWire(mPosition, mMoveDir)) {
+		mMoveDir *= -1.0f;
 		return true;
 	}
 
@@ -318,13 +281,11 @@ bool TWireTrap::doReturnMove()
 
 bool TWireTrap::doOnewayMove()
 {
-	if (isReflect()) {
-		unk16C--;
-	}
+	if (getHitTimer() > 0)
+		--mHitTimer;
 
-	if (isEndWire()) {
+	if (getWireBinder()->isEndWire(mPosition, mMoveDir))
 		return true;
-	}
 
 	mPositionDelta = calcMomentum();
 	return false;
@@ -332,71 +293,74 @@ bool TWireTrap::doOnewayMove()
 
 bool TWireTrap::doSearchMove()
 {
-	if (!SMS_IsMarioOnWire()) {
+	if (!SMS_IsMarioOnWire())
 		return false;
-	}
 
-	if (isReflect()) {
-		unk16C--;
-	}
+	if (getHitTimer() > 0)
+		--mHitTimer;
 
-	JGeometry::TVec3<f32> diff = SMS_GetMarioPos();
-	diff -= mPosition;
+	JGeometry::TVec3<f32> toMario = *gpMarioPos;
+	toMario -= mPosition;
+	f32 dot  = toMario.dot(getWireBinder()->getDir());
+	mMoveDir = dot > 0.0f ? 1 : dot < 0.0f ? -1 : 0;
 
-	f32 dot                  = diff.dot(getWireBinder()->getDir());
-	mWireDirectionMultiplier = dot > 0.0f ? 1 : (dot < 0.0f ? -1 : 0);
-	mPositionDelta           = calcMomentum();
+	mPositionDelta = calcMomentum();
 	return false;
 }
 
 bool TWireTrap::doScaleUp()
 {
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mModelScaleMultiplier += 1.0f / getDataParams()->mScaleTimerMax.get();
-	if (1.0f <= mModelScaleMultiplier) { // operand order from the fcmpo
-		mModelScaleMultiplier = 1.0f;
+	mAppearScale += 1.0f / getParam()->mScaleTimerMax.get();
+	if (1.0f <= mAppearScale) {
+		mAppearScale = 1.0f;
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
 	return false;
 }
+
 bool TWireTrap::doScaleDown()
 {
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	mModelScaleMultiplier -= 1.0f / getDataParams()->mScaleTimerMax.get();
-	if (mModelScaleMultiplier <= 0.0f) {
-		mModelScaleMultiplier = 0.0f;
+	mAppearScale -= 1.0f / getParam()->mScaleTimerMax.get();
+	if (mAppearScale <= 0.0f) {
+		mAppearScale = 0.0f;
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
 	return false;
 }
+
+// Jump back to the end of the wire the trap started from.
 void TWireTrap::doResetToEdge()
 {
-	f32 baseOffset = 0.0f < mWireDirectionMultiplier ? 0.0f : 1.0f;
-	getWireBinder()->getPoint(&mPosition,
-	                          (0.01f * mWireDirectionMultiplier) + baseOffset);
+	f32 edge = 0.0f < mMoveDir ? 0.0f : 1.0f;
+	getWireBinder()->getPoint(&mPosition, edge + 0.01f * mMoveDir);
 }
 
+// TODO: frame-only, ours is 0x98 bytes smaller.
 void TWireTrap::checkHitActors()
 {
 	THitActor** end = mCollisions + mColCount;
 	for (THitActor** it = mCollisions; it != end; ++it) {
-		switch ((*it)->getActorType()) {
+		THitActor* actor = *it;
+		switch (actor->getActorType()) {
 		case ACTOR_TYPE_MARIO:
 			SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 			break;
-		case ACTOR_TYPE_WIRE_TRAP: {
-			TWireTrap* otherTrap = (TWireTrap*)*it;
-			if (otherTrap == this)
-				break;
 
-			const JGeometry::TVec3<f32> dir      = calcMomentum();
-			const JGeometry::TVec3<f32> otherDir = otherTrap->calcMomentum();
-			behaveHitWireTrap(otherTrap, dir, otherDir);
-			otherTrap->behaveHitWireTrap(otherTrap, otherDir, dir);
+		case ACTOR_TYPE_WIRE_TRAP:
+			if (actor != this) {
+				TWireTrap* other                     = (TWireTrap*)actor;
+				JGeometry::TVec3<f32> momentum       = calcMomentum();
+				JGeometry::TVec3<f32> other_momentum = other->calcMomentum();
+				behaveHitWireTrap(other, momentum, other_momentum);
+				// TODO: passing `other` again looks like a slip, but it is
+				// what the binary does (only the debug output reads it).
+				other->behaveHitWireTrap(other, other_momentum, momentum);
+			}
 			break;
-		}
 		}
 	}
 }
@@ -406,28 +370,29 @@ void TWireTrap::updateCollision()
 	setHitParams(20.0f * mScaling.x, 30.0f * mScaling.y, 40.0f * mScaling.x,
 	             40.0f * mScaling.y);
 }
+
 void TWireTrap::emitEffects()
 {
-	JPABaseEmitter* emitter1 = gpMarioParticleManager->emitAndBindToPosPtr(
-	    WIRETRAP_JPA_NS_WRT_BIRI_A, &mPosition, 1, this);
-	if (emitter1)
-		emitter1->setGlobalScale(mScaling);
-
-	JPABaseEmitter* emitter2 = gpMarioParticleManager->emitAndBindToPosPtr(
-	    WIRETRAP_JPA_NS_WRT_BIRI_B, &mPosition, 1, this);
-	if (emitter2)
-		emitter2->setGlobalScale(mScaling);
+	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
+	    WIRETRAP_JPA_MS_WRT_BIRI_A, &mPosition, 1, this);
+	if (emitter)
+		emitter->setGlobalScale(mScaling);
+	emitter = gpMarioParticleManager->emitAndBindToPosPtr(
+	    WIRETRAP_JPA_MS_WRT_BIRI_B, &mPosition, 1, this);
+	if (emitter)
+		emitter->setGlobalScale(mScaling);
 }
 
 void TWireTrap::setMoveMode(int mode)
 {
+	mMoveMode = mode;
 	mSpine->reset();
 	mSpine->setNext(getNerveFromMode(mode));
 }
 
-const JGeometry::TVec3<f32> TWireTrap::getDirAtWirePos() const
+JGeometry::TVec3<f32> TWireTrap::getDirAtWirePos() const
 {
-	return getWireBinder()->getDirAtPos(mPosition, mWireDirectionMultiplier);
+	return getWireBinder()->getDirAtPos(mPosition, mMoveDir);
 }
 
 const JGeometry::TVec3<f32>& TWireTrap::getWireDir() const
@@ -435,20 +400,19 @@ const JGeometry::TVec3<f32>& TWireTrap::getWireDir() const
 	return getWireBinder()->getDir();
 }
 
-bool TWireTrap::isReflect() const { return unk16C > 0; }
+bool TWireTrap::isReflect() const { return mMoveMode == WIRE_TRAP_MODE_RETURN; }
 
 const TNerveBase<TLiveActor>* TWireTrap::getNerveFromMode(int mode)
 {
 	switch (mode) {
-	case WIRETRAP_MODE_RETURN_MOVE:
+	case WIRE_TRAP_MODE_RETURN:
 		return &TNerveWireTrapReturnMove::theNerve();
-	case WIRETRAP_MODE_ONEWAY_MOVE:
+	case WIRE_TRAP_MODE_ONEWAY:
 		return &TNerveWireTrapOnewayMove::theNerve();
-	case WIRETRAP_MODE_SEARCH:
+	case WIRE_TRAP_MODE_SEARCH:
 		return &TNerveWireTrapSearch::theNerve();
-	default:
-		return nullptr;
 	}
+	return nullptr;
 }
 
 f32 TWireTrap::getRangePosInWire() const
@@ -458,16 +422,19 @@ f32 TWireTrap::getRangePosInWire() const
 
 TWireBinder* TWireTrap::getWireBinder() { return (TWireBinder*)mBinder; }
 
-TWireBinder* TWireTrap::getWireBinder() const { return (TWireBinder*)mBinder; }
+const TWireBinder* TWireTrap::getWireBinder() const
+{
+	return (const TWireBinder*)mBinder;
+}
 
 bool TWireTrap::isStartWire() const
 {
-	return getWireBinder()->isStartWire(mPosition, mWireDirectionMultiplier);
+	return getWireBinder()->isStartWire(mPosition, mMoveDir);
 }
 
 bool TWireTrap::isEndWire() const
 {
-	return getWireBinder()->isEndWire(mPosition, mWireDirectionMultiplier);
+	return getWireBinder()->isEndWire(mPosition, mMoveDir);
 }
 
 TWireTrapParams::TWireTrapParams(const char* path)
@@ -492,20 +459,16 @@ void TWireTrapManager::load(JSUMemoryInputStream& stream)
 
 void TWireTrapManager::createModelData()
 {
-	static const TModelDataLoadEntry entry[] = {
-		{ "wire_trap.bmd",
-		  J3DMLF_MaterialPEFull | J3DMLF_MaterialTexGenFull
-		      | J3DMLF_UseUniqueMaterials | (4 << J3DMLF_TevStageNumShift),
-		  0 },
-		{ nullptr, 0, 0 },
-	};
+	static const TModelDataLoadEntry entry[]
+	    = { { "wire_trap.bmd", 0x10210000, 0 }, { nullptr, 0, 0 } };
 	createModelDataArray(entry);
 }
 
+// TODO: frame-only.
 DEFINE_NERVE(TNerveWireTrapReturnMove, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-	if (actor->doReturnMove()) {
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (self->doReturnMove()) {
 		spine->pushAfterCurrent(this);
 		spine->pushAfterCurrent(&TNerveWireTrapWait::theNerve());
 		return true;
@@ -515,24 +478,24 @@ DEFINE_NERVE(TNerveWireTrapReturnMove, TLiveActor)
 
 DEFINE_NERVE(TNerveWireTrapOnewayMoveStart, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-	if (actor->doScaleUp())
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (self->doScaleUp())
 		return true;
 	return false;
 }
 
+// TODO: frame-only.
 DEFINE_NERVE(TNerveWireTrapOnewayMove, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-
-	if (spine->getTime() == 0 && actor->mModelScaleMultiplier < 1.0f) {
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (spine->getTime() == 0 && self->mAppearScale < 1.0f) {
 		spine->pushAfterCurrent(this);
 		spine->pushAfterCurrent(&TNerveWireTrapGoWait::theNerve());
 		spine->pushAfterCurrent(&TNerveWireTrapOnewayMoveStart::theNerve());
 		return true;
 	}
 
-	if (actor->doOnewayMove()) {
+	if (self->doOnewayMove()) {
 		spine->pushAfterCurrent(this);
 		spine->pushAfterCurrent(&TNerveWireTrapWait::theNerve());
 		spine->pushAfterCurrent(&TNerveWireTrapOnewayMoveEnd::theNerve());
@@ -543,18 +506,19 @@ DEFINE_NERVE(TNerveWireTrapOnewayMove, TLiveActor)
 
 DEFINE_NERVE(TNerveWireTrapOnewayMoveEnd, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-	if (actor->doScaleDown()) {
-		actor->doResetToEdge();
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (self->doScaleDown()) {
+		self->doResetToEdge();
 		return true;
 	}
 	return false;
 }
 
+// TODO: frame-only.
 DEFINE_NERVE(TNerveWireTrapSearch, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-	if (actor->doSearchMove()) {
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (self->doSearchMove()) {
 		spine->pushAfterCurrent(this);
 		spine->pushAfterCurrent(&TNerveWireTrapWait::theNerve());
 		return true;
@@ -564,20 +528,16 @@ DEFINE_NERVE(TNerveWireTrapSearch, TLiveActor)
 
 DEFINE_NERVE(TNerveWireTrapWait, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-
-	if (actor->mTargetValue < spine->getTime()) {
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (self->mWaitTime < spine->getTime())
 		return true;
-	}
 	return false;
 }
 
 DEFINE_NERVE(TNerveWireTrapGoWait, TLiveActor)
 {
-	TWireTrap* actor = (TWireTrap*)spine->getBody();
-
-	if (actor->getDataParams()->mGoTimerMax.get() < spine->getTime()) {
+	TWireTrap* self = (TWireTrap*)spine->getBody();
+	if (self->getParam()->mGoTimerMax.get() < spine->getTime())
 		return true;
-	}
 	return false;
 }

@@ -88,8 +88,7 @@ void TBathtubBinder::constrain_(JGeometry::TVec3<f32>& param_1, f32 param_2)
 
 	const TBathtubData& data     = unk4->getBathtubData();
 	JGeometry::TVec3<f32> center = data.getThing();
-	f32 radius = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-	                                         - data.unk44 * data.unk44)
+	f32 radius = data.getSurfaceRadius()
 	             - param_2;
 	f32 centerZ = center.z;
 	f32 dx      = param_1.x - center.x;

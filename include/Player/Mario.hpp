@@ -952,7 +952,7 @@ public:
 	BOOL doSliding(f32);
 	void slopeProcess();
 	void doSlipping(f32);
-	void doStopping();
+	BOOL doStopping();
 	void doRunning();
 	TSurfingParams* getSurfingParamsWater();
 	TSurfingParams* getSurfingParamsGround();
@@ -1016,7 +1016,7 @@ public:
 	BOOL kickRoofRollDown();
 	BOOL startHangLanding(u32);
 	void hangingCommon(int, int);
-	void findNearestWall(const TBGWallCheckRecord&);
+	TBGCheckData* findNearestWall(const TBGWallCheckRecord&);
 	BOOL hanging();
 	BOOL ascend();
 	BOOL descend();
@@ -1194,7 +1194,9 @@ public:
 	void startVoiceYoshi(u32);
 	bool checkStatusType(s32 flag) const
 	{
-		return mStatus & flag ? true : false;
+		if (mStatus & flag)
+			return true;
+		return false;
 	}
 
 	// fabricated
@@ -1204,16 +1206,6 @@ public:
 	s16 getHealth() const { return mHealth; }
 	s16 getAir() const { return mAir; }
 	void setPlayerType(int type) { mPlayerType = type; }
-
-	// fabricated
-	bool isOnWire() const
-	{
-		if (mHolder != nullptr
-		    && mHolder->getActorType() == ACTOR_TYPE_MAP_WIRE_ACTOR)
-			return true;
-		else
-			return false;
-	}
 
 	// fabricated
 	bool isTouchGround4cm() const
@@ -1231,6 +1223,17 @@ public:
 	}
 
 	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
+
+	// fabricated: true when Mario's hands are free to grab a ledge, pole or
+	// wire (not carrying anything and not riding Yoshi). The bool converted
+	// to a BOOL shows up as a clrlwi + signed compare with 1 at its callers.
+	BOOL canHang() const
+	{
+		bool canHang = false;
+		if (mHeldObject == nullptr && !onYoshi())
+			canHang = true;
+		return canHang;
+	}
 
 	// Fabricated
 	// See E_MARIO_FLAG
@@ -1290,6 +1293,17 @@ public:
 	}
 
 	// Fabricated
+	// fabricated
+	BOOL isOnWire() const
+	{
+		bool ret;
+		if (mHolder && mHolder->mActorType == ACTOR_TYPE_MAP_WIRE_ACTOR)
+			ret = true;
+		else
+			ret = false;
+		return ret;
+	}
+
 	bool isFencing() const
 	{
 		if ((mStatus & MARIO_STATUS_TYPE_AND_ID_MASK)

@@ -188,8 +188,10 @@ TNameIndParCallback::TNameIndParCallback(TNameKuri* owner)
 void TNameIndParCallback::execute(JPABaseEmitter* param_1,
                                   JPABaseParticle* param_2)
 {
-	if (mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-		MtxPtr mA = mOwner->getMActor()->getModel()->getAnmMtx(1);
+	if (!mOwner->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
+		J3DModel* model = mOwner->getMActor()->getModel();
+		MtxPtr mA       = model->getAnmMtx(4);
+		MtxPtr mRoot    = model->getAnmMtx(0);
 
 		Mtx local_4c;
 		MsMtxSetRotX(local_4c, mOwner->unk1AC);
@@ -207,7 +209,7 @@ void TNameIndParCallback::execute(JPABaseEmitter* param_1,
 		JGeometry::TVec3<f32> tmp3(mA[0][2], mA[1][2], mA[2][2]);
 		local_7c.x = tmp3.length();
 
-		param_1->setGlobalRTMatrix(mA);
+		param_1->setGlobalRTMatrix(mRoot);
 
 		if (mOwner->unk1A8) {
 			param_1->setGlobalScale(mOwner->mScaling);

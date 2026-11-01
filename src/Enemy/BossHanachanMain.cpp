@@ -308,6 +308,111 @@ void TBossHanachan::moveObject()
 	mHead->mGroundPlane = mGroundPlane;
 }
 
+// fabricated
+static inline void BHCalcLean(TBossHanachan* self)
+{
+	f32 maxRotate                         = self->getBodyMaxRotateZ();
+	const TNerveBase<TLiveActor>* current = self->mSpine->getLatestNerve();
+	f32 spacing                           = self->unk1BC->mSLBodyLength.get();
+	f32 damping    = self->unk1C0->mSLWaveDecrease.get() * (1.0f / 120.0f);
+	f32 velocity   = self->unk1C0->mSLWaveVelocity.get();
+	f32 invSpacing = 1.0f / (spacing * spacing);
+	f32 invDamping = 1.0f / (1.0f + damping);
+	f32 oldDamping = 1.0f - damping;
+	f32 wave = (1.0f / 120.0f) * ((1.0f / 120.0f) * (velocity * velocity));
+	for (int i = 0; i < ARRAY_COUNT(self->mBodyParts); ++i) {
+		TBossHanachanPartsBody* body = self->mBodyParts[i];
+		bool complete
+		    = (body->mRotation.z == -179.0f || body->mRotation.z == 179.0f)
+		          ? true
+		          : false;
+		if (complete && body->mRotation.z == maxRotate)
+			continue;
+		f32 previous = i == 0 ? self->mBodyParts[i + 1]->unk13C
+		                      : self->mBodyParts[i - 1]->unk13C;
+		f32 next     = i == ARRAY_COUNT(self->mBodyParts) - 1
+		                   ? self->mBodyParts[i - 1]->unk13C
+		                   : self->mBodyParts[i + 1]->unk13C;
+		f32 twice    = 2.0f * body->unk13C;
+		f32 target   = (twice * invDamping)
+		             + invDamping
+		                   * (wave
+		                      * (invSpacing * ((next + previous) - twice)
+		                         + body->unk148))
+		             - invDamping * (body->unk140 * oldDamping);
+		target = MsClamp(target, -179.0f, 179.0f);
+		CLBChaseGeneralConstantSpecifySpeed(
+		    &body->mRotation.z, target,
+		    self->unk1C0->mSLRotateZLeanSpeed.get());
+		bool onSand = false;
+		if (current == &TNerveBossHanachanGraphWander::theNerve()) {
+			if (body->getSandActor_()) {
+				onSand = true;
+				if (body->unk120 != 0.0f) {
+					f32 speed = body->unk120 * self->mMarchSpeed
+					            * self->unk1C0->mSLSandSlopeForce.get();
+					f32 fall = body->unk120 < 0.0f ? -179.0f : 179.0f;
+					CLBChaseGeneralConstantSpecifySpeed(&body->mRotation.z,
+					                                    fall, speed);
+				}
+			} else {
+				CLBChaseGeneralConstantSpecifySpeed(
+				    &body->mRotation.z, body->unk120,
+				    self->unk1C0->mSLRotateZRestorationSpeed.get());
+			}
+		} else if (current == &TNerveBossHanachanTumble::theNerve()) {
+			CLBChaseGeneralConstantSpecifySpeed(&body->mRotation.z,
+			                                    self->unk194, self->unk198);
+		}
+		body->mRotation.z = MsClamp(body->mRotation.z, -179.0f, 179.0f);
+		if (current == &TNerveBossHanachanGraphWander::theNerve()
+		    && (self->mSpine->getTime()
+		            < self->unk1C0->mSLNotFallDownFrames.get()
+		        || !onSand)) {
+			f32 limit = self->unk1C0->mSLMaxRotateZNotSand.get();
+			if (body->mRotation.z < -limit)
+				CLBChaseGeneralConstantSpecifySpeed(&body->mRotation.z, -limit,
+				                                    15.0f);
+			else if (body->mRotation.z > limit)
+				CLBChaseGeneralConstantSpecifySpeed(&body->mRotation.z, limit,
+				                                    15.0f);
+		}
+	}
+	f32 limit = self->unk1C0->mSLDiffMaxRotateZ.get();
+	for (int i = 1; i < ARRAY_COUNT(self->mBodyParts); ++i) {
+		f32 previous = self->mBodyParts[i - 1]->mRotation.z;
+		f32& current = self->mBodyParts[i]->mRotation.z;
+		if (fabsf(previous - current) > limit) {
+			if (current < previous)
+				current = previous - limit;
+			else
+				current = previous + limit;
+		}
+	}
+}
+
+// fabricated
+static inline void BHCalcCentrifugal(TBossHanachan* self)
+{
+	bool tumble = false;
+	f32 force   = 0.0f;
+	if ((self->mSpine->getLatestNerve()
+	     == &TNerveBossHanachanTumble::theNerve())) {
+		tumble = true;
+		force  = self->getBodyMaxRotateZ();
+	}
+	for (int i = 0; i < ARRAY_COUNT(self->mBodyParts); ++i) {
+		TBossHanachanPartsBody* body = self->mBodyParts[i];
+		if (!tumble)
+			force = BHSCalcCentrifugalForce(body->mPosition, body->unk124,
+			                                body->unk130, body->mRotation.y)
+			        * self->unk1C0->mSLCentrifugalForce.get();
+		CLBChaseGeneralConstantSpecifySpeed(
+		    &body->unk144, force, self->unk1C0->mSLCentrifugalSpeed.get());
+		body->unk144 = MsClamp(body->unk144, -179.0f, 179.0f);
+	}
+}
+
 void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
@@ -396,24 +501,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 				body->mPosition.x -= x;
 				body->mPosition.z -= z;
 			}
-			bool tumble = false;
-			f32 force   = 0.0f;
-			if ((mSpine->getLatestNerve()
-			     == &TNerveBossHanachanTumble::theNerve())) {
-				tumble = true;
-				force  = getBodyMaxRotateZ();
-			}
-			for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
-				TBossHanachanPartsBody* body = mBodyParts[i];
-				if (!tumble)
-					force = BHSCalcCentrifugalForce(body->mPosition,
-					                                body->unk124, body->unk130,
-					                                body->mRotation.y)
-					        * unk1C0->mSLCentrifugalForce.get();
-				CLBChaseGeneralConstantSpecifySpeed(
-				    &body->unk144, force, unk1C0->mSLCentrifugalSpeed.get());
-				body->unk144 = MsClamp(body->unk144, -179.0f, 179.0f);
-			}
+			BHCalcCentrifugal(this);
 			if (nerve != &TNerveBossHanachanDown::theNerve()) {
 				for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
 					TBossHanachanPartsBody* body = mBodyParts[i];
@@ -483,95 +571,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 					for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
 						mBodyParts[i]->calcRotateZWhenGetUp_();
 				} else {
-					f32 maxRotate = getBodyMaxRotateZ();
-					const TNerveBase<TLiveActor>* current
-					    = mSpine->getLatestNerve();
-					f32 spacing = unk1BC->mSLBodyLength.get();
-					f32 damping
-					    = unk1C0->mSLWaveDecrease.get() * (1.0f / 120.0f);
-					f32 velocity   = unk1C0->mSLWaveVelocity.get();
-					f32 invSpacing = 1.0f / (spacing * spacing);
-					f32 invDamping = 1.0f / (1.0f + damping);
-					f32 oldDamping = 1.0f - damping;
-					f32 wave       = (1.0f / 120.0f)
-					           * ((1.0f / 120.0f) * (velocity * velocity));
-					for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i) {
-						TBossHanachanPartsBody* body = mBodyParts[i];
-						bool complete = (body->mRotation.z == -179.0f
-						                 || body->mRotation.z == 179.0f)
-						                    ? true
-						                    : false;
-						if (complete && body->mRotation.z == maxRotate)
-							continue;
-						f32 previous = i == 0 ? mBodyParts[i + 1]->unk13C
-						                      : mBodyParts[i - 1]->unk13C;
-						f32 next     = i == ARRAY_COUNT(mBodyParts) - 1
-						                   ? mBodyParts[i - 1]->unk13C
-						                   : mBodyParts[i + 1]->unk13C;
-						f32 twice    = 2.0f * body->unk13C;
-						f32 target
-						    = (twice * invDamping)
-						      + invDamping
-						            * (wave
-						               * (invSpacing
-						                      * ((next + previous) - twice)
-						                  + body->unk148))
-						      - invDamping * (body->unk140 * oldDamping);
-						target = MsClamp(target, -179.0f, 179.0f);
-						CLBChaseGeneralConstantSpecifySpeed(
-						    &body->mRotation.z, target,
-						    unk1C0->mSLRotateZLeanSpeed.get());
-						bool onSand = false;
-						if (current
-						    == &TNerveBossHanachanGraphWander::theNerve()) {
-							if (body->getSandActor_()) {
-								onSand = true;
-								if (body->unk120 != 0.0f) {
-									f32 speed
-									    = body->unk120 * mMarchSpeed
-									      * unk1C0->mSLSandSlopeForce.get();
-									f32 fall = body->unk120 < 0.0f ? -179.0f
-									                               : 179.0f;
-									CLBChaseGeneralConstantSpecifySpeed(
-									    &body->mRotation.z, fall, speed);
-								}
-							} else {
-								CLBChaseGeneralConstantSpecifySpeed(
-								    &body->mRotation.z, body->unk120,
-								    unk1C0->mSLRotateZRestorationSpeed.get());
-							}
-						} else if (current
-						           == &TNerveBossHanachanTumble::theNerve()) {
-							CLBChaseGeneralConstantSpecifySpeed(
-							    &body->mRotation.z, unk194, unk198);
-						}
-						body->mRotation.z
-						    = MsClamp(body->mRotation.z, -179.0f, 179.0f);
-						if (current
-						        == &TNerveBossHanachanGraphWander::theNerve()
-						    && (mSpine->getTime()
-						            < unk1C0->mSLNotFallDownFrames.get()
-						        || !onSand)) {
-							f32 limit = unk1C0->mSLMaxRotateZNotSand.get();
-							if (body->mRotation.z < -limit)
-								CLBChaseGeneralConstantSpecifySpeed(
-								    &body->mRotation.z, -limit, 15.0f);
-							else if (body->mRotation.z > limit)
-								CLBChaseGeneralConstantSpecifySpeed(
-								    &body->mRotation.z, limit, 15.0f);
-						}
-					}
-					f32 limit = unk1C0->mSLDiffMaxRotateZ.get();
-					for (int i = 1; i < ARRAY_COUNT(mBodyParts); ++i) {
-						f32 previous = mBodyParts[i - 1]->mRotation.z;
-						f32& current = mBodyParts[i]->mRotation.z;
-						if (fabsf(previous - current) > limit) {
-							if (current < previous)
-								current = previous - limit;
-							else
-								current = previous + limit;
-						}
-					}
+					BHCalcLean(this);
 				}
 			}
 			bool thrown = false;

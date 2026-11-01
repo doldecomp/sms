@@ -384,7 +384,9 @@ void TRailBlock::control()
 	calcEntryRadius();
 
 	checkMarioRiding();
-	if (calcRecycle() || checkRailFlag(2))
+	if (calcRecycle())
+		return;
+	if (checkRailFlag(2))
 		return;
 
 	if (moveToNextNode(unk144)) {
@@ -401,16 +403,11 @@ void TRailBlock::control()
 		if (speed != 0xffff)
 			unk144 = speed * 0.01f;
 
-		JGeometry::TVec3<f32> nextPoint
-		    = unk138->unk0->indexToPoint(unk138->mCurrIdx);
-		f32 step = VECDistance(&nextPoint, &mPosition) / unk144;
-		unk13C   = step;
+		resetStep(unk144);
 
 		if (checkRailFlag(2)) {
 			MTXIdentity(unk174);
-			unk168.x = 0.0f;
-			unk168.y = 0.0f;
-			unk168.z = 0.0f;
+			unk168.zero();
 		} else {
 			unk168 = unk15C;
 
@@ -418,9 +415,7 @@ void TRailBlock::control()
 			MsMtxSetRotRPH(rotMtx, unk168.x, unk168.y, unk168.z);
 			MTXConcat(rotMtx, unk174, unk174);
 
-			unk168.x = 0.0f;
-			unk168.y = 0.0f;
-			unk168.z = 0.0f;
+			unk168.zero();
 
 			JGeometry::TVec3<f32> xAxis(unk174[0][0], unk174[1][0],
 			                            unk174[2][0]);
@@ -448,9 +443,7 @@ void TRailBlock::control()
 		rotateNode.getPoint(&point);
 		f32 rotateStep      = VECDistance(&mPosition, &point) / unk144;
 		TRailNode* railNode = rotateNode.getRailNode();
-		unk15C.x            = railNode->mPitch;
-		unk15C.y            = railNode->mYaw;
-		unk15C.z            = railNode->mRoll;
+		unk15C.set(railNode->mPitch, railNode->mYaw, railNode->mRoll);
 		unk150              = MsAngleDiff(unk15C.x, unk168.x) / rotateStep;
 		unk154              = MsAngleDiff(unk15C.y, unk168.y) / rotateStep;
 		unk158              = MsAngleDiff(unk15C.z, unk168.z) / rotateStep;

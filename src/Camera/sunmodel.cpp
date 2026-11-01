@@ -162,6 +162,9 @@ void TSunModel::calcDispRatioAndScreenPos_()
 	radius /= 2.0f;
 	calcOtherFPosFromCenterAndRadius_(&unkF8[9], unkF8[0], radius);
 
+	// TODO: the target calls CLBScreenFPosToSPos out of line here (it is a
+	// weak symbol in sunmodel.o) and counts i up from 0; ours inlines it.
+	// Index and pointer loop spellings were both worse (12.7%, 8.7%).
 	int i;
 	JGeometry::TVec2<f32>* it2;
 	JGeometry::TVec2<s16>* it1;

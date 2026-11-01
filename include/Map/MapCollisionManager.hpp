@@ -51,8 +51,11 @@ public:
 		Mtx mtx;
 		MsMtxSetTRS(mtx, trans.x, trans.y, trans.z, rot.x, rot.y, rot.z,
 		            scale.x, scale.y, scale.z);
-		mActiveEntry->setUpMtx(mtx);
+		setUpActiveCollisionMtx(mtx);
 	}
+
+	// fabricated
+	void setUpActiveCollisionMtx(MtxPtr mtx) { mActiveEntry->setUpMtx(mtx); }
 
 private:
 	/* 0x0 */ TMapCollisionBase** mEntries;

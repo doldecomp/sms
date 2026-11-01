@@ -47,7 +47,8 @@ void TBigWindmill::control()
 		MtxPtr mtx = unk138[i]->getModel()->getAnmMtx(0);
 		mtx[0][3]  = mPosition.x + sRadius * cosf(0.017453294f * angle);
 		mtx[1][3]
-		    = mPosition.y + sRadius * sinf(0.017453294f * angle) - mYOffset;
+		    = mPosition.y + sRadius * sinf(0.017453294f * angle)
+		      - getObjCollisionHeightOffset();
 		mtx[2][3] = mPosition.z - sSubZ;
 		unk138[i]->mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 		angle += 90.0f;
@@ -371,9 +372,10 @@ void TLeafBoat::bind()
 	mPositionDelta = position - mPosition;
 	f32 dx         = SMS_GetMarioPos().x - mPosition.x;
 	f32 dz         = SMS_GetMarioPos().z - mPosition.z;
+	f32 radius     = mBodyRadius;
 	if (SMS_GetMarioPos().y <= mPosition.y - mYOffset
 	    && mPosition.y - mYOffset - 100.0f < SMS_GetMarioPos().y
-	    && dx * dx + dz * dz < mBodyRadius * mBodyRadius)
+	    && dx * dx + dz * dz < radius * radius)
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
@@ -384,7 +386,8 @@ void TLeafBoat::control()
 		mVelocity.y -= unk154;
 	if (marioIsOn()) {
 		mVelocity.y -= unk150;
-		if (SMS_GetMarioWaterGun()->getEmittedWaterCount() > 0) {
+		// signed compare in the target: the count was an int here
+		if ((int)SMS_GetMarioWaterGun()->getEmittedWaterCount() > 0) {
 			MtxPtr mtx = SMS_GetMarioWaterGun()->getEmitMtx(0);
 			mVelocity.x -= mtx[0][0] * unk144;
 			mVelocity.z -= mtx[2][0] * unk144;

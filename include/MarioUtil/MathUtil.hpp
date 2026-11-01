@@ -157,6 +157,21 @@ inline f32 MsAngleDiff(f32 alpha, f32 beta)
 // fabricated
 inline f32 MsAngleWrap(f32 angle) { return MsWrap(angle, 0.0f, 360.0f); }
 
+// fabricated: wraps `value` into [lo, hi) with std::fmodf. The "- lo" and
+// "lo +" survive in the asm even when lo is 0, so the bounds were parameters
+// of a helper. Seen in Enemy/koopajr.cpp and MoveBG/MapObjCorona.cpp, where
+// std::fmodf is never inlined.
+inline f32 MsWrapFmodf(f32 value, f32 lo, f32 hi)
+{
+	return lo + std::fmodf((hi - lo) + (value - lo), hi - lo);
+}
+
+// fabricated: same as MsWrapFmodf, through JGeometry::TUtil<f32>::mod
+inline f32 MsWrapMod(f32 value, f32 lo, f32 hi)
+{
+	return lo + JGeometry::TUtil<f32>::mod((hi - lo) + (value - lo), hi - lo);
+}
+
 // fabricated
 inline f32 MsAngleBetween(const JGeometry::TVec3<f32>& a,
                           const JGeometry::TVec3<f32>& b)
@@ -204,7 +219,6 @@ MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
                        const JGeometry::TVec3<f32>& param_2,
                        const JGeometry::TVec3<f32>& param_3)
 {
-	// TODO: floats are the worst, doesn't match at all...
 	JGeometry::TVec3<f32> diff = param_2;
 	diff -= param_1;
 	f32 fVar1 = (param_3.dot(diff) - param_1.dot(diff)) / diff.squared();
@@ -214,12 +228,10 @@ MsPerpendicFootToLineR(const JGeometry::TVec3<f32>& param_1,
 	else if (fVar1 > 1.0f)
 		fVar1 = 1.0f;
 
-	JGeometry::TVec3<f32> thing;
-	thing.scale(fVar1, diff);
-
-	JGeometry::TVec3<f32> copy = thing;
-	thing += param_1;
-	return thing;
+	diff.scale(fVar1);
+	JGeometry::TVec3<f32> foot = param_1;
+	foot += diff;
+	return foot;
 }
 
 inline f32 MsSqrtf(f32 x)

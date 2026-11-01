@@ -1,46 +1,70 @@
-#ifndef ENEMY_TABEPUKU_HPP
-#define ENEMY_TABEPUKU_HPP
+#ifndef ENEMY_TABE_PUKU_HPP
+#define ENEMY_TABE_PUKU_HPP
 
 #include <Enemy/SmallEnemy.hpp>
-#include <JSystem/JDrama/JDRGraphics.hpp>
 #include <JSystem/JGeometry.hpp>
-#include <JSystem/JGeometry/JGQuat4.hpp>
-#include <JSystem/JGeometry/JGVec3.hpp>
 #include <Strategic/HitActor.hpp>
-#include <Strategic/Nerve.hpp>
-#include <Strategic/Spine.hpp>
-#include <System/ParamInst.hpp>
-#include <dolphin/types.h>
 
-class JSUMemoryInputStream;
-class TLiveManager;
-class TTPHitActor;
+class TBGCheckData;
+class TTabePuku;
 
-DECLARE_NERVE(TNerveTabePukuDrag, TLiveActor);
+// The cheep cheeps ("pukupuku") that patrol a rail graph underwater, bite
+// Mario and drag him away. Member names come from the .prm strings.
+class TTabePukuParams : public TSmallEnemyParams {
+public:
+	TTabePukuParams(const char* path);
 
-DECLARE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor);
-
-DECLARE_NERVE(TNerveTabePukuDive, TLiveActor);
-
-DECLARE_NERVE(TNerveTabePukuBite, TLiveActor);
-
-DECLARE_NERVE(TNerveTabePukuAttack, TLiveActor);
-
-DECLARE_NERVE(TNerveTabePukuGraphWander, TLiveActor);
-
-DECLARE_NERVE(TNerveTabePukuFound, TLiveActor);
+	/* 0x2D4 */ TParamRT<f32> mMarchSpeed;
+	/* 0x2E8 */ TParamRT<f32> mAttackSpeed;
+	/* 0x2FC */ TParamRT<f32> mDiveSpeed;
+	/* 0x310 */ TParamRT<f32> mWaterFric;
+	/* 0x324 */ TParamRT<f32> mTurnSlerpRate;
+	/* 0x338 */ TParamRT<f32> mApartHeight;
+	/* 0x34C */ TParamRT<f32> mCorrectY;
+	/* 0x360 */ TParamRT<f32> mCorrectZ;
+	/* 0x374 */ TParamRT<f32> mTerritoryRange;
+	/* 0x388 */ TParamRT<f32> mDragLength;
+};
 
 class TTabePukuManager : public TSmallEnemyManager {
 public:
-	TTabePukuManager(const char*);
+	TTabePukuManager(const char* name = "プクプク(レール巡回)マネージャー");
+	virtual ~TTabePukuManager() { }
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
 };
 
+// The fish's own collision, which moves with it through the water and
+// collides with the map on its behalf.
+class TTPHitActor : public THitActor {
+public:
+	TTPHitActor(TTabePuku& owner);
+	virtual ~TTPHitActor() { }
+
+	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void init();
+
+	void checkHitActors();
+	void bind();
+	void updateTerrainCollsion();
+	void updateObjCollision();
+
+public:
+	/* 0x68 */ TTabePuku* mOwner;
+	/* 0x6C */ JGeometry::TVec3<f32> mPositionDelta;
+	/* 0x78 */ f32 mHeight;
+	/* 0x7C */ f32 mRadius;
+	/* 0x80 */ f32 mGroundHeight;
+	/* 0x84 */ const TBGCheckData* mGroundPlane;
+	/* 0x88 */ bool mAirborne;
+	/* 0x89 */ bool mTouchedWall;
+};
+
 class TTabePuku : public TSmallEnemy {
 public:
-	TTabePuku(const char*);
+	TTabePuku(const char* name = "プクプク(レール巡回)");
+	virtual ~TTabePuku() { }
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);
@@ -59,13 +83,13 @@ public:
 
 	void detach();
 	void setMomentumFromQuat();
-	void swimTo(const JGeometry::TVec3<f32>&);
+	void swimTo(const JGeometry::TVec3<f32>& dir);
 	bool doDrag();
 	void prepareDrag();
 	bool doDive();
 	void prepareDive();
 	void doBite();
-	void swimToCurPathNode(const JGeometry::TVec3<f32>&);
+	void swimToCurPathNode(const JGeometry::TVec3<f32>& offset);
 	bool isBiting() const;
 	bool isAttacking() const;
 	bool isGraphWander() const;
@@ -76,53 +100,28 @@ public:
 	void initParams();
 	void initCollision();
 
+	// fabricated
+	const TTabePukuParams* getParam() const
+	{
+		return (const TTabePukuParams*)getSaveParam();
+	}
+
 public:
-	/* 0x194 */ TTPHitActor* unk194;
+	/* 0x194 */ TTPHitActor* mHitActor;
 	/* 0x198 */ JGeometry::TQuat4<f32> mQuat;
-	/* 0x1A8 */ TPosition3f mTakeMtx;
-	/* 0x1D8 */ s32 mMouthJointIndex;
-	/* 0x1DC */ u8 mTouchedWall;
+	/* 0x1A8 */ TPosition3f mTakingMtx;
+	/* 0x1D8 */ int mMouthJoint;
+	/* 0x1DC */ bool mTouchedWall;
 	/* 0x1E0 */ f32 mDiveStartY;
 	/* 0x1E4 */ JGeometry::TVec3<f32> mDragDir;
 };
 
-class TTPHitActor : public THitActor {
-public:
-	TTPHitActor(TTabePuku&);
+DECLARE_NERVE(TNerveTabePukuGraphWander, TLiveActor);
+DECLARE_NERVE(TNerveTabePukuFound, TLiveActor);
+DECLARE_NERVE(TNerveTabePukuRecoverGraph, TLiveActor);
+DECLARE_NERVE(TNerveTabePukuAttack, TLiveActor);
+DECLARE_NERVE(TNerveTabePukuBite, TLiveActor);
+DECLARE_NERVE(TNerveTabePukuDive, TLiveActor);
+DECLARE_NERVE(TNerveTabePukuDrag, TLiveActor);
 
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init();
-
-	void checkHitActors();
-	void bind();
-	void updateTerrainCollsion();
-	void updateObjCollision();
-
-public:
-	/* 0x68 */ TTabePuku* mOwner;
-	/* 0x6C */ JGeometry::TVec3<f32> mVelocity;
-	/* 0x78 */ f32 mCheckHeight;
-	/* 0x7C */ f32 mCheckRadius;
-	/* 0x80 */ f32 mGroundHeight;
-	/* 0x84 */ const TBGCheckData* mGroundPlane;
-	/* 0x88 */ u8 mAirborne;
-	/* 0x89 */ u8 mTouchedWall;
-};
-
-class TTabePukuParams : public TSmallEnemyParams {
-public:
-	TTabePukuParams(const char*);
-
-	/* 0x2D4 */ TParamRT<f32> mMarchSpeed;
-	/* 0x2E8 */ TParamRT<f32> mAttackSpeed;
-	/* 0x2FC */ TParamRT<f32> mDiveSpeed;
-	/* 0x310 */ TParamRT<f32> mWaterFric;
-	/* 0x324 */ TParamRT<f32> mTurnSlerpRate;
-	/* 0x338 */ TParamRT<f32> mApartHeight;
-	/* 0x34C */ TParamRT<f32> mCorrectY;
-	/* 0x360 */ TParamRT<f32> mCorrectZ;
-	/* 0x374 */ TParamRT<f32> mTerritoryRange;
-	/* 0x388 */ TParamRT<f32> mDragLength;
-};
-
-#endif // ENEMY_TABEPUKU_HPP
+#endif

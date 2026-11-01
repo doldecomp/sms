@@ -45,29 +45,39 @@ void CPolarSubCamera::setNoticeInfo()
 	    JDrama::TNameRefGen::search(bossGesoViewObjName));
 }
 
+// fabricated: the target squares each component on its own (no fused
+// multiply-adds), so this isn't TVec3::squared(). Its result is still computed
+// after the CLBSquared call in getNoticeActor_, where the target computes it
+// before.
+static inline f32 distSq(const Vec& a, const Vec& b)
+{
+	f32 dx = a.x - b.x;
+	f32 dy = a.y - b.y;
+	f32 dz = a.z - b.z;
+	f32 x2 = dx * dx;
+	f32 y2 = dy * dy;
+	f32 z2 = dz * dz;
+	return x2 + y2 + z2;
+}
+
+// fabricated: the target tests both clip coordinates in one && chain and then
+// turns the result into a bool again.
+static inline bool isInClip(const JGeometry::TVec2<f32>& p, f32 c)
+{
+	return (-c <= p.x && p.x <= c && -c <= p.y && p.y <= c) ? true : false;
+}
+
 TLiveActor* CPolarSubCamera::getNoticeActor_()
 {
 	if (mNoticeActor != nullptr && !mNoticeActor->checkLiveFlag(LIVE_FLAG_DEAD)
 	    && !mNoticeActor->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
-
-		if (mNoticeActor->mPosition.squared(SMS_GetMarioPos())
-		    < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
+		f32 dist2 = distSq(mNoticeActor->mPosition, SMS_GetMarioPos());
+		if (dist2 < CLBSquared<f32>(mSaveNotice->mOffDist.get())) {
+			f32 clip = mSaveNotice->mOffClipRatio.get();
 			JGeometry::TVec2<f32> clipPos;
 			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, mNoticeActor->mPosition,
 			              nullptr, false);
-
-			// TODO: inline
-			f32 clipMax  = mSaveNotice->mOffClipRatio.get();
-			f32 clipMin  = -clipMax;
-			bool inClipX = false;
-			bool inClipY = false;
-			if (clipMin <= clipPos.x && clipPos.x <= clipMax)
-				inClipX = true;
-
-			if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax)
-				inClipY = true;
-
-			if (inClipY)
+			if (isInClip(clipPos, clip))
 				return mNoticeActor;
 		}
 	}
@@ -83,35 +93,26 @@ TLiveActor* CPolarSubCamera::getNoticeActor_()
 		if (mNoticeActor != nullptr && unk2A0[i] == mNoticeActor)
 			continue;
 
-		f32 dist2 = unk2A0[i]->mPosition.squared(SMS_GetMarioPos());
-		if (dist2 >= closestDist2)
-			continue;
+		// TODO: the target keeps both &unk16C and &unk1EC in registers across
+		// this loop (one more saved GPR, frame 0x10 larger); ours hoists only
+		// one of them.
+		f32 dist2 = distSq(unk2A0[i]->mPosition, SMS_GetMarioPos());
+		if (dist2 < closestDist2) {
+			f32 clip = mSaveNotice->mOnClipRatio.get();
+			JGeometry::TVec2<f32> clipPos;
+			CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->mPosition,
+			              nullptr, false);
+			if (!isInClip(clipPos, clip))
+				continue;
 
-		JGeometry::TVec2<f32> clipPos;
-		CLBCalc2DFPos(&clipPos, unk16C, unk1EC, unk2A0[i]->mPosition, nullptr,
-		              false);
+			if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(SMS_GetMarioAngleY()),
+			                 unk2A0[i]->mPosition, dist2,
+			                 mSaveNotice->mOnDegree.get(), -1.0f))
+				continue;
 
-		// TODO: inline
-		f32 clipMax  = mSaveNotice->mOnClipRatio.get();
-		f32 clipMin  = -clipMax;
-		bool inClipX = false;
-		bool inClipY = false;
-		if (clipMin <= clipPos.x && clipPos.x <= clipMax) {
-			inClipX = true;
+			closestDist2 = dist2;
+			noticeActor  = unk2A0[i];
 		}
-		if (inClipX && clipMin <= clipPos.y && clipPos.y <= clipMax) {
-			inClipY = true;
-		}
-		if (!inClipY)
-			continue;
-
-		if (!MsIsInSight(*gpMarioPos, SHORTANGLE2DEG(SMS_GetMarioAngleY()),
-		                 unk2A0[i]->mPosition, dist2,
-		                 mSaveNotice->mOnDegree.get(), -1.0f))
-			continue;
-
-		closestDist2 = dist2;
-		noticeActor  = unk2A0[i];
 	}
 
 	return noticeActor;

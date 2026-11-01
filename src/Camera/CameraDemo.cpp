@@ -61,40 +61,38 @@ void CPolarSubCamera::updateDemoCamera_(bool param_1)
 			if (mCameraDemo->unk4 != 0.0f) {
 				s16 angle = CLBDegToShortAngle(mCameraDemo->unk4);
 
+				// TODO: the target keeps origin.y and origin.z in f30/f31
+				// across both rotations below and reloads only origin.x.
+				// Writing the copy as origin.set(*unk0) gets that, but then the
+				// copy uses lfs/stfs where the target uses lwz/stw, so it isn't
+				// the original either.
 				JGeometry::TVec3<f32> origin(0.0f, 0.0f, 0.0f);
 				if (mCameraDemo->unk0 != nullptr)
 					origin = *mCameraDemo->unk0;
 
 				{
-					JGeometry::TVec3<f32> result = origin;
-					f32 dx                       = unk124.x - origin.x;
-					f32 dy                       = unk124.y - origin.y;
-					f32 dz                       = unk124.z - origin.z;
-					f32 sn                       = JMASSin(angle);
-					f32 cs                       = JMASCos(angle);
-					result.x += dx * cs + dz * sn;
-					result.y += dy;
-					result.z += -dx * sn + dz * cs;
-					unk124 = result;
+					JGeometry::TVec3<f32> d(unk124.x - origin.x,
+					                        unk124.y - origin.y,
+					                        unk124.z - origin.z);
+					f32 dx = d.x;
+					d.x    = dx * JMASCos(angle) + d.z * JMASSin(angle);
+					d.z    = -dx * JMASSin(angle) + d.z * JMASCos(angle);
+					unk124 = origin + d;
 				}
 
 				{
-					JGeometry::TVec3<f32> result = origin;
-					f32 dx                       = unk148.x - origin.x;
-					f32 dy                       = unk148.y - origin.y;
-					f32 dz                       = unk148.z - origin.z;
-					f32 sn                       = JMASSin(angle);
-					f32 cs                       = JMASCos(angle);
-					result.x += dx * cs + dz * sn;
-					result.y += dy;
-					result.z += -dx * sn + dz * cs;
-					unk148 = result;
+					JGeometry::TVec3<f32> d(unk148.x - origin.x,
+					                        unk148.y - origin.y,
+					                        unk148.z - origin.z);
+					f32 dx = d.x;
+					d.x    = dx * JMASCos(angle) + d.z * JMASSin(angle);
+					d.z    = -dx * JMASSin(angle) + d.z * JMASCos(angle);
+					unk148 = origin + d;
 				}
 
 				f32 ux = mUp.x;
-				f32 uz = mUp.z;
-				mUp.x  = ux * JMASCos(angle) + uz * JMASSin(angle);
-				mUp.z  = -ux * JMASSin(angle) + uz * JMASCos(angle);
+				mUp.x  = ux * JMASCos(angle) + mUp.z * JMASSin(angle);
+				mUp.z  = -ux * JMASSin(angle) + mUp.z * JMASCos(angle);
 			}
 
 			calcFinalPosAndAt_();

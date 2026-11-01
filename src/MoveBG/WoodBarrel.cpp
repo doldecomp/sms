@@ -20,7 +20,7 @@ void TWoodBarrel::put()
 {
 	TMapObjGeneral::put();
 	if (mGroundPlane->getActor() != nullptr
-	    && mGroundPlane->getActor()->isActorType(ACTOR_TYPE_MAP_OBJECT_UNK7B)) {
+	    && mGroundPlane->getActor()->isActorType(ACTOR_TYPE_FRUITS_BOAT)) {
 		kill();
 		return;
 	}

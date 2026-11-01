@@ -44,11 +44,11 @@ void TMario::hitNormal(THitActor* actor)
 
 	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
 	    && mWaterGun->getEmittedWaterCount() != 0) {
-		TModelWaterManager::mStaticHitActor.mPosition = mPosition;
-		TModelWaterManager::mStaticHitActor.mPosition.y += 80.0f;
-		TModelWaterManager::mStaticHitActor.unk68 = 0;
-		actor->receiveMessage(&TModelWaterManager::mStaticHitActor,
-		                      HIT_MESSAGE_SPRAYED_BY_WATER);
+		TWaterHitActor* waterActor = &TModelWaterManager::mStaticHitActor;
+		waterActor->mPosition      = mPosition;
+		waterActor->mPosition.y += 80.0f;
+		waterActor->unk68 = 0;
+		actor->receiveMessage(waterActor, HIT_MESSAGE_SPRAYED_BY_WATER);
 	}
 }
 
@@ -324,8 +324,8 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_ENEMY_UNK1F:
 		case ACTOR_TYPE_EFFECT_OBJ:
 		case ACTOR_TYPE_HAUNT_LEG:
-		case ACTOR_TYPE_ENEMY_UNK2E:
-		case ACTOR_TYPE_ENEMY_UNK31:
+		case ACTOR_TYPE_KUKKU:
+		case ACTOR_TYPE_BEE_HIVE:
 		case ACTOR_TYPE_DORO_HANE_KURI:
 		case ACTOR_TYPE_CASINORULET:
 			hitNormal(mCollisions[i]);
@@ -398,7 +398,7 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_BOSS_UNK14:
 		case ACTOR_TYPE_BOSS_UNK15:
 		case ACTOR_TYPE_SAMBO_FLOWER:
-		case ACTOR_TYPE_ENEMY_UNK35:
+		case ACTOR_TYPE_TABE_PUKU:
 			keepDistance(*mCollisions[i], 0.0f);
 			break;
 
@@ -507,7 +507,7 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_TIN_KOOPA_RARM:
 		case ACTOR_TYPE_TIN_KOOPA_LEG:
 		case ACTOR_TYPE_COASTER_KILLER:
-		case ACTOR_TYPE_BOSS_UNK20:
+		case ACTOR_TYPE_LAST_KOOPA_JR_SUBMARINE:
 		case ACTOR_TYPE_BOSS_UNK21:
 		case ACTOR_TYPE_EFFECT_ENEMY:
 		case ACTOR_TYPE_POLLUTE_OBJ:
@@ -517,7 +517,7 @@ void TMario::checkCollision()
 		case ACTOR_TYPE_ENEMY_UNK23:
 		case ACTOR_TYPE_SEAL:
 		case ACTOR_TYPE_WIRE_TRAP:
-		case ACTOR_TYPE_ENEMY_UNK32:
+		case ACTOR_TYPE_ANIMAL_BIRD:
 		case ACTOR_TYPE_ENEMY_DAMAGE_OBJ:
 		case ACTOR_TYPE_MAP_OBJECT_UNK33:
 		case ACTOR_TYPE_PALM_LEAF:

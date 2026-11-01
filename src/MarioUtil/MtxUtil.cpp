@@ -502,7 +502,11 @@ void TRope::constraintTail(const JGeometry::TVec3<f32>& param)
 		TRopePoint& cur  = mPoints[i];
 		TRopePoint& prev = mPoints[i - 1];
 
-		if (!cur.unkC.epsilonEquals(prev.unkC)) {
+		// TODO: the original computes prev - cur inside the epsilon test
+		// (we get cur - prev) with these same register assignments; the
+		// fabricated one-argument TVec3::epsilonEquals may have its
+		// operands the wrong way around.
+		if (!prev.unkC.epsilonEquals(cur.unkC)) {
 			JGeometry::TVec3<f32> delta = prev.unkC;
 			delta -= cur.unkC;
 			VECNormalize(&delta, &delta);
@@ -523,7 +527,8 @@ void TRope::moveHead(const JGeometry::TVec3<f32>& param)
 	constraintHead(param);
 	for (int i = 0; i < mNumPoints; ++i) {
 		f32 scale               = unk8;
-		JGeometry::TVec3<f32> v = mPoints[i].unkC - mPoints[i].unk0;
+		JGeometry::TVec3<f32> v;
+		v = mPoints[i].unkC - mPoints[i].unk0;
 		mPoints[i].unk18        = v * scale;
 		mPoints[i].unk0         = mPoints[i].unkC;
 	}

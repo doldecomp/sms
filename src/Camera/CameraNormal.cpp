@@ -13,11 +13,13 @@
 
 #include <M3DUtil/MActorAnm.hpp>
 
-// TODO: this should be an inline that doesn't get inlined,
-// but it actually gets inlined :(
-void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
+// Weak in the map (its table too), yet called out of line: the call is one
+// inline level down (noticeTowerCenter_), where MWCC only inlines bodies of
+// about nine statements or fewer. Defining it in Camera.hpp would put the
+// strings into every TU that includes the header, so it stays here.
+inline void CPolarSubCamera::calcTowerCenterPos_(Vec* result)
 {
-	static const char* sPositionNameTable[6] = {
+	static const char* sPositionNameTable[5] = {
 		"塔カメラＡ中心", "塔カメラＢ中心", "塔カメラＣ中心",
 		"塔カメラＤ中心", "塔カメラＥ中心",
 	};
@@ -82,11 +84,8 @@ void CPolarSubCamera::ctrlNormalOrTowerCamera_()
 				execInvalidAutoChase_();
 				unk64 |= CAMERA_FLAG_UNK80;
 			} else {
-				if (!(unk64 & CAMERA_FLAG_UNK80) && !isMarioCrabWalk_()) {
-					Vec v;
-					calcTowerCenterPos_(&v);
-					calcNoticeTargetYrot_(v);
-				}
+				if (!(unk64 & CAMERA_FLAG_UNK80) && !isMarioCrabWalk_())
+					noticeTowerCenter_();
 			}
 		} else if (fVar2 != 0.0f) {
 			rotateY_ByStickX_(fVar2);

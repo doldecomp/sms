@@ -232,24 +232,24 @@ BOOL TBathtubGrip::receiveMessage(THitActor* sender, u32 message)
 		f32 speed;
 		switch (dead) {
 		case 1:
-			count = unk244->unk16C->breakCount0.get();
 			speed = unk244->unk16C->animSpeed1.get();
+			count = unk244->unk16C->breakCount0.get();
 			break;
 		case 2:
-			count = unk244->unk16C->breakCount1.get();
 			speed = unk244->unk16C->animSpeed2.get();
+			count = unk244->unk16C->breakCount1.get();
 			break;
 		case 3:
-			count = unk244->unk16C->breakCount2.get();
 			speed = unk244->unk16C->animSpeed3.get();
+			count = unk244->unk16C->breakCount2.get();
 			break;
 		case 4:
-			count = unk244->unk16C->breakCount3.get();
 			speed = unk244->unk16C->animSpeed4.get();
+			count = unk244->unk16C->breakCount3.get();
 			break;
 		default:
-			count = unk244->unk16C->breakCount0.get();
 			speed = unk244->unk16C->animSpeed0.get();
+			count = unk244->unk16C->breakCount0.get();
 			break;
 		}
 		startBreak(dead, count, speed);
@@ -272,13 +272,14 @@ Mtx* TBathtubGrip::getRootJointMtx() const
 
 void TBathtubGrip::calcRootMatrix()
 {
-	MtxPtr m = getModel()->getBaseTRMtx();
-	Mtx rot;
+	TPosition3f& m = *(TPosition3f*)getModel()->getBaseTRMtx();
+	TPosition3f rot;
 	MsMtxSetRotRPH(rot, 0.0f, unk24C, 0.0f);
-	rot[0][3] = 0.0f;
-	rot[1][3] = 0.0f;
-	rot[2][3] = 0.0f;
-	MTXConcat(*unk244->getRootJointMtx(), rot, m);
+	rot.ref(0, 3) = 0.0f;
+	rot.ref(1, 3) = 0.0f;
+	rot.ref(2, 3) = 0.0f;
+	m.concat(*(TPosition3f*)unk244->getRootJointMtx(), rot);
+
 }
 
 // Unused
@@ -788,38 +789,46 @@ bool TBathtub::allowsTumble() const
 {
 	JGeometry::TVec3<f32> marioPos(SMS_GetMarioPos());
 	f32 grip;
-	if (!getNearGrip(marioPos, 18.0f, &grip))
-		return false;
-
-	JGeometry::TVec3<f32> delta = marioPos;
-	delta -= mBathtubData.mPos;
-	JGeometry::TVec3<f32> local;
-	mBathtubData.unk18.mult(delta, local);
-	local.y      = 0.0f;
-	f32 distance = local.length();
-	if (distance < 4200.0f)
-		return false;
-	if (!(4700.0f < distance))
-		return true;
-	if (!(mBathtubData.unk18.at(1, 1) > 0.99f))
-		return false;
-
-	TBathtubKillerManager* manager = static_cast<TBathtubKillerManager*>(
-	    JDrama::TNameRefGen::search("バスタブキラーマネージャー"));
-	u32 status = SMS_GetMarioStatus();
-	if (status == MARIO_STATUS_HIP_DROP || status == MARIO_STATUS_ROCKET
-	    || status == MARIO_STATUS_ROCKET_LANDING)
-		return false;
-
-	const TWaterGun* fludd = gpMarioOriginal->mWaterGun;
-	if (fludd != nullptr) {
-		TNozzleTrigger* nozzle
-		    = static_cast<TNozzleTrigger*>(fludd->getCurrentNozzle());
-		if (nozzle != nullptr && nozzle->getNozzleKind() == TWaterGun::Rocket
-		    && nozzle->getInsidePressure() > 0.0f)
+	if (getNearGrip(marioPos, 18.0f, &grip)) {
+		JGeometry::TVec3<f32> delta;
+		delta.sub(marioPos, mBathtubData.mPos);
+		JGeometry::TVec3<f32> local;
+		mBathtubData.unk18.mult(delta, local);
+		JGeometry::TVec3<f32> flat = local;
+		flat.y       = 0.0f;
+		f32 distance = flat.length();
+		if (distance < 4200.0f)
 			return false;
+
+		if (4700.0f < distance) {
+			if (mBathtubData.unk18.at(1, 1) > 0.99f) {
+				TBathtubKillerManager* manager
+				    = static_cast<TBathtubKillerManager*>(
+				        JDrama::TNameRefGen::search("バスタブキラーマネージャー"));
+				u32 status = SMS_GetMarioStatus();
+				if (status == MARIO_STATUS_HIP_DROP)
+					return false;
+				if (status == MARIO_STATUS_ROCKET)
+					return false;
+				if (status == MARIO_STATUS_ROCKET_LANDING)
+					return false;
+
+				const TWaterGun* fludd = gpMarioOriginal->mWaterGun;
+				if (fludd != nullptr) {
+					TNozzleTrigger* nozzle = static_cast<TNozzleTrigger*>(
+					    fludd->getCurrentNozzle());
+					if (nozzle != nullptr
+					    && nozzle->getNozzleKind() == TWaterGun::Rocket
+					    && nozzle->getInsidePressure() > 0.0f)
+						return false;
+				}
+				return manager->countActiveKillers() == 0;
+			}
+			return false;
+		}
+		return true;
 	}
-	return manager->countActiveKillers() == 0;
+	return false;
 }
 
 void TBathtub::calcRootMatrix()
@@ -891,14 +900,13 @@ u8 TBathtub::getNearJuncture(const JGeometry::TVec3<f32>&) const { return 0; }
 bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 maxDiff,
                            f32* out) const
 {
-	f32 angle = getDir(*getRootJointMtx(), pos);
+	MtxPtr mtx = *getRootJointMtx();
+	f32 angle  = getDir(mtx, pos);
 
 	f32 best  = 360.0f;
 	int index = 0;
 	for (int i = 0; i < ARRAY_COUNT(unk150); i++) {
-		f32 diff = fabsf(
-		    -180.0f
-		    + std::fmodf(360.0f + (unk150[i] - angle - -180.0f), 360.0f));
+		f32 diff = fabsf(MsWrapFmodf(unk150[i] - angle, -180.0f, 180.0f));
 		if (diff < best) {
 			index = i;
 			best  = diff;
@@ -919,9 +927,7 @@ f32 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>& pos,
 	f32 best  = 360.0f;
 	int index = 0;
 	for (int i = 0; i < ARRAY_COUNT(unk13C); ++i) {
-		f32 diff = fabsf(
-		    -180.0f
-		    + std::fmodf(360.0f + (unk13C[i] - angle - -180.0f), 360.0f));
+		f32 diff = fabsf(MsWrapFmodf(unk13C[i] - angle, -180.0f, 180.0f));
 		if (diff < best) {
 			index = i;
 			best  = diff;
@@ -938,9 +944,7 @@ bool TBathtub::getNextGrip(const JGeometry::TVec3<f32>& pos,
 	f32 best  = 360.0f;
 	int index = 0;
 	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
-		f32 diff = fabsf(
-		    -180.0f
-		    + std::fmodf(360.0f + (unk150[i] - angle - -180.0f), 360.0f));
+		f32 diff = fabsf(MsWrapFmodf(unk150[i] - angle, -180.0f, 180.0f));
 		if (diff < best) {
 			index = i;
 			best  = diff;

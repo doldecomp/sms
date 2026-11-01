@@ -220,7 +220,7 @@ void TBubble::behaveToWater(THitActor*)
 	    && mMActor->checkCurBckFromIndex(10)) {
 		kill();
 		TItem* item = (TItem*)gpItemManager->makeObjAppear(
-		    mPosition.x, mPosition.y + 50.0f, mPosition.z,
+		    mPosition.x, mPosition.y + 20.0f, mPosition.z,
 		    ACTOR_TYPE_BOTTLE_LARGE, true);
 		if (item)
 			item->killByTimer(0x4B0);
@@ -305,7 +305,7 @@ void TBubble::appendEnemy()
 		enemy->onHitFilter(HIT_CATEGORY_BOSS);
 		mHeldObject = enemy;
 		JGeometry::TVec3<f32> velocity;
-		velocity.set(0.0f, 1.0f, -1.0f);
+		velocity.set(0.0f, 2.0f, 10.0f);
 		enemy->mVelocity = velocity;
 		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		unk198 = enemy;
@@ -334,6 +334,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 		bubble->setBckAnm(10);
 	}
 
+	f32 addPosBase = bubble->unk194->mSLAddPosBase.get();
 	if (!bubble->unk1D0) {
 		if (bubble->unk194->mSLAddPosBase.get() > bubble->unk1CC)
 			bubble->unk1CC += 1.0f;
@@ -344,7 +345,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 			velocity *= 0.98f;
 			bubble->mVelocity = velocity;
 		} else {
-			bubble->walkBehavior(0, 0.8f);
+			bubble->walkBehavior(0, 1.0f);
 		}
 
 		if (spine->getTime() == 80) {
@@ -502,9 +503,10 @@ void TBossTelesaKillSmallEnemy::checkHit()
 	for (int i = 0; i < mColCount; ++i) {
 		THitActor* actor = mCollisions[i];
 		if (actor->isHitCategory(HIT_CATEGORY_ENEMY)) {
-			if (actor->isActorType(ACTOR_TYPE_DORO_HAMU_KURI))
-				((THamuKuri*)actor)->selectCapHolder();
-			((TLiveActor*)actor)->kill();
+			TLiveActor* enemy = (TLiveActor*)actor;
+			if (enemy->getActorType() == ACTOR_TYPE_DORO_HAMU_KURI)
+				((THamuKuri*)enemy)->selectCapHolder();
+			enemy->kill();
 		}
 	}
 
@@ -647,8 +649,8 @@ void TTelesaSlot::moveObject()
 
 void TTelesaSlot::moveStart()
 {
-	unk19C = true;
-	unk19B = true;
+	unk19C = 1;
+	unk19B = 1;
 
 	for (int i = 0; i < 3; ++i) {
 		unk198[i] = true;
@@ -700,7 +702,7 @@ void TTelesaSlot::forceStopSlot(int idx)
 			unk1A4 = 3;
 	}
 
-	unk19C = false;
+	unk19C = 0;
 }
 
 bool TTelesaSlot::isRollDrum()
@@ -712,7 +714,7 @@ bool TTelesaSlot::isRollDrum()
 	if (unk198[2])
 		return true;
 
-	unk19B = false;
+	unk19B = 0;
 	return false;
 }
 
@@ -720,7 +722,8 @@ int TTelesaSlot::getSlotResult()
 {
 	int result = getDrumResult(0);
 	for (int i = 1; i < 3; ++i) {
-		if (getDrumResult(i) != result)
+		int r = getDrumResult(i);
+		if (result != r)
 			return -1;
 	}
 	return result;
@@ -835,7 +838,7 @@ void TBossTelesa::init(TLiveManager* manager)
 		mWallRadius       = params->mSLWallRadius.get();
 		mHeadHeight       = params->mSLHeadHeight.get();
 		mScaledBodyRadius = mBodyScale * mBodyRadius;
-		resetHitPoints();
+		mHitPoints        = getMaxHitPoints();
 	}
 
 	initHitActor(0, 5,
@@ -856,8 +859,10 @@ void TBossTelesa::init(TLiveManager* manager)
 	mMActor->initBckNormalMotionBlend();
 
 	J3DModel* model = mMActor->getModel();
-	if (!model->getSkinDeform())
-		model->setSkinDeform(new J3DSkinDeform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	if (!model->getSkinDeform()) {
+		J3DSkinDeform* deform = new J3DSkinDeform;
+		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
+	}
 	mMActor->resetDL();
 
 	unk348.r = unk348.g = unk348.b = unk348.a = 0xFF;
@@ -887,8 +892,9 @@ void TBossTelesa::init(TLiveManager* manager)
 	}
 
 	if (mInstanceIndex == 0) {
-		for (u8 i = 0; i < mMActor->getModel()->getModelData()->getJointNum();
-		     ++i) { }
+		for (u8 i = 0;
+		     i < getMActor()->getModel()->getModelData()->getJointNum(); ++i) {
+		}
 	}
 
 	mBodyCollision = new TBossTelesaBody("ボステレサ体コリジョン");
@@ -1547,30 +1553,30 @@ bool TBossTelesa::rouletteFall()
 	if (mRoulettes[0]->mPosition.y > mRoulettes[1]->mPosition.y) {
 		mRoulettes[0]->mPosition.y -= 1.0f;
 		mRoulettes[0]->mMActor->setBck("rulet00");
-	} else {
-		mRoulettes[0]->mPosition.y = mRoulettes[1]->mPosition.y;
-		return TRUE;
-	}
 
-	if (mRoulettes[0]->mPosition.y > mRoulettes[1]->mPosition.y + 3.0f) {
-		if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE))
-			mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
-	} else {
-		if (SMS_SendMessageToMario(this, HIT_MESSAGE_DETACH)) {
-			SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_SET,
-			                                &mPosition, 0, nullptr, 0, 4);
-			mHeldObject = nullptr;
+		if (mRoulettes[0]->mPosition.y > mRoulettes[1]->mPosition.y + 3.0f) {
+			if (SMS_SendMessageToMario(this, HIT_MESSAGE_TAKE))
+				mHeldObject = (TTakeActor*)SMS_GetMarioHitActor();
+		} else {
+			if (SMS_SendMessageToMario(this, HIT_MESSAGE_DETACH)) {
+				SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_SET,
+				                                &mPosition, 0, nullptr, 0, 4);
+				mHeldObject = nullptr;
+			}
 		}
+
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1B, &mPosition,
+		                                0, nullptr, 0, 4);
+
+		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition,
+		                                0, nullptr, 0, 4);
+
+		gpMarioOriginal->mGamePad->onNeutralMarioKey();
+		return FALSE;
 	}
 
-	SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_V_LAUGH1B, &mPosition, 0,
-	                                nullptr, 0, 4);
-
-	SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_RLT_DOWN, &mPosition, 0,
-	                                nullptr, 0, 4);
-
-	gpMarioOriginal->mGamePad->onNeutralMarioKey();
-	return FALSE;
+	mRoulettes[0]->mPosition.y = mRoulettes[1]->mPosition.y;
+	return TRUE;
 }
 
 bool TBossTelesa::slotFall()
@@ -1584,12 +1590,10 @@ bool TBossTelesa::slotFall()
 
 	if (mSlot->mPosition.y < mRoulettes[0]->mPosition.y - 900.0f) {
 		int rolling = 0;
-		if (mRoulettes[0]->unk13C != 0.0f)
-			rolling = 1;
-		if (mRoulettes[1]->unk13C != 0.0f)
-			++rolling;
-		if (mRoulettes[2]->unk13C != 0.0f)
-			++rolling;
+		for (int i = 0; i < 3; ++i) {
+			if (mRoulettes[i]->unk13C != 0.0f)
+				rolling++;
+		}
 
 		if (rolling != 3)
 			rouletteStart();
@@ -1709,7 +1713,7 @@ void TBossTelesa::genAttacker()
 
 void TBossTelesa::setBckAnm(int index)
 {
-	unk164 = getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
+	unk164 = getMActor()->getCurAnmIdx(0);
 	unk160 = index;
 	unk168 = 1.0f;
 
@@ -1736,6 +1740,7 @@ void TBossTelesa::rouletteStart()
 	TMsRange<f32> speedRange(0.05f, 0.1f);
 	TMsRange<f32> directionRange(-1.0f, 1.0f);
 	f32 dir = directionRange.rand();
+	f32 direction;
 
 	u8 maxHitPoints = getMaxHitPoints();
 	f32 hpSpeed = (maxHitPoints - mHitPoints) * TBossTelesa::mRouletteUpRate;
@@ -2005,11 +2010,10 @@ void TBossTelesa::generateSlotItem()
 void TBossTelesa::fruitCollisionOn()
 {
 	for (int i = 0; i < mSpitObjNum; ++i) {
-		TLiveActor* actor = mSpitObjs[i];
-		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && !actor->isActorType(ACTOR_TYPE_COIN)
-		    && !actor->isActorType(ACTOR_TYPE_BOTTLE_LARGE))
-			actor->offHitFilter(HIT_FILTER_NO_COLLISION);
+		if (!mSpitObjs[i]->checkLiveFlag(LIVE_FLAG_DEAD)
+		    && !mSpitObjs[i]->isActorType(ACTOR_TYPE_COIN)
+		    && !mSpitObjs[i]->isActorType(ACTOR_TYPE_BOTTLE_LARGE))
+			mSpitObjs[i]->offHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 }
 
@@ -2043,6 +2047,10 @@ void TBossTelesa::rollRouletteCircle()
 // UNUSED
 bool TBossTelesa::isForceRestart() { return false; }
 
+// TODO: same as forceAllItemKill: the original is called out of line from
+// TBossTelesaKillSmallEnemy::checkHit, so it had 16+ statements (ours has
+// 15) and an 8 byte larger frame.
+#pragma dont_inline on
 void TBossTelesa::forceHide()
 {
 	if (mSpine->getCurrentNerve() == &TNerveBossTelesaDie::theNerve())
@@ -2066,6 +2074,7 @@ void TBossTelesa::forceHide()
 	mSpine->reset();
 	mSpine->setNext(&TNerveBossTelesaHide::theNerve());
 }
+#pragma dont_inline off
 
 void TBossTelesa::forceAllItemKill()
 {
@@ -2112,12 +2121,12 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (spine->getTime() == 0) {
 		boss->unk388 = 0;
-		if (boss->mIsSpicy)
-			boss->decHitPoints();
+		if (boss->mIsSpicy && boss->mHitPoints != 0)
+			--boss->mHitPoints;
 
 		boss->offAllCollision();
 
-		if (boss->getHitPoints() != 0) {
+		if (boss->mHitPoints != 0) {
 			if (boss->mIsSpicy) {
 				boss->getMActor()->setBrkFromIndex(1);
 				boss->setBckAnm(2);
@@ -2139,7 +2148,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		}
 	}
 
-	if (boss->getHitPoints() == 0) {
+	if (boss->mHitPoints == 0) {
 		if (boss->checkCurAnmEnd(0)) {
 			if (boss->unk388 == 0) {
 				MtxPtr mtx = boss->getMActor()->getModel()->getAnmMtx(1);
@@ -2256,11 +2265,10 @@ DEFINE_NERVE(TNerveBossTelesaHideWait, TLiveActor)
 		boss->onLiveFlag(LIVE_FLAG_HIDDEN);
 		boss->mIsSpicy = 0;
 
-		u8 maxHp = boss->getMaxHitPoints();
-		u8 alpha
-		    = TBossTelesa::mNormalAlpha + (maxHp - boss->getHitPoints()) * 30;
-		alpha          = MsClamp<u8>(alpha, 0, 0xFE);
-		boss->unk34C.a = alpha;
+		u8 maxHp       = boss->getMaxHitPoints();
+		boss->unk34C.a = MsClamp<u8>(TBossTelesa::mNormalAlpha
+		                                 + (maxHp - boss->mHitPoints) * 30,
+		                             0, 0xFE);
 
 		boss->mSlot->mScaling.set(0.0f, 0.0f, 0.0f);
 		boss->getMActor()->setBrkFromIndex(2);
@@ -2303,7 +2311,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 	}
 
 	if (boss->getMActor()->checkCurBckFromIndex(0)
-	    && boss->getMActor()->getFrameCtrl(0)->checkPass(78.0f)) {
+	    && boss->getMActor()->getFrameCtrl(0)->checkPass(40.0f)) {
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK22, 1.0f);
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_TELESA_SLT_LAND,
 		                                &boss->mPosition, 0, nullptr, 0, 4);
@@ -2312,13 +2320,13 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 	if (spine->getTime() > 800) {
 		u8 maxHp     = boss->getMaxHitPoints();
 		int interval = TBossTelesa::mTelesaGenerateInterval
-		               + (maxHp - boss->getHitPoints()) * 100;
+		               + (maxHp - boss->mHitPoints) * 100;
 		if (spine->getTime() % interval == 1) {
 			boss->setBckAnm(14);
 		}
 	}
 
-	boss->mHoseiPosY *= 0.96f;
+	boss->mHoseiPosY *= 0.9f;
 	return FALSE;
 }
 
@@ -2352,7 +2360,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (!boss->getMActor()->checkCurBckFromIndex(14)
-	    && boss->mHoseiPosY < TBossTelesa::mBaseHoseiPosY - 200.0f) {
+	    && boss->mHoseiPosY < TBossTelesa::mBaseHoseiPosY - 300.0f) {
 		boss->setBckAnm(14);
 	} else if (boss->checkCurAnmEnd(0) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
@@ -2360,7 +2368,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 		boss->fruitCollisionOn();
 		return TRUE;
 	} else if (spine->getTime() > 200) {
-		boss->mHoseiPosY -= 100.0f;
+		boss->mHoseiPosY -= 2.0f;
 	}
 	return FALSE;
 }
@@ -2404,9 +2412,9 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 	TBossTelesaSaveLoadParams* params = boss->unk15C;
 	int waitTime                      = params->mSLStopSlotTime0.get();
-	if (boss->getHitPoints() == 2)
+	if (boss->mHitPoints == 2)
 		waitTime = params->mSLStopSlotTime1.get();
-	if (boss->getHitPoints() == 1)
+	if (boss->mHitPoints == 1)
 		waitTime = params->mSLStopSlotTime2.get();
 
 	if (boss->mSlot->getSlotResult() == 0)
@@ -2447,12 +2455,10 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 		if (boss->checkCurAnmEnd(0)) {
 			boss->mIsSpicy = 0;
 
-			u8 maxHp = boss->getMaxHitPoints();
-			u8 alpha = TBossTelesa::mNormalAlpha
-			           + (maxHp - boss->getHitPoints()) * 30;
-			alpha = MsClamp<u8>(alpha, 0, 0xFE);
-
-			boss->unk34C.a = alpha;
+			u8 maxHp       = boss->getMaxHitPoints();
+			boss->unk34C.a = MsClamp<u8>(TBossTelesa::mNormalAlpha
+			                                 + (maxHp - boss->mHitPoints) * 30,
+			                             0, 0xFE);
 			return TRUE;
 		}
 	} else {

@@ -43,6 +43,15 @@ template <> struct TUtil<f32> {
 		       && param_2 - param_1 <= epsilon();
 	}
 
+	// Emitted as a weak symbol in Enemy/koopajr.cpp.
+	static f32 mod(f32 value, f32 modulus)
+	{
+		if (__fabs(modulus) > __fabs(value))
+			return value;
+		s64 quotient = value / modulus;
+		return value - modulus * quotient;
+	}
+
 	static f32 clamp(f32 value, f32 min, f32 max)
 	{
 		if (value < min)

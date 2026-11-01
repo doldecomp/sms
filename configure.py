@@ -1276,7 +1276,7 @@ config.libs = [
             PCHObject(NonMatching, "Camera/CameraOption.cpp"),
             PCHObject(NonMatching, "Camera/CameraDemo.cpp"),
             Object(NonMatching, "Camera/CameraWarp.cpp"),
-            PCHObject(NonMatching, "Camera/CameraMode.cpp"),
+            PCHObject(Matching, "Camera/CameraMode.cpp"),
             Object(NonMatching, "Camera/CameraSecureView.cpp"),
             PCHObject(Matching, "Camera/CamShakeDefine.cpp"),
         ],

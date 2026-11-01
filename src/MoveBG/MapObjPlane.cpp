@@ -116,6 +116,20 @@ void TMapObjPlane::updateCheckData(int x, int z)
 	mCollision->getCheckData(x, z, 1)->setVertex(local_58, local_4c, local_40);
 }
 
+// fabricated
+static inline void calcFaceNrm(JGeometry::TVec3<f32>* nrm,
+                               const JGeometry::TVec3<f32>& from,
+                               const JGeometry::TVec3<f32>& to,
+                               const JGeometry::TVec3<f32>& center)
+{
+	JGeometry::TVec3<f32> edge;
+	edge.sub(to, from);
+	JGeometry::TVec3<f32> side;
+	side.sub(from, center);
+	nrm->cross(edge, side);
+	nrm->normalize();
+}
+
 void TMapObjPlane::calcNrm(int x, int z)
 {
 	if (x < 0 || mExtents <= x || z < 0 || mExtents <= z)
@@ -130,32 +144,20 @@ void TMapObjPlane::calcNrm(int x, int z)
 	f32 hN0 = heightAt(MsWrap(x - 1, 0, mExtents), z);
 	f32 hP0 = heightAt(MsWrap(x + 1, 0, mExtents), z);
 
-	// TODO: figure out the inlines here. Definitely some subtracting and
-	// cross producting is occurring.
+	JGeometry::TVec3<f32> p00(0.0f, h00, 0.0f);
+	JGeometry::TVec3<f32> pN0(fVar7, hN0, 0.0f);
+	JGeometry::TVec3<f32> p0N(0.0f, h0N, fVar7);
+	JGeometry::TVec3<f32> pP0(fVar1, hP0, 0.0f);
+	JGeometry::TVec3<f32> p0P(0.0f, h0P, fVar1);
 
 	JGeometry::TVec3<f32> local_9c;
-	local_9c.x = (h0N - hN0) * 0.0f - (fVar7 - 0.0f) * (hN0 - h00);
-	local_9c.y = (fVar7 - 0.0f) * (fVar7 - 0.0f) - (0.0f - fVar7) * 0.0f;
-	local_9c.z = (0.0f - fVar7) * (hN0 - h00) - (h0N - hN0) * (fVar7 - 0.0f);
-	local_9c.normalize();
-
+	calcFaceNrm(&local_9c, pN0, p0N, p00);
 	JGeometry::TVec3<f32> local_a8;
-	local_a8.x = (hP0 - h0N) * (fVar7 - 0.0f) - (0.0f - fVar7) * (h0N - h00);
-	local_a8.z = (fVar1 - 0.0f) * (h0N - h00) - (hP0 - h0N) * 0.0f;
-	local_a8.y = (0.0f - fVar7) * 0.0f - (fVar1 - 0.0f) * (fVar7 - 0.0f);
-	local_a8.normalize();
-
+	calcFaceNrm(&local_a8, p0N, pP0, p00);
 	JGeometry::TVec3<f32> local_b4;
-	local_b4.x = (hN0 - h0P) * (fVar1 - 0.0f) - (0.0f - fVar1) * (h0P - h00);
-	local_b4.z = (fVar7 - 0.0f) * (h0P - h00) - (hN0 - h0P) * 0.0f;
-	local_b4.y = (0.0f - fVar1) * 0.0f - (fVar7 - 0.0f) * (fVar1 - 0.0f);
-	local_b4.normalize();
-
+	calcFaceNrm(&local_b4, p0P, pN0, p00);
 	JGeometry::TVec3<f32> local_c0;
-	local_c0.x = (h0P - hP0) * 0.0f - h0N * (hP0 - h00);
-	local_c0.y = h0N * h0N - (0.0f - fVar1) * 0.0f;
-	local_c0.z = (0.0f - fVar1) * (hP0 - h00) - (h0P - hP0) * h0N;
-	local_c0.normalize();
+	calcFaceNrm(&local_c0, pP0, p0P, p00);
 
 	mNormalMap[x + z * mExtents] = local_9c + local_a8 + local_b4 + local_c0;
 	mNormalMap[x + z * mExtents].scale(0.25f);

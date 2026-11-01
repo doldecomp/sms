@@ -653,9 +653,9 @@ bool TBathtubKiller::isAboided()
 	f32 distanceY                  = fabsf(mario.y - position.y);
 	mario.y                        = 0.0f;
 	position.y                     = 0.0f;
-	JGeometry::TVec3<f32> direction;
-	direction.sub(mario, position);
-	f32 distance = direction.length();
+	JGeometry::TVec3<f32> diff;
+	diff.sub(mario, position);
+	f32 distance = diff.length();
 	if (distanceY > getSaveParam2()->mSLAboidDistanceY.get()
 	    && distance <= getSaveParam2()->mSLAboidDistance.get())
 		return true;
@@ -666,6 +666,8 @@ bool TBathtubKiller::isAboided()
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 		return true;
 	}
+	JGeometry::TVec3<f32> direction;
+	direction.set(diff);
 	direction.normalize();
 	TDirectionCalc target(direction);
 	JGeometry::TVec3<f32> forward;

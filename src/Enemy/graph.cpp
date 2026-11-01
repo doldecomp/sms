@@ -734,7 +734,7 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 {
 	bool bVar9 = true;
 
-	JGeometry::TVec3<f32> local_48;
+	JGeometry::TVec3<f32> local_48 = param_1;
 	f32 min;
 	for (int i = 0; i < unk8; ++i) {
 		const TGraphNode& node = getGraphNode(i);
@@ -751,8 +751,9 @@ TGraphWeb::getNearestPosOnGraphLink(const JGeometry::TVec3<f32>& param_1) const
 			f32 fVar4 = MsClamp((param_1.dot(point2) - point.dot(point2))
 			                        / point2.squared(),
 			                    0.0f, 1.0f);
-			JGeometry::TVec3<f32> thing;
-			thing.scaleAdd(fVar4, point, point2);
+			JGeometry::TVec3<f32> thing = point2;
+			thing.scale(fVar4);
+			thing.add(point);
 			thing.sub(param_1);
 			f32 dVar18 = thing.squared();
 			if (bVar9 || dVar18 < min) {
@@ -892,14 +893,10 @@ f32 TGraphTracer::calcSplineSpeed(f32 param_1)
 	if (mPrevIdx < 0)
 		return 0.001f;
 
-	JGeometry::TVec3<f32> v1;
-	unk0->unk0[mCurrIdx].getPoint(&v1);
-	JGeometry::TVec3<f32> v2;
-	unk0->unk0[mPrevIdx].getPoint(&v2);
-
-	JGeometry::TVec3<f32> diff = v1;
-	diff -= v2;
-	f32 fVar13 = VECMag(&diff);
+	JGeometry::TVec3<f32> v1 = unk0->unk0[mCurrIdx].getPoint();
+	JGeometry::TVec3<f32> v2 = unk0->unk0[mPrevIdx].getPoint();
+	v1 -= v2;
+	f32 fVar13 = VECMag(&v1);
 
 	f32 fVar1;
 	f32 fVar2;

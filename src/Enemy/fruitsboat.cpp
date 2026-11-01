@@ -181,7 +181,7 @@ void TFruitsBoat::init(TLiveManager* manager)
 	mManager->manageActor(this);
 	mMActorKeeper = new TMActorKeeper(mManager, 1);
 
-	initHitActor(ACTOR_TYPE_MAP_OBJECT_UNK7B, 1,
+	initHitActor(ACTOR_TYPE_FRUITS_BOAT, 1,
 	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT, 0.0f, 0.0f,
 	             0.0f, 0.0f);
 	offHitFilter(HIT_FILTER_NO_COLLISION);

@@ -541,7 +541,21 @@ void TChuuHana::bind()
 	mPositionDelta = next - mPosition;
 }
 
-void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1) { }
+// Body taken from the copies inlined into moveObject and behaveToWater.
+// The XZ speed is computed and never used; the target keeps its dead compare.
+// TODO: 0xa0 bytes against 0xc4 in the map. The target copies `cur` twice
+// more and reads x from one copy and z from the other, the same shape as in
+// rolling(). Two explicit copies reproduce it byte for byte (0xc4), so a
+// helper taking two vectors by value is likely, but it isn't known.
+void TChuuHana::margeVelocity(JGeometry::TVec3<f32>& param_1)
+{
+	JGeometry::TVec3<f32> vel = mVelocity;
+	JGeometry::TVec3<f32> cur = getVelocity();
+	f32 speed = JGeometry::TUtil<f32>::sqrt(cur.x * cur.x + cur.z * cur.z);
+	VECAdd(&vel, &param_1, &vel);
+	vel.y     = 0.0f;
+	mVelocity = vel;
+}
 
 BOOL TChuuHana::receiveMessage(THitActor* sender, u32 message)
 {
@@ -691,7 +705,27 @@ void TChuuHana::setSafeGoal()
 	unk1B2 = 1;
 }
 
-void TChuuHana::rolling() { }
+// Body taken from the copy inlined into TNerveChuuHanaRoll::execute.
+// TODO: 0x108 bytes against 0x120 in the map. The target copies the velocity
+// twice more (x is read from one copy, z from the other) and fuses the
+// speed's multiply-add; probably two more inline helpers.
+void TChuuHana::rolling()
+{
+	JGeometry::TVec3<f32> vel = getVelocity();
+	f32 dx = 0.2f * (vel.x - unk204.x);
+	f32 dz = 0.2f * (vel.z - unk204.z);
+	unk204.x += dx;
+	unk204.z += dz;
+	f32 speed = unk204.x * unk204.x + unk204.z * unk204.z;
+	speed     = JGeometry::TUtil<f32>::sqrt(speed);
+	unk1B8 = 2.0f * (speed / mBodyRadius);
+	unk210 += unk1B8;
+	if (unk210 > 360.0f)
+		unk210 -= 360.0f;
+	if (unk210 < 0.0f)
+		unk210 += 360.0f;
+}
+
 
 void TChuuHana::rollStart()
 {

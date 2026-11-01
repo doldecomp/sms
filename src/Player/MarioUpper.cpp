@@ -79,29 +79,8 @@ void TMario::stateMachineUpper()
 			mPumpCooldown = mUpperBodyParams.mPumpWaitTime.get();
 		}
 		if (!checkFlag(MARIO_FLAG_IN_ANY_WATER) && mWaterGun != nullptr) {
-			s32 flag;
-			if (mWaterGun->getCurrentWater() == 0) {
-				flag = 0;
-			} else {
-				TWaterGun const* waterGun = mWaterGun;
-				if (waterGun->checkCurrentNozzleKind(1)) {
-					if (waterGun->checkCurrentNozzleTriggerSprayState(1)) {
-						flag = 1;
-					} else {
-						flag = 0;
-					}
-				} else {
-					if (waterGun->getCurrentNozzle()->getUnk378() > 0.0f) {
-						flag = 1;
-					} else {
-						flag = 0;
-					}
-				}
-			}
-
-			if (flag != 0) {
+			if (mWaterGun->isEmitting())
 				emitSweatSometimes();
-			}
 		}
 		break;
 

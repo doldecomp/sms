@@ -72,7 +72,7 @@ TBee::TBee(MActor* actor, TBeeHive* hive)
 
 void TBee::init()
 {
-	initHitActor(ACTOR_TYPE_ENEMY_UNK2F, 1, HIT_CATEGORY_PLAYER, 20.0f, 20.0f,
+	initHitActor(ACTOR_TYPE_BEE, 1, HIT_CATEGORY_PLAYER, 20.0f, 20.0f,
 	             50.0f, 50.0f);
 
 	TIdxGroupObj* enemyGroup
@@ -149,7 +149,7 @@ void TBeeHive::reset()
 
 void TBeeHive::initCollision()
 {
-	initHitActor(ACTOR_TYPE_ENEMY_UNK31, 0, HIT_CATEGORY_PLAYER, 50.0f, 50.0f,
+	initHitActor(ACTOR_TYPE_BEE_HIVE, 0, HIT_CATEGORY_PLAYER, 50.0f, 50.0f,
 	             100.0f, 100.0f);
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 }

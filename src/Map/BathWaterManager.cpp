@@ -195,8 +195,7 @@ public:
 
 		JGeometry::TVec3<f32> capCenter = data.getThing();
 
-		f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-		                                      - data.unk44 * data.unk44);
+		f32 rad = data.getSurfaceRadius();
 		bool hit;
 		if (capCenter.y < my)
 			return false;
@@ -899,8 +898,7 @@ public:
 
 		if (unk2C->showsCap.get() && !data.unk65) {
 			drawCap(data.getThing(),
-			        JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                    - data.unk44 * data.unk44));
+			        data.getSurfaceRadius());
 		}
 
 		GXColor color = (GXColor) { 0x78, 0xFA, 0x14, unk2C->alpha.get() };
@@ -1051,8 +1049,7 @@ public:
 
 		JGeometry::TVec3<f32> v1;
 		v1.set(data.getThing());
-		JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-		                            - data.unk44 * data.unk44);
+		data.getSurfaceRadius();
 
 		JGeometry::TVec3<f32> v2;
 		v2.set(data.getThing());
@@ -1174,8 +1171,7 @@ public:
 			GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 			GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_U8, 7);
 			JGeometry::TVec3<f32> capCenter = data.getThing();
-			f32 rad = JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                      - data.unk44 * data.unk44);
+			f32 rad = data.getSurfaceRadius();
 			drawCap(capCenter, rad);
 			capCenter.y += 0.5f * negR;
 			drawCap(capCenter, unk800B0 * unk80134->meshWidth.get() + rad);
@@ -1266,8 +1262,7 @@ public:
 
 		if (unk80134->showsCap.get() && !data.unk65) {
 			drawCap(data.getThing(),
-			        JGeometry::TUtil<f32>::sqrt(data.unk3C * data.unk3C
-			                                    - data.unk44 * data.unk44));
+			        data.getSurfaceRadius());
 		}
 
 		GXInitTexObj(&unk800D4, unk800A8, r23, r24, (GXTexFmt)1, GX_CLAMP,

@@ -98,7 +98,12 @@ TMapWire* TWireBinder::getWire() const
 	return gpMapWireManager->getWire(mWireNumber);
 }
 
-bool TWireBinder::isStartWire(const JGeometry::TVec3<f32>&, f32) const { }
+// TODO: UNUSED, nothing linked shows its body. It returns a bool like
+// isEndWire, since TWireTrap::isStartWire hands its result back.
+bool TWireBinder::isStartWire(const JGeometry::TVec3<f32>&, f32) const
+{
+	return false;
+}
 
 bool TWireBinder::isEndWire(const JGeometry::TVec3<f32>& point,
                             f32 direction) const

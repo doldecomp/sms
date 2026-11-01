@@ -488,8 +488,8 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 		case ACTOR_TYPE_YUMBO:
 		case ACTOR_TYPE_KUMOKUN:
 		case ACTOR_TYPE_AMENBO:
-		case ACTOR_TYPE_ENEMY_UNK2E:
-		case ACTOR_TYPE_ENEMY_UNK2F:
+		case ACTOR_TYPE_KUKKU:
+		case ACTOR_TYPE_BEE:
 		case ACTOR_TYPE_DEBU_TELESA:
 		case ACTOR_TYPE_ENEMY_DAMAGE_OBJ:
 			if (message == HIT_MESSAGE_ATTACK && !isInvincible()) {
@@ -694,7 +694,7 @@ BOOL TMario::receiveMessage(THitActor* sender, u32 message)
 	case ACTOR_TYPE_BOSS_EEL_COLLISION:
 	case ACTOR_TYPE_TIN_KOOPA_FLAME:
 	case ACTOR_TYPE_HANE_HAMU_KURI:
-	case ACTOR_TYPE_ENEMY_UNK35:
+	case ACTOR_TYPE_TABE_PUKU:
 		switch (message) {
 		case HIT_MESSAGE_TAKE:
 			if (!isInvincible() && mHeldObject == nullptr

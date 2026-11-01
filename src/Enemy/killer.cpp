@@ -364,14 +364,14 @@ void TKiller::init(TLiveManager* manager)
 	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 
 	J3DModel* model = mMActor->getModel();
-	if (!model->getSkinDeform()) {
+	if (model->getSkinDeform() == nullptr) {
 		J3DSkinDeform* deform = new J3DSkinDeform;
 		model->setSkinDeform(deform, J3D_DEFORM_ATTACH_FLAG_UNK_1);
 	}
 
 	mMActor->resetDL();
 	if (mInstanceIndex == 0)
-		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); ++i) { }
+		for (u8 i = 0; i < getModel()->getModelData()->getJointNum(); i++) { }
 
 	mMActor->setJointCallback(1, KillerBodyCallback);
 	unk188 = 0.0f;
@@ -482,7 +482,7 @@ void TKiller::setDeadAnm()
 
 void TKiller::attackToMario()
 {
-	if (gpMarioPos->y < mPosition.y) {
+	if (SMS_GetMarioPos().y < mPosition.y) {
 		if (mSpine->getCurrentNerve() != &TNerveKillerExplosion::theNerve()) {
 			mSpine->pushNerve(&TNerveKillerExplosion::theNerve());
 			sendAttackMsgToMario();

@@ -503,17 +503,18 @@ void TMapObjBase::makeMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
 	rotation.identity();
 	rotation.setRotate(param_1, param_2);
 
-	param_3[0][0] = rotation.at(0, 0);
-	param_3[0][1] = rotation.at(0, 1);
-	param_3[0][2] = rotation.at(0, 2);
+	MtxPtr src = rotation;
+	param_3[0][0] = src[0][0];
+	param_3[0][1] = src[0][1];
+	param_3[0][2] = src[0][2];
 
-	param_3[1][0] = rotation.at(1, 0);
-	param_3[1][1] = rotation.at(1, 1);
-	param_3[1][2] = rotation.at(1, 2);
+	param_3[1][0] = src[1][0];
+	param_3[1][1] = src[1][1];
+	param_3[1][2] = src[1][2];
 
-	param_3[2][0] = rotation.at(2, 0);
-	param_3[2][1] = rotation.at(2, 1);
-	param_3[2][2] = rotation.at(2, 2);
+	param_3[2][0] = src[2][0];
+	param_3[2][1] = src[2][1];
+	param_3[2][2] = src[2][2];
 }
 
 void TMapObjBase::makeObjMtxRotByAxis(const JGeometry::TVec3<f32>& param_1,
@@ -662,27 +663,27 @@ const JGeometry::TVec3<f32>& TMapObjBase::getWaterPos(THitActor* actor)
 	return gpModelWaterManager->mParticlePositionSOA[getWaterID(actor)];
 }
 
-BOOL TMapObjBase::waterHitPlane(THitActor* actor)
+bool TMapObjBase::waterHitPlane(THitActor* actor)
 {
 	int idx                   = getWaterID(actor);
 	const TBGCheckData* plane = gpModelWaterManager->unk2914[idx];
 	if (plane == nullptr)
-		return FALSE;
+		return false;
 	{
 		const JGeometry::TVec3<f32>& v
 		    = gpModelWaterManager->mParticleVelocitySOA[idx];
 		if (v.x == 0.0f && v.z == 0.0f)
-			return FALSE;
+			return false;
 	}
 
 	{
 		const JGeometry::TVec3<f32>& v
 		    = gpModelWaterManager->mParticleVelocitySOA[idx];
 		if (v.x * plane->mNormal.x > 0.0f || v.z * plane->mNormal.z > 0.0f)
-			return FALSE;
+			return false;
 	}
 
-	return TRUE;
+	return true;
 }
 
 void TMapObjBase::sendMsg(u32 param_1, u32 param_2)

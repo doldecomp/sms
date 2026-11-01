@@ -1,11 +1,16 @@
 #include <Enemy/BathtubKiller.hpp>
+#include <Enemy/BathtubPeach.hpp>
 #include <Enemy/BossGesso.hpp>
 #include <Enemy/CoasterKiller.hpp>
 #include <Enemy/Emario.hpp>
 #include <Enemy/BossEel.hpp>
 #include <Enemy/BossManta.hpp>
 #include <Enemy/BossPakkun.hpp>
+#include <Enemy/BossWanwan.hpp>
 #include <Enemy/Hinokuri2.hpp>
+#include <Enemy/Koopa.hpp>
+#include <Enemy/KoopaJr.hpp>
+#include <Enemy/LimitKoopa.hpp>
 #include <Enemy/LimitKoopaJr.hpp>
 #include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TinKoopa.hpp>
@@ -14,6 +19,13 @@
 #include <Enemy/BossWanwan.hpp>
 #include <System/MarNameRefGen.hpp>
 #include <M3DUtil/M3UModelMario.hpp>
+#include <M3DUtil/MActorAnm.hpp>
+
+// rogue includes needed for matching sinit & bss
+#include <MSound/MSSetSound.hpp>
+#include <MSound/MSoundBGM.hpp>
+#include <System/Application.hpp>
+
 #include <M3DUtil/MActorAnm.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
@@ -45,13 +57,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BEelTearsManager") == 0)
 		return new TBEelTearsManager("めおとウナギ涙マネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "Koopa" ) == 0 )
-	//     return new TKoopa("クッパ");
+	if (strcmp(name, "Koopa") == 0)
+		return new TKoopa("クッパ");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaManager" ) == 0 )
-	//     return new TKoopaManager("クッパマネージャー");
+	if (strcmp(name, "KoopaManager") == 0)
+		return new TKoopaManager("クッパマネージャー");
 
 	if (strcmp(name, "HinoKuri2") == 0)
 		return new THinokuri2;
@@ -77,22 +87,17 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "CoasterKiller") == 0)
 		return new TCoasterKiller;
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrManager" ) == 0 )
-	//     return new TKoopaJrManager("クッパジュニアマネージャー");
+	if (strcmp(name, "KoopaJrManager") == 0)
+		return new TKoopaJrManager;
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJr" ) == 0 )
-	//     return new TKoopaJr("クッパジュニア");
+	if (strcmp(name, "KoopaJr") == 0)
+		return new TKoopaJr;
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrSubmarineManager" ) == 0 )
-	//     return new
-	//     TKoopaJrSubmarineManager("クッパジュニアサブマリンマネージャー");
+	if (strcmp(name, "KoopaJrSubmarineManager") == 0)
+		return new TKoopaJrSubmarineManager;
 
-	// TODO:
-	// if ( strcmp( name, "KoopaJrSubmarine" ) == 0 )
-	//     return new TKoopaJrSubmarine("クッパジュニアサブマリン");
+	if (strcmp(name, "KoopaJrSubmarine") == 0)
+		return new TKoopaJrSubmarine;
 
 	if (strcmp(name, "LimitKoopaJrManager") == 0)
 		return new TLimitKoopaJrManager;
@@ -100,13 +105,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "LimitKoopaJr") == 0)
 		return new TLimitKoopaJr;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaManager" ) == 0 )
-	//     return new TLimitKoopaManager("クッパマネージャー");
+	if (strcmp(name, "LimitKoopaManager") == 0)
+		return new TLimitKoopaManager("クッパマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopa" ) == 0 )
-	//     return new TLimitKoopa("クッパ");
+	if (strcmp(name, "LimitKoopa") == 0)
+		return new TLimitKoopa("クッパ");
 
 	if (strcmp(name, "BathtubKillerManager") == 0)
 		return new TBathtubKillerManager;
@@ -114,19 +117,17 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BathtubKiller") == 0)
 		return new TBathtubKiller;
 
-	// TODO:
-	// if ( strcmp( name, "BathtubPeachManager" ) == 0 )
-	//     return new TBathtubPeachManager("バスタブピーチマネージャー");
+	if (strcmp(name, "BathtubPeachManager") == 0)
+		return new TBathtubPeachManager("バスタブピーチマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "BathtubPeach" ) == 0 )
-	//     return new TBathtubPeach("バスタブピーチ");
+	if (strcmp(name, "BathtubPeach") == 0)
+		return new TBathtubPeach("バスタブピーチ");
 
 	if (strcmp(name, "BossWanwan") == 0)
-		return new TBossWanwan;
+		return new TBossWanwan("ボスワンワン");
 
 	if (strcmp(name, "BossWanwanManager") == 0)
-		return new TBossWanwanManager;
+		return new TBossWanwanManager("ボスワンワンマネージャ");
 
 	if (strcmp(name, "BossPakkun") == 0)
 		return new TBossPakkun("ボスパックン改");

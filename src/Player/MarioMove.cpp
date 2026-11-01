@@ -621,6 +621,10 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 		break;
 
 	case MARIO_STATUS_WIRE_ROLL_JUMP: {
+		// TODO: the target keeps the multiply by 1.0f, which MWCC folds away
+		// when it's written as a literal here. Passing 1.0f through an
+		// inline's float parameter keeps it, so this was probably an
+		// inline helper taking a scale. Its name and shape are unknown.
 		if (arg == 0) {
 			f32 jumpPower = (f32)unkF6 * mWireParams.mJumpRate.get() * 1.0f;
 			mVel.y        = jumpPower * JMASSin(0xE000);
@@ -953,11 +957,16 @@ void TMario::checkGraffito()
 	if (onYoshi())
 		return;
 
-	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO
-	    || mPlayerType == PLAYER_TYPE_MONTE_MAN)
+	if (mPlayerType == PLAYER_TYPE_SHADOW_MARIO)
+		return;
+	if (mPlayerType == PLAYER_TYPE_MONTE_MAN)
 		return;
 
+	// TODO: one probe vector shared by every case, which is why the target
+	// keeps it on the stack at one slot. The target frame is 0x18 bigger and
+	// this/isDirty swap r30 and r31; unknown why.
 	int isDirty = 0;
+	JGeometry::TVec3<f32> pos;
 	mPollutionTypeStandingOn
 	    = gpPollution->getPollutionType(mPosition.x, mPosition.y, mPosition.z);
 
@@ -965,7 +974,7 @@ void TMario::checkGraffito()
 	case POLLUTION_TYPE_SLIP:
 	case POLLUTION_TYPE_INSTAKILL:
 	case POLLUTION_TYPE_SAFE: {
-		JGeometry::TVec3<f32> pos = mPosition;
+		pos = mPosition;
 		pos.x -= 32.0f;
 		pos.z -= 32.0f;
 		isDirty = 1;
@@ -1003,7 +1012,6 @@ void TMario::checkGraffito()
 	case POLLUTION_TYPE_FIRE:
 	case POLLUTION_TYPE_GLASS_WALL:
 	case POLLUTION_TYPE_UNK7: {
-		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
@@ -1032,13 +1040,10 @@ void TMario::checkGraffito()
 		if (!gpPollution->isPolluted(pos.x, pos.y, pos.z))
 			isDirty = 0;
 
-		(void)&pos;
-
 		break;
 	}
 
 	case POLLUTION_TYPE_ELECTRIC: {
-		JGeometry::TVec3<f32> pos;
 		pos.x = mPosition.x;
 		pos.y = mFloorPosition.y;
 		pos.z = mPosition.z;
@@ -1387,8 +1392,8 @@ void TMario::checkController(JDrama::TGraphics*)
 	unk108->mStickDist = dist;
 
 	if (unk108->mStickDist > 64.0f) {
-		unk108->mStickH    = unk108->mStickH * (64.0f / unk108->mStickDist);
-		unk108->mStickV    = unk108->mStickV * (64.0f / unk108->mStickDist);
+		unk108->mStickH *= 64.0f / unk108->mStickDist;
+		unk108->mStickV *= 64.0f / unk108->mStickDist;
 		unk108->mStickDist = 64.0f;
 	}
 
@@ -1606,6 +1611,17 @@ BOOL TMario::checkGroundPlane(f32 x, f32 y, f32 z, f32* outHeight,
 	return (*outPlane)->isLegal() ? TRUE : FALSE;
 }
 
+// fabricated: signed distance from a collision plane. The target copies
+// Mario's position to the stack before each use, which is what passing the
+// vector by value to an inline does. The real helper's name and owner are
+// unknown.
+static inline f32 calcPlaneDistance(const TBGCheckData* plane,
+                                    JGeometry::TVec3<f32> pos)
+{
+	return plane->mNormal.x * pos.x + plane->mNormal.y * pos.y
+	     + plane->mNormal.z * pos.z + plane->mPlaneDistance;
+}
+
 void TMario::checkCurrentPlane()
 {
 	if (checkStatusType(MARIO_STATUS_FLAG_UNK1000))
@@ -1628,16 +1644,11 @@ void TMario::checkCurrentPlane()
 		if (record.mResultWallsNum == 2
 		    && record.mResultWalls[0]->getNormal().dot(
 		           record.mResultWalls[1]->getNormal())
+
 		           < -0.9f) {
 
-			JGeometry::TVec3<f32> normal1 = record.mResultWalls[0]->getNormal();
-			JGeometry::TVec3<f32> normal2 = record.mResultWalls[1]->getNormal();
-
-			f32 planeDist1 = record.mResultWalls[0]->getPlaneDistance();
-			f32 planeDist2 = record.mResultWalls[1]->getPlaneDistance();
-
-			f32 dist1 = normal1.dot(mPosition) + planeDist1;
-			f32 dist2 = normal2.dot(mPosition) + planeDist2;
+			f32 dist1 = calcPlaneDistance(record.mResultWalls[0], mPosition);
+			f32 dist2 = calcPlaneDistance(record.mResultWalls[1], mPosition);
 
 			if ((record.mResultWalls[0]->getActor() != nullptr
 			     && record.mResultWalls[0]->getActor()->getActorType()
@@ -1951,9 +1962,9 @@ void TMario::thinkWaterSurface()
 		return;
 
 	BOOL wasInWater = checkFlag(MARIO_FLAG_IN_ANY_WATER);
-	bool isInWater  = false;
+	BOOL isInWater  = FALSE;
 	if (checkFlag(MARIO_FLAG_IN_ANY_WATER) == true)
-		isInWater = true;
+		isInWater = TRUE;
 	else
 		mFloorPosition.z = mPosition.y;
 
@@ -1963,7 +1974,7 @@ void TMario::thinkWaterSurface()
 	if (mGroundPlane->isPool()) {
 		mFloorPosition.z = gpPoolManager->getWaterLevel(mGroundPlane);
 		if (mFloorPosition.z > mPosition.y) {
-			isInWater = true;
+			isInWater = TRUE;
 			onFlag(MARIO_FLAG_IN_SHALLOW_WATER);
 		}
 	}
@@ -1980,14 +1991,14 @@ void TMario::thinkWaterSurface()
 	if (mWaterFloor->isWaterSurface()) {
 		mFloorPosition.z = waterFloorY;
 		if (mFloorPosition.z >= mPosition.y) {
-			isInWater = true;
+			isInWater = TRUE;
 			onFlag(MARIO_FLAG_IN_WATER);
 		}
 	} else {
 		const TBGCheckData* localBg;
 		gpMap->checkGround(mPosition.x, mPosition.y, mPosition.z, &localBg);
 		if (localBg->isCamNoclipUnk10B()) {
-			isInWater = true;
+			isInWater = TRUE;
 			onFlag(MARIO_FLAG_IN_WATER);
 		}
 	}
@@ -2293,10 +2304,14 @@ void TMario::checkWet()
 
 void TMario::gunExec()
 {
-	if (!onYoshi())
+	bool yoshi = false;
+	if (onYoshi())
+		yoshi = true;
+	if (!yoshi)
 		gpModelWaterManager->unk5D5F = 0;
 
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
+
 		return;
 
 	mWaterGun->updateUnk1C88(0);

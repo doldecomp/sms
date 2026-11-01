@@ -69,8 +69,8 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 
 	MtxPtr asdf = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1);
 
-	JGeometry::TVec3<f32> local_278
-	    = mOwner->mSpline->getPoint(param_1 / f32(iVar8));
+	f32 t = param_1 / f32(iVar8);
+	JGeometry::TVec3<f32> local_278 = mOwner->mSpline->getPoint(t);
 
 	asdf[0][3] = local_278.x;
 	asdf[1][3] = local_278.y;
@@ -86,10 +86,10 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 		MtxPtr mtx2 = mOwner->getUnk2C()->getModel()->getAnmMtx(param_1 - 1);
 		JGeometry::TVec3<f32> vec2(mtx2[0][3], mtx2[1][3], mtx2[2][3]);
 
-		vec2 -= vec1;
+		JGeometry::TVec3<f32> diff = vec2 - vec1;
 
-		if (!vec2.isZero()) {
-			VECNormalize(&vec2, &local_68);
+		if (!diff.isZero()) {
+			VECNormalize(&diff, &local_68);
 		} else {
 			local_68.set(1.0f, 0.0f, 0.0f);
 		}
@@ -154,14 +154,16 @@ void TBGTentacleMtxCalc::calc(u16 param_1)
 	}
 
 	if (abs(fVar1) > 0.01f) {
-		fVar1 *= __frsqrte(fVar1);
+		// TODO: same unrefined sqrt as THitActor::calcEntryRadius
+		volatile f32 y = fVar1 * __frsqrte(fVar1);
+		fVar1          = y;
 	}
 
-	f32 fVar13 = MsClamp(fVar1, 0.7f, 1.2f);
+	fVar1 = MsClamp(fVar1, 0.7f, 1.2f);
 
-	local_68.scale(fVar13);
-	local_74.scale(fVar13);
-	local_80.scale(fVar13);
+	local_68.scale(fVar1);
+	local_74.scale(fVar1);
+	local_80.scale(fVar1);
 
 	if (mOwner->getState() == TBGTentacle::TSTATE_STUN
 	    && (param_1 == iVar8 || param_1 == uVar9 - 2)) {
@@ -194,10 +196,11 @@ TBGTakeHit::TBGTakeHit(TBGTentacle* owner, const char* name)
 	    ->getChildren()
 	    .push_back(this);
 
-	TBGTentacle::TTentacleParams* pTVar3 = mOwner->getParams();
 	initHitActor(ACTOR_TYPE_BOSS_GESSO_TENTACLE, 1, HIT_CATEGORY_PLAYER,
-	             pTVar3->mAttackRadius.get(), pTVar3->mAttackHeight.get(),
-	             pTVar3->mDamageRadius.get(), pTVar3->mDamageHeight.get());
+	             mOwner->getParams()->mAttackRadius.get(),
+	             mOwner->getParams()->mAttackHeight.get(),
+	             mOwner->getParams()->mDamageRadius.get(),
+	             mOwner->getParams()->mDamageHeight.get());
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	unk74.zero();
 }
@@ -853,8 +856,8 @@ void TBGTentacle::returnToDefaultState()
 
 void TBGTentacle::moveNode()
 {
-	f32 fVar1 = mParams->mVibrationSpeed.get();
 	f32 fVar2 = mParams->mVibrationForce.get();
+	f32 fVar1 = mParams->mVibrationSpeed.get();
 
 	if (mState == TSTATE_AMPUTEE) {
 		fVar2 *= mParams->mDamagePropF.get();
@@ -912,7 +915,7 @@ void TBGTentacle::moveNode()
 	for (int i = 0; i < mNodeNum; ++i) {
 		mNodes[i].calcPosition(this);
 
-		if (i <= 1 && mOwner->getAttackMode() == 6)
+		if ((i == 0 || i == 1) && mOwner->getAttackMode() == 6)
 			continue;
 
 		TNode* node = &mNodes[i];
@@ -945,9 +948,10 @@ void TBGTentacle::moveNode()
 			                         local_ac.z, &pTStack_b0);
 		}
 
-		if (local_ac.y < dVar16 + 20.0f) {
+		dVar16 += 20.0f;
+		if (local_ac.y < dVar16) {
 			mNodes[i].setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-			local_ac.y = dVar16 + 20.0f;
+			local_ac.y = dVar16;
 		}
 
 		if (mState == TSTATE_STUN && local_ac.y < mOwner->mPosition.y) {

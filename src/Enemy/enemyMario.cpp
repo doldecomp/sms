@@ -331,6 +331,7 @@ void TEnemyMario::initEnemyValues()
 		break;
 	}
 
+
 	mBrushModel                = nullptr;
 	mStampActor                = nullptr;
 	mBrushScaleupDuringDrawing = 3.0f;
@@ -386,6 +387,7 @@ void TEnemyMario::initEnemyValues()
 		mSettingParams = new TSettingParams("/../map/pad3/Setting.prm");
 		break;
 	}
+
 
 	mWaterCounter          = mSettingParams->mWaterCtMax.get();
 	char** replayFileNames = nullptr;

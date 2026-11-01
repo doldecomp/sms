@@ -89,7 +89,15 @@ inline float atan2(float x, float y) { return atan2f(x, y); }
 namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
-inline float fmodf(float x, float y) { return ::fmod(x, y); }
+// The copy emitted (weak) in MoveBG/MapObjCorona.cpp truncates through a
+// long long instead of calling ::fmod.
+inline float fmodf(float x, float y)
+{
+	if (__fabs(y) > __fabs(x))
+		return x;
+	long long quotient = x / y;
+	return x - y * quotient;
+}
 inline float atan2f(float y, float x) { return ::atan2((double)y, (double)x); }
 inline float sinf(float x) { return ::sin((double)x); }
 inline float cosf(float x) { return ::cos((double)x); }

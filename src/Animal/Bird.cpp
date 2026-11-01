@@ -83,7 +83,7 @@ void TAnimalBird::initTevColor(const GXColorS10* color)
 
 void TAnimalBird::initCollision()
 {
-	initHitActor(ACTOR_TYPE_ENEMY_UNK32, 0, 0, 50.0f, 50.0f, 70.0f, 80.0f);
+	initHitActor(ACTOR_TYPE_ANIMAL_BIRD, 0, 0, 50.0f, 50.0f, 70.0f, 80.0f);
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }

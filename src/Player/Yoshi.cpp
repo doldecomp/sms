@@ -395,8 +395,9 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 
 	TTakeActor* fruit = (TTakeActor*)egg->getFruit();
 	if (mMario->getHeldObject() == fruit) {
-		fruit->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_DETACH);
-		fruit->mHolder      = nullptr;
+		TTakeActor* held = mMario->getHeldObject();
+		held->receiveMessage(mMario->getFloorHitActor(), HIT_MESSAGE_DETACH);
+		held->mHolder       = nullptr;
 		mMario->mHeldObject = nullptr;
 	}
 
@@ -553,12 +554,15 @@ void TYoshi::thinkAnimation()
 				case 2:
 					newIdx = 17;
 					break;
+				default:
+					goto checkR;
 				}
-			} else if (mMario->mGamePad->checkMeaning(
-			               TMarioGamePad::MEANING_R)) {
-				newIdx = 13;
 			} else {
-				goto walking;
+			checkR:
+				if (mMario->mGamePad->checkMeaning(TMarioGamePad::MEANING_R))
+					newIdx = 13;
+				else
+					goto walking;
 			}
 		} else {
 		walking:

@@ -37,7 +37,7 @@ public:
 public:
 	/* 0x70 */ TBGTentacle* mOwner;
 	/* 0x74 */ JGeometry::TVec3<f32> unk74;
-	/* 0x80 */ TMtx34f unk80;
+	/* 0x80 */ TPosition3f unk80;
 };
 
 class TBGAttackHit : public THitActor {
@@ -146,9 +146,13 @@ public:
 	void resetAllNodes(const JGeometry::TVec3<f32>&);
 
 	// fabricated
+	// TODO: this order matches the out-of-line changeAllTentacleState and
+	// TBossGesso::perform, but where changeAllTentacleState is inlined (the
+	// nerves, stopIfRoll, changeAttackMode) the original tests 6 first and
+	// then 3..4 as a range, which is what the order 6, 3, 4 compiles to.
 	BOOL isThing()
 	{
-		if (mState == 6 || mState == 3 || mState == 4)
+		if (mState == 4 || mState == 6 || mState == 3)
 			return true;
 		return false;
 	}

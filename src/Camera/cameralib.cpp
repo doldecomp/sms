@@ -327,109 +327,77 @@ void CLBCalcNearClipAngle(JGeometry::TVec3<f32>* out_pos, S16Vec* out_euler,
 	out_euler->z = roll;
 }
 
+// fabricated: the target rotates the up and right vectors the same way, first
+// about X by angle.x, then about Y by angle.y
+static inline void rotateXY(JGeometry::TVec3<f32>* v, const S16Vec& angle)
+{
+	f32 y = v->y;
+	v->y  = y * JMASCos(angle.x) - v->z * JMASSin(angle.x);
+	v->z  = y * JMASSin(angle.x) + v->z * JMASCos(angle.x);
+	f32 x = v->x;
+	v->x  = x * JMASCos(angle.y) + v->z * JMASSin(angle.y);
+	v->z  = -x * JMASSin(angle.y) + v->z * JMASCos(angle.y);
+}
+
 void CLBCalcNearNinePos(JGeometry::TVec3<f32>* out_grid, S16Vec* out_euler,
                         const JGeometry::TVec3<f32>& origin,
                         const JGeometry::TVec3<f32>& lookat, s16 roll,
                         f32 near_dist, const JGeometry::TVec2<f32>& near_dims)
 {
-	// TODO: This needs matching work, but it's mathematically correct
-
-	JGeometry::TVec3<f32> fVar16;
-	JGeometry::TVec3<f32> fVar19;
-
-	JGeometry::TRotation3<TMtx33f> local_118;
-
-	JGeometry::TRotation3<TMtx33f> local_e4;
-
-	JGeometry::TVec3<f32> local_a8;
-	JGeometry::TVec3<f32> local_90;
-	JGeometry::TVec3<f32> local_80;
-	JGeometry::TVec3<f32> local_74;
-	JGeometry::TVec3<f32> local_68;
-
+	// TODO: the target calls MsSqrtf out of line inside the inlined
+	// CLBCalcNearClipAngle (its map size, 0x154, also fits a call), while we
+	// inline it; and the target keeps upH/leftW/rightW and the diagonal's
+	// square sum in f25-f31, where we allocate them differently.
 	CLBCalcNearClipAngle(&out_grid[4], out_euler, origin, lookat, roll,
 	                     near_dist);
 
-	local_68.set(0.0f, 1.0f, 0.0f);
-	local_74.set(1.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
+	JGeometry::TVec3<f32> right(1.0f, 0.0f, 0.0f);
+	JGeometry::TVec3<f32> dir;
+	unitVecTo(origin, lookat, &dir);
+	f32 rollRad = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
-	unitVecTo(origin, lookat, &local_80);
+	rotateXY(&up, *out_euler);
+	RotateAboutAxis(dir, rollRad, &up);
+	rotateXY(&right, *out_euler);
+	RotateAboutAxis(dir, rollRad, &right);
 
-	fVar16.z = out_euler->z * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	f32 halfH = near_dims.y * 0.5f;
+	f32 halfW = near_dims.x * 0.5f;
 
-	// Basically transform the up/right vectors from cam space into world space.
-	// TODO: Definitely inlines...
+	JGeometry::TVec3<f32> upH;
+	upH.scale(halfH, up);
+	out_grid[1].add(out_grid[4], upH);
+	out_grid[7].scaleAdd(-halfH, up, out_grid[4]);
+	JGeometry::TVec3<f32> leftW;
+	leftW.scale(-halfW, right);
+	out_grid[3].add(out_grid[4], leftW);
+	JGeometry::TVec3<f32> rightW;
+	rightW.scale(halfW, right);
+	out_grid[5].add(out_grid[4], rightW);
 
-	{
-		f32 sinX = JMASSin(out_euler->x);
-		f32 cosX = JMASCos(out_euler->x);
-		f32 sinY = JMASSin(out_euler->y);
-		f32 cosY = JMASCos(out_euler->y);
+	f32 diag = MsSqrtf(halfH * halfH + halfW * halfW);
 
-		// This transformation appears to be the following:
-		// [ cosY, 0, sinY]   [1,   0,     0 ]
-		// [   0,  1,   0 ] * [0, cosX, -sinX]
-		// [-sinY, 0, cosY]   [0, sinX,  cosX]
-		local_68.set(local_68.x * cosY
-		                 + (local_68.y * sinX + local_68.z * cosX) * sinY,
-		             local_68.y * cosX - local_68.z * sinX,
-		             -local_68.x * sinY
-		                 + (local_68.y * sinX + local_68.z * cosX) * cosY);
+	JGeometry::TVec3<f32> d;
+	d.set(leftW);
+	d += upH;
+	MsVECNormalize(&d, &d);
+	out_grid[0].scaleAdd(diag, d, out_grid[4]);
+	d.negate();
+	out_grid[8].scaleAdd(diag, d, out_grid[4]);
 
-		local_e4.identity33();
-		local_e4.setRotate(local_80, fVar16.z);
+	d.set(rightW);
+	d += upH;
+	MsVECNormalize(&d, &d);
+	out_grid[2].scaleAdd(diag, d, out_grid[4]);
+	d.negate();
+	out_grid[6].scaleAdd(diag, d, out_grid[4]);
+}
 
-		CLBMultTranspose33(local_e4, local_68);
-	}
-
-	{
-		f32 sinX = JMASSin(out_euler->x);
-		f32 cosX = JMASCos(out_euler->x);
-		f32 sinY = JMASSin(out_euler->y);
-		f32 cosY = JMASCos(out_euler->y);
-
-		local_74.set(local_74.x * cosY
-		                 + (local_74.y * sinX + local_74.z * cosX) * sinY,
-		             local_74.y * cosX - local_74.z * sinX,
-		             -local_74.x * sinY
-		                 + (local_74.y * sinX + local_74.z * cosX) * cosY);
-
-		local_118.identity33();
-		local_118.setRotate(local_80, fVar16.z);
-
-		CLBMultTranspose33(local_118, local_74);
-	}
-
-	f32 fVar3 = near_dims.y * 0.5f;
-	f32 fVar5 = near_dims.x * 0.5f;
-	f32 fVar6 = -fVar3;
-	f32 fVar7 = -fVar5;
-
-	out_grid[1].scaleAdd(fVar3, local_68, out_grid[4]);
-	out_grid[7].scaleAdd(fVar6, local_68, out_grid[4]);
-	out_grid[3].scaleAdd(fVar7, local_74, out_grid[4]);
-	out_grid[5].scaleAdd(fVar5, local_74, out_grid[4]);
-
-	// Anything below here could be part of CLBCalcNearFourPos?
-
-	fVar16.scale(fVar5, local_74);
-	fVar19.scale(fVar3, local_68);
-
-	f32 halfPlaneDiagonal = MsSqrtf(fVar3 * fVar3 + fVar5 * fVar5);
-
-	local_90.scaleAdd(fVar7, local_74, fVar19);
-	MsVECNormalize(&local_90, &local_90);
-
-	out_grid[0].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
-	local_90.negate();
-	out_grid[8].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
-
-	local_90.x = (f32)(fVar16.x + fVar19.x);
-	local_90.y = (f32)(fVar16.y + fVar19.y);
-	local_90.z = (f32)(fVar16.z + fVar19.z);
-	MsVECNormalize(&local_90, &local_90);
-
-	out_grid[2].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
-	local_90.negate();
-	out_grid[6].scaleAdd(halfPlaneDiagonal, local_90, out_grid[4]);
+// UNUSED (map size 0x104); no linked caller shows its body, so it stays empty
+void CLBCalcNearFourPos(JGeometry::TVec3<f32>*, JGeometry::TVec3<f32>*,
+                        S16Vec*, const JGeometry::TVec3<f32>&,
+                        const JGeometry::TVec3<f32>&, s16, f32,
+                        const JGeometry::TVec2<f32>&)
+{
 }

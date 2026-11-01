@@ -463,17 +463,15 @@ static int MarioHeadCtrl(J3DNode* param_1, int param_2)
 
 static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 {
-	volatile u32 padding[3];
 	if (param_2 == 0) {
 		TMario* mario = gpMarioForCallBack;
-		s16* unk      = &mario->unkFC.x; // This feels wrong
 		if (mario == gpMarioOriginal && gpCamera->isLButtonCamera() == true
 		    && gpMarioForCallBack->canBendBody() != 0
 		    && gpCamera->mCurrentTarget.mPitch > 0) {
-			*unk = gpCamera->mCurrentTarget.mPitch;
+			mario->unkFC.x = gpCamera->mCurrentTarget.mPitch;
 			Mtx transform;
 			MsMtxSetRotRPH(transform, SHORTANGLE2DEG(-mario->unkFC.z), 0.0f,
-			               SHORTANGLE2DEG(gpCamera->mCurrentTarget.mPitch));
+			               SHORTANGLE2DEG(mario->unkFC.x));
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else if (gpMarioForCallBack->checkStatusType(MARIO_FLAG_HAS_FLUDD)
@@ -487,12 +485,12 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 				MTXConcat(J3DSys::mCurrentMtx, gunMtx, J3DSys::mCurrentMtx);
 				return 1;
 			}
-		} else if ((gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
-		            || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
-		            || gpMarioForCallBack->mAnimationId
-		                   == TMario::ANIM_RIDE_SHELL)
-		           && !gpMarioForCallBack->checkFlag(
-		               MARIO_FLAG_FLUDD_EMITTING)) {
+		} else if (gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN1
+		           || gpMarioForCallBack->mAnimationId == TMario::ANIM_RUN2
+		           || gpMarioForCallBack->mAnimationId
+		                      == TMario::ANIM_RIDE_SHELL
+		                  && !gpMarioForCallBack->checkStatusType(
+		                      MARIO_FLAG_FLUDD_EMITTING)) {
 
 			// Ah, i love storing floats, casting them to s16
 			// and then transforming them to floats again...
@@ -508,7 +506,7 @@ static int MarioWaistCtrl(J3DNode* param_1, int param_2)
 			MTXConcat(J3DSys::mCurrentMtx, transform, J3DSys::mCurrentMtx);
 			return 1;
 		} else {
-			*unk           = 0;
+			mario->unkFC.x  = 0;
 			mario->unkFC.z = 0;
 		}
 	}
@@ -1082,6 +1080,14 @@ void TMario::loadAnmTexPattern(J3DAnmTexPattern** param_1, char* param_2,
 	(*param_1)->searchUpdateMaterialID(param_3);
 }
 
+// fabricated
+static inline void copyBodyTexture(J3DModel* model, J3DModelData* body)
+{
+	J3DModelData* data = model->getModelData();
+	data->getTexture()->setResTIMG(0, *body->getTexture()->getResTIMG(0));
+	DCFlushRange(data->getTexture()->getResTIMG(0), 0x20);
+}
+
 void TMario::initModel()
 {
 	unk394         = new J3DDrawBuffer(0x20);
@@ -1129,29 +1135,14 @@ void TMario::initModel()
 	    J3DMLF_MaterialPEFull | (16 << J3DMLF_TevStageNumShift));
 
 	// possible inlines around setting ResTIMG through J3DTexture?
-	mHandModels[0][0]->getModelData()->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[0][0]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	copyBodyTexture(mHandModels[0][0], mBodyModelData);
 
-	mHandModels[0][1]->getModelData()->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[0][1]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	copyBodyTexture(mHandModels[0][1], mBodyModelData);
 
-	mHandModels[1][0]->getModelData()->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[1][0]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
-	mHandModels[1][1]->getModelData()->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mHandModels[1][1]->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	copyBodyTexture(mHandModels[1][0], mBodyModelData);
+	copyBodyTexture(mHandModels[1][1], mBodyModelData);
 
-	mRHand4ndModel->getModelData()->getTexture()->setResTIMG(
-	    0, *mBodyModelData->getTexture()->getResTIMG(0));
-	DCFlushRange(mRHand4ndModel->getModelData()->getTexture()->getResTIMG(0),
-	             0x20);
+	copyBodyTexture(mRHand4ndModel, mBodyModelData);
 
 	mBodyModelData->getShapeNodePointer(4)->onFlag(J3DShpFlag_Visible);
 
@@ -1184,10 +1175,10 @@ void TMario::initModel()
 	for (int i = 0; i < 0x18; ++i) {
 		loadAnmTexPattern(&anmTexPattern[i], marioAnimeTexPatternFilenames[i],
 		                  mBodyModelData);
-		u16 matCount   = anmTexPattern[i]->getUpdateMaterialNum();
-		anmTexNoAnm[i] = new J3DTexNoAnm[matCount];
+		anmTexNoAnm[i]
+		    = new J3DTexNoAnm[anmTexPattern[i]->getUpdateMaterialNum()];
 
-		for (int j = 0; j < matCount; ++j) {
+		for (int j = 0; j < anmTexPattern[i]->getUpdateMaterialNum(); ++j) {
 			anmTexNoAnm[i][j].setAnmIndex(j);
 			anmTexNoAnm[i][j].setAnmTexPattern(anmTexPattern[i]);
 		}
@@ -1249,7 +1240,7 @@ void TMario::initModel()
 	transformInfo.mScale.y     = 1.0f;
 	transformInfo.mScale.z     = 1.0f;
 	transformInfo.mRotation.x  = mFaceAngle.x;
-	transformInfo.mRotation.y  = mModelFaceAngle;
+	transformInfo.mRotation.y  = mFaceAngle.y;
 	transformInfo.mRotation.z  = mFaceAngle.z;
 	transformInfo.mTranslate.x = mPosition.x;
 	transformInfo.mTranslate.y = mPosition.y;
@@ -1279,78 +1270,80 @@ void TMario::initModel()
 	}
 
 	mSurfGesso = nullptr;
-	if (SMSGetMarDirector()->getCurrentStage() == 58
-	    && (SMSGetMarDirector()->getCurrentScenario() == 0
-	        || SMSGetMarDirector()->getCurrentScenario() == 1)) {
-		MActorAnmData* anmData = new MActorAnmData();
-		anmData->init("/scene/map/map/Torocco", nullptr);
-		mTorocco = new MActor(anmData);
-
-		void* toroccoRes = JKRFileLoader::getGlbResource(
-		    "/scene/map/map/Torocco/Torocco.bmd");
-		mTorocco->setModel(
-		    new J3DModel(J3DModelLoaderDataBase::load(
-		                     toroccoRes, J3DMLF_MaterialPEFull
-		                                     | (4 << J3DMLF_TevStageNumShift)),
-		                 0, 1),
-		    0);
-		if (SMSGetMarDirector()->getCurrentScenario() == 0) {
-			mRailType              = 0;
+	if (SMSGetMarDirector()->getCurrentStage() == 58) {
+		if (SMSGetMarDirector()->getCurrentScenario() == 0
+		    || SMSGetMarDirector()->getCurrentScenario() == 1) {
 			MActorAnmData* anmData = new MActorAnmData();
-			anmData->init("/scene/map/map/Pinna_rail", nullptr);
-			mPinaRail = new MActor(anmData);
+			anmData->init("/scene/map/map/Torocco", nullptr);
+			mTorocco = new MActor(anmData);
 
-			void* pinaRailRes = JKRFileLoader::getGlbResource(
-			    "/scene/map/map/Pinna_rail/Pinna_rail.bmd");
-			mPinaRail->setModel(
+			void* toroccoRes = JKRFileLoader::getGlbResource(
+			    "/scene/map/map/Torocco/Torocco.bmd");
+			mTorocco->setModel(
 			    new J3DModel(
 			        J3DModelLoaderDataBase::load(
-			            pinaRailRes,
+			            toroccoRes,
 			            J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
 			        0, 1),
 			    0);
+			if (SMSGetMarDirector()->getCurrentScenario() == 0) {
+				mRailType              = 0;
+				MActorAnmData* anmData = new MActorAnmData();
+				anmData->init("/scene/map/map/Pinna_rail", nullptr);
+				mPinaRail = new MActor(anmData);
 
-			mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+				void* pinaRailRes = JKRFileLoader::getGlbResource(
+				    "/scene/map/map/Pinna_rail/Pinna_rail.bmd");
+				mPinaRail->setModel(
+				    new J3DModel(
+				        J3DModelLoaderDataBase::load(
+				            pinaRailRes, J3DMLF_MaterialPEFull
+				                             | (4 << J3DMLF_TevStageNumShift)),
+				        0, 1),
+				    0);
 
-			Mtx pinnaMtx;
-			MTXIdentity(pinnaMtx);
-			mPinaRail->getModel()->setBaseTRMtx(pinnaMtx);
-			mPinaRail->calcAnm();
-			mTorocco->getModel()->setBaseTRMtx(
-			    mPinaRail->getModel()->getAnmMtx(0));
+				mPinaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+
+				Mtx pinnaMtx;
+				MTXIdentity(pinnaMtx);
+				mPinaRail->getModel()->setBaseTRMtx(pinnaMtx);
+				mPinaRail->calcAnm();
+				mPinaRail->getModel()->setBaseTRMtx(
+				    mTorocco->getModel()->getAnmMtx(0));
+			}
+			if (SMSGetMarDirector()->getCurrentScenario() == 1) {
+				mRailType              = 1;
+				MActorAnmData* anmData = new MActorAnmData();
+				anmData->init("/scene/map/map/Koopa_rail", nullptr);
+				mKoopaRail = new MActor(anmData);
+
+				void* koopaRailRes = JKRFileLoader::getGlbResource(
+				    "/scene/map/map/Koopa_rail/Koopa_rail.bmd");
+				mKoopaRail->setModel(
+				    new J3DModel(
+				        J3DModelLoaderDataBase::load(
+				            koopaRailRes, J3DMLF_MaterialPEFull
+				                              | (4 << J3DMLF_TevStageNumShift)),
+				        0, 1),
+				    0);
+
+				mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
+
+				Mtx koopaMtx;
+				MTXIdentity(koopaMtx);
+				mKoopaRail->getModel()->setBaseTRMtx(koopaMtx);
+				mKoopaRail->calcAnm();
+				mKoopaRail->getModel()->setBaseTRMtx(
+				    mTorocco->getModel()->getAnmMtx(0));
+			}
+			onFlag(MARIO_FLAG_HAS_FLUDD);
+			mTorocco->calcAnm();
+			MtxPtr toroccoMtx = mTorocco->getModel()->getAnmMtx(2);
+			mPosition.x       = toroccoMtx[0][3];
+			mPosition.y       = toroccoMtx[1][3];
+			mPosition.z       = toroccoMtx[2][3];
+			mToroccoAngle     = mFaceAngle.y;
 		}
-		if (SMSGetMarDirector()->getCurrentScenario() == 1) {
-			mRailType              = 1;
-			MActorAnmData* anmData = new MActorAnmData();
-			anmData->init("/scene/map/map/Koopa_rail", nullptr);
-			mKoopaRail = new MActor(anmData);
-
-			void* koopaRailRes = JKRFileLoader::getGlbResource(
-			    "/scene/map/map/Koopa_rail/Koopa_rail.bmd");
-			mKoopaRail->setModel(
-			    new J3DModel(
-			        J3DModelLoaderDataBase::load(
-			            koopaRailRes,
-			            J3DMLF_MaterialPEFull | (4 << J3DMLF_TevStageNumShift)),
-			        0, 1),
-			    0);
-
-			mKoopaRail->getFrameCtrl(ANM_TYPE_BCK)->setRate(0.5f);
-
-			Mtx koopaMtx;
-			MTXIdentity(koopaMtx);
-			mKoopaRail->getModel()->setBaseTRMtx(koopaMtx);
-			mKoopaRail->calcAnm();
-			mTorocco->getModel()->setBaseTRMtx(
-			    mKoopaRail->getModel()->getAnmMtx(0));
-		}
-		onFlag(MARIO_FLAG_HAS_FLUDD);
-		mTorocco->calcAnm();
-		MtxPtr toroccoMtx = mTorocco->getModel()->getAnmMtx(2);
-		mPosition.x       = toroccoMtx[0][3];
-		mPosition.y       = toroccoMtx[1][3];
-		mPosition.z       = toroccoMtx[2][3];
-		mToroccoAngle     = mFaceAngle.y;
 	} else {
 		mTorocco   = nullptr;
 		mPinaRail  = nullptr;

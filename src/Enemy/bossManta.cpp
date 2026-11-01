@@ -34,7 +34,12 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-f32 TBossManta::sScale[]      = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
+f32 TBossManta::sScale[] = { 20.0f, 10.0f, 5.0f, 2.0f, 1.0f, 1.0f };
+int TBossManta::sCenterJointIndex;
+int TBossManta::sBodyJointIndex;
+int TBossManta::sRwingJointIndex;
+int TBossManta::sLwingJointIndex;
+u8 TBossManta::sEscapeFromMario;
 f32 TBossManta::sFrameRate[6] = { 0.3f, 0.5f, 1.2f, 2.0f, 5.0f, 5.3f };
 
 namespace {
@@ -55,20 +60,10 @@ void AttackMario(THitActor* attacker)
 } // namespace
 
 DEFINE_NERVE_INSTANCE(TNerveMantaMove)
-
 DEFINE_NERVE_INSTANCE(TNerveMantaHitWater)
-
 DEFINE_NERVE_INSTANCE(TNerveMantaSpawn)
-
 DEFINE_NERVE_INSTANCE(TNerveMantaDeath)
-
 DEFINE_NERVE_INSTANCE(TNerveMantaAppearDemo)
-
-int TBossManta::sCenterJointIndex;
-int TBossManta::sBodyJointIndex;
-int TBossManta::sRwingJointIndex;
-int TBossManta::sLwingJointIndex;
-u8 TBossManta::sEscapeFromMario;
 
 static inline void lerp_hack(f32& value, f32 target, f32 progress)
 {
@@ -454,7 +449,7 @@ void TBossManta::init(TLiveManager* manager)
 	mMActor       = mMActorKeeper->createMActor("manta.bmd", 0);
 	unk124->setGraph(gpConductor->getGraphByName("main"));
 
-	resetHitPoints();
+	mHitPoints = getMaxHitPoints();
 
 	mHeadHeight = 5000.0f;
 	initHitActor(ACTOR_TYPE_BOSS_MANTA, 1, HIT_CATEGORY_PLAYER, 0.0f, 0.0f,
@@ -492,9 +487,11 @@ void TBossManta::moveObject()
 		gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
 		                     getPolluteRadius());
 
-	for (int i = 0; i < mColCount; ++i)
-		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
+	for (int i = 0; i < mColCount; ++i) {
+		THitActor* col = mCollisions[i];
+		if (col->isActorType(ACTOR_TYPE_MARIO))
 			AttackMario(this);
+	}
 }
 
 BOOL TBossManta::isSpawnState()
@@ -675,11 +672,10 @@ void TBossManta::calcRootMatrix()
 	TPosition3f m;
 	m.setTrans(mPosition);
 
-	JGeometry::TVec3<f32> up(0.0f, 1.0f, 0.0f);
 	JGeometry::TVec3<f32> side;
-	side.cross2(up, unk170);
+	side.cross2(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), unk170);
 	m.setXDir(side);
-	m.setYDir(up);
+	m.setYDir(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f));
 	m.setZDir(unk170);
 
 	MtxPtr joint = getModel()->getAnmMtx(sCenterJointIndex);
@@ -710,7 +706,7 @@ f32 TBossManta::getPolluteRadius()
 	case 1:
 	case 2:
 	case 3:
-		return getSaveParams()->mSLPolluteRadius.get() * mScaling.x;
+		return getSaveParams()->mSLPolluteRadius.get() * getScaling().x;
 	case 4:
 	case 5:
 		return 100.0f;
@@ -807,7 +803,7 @@ void TBossMantaManager::TMantaBattleState::update()
 			}
 		}
 		if (allMaxGen) {
-			for (int i = 0; i < unk0->getActiveObjNum(); ++i) {
+			for (i = 0; i < unk0->getActiveObjNum(); ++i) {
 				TBossManta* m = (TBossManta*)unk0->getObj(i);
 				if (!m->checkLiveFlag(LIVE_FLAG_DEAD))
 					m->initNthGeneration(5);
@@ -898,12 +894,12 @@ void TBossMantaAdditionalCollisionSet::adapt(TBossManta* manta)
 {
 	unkC = manta;
 
-	unk0[0]->setHitParams(54.0f * unkC->mScaling.x, 100.0f,
-	                      54.0f * unkC->mScaling.x, 100.0f);
-	unk0[1]->setHitParams(26.0f * unkC->mScaling.x, 100.0f,
-	                      26.0f * unkC->mScaling.x, 100.0f);
-	unk0[2]->setHitParams(26.0f * unkC->mScaling.x, 100.0f,
-	                      26.0f * unkC->mScaling.x, 100.0f);
+	unk0[0]->setHitParams(54.0f * unkC->getScaling().x, 100.0f,
+	                      54.0f * unkC->getScaling().x, 100.0f);
+	unk0[1]->setHitParams(26.0f * unkC->getScaling().x, 100.0f,
+	                      26.0f * unkC->getScaling().x, 100.0f);
+	unk0[2]->setHitParams(26.0f * unkC->getScaling().x, 100.0f,
+	                      26.0f * unkC->getScaling().x, 100.0f);
 
 	for (int i = 0; i < 3; ++i)
 		unk0[i]->setManta(unkC);
@@ -929,27 +925,26 @@ void TBossMantaAdditionalCollisionSet::update(u32 cue,
 
 		MtxPtr centerMtx
 		    = unkC->getModel()->getAnmMtx(TBossManta::sCenterJointIndex);
-		f32 centerX = centerMtx[0][3];
-		f32 centerY = centerMtx[1][3];
-		f32 centerZ = centerMtx[2][3];
+		f32 centerX      = centerMtx[0][3];
+		f32 centerY      = centerMtx[1][3];
+		f32 centerZ      = centerMtx[2][3];
 
-		MtxPtr bodyMtx
-		    = unkC->getModel()->getAnmMtx(TBossManta::sBodyJointIndex);
-		f32 bodyX = bodyMtx[0][3];
-		f32 bodyY = bodyMtx[1][3];
-		f32 bodyZ = bodyMtx[2][3];
+		MtxPtr bodyMtx = unkC->getModel()->getAnmMtx(TBossManta::sBodyJointIndex);
+		f32 bodyX      = bodyMtx[0][3];
+		f32 bodyY      = bodyMtx[1][3];
+		f32 bodyZ      = bodyMtx[2][3];
 
 		MtxPtr rwingMtx
 		    = unkC->getModel()->getAnmMtx(TBossManta::sRwingJointIndex);
-		f32 rwingX = rwingMtx[0][3];
-		f32 rwingY = rwingMtx[1][3];
-		f32 rwingZ = rwingMtx[2][3];
+		f32 rwingX      = rwingMtx[0][3];
+		f32 rwingY      = rwingMtx[1][3];
+		f32 rwingZ      = rwingMtx[2][3];
 
 		MtxPtr lwingMtx
 		    = unkC->getModel()->getAnmMtx(TBossManta::sLwingJointIndex);
-		f32 lwingX = lwingMtx[0][3];
-		f32 lwingY = lwingMtx[1][3];
-		f32 lwingZ = lwingMtx[2][3];
+		f32 lwingX      = lwingMtx[0][3];
+		f32 lwingY      = lwingMtx[1][3];
+		f32 lwingZ      = lwingMtx[2][3];
 
 		unk0[0]->mPosition.set(-0.15f * (bodyX - centerX) + centerX,
 		                       -0.15f * (bodyY - centerY) + centerY,
@@ -1320,6 +1315,8 @@ void TBossMantaManager::spawn(int gen, const JGeometry::TVec3<f32>& pos)
 
 		f32 angle = baseAngle + (2.0f * (f32)i * M_PI) / (f32)count;
 
+		// The original never sets the matrix translation, so mult() adds
+		// whatever happens to be in that register. This matches the target.
 		TPosition3f mtx;
 		mtx.setEularY(angle);
 		mtx.mult(dir, dir);

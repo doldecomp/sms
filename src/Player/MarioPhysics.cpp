@@ -93,6 +93,8 @@ void TMario::keepDistance(const THitActor& actor, f32 param_2)
 	keepDistance(actor.getPosition(), actor.getDamageRadius(), param_2);
 }
 
+// TODO: only the register of the canHang() result differs (r30, r29 in the
+// target).
 void TMario::checkDescent()
 {
 	bool active   = false;
@@ -389,13 +391,11 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 				if (checkFlag(MARIO_FLAG_VISIBLE))
 					onFlag(MARIO_FLAG_UNK200);
 
-				if (param_2 & 0x2) {
-					BOOL canHang = (mHeldObject == nullptr && !onYoshi());
-					if (canHang && mRoofPlane->isFence())
-						roofCode = 4;
-					else
-						roofCode = 0;
-				}
+				if ((param_2 & 0x2) && canHang() != FALSE
+				    && mRoofPlane->isFence())
+					roofCode = 4;
+				else
+					roofCode = 0;
 			}
 		}
 	}
@@ -417,16 +417,15 @@ int TMario::checkGroundAtJumping(const Vec& target, int param_2)
 		wall2Passable = true;
 	}
 
-	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0) {
-		BOOL canHang = (mHeldObject == nullptr && !onYoshi());
-		if (canHang == 1) {
-			mWallPlane = wall2;
-			if (hangonCheck(wall2, target, pos))
-				wallCode = 3;
-			else
-				wallCode = 0;
-		}
+	if ((param_2 & 0x1) && wall1Passable == 1 && wall2Passable == 0
+	    && canHang() == TRUE) {
+		mWallPlane = wall2;
+		if (hangonCheck(wall2, target, pos))
+			wallCode = 3;
+		else
+			wallCode = 0;
 	} else if (wall1Passable == 0 || wall2Passable == 0) {
+
 		mWallPlane = wall1 != nullptr ? wall1 : wall2;
 		s16 diff   = matan(mWallPlane->getNormal().z, mWallPlane->getNormal().x)
 		           - (mFaceAngle.y + 0x8000);

@@ -50,7 +50,7 @@ THitActor* SMS_GetMarioHitActor() { return (THitActor*)gpMarioAddress; }
 
 TLiveActor* SMS_GetMarioLiveActor() { return (TLiveActor*)gpMarioAddress; }
 
-bool SMS_IsMarioStatusWaiting() { return false; }
+bool SMS_IsMarioStatusWaiting() { }
 
 bool SMS_IsMarioStatusTypeJumping()
 {
@@ -71,7 +71,7 @@ bool SMS_IsMarioStatusHipDrop()
 	}
 }
 
-bool SMS_IsMarioStatusHipDropEnd() { return false; }
+bool SMS_IsMarioStatusHipDropEnd() { }
 
 bool SMS_IsMarioStatusThrownDown()
 {
@@ -91,11 +91,11 @@ bool SMS_IsMarioStatusElecDamage()
 	}
 }
 
-bool SMS_IsStatusHipDropOrHipDropEnd(THitActor*) { return false; }
+bool SMS_IsStatusHipDropOrHipDropEnd(THitActor*) { }
 
-bool SMS_IsMarioNoCap() { return false; }
+bool SMS_IsMarioNoCap() { }
 
-bool SMS_IsMarioWearingAloha() { return false; }
+bool SMS_IsMarioWearingAloha() { }
 
 bool SMS_IsMarioHeadSlideAttack()
 {
@@ -109,7 +109,7 @@ bool SMS_IsMarioHeadSlideAttack()
 
 s16 SMS_GetMarioHP() { return gpMarioOriginal->getHealth(); }
 
-s16 SMS_GetMarioHPMax() { return 0; }
+s16 SMS_GetMarioHPMax() { }
 
 f32 SMS_GetMarioDamageRadius() { return gpMarioOriginal->mDamageRadius; }
 
@@ -141,7 +141,7 @@ bool SMS_IsMarioTouchGround4cm()
 
 void SMS_IsMarioSpeedZero() { }
 
-bool SMS_IsMarioOnWire() { return !!gpMarioOriginal->isOnWire(); }
+bool SMS_IsMarioOnWire() { return gpMarioOriginal->isOnWire(); }
 
 bool SMS_IsMarioOpeningDoor()
 {

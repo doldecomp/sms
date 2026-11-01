@@ -325,6 +325,12 @@ BOOL MsIsInSight(const JGeometry::TVec3<f32>& eye, f32 sight,
 	if (tmp.squared() < aware * aware)
 		return true;
 
+	// TODO: since MsGetRotFromZaxisY uses a ternary for its z == 0 case, the
+	// 90-degree path here branches to the ternary's join instead of straight
+	// to the end of the inline (one branch target differs). That form of
+	// MsGetRotFromZaxisY is backed by the exact UNUSED sizes of
+	// TBossGesso::inSight/inSightAngle and by several other units, so the
+	// difference is probably in how this function was written.
 	if (tmp.squared() < length * length
 	    && abs(MsAngleDiff(MsGetRotFromZaxisY(tmp), sight)) < angle * 0.5f) {
 		return true;

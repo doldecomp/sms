@@ -13,6 +13,12 @@ class J3DModel;
 
 class TBathtubData {
 public:
+	// fabricated
+	f32 getSurfaceRadius() const
+	{
+		return JGeometry::TUtil<f32>::sqrt(unk3C * unk3C - unk44 * unk44);
+	}
+
 	JGeometry::TVec3<f32> getGravityDir(f32 amount) const
 	{
 		(void)0;
