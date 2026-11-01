@@ -194,7 +194,7 @@ public:
 		if (1.0f - fVar13 <= TUtil<f32>::epsilon()) {
 			fVar92 = 1.0f - param_2;
 		} else {
-			fVar11 = acosf(fVar13);
+			fVar11     = acosf(fVar13);
 			f32 fVar12 = sinf(fVar11);
 
 			fVar92 = sinf((1.0f - param_2) * fVar11) / fVar12;
@@ -204,9 +204,8 @@ public:
 		if (bVar9)
 			fVar93 = -fVar93;
 
-		this->set(
-		    fVar92 * q1.x + fVar93 * q2.x, fVar92 * q1.y + fVar93 * q2.y,
-		    fVar92 * q1.z + fVar93 * q2.z, fVar92 * q1.w + fVar93 * q2.w);
+		this->set(fVar92 * q1.x + fVar93 * q2.x, fVar92 * q1.y + fVar93 * q2.y,
+		          fVar92 * q1.z + fVar93 * q2.z, fVar92 * q1.w + fVar93 * q2.w);
 	}
 };
 
