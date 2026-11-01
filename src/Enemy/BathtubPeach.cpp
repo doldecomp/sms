@@ -194,7 +194,7 @@ void TBathtubPeach::reset()
 {
 	mPosition.scale(0.21f);
 	unk150.init(50.0f, 50.0f, 50.0f, 50.0f, 0.0f);
-	unk130 = 0;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_NONE;
 	mScaling.set(1.5f, 1.5f, 1.5f);
 	mBinder = &unk150;
 	TSpineEnemy::reset();

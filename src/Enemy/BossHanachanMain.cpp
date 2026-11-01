@@ -852,8 +852,7 @@ void TBossHanachan::goToInitialRecoverGraphNode()
 	}
 	unk124->setTo(index);
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 // fabricated

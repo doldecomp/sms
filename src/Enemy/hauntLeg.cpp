@@ -136,7 +136,7 @@ void THauntLeg::init(TLiveManager* param_1)
 	unk150     = 0x3a;
 	onHitFilter(HIT_CATEGORY_ITEM | HIT_CATEGORY_MAP_OBJECT);
 	getWalker()->setMode(1);
-	unk130 = 2;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND_AND_WALL;
 	getMActor()->setJointCallback(1, HauntLegCallback);
 	unk194 = new THauntedObject;
 	static_cast<TIdxGroupObj*>(JDrama::TNameRefGen::search("敵グループ"))

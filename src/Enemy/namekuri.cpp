@@ -293,7 +293,7 @@ void TNameKuri::init(TLiveManager* param_1)
 	mActorType = ACTOR_TYPE_NAME_KURI;
 	unk150     = 0x3A;
 	getWalker()->setMode(1);
-	unk130 = 2;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND_AND_WALL;
 	unk1A4 = (TNameKuriSaveLoadParams*)getSaveParam();
 
 	if (mInstanceIndex == 0) {

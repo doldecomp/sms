@@ -248,7 +248,7 @@ void TChuuHana::init(TLiveManager* param_1)
 	offHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mSpine->initWith(&TNerveChuuHanaWalkOnPanel::theNerve());
 	getMActor()->setJointCallback(mBodyJntIndex, &ChuuHanaBodyCallback);
-	unk130 = 1;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND;
 	getMActor()->initBckNormalMotionBlend();
 	unk1B4 = (TChuuHanaSaveLoadParams*)getSaveParam();
 	getMActor()->getModel()->calc();
@@ -998,7 +998,7 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 		self->mPosition.y += 10.0f;
 		self->mVelocity = velocity;
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		self->unk130 = 0;
+		self->mSurfaceAlignmentMode = TSpineEnemy::SURFACE_ALIGNMENT_NONE;
 	}
 
 	if (self->checkCurAnmEnd(0))

@@ -797,7 +797,7 @@ bool THamuKuri::isGiveUpSearchActor()
 {
 	TLiveActor* casted = (TLiveActor*)unk1F8;
 
-	if (unk128 > 100
+	if (mStayCount > 100
 	    || abs(mGroundHeight - casted->getGroundHeight()) > 100.0f) {
 		unk1A0 = true;
 		unk1F8 = nullptr;

@@ -1401,8 +1401,7 @@ void TFireWanwan::initTurnNextGraphNode()
 {
 	unk124->mCurrIdx = unk124->popCurr();
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TFireWanwan::initEscapeNextGraphNode()
@@ -1426,14 +1425,12 @@ void TFireWanwan::initEscapeNextGraphNode()
 		unk124->mPrevIdx = -1;
 		unk124->mCurrIdx = uVar2;
 		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
+		resetStayCount();
 	} else {
 		unk124->mPrevIdx = -1;
 		unk124->mCurrIdx = uVar1;
 		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
+		resetStayCount();
 	}
 }
 

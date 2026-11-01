@@ -144,7 +144,7 @@ void TRollEnemy::walkBehavior(int param_1, f32 param_2)
 	}
 	if (mPosition.y < mGroundHeight + 30.0f)
 		rollSE();
-	if (unk128 > 300) {
+	if (mStayCount > 300) {
 		onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		kill();
 	}
@@ -864,7 +864,7 @@ void TGorogoro::init(TLiveManager* param_1)
 	}
 
 	mMActor->setJointCallback(1, RollEnemyBodyCallback);
-	unk130 = 1;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND;
 }
 
 void TGorogoro::perform(u32 cue, JDrama::TGraphics* param_2)
@@ -909,7 +909,7 @@ void TGorogoro::calcRootMatrix()
 
 void TGorogoro::reset()
 {
-	unk130 = 1;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND;
 	TRollEnemy::reset();
 	offLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 	mTevKColor.a = 0xFF;
@@ -1058,7 +1058,7 @@ void TGorogoro::setDeadAnm()
 void TGorogoro::setMeltAnm()
 {
 	setBckAnm(1);
-	unk130 = 0;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_NONE;
 	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 
 	MTXCopy(getMActor()->getModel()->getBaseTRMtx(), unk1B4);

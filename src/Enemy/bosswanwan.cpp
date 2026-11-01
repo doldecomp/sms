@@ -1091,8 +1091,7 @@ void TBossWanwan::reverseNextGraphNode()
 	unk124->mCurrIdx = prev;
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TBossWanwan::rollNextGraphNode()
@@ -1112,8 +1111,7 @@ void TBossWanwan::rollNextGraphNode()
 
 	unk124->moveTo(next);
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)

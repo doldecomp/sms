@@ -88,8 +88,7 @@ f32 TCoasterEnemy::getGravityY() const { return 0.0f; }
 void TCoasterEnemy::makeCoasterGoalPath()
 {
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TCoasterEnemy::moveCoaster()

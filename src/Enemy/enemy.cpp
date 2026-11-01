@@ -21,9 +21,9 @@
 TSpineEnemy::TSpineEnemy(const char* name)
     : TLiveActor(name)
     , mGoalPath(4)
-    , unk128(0)
-    , unk12C(0.0f)
-    , unk130(0)
+    , mStayCount(0)
+    , mStayReferenceDistance(0.0f)
+    , mSurfaceAlignmentMode(SURFACE_ALIGNMENT_NONE)
     , mDistToMarioSquared(0.0f)
     , unk138(nullptr)
     , mHitPoints(1)
@@ -88,10 +88,11 @@ void TSpineEnemy::calcEnemyRootMatrix()
 
 	pJVar13->setBaseScale(mScaling);
 
-	if (unk130 == 0) {
+	if (mSurfaceAlignmentMode == SURFACE_ALIGNMENT_NONE) {
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 	} else {
-		if (unk130 >= 2 && !isAirborne() && unk138 != nullptr) {
+		if (mSurfaceAlignmentMode >= SURFACE_ALIGNMENT_GROUND_AND_WALL
+		    && !isAirborne() && unk138 != nullptr) {
 			JGeometry::TVec3<f32> v2 = unk138->getNormal();
 
 			JGeometry::TVec3<f32> v1;
@@ -115,7 +116,8 @@ void TSpineEnemy::calcEnemyRootMatrix()
 			mtx[1][3] = 0.0f;
 			mtx[2][3] = 0.0f;
 		} else {
-			if (unk130 >= 1 && !mGroundPlane->isIllegalData()) {
+			if (mSurfaceAlignmentMode >= SURFACE_ALIGNMENT_GROUND
+			    && !mGroundPlane->isIllegalData()) {
 				JGeometry::TVec3<f32> v1(MsSin(mRotation.y), 0.0f,
 				                         MsCos(mRotation.y));
 
@@ -296,8 +298,7 @@ int TSpineEnemy::goToShortestNextGraphNode()
 		return -1;
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 	return 0;
 }
 #pragma dont_inline off
@@ -312,8 +313,7 @@ int TSpineEnemy::jumpToNextGraphNode()
 	if (idx >= 0) {
 		unk124->moveTo(idx);
 		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
+		resetStayCount();
 		return idx;
 	}
 
@@ -329,8 +329,7 @@ void TSpineEnemy::goToRandomNextGraphNode()
 		    unk124->getCurGraphIndex(), unk124->getPrevIndex(), -1));
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TSpineEnemy::goToRandomEscapeGraphNode()
@@ -342,8 +341,7 @@ void TSpineEnemy::goToRandomEscapeGraphNode()
 		    unk124->getCurGraphIndex(), -1, mPosition, -1));
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TSpineEnemy::goToExclusiveNextGraphNode()
@@ -366,8 +364,7 @@ void TSpineEnemy::goToExclusiveNextGraphNode()
 		}
 
 		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
+		resetStayCount();
 	}
 }
 
@@ -385,8 +382,7 @@ void TSpineEnemy::goToDirectedNextGraphNode(
 	}
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 // TODO: fake
@@ -413,11 +409,18 @@ void TSpineEnemy::goToDirLimitedNextGraphNode(f32 param_1)
 	}
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
-void TSpineEnemy::updateStayCount(f32) { }
+void TSpineEnemy::updateStayCount(f32 target_distance)
+{
+	if (abs(target_distance - mStayReferenceDistance) < 100.0f) {
+		mStayCount += 1;
+	} else {
+		mStayCount             = 0;
+		mStayReferenceDistance = target_distance;
+	}
+}
 
 BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 {
@@ -446,44 +449,40 @@ BOOL TSpineEnemy::turnToCurPathNode(f32 param_1)
 }
 
 void TSpineEnemy::walkToCurPathNode(f32 march_speed, f32 turn_speed,
-                                    f32 param_3)
+                                    f32 yaw_offset)
 {
-	JGeometry::TVec3<f32> tmp = getCurrentTarget().getPoint();
-	tmp -= mPosition;
+	JGeometry::TVec3<f32> toTarget = getCurrentTarget().getPoint();
+	toTarget -= mPosition;
 
-	f32 fVar7 = tmp.length();
-	f32 angle = MsWrap(param_3 + MsGetRotFromZaxisY(tmp), 0.0f, 360.0f);
-	f32 fVar2 = MsAngleDiff(angle, mRotation.y);
+	f32 distToTarget = toTarget.length();
+	f32 desiredYaw
+	    = MsWrap(yaw_offset + MsGetRotFromZaxisY(toTarget), 0.0f, 360.0f);
+	f32 desiredTurn = MsAngleDiff(desiredYaw, mRotation.y);
 
-	f32 fVar5 = fVar2;
-	if (fVar7 > calcMinimumTurnRadius(march_speed, turn_speed) * 2.0f) {
-		if (fVar2 > 0.0f) {
-			fVar5 = MsMin(fVar2, turn_speed);
+	f32 deltaYaw = desiredTurn;
+	if (distToTarget > calcMinimumTurnRadius(march_speed, turn_speed) * 2.0f) {
+		if (desiredTurn > 0.0f) {
+			deltaYaw = MsMin(desiredTurn, turn_speed);
 		} else {
-			fVar5 = MsMax(fVar2, -turn_speed);
+			deltaYaw = MsMax(desiredTurn, -turn_speed);
 		}
 	} else {
-		f32 fVar3 = calcTurnSpeedToReach(march_speed, fVar7 * 0.5f);
+		f32 turnSpeed = calcTurnSpeedToReach(march_speed, distToTarget * 0.5f);
 
-		if (fVar2 > 0.0f) {
-			fVar5 = MsMin(fVar2, fVar3);
+		if (desiredTurn > 0.0f) {
+			deltaYaw = MsMin(desiredTurn, turnSpeed);
 		} else {
-			fVar5 = MsMax(fVar2, -fVar3);
+			deltaYaw = MsMax(desiredTurn, -turnSpeed);
 		}
 	}
 
-	mRotation.y = MsWrap(mRotation.y + fVar5, 0.0f, 360.0f);
+	mRotation.y = MsWrap(mRotation.y + deltaYaw, 0.0f, 360.0f);
 
 	JGeometry::TVec3<f32> vel = mPositionDelta;
 	vel += polarXZ(mRotation.y, march_speed);
 	mPositionDelta = vel;
 
-	if (abs(fVar7 - unk12C) < 100.0f) {
-		unk128 += 1;
-	} else {
-		unk128 = 0;
-		unk12C = fVar7;
-	}
+	updateStayCount(distToTarget);
 }
 
 void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
@@ -496,9 +495,9 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	f32 f29 = angle * unk124->unk10;
 
-	f32 dVar9 = getCurrentTargetDistance();
+	f32 distToTarget = getCurrentTargetDistance();
 
-	f32 dVar13 = MsWrap(dVar9, 0.0f, cycle);
+	f32 dVar13 = MsWrap(distToTarget, 0.0f, cycle);
 
 	cycle          = 360.0f * (1.0f / cycle);
 	f32 phaseShift = getPhaseShift();
@@ -515,7 +514,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	f32 fVar3 = calcMinimumTurnRadius(march_speed, turn_speed);
 
-	if (dVar9 > fVar3 * 2.0f) {
+	if (distToTarget > fVar3 * 2.0f) {
 		if (fVar1 > 0.0f) {
 			fVar2 = MsMin(fVar1, turn_speed);
 		} else {
@@ -529,12 +528,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	vel += polarXZ(mRotation.y, march_speed);
 	mPositionDelta = vel;
 
-	if (abs(dVar9 - unk12C) < 100.0f) {
-		unk128 += 1;
-	} else {
-		unk128 = 0;
-		unk12C = dVar9;
-	}
+	updateStayCount(distToTarget);
 }
 
 void TSpineEnemy::doShortCut()

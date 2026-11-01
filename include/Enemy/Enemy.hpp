@@ -67,7 +67,7 @@ public:
 	void goToDirLimitedNextGraphNode(f32);
 	void updateStayCount(f32);
 	BOOL turnToCurPathNode(f32);
-	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32);
+	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32 yaw_offset);
 	void zigzagToCurPathNode(f32 march_speed, f32 turn_speed, f32 cycle,
 	                         f32 angle);
 	void doShortCut();
@@ -133,6 +133,13 @@ public:
 
 	bool isJumping() const { return checkLiveFlag(LIVE_FLAG_JUMPING) ? 1 : 0; }
 
+	// fabricated
+	void resetStayCount()
+	{
+		mStayCount             = 0;
+		mStayReferenceDistance = 0.0f;
+	}
+
 	enum {
 		/// Allows this enemy to be recycled for spawning a new one even if it's
 		/// not dead, as long as it's not immediately visible.
@@ -146,14 +153,20 @@ public:
 		LIVE_FLAG_JUMPING = 1u << LIVE_FLAG_BIT_USER1, // 0x8000
 	};
 
+	enum {
+		SURFACE_ALIGNMENT_NONE            = 0,
+		SURFACE_ALIGNMENT_GROUND          = 1,
+		SURFACE_ALIGNMENT_GROUND_AND_WALL = 2,
+	};
+
 public:
 	/* 0xF4 */ TPathNode mCurrentTarget;
 	/* 0x104 */ TPathNode mGoal;
 	/* 0x114 */ TSolidStack<TPathNode> mGoalPath;
 	/* 0x124 */ TGraphTracer* unk124;
-	/* 0x128 */ s16 unk128;
-	/* 0x12C */ f32 unk12C;
-	/* 0x130 */ s8 unk130;
+	/* 0x128 */ s16 mStayCount;
+	/* 0x12C */ f32 mStayReferenceDistance;
+	/* 0x130 */ s8 mSurfaceAlignmentMode;
 	/* 0x134 */ f32 mDistToMarioSquared;
 	/* 0x138 */ const TBGCheckData* unk138; // TODO: type is a wild guess
 	/* 0x13C */ u8 mHitPoints;
