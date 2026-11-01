@@ -325,9 +325,9 @@ static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(name));
 	if (npc) {
 		if (arg)
-			npc->onLiveFlag(LIVE_FLAG_UNK100000);
+			npc->onLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 		else
-			npc->offLiveFlag(LIVE_FLAG_UNK100000);
+			npc->offLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 	}
 	interp->push();
 }

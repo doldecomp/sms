@@ -92,7 +92,7 @@ void TWalker::bind(TLiveActor* param_1)
 		f32 fVar1;
 		const TBGCheckData* local_40;
 
-		if (enemy->checkLiveFlag(LIVE_FLAG_UNK1000)) {
+		if (enemy->checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS)) {
 			fVar1 = gpMap->checkGroundIgnoreWaterSurface(
 			    local_30.x, local_30.y + enemy->getHeadHeight(), local_30.z,
 			    &local_40);
@@ -108,7 +108,8 @@ void TWalker::bind(TLiveActor* param_1)
 			if (!local_40->isEnemyThrough()) {
 				f32 dVar16;
 				const TBGCheckData* local_44;
-				if (enemy->checkLiveFlag(LIVE_FLAG_UNK1000)) {
+				if (enemy->checkLiveFlag(
+				        LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS)) {
 					dVar16 = gpMap->checkGroundIgnoreWaterSurface(
 					    local_30.x, enemy->mPosition.y + enemy->getHeadHeight(),
 					    local_30.z, &local_44);
@@ -143,7 +144,7 @@ void TWalker::bind(TLiveActor* param_1)
 			local_30.y       = fVar1;
 			enemy->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 			enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
-			enemy->offLiveFlag(LIVE_FLAG_UNK8000);
+			enemy->offLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 		} else {
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}

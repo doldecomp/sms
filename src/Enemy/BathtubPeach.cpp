@@ -122,7 +122,7 @@ TBathtubPeach::TBathtubPeach(const char* name)
 {
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 // fabricated

@@ -155,9 +155,6 @@ public:
 
 	f32 getUnk168() const { return unk168; }
 
-	// fabricated
-	f32 getHeadHeight() const { return mHeadHeight * mBodyScale; }
-
 	// UNUSED
 	BOOL isHeadPulled();
 	bool isMarioInSight();

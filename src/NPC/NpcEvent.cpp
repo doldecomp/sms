@@ -165,7 +165,7 @@ static void evOnTalkToDummyNpc(TSpcTypedInterp<TEventWatcher>* interp,
 	    = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search("ダミーＮＰＣ"));
 	if (dummyNpc != nullptr) {
 		dummyNpc->offLiveFlag(LIVE_FLAG_DEAD);
-		dummyNpc->offLiveFlag(LIVE_FLAG_UNK40000);
+		dummyNpc->offLiveFlag(TBaseNPC::LIVE_FLAG_TALK_REQUESTED);
 		dummyNpc->mTalkForbidCount = 120;
 	}
 
@@ -312,7 +312,7 @@ static void evCheckMonteClear(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(buffer));
 
 	int b;
-	if (!npc->checkLiveFlag(LIVE_FLAG_UNK400000) && npc->isClean())
+	if (!npc->checkLiveFlag(TBaseNPC::LIVE_FLAG_SINKING) && npc->isClean())
 		b = true;
 	else
 		b = false;

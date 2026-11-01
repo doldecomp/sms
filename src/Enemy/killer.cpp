@@ -247,7 +247,7 @@ DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 
 	if ((self->isHoming() && self->isReachedToGoalXZ())
 	    || (self->getFlyMode() == TFlyEnemy::FLY_MODE_DIVE
-	        && self->mPosition.y < 100.0f + self->mGroundHeight))
+	        && self->mPosition.y < 100.0f + self->getGroundHeight()))
 		self->calcChaseParam();
 
 	switch (self->getFlyMode()) {
@@ -261,7 +261,7 @@ DEFINE_NERVE(TNerveFlyEnemyChaseFly, TLiveActor)
 	}
 
 	if (self->getFlyMode() != TFlyEnemy::FLY_MODE_HOMING
-	    && self->mPosition.y > 200.0f + self->mGroundHeight) {
+	    && self->mPosition.y > 200.0f + self->getGroundHeight()) {
 		f32 marchSpeed = self->mMarchSpeed;
 		JGeometry::TVec3<f32> dir(self->mMarchSpeed,
 		                          -40.0f * self->getGravityY(), marchSpeed);
@@ -360,7 +360,7 @@ void TKiller::init(TLiveManager* manager)
 	mKillerParams = (TKillerSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveFlyEnemyNormalFly::theNerve());
 	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
-	offLiveFlag(LIVE_FLAG_UNK800);
+	offLiveFlag(LIVE_FLAG_RECYCLABLE);
 	onHitFilter(HIT_CATEGORY_MAP_OBJECT);
 
 	J3DModel* model = mMActor->getModel();
@@ -445,7 +445,7 @@ void TKiller::genEventCoin()
 			coin->mPosition.y = mPosition.y;
 			MsVECNormalize(&dir, &dir);
 			coin->mVelocity.set(3.0f * dir.x, 20.0f, 3.0f * dir.z);
-			coin->offLiveFlag(LIVE_FLAG_UNK10);
+			coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 	}
 }
@@ -775,8 +775,8 @@ DEFINE_NERVE(TNerveKillerExplosion, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->onLiveFlag(LIVE_FLAG_DEAD);
-			self->onLiveFlag(LIVE_FLAG_UNK8);
-			self->offLiveFlag(LIVE_FLAG_UNK10000);
+			self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
+			self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 			self->mHolder = nullptr;
 			self->stopAnmSound();
 			spine->reset();

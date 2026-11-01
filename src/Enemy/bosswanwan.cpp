@@ -582,8 +582,7 @@ void TBWBinder::bind(TLiveActor* actor)
 			if (!bgData->isEnemyThrough()) {
 				const TBGCheckData* bgData2;
 				f32 groundY2 = gpMap->checkGround(
-				    nextPos.x,
-				    boss->mPosition.y + boss->mHeadHeight * boss->mBodyScale,
+				    nextPos.x, boss->mPosition.y + boss->getHeadHeight(),
 				    nextPos.z, &bgData2);
 				if (groundY2 + 1.0f > groundY) {
 					groundY = groundY2 + 1.0f;
@@ -592,12 +591,12 @@ void TBWBinder::bind(TLiveActor* actor)
 			}
 		}
 
-		if (nextPos.y <= groundY && !bgData->checkFlag(0x10)
+		if (nextPos.y <= groundY && !bgData->isIllegalData()
 		    && !bgData->isEnemyThrough()) {
 			nextPos.y       = groundY;
 			boss->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 			boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
-			boss->offLiveFlag(0x8000);
+			boss->offLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 		} else {
 			boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
@@ -1768,7 +1767,7 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
 		boss->mVelocity      = zero;
 		boss->mPositionDelta = zero;
-		boss->onLiveFlag(LIVE_FLAG_UNK10);
+		boss->onLiveFlag(LIVE_FLAG_NO_BIND);
 		boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		gpMarioParticleManager->emit(0xB1, &boss->mPosition, 0, nullptr);
 	}

@@ -363,7 +363,7 @@ void TAnimalBird::doDropCoin()
 			obj->appear();
 			obj->JSGSetTranslation(mPosition);
 			obj->mVelocity.set(0.0f, -10.0f, 0.0f);
-			obj->offLiveFlag(LIVE_FLAG_UNK10);
+			obj->offLiveFlag(LIVE_FLAG_NO_BIND);
 			obj->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
 	}

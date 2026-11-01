@@ -68,7 +68,7 @@ TBossHanachanPartsBase::TBossHanachanPartsBase(TBossHanachan* owner,
 		mScaledBodyRadius = mOwner->unk1BC->mSLHeadShadowSize.get();
 		break;
 	}
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	initAnmSound();
 	mMActor->setLightType(1);
 	unk110 = new TNpcInbetween(

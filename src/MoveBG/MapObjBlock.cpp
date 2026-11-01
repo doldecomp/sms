@@ -347,7 +347,7 @@ void TTelesaBlock::initMapObj() { TMapObjBase::initMapObj(); }
 
 void TTelesaBlock::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	mLiveFlag &= ~LIVE_FLAG_UNK200;
+	mLiveFlag &= ~LIVE_FLAG_OUT_OF_AREA;
 	if (!SMSGetMarDirector()->isTalkModeNow()) {
 		TMapObjBase::perform(cue, graphics);
 	} else {
@@ -405,6 +405,6 @@ void TSuperHipDropBlock::loadAfter()
 		        MSF_PIANTA_PIPE_SLAB_DESTROYED)) {
 			makeObjDead();
 		}
-		onLiveFlag(LIVE_FLAG_UNK8);
+		onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	}
 }

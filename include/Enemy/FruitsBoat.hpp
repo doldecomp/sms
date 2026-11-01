@@ -26,6 +26,11 @@ public:
 	void setJumpReaction();
 	int setBckTrack(const char*);
 
+	enum {
+		LIVE_FLAG_ROUTE_PAUSED   = 1u << LIVE_FLAG_BIT_USER2, // 0x10000
+		LIVE_FLAG_MARIO_ON_BOARD = 1u << LIVE_FLAG_BIT_USER3, // 0x20000
+	};
+
 public:
 	/* 0x150 */ s16 unk150;
 	/* 0x154 */ f32 unk154;

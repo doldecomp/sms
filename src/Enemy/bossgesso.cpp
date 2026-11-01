@@ -616,7 +616,7 @@ void TBossGesso::init(TLiveManager* param_1)
 
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	getMActor()->offMakeDL();
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	mScaledBodyRadius = 330.0f;
 	initAnmSound();
 	unk190.color.r = 0;
@@ -1913,7 +1913,7 @@ DEFINE_NERVE(TNerveBGDie, TLiveActor)
 	if (self->isReachedToGoal()) {
 		self->mPositionDelta = self->mVelocity
 		    = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 
 	if (self->isReachedToGoal() && !SMSGetMarDirector()->isInnerDemoModeNow()) {

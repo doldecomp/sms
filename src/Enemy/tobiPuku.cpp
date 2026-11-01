@@ -148,7 +148,7 @@ TTobiPukuLaunchPad::TTobiPukuLaunchPad(const char* param_1)
 
 void TTobiPukuLaunchPad::perform(u32 cue, JDrama::TGraphics* param_2)
 {
-	if (!checkLiveFlag(LIVE_FLAG_UNK200) && !checkLiveFlag(LIVE_FLAG_DEAD)
+	if (!checkLiveFlag(LIVE_FLAG_OUT_OF_AREA) && !checkLiveFlag(LIVE_FLAG_DEAD)
 	    && (cue & CUE_MOVE)) {
 		if (TTobiPuku::mReturnLaunchSw) {
 			if (!unk1A8)
@@ -536,7 +536,7 @@ void TTobiPuku::flyStart()
 	unk1B4    = MsGetRotFromZaxis(unk1D0).x;
 	generateEffectColumWater();
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TTobiPuku::fallStart()
@@ -596,7 +596,7 @@ void TTobiPuku::forceKill()
 	if (mSpine->getCurrentNerve() == &TNerveTobiPukuDie::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTobiPukuPrepareFly::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveTobiPukuFly::theNerve()
-	    || checkLiveFlag(LIVE_FLAG_UNK10) || !isJumpBck())
+	    || checkLiveFlag(LIVE_FLAG_NO_BIND) || !isJumpBck())
 		return;
 }
 
@@ -818,7 +818,7 @@ DEFINE_NERVE(TNerveTobiPukuGenerate, TLiveActor)
 {
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 		self->mPosition.y -= 300.0f;
 		self->mRotation.x = MsGetRotFromZaxis(self->getVelocity()).x;
 		self->setJumpAnm();
@@ -838,7 +838,7 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 	TTobiPuku* self = (TTobiPuku*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setJumpStartAnm();
-		self->offLiveFlag(LIVE_FLAG_UNK10);
+		self->offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 
 	if (self->checkCurAnmEnd(0) && self->isJumpStartBck())
@@ -924,10 +924,10 @@ DEFINE_NERVE(TNerveTobiPukuFall, TLiveActor)
 		if (self->getGroundPlane()->isWaterSurface()) {
 			spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
 			self->generateEffectColumWater();
-			self->onLiveFlag(LIVE_FLAG_UNK20000);
+			self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		} else {
 			spine->pushAfterCurrent(&TNerveTobiPukuDie::theNerve());
-			self->onLiveFlag(LIVE_FLAG_UNK20000);
+			self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		}
 		return true;
 	}
@@ -967,16 +967,16 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			self->setDownLandAnm();
 		} else {
-			self->onLiveFlag(LIVE_FLAG_UNK20000);
+			self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			self->setDeadAnm();
 		}
 	}
 
 	if (self->checkCurAnmEnd(0)) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
-		self->offLiveFlag(LIVE_FLAG_UNK10000);
+		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();
 		spine->reset();
@@ -995,7 +995,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 	if (spine->getTime() < 2) {
 		if (self->getGroundPlane()->isWaterSurface()) {
 			self->mPosition.y -= 10.0f;
-			self->onLiveFlag(LIVE_FLAG_UNK10);
+			self->onLiveFlag(LIVE_FLAG_NO_BIND);
 			self->generateEffectColumWater();
 			if (TTobiPuku::mReturnLaunchSw) {
 				self->unk1E4 *= 0.8f;
@@ -1145,7 +1145,7 @@ DEFINE_NERVE(TNerveTobiPukuSwimWander, TLiveActor)
 		self->unk1E0 = self->mPosition.y;
 		self->setSwimAnm();
 		self->initialGraphNode();
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 
 	if (self->isReachedToGoalXZ())

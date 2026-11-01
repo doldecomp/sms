@@ -52,7 +52,7 @@ void TLiveManager::clipActorsAux(JDrama::TGraphics* graphics, f32 clip_far,
 		} else {
 			JGeometry::TVec3<f32> pos = actor->getPosition();
 			pos.y += 75.0f;
-			if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
+			if (actor->checkLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING)
 			    && SMS_IsInOtherFastCube(pos)) {
 				actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 			} else {
@@ -78,9 +78,9 @@ void TLiveManager::setFlagOutOfCube()
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 		if (gpCubeArea->isInAreaCube(pos))
-			actor->offLiveFlag(LIVE_FLAG_UNK200);
+			actor->offLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 		else
-			actor->onLiveFlag(LIVE_FLAG_UNK200);
+			actor->onLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 	}
 }
 

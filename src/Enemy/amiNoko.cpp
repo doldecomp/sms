@@ -133,7 +133,7 @@ void TAmiNoko::init(TLiveManager* param_1)
 	unk20C = (TAmiNokoSaveLoadParams*)getSaveParam();
 	reset();
 	setWalkAnm();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	initialGraphNode();
 	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		unk210 = 0;
@@ -594,7 +594,7 @@ void TAmiNoko::bind()
 		mVelocity.y -= getGravityY();
 		if (mVelocity.y < mVelocityMinY)
 			mVelocity.y = mVelocityMinY;
-		if (checkLiveFlag(LIVE_FLAG_UNK1000))
+		if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS))
 			mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 			    vec.x, vec.y + mHeadHeight, vec.z, &mGroundPlane);
 		else
@@ -800,7 +800,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 		    || direction.length() > 10000.0f) {
 			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			self->onLiveFlag(LIVE_FLAG_DEAD);
-			self->onLiveFlag(LIVE_FLAG_UNK8);
+			self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 			self->offLiveFlag(LIVE_FLAG_HIDDEN);
 			self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 			self->mHolder = nullptr;

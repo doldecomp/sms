@@ -1696,7 +1696,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 
 	const TBGCheckData* local_30;
 
-	if (checkLiveFlag(LIVE_FLAG_UNK1000))
+	if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
 		    &local_30);
@@ -1711,7 +1711,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 		if (!local_30->isEnemyThrough()) {
 			f32 dVar9;
 			const TBGCheckData* local_34;
-			if (checkLiveFlag(LIVE_FLAG_UNK1000))
+			if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
 				    &local_34);
@@ -2025,7 +2025,7 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		self->changeBodyToSilver(40);
 
 		self->generateEffectColumWater();
-		self->onLiveFlag(LIVE_FLAG_UNK1000);
+		self->onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 		self->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		self->setHitPoints(0);
 		self->mDamageHeight -= 250.0f;

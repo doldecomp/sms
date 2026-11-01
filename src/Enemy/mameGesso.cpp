@@ -405,7 +405,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 			self->unk1EC = 1;
 
 		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-			self->onLiveFlag(LIVE_FLAG_UNK20000);
+			self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			spine->setNext(&TNerveSmallEnemyDie::theNerve());
 		}
 

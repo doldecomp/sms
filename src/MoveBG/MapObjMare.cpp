@@ -701,7 +701,7 @@ void TMuddyBoat::moveByWater()
 			unk140 += dot * unk138;
 		else
 			unk140 += dot * unk13C;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 }
 
@@ -719,7 +719,7 @@ void TMuddyBoat::kill()
 	MtxPtr src = getModel()->getAnmMtx(0);
 	MTXCopy(src, dst);
 	offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	startAnim(1);
 	startAnim(2);
 	mState = STATE_UNK2;
@@ -752,7 +752,7 @@ bool TMuddyBoat::bindToWall(const JGeometry::TVec3<f32>& param_1, f32 param_2,
 
 void TMuddyBoat::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 	JGeometry::TVec3<f32> pos = mPosition;
 	MtxPtr mtx                = getModel()->getAnmMtx(0);

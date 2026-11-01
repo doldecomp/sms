@@ -83,7 +83,7 @@ void TMapObjGeneral::waitToAppear(s32 waitTime)
 void TMapObjGeneral::sink()
 {
 	mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	mState = STATE_SINKING;
 	unk144 = mPosition.y;
 	setUpMapCollision(1);
@@ -104,7 +104,7 @@ void TMapObjGeneral::put()
 	mPosition.z = JMASCos(SMS_GetMarioAngleY())
 	                  * (getDamageRadius() + SMS_GetMarioDamageRadius() + 10.0f)
 	              + SMS_GetMarioPos().z;
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 }
 
@@ -130,7 +130,7 @@ void TMapObjGeneral::thrown()
 	                         * getMapObjData()->mPhysical->mData->unk2C)
 	                  + mNormalThrowSpeedRate * SMS_GetMarioSpeedZ());
 
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	JGeometry::TVec3<f32> vel = getVelocity();
 	mPosition.add(vel);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -236,7 +236,7 @@ void TMapObjGeneral::appearing()
 	}
 
 uuuh:
-	if (!checkLiveFlag(LIVE_FLAG_UNK10))
+	if (!checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	makeObjAppeared();
@@ -325,7 +325,7 @@ void TMapObjGeneral::ensureTakeSituation()
 	TMapObjBase::ensureTakeSituation();
 	if (isState(STATE_HOLDING) && mHolder == nullptr) {
 		mState = STATE_NORMAL;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 }
 
@@ -333,7 +333,7 @@ void TMapObjGeneral::kill()
 {
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
-	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_NO_SHADOW);
 	mStateTimer = -1;
 	startAnim(2);
 	mState = STATE_BREAKING;
@@ -457,7 +457,7 @@ void TMapObjGeneral::touchGround(JGeometry::TVec3<f32>* param_1)
 	} else {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.x = mVelocity.y = mVelocity.z = 0.0f;
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 		param_1->y = mGroundHeight;
 	}
 }
@@ -500,7 +500,7 @@ void TMapObjGeneral::calcVelocity()
 
 void TMapObjGeneral::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	if (mBinder != nullptr) {
@@ -530,7 +530,7 @@ void TMapObjGeneral::bind()
 	if (!isAirborne()) {
 		if (getVelocity().x == 0.0f && getVelocity().y == 0.0f
 		    && getVelocity().z == 0.0f)
-			onLiveFlag(LIVE_FLAG_UNK10);
+			onLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 
 	mPositionDelta = vec - mPosition;

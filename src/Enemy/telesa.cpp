@@ -185,9 +185,9 @@ void TTelesaManager::setFlagOutOfCube()
 		JGeometry::TVec3<f32> pos = telesa->getPosition();
 		pos.y += 75.0f;
 		if (gpCubeArea->isInAreaCube(pos))
-			telesa->offLiveFlag(LIVE_FLAG_UNK200);
+			telesa->offLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 		else
-			telesa->onLiveFlag(LIVE_FLAG_UNK200);
+			telesa->onLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 	}
 }
 
@@ -231,7 +231,7 @@ void TTelesa::init(TLiveManager* manager)
 	onHitFilter(HIT_CATEGORY_BOSS);
 	unk194 = (TTelesaSaveLoadParams*)getSaveParam();
 	mSpine->initWith(&TNerveWalkerGraphWander::theNerve());
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	setFlyParam(1.0f);
 
@@ -262,7 +262,7 @@ void TTelesa::reset()
 {
 	TWalkerEnemy::reset();
 
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 
 	setFlyParam(1.0f);
@@ -284,7 +284,7 @@ void TTelesa::reset()
 void TTelesa::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	TSmallEnemy::perform(cue, graphics);
-	if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD)) {
+	if (!checkLiveFlag(LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_DEAD)) {
 		if (mImitatedBmd) {
 			if (cue & CUE_CALC_ANIM) {
 				const TBGCheckData* pTStack_5c;
@@ -476,7 +476,7 @@ void TTelesa::moveObject()
 
 void TTelesa::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	JGeometry::TVec3<f32> nextPos = mPosition;
@@ -1123,7 +1123,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 
 	if (self->checkCurAnmEnd(0) || self->getUnk184()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);

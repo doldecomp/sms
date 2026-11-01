@@ -145,7 +145,7 @@ void TRollEnemy::walkBehavior(int param_1, f32 param_2)
 	if (mPosition.y < mGroundHeight + 30.0f)
 		rollSE();
 	if (unk128 > 300) {
-		onLiveFlag(LIVE_FLAG_UNK10000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		kill();
 	}
 }
@@ -400,7 +400,7 @@ void TIgaiga::reset()
 {
 	TRollEnemy::reset();
 	initialGraphNode();
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 
 	unk1B4 = 0;
 	unk1B8 = TMsRange<s32>(50, 100).rand() * 120;
@@ -631,7 +631,7 @@ void TIgaiga::shoot(JGeometry::TVec3<f32>& param_1)
 {
 	mSpine->setNext(&TNerveIgaigaShootFromCannon::theNerve());
 	unk1D8 = param_1;
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	unk1A8 = true;
 }
 
@@ -652,7 +652,7 @@ DEFINE_NERVE(TNerveIgaigaWaterHit, TLiveActor)
 
 	if (self->unk1E4 >= self->unk1A4->mSLExpandMax.get()) {
 		if (self->unk1E8 > 20) {
-			self->onLiveFlag(LIVE_FLAG_UNK10000);
+			self->onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 			spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 			return TRUE;
 		}
@@ -887,7 +887,7 @@ void TGorogoro::calcRootMatrix()
 	gpCurRollEnemy = this;
 	if (mSpine->getCurrentNerve() == &TNerveGorogoroDie::theNerve()) {
 		TSpineEnemy::calcRootMatrix();
-		if (checkLiveFlag(LIVE_FLAG_UNK10000)) {
+		if (checkLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH)) {
 			unk1B4.ref(0, 3) = mPosition.x;
 			unk1B4.ref(2, 3) = mPosition.z;
 		}
@@ -911,7 +911,7 @@ void TGorogoro::reset()
 {
 	unk130 = 1;
 	TRollEnemy::reset();
-	offLiveFlag(LIVE_FLAG_UNK1000);
+	offLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 	mTevKColor.a = 0xFF;
 	unk1AC       = -10.0f;
 	unk1B0       = 1.0f;
@@ -930,7 +930,7 @@ void TGorogoro::kill()
 	mSpine->reset();
 	mSpine->setNext(&TNerveGorogoroDie::theNerve());
 	mSpine->pushAfterCurrent(mSpine->getDefault());
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 }
 
 void TGorogoro::forceKill()
@@ -950,7 +950,7 @@ void TGorogoro::forceKill()
 	mSpine->reset();
 	mSpine->setNext(&TNerveGorogoroDie::theNerve());
 	mSpine->pushAfterCurrent(mSpine->getDefault());
-	onLiveFlag(LIVE_FLAG_UNK20000);
+	onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	onLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 }
 
@@ -1034,8 +1034,8 @@ void TGorogoro::walkBehavior(int param_1, f32 param_2)
 	if (mSpine->getCurrentNerve() != &TNerveGorogoroDie::theNerve()
 	    && mPosition.y < mGroundHeight + 10.0f
 	    && getGroundPlane()->isWaterSurface()) {
-		onLiveFlag(LIVE_FLAG_UNK10000);
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		kill();
 	}
 }
@@ -1059,7 +1059,7 @@ void TGorogoro::setMeltAnm()
 {
 	setBckAnm(1);
 	unk130 = 0;
-	onLiveFlag(LIVE_FLAG_UNK1000);
+	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 
 	MTXCopy(getMActor()->getModel()->getBaseTRMtx(), unk1B4);
 	unk1B4.ref(1, 3) = mGroundHeight;
@@ -1205,7 +1205,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 	} else if (self->checkCurAnmEnd(0) || spine->getTime() > 360) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;

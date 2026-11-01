@@ -49,7 +49,7 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 			if (bVar6) {
 				spine->pushAfterCurrent(&TNerveNPCUTurn::theNerve());
 				if (bVar5)
-					self->onLiveFlag(LIVE_FLAG_UNK200000);
+					self->onLiveFlag(TBaseNPC::LIVE_FLAG_UTURN_POSITIVE_YAW);
 				return true;
 			}
 		}
@@ -64,7 +64,7 @@ DEFINE_NERVE(TNerveNPCUTurn, TLiveActor)
 
 	if (self->execUTurn()) {
 		self->mMarchSpeed = 0.0f;
-		self->offLiveFlag(LIVE_FLAG_UNK200000);
+		self->offLiveFlag(TBaseNPC::LIVE_FLAG_UTURN_POSITIVE_YAW);
 		spine->pushAfterCurrent(&TNerveNPCGraphWander::theNerve());
 		return true;
 	}

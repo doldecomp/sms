@@ -196,7 +196,7 @@ void TBombHei::genEventCoin()
 			JGeometry::TVec3<f32> vec = SMS_GetMarioPos() - mPosition;
 			MsVECNormalize(&vec, &vec);
 			coin->mVelocity.set(vec.x * 20.0f, 20.0f, vec.z * 20.0f);
-			coin->offLiveFlag(LIVE_FLAG_UNK10);
+			coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 	}
 }
@@ -334,7 +334,7 @@ void TBombHei::forceKill()
 		if (isAirborne())
 			return;
 
-		if (checkLiveFlag(LIVE_FLAG_UNK10))
+		if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 			return;
 
 		if (mSpine->getCurrentNerve() != &TNerveBombHeiExplosion::theNerve()) {
@@ -342,7 +342,7 @@ void TBombHei::forceKill()
 			mSpine->setNext(&TNerveBombHeiExplosion::theNerve());
 			mSpine->pushAfterCurrent(mSpine->getDefault());
 
-			onLiveFlag(LIVE_FLAG_UNK20000);
+			onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			mHitPoints = 1;
 		}
 	}
@@ -510,7 +510,7 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 		self->unk1A0 = params->mSLBombRange.get() * self->getBodyScale()
 		               / self->getAttackRadius();
 		self->setDeadAnm();
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		if (self->getHolder() == gpMarioAddress)
 			self->sendAttackMsgToMario();
 		self->unk164 = 0;
@@ -538,7 +538,7 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 	} else if (self->checkCurAnmEnd(0)) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();

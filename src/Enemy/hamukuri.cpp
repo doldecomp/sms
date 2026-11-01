@@ -703,7 +703,7 @@ void THamuKuri::bind()
 		nextPos += mVelocity;
 
 		{
-			if (checkLiveFlag(LIVE_FLAG_UNK1000)) {
+			if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS)) {
 				mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 				    nextPos.x, nextPos.y + mHeadHeight, nextPos.z,
 				    &mGroundPlane);
@@ -947,7 +947,7 @@ void THamuKuri::makeCapFly(TMapObjBase* param_1)
 		} else {
 			param_1->mPosition = SMS_GetMarioPos();
 			param_1->mVelocity.set(0.0f, 10.0f, 0.0f);
-			param_1->offLiveFlag(LIVE_FLAG_UNK10);
+			param_1->offLiveFlag(LIVE_FLAG_NO_BIND);
 			return;
 		}
 	}
@@ -1061,7 +1061,7 @@ void THamuKuri::setDeadAnm()
 		releaseCap();
 
 	if (unk184) {
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A, &mPosition, 0,
 		                             nullptr);
 	} else {
@@ -1453,7 +1453,7 @@ void THaneHamuKuri::walkBehavior(int param_1, f32 param_2)
 
 void THaneHamuKuri::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	JGeometry::TVec3<f32> local_18 = mPosition;
@@ -1658,7 +1658,7 @@ void THaneHamuKuri2::reset()
 
 	resetFlyParam();
 
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	unk230 = mPosition.y;
 	mSpine->initWith(&TNerveHaneHamuKuriMoveOnGraph::theNerve());
 }
@@ -1915,7 +1915,7 @@ void TDangoHamuKuri::forceKill()
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		mSpine->pushAfterCurrent(mSpine->getDefault());
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 }
 
@@ -2061,7 +2061,7 @@ void TBossDangoHamuKuri::genEventCoin()
 	if (coin) {
 		coin->mPosition = mPosition;
 		coin->mVelocity.set(0.0f, 20.0f, 0.0f);
-		coin->offLiveFlag(LIVE_FLAG_UNK10);
+		coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 		unk18C -= 1;
 	}
 }
@@ -2523,8 +2523,8 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 
 			if (spine->getTime() > pTVar7 + ctrl->getEnd()) {
 				self->onLiveFlag(LIVE_FLAG_DEAD);
-				self->onLiveFlag(LIVE_FLAG_UNK8);
-				self->onLiveFlag(LIVE_FLAG_UNK20000);
+				self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
+				self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 				self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 				self->mHolder = nullptr;
 				self->stopAnmSound();

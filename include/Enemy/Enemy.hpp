@@ -131,6 +131,21 @@ public:
 
 	TGraphTracer* getTracer() { return unk124; }
 
+	bool isJumping() const { return checkLiveFlag(LIVE_FLAG_JUMPING) ? 1 : 0; }
+
+	enum {
+		/// Allows this enemy to be recycled for spawning a new one even if it's
+		/// not dead, as long as it's not immediately visible.
+		LIVE_FLAG_RECYCLABLE = 1u << LIVE_FLAG_BIT_UNK800, // 0x800
+
+		LIVE_FLAG_USE_SHARED_ANIMATION = 1u << LIVE_FLAG_BIT_USER0, // 0x4000
+
+		/// Signifies that the enemy is currently mid-jump. Different from
+		/// LIVE_FLAG_AIRBORNE in that it is not set if the enemy simply fell
+		/// off a cliff.
+		LIVE_FLAG_JUMPING = 1u << LIVE_FLAG_BIT_USER1, // 0x8000
+	};
+
 public:
 	/* 0xF4 */ TPathNode mCurrentTarget;
 	/* 0x104 */ TPathNode mGoal;

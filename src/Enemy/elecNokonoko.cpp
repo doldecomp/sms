@@ -414,7 +414,7 @@ void TElecNokonoko::setDeadAnm() { setBckAnm(1); }
 void TElecNokonoko::setMeltAnm()
 {
 	setBckAnm(2);
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
 	unk18C            = 3;
@@ -439,7 +439,7 @@ void TElecNokonoko::genRandomItem()
 		    ACTOR_TYPE_COIN, true);
 		if (item != nullptr) {
 			item->mVelocity.set(0.0f, 20.0f, 0.0f);
-			item->offLiveFlag(LIVE_FLAG_UNK10);
+			item->offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 	}
 }

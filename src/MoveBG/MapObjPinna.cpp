@@ -679,7 +679,7 @@ void TAmiKing::initMapObj()
 	initAnmSound();
 	mMActor->setBck("amiking_sleep1");
 	setAnmSound("/scene/mapObj/amiking_sleep1.bas");
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	for (u8 i = 0; i < getMActor()->getModel()->getModelData()->getJointNum();
 	     ++i) { }
 }
@@ -771,7 +771,7 @@ void TAmiKing::calcRootMatrix()
 
 void TAmiKing::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10)) {
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND)) {
 		gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight, mPosition.z,
 		                   &mGroundPlane);
 	} else {

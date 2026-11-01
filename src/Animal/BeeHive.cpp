@@ -119,7 +119,7 @@ void TBeeHive::init(TLiveManager* manager)
 {
 	mManager = manager;
 	mManager->manageActor(this);
-	onLiveFlag(LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW | LIVE_FLAG_NO_BIND);
 	mSpine->initWith(&TNerveBeeHiveWait::theNerve());
 	mInitialPosition = mPosition;
 	mActiveBeeNum    = 0;
@@ -142,7 +142,7 @@ void TBeeHive::reset()
 	mSwingAngVel    = 0.0f;
 	mSwingAngleMax  = 0.015707964f;
 	mHitCheckBeeIdx = 0;
-	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_AIRBORNE);
+	onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_AIRBORNE);
 	mMActor = mMActorKeeper->getMActor("bee_nest.bmd");
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
@@ -289,7 +289,7 @@ void TBeeHive::control()
 
 void TBeeHive::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	JGeometry::TVec3<f32> pos = mPosition;
@@ -383,7 +383,7 @@ void TBeeHive::calcRootMatrix()
 
 void TBeeHive::prepareWait()
 {
-	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_AIRBORNE);
+	onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_AIRBORNE);
 	if (mActiveBeeNum < 3) {
 		for (int i = 0; i < 3; ++i)
 			appearBee(i);
@@ -435,7 +435,7 @@ bool TBeeHive::doWait()
 
 void TBeeHive::prepareFall()
 {
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_BEENEST_OFF, &mPosition, 0,
 	                                nullptr, 0, 4);

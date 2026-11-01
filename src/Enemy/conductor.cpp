@@ -188,7 +188,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& position,
 	for (int i = 0; i < mgr->getObjNum(); ++i) {
 		TSpineEnemy* actor = (TSpineEnemy*)mgr->getObj(i);
 		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
-		    && actor->checkLiveFlag(LIVE_FLAG_UNK800)
+		    && actor->checkLiveFlag(TSpineEnemy::LIVE_FLAG_RECYCLABLE)
 		    && actor->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 			actor->resetToPosition(position);
 			++result;
@@ -204,7 +204,7 @@ int TConductor::makeEnemyAppear(const JGeometry::TVec3<f32>& position,
 		TSpineEnemy* actor = (TSpineEnemy*)mgr->getObj(i);
 		if (!actor->checkLiveFlag(LIVE_FLAG_DEAD)
 		    && !actor->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
-		    && actor->checkLiveFlag(LIVE_FLAG_UNK800)) {
+		    && actor->checkLiveFlag(TSpineEnemy::LIVE_FLAG_RECYCLABLE)) {
 			actor->resetToPosition(position);
 			++result;
 			if (result >= count)
@@ -235,8 +235,8 @@ TConductor::makeOneEnemyAppear(const JGeometry::TVec3<f32>& position,
 	if (param_3 == 0)
 		return nullptr;
 
-	result = (TSpineEnemy*)mgr->getActorByFlag(LIVE_FLAG_CLIPPED_OUT
-	                                           | LIVE_FLAG_UNK800);
+	result = (TSpineEnemy*)mgr->getActorByFlag(
+	    LIVE_FLAG_CLIPPED_OUT | TSpineEnemy::LIVE_FLAG_RECYCLABLE);
 	if (result) {
 		result->resetToPosition(position);
 		return result;

@@ -119,7 +119,7 @@ TGateKeeperBase::TGateKeeperBase(const char* name)
 	mStampEnabled = TRUE;
 	mVulnerable   = 0;
 	mStampScale.set(1.0f, 1.0f, 1.0f);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TGateKeeperBase::kill() { onLiveFlag(LIVE_FLAG_DEAD); }
@@ -470,8 +470,8 @@ void TBiancoGateKeeper::launchNamekuri()
 			enemy->resetHitPoints();
 			enemy->mVelocity = vel;
 			enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
-			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
-			enemy->onLiveFlag(LIVE_FLAG_UNK8000);
+			enemy->offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_NO_SHADOW);
+			enemy->onLiveFlag(LIVE_FLAG_JUMPING);
 			enemy->offHitFilter(HIT_FILTER_NO_COLLISION);
 			enemy->mSpine->pushNerve(&TNerveNameKuriDiffuse::theNerve());
 		}

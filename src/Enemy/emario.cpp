@@ -137,7 +137,7 @@ void TEMario::init(TLiveManager* manager)
 	             70.0f, 45.0f, 60.0f, 40.0f);
 
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TEMario::checkCollision()

@@ -202,7 +202,7 @@ void TMapObjBall::kicked()
 	}
 
 	unk194 = 10;
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	THitActor* marHitActor = SMS_GetMarioHitActor();
@@ -222,7 +222,7 @@ u32 TMapObjBall::touchWater(THitActor* water)
 	vel.set(getVelocity());
 	vel.scaleAdd(unk17C, getWaterSpeed(water), vel);
 	setVelocity(vel);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	return 1;
 }
 
@@ -292,7 +292,7 @@ void TMapObjBall::boundByActor(THitActor* actor)
 	}
 
 	unk194 = 10;
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 }
 
@@ -722,7 +722,7 @@ void TResetFruit::hold(TTakeActor* actor)
 {
 	TMapObjBall::hold(actor);
 	mVelocity.zero();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && !isStateTimerEngaged()) {
 		onMapObjFlag(MAP_OBJ_FLAG_DISAPPEARING);
 		startStateTimer(getLivingTime());
@@ -774,7 +774,7 @@ void TResetFruit::makeObjLiving()
 		startStateTimer(getLivingTime());
 	}
 
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	mState = STATE_LIVING;
 }
 
@@ -786,7 +786,7 @@ void TResetFruit::pick(THitActor* actor)
 
 	TMapObjBall::touchActor(actor);
 	if (!checkMapObjFlag(MAP_OBJ_FLAG_UNK4000000) && isState(STATE_NORMAL)
-	    && !checkLiveFlag(LIVE_FLAG_UNK10))
+	    && !checkLiveFlag(LIVE_FLAG_NO_BIND))
 		makeObjLiving();
 }
 
@@ -818,7 +818,7 @@ void TResetFruit::kicked()
 		}
 
 		unk194 = 10;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 		SMS_GetMarioHitActor()->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		SMSGetMSound()->startSoundActor(MSD_SE_MA_KICK_DRIAN, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -904,13 +904,13 @@ void TResetFruit::control()
 	case STATE_LIVING: {
 		offHitFilter(HIT_FILTER_NO_COLLISION);
 		if (SMSGetMarDirector()->getCurrentStage() == 4
-		    && checkLiveFlag(LIVE_FLAG_UNK10)) {
-			offLiveFlag(LIVE_FLAG_UNK10);
+		    && checkLiveFlag(LIVE_FLAG_NO_BIND)) {
+			offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 
 		if (mGroundPlane->getActor() != nullptr) {
-			if (checkLiveFlag(LIVE_FLAG_UNK10)) {
-				offLiveFlag(LIVE_FLAG_UNK10);
+			if (checkLiveFlag(LIVE_FLAG_NO_BIND)) {
+				offLiveFlag(LIVE_FLAG_NO_BIND);
 			}
 
 			const TLiveActor* actor = mGroundPlane->getActor();
@@ -958,8 +958,8 @@ void TResetFruit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (SMSGetMarDirector()->getCurrentStage() == 7) {
 		if (isState(STATE_HOLDING) || !getVelocity().isZero()) {
-			if (checkLiveFlag(LIVE_FLAG_UNK200)) {
-				offLiveFlag(LIVE_FLAG_UNK200);
+			if (checkLiveFlag(LIVE_FLAG_OUT_OF_AREA)) {
+				offLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 			}
 		} else {
 			if (!gpCubeArea->isInAreaCube(mPosition) && isState(STATE_LIVING)) {
@@ -1251,7 +1251,7 @@ void TBigWatermelon::kill()
 
 		if (mapObj != nullptr) {
 			mapObj->mVelocity.set(0.0f, 25.0f, 0.0f);
-			mapObj->offLiveFlag(LIVE_FLAG_UNK10);
+			mapObj->offLiveFlag(LIVE_FLAG_NO_BIND);
 			++unk19C;
 		}
 	}
@@ -1287,8 +1287,8 @@ void TBigWatermelon::control()
 
 	switch (mState) {
 	case STATE_NORMAL: {
-		if (checkLiveFlag(LIVE_FLAG_UNK10)) {
-			offLiveFlag(LIVE_FLAG_UNK10);
+		if (checkLiveFlag(LIVE_FLAG_NO_BIND)) {
+			offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 		const TLiveActor* groundPlaneActor = mGroundPlane->getActor();
 		if (mPosition.y < mGroundHeight + 200.0f
@@ -1332,9 +1332,9 @@ void TBigWatermelon::startEvent()
 	if (strcmp(getName(), "スイカ（大）") == 0) {
 		mPosition.set(-4660.0f, 1300.0f, 13600.0f);
 		offMapObjFlag(MAP_OBJ_FLAG_NO_ANIMATIONS);
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 		mVelocity.zero();
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 		TMapObjBase::startAnim(7);
 		// getter?
 		TMarDirector* director = SMSGetMarDirector();
@@ -1356,7 +1356,7 @@ void TBigWatermelon::startEvent()
 				item->mVelocity.x = 20.0f * (MsRandF() - 0.5f);
 				item->mVelocity.y = randY;
 				item->mVelocity.z = randZ;
-				item->offLiveFlag(LIVE_FLAG_UNK10);
+				item->offLiveFlag(LIVE_FLAG_NO_BIND);
 				item->mDisappearAfterFrames = 960;
 			}
 		}

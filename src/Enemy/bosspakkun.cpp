@@ -1785,7 +1785,7 @@ DEFINE_NERVE(TNerveBPDie, TLiveActor)
 	}
 
 	if (actor->checkCurBckFromIndex(7) && spine->getTime() == 680)
-		boss->onLiveFlag(LIVE_FLAG_UNK8);
+		boss->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)
 	    && actor->checkCurBckFromIndex(7)) {
@@ -1804,7 +1804,7 @@ DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
 	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
-		boss->onLiveFlag(LIVE_FLAG_UNK10);
+		boss->onLiveFlag(LIVE_FLAG_NO_BIND);
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->changeBck(13);
 	}
@@ -1867,7 +1867,7 @@ DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 		if (goal.y > boss->mPosition.y) {
 			boss->mPosition.y = goal.y;
 			boss->changeBck(18);
-			boss->offLiveFlag(LIVE_FLAG_UNK10);
+			boss->offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 	}
 
@@ -1937,7 +1937,7 @@ DEFINE_NERVE(TNerveBPFall, TLiveActor)
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
 	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
-		boss->offLiveFlag(LIVE_FLAG_UNK10);
+		boss->offLiveFlag(LIVE_FLAG_NO_BIND);
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->changeBck(10);
 	}

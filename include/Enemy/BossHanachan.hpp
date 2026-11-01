@@ -57,6 +57,16 @@ public:
 	void emitOneTimeSandPillar_(TBossHanachanPartsBody*);
 	void emitParticle_();
 
+	// clang-format off
+	enum {
+		LIVE_FLAG_SAND_PILLAR_ACTIVE        = 1u << LIVE_FLAG_BIT_USER2, // 0x10000
+		LIVE_FLAG_BGM_CHANGE_PENDING        = 1u << LIVE_FLAG_BIT_USER3, // 0x20000
+		LIVE_FLAG_DEATH_ANIMATION_FINISHED  = 1u << LIVE_FLAG_BIT_USER4, // 0x40000
+		LIVE_FLAG_SUPPRESS_HINT_BALLOON     = 1u << LIVE_FLAG_BIT_USER5, // 0x80000
+		LIVE_FLAG_SKIP_DEATH_BGM_MODULATION = 1u << LIVE_FLAG_BIT_USER6, // 0x100000
+	};
+	// clang-format on
+
 public:
 	/* 0x150 */ TBossHanachanPartsBody* mBodyParts[8];
 	/* 0x170 */ TBossHanachanPartsHead* mHead;

@@ -100,7 +100,7 @@ bool TBaseNPC::execUTurn()
 
 	targetYaw   = MsWrap(targetYaw, 0.0f, 360.0f);
 	mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
-	if (checkLiveFlag(LIVE_FLAG_UNK200000)) {
+	if (checkLiveFlag(TBaseNPC::LIVE_FLAG_UTURN_POSITIVE_YAW)) {
 		if (mRotation.y > targetYaw)
 			mRotation.y -= 360.0f;
 	} else {

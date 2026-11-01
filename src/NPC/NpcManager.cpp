@@ -318,7 +318,7 @@ void TNPCManager::clipEnemies(JDrama::TGraphics* graphics)
 		JGeometry::TVec3<f32> checkPos = actor->mPosition;
 		checkPos.y += 75.0f;
 
-		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
+		if (actor->checkLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING)
 		    && SMS_IsInOtherFastCube(checkPos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 			continue;
@@ -337,7 +337,7 @@ void TNPCManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_ENTRY) {
 		for (int i = 0, e = mObjNum; i < e; ++i) {
 			TBaseNPC* npc = (TBaseNPC*)unk18[i];
-			npc->onLiveFlag(LIVE_FLAG_UNK1000000);
+			npc->onLiveFlag(TBaseNPC::LIVE_FLAG_RENDER_ENTRY_SKIPPED);
 		}
 	}
 

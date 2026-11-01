@@ -234,8 +234,8 @@ void TCommonLauncher::init(TLiveManager* param_1)
 	    ->getChildren()
 	    .push_back(this);
 
-	onLiveFlag(LIVE_FLAG_UNK8);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 
 	ResTIMG* res = (ResTIMG*)JKRFileLoader::getGlbResource(
 	    "/scene/map/pollution/H_ma_rak.bti");

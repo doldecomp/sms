@@ -114,7 +114,7 @@ void TYumboSeed::startToMove(const JGeometry::TVec3<f32>& param_1,
 TYumbo::TYumbo(const char* param_1)
     : TSmallEnemy(param_1)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 static const char* sambohead_bastable[] = {

@@ -92,7 +92,7 @@ void TMario::hitNpc(THitActor* actor)
 
 	keepDistance(*actor, 0.0f);
 
-	if (((TLiveActor*)actor)->checkLiveFlag(LIVE_FLAG_UNK100000))
+	if (((TLiveActor*)actor)->checkLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN))
 		wantToTakeActor(actor);
 }
 

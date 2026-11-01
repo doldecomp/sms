@@ -87,8 +87,9 @@ DEFINE_NERVE(TNerveBossHanachanSnort, TLiveActor)
 {
 	TBossHanachan* hanachan = (TBossHanachan*)spine->getBody();
 	if (spine->getTime() == 0xC8
-	    && hanachan->checkLiveFlag(LIVE_FLAG_UNK20000)) {
-		hanachan->offLiveFlag(LIVE_FLAG_UNK20000);
+	    && hanachan->checkLiveFlag(
+	        TBossHanachan::LIVE_FLAG_BGM_CHANGE_PENDING)) {
+		hanachan->offLiveFlag(TBossHanachan::LIVE_FLAG_BGM_CHANGE_PENDING);
 		MSBgm::startBGM(MSD_BGM_BOSSGESO_2DN3RD);
 		switch (hanachan->getHitPoints()) {
 		case 2:
@@ -112,9 +113,10 @@ DEFINE_NERVE(TNerveBossHanachanDead, TLiveActor)
 {
 	TBossHanachan* hanachan = (TBossHanachan*)spine->getBody();
 	hanachan->considerSetAnm(BOSS_HANACHAN_NERVE_ANM_UNK5);
-	if (!hanachan->checkLiveFlag(LIVE_FLAG_UNK40000)
+	if (!hanachan->checkLiveFlag(
+	        TBossHanachan::LIVE_FLAG_DEATH_ANIMATION_FINISHED)
 	    && hanachan->isAllBckAlreadyEnd(BOSS_HANACHAN_ANM_UNK15)) {
-		hanachan->onLiveFlag(LIVE_FLAG_UNK40000);
+		hanachan->onLiveFlag(TBossHanachan::LIVE_FLAG_DEATH_ANIMATION_FINISHED);
 		hanachan->removeAllMapCollision();
 	}
 	return false;

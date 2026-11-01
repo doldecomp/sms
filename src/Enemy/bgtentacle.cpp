@@ -954,18 +954,14 @@ void TBGTentacle::moveNode()
 			local_ac.y = mOwner->mPosition.y + 10.0f;
 		}
 
-		// TODO: inline, or need to try harder to make MWCC merge the loads?
-		TBossGesso* bossGesso          = mOwner;
-		JGeometry::TVec3<f32> local_c8 = bossGesso->mPosition;
+		JGeometry::TVec3<f32> local_c8 = mOwner->mPosition;
 		if (local_c8.y < local_ac.y) {
 			local_c8 -= local_ac;
 
-			f32 thing = bossGesso->mBodyScale * bossGesso->mBodyRadius;
-			// TODO: common subexpression eliminator doesn't want to merge
-			// the `squared`  calls here =(
-			if (local_c8.length() < thing) {
+			f32 bodyRad = mOwner->getBodyRadius();
+			if (local_c8.length() < bodyRad) {
 				local_c8.normalize();
-				local_c8.scale(thing);
+				local_c8.scale(bodyRad);
 				local_ac += local_c8;
 			}
 		}

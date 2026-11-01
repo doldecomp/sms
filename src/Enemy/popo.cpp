@@ -351,10 +351,10 @@ void TPopo::reset()
 	mMActor = mMActorKeeper->getMActor("popoL.bmd");
 
 	if (unk1A4) {
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 		mSpine->initWith(&TNervePopoWait::theNerve());
 		mPosition = unk1A8;
-		offLiveFlag(LIVE_FLAG_UNK800);
+		offLiveFlag(LIVE_FLAG_RECYCLABLE);
 	}
 
 	unk23C->kill();
@@ -647,7 +647,7 @@ void TPopo::forceKill()
 	if (!(mGroundPlane->isIllegalData()
 	      || (!mGroundPlane->isDeathPlane() && !mGroundPlane->isPool()
 	          && !mGroundPlane->isWaterSurface())
-	      || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10))
+	      || isAirborne() || checkLiveFlag(LIVE_FLAG_NO_BIND))
 	    || !gpMap->isInArea(mPosition.x, mPosition.z)) {
 
 		if (mSpine->getCurrentNerve() != &TNervePopoExplosion::theNerve()) {
@@ -655,7 +655,7 @@ void TPopo::forceKill()
 			mSpine->setNext(&TNervePopoExplosion::theNerve());
 			mSpine->pushAfterCurrent(mSpine->getDefault());
 
-			onLiveFlag(LIVE_FLAG_UNK20000);
+			onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			mHitPoints = 1;
 		}
 	}
@@ -664,7 +664,7 @@ void TPopo::forceKill()
 void TPopo::bind()
 {
 	unk23C->checkHit();
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	if ((mSpine->getCurrentNerve() == &TNervePopoPossessedNozzle::theNerve()
@@ -816,7 +816,7 @@ void TPopo::possessedIn()
 	mMActor->getFrameCtrl(5)->setFrame(0.0f);
 	unk1A0 = 30.0f;
 	mMActor->setFrameRate(0.0f, 5);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	unk1B8 = 90.0f;
 	unk1B4 = 1;
 
@@ -934,12 +934,12 @@ DEFINE_NERVE(TNervePopoExplosion, TLiveActor)
 		self->getMActor()->setFrameRate(0.0f, 0);
 		self->releaseNozzle();
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->explosionEffect();
 	}
 	if (spine->getTime() > self->unk194->mSLExplosionEmitTime.get()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
@@ -957,7 +957,7 @@ DEFINE_NERVE(TNervePopoWait, TLiveActor)
 {
 	TPopo* self = (TPopo*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 		self->setBckAnm(6);
 		self->setGoal((THitActor*)gpMarioAddress);
 	}

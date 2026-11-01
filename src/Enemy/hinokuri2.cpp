@@ -539,7 +539,7 @@ void THinokuri2::init(TLiveManager* param_1)
 void THinokuri2::reset()
 {
 	TSpineEnemy::reset();
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	resetPolInterval();
 	mHitPoints = calcHitPoints();
 	validateCollisionAll();

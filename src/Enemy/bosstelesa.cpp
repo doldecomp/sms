@@ -144,7 +144,7 @@ void TBubble::init(TLiveManager* manager)
 void TBubble::reset()
 {
 	TWalkerEnemy::reset();
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	TMsRange<f32> scaleRange(50.0f, 150.0f);
 	unk1CC = scaleRange.rand();
@@ -208,7 +208,7 @@ void TBubble::kill()
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		mSpine->pushAfterCurrent(mSpine->getDefault());
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 
 	onLiveFlag(LIVE_FLAG_UNK40);
@@ -262,7 +262,7 @@ void TBubble::appendItem()
 		item->appear();
 		item->mPosition = mPosition;
 		item->mVelocity.set(0.0f, 15.0f, 0.0f);
-		item->offLiveFlag(LIVE_FLAG_UNK10);
+		item->offLiveFlag(LIVE_FLAG_NO_BIND);
 		mHeldObject = item;
 		unk198      = item;
 	}
@@ -328,7 +328,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 		J3DFrameCtrl* frameCtrl = bubble->mMActor->getFrameCtrl(0);
 		TMsRange<f32> frameRange(0.0f, 20.0f);
 		frameCtrl->setFrame(frameRange.rand());
-		bubble->onLiveFlag(LIVE_FLAG_UNK8);
+		bubble->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	} else if (bubble->checkCurAnmEnd(0)) {
 		bubble->offHitFilter(HIT_FILTER_NO_COLLISION);
 		bubble->setBckAnm(10);
@@ -520,7 +520,7 @@ void TBossTelesaKillSmallEnemy::checkHit()
 void TTelesaSlot::initMapObj()
 {
 	TSlotDrum::initMapObj();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	unk14C = 160.0f;
 	unk150 = mPosition.y;
 	unk154 = 2.0f;
@@ -849,7 +849,7 @@ void TBossTelesa::init(TLiveManager* manager)
 	onHitFilter(HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
 	            | HIT_CATEGORY_ENEMY);
 	mSpine->initWith(&TNerveBossTelesaFallDemo::theNerve());
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	mMActor->setLightType(1);
 	mMActor->markUnk40();
@@ -1102,8 +1102,8 @@ void TBossTelesa::reset()
 {
 	TSpineEnemy::reset();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onLiveFlag(LIVE_FLAG_UNK8);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 
 	unk18C = 0;
@@ -1852,12 +1852,12 @@ void TBossTelesa::generateSlotItem()
 				mRedPeppers[i]->mVelocity.set(
 				    normalizedDir.x * fruitSpeedRange.rand(), -2.0f,
 				    normalizedDir.z * fruitSpeedRange.rand());
-				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_NO_BIND);
 				if (i == 0) {
 					mRedPeppers[i]->mVelocity.set(
 					    normalizedDir.x * fruitSpeedRange.rand() * 2.0f, -2.0f,
 					    normalizedDir.z * fruitSpeedRange.rand() * 2.0f);
-					mRedPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+					mRedPeppers[i]->offLiveFlag(LIVE_FLAG_NO_BIND);
 				}
 				mRedPeppers[i]->mRotation.set(0.0f, 90.0f, 0.0f);
 				mSpitObjs[mSpitObjNum] = mRedPeppers[i];
@@ -1868,7 +1868,7 @@ void TBossTelesa::generateSlotItem()
 				mFruits[i]->mVelocity.set(
 				    normalizedDir.x * fruitSpeedRange.rand(), -2.0f,
 				    normalizedDir.z * fruitSpeedRange.rand());
-				mFruits[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				mFruits[i]->offLiveFlag(LIVE_FLAG_NO_BIND);
 				mSpitObjs[mSpitObjNum] = mFruits[i];
 			}
 
@@ -1920,7 +1920,7 @@ void TBossTelesa::generateSlotItem()
 			item->mPosition.set(rootMtx[0][3], rootMtx[1][3] - 250.0f,
 			                    rootMtx[2][3]);
 			item->mVelocity.set(velocity);
-			item->offLiveFlag(LIVE_FLAG_UNK10);
+			item->offLiveFlag(LIVE_FLAG_NO_BIND);
 			item->mScaling.set(0.0f, 0.0f, 0.0f);
 			item->killByTimer(0x3C0);
 
@@ -2173,7 +2173,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				    "シャイン（ボス用）", "ボスシャインカメラ",
 				    boss->mPosition.x, boss->mPosition.y, boss->mPosition.z);
 				boss->onLiveFlag(LIVE_FLAG_DEAD);
-				boss->onLiveFlag(LIVE_FLAG_UNK8);
+				boss->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 				boss->offLiveFlag(TBossTelesa::LIVE_FLAG_UNK10000);
 				boss->mHolder = nullptr;
 				boss->offAllCollision();

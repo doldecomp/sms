@@ -270,7 +270,7 @@ void TPoiHana::attackToMario()
 	if (mSpine->getCurrentNerve() == &TNervePoihanaSleep::theNerve()) {
 		unk1A0 = true;
 		unk194 = true;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 		return;
 	}
 
@@ -395,7 +395,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 
 BOOL TPoiHana::isInhibitedForceMove()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return true;
 	return false;
 }
@@ -507,7 +507,7 @@ void TPoiHana::genEventCoin()
 	MsVECNormalize(&vec, &vec);
 	coin->mVelocity.set(vec.x * 10.0f, 18.0f, vec.z * 10.0f);
 
-	coin->offLiveFlag(LIVE_FLAG_UNK10);
+	coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 	mCoin = nullptr;
 }
 
@@ -559,7 +559,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 		if (!self->unk1C8) {
 			self->mGoToSleepTimer = 0;
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-			self->offLiveFlag(LIVE_FLAG_UNK10);
+			self->offLiveFlag(LIVE_FLAG_NO_BIND);
 			return true;
 		}
 
@@ -568,7 +568,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 	}
 
 	if (!self->unk1A0 && !self->isAirborne())
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 
 	self->mGoToSleepTimer += 1;
 	if ((self->unk194 || self->unsetUnk165()) && !self->isBckAnm(10)) {
@@ -590,14 +590,14 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 			if (self->isBckAnm(10)) {
 				self->mGoToSleepTimer = 0;
 				spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-				self->offLiveFlag(LIVE_FLAG_UNK10);
+				self->offLiveFlag(LIVE_FLAG_NO_BIND);
 				return true;
 			}
 
 			if (!self->unk1C8) {
 				self->mGoToSleepTimer = 0;
 				spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-				self->offLiveFlag(LIVE_FLAG_UNK10);
+				self->offLiveFlag(LIVE_FLAG_NO_BIND);
 				return true;
 			}
 

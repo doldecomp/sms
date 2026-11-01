@@ -41,7 +41,7 @@ TKazekun::TKazekun(const char* param_1)
     : TSmallEnemy(param_1)
     , unk1B0(0)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TKazekun::init(TLiveManager* param_1)
@@ -282,9 +282,9 @@ void TKazekun::doAttack(bool start)
 void TKazekun::setVisible(bool visible)
 {
 	if (visible) {
-		offLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8);
+		offLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW);
 	} else {
-		onLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8);
+		onLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW);
 		setAnmSound(nullptr);
 	}
 }

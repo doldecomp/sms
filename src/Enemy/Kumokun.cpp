@@ -208,7 +208,7 @@ void TKumokun::reset() { }
 
 void TKumokun::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	if (isFlying()) {

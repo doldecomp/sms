@@ -24,7 +24,7 @@ TSeal::TSeal(const char* name)
     : TSpineEnemy(name)
     , unk150(0)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TSeal::init(TLiveManager* param_1)

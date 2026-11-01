@@ -163,12 +163,13 @@ void TEnemyManager::setSharedFlags()
 
 	for (int i = 0; i < getObjNum(); ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		enemy->offLiveFlag(LIVE_FLAG_UNK4000);
+		enemy->offLiveFlag(TSpineEnemy::LIVE_FLAG_USE_SHARED_ANIMATION);
 		if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
 			int idx = enemy->getMActor()->getCurAnmIdx(ANM_TYPE_BCK);
 			for (int i = 0; i < unk44; ++i) {
 				if (idx < 0 || idx == unk40[i].getIdx()) {
-					enemy->onLiveFlag(LIVE_FLAG_UNK4000);
+					enemy->onLiveFlag(
+					    TSpineEnemy::LIVE_FLAG_USE_SHARED_ANIMATION);
 					break;
 				}
 			}
@@ -221,7 +222,7 @@ void TEnemyManager::copyFromShared()
 
 	for (int i = 0; i < r29; ++i) {
 		TSpineEnemy* enemy = getObj(i);
-		if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)
+		if (!enemy->checkLiveFlag(TSpineEnemy::LIVE_FLAG_USE_SHARED_ANIMATION)
 		    || enemy->checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 			continue;
 
@@ -310,7 +311,8 @@ void TEnemyManager::performShared(u32 cue, JDrama::TGraphics* param_2)
 		if (cue & CUE_CALC_ANIM) {
 			enemy->updateSquareToMario();
 			enemy->calcRootMatrix();
-			if (!enemy->checkLiveFlag(LIVE_FLAG_UNK4000)) {
+			if (!enemy->checkLiveFlag(
+			        TSpineEnemy::LIVE_FLAG_USE_SHARED_ANIMATION)) {
 				enemy->getMActor()->frameUpdate();
 				if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
 				                          | LIVE_FLAG_CLIPPED_OUT)) {
@@ -327,7 +329,8 @@ void TEnemyManager::performShared(u32 cue, JDrama::TGraphics* param_2)
 			if (!enemy->checkLiveFlag(LIVE_FLAG_HIDDEN
 			                          | LIVE_FLAG_CLIPPED_OUT)) {
 				if ((cue & CUE_CALC_VIEW)
-				    && !enemy->checkLiveFlag(LIVE_FLAG_UNK4000))
+				    && !enemy->checkLiveFlag(
+				        TSpineEnemy::LIVE_FLAG_USE_SHARED_ANIMATION))
 					enemy->getMActor()->viewCalc();
 				if (cue & CUE_ENTRY) {
 					enemy->getMActor()->setLightData(enemy->getGroundPlane(),
@@ -425,7 +428,7 @@ TSpineEnemy* TEnemyManager::getFarOutEnemy()
 		}
 
 		if (!enemy->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)
-		    || !enemy->checkLiveFlag(LIVE_FLAG_UNK800))
+		    || !enemy->checkLiveFlag(TSpineEnemy::LIVE_FLAG_RECYCLABLE))
 			continue;
 
 		if (!best || dist > enemy->getDistToMarioSquared()) {

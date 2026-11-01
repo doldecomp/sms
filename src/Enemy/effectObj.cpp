@@ -236,8 +236,8 @@ void TEffectModel::reset()
 {
 	TSpineEnemy::reset();
 	mRotation.y = TMsRange<f32>(0.0f, 360.0f).rand();
-	onLiveFlag(LIVE_FLAG_UNK8);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 	onHitFilter(HIT_FILTER_NO_COLLISION);

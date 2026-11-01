@@ -35,7 +35,7 @@ const char* const cJointNames[] = {
 TAmenbo::TAmenbo(const char* name)
     : TSmallEnemy(name)
 {
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 }
 
 void TAmenbo::init(TLiveManager* manager)
@@ -92,7 +92,7 @@ void TAmenbo::initParticle()
 
 void TAmenbo::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	JGeometry::TVec3<f32> local_14 = mPosition;
@@ -237,7 +237,7 @@ void TAmenbo::forceKill()
 
 	// amenbo die if no water ;(
 	if (mSpine->getLatestNerve() != &TNerveSmallEnemyDie::theNerve()) {
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		kill();
 	}
 }
@@ -476,7 +476,7 @@ void TAmenbo::activateJumpBase()
 	mDamageRadius = 215.0f;
 	mDamageHeight = 120.0f;
 	calcEntryRadius();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TAmenbo::deactivateJumpBase()
@@ -487,7 +487,7 @@ void TAmenbo::deactivateJumpBase()
 	unk1E4->remove();
 	offHitFilter(HIT_FILTER_NO_ATTACK);
 	setDamageParams(100.0f, 150.0f);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 bool TAmenbo::isActivateJumpBase() const { return unk1E4->isSetUp(); }

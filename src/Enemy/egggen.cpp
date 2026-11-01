@@ -10,8 +10,8 @@
 TEggGenerator::TEggGenerator(const char* name)
     : TSpineEnemy(name)
 {
-	mLiveFlag |= LIVE_FLAG_UNK10;
-	mLiveFlag |= LIVE_FLAG_UNK8;
+	mLiveFlag |= LIVE_FLAG_NO_BIND;
+	mLiveFlag |= LIVE_FLAG_NO_SHADOW;
 }
 
 void TEggGenerator::init(TLiveManager* manager)

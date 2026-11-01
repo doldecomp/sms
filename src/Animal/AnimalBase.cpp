@@ -59,7 +59,7 @@ void TAnimalBase::init(TLiveManager* manager)
 	mMarchSpeed = 0.0f;
 	mBodyRadius = 10.0f;
 	mWallRadius = 20.0f;
-	mLiveFlag |= LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20 | LIVE_FLAG_UNK8;
+	mLiveFlag |= LIVE_FLAG_NO_BIND | LIVE_FLAG_UNK20 | LIVE_FLAG_NO_SHADOW;
 
 	mSpine->initWith(&TNerveAnimalGraphWander::theNerve());
 	unk124->reset();

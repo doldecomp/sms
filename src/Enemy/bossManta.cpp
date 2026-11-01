@@ -478,7 +478,7 @@ void TBossManta::init(TLiveManager* manager)
 		getManager()->initAdditionalCollision();
 	}
 
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	unk1A4 = 0;
 	unk150 = 0.5f;

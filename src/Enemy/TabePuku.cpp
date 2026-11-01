@@ -184,7 +184,7 @@ void TTPHitActor::checkHitActors()
 TTabePuku::TTabePuku(const char* param_1)
     : TSmallEnemy(param_1)
 {
-	onLiveFlag(LIVE_FLAG_UNK1000);
+	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 }
 
 void TTabePuku::init(TLiveManager* param_1)

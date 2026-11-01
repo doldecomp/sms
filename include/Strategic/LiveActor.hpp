@@ -20,41 +20,89 @@ class TBinder;
 class TMapCollisionManager;
 
 enum {
-	LIVE_FLAG_DEAD            = 0x1,
-	LIVE_FLAG_HIDDEN          = 0x2,
-	LIVE_FLAG_CLIPPED_OUT     = 0x4,
-	LIVE_FLAG_UNK8            = 0x8,
-	LIVE_FLAG_UNK10           = 0x10,
-	LIVE_FLAG_UNK20           = 0x20,
-	LIVE_FLAG_UNK40           = 0x40,
-	LIVE_FLAG_AIRBORNE        = 0x80,
-	LIVE_FLAG_ENABLE_CLIPPING = 0x100,
-	LIVE_FLAG_UNK200          = 0x200,
-	LIVE_FLAG_FORCE_SHADOW    = 0x400,
-	LIVE_FLAG_UNK800          = 0x800,
-	LIVE_FLAG_UNK1000         = 0x1000,
-	LIVE_FLAG_UNK2000         = 0x2000,
+	LIVE_FLAG_BIT_DEAD = 0,
+	LIVE_FLAG_BIT_HIDDEN,
+	LIVE_FLAG_BIT_CLIPPED_OUT,
+	LIVE_FLAG_BIT_NO_SHADOW,
+	LIVE_FLAG_BIT_NO_BIND,
+	LIVE_FLAG_BIT_UNK20,
+	LIVE_FLAG_BIT_UNK40,
+	LIVE_FLAG_BIT_AIRBORNE,
+	LIVE_FLAG_BIT_ENABLE_CLIPPING,
+	LIVE_FLAG_BIT_OUT_OF_AREA,
+	LIVE_FLAG_BIT_FORCE_SHADOW,
+	LIVE_FLAG_BIT_UNK800,
+	LIVE_FLAG_BIT_IGNORE_WATER_IN_GROUND_CHECKS,
+	LIVE_FLAG_BIT_ENABLE_FAST_CUBE_CULLING,
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	LIVE_FLAG_CALC_INT_FRAME = 0x4000,
+	LIVE_FLAG_BIT_CALC_INT_FRAME,
+#elif defined(VERSION_GMSJ01_01)
+	LIVE_FLAG_BIT_UNK4000,
 #endif
-	LIVE_FLAG_UNK4000  = VERSION_SELECT(0x8000, GMSJ01(0x4000)),
-	LIVE_FLAG_UNK8000  = VERSION_SELECT(0x10000, GMSJ01(0x8000)),
-	LIVE_FLAG_UNK10000 = VERSION_SELECT(0x20000, GMSJ01(0x10000)),
-	// WARNING: some flag values are overloaded between derived classes. E.g.
-	// LIVE_FLAG_UNK10000 means different things for NPCs and small enemies.
-	// Be careful about placing stuff here -- it might belong to derived classes
-	// instead.
-	LIVE_FLAG_UNK20000    = VERSION_SELECT(0x40000, GMSJ01(0x20000)),
-	LIVE_FLAG_UNK40000    = VERSION_SELECT(0x80000, GMSJ01(0x40000)),
-	LIVE_FLAG_UNK80000    = VERSION_SELECT(0x100000, GMSJ01(0x80000)),
-	LIVE_FLAG_UNK100000   = VERSION_SELECT(0x200000, GMSJ01(0x100000)),
-	LIVE_FLAG_UNK200000   = VERSION_SELECT(0x400000, GMSJ01(0x200000)),
-	LIVE_FLAG_UNK400000   = VERSION_SELECT(0x800000, GMSJ01(0x400000)),
-	LIVE_FLAG_UNK1000000  = VERSION_SELECT(0x2000000, GMSJ01(0x1000000)),
-	LIVE_FLAG_UNK2000000  = VERSION_SELECT(0x4000000, GMSJ01(0x2000000)),
-	LIVE_FLAG_UNK4000000  = VERSION_SELECT(0x8000000, GMSJ01(0x4000000)),
-	LIVE_FLAG_UNK8000000  = VERSION_SELECT(0x10000000, GMSJ01(0x8000000)),
-	LIVE_FLAG_UNK10000000 = VERSION_SELECT(0x20000000, GMSJ01(0x10000000)),
+	LIVE_FLAG_BIT_USER0,
+	LIVE_FLAG_BIT_USER1,
+	LIVE_FLAG_BIT_USER2,
+	LIVE_FLAG_BIT_USER3,
+	LIVE_FLAG_BIT_USER4,
+	LIVE_FLAG_BIT_USER5,
+	LIVE_FLAG_BIT_USER6,
+	LIVE_FLAG_BIT_USER7,
+	LIVE_FLAG_BIT_USER8,
+	LIVE_FLAG_BIT_USER9,
+	LIVE_FLAG_BIT_USER10,
+	LIVE_FLAG_BIT_USER11,
+	LIVE_FLAG_BIT_USER12,
+	LIVE_FLAG_BIT_USER13,
+	LIVE_FLAG_BIT_USER14,
+	LIVE_FLAG_BIT_USER15,
+};
+
+enum {
+	/// Stops the actor from performing.
+	LIVE_FLAG_DEAD = 1u << LIVE_FLAG_BIT_DEAD, // 0x1
+
+	/// Stops the actor from being drawn or animated.
+	LIVE_FLAG_HIDDEN = 1u << LIVE_FLAG_BIT_HIDDEN, // 0x2
+
+	/// Set while the actor is outside of the camera's view frustum or inside of
+	/// a "fast cube". Stops the actor from being animated or drawn, analogous
+	/// to LIVE_FLAG_HIDDEN.
+	LIVE_FLAG_CLIPPED_OUT = 1u << LIVE_FLAG_BIT_CLIPPED_OUT, // 0x4
+
+	/// Stops the actor from casting a shadow.
+	LIVE_FLAG_NO_SHADOW = 1u << LIVE_FLAG_BIT_NO_SHADOW, // 0x8
+
+	/// Disables "binding", aka physics simulation.
+	LIVE_FLAG_NO_BIND = 1u << LIVE_FLAG_BIT_NO_BIND, // 0x10
+
+	LIVE_FLAG_UNK20 = 1u << LIVE_FLAG_BIT_UNK20, // 0x20
+	LIVE_FLAG_UNK40 = 1u << LIVE_FLAG_BIT_UNK40, // 0x40
+
+	/// Signifies that the actor is not standing on solid ground.
+	LIVE_FLAG_AIRBORNE = 1u << LIVE_FLAG_BIT_AIRBORNE, // 0x80
+
+	/// Controls whether frustum clipping is used for the actor by it's manager.
+	LIVE_FLAG_ENABLE_CLIPPING = 1u << LIVE_FLAG_BIT_ENABLE_CLIPPING, // 0x100
+
+	/// Signifies that the actor is outside of the current playable area (e.g.
+	/// floors in hotel delphino) and stops it from performing whatsoever.
+	LIVE_FLAG_OUT_OF_AREA = 1u << LIVE_FLAG_BIT_OUT_OF_AREA, // 0x200
+
+	/// Forces a shadow to be drawn for the actor even if it's culled out.
+	LIVE_FLAG_FORCE_SHADOW = 1u << LIVE_FLAG_BIT_FORCE_SHADOW, // 0x400
+
+	/// Whether the actor "falls" through water during binding.
+	LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS
+	= 1u << LIVE_FLAG_BIT_IGNORE_WATER_IN_GROUND_CHECKS, // 0x1000
+
+	/// If enabled, the actor will be culled out whenever it is in a different
+	/// fast cube from mario.
+	LIVE_FLAG_ENABLE_FAST_CUBE_CULLING
+	= 1u << LIVE_FLAG_BIT_ENABLE_FAST_CUBE_CULLING, // 0x2000
+
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	LIVE_FLAG_CALC_INT_FRAME = 1u << LIVE_FLAG_BIT_CALC_INT_FRAME, // 0x4000
+#endif
 };
 
 class TLiveActor : public TTakeActor {
@@ -133,12 +181,7 @@ public:
 	// fabricated
 	const TBGCheckData* getGroundPlane() const { return mGroundPlane; }
 	f32 getGroundHeight() const { return mGroundHeight; }
-	// TODO: which one is real?
 	bool checkLiveFlag(u32 flag) const { return mLiveFlag & flag; }
-	bool checkLiveFlag2(u32 flag) const
-	{
-		return mLiveFlag & flag ? true : false;
-	}
 	bool isAirborne() const
 	{
 		return checkLiveFlag(LIVE_FLAG_AIRBORNE) ? 1 : 0;
@@ -169,7 +212,7 @@ public:
 	void setVelocityAndFlag10(f32 x, f32 y, f32 z)
 	{
 		mVelocity.set(x, y, z);
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 	void setPositionDelta(const JGeometry::TVec3<f32>& v)
 	{

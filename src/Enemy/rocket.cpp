@@ -210,9 +210,9 @@ void TRocket::reset()
 	TSmallEnemy::reset();
 	if (unk1A1)
 		mPosition = unk194;
-	onLiveFlag(LIVE_FLAG_UNK10);
-	offLiveFlag(LIVE_FLAG_UNK800);
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
+	offLiveFlag(LIVE_FLAG_RECYCLABLE);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	mSpine->initWith(&TNerveRocketWait::theNerve());
 }
 
@@ -227,7 +227,7 @@ void TRocket::behaveToWater(THitActor* param_1) { attackToMario(); }
 
 void TRocket::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 	if (mSpine->getCurrentNerve() == &TNerveRocketPossessedNozzle::theNerve()
 	    || mSpine->getCurrentNerve() == &TNerveRocketFly::theNerve()) {
@@ -262,7 +262,7 @@ void TRocket::setDeadAnm()
 	gpModelWaterManager->emitRequest(*manager->unk68);
 	if (unk1A0)
 		releaseNozzle();
-	onLiveFlag(LIVE_FLAG_UNK20000);
+	onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_PETBTL_BOMB_A, mMActor->getModel()->getBaseTRMtx(), 0,
 	    nullptr);
@@ -290,7 +290,7 @@ bool TRocket::isCollidMove(THitActor* param_1)
 void TRocket::possessedNozzle()
 {
 	((TRocketManager*)mManager)->unk60 = 0;
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	unk1A0 = 1;
 }
 
@@ -396,7 +396,7 @@ DEFINE_NERVE(TNerveRocketWait, TLiveActor)
 {
 	TRocket* self = (TRocket*)spine->getBody();
 	if (spine->getTime() == 0) {
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 		self->setBckAnm(3);
 	}
 	return false;

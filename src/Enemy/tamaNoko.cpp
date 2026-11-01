@@ -94,7 +94,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 							MsVECNormalize(&local_88, &local_88);
 							mapObj->mVelocity.set(local_88.x * 4.0f, 20.0f,
 							                      local_88.z * 4.0f);
-							mapObj->offLiveFlag(LIVE_FLAG_UNK10);
+							mapObj->offLiveFlag(LIVE_FLAG_NO_BIND);
 						}
 					}
 				}
@@ -249,7 +249,7 @@ void TTamaNoko::reset()
 	unk1B8             = false;
 	unk1B9             = true;
 	mScaledBodyRadius  = 280.0f;
-	onLiveFlag(LIVE_FLAG_UNK1000);
+	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 }
 
 void TTamaNoko::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -489,8 +489,9 @@ void TTamaNoko::calcRootMatrix()
 
 void TTamaNoko::requestShadow()
 {
-	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8 | LIVE_FLAG_HIDDEN)) {
-		if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT)
+	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_NO_SHADOW
+	                   | LIVE_FLAG_HIDDEN)) {
+		if (!checkLiveFlag(LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT)
 		    || checkLiveFlag(LIVE_FLAG_FORCE_SHADOW)) {
 			TCircleShadowRequest local_2c;
 
@@ -523,7 +524,7 @@ void TTamaNoko::requestShadow()
 			}
 		}
 
-		if (!checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT)
+		if (!checkLiveFlag(LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT)
 		    && !isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 			gpQuestionManager->request(mPosition, mScaledBodyRadius);
 		}
@@ -690,7 +691,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 			}
 
 			if (self->mAirAttackTimer < TTamaNoko::mStopOnAirTimeMax) {
-				self->onLiveFlag(LIVE_FLAG_UNK10);
+				self->onLiveFlag(LIVE_FLAG_NO_BIND);
 
 				// NOTE: at the top of the arc, we do a lil 360 spin
 				f32 delta
@@ -702,7 +703,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 			} else {
 				self->setVelocity(JGeometry::TVec3<f32>(
 				    0.0f, TTamaNoko::mDropVelocityY, 0.0f));
-				self->offLiveFlag(LIVE_FLAG_UNK10);
+				self->offLiveFlag(LIVE_FLAG_NO_BIND);
 			}
 		}
 	} else {

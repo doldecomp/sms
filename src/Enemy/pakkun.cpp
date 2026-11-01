@@ -328,7 +328,7 @@ bool TPakkun::isHideEnd() const { return false; }
 
 void TPakkun::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (!checkLiveFlag(LIVE_FLAG_UNK200)) {
+	if (!checkLiveFlag(LIVE_FLAG_OUT_OF_AREA)) {
 		unk194->perform(cue, graphics);
 		if (!checkLiveFlag(LIVE_FLAG_DEAD)) {
 			if (cue & CUE_MOVE) {
@@ -661,7 +661,7 @@ void TPakkunSeed::forceKill()
 	kill();
 	if (!unk16C->unk199 && unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		unk160->kill();
-		unk160->onLiveFlag(LIVE_FLAG_UNK20000);
+		unk160->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 }
 
@@ -686,7 +686,7 @@ void TStayPakkun::reset()
 {
 	TPakkun::reset();
 	unk1B2.a = 255;
-	offLiveFlag(LIVE_FLAG_UNK800);
+	offLiveFlag(LIVE_FLAG_RECYCLABLE);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 }
 
@@ -749,7 +749,7 @@ bool TStayPakkun::isHitValid(u32 message)
 {
 	if (message == HIT_MESSAGE_UNKB) {
 		onLiveFlag(LIVE_FLAG_DEAD);
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		return true;
 	}
 

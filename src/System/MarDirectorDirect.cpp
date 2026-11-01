@@ -1007,7 +1007,7 @@ u8 TMarDirector::updateGameMode()
 			break;
 
 		case GAME_MODE_TALK_START:
-			mTalkingNPC->onLiveFlag(LIVE_FLAG_UNK40000);
+			mTalkingNPC->onLiveFlag(TBaseNPC::LIVE_FLAG_TALK_REQUESTED);
 			mTalkingNPC->unkC.off(CUE_MOVE | CUE_CALC_ANIM);
 			mGamePads[0]->onFlag(TMarioGamePad::PAD_FLAG_TALK_SELECT);
 			OSStopStopwatch(&unkE8);

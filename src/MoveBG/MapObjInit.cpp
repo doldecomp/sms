@@ -11306,7 +11306,7 @@ void TMapObjBase::initMapObj()
 		mMActor->setLightType(LIGHT_TYPE_MAPOBJECT);
 
 	if (getMapObjData()->unk30 == 0.0f)
-		onLiveFlag(LIVE_FLAG_UNK8);
+		onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	if (checkMapObjFlag(MAP_OBJ_FLAG_INDIRECT_TEXTURE)
 	    && !isActorType(ACTOR_TYPE_DOKAN_GATE)) {

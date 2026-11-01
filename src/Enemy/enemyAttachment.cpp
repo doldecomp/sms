@@ -1,4 +1,5 @@
 #include <Enemy/EnemyAttachment.hpp>
+#include <Enemy/SmallEnemy.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
@@ -52,7 +53,7 @@ void TEnemyAttachment::forceKill()
 
 	if (unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		unk160->kill();
-		unk160->onLiveFlag(LIVE_FLAG_UNK20000);
+		unk160->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 }
 

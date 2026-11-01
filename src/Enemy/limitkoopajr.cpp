@@ -41,7 +41,7 @@ TLimitKoopaJr::TLimitKoopaJr(const char* param_1)
     : TSpineEnemy(param_1)
     , mBathtub(nullptr)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 }
 

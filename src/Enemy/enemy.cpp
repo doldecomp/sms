@@ -55,10 +55,10 @@ void TSpineEnemy::reset()
 	unk124->reset();
 	goToShortestNextGraphNode();
 	offLiveFlag(LIVE_FLAG_DEAD);
-	offLiveFlag(LIVE_FLAG_UNK8);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_SHADOW);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	onLiveFlag(LIVE_FLAG_UNK800);
+	onLiveFlag(LIVE_FLAG_RECYCLABLE);
 	mSpine->reset();
 	mSpine->pushAfterCurrent(mSpine->getDefault());
 }
@@ -173,13 +173,13 @@ TSpineEnemyParams* TSpineEnemy::getSaveParam() const
 void TSpineEnemy::resetToPosition(const JGeometry::TVec3<f32>& position)
 {
 	mPosition = position;
-	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_NO_SHADOW);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
 	resetHitPoints();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mVelocity = JGeometry::TVec3<f32>(0.0f, 5.0f, 0.0f);
-	onLiveFlag(LIVE_FLAG_UNK8000);
+	onLiveFlag(LIVE_FLAG_JUMPING);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	control();
 }
@@ -190,7 +190,7 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& position,
                             const JGeometry::TVec3<f32>& velocity)
 {
 	mPosition = position;
-	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_NO_SHADOW);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	reset();
 	mRotation = rotation;
@@ -198,7 +198,7 @@ void TSpineEnemy::resetSRTV(const JGeometry::TVec3<f32>& position,
 	resetHitPoints();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	mVelocity = velocity;
-	onLiveFlag(LIVE_FLAG_UNK8000);
+	onLiveFlag(LIVE_FLAG_JUMPING);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
 	control();
 }
@@ -602,7 +602,7 @@ void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
 		    && TEnemyManager::mIsCopyAnmMtx && mgr->getUnk4C() >= 0) {
-			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
+			if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_OUT_OF_AREA))
 				return;
 
 			if (mgr->copyAnmMtx(this))
@@ -611,7 +611,7 @@ void TSpineEnemy::perform(u32 cue, JDrama::TGraphics* graphics)
 	} else {
 		if ((cue & CUE_CALC_ANIM)
 		    && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)
-		    && checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200)) {
+		    && checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_OUT_OF_AREA)) {
 			return;
 		}
 	}

@@ -40,7 +40,7 @@ static const char* cNeckJointName              = "kubi";
 void TBaseNPC::initNpcLight_()
 {
 	mMActor->setLightType(LIGHT_TYPE_OBJECT);
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    mPosition.x, mPosition.y + 10.0f, mPosition.z, &mGroundPlane);
 }
@@ -157,7 +157,8 @@ void TBaseNPC::init(TLiveManager* param_1)
 	mScaledBodyRadius = mScaling.x * mIndividualParams->mCircleShadowSize.get();
 
 	if (mActorType == ACTOR_TYPE_NPC_BOARD) {
-		onLiveFlag(LIVE_FLAG_UNK2000 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+		onLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING | LIVE_FLAG_NO_BIND
+		           | LIVE_FLAG_NO_SHADOW);
 		initNpcObjCollision_(pTVar3);
 		mSpine->initWith(&TNerveNPCWaitMarioApproach::theNerve());
 		mTurnSpeed = 0.0f;
@@ -165,21 +166,21 @@ void TBaseNPC::init(TLiveManager* param_1)
 		return;
 	}
 
-	onLiveFlag(LIVE_FLAG_UNK1000000);
+	onLiveFlag(LIVE_FLAG_RENDER_ENTRY_SKIPPED);
 	onLiveFlag(LIVE_FLAG_AIRBORNE);
-	onLiveFlag(LIVE_FLAG_UNK1000);
+	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 	if (SMSGetMarDirector()->getCurrentStage() != 8
 	    || (strcmp(mName, cNotUseFastCubeViewObjName0) != 0
 	        && strcmp(mName, cNotUseFastCubeViewObjName1) != 0)) {
-		onLiveFlag(LIVE_FLAG_UNK2000);
+		onLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING);
 	}
 
 	if (mActorType == ACTOR_TYPE_NPC_MONTE_ME)
-		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+		onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_NO_SHADOW);
 
 	if (isJellyFishMare() || isSunflower()
 	    || mActorType == ACTOR_TYPE_NPC_MONTE_MF) {
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 
 	if (mMActor->getAnmBck())

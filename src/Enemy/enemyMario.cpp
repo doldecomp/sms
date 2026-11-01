@@ -1,3 +1,4 @@
+#include <NPC/NpcBase.hpp>
 #include <Enemy/EnemyMario.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Emario.hpp>
@@ -661,7 +662,8 @@ bool TEnemyMario::tryTake()
 		    || actorType == ACTOR_TYPE_ROCKET_NOZZLE_ITEM
 		    || actorType == ACTOR_TYPE_EGG_YOSHI) {
 			if (actorType == ACTOR_TYPE_NPC_PEACH) {
-				((TLiveActor*)actor)->onLiveFlag(LIVE_FLAG_UNK100000);
+				((TLiveActor*)actor)
+				    ->onLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 				onEMFlag(EM_FLAG_ENFORCE_TAKE);
 			}
 			unk384 = actor;
@@ -1478,7 +1480,8 @@ void TEnemyMario::hitWater(THitActor* sender)
 
 		if (mStatus == MARIO_STATUS_RUN && canSleep()) {
 			if (mHeldObject != nullptr) {
-				((TLiveActor*)mHeldObject)->offLiveFlag(LIVE_FLAG_UNK100000);
+				((TLiveActor*)mHeldObject)
+				    ->offLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 				dropObject();
 			}
 			changeEMDoing(EM_DOING_PRE_DOWN_ANIMATION);

@@ -88,7 +88,7 @@ void TRiccoHook::init(TLiveManager* manager)
 	goToShortestNextGraphNode();
 	mMarchSpeed = getSaveLoadParam()->mSLMoveSpeed.get();
 	mTurnSpeed  = 10.0f;
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TRiccoHook::kill() { }

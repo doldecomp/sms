@@ -40,7 +40,7 @@ void THideObjBase::appearObjFromPoint(const JGeometry::TVec3<f32>& point)
 {
 	if (mHiddenObj != nullptr && mAllowReveal) {
 		if (mHiddenObj->isActorType(ACTOR_TYPE_SHINE)) {
-			mHiddenObj->onLiveFlag(LIVE_FLAG_UNK10);
+			mHiddenObj->onLiveFlag(LIVE_FLAG_NO_BIND);
 			mHiddenObj->mPosition.set(mPosition);
 			((TShine*)mHiddenObj)->appearWithDemo(mHiddenShineDemoName);
 		} else {
@@ -542,7 +542,7 @@ void THideObjPictureTwin::afterFinishedAnim()
 		obj->mVelocity.set(mtx[0][2] * mAppearSpeed,
 		                   mtx[1][2] * mAppearSpeed + mAppearYSpeed,
 		                   mtx[2][2] * mAppearSpeed);
-		obj->offLiveFlag(LIVE_FLAG_UNK10);
+		obj->offLiveFlag(LIVE_FLAG_NO_BIND);
 
 		if (TMapObjBase::isCoin(obj)) {
 			TCoin* coin                 = (TCoin*)obj;
@@ -602,7 +602,7 @@ void TBreakHideObj::kill()
 	startAnim(2);
 	removeMapCollision();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_NO_SHADOW);
 	mStateTimer = -1;
 	mState      = 2;
 }
@@ -666,7 +666,7 @@ void TWoodBox::kill()
 	startAnim(2);
 	removeMapCollision();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_NO_SHADOW);
 	mStateTimer = -1;
 	mState      = 2;
 

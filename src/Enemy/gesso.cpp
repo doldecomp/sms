@@ -276,7 +276,7 @@ void TGesso::reset()
 		unk158 = 0.0f;
 	}
 
-	offLiveFlag(LIVE_FLAG_UNK1000);
+	offLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 	mNeedsLanding  = false;
 	mIsRightSideUp = true;
 	unk1A4         = mPosition.y;
@@ -719,7 +719,7 @@ void TGesso::rollCheck()
 			mState = STATE_ROLLING;
 			mSpine->pushNerve(&TNerveGessoRolling::theNerve());
 			if (mIsRightSideUp)
-				onLiveFlag(LIVE_FLAG_UNK8);
+				onLiveFlag(LIVE_FLAG_NO_SHADOW);
 			mAttackCooldown = 0;
 		}
 	}
@@ -741,7 +741,7 @@ void TGesso::rollEnd()
 	mState         = STATE_BEAM_CHILLING;
 	mIsRightSideUp = !mIsRightSideUp;
 	if (mIsRightSideUp)
-		offLiveFlag(LIVE_FLAG_UNK8);
+		offLiveFlag(LIVE_FLAG_NO_SHADOW);
 }
 
 void TGesso::modifyRotate()
@@ -754,7 +754,7 @@ void TGesso::fallEnd()
 {
 	mState = STATE_WANDERING;
 	unk158 = 1.0f;
-	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_NO_SHADOW);
 	mRotation.set(0.0f, 0.0f, 0.0f);
 	mIsRightSideUp = true;
 }
@@ -1107,7 +1107,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 
 			self->mState = TGesso::STATE_FALLING;
 		}
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	} else if (self->isWandering()) {
 		if (self->checkCurAnmEnd(0)) {
 			if (self->isBckAnm(6)) {
@@ -1158,7 +1158,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 					self->setBckAnm(7);
 			}
 		} else if (self->isBckAnm(7)) {
-			self->offLiveFlag(LIVE_FLAG_UNK8);
+			self->offLiveFlag(LIVE_FLAG_NO_SHADOW);
 			self->modifyRotate();
 
 			if (self->checkCurAnmEnd(0)) {

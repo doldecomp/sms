@@ -363,7 +363,7 @@ void TCannon::reset()
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk214      = 1;
 	mHeadHeight = 40.0f;
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	unk2AC = mRotation.y;
 
 	if (unk230 == 9) {

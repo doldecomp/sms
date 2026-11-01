@@ -104,14 +104,14 @@ void TMapObjBase::throwObjToFront(TMapObjBase* object, f32 y_offset, f32 speed,
 		object->mVelocity.set(mtx[0][2] * speed,
 		                      mtx[1][2] * speed + vertical_speed,
 		                      mtx[2][2] * speed);
-		object->offLiveFlag(LIVE_FLAG_UNK10);
+		object->offLiveFlag(LIVE_FLAG_NO_BIND);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 		object->mVelocity.set(mtx[0][2] * speed,
 		                      mtx[1][2] * speed + vertical_speed,
 		                      mtx[2][2] * speed);
-		object->offLiveFlag(LIVE_FLAG_UNK10);
+		object->offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 }
 
@@ -125,13 +125,13 @@ void TMapObjBase::throwObjToFrontFromPoint(TMapObjBase* object,
 		MtxPtr mtx = getModel()->getAnmMtx(0);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
-		object->offLiveFlag(LIVE_FLAG_UNK10);
+		object->offLiveFlag(LIVE_FLAG_NO_BIND);
 	} else {
 		Mtx mtx;
 		MsMtxSetRotRPH(mtx, mRotation.x, mRotation.y, mRotation.z);
 		object->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + y_speed,
 		                      mtx[2][2] * speed);
-		object->offLiveFlag(LIVE_FLAG_UNK10);
+		object->offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 }
 
@@ -147,7 +147,7 @@ void TMapObjBase::throwObjFromPointWithRot(TMapObjBase* obj,
 	MsMtxSetRotRPH(mtx, rot.x, rot.y, rot.z);
 	obj->mVelocity.set(mtx[0][2] * speed, mtx[1][2] * speed + up_speed,
 	                   mtx[2][2] * speed);
-	obj->offLiveFlag(LIVE_FLAG_UNK10);
+	obj->offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 bool TMapObjBase::isCoin(THitActor* param_1)

@@ -460,10 +460,10 @@ void TBEelTears::reset()
 	mActorType = ACTOR_TYPE_BOSS_EEL;
 	TSpineEnemy::reset();
 	mSpine->initWith(&TNerveBEelTearsGenerate::theNerve());
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	offLiveFlag(LIVE_FLAG_DEAD);
 	offLiveFlag(LIVE_FLAG_CLIPPED_OUT);
-	offLiveFlag(LIVE_FLAG_UNK200);
+	offLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 	mGroundPlane = gpMap->getIllegalCheckData();
 	offHitFilter(HIT_FILTER_NO_COLLISION);
@@ -1415,7 +1415,7 @@ void TBossEel::init(TLiveManager* manager)
 	mMActor     = mMActorKeeper->getMActor(0);
 	mSaveParams = &static_cast<TBossEelManager*>(manager)->mSaveParams;
 	mInitialPosition.set(mPosition);
-	onLiveFlag(LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW | LIVE_FLAG_NO_BIND);
 	mGroundHeight = gpMap->checkGround(
 	    mPosition.x, mPosition.y + getHeadHeight(), mPosition.z, &mGroundPlane);
 	mMActor->initBckNormalMotionBlend();
@@ -1763,7 +1763,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (mMActor->checkCurBckFromIndex(4))
 		mAwaCollision->perform(cue, graphics);
 
-	if (checkLiveFlag(LIVE_FLAG_UNK200))
+	if (checkLiveFlag(LIVE_FLAG_OUT_OF_AREA))
 		return;
 
 	if (cue & CUE_MOVE) {
@@ -1860,7 +1860,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 			                            breathMtx[2][3]);
 
 			JPABaseEmitter* emitter;
-			if (checkLiveFlag(LIVE_FLAG_UNK10000))
+			if (checkLiveFlag(LIVE_FLAG_REVERSE_SPIN))
 				emitter = gpMarioParticleManager->emit(
 				    BOSSEEL_JPA_MS_MEO_SPIN_SMOKE, &mBreathParticlePosition, 1,
 				    this);
@@ -1871,7 +1871,7 @@ void TBossEel::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (emitter)
 				emitter->setGlobalScale(mScaling);
 
-			if (checkLiveFlag(LIVE_FLAG_UNK10000))
+			if (checkLiveFlag(LIVE_FLAG_REVERSE_SPIN))
 				emitter = gpMarioParticleManager->emit(
 				    BOSSEEL_JPA_MS_MEO_SPIN_AWA, &mBreathParticlePosition, 1,
 				    this);
@@ -2049,7 +2049,7 @@ void ExecSpinNerve_Sub(TBossEel* eel)
 	eel->setTurnSpeed(spinSpeed);
 	gpCameraShake->keepShake(static_cast<EnumCamShakeMode>(0x18), 1.0f);
 
-	if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000)) {
+	if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_REVERSE_SPIN)) {
 		eel->mRotation.y -= spinSpeed;
 		if (eel->mRotation.y <= 0.0f)
 			SMSGetMSound()->startSoundActorWithInfo(
@@ -2075,9 +2075,9 @@ DEFINE_NERVE(TNerveBossEelFirstSpin, TLiveActor)
 		                                        0, 0, nullptr, 0, 4);
 		eel->setBckAnm(10);
 		if (MsRandF() < 0.5f)
-			eel->onLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
+			eel->onLiveFlag(TBossEel::LIVE_FLAG_REVERSE_SPIN);
 		else
-			eel->offLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
+			eel->offLiveFlag(TBossEel::LIVE_FLAG_REVERSE_SPIN);
 	}
 
 	ExecSpinNerve_Sub(eel);
@@ -2102,9 +2102,9 @@ DEFINE_NERVE(TNerveBossEelSecondSpin, TLiveActor)
 		                                        &eel->mPosition, nullptr, 2.0f,
 		                                        0, 0, nullptr, 0, 4);
 		if (MsRandF() < 0.5f)
-			eel->onLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
+			eel->onLiveFlag(TBossEel::LIVE_FLAG_REVERSE_SPIN);
 		else
-			eel->offLiveFlag(TBossEel::LIVE_FLAG_UNK10000);
+			eel->offLiveFlag(TBossEel::LIVE_FLAG_REVERSE_SPIN);
 	}
 
 	ExecSpinNerve_Sub(eel);
@@ -2154,7 +2154,7 @@ DEFINE_NERVE_EXECUTE(TNerveBossEelAppear, TLiveActor)
 		sp *= 0.98f;
 		eel->setTurnSpeed(sp);
 
-		if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_UNK10000))
+		if (eel->checkLiveFlag(TBossEel::LIVE_FLAG_REVERSE_SPIN))
 			eel->mRotation.y -= sp;
 		else
 			eel->mRotation.y += sp;

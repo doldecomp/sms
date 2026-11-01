@@ -162,7 +162,7 @@ void TSamboFlowerCoinUnit::checkGenCoin()
 				coin->mVelocity.set(offset.x * prm->mSLCoinVelocityXZ.get(),
 				                    8.0f * rate + prm->mSLCoinVelocityY.get(),
 				                    offset.z * prm->mSLCoinVelocityXZ.get());
-				coin->offLiveFlag(LIVE_FLAG_UNK10);
+				coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 				spawned++;
 			}
 		}
@@ -387,7 +387,7 @@ void TSamboFlower::load(JSUMemoryInputStream& param_1)
 	param_1 >> mCoinUnitIndex;
 	unk160 = true;
 	reset();
-	offLiveFlag(LIVE_FLAG_UNK800);
+	offLiveFlag(LIVE_FLAG_RECYCLABLE);
 }
 
 void TSamboFlower::loadAfter()
@@ -454,9 +454,9 @@ void TSamboFlower::reset()
 	TSpineEnemy::reset();
 	mMActor->setBck("flower_wait");
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	offLiveFlag(LIVE_FLAG_UNK800);
+	offLiveFlag(LIVE_FLAG_RECYCLABLE);
 	offLiveFlag(LIVE_FLAG_DEAD);
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TSamboFlower::moveObject()
@@ -489,7 +489,7 @@ void TSamboFlower::moveObject()
 		}
 	}
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK10))
+	if (!checkLiveFlag(LIVE_FLAG_NO_BIND))
 		mPosition.y = gpMap->checkGround(mPosition.x, mPosition.y + 100.0f,
 		                                 mPosition.z, &mGroundPlane);
 }
@@ -683,7 +683,7 @@ void THanaSambo::moveObject()
 void THanaSambo::drawObject(JDrama::TGraphics* param_1)
 {
 	TLiveActor::drawObject(param_1);
-	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8))
+	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW))
 		unk1AC->entryDrawShadow();
 }
 
@@ -729,7 +729,7 @@ void THanaSambo::setDeadAnm()
 
 	unk194->kill();
 	unk1B0 = 0;
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 }
 
 void THanaSambo::setAttackAnm()
@@ -803,7 +803,7 @@ void THanaSambo::initFlower()
 		unk1A8->reset();
 	}
 
-	unk1A8->onLiveFlag(LIVE_FLAG_UNK10);
+	unk1A8->onLiveFlag(LIVE_FLAG_NO_BIND);
 	unk1A8->offLiveFlag(LIVE_FLAG_DEAD);
 	unk1A8->mPosition   = mPosition;
 	unk1A8->mPosition.y = mGroundHeight;
@@ -961,7 +961,7 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 		}
 
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
@@ -1127,7 +1127,7 @@ void TSamboHead::reset()
 	unk1B0 = 0;
 	unk19C = 0;
 	unk1AC = 0.0f;
-	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_NO_SHADOW);
 }
 
 void TSamboHead::kill()
@@ -1210,7 +1210,7 @@ void TSamboHead::initFlower()
 	}
 
 	unk198->offHitFilter(HIT_FILTER_NO_COLLISION);
-	unk198->onLiveFlag(LIVE_FLAG_UNK10);
+	unk198->onLiveFlag(LIVE_FLAG_NO_BIND);
 	unk198->offLiveFlag(LIVE_FLAG_DEAD);
 	unk198->mPosition.y = mGroundHeight;
 	unk198->mPosition   = mPosition;
@@ -1297,7 +1297,7 @@ void TSamboHead::genEventCoin()
 				coin->mVelocity.set(offset.x * 4.0f,
 				                    TMsRange<f32>(8.0f, 16.0f).rand(),
 				                    offset.z * 4.0f);
-				coin->offLiveFlag(LIVE_FLAG_UNK10);
+				coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 			}
 		}
 	} else {
@@ -1528,8 +1528,8 @@ DEFINE_NERVE(TNerveSamboHeadHitWall, TLiveActor)
 	                                    ->getFrameCtrl(ANM_TYPE_BCK)
 	                                    ->getEnd()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
-		self->onLiveFlag(LIVE_FLAG_UNK20000);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
+		self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();
