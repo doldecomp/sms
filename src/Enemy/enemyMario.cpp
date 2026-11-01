@@ -1112,7 +1112,7 @@ void TEnemyMario::findRunAwayNearestNode()
 		JGeometry::TVec3<f32> point;
 		TGraphWeb* graph = mEMario->getTracer()->getGraph();
 		graph->getGraphNode(i).getPoint(&point);
-		f32 distance = JGeometry::TVec3<f32>(point - mPosition).length();
+		f32 distance = (point - mPosition).length();
 		if (distance < nearestDistance) {
 			secondDistance  = nearestDistance;
 			secondIndex     = nearestIndex;
@@ -1127,8 +1127,8 @@ void TEnemyMario::findRunAwayNearestNode()
 		}
 	}
 
-	if (JGeometry::TVec3<f32>(mPosition - nearestPoint).length()
-	    < JGeometry::TVec3<f32>(mPosition - secondPoint).length()) {
+	if ((mPosition - nearestPoint).length()
+	    < (mPosition - secondPoint).length()) {
 		mRunAwayNodeIndex = nearestIndex;
 	} else {
 		mRunAwayNodeIndex = secondIndex;

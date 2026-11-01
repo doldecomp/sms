@@ -664,8 +664,7 @@ void TYoshi::emitTongue()
 	int tries = 0;
 	do {
 		mTongue->movement();
-		// TODO: dumb but matches?
-		if (JGeometry::TVec3<f32>(mTongue->mTipPos - pos).length() > unk90)
+		if ((mTongue->mTipPos - pos).length() > unk90)
 			break;
 		++tries;
 	} while (tries < 10);

@@ -796,7 +796,7 @@ void TPinnaCoaster::control()
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	f32 speed = JGeometry::TVec3<f32>(mPosition - unk140).length();
+	f32 speed = (mPosition - unk140).length();
 	if (switchSnd)
 		SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER,
 		                                        &mPosition, nullptr, speed, 0,

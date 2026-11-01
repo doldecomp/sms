@@ -152,11 +152,7 @@ void TMarioCap::perform(u32 cue, JDrama::TGraphics* graphics)
 
 			bool doTremble = false;
 
-			// Missing a copy of TVec3, i still suspect that operations should
-			// do a copy
-			f32 distance = JGeometry::TVec3<f32>(mMario->mPosition
-			                                     - mMario->mPrevPosition)
-			                   .length();
+			f32 distance = (mMario->mPosition - mMario->mPrevPosition).length();
 			if (mMario->mStatus == MARIO_STATUS_SURF && distance > 20.0f) {
 				doTremble = true;
 			}

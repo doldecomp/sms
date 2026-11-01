@@ -358,10 +358,12 @@ void CLBPolarToCross(const Vec& origin, Vec* out, f32 radius, s16 vAngle,
 void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
                                Vec* inOut);
 
-void CLBRotatePosAndUp(s16, s16, const JGeometry::TVec3<f32>&,
-                       const JGeometry::TVec3<f32>&,
-                       const JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>*,
-                       JGeometry::TVec3<f32>*);
+void CLBRotatePosAndUp(s16 pitch_angle, s16 yaw_angle,
+                       const JGeometry::TVec3<f32>& pitch_axis,
+                       const JGeometry::TVec3<f32>& yaw_axis,
+                       const JGeometry::TVec3<f32>& pivot,
+                       JGeometry::TVec3<f32>* in_out_pos,
+                       JGeometry::TVec3<f32>* in_out_up);
 
 inline void CLBScreenFPosToSPos(JGeometry::TVec2<s16>* out,
                                 const JGeometry::TVec2<f32>& in)

@@ -67,18 +67,18 @@ public:
 		return *this;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	friend TVec3 operator-(const TVec3& fst, const TVec3& snd)
 	{
-		fst -= snd;
-		return fst;
+		TVec3 result = fst;
+		result -= snd;
+		return result;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	friend TVec3 operator+(const TVec3& fst, const TVec3& snd)
 	{
-		fst += snd;
-		return fst;
+		TVec3 result = fst;
+		result += snd;
+		return result;
 	}
 };
 
@@ -217,30 +217,32 @@ public:
 		return *this;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	friend TVec3 operator-(const TVec3& fst, const TVec3& snd)
 	{
-		fst -= snd;
-		return fst;
+		TVec3 result = fst;
+		result -= snd;
+		return result;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	friend TVec3 operator+(const TVec3& fst, const TVec3& snd)
 	{
-		fst += snd;
-		return fst;
+		TVec3 result = fst;
+		result += snd;
+		return result;
 	}
 
-	// @fabricated
-	friend TVec3 operator*(TVec3 fst, f32 snd)
+	friend TVec3 operator*(const TVec3& fst, f32 snd)
 	{
-		fst *= snd;
-		return fst;
+		TVec3 result = fst;
+		result *= snd;
+		return result;
 	}
-	friend TVec3 operator/(TVec3 fst, f32 snd)
+
+	friend TVec3 operator/(const TVec3& fst, f32 snd)
 	{
-		fst /= snd;
-		return fst;
+		TVec3 result = fst;
+		result /= snd;
+		return result;
 	}
 
 	f32 dot(const TVec3& other) const

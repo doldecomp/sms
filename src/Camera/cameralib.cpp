@@ -131,26 +131,25 @@ void CLBRevisionLookatByAngleX(s16 vAngleMin, s16 vAngleMax, const Vec& origin,
 	CLBPolarToCross(origin, inOut, radius, vAngle, hAngle);
 }
 
-void CLBRotatePosAndUp(s16 sAngle1, s16 sAngle2,
-                       const JGeometry::TVec3<f32>& axis1,
-                       const JGeometry::TVec3<f32>& axis2,
-                       const JGeometry::TVec3<f32>& offset,
-                       JGeometry::TVec3<f32>* param_6,
-                       JGeometry::TVec3<f32>* param_7)
-
+void CLBRotatePosAndUp(s16 pitch_angle, s16 yaw_angle,
+                       const JGeometry::TVec3<f32>& pitch_axis,
+                       const JGeometry::TVec3<f32>& yaw_axis,
+                       const JGeometry::TVec3<f32>& pivot,
+                       JGeometry::TVec3<f32>* in_out_pos,
+                       JGeometry::TVec3<f32>* in_out_up)
 {
-	f32 angle1 = sAngle1 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
-	f32 angle2 = sAngle2 * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	f32 pitch = pitch_angle * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
+	f32 yaw   = yaw_angle * SHORTANGLE_TO_DEGREES * DEGREES_TO_RADIANS;
 
-	JGeometry::TVec3<f32> v1 = *param_6 - offset;
-	RotateAboutAxis(axis1, -angle1, &v1);
-	*param_6 = offset + v1;
-	RotateAboutAxis(axis1, -angle1, param_7);
+	JGeometry::TVec3<f32> relativePos = *in_out_pos - pivot;
+	RotateAboutAxis(pitch_axis, -pitch, &relativePos);
+	*in_out_pos = pivot + relativePos;
+	RotateAboutAxis(pitch_axis, -pitch, in_out_up);
 
-	JGeometry::TVec3<f32> v2 = *param_6 - offset;
-	RotateAboutAxis(axis2, -angle2, &v2);
-	*param_6 = offset + v2;
-	RotateAboutAxis(axis2, -angle2, param_7);
+	relativePos = *in_out_pos - pivot;
+	RotateAboutAxis(yaw_axis, -yaw, &relativePos);
+	*in_out_pos = pivot + relativePos;
+	RotateAboutAxis(yaw_axis, -yaw, in_out_up);
 }
 
 bool CLBIsPointInCube(const Vec& param_1, const Vec& param_2,

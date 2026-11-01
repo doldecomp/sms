@@ -44,8 +44,7 @@ f32 TMapWireActor::getPosInWire() const
 
 	JGeometry::TVec3<f32> foot = MsPerpendicFootToLineR(start, end, mPosition);
 
-	return JGeometry::TVec3<f32>(foot - start).length()
-	       / JGeometry::TVec3<f32>(end - start).length();
+	return (foot - start).length() / (end - start).length();
 }
 
 void TMapWireActor::getTipPoints(JGeometry::TVec3<f32>* start,

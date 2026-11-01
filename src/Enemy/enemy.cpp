@@ -496,14 +496,15 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 
 	f32 f29 = angle * unk124->unk10;
 
-	f32 dVar9 = (mCurrentTarget.getPoint() - mPosition).length();
+	f32 dVar9 = getCurrentTargetDistance();
 
 	f32 dVar13 = MsWrap(dVar9, 0.0f, cycle);
 
-	dVar13 *= 360.0f * (1.0f / cycle);
-	dVar13 += getPhaseShift();
-
-	f29 *= MsSin(dVar13);
+	cycle          = 360.0f * (1.0f / cycle);
+	f32 phaseShift = getPhaseShift();
+	dVar13 *= cycle;
+	phaseShift = dVar13 + phaseShift;
+	f29 *= MsSin(phaseShift);
 
 	JGeometry::TVec3<f32> local_58 = mCurrentTarget.getPoint();
 	local_58 -= mPosition;
@@ -512,17 +513,7 @@ void TSpineEnemy::zigzagToCurPathNode(f32 march_speed, f32 turn_speed,
 	f32 fVar1 = MsAngleDiff(dVar12, mRotation.y);
 	f32 fVar2 = fVar1;
 
-	f32 fVar3;
-	if (turn_speed >= 90.0f) {
-		fVar3 = 0.0f;
-	} else {
-		f32 s = MsSin(turn_speed);
-		if (s == 0.0f) {
-			fVar3 = 100000.0f;
-		} else {
-			fVar3 = march_speed * MsSin(90.0f - turn_speed * 0.5f) / s;
-		}
-	}
+	f32 fVar3 = calcMinimumTurnRadius(march_speed, turn_speed);
 
 	if (dVar9 > fVar3 * 2.0f) {
 		if (fVar1 > 0.0f) {
@@ -551,7 +542,7 @@ void TSpineEnemy::doShortCut()
 	if (mGoalPath.size() <= 0)
 		return;
 
-	if ((mCurrentTarget.getPoint() - mPosition).length() < getBodyRadius()) {
+	if (getCurrentTargetDistance() < getBodyRadius()) {
 		switchNextGoalPathNode();
 		return;
 	}
