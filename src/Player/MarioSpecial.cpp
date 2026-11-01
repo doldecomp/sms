@@ -1163,7 +1163,19 @@ void TMario::getCurrentPullParams(f32* outV, f32* outH)
 	}
 }
 
-void TMario::setPullingAnm(const JGeometry::TVec3<f32>&, f32) { }
+void TMario::setPullingAnm(const JGeometry::TVec3<f32>& delta, f32 anim_rate)
+{
+	s16 ang  = matan(delta.z, delta.x);
+	s16 adff = ang - mFaceAngle.y;
+	if (adff >= -0x2000 && adff <= 0x2000)
+		setAnimation(ANIM_HOLD_DRAG, anim_rate);
+	if (adff <= -0x6000 || adff >= 0x6000)
+		setAnimation(ANIM_HOLD_BACK, anim_rate);
+	if (adff > -0x6000 && adff < -0x2000)
+		setAnimation(ANIM_HOLD_MOVE_R, anim_rate);
+	if (adff > 0x2000 && adff < 0x6000)
+		setAnimation(ANIM_HOLD_MOVE_L, anim_rate);
+}
 
 BOOL TMario::pulling()
 {
@@ -1212,9 +1224,8 @@ BOOL TMario::pulling()
 	pos.z += rateV * (cosF * JMASCos(backAngle))
 	         + rateH * (sinF * JMASSin(backAngle));
 
-	if (mHeldObject->moveRequest(pos) == 1) {
+	if (mHeldObject->moveRequest(pos) == 1)
 		mPosition = pos;
-	}
 
 	stopProcess();
 
@@ -1231,30 +1242,17 @@ BOOL TMario::pulling()
 
 	default:
 		JGeometry::TVec3<f32> delta;
-		if ((mHeldObject->getActorType() == ACTOR_TYPE_BOSS_GESSO_TENTACLE
-		         ? true
-		         : false)
-		    || (mHeldObject->getActorType() == ACTOR_TYPE_BOSS_UNK8 ? true
-		                                                            : false)) {
+		if (mHeldObject->isActorType(ACTOR_TYPE_BOSS_GESSO_TENTACLE)
+		    || mHeldObject->isActorType(ACTOR_TYPE_BOSS_UNK8)) {
 			delta = pos - mPrevPosition;
 		} else {
 			delta = mPosition - mPrevPosition;
 		}
 
-		f32 len = delta.length();
-		if (len < 1.0f) {
+		if (delta.length() < 1.0f) {
 			setAnimation(ANIM_HOLD_WAIT, animRate);
 		} else {
-			s16 ang  = matan(delta.z, delta.x);
-			s16 adff = ang - mFaceAngle.y;
-			if (adff >= -0x2000 && adff <= 0x2000)
-				setAnimation(ANIM_HOLD_DRAG, animRate);
-			if (adff <= -0x6000 || adff >= 0x6000)
-				setAnimation(ANIM_HOLD_BACK, animRate);
-			if (adff > -0x6000 && adff < -0x2000)
-				setAnimation(ANIM_HOLD_MOVE_R, animRate);
-			if (adff > 0x2000 && adff < 0x6000)
-				setAnimation(ANIM_HOLD_MOVE_L, animRate);
+			setPullingAnm(delta, animRate);
 		}
 		break;
 	}
