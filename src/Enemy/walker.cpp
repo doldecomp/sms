@@ -226,14 +226,18 @@ void TWalker::bind(TLiveActor* param_1)
 			f32 dVar18
 			    = calcFarthestVertex(pTVar14, enemy->mPosition, local_94);
 			f32 fVar4 = (enemy->getWallRadius()) * 2.0f + dVar18;
+
+			// TODO: the vector arithmetic is still wrong here!
 			if (enemy->mGoalPath.empty()) {
-				enemy->pushGoalPathNode(enemy->mPosition
-				                        - normal * enemy->getWallRadius()
-				                        + local_94 * fVar4);
+				JGeometry::TVec3<f32> tangentOffset = local_94 * fVar4;
+				JGeometry::TVec3<f32> wallPoint;
+				wallPoint = enemy->mPosition - normal * enemy->getWallRadius();
+				enemy->pushGoalPathNode(wallPoint + tangentOffset);
 			} else {
-				enemy->mCurrentTarget = TPathNode(
-				    enemy->mPosition - normal * enemy->getWallRadius()
-				    + local_94 * fVar4);
+				JGeometry::TVec3<f32> tangentOffset = local_94 * fVar4;
+				JGeometry::TVec3<f32> wallPoint;
+				wallPoint = enemy->mPosition - normal * enemy->getWallRadius();
+				enemy->mCurrentTarget = TPathNode(wallPoint + tangentOffset);
 			}
 		}
 	}

@@ -88,7 +88,7 @@ void TEnemyAttachment::bind()
 	TBGWallCheckRecord local_48(local_1C.x, local_1C.y + mHeadHeight,
 	                            local_1C.z, 2.0f * mBodyRadius, 1, 0);
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
-		behaveToHitWall(local_48.mResultWalls[0]);
+		behaveToHitWall(local_48.getResultWall(0));
 
 	mPosition      = local_1C;
 	mPositionDelta = local_1C - mPosition;

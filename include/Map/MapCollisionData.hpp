@@ -121,7 +121,9 @@ struct TBGWallCheckRecord {
 	// fabricated
 	const JGeometry::TVec3<f32>& getCenter() const { return mCenter; }
 	int getMaxResults() const { return mMaxResults; }
+	TBGCheckData* getResultWall(int index) const { return mResultWalls[index]; }
 
+public:
 	/* 0x0 */ JGeometry::TVec3<f32> mCenter;
 	/* 0xC */ f32 mRadius;
 	/* 0x10 */ int mMaxResults;

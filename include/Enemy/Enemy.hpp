@@ -116,6 +116,12 @@ public:
 	}
 	const TPathNode& getCurrentTarget() const { return mCurrentTarget; }
 	const TPathNode& getGoal() const { return mGoal; }
+	f32 getCurrentTargetDistance() const
+	{
+		JGeometry::TVec3<f32> delta = mCurrentTarget.getPoint();
+		delta -= mPosition;
+		return delta.length();
+	}
 	f32 getGoalDistance() const
 	{
 		JGeometry::TVec3<f32> delta = mGoal.getPoint();

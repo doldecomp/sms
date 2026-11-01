@@ -145,8 +145,7 @@ void TEMario::checkCollision()
 	for (s32 i = 0; i < mColCount; ++i) {
 		switch (mCollisions[i]->mActorType) {
 		case ACTOR_TYPE_MARIO: {
-			if (JGeometry::TVec3<f32>(mPosition - mCollisions[i]->getPosition())
-			        .length()
+			if ((mPosition - mCollisions[i]->getPosition()).length()
 			    < mEnemyMario->mAttackRange) {
 				mCollisions[i]->receiveMessage(this, HIT_MESSAGE_ATTACK);
 			}
@@ -154,9 +153,7 @@ void TEMario::checkCollision()
 
 		case ACTOR_TYPE_GESO_SURF_BOARD: {
 			if (!mEnemyMario->checkStatusType(MARIO_STATUS_FLAG_UNK10000)) {
-				if (JGeometry::TVec3<f32>(mCollisions[i]->getPosition()
-				                          - mPosition)
-				        .length()
+				if ((mCollisions[i]->getPosition() - mPosition).length()
 				    < (mCollisions[i]->getAttackRadius()
 				       + mEnemyMario->getDamageRadius())) {
 					mEnemyMario->changePlayerStatus(MARIO_STATUS_SURF, 0,
