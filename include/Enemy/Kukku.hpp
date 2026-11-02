@@ -35,7 +35,7 @@ class TEnemyCoinUnit {
 
 class TKukku : public TSmallEnemy {
 public:
-	TKukku(const char* name = "");
+	TKukku(const char* name = "クック");
 	virtual ~TKukku() { };
 
 	void setAfterDeadEffect();
@@ -103,7 +103,7 @@ public:
 
 class TKukkuManager : public TSmallEnemyManager {
 public:
-	TKukkuManager(const char* name = "");
+	TKukkuManager(const char* name = "クックマネージャー");
 	virtual ~TKukkuManager() { };
 	virtual void load(JSUMemoryInputStream&);
 	virtual TSpineEnemy* createEnemyInstance();

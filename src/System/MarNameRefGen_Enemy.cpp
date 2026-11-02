@@ -21,6 +21,7 @@
 #include <Enemy/FireWanwan.hpp>
 #include <Enemy/Beam.hpp>
 #include <Enemy/Amenbo.hpp>
+#include <Enemy/Kukku.hpp>
 #include <Enemy/Kumokun.hpp>
 #include <Enemy/EggGen.hpp>
 #include <Enemy/Igaiga.hpp>
@@ -442,13 +443,12 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return gpBeamManager;
 	}
 
-	// TODO:
-	// if ( strcmp( name, "KukkuManager" ) == 0 )
-	//     return new TKukkuManager;
+	
+	if ( strcmp( name, "KukkuManager" ) == 0 )
+		return new TKukkuManager;
 
-	// TODO:
-	// if ( strcmp( name, "Kukku" ) == 0 )
-	//     return new TKukku;
+	if ( strcmp( name, "Kukku" ) == 0 )
+		return new TKukku;
 
 	if (strcmp(name, "KumokunManager") == 0)
 		return new TKumokunManager;
