@@ -72,7 +72,7 @@ class TBEelTearsManager : public TEnemyManager {
 public:
 	TBEelTearsManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -95,7 +95,7 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void kill();
@@ -125,7 +125,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void reset();
@@ -352,7 +352,7 @@ public:
 	{
 		return false;
 	}
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual MtxPtr getTakingMtx();
 	virtual const char** getBasNameTable() const;
 	virtual BOOL hasMapCollision() const { return true; }
@@ -421,7 +421,7 @@ public:
 
 inline const TBossEel* TBossEelEye::getOwner() const
 {
-	return static_cast<const TBossEel*>(unk10);
+	return static_cast<const TBossEel*>(mActor);
 }
 
 void ExecSpinNerve_Sub(TBossEel*);

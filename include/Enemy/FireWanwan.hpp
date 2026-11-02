@@ -153,7 +153,7 @@ class TFireWanwanTailHit : public TTakeActor {
 public:
 	TFireWanwanTailHit(TFireWanwan&);
 
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	MtxPtr getTakingMtx();
 	BOOL moveRequest(const JGeometry::TVec3<f32>&);
 	void behaveTaken(THitActor*);
@@ -206,7 +206,7 @@ public:
 	bool isMissMario() const;
 	bool isOverApproachRumble() const;
 	bool isOverHungTailRumble() const;
-	BOOL receiveMessage(THitActor*, u32);
+	BOOL receiveMessage(THitActor* sender, u32 message);
 	void behaveToWater(THitActor*);
 	void behaveHitComrades();
 	void changeBodyToRed(f32);

@@ -10,7 +10,7 @@ class TItem : public TMapObjGeneral {
 public:
 	TItem(const char* name = "アイテム");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
@@ -59,7 +59,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 public:
 	/* 0x158 */ s32 mCoinUnitIndex;
@@ -91,7 +91,7 @@ class TCoinBlue : public TCoin {
 public:
 	TCoinBlue(const char* name = "青コイン");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void makeObjAppeared();
 	virtual void loadBeforeInit(JSUMemoryInputStream&);
 	virtual void taken(THitActor*);
@@ -177,7 +177,7 @@ class TEggYoshi : public TMapObjGeneral {
 public:
 	TEggYoshi(const char* name = "ヨッシーの卵");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
@@ -205,7 +205,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void initMapObj();
@@ -218,7 +218,7 @@ class TNozzleBox : public TMapObjGeneral {
 public:
 	TNozzleBox(const char* name = "ノズルボックス");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();

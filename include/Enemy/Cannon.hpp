@@ -43,12 +43,12 @@ class TCannon : public TSmallEnemy {
 public:
 	TCannon(const char* name = "砲台");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual const char** getBasNameTable() const;
@@ -123,7 +123,7 @@ class TCannonDom : public TSharedParts {
 public:
 	TCannonDom(TLiveActor*, int, SDLModelData*, u32, const char* name = "砲身");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void setBckAnm(int);
 
@@ -141,8 +141,8 @@ class TChorobei : public THitActor {
 public:
 	TChorobei(TCannon*, int, const char* name = "チョロベー");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	bool isDownEnd();
 	bool isUpEnd();
@@ -162,7 +162,7 @@ class TCannonManager : public TSmallEnemyManager {
 public:
 	TCannonManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*) { }
 };

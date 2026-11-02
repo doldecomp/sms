@@ -175,7 +175,7 @@ void TSunModel::calcDispRatioAndScreenPos_()
 	}
 }
 
-void TSunModel::perform(u32 cue, JDrama::TGraphics*)
+void TSunModel::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	bool sunInBounds;
 	if (gpCameraMario->isMarioIndoor()) {

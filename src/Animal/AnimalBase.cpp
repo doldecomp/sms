@@ -138,7 +138,10 @@ void TAnimalBase::loadAfter()
 
 void TAnimalBase::calcRootMatrix() { }
 
-BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 msg) { return FALSE; }
+BOOL TAnimalBase::receiveMessage(THitActor* sender, u32 message)
+{
+	return FALSE;
+}
 
 void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {

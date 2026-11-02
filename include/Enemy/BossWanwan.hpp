@@ -144,7 +144,7 @@ public:
 	TBossWanwan(const char* name = "ボスワンワン");
 
 	virtual void kill() { };
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	void shakeCamera(int shakeType);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
@@ -231,7 +231,7 @@ class TBossWanwanManager : public TEnemyManager {
 public:
 	TBossWanwanManager(const char* name = "ボスワンワンマネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void createModelData();
 	void initJParticle();

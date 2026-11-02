@@ -11,7 +11,7 @@ class THideObjBase : public TMapObjBase {
 public:
 	THideObjBase(const char* name = "隠しオブジェ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void appearObj(f32 y_offset);
@@ -44,7 +44,7 @@ public:
 	    : THideObjBase(name)
 	{
 	}
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual u32 touchWater(THitActor*);
 };
 
@@ -55,7 +55,7 @@ public:
 	    : THideObjBase(name)
 	{
 	}
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void touchActor(THitActor*);
 	virtual void touchFruit(THitActor*);
 };
@@ -110,9 +110,9 @@ class TWaterHitPictureHideObj : public THideObjBase {
 public:
 	TWaterHitPictureHideObj(const char* name = "オブジェ出現の絵");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void touchActor(THitActor*);
 	virtual u32 touchWater(THitActor*);

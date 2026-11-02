@@ -36,7 +36,7 @@ protected:
 
 class TMapObjSteam : public THideObjBase {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void control();
 
 	TMapObjSteam(const char* name = "水蒸気")

@@ -88,10 +88,10 @@ public:
 	TBossTelesa(const char* name = "ボステレサ");
 
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void kill();
@@ -205,7 +205,7 @@ public:
 	{
 	}
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	void checkHit();
 
 public:
@@ -220,7 +220,7 @@ public:
 	{
 	}
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	void checkHit();
 
 public:
@@ -247,8 +247,8 @@ class TBossTelesaManager : public TEnemyManager {
 public:
 	TBossTelesaManager(const char* name = "ボステレサマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*) { }
@@ -271,7 +271,7 @@ public:
 	TBubble(const char* name = "バブル");
 
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void kill();
 	virtual f32 getGravityY() const;
@@ -301,7 +301,7 @@ class TBubbleManager : public TSmallEnemyManager {
 public:
 	TBubbleManager(const char* name = "バブルマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();
 };

@@ -12,8 +12,8 @@ class TSunMgr : public JDrama::TViewObj, public TDrawSyncCallback {
 public:
 	TSunMgr(const char* name = "<TSunMgr>");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void drawSyncCallback(unsigned short);
 
 	int getAddColor() const;

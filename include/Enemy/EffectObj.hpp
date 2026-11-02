@@ -48,7 +48,7 @@ class TEffectObjBase : public THitActor {
 public:
 	TEffectObjBase(const char* name = "<EffectObjBase>");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init();
@@ -72,7 +72,7 @@ class TEffectObjManager : public JDrama::TViewObj {
 public:
 	TEffectObjManager(const char* name = "<EffectObjManager>");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void generateEffect(Vec);
@@ -94,7 +94,7 @@ public:
 	{
 	}
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void control() { }
 	virtual void moveObject();
@@ -112,7 +112,7 @@ public:
 class TEffectColumWaterManager : public TEffectModelManager {
 public:
 	TEffectColumWaterManager(const char* name = "エフェクト水柱マネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TEffectModel* createEnemyInstance();
@@ -121,7 +121,7 @@ public:
 class TEffectColumWater : public TEffectModel {
 public:
 	TEffectColumWater(const char* name = "エフェクト水柱");
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 
 	void generate(JGeometry::TVec3<f32>& position,
@@ -132,7 +132,7 @@ class TEffectBombColumWaterManager : public TEffectModelManager {
 public:
 	TEffectBombColumWaterManager(const char* name
 	                             = "エフェクト爆発水柱マネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TEffectModel* createEnemyInstance();
@@ -141,7 +141,7 @@ public:
 class TEffectBombColumWater : public TEffectModel {
 public:
 	TEffectBombColumWater(const char* name = "エフェクト爆発水柱");
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 
 	void generate(JGeometry::TVec3<f32>& position,
@@ -151,7 +151,7 @@ public:
 class TEffectColumSandManager : public TEffectModelManager {
 public:
 	TEffectColumSandManager(const char* name = "エフェクト砂柱マネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TEffectModel* createEnemyInstance();
@@ -160,7 +160,7 @@ public:
 class TEffectColumSand : public TEffectModel {
 public:
 	TEffectColumSand(const char* name = "エフェクト砂柱");
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 
 	void generate(JGeometry::TVec3<f32>& position,
@@ -170,7 +170,7 @@ public:
 class TEffectExplosionManager : public TEffectModelManager {
 public:
 	TEffectExplosionManager(const char* name = "エフェクト爆発マネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TEffectModel* createEnemyInstance();
@@ -179,7 +179,7 @@ public:
 class TEffectExplosion : public TEffectModel {
 public:
 	TEffectExplosion(const char* name = "エフェクト爆発");
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 
 	void generate(JGeometry::TVec3<f32>& position,

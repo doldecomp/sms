@@ -29,9 +29,9 @@ class TYumbo : public TSmallEnemy {
 public:
 	TYumbo(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void moveObject();
 	virtual const char** getBasNameTable() const;
 	virtual void reset();
@@ -71,7 +71,7 @@ class TYumboManager : public TSmallEnemyManager {
 public:
 	TYumboManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 
 	void loadMaterialTable(J3DMaterialTable**, const char*);
@@ -96,7 +96,7 @@ class TYumboSeed : public THitActor {
 public:
 	TYumboSeed(MActor*, const TYumbo&);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void init();
 
 	void startToMove(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&,

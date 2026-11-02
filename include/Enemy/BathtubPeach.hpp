@@ -35,7 +35,7 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual Mtx* getRootJointMtx() const;
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual const char** getBasNameTable() const;
 	virtual void reset();
@@ -53,7 +53,7 @@ class TBathtubPeachManager : public TEnemyManager {
 public:
 	TBathtubPeachManager(const char* name = "バスタブピーチマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 };

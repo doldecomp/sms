@@ -21,10 +21,10 @@ void JDrama::TActor::load(JSUMemoryInputStream& stream)
 	lightMap->load(stream);
 }
 
-void JDrama::TActor::issueGXLight(u32 param_1, JDrama::TGraphics* param_2)
+void JDrama::TActor::issueGXLight(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mLightMap != nullptr)
-		mLightMap->perform(param_1 | CUE_LIGHT, param_2);
+		mLightMap->perform(cue | CUE_LIGHT, graphics);
 }
 
 void JDrama::TActor::perform(u32 cue, TGraphics* graphics)

@@ -496,9 +496,9 @@ void TLeafBoatRotten::control()
 	}
 }
 
-void TLeafBoatRotten::perform(u32 cue, JDrama::TGraphics* param_2)
+void TLeafBoatRotten::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TMapObjBase::perform(cue, param_2);
+	TMapObjBase::perform(cue, graphics);
 }
 
 void TLeafBoatRotten::load(JSUMemoryInputStream& param_1)

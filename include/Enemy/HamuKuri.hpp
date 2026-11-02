@@ -86,7 +86,7 @@ class THamuKuriManager : public TSmallEnemyManager {
 public:
 	THamuKuriManager(const char* = "ハムクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -116,7 +116,7 @@ class THaneHamuKuriManager : public THamuKuriManager {
 public:
 	THaneHamuKuriManager(const char* name = "はねハムクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual void createAnmData();
 	virtual TSpineEnemy* createEnemyInstance();
@@ -128,7 +128,7 @@ class TDoroHaneKuriManager : public THaneHamuKuriManager {
 public:
 	TDoroHaneKuriManager(const char* name = "ドロハネクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -144,7 +144,7 @@ class TDangoHamuKuriManager : public THamuKuriManager {
 public:
 	TDangoHamuKuriManager(const char* name = "だんごハムクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelDataArray(const TModelDataLoadEntry*);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*) { }
@@ -155,7 +155,7 @@ public:
 	TBossDangoHamuKuriManager(const char* name
 	                          = "ボスだんごハムクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*) { }
 };
@@ -164,7 +164,7 @@ class TFireHamuKuriManager : public THamuKuriManager {
 public:
 	TFireHamuKuriManager(const char* name = "ヤキグリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
@@ -185,8 +185,8 @@ public:
 
 	void setOwner(THamuKuri* hamu)
 	{
-		unk1C = hamu;
-		unk10 = (TLiveActor*)hamu;
+		unk1C  = hamu;
+		mActor = (TLiveActor*)hamu;
 	}
 
 public:
@@ -197,7 +197,7 @@ class TDoroHamuKuriManager : public THamuKuriManager {
 public:
 	TDoroHamuKuriManager(const char* name = "どろハムクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -216,7 +216,7 @@ public:
 	THamuKuri(const char* name = "ハムクリ");
 
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void bind();
 	virtual void moveObject();
 	virtual f32 getGravityY() const;
@@ -295,7 +295,7 @@ class THaneHamuKuri : public THamuKuri {
 public:
 	THaneHamuKuri(const char* name = "はねハムクリ");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void bind();
 	virtual void moveObject();
 	virtual const char** getBasNameTable() const;
@@ -338,7 +338,7 @@ class TDoroHaneKuri : public THaneHamuKuri {
 public:
 	TDoroHaneKuri(const char* = "ドロハネクリ");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 	virtual void setBehavior();
 	virtual void behaveToWater(THitActor*);
@@ -377,9 +377,9 @@ public:
 	TDangoHamuKuri(const char* = "だんごハムクリ");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void updateAnmSound();
@@ -416,7 +416,7 @@ public:
 	TBossDangoHamuKuri(const char* = "ボスだんごハムクリ");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void moveObject();
 	virtual void reset();
 	virtual void genEventCoin();
@@ -438,7 +438,7 @@ class TFireHamuKuri : public THamuKuri {
 public:
 	TFireHamuKuri(const char* = "ヤキグリ");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void reset();
@@ -468,7 +468,7 @@ class TDoroHamuKuri : public THamuKuri {
 public:
 	TDoroHamuKuri(const char* = "どろハムクリ");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void kill();
 	virtual void reset();
 	virtual void setBehavior();

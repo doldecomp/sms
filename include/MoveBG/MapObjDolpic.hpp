@@ -65,7 +65,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void control();
 	virtual u32 touchWater(THitActor*);
 };

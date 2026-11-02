@@ -16,7 +16,7 @@ public:
 	void setPartsAnmFrame(f32);
 	MActor* getPartsMActor(int, int);
 	void partsFrameUpdate();
-	void partsPerform(u32, JDrama::TGraphics*);
+	void partsPerform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x0 */ TSharedParts* unk0[2][12];

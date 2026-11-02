@@ -13,8 +13,8 @@ public:
 	TAmenbo(const char* name = "アメンボくん");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void bind();
@@ -103,7 +103,7 @@ class TAmenboManager : public TSmallEnemyManager {
 public:
 	TAmenboManager(const char* name = "アメンボくんマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 

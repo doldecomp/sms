@@ -27,7 +27,7 @@ class TBee : public TRealoidActor {
 public:
 	TBee(MActor*, TBeeHive*);
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init();
 
 	void behaveToEat();
@@ -40,10 +40,10 @@ class TBeeHive : public TRealoid {
 public:
 	TBeeHive(const char* name = "ハチの巣とハチ");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void bind();
@@ -106,7 +106,7 @@ class TBeeHiveManager : public TEnemyManager {
 public:
 	TBeeHiveManager(const char* name = "ハチの巣マネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 

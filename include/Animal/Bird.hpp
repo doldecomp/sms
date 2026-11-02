@@ -37,10 +37,10 @@ class TAnimalBird : public TSpineEnemy {
 public:
 	TAnimalBird(const char* name = "(幸せの青い)鳥");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void moveObject();
@@ -100,7 +100,7 @@ class TAnimalBirdManager : public TEnemyManager {
 public:
 	TAnimalBirdManager(const char* name = "(幸せの青い)鳥マネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 };

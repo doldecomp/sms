@@ -105,7 +105,7 @@ void TRocketManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TRocketManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TRocketManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < getActiveObjNum(); ++i) {
@@ -114,7 +114,7 @@ void TRocketManager::perform(u32 cue, JDrama::TGraphics* param_2)
 				rocket->reset();
 		}
 	}
-	TSmallEnemyManager::perform(cue, param_2);
+	TSmallEnemyManager::perform(cue, graphics);
 }
 
 TRocket::TRocket(const char* param_1)

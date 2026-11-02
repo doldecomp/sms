@@ -77,7 +77,7 @@ public:
 class TSmallEnemyManager : public TEnemyManager {
 public:
 	TSmallEnemyManager(const char* name = "エフェクト敵マネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual void createEnemies(int);
@@ -111,11 +111,11 @@ class TSmallEnemy : public TSpineEnemy {
 public:
 	TSmallEnemy(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void moveObject();
 	virtual void kill();
 	virtual void updateAnmSound();

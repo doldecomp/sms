@@ -32,7 +32,7 @@ TEffectObjManager* gpEffectObjManager;
 // JGadget::TAllocator<TEffectObjBase*>>::insert(JGadget::TList<TEffectObjBase*,
 // JGadget::TAllocator<TEffectObjBase*>>::iterator, TEffectObjBase* const&) {}
 
-void TSimpleEffect::perform(u32 cue, JDrama::TGraphics*)
+void TSimpleEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM)
 		emitEffect();
@@ -104,7 +104,7 @@ void TEffectObjBase::reset()
 	unk74 = 0;
 }
 
-void TEffectObjBase::perform(u32 cue, JDrama::TGraphics*)
+void TEffectObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		if (unk68 == 1) {

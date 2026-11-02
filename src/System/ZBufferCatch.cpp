@@ -3,7 +3,7 @@
 #include <MarioUtil/ReinitGX.hpp>
 #include <dolphin/gx.h>
 
-void TZBufferCatch::perform(u32 cue, JDrama::TGraphics*)
+void TZBufferCatch::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
 		TDrawSyncManager::smInstance->pushBreakPoint();
@@ -12,7 +12,7 @@ void TZBufferCatch::perform(u32 cue, JDrama::TGraphics*)
 	}
 }
 
-void TAlphaCatch::perform(u32 cue, JDrama::TGraphics*)
+void TAlphaCatch::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
 		TDrawSyncManager::smInstance->pushBreakPoint();

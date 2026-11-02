@@ -153,11 +153,11 @@ void TElecNokonokoManager::clipEnemies(JDrama::TGraphics* param_1)
 	}
 }
 
-void TElecNokonokoManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TElecNokonokoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(cue, param_2);
+	TEnemyManager::perform(cue, graphics);
 	for (int i = 0; i < getActiveObjNum(); ++i) {
-		((TElecNokonoko*)getObj(i))->unk194->perform(cue, param_2);
+		((TElecNokonoko*)getObj(i))->unk194->perform(cue, graphics);
 	}
 }
 
@@ -300,26 +300,26 @@ void TElecNokonoko::sendAttackMsgToMario()
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 }
 
-BOOL TElecNokonoko::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TElecNokonoko::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_UNKD || param_2 == HIT_MESSAGE_UNKB) {
+	if (message == HIT_MESSAGE_UNKD || message == HIT_MESSAGE_UNKB) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		kill();
 	}
 
-	if (param_2 == HIT_MESSAGE_TAKE && mHolder == nullptr) {
+	if (message == HIT_MESSAGE_TAKE && mHolder == nullptr) {
 		onHitFilter(HIT_FILTER_NO_COLLISION);
-		mHolder = (TTakeActor*)param_1;
+		mHolder = (TTakeActor*)sender;
 		return true;
 	}
 
-	if ((param_2 == HIT_MESSAGE_PUT || param_2 == HIT_MESSAGE_THROWN)
-	    && mHolder == param_1) {
+	if ((message == HIT_MESSAGE_PUT || message == HIT_MESSAGE_THROWN)
+	    && mHolder == sender) {
 		mHolder = nullptr;
 		return true;
 	}
 
-	if (param_2 == HIT_MESSAGE_TRAMPLE) {
+	if (message == HIT_MESSAGE_TRAMPLE) {
 		if (unk1A4 == 1) {
 			mHitPoints = 1;
 			kill();
@@ -329,9 +329,9 @@ BOOL TElecNokonoko::receiveMessage(THitActor* param_1, u32 param_2)
 		return false;
 	}
 
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (!changeByJuice())
-			behaveToWater(param_1);
+			behaveToWater(sender);
 		else
 			unk194->kill();
 		return true;
@@ -507,9 +507,9 @@ void TElecCarapace::loadInit(TSpineEnemy* param_1, const char* param_2)
 	mHeadHeight = 80.0f;
 }
 
-void TElecCarapace::perform(u32 cue, JDrama::TGraphics* param_2)
+void TElecCarapace::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyAttachment::perform(cue, param_2);
+	TEnemyAttachment::perform(cue, graphics);
 
 	if (cue & CUE_MOVE) {
 		if (unk180 != 0) {
@@ -691,18 +691,18 @@ void TElecCarapace::sendMessage()
 	}
 }
 
-BOOL TElecCarapace::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TElecCarapace::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_UNKD) {
+	if (message == HIT_MESSAGE_UNKD) {
 		gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TLS_CHANGE,
 		                                            &mPosition, 0, nullptr);
 		kill();
 	}
 
-	if (param_2 == HIT_MESSAGE_TRAMPLE)
+	if (message == HIT_MESSAGE_TRAMPLE)
 		SMS_SendMessageToMario(this, HIT_MESSAGE_ELECTRIC_SHOCK);
 
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 	return false;
 }

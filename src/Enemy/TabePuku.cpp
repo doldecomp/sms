@@ -78,9 +78,9 @@ void TTPHitActor::init()
 	group->getChildren().push_back(this);
 }
 
-BOOL TTPHitActor::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TTPHitActor::receiveMessage(THitActor* sender, u32 message)
 {
-	return mOwner->receiveMessage(param_1, param_2);
+	return mOwner->receiveMessage(sender, message);
 }
 
 void TTPHitActor::updateObjCollision()
@@ -217,10 +217,10 @@ void TTabePuku::initParams()
 	mMouthJointIndex = jointIndex;
 }
 
-void TTabePuku::perform(u32 cue, JDrama::TGraphics* param_2)
+void TTabePuku::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	unk194->perform(cue, param_2);
-	TSmallEnemy::perform(cue, param_2);
+	unk194->perform(cue, graphics);
+	TSmallEnemy::perform(cue, graphics);
 }
 
 void TTabePuku::control()
@@ -285,14 +285,14 @@ void TTabePuku::emitEffects()
 	}
 }
 
-BOOL TTabePuku::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TTabePuku::receiveMessage(THitActor* sender, u32 message)
 {
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 		return FALSE;
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 }
 

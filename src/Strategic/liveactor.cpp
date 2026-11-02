@@ -260,7 +260,10 @@ void TLiveActor::kill()
 	mLiveFlag |= LIVE_FLAG_UNK40;
 }
 
-BOOL TLiveActor::receiveMessage(THitActor*, u32) { return FALSE; }
+BOOL TLiveActor::receiveMessage(THitActor* sender, u32 message)
+{
+	return FALSE;
+}
 
 u32 TLiveActor::getShadowType() { return SHADOW_TYPE_CIRCLE; }
 

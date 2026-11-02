@@ -18,7 +18,7 @@ class TMapObjBaseManager : public TLiveManager {
 public:
 	TMapObjBaseManager(const char* name = "地形基底オブジェ管理");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual void clipActors(JDrama::TGraphics*);
 
@@ -52,7 +52,7 @@ public:
 	void initKeyCode();
 
 	TMapObjManager(const char* name = "地形オブジェ管理");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual BOOL hasMapCollision() const { return true; }
 

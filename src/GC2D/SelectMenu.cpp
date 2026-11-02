@@ -78,7 +78,7 @@ void TSelectGrad::setStageColor(u8 stage)
 	}
 }
 
-void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
+void TSelectGrad::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		bool nextCycle = false;
@@ -583,7 +583,7 @@ static inline s16 getSelectedShineID(const TSelectMenu* menu)
 	                      false);
 }
 
-void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
+void TSelectMenu::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		switch (mMenuState) {
@@ -1196,7 +1196,7 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 		case WAIT_BEFORE_CLOSE: {
 			ReInitializeGX();
 			SMS_DrawInit();
-			J2DOrthoGraph graph(gfx->getViewport());
+			J2DOrthoGraph graph(graphics->getViewport());
 			graph.setup2D();
 			graph.setup2D();
 			mMenuScreen->draw(0, 0, &graph);

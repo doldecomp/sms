@@ -10,7 +10,7 @@ class TNPCManager : public TEnemyManager {
 public:
 	TNPCManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void clipEnemies(JDrama::TGraphics*);
 	virtual J3DMaterialTable* getBmt_(bool);
@@ -119,25 +119,25 @@ public:
 
 class TMonteMFManager : public TMonteMSpecialManager {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
 class TMonteMGManager : public TMonteMSpecialManager {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
 class TMonteMHManager : public TMonteMSpecialManager {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
 class TMonteWCManager : public TMonteWSpecialManager {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -156,7 +156,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TMareMBManager : public TMareMBaseManager {
@@ -166,7 +166,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TMareMCManager : public TMareMBaseManager {
@@ -176,7 +176,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TMareMDManager : public TMareMBaseManager {
@@ -186,7 +186,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TMareWManager : public TMareWBaseManager {
@@ -204,7 +204,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TMareWBManager : public TMareWBaseManager {
@@ -214,7 +214,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TKinopioManager : public TNPCManager {
@@ -224,7 +224,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -235,7 +235,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -246,7 +246,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -257,7 +257,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -268,7 +268,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 

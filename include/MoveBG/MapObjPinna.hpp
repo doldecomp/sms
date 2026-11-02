@@ -156,7 +156,7 @@ private:
 
 class TBalloonKoopaJr : public TMapObjGeneral {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void kill();
 	virtual void touchActor(THitActor*);
 	TBalloonKoopaJr(const char* name = "風船（クッパＪｒ）")

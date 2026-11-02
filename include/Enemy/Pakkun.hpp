@@ -86,9 +86,9 @@ class TPakkun : public TSmallEnemy {
 public:
 	TPakkun(const char* name = "パックン");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void kill();
 	virtual const char** getBasNameTable() const;
 	virtual void reset();
@@ -139,8 +139,8 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void kill();
 	virtual TPakkunSaveLoadParams* getSaveParam() const;
@@ -158,7 +158,7 @@ class TPakkunManager : public TSmallEnemyManager {
 public:
 	TPakkunManager(const char* name = "パックンマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();

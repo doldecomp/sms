@@ -74,7 +74,7 @@ class TLampSeesaw : public TMapObjBase {
 public:
 	TLampSeesaw(const char* name = "ランプシーソー（従）");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void touchPlayer(THitActor*);
 	virtual void pushDown(f32) { }
 
@@ -138,8 +138,8 @@ class TLeafBoatRotten : public TLeafBoat {
 public:
 	TLeafBoatRotten(const char* name = "腐ったリーフボート");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void control();
 
 	static f32 mAlphaDownSpeed;
@@ -182,7 +182,7 @@ class TBiancoWatermillVertical : public TMapObjBase {
 public:
 	TBiancoWatermillVertical(const char* name = "水車（ビアンコ垂直）");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void setGroundCollision();
 	virtual void control();
@@ -246,7 +246,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void control();
 
 private:

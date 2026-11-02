@@ -184,7 +184,7 @@ TSamboLeaf::TSamboLeaf(TSamboFlowerManager* param_1, SDLModelData* param_2,
 	unk10 = new SDLModel(param_2, 3, 1);
 }
 
-void TSamboLeaf::perform(u32 cue, JDrama::TGraphics* param_2)
+void TSamboLeaf::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!unk44)
 		return;
@@ -332,17 +332,17 @@ void TSamboFlowerManager::loadAfter()
 	JDrama::TNameRef::loadAfter();
 }
 
-void TSamboFlowerManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TSamboFlowerManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk58 > 0 && cue & CUE_CALC_ANIM) {
 		for (int i = 0; i < unk58; i++)
 			unk54[i]->checkGenCoin();
 	}
 
-	TEnemyManager::perform(cue, param_2);
+	TEnemyManager::perform(cue, graphics);
 
 	for (int i = 0; i < 0x12; ++i)
-		unk60[i]->perform(cue, param_2);
+		unk60[i]->perform(cue, graphics);
 }
 
 void TSamboFlowerManager::dropLeaf(JGeometry::TVec3<f32>& param_1,
@@ -438,9 +438,9 @@ void TSamboFlower::setMActorAndKeeper()
 	actor->getModel()->lock();
 }
 
-BOOL TSamboFlower::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TSamboFlower::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (!unk150)
 			bloom();
 		return 1;
@@ -581,19 +581,19 @@ void THanaSamboManager::createModelData()
 	createModelDataArray(entry);
 }
 
-BOOL THanaSamboHead::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL THanaSamboHead::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_TRAMPLE || param_2 == HIT_MESSAGE_HIP_DROP) {
+	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
 		unk68->kill();
-		return 1;
+		return TRUE;
 	}
 
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		unk68->waterDamage();
-		return 1;
+		return TRUE;
 	}
 
-	return 0;
+	return FALSE;
 }
 
 void THanaSamboHead::checkHit()
@@ -754,12 +754,12 @@ void THanaSambo::waterDamage()
 
 const char** THanaSambo::getBasNameTable() const { return sambo_bastable; }
 
-void THanaSambo::perform(u32 cue, JDrama::TGraphics* param_2)
+void THanaSambo::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                   | LIVE_FLAG_CLIPPED_OUT))
-		unk194->THitActor::perform(cue, param_2);
+		unk194->THitActor::perform(cue, graphics);
 }
 
 void THanaSambo::createPollen()

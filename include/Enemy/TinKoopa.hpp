@@ -37,7 +37,7 @@ public:
 	TTinKoopaManager(const char* name);
 	virtual ~TTinKoopaManager() { }
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual BOOL hasMapCollision() const { return true; }
@@ -59,7 +59,7 @@ class TTinKoopaPartsBase : public TLiveActor {
 public:
 	TTinKoopaPartsBase(const char* name, int index, TTinKoopa* owner);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void reset();
 
@@ -84,7 +84,7 @@ class TTinKoopaFlame : public THitActor {
 public:
 	TTinKoopaFlame(const char* name, TTinKoopa* owner);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void emitFlameEffects();
@@ -131,7 +131,7 @@ public:
 	virtual ~TTinKoopa() { }
 
 	virtual void init(TLiveManager* manager);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual BOOL hasMapCollision() const { return true; }
 	virtual const char** getBasNameTable() const;

@@ -80,12 +80,12 @@ TAmiHit::TAmiHit(TAmiNoko* param_1, const char* param_2)
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
-BOOL TAmiHit::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TAmiHit::receiveMessage(THitActor* sender, u32 message)
 {
-	return unk68->receiveMessage(param_1, param_2);
+	return unk68->receiveMessage(sender, message);
 }
 
-void TAmiHit::perform(u32 cue, JDrama::TGraphics* param_2)
+void TAmiHit::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		JGeometry::TVec3<f32> vec = unk68->unk19C;
@@ -103,7 +103,7 @@ void TAmiHit::perform(u32 cue, JDrama::TGraphics* param_2)
 			}
 		}
 	}
-	THitActor::perform(cue, param_2);
+	THitActor::perform(cue, graphics);
 }
 
 TAmiNoko::TAmiNoko(const char* name)
@@ -617,14 +617,14 @@ void TAmiNoko::bind()
 	}
 }
 
-void TAmiNoko::perform(u32 cue, JDrama::TGraphics* param_2)
+void TAmiNoko::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 	if (cue & CUE_CALC_ANIM)
 		calcDirection();
 #endif
-	TSmallEnemy::perform(cue, param_2);
-	unk208->perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
+	unk208->perform(cue, graphics);
 }
 
 f32 TAmiNoko::getGravityY() const

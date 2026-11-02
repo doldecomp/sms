@@ -9,7 +9,7 @@ class TButterfly : public TRealoidActor {
 public:
 	TButterfly(MActor*, TButterfloid*);
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void init();
 
@@ -21,7 +21,7 @@ class TButterfloid : public TRealoid {
 public:
 	TButterfloid(int, const char* name);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TButterfly* createRealoidActor(MActor*);
 
 	void init(TLiveManager*);

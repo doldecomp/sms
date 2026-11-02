@@ -22,7 +22,7 @@ public:
 	}
 	TMareWallRock(const char* name);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
@@ -55,7 +55,7 @@ class TMareEventWallRock : public JDrama::TViewObj {
 public:
 	TMareEventWallRock(const char* name = "イベント（マーレ壁の岩）");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 public:
@@ -109,7 +109,7 @@ class TMareEventBumpyWall : public TMapObjBase {
 public:
 	TMareEventBumpyWall(const char* name = "凸凹壁");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void control();
 	virtual u32 touchWater(THitActor*);
 

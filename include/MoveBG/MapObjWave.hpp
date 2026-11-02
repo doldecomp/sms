@@ -13,7 +13,7 @@ class TMapObjWave : public JDrama::TViewObj {
 public:
 	TMapObjWave(const char* name = "波の表現");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void movement();

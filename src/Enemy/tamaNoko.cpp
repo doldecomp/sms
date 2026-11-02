@@ -85,7 +85,7 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 
 						MTXMultVec(local_b8, &local_88, &local_88);
 
-						JGeometry::TVec3<f32> local_c4 = unk10->getPosition();
+						JGeometry::TVec3<f32> local_c4 = mActor->getPosition();
 						if (TMapObjBase* mapObj = gpItemManager->makeObjAppear(
 						        local_c4.x + local_88.x, local_c4.y,
 						        local_c4.z + local_88.z, ACTOR_TYPE_COIN,
@@ -100,8 +100,8 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 				}
 			}
 
-			if (unk35 == 0 && unk18->checkCurBckFromIndex(0)
-			    && unk18->curAnmEndsNext()) {
+			if (unk35 == 0 && mMActor->checkCurBckFromIndex(0)
+			    && mMActor->curAnmEndsNext()) {
 				unk35 = 1;
 				TNpcEvent::reviveOneSunflower();
 			}
@@ -110,13 +110,13 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_CALC_ANIM) {
 		TPosition3f magic;
-		magic.translation(unk10->mPosition.x, unk10->mPosition.y,
-		                  unk10->mPosition.z);
-		unk18->getModel()->setBaseTRMtx(magic);
+		magic.translation(mActor->mPosition.x, mActor->mPosition.y,
+		                  mActor->mPosition.z);
+		mMActor->getModel()->setBaseTRMtx(magic);
 		if (unk2C != nullptr && unk30 != 0) {
-			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
 
-			unk20 = unk10->mPosition;
+			unk20 = mActor->mPosition;
 
 			unk2C->animeLoop(&unk20, ctrl->getFrame(), ctrl->getRate(), 0, 4);
 		}
@@ -125,19 +125,19 @@ void TTamaNokoFlower::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (!SMSGetMarDirector()->isDemoModeNow()
 	    && SMSGetMarDirector()->isTalkModeNow()) {
 		if (cue & CUE_CALC_VIEW)
-			unk18->viewCalc();
+			mMActor->viewCalc();
 
 		if (cue & CUE_ENTRY)
-			unk18->entry();
+			mMActor->entry();
 	} else {
-		unk18->perform(cue, graphics);
+		mMActor->perform(cue, graphics);
 	}
 }
 
 void TTamaNokoFlower::setBckAnm(int idx)
 {
 	getMActor()->setBckFromIndex(idx);
-	unk30 = unk10->getBas(idx);
+	unk30 = mActor->getBas(idx);
 	if (unk30 != nullptr) {
 		unk2C->initAnmSound(JKRGetResource(unk30), 1, 0.0f);
 	} else {

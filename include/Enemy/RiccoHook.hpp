@@ -22,7 +22,7 @@ class TRiccoHookManager : public TEnemyManager {
 public:
 	TRiccoHookManager(const char* name = "フックマネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void createModelData();
 
@@ -35,7 +35,7 @@ class TRiccoHook : public TSpineEnemy {
 public:
 	TRiccoHook(const char* name = "フック");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void kill();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);

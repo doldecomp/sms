@@ -51,7 +51,7 @@ class TGessoManager : public TSmallEnemyManager {
 public:
 	TGessoManager(const char* name = "ゲッソーマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -74,8 +74,8 @@ class TGesso : public TWalkerEnemy {
 public:
 	TGesso(const char* name = "ゲッソー");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void kill();
@@ -192,7 +192,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual bool isFindMario(f32) { return false; }
 };
@@ -204,7 +204,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TGessoPolluteObj : public TEnemyAttachment {

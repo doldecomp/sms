@@ -25,8 +25,8 @@ public:
 
 	TLauncher(const char* name);
 
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void control();
 	virtual void bind();
 	virtual void changeState(int);
@@ -56,16 +56,16 @@ public:
 class TLauncherManager : public TEnemyManager {
 public:
 	TLauncherManager(const char* name);
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TCommonLauncher : public TLauncher {
 public:
 	TCommonLauncher(const char* name = "コモンランチャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual const char** getBasNameTable() const;
 	virtual void stateInitial();
 	virtual void stateHitByWater();
@@ -84,7 +84,7 @@ class TCommonLauncherManager : public TLauncherManager {
 public:
 	TCommonLauncherManager(const char* name = "コモンランチャーマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 
 	void initJParticle();

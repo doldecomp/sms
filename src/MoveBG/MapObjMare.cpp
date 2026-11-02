@@ -67,13 +67,13 @@ u32 TCogwheelScale::touchWater(THitActor* param_1)
 	return 1;
 }
 
-BOOL TCogwheelScale::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TCogwheelScale::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_HIP_DROP) {
+	if (message == HIT_MESSAGE_HIP_DROP) {
 		unk158->unk138 += unk150;
 		return TRUE;
 	}
-	return TMapObjBase::receiveMessage(param_1, param_2);
+	return TMapObjBase::receiveMessage(sender, message);
 }
 
 void TCogwheelScale::touchPlayer(THitActor* param_1)
@@ -1004,18 +1004,17 @@ void TMareCork::drawObject(JDrama::TGraphics* param_1)
 	}
 }
 
-BOOL TMareEventPoint::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TMareEventPoint::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		if (!gpModelWaterManager->checkFlagBottom4Bits(
-		        TMapObjBase::getWaterID(param_1), 1)
-		    && TMapObjBase::getWaterPlane(param_1)) {
-			f32 normal_y = TMapObjBase::getWaterPlane(param_1)->getNormal().y;
+		        TMapObjBase::getWaterID(sender), 1)
+		    && TMapObjBase::getWaterPlane(sender)) {
+			f32 normal_y = TMapObjBase::getWaterPlane(sender)->getNormal().y;
 			if (normal_y < 0.1f) {
 				if (unk68->startEvent()) {
-					gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
-					                             &param_1->mPosition, 0,
-					                             nullptr);
+					gpMarioParticleManager->emit(
+					    PARTICLE_MS_ENM_WATHIT, &sender->mPosition, 0, nullptr);
 					SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 					                              &mPosition, 0, 0.0f, 0, 0, 4);
 				}

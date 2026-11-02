@@ -29,8 +29,8 @@ public:
 	TRocket(const char* name = "ロケット");
 	virtual ~TRocket() { }
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual f32 getGravityY() const;
@@ -69,9 +69,9 @@ class TRocketManager : public TSmallEnemyManager {
 public:
 	TRocketManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*) { }

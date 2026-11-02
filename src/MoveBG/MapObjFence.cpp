@@ -20,9 +20,9 @@
 
 #include <M3DUtil/M3UModelMario.hpp>
 
-BOOL TFence::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TFence::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SUPER_HIP_DROP) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		startBck("fence_normal_shake");
 		return TRUE;
 	}
@@ -56,9 +56,9 @@ void TFence::initMapObj()
 	TMapObjBase::initMapObj();
 }
 
-BOOL TRevolvingFenceOuter::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TRevolvingFenceOuter::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SUPER_HIP_DROP) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		startBck("fence_revolve_outer_shake");
 		unk13C->startBck("fence_revolve_inner_shake");
 		return TRUE;
@@ -82,9 +82,9 @@ void TRevolvingFenceOuter::initMapCollisionData()
 	unk13C->appear();
 }
 
-BOOL TRevolvingFenceInner::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TRevolvingFenceInner::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SUPER_HIP_DROP && !unk140) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP && !unk140) {
 		if (isState(STATE_NORMAL)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FENCE_REVERSE1,
 			                                &mPosition, 0, nullptr, 0, 4);
@@ -101,7 +101,7 @@ BOOL TRevolvingFenceInner::receiveMessage(THitActor* param_1, u32 param_2)
 			return TRUE;
 		}
 	}
-	if (param_2 == HIT_MESSAGE_SUPER_HIP_DROP && unk140) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP && unk140) {
 		f32 angle = 180.0f * (getRotYFromAxisZ(SMS_GetMarioPos()) / 3.14f)
 		            + mInitialRotation.y;
 		angle = MsWrap(angle, -180.0f, 180.0f);
@@ -258,9 +258,9 @@ void TRevolvingFenceInner::initMapObj()
 
 void TFenceWater::draw() const { }
 
-BOOL TFenceWater::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TFenceWater::receiveMessage(THitActor* sender, u32 message)
 {
-	if (!isState(STATE_UNK3) && param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+	if (!isState(STATE_UNK3) && message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 		unk13C = mWaterAccel;
 		if (unk13C > 0.0f)
 			changeStatusToGo();
@@ -371,9 +371,9 @@ void TFenceWaterH::changeStatusToWait()
 	setUpMapCollision(0);
 }
 
-BOOL TRailFence::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TRailFence::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SUPER_HIP_DROP) {
+	if (message == HIT_MESSAGE_SUPER_HIP_DROP) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_MVING_FENCT_PNCH, &mPosition,
 		                                0, nullptr, 0, 4);
 		setUpMapCollision(1);

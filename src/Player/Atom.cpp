@@ -29,6 +29,6 @@ void TDeformedTerrain::movement() { }
 
 void TDeformedTerrain::draw(JDrama::TGraphics*) { }
 
-void TDeformedTerrain::perform(u32, JDrama::TGraphics*) { }
+void TDeformedTerrain::perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 TDeformedTerrain::~TDeformedTerrain() { }

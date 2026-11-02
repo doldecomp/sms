@@ -52,7 +52,7 @@ class TTobiPuku : public TWalkerEnemy {
 public:
 	TTobiPuku(const char*);
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void kill();
@@ -131,8 +131,8 @@ class TPukuPuku : public TTobiPuku {
 public:
 	TPukuPuku(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 };
 
@@ -169,9 +169,9 @@ class TTobiPukuLaunchPad : public TSmallEnemy {
 public:
 	TTobiPukuLaunchPad(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void init(TLiveManager* manager);
 	virtual void reset();
 	virtual void launch();
 
@@ -198,7 +198,7 @@ class TTobiPukuManager : public TSmallEnemyManager {
 public:
 	TTobiPukuManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSpineEnemy* createEnemyInstance();
 };
 
@@ -215,8 +215,8 @@ class TTobiPukuLaunchPadManager : public TSmallEnemyManager {
 public:
 	TTobiPukuLaunchPadManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSpineEnemy* createEnemyInstance();
 
 public:

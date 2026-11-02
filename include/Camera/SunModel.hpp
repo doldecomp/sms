@@ -16,7 +16,7 @@ class TSunModel : public JDrama::TActor {
 public:
 	TSunModel(bool, const char* name = "<TSunModel>");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void getZBufValue();

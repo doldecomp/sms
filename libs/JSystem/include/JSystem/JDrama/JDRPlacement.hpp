@@ -20,7 +20,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 	// fabricated
 	const JGeometry::TVec3<f32>& getPosition() const { return mPosition; }

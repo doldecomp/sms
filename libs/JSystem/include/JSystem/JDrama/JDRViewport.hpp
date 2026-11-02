@@ -10,8 +10,8 @@ class TViewport : public TViewObj {
 public:
 	TViewport(const TRect& = TRect(0, 0, 640, 528), const char* = "<Viewport>");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ TRect unk10;

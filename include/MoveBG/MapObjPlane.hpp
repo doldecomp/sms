@@ -10,7 +10,7 @@ class TMapObjPlane : public TLiveActor {
 public:
 	TMapObjPlane(const char* name);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual BOOL hasMapCollision() const { return TRUE; }
@@ -59,7 +59,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 class TSandPlane : public TMapObjPlane {
@@ -69,7 +69,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 #endif

@@ -14,7 +14,7 @@ public:
 		unk15C = nullptr;
 	}
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual const char** getBasNameTable() const;
 

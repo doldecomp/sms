@@ -11,7 +11,7 @@ public:
 		mPath = new char[256];
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void* getRes(const char*) const;
 
 	~TSMSSmplChara() { delete[] mPath; }

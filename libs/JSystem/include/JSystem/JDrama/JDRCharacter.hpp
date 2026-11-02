@@ -26,7 +26,7 @@ public:
 	{
 	}
 	virtual ~TSmplChara();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void* getRes(const char*) const;
 
 	void mountArc(const char*);

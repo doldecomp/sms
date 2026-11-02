@@ -1383,7 +1383,10 @@ void TBossTelesa::perform(u32 cue, JDrama::TGraphics* gfx)
 		mSlotParts->testPerform(cue, gfx);
 }
 
-BOOL TBossTelesa::receiveMessage(THitActor*, u32) { return FALSE; }
+BOOL TBossTelesa::receiveMessage(THitActor* sender, u32 message)
+{
+	return FALSE;
+}
 
 BOOL TBossTelesa::checkMessage(THitActor* actor, u32 message)
 {

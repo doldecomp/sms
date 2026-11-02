@@ -30,7 +30,7 @@ public:
 	~TActor();
 
 	virtual int getType() const { return 1; }
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	void issueGXLight(u32, JDrama::TGraphics*);
 
 	virtual void perform(u32 cue, TGraphics* graphics);
