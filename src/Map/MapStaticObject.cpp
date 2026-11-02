@@ -272,7 +272,7 @@ void TMapStaticObj::initUnique()
 {
 	switch (getActorType()) {
 	case ACTOR_TYPE_TOP_OF_CORONA:
-		if (SMSGetMarDirector()->getCurrentStage() == 4)
+		if (gpMarDirector->getCurrentStage() == 4)
 			mEffectCoronaScale = 1.8f;
 		else
 			mEffectCoronaScale = 1.8f;
@@ -299,11 +299,11 @@ void TMapStaticObj::initUnique()
 	}
 #ifndef VERSION_GMSJ01
 	else if (strcmp(mActorName, "SoundObjRiver") == 0) {
-		if (SMSGetMarDirector()->getCurrentStage() == 13) {
+		if (gpMarDirector->getCurrentStage() == 13) {
 			mSoundId = MSD_SE_OBJ_FOUNTAIN;
 		}
 	} else if (strcmp(mActorName, "MareFalls") == 0) {
-		int stage = SMSGetMarDirector()->getCurrentStage();
+		int stage = gpMarDirector->getCurrentStage();
 		if (stage == 8) {
 			int scenario = gpMarDirector->getCurrentScenario();
 			if (scenario < 6) {
