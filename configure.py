@@ -695,7 +695,7 @@ config.libs = [
             Object(Matching, "dolphin/os/OSRtc.c"),
             Object(Matching, "dolphin/os/OSStopwatch.c"),
             Object(Matching, "dolphin/os/OSSync.c"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "dolphin/os/OSThread.c"),
+            Object(Matching, "dolphin/os/OSThread.c"),
             Object(Matching, "dolphin/os/OSTime.c"),
             Object(Matching, "dolphin/os/__start.c"),
             Object(Matching, "dolphin/os/__ppc_eabi_init.cpp"),

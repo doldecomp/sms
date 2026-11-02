@@ -70,12 +70,23 @@
 	} while (0);
 
 // which header should these go in?
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
-extern unsigned char _stack_end[] AT_ADDRESS(0x8040ED44);
-#else
+#if defined(VERSION_GMSJ01)
 extern char _stack_addr[] AT_ADDRESS(0x80424008);
 extern unsigned char _stack_end[] AT_ADDRESS(0x80414004);
+#elif defined(VERSION_GMSJ01_01)
+extern char _stack_addr[] AT_ADDRESS(0x80418518);
+extern unsigned char _stack_end[] AT_ADDRESS(0x80408518);
+#elif defined(VERSION_GMSE01)
+extern char _stack_addr[] AT_ADDRESS(0x804277E8);
+extern unsigned char _stack_end[] AT_ADDRESS(0x804177E4);
+#elif defined(VERSION_GMSP01)
+extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
+extern unsigned char _stack_end[] AT_ADDRESS(0x8040ED44);
+#elif defined(VERSION_GMSP01_NX)
+extern char _stack_addr[] AT_ADDRESS(0x8041C2F0);
+extern unsigned char _stack_end[] AT_ADDRESS(0x8040C2EC);
+#else
+#error "Unhandled ROM"
 #endif
 
 // .bss
