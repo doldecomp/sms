@@ -217,31 +217,31 @@ public:
 		return *this;
 	}
 
-	friend TVec3 operator-(const TVec3& fst, const TVec3& snd)
+	TVec3 operator-(const TVec3& other) const
 	{
-		TVec3 result = fst;
-		result -= snd;
+		TVec3 result = *this;
+		result -= other;
 		return result;
 	}
 
-	friend TVec3 operator+(const TVec3& fst, const TVec3& snd)
+	TVec3 operator+(const TVec3& other) const
 	{
-		TVec3 result = fst;
-		result += snd;
+		TVec3 result = *this;
+		result += other;
 		return result;
 	}
 
-	friend TVec3 operator*(const TVec3& fst, f32 snd)
+	TVec3 operator*(f32 other) const
 	{
-		TVec3 result = fst;
-		result *= snd;
+		TVec3 result = *this;
+		result *= other;
 		return result;
 	}
 
-	friend TVec3 operator/(const TVec3& fst, f32 snd)
+	TVec3 operator/(f32 other) const
 	{
-		TVec3 result = fst;
-		result /= snd;
+		TVec3 result = *this;
+		result /= other;
 		return result;
 	}
 
