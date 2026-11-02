@@ -892,7 +892,7 @@ config.libs = [
             PCHObject(Matching, "System/StageUtil.cpp"),
             Object(Matching, "System/Resolution.cpp"),
             PCHObject(Matching, "System/PositionHolder.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSP01_NX"), "System/ProcessMeter.cpp"),
+            Object(Matching, "System/ProcessMeter.cpp"),
             PCHObject(Matching, "System/TimeRec.cpp"),
             Object(NonMatching, "System/DrawSyncManager.cpp"),
             PCHObject(Matching, "System/THPRender.cpp"),
