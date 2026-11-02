@@ -7,6 +7,7 @@
 #include <System/MarDirector.hpp>
 #include <MarioUtil/RandomUtil.hpp>
 #include <MarioUtil/MathUtil.hpp>
+#include <M3DUtil/MActor.hpp>
 #include <JSystem/JMath.hpp>
 
 // rogue includes needed for matching sinit & bss
