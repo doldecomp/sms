@@ -823,7 +823,7 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setSafeGoal();
 
-	if (self->unk214 && self->getCurAnmFrameNo(0) > 80.0f) {
+	if (self->unk214 && self->getCurAnmFrameNo(ANM_TYPE_BCK) > 80.0f) {
 		if (self->getGroundPlane()->getActor() != nullptr) {
 			THitActor* actor = (THitActor*)self->getGroundPlane()->getActor();
 			actor->receiveMessage(self, HIT_MESSAGE_SUPER_HIP_DROP);
@@ -831,7 +831,7 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 		self->unk214 = 0;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->unk1B1) {
 			spine->pushAfterCurrent(&TNerveChuuHanaRoll::theNerve());
 		} else {
@@ -851,7 +851,7 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 		self->setBckAnm(2);
 		self->mPosition.x -= 10.0f * self->unk1EC.x;
 		self->mPosition.z -= 10.0f * self->unk1EC.z;
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(2)) {
 			self->setBckAnm(1);
 		} else if (self->isBckAnm(1)) {
@@ -889,12 +889,12 @@ DEFINE_NERVE(TNerveChuuHanaStick, TLiveActor)
 	} else {
 		self->unk224++;
 		if (self->unk224 > self->unk1B4->mSLHitWaterTimer.get()) {
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				*self->unk21C = 0;
 				spine->pushAfterCurrent(&TNerveChuuHanaWait::theNerve());
 				return true;
 			}
-		} else if (self->checkCurAnmEnd(0)) {
+		} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->setBckAnm(4);
 		}
 	}
@@ -1001,7 +1001,7 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 		self->mSurfaceAlignmentMode = TSpineEnemy::SURFACE_ALIGNMENT_NONE;
 	}
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }
@@ -1011,7 +1011,7 @@ DEFINE_NERVE(TNerveChuuHanaWait, TLiveActor)
 	TChuuHana* self = (TChuuHana*)spine->getBody();
 	if (spine->getTime() == 0)
 		self->setBckAnm(11);
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }

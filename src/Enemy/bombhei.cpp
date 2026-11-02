@@ -300,7 +300,7 @@ void TBombHei::moveObject()
 		++unk198;
 		if (unk198 > unk194->mSLBombTime.get()) {
 			mCanBePickedUp = false;
-			unk198 = 0;
+			unk198         = 0;
 			if (mSpine->getCurrentNerve()
 			    != &TNerveBombHeiWaitExplosion::theNerve())
 				mSpine->pushNerve(&TNerveBombHeiWalkExplosion::theNerve());
@@ -382,7 +382,7 @@ DEFINE_NERVE(TNerveBombHeiGenerate, TLiveActor)
 	if (!self->isAirborne() && !self->getHolder()) {
 		if (self->isBckAnm(2)) {
 			self->setBckAnm(3);
-		} else if (self->checkCurAnmEnd(0)) {
+		} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveBombHeiAttack::theNerve());
 			return true;
 		}
@@ -414,7 +414,7 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
 		self->getMActor()->setBtpFromIndex(0);
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveBombHeiExplosion::theNerve());
 		return true;
 	}
@@ -448,7 +448,7 @@ DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		if (!self->getMActor()->checkCurAnmFromIndex(0, ANM_TYPE_BTP))
 			self->getMActor()->setBtpFromIndex(0);
-		if (self->checkCurAnmEnd(0) && spine->getTime() > 150) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > 150) {
 			spine->pushAfterCurrent(&TNerveBombHeiExplosion::theNerve());
 			return true;
 		}
@@ -535,7 +535,7 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 	}
 	if (self->unk190 < self->unk1A0) {
 		self->unk190 *= 1.2f;
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);

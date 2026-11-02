@@ -831,7 +831,7 @@ void TFireWanwan::doWalk()
 		setCurAnmSound();
 	}
 
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(7);
 
 	walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
@@ -849,7 +849,7 @@ void TFireWanwan::doEscape()
 		setCurAnmSound();
 	}
 
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(0);
 
 	walkToCurPathNode(mMarchSpeed * getSaveParam2()->mEscapeSpeedRate.get(),
@@ -872,7 +872,7 @@ bool TFireWanwan::doAttack()
 		                  mTurnSpeed, 0.0f);
 	}
 
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(3);
 
 	return isMissMario();
@@ -1858,7 +1858,7 @@ DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 		self->setBckAnm(5);
 	}
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		self->setBckAnm(7);
 
 	if (self->doTurn()) {
@@ -1881,7 +1881,7 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 
 	self->doAdjustTarget();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveFireWanwanAttack::theNerve());
 		return true;
 	}
@@ -1918,7 +1918,7 @@ DEFINE_NERVE(TNerveFireWanwanTired, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(4);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->setBckAnm(4);
 
 		if (self->getSaveParam2()->mSLAttackWait.get() < spine->getTime()) {
@@ -1951,15 +1951,15 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 	bool b = self->getMActor()->checkCurBckFromIndex(7);
 	if (b) {
 		self->doAdjustTarget();
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			// removed code?
 		}
 	} else {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			self->setBckAnm(7);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveFireWanwanGraphWander::theNerve());
 		return true;
 	}
@@ -1987,7 +1987,7 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 		self->changeBodyToRed(end);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->recoverFire();
 		spine->pushAfterCurrent(spine->getDefault());
 		return true;

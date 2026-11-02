@@ -367,7 +367,7 @@ void TGesso::behaveToWater(THitActor* param_1)
 
 void TGesso::walkBehavior(int param_1, float param_2)
 {
-	if (getCurAnmFrameNo(0) > 20.0f)
+	if (getCurAnmFrameNo(ANM_TYPE_BCK) > 20.0f)
 		TWalkerEnemy::walkBehavior(param_1, param_2);
 
 	if (param_1 == 2)
@@ -449,7 +449,7 @@ void TGesso::polluteBehavior()
 {
 	mPollutionTimer += 1;
 
-	if (!checkCurAnmEnd(0))
+	if (!checkCurAnmEnd(ANM_TYPE_BCK))
 		return;
 
 	if (mSpine->getCurrentNerve() == &TNerveGessoPollute::theNerve())
@@ -777,7 +777,7 @@ bool TGesso::turning()
 	}
 
 	mTurnAngle = 180.0f;
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	else
 		return false;
@@ -1001,7 +1001,7 @@ DEFINE_NERVE(TNerveGessoFreeze, TLiveActor)
 		self->setBckAnm(10);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(10)) {
 			self->setBckAnm(9);
 		} else if (self->isBckAnm(9)) {
@@ -1041,7 +1041,7 @@ DEFINE_NERVE(TNerveGessoPunch, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(11);
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 
 	return false;
@@ -1060,7 +1060,7 @@ DEFINE_NERVE(TNerveGessoPollute, TLiveActor)
 	if (self->isBckAnm(5) || self->isBckAnm(17)) {
 		if (self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(50.0f))
 			self->pollute();
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			return true;
 	} else {
 		if (self->isWandering() || self->mIsRightSideUp)
@@ -1109,7 +1109,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 		}
 		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	} else if (self->isWandering()) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->isBckAnm(6)) {
 				JGeometry::TVec3<f32> local_8C
 				    = self->getPosition() - SMS_GetMarioPos();
@@ -1141,7 +1141,7 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 	} else {
 		if (self->isBckAnm(6) || self->isBckAnm(18)) {
 			self->unk1D0 *= 0.8f;
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				self->mState = 4;
 				self->setBckAnm(4);
 			}
@@ -1154,14 +1154,14 @@ DEFINE_NERVE(TNerveGessoFall, TLiveActor)
 					return true;
 				}
 
-				if (self->checkCurAnmEnd(0))
+				if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 					self->setBckAnm(7);
 			}
 		} else if (self->isBckAnm(7)) {
 			self->offLiveFlag(LIVE_FLAG_NO_SHADOW);
 			self->modifyRotate();
 
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				self->fallEnd();
 				spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 				return true;
@@ -1186,7 +1186,7 @@ DEFINE_NERVE(TNerveGessoRolling, TLiveActor)
 		else
 			self->setBckAnm(19);
 	} else {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->rollEnd();
 			return true;
 		}
@@ -1201,7 +1201,7 @@ DEFINE_NERVE(TNerveGessoFindMario, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(13);
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 
 	return false;
@@ -1214,7 +1214,7 @@ DEFINE_NERVE(TNerveGessoLand, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(14);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->mNeedsLanding = false;
 		return true;
 	}

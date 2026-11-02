@@ -514,7 +514,7 @@ DEFINE_NERVE(TNerveBEelTearsGenerate, TLiveActor)
 		tears->mMActor->setBckFromIndex(2);
 	}
 
-	if (tears->checkCurAnmEnd(0)) {
+	if (tears->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveBEelTearsMoveUp::theNerve());
 		return true;
 	}
@@ -674,7 +674,7 @@ DEFINE_NERVE(TNerveOilBallStay, TLiveActor)
 {
 	TOilBall* oilBall = static_cast<TOilBall*>(spine->getBody());
 	if (oilBall->getMActor()->checkCurBckFromIndex(3)
-	    || (oilBall->checkCurAnmEnd(0)
+	    || (oilBall->checkCurAnmEnd(ANM_TYPE_BCK)
 	        && !oilBall->getMActor()->checkCurBckFromIndex(1))) {
 		oilBall->mMActor = oilBall->mMActorKeeper->getMActor("tears.bmd");
 		oilBall->mMActor->setBckFromIndex(1);
@@ -2159,7 +2159,7 @@ DEFINE_NERVE_EXECUTE(TNerveBossEelAppear, TLiveActor)
 		else
 			eel->mRotation.y += sp;
 		eel->mRotation.y = MsWrap(eel->mRotation.y, 0.0f, 360.0f);
-	} else if (eel->checkCurAnmEnd(0)) {
+	} else if (eel->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveBossEelOutWait::theNerve());
 		eel->mBarrierCollision->onHitFilter(HIT_FILTER_NO_COLLISION);
 		if (eel->mCollisionEnabled) {
@@ -2182,7 +2182,7 @@ DEFINE_NERVE(TNerveBossEelOutWait, TLiveActor)
 		eel->setBckAnm(16);
 	}
 
-	if (eel->checkCurAnmEnd(0)) {
+	if (eel->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		s32 r28 = eel->mSaveParams->mSLMouthOpenInterval.get();
 
 		if (eel->getMActor()->checkCurBckFromIndex(19)) {
@@ -2235,7 +2235,7 @@ static BOOL ExecBackNerve_Sub(TSpineBase<TLiveActor>* spine, f32 speed)
 	       / (eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd() * 2);
 	if (eel->mAppearOffset < 0.0f) {
 		eel->mAppearOffset = 0.0f;
-		if (eel->checkCurAnmEnd(0)) {
+		if (eel->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			eel->mInDemo = false;
 			spine->pushAfterCurrent(&TNerveBossEelSecondSpin::theNerve());
 			if (eel->getMActor()->checkCurBckFromIndex(6))
@@ -2269,7 +2269,7 @@ DEFINE_NERVE(TNerveBossEelEat, TLiveActor)
 	if (spine->getTime() == 0)
 		eel->setBckAnm(17);
 
-	if (eel->checkCurAnmEnd(0)) {
+	if (eel->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (eel->getMActor()->checkCurBckFromIndex(17)) {
 			if (eel->canEatMario()) {
 				eel->setBckAnm(12);
@@ -2346,7 +2346,7 @@ DEFINE_NERVE(TNerveBossEelDie, TLiveActor)
 		if (eel->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->checkPass(650.0f))
 			eel->mHeartCoin->getMActor()->setBckFromIndex(8);
 
-		if (eel->checkCurAnmEnd(0)) {
+		if (eel->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (SMS_SendMessageToMario(eel, HIT_MESSAGE_DETACH)) {
 				eel->mHeldObject = nullptr;
 				SMS_SendMessageToMario(eel, HIT_MESSAGE_ATTACK);
@@ -2383,7 +2383,7 @@ DEFINE_NERVE(TNerveBossEelMouthOpenWait, TLiveActor)
 			eel->mToothBroken = false;
 		eel->setBckAnm(13);
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1B, 1.0f);
-	} else if (eel->checkCurAnmEnd(0)) {
+	} else if (eel->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (eel->getMActor()->checkCurBckFromIndex(13)) {
 			eel->setBckAnm(14);
 			gpCameraShake->startShake(CAM_SHAKE_MODE_UNK1C, 1.0f);
@@ -2424,7 +2424,7 @@ DEFINE_NERVE(TNerveBossEelSleepOnBottom, TLiveActor)
 	if (spine->getTime() % 100 == 1)
 		eel->forceShedTears(spine->getTime() % 2);
 
-	if (spine->getTime() > 1000 && eel->checkCurAnmEnd(0))
+	if (spine->getTime() > 1000 && eel->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 
 	return false;

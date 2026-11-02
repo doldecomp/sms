@@ -776,7 +776,7 @@ DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->killBathtubKiller();
 		return TRUE;
 	}
@@ -793,7 +793,7 @@ DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->killBathtubKiller();
 		return TRUE;
 	}

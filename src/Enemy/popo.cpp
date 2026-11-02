@@ -855,7 +855,7 @@ DEFINE_NERVE(TNervePopoPossessedNozzle, TLiveActor)
 		self->possessedIn();
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->unsetUnk165()) {
 			self->setBckAnm(3);
 			self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), 3);

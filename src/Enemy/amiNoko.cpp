@@ -691,7 +691,7 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 		self->setWalkAnm();
 
 	if (self->isBckAnm(5) || self->isBckAnm(8)) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->unk210 != 0)
 				self->setBckAnm(4);
 			else
@@ -701,7 +701,7 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 
 	JGeometry::TVec3<f32> pos = self->getCurrentTarget().getPoint();
 	pos -= self->mPosition;
-	if (pos.length() < 1.5f && self->checkCurAnmEnd(0)) {
+	if (pos.length() < 1.5f && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(3) || self->isBckAnm(6)) {
 			self->goToRandomNextGraphNode();
 			spine->pushAfterCurrent(&TNerveAmiNokoTurn::theNerve());
@@ -728,7 +728,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 	}
 
 	if (self->isBckAnm(11) || self->isBckAnm(14)) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->unk210 != 0)
 				self->setBckAnm(10);
 			else
@@ -741,7 +741,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 	if (pos.x == 0.0f && pos.y == 0.0f && pos.z == 0.0f)
 		pos.x = 1.0f;
 	VECNormalize(&pos, &pos);
-	if (pos.dot(self->unk1A8) > 0.8f && self->checkCurAnmEnd(0)) {
+	if (pos.dot(self->unk1A8) > 0.8f && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(9) || self->isBckAnm(12)) {
 			if (self->unk210 != 0)
 				self->setBckAnm(15);
@@ -774,7 +774,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 		self->unk208->onHitFilter(HIT_FILTER_NO_COLLISION);
 #endif
 	}
-	if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(1)) {
 		JGeometry::TVec3<f32> direction = self->mPosition;
 		direction -= SMS_GetMarioPos();
 		if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
@@ -828,7 +828,7 @@ DEFINE_NERVE(TNerveAmiNokoFreeze, TLiveActor)
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f));
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(2))
 			self->setBckAnm(15);
 		else if (spine->getTime() > self->getSaveParams()->getSLFreezeWait())

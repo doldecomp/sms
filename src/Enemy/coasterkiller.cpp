@@ -337,7 +337,7 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 		self->unk190 *= 1.3f;
 	} else {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->onLiveFlag(LIVE_FLAG_DEAD);
 			self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 			self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);

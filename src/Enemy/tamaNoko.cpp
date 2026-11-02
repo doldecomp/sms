@@ -263,7 +263,7 @@ void TTamaNoko::moveObject()
 {
 	TWalkerEnemy::moveObject();
 	if (mSpine->getCurrentNerve() == &TNerveWalkerGraphWander::theNerve()
-	    && isBckAnm(10) && checkCurAnmEnd(0))
+	    && isBckAnm(10) && checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(9);
 }
 
@@ -393,7 +393,8 @@ bool TTamaNoko::isHitValid(u32 param_1)
 	if (param_1 == HIT_MESSAGE_UNKB)
 		return false;
 
-	if (!mIsSunkInGround || (isBckAnm(7) && getCurAnmFrameNo(0) > 80.0f))
+	if (!mIsSunkInGround
+	    || (isBckAnm(7) && getCurAnmFrameNo(ANM_TYPE_BCK) > 80.0f))
 		return false;
 
 	if (param_1 == HIT_MESSAGE_HIP_DROP)
@@ -638,7 +639,7 @@ DEFINE_NERVE(TNerveTamaNokoSleep, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
 
-	if (!self->isBckAnm(15) && self->checkCurAnmEnd(0)) {
+	if (!self->isBckAnm(15) && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->setBckAnm(15);
 		self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 	}
@@ -708,7 +709,7 @@ DEFINE_NERVE(TNerveTamaNokoAttack, TLiveActor)
 		}
 	} else {
 		// Not doing jump attack -- chase mario & try to do the jump attack
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->isBckAnm(10)) {
 				self->setBckAnm(9);
 			} else if (self->isBckAnm(9)) {
@@ -805,7 +806,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 
 	// If didn't land on sand -- we pick ourselves back up after a moment
 	int pickUpTime = self->getSaveParams2()->mSLPickUpTime.get();
-	if (self->checkCurAnmEnd(0) && spine->getTime() > pickUpTime) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > pickUpTime) {
 		self->mCanBePickedUp = false;
 		spine->pushAfterCurrent(&TNerveTamaNokoWait::theNerve());
 		return true;
@@ -821,7 +822,7 @@ DEFINE_NERVE(TNerveTamaNokoPickUp, TLiveActor)
 	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > self->getSaveParams2()->mSLPickUpTime.get()) {
 		self->mCanBePickedUp = false;
 		self->attackToMario();
@@ -870,7 +871,7 @@ DEFINE_NERVE(TNerveTamaNokoSink, TLiveActor)
 		self->setBckAnm(6);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(6))
 			self->setBckAnm(5);
 
@@ -908,7 +909,7 @@ DEFINE_NERVE(TNerveTamaNokoHitWater, TLiveActor)
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(15)) {
 			self->setBckAnm(16);
 		} else if (self->isBckAnm(16)) {
@@ -944,7 +945,7 @@ DEFINE_NERVE(TNerveTamaNokoWait, TLiveActor)
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(14)) {
 			self->setBckAnm(13);
 		} else if (self->isBckAnm(13)) {

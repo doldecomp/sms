@@ -329,7 +329,7 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 		TMsRange<f32> frameRange(0.0f, 20.0f);
 		frameCtrl->setFrame(frameRange.rand());
 		bubble->onLiveFlag(LIVE_FLAG_NO_SHADOW);
-	} else if (bubble->checkCurAnmEnd(0)) {
+	} else if (bubble->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		bubble->offHitFilter(HIT_FILTER_NO_COLLISION);
 		bubble->setBckAnm(10);
 	}
@@ -386,7 +386,8 @@ DEFINE_NERVE(TNerveBubbleSplit, TLiveActor)
 	if (spine->getTime() == 10)
 		bubble->setBckAnm(9);
 
-	if (bubble->checkCurAnmEnd(0) && bubble->mMActor->checkCurBckFromIndex(9)) {
+	if (bubble->checkCurAnmEnd(ANM_TYPE_BCK)
+	    && bubble->mMActor->checkCurBckFromIndex(9)) {
 		bubble->unk1D2 = 0;
 		bubble->kill();
 	}
@@ -2140,7 +2141,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	}
 
 	if (boss->getHitPoints() == 0) {
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (boss->unk388 == 0) {
 				MtxPtr mtx = boss->getMActor()->getModel()->getAnmMtx(1);
 				boss->mEffectPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
@@ -2187,7 +2188,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		return FALSE;
 	}
 
-	if (boss->checkCurAnmEnd(0)) {
+	if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (boss->getMActor()->checkCurBckFromIndex(5)) {
 			boss->getMActor()->setBrkFromIndex(2);
 			boss->setBckAnm(7);
@@ -2226,7 +2227,7 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 			boss->genAttacker();
 	}
 
-	if (boss->checkCurAnmEnd(0))
+	if (boss->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }
@@ -2239,7 +2240,7 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 		boss->getMActor()->setBtpFromIndex(2);
 	}
 
-	if (boss->checkCurAnmEnd(0)) {
+	if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		boss->offAllCollision();
 		SMSRumbleMgr->start(0x14, 0xF, (f32*)nullptr);
 		boss->rouletteStart();
@@ -2296,7 +2297,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->mSlot->randomReset();
 			boss->onAllCollision();
 		}
-	} else if (boss->checkCurAnmEnd(0)
+	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK)
 	           && !boss->getMActor()->checkCurBckFromIndex(15)) {
 		boss->setBckAnm(15);
 		boss->getMActor()->setBtpFromIndex(2);
@@ -2334,7 +2335,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 			boss->slotStart();
 		}
 
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			boss->setBckAnm(15);
 			boss->getMActor()->setBtpFromIndex(2);
 			boss->mSlot->forceStopSlot(1);
@@ -2354,7 +2355,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 	if (!boss->getMActor()->checkCurBckFromIndex(14)
 	    && boss->mHoseiPosY < TBossTelesa::mBaseHoseiPosY - 200.0f) {
 		boss->setBckAnm(14);
-	} else if (boss->checkCurAnmEnd(0) && spine->getTime() > 600) {
+	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
 		boss->unk368 = 0;
 		boss->fruitCollisionOn();
@@ -2375,7 +2376,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 	if (boss->mIsSpicy) {
 		boss->mSpicyTimer++;
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (boss->getMActor()->checkCurBckFromIndex(1)) {
 				boss->setBckAnm(12);
 				boss->getMActor()->setBtpFromIndex(1);
@@ -2444,7 +2445,7 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (boss->getMActor()->checkCurBckFromIndex(16)) {
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			boss->mIsSpicy = 0;
 
 			u8 maxHp = boss->getMaxHitPoints();

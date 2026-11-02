@@ -369,7 +369,7 @@ DEFINE_NERVE(TNerveKazekunAppear, TLiveActor)
 		self->changeBck("kazekun_appear");
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunTurn::theNerve());
 		return true;
 	}
@@ -462,7 +462,7 @@ DEFINE_NERVE(TNerveKazekunDisappear, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunWait::theNerve());
 		return true;
 	}
@@ -496,7 +496,7 @@ DEFINE_NERVE(TNerveKazekunHitWater, TLiveActor)
 		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunDisappear::theNerve());
 		self->unk1B0
 		    = ((TKazekunParams*)self->getSaveParam())->mResetTimeHitting.get();

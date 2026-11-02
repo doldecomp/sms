@@ -72,8 +72,8 @@ public:
 	                         f32 angle);
 	void doShortCut();
 	void searchNearestBrother() const;
-	f32 getCurAnmFrameNo(int) const;
-	BOOL checkCurAnmEnd(int) const;
+	f32 getCurAnmFrameNo(int type) const;
+	BOOL checkCurAnmEnd(int type) const;
 
 	// fabricated
 	f32 getDistToMarioSquared() const { return mDistToMarioSquared; }

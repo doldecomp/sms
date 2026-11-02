@@ -232,7 +232,7 @@ DEFINE_NERVE_EXECUTE(TNerveMantaHitWater, TLiveActor)
 		}
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->startDamageAnimEpilogue();
 		return TRUE;
 	}
@@ -286,7 +286,7 @@ DEFINE_NERVE_EXECUTE(TNerveMantaDeath, TLiveActor)
 		self->getMActor()->setBckMotionBlendRatio(0.0f);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		gpMarioParticleManager->emitAndBindToPosPtr(SCENE_MANTA_JPA_MS_MAN_DEAD,
 		                                            &self->unk17C, 0, self);
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_MANTA_VANISH,

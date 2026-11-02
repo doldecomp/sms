@@ -841,7 +841,7 @@ DEFINE_NERVE(TNerveTobiPukuFly, TLiveActor)
 		self->offLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 
-	if (self->checkCurAnmEnd(0) && self->isJumpStartBck())
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isJumpStartBck())
 		self->setJumpAnm();
 
 	if (!self->isAirborne()) {
@@ -862,10 +862,10 @@ DEFINE_NERVE(TNerveTobiPukuAttack, TLiveActor)
 		self->setAttackAnm();
 
 	if (self->isAirborne()) {
-		if (self->getCurAnmFrameNo(0) >= 6.0f)
+		if (self->getCurAnmFrameNo(ANM_TYPE_BCK) >= 6.0f)
 			self->fallStart();
 
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveTobiPukuFall::theNerve());
 			return true;
 		}
@@ -904,7 +904,7 @@ DEFINE_NERVE(TNerveTobiPukuHitWater, TLiveActor)
 		self->mPosition.y += 5.0f;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isAttackBck())
 			spine->pushAfterCurrent(&TNerveTobiPukuFall::theNerve());
 		return true;
@@ -940,7 +940,7 @@ DEFINE_NERVE(TNerveTobiPukuPitiPiti, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setPichiAnm();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		TTobiPukuSaveLoadParams* params
 		    = (TTobiPukuSaveLoadParams*)self->getSaveParams();
 		if (spine->getTime() > params->mSLLifeTimer.get()) {
@@ -972,7 +972,7 @@ DEFINE_NERVE(TNerveTobiPukuDie, TLiveActor)
 		}
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
@@ -1026,7 +1026,7 @@ DEFINE_NERVE(TNerveTobiPukuLand, TLiveActor)
 			self->mPosition.z += self->unk1B8[1].z * rate;
 		}
 
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveTobiPukuPitiPiti::theNerve());
 			return true;
 		}

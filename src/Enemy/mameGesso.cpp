@@ -348,10 +348,11 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	}
 
 	if (self->isBckAnm(11) || self->isBckAnm(12)) {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			self->setBckAnm(10);
 
-		if (!self->isAirborne() && self->getCurAnmFrameNo(0) > 26.0f) {
+		if (!self->isAirborne()
+		    && self->getCurAnmFrameNo(ANM_TYPE_BCK) > 26.0f) {
 			if (self->getGroundPlane()->isWaterSurface())
 				self->generateEffectColumWater();
 
@@ -421,7 +422,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				self->setBckAnm(8);
 			}
 		} else {
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
 				return true;
 			}
@@ -450,7 +451,7 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 		return true;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(13) && self->isAirborne())
 			self->setBckAnm(0);
 
@@ -473,7 +474,7 @@ DEFINE_NERVE(TNerveMameGessoJitabata, TLiveActor)
 	if (spine->getTime() <= 2) {
 		self->setFreezeAnm();
 	} else {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->isBckAnm(15)) {
 				if (spine->getTime() > self->unk194->mSLFreezeWait.get())
 					self->setBckAnm(5);
@@ -508,7 +509,7 @@ DEFINE_NERVE(TNerveMameGessoTrample, TLiveActor)
 				self->setBckAnm(4);
 		}
 	} else {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			return true;
 	}
 
@@ -522,7 +523,7 @@ DEFINE_NERVE(TNerveMameGessoPickUp, TLiveActor)
 	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > self->getSaveLoadParam()->mSLPickUpTime.get()) {
 		self->mCanBePickedUp = false;
 		self->attackToMario();
@@ -563,7 +564,7 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 		if (!self->isBckAnm(1))
 			self->setBckAnm(1);
 
-		if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(1)) {
 			self->mCanBePickedUp = false;
 			return true;
 		}
@@ -595,11 +596,11 @@ DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 		self->unk1E8 = 80.0f;
 	}
 
-	if (self->checkCurAnmEnd(0) && self->isBckAnm(2))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(2))
 		self->setBckAnm(16);
 
 	if (spine->getTime() > self->unk194->mSLObjectRecoverTime.get()) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->isBckAnm(16)) {
 				self->setBckAnm(18);
 			} else if (self->isBckAnm(18)) {
@@ -634,7 +635,7 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		int wait = self->getGroundPlane()->isWaterSurface()
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();

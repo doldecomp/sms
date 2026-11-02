@@ -529,7 +529,7 @@ DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 	self->mVelocity   = velocity;
 	self->mRotation.y = MsGetRotFromZaxisY(velocity);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveTabePukuAttack::theNerve());
 		return true;
 	}

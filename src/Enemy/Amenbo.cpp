@@ -551,7 +551,7 @@ DEFINE_NERVE(TNerveAmenboSearch, TLiveActor)
 		return true;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->decideTargetOnFingingMario();
 		spine->pushAfterCurrent(&TNerveAmenboTurn::theNerve());
 		return true;
@@ -633,7 +633,7 @@ DEFINE_NERVE(TNerveAmenboHitWater, TLiveActor)
 
 	self->setVelocity(JGeometry::TVec3<f32>(0.0f));
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->getMActor()->checkCurAnm("amenbo_hit1_start", ANM_TYPE_BCK))
 			self->changeBck("amenbo_hit1_loop", 1.0f);
 		else if (self->getMActor()->checkCurAnm("amenbo_hit1_loop",

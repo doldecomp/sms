@@ -959,7 +959,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 	if (self->getGroundPlane()->isWaterSurface())
 		uVar8 = 0;
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	        && spine->getTime() > uVar8
 	                                  + self->getMActor()
 	                                        ->getFrameCtrl(ANM_TYPE_BCK)
@@ -992,7 +992,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
-	if (self->checkCurAnmEnd(0) && spine->getTime() >= freezeTime)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() >= freezeTime)
 		return true;
 	else
 		return false;
@@ -1062,7 +1062,7 @@ DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > self->getSaveParams()->getSLWaitTime())
 		return true;
 	else

@@ -190,7 +190,7 @@ DEFINE_NERVE(TNerveWalkerGenerate, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setGenerateAnm();
 	} else {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 			return true;
 		}
@@ -253,7 +253,7 @@ DEFINE_NERVE(TNerveWalkerPostAttack, TLiveActor)
 		self->setWaitAnm();
 
 	s32 delay = self->getSaveParam2()->getSLAttackWait();
-	if (spine->getTime() >= delay && self->checkCurAnmEnd(0)) {
+	if (spine->getTime() >= delay && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		return true;
 	}
 

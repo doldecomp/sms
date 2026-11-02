@@ -1121,7 +1121,7 @@ DEFINE_NERVE(TNerveTelesaDie, TLiveActor)
 
 	self->reduceFlyForce();
 
-	if (self->checkCurAnmEnd(0) || self->isAttacker()) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) || self->isAttacker()) {
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
@@ -1155,7 +1155,7 @@ DEFINE_NERVE(TNerveTelesaFreeze, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
 		self->setGoal((THitActor*)gpMarioAddress);
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(4)) {
 			if (!self->isFlying()) {
 				self->unk1C8 = 0;
@@ -1200,7 +1200,7 @@ DEFINE_NERVE(TNerveTelesaTrample, TLiveActor)
 
 	if (spine->getTime() == 0)
 		self->setBckAnm(1);
-	else if (self->checkCurAnmEnd(0))
+	else if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 
 	return false;

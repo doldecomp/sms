@@ -592,7 +592,7 @@ bool TIgaiga::isHitValid(u32 param_1)
 
 void TIgaiga::rollMove()
 {
-	if (checkCurAnmEnd(0) && isBckAnm(2))
+	if (checkCurAnmEnd(ANM_TYPE_BCK) && isBckAnm(2))
 		setBckAnm(3);
 
 	if (isReachedToGoalXZ()) {
@@ -657,7 +657,7 @@ DEFINE_NERVE(TNerveIgaigaWaterHit, TLiveActor)
 			return TRUE;
 		}
 		++self->unk1E8;
-	} else if (self->checkCurAnmEnd(0) && !self->unsetUnk165()) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK) && !self->unsetUnk165()) {
 		self->setBckAnm(3);
 		spine->pushAfterCurrent(&TNerveIgaigaRollOnGraph::theNerve());
 		return TRUE;
@@ -676,7 +676,7 @@ DEFINE_NERVE(TNerveIgaigaShootFromCannon, TLiveActor)
 		self->mPosition.y += 10.0f;
 		self->mVelocity = self->unk1D8;
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
-	} else if (self->checkCurAnmEnd(0) && !self->isAirborne()) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK) && !self->isAirborne()) {
 		self->bound();
 		spine->pushAfterCurrent(&TNerveIgaigaRollOnGraph::theNerve());
 		return TRUE;
@@ -1202,7 +1202,7 @@ DEFINE_NERVE(TNerveGorogoroDie, TLiveActor)
 			self->setDeadAnm();
 			self->setDeadEffect();
 		}
-	} else if (self->checkCurAnmEnd(0) || spine->getTime() > 360) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK) || spine->getTime() > 360) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
 		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);

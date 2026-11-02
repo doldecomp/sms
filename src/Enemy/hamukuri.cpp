@@ -891,7 +891,7 @@ void THamuKuri::moveObject()
 			setBckAnm(4);
 		}
 
-		if (isBckAnm(4) && checkCurAnmEnd(0))
+		if (isBckAnm(4) && checkCurAnmEnd(ANM_TYPE_BCK))
 			setBckAnm(14);
 	}
 
@@ -2521,7 +2521,7 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		self->setHitPoints(0);
 	} else {
 		int pTVar7 = self->getManager()->unk5C;
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
 			if (spine->getTime() > pTVar7 + ctrl->getEnd()) {
@@ -2550,7 +2550,7 @@ DEFINE_NERVE(TNerveHamuKuriLand, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(5);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->offHitFilter(HIT_FILTER_NO_COLLISION);
 		self->unk1F0 = 0;
 		return true;
@@ -2566,7 +2566,7 @@ DEFINE_NERVE(TNerveHamuKuriJitabata, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(12);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		int timer = self->unk1F4->mSLJitabataTimer.get();
 		if (self->isBckAnm(12)) {
 			self->setBckAnm(3);
@@ -2687,7 +2687,7 @@ DEFINE_NERVE(TNerveFireHamuKuriRecover, TLiveActor)
 {
 	TFireHamuKuri* self = (TFireHamuKuri*)spine->getBody();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(6)) {
 			self->recoverFire();
 			return true;

@@ -662,7 +662,7 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
 	if (self->isBckAnm(4)) {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			return true;
 	} else if (!self->isAirborne()) {
 		self->setBckAnm(4);
@@ -710,7 +710,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 			self->walkToCurPathNode(0.0f, 6.0f, 0.0f);
 			int colorChangeRate
 			    = self->getSaveParams()->mSLColorChangeRate.get();
-			if (self->getCurAnmFrameNo(0) > 62.0f) {
+			if (self->getCurAnmFrameNo(ANM_TYPE_BCK) > 62.0f) {
 				self->unk1B8 += 1.0f;
 				s16 sVar5
 				    = MsClamp<s16>(self->unk1BC.r - colorChangeRate, 0, 255);
@@ -724,10 +724,10 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 			if (self->isAirborne())
 				self->mScaling.x = self->unk1B0;
 
-			if (!self->isAirborne() && self->checkCurAnmEnd(0))
+			if (!self->isAirborne() && self->checkCurAnmEnd(ANM_TYPE_BCK))
 				self->setBckAnm(2);
 		} else if (self->isBckAnm(2)) {
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				self->switchNextGoalPathNode();
 				self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 				spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());

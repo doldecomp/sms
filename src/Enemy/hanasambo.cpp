@@ -462,7 +462,8 @@ void TSamboFlower::reset()
 void TSamboFlower::moveObject()
 {
 	if (unk150) {
-		if (checkCurAnmEnd(0) && getMActor()->checkCurAnm("flower_hit", 0))
+		if (checkCurAnmEnd(ANM_TYPE_BCK)
+		    && getMActor()->checkCurAnm("flower_hit", 0))
 			getMActor()->setBck("flower_fwait");
 
 		if (unk160) {
@@ -824,7 +825,7 @@ DEFINE_NERVE(TNerveHanaSamboAppear, TLiveActor)
 		self->unk1A8->hide();
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveHanaSamboWait::theNerve());
 		self->setWaitAnm();
 		if (SMS_GetMarioPos().y < 100.0f + self->mPosition.y) {
@@ -880,7 +881,7 @@ DEFINE_NERVE(TNerveHanaSamboAttack, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setAttackAnm();
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(3)) {
 			self->createPollen();
 			SMSGetMSound()->startSoundActor(MSD_SE_EN_SAMBO_ATTACK,
@@ -917,7 +918,7 @@ DEFINE_NERVE(TNerveHanaSamboHide, TLiveActor)
 	if (spine->getTime() == 75)
 		self->initFlower();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->initFlower();
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->setBckAnm(6);
@@ -943,7 +944,7 @@ DEFINE_NERVE(TNerveHanaSamboDie, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->setDeadAnm();
-	} else if (self->checkCurAnmEnd(0) || spine->getTime() > 300) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK) || spine->getTime() > 300) {
 		static int jIndexTable[] = { 1, 3, 4, 5 };
 
 		for (int i = 0; i < 4; ++i) {
@@ -983,7 +984,7 @@ DEFINE_NERVE(TNerveHanaSamboFreeze, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(5);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(5)) {
 			if (self->unsetUnk165())
 				self->setBckAnm(8);
@@ -1342,7 +1343,7 @@ DEFINE_NERVE(TNerveSamboHeadAppear, TLiveActor)
 		((TSamboFlowerManager*)self->unk198->mManager)
 		    ->dropLeaf(self->mPosition, self->mScaling);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->setBckAnm(12);
 		spine->pushAfterCurrent(&TNerveSamboHeadAttack::theNerve());
 		return true;
@@ -1357,7 +1358,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 
 	if (!self->isAirborne()) {
 		if (self->unk19C > self->unk194->mSLJumpPrepareTime.get()
-		    && self->checkCurAnmEnd(0)) {
+		    && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->unk19C = 0;
 			self->updateSquareToMario();
 
@@ -1384,7 +1385,7 @@ DEFINE_NERVE(TNerveSamboHeadAttack, TLiveActor)
 			self->unk19C++;
 		}
 
-		if (self->checkCurAnmEnd(0) && self->isBckAnm(7))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(7))
 			self->setBckAnm(12);
 
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
@@ -1423,7 +1424,7 @@ DEFINE_NERVE(TNerveSamboHeadHide, TLiveActor)
 		                             0, nullptr);
 		gpMarioParticleManager->emit(PARTICLE_MS_SMB_HD_SMOKE, &self->mPosition,
 		                             0, nullptr);
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->onLiveFlag(LIVE_FLAG_HIDDEN);
 		self->setBckAnm(12);
 		self->initFlower();
@@ -1483,7 +1484,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWater, TLiveActor)
 	if (!self->isAirborne())
 		self->setBckAnm(6);
 
-	if (self->checkCurAnmEnd(0) && self->isBckAnm(6)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(6)) {
 		f32 rate = self->unk194->mSLHitJumpSpRateXZ.get();
 		self->setBckAnm(6);
 		self->unk1A0.x *= rate;
@@ -1509,7 +1510,7 @@ DEFINE_NERVE(TNerveSamboHeadRecoverWater, TLiveActor)
 		self->setBckAnm(12);
 
 	self->unk1AC *= 0.99f;
-	if (self->checkCurAnmEnd(0) && self->unk1AC < 1.0f)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->unk1AC < 1.0f)
 		return true;
 	return false;
 }
@@ -1522,7 +1523,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWall, TLiveActor)
 		self->setCrashAnm();
 
 	int waitTime = ((TSmallEnemyManager*)self->getManager())->unk5C;
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > waitTime
 	                              + self->getMActor()
 	                                    ->getFrameCtrl(ANM_TYPE_BCK)

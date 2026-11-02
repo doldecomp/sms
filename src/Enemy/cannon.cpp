@@ -847,7 +847,7 @@ void TCannon::turnToGoal() { walkToCurPathNode(0.0f, mTurnSpeed, 0.0f); }
 
 bool TCannon::isObject()
 {
-	if (isBckAnm(4) && checkCurAnmEnd(0))
+	if (isBckAnm(4) && checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }
@@ -880,7 +880,7 @@ DEFINE_NERVE(TNerveCannonOpen, TLiveActor)
 		cannon->unk1A8->setBckAnm(12);
 		cannon->setBckAnm(3);
 	}
-	if (cannon->unk1A8->isUpEnd() && cannon->checkCurAnmEnd(0)) {
+	if (cannon->unk1A8->isUpEnd() && cannon->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveCannonSearch::theNerve());
 		return true;
 	}

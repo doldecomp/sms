@@ -679,7 +679,7 @@ DEFINE_NERVE(TNerveBeeHiveBreak, TLiveActor)
 		self->setBoidParamOnAttacking();
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveBeeHiveAttack::theNerve());
 		self->prepareVanish();
 		return true;

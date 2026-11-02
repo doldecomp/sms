@@ -379,7 +379,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
-		if (checkCurAnmEnd(0)) {
+		if (checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (mGoToSleepTimer
 			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
 				mGoToSleepTimer = 0;
@@ -579,7 +579,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(148.0f);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(6)) {
 			self->setBckAnm(5);
 		} else if (self->isBckAnm(5)) {
@@ -621,7 +621,7 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 		self->unk1BC->kill();
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(12) || self->isBckAnm(3)) {
 			self->setBckAnm(4);
 			self->mIsTrapped = false;
@@ -682,7 +682,7 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		                                            mtx, 0, nullptr);
 	}
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 
 	return false;
