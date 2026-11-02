@@ -3,6 +3,7 @@
 
 #include <Enemy/SmallEnemy.hpp>
 #include <Strategic/Spine.hpp>
+#include <MarioUtil/MathUtil.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <MoveBG/MapObjManager.hpp>
 
@@ -53,7 +54,7 @@ public:
 	virtual const char** getBasNameTable() const;
 
 	// Unused
-	void getUnusedBall();
+	TKukkuBall* getUnusedBall();
 	f32 getWaterPowerY() const;
 	void getWaterDamageRate() const;
 	void changeBck(const char*);
@@ -75,6 +76,21 @@ public:
 
 	// fabricated
 	s32 getUnk1A4() const { return unk1A4; }
+	s32 getUnk1AC() const { return unk1AC; }
+
+	// fabricated
+	const TKukkuParams* getKukkuParams() const
+	{
+		return (const TKukkuParams*)getSaveParam();
+	}
+
+	// fabricated
+	JGeometry::TVec3<f32> polarXZ(f32 theta, f32 radius)
+	{
+		f32 c = radius * MsCos(theta);
+		f32 s = radius * MsSin(theta);
+		return JGeometry::TVec3<f32>(s, 0.0f, c);
+	}
 
 public:
 	/* 0x194 */ TKukkuBall* mBalls[3];
@@ -101,9 +117,9 @@ public:
 // class Thitactor adds all the bloat libraries horrible
 class TKukkuBall : public THitActor {
 public:
-	TKukkuBall(MActor* actor, const char* name = "クック玉");
+	TKukkuBall(MActor* actor);
 	virtual ~TKukkuBall() { };
-	void init();
+	virtual void init();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	// UNUSED
