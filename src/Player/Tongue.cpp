@@ -270,7 +270,7 @@ void TYoshiTongue::movement()
 
 		if (mHeldObject != nullptr) {
 			if (diff.length() < mMaxReach) {
-				f32 elasticity = mElasticity;
+				f32 elasticity              = mElasticity;
 				JGeometry::TVec3<f32> scale = mHeldObject->mScaling;
 				scale *= elasticity;
 				if (scale.x < 0.01f)
@@ -316,7 +316,7 @@ void TYoshiTongue::movement()
 			JGeometry::TVec3<f32> tpos = target->mPosition;
 			tpos.y += 0.5f * target->mDamageHeight;
 			JGeometry::TVec3<f32> oldTip = mTipPos;
-			mTipPos = mTipPos + (tpos - mTipPos) * mExtendAmount;
+			mTipPos          = mTipPos + (tpos - mTipPos) * mExtendAmount;
 			mInitialVelocity = mTipPos - oldTip;
 
 			if ((tpos - mTipPos).length() < 200.0f
