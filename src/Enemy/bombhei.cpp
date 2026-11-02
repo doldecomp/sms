@@ -250,7 +250,7 @@ void TBombHei::behaveToTaken(THitActor* param_1)
 
 void TBombHei::behaveToRelease()
 {
-	if (unk164 == 0
+	if (!mCanBePickedUp
 	    && mSpine->getCurrentNerve() != &TNerveBombHeiWalkExplosion::theNerve())
 		return;
 
@@ -268,11 +268,11 @@ void TBombHei::bombIn()
 void TBombHei::reset()
 {
 	TWalkerEnemy::reset();
-	unk198  = 0;
-	unk1A4  = 0;
-	unk164  = 0;
-	unk19C  = 1;
-	mMActor = mMActorKeeper->getMActor("nejibomb_model1.bmd");
+	unk198         = 0;
+	unk1A4         = 0;
+	mCanBePickedUp = false;
+	unk19C         = 1;
+	mMActor        = mMActorKeeper->getMActor("nejibomb_model1.bmd");
 }
 
 f32 TBombHei::getGravityY() const
@@ -299,7 +299,7 @@ void TBombHei::moveObject()
 	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyChange::theNerve()) {
 		++unk198;
 		if (unk198 > unk194->mSLBombTime.get()) {
-			unk164 = 0;
+			mCanBePickedUp = false;
 			unk198 = 0;
 			if (mSpine->getCurrentNerve()
 			    != &TNerveBombHeiWaitExplosion::theNerve())
@@ -401,7 +401,7 @@ DEFINE_NERVE(TNerveBombHeiAttack, TLiveActor)
 	TBombHei* self = (TBombHei*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setWalkAnm();
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		self->setGoal((THitActor*)gpMarioAddress);
 	}
 	self->walkBehavior(2, 1.0f);
@@ -434,9 +434,9 @@ DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 	TBombHei* self = (TBombHei*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(6);
-		self->unk164 = 1;
+		self->mCanBePickedUp = true;
 	}
-	if (self->unk164) {
+	if (self->mCanBePickedUp) {
 		if (self->getMActor()->getFrameCtrl(0)->checkPass(60.0f))
 			self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 		if (self->getMActor()->getFrameCtrl(0)->checkPass(10.0f)) {
@@ -467,7 +467,7 @@ DEFINE_NERVE(TNerveBombHeiPickUp, TLiveActor)
 {
 	TBombHei* self = (TBombHei*)spine->getBody();
 
-	if (spine->getTime() == 0 && self->unk164 == 0)
+	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
 	return false;
@@ -513,7 +513,7 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		if (self->getHolder() == gpMarioAddress)
 			self->sendAttackMsgToMario();
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		if (self->getGroundPlane()->isWaterSurface()) {
 			TEffectBombColumWater* effect
 			    = (TEffectBombColumWater*)gpConductor->makeOneEnemyAppear(

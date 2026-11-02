@@ -210,7 +210,7 @@ void TMario::hangPole(THitActor* actor)
 
 void TMario::hitPickUpEnemy(THitActor* actor)
 {
-	if (((TSmallEnemy*)actor)->unk164 != 0
+	if (((TSmallEnemy*)actor)->mCanBePickedUp
 	    && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 		hitWantToTake(actor);
 		return;

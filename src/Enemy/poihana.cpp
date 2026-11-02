@@ -299,8 +299,8 @@ void TPoiHana::setDeadAnm()
 	unk1BC->kill();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mHitPoints = 1;
-	if (!unk184)
-		unk18C = 3;
+	if (!mIsAttacker)
+		mDroppedCoinCount = 3;
 	setBckAnm(1);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
@@ -487,14 +487,14 @@ bool TPoiHana::isMoving()
 
 void TPoiHana::genEventCoin()
 {
-	if (!mCoin)
+	if (!mEventCoin)
 		return;
 
 	TCoin* coin;
-	if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+	if (mEventCoin->isActorType(ACTOR_TYPE_COIN)) {
 		coin = (TCoin*)gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 	} else {
-		coin = mCoin;
+		coin = mEventCoin;
 		coin->appear();
 	}
 
@@ -508,7 +508,7 @@ void TPoiHana::genEventCoin()
 	coin->mVelocity.set(vec.x * 10.0f, 18.0f, vec.z * 10.0f);
 
 	coin->offLiveFlag(LIVE_FLAG_NO_BIND);
-	mCoin = nullptr;
+	mEventCoin = nullptr;
 }
 
 bool TPoiHana::changeByJuice()

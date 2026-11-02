@@ -705,7 +705,7 @@ void TStayPakkun::genRandomItem()
 		gpItemManager->makeObjAppear(mPosition.x, mPosition.y, mPosition.z,
 		                             ACTOR_TYPE_BOTTLE_LARGE, true);
 	} else {
-		unk18C = 3;
+		mDroppedCoinCount = 3;
 		genEventCoin();
 	}
 

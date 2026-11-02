@@ -1060,7 +1060,7 @@ void THamuKuri::setDeadAnm()
 	if (unk198)
 		releaseCap();
 
-	if (unk184) {
+	if (mIsAttacker) {
 		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		gpMarioParticleManager->emit(PARTICLE_MS_ENM_DISAP_A, &mPosition, 0,
 		                             nullptr);
@@ -1582,7 +1582,7 @@ void TDoroHaneKuri::init(TLiveManager* param_1)
 
 void TDoroHaneKuri::reset()
 {
-	unk18C = 5;
+	mDroppedCoinCount = 5;
 	THaneHamuKuri::reset();
 	unk198 = 0;
 	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
@@ -1866,7 +1866,7 @@ BOOL TDangoHamuKuri::receiveMessage(THitActor* sender, u32 message)
 	    || message == HIT_MESSAGE_SUPER_HIP_DROP
 	    || message == HIT_MESSAGE_UNKB) {
 		if (isHitValid(message)) {
-			unk184 = 0;
+			mIsAttacker = false;
 			kill();
 		}
 		return true;
@@ -2049,15 +2049,15 @@ void TBossDangoHamuKuri::moveObject() { TDangoHamuKuri::moveObject(); }
 
 void TBossDangoHamuKuri::genEventCoin()
 {
-	if (!mCoin)
+	if (!mEventCoin)
 		return;
 
 	TMapObjBase* coin;
 
-	if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+	if (mEventCoin->isActorType(ACTOR_TYPE_COIN)) {
 		coin = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 	} else {
-		coin = mCoin;
+		coin = mEventCoin;
 		coin->appear();
 	}
 
@@ -2065,7 +2065,7 @@ void TBossDangoHamuKuri::genEventCoin()
 		coin->mPosition = mPosition;
 		coin->mVelocity.set(0.0f, 20.0f, 0.0f);
 		coin->offLiveFlag(LIVE_FLAG_NO_BIND);
-		unk18C -= 1;
+		mDroppedCoinCount -= 1;
 	}
 }
 

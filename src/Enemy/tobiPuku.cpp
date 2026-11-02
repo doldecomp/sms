@@ -617,7 +617,7 @@ void TTobiPuku::initAttacker(THitActor* param_1)
 {
 	mRotation = param_1->mRotation;
 	mSpine->pushNerve(&TNerveTobiPukuFly::theNerve());
-	unk184 = 1;
+	mIsAttacker = true;
 }
 
 void TTobiPuku::scalingChangeActor()

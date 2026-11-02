@@ -358,7 +358,7 @@ void TPopo::reset()
 	}
 
 	unk23C->kill();
-	unk18C = 0;
+	mDroppedCoinCount = 0;
 }
 
 bool TPopo::checkTrigger()

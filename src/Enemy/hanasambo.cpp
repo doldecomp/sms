@@ -694,7 +694,7 @@ void THanaSambo::kill()
 
 	mHitPoints = 1;
 	if (isBckAnm(7))
-		unk18C = 3;
+		mDroppedCoinCount = 3;
 
 	if (mSpine->getCurrentNerve() != &TNerveHanaSamboDie::theNerve()) {
 		mSpine->reset();
@@ -1276,8 +1276,8 @@ void TSamboHead::genEventCoin()
 			MTXMultVec(matrix, &offset, &offset);
 
 			TMapObjBase* coin;
-			if (i == 1 && mCoin) {
-				coin = mCoin;
+			if (i == 1 && mEventCoin) {
+				coin = mEventCoin;
 				if (coin->isActorType(ACTOR_TYPE_COIN))
 					coin = gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 

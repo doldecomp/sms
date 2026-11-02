@@ -347,7 +347,7 @@ void TTamaNoko::behaveToTaken(THitActor*)
 
 void TTamaNoko::behaveToRelease()
 {
-	if (unk164 != 0
+	if (mCanBePickedUp
 	    && mSpine->getCurrentNerve() != &TNerveTamaNokoThrown::theNerve())
 		mSpine->pushNerve(&TNerveTamaNokoThrown::theNerve());
 }
@@ -356,7 +356,7 @@ BOOL TTamaNoko::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_TRAMPLE || message == HIT_MESSAGE_HIP_DROP) {
 		if (isHitValid(message)) {
-			unk184 = 0;
+			mIsAttacker = false;
 			kill();
 		}
 		return true;
@@ -404,7 +404,7 @@ bool TTamaNoko::isHitValid(u32 param_1)
 
 void TTamaNoko::attackToMario()
 {
-	if (unk164 == 0
+	if (!mCanBePickedUp
 	    && mSpine->getCurrentNerve() != &TNerveTamaNokoSleep::theNerve()
 	    && (!mIsSunkInGround || !(SMS_GetMarioPos().y > mPosition.y + 10.0f))) {
 
@@ -795,7 +795,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_TAMANOKO_DROPOK,
 		                                &self->mPosition, 0, nullptr, 0, 4);
-		self->unk164 = 1;
+		self->mCanBePickedUp = true;
 		gpCameraShake->startShake(CAM_SHAKE_MODE_UNK7, 1.0f);
 		self->setBckAnm(4);
 	}
@@ -806,7 +806,7 @@ DEFINE_NERVE(TNerveTamaNokoDown, TLiveActor)
 	// If didn't land on sand -- we pick ourselves back up after a moment
 	int pickUpTime = self->getSaveParams2()->mSLPickUpTime.get();
 	if (self->checkCurAnmEnd(0) && spine->getTime() > pickUpTime) {
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		spine->pushAfterCurrent(&TNerveTamaNokoWait::theNerve());
 		return true;
 	}
@@ -818,12 +818,12 @@ DEFINE_NERVE(TNerveTamaNokoPickUp, TLiveActor)
 {
 	TTamaNoko* self = (TTamaNoko*)spine->getBody();
 
-	if (spine->getTime() == 0 && self->unk164 == 0)
+	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
 	if (self->checkCurAnmEnd(0)
 	    && spine->getTime() > self->getSaveParams2()->mSLPickUpTime.get()) {
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		self->attackToMario();
 		return true;
 	}
@@ -854,7 +854,7 @@ DEFINE_NERVE(TNerveTamaNokoThrown, TLiveActor)
 	}
 
 	if (!self->isAirborne()) {
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		return true;
 	}
 

@@ -417,7 +417,7 @@ void TElecNokonoko::setMeltAnm()
 	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
-	unk18C            = 3;
+	mDroppedCoinCount = 3;
 	unk194->mVelocity = zero;
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(

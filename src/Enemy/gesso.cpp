@@ -811,9 +811,9 @@ bool TGesso::checkDropInWater()
 
 void TGesso::initAttacker(THitActor* param_1)
 {
-	mRotation  = param_1->getRotation();
-	unk184     = 1;
-	mGessoType = TYPE_LAND;
+	mRotation   = param_1->getRotation();
+	mIsAttacker = true;
+	mGessoType  = TYPE_LAND;
 	reset();
 }
 

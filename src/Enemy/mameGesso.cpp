@@ -145,7 +145,7 @@ void TMameGesso::setMActorAndKeeper()
 
 void TMameGesso::attackToMario()
 {
-	if (unk164 != 0)
+	if (mCanBePickedUp)
 		return;
 
 	if (mSpine->getCurrentNerve() != &TNerveMameGessoObject::theNerve()) {
@@ -204,7 +204,7 @@ bool TMameGesso::isHitValid(u32 param_1)
 
 void TMameGesso::kill()
 {
-	if (unk184)
+	if (mIsAttacker)
 		if (mSpine->getCurrentNerve()
 		    == &TNerveMameGessoGraphJumpWander::theNerve())
 			mSpine->pushNerve(&TNerveSmallEnemyDie::theNerve());
@@ -242,11 +242,11 @@ void TMameGesso::setWaitAnm()
 
 void TMameGesso::setFreezeAnm()
 {
-	unk164 = 1;
+	mCanBePickedUp = true;
 	setBckAnm(15);
 }
 
-void TMameGesso::setDeadAnm() { unk164 = 1; }
+void TMameGesso::setDeadAnm() { mCanBePickedUp = true; }
 
 void TMameGesso::behaveToWater(THitActor*)
 {
@@ -265,7 +265,7 @@ void TMameGesso::behaveToTaken(THitActor*)
 
 void TMameGesso::behaveToRelease()
 {
-	if (unk164 != 0
+	if (mCanBePickedUp
 	    && mSpine->getCurrentNerve() != &TNerveMameGessoThrown::theNerve())
 		mSpine->pushNerve(&TNerveMameGessoThrown::theNerve());
 }
@@ -482,7 +482,7 @@ DEFINE_NERVE(TNerveMameGessoJitabata, TLiveActor)
 					self->unk1EC = 0;
 
 				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
-				self->unk164 = 0;
+				self->mCanBePickedUp = false;
 				return true;
 			}
 		}
@@ -519,12 +519,12 @@ DEFINE_NERVE(TNerveMameGessoPickUp, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
 
-	if (spine->getTime() == 0 && self->unk164 == 0)
+	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
 	if (self->checkCurAnmEnd(0)
 	    && spine->getTime() > self->getSaveLoadParam()->mSLPickUpTime.get()) {
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		self->attackToMario();
 		return true;
 	}
@@ -556,7 +556,7 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 	if (!self->isAirborne()) {
 		if (self->getGroundPlane()->isWaterSurface()) {
 			spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
-			self->unk164 = 0;
+			self->mCanBePickedUp = false;
 			return true;
 		}
 
@@ -564,7 +564,7 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 			self->setBckAnm(1);
 
 		if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
-			self->unk164 = 0;
+			self->mCanBePickedUp = false;
 			return true;
 		}
 	}

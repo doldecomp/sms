@@ -148,8 +148,8 @@ void TWalkerEnemy::behaveToFindMario()
 
 void TWalkerEnemy::initAttacker(THitActor* param_1)
 {
-	mRotation = param_1->getRotation();
-	unk184    = 1;
+	mRotation   = param_1->getRotation();
+	mIsAttacker = true;
 }
 
 bool TWalkerEnemy::isResignationAttack()
