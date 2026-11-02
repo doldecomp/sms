@@ -371,6 +371,8 @@ enum E_SMS_EFFECT_LOOP_NORMAL /* 1 */ {
 	KAZEKUN_JPA_MS_KAZE_WIND              = 0x189,
 	KAZEKUN_JPA_MS_KAZE_BLUR              = 0x18A,
 	PARTICLE_MS_YNB_ONPU                  = 0x18B,
+	COOC_JPA_MS_ASE                       = 0x18C,
+	COOC_JPA_MS_HANE                      = 0x18D,
 	AMENBO_JPA_MS_AME_HAMON               = 0x18E,
 	FIREWANWAN_JPA_MS_CAN_HITYUGE         = 0x18F,
 	WIRETRAP_JPA_NS_WRT_BIRI_A            = 0x190,
