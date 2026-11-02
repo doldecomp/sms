@@ -21,31 +21,16 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-static const char* tori_bastable[] = { "/scene/tori/bas/tori_back.bas",
-	                                   "/scene/tori/bas/tori_down.bas",
-	                                   nullptr,
-	                                   "/scene/tori/bas/tori_fall_end.bas",
-	                                   "/scene/tori/bas/tori_hit.bas",
-	                                   "/scene/tori/bas/tori_wait.bas" };
+static const char* tori_bastable[] = {
+	"/scene/tori/bas/tori_back.bas",
+	"/scene/tori/bas/tori_down.bas",
+	nullptr,
+	"/scene/tori/bas/tori_fall_end.bas",
+	"/scene/tori/bas/tori_hit.bas",
+	"/scene/tori/bas/tori_wait.bas",
+};
 
 static const int cDropCoinNumTable[] = { 3, 3, 1, 2 };
-
-TKukkuParams::TKukkuParams(const char* path)
-    : TSmallEnemyParams(path)
-    , PARAM_INIT(mMarchSpeed, 3.0f)
-    , PARAM_INIT(mTurnSpeed, 0.2f)
-    , PARAM_INIT(mWaterPowerY, 12.0f)
-    , PARAM_INIT(mShootSpeed, 1.0f)
-    , PARAM_INIT(mShootInterval, 60)
-    , PARAM_INIT(mSearchRange, 800.0f)
-    , PARAM_INIT(mHabatakiTimer, 45)
-    , PARAM_INIT(mAirFric, 0.97f)
-    , PARAM_INIT(mUpperVelocityY, 0.0f)
-    , PARAM_INIT(mDropSpeed, 5.0f)
-    , PARAM_INIT(mDropAngleX, -0.25f)
-{
-	TParams::load(mPrmPath);
-}
 
 TKukkuBall::TKukkuBall(MActor* actor)
     : THitActor("クック玉")
@@ -85,7 +70,7 @@ void TKukkuBall::perform(u32 cue, JDrama::TGraphics* graphics)
 		mtx.setTrans(mPosition);
 		J3DModel* model = actor->getModel();
 		model->setBaseScale(mScaling);
-		MTXCopy(mtx, actor->getModel()->getBaseTRMtx());
+		actor->getModel()->setBaseTRMtx(mtx);
 		actor->getModel()->calc();
 	}
 
@@ -98,27 +83,26 @@ void TKukkuBall::perform(u32 cue, JDrama::TGraphics* graphics)
 		actor->perform(cue, graphics);
 }
 
-BOOL TKukkuBall::isDead() const
-{
-	if (checkHitFilter(HIT_FILTER_NO_DAMAGE) && unk7C == 0)
-		return true;
-	return false;
-}
+void TKukkuBall::moveObject() { }
 
-void TKukkuBall::kill()
+void TKukkuBall::bind()
 {
-	onHitFilter(HIT_FILTER_NO_COLLISION);
-	unk6C |= 0x1;
-	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 500.0f);
-}
+	mVelocity.y -= 0.9f;
+	mVelocity.scale(0.94f);
 
-void TKukkuBall::startToMove(const JGeometry::TVec3<f32>& pos,
-                             const JGeometry::TVec3<f32>& vel)
-{
-	offHitFilter(HIT_FILTER_NO_COLLISION);
-	unk6C &= ~1;
-	mPosition = pos;
-	mVelocity = vel;
+	JGeometry::TVec3<f32> next = mPosition;
+	next += mVelocity;
+
+	const TBGCheckData* ground;
+	f32 groundHeight
+	    = gpMap->checkGround(next.x, next.y + mAttackHeight, next.z, &ground);
+	groundHeight += 1.0f;
+	if (next.y <= 0.05f + groundHeight)
+		kill();
+
+	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y + mAttackHeight, &next.z,
+	                                 mAttackRadius);
+	mPosition = next;
 }
 
 void TKukkuBall::checkHitActors()
@@ -134,27 +118,28 @@ void TKukkuBall::checkHitActors()
 	}
 }
 
-void TKukkuBall::bind()
+void TKukkuBall::startToMove(const JGeometry::TVec3<f32>& pos,
+                             const JGeometry::TVec3<f32>& vel)
 {
-	mVelocity.y -= 0.9f;
-	mVelocity.scale(0.94f);
-
-	JGeometry::TVec3<f32> next = mPosition;
-	next += mVelocity;
-
-	const TBGCheckData* ground;
-	if (next.y <= 0.05f
-	                  + (gpMap->checkGround(next.x, next.y + mAttackHeight,
-	                                        next.z, &ground)
-	                     + 1.0f))
-		kill();
-
-	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y + mAttackHeight, &next.z,
-	                                 mAttackRadius);
-	mPosition = next;
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+	unk6C &= ~1;
+	mPosition = pos;
+	mVelocity = vel;
 }
 
-void TKukkuBall::moveObject() { }
+void TKukkuBall::kill()
+{
+	onHitFilter(HIT_FILTER_NO_COLLISION);
+	unk6C |= 0x1;
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 500.0f);
+}
+
+BOOL TKukkuBall::isDead() const
+{
+	if (checkHitFilter(HIT_FILTER_NO_DAMAGE) && unk7C == 0)
+		return true;
+	return false;
+}
 
 TEnemyCoinUnit::TEnemyCoinUnit(int) { }
 
@@ -186,6 +171,28 @@ void TKukku::init(TLiveManager* manager)
 	reset();
 }
 
+void TKukku::initBalls()
+{
+	TKukkuBall** end = mBalls + ARRAY_COUNT(mBalls);
+	for (TKukkuBall** it = mBalls; it != end; ++it) {
+		*it = new TKukkuBall(mMActorKeeper->createMActor("torifun.bmd", 3));
+		(*it)->init();
+	}
+}
+
+void TKukku::initCollision()
+{
+	initHitActor(ACTOR_TYPE_KUKKU_BALL, 1, HIT_CATEGORY_PLAYER, 30.0f, 30.0f,
+	             100.0f, 100.0f);
+	offHitFilter(HIT_FILTER_NO_COLLISION);
+}
+
+void TKukku::initParticle()
+{
+	SMS_LoadParticle("/scene/tori/jpa/ms_cooc_ase.jpa", COOC_JPA_MS_ASE);
+	SMS_LoadParticle("/scene/tori/jpa/ms_cooc_hane.jpa", COOC_JPA_MS_HANE);
+}
+
 void TKukku::reset()
 {
 	unk1A4   = 0;
@@ -208,7 +215,7 @@ BOOL TKukku::receiveMessage(THitActor* sender, u32 message)
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		return true;
-	};
+	}
 
 	default:
 		return TSmallEnemy::receiveMessage(sender, message);
@@ -251,12 +258,12 @@ void TKukku::calcRootMatrix()
 
 	if (isFalling()) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x18d, getModel()->getAnmMtx(unk1A8), 1, this);
+		    COOC_JPA_MS_HANE, getModel()->getAnmMtx(unk1A8), 1, this);
 	}
 
 	if (getMActor()->checkCurAnm("tori_back", 0)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    0x18c, getModel()->getAnmMtx(unk1A8), 1, this);
+		    COOC_JPA_MS_ASE, getModel()->getAnmMtx(unk1A8), 1, this);
 	}
 }
 
@@ -270,6 +277,8 @@ void TKukku::perform(u32 cue, JDrama::TGraphics* graphics)
 		(*it)->perform(cue, graphics);
 }
 
+void TKukku::updateEffect() { }
+
 void TKukku::behaveToWater(THitActor* sender)
 {
 	if (!isFalling() && isRecoveringGraph()) {
@@ -277,6 +286,10 @@ void TKukku::behaveToWater(THitActor* sender)
 		mSpine->setNext(&TNerveKukkuFall::theNerve());
 	}
 }
+
+void TKukku::behaveHitTrample() { }
+
+void TKukku::doFlyToCurPathNode() { }
 
 void TKukku::updateRotation()
 {
@@ -308,6 +321,48 @@ JGeometry::TVec3<f32> TKukku::calcMomentum(f32 deltaTime)
 
 	quat.rotate(momentum);
 	return momentum;
+}
+
+void TKukku::doRecoverToCurPathNode()
+{
+	updateRotation();
+	mPositionDelta = calcMomentum(getKukkuParams()->mDropAngleX.get());
+}
+
+BOOL TKukku::doHabataki()
+{
+	JGeometry::TVec3<f32> velocity = mVelocity;
+	velocity.scale(getKukkuParams()->mAirFric.get());
+	velocity.y += getKukkuParams()->mUpperVelocityY.get();
+	bool stopped = false;
+	if (-0.1f < velocity.y) {
+		stopped    = true;
+		velocity.y = 0.0f;
+	}
+	mVelocity = velocity;
+	return stopped;
+}
+
+void TKukku::decideFlyingAnm()
+{
+	if (getMActor()->checkCurAnm("tori_back", 0))
+		changeBck("tori_back");
+	else
+		changeBck("tori_wait");
+}
+
+void TKukku::shotBall()
+{
+	TKukkuBall* ball = getUnusedBall();
+	if (ball) {
+		JGeometry::TVec3<f32> velocity(0.0f, 1.0f, 0.0f);
+		velocity.setLength(getKukkuParams()->mShootSpeed.get());
+		getModel()->getModelData()->getJointName()->getIndex("null_osen");
+		ball->startToMove(mPosition, velocity);
+		unk1AC = getKukkuParams()->mShootInterval.get();
+		SMSGetMSound()->startSoundActor(MSD_SE_EN_TORI_SHIT, &mPosition, 0,
+		                                nullptr, 0, 4);
+	}
 }
 
 void TKukku::dropCoins()
@@ -352,36 +407,21 @@ void TKukku::dropCoins()
 	}
 }
 
-void TKukku::setDeadAnm() { changeBck("tori_dead"); }
-
-void TKukku::setAfterDeadEffect()
+BOOL TKukku::isFalling() const
 {
-	TSmallEnemy::setAfterDeadEffect();
-	TSmallEnemyManager* manager = (TSmallEnemyManager*)getManager();
-	gpPollution->stamp(manager->getUnk58(), mPosition.x, mPosition.y,
-	                   mPosition.z, 1000.0f);
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	return nerve == &TNerveKukkuFall::theNerve()
+	       || nerve == &TNerveKukkuPostFall::theNerve();
 }
 
-// UNUSED
-TKukkuBall* TKukku::getUnusedBall()
+BOOL TKukku::isRecoveringGraph() const
 {
-	for (TKukkuBall** it = mBalls; it != mBalls + ARRAY_COUNT(mBalls); ++it)
-		if ((*it)->isDead())
-			return *it;
-	return nullptr;
+	return mSpine->getLatestNerve() == &TNerveKukkuRecoverGraph::theNerve();
 }
 
-f32 TKukku::getWaterPowerY() const
+BOOL TKukku::isDying() const
 {
-	return getKukkuParams()->mWaterPowerY.get();
-}
-
-void TKukku::getWaterDamageRate() const { }
-
-void TKukku::changeBck(const char* name)
-{
-	getMActor()->setBck(name);
-	setCurAnmSound();
+	return mSpine->getLatestNerve() == &TNerveSmallEnemyDie::theNerve();
 }
 
 BOOL TKukku::isFindOutMario() const
@@ -393,94 +433,53 @@ BOOL TKukku::isFindOutMario() const
 	return toMario.squared() < range * range;
 }
 
-BOOL TKukku::isDying() const
+void TKukku::changeBck(const char* name)
 {
-	return mSpine->getLatestNerve() == &TNerveSmallEnemyDie::theNerve();
+	getMActor()->setBck(name);
+	setCurAnmSound();
 }
 
-BOOL TKukku::isRecoveringGraph() const
+void TKukku::setDeadAnm() { changeBck("tori_dead"); }
+
+void TKukku::setAfterDeadEffect()
 {
-	return mSpine->getLatestNerve() == &TNerveKukkuRecoverGraph::theNerve();
+	TSmallEnemy::setAfterDeadEffect();
+	TSmallEnemyManager* manager = (TSmallEnemyManager*)getManager();
+	gpPollution->stamp(manager->getUnk58(), mPosition.x, mPosition.y,
+	                   mPosition.z, 1000.0f);
 }
 
-BOOL TKukku::isFalling() const
+f32 TKukku::getWaterDamageRate() const { return 1.0f; }
+
+f32 TKukku::getWaterPowerY() const
 {
-	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
-	return nerve == &TNerveKukkuFall::theNerve()
-	       || nerve == &TNerveKukkuPostFall::theNerve();
+	return getKukkuParams()->mWaterPowerY.get();
 }
 
-void TKukku::shotBall()
+TKukkuBall* TKukku::getUnusedBall()
 {
-	TKukkuBall* ball = getUnusedBall();
-	if (ball) {
-		JGeometry::TVec3<f32> velocity(0.0f, 1.0f, 0.0f);
-		velocity.setLength(getKukkuParams()->mShootSpeed.get());
-		getModel()->getModelData()->getJointName()->getIndex("null_osen");
-		ball->startToMove(mPosition, velocity);
-		unk1AC = getKukkuParams()->mShootInterval.get();
-		SMSGetMSound()->startSoundActor(MSD_SE_EN_TORI_SHIT, &mPosition, 0,
-		                                nullptr, 0, 4);
-	}
-};
-
-void TKukku::decideFlyingAnm()
-{
-	if (getMActor()->checkCurAnm("tori_back", 0))
-		changeBck("tori_back");
-	else
-		changeBck("tori_wait");
+	for (TKukkuBall** it = mBalls; it != mBalls + ARRAY_COUNT(mBalls); ++it)
+		if ((*it)->isDead())
+			return *it;
+	return nullptr;
 }
 
-BOOL TKukku::doHabataki()
+TKukkuParams::TKukkuParams(const char* path)
+    : TSmallEnemyParams(path)
+    , PARAM_INIT(mMarchSpeed, 3.0f)
+    , PARAM_INIT(mTurnSpeed, 0.2f)
+    , PARAM_INIT(mWaterPowerY, 12.0f)
+    , PARAM_INIT(mShootSpeed, 1.0f)
+    , PARAM_INIT(mShootInterval, 60)
+    , PARAM_INIT(mSearchRange, 800.0f)
+    , PARAM_INIT(mHabatakiTimer, 45)
+    , PARAM_INIT(mAirFric, 0.97f)
+    , PARAM_INIT(mUpperVelocityY, 0.0f)
+    , PARAM_INIT(mDropSpeed, 5.0f)
+    , PARAM_INIT(mDropAngleX, -0.25f)
 {
-	JGeometry::TVec3<f32> velocity = mVelocity;
-	velocity.scale(getKukkuParams()->mAirFric.get());
-	velocity.y += getKukkuParams()->mUpperVelocityY.get();
-	bool stopped = false;
-	if (-0.1f < velocity.y) {
-		stopped    = true;
-		velocity.y = 0.0f;
-	}
-	mVelocity = velocity;
-	return stopped;
+	TParams::load(mPrmPath);
 }
-
-void TKukku::doRecoverToCurPathNode()
-{
-	updateRotation();
-	mPositionDelta = calcMomentum(getKukkuParams()->mDropAngleX.get());
-}
-
-void TKukku::doFlyToCurPathNode() { }
-
-void TKukku::behaveHitTrample() { }
-
-void TKukku::updateEffect() { }
-
-void TKukku::initParticle()
-{
-	SMS_LoadParticle("/scene/tori/jpa/ms_cooc_ase.jpa", COOC_JPA_MS_ASE);
-	SMS_LoadParticle("/scene/tori/jpa/ms_cooc_hane.jpa", COOC_JPA_MS_HANE);
-}
-
-void TKukku::initCollision()
-{
-	initHitActor(ACTOR_TYPE_KUKKU_BALL, 1, HIT_CATEGORY_PLAYER, 30.0f, 30.0f,
-	             100.0f, 100.0f);
-	offHitFilter(HIT_FILTER_NO_COLLISION);
-}
-
-void TKukku::initBalls()
-{
-	TKukkuBall** end = mBalls + ARRAY_COUNT(mBalls);
-	for (TKukkuBall** it = mBalls; it != end; ++it) {
-		*it = new TKukkuBall(mMActorKeeper->createMActor("torifun.bmd", 3));
-		(*it)->init();
-	}
-}
-
-void TKukku::getUnusedItem(TEnemyCoinUnit*) { }
 
 TKukkuManager::TKukkuManager(const char* name)
     : TSmallEnemyManager(name)
@@ -499,6 +498,8 @@ void TKukkuManager::load(JSUMemoryInputStream& stream)
 
 	TSmallEnemyManager::load(stream);
 }
+
+void TKukkuManager::initCoins() { }
 
 void TKukkuManager::createModelData()
 {
@@ -540,6 +541,20 @@ DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 	}
 
 	kukku->doRecoverToCurPathNode();
+	return false;
+}
+
+DEFINE_NERVE(TNerveKukkuHit, TLiveActor)
+{
+	TKukku* kukku = (TKukku*)spine->getBody();
+	if (spine->getTime() == 0) {
+		kukku->changeBck("tori_hit");
+	}
+
+	if (kukku->checkCurAnmEnd(0)) {
+		spine->pushAfterCurrent(&TNerveKukkuGraphWander::theNerve());
+		return true;
+	}
 	return false;
 }
 
@@ -607,19 +622,5 @@ DEFINE_NERVE(TNerveKukkuRecoverGraph, TLiveActor)
 	kukku->doRecoverToCurPathNode(); // calcMomentum here gets out-of-line...
 	                                 // double layer?
 
-	return false;
-}
-
-DEFINE_NERVE(TNerveKikkuHit, TLiveActor)
-{
-	TKukku* kukku = (TKukku*)spine->getBody();
-	if (spine->getTime() == 0) {
-		kukku->changeBck("tori_hit");
-	}
-
-	if (kukku->checkCurAnmEnd(0)) {
-		spine->pushAfterCurrent(&TNerveKukkuGraphWander::theNerve());
-		return true;
-	}
 	return false;
 }

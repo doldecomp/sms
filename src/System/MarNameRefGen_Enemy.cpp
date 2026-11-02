@@ -443,11 +443,10 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 		return gpBeamManager;
 	}
 
-	
-	if ( strcmp( name, "KukkuManager" ) == 0 )
+	if (strcmp(name, "KukkuManager") == 0)
 		return new TKukkuManager;
 
-	if ( strcmp( name, "Kukku" ) == 0 )
+	if (strcmp(name, "Kukku") == 0)
 		return new TKukku;
 
 	if (strcmp(name, "KumokunManager") == 0)

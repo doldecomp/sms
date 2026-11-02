@@ -37,7 +37,14 @@ class TKukku : public TSmallEnemy {
 public:
 	TKukku(const char* name = "クック");
 	virtual ~TKukku() { };
-
+	virtual void bind();
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void reset();
+	virtual void control();
+	virtual void init(TLiveManager*);
+	virtual const char** getBasNameTable() const;
+	
 	void setAfterDeadEffect();
 	void setDeadAnm();
 	void dropCoins();
@@ -45,18 +52,11 @@ public:
 	void calcRootMatrix();
 	JGeometry::TVec3<f32> calcMomentum(f32 deltaTime);
 	void behaveToWater(THitActor* sender);
-	void bind();
-	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	void reset();
-	void control();
-	virtual void init(TLiveManager*);
-	virtual const char** getBasNameTable() const;
 
 	// Unused
 	TKukkuBall* getUnusedBall();
 	f32 getWaterPowerY() const;
-	void getWaterDamageRate() const;
+	f32 getWaterDamageRate() const;
 	void changeBck(const char*);
 	BOOL isFindOutMario() const;
 	BOOL isDying() const;
@@ -72,7 +72,6 @@ public:
 	void initParticle();
 	void initCollision();
 	void initBalls();
-	void getUnusedItem(TEnemyCoinUnit*);
 
 	// fabricated
 	s32 getUnk1A4() const { return unk1A4; }
@@ -142,6 +141,6 @@ DECLARE_NERVE(TNerveKukkuRecoverGraph, TLiveActor);
 DECLARE_NERVE(TNerveKukkuPostFall, TLiveActor);
 DECLARE_NERVE(TNerveKukkuFall, TLiveActor);
 DECLARE_NERVE(TNerveKukkuGraphWander, TLiveActor);
-DECLARE_NERVE(TNerveKikkuHit, TLiveActor);
+DECLARE_NERVE(TNerveKukkuHit, TLiveActor);
 
 #endif
