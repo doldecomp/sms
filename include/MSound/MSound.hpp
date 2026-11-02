@@ -166,10 +166,10 @@ public:
 			    fade, camera_idx);
 	}
 
-	void startSeRandPlay(u32 id, u32 param_2)
+	void startSeRandPlay(u32 sound_id, u32 vec_idx)
 	{
-		if (gateCheck(id))
-			MSoundSESystem::MSRandPlay::startSeRandPlay(id, param_2);
+		if (gateCheck(sound_id))
+			MSoundSESystem::MSRandPlay::startSeRandPlay(sound_id, vec_idx);
 	}
 
 	void startForceJumpSound(Vec* position, u32 param_2, f32 param_3,
