@@ -1109,11 +1109,11 @@ TSandBird::TSandBird(const char* name)
 {
 }
 
+void TWatermelon::control() { }
+
 #ifndef VERSION_GMSJ01
 u32 TWatermelonStatic::touchWater(THitActor* actor) { return 1; }
 #endif
-
-void TWatermelon::control() { }
 
 void TGoalWatermelon::touchActor(THitActor* actor)
 {
