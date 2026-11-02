@@ -15,11 +15,11 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void emitEffect() = 0;
 
-	MtxPtr getUnk48() { return unk48; }
+	MtxPtr getEffectMtx() { return mEffectMtx; }
 
 public:
 	/* 0x44 */ u32 unk44;
-	/* 0x48 */ Mtx unk48;
+	/* 0x48 */ Mtx mEffectMtx;
 };
 
 class TEffectPinnaFunsui : public TSimpleEffect {
@@ -46,6 +46,13 @@ public:
 
 class TEffectObjBase : public THitActor {
 public:
+	enum {
+		STATE_INACTIVE     = 0,
+		STATE_READY        = 1,
+		STATE_ACTIVE       = 2,
+		STATE_EXTINGUISHED = 3,
+	};
+
 	TEffectObjBase(const char* name = "<EffectObjBase>");
 
 	virtual void load(JSUMemoryInputStream& stream);
@@ -58,11 +65,13 @@ public:
 
 	void forceKill();
 
+	f32 getFireScale() const { return mFireStrength / mMaxFireStrength; }
+
 public:
-	/* 0x68 */ int unk68;
-	/* 0x6C */ f32 unk6C;
-	/* 0x70 */ f32 unk70;
-	/* 0x74 */ u32 unk74;
+	/* 0x68 */ int mState;
+	/* 0x6C */ f32 mMaxFireStrength;
+	/* 0x70 */ f32 mFireStrength;
+	/* 0x74 */ u32 mActiveFrameCount;
 };
 
 class TEffectObjManager;
@@ -78,13 +87,12 @@ public:
 	void generateEffect(Vec);
 	void addListEffectObj(TEffectObjBase*);
 
-	// TODO: why are there 5 always existing "special" effect objects?
-	enum { COOL_EFFECT_OBJ_NUM = 5 };
-
 public:
-	/* 0x10 */ u32 unk10;
-	/* 0x14 */ JGadget::TList<TEffectObjBase*> unk14;
-	/* 0x24 */ TEffectObjBase** unk24;
+	enum { EFFECT_OBJ_POOL_SIZE = 5 };
+
+	/* 0x10 */ u32 mRegisteredEffectCount;
+	/* 0x14 */ JGadget::TList<TEffectObjBase*> mEffectObjList;
+	/* 0x24 */ TEffectObjBase** mEffectObjPool;
 };
 
 class TEffectModel : public TSpineEnemy {
