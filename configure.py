@@ -874,7 +874,7 @@ config.libs = [
             PCHObject(NonMatching, "System/MarDirectorInitECT.cpp"),
             PCHObject(NonMatching, "System/MarDirectorPreEntry.cpp"),
             PCHObject(NonMatching, "System/MarDirectorSetup2.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSJ01_01", "GMSP01_NX"), "System/marerr.cpp"),
+            Object(Matching, "System/marerr.cpp"),
             PCHObject(NonMatching, "System/MarNameRefGen.cpp"),
             PCHObject(NonMatching, "System/MenuDir.cpp"),
             Object(Matching, "System/Params.cpp"),

@@ -2,14 +2,20 @@
 #include <JSystem/JUtility/JUTDirectPrint.hpp>
 #include <JSystem/JUtility/JUTConsole.hpp>
 #include <JSystem/JUtility/JUTException.hpp>
+#include <version.h>
 
 static void MarErrException(u16, OSContext*, u32, u32);
-
 namespace {
 
 const u32 cDispExceptionCommand[6] = { 0x100, 0x200, 0x400, 0x800, 0x1, 0x0 };
 
 }
+
+#ifndef VERSION_GMSJ01
+static const char sStrMapFile[]
+    = VERSION_SELECT("/mario.MAP", GMSP01("/marioEU.MAP"),
+                     GMSP01_NX("/marioEU.MAP"), GMSE01("/marioUS.MAP"));
+#endif
 
 static void MarErrException(u16, OSContext*, u32, u32)
 {
@@ -29,10 +35,10 @@ void MarErrInit()
 	JUTConsoleManager::createManager(nullptr);
 	JUTException::create(print);
 	JUTException::createConsole(new u8[0x1400], 0x1400);
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	JUTException::appendMapFile("/marioEU.MAP");
-#else
+#if defined(VERSION_GMSJ01)
 	JUTException::appendMapFile("/mario.MAP");
+#else
+	JUTException::appendMapFile(sStrMapFile);
 #endif
 	JUTException::setPreUserCallback(&MarErrException);
 	// fullptr :D
