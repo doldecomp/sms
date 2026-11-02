@@ -3,10 +3,7 @@
 
 #include <Enemy/SmallEnemy.hpp>
 #include <Strategic/Spine.hpp>
-<<<<<<< HEAD
-=======
 #include <MarioUtil/MathUtil.hpp>
->>>>>>> e72d96f346c82c9b621aa98e1bd62bbf330e0a4d
 #include <M3DUtil/MActor.hpp>
 #include <MoveBG/MapObjManager.hpp>
 
