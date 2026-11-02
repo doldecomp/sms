@@ -623,12 +623,14 @@ void TLeanMirror::release()
 
 static s32 startCameraShakeSE(uintptr_t param_1, u32 param_2)
 {
+#ifdef VERSION_GMSJ01
 	if (param_2 == 0) {
 		const JGeometry::TVec3<f32>* pos
 		    = (const JGeometry::TVec3<f32>*)param_1;
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_QUAKE, pos, 0, nullptr, 0,
 		                                4);
 	}
+#endif
 	return 0;
 }
 
@@ -1106,6 +1108,10 @@ TSandBird::TSandBird(const char* name)
     , unk151(0)
 {
 }
+
+#ifndef VERSION_GMSJ01
+u32 TWatermelonStatic::touchWater(THitActor* actor) { return 1; }
+#endif
 
 void TWatermelon::control() { }
 

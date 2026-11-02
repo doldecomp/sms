@@ -46,6 +46,7 @@
 #include <Enemy/Kazekun.hpp>
 #include <M3DUtil/MActorAnm.hpp>
 #include <Enemy/WireTrap.hpp>
+#include <Enemy/TabePuku.hpp>
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 {
@@ -64,8 +65,16 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "EnemyManager") == 0)
 		return new TEnemyManager;
 
-	if (strcmp(name, "FruitsBoat") == 0 || strcmp(name, "FruitsBoatG") == 0
-	    || strcmp(name, "FruitsBoatP") == 0 || strcmp(name, "FruitsBoatY") == 0)
+	if (strcmp(name, "FruitsBoat") == 0)
+		return new TFruitsBoat;
+
+	if (strcmp(name, "FruitsBoatB") == 0)
+		return new TFruitsBoat;
+
+	if (strcmp(name, "FruitsBoatP") == 0)
+		return new TFruitsBoat;
+
+	if (strcmp(name, "FruitsBoatY") == 0)
 		return new TFruitsBoat;
 
 	if (strcmp(name, "FruitsBoatManager") == 0)
@@ -338,13 +347,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_Enemy(const char* name) const
 	if (strcmp(name, "MoePuku") == 0)
 		return new TMoePuku;
 
-	// TODO:
-	// if ( strcmp(name, "TabePukuManager") == 0)
-	//     return new TTabePukuManager;
+	if (strcmp(name, "TabePukuManager") == 0)
+		return new TTabePukuManager;
 
-	// TODO:
-	// if ( strcmp(name, "TabePuku") == 0)
-	//     return new TTabePuku;
+	if (strcmp(name, "TabePuku") == 0)
+		return new TTabePuku;
 
 	if (strcmp(name, "WireTrapManager") == 0)
 		return new TWireTrapManager;

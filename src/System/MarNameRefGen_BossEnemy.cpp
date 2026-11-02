@@ -115,11 +115,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BathtubKiller") == 0)
 		return new TBathtubKiller;
 
-	if ( strcmp( name, "BathtubPeachManager" ) == 0 )
-	    return new TBathtubPeachManager;
+	if (strcmp(name, "BathtubPeachManager") == 0)
+		return new TBathtubPeachManager;
 
-	if ( strcmp( name, "BathtubPeach" ) == 0 )
-	    return new TBathtubPeach;
+	if (strcmp(name, "BathtubPeach") == 0)
+		return new TBathtubPeach;
 
 	if (strcmp(name, "BossWanwan") == 0)
 		return new TBossWanwan;
