@@ -92,13 +92,6 @@ public:
 
 	explicit TVec3(f32 value) { setAll(value); }
 
-	// NOTE: yes, this has to use lwz/stw and not lfs/stf.
-	// Checked via MarioCollision.cpp where this is not inlined
-	TVec3(const TVec3& other)
-	    : Vec(other)
-	{
-	}
-
 	TVec3& operator=(const TVec3& other)
 	{
 		// NOTE: yes, this has to use lwz/stw and not lfs/stf.

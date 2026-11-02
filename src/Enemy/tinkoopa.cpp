@@ -902,7 +902,7 @@ void TTinKoopa::checkTinKoopaKillerApproachingMessage()
 			continue;
 
 		if (checkKillerApproachingFromBack(
-		        killer, *gpMarioPos,
+		        killer, SMS_GetMarioPos(),
 		        getSaveParam2()->mSLKillerApproachingDistance.get()))
 			startTinKoopaMessage(msgId);
 	}

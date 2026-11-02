@@ -852,7 +852,7 @@ void THamuKuri::behaveToFindMario()
 void THamuKuri::attackToMario()
 {
 	if (mSpine->getCurrentNerve() == &TNerveHamuKuriJitabata::theNerve()) {
-		if (mPosition.y + 10.0f > gpMarioPos->y) {
+		if (mPosition.y + 10.0f > SMS_GetMarioY()) {
 			forceRoll(SMS_GetMarioPos(), false);
 			SMSRumbleMgr->start(0x15, 5, (f32*)nullptr);
 		}
@@ -1516,7 +1516,10 @@ void THaneHamuKuri::setRunAnm() { setBckAnm(3); }
 
 void THaneHamuKuri::setRollAnm() { setBckAnm(2); }
 
-void THaneHamuKuri::behaveToWater(THitActor*) { forceRoll(*gpMarioPos, true); }
+void THaneHamuKuri::behaveToWater(THitActor*)
+{
+	forceRoll(SMS_GetMarioPos(), true);
+}
 
 void THaneHamuKuri::setCrashAnm() { setBckAnm(0); }
 
