@@ -27,8 +27,9 @@ public:
 };
 
 class TEnemyCoinUnit {
-	TEnemyCoinUnit();
+	TEnemyCoinUnit(int);
 	void init();
+	TMapObjBase* getUnusedItem();
 };
 
 class TKukku : public TSmallEnemy {
@@ -53,16 +54,16 @@ public:
 
 	// Unused
 	void getUnusedBall();
-	void getWaterPowerY() const;
+	f32 getWaterPowerY() const;
 	void getWaterDamageRate() const;
-	void changeBck(int);
+	void changeBck(const char*);
 	BOOL isFindOutMario() const;
 	BOOL isDying() const;
 	BOOL isRecoveringGraph() const;
 	BOOL isFalling() const;
 	void shotBall();
 	void decideFlyingAnm();
-	void doHabataki();
+	BOOL doHabataki();
 	void doRecoverToCurPathNode();
 	void doFlyToCurPathNode();
 	void behaveHitTrample();
@@ -75,14 +76,11 @@ public:
 	// fabricated
 	s32 getUnk1A4() const { return unk1A4; }
 
+public:
 	/* 0x194 */ TKukkuBall* mBalls[3];
-	/* 0x198 */ TMapObjBase* mMapObj;
-	/* 0x19C */ u32 unk19C;
-	/* 0x1A0 */ u32 unk1A0;
-
-private:
-	/* 0x1A4 */ s32 unk1A4;
-	/* 0x1A8 */ s32 unk1A8;
+	/* 0x1A0 */ TMapObjBase* mMapObj;
+	/* 0x1A4 */ u32 unk1A4;
+	/* 0x1A8 */ u32 unk1A8;
 	/* 0x1AC */ s32 unk1AC;
 	/* 0x1B0 */ s32 unk1B0;
 };
@@ -103,9 +101,9 @@ public:
 // class Thitactor adds all the bloat libraries horrible
 class TKukkuBall : public THitActor {
 public:
-	TKukkuBall(const char* name = "クック玉");
+	TKukkuBall(MActor* actor, const char* name = "クック玉");
 	virtual ~TKukkuBall() { };
-	int init();
+	void init();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	// UNUSED
@@ -118,7 +116,10 @@ public:
 	void moveObject();
 
 public:
-	/* 0x68 */ TKukku* mOwner;
+	/* 0x68 */ MActor* actor;
+	/* 0x6C */ s32 unk6C;
+	/* 0x70 */ JGeometry::TVec3<f32> mVelocity;
+	/* 0x7C */ u32 unk7C;
 };
 
 DECLARE_NERVE(TNerveKukkuRecoverGraph, TLiveActor);
