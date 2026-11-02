@@ -675,7 +675,7 @@ config.libs = [
             Object(Matching, "dolphin/db/db.c"),
         ]),
     DolphinLib("os", [
-            Object(MatchingFor("GMSJ01", "GMSP01"), "dolphin/os/OS.c"),
+            Object(Matching, "dolphin/os/OS.c"),
             Object(Matching, "dolphin/os/OSAlarm.c"),
             Object(Matching, "dolphin/os/OSAlloc.c"),
             Object(Matching, "dolphin/os/OSArena.c"),
