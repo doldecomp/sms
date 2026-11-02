@@ -174,6 +174,7 @@ config.asflags = [
     f"-I {msl_include}/MSL_C/MSL_Common",
     f"-I {msl_include}/MSL_C++/MSL_Common",
     f"-I build/{config.version}/include",
+    f"--defsym VERSION_{config.version}=1",
     f"--defsym BUILD_VERSION={version_num}",
 ]
 config.ldflags = [
@@ -659,7 +660,7 @@ config.libs = [
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/flush_cache.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mem_TRK.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/targimpl.c"),
-            Object(MatchingFor("GMSJ01"), "TRK_MINNOW_DOLPHIN/__exception.s"),
+            Object(Matching, "TRK_MINNOW_DOLPHIN/__exception.s"),
             Object(MatchingFor("GMSJ01", "GMSP01"), "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/mpc_7xx_603e.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/main_TRK.c"),
