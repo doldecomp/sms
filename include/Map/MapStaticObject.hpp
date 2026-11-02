@@ -67,6 +67,9 @@ public:
 	/* 0x70 */ MActor* mMActor;
 	/* 0x74 */ TMapCollisionManager* mCollisionManager;
 	/* 0x78 */ u32 mSoundId;
+#ifndef VERSION_GMSJ01
+	/* 0x7C */ u32 mSoundVecIdx;
+#endif
 };
 
 class TMapModelActor : public THitActor {

@@ -18,6 +18,13 @@ struct J3DTexCoordScaleInfo {
 	/* 0x6 */ u16 field_0x06;
 };
 
+// from tp
+enum J3DSysFlag {
+	J3DSysFlag_SkinPosCpu = 0x00000004,
+	J3DSysFlag_SkinNrmCpu = 0x00000008,
+	J3DSysFlag_PostTexMtx = 0x40000000,
+};
+
 class J3DTexture;
 class J3DMatPacket;
 class J3DMtxCalc;

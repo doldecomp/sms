@@ -368,6 +368,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_MapObj(const char* name) const
 	if (strcmp(name, "WaterMelon") == 0)
 		return new TBigWatermelon;
 
+#ifndef VERSION_GMSJ01
+	if (strcmp(name, "WatermelonStatic") == 0)
+		return new TWatermelonStatic;
+#endif
+
 	if (strcmp(name, "ShiningStone") == 0)
 		return new TShiningStone;
 

@@ -19,7 +19,7 @@ void J3DModelData::clear()
 	unkC              = 0;
 	mRootNode         = 0;
 	unk14             = 0;
-	unk18             = 0;
+	mBumpFlag         = 0;
 	mbHasBillboard    = 0;
 	mJointNum         = 0;
 	mJointNodePointer = (J3DJoint**)0x0;
@@ -487,7 +487,7 @@ J3DModel::~J3DModel() { }
 void J3DModel::initialize()
 {
 	unkC        = nullptr;
-	unk8        = 0;
+	mFlags      = J3DMdlFlag_None;
 	mModelData  = nullptr;
 	mDeformData = 0;
 	mSkinDeform = nullptr;
@@ -514,8 +514,12 @@ void J3DModel::initialize()
 	mMatPackets    = nullptr;
 	mShapePackets  = nullptr;
 	unk9C          = nullptr;
-	unk90          = nullptr;
+	mVtxColorCalc  = nullptr;
 	unk94          = nullptr;
+
+#ifdef VERSION_GMSP01_NX
+	mLastFrameId = -1;
+#endif
 }
 
 void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
@@ -566,17 +570,16 @@ void J3DModel::entryModelData(J3DModelData* pModelData, u32 mdlFlags,
 		for (int i = 0; i < pModelData->getMaterialNum(); ++i) {
 			mMatPackets[i].setMaterial(pModelData->getMaterialNodePointer(i));
 			J3DShape* shape = pModelData->getMaterialNodePointer(i)->getShape();
-			mMatPackets[i].addShapePacket(&mShapePackets[shape->getIndex()]);
+			mMatPackets[i].addShapePacket(getShapePacket(shape->getIndex()));
 			mMatPackets[i].setTexture(pModelData->getTexture());
 
-			if (mdlFlags & 0x20000) {
-				J3DMaterial* mat = pModelData->getMaterialNodePointer(i);
-				u32 dlSize       = mat->countDLSize();
+			if (mdlFlags & J3DMdlFlag_UseSharedDL) {
 				mMatPackets[i].setDisplayListObj(
-				    mat->newSharedDisplayList(dlSize));
+				    pModelData->getMaterialNodePointer(i)->newSharedDisplayList(
+				        pModelData->getMaterialNodePointer(i)->countDLSize()));
 			} else {
-				J3DMaterial* mat     = pModelData->getMaterialNodePointer(i);
-				u32 dlSize           = mat->countDLSize();
+				u32 dlSize
+				    = pModelData->getMaterialNodePointer(i)->countDLSize();
 				J3DMatPacket* packet = &mMatPackets[i];
 				packet->setDisplayListObj(new J3DDisplayListObj);
 				packet->getDisplayListObj()->newDisplayList(dlSize);
@@ -661,20 +664,49 @@ void J3DModel::makeDL()
 	}
 }
 
+void J3DModel::patch()
+{
+	// UNUSED - unknowable
+}
+
+void J3DModel::setDeformData(J3DDeformData* pDeformData,
+                             J3DDeformAttachFlag flags)
+{
+	// UNUSED - based off tp
+	mDeformData = pDeformData;
+
+	mVertexBuffer->copyLocalVtxArray(flags);
+
+	if (checkFlag(J3DMdlFlag_SkinPosCpu)) {
+		pDeformData->offAllFlag(1);
+	}
+}
+
 void J3DModel::setSkinDeform(J3DSkinDeform* pSkinDeform,
                              J3DDeformAttachFlag flags)
 {
 	mSkinDeform = pSkinDeform;
 
 	if (pSkinDeform == nullptr) {
-		unk8 &= ~0x4;
-		unk8 &= ~0x8;
+		offFlag(J3DMdlFlag_SkinPosCpu);
+		offFlag(J3DMdlFlag_SkinNrmCpu);
 	} else {
-		unk8 |= 0x4;
-		unk8 |= 0x8;
+		onFlag(J3DMdlFlag_SkinPosCpu);
+		onFlag(J3DMdlFlag_SkinNrmCpu);
 		mSkinDeform->initMtxIndexArray(mModelData);
 		mVertexBuffer->copyTransformedVtxArray();
 	}
+}
+
+void J3DModel::setVtxColorCalc(J3DVtxColorCalc* pVtxColorCalc,
+                               J3DDeformAttachFlag flags)
+{
+	// UNUSED - unknowable
+}
+
+void J3DModel::setVtxShader(J3DVtxShader* pVtxShader, J3DDeformAttachFlag flags)
+{
+	// UNUSED - unknowable
 }
 
 static f32 J3DUnit01[] = { 0.0f, 1.0f };
@@ -827,16 +859,16 @@ void J3DModel::update()
 {
 	j3dSys.setModel(this);
 
-	if (checkFlag(4)) {
-		j3dSys.onFlag(0x4);
+	if (checkFlag(J3DMdlFlag_SkinPosCpu)) {
+		j3dSys.onFlag(J3DSysFlag_SkinPosCpu);
 	} else {
-		j3dSys.offFlag(0x4);
+		j3dSys.offFlag(J3DSysFlag_SkinPosCpu);
 	}
 
-	if (checkFlag(0x8)) {
-		j3dSys.onFlag(0x8);
+	if (checkFlag(J3DMdlFlag_SkinNrmCpu)) {
+		j3dSys.onFlag(J3DMdlFlag_SkinNrmCpu);
 	} else {
-		j3dSys.offFlag(0x8);
+		j3dSys.offFlag(J3DMdlFlag_SkinNrmCpu);
 	}
 
 	mVertexBuffer->frameInit();
@@ -847,8 +879,8 @@ void J3DModel::update()
 	if (mDeformData != nullptr)
 		mDeformData->deform(this);
 
-	if (unk90 != nullptr)
-		unk90->calc(this);
+	if (mVtxColorCalc != nullptr)
+		mVtxColorCalc->calc(this);
 
 	if (unk94 != nullptr)
 		unk94->calc(this);
@@ -870,16 +902,16 @@ void J3DModel::calc()
 {
 	j3dSys.setModel(this);
 
-	if (checkFlag(4)) {
-		j3dSys.onFlag(0x4);
+	if (checkFlag(J3DMdlFlag_SkinPosCpu)) {
+		j3dSys.onFlag(J3DMdlFlag_SkinPosCpu);
 	} else {
-		j3dSys.offFlag(0x4);
+		j3dSys.offFlag(J3DMdlFlag_SkinPosCpu);
 	}
 
-	if (checkFlag(0x8)) {
-		j3dSys.onFlag(0x8);
+	if (checkFlag(J3DMdlFlag_SkinNrmCpu)) {
+		j3dSys.onFlag(J3DMdlFlag_SkinNrmCpu);
 	} else {
-		j3dSys.offFlag(0x8);
+		j3dSys.offFlag(J3DMdlFlag_SkinNrmCpu);
 	}
 
 	mVertexBuffer->frameInit();
@@ -890,8 +922,8 @@ void J3DModel::calc()
 	if (mDeformData != nullptr)
 		mDeformData->deform(this);
 
-	if (unk90 != nullptr)
-		unk90->calc(this);
+	if (mVtxColorCalc != nullptr)
+		mVtxColorCalc->calc(this);
 
 	if (unk94 != nullptr)
 		unk94->calc(this);
@@ -912,61 +944,78 @@ void J3DModel::calc()
 
 void J3DModel::entry()
 {
-
 	j3dSys.setModel(this);
 
-	if (unk8 & 0x4 ? 1 : 0) {
-		j3dSys.mFlags |= 0x4;
+	if (checkFlag(J3DMdlFlag_SkinPosCpu)) {
+		j3dSys.onFlag(J3DSysFlag_SkinPosCpu);
 	} else {
-		j3dSys.mFlags &= ~0x4;
+		j3dSys.offFlag(J3DSysFlag_SkinPosCpu);
 	}
 
-	if (unk8 & 0x8 ? 1 : 0) {
-		j3dSys.mFlags |= 0x8;
+	if (checkFlag(J3DMdlFlag_SkinNrmCpu)) {
+		j3dSys.onFlag(J3DMdlFlag_SkinNrmCpu);
 	} else {
-		j3dSys.mFlags &= ~0x8;
+		j3dSys.offFlag(J3DMdlFlag_SkinNrmCpu);
 	}
 
 	j3dSys.setTexture(mModelData->getTexture());
 
-	mModelData->unk14->recursiveEntry(mModelData->mRootNode);
+	mModelData->getMtxCalc()->recursiveEntry(mModelData->getRootNode());
 }
+
+#ifdef VERSION_GMSP01_NX
+// this is a stupid hack nintendo did to access the frame id in JSystem, and is
+// only present on the switch 3D All Stars version of sunshine
+extern u32 gl_stardust_frameid;
+#endif
 
 void J3DModel::viewCalc()
 {
-	swapDrawMtx();
-	swapNrmMtx();
+#ifdef VERSION_GMSP01_NX
+	if (mLastFrameId != gl_stardust_frameid) {
+		mLastFrameId = gl_stardust_frameid;
+#endif
 
-	if (checkFlag(1)) {
-		for (u16 i = 0; i < mModelData->getDrawFullWgtMtxNum(); i++) {
-			MTXCopy(getAnmMtx(mModelData->getDrawMtxIndex(i)), getDrawMtx(i));
+		swapDrawMtx();
+		swapNrmMtx();
+
+		if (checkFlag(J3DMdlFlag_OverrideMtx)) {
+			for (u16 i = 0; i < mModelData->getDrawFullWgtMtxNum(); i++) {
+				MTXCopy(getAnmMtx(mModelData->getDrawMtxIndex(i)),
+				        getDrawMtx(i));
+			}
+			for (u16 i = 0; i < mModelData->getWEvlpMtxNum(); i++) {
+				MTXCopy(mWeightEvlpMatrices[i],
+				        getDrawMtx(mModelData->getDrawFullWgtMtxNum() + i));
+			}
+		} else {
+			MtxPtr viewMtx = j3dSys.getViewMtx();
+			if (mModelData->getDrawFullWgtMtxNum() != 0) {
+				J3DMTXConcatArrayIndexedSrc(
+				    viewMtx, mNodeMatrices,
+				    mModelData->mDrawMtxData.mDrawMtxIndex, getDrawMtxPtr(),
+				    mModelData->getDrawFullWgtMtxNum());
+			}
+			if (mModelData->getDrawMtxNum()
+			    > mModelData->getDrawFullWgtMtxNum()) {
+				J3DPSMtxArrayConcat(
+				    viewMtx, getWeightAnmMtx(0),
+				    getDrawMtx(mModelData->getDrawFullWgtMtxNum()),
+				    mModelData->getWEvlpMtxNum());
+			}
 		}
-		for (u16 i = 0; i < mModelData->getWEvlpMtxNum(); i++) {
-			MTXCopy(mWeightEvlpMatrices[i],
-			        getDrawMtx(mModelData->getDrawFullWgtMtxNum() + i));
-		}
-	} else {
-		MtxPtr viewMtx = j3dSys.getViewMtx();
-		if (mModelData->getDrawFullWgtMtxNum() != 0) {
-			J3DMTXConcatArrayIndexedSrc(
-			    viewMtx, mNodeMatrices, mModelData->mDrawMtxData.mDrawMtxIndex,
-			    getDrawMtxPtr(), mModelData->getDrawFullWgtMtxNum());
-		}
-		if (mModelData->getDrawMtxNum() > mModelData->getDrawFullWgtMtxNum()) {
-			J3DPSMtxArrayConcat(viewMtx, getWeightAnmMtx(0),
-			                    getDrawMtx(mModelData->getDrawFullWgtMtxNum()),
-			                    mModelData->getWEvlpMtxNum());
-		}
+
+		calcNrmMtx();
+		calcBBoard();
+		calcBumpMtx();
+		DCStoreRange(getDrawMtxPtr(),
+		             getModelData()->getDrawMtxNum() * sizeof(Mtx));
+		DCStoreRange(getNrmMtxPtr(),
+		             getModelData()->getDrawMtxNum() * sizeof(Mtx33));
+		prepareShapePackets();
+#ifdef VERSION_GMSP01_NX
 	}
-
-	calcNrmMtx();
-	calcBBoard();
-	calcBumpMtx();
-	DCStoreRange(getDrawMtxPtr(),
-	             getModelData()->getDrawMtxNum() * sizeof(Mtx));
-	DCStoreRange(getNrmMtxPtr(),
-	             getModelData()->getDrawMtxNum() * sizeof(Mtx33));
-	prepareShapePackets();
+#endif
 }
 
 void J3DModel::calcNrmMtx()
@@ -996,7 +1045,7 @@ void J3DModel::calcNrmMtx()
 
 void J3DModel::calcBumpMtx()
 {
-	if (mModelData->unk18 != 1)
+	if (mModelData->checkBumpFlag(1))
 		return;
 
 	s32 nextBumpMtx = 0;
@@ -1123,12 +1172,13 @@ void J3DModel::prepareShapePackets()
 		J3DShapePacket* pkt = &mShapePackets[i];
 		shape->setScaleFlagArray(mScaleFlagArr);
 
-		if (checkFlag(0x4))
+		if (checkFlag(J3DMdlFlag_SkinPosCpu))
 			shape->onFlag(J3DShpFlag_SkinPosCpu);
 		else
 			shape->offFlag(J3DShpFlag_SkinPosCpu);
 
-		if (checkFlag(0x8) && !shape->checkFlag(J3DShpFlag_EnableLod))
+		if (checkFlag(J3DMdlFlag_SkinNrmCpu)
+		    && !shape->checkFlag(J3DShpFlag_EnableLod))
 			shape->onFlag(J3DShpFlag_SkinNrmCpu);
 		else
 			shape->offFlag(J3DShpFlag_SkinNrmCpu);

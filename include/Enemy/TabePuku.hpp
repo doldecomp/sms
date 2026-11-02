@@ -32,7 +32,7 @@ DECLARE_NERVE(TNerveTabePukuFound, TLiveActor);
 
 class TTabePukuManager : public TSmallEnemyManager {
 public:
-	TTabePukuManager(const char*);
+	TTabePukuManager(const char* name = "プクプク(レール巡回)マネージャー");
 
 	virtual void load(JSUMemoryInputStream&);
 	virtual void createModelData();
@@ -40,7 +40,7 @@ public:
 
 class TTabePuku : public TSmallEnemy {
 public:
-	TTabePuku(const char*);
+	TTabePuku(const char* name = "プクプク(レール巡回)");
 
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual BOOL receiveMessage(THitActor*, u32);

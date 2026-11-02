@@ -154,4 +154,16 @@ public:
 	f32 unk1A0;
 };
 
+#ifndef VERSION_GMSJ01
+class TWatermelonStatic : public TMapObjBase {
+public:
+	TWatermelonStatic(const char* name = "固定スイカ")
+	    : TMapObjBase(name)
+	{
+	}
+
+	virtual u32 touchWater(THitActor*);
+};
+#endif
+
 #endif
