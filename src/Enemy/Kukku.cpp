@@ -211,7 +211,7 @@ void TKukku::behaveToWater(THitActor* sender)
 
 void TKukku::updateRotation()
 {
-	JGeometry::TVec3<f32> toTarget = unkF4.getPoint();
+	JGeometry::TVec3<f32> toTarget = mCurrentTarget.getPoint();
 	toTarget.sub(mPosition);
 
 	f32 dist = toTarget.length();
