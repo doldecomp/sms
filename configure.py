@@ -429,7 +429,7 @@ config.libs = [
             Object(Matching, "JSystem/JDrama/JDRNameRefGen.cpp"),
             Object(Matching, "JSystem/JDrama/JDRPlacement.cpp"),
             Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSP01_NX"), "JSystem/JDrama/JDRRenderMode.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSP01_NX"), "JSystem/JDrama/JDRResolution.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRResolution.cpp"),
             Object(Matching, "JSystem/JDrama/JDRScreen.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DAct.cpp"),
             Object(Matching, "JSystem/JDrama/JDRSmJ3DScn.cpp"),
