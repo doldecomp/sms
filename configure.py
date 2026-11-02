@@ -1075,7 +1075,7 @@ config.libs = [
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
-            PCHObject(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01"), "Map/JointModel.cpp"),
+            PCHObject(Matching, "Map/JointModel.cpp"),
             PCHObject(Matching, "Map/JointModelManager.cpp"),
             PCHObject(Matching, "Map/JointObj.cpp"),
             PCHObject(NonMatching, "Map/Map.cpp"),

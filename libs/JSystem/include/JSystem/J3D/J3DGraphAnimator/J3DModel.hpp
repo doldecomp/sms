@@ -332,6 +332,10 @@ protected:
 	/* 0x94 */ J3DUnkCalc1* unk94;
 	/* 0x98 */ J3DVertexBuffer* mVertexBuffer;
 	/* 0x9C */ J3DUnkCalc2* unk9C;
+
+#ifdef VERSION_GMSP01_NX
+	/* 0xA0 */ u32 unkA0;
+#endif
 };
 
 #endif
