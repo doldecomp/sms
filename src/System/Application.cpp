@@ -1,3 +1,4 @@
+#include "System/FlagManagerFlags.hpp"
 #include <System/Application.hpp>
 #include <stdio.h>
 #include <stdlib.h>
@@ -59,6 +60,10 @@ TCardManager* gpCardManager;
 JUTResFont* gpSystemFont;
 JUTRomFont* gpRomFont;
 
+#ifdef VERSION_GMSP01_NX
+static bool s_RunOnGC;
+#endif
+
 static int sGameInit;
 static void* arcBufNLogo;
 static void* arcBufMario;
@@ -76,7 +81,8 @@ TARAMBlock gArBkGuide;
 extern "C" void ReInitializeGX();
 u8 SMS_getShineIDofExStage(u8);
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 f32 SMSGetRealVSyncTimesPerSec()
 {
 	f32 result = 60.0f;
@@ -126,6 +132,11 @@ TApplication::TApplication()
     , unk44(0)
     , unk46(0)
 {
+#ifdef VERSION_GMSP01_NX
+	u32 unkFlag  = __PIRegs[11];
+	__PIRegs[11] = 0;
+	s_RunOnGC    = __PIRegs[11] != 0;
+#endif
 }
 
 void* SMSLoadArchive(const char* path, void* dst, u32 dstLength, JKRHeap* heap)
@@ -164,7 +175,8 @@ void SMSLoadArchiveARAM(TARAMBlock* out_block, const char* path)
 	// Try to load a compressed version of the archive first
 	char compressedArcPath[64];
 	strcpy(compressedArcPath, path);
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 	out_block->mBlock = nullptr;
 #endif
 	char* loc = strstr(compressedArcPath, ".arc");
@@ -238,7 +250,8 @@ void TApplication::initialize()
 	GXInit(JKRAllocFromHeap(nullptr, 0x80000, 0x20), 0x80000);
 	SMS_ResetTexCacheRegion();
 	GXPokeAlphaRead(GX_READ_NONE);
-	void* pvVar3 = new (0x20) u8[0xa5000];
+	void* pvVar3 = new (0x20)
+	    u8[VERSION_SELECT(0xa5000, GMSP01_NX(0xa5a00), GMSP01(0xa5a00))];
 	GXRenderModeObj rmode;
 	SMSSetupTitleRenderMode(&rmode);
 	mDisplay = new JDrama::TDisplay(2, pvVar3, pvVar3, rmode);
@@ -249,7 +262,11 @@ void TApplication::initialize()
 	mHeap = JKRExpHeap::create(spGameHeapBlock, 0x500000, JKRGetCurrentHeap(),
 	                           true);
 
+#ifdef VERSION_GMSP01_NX
+	gpRomFont = nullptr;
+#else
 	gpRomFont = new JUTRomFont(JKRGetCurrentHeap());
+#endif
 	prevHeap->becomeCurrentHeap();
 
 	JKRAram::create(0xf40000, -1, 8, 8, 8);
@@ -289,7 +306,51 @@ void TApplication::initialize()
 #pragma dont_inline on
 void load2DResource2Aram()
 {
-	static u8 sLoadResourceLang     = -1;
+	static u8 sLoadResourceLang = -1;
+#if defined(VERSION_GMSP01_NX)
+	static const char* cmn2dNames[] = {
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		"/data/cmn2d_jp.arc",
+		"/data/cmn2d_us.arc",
+		"/data/cmn2d_en.arc",
+		"/data/cmn2d_ge.arc",
+		"/data/cmn2d_fr.arc",
+		"/data/cmn2d_sp.arc",
+		"/data/cmn2d_it.arc",
+	};
+	static const char* game_6Names[] = {
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		"/data/game_6_jp.arc",
+		"/data/game_6_us.arc",
+		"/data/game_6_en.arc",
+		"/data/game_6_ge.arc",
+		"/data/game_6_fr.arc",
+		"/data/game_6_sp.arc",
+		"/data/game_6_it.arc",
+	};
+	static const char* guideNames[] = {
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		"/data/guide_jp.arc",
+		"/data/guide_us.arc",
+		"/data/guide_en.arc",
+		"/data/guide_ge.arc",
+		"/data/guide_fr.arc",
+		"/data/guide_sp.arc",
+		"/data/guide_it.arc",
+	};
+#else
 	static const char* cmn2dNames[] = {
 		"/data/cmn2d_en.arc", "/data/cmn2d_ge.arc", "/data/cmn2d_fr.arc",
 		"/data/cmn2d_sp.arc", "/data/cmn2d_it.arc",
@@ -302,6 +363,7 @@ void load2DResource2Aram()
 		"/data/guide_en.arc", "/data/guide_ge.arc", "/data/guide_fr.arc",
 		"/data/guide_sp.arc", "/data/guide_it.arc",
 	};
+#endif
 
 	if (sLoadResourceLang
 	    != (u8)TFlagManager::getInstance()->getFlag(MSF_LANGUAGE)) {
@@ -356,18 +418,42 @@ static void* SetupThreadFuncLogo(void* param)
 	return ((TApplication*)param)->setupThreadFuncLogo();
 }
 
+#ifdef VERSION_GMSP01_NX
+static u32 gl_stardust_frameid;
+#endif
+
 void TApplication::initialize_bootAfter()
 {
 	JKRGetRootHeap()->becomeCurrentHeap();
 	JKRMemArchive* this_01 = new (JKRGetSystemHeap(), 0) JKRMemArchive;
 	this_01->mountFixed(arcBufNLogo, MBF_0);
 
+#ifdef VERSION_GMSP01_NX
+	s32 language;
+	language = TFlagManager::getInstance()->getFlag(MSF_LANGUAGE);
+	if (language == MSLANG_NX_JAPANESE) {
+		this_01->becomeCurrent("/font");
+		void* fontRes = this_01->getResource("standard_fontEx-jp.bfn");
+		u32 uVar1     = this_01->getResSize(fontRes);
+		ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
+		this_01->readResource(font, uVar1, "standard_fontEx-jp.bfn");
+		gpSystemFont = new JUTResFont(font, nullptr);
+	} else {
+		this_01->becomeCurrent("/font");
+		void* fontRes = this_01->getResource("standard_fontEx.bfn");
+		u32 uVar1     = this_01->getResSize(fontRes);
+		ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
+		this_01->readResource(font, uVar1, "standard_fontEx.bfn");
+		gpSystemFont = new JUTResFont(font, nullptr);
+	}
+#else
 	this_01->becomeCurrent("/font");
 	void* fontRes = this_01->getResource("standard_fontEx.bfn");
 	u32 uVar1     = this_01->getResSize(fontRes);
 	ResFONT* font = (ResFONT*)new (0x20) u8[uVar1];
 	this_01->readResource(font, uVar1, "standard_fontEx.bfn");
 	gpSystemFont = new JUTResFont(font, nullptr);
+#endif
 
 	this_01->becomeCurrent("/audi");
 	void* aafRes = this_01->getResource("mSound.aaf");
@@ -377,7 +463,16 @@ void TApplication::initialize_bootAfter()
 	JKRHeap* prevHeap = JKRGetCurrentHeap();
 	gpMSound = new MSound(prevHeap, nullptr, 0xF40000, buf, nullptr, 0xb00000);
 
+#ifdef VERSION_GMSP01_NX
+	if (s_RunOnGC) {
+		JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? 0 : 1);
+	} else {
+		JAIGlobalParameter::setParamSoundOutputMode(1);
+	}
+#else
 	JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? 0 : 1);
+#endif
+
 	gpMSound->loadWave(MS_WAVE_UNK0);
 	gpMSound->loadWave(MS_WAVE_UNK210);
 	prevHeap->becomeCurrentHeap();
@@ -443,7 +538,7 @@ void TApplication::initialize_nlogoAfter()
 	    (ResTIMG*)piVar2->getResource("/card/mariobnr_jpn.bti") + 1);
 #endif
 
-#ifndef VERSION_GMSP01
+#if !(defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX))
 	int status;
 	while ((status = gpCardManager->getLastStatus()) == -1)
 		OSYieldThread();
@@ -699,6 +794,10 @@ int TApplication::gameLoop()
 {
 	u32 nextState = APP_STATE_DEFAULT;
 	while (nextState <= APP_STATE_DEFAULT) {
+#if VERSION_GMSP01_NX
+		gl_stardust_frameid++;
+#endif
+
 		mDisplay->startRendering();
 
 		TTimeRec::startFrameSt(mDisplay->unk60->mLastRetraceTime);
@@ -887,8 +986,35 @@ int TApplication::drawDVDErr()
 #endif
 
 	switch (DVDGetDriveStatus()) {
-	case -1:
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+	case DVD_STATE_FATAL_ERROR:
+#if defined(VERSION_GMSP01_NX)
+		switch (language) {
+		case MSLANG_NX_JAPANESE:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_ENGLISH][0]);
+			break;
+		case MSLANG_NX_EN_US:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_ENGLISH][0]);
+			break;
+		case MSLANG_NX_EN_GB:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_ENGLISH][0]);
+			break;
+		case MSLANG_NX_GERMAN:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_GERMAN][0]);
+			break;
+		case MSLANG_NX_FRENCH:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_FRENCH][0]);
+			break;
+		case MSLANG_NX_SPANISH:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_SPANISH][0]);
+			break;
+		case MSLANG_NX_ITALIAN:
+			snprintf(message, 512, sDvdErrMsgs[MSLANG_ITALIAN][0]);
+			break;
+		default:
+			OSReport("Language overflow %d %s %d\n", language, __FILE__, 1707);
+			break;
+		}
+#elif defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		snprintf(message, 512, sDvdErrMsgs[language][0]);
 #else
 		snprintf(message, 512,
@@ -899,7 +1025,7 @@ int TApplication::drawDVDErr()
 		error = 'em_1';
 		break;
 
-	case 11:
+	case DVD_STATE_RETRY:
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		snprintf(message, 512, sDvdErrMsgs[language][1]);
 #else
@@ -911,7 +1037,7 @@ int TApplication::drawDVDErr()
 		error = 'em_2';
 		break;
 
-	case 1:
+	case DVD_STATE_BUSY:
 		if (DVDCheckDisk() == 0) {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 			snprintf(message, 512, sDvdErrMsgs[language][2]);
@@ -922,7 +1048,7 @@ int TApplication::drawDVDErr()
 		}
 		break;
 
-	case 5:
+	case DVD_STATE_COVER_OPEN:
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		snprintf(message, 512, sDvdErrMsgs[language][3]);
 #else
@@ -934,7 +1060,7 @@ int TApplication::drawDVDErr()
 		error = 'em_4';
 		break;
 
-	case 4:
+	case DVD_STATE_NO_DISK:
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		snprintf(message, 512, sDvdErrMsgs[language][4]);
 #else
@@ -945,7 +1071,7 @@ int TApplication::drawDVDErr()
 		error = 'em_5';
 		break;
 
-	case 6:
+	case DVD_STATE_WRONG_DISK:
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 		snprintf(message, 512, sDvdErrMsgs[language][5]);
 #else
