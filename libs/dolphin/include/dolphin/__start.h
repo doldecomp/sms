@@ -26,7 +26,11 @@ extern void OSResetSystem(BOOL reset, u32 resetCode, BOOL forceMenu);
 __declspec(section ".init") extern void __check_pad3(void);
 __declspec(section ".init") extern void __start(void);
 __declspec(section ".init") extern void __init_registers(void);
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSP01)
 __declspec(section ".init") extern void __init_data(void);
+#else
+__declspec(section ".init") extern void __init_data_80005380(void);
+#endif
 
 __declspec(section ".init") extern char _stack_addr[];
 __declspec(section ".init") extern char _SDA_BASE_[];
