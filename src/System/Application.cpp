@@ -418,7 +418,7 @@ static void* SetupThreadFuncLogo(void* param)
 }
 
 #ifdef VERSION_GMSP01_NX
-static u32 gl_stardust_frameid;
+u32 gl_stardust_frameid;
 #endif
 
 void TApplication::initialize_bootAfter()

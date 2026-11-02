@@ -5,6 +5,7 @@
 #include <version.h>
 
 static void MarErrException(u16, OSContext*, u32, u32);
+
 namespace {
 
 const u32 cDispExceptionCommand[6] = { 0x100, 0x200, 0x400, 0x800, 0x1, 0x0 };

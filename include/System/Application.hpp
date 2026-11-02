@@ -9,6 +9,10 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
+#ifdef VERSION_GMSP01_NX
+extern u32 gl_stardust_frameid;
+#endif
+
 namespace JDrama {
 class TDisplay;
 class TDirector;

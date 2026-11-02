@@ -36,9 +36,10 @@ enum J3DMaterialCopyFlag {
 	J3DMatCopyFlag_All      = 0x03,
 };
 
+// from tp
 enum J3DMdlFlag {
 	J3DMdlFlag_None             = 0x0,
-	J3DMdlFlag_Unk1             = 0x1,
+	J3DMdlFlag_OverrideMtx      = 0x1,
 	J3DMdlFlag_UseDefaultJ3D    = 0x2,
 	J3DMdlFlag_SkinPosCpu       = 0x4,
 	J3DMdlFlag_SkinNrmCpu       = 0x8,
@@ -120,7 +121,6 @@ public:
 	{
 		return mDrawMtxData.mDrawMtxIndex[idx];
 	}
-	u16* getDrawMtxIndices() { return mDrawMtxData.mDrawMtxIndex; }
 
 	u32 getVtxNum() const { return mVertexData.getVtxNum(); }
 	u32 getNrmNum() const { return mVertexData.getNrmNum(); }
@@ -244,10 +244,10 @@ public:
 	void unlock();
 	void makeDL();
 	void patch();
-	// void setDeformData(J3DDeformData*, J3DDeformAttachFlag);
+	void setDeformData(J3DDeformData*, J3DDeformAttachFlag);
 	void setSkinDeform(J3DSkinDeform* pSkinDeform, J3DDeformAttachFlag flags);
-	// void setVtxColorCalc(J3DVtxColorCalc*, J3DDeformAttachFlag);
-	// void setVtxShader(J3DVtxShader*, J3DDeformAttachFlag);
+	void setVtxColorCalc(J3DVtxColorCalc*, J3DDeformAttachFlag);
+	void setVtxShader(J3DVtxShader*, J3DDeformAttachFlag);
 	void calcWeightEnvelopeMtx();
 	void calcBaseMtx();
 
@@ -280,7 +280,9 @@ public:
 		MTXCopy(mtx, mWeightEvlpMatrices[idx]);
 	}
 
-	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
+	void onFlag(u32 flag) { mFlags |= flag; }
+	void offFlag(u32 flag) { mFlags &= ~flag; }
+	bool checkFlag(u32 flag) const { return (mFlags & flag) ? 1 : 0; }
 
 	Mtx* getDrawMtxPtr() { return mDrawMtxBuf[1][mCurrentViewNo]; }
 	Mtx& getDrawMtx(int idx) { return mDrawMtxBuf[1][mCurrentViewNo][idx]; }
@@ -324,7 +326,7 @@ public:
 
 protected:
 	/* 0x04 */ J3DModelData* mModelData;
-	/* 0x08 */ u32 unk8;
+	/* 0x08 */ u32 mFlags;
 	/* 0x0C */ J3DCalcCallBack unkC;
 	char pad1[0x4];
 	/* 0x14 */ Vec unk14; // mBaseScale
@@ -345,7 +347,7 @@ protected:
 	/* 0x84 */ J3DShapePacket* mShapePackets;
 	/* 0x88 */ J3DDeformData* mDeformData;
 	/* 0x8C */ J3DSkinDeform* mSkinDeform;
-	/* 0x90 */ J3DVtxColorCalc* unk90;
+	/* 0x90 */ J3DVtxColorCalc* mVtxColorCalc;
 	/* 0x94 */ J3DUnkCalc1* unk94;
 	/* 0x98 */ J3DVertexBuffer* mVertexBuffer;
 	/* 0x9C */ J3DUnkCalc2* unk9C;
