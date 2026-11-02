@@ -305,7 +305,7 @@ void SDLModel::entryModelDataSDL(SDLModelData* model_data, u32 flags,
 	}
 
 	if (totalMatsWithBumpMtxs)
-		mModelData->unk18 = true;
+		mModelData->mBumpFlag = true;
 
 	mVertexBuffer = new J3DVertexBuffer(&md->getVertexData());
 }
