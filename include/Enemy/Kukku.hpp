@@ -44,7 +44,7 @@ public:
 	virtual void control();
 	virtual void init(TLiveManager*);
 	virtual const char** getBasNameTable() const;
-	
+
 	void setAfterDeadEffect();
 	void setDeadAnm();
 	void dropCoins();
