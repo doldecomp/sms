@@ -118,7 +118,7 @@ TRealoid::TRealoid(const char* name)
     : TSpineEnemy(name)
 {
 	unk150 = 0;
-	mLiveFlag |= LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20 | LIVE_FLAG_UNK8;
+	mLiveFlag |= LIVE_FLAG_NO_BIND | LIVE_FLAG_UNK20 | LIVE_FLAG_NO_SHADOW;
 }
 
 void TRealoid::loadDefault(JSUMemoryInputStream& stream, const char* name,

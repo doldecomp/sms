@@ -55,14 +55,14 @@ u32 TMapObjBase::getSDLModelFlag() const { return 3; }
 
 void TMapObjBase::awake()
 {
-	offLiveFlag(LIVE_FLAG_UNK4000);
+	offLiveFlag(LIVE_FLAG_SLEEPING);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	setUpCurrentMapCollision();
 }
 
 void TMapObjBase::sleep()
 {
-	onLiveFlag(LIVE_FLAG_UNK4000);
+	onLiveFlag(LIVE_FLAG_SLEEPING);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	removeMapCollision();
 }
@@ -269,7 +269,7 @@ void TMapObjBase::makeObjDefault()
 	mScaling  = mInitialScaling;
 
 	mVelocity.zero();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	if (mMActor) {
 		calcRootMatrix();
 		getModel()->calc();
@@ -280,7 +280,7 @@ void TMapObjBase::makeObjDefault()
 void TMapObjBase::makeObjDead()
 {
 	mVelocity.zero();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 
 	stopAnim();
 
@@ -298,7 +298,7 @@ void TMapObjBase::makeObjDead()
 		mHolder = nullptr;
 	}
 
-	onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10
+	onLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_NO_SHADOW | LIVE_FLAG_NO_BIND
 	           | LIVE_FLAG_UNK40 | LIVE_FLAG_AIRBORNE);
 	mState = STATE_DEAD;
 	if (mMActor)
@@ -307,16 +307,16 @@ void TMapObjBase::makeObjDead()
 
 void TMapObjBase::makeObjAppeared()
 {
-	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_NO_SHADOW);
 	mVelocity.zero();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	mStateTimer = 0;
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	setObjHitData(0);
 	startSound(0);
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 	if (mMapObjData->mMove) {
@@ -390,7 +390,7 @@ void TMapObjBase::ensureTakeSituation()
 
 	if (mHolder && mHolder->getHeldObject() != this) {
 		if (mPosition.y != mGroundHeight)
-			offLiveFlag(LIVE_FLAG_UNK10);
+			offLiveFlag(LIVE_FLAG_NO_BIND);
 
 		mHolder = nullptr;
 	}
@@ -457,7 +457,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 
 		if ((cue & CUE_CALC_ANIM) && mMActor) {
-			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
+			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_OUT_OF_AREA)) {
 				if (getModel()->getShapePacket(0)->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {
@@ -466,7 +466,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			}
 		}
 
-		if (checkLiveFlag(LIVE_FLAG_UNK200))
+		if (checkLiveFlag(LIVE_FLAG_OUT_OF_AREA))
 			return;
 
 		if (hasMapCollision())
@@ -489,7 +489,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_DRAW)
 		draw();
 
-	if (checkLiveFlag(LIVE_FLAG_UNK4000)) {
+	if (checkLiveFlag(LIVE_FLAG_SLEEPING)) {
 		if (cue & CUE_CALC_ANIM)
 			cue &= ~CUE_CALC_ANIM;
 		if (cue & CUE_ENTRY)
@@ -501,7 +501,7 @@ void TMapObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_CALC_ANIM) {
 		calc();
 		if (mMActor) {
-			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK200)) {
+			if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_OUT_OF_AREA)) {
 				if (getModel()->getShapePacket(0)->isVisible())
 					SMS_HideAllShapePacket(getModel());
 			} else {

@@ -27,10 +27,10 @@ void TWoodBarrel::put()
 
 	if (mGroundHeight < mPosition.y - 50.0f) {
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 	} else {
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 	}
 }
 
@@ -75,7 +75,7 @@ void TWoodBarrel::appeared()
 
 	mGroundHeight = gpMap->checkGround(mPosition, &mGroundPlane);
 	if (mPosition.y - 50.0f > mGroundHeight)
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TWoodBarrel::appear()

@@ -145,7 +145,7 @@ void TMameGesso::setMActorAndKeeper()
 
 void TMameGesso::attackToMario()
 {
-	if (unk164 != 0)
+	if (mCanBePickedUp)
 		return;
 
 	if (mSpine->getCurrentNerve() != &TNerveMameGessoObject::theNerve()) {
@@ -204,7 +204,7 @@ bool TMameGesso::isHitValid(u32 param_1)
 
 void TMameGesso::kill()
 {
-	if (unk184)
+	if (mIsAttacker)
 		if (mSpine->getCurrentNerve()
 		    == &TNerveMameGessoGraphJumpWander::theNerve())
 			mSpine->pushNerve(&TNerveSmallEnemyDie::theNerve());
@@ -242,11 +242,11 @@ void TMameGesso::setWaitAnm()
 
 void TMameGesso::setFreezeAnm()
 {
-	unk164 = 1;
+	mCanBePickedUp = true;
 	setBckAnm(15);
 }
 
-void TMameGesso::setDeadAnm() { unk164 = 1; }
+void TMameGesso::setDeadAnm() { mCanBePickedUp = true; }
 
 void TMameGesso::behaveToWater(THitActor*)
 {
@@ -265,7 +265,7 @@ void TMameGesso::behaveToTaken(THitActor*)
 
 void TMameGesso::behaveToRelease()
 {
-	if (unk164 != 0
+	if (mCanBePickedUp
 	    && mSpine->getCurrentNerve() != &TNerveMameGessoThrown::theNerve())
 		mSpine->pushNerve(&TNerveMameGessoThrown::theNerve());
 }
@@ -348,10 +348,11 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 	}
 
 	if (self->isBckAnm(11) || self->isBckAnm(12)) {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			self->setBckAnm(10);
 
-		if (!self->isAirborne() && self->getCurAnmFrameNo(0) > 26.0f) {
+		if (!self->isAirborne()
+		    && self->getCurAnmFrameNo(ANM_TYPE_BCK) > 26.0f) {
 			if (self->getGroundPlane()->isWaterSurface())
 				self->generateEffectColumWater();
 
@@ -359,15 +360,15 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				self->goToShortestNextGraphNode();
 				f32 jumpWanderSpeed = self->unk194->mSLJumpWanderSpeed.get();
 				JGeometry::TVec3<f32> local_4c = self->calcVelocityToJumpToY(
-				    self->getUnk104().getPoint(), jumpWanderSpeed,
+				    self->getGoal().getPoint(), jumpWanderSpeed,
 				    self->getGravityY());
 				self->mPosition.y += 10.0f;
 				self->setVelocity(local_4c);
 				self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 			} else {
 				JGeometry::TVec3<f32> local_34(
-				    self->getUnk104().getPoint().x - self->mPosition.x, 0.0f,
-				    self->getUnk104().getPoint().z - self->mPosition.z);
+				    self->getGoal().getPoint().x - self->mPosition.x, 0.0f,
+				    self->getGoal().getPoint().z - self->mPosition.z);
 
 				if (local_34.x == 0.0f && local_34.y == 0.0f
 				    && local_34.z == 0.0f)
@@ -405,7 +406,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 			self->unk1EC = 1;
 
 		if (self->checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
-			self->onLiveFlag(LIVE_FLAG_UNK20000);
+			self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			spine->setNext(&TNerveSmallEnemyDie::theNerve());
 		}
 
@@ -421,7 +422,7 @@ DEFINE_NERVE(TNerveMameGessoGraphJumpWander, TLiveActor)
 				self->setBckAnm(8);
 			}
 		} else {
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
 				return true;
 			}
@@ -450,7 +451,7 @@ DEFINE_NERVE(TNerveMameGessoDamage, TLiveActor)
 		return true;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(13) && self->isAirborne())
 			self->setBckAnm(0);
 
@@ -473,18 +474,16 @@ DEFINE_NERVE(TNerveMameGessoJitabata, TLiveActor)
 	if (spine->getTime() <= 2) {
 		self->setFreezeAnm();
 	} else {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->isBckAnm(15)) {
 				if (spine->getTime() > self->unk194->mSLFreezeWait.get())
 					self->setBckAnm(5);
 			} else if (self->isBckAnm(5)) {
-				// TODO: operator- inline is wrong here, too much stack frame
-				if ((self->unk104.getPoint() - self->getPosition()).length()
-				    > 300.0f)
+				if (self->getGoalDistance() > 300.0f)
 					self->unk1EC = 0;
 
 				spine->pushAfterCurrent(&TNerveMameGessoWait::theNerve());
-				self->unk164 = 0;
+				self->mCanBePickedUp = false;
 				return true;
 			}
 		}
@@ -510,7 +509,7 @@ DEFINE_NERVE(TNerveMameGessoTrample, TLiveActor)
 				self->setBckAnm(4);
 		}
 	} else {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			return true;
 	}
 
@@ -521,12 +520,12 @@ DEFINE_NERVE(TNerveMameGessoPickUp, TLiveActor)
 {
 	TMameGesso* self = (TMameGesso*)spine->getBody();
 
-	if (spine->getTime() == 0 && self->unk164 == 0)
+	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > self->getSaveLoadParam()->mSLPickUpTime.get()) {
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		self->attackToMario();
 		return true;
 	}
@@ -558,15 +557,15 @@ DEFINE_NERVE(TNerveMameGessoThrown, TLiveActor)
 	if (!self->isAirborne()) {
 		if (self->getGroundPlane()->isWaterSurface()) {
 			spine->pushAfterCurrent(&TNerveMameGessoObject::theNerve());
-			self->unk164 = 0;
+			self->mCanBePickedUp = false;
 			return true;
 		}
 
 		if (!self->isBckAnm(1))
 			self->setBckAnm(1);
 
-		if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
-			self->unk164 = 0;
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(1)) {
+			self->mCanBePickedUp = false;
 			return true;
 		}
 	}
@@ -597,11 +596,11 @@ DEFINE_NERVE(TNerveMameGessoObject, TLiveActor)
 		self->unk1E8 = 80.0f;
 	}
 
-	if (self->checkCurAnmEnd(0) && self->isBckAnm(2))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(2))
 		self->setBckAnm(16);
 
 	if (spine->getTime() > self->unk194->mSLObjectRecoverTime.get()) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->isBckAnm(16)) {
 				self->setBckAnm(18);
 			} else if (self->isBckAnm(18)) {
@@ -636,7 +635,7 @@ DEFINE_NERVE(TNerveMameGessoWait, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		int wait = self->getGroundPlane()->isWaterSurface()
 		               ? self->unk194->mSLWaitTimeInWater.get()
 		               : self->unk194->mSLWaitTimeOnGround.get();

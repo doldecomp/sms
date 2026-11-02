@@ -679,7 +679,7 @@ void TAmiKing::initMapObj()
 	initAnmSound();
 	mMActor->setBck("amiking_sleep1");
 	setAnmSound("/scene/mapObj/amiking_sleep1.bas");
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 	for (u8 i = 0; i < getMActor()->getModel()->getModelData()->getJointNum();
 	     ++i) { }
 }
@@ -771,7 +771,7 @@ void TAmiKing::calcRootMatrix()
 
 void TAmiKing::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10)) {
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND)) {
 		gpMap->checkGround(mPosition.x, mPosition.y + mHeadHeight, mPosition.z,
 		                   &mGroundPlane);
 	} else {
@@ -796,7 +796,7 @@ void TPinnaCoaster::control()
 	MtxPtr mtx = getModel()->getAnmMtx(0);
 	mPosition.set(mtx[0][3], mtx[1][3], mtx[2][3]);
 
-	f32 speed = JGeometry::TVec3<f32>(mPosition - unk140).length();
+	f32 speed = (mPosition - unk140).length();
 	if (switchSnd)
 		SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER,
 		                                        &mPosition, nullptr, speed, 0,

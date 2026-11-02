@@ -63,6 +63,13 @@ public:
 		this->setQuat(quat);
 		this->setTrans(trans);
 	}
+	// fabricated
+	void setSQT(const TVec3<f32>& scale, const TQuat4<f32>& quat,
+	            const TVec3<f32>& trans)
+	{
+		this->setSQ(scale, quat);
+		this->setTrans(trans);
+	}
 
 	void makeRotate(const JGeometry::TVec3<f32>&, f32);
 	void setPositionFromLookAt(const TPosition3<T>&);

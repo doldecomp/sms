@@ -142,7 +142,7 @@ void TBaseNPC::bind()
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_UNK10000000)) {
+	if (checkLiveFlag(LIVE_FLAG_ENABLE_WALL_COLLISION)) {
 		gpMap->isTouchedOneWallAndMoveXZ(&nextPos.x, nextPos.y + mHeadHeight,
 		                                 &nextPos.z, 150.0f);
 	}

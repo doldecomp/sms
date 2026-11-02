@@ -17,7 +17,7 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 
 	self->execWalk(true);
 
-	JGeometry::TVec3<f32> local_582 = self->unkF4.getPoint();
+	JGeometry::TVec3<f32> local_582 = self->mCurrentTarget.getPoint();
 
 	JGeometry::TVec3<f32> local_58(local_582.x - self->mPosition.x, 0.0f,
 	                               local_582.z - self->mPosition.z);
@@ -26,10 +26,9 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 
 	f32 fVar2 = local_58.squared();
 
-	if (!self->unk114.empty()) {
-		if (fVar2 < CLBSquared(100.0f) && !self->unk114.empty()) {
-			self->unkF4 = self->unk114.pop();
-		}
+	if (!self->mGoalPath.empty()) {
+		if (fVar2 < CLBSquared(100.0f))
+			self->switchNextGoalPathNode();
 	} else {
 		bool bVar6 = false;
 		bool bVar5 = false;
@@ -50,7 +49,7 @@ DEFINE_NERVE(TNerveNPCGraphWander, TLiveActor)
 			if (bVar6) {
 				spine->pushAfterCurrent(&TNerveNPCUTurn::theNerve());
 				if (bVar5)
-					self->onLiveFlag(LIVE_FLAG_UNK200000);
+					self->onLiveFlag(TBaseNPC::LIVE_FLAG_UTURN_POSITIVE_YAW);
 				return true;
 			}
 		}
@@ -65,7 +64,7 @@ DEFINE_NERVE(TNerveNPCUTurn, TLiveActor)
 
 	if (self->execUTurn()) {
 		self->mMarchSpeed = 0.0f;
-		self->offLiveFlag(LIVE_FLAG_UNK200000);
+		self->offLiveFlag(TBaseNPC::LIVE_FLAG_UTURN_POSITIVE_YAW);
 		spine->pushAfterCurrent(&TNerveNPCGraphWander::theNerve());
 		return true;
 	}

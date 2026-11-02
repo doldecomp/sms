@@ -9,6 +9,10 @@
 static const char* dummyMactorStringValue1 = "\0\0\0\0\0\0\0\0\0\0\0";
 static const char* SMS_NO_MEMORY_MESSAGE   = "メモリが足りません\n";
 
+#ifdef VERSION_GMSP01_NX
+extern u32 gl_stardust_frameid;
+#endif
+
 namespace JDrama {
 class TDisplay;
 class TDirector;
@@ -25,13 +29,16 @@ class JKRArchive;
 class JUTResFont;
 
 f32 SMSGetVSyncTimesPerSec();
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 f32 SMSGetRealVSyncTimesPerSec();
 void load2DResource2Aram();
 #endif
+
 #ifdef VERSION_GMSP01_NX
 extern bool s_RunOnGC;
 #endif
+
 f32 SMSGetAnmFrameRate();
 void* SMSLoadArchive(const char*, void*, u32, JKRHeap*);
 

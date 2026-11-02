@@ -224,11 +224,24 @@ public:
 
 	bool isClean() const { return mPollutionAmount == 0.0f; }
 
+	// clang-format off
 	enum {
-		LIVE_FLAG_DONT_TALK   = VERSION_SELECT(0x20000, GMSJ01(0x10000)),
-		LIVE_FLAG_SINK_BOTTOM = VERSION_SELECT(0x1000000, GMSJ01(0x800000)),
-		LIVE_FLAG_DONT_THROW  = VERSION_SELECT(0x40000000, GMSJ01(0x20000000)),
+		LIVE_FLAG_DONT_TALK                  = 1u << LIVE_FLAG_BIT_USER2, // 0x10000
+		LIVE_FLAG_TALKABLE                   = 1u << LIVE_FLAG_BIT_USER3, // 0x20000
+		LIVE_FLAG_TALK_REQUESTED             = 1u << LIVE_FLAG_BIT_USER4, // 0x40000
+		LIVE_FLAG_TALKING                    = 1u << LIVE_FLAG_BIT_USER5, // 0x80000
+		LIVE_FLAG_CAN_BE_TAKEN               = 1u << LIVE_FLAG_BIT_USER6, // 0x100000
+		LIVE_FLAG_UTURN_POSITIVE_YAW         = 1u << LIVE_FLAG_BIT_USER7, // 0x200000
+		LIVE_FLAG_SINKING                    = 1u << LIVE_FLAG_BIT_USER8, // 0x400000
+		LIVE_FLAG_SINK_BOTTOM                = 1u << LIVE_FLAG_BIT_USER9, // 0x800000
+		LIVE_FLAG_RENDER_ENTRY_SKIPPED       = 1u << LIVE_FLAG_BIT_USER10, // 0x1000000
+		LIVE_FLAG_ANGRY                      = 1u << LIVE_FLAG_BIT_USER11, // 0x2000000
+		LIVE_FLAG_BALL_HIT_REACTION          = 1u << LIVE_FLAG_BIT_USER12, // 0x4000000
+		LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED = 1u << LIVE_FLAG_BIT_USER13, // 0x8000000
+		LIVE_FLAG_ENABLE_WALL_COLLISION      = 1u << LIVE_FLAG_BIT_USER14, // 0x10000000
+		LIVE_FLAG_DONT_THROW                 = 1u << LIVE_FLAG_BIT_USER15, // 0x20000000
 	};
+	// clang-format on
 
 private:
 	void setIndividualDifference_(JSUMemoryInputStream&);
@@ -275,7 +288,7 @@ private:
 				unk1DC -= 1;
 				if (unk1DC == 0 && mHolder == nullptr) {
 					offHitFilter(HIT_FILTER_NO_COLLISION);
-					offLiveFlag(LIVE_FLAG_UNK10000000);
+					offLiveFlag(LIVE_FLAG_ENABLE_WALL_COLLISION);
 				}
 			}
 
@@ -292,9 +305,12 @@ private:
 	{
 		bool r31 = false;
 
-		bool bVar12 = checkLiveFlag2(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
-		                             | LIVE_FLAG_DEAD);
-		bool bVar6  = checkLiveFlag2(LIVE_FLAG_UNK1000000);
+		bool bVar12 = checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
+		                            | LIVE_FLAG_DEAD)
+		                  ? true
+		                  : false;
+		bool bVar6
+		    = checkLiveFlag(LIVE_FLAG_RENDER_ENTRY_SKIPPED) ? true : false;
 
 		if (bVar12) {
 			r31 = true;
@@ -328,14 +344,14 @@ private:
 	bool isTalkable_()
 	{
 		bool result = false;
-		if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+		if (checkLiveFlag(LIVE_FLAG_TALK_REQUESTED)) {
 			result = true;
 		} else if (mTalkForbidCount == 0 && !isJellyFishMare()
 		           && !gpCamera->isTalkCameraInbetween() && mHolder == nullptr
 		           && !checkLiveFlag(
 		               LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
-		               | LIVE_FLAG_UNK200 | LIVE_FLAG_DONT_TALK
-		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK400000)
+		               | LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_DONT_TALK
+		               | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_SINKING)
 		           && !checkActionFlag(NPC_ACTION_BURNING) && isClean()) {
 
 			if (!isSunflowerReviving() && isNerveCanGoToTalk()

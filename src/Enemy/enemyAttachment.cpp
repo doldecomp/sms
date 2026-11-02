@@ -1,4 +1,5 @@
 #include <Enemy/EnemyAttachment.hpp>
+#include <Enemy/SmallEnemy.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/SharedParts.hpp>
@@ -52,7 +53,7 @@ void TEnemyAttachment::forceKill()
 
 	if (unk160->checkLiveFlag(LIVE_FLAG_HIDDEN)) {
 		unk160->kill();
-		unk160->onLiveFlag(LIVE_FLAG_UNK20000);
+		unk160->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 }
 
@@ -88,7 +89,7 @@ void TEnemyAttachment::bind()
 	TBGWallCheckRecord local_48(local_1C.x, local_1C.y + mHeadHeight,
 	                            local_1C.z, 2.0f * mBodyRadius, 1, 0);
 	if (gpMap->isTouchedWallsAndMoveXZ(&local_48))
-		behaveToHitWall(local_48.mResultWalls[0]);
+		behaveToHitWall(local_48.getResultWall(0));
 
 	mPosition      = local_1C;
 	mPositionDelta = local_1C - mPosition;

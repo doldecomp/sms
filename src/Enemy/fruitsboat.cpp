@@ -49,7 +49,7 @@ TFruitsBoat::TFruitsBoat(const char* name)
     , unk170(0.0f)
     , unk174(0.0f)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 int TFruitsBoat::setBckTrack(const char* name)
@@ -234,11 +234,11 @@ void TFruitsBoat::init(TLiveManager* manager)
 	mSpine->initWith(&TNerveFruitsBoatGraphWander::theNerve());
 
 	if (!unk124->unk0)
-		onLiveFlag(LIVE_FLAG_UNK8000);
+		onLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED);
 	else if (unk124->getCurrent().checkFlag(0x80))
-		onLiveFlag(LIVE_FLAG_UNK8000);
+		onLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED);
 	else
-		offLiveFlag(LIVE_FLAG_UNK8000);
+		offLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED);
 
 	mMarchSpeed = ((TFruitsBoatParams*)getSaveParam())->mSLMoveSpeed.get();
 	mTurnSpeed  = ((TFruitsBoatParams*)getSaveParam())->mSLRotSpeed.get();
@@ -322,7 +322,7 @@ void TFruitsBoat::moveObject()
 	mRotation.x += step;
 
 	const TBGCheckData* plane = SMS_GetMarioGrPlane();
-	if (!checkLiveFlag(LIVE_FLAG_UNK10000)) {
+	if (!checkLiveFlag(TFruitsBoat::LIVE_FLAG_MARIO_ON_BOARD)) {
 		if (plane && plane->mActor == this && SMS_IsMarioTouchGround4cm()) {
 			JGeometry::TVec3<f32> toMario = *gpMarioPos;
 			toMario.sub(mPosition);
@@ -337,19 +337,19 @@ void TFruitsBoat::moveObject()
 				unk164.normalize();
 				unk174 += 0.0003f * dist;
 			}
-			onLiveFlag(LIVE_FLAG_UNK10000);
-			offLiveFlag(LIVE_FLAG_UNK8000);
+			onLiveFlag(TFruitsBoat::LIVE_FLAG_MARIO_ON_BOARD);
+			offLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED);
 			if (plane->isBounceOnLanding()) {
 				setJumpReaction();
-				offLiveFlag(LIVE_FLAG_UNK10000);
+				offLiveFlag(TFruitsBoat::LIVE_FLAG_MARIO_ON_BOARD);
 			}
 		}
 	} else if (!plane || plane->mActor != this
 	           || !SMS_IsMarioTouchGround4cm()) {
-		offLiveFlag(LIVE_FLAG_UNK10000);
+		offLiveFlag(TFruitsBoat::LIVE_FLAG_MARIO_ON_BOARD);
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_UNK10000)) {
+	if (checkLiveFlag(TFruitsBoat::LIVE_FLAG_MARIO_ON_BOARD)) {
 		JGeometry::TVec3<f32> toMario = *gpMarioPos;
 		toMario.sub(mPosition);
 		toMario.y = 0.0f;
@@ -388,10 +388,10 @@ void TFruitsBoat::moveObject()
 
 void TFruitsBoat::requestShadow()
 {
-	if (mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8))
+	if (mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW))
 		return;
 
-	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
+	if (!(mLiveFlag & (LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT))
 	    || (mLiveFlag & LIVE_FLAG_FORCE_SHADOW)) {
 		TCircleShadowRequest shadow;
 		shadow.mPosition   = mPosition;
@@ -406,7 +406,7 @@ void TFruitsBoat::requestShadow()
 			gpBindShadowManager->request(shadow, getActorType());
 	}
 
-	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
+	if (!(mLiveFlag & (LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT))
 	    && !isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 		gpQuestionManager->request(mPosition, mScaledBodyRadius);
 	}
@@ -487,20 +487,20 @@ DEFINE_NERVE(TNerveFruitsBoatGraphWander, TLiveActor)
 	if (self->isReachedToGoal()) {
 		TGraphNode& node = self->unk124->getCurrent();
 		if (node.checkFlag(0x100))
-			self->onLiveFlag(LIVE_FLAG_UNK8000);
+			self->onLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED);
 		if (node.checkFlag(0x400))
 			self->unk150 ^= 1;
 
 		self->goToDirectedNextGraphNode(polarXZ(self->mRotation.y, 1.0f));
 
-		if (!self->checkLiveFlag(LIVE_FLAG_UNK8000))
+		if (!self->checkLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED))
 			self->rowToCurPathNode(self->mMarchSpeed);
 
 		spine->pushAfterCurrent(&TNerveFruitsBoatGraphWander::theNerve());
 		return true;
 	}
 
-	if (self->checkLiveFlag(LIVE_FLAG_UNK8000))
+	if (self->checkLiveFlag(TFruitsBoat::LIVE_FLAG_ROUTE_PAUSED))
 		return false;
 
 	self->rowToCurPathNode(self->mMarchSpeed);

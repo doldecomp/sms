@@ -539,7 +539,7 @@ void THinokuri2::init(TLiveManager* param_1)
 void THinokuri2::reset()
 {
 	TSpineEnemy::reset();
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	resetPolInterval();
 	mHitPoints = calcHitPoints();
 	validateCollisionAll();
@@ -1123,7 +1123,7 @@ DEFINE_NERVE(TNerveHino2JumpIn, TLiveActor)
 		self->changeBck(0x9);
 
 	if (self->getMActor()->curAnmEndsNext()) {
-		const JGeometry::TVec3<f32>& p = self->unk104.getPoint();
+		const JGeometry::TVec3<f32>& p = self->getGoal().getPoint();
 		f32 f                          = self->unk124->unkC;
 		f32 grav                       = self->getGravityY();
 		self->mVelocity = self->calcVelocityToJumpToY(p, f, grav);
@@ -1160,7 +1160,7 @@ DEFINE_NERVE(TNerveHino2Turn, TLiveActor)
 {
 	THinokuri2* self = (THinokuri2*)spine->getBody();
 
-	JGeometry::TVec3<f32> posDiff = self->getUnkF4().getPoint();
+	JGeometry::TVec3<f32> posDiff = self->getCurrentTarget().getPoint();
 
 	posDiff -= self->mPosition;
 

@@ -1,3 +1,4 @@
+#include <NPC/NpcBase.hpp>
 #include <Enemy/EnemyMario.hpp>
 #include <Enemy/Conductor.hpp>
 #include <Enemy/Emario.hpp>
@@ -661,7 +662,8 @@ bool TEnemyMario::tryTake()
 		    || actorType == ACTOR_TYPE_ROCKET_NOZZLE_ITEM
 		    || actorType == ACTOR_TYPE_EGG_YOSHI) {
 			if (actorType == ACTOR_TYPE_NPC_PEACH) {
-				((TLiveActor*)actor)->onLiveFlag(LIVE_FLAG_UNK100000);
+				((TLiveActor*)actor)
+				    ->onLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 				onEMFlag(EM_FLAG_ENFORCE_TAKE);
 			}
 			unk384 = actor;
@@ -760,22 +762,15 @@ void TEnemyMario::emWalkAround()
 	setStickToAngle(mFaceAngle.y, 0.5f);
 }
 
-// TODO: this sure feels like it should be a method of TSpineEnemy
-// fabricated
-static inline f32 getGoalDistance(const TSpineEnemy* enemy)
-{
-	return (enemy->getUnk104().getPoint() - enemy->mPosition).length();
-}
-
 void TEnemyMario::emWalkGraph()
 {
-	if (getGoalDistance(mEMario) < 100.0f) {
+	if (mEMario->getGoalDistance() < 100.0f) {
 		if (mDistanceToMario > 3000.0f)
 			mEMario->goToRandomNextGraphNode();
 		else
 			mEMario->goToRandomEscapeGraphNode();
 	}
-	const JGeometry::TVec3<f32>& goal = mEMario->getUnkF4().getPoint();
+	const JGeometry::TVec3<f32>& goal = mEMario->getCurrentTarget().getPoint();
 	u16 angle = matan(goal.z - mPosition.z, goal.x - mPosition.x);
 	setStickToAngle(angle, 1.0f);
 	++mEMDoingTimer;
@@ -1119,7 +1114,7 @@ void TEnemyMario::findRunAwayNearestNode()
 		JGeometry::TVec3<f32> point;
 		TGraphWeb* graph = mEMario->getTracer()->getGraph();
 		graph->getGraphNode(i).getPoint(&point);
-		f32 distance = JGeometry::TVec3<f32>(point - mPosition).length();
+		f32 distance = (point - mPosition).length();
 		if (distance < nearestDistance) {
 			secondDistance  = nearestDistance;
 			secondIndex     = nearestIndex;
@@ -1134,8 +1129,8 @@ void TEnemyMario::findRunAwayNearestNode()
 		}
 	}
 
-	if (JGeometry::TVec3<f32>(mPosition - nearestPoint).length()
-	    < JGeometry::TVec3<f32>(mPosition - secondPoint).length()) {
+	if ((mPosition - nearestPoint).length()
+	    < (mPosition - secondPoint).length()) {
 		mRunAwayNodeIndex = nearestIndex;
 	} else {
 		mRunAwayNodeIndex = secondIndex;
@@ -1485,7 +1480,8 @@ void TEnemyMario::hitWater(THitActor* sender)
 
 		if (mStatus == MARIO_STATUS_RUN && canSleep()) {
 			if (mHeldObject != nullptr) {
-				((TLiveActor*)mHeldObject)->offLiveFlag(LIVE_FLAG_UNK100000);
+				((TLiveActor*)mHeldObject)
+				    ->offLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 				dropObject();
 			}
 			changeEMDoing(EM_DOING_PRE_DOWN_ANIMATION);

@@ -133,12 +133,12 @@ void TAmiNoko::init(TLiveManager* param_1)
 	unk20C = (TAmiNokoSaveLoadParams*)getSaveParam();
 	reset();
 	setWalkAnm();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	initialGraphNode();
 	if (SMSGetMarDirector()->getCurrentStage() == 8)
 		unk210 = 0;
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	unkE8 = 0;
+	mRideMode = RIDE_MODE_NONE;
 #endif
 	unk208 = new TAmiHit(this);
 }
@@ -224,7 +224,7 @@ bool TAmiNoko::isHitValid(u32 param_1)
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
 void TAmiNoko::calcDirection()
 {
-	JGeometry::TVec3<f32> pos = unkF4.getPoint();
+	JGeometry::TVec3<f32> pos = mCurrentTarget.getPoint();
 	pos -= mPosition;
 	if (pos.isZero())
 		pos.set(1.0f, 0.0f, 0.0f);
@@ -457,7 +457,7 @@ void TAmiNoko::calcRootMatrix()
 
 	MtxPtr rootMtx = getModel()->getBaseTRMtx();
 
-	JGeometry::TVec3<f32> pos = unkF4.getPoint();
+	JGeometry::TVec3<f32> pos = mCurrentTarget.getPoint();
 	pos -= mPosition;
 	if (pos.x == 0.0f && pos.y == 0.0f && pos.z == 0.0f)
 		pos.x = 1.0f;
@@ -594,7 +594,7 @@ void TAmiNoko::bind()
 		mVelocity.y -= getGravityY();
 		if (mVelocity.y < mVelocityMinY)
 			mVelocity.y = mVelocityMinY;
-		if (checkLiveFlag(LIVE_FLAG_UNK1000))
+		if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS))
 			mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 			    vec.x, vec.y + mHeadHeight, vec.z, &mGroundPlane);
 		else
@@ -638,7 +638,7 @@ f32 TAmiNoko::getGravityY() const
 void TAmiNoko::creepToCurPathNode(f32 param_1)
 {
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	JGeometry::TVec3<f32> direction = unkF4.getPoint();
+	JGeometry::TVec3<f32> direction = mCurrentTarget.getPoint();
 	direction -= mPosition;
 	if (!direction.isZero()) {
 		f32 speed = MsMin(param_1, direction.length());
@@ -650,7 +650,7 @@ void TAmiNoko::creepToCurPathNode(f32 param_1)
 	}
 #else
 	if (isBckAnm(4) || isBckAnm(7) || isBckAnm(10) || isBckAnm(13)) {
-		JGeometry::TVec3<f32> direction = unkF4.getPoint();
+		JGeometry::TVec3<f32> direction = mCurrentTarget.getPoint();
 		direction -= mPosition;
 		if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
 			direction.x = 1.0f;
@@ -691,7 +691,7 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 		self->setWalkAnm();
 
 	if (self->isBckAnm(5) || self->isBckAnm(8)) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->unk210 != 0)
 				self->setBckAnm(4);
 			else
@@ -699,9 +699,9 @@ DEFINE_NERVE(TNerveAmiNokoWalkOnFence, TLiveActor)
 		}
 	}
 
-	JGeometry::TVec3<f32> pos = self->getUnkF4().getPoint();
+	JGeometry::TVec3<f32> pos = self->getCurrentTarget().getPoint();
 	pos -= self->mPosition;
-	if (pos.length() < 1.5f && self->checkCurAnmEnd(0)) {
+	if (pos.length() < 1.5f && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(3) || self->isBckAnm(6)) {
 			self->goToRandomNextGraphNode();
 			spine->pushAfterCurrent(&TNerveAmiNokoTurn::theNerve());
@@ -728,7 +728,7 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 	}
 
 	if (self->isBckAnm(11) || self->isBckAnm(14)) {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (self->unk210 != 0)
 				self->setBckAnm(10);
 			else
@@ -736,12 +736,12 @@ DEFINE_NERVE(TNerveAmiNokoTurn, TLiveActor)
 		}
 	}
 
-	JGeometry::TVec3<f32> pos = self->getUnkF4().getPoint();
+	JGeometry::TVec3<f32> pos = self->getCurrentTarget().getPoint();
 	pos -= self->mPosition;
 	if (pos.x == 0.0f && pos.y == 0.0f && pos.z == 0.0f)
 		pos.x = 1.0f;
 	VECNormalize(&pos, &pos);
-	if (pos.dot(self->unk1A8) > 0.8f && self->checkCurAnmEnd(0)) {
+	if (pos.dot(self->unk1A8) > 0.8f && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(9) || self->isBckAnm(12)) {
 			if (self->unk210 != 0)
 				self->setBckAnm(15);
@@ -774,7 +774,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 		self->unk208->onHitFilter(HIT_FILTER_NO_COLLISION);
 #endif
 	}
-	if (self->checkCurAnmEnd(0) && self->isBckAnm(1)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && self->isBckAnm(1)) {
 		JGeometry::TVec3<f32> direction = self->mPosition;
 		direction -= SMS_GetMarioPos();
 		if (direction.x == 0.0f && direction.y == 0.0f && direction.z == 0.0f)
@@ -800,7 +800,7 @@ DEFINE_NERVE(TNerveAmiNokoDie, TLiveActor)
 		    || direction.length() > 10000.0f) {
 			self->onHitFilter(HIT_FILTER_NO_COLLISION);
 			self->onLiveFlag(LIVE_FLAG_DEAD);
-			self->onLiveFlag(LIVE_FLAG_UNK8);
+			self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 			self->offLiveFlag(LIVE_FLAG_HIDDEN);
 			self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 			self->mHolder = nullptr;
@@ -828,7 +828,7 @@ DEFINE_NERVE(TNerveAmiNokoFreeze, TLiveActor)
 			emitter->setGlobalScale(JGeometry::TVec3<f32>(2.0f));
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(2))
 			self->setBckAnm(15);
 		else if (spine->getTime() > self->getSaveParams()->getSLFreezeWait())

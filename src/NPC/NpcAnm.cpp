@@ -420,9 +420,9 @@ void TBaseNPC::npcFallIn()
 
 bool TBaseNPC::npcRecoverFromSinking()
 {
-	if (!checkLiveFlag(LIVE_FLAG_UNK8000000)) {
+	if (!checkLiveFlag(LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED)) {
 		if (mMActor->getFrameCtrl(ANM_TYPE_BCK)->checkPass(32.0f)) {
-			onLiveFlag(LIVE_FLAG_UNK8000000);
+			onLiveFlag(LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED);
 			mVelocity.y = CalcJumpVelocityY(unk1C4 - mPosition.y + 150.0f,
 			                                getGravityY());
 			if (mVelocity.y < 5.0f)
@@ -436,10 +436,10 @@ bool TBaseNPC::npcRecoverFromSinking()
 		offLiveFlag(LIVE_FLAG_AIRBORNE);
 		mVelocity.set(0.0f, 0.0f, 0.0f);
 		mPosition.y = unk1C4;
-		offLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
-		            | LIVE_FLAG_UNK8000000);
+		offLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_SINKING
+		            | LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED);
 	} else {
-		if (checkLiveFlag(LIVE_FLAG_UNK8000000)) {
+		if (checkLiveFlag(LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED)) {
 			mVelocity.y -= getGravityY();
 			if (mVelocity.y < mVelocityMinY)
 				mVelocity.y = mVelocityMinY;
@@ -466,7 +466,7 @@ void TBaseNPC::npcStepIn()
 
 void TBaseNPC::npcTalkIn()
 {
-	onLiveFlag(LIVE_FLAG_UNK80000);
+	onLiveFlag(LIVE_FLAG_TALKING);
 	if (mActorType != ACTOR_TYPE_NPC_DUMMY
 	    && mActorType != ACTOR_TYPE_NPC_BOARD) {
 		if (!isSunflowerReviving()) {
@@ -509,7 +509,7 @@ void TBaseNPC::npcTalkOut()
 {
 	mTalkForbidCount = 60;
 
-	if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
+	if (checkLiveFlag(LIVE_FLAG_TALKING)) {
 		mWalkForbidCount = 120;
 		if (isPeachTired())
 			peachTiredOut_();
@@ -523,7 +523,7 @@ void TBaseNPC::npcTalkOut()
 			}
 		}
 
-		offLiveFlag(LIVE_FLAG_UNK80000);
+		offLiveFlag(LIVE_FLAG_TALKING);
 		changeNerveFromTalk_();
 		if (mThrowCtrl == nullptr && mActorType == ACTOR_TYPE_NPC_MONTE_ME)
 			requestNpcAnm_(NPC_ANM_KIND_UNK4, NPC_STOP_MOTION_BLEND_ON);
@@ -566,7 +566,7 @@ void TBaseNPC::npcWetIn()
 					EVar6 = NPC_STOP_MOTION_BLEND_OFF;
 			} else {
 				if (isNormalMonte() || mActorType == ACTOR_TYPE_NPC_MONTE_WC) {
-					if (!checkLiveFlag(LIVE_FLAG_UNK4000000)
+					if (!checkLiveFlag(LIVE_FLAG_BALL_HIT_REACTION)
 					    && MsRandF() < 0.5f)
 						EVar7 = NPC_ANM_KIND_UNKB;
 					else
@@ -579,7 +579,7 @@ void TBaseNPC::npcWetIn()
 					} else if (!(mActorType < ACTOR_TYPE_NPC_PEACH
 					             && mActorType >= ACTOR_TYPE_NPC_KINOPIO)) {
 						(void)mActorType; // TODO: uh, inlining maybe?
-					} else if (!checkLiveFlag(LIVE_FLAG_UNK4000000)) {
+					} else if (!checkLiveFlag(LIVE_FLAG_BALL_HIT_REACTION)) {
 						if (MsRandF() < 0.5f)
 							EVar7 = NPC_ANM_KIND_UNKB;
 					}
@@ -654,13 +654,13 @@ bool TBaseNPC::npcWetting()
 					break;
 
 				case NPC_ANM_KIND_UNK4:
-					if (checkLiveFlag(LIVE_FLAG_UNK2000000))
+					if (checkLiveFlag(LIVE_FLAG_ANGRY))
 						npcMadding();
 					break;
 
 				case NPC_ANM_KIND_MAD:
 				case NPC_ANM_KIND_UNKB:
-					if (checkLiveFlag(LIVE_FLAG_UNK2000000)) {
+					if (checkLiveFlag(LIVE_FLAG_ANGRY)) {
 						if (npcMadding()) {
 							npcWetOut();
 							result = true;
@@ -732,8 +732,8 @@ bool TBaseNPC::npcWetting()
 
 void TBaseNPC::npcWetOut()
 {
-	offLiveFlag(LIVE_FLAG_UNK2000000);
-	offLiveFlag(LIVE_FLAG_UNK4000000);
+	offLiveFlag(LIVE_FLAG_ANGRY);
+	offLiveFlag(LIVE_FLAG_BALL_HIT_REACTION);
 	if (mSpine->getTop() == &TNerveNPCTalk::theNerve())
 		requestTalkAnm_();
 	else if (mActorType == ACTOR_TYPE_NPC_MONTE_ME)
@@ -784,7 +784,7 @@ bool TBaseNPC::npcThrowing()
 
 void TBaseNPC::npcMadIn()
 {
-	onLiveFlag(LIVE_FLAG_UNK2000000);
+	onLiveFlag(LIVE_FLAG_ANGRY);
 
 	if (mActorType == ACTOR_TYPE_NPC_MONTE_MF
 	    || checkActionFlag(NPC_ACTION_UNK1)) {
@@ -799,7 +799,7 @@ bool TBaseNPC::npcMadding()
 {
 	bool result = false;
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK2000000)) {
+	if (!checkLiveFlag(LIVE_FLAG_ANGRY)) {
 		result = true;
 	} else {
 		switch (mLodAnm->getCurrentAnmKind()) {
@@ -824,7 +824,7 @@ bool TBaseNPC::npcMadding()
 		case NPC_ANM_KIND_UNKB:
 			if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 				result = true;
-				offLiveFlag(LIVE_FLAG_UNK2000000);
+				offLiveFlag(LIVE_FLAG_ANGRY);
 			}
 			break;
 		}
@@ -983,7 +983,7 @@ bool TBaseNPC::sunflowerReviving()
 	    && mLodAnm->getCurrentAnmKind() == NPC_ANM_KIND_UNK1A) {
 		if (mMActor->isCurAnmAlreadyEnd(ANM_TYPE_BCK)) {
 			offUnk1D8(UNK1D8_FLAG_UNK2);
-			if (checkLiveFlag(LIVE_FLAG_UNK80000)) {
+			if (checkLiveFlag(LIVE_FLAG_TALKING)) {
 				requestTalkAnm_();
 			} else {
 				npcWaitIn();

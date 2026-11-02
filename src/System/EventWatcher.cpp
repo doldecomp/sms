@@ -325,9 +325,9 @@ static void evSetFlagNPCCanTaken(TSpcTypedInterp<TEventWatcher>* interp,
 	TBaseNPC* npc = static_cast<TBaseNPC*>(JDrama::TNameRefGen::search(name));
 	if (npc) {
 		if (arg)
-			npc->onLiveFlag(LIVE_FLAG_UNK100000);
+			npc->onLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 		else
-			npc->offLiveFlag(LIVE_FLAG_UNK100000);
+			npc->offLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN);
 	}
 	interp->push();
 }
@@ -1214,16 +1214,6 @@ static void evAppear8RedCoinsAndTimer(TSpcTypedInterp<TEventWatcher>* interp,
 	interp->push();
 }
 
-// fabricated and wrong
-JGeometry::TVec3<f32> rotateY(JGeometry::TVec3<f32> vec, s16 angleY)
-{
-	f32 x = vec.x * JMASCos(angleY) + vec.z * JMASSin(angleY);
-	f32 z = -vec.x * JMASSin(angleY) + vec.z * JMASCos(angleY);
-	vec.x = x;
-	vec.z = z;
-	return JGeometry::TVec3<f32>(vec.x, vec.y, vec.z);
-}
-
 static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>* interp,
                                u32 arg_num)
 {
@@ -1231,11 +1221,15 @@ static void evWarpFrontToMario(TSpcTypedInterp<TEventWatcher>* interp,
 	TLiveActor* actor = (TLiveActor*)interp->pop().getDataInt();
 
 	s16 angleY = SMS_GetMarioAngleY();
-
-	// TODO: codegen very wrong
-	actor->mPosition = SMS_GetMarioPos()
-	                   + rotateY(JGeometry::TVec3<f32>(0.0f, 0.0f, 400.0f),
-	                             SMS_GetMarioAngleY());
+	Vec offset;
+	offset.x         = 0.0f;
+	offset.y         = 0.0f;
+	offset.z         = 400.0f;
+	u16 rotationY    = SMS_GetMarioAngleY();
+	f32 x            = offset.x;
+	offset.x         = x * JMASCos(rotationY) + offset.z * JMASSin(rotationY);
+	offset.z         = -x * JMASSin(rotationY) + offset.z * JMASCos(rotationY);
+	actor->mPosition = SMS_GetMarioPos() + offset;
 	actor->mRotation.y = SHORTANGLE2DEG((s16)(angleY - 0x8000));
 
 	interp->push();

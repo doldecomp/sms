@@ -21,7 +21,7 @@ static const char* DebuTelesa_bastable[] = {
 TDebuTelesa::TDebuTelesa(const char* name)
     : TSmallEnemy(name)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TDebuTelesa::init(TLiveManager* manager)
@@ -167,7 +167,7 @@ void TDebuTelesaManager::clipEnemies(JDrama::TGraphics* graphics)
 
 		JGeometry::TVec3<f32> pos = debu->mPosition;
 
-		if (debu->checkLiveFlag(LIVE_FLAG_UNK2000)
+		if (debu->checkLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING)
 		    && SMS_IsInOtherFastCube(pos)) {
 			debu->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else if (ViewFrustumClipCheck(graphics, &debu->mPosition, unk3C)) {

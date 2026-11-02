@@ -54,7 +54,7 @@ void TCoasterEnemy::init(TLiveManager* mgr)
 	TSpineEnemy::goToShortestNextGraphNode();
 	mSpine->initWith(&TNerveCoasterEnemyWander::theNerve());
 	onLiveFlag(LIVE_FLAG_DEAD);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -88,8 +88,7 @@ f32 TCoasterEnemy::getGravityY() const { return 0.0f; }
 void TCoasterEnemy::makeCoasterGoalPath()
 {
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TCoasterEnemy::moveCoaster()
@@ -186,7 +185,7 @@ void TCoasterKiller::init(TLiveManager* mgr)
 	mActorType = ACTOR_TYPE_COASTER_KILLER;
 	unk150     = 17;
 	onLiveFlag(LIVE_FLAG_FORCE_SHADOW);
-	offLiveFlag(LIVE_FLAG_UNK800);
+	offLiveFlag(LIVE_FLAG_RECYCLABLE);
 
 	GXColorS10& bodyColor = getBodyColor(); // @hack, gets stack right
 	mBodyColor.r          = 0;
@@ -338,9 +337,9 @@ DEFINE_NERVE(TNerveCoasterKillerExplosion, TLiveActor)
 		self->unk190 *= 1.3f;
 	} else {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->onLiveFlag(LIVE_FLAG_DEAD);
-			self->onLiveFlag(LIVE_FLAG_UNK8);
+			self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 			self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 			self->mHolder = nullptr;
 			self->stopAnmSound();

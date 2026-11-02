@@ -116,49 +116,52 @@ void TMapObjPlane::updateCheckData(int x, int z)
 	mCollision->getCheckData(x, z, 1)->setVertex(local_58, local_4c, local_40);
 }
 
+// fabricated
+static inline void calcTriangleNormal(JGeometry::TVec3<f32>& normal,
+                                      const JGeometry::TVec3<f32>& a,
+                                      const JGeometry::TVec3<f32>& b,
+                                      const JGeometry::TVec3<f32>& c)
+{
+	JGeometry::TVec3<f32> edge1;
+	JGeometry::TVec3<f32> edge2;
+	edge1.sub(b, c);
+	edge2.set(a);
+	edge2.sub(b);
+	normal.cross(edge2, edge1);
+	normal.normalize();
+}
+
 void TMapObjPlane::calcNrm(int x, int z)
 {
 	if (x < 0 || mExtents <= x || z < 0 || mExtents <= z)
 		return;
 
-	f32 fVar1 = unkFC;
-	f32 fVar7 = -unkFC;
+	JGeometry::TVec3<f32> center(0.0f, heightAt(x, z), 0.0f);
+	int northZ = MsWrap(z - 1, 0, mExtents);
+	JGeometry::TVec3<f32> north(0.0f, heightAt(x, northZ), -unkFC);
+	int southZ = MsWrap(z + 1, 0, mExtents);
+	JGeometry::TVec3<f32> south(0.0f, heightAt(x, southZ), unkFC);
+	int westX = MsWrap(x - 1, 0, mExtents);
+	JGeometry::TVec3<f32> west(-unkFC, heightAt(westX, z), 0.0f);
+	int eastX = MsWrap(x + 1, 0, mExtents);
+	JGeometry::TVec3<f32> east(unkFC, heightAt(eastX, z), 0.0f);
 
-	f32 h00 = heightAt(x, z);
-	f32 h0N = heightAt(x, MsWrap(z - 1, 0, mExtents));
-	f32 h0P = heightAt(x, MsWrap(z + 1, 0, mExtents));
-	f32 hN0 = heightAt(MsWrap(x - 1, 0, mExtents), z);
-	f32 hP0 = heightAt(MsWrap(x + 1, 0, mExtents), z);
+	JGeometry::TVec3<f32> northWest;
+	JGeometry::TVec3<f32> northEast;
+	JGeometry::TVec3<f32> southWest;
+	JGeometry::TVec3<f32> southEast;
+	calcTriangleNormal(northWest, north, west, center);
+	calcTriangleNormal(northEast, east, north, center);
+	calcTriangleNormal(southWest, west, south, center);
+	calcTriangleNormal(southEast, south, east, center);
 
-	// TODO: figure out the inlines here. Definitely some subtracting and
-	// cross producting is occurring.
-
-	JGeometry::TVec3<f32> local_9c;
-	local_9c.x = (h0N - hN0) * 0.0f - (fVar7 - 0.0f) * (hN0 - h00);
-	local_9c.y = (fVar7 - 0.0f) * (fVar7 - 0.0f) - (0.0f - fVar7) * 0.0f;
-	local_9c.z = (0.0f - fVar7) * (hN0 - h00) - (h0N - hN0) * (fVar7 - 0.0f);
-	local_9c.normalize();
-
-	JGeometry::TVec3<f32> local_a8;
-	local_a8.x = (hP0 - h0N) * (fVar7 - 0.0f) - (0.0f - fVar7) * (h0N - h00);
-	local_a8.z = (fVar1 - 0.0f) * (h0N - h00) - (hP0 - h0N) * 0.0f;
-	local_a8.y = (0.0f - fVar7) * 0.0f - (fVar1 - 0.0f) * (fVar7 - 0.0f);
-	local_a8.normalize();
-
-	JGeometry::TVec3<f32> local_b4;
-	local_b4.x = (hN0 - h0P) * (fVar1 - 0.0f) - (0.0f - fVar1) * (h0P - h00);
-	local_b4.z = (fVar7 - 0.0f) * (h0P - h00) - (hN0 - h0P) * 0.0f;
-	local_b4.y = (0.0f - fVar1) * 0.0f - (fVar7 - 0.0f) * (fVar1 - 0.0f);
-	local_b4.normalize();
-
-	JGeometry::TVec3<f32> local_c0;
-	local_c0.x = (h0P - hP0) * 0.0f - h0N * (hP0 - h00);
-	local_c0.y = h0N * h0N - (0.0f - fVar1) * 0.0f;
-	local_c0.z = (0.0f - fVar1) * (hP0 - h00) - (h0P - hP0) * h0N;
-	local_c0.normalize();
-
-	mNormalMap[x + z * mExtents] = local_9c + local_a8 + local_b4 + local_c0;
-	mNormalMap[x + z * mExtents].scale(0.25f);
+	JGeometry::TVec3<f32>& normal = mNormalMap[x + z * mExtents];
+	JGeometry::TVec3<f32> northNormal;
+	northNormal = northWest + northEast;
+	JGeometry::TVec3<f32> partialNormal;
+	partialNormal = northNormal + southWest;
+	normal        = partialNormal + southEast;
+	normal.scale(0.25f);
 }
 
 void TMapObjPlane::movement() { }

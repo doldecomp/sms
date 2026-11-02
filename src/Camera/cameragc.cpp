@@ -878,7 +878,7 @@ void CPolarSubCamera::ctrlGameCamera_()
 
 	mPreviousTarget = mCurrentTarget;
 
-	if (SMSGetMarDirector()->getState() == 4
+	if (SMSGetMarDirector()->getState() == TMarDirector::STATE_UNK4
 	    && !(unk64 & CAMERA_FLAG_DEAD_DEMO)) {
 		if (isTalkCameraSpecifyMode(mMode)) {
 			if (!SMSGetMarDirector()->isTalkModeNow())

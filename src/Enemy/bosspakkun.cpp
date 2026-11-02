@@ -1099,7 +1099,7 @@ void TBossPakkun::flyToCurPathNode(f32 flySpeed, f32 turnSpeed)
 {
 	turnToCurPathNode(turnSpeed);
 
-	JGeometry::TVec3<f32> velocityStep = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> velocityStep = getCurrentTarget().getPoint();
 	velocityStep -= mPosition;
 	PSVECNormalize(&velocityStep, &velocityStep);
 	velocityStep *= flySpeed;
@@ -1408,9 +1408,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 
 		spine->pushAfterCurrent(&TNerveBPWait::theNerve());
 		spine->pushAfterCurrent(&TNerveBPVomit::theNerve());
-		TPathNode goal(SMS_GetMarioPos());
-		boss->unk114.push(boss->unkF4);
-		boss->unkF4 = goal;
+		boss->pushGoalPathNode(SMS_GetMarioPos());
 		spine->pushAfterCurrent(&TNerveBPPivot::theNerve());
 		return true;
 	}
@@ -1454,9 +1452,7 @@ DEFINE_NERVE(TNerveBPWait, TLiveActor)
 		goalPosition.x += 10000.0f * (randomX - 0.5f);
 		f32 randomZ = rand() * (1.0f / 32768.0f);
 		goalPosition.z += 10000.0f * (randomZ - 0.5f);
-		TPathNode goal(goalPosition);
-		boss->unk114.push(boss->unkF4);
-		boss->unkF4 = goal;
+		boss->pushGoalPathNode(goalPosition);
 		spine->pushAfterCurrent(&TNerveBPPivot::theNerve());
 		return true;
 	}
@@ -1569,7 +1565,7 @@ DEFINE_NERVE(TNerveBPPivot, TLiveActor)
 		pivotSpeed = boss->getBossPakkunParams()->mSLPivotSpeed.get();
 
 	if (boss->turnToCurPathNode(pivotSpeed)) {
-		boss->switchNextGoalPath();
+		boss->switchNextGoalPathNode();
 		return true;
 	}
 	return false;
@@ -1789,7 +1785,7 @@ DEFINE_NERVE(TNerveBPDie, TLiveActor)
 	}
 
 	if (actor->checkCurBckFromIndex(7) && spine->getTime() == 680)
-		boss->onLiveFlag(LIVE_FLAG_UNK8);
+		boss->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)
 	    && actor->checkCurBckFromIndex(7)) {
@@ -1808,7 +1804,7 @@ DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
 	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
-		boss->onLiveFlag(LIVE_FLAG_UNK10);
+		boss->onLiveFlag(LIVE_FLAG_NO_BIND);
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->changeBck(13);
 	}
@@ -1819,7 +1815,7 @@ DEFINE_NERVE(TNerveBPTakeOff, TLiveActor)
 
 	if (actor->checkCurBckFromIndex(11)) {
 		boss->mPosition.y += 5.0f;
-		JGeometry::TVec3<f32> goal = boss->getUnk104().getPoint();
+		JGeometry::TVec3<f32> goal = boss->getGoal().getPoint();
 		if (goal.y < boss->mPosition.y) {
 			boss->mPosition.y = goal.y;
 			if (boss->getTracer()->getGraph() != nullptr)
@@ -1841,7 +1837,7 @@ DEFINE_NERVE(TNerveBPFly, TLiveActor)
 		boss->startBGM();
 	}
 
-	JGeometry::TVec3<f32> toNext = boss->getUnk104().getPoint();
+	JGeometry::TVec3<f32> toNext = boss->getGoal().getPoint();
 	toNext -= boss->mPosition;
 	toNext.y = 0.0f;
 	if (PSVECMag(&toNext) < 100.0f) {
@@ -1867,11 +1863,11 @@ DEFINE_NERVE(TNerveBPTouchDown, TLiveActor)
 
 	if (actor->checkCurBckFromIndex(11)) {
 		boss->mPosition.y -= 5.0f;
-		JGeometry::TVec3<f32> goal = boss->getUnk104().getPoint();
+		JGeometry::TVec3<f32> goal = boss->getGoal().getPoint();
 		if (goal.y > boss->mPosition.y) {
 			boss->mPosition.y = goal.y;
 			boss->changeBck(18);
-			boss->offLiveFlag(LIVE_FLAG_UNK10);
+			boss->offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 	}
 
@@ -1903,7 +1899,7 @@ DEFINE_NERVE(TNerveBPFlyPivot, TLiveActor)
 		boss->changeBck(11);
 	if (boss->turnToCurPathNode(
 	        boss->getBossPakkunParams()->mSLPivotSpeed.get())) {
-		boss->switchNextGoalPath();
+		boss->switchNextGoalPathNode();
 		return true;
 	}
 	return false;
@@ -1922,11 +1918,7 @@ DEFINE_NERVE(TNerveBPHover, TLiveActor)
 	    && boss->getDistToMarioSquared() < range * range) {
 		spine->pushAfterCurrent(&TNerveBPHover::theNerve());
 		spine->pushAfterCurrent(&TNerveBPFlyCannon::theNerve());
-
-		TPathNode goal(SMS_GetMarioPos());
-		boss->unk114.push(boss->unkF4);
-		boss->unkF4 = goal;
-
+		boss->pushGoalPathNode(SMS_GetMarioPos());
 		spine->pushAfterCurrent(&TNerveBPFlyPivot::theNerve());
 		return true;
 	}
@@ -1945,7 +1937,7 @@ DEFINE_NERVE(TNerveBPFall, TLiveActor)
 	TBossPakkun* boss = static_cast<TBossPakkun*>(spine->getBody());
 	MActor* actor     = boss->getMActor();
 	if (spine->getTime() == 0) {
-		boss->offLiveFlag(LIVE_FLAG_UNK10);
+		boss->offLiveFlag(LIVE_FLAG_NO_BIND);
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->changeBck(10);
 	}

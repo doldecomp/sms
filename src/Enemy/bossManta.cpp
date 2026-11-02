@@ -232,7 +232,7 @@ DEFINE_NERVE_EXECUTE(TNerveMantaHitWater, TLiveActor)
 		}
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->startDamageAnimEpilogue();
 		return TRUE;
 	}
@@ -286,7 +286,7 @@ DEFINE_NERVE_EXECUTE(TNerveMantaDeath, TLiveActor)
 		self->getMActor()->setBckMotionBlendRatio(0.0f);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		gpMarioParticleManager->emitAndBindToPosPtr(SCENE_MANTA_JPA_MS_MAN_DEAD,
 		                                            &self->unk17C, 0, self);
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_MANTA_VANISH,
@@ -478,7 +478,7 @@ void TBossManta::init(TLiveManager* manager)
 		getManager()->initAdditionalCollision();
 	}
 
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	unk1A4 = 0;
 	unk150 = 0.5f;

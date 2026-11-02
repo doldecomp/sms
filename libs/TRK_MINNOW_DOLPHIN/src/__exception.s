@@ -5,6 +5,31 @@
 .section .init, "ax"
 .balign 4
 
+.ifdef VERSION_GMSJ01
+    .equ OS_EXCEPTION_VECTOR_HI, 0x8008
+    .equ OS_EXCEPTION_VECTOR_LO, 0xadd8
+.endif
+
+.ifdef VERSION_GMSJ01_01
+    .equ OS_EXCEPTION_VECTOR_HI, 0x8031
+    .equ OS_EXCEPTION_VECTOR_LO, 0xfdb8
+.endif
+
+.ifdef VERSION_GMSE01
+    .equ OS_EXCEPTION_VECTOR_HI, 0x8034
+    .equ OS_EXCEPTION_VECTOR_LO, 0x04b8
+.endif
+
+.ifdef VERSION_GMSP01
+    .equ OS_EXCEPTION_VECTOR_HI, 0x8033
+    .equ OS_EXCEPTION_VECTOR_LO, 0x8638
+.endif
+
+.ifdef VERSION_GMSP01_NX
+    .equ OS_EXCEPTION_VECTOR_HI, 0x8033
+    .equ OS_EXCEPTION_VECTOR_LO, 0x6ff8
+.endif
+
 # .init:0x0 | 0x80003298 | size: 0x0
 .sym gTRKInterruptVectorTable, global
   .4byte 0x4D657472 /* invalid */
@@ -150,8 +175,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x200
   rfi
@@ -208,8 +233,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x300
   rfi
@@ -272,8 +297,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x400
   rfi
@@ -336,8 +361,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x500
   rfi
@@ -400,8 +425,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x600
   rfi
@@ -464,8 +489,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x700
   rfi
@@ -528,8 +553,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x800
   rfi
@@ -592,8 +617,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x900
   rfi
@@ -784,8 +809,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0xc00
   rfi
@@ -848,8 +873,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0xd00
   rfi
@@ -912,8 +937,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0xe00
   rfi
@@ -984,8 +1009,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0xf20
   rfi
@@ -999,8 +1024,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0xf00
   rfi
@@ -1058,8 +1083,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1000
   rfi
@@ -1123,8 +1148,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1100
   rfi
@@ -1189,8 +1214,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1200
   rfi
@@ -1239,8 +1264,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1300
   rfi
@@ -1306,8 +1331,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1400
   rfi
@@ -1434,8 +1459,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1600
   rfi
@@ -1498,8 +1523,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1700
   rfi
@@ -1818,8 +1843,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1c00
   rfi
@@ -1882,8 +1907,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1d00
   rfi
@@ -1946,8 +1971,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1e00
   rfi
@@ -2010,8 +2035,8 @@
   mfmsr r3
   ori r3, r3, 0x30
   mtsrr1 r3
-  lis r3, 0x8008
-  ori r3, r3, 0xadd8
+  lis r3, OS_EXCEPTION_VECTOR_HI
+  ori r3, r3, OS_EXCEPTION_VECTOR_LO
   mtsrr0 r3
   li r3, 0x1f00
   rfi

@@ -137,7 +137,7 @@ void TBossHanachan::init(TLiveManager* manager)
 	mGravity          = 2.0f;
 	mHitPoints        = 3;
 	mScaledBodyRadius = 0.0f;
-	onLiveFlag(LIVE_FLAG_UNK1000 | LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS | LIVE_FLAG_NO_SHADOW);
 	mSpine->initWith(&TNerveBossHanachanGraphWander::theNerve());
 	unk124->reset();
 	goToShortestNextGraphNode();
@@ -257,7 +257,7 @@ void TBossHanachan::kill() { }
 // TODO: frame offsets and revision-argument load order differ.
 void TBossHanachan::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 	if (mBinder) {
 		mBinder->bind(this);
@@ -310,14 +310,14 @@ void TBossHanachan::moveObject()
 
 void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_UNK200))
+	if (checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_OUT_OF_AREA))
 		return;
-	if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+	if (checkLiveFlag(LIVE_FLAG_DEATH_ANIMATION_FINISHED)) {
 		if ((cue & CUE_MOVE) && (graphics->unk0 & 2)) {
 			SMSGetMSound()->startSoundActor(MSD_SE_WT_BOSS_FADEAWAY, &mPosition,
 			                                0, nullptr, 0, 4);
 			if (!gpMarDirector->isInTalkNow()
-			    && (checkLiveFlag(LIVE_FLAG_UNK100000)
+			    && (checkLiveFlag(LIVE_FLAG_SKIP_DEATH_BGM_MODULATION)
 			        || gpMSound->unk98->modBgm(1, 1) == 0)) {
 				onLiveFlag(LIVE_FLAG_UNK40 | LIVE_FLAG_DEAD);
 				gpItemManager->makeShineAppearWithDemo(
@@ -334,16 +334,17 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			if ((graphics->unk0 & 2)
 			    && (mSpine->getLatestNerve()
 			        == &TNerveBossHanachanDead::theNerve())
-			    && !checkLiveFlag(LIVE_FLAG_UNK100000)) {
-				onLiveFlag(LIVE_FLAG_UNK100000);
+			    && !checkLiveFlag(LIVE_FLAG_SKIP_DEATH_BGM_MODULATION)) {
+				onLiveFlag(LIVE_FLAG_SKIP_DEATH_BGM_MODULATION);
 				MSBgm::stopTrackBGM(1, 30);
 			}
 		} else {
-			if (!checkLiveFlag(LIVE_FLAG_UNK80000) && mHitPoints == 3
-			    && mMarchSpeed != 0.0f
+			if (!checkLiveFlag(LIVE_FLAG_SUPPRESS_HINT_BALLOON)
+			    && mHitPoints == 3 && mMarchSpeed != 0.0f
 			    && !(mSpine->getLatestNerve()
 			         == &TNerveBossHanachanTumble::theNerve())) {
-				if (unk1B8 == -1 && gpMarDirector->getState() == 4)
+				if (unk1B8 == -1
+				    && gpMarDirector->getState() == TMarDirector::STATE_UNK4)
 					unk1B8 = 7200;
 				else if (unk1B8 > 0) {
 					--unk1B8;
@@ -613,7 +614,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			    && nerve == &TNerveBossHanachanDead::theNerve()) {
 				SMSGetMSound()->startSoundActor(MSD_SE_WT_BOSS_FADEAWAY,
 				                                &mPosition, 0, nullptr, 0, 4);
-				if (!checkLiveFlag(LIVE_FLAG_UNK100000))
+				if (!checkLiveFlag(LIVE_FLAG_SKIP_DEATH_BGM_MODULATION))
 					gpMSound->unk98->modBgm(1, 1);
 			}
 		}
@@ -674,9 +675,9 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 			emitParticle_();
 			emitCamShake_();
 		}
-		if (checkLiveFlag(LIVE_FLAG_UNK10000)
+		if (checkLiveFlag(LIVE_FLAG_SAND_PILLAR_ACTIVE)
 		    && unk19C->curAnmEndsNext(0, nullptr))
-			offLiveFlag(LIVE_FLAG_UNK10000);
+			offLiveFlag(LIVE_FLAG_SAND_PILLAR_ACTIVE);
 		if (!gpMarDirector->isInTalkNow())
 			changeAnmRateAndFrameUpdate_();
 		mHead->unk110->execMotionBlend(mHead->getMActor());
@@ -714,7 +715,7 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 		for (int i = 0; i < ARRAY_COUNT(mBodyParts); ++i)
 			mBodyParts[i]->getMActor()->viewCalc();
 	}
-	if (checkLiveFlag(LIVE_FLAG_UNK10000))
+	if (checkLiveFlag(LIVE_FLAG_SAND_PILLAR_ACTIVE))
 		unk19C->perform(cue, graphics);
 }
 
@@ -771,7 +772,7 @@ f32 TBossHanachan::getBodyMaxRotateZ() const
 bool TBossHanachan::isCanWalk() const
 {
 	bool result                = true;
-	JGeometry::TVec3<f32> goal = unkF4.getPoint();
+	JGeometry::TVec3<f32> goal = mCurrentTarget.getPoint();
 	f32 squareToGoal = JGeometry::TVec3<f32>(goal.x - mPosition.x, 0.0f,
 	                                         goal.z - mPosition.z)
 	                       .squared();
@@ -792,12 +793,12 @@ void TBossHanachan::execWalk(bool accelerate)
 	mTurnSpeed = unk1C0->mSLWalkTurnSpeed.get();
 	if (isCanWalk())
 		walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
-	JGeometry::TVec3<f32> direction = unkF4.getPoint();
+	JGeometry::TVec3<f32> direction = mCurrentTarget.getPoint();
 	direction.set(direction.x - mPosition.x, 0.0f, direction.z - mPosition.z);
 	f32 squareToGoal = direction.squared();
 	if (squareToGoal < CLBSquared(100.0f)) {
-		if (!unk114.empty())
-			switchNextGoalPath();
+		if (!mGoalPath.empty())
+			switchNextGoalPathNode();
 		else
 			goToDirLimitedNextGraphNode(90.0f);
 	}
@@ -829,7 +830,7 @@ void TBossHanachan::execSlip()
 			direction.scale(500.0f);
 			JGeometry::TVec3<f32> goal = mPosition;
 			goal.add(direction);
-			setGoalPath(TPathNode(goal));
+			setGoal(goal);
 			walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
 		}
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK9, 1.0f);
@@ -851,8 +852,7 @@ void TBossHanachan::goToInitialRecoverGraphNode()
 	}
 	unk124->setTo(index);
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 // fabricated
@@ -892,7 +892,7 @@ void TBossHanachan::execDamage()
 			break;
 		}
 		unk124->setGraph(gpConductor->getGraphByName(railName));
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TBossHanachan::LIVE_FLAG_BGM_CHANGE_PENDING);
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_DAMAGE_SYMBL,
 		                                &mBodyParts[unk174]->unk154, 0, nullptr,
 		                                0, 4);

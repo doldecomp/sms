@@ -24,13 +24,25 @@ void EnableMetroTRKInterrupts(void);
 
 extern unsigned long __DVDLongFileNameFlag;
 extern unsigned long __PADSpec;
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-extern unsigned char __ArenaLo[] AT_ADDRESS(0x80420D60);
-extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
-#else
+#if defined(VERSION_GMSJ01)
 extern unsigned char __ArenaLo[] AT_ADDRESS(0x80426020);
 extern char _stack_addr[] AT_ADDRESS(0x80424008);
+#elif defined(VERSION_GMSJ01_01)
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x8041A520);
+extern char _stack_addr[] AT_ADDRESS(0x80418518);
+#elif defined(VERSION_GMSE01)
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x80429800);
+extern char _stack_addr[] AT_ADDRESS(0x804277E8);
+#elif defined(VERSION_GMSP01)
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x80420D60);
+extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
+#elif defined(VERSION_GMSP01_NX)
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x8041E300);
+extern char _stack_addr[] AT_ADDRESS(0x8041C2F0);
+#else
+#error "Unhandled ROM"
 #endif
+
 extern unsigned char __ArenaHi[];
 
 // dummy entry points to the OS Exception vector

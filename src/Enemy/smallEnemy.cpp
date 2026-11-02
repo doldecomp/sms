@@ -142,16 +142,16 @@ TSmallEnemy::TSmallEnemy(const char* name)
     , unk158(1.0f)
     , mCurrentBckAnm(-1)
     , mSprayedByWaterCooldown(0)
-    , unk164(0)
+    , mCanBePickedUp(false)
     , unk165(0)
     , unk174(0)
     , mJuiceBlock(0)
     , mCoinId(-1)
-    , mCoin(nullptr)
-    , unk184(0)
+    , mEventCoin(nullptr)
+    , mIsAttacker(false)
     , unk185(0)
     , unk188(1.0f)
-    , unk18C(0)
+    , mDroppedCoinCount(0)
 {
 }
 
@@ -161,17 +161,17 @@ void TSmallEnemy::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActorFromNthData(0, 0);
 }
 
-void TSmallEnemy::init(TLiveManager* param_1)
+void TSmallEnemy::init(TLiveManager* manager)
 {
-	mManager = param_1;
-	param_1->manageActor(this);
+	mManager = manager;
+	manager->manageActor(this);
 
 	setMActorAndKeeper();
 
 	onLiveFlag(LIVE_FLAG_DEAD);
 	if (SMSGetMarDirector()->getCurrentStage() == 2
 	    && SMSGetMarDirector()->getCurrentScenario() == 0)
-		onLiveFlag(LIVE_FLAG_UNK2000);
+		onLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	unk158 = 1.0f;
 
@@ -182,7 +182,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	mBodyRadius       = getSaveParams()->mSLBodyRadius.get();
 	mWallRadius       = getSaveParams()->mSLWallRadius.get();
 	mHeadHeight       = getSaveParams()->mSLHeadHeight.get();
-	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
+	mScaledBodyRadius = getBodyRadius() * 15.0f;
 
 	f32 attackRadius = getSaveParams()->mSLAttackRadius.get();
 	f32 attackHeight = getSaveParams()->mSLAttackHeight.get();
@@ -198,7 +198,7 @@ void TSmallEnemy::init(TLiveManager* param_1)
 	if (!unk124->getGraph() || unk124->getGraph()->isDummy())
 		unk124->init(gpConductor->getGraphByName("main"));
 
-	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+	setGoal((THitActor*)gpMarioAddress);
 	initAnmSound();
 }
 
@@ -207,13 +207,13 @@ void TSmallEnemy::load(JSUMemoryInputStream& stream)
 	TSpineEnemy::load(stream);
 	stream >> mCoinId;
 	if (mCoinId != 0x65)
-		unk18C = 1;
+		mDroppedCoinCount = 1;
 	reset();
 }
 
 void TSmallEnemy::loadAfter()
 {
-	mCoin = TItemManager::newAndRegisterCoin(mCoinId);
+	mEventCoin = TItemManager::newAndRegisterCoin(mCoinId);
 }
 
 void TSmallEnemy::behaveToWater(THitActor* param_1)
@@ -233,18 +233,17 @@ void TSmallEnemy::attackToMario()
 {
 	sendAttackMsgToMario();
 
-	// TODO: wtf
-	JGeometry::TVec3<f32> local_14(0, 0, 0);
+	JGeometry::TVec3<f32> posDelta(0, 0, 0);
 
-	JGeometry::TVec3<f32> local_20(mPosition.x - SMS_GetMarioPos().x,
-	                               mPosition.y - SMS_GetMarioPos().y,
-	                               mPosition.z - SMS_GetMarioPos().z);
-	MsVECNormalize(&local_20, &local_20);
-	mVelocity.x = local_20.x;
-	mVelocity.z = local_20.z;
-	local_20.scale(mBodyScale * mBodyRadius);
-	local_14 += local_20;
-	mPositionDelta = local_14;
+	JGeometry::TVec3<f32> toMario(mPosition.x - SMS_GetMarioPos().x,
+	                              mPosition.y - SMS_GetMarioPos().y,
+	                              mPosition.z - SMS_GetMarioPos().z);
+	MsVECNormalize(&toMario, &toMario);
+	mVelocity.x = toMario.x;
+	mVelocity.z = toMario.z;
+	toMario *= getBodyRadius();
+	posDelta += toMario;
+	mPositionDelta = posDelta;
 }
 
 void TSmallEnemy::reset()
@@ -260,19 +259,19 @@ void TSmallEnemy::reset()
 	mBodyRadius       = getSaveParams()->mSLBodyRadius.get();
 	mWallRadius       = getSaveParams()->mSLWallRadius.get();
 	mHeadHeight       = getSaveParams()->mSLHeadHeight.get();
-	mScaledBodyRadius = mBodyScale * mBodyRadius * 15.0f;
+	mScaledBodyRadius = getBodyRadius() * 15.0f;
 
 	resetHitPoints();
 
 	offLiveFlag(LIVE_FLAG_DEAD);
-	offLiveFlag(LIVE_FLAG_UNK20000);
+	offLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	offLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 	offLiveFlag(LIVE_FLAG_HIDDEN);
 
 	if (getSaveParams()->mSLGenerateOnlyDead.get())
-		offLiveFlag(LIVE_FLAG_UNK800);
+		offLiveFlag(LIVE_FLAG_RECYCLABLE);
 	else
-		onLiveFlag(LIVE_FLAG_UNK800);
+		onLiveFlag(LIVE_FLAG_RECYCLABLE);
 
 	unk124->mPrevIdx = -1;
 	goToShortestNextGraphNode();
@@ -283,7 +282,7 @@ void TSmallEnemy::reset()
 
 	mSprayedByWaterCooldown = 0;
 	unk165                  = 0;
-	unk184                  = 0;
+	mIsAttacker             = false;
 
 	f32 attackRadius = getSaveParams()->getSLAttackRadius();
 	f32 attackHeight = getSaveParams()->getSLAttackHeight();
@@ -297,7 +296,7 @@ void TSmallEnemy::reset()
 
 	setHitParams(attackRadius, attackHeight, damageRadius, damageHeight);
 
-	unk164 = 0;
+	mCanBePickedUp = false;
 
 	MsMtxSetXYZRPH(getModel()->getBaseTRMtx(), mPosition.x, mPosition.y,
 	               mPosition.z, mRotation.x, mRotation.y, mRotation.z);
@@ -309,7 +308,7 @@ void TSmallEnemy::forceKill()
 	if (!(mGroundPlane->isIllegalData()
 	      || (!mGroundPlane->isDeathPlane() && !mGroundPlane->isPool()
 	          && !mGroundPlane->isWaterSurface())
-	      || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10))
+	      || isAirborne() || checkLiveFlag(LIVE_FLAG_NO_BIND))
 	    || !gpMap->isInArea(mPosition.x, mPosition.z)) {
 
 		if (mSpine->getCurrentNerve() != &TNerveSmallEnemyDie::theNerve()) {
@@ -317,7 +316,7 @@ void TSmallEnemy::forceKill()
 			mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 			mSpine->pushAfterCurrent(mSpine->getDefault());
 
-			onLiveFlag(LIVE_FLAG_UNK20000);
+			onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			mHitPoints = 1;
 		}
 	}
@@ -330,58 +329,57 @@ void TSmallEnemy::genRandomItem()
 
 	setAfterDeadEffect();
 	genEventCoin();
-	if (!checkLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_DEAD))
+	if (!checkLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS | LIVE_FLAG_DEAD))
 		generateItem();
 }
 
 void TSmallEnemy::genEventCoin()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK20000))
+	if (checkLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS))
 		return;
 
-	if (mCoin) {
+	if (mEventCoin) {
 		TCoin* coin;
-		if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+		if (mEventCoin->isActorType(ACTOR_TYPE_COIN)) {
 			coin = (TCoin*)gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 		} else {
-			coin = mCoin;
+			coin = mEventCoin;
 			coin->appear();
 		}
 
 		if (coin) {
 			coin->mPosition = mPosition;
 			coin->mVelocity.set(0, 20, 0);
-			coin->offLiveFlag(LIVE_FLAG_UNK10);
-			--unk18C;
+			coin->offLiveFlag(LIVE_FLAG_NO_BIND);
+			--mDroppedCoinCount;
 		}
 	}
 
-	if (unk18C > 0) {
-		for (int i = 0; i < unk18C; ++i) {
-			Mtx44 local_c0;
+	if (mDroppedCoinCount > 0) {
+		for (int i = 0; i < mDroppedCoinCount; ++i) {
+			Mtx rotMtx;
 
-			f32 angle = 360.0f / unk18C * i + mRotation.y;
-			MsMtxSetRotY(local_c0, angle);
+			MsMtxSetRotY(rotMtx, 360.0f / mDroppedCoinCount * i + mRotation.y);
 
-			Vec local_d0;
-			local_d0.x = 0.0f;
-			local_d0.y = 0.0f;
-			local_d0.z = 100.0f;
-			if (unk18C == 1)
-				local_d0.z = 1.0f;
+			Vec offset;
+			offset.x = 0.0f;
+			offset.y = 0.0f;
+			offset.z = 100.0f;
+			if (mDroppedCoinCount == 1)
+				offset.z = 1.0f;
 
-			MTXMultVec(local_c0, &local_d0, &local_d0);
+			MTXMultVec(rotMtx, &offset, &offset);
 
 			TCoin* coin = (TCoin*)gpItemManager->makeObjAppear(
-			    mPosition.x + local_d0.x, mPosition.y, mPosition.z + local_d0.z,
+			    mPosition.x + offset.x, mPosition.y, mPosition.z + offset.z,
 			    ACTOR_TYPE_COIN, false);
 			if (coin) {
 				coin->mPosition.y = mPosition.y;
-				MsVECNormalize(&local_d0, &local_d0);
-				coin->mVelocity.set(local_d0.x * 4,
+				MsVECNormalize(&offset, &offset);
+				coin->mVelocity.set(offset.x * 4,
 				                    TMsRange<f32>(8.0f, 16.0f).rand(),
-				                    local_d0.z * 4);
-				coin->offLiveFlag(LIVE_FLAG_UNK10);
+				                    offset.z * 4);
+				coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 			}
 		}
 	}
@@ -390,14 +388,12 @@ void TSmallEnemy::genEventCoin()
 void TSmallEnemy::setAfterDeadEffect()
 {
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-	        PARTICLE_MS_ENM_DISAP_A, &mPosition, 0, nullptr)) {
+	        PARTICLE_MS_ENM_DISAP_A, &mPosition, 0, nullptr))
 		emitter->setGlobalScale(mScaling);
-	}
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
-	        PARTICLE_MS_ENM_DISAP_B, &mPosition, 0, nullptr)) {
+	        PARTICLE_MS_ENM_DISAP_B, &mPosition, 0, nullptr))
 		emitter->setGlobalScale(mScaling);
-	}
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_COMMON_SMOKE, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -405,8 +401,7 @@ void TSmallEnemy::setAfterDeadEffect()
 
 void TSmallEnemy::generateItem()
 {
-	f32 rand = TMsRange<f32>(0.0f, 100.0f).rand();
-	(void)rand; // TODO: due to rand being incorrect
+	f32 rand     = TMsRange<f32>(0.0f, 100.0f).rand();
 	f32 eggRate  = getSaveParams()->mSLGenEggRate.get();
 	f32 itemRate = getSaveParams()->mSLGenItemRate.get();
 	if (rand < eggRate + itemRate && !mGroundPlane->isIllegalData())
@@ -461,20 +456,20 @@ void TSmallEnemy::moveObject()
 		if (!isCollidMove(col))
 			continue;
 
-		JGeometry::TVec3<f32> v;
-		v.zero();
+		JGeometry::TVec3<f32> posDelta;
+		posDelta.zero();
 
-		JGeometry::TVec3<f32> local_74(mPosition.x - col->mPosition.x,
-		                               mPosition.y - col->mPosition.y,
-		                               mPosition.z - col->mPosition.z);
-		if (local_74.x == 0.0f && local_74.y == 0.0f && local_74.z == 0.0f)
-			local_74.x += 1;
+		JGeometry::TVec3<f32> toCol(mPosition.x - col->mPosition.x,
+		                            mPosition.y - col->mPosition.y,
+		                            mPosition.z - col->mPosition.z);
+		if (toCol.x == 0.0f && toCol.y == 0.0f && toCol.z == 0.0f)
+			toCol.x += 1;
 
-		MsVECNormalize(&local_74, &local_74);
-		local_74.scale(mMarchSpeed * 3.0f * unk158);
+		MsVECNormalize(&toCol, &toCol);
+		toCol *= mMarchSpeed * 3.0f * unk158;
 
-		v.add(local_74);
-		mPositionDelta = v;
+		posDelta += toCol;
+		mPositionDelta = posDelta;
 	}
 
 	bind();
@@ -522,7 +517,7 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 	    || (mActorType == ACTOR_TYPE_AMI_NOKO
 	        && message == HIT_MESSAGE_PUNCH)) {
 		if (isHitValid(message)) {
-			unk184 = 0;
+			mIsAttacker = false;
 			kill();
 		}
 		return true;
@@ -578,7 +573,7 @@ bool TSmallEnemy::changeByJuice()
 		mJuiceBlock->offLiveFlag(LIVE_FLAG_HIDDEN);
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 		onLiveFlag(LIVE_FLAG_HIDDEN);
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 
@@ -604,7 +599,7 @@ bool TSmallEnemy::changeByJuice()
 			break;
 		}
 
-		offLiveFlag(LIVE_FLAG_UNK800);
+		offLiveFlag(LIVE_FLAG_RECYCLABLE);
 		return true;
 	}
 
@@ -688,9 +683,9 @@ bool TSmallEnemy::changeMove()
 			local_80.x = 0.2f;
 			local_80.y = 0.0f;
 			local_80.z = 0.0f;
-			Mtx afStack_b0;
-			MsMtxSetRotRPH(afStack_b0, 0.0f, mRotation.y, 0.0f);
-			MTXMultVec(afStack_b0, &local_80, &local_80);
+			Mtx rotMtx;
+			MsMtxSetRotRPH(rotMtx, 0.0f, mRotation.y, 0.0f);
+			MTXMultVec(rotMtx, &local_80, &local_80);
 			if (mSpine->getTime() % 30 > 15) {
 				mJuiceBlock->mPosition.y += 0.5f;
 				mJuiceBlock->mPosition.x += local_80.x;
@@ -728,7 +723,8 @@ void TSmallEnemy::changeOut()
 	kill();
 	mPosition = mJuiceBlock->mPosition;
 
-	gpMarioParticleManager->emitAndBindToPosPtr(0xCD, &mPosition, 0, nullptr);
+	gpMarioParticleManager->emitAndBindToPosPtr(PARTICLE_MS_TLS_CHANGE,
+	                                            &mPosition, 0, nullptr);
 	getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 	mJuiceBlock->kill();
 	mJuiceBlock = nullptr;
@@ -884,7 +880,7 @@ bool TSmallEnemy::isHitWallInBound()
 		mPosition.z = local_3C.mCenter.z;
 		mRotation.y = sVar2;
 
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 
 		return true;
@@ -950,7 +946,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 				                       * 32.0f * self->getUnk158());
 			}
 			if (self->getHitPoints() == 0) {
-				self->onLiveFlag(LIVE_FLAG_UNK8);
+				self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 				self->setDeadAnm();
 				self->setDeadEffect();
 			} else {
@@ -963,16 +959,16 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 	if (self->getGroundPlane()->isWaterSurface())
 		uVar8 = 0;
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	        && spine->getTime() > uVar8
 	                                  + self->getMActor()
 	                                        ->getFrameCtrl(ANM_TYPE_BCK)
 	                                        ->getEnd()
-	    || spine->getTime() > 360 || self->getUnk184() != 0) {
+	    || spine->getTime() > 360 || self->isAttacker() != false) {
 		self->genRandomItem();
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(LIVE_FLAG_HIDDEN);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
@@ -996,7 +992,7 @@ DEFINE_NERVE(TNerveSmallEnemyFreeze, TLiveActor)
 
 	if (spine->getTime() == 0)
 		self->setFreezeAnm();
-	if (self->checkCurAnmEnd(0) && spine->getTime() >= freezeTime)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() >= freezeTime)
 		return true;
 	else
 		return false;
@@ -1007,8 +1003,8 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
-		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
+		if (self->isJumping()
+		    || self->checkLiveFlag(TSmallEnemy::LIVE_FLAG_UNK40000))
 			return true;
 
 		self->jumpBehavior();
@@ -1017,7 +1013,7 @@ DEFINE_NERVE(TNerveSmallEnemyJump, TLiveActor)
 		v.y = self->getSaveParams()->getSLJumpForce() * self->getBodyScale();
 		self->setVelocity(v);
 
-		self->onLiveFlag(LIVE_FLAG_UNK8000);
+		self->onLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 
@@ -1032,8 +1028,8 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 	TSmallEnemy* self = (TSmallEnemy*)spine->getBody();
 
 	if (spine->getTime() == 0) {
-		if (self->checkLiveFlag2(LIVE_FLAG_UNK8000)
-		    || self->checkLiveFlag(LIVE_FLAG_UNK40000))
+		if (self->isJumping()
+		    || self->checkLiveFlag(TSmallEnemy::LIVE_FLAG_UNK40000))
 			return true;
 
 		self->setWaitAnm();
@@ -1043,7 +1039,7 @@ DEFINE_NERVE(TNerveSmallEnemyHitWaterJump, TLiveActor)
 		v.y                     = self->getSaveParams()->mSLJumpForce.get();
 		self->mVelocity         = v;
 
-		self->onLiveFlag(LIVE_FLAG_UNK8000);
+		self->onLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
 
 		self->mRotation.y += TMsRange<f32>(30.0f, 100.0f).rand();
@@ -1066,7 +1062,7 @@ DEFINE_NERVE(TNerveSmallEnemyWait, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setWaitAnm();
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > self->getSaveParams()->getSLWaitTime())
 		return true;
 	else

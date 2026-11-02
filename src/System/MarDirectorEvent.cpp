@@ -41,8 +41,8 @@ TBaseNPC* TMarDirector::findNearestTalkNPC()
 
 		for (it = mNPCList.begin(); it != mNPCList.end(); ++it) {
 			TBaseNPC* npc = *it;
-			if (npc->checkLiveFlag(LIVE_FLAG_UNK100000)
-			    || !npc->checkLiveFlag(LIVE_FLAG_UNK20000))
+			if (npc->checkLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN)
+			    || !npc->checkLiveFlag(TBaseNPC::LIVE_FLAG_TALKABLE))
 				continue;
 
 			f32 dist = (npc->mPosition.x - marioPos.x)

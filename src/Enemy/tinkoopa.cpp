@@ -638,7 +638,7 @@ TTinKoopa::TTinKoopa(const char* name)
     , unk1F0(nullptr)
     , unk1F8(0)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	offLiveFlag(LIVE_FLAG_ENABLE_CLIPPING);
 	mScaledBodyRadius = 2000.0f;
 }
@@ -902,7 +902,7 @@ void TTinKoopa::checkTinKoopaKillerApproachingMessage()
 			continue;
 
 		if (checkKillerApproachingFromBack(
-		        killer, *gpMarioPos,
+		        killer, SMS_GetMarioPos(),
 		        getSaveParam2()->mSLKillerApproachingDistance.get()))
 			startTinKoopaMessage(msgId);
 	}

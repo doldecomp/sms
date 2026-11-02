@@ -88,7 +88,7 @@ void TRideCloud::load(JSUMemoryInputStream& stream)
 	SMS_InitPacket_TwoTevColor(getModel(), 0, GX_TEVREG0, &unk16E, GX_TEVREG1,
 	                           &unk176);
 	offLiveFlag(LIVE_FLAG_FORCE_SHADOW);
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 }
 
 u32 TRideCloud::getShadowType() { return SHADOW_TYPE_CIRCLE; }

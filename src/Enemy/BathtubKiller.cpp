@@ -149,9 +149,9 @@ void TBathtubKiller::init(TLiveManager* manager)
 	TSmallEnemy::init(manager);
 	mActorType = ACTOR_TYPE_BATHTUB_KILLER;
 	unk150     = 0x11;
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	onLiveFlag(LIVE_FLAG_DEAD);
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mKillerType = KILLER_NORMAL;
 	resetBathtubKiller();
@@ -200,7 +200,7 @@ void TBathtubKiller::reset()
 {
 	TSmallEnemy::reset();
 	offLiveFlag(LIVE_FLAG_DEAD);
-	offLiveFlag(LIVE_FLAG_UNK8);
+	offLiveFlag(LIVE_FLAG_NO_SHADOW);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
 	offHitFilter(HIT_FILTER_NO_ATTACK);
 	offHitFilter(HIT_FILTER_NO_DAMAGE);
@@ -609,7 +609,7 @@ void TBathtubKiller::setDeadBathtubKillerAnm()
 	mQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 	mAcceleration.set(0.0f, 0.0f, 0.0f);
 	mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 	mNoseColor = mBodyColor;
 }
 
@@ -776,7 +776,7 @@ DEFINE_NERVE(TNerveBathtubKillerBreak, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->killBathtubKiller();
 		return TRUE;
 	}
@@ -793,7 +793,7 @@ DEFINE_NERVE(TNerveBathtubKillerExplosion, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->killBathtubKiller();
 		return TRUE;
 	}

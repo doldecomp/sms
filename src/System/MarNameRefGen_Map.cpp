@@ -1,6 +1,3 @@
-
-#include "Camera/SunMgr.hpp"
-#include "Camera/SunModel.hpp"
 #include "Map/BathWaterManager.hpp"
 #include "Map/Map.hpp"
 #include "Map/MapDraw.hpp"
@@ -14,6 +11,8 @@
 
 // rogue includes needed for matching sinit & bss
 #include <M3DUtil/MActorAnm.hpp>
+#include "Camera/SunMgr.hpp"
+#include "Camera/SunModel.hpp"
 
 JDrama::TNameRef* TMarNameRefGen::getNameRef_Map(const char* name) const
 {

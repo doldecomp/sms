@@ -67,7 +67,7 @@ void TSpider::bind(TLiveActor* param_1)
 		local_50.y       = fVar3;
 		enemy->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 		enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
-		enemy->offLiveFlag(LIVE_FLAG_UNK8000);
+		enemy->offLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 	} else {
 		enemy->onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
@@ -88,7 +88,7 @@ void TSpider::bind(TLiveActor* param_1)
 			unk8 -= 1;
 			unaff_f29 = enemy->getMarchSpeed();
 			enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
-			enemy->offLiveFlag(LIVE_FLAG_UNK8000);
+			enemy->offLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 			enemy->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 		} else {
 			unkC = 0;
@@ -105,7 +105,7 @@ void TSpider::bind(TLiveActor* param_1)
 		if (normal.dot(local_114) < 0.0f) {
 			unaff_f29 = enemy->getMarchSpeed();
 			enemy->offLiveFlag(LIVE_FLAG_AIRBORNE);
-			enemy->offLiveFlag(LIVE_FLAG_UNK8000);
+			enemy->offLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 			enemy->mVelocity = JGeometry::TVec3<f32>(0, 0, 0);
 
 			unkC = local_90.mResultWalls[0];

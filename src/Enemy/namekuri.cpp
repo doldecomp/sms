@@ -293,8 +293,8 @@ void TNameKuri::init(TLiveManager* param_1)
 	mActorType = ACTOR_TYPE_NAME_KURI;
 	unk150     = 0x3A;
 	getWalker()->setMode(1);
-	unk130 = 2;
-	unk1A4 = (TNameKuriSaveLoadParams*)getSaveParam();
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND_AND_WALL;
+	unk1A4                = (TNameKuriSaveLoadParams*)getSaveParam();
 
 	if (mInstanceIndex == 0) {
 		for (u8 i = 0;
@@ -463,7 +463,7 @@ void TNameKuri::behaveToWater(THitActor* param_1)
 		if (!isAirborne())
 			onLiveFlag(LIVE_FLAG_MELT_ON_DEATH);
 
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 }
 
@@ -510,7 +510,7 @@ void TNameKuri::setDeadAnm()
 	}
 
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TNameKuri::setAfterDeadEffect()
@@ -544,7 +544,7 @@ void TNameKuri::setMeltAnm()
 	}
 
 	setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EN_NAMEKURI_DOWN_WT, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -575,7 +575,7 @@ void TNameKuri::reset()
 	unk1C4 = nameKuriTevColorData[((TNameKuriManager*)mManager)
 	                                  ->getNextColorIdx()];
 
-	offLiveFlag(LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TNameKuri::attackToMario()
@@ -583,7 +583,7 @@ void TNameKuri::attackToMario()
 	SMS_SendMessageToMario(this, HIT_MESSAGE_ATTACK);
 	if (mSpine->getCurrentNerve() == &TNerveNameKuriJumpAttack::theNerve()) {
 		setVelocity(JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f));
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 		kill();
 	}
 }
@@ -662,7 +662,7 @@ DEFINE_NERVE(TNerveNameKuriLand, TLiveActor)
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
 	if (self->isBckAnm(4)) {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			return true;
 	} else if (!self->isAirborne()) {
 		self->setBckAnm(4);
@@ -676,7 +676,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
 	if (spine->getTime() <= 1) {
-		self->setGoalPath(SMS_GetMarioHitActor());
+		self->setGoal(SMS_GetMarioHitActor());
 
 		self->unk1B0 = self->mScaling.y;
 		self->unk1AC = 0.0f;
@@ -704,13 +704,13 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 				self->unk1AC = 0.0f;
 				self->unk1B8 = 0.0f;
 
-				self->setGoalPath(SMS_GetMarioPos());
+				self->setGoal(SMS_GetMarioPos());
 			}
 
 			self->walkToCurPathNode(0.0f, 6.0f, 0.0f);
 			int colorChangeRate
 			    = self->getSaveParams()->mSLColorChangeRate.get();
-			if (self->getCurAnmFrameNo(0) > 62.0f) {
+			if (self->getCurAnmFrameNo(ANM_TYPE_BCK) > 62.0f) {
 				self->unk1B8 += 1.0f;
 				s16 sVar5
 				    = MsClamp<s16>(self->unk1BC.r - colorChangeRate, 0, 255);
@@ -724,12 +724,12 @@ DEFINE_NERVE(TNerveNameKuriJumpAttack, TLiveActor)
 			if (self->isAirborne())
 				self->mScaling.x = self->unk1B0;
 
-			if (!self->isAirborne() && self->checkCurAnmEnd(0))
+			if (!self->isAirborne() && self->checkCurAnmEnd(ANM_TYPE_BCK))
 				self->setBckAnm(2);
 		} else if (self->isBckAnm(2)) {
-			if (self->checkCurAnmEnd(0)) {
-				self->switchNextGoalPath();
-				self->onLiveFlag(LIVE_FLAG_UNK20000);
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
+				self->switchNextGoalPathNode();
+				self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 				spine->pushAfterCurrent(&TNerveSmallEnemyDie::theNerve());
 				return true;
 			}
@@ -745,7 +745,7 @@ DEFINE_NERVE(TNerveNameKuriJumpAttackPrepare, TLiveActor)
 {
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 	if (spine->getTime() == 1) {
-		self->setGoalPath(SMS_GetMarioHitActor());
+		self->setGoal(SMS_GetMarioHitActor());
 		self->setBckAnm(6);
 	} else if (self->isBckAnm(6)) {
 		if (self->isInSight(SMS_GetMarioPos(), 100000.0f, 30.0f, 0.0f)
@@ -796,7 +796,7 @@ DEFINE_NERVE(TNerveNKFollowMario, TLiveActor)
 	TNameKuri* self = (TNameKuri*)spine->getBody();
 
 	if (spine->getTime() == 0)
-		self->setGoalPath(SMS_GetMarioHitActor());
+		self->setGoal(SMS_GetMarioHitActor());
 
 	self->walkToCurPathNode(self->getMarchSpeed(), 3.0f, 0.0f);
 

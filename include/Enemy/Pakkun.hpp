@@ -134,6 +134,11 @@ public:
 
 class TStayPakkun : public TPakkun {
 public:
+	TStayPakkun(const char* name = "固定パックン")
+	    : TPakkun(name)
+	{
+	}
+
 	virtual void load(JSUMemoryInputStream&);
 	virtual void init(TLiveManager*);
 	virtual void calcRootMatrix();

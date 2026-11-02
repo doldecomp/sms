@@ -261,7 +261,7 @@ void TCoin::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return;
 
-	if ((cue & CUE_MOVE) && checkLiveFlag(LIVE_FLAG_UNK10)) {
+	if ((cue & CUE_MOVE) && checkLiveFlag(LIVE_FLAG_NO_BIND)) {
 
 		if (SMSGetMarDirector()->isTalkModeNow()
 		    && !SMSGetMarDirector()->isDemoModeNow())
@@ -417,7 +417,7 @@ void TShine::calc()
 {
 	MtxPtr mtxPos = getMActor()->getModel()->getAnmMtx(2);
 
-	if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT
+	if (checkLiveFlag(LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT
 	                  | LIVE_FLAG_DEAD))
 		return;
 
@@ -631,7 +631,7 @@ void TShine::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if ((cue & CUE_CALC_ANIM) && !checkLiveFlag(LIVE_FLAG_DEAD)) {
 		if (!isState(STATE_NORMAL))
-			offLiveFlag(LIVE_FLAG_UNK200);
+			offLiveFlag(LIVE_FLAG_OUT_OF_AREA);
 	}
 	TMapObjGeneral::perform(cue, graphics);
 }
@@ -1036,7 +1036,7 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
 		mVelocity.y = 10.0f;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 		mState = 0xF;
 		return TRUE;
 	}
@@ -1045,7 +1045,7 @@ BOOL TEggYoshi::receiveMessage(THitActor* sender, u32 message)
 		JGeometry::TVec3<f32> v = getVelocity();
 		makeObjAppeared();
 		mVelocity.y = v.y;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 		decideRandomLoveFruit();
 		startBalloonAnim();
 		mState = STATE_NORMAL;
@@ -1150,7 +1150,7 @@ BOOL TItemNozzle::receiveMessage(THitActor* sender, u32 message)
 
 	if (message == HIT_MESSAGE_THROWN) {
 		mVelocity.set(0.0f, 20.0f, 0.0f);
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 		onHitFilter(HIT_FILTER_NO_COLLISION);
 		mState = 0xB;
 		return TRUE;
@@ -1161,7 +1161,7 @@ BOOL TItemNozzle::receiveMessage(THitActor* sender, u32 message)
 
 void TItemNozzle::appearing()
 {
-	if (!checkLiveFlag(LIVE_FLAG_UNK10))
+	if (!checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	mState = STATE_NORMAL;

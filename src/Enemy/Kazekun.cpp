@@ -41,7 +41,7 @@ TKazekun::TKazekun(const char* param_1)
     : TSmallEnemy(param_1)
     , unk1B0(0)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TKazekun::init(TLiveManager* param_1)
@@ -265,7 +265,7 @@ bool TKazekun::doAttackPose(bool start)
 void TKazekun::doAttack(bool start)
 {
 	if (start) {
-		JGeometry::TVec3<f32> dir = getUnk104().getPoint();
+		JGeometry::TVec3<f32> dir = getGoal().getPoint();
 		dir -= mPosition;
 		dir.setLength(((TKazekunParams*)getSaveParam())->mAttackSpeed.get());
 		mVelocity = dir;
@@ -282,9 +282,9 @@ void TKazekun::doAttack(bool start)
 void TKazekun::setVisible(bool visible)
 {
 	if (visible) {
-		offLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8);
+		offLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW);
 	} else {
-		onLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8);
+		onLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW);
 		setAnmSound(nullptr);
 	}
 }
@@ -369,7 +369,7 @@ DEFINE_NERVE(TNerveKazekunAppear, TLiveActor)
 		self->changeBck("kazekun_appear");
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunTurn::theNerve());
 		return true;
 	}
@@ -416,7 +416,7 @@ DEFINE_NERVE(TNerveKazekunPreAttack, TLiveActor)
 	if (((TKazekunParams*)self->getSaveParam())->mPoseTime.get()
 	        * ((TKazekunParams*)self->getSaveParam())->mDicideTiming.get()
 	    < spine->getTime()) {
-		self->setGoalPath(TPathNode(SMS_GetMarioPos()));
+		self->setGoal(SMS_GetMarioPos());
 	}
 
 	self->doAttackPose(false);
@@ -462,7 +462,7 @@ DEFINE_NERVE(TNerveKazekunDisappear, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunWait::theNerve());
 		return true;
 	}
@@ -496,7 +496,7 @@ DEFINE_NERVE(TNerveKazekunHitWater, TLiveActor)
 		                                &self->mPosition, 0, nullptr, 0, 4);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKazekunDisappear::theNerve());
 		self->unk1B0
 		    = ((TKazekunParams*)self->getSaveParam())->mResetTimeHitting.get();

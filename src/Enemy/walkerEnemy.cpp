@@ -101,7 +101,7 @@ void TWalkerEnemy::reset()
 	((TWalker*)mBinder)->reset();
 	mSpine->reset();
 	mSpine->setNext(mSpine->getDefault());
-	setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+	setGoal((THitActor*)gpMarioAddress);
 }
 
 void TWalkerEnemy::walkBehavior(int param_1, float param_2)
@@ -139,7 +139,7 @@ void TWalkerEnemy::behaveToFindMario()
 		mSpine->pushAfterCurrent(&TNerveWalkerEscape::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
 	} else {
-		setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		setGoal((THitActor*)gpMarioAddress);
 		mSpine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 		mSpine->pushAfterCurrent(&TNerveWalkerAttack::theNerve());
 		mSpine->pushAfterCurrent(&TNerveSmallEnemyJump::theNerve());
@@ -148,24 +148,15 @@ void TWalkerEnemy::behaveToFindMario()
 
 void TWalkerEnemy::initAttacker(THitActor* param_1)
 {
-	mRotation = param_1->getRotation();
-	unk184    = 1;
-}
-
-// TODO: look for more places to use this
-static inline f32 dist(const JGeometry::TVec3<f32>& a,
-                       const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> tmp = a;
-	tmp.sub(b);
-	return tmp.length();
+	mRotation   = param_1->getRotation();
+	mIsAttacker = true;
 }
 
 bool TWalkerEnemy::isResignationAttack()
 {
 	f32 fVar1 = getSaveParam2()->getSLGiveUpLength();
 
-	if (dist(unk104.getPoint(), mPosition) > fVar1)
+	if (getGoalDistance() > fVar1)
 		return true;
 	else
 		return false;
@@ -173,7 +164,7 @@ bool TWalkerEnemy::isResignationAttack()
 
 bool TWalkerEnemy::isReachedToGoalXZ()
 {
-	JGeometry::TVec3<f32> tmp = getUnk104().getPoint();
+	JGeometry::TVec3<f32> tmp = getGoal().getPoint();
 	tmp -= mPosition;
 	tmp.y = 0.0f;
 
@@ -199,7 +190,7 @@ DEFINE_NERVE(TNerveWalkerGenerate, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setGenerateAnm();
 	} else {
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
 			return true;
 		}
@@ -237,7 +228,7 @@ DEFINE_NERVE(TNerveWalkerAttack, TLiveActor)
 		self->setRunAnm();
 
 	// TODO: what is the inlines play here?
-	if (self->unkF4.unk0 == (THitActor*)gpMarioAddress) {
+	if (self->mCurrentTarget.unk0 == (THitActor*)gpMarioAddress) {
 		if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
 		    || SMS_CheckMarioFlag(MARIO_FLAG_IN_SHALLOW_WATER)
 		    || SMS_GetMarioGroundPlane()->isWaterSurface()
@@ -262,7 +253,7 @@ DEFINE_NERVE(TNerveWalkerPostAttack, TLiveActor)
 		self->setWaitAnm();
 
 	s32 delay = self->getSaveParam2()->getSLAttackWait();
-	if (spine->getTime() >= delay && self->checkCurAnmEnd(0)) {
+	if (spine->getTime() >= delay && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		return true;
 	}
 
@@ -283,8 +274,7 @@ DEFINE_NERVE(TNerveWalkerEscape, TLiveActor)
 	self->getSaveParam();
 	self->getSaveParam();
 	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)) {
-		if (!self->unk114.empty())
-			self->unkF4 = self->unk114.pop();
+		self->switchNextGoalPathNode();
 		return true;
 	}
 
@@ -305,7 +295,7 @@ DEFINE_NERVE(TNerveWalkerTraceMario, TLiveActor)
 	TWalkerEnemy* self = (TWalkerEnemy*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setRunAnm();
-		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		self->setGoal((THitActor*)gpMarioAddress);
 	}
 
 	if (spine->getTime() == 10)

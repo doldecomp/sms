@@ -144,7 +144,7 @@ public:
 	virtual void attackToMario();
 	virtual void forceKill();
 	virtual void setMActorAndKeeper();
-	virtual void initAttacker(THitActor*) { unk184 = 1; }
+	virtual void initAttacker(THitActor*) { mIsAttacker = true; }
 	virtual bool isHitValid(u32)
 	{
 		return checkLiveFlag(LIVE_FLAG_HIDDEN) ? false : true;
@@ -182,7 +182,7 @@ public:
 		return (TSmallEnemyParams*)TSpineEnemy::getSaveParam();
 	}
 	f32 getUnk158() const { return unk158; }
-	u8 getUnk184() const { return unk184; }
+	bool isAttacker() const { return mIsAttacker; }
 
 	static bool mIsPolluter;
 	static bool mIsAmpPolluter;
@@ -201,7 +201,9 @@ public:
 	}
 
 	enum {
-		LIVE_FLAG_MELT_ON_DEATH = VERSION_SELECT(0x20000, GMSJ01(0x10000)),
+		LIVE_FLAG_MELT_ON_DEATH = 1u << LIVE_FLAG_BIT_USER2, // 0x10000
+		LIVE_FLAG_NO_ITEM_DROPS = 1u << LIVE_FLAG_BIT_USER3, // 0x20000
+		LIVE_FLAG_UNK40000      = 1u << LIVE_FLAG_BIT_USER4, // 0x40000
 	};
 
 public:
@@ -210,18 +212,18 @@ public:
 	/* 0x158 */ f32 unk158;
 	/* 0x15C */ int mCurrentBckAnm;
 	/* 0x160 */ int mSprayedByWaterCooldown;
-	/* 0x164 */ u8 unk164;
+	/* 0x164 */ bool mCanBePickedUp;
 	/* 0x165 */ bool unk165;
 	/* 0x166 */ char unk166[2];
 	/* 0x168 */ char unk168[0x174 - 0x168];
 	/* 0x174 */ u32 unk174;
 	/* 0x178 */ TJuiceBlock* mJuiceBlock;
 	/* 0x17C */ s32 mCoinId;
-	/* 0x180 */ TCoin* mCoin;
-	/* 0x184 */ u8 unk184;
+	/* 0x180 */ TCoin* mEventCoin;
+	/* 0x184 */ bool mIsAttacker;
 	/* 0x185 */ u8 unk185;
 	/* 0x188 */ f32 unk188;
-	/* 0x18C */ int unk18C;
+	/* 0x18C */ int mDroppedCoinCount;
 	/* 0x190 */ f32 unk190;
 };
 

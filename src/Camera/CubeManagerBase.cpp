@@ -107,14 +107,15 @@ bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 	// Presumably hotel delphino floor transitions?
 	if (SMSGetMarDirector()->getCurrentStage() == 7 && unk1C != -1
 	    && found != -1) {
-		const char* curName = (*unk14)[unk1C].getName();
-		const char* newName = (*unk14)[found].getName();
+		const char* curFloor   = (*unk14)[unk1C].getName();
+		const char* foundFloor = (*unk14)[found].getName();
 
-		if (strcmp(curName, "３階") == 0) {
-			if (strcmp(newName, "２階") == 0 || strcmp(newName, "１階") == 0)
+		if (strcmp(curFloor, "３階") == 0) {
+			if (strcmp(foundFloor, "２階") == 0
+			    || strcmp(foundFloor, "１階") == 0)
 				return true;
-		} else if (strcmp(curName, "２階") == 0) {
-			if (strcmp(newName, "１階") == 0)
+		} else if (strcmp(curFloor, "２階") == 0) {
+			if (strcmp(foundFloor, "１階") == 0)
 				return true;
 		}
 	}

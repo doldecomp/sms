@@ -184,7 +184,7 @@ void TTPHitActor::checkHitActors()
 TTabePuku::TTabePuku(const char* param_1)
     : TSmallEnemy(param_1)
 {
-	onLiveFlag(LIVE_FLAG_UNK1000);
+	onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 }
 
 void TTabePuku::init(TLiveManager* param_1)
@@ -371,7 +371,7 @@ bool TTabePuku::isBiting() const
 
 void TTabePuku::swimToCurPathNode(const JGeometry::TVec3<f32>& offset)
 {
-	JGeometry::TVec3<f32> dir(getUnk104().getPoint());
+	JGeometry::TVec3<f32> dir(getGoal().getPoint());
 	dir -= mPosition;
 	dir += offset;
 	swimTo(dir);
@@ -404,10 +404,20 @@ void TTabePuku::prepareDrag()
 	JGeometry::TQuat4<f32> quat;
 	quat.setEulerY(MsRandF() * (2.0f * JGeometry::TUtil<f32>::PI()));
 	quat.rotate(mDragDir);
-	setGoalPath(mPosition);
+	setGoal(mPosition);
 }
 
-bool TTabePuku::doDrag() { return false; }
+bool TTabePuku::doDrag()
+{
+	swimTo(mDragDir);
+	if (mTouchedWall || !isAirborne()
+	    || ((TTabePukuParams*)getSaveParam())->mDragLength.get()
+	           < getGoalDistance()) {
+		detach();
+		return true;
+	}
+	return false;
+}
 
 void TTabePuku::swimTo(const JGeometry::TVec3<f32>& dir)
 {
@@ -519,7 +529,7 @@ DEFINE_NERVE(TNerveTabePukuFound, TLiveActor)
 	self->mVelocity   = velocity;
 	self->mRotation.y = MsGetRotFromZaxisY(velocity);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveTabePukuAttack::theNerve());
 		return true;
 	}
@@ -555,7 +565,7 @@ DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
 	TTabePuku* self = (TTabePuku*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(0);
-		self->setGoalPath((THitActor*)gpMarioAddress);
+		self->setGoal((THitActor*)gpMarioAddress);
 		self->mMarchSpeed
 		    = ((TTabePukuParams*)self->getSaveParam())->mAttackSpeed.get();
 	}
@@ -563,7 +573,7 @@ DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
 	            > self->getSaveParams()->getSLGiveUpHeight();
 	if (!lost) {
 		f32 giveUpLength = self->getSaveParams()->getSLGiveUpLength();
-		JGeometry::TVec3<f32> toGoal = self->getUnk104().getPoint();
+		JGeometry::TVec3<f32> toGoal = self->getGoal().getPoint();
 		toGoal -= self->mPosition;
 		if (toGoal.length() > giveUpLength) {
 			lost = true;
@@ -621,11 +631,7 @@ DEFINE_NERVE(TNerveTabePukuDrag, TLiveActor)
 		    = ((TTabePukuParams*)self->getSaveParam())->mDiveSpeed.get();
 	}
 
-	self->swimTo(self->mDragDir);
-	if (self->mTouchedWall || !self->isAirborne()
-	    || self->getUnk104().getPoint().distance(self->mPosition)
-	           > ((TTabePukuParams*)self->getSaveParam())->mDragLength.get()) {
-		self->detach();
+	if (self->doDrag()) {
 		spine->pushAfterCurrent(&TNerveTabePukuRecoverGraph::theNerve());
 		return true;
 	}

@@ -36,6 +36,19 @@ enum J3DMaterialCopyFlag {
 	J3DMatCopyFlag_All      = 0x03,
 };
 
+// from tp
+enum J3DMdlFlag {
+	J3DMdlFlag_None             = 0x0,
+	J3DMdlFlag_OverrideMtx      = 0x1,
+	J3DMdlFlag_UseDefaultJ3D    = 0x2,
+	J3DMdlFlag_SkinPosCpu       = 0x4,
+	J3DMdlFlag_SkinNrmCpu       = 0x8,
+	J3DMdlFlag_EnableLOD        = 0x10,
+	J3DMdlFlag_UseSharedDL      = 0x20000,
+	J3DMdlFlag_UseSingleDL      = 0x40000,
+	J3DMdlFlag_DifferedDLBuffer = 0x80000,
+};
+
 typedef void (*J3DCalcCallBack)(J3DModel*, u32 timing);
 
 class JUTNameTab;
@@ -130,7 +143,8 @@ public:
 
 	J3DMtxCalc* getMtxCalc() { return unk14; }
 
-	void setBumpFlag(u32 flag) { unk18 = flag; }
+	void setBumpFlag(u32 flag) { mBumpFlag = flag; }
+	bool checkBumpFlag(u32 flag) const { return mBumpFlag != flag; }
 
 	// This is the J3DMtxCalcAnm type this model needs supposedly
 	u32 getUnkC() const { return unkC & J3DMLF_MtxCalcMask; }
@@ -155,7 +169,7 @@ public:
 	/* 0x0C */ u32 unkC;
 	/* 0x10 */ J3DJoint* mRootNode;
 	/* 0x14 */ J3DMtxCalc* unk14;
-	/* 0x18 */ u16 unk18;
+	/* 0x18 */ u16 mBumpFlag;
 	/* 0x1A */ u16 mbHasBillboard;
 	/* 0x1C */ u16 mJointNum;
 
@@ -222,7 +236,7 @@ struct J3DUnkCalc2 {
 class J3DModel {
 public:
 	J3DModel();
-	J3DModel(J3DModelData*, u32, u32);
+	J3DModel(J3DModelData* model_data, u32 model_flag, u32 mtx_buffer_flag);
 
 	void initialize();
 	void entryModelData(J3DModelData* pModelData, u32 mdlFlags, u32 mtxNum);
@@ -231,7 +245,7 @@ public:
 	void makeDL();
 	void patch();
 	void setDeformData(J3DDeformData*, J3DDeformAttachFlag);
-	void setSkinDeform(J3DSkinDeform*, J3DDeformAttachFlag);
+	void setSkinDeform(J3DSkinDeform* pSkinDeform, J3DDeformAttachFlag flags);
 	void setVtxColorCalc(J3DVtxColorCalc*, J3DDeformAttachFlag);
 	void setVtxShader(J3DVtxShader*, J3DDeformAttachFlag);
 	void calcWeightEnvelopeMtx();
@@ -266,7 +280,9 @@ public:
 		MTXCopy(mtx, mWeightEvlpMatrices[idx]);
 	}
 
-	bool checkFlag(u32 flag) const { return (unk8 & flag) ? 1 : 0; }
+	void onFlag(u32 flag) { mFlags |= flag; }
+	void offFlag(u32 flag) { mFlags &= ~flag; }
+	bool checkFlag(u32 flag) const { return (mFlags & flag) ? 1 : 0; }
 
 	Mtx* getDrawMtxPtr() { return mDrawMtxBuf[1][mCurrentViewNo]; }
 	Mtx& getDrawMtx(int idx) { return mDrawMtxBuf[1][mCurrentViewNo][idx]; }
@@ -310,7 +326,7 @@ public:
 
 protected:
 	/* 0x04 */ J3DModelData* mModelData;
-	/* 0x08 */ u32 unk8;
+	/* 0x08 */ u32 mFlags;
 	/* 0x0C */ J3DCalcCallBack unkC;
 	char pad1[0x4];
 	/* 0x14 */ Vec unk14; // mBaseScale
@@ -324,11 +340,14 @@ protected:
 	/* 0x70 */ Mtx33*** mBumpMtxArr[2];
 	char pad2[0x4];
 	/* 0x7C */ u32 mCurrentViewNo;
+#ifdef VERSION_GMSP01_NX
+	/* 0x80 */ u32 mLastFrameId;
+#endif
 	/* 0x80 */ J3DMatPacket* mMatPackets;
 	/* 0x84 */ J3DShapePacket* mShapePackets;
 	/* 0x88 */ J3DDeformData* mDeformData;
 	/* 0x8C */ J3DSkinDeform* mSkinDeform;
-	/* 0x90 */ J3DVtxColorCalc* unk90;
+	/* 0x90 */ J3DVtxColorCalc* mVtxColorCalc;
 	/* 0x94 */ J3DUnkCalc1* unk94;
 	/* 0x98 */ J3DVertexBuffer* mVertexBuffer;
 	/* 0x9C */ J3DUnkCalc2* unk9C;

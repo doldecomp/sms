@@ -196,7 +196,7 @@ void TBombHei::genEventCoin()
 			JGeometry::TVec3<f32> vec = SMS_GetMarioPos() - mPosition;
 			MsVECNormalize(&vec, &vec);
 			coin->mVelocity.set(vec.x * 20.0f, 20.0f, vec.z * 20.0f);
-			coin->offLiveFlag(LIVE_FLAG_UNK10);
+			coin->offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 	}
 }
@@ -250,7 +250,7 @@ void TBombHei::behaveToTaken(THitActor* param_1)
 
 void TBombHei::behaveToRelease()
 {
-	if (unk164 == 0
+	if (!mCanBePickedUp
 	    && mSpine->getCurrentNerve() != &TNerveBombHeiWalkExplosion::theNerve())
 		return;
 
@@ -268,11 +268,11 @@ void TBombHei::bombIn()
 void TBombHei::reset()
 {
 	TWalkerEnemy::reset();
-	unk198  = 0;
-	unk1A4  = 0;
-	unk164  = 0;
-	unk19C  = 1;
-	mMActor = mMActorKeeper->getMActor("nejibomb_model1.bmd");
+	unk198         = 0;
+	unk1A4         = 0;
+	mCanBePickedUp = false;
+	unk19C         = 1;
+	mMActor        = mMActorKeeper->getMActor("nejibomb_model1.bmd");
 }
 
 f32 TBombHei::getGravityY() const
@@ -299,8 +299,8 @@ void TBombHei::moveObject()
 	    && mSpine->getCurrentNerve() != &TNerveSmallEnemyChange::theNerve()) {
 		++unk198;
 		if (unk198 > unk194->mSLBombTime.get()) {
-			unk164 = 0;
-			unk198 = 0;
+			mCanBePickedUp = false;
+			unk198         = 0;
 			if (mSpine->getCurrentNerve()
 			    != &TNerveBombHeiWaitExplosion::theNerve())
 				mSpine->pushNerve(&TNerveBombHeiWalkExplosion::theNerve());
@@ -334,7 +334,7 @@ void TBombHei::forceKill()
 		if (isAirborne())
 			return;
 
-		if (checkLiveFlag(LIVE_FLAG_UNK10))
+		if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 			return;
 
 		if (mSpine->getCurrentNerve() != &TNerveBombHeiExplosion::theNerve()) {
@@ -342,7 +342,7 @@ void TBombHei::forceKill()
 			mSpine->setNext(&TNerveBombHeiExplosion::theNerve());
 			mSpine->pushAfterCurrent(mSpine->getDefault());
 
-			onLiveFlag(LIVE_FLAG_UNK20000);
+			onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 			mHitPoints = 1;
 		}
 	}
@@ -382,7 +382,7 @@ DEFINE_NERVE(TNerveBombHeiGenerate, TLiveActor)
 	if (!self->isAirborne() && !self->getHolder()) {
 		if (self->isBckAnm(2)) {
 			self->setBckAnm(3);
-		} else if (self->checkCurAnmEnd(0)) {
+		} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			spine->pushAfterCurrent(&TNerveBombHeiAttack::theNerve());
 			return true;
 		}
@@ -401,8 +401,8 @@ DEFINE_NERVE(TNerveBombHeiAttack, TLiveActor)
 	TBombHei* self = (TBombHei*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setWalkAnm();
-		self->unk164 = 0;
-		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		self->mCanBePickedUp = false;
+		self->setGoal((THitActor*)gpMarioAddress);
 	}
 	self->walkBehavior(2, 1.0f);
 	return false;
@@ -414,7 +414,7 @@ DEFINE_NERVE(TNerveBombHeiWalkExplosion, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(5);
 		self->getMActor()->setBtpFromIndex(0);
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveBombHeiExplosion::theNerve());
 		return true;
 	}
@@ -434,9 +434,9 @@ DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 	TBombHei* self = (TBombHei*)spine->getBody();
 	if (spine->getTime() == 0) {
 		self->setBckAnm(6);
-		self->unk164 = 1;
+		self->mCanBePickedUp = true;
 	}
-	if (self->unk164) {
+	if (self->mCanBePickedUp) {
 		if (self->getMActor()->getFrameCtrl(0)->checkPass(60.0f))
 			self->getMActor()->setFrameRate(0.0f, ANM_TYPE_BCK);
 		if (self->getMActor()->getFrameCtrl(0)->checkPass(10.0f)) {
@@ -448,7 +448,7 @@ DEFINE_NERVE(TNerveBombHeiWaitExplosion, TLiveActor)
 		self->getMActor()->setFrameRate(SMSGetAnmFrameRate(), ANM_TYPE_BCK);
 		if (!self->getMActor()->checkCurAnmFromIndex(0, ANM_TYPE_BTP))
 			self->getMActor()->setBtpFromIndex(0);
-		if (self->checkCurAnmEnd(0) && spine->getTime() > 150) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > 150) {
 			spine->pushAfterCurrent(&TNerveBombHeiExplosion::theNerve());
 			return true;
 		}
@@ -467,7 +467,7 @@ DEFINE_NERVE(TNerveBombHeiPickUp, TLiveActor)
 {
 	TBombHei* self = (TBombHei*)spine->getBody();
 
-	if (spine->getTime() == 0 && self->unk164 == 0)
+	if (spine->getTime() == 0 && !self->mCanBePickedUp)
 		return true;
 
 	return false;
@@ -510,10 +510,10 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 		self->unk1A0 = params->mSLBombRange.get() * self->getBodyScale()
 		               / self->getAttackRadius();
 		self->setDeadAnm();
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		if (self->getHolder() == gpMarioAddress)
 			self->sendAttackMsgToMario();
-		self->unk164 = 0;
+		self->mCanBePickedUp = false;
 		if (self->getGroundPlane()->isWaterSurface()) {
 			TEffectBombColumWater* effect
 			    = (TEffectBombColumWater*)gpConductor->makeOneEnemyAppear(
@@ -535,10 +535,10 @@ DEFINE_NERVE(TNerveBombHeiExplosion, TLiveActor)
 	}
 	if (self->unk190 < self->unk1A0) {
 		self->unk190 *= 1.2f;
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->onLiveFlag(LIVE_FLAG_DEAD);
-		self->onLiveFlag(LIVE_FLAG_UNK8);
+		self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 		self->offLiveFlag(TSmallEnemy::LIVE_FLAG_MELT_ON_DEATH);
 		self->mHolder = nullptr;
 		self->stopAnmSound();

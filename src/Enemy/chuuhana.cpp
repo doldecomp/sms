@@ -248,7 +248,7 @@ void TChuuHana::init(TLiveManager* param_1)
 	offHitFilter(HIT_CATEGORY_MAP_OBJECT);
 	mSpine->initWith(&TNerveChuuHanaWalkOnPanel::theNerve());
 	getMActor()->setJointCallback(mBodyJntIndex, &ChuuHanaBodyCallback);
-	unk130 = 1;
+	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND;
 	getMActor()->initBckNormalMotionBlend();
 	unk1B4 = (TChuuHanaSaveLoadParams*)getSaveParam();
 	getMActor()->getModel()->calc();
@@ -673,7 +673,7 @@ void TChuuHana::setGoal()
 	goal.x += 1000.0f * dir.x;
 	goal.z += 1000.0f * dir.z;
 
-	setGoalPath(goal);
+	TSpineEnemy::setGoal(goal);
 	unk1A4 = mCheckOnPanelTime;
 	unk1B2 = 0;
 }
@@ -686,7 +686,7 @@ void TChuuHana::setSafeGoal()
 	TMsRange<s32> nodeRange(0, getTracer()->getGraph()->getNodeNum());
 	getTracer()->getGraph()->getGraphNode(nodeRange.rand()).getPoint(&point);
 	TPathNode pathPoint(point);
-	setGoalPath(pathPoint);
+	TSpineEnemy::setGoal(pathPoint);
 
 	unk1B2 = 1;
 }
@@ -823,7 +823,7 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setSafeGoal();
 
-	if (self->unk214 && self->getCurAnmFrameNo(0) > 80.0f) {
+	if (self->unk214 && self->getCurAnmFrameNo(ANM_TYPE_BCK) > 80.0f) {
 		if (self->getGroundPlane()->getActor() != nullptr) {
 			THitActor* actor = (THitActor*)self->getGroundPlane()->getActor();
 			actor->receiveMessage(self, HIT_MESSAGE_SUPER_HIP_DROP);
@@ -831,7 +831,7 @@ DEFINE_NERVE(TNerveChuuHanaForceJumped, TLiveActor)
 		self->unk214 = 0;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->unk1B1) {
 			spine->pushAfterCurrent(&TNerveChuuHanaRoll::theNerve());
 		} else {
@@ -851,7 +851,7 @@ DEFINE_NERVE(TNerveChuuHanaKeepBalance, TLiveActor)
 		self->setBckAnm(2);
 		self->mPosition.x -= 10.0f * self->unk1EC.x;
 		self->mPosition.z -= 10.0f * self->unk1EC.z;
-	} else if (self->checkCurAnmEnd(0)) {
+	} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(2)) {
 			self->setBckAnm(1);
 		} else if (self->isBckAnm(1)) {
@@ -883,18 +883,18 @@ DEFINE_NERVE(TNerveChuuHanaStick, TLiveActor)
 	TChuuHana* self = (TChuuHana*)spine->getBody();
 	if (spine->getTime() == 0 || !self->isBckAnm(4)) {
 		self->setBckAnm(4);
-		self->setGoalPath(SMS_GetMarioPos());
+		self->TSpineEnemy::setGoal(SMS_GetMarioPos());
 		if (TChuuHana::mAttackVersion)
 			*self->unk21C = 1;
 	} else {
 		self->unk224++;
 		if (self->unk224 > self->unk1B4->mSLHitWaterTimer.get()) {
-			if (self->checkCurAnmEnd(0)) {
+			if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 				*self->unk21C = 0;
 				spine->pushAfterCurrent(&TNerveChuuHanaWait::theNerve());
 				return true;
 			}
-		} else if (self->checkCurAnmEnd(0)) {
+		} else if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			self->setBckAnm(4);
 		}
 	}
@@ -951,7 +951,7 @@ DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
 	if (spine->getTime() == 0) {
 		self->setBckAnm(12);
 		self->getMActor()->setFrameRate(2.0f * SMSGetAnmFrameRate(), 0);
-		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		self->TSpineEnemy::setGoal(TPathNode((THitActor*)gpMarioAddress));
 	}
 
 	if (SMS_GetMarioGroundPlane()->getActor() != self->unk218)
@@ -966,7 +966,7 @@ DEFINE_NERVE(TNerveChuuHanaAttack, TLiveActor)
 	self->checkOnPanel();
 
 	if (self->isReachedToGoalXZ())
-		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		self->TSpineEnemy::setGoal(TPathNode((THitActor*)gpMarioAddress));
 
 	self->walkBehavior(2, self->unk1B4->mSLDashRate.get());
 	return false;
@@ -998,10 +998,10 @@ DEFINE_NERVE(TNerveChuuHanaJumpPrepare, TLiveActor)
 		self->mPosition.y += 10.0f;
 		self->mVelocity = velocity;
 		self->onLiveFlag(LIVE_FLAG_AIRBORNE);
-		self->unk130 = 0;
+		self->mSurfaceAlignmentMode = TSpineEnemy::SURFACE_ALIGNMENT_NONE;
 	}
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }
@@ -1011,7 +1011,7 @@ DEFINE_NERVE(TNerveChuuHanaWait, TLiveActor)
 	TChuuHana* self = (TChuuHana*)spine->getBody();
 	if (spine->getTime() == 0)
 		self->setBckAnm(11);
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }

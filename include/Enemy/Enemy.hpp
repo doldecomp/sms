@@ -46,7 +46,7 @@ public:
 	virtual f32 getPhaseShift() const { return 0.0f; }
 	virtual BOOL isReachedToGoal() const
 	{
-		return (unk104.getPoint() - mPosition).length() < 100.0f ? TRUE : FALSE;
+		return getGoalDistance() < 100.0f ? TRUE : FALSE;
 	}
 
 	void calcEnemyRootMatrix();
@@ -67,13 +67,13 @@ public:
 	void goToDirLimitedNextGraphNode(f32);
 	void updateStayCount(f32);
 	BOOL turnToCurPathNode(f32);
-	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32);
+	void walkToCurPathNode(f32 march_speed, f32 turn_speed, f32 yaw_offset);
 	void zigzagToCurPathNode(f32 march_speed, f32 turn_speed, f32 cycle,
 	                         f32 angle);
 	void doShortCut();
 	void searchNearestBrother() const;
-	f32 getCurAnmFrameNo(int) const;
-	BOOL checkCurAnmEnd(int) const;
+	f32 getCurAnmFrameNo(int type) const;
+	BOOL checkCurAnmEnd(int type) const;
 
 	// fabricated
 	f32 getDistToMarioSquared() const { return mDistToMarioSquared; }
@@ -85,45 +85,88 @@ public:
 	f32 getWallRadius() const { return mBodyScale * mWallRadius; }
 	f32 getBodyRadius() const { return mBodyScale * mBodyRadius; }
 	f32 getBodyScale() const { return mBodyScale; }
+	void setTurnSpeed(f32 speed) { mTurnSpeed = speed; }
+
 	u8 getMaxHitPoints() const
 	{
 		return getSaveParam() ? getSaveParam()->mSLHitPointMax.get() : 1;
 	}
 	void resetHitPoints() { mHitPoints = getMaxHitPoints(); }
-
-	void setTurnSpeed(f32 speed) { mTurnSpeed = speed; }
-
-	void setGoalPath(const TPathNode& point)
-	{
-		unkF4  = point;
-		unk104 = point;
-
-		unk114.clear();
-	}
-	void switchNextGoalPath()
-	{
-		if (!unk114.empty())
-			unkF4 = unk114.pop();
-	}
-
 	void decHitPoints()
 	{
 		if (mHitPoints > 0)
 			mHitPoints -= 1;
 	}
 
-	const TPathNode& getUnkF4() const { return unkF4; }
-	const TPathNode& getUnk104() const { return unk104; }
+	void setGoal(const TPathNode& goal)
+	{
+		mCurrentTarget = goal;
+		mGoal          = goal;
+		mGoalPath.clear();
+	}
+	void pushGoalPathNode(const TPathNode& goal)
+	{
+		mGoalPath.push(mCurrentTarget);
+		mCurrentTarget = goal;
+	}
+	void switchNextGoalPathNode()
+	{
+		if (!mGoalPath.empty())
+			mCurrentTarget = mGoalPath.pop();
+	}
+	const TPathNode& getCurrentTarget() const { return mCurrentTarget; }
+	const TPathNode& getGoal() const { return mGoal; }
+	f32 getCurrentTargetDistance() const
+	{
+		JGeometry::TVec3<f32> delta = mCurrentTarget.getPoint();
+		delta -= mPosition;
+		return delta.length();
+	}
+	f32 getGoalDistance() const
+	{
+		JGeometry::TVec3<f32> delta = mGoal.getPoint();
+		delta -= mPosition;
+		return delta.length();
+	}
+
 	TGraphTracer* getTracer() { return unk124; }
 
+	bool isJumping() const { return checkLiveFlag(LIVE_FLAG_JUMPING) ? 1 : 0; }
+
+	// fabricated
+	void resetStayCount()
+	{
+		mStayCount             = 0;
+		mStayReferenceDistance = 0.0f;
+	}
+
+	enum {
+		/// Allows this enemy to be recycled for spawning a new one even if it's
+		/// not dead, as long as it's not immediately visible.
+		LIVE_FLAG_RECYCLABLE = 1u << LIVE_FLAG_BIT_UNK800, // 0x800
+
+		LIVE_FLAG_USE_SHARED_ANIMATION = 1u << LIVE_FLAG_BIT_USER0, // 0x4000
+
+		/// Signifies that the enemy is currently mid-jump. Different from
+		/// LIVE_FLAG_AIRBORNE in that it is not set if the enemy simply fell
+		/// off a cliff.
+		LIVE_FLAG_JUMPING = 1u << LIVE_FLAG_BIT_USER1, // 0x8000
+	};
+
+	enum {
+		SURFACE_ALIGNMENT_NONE            = 0,
+		SURFACE_ALIGNMENT_GROUND          = 1,
+		SURFACE_ALIGNMENT_GROUND_AND_WALL = 2,
+	};
+
 public:
-	/* 0xF4 */ TPathNode unkF4;
-	/* 0x104 */ TPathNode unk104;
-	/* 0x114 */ TSolidStack<TPathNode> unk114;
+	/* 0xF4 */ TPathNode mCurrentTarget;
+	/* 0x104 */ TPathNode mGoal;
+	/* 0x114 */ TSolidStack<TPathNode> mGoalPath;
 	/* 0x124 */ TGraphTracer* unk124;
-	/* 0x128 */ s16 unk128;
-	/* 0x12C */ f32 unk12C;
-	/* 0x130 */ s8 unk130;
+	/* 0x128 */ s16 mStayCount;
+	/* 0x12C */ f32 mStayReferenceDistance;
+	/* 0x130 */ s8 mSurfaceAlignmentMode;
 	/* 0x134 */ f32 mDistToMarioSquared;
 	/* 0x138 */ const TBGCheckData* unk138; // TODO: type is a wild guess
 	/* 0x13C */ u8 mHitPoints;

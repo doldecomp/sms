@@ -5,11 +5,20 @@
 #include <NPC/NpcNerve.hpp>
 #include <Camera/cameralib.hpp>
 
+// fabricated
+static inline f32 squareDistanceXZ(const JGeometry::TVec3<f32>& point,
+                                   const JGeometry::TVec3<f32>& origin)
+{
+	return JGeometry::TVec3<f32>(point.x - origin.x, 0.0f, point.z - origin.z)
+	    .squared();
+}
+
 bool TBaseNPC::isCanWalk() const
 {
-	bool result = true;
-	// TODO: TVec3::sub should use set internally I guess?
-	if ((unkF4.getPoint() - mPosition).squared() < CLBSquared(10.0f))
+	bool result                 = true;
+	JGeometry::TVec3<f32> point = mCurrentTarget.getPoint();
+	f32 squareToGoal            = squareDistanceXZ(point, mPosition);
+	if (squareToGoal < CLBSquared(10.0f))
 		result = false;
 	return result;
 }
@@ -28,14 +37,11 @@ void TBaseNPC::execWalk(bool param_1)
 		if (checkActionFlag(NPC_ACTION_RUN))
 			fVar1 = 6.0f;
 
-		SMS_GoRotate(mPosition, getUnkF4().getPoint(), fVar1, &mRotation.y);
+		SMS_GoRotate(mPosition, getCurrentTarget().getPoint(), fVar1,
+		             &mRotation.y);
 
-		// TODO: vector math is borked
-		JGeometry::TVec3<f32> local_54 = getUnkF4().getPoint();
-		local_54 -= mPosition;
-		JGeometry::TVec3<f32> copy = local_54;
-
-		f32 angle = MsGetRotFromZaxisY(copy);
+		Vec v     = getCurrentTarget().getPoint() - mPosition;
+		f32 angle = MsGetRotFromZaxisY(v);
 		if (MsWrap(abs(mRotation.y - angle), 0.0f, 360.0f) < 0.001f)
 			offUnk1DA(UNK1DA_FLAG_UNK1);
 
@@ -81,7 +87,7 @@ void TBaseNPC::execWalk(bool param_1)
 
 bool TBaseNPC::execUTurn()
 {
-	JGeometry::TVec3<f32> local_24 = unkF4.getPoint();
+	JGeometry::TVec3<f32> local_24 = mCurrentTarget.getPoint();
 	local_24 -= mPosition;
 	f32 targetYaw = MsGetRotFromZaxis(local_24).y;
 	if (mRotation.y == targetYaw)
@@ -94,7 +100,7 @@ bool TBaseNPC::execUTurn()
 
 	targetYaw   = MsWrap(targetYaw, 0.0f, 360.0f);
 	mRotation.y = MsWrap(mRotation.y, 0.0f, 360.0f);
-	if (checkLiveFlag(LIVE_FLAG_UNK200000)) {
+	if (checkLiveFlag(TBaseNPC::LIVE_FLAG_UTURN_POSITIVE_YAW)) {
 		if (mRotation.y > targetYaw)
 			mRotation.y -= 360.0f;
 	} else {

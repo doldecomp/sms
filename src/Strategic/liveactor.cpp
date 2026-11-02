@@ -53,7 +53,7 @@ TLiveActor::TLiveActor(const char* name)
 	mLodAnm              = nullptr;
 	mGroundActor         = nullptr;
 	mGroundActorYaw      = 0.0f;
-	unkE8                = 1;
+	mRideMode            = RIDE_MODE_POSITION;
 	mMapCollisionManager = nullptr;
 	mLiveFlag            = LIVE_FLAG_ENABLE_CLIPPING;
 
@@ -61,7 +61,7 @@ TLiveActor::TLiveActor(const char* name)
 
 	mGroundPlane = TMap::getIllegalCheckData();
 	if (SMSGetMarDirector()->getCurrentStage() != 8)
-		mLiveFlag |= LIVE_FLAG_UNK2000;
+		mLiveFlag |= LIVE_FLAG_ENABLE_FAST_CUBE_CULLING;
 }
 
 TLiveActor::~TLiveActor() { }
@@ -91,7 +91,7 @@ BOOL TLiveActor::belongToGround() const
 
 void TLiveActor::calcRideMomentum()
 {
-	if (unkE8 == 0)
+	if (mRideMode == RIDE_MODE_NONE)
 		return;
 
 	if (belongToGround()) {
@@ -100,7 +100,8 @@ void TLiveActor::calcRideMomentum()
 			mGroundActor = mGroundPlane->getActor();
 			calcRidePos();
 
-			if (unkE8 >= 2 && mGroundActor != nullptr)
+			if (mRideMode >= RIDE_MODE_POSITION_AND_YAW
+			    && mGroundActor != nullptr)
 				mGroundActorYaw = mGroundActor->mRotation.y;
 		} else {
 			Mtx mtx;
@@ -117,7 +118,7 @@ void TLiveActor::calcRideMomentum()
 			rideVelocity -= mPosition;
 			mPositionDelta += rideVelocity;
 
-			if (unkE8 >= 2) {
+			if (mRideMode >= RIDE_MODE_POSITION_AND_YAW) {
 				mRotationDelta.y
 				    += MsAngleDiff(mGroundActor->mRotation.y, mGroundActorYaw);
 				mGroundActorYaw = mGroundActor->mRotation.y;
@@ -181,7 +182,7 @@ void TLiveActor::load(JSUMemoryInputStream& stream)
 
 void TLiveActor::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	if (mBinder != nullptr) {
@@ -200,7 +201,7 @@ void TLiveActor::bind()
 
 	// Handle vertical collisions
 	{
-		if (checkLiveFlag(LIVE_FLAG_UNK1000)) {
+		if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS)) {
 			mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 			    nextPos.x, nextPos.y + mHeadHeight, nextPos.z, &mGroundPlane);
 		} else {
@@ -292,10 +293,10 @@ void TLiveActor::moveObject()
 
 void TLiveActor::requestShadow()
 {
-	if (mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_UNK8))
+	if (mLiveFlag & (LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_NO_SHADOW))
 		return;
 
-	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
+	if (!(mLiveFlag & (LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT))
 	    || (mLiveFlag & LIVE_FLAG_FORCE_SHADOW)) {
 		TCircleShadowRequest shadow;
 
@@ -318,7 +319,7 @@ void TLiveActor::requestShadow()
 		}
 	}
 
-	if (!(mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_CLIPPED_OUT))
+	if (!(mLiveFlag & (LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_CLIPPED_OUT))
 	    && !isHitCategory(HIT_CATEGORY_MAP_OBJECT)) {
 		gpQuestionManager->request(mPosition, mScaledBodyRadius);
 	}
@@ -335,7 +336,7 @@ void TLiveActor::drawObject(JDrama::TGraphics*)
 
 void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
+	if (mLiveFlag & (LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_DEAD))
 		return;
 
 	if (cue & CUE_MOVE)
@@ -383,7 +384,7 @@ void TLiveActor::perform(u32 cue, JDrama::TGraphics* graphics)
 
 void TLiveActor::performOnlyDraw(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (mLiveFlag & (LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
+	if (mLiveFlag & (LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_DEAD))
 		return;
 	if (!mMActor)
 		return;

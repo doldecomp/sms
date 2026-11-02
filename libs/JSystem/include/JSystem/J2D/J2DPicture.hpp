@@ -90,6 +90,14 @@ public:
 			mTextures[idx]->load(id);
 	}
 
+	void getCornerColor(TCornerColor& color) const
+	{
+		color.mColor[0] = mCornerColor[0];
+		color.mColor[1] = mCornerColor[1];
+		color.mColor[2] = mCornerColor[2];
+		color.mColor[3] = mCornerColor[3];
+	}
+
 	void setCornerColor(JUtility::TColor c0, JUtility::TColor c1,
 	                    JUtility::TColor c2, JUtility::TColor c3)
 	{
@@ -98,7 +106,16 @@ public:
 		mCornerColor[2] = c2;
 		mCornerColor[3] = c3;
 	}
+
 	void setCornerColor(JUtility::TColor c0) { setCornerColor(c0, c0, c0, c0); }
+
+	void setCornerColor(J2DPicture::TCornerColor color)
+	{
+		mCornerColor[0] = color.mColor[0];
+		mCornerColor[1] = color.mColor[1];
+		mCornerColor[2] = color.mColor[2];
+		mCornerColor[3] = color.mColor[3];
+	}
 
 	void setBlendColorRatio(f32 r, f32 g, f32 b, f32 a)
 	{
@@ -134,14 +151,6 @@ public:
 
 	void setMirror(J2DMirror mirror) { mMirror = mirror; }
 	J2DMirror getMirror() const { return mMirror; }
-
-	void getCornerColor(TCornerColor& color) const
-	{
-		color.mColor[0] = mCornerColor[0];
-		color.mColor[1] = mCornerColor[1];
-		color.mColor[2] = mCornerColor[2];
-		color.mColor[3] = mCornerColor[3];
-	}
 
 protected:
 	/* 0xEC */ JUTTexture* mTextures[4];

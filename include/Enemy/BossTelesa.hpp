@@ -147,7 +147,7 @@ public:
 	static f32 mCameraMoveSp;
 
 	enum {
-		LIVE_FLAG_UNK10000 = 0x10000,
+		LIVE_FLAG_UNK10000 = 1u << LIVE_FLAG_BIT_USER2, // 0x10000 / 0x20000
 	};
 
 public:

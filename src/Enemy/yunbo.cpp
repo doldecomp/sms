@@ -114,7 +114,7 @@ void TYumboSeed::startToMove(const JGeometry::TVec3<f32>& param_1,
 TYumbo::TYumbo(const char* param_1)
     : TSmallEnemy(param_1)
 {
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 static const char* sambohead_bastable[] = {
@@ -472,7 +472,7 @@ DEFINE_NERVE(TNerveYumboHiding, TLiveActor)
 		self->unk1D8 = 1;
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveYumboAttack::theNerve());
 		return true;
 	}
@@ -495,7 +495,7 @@ DEFINE_NERVE(TNerveYumboAppearing, TLiveActor)
 
 	self->lookatMario();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveYumboDancing::theNerve());
 		return true;
 	}

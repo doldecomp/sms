@@ -363,7 +363,7 @@ void TAnimalBird::doDropCoin()
 			obj->appear();
 			obj->JSGSetTranslation(mPosition);
 			obj->mVelocity.set(0.0f, -10.0f, 0.0f);
-			obj->offLiveFlag(LIVE_FLAG_UNK10);
+			obj->offLiveFlag(LIVE_FLAG_NO_BIND);
 			obj->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
 	}
@@ -371,7 +371,7 @@ void TAnimalBird::doDropCoin()
 
 void TAnimalBird::doFlyToCurPathNode()
 {
-	JGeometry::TVec3<f32> diff = getUnkF4().getPoint();
+	JGeometry::TVec3<f32> diff = getCurrentTarget().getPoint();
 	diff -= mPosition;
 
 	f32 dist = diff.length();
@@ -449,14 +449,14 @@ bool TAnimalBird::doLanding(bool init)
 void TAnimalBird::doGotoRandomNextGraphNode()
 {
 	goToRandomNextGraphNode();
-	JGeometry::TVec3<f32> point = getUnk104().getPoint();
+	JGeometry::TVec3<f32> point = getGoal().getPoint();
 	point.x += 200.0f * (MsRandF() - 0.5f);
 	point.y += 200.0f * (MsRandF() - 0.5f);
 	point.z += 200.0f * (MsRandF() - 0.5f);
-	setGoalPath(TPathNode(point));
+	setGoal(TPathNode(point));
 }
 
-void TAnimalBird::setGoalToComeback() { setGoalPath(TPathNode(unk158)); }
+void TAnimalBird::setGoalToComeback() { setGoal(TPathNode(unk158)); }
 
 void TAnimalBird::setParamsOnFloating()
 {
@@ -660,7 +660,7 @@ DEFINE_NERVE(TNerveAnimalBirdGraphWander, TLiveActor)
 
 	if (spine->getTime() == 0 || self->isReachedToGoal()) {
 		self->doGotoRandomNextGraphNode();
-		if (self->mPosition.y <= self->getUnkF4().getPoint().y)
+		if (self->mPosition.y <= self->getCurrentTarget().getPoint().y)
 			self->setBckAnm(1);
 		else
 			self->setBckAnm(3);

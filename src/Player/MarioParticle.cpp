@@ -740,7 +740,7 @@ void TMario::sleepingEffectKill()
 
 void TMario::toroccoEffect()
 {
-	f32 dist = JGeometry::TVec3<f32>(mPosition - mToroccoPos).length();
+	f32 dist = (mPosition - mToroccoPos).length();
 
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
 	    PARTICLE_MS_TORO_WIND, mTorocco->getModel()->getAnmMtx(0), 1, this);

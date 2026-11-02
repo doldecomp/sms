@@ -444,7 +444,8 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 		break;
 
 	default:
-		if (param_2 == HIT_MESSAGE_TAKE && checkLiveFlag(LIVE_FLAG_UNK100000)
+		if (param_2 == HIT_MESSAGE_TAKE
+		    && checkLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN)
 		    && mHolder == nullptr) {
 			behaveToBeTaken_(param_1);
 			result = true;
@@ -548,18 +549,18 @@ void TBaseNPC::moveObject()
 
 	control();
 
-	if (!checkLiveFlag(LIVE_FLAG_UNK400000))
+	if (!checkLiveFlag(LIVE_FLAG_SINKING))
 		calcRideMomentum();
 
-	if (checkLiveFlag(LIVE_FLAG_UNK400000)
-	    && !checkLiveFlag(LIVE_FLAG_UNK1000000))
+	if (checkLiveFlag(LIVE_FLAG_SINKING)
+	    && !checkLiveFlag(LIVE_FLAG_RENDER_ENTRY_SKIPPED))
 		emitSinkEffect_();
 
 	if (mSpine->getLatestNerve()
 	    != &TNerveNPCSetPosAfterSinkBottom::theNerve()) {
 		execNpcObjCollision_();
 
-		if (!checkLiveFlag(LIVE_FLAG_UNK10))
+		if (!checkLiveFlag(LIVE_FLAG_NO_BIND))
 			bind();
 
 		if (mHolder != nullptr) {
@@ -571,7 +572,7 @@ void TBaseNPC::moveObject()
 				mRotation.y = SHORTANGLE2DEG(angle);
 			}
 		} else {
-			if (!checkLiveFlag(LIVE_FLAG_UNK10) && isNerveWalk()
+			if (!checkLiveFlag(LIVE_FLAG_NO_BIND) && isNerveWalk()
 			    && !belongToGround() && mPositionDelta.y > 5.0f) {
 				mPositionDelta.y = 5.0f;
 			}
@@ -640,7 +641,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (mActorType == ACTOR_TYPE_NPC_BOARD) {
-		if (checkLiveFlag(LIVE_FLAG_UNK200 | LIVE_FLAG_DEAD))
+		if (checkLiveFlag(LIVE_FLAG_OUT_OF_AREA | LIVE_FLAG_DEAD))
 			return;
 
 		if (cue & CUE_MOVE)
@@ -653,7 +654,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	bool bVar5 = true;
 	if (checkLiveFlag(LIVE_FLAG_DEAD)) {
 		bVar5 = false;
-	} else if (checkLiveFlag(LIVE_FLAG_UNK200)) {
+	} else if (checkLiveFlag(LIVE_FLAG_OUT_OF_AREA)) {
 		bVar5 = false;
 	} else if ((cue & (CUE_CALC_VIEW | CUE_ENTRY))
 	           && checkLiveFlag(LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_HIDDEN)) {
@@ -679,7 +680,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (!bVar5) {
-		offLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK40000);
+		offLiveFlag(TBaseNPC::LIVE_FLAG_TALKABLE | LIVE_FLAG_TALK_REQUESTED);
 		return;
 	}
 
@@ -697,7 +698,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 				    MSD_SE_NPC_BURNING, &mPosition, 0, nullptr, 0, 4);
 		}
 
-		if (!checkLiveFlag(LIVE_FLAG_UNK1000000 | LIVE_FLAG_HIDDEN
+		if (!checkLiveFlag(LIVE_FLAG_RENDER_ENTRY_SKIPPED | LIVE_FLAG_HIDDEN
 		                   | LIVE_FLAG_CLIPPED_OUT))
 			emitParticle_();
 
@@ -714,7 +715,7 @@ void TBaseNPC::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 
 	if (cue & CUE_ENTRY) {
-		offLiveFlag(LIVE_FLAG_UNK1000000);
+		offLiveFlag(LIVE_FLAG_RENDER_ENTRY_SKIPPED);
 		JGeometry::TVec3<f32> diff;
 		diff.sub(mPosition, gpCamera->unk124);
 		if (diff.squared() > CLBSquared(mIndividualParams->mAllDLLockDist.get())

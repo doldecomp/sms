@@ -34,34 +34,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// fabricated and not matching
-inline void bzero(void* pDst, u32 len)
-{
-	u8* dst           = (u8*)pDst;
-	u32 alignedBlocks = len / 8;
-	if (alignedBlocks > 0) {
-		for (; alignedBlocks > 0; alignedBlocks--) {
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-			*dst++ = 0;
-		}
-
-		len = len % 8;
-		if (len == 0) {
-			return;
-		}
-	}
-
-	for (; len != 0; len--) {
-		*dst++ = 0;
-	}
-}
-
 TSelectGrad::TSelectGrad(const char* pName)
     : JDrama::TViewObj(pName)
 {
@@ -134,7 +106,7 @@ void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 			} break;
 			}
 
-			s32 topLeftAnimCycle = mRgbAnimCycle[i] - 1;
+			int topLeftAnimCycle = mRgbAnimCycle[i] - 1;
 			if (topLeftAnimCycle < 0) {
 				topLeftAnimCycle = 5;
 			}
@@ -161,15 +133,11 @@ void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 		}
 
 		if (nextCycle) {
-			// TODO: This doesn't fully match.
-			mRgbAnimCycle[0]++;
-			mRgbAnimCycle[0] = (mRgbAnimCycle[0] >= 6) ? 0 : mRgbAnimCycle[0];
-
-			mRgbAnimCycle[1]++;
-			mRgbAnimCycle[1] = (mRgbAnimCycle[1] >= 6) ? 0 : mRgbAnimCycle[1];
-
-			mRgbAnimCycle[2]++;
-			mRgbAnimCycle[2] = (mRgbAnimCycle[2] >= 6) ? 0 : mRgbAnimCycle[2];
+			for (int i = 0; i < 3; ++i) {
+				mRgbAnimCycle[i]++;
+				if (mRgbAnimCycle[i] >= 6)
+					mRgbAnimCycle[i] = 0;
+			}
 		}
 	}
 
@@ -200,9 +168,12 @@ void TSelectGrad::perform(u32 cue, JDrama::TGraphics* gfx)
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 
-		u8 midR = (mTopLeftCol.r + mBottomRightCol.r) >> 1;
-		u8 midG = (mTopLeftCol.g + mBottomRightCol.g) >> 1;
-		u8 midB = (mTopLeftCol.b + mBottomRightCol.b) >> 1;
+		u8 midB;
+		u8 midG;
+		u8 midR;
+		midR = (mBottomRightCol.r + mTopLeftCol.r) >> 1;
+		midG = (mBottomRightCol.g + mTopLeftCol.g) >> 1;
+		midB = (mBottomRightCol.b + mTopLeftCol.b) >> 1;
 
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 		GXPosition3f32(0.0f, 16.0f, -100.0f);
@@ -292,15 +263,25 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		return;
 	}
 
-	mMenuScreen      = new J2DSetScreen("scenario_select_1.blo", pArch);
-	mLetterBoxTop    = new TExPane(mMenuScreen, 'msk1');
+	mMenuScreen = new J2DSetScreen("scenario_select_1.blo", pArch);
+
+	mLetterBoxTop = new TExPane(mMenuScreen, 'msk1');
+#if defined(VERSION_GMSP01_NX)
+	mLetterBoxTop->adjustBounds(-110, 0, 220, 0);
+#endif
+
 	mLetterBoxBottom = new TExPane(mMenuScreen, 'msk2');
-	mStageName       = (J2DTextBox*)mMenuScreen->search('map');
-	mScenarioPane1   = new TExPane(mMenuScreen, 's_0');
-	mScenarioPane2   = new TExPane(mMenuScreen, '0_0');
+#if defined(VERSION_GMSP01_NX)
+	mLetterBoxBottom->adjustBounds(-110, 0, 220, 0);
+#endif
+
+	mStageName     = (J2DTextBox*)mMenuScreen->search('map');
+	mScenarioPane1 = new TExPane(mMenuScreen, 's_0');
+	mScenarioPane2 = new TExPane(mMenuScreen, '0_0');
 
 	mScenarioPane2->getPane()->hide();
-	unk58            = mScenarioPane1->mPane->getBounds();
+	J2DPane* pane    = mScenarioPane1->getPane();
+	unk58            = pane->getBounds();
 	mScenarioImg1    = (J2DPicture*)mMenuScreen->search('s_2a');
 	mScenarioShadow1 = (J2DPicture*)mMenuScreen->search('s_2b');
 	mScenarioImg2    = (J2DPicture*)mMenuScreen->search('0_2a');
@@ -320,8 +301,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	mScenarioText2 = (J2DTextBox*)mMenuScreen->search('0ttx');
 	SMSMakeTextBuffer(mScenarioText2, 0x80);
 
-	mScenarioPaneDist = mScenarioPane2->mPane->getBounds().x1
-	                    - mScenarioPane1->mPane->getBounds().x1;
+	mScenarioPaneDist = mScenarioPane2->getPane()->getBounds().x1
+	                    - mScenarioPane1->getPane()->getBounds().x1;
 
 	mShineList = mMenuScreen->search('i_0');
 	mScorePane = mMenuScreen->search('sc_0');
@@ -334,7 +315,8 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 
 	J2DPicture* coinDigits[3];
 	for (s32 i = 0; i < 3; i++) {
-		coinDigits[i] = (J2DPicture*)mMenuScreen->search('sc_1' + i);
+		pane          = mMenuScreen->search('sc_1' + i);
+		coinDigits[i] = (J2DPicture*)pane;
 	}
 
 	s32 const tags[] = { 0x0,   0x0, 'bi_', 'rc_', 'mm_', 'pi_',
@@ -343,59 +325,56 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	s32 const stageNameIds[]
 	    = { 0x0, 0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x0, 0x7, 0x8, 0x0 };
 
-	const u8* const stages[] = { nullptr,
-		                         nullptr,
-		                         scShineTableBiancoEtc,
-		                         scShineTableRiccoEtc,
-		                         scShineTableMammaEtc,
-		                         scShineTablePinnaEtc,
-		                         scShineTableSirenaEtc,
-		                         nullptr,
-		                         scShineTableMonteEtc,
-		                         scShineTableMareEtc,
-		                         nullptr };
+	const u8* const stages[] = {
+		nullptr,
+		nullptr,
+		scShineTableBiancoEtc,
+		scShineTableRiccoEtc,
+		scShineTableMammaEtc,
+		scShineTablePinnaEtc,
+		scShineTableSirenaEtc,
+		nullptr,
+		scShineTableMonteEtc,
+		scShineTableMareEtc,
+		nullptr,
+	};
 
 	s32 numCoins = TFlagManager::getInstance()->getFlag(SMS_getShineStage(stage)
 	                                                    + MSF_COIN_RECORD_BASE);
-	if (numCoins > 999) {
+	if (numCoins > 999)
 		numCoins = 999;
-	}
-	if (numCoins < 0) {
+	if (numCoins < 0)
 		numCoins = 0;
-	}
+
 	mMenuScreen->search('sc_s')->hide();
 
 	if (numCoins < 100) {
-		s32 digit1 = numCoins * 0.1f;
-		coinDigits[1]->changeTexture(mCoinNumTex[digit1]->getTexInfo(), 0);
+		coinDigits[1]->changeTexture(
+		    mCoinNumTex[(s32)(numCoins * 0.1f)]->getTexInfo(), 0);
 
-		s32 digit2 = numCoins % 10;
-		coinDigits[2]->changeTexture(mCoinNumTex[digit2]->getTexInfo(), 0);
+		coinDigits[2]->changeTexture(mCoinNumTex[numCoins % 10]->getTexInfo(),
+		                             0);
 
 		coinDigits[0]->hide();
 	} else {
-		f32 hundreds = numCoins * 0.01f;
+		coinDigits[0]->changeTexture(
+		    mCoinNumTex[(s32)(numCoins * 0.01f)]->getTexInfo(), 0);
 
-		s32 digit0 = hundreds;
-		coinDigits[0]->changeTexture(mCoinNumTex[digit0]->getTexInfo(), 0);
+		numCoins -= 100 * (s32)(numCoins * 0.01f);
+		coinDigits[1]->changeTexture(
+		    mCoinNumTex[(s32)(0.1f * numCoins)]->getTexInfo(), 0);
 
-		s32 digit1 = 0.1f * (numCoins - 100 * (s32)(hundreds));
-		coinDigits[1]->changeTexture(mCoinNumTex[digit1]->getTexInfo(), 0);
+		coinDigits[2]->changeTexture(mCoinNumTex[numCoins % 10]->getTexInfo(),
+		                             0);
 
-		s32 digit2 = numCoins % 10;
-		coinDigits[2]->changeTexture(mCoinNumTex[digit2]->getTexInfo(), 0);
-
-		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][0])) {
+		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][0]))
 			mMenuScreen->search('sc_s')->show();
-		}
 	}
 
 	s8 count = 0;
-	for (s32 i = 1; i < 3; i++) {
-		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i])) {
+	for (s32 i = 1; i < 3; i++)
+		if (TFlagManager::getInstance()->getShineFlag(stages[mStage][i]))
 			count++;
-		}
-	}
 
 	if (count == 0) {
 		mMenuScreen->search('sc_0')->add(83, 0);
@@ -454,43 +433,29 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	}
 #endif
 
-	mShineUnlockStates[0] = 2;
-	mShineUnlockStates[1] = 2;
-	mShineUnlockStates[2] = 2;
-	mShineUnlockStates[3] = 2;
-	mShineUnlockStates[4] = 2;
-	mShineUnlockStates[5] = 2;
-	mShineUnlockStates[6] = 2;
-	mShineUnlockStates[7] = 2;
+	for (int i = 0; i < 8; ++i)
+		mShineUnlockStates[i] = SELECT_SHINE_UNLOCKED;
 
-	// Check which shines are unlocked.
 	for (s8 i = 0; i < 8; i++) {
-		u32 stage = SMS_getShineStage(mStage);
-		if (SMS_isGetShine(stage, i, false)) {
-			mShineUnlockStates[i] = 3;
+		if (SMS_isGetShine(SMS_getShineStage(mStage), i, false)) {
+			mShineUnlockStates[i] = SELECT_SHINE_COLLECTED;
 			mNumUnlockedShines    = i + 2;
 		}
 	}
 
-	if (mNumUnlockedShines > 8) {
+	if (mNumUnlockedShines > 8)
 		mNumUnlockedShines = 8;
-	}
-
-	if (mNumUnlockedShines == 0) {
+	if (mNumUnlockedShines == 0)
 		mNumUnlockedShines = 1;
-	}
 
 	s32 lastShineIdx = mNumUnlockedShines - 1;
-	if (lastShineIdx < 0) {
+	if (lastShineIdx < 0)
 		lastShineIdx = 0;
-	}
+
 	mSelectedShine = lastShineIdx;
 
-	if (mNumUnlockedShines < 8) {
-		// TODO: I tried matching this as best as I could but the compiler
-		// keeps unrolling the loops and I'm running out of ideas...
-		bzero(mShineUnlockStates + mNumUnlockedShines, 8 - mNumUnlockedShines);
-	}
+	for (s32 i = mNumUnlockedShines; i < 8; ++i)
+		mShineUnlockStates[i] = SELECT_SHINE_LOCKED;
 
 	// Show arrows if we have more than one shine unlocked.
 	if (mNumUnlockedShines > 1) {
@@ -501,23 +466,15 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 		mArrowLBounds = mArrowL->getBounds();
 		mArrowRBounds = mArrowR->getBounds();
 
-		if (mSelectedShine != 0) {
+		if (mSelectedShine != 0)
 			mArrowL->show();
-		}
 
-		if (mSelectedShine != (mNumUnlockedShines - 1)) {
+		if (mSelectedShine != mNumUnlockedShines - 1)
 			mArrowR->show();
-		}
 	}
 
-	mShineMarks[0] = nullptr;
-	mShineMarks[1] = nullptr;
-	mShineMarks[2] = nullptr;
-	mShineMarks[3] = nullptr;
-	mShineMarks[4] = nullptr;
-	mShineMarks[5] = nullptr;
-	mShineMarks[6] = nullptr;
-	mShineMarks[7] = nullptr;
+	for (int i = 0; i < 8; ++i)
+		mShineMarks[i] = nullptr;
 
 	// This code displays the icons of the unlocked shines at the bottom of
 	// the screen. It handles even and odd numbers differently to centre
@@ -525,36 +482,38 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	s32 i = 0;
 	if ((mNumUnlockedShines & 1) == 1) {
 		// Odd number of shines.
-		s32 firstSlot = (7 - mNumUnlockedShines) / 2;
-		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+		s32 slot     = (7 - mNumUnlockedShines) / 2;
+		s32 lastSlot = slot + mNumUnlockedShines - 1;
 
-		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+		for (; slot <= lastSlot; slot++) {
 			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_o0' + slot);
 			mShineMarks[i]->show();
 
-			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
+			if (mShineUnlockStates[i] == SELECT_SHINE_UNLOCKED
+			    || mShineUnlockStates[i] == SELECT_SHINE_UNKNOWN_1) {
 				JUTTexture* mark = mShineUnlockedMark;
 				mShineMarks[i]->insert(mark, 0, 1.0f);
 				mShineMarks[i]->remove(1);
-			} else if (mShineUnlockStates[i] == 0) {
+			} else if (mShineUnlockStates[i] == SELECT_SHINE_LOCKED) {
 				mShineMarks[i]->hide();
 			}
 			i++;
 		}
 	} else {
 		// Even number of shines.
-		s32 firstSlot = (8 - mNumUnlockedShines) / 2;
-		s32 lastSlot  = firstSlot + mNumUnlockedShines - 1;
+		s32 slot     = (8 - mNumUnlockedShines) / 2;
+		s32 lastSlot = slot + mNumUnlockedShines - 1;
 
-		for (s32 slot = firstSlot; slot <= lastSlot; slot++) {
+		for (; slot <= lastSlot; slot++) {
 			mShineMarks[i] = (J2DPicture*)mMenuScreen->search('i_e0' + slot);
 			mShineMarks[i]->show();
 
-			if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 1) {
+			if (mShineUnlockStates[i] == SELECT_SHINE_UNLOCKED
+			    || mShineUnlockStates[i] == SELECT_SHINE_UNKNOWN_1) {
 				JUTTexture* mark = mShineUnlockedMark;
 				mShineMarks[i]->insert(mark, 0, 1.0f);
 				mShineMarks[i]->remove(1);
-			} else if (mShineUnlockStates[i] == 0) {
+			} else if (mShineUnlockStates[i] == SELECT_SHINE_LOCKED) {
 				mShineMarks[i]->hide();
 			}
 			i++;
@@ -572,10 +531,19 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
 	mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
 
+#if defined(VERSION_GMSJ01)
 	mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
 	mScenarioImg1->remove(1);
+#else
+	mScenarioImg1->changeTexture(mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+#endif
+#if defined(VERSION_GMSJ01)
 	mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0, 1.0f);
 	mScenarioShadow1->remove(1);
+#else
+	mScenarioShadow1->changeTexture(mScenarioTex[mSelectedShine]->getTexInfo(),
+	                                0);
+#endif
 
 	char buf[254];
 	snprintf(buf, sizeof(buf),
@@ -587,16 +555,15 @@ void TSelectMenu::initData(u8 stage, JKRArchive* pArch,
 	mScenarioText1->setFont((JUTFont*)gpSystemFont);
 	mScenarioText2->setFont((JUTFont*)gpSystemFont);
 
-	s16 shineID
-	    = SMS_getShineID(SMS_getShineStage(mStage), mSelectedShine, false);
-
 	strncpy(mScenarioText1->getStringPtr(),
-	        SMSGetMessageData(mScenarioBmg2, SMS_getNormalStage(shineID)), 127);
+	        SMSGetMessageData(mScenarioBmg2, SMS_getNormalStage(SMS_getShineID(
+	                                             SMS_getShineStage(mStage),
+	                                             mSelectedShine, false))),
+	        127);
 }
 
 void TSelectMenu::startMove()
 {
-	s32 padding[4];
 	JPAEmitterManager* emitter = mSelectDir->unk30;
 	mSelectShineMgr->initData(mShineUnlockStates, mNumUnlockedShines,
 	                          mSelectedShine, emitter);
@@ -607,6 +574,13 @@ void TSelectMenu::startMove()
 static inline JUtility::TColor makeBlackCornerColor(u8 alpha)
 {
 	return JUtility::TColor(0, 0, 0, alpha);
+}
+
+// fabricated TODO: recover the original shine lookup helper
+static inline s16 getSelectedShineID(const TSelectMenu* menu)
+{
+	return SMS_getShineID(SMS_getShineStage(menu->mStage), menu->mSelectedShine,
+	                      false);
 }
 
 void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
@@ -726,8 +700,8 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 			updated &= mStageBannerShadow->update();
 
 			// Fade the stage name in.
-			f32 curAlpha   = mStageName->getAlpha();
-			u16 stageAlpha = SMSGetAnmFrameRate() * 6.0f + curAlpha;
+			u16 stageAlpha = mStageName->getAlpha();
+			stageAlpha += SMSGetAnmFrameRate() * 6.0f;
 			if (stageAlpha > 255u) {
 				stageAlpha = 255u;
 			}
@@ -789,7 +763,8 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 
 				JGeometry::TVec3<f32> emitterPos(300.0f, 244.0f, 0.0f);
 				JPAEmitterManager* emitter = mSelectDir->unk34;
-				if (mShineUnlockStates[mSelectedShine] == 3) {
+				if (mShineUnlockStates[mSelectedShine]
+				    == SELECT_SHINE_COLLECTED) {
 					emitter->createEmitter(emitterPos, 5, nullptr, nullptr);
 				} else {
 					emitter->createEmitter(emitterPos, 4, nullptr, nullptr);
@@ -821,26 +796,45 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 					mScenarioPane1->setPaneOffset(10, mScenarioPaneDist, 0, 0,
 					                              0);
 
+#if defined(VERSION_GMSJ01)
 					mScenarioImg2->insert(mScenarioTex[prevIndex], 0, 1.0f);
 					mScenarioImg2->remove(1);
+#else
+					mScenarioImg2->changeTexture(
+					    mScenarioTex[prevIndex]->getTexInfo(), 0);
+#endif
 
+#if defined(VERSION_GMSJ01)
 					mScenarioShadow2->insert(mScenarioTex[prevIndex], 0, 1.0f);
 					mScenarioShadow2->remove(1);
+#else
+					mScenarioShadow2->changeTexture(
+					    mScenarioTex[prevIndex]->getTexInfo(), 0);
+#endif
 
+#if defined(VERSION_GMSJ01)
 					mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0,
 					                      1.0f);
 					mScenarioImg1->remove(1);
+#else
+					mScenarioImg1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+#endif
 
+#if defined(VERSION_GMSJ01)
 					mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0,
 					                         1.0f);
 					mScenarioShadow1->remove(1);
+#else
+					mScenarioShadow1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+#endif
 
-					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
-					                             mSelectedShine, false);
-					const char* scenarioName = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
-
-					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
+					strncpy(mScenarioText1->getStringPtr(),
+					        SMSGetMessageData(
+					            mScenarioBmg2,
+					            SMS_getNormalStage(getSelectedShineID(this))),
+					        127);
 
 					mShineMarks[mSelectedShine]->setWhite(mMarkCol);
 					mShineMarks[mSelectedShine]->setAlpha(mMarkAlpha);
@@ -850,11 +844,11 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 
 					mSelectedShine = prevIndex;
 
-					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
-					                              mSelectedShine, false);
-					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID2));
-					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
+					strncpy(mScenarioText2->getStringPtr(),
+					        SMSGetMessageData(
+					            mScenarioBmg2,
+					            SMS_getNormalStage(getSelectedShineID(this))),
+					        127);
 
 					mShineMarks[mSelectedShine]->setWhite(mSelectedMarkCol);
 					mShineMarks[mSelectedShine]->setAlpha(mSelectedMarkAlpha);
@@ -897,26 +891,45 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 					mScenarioPane1->setPaneOffset(10, -mScenarioPaneDist, 0, 0,
 					                              0);
 
+#if defined(VERSION_GMSJ01)
 					mScenarioImg2->insert(mScenarioTex[nextIndex], 0, 1.0f);
 					mScenarioImg2->remove(1);
+#else
+					mScenarioImg2->changeTexture(
+					    mScenarioTex[nextIndex]->getTexInfo(), 0);
+#endif
 
+#if defined(VERSION_GMSJ01)
 					mScenarioShadow2->insert(mScenarioTex[nextIndex], 0, 1.0f);
 					mScenarioShadow2->remove(1);
+#else
+					mScenarioShadow2->changeTexture(
+					    mScenarioTex[nextIndex]->getTexInfo(), 0);
+#endif
 
+#if defined(VERSION_GMSJ01)
 					mScenarioImg1->insert(mScenarioTex[mSelectedShine], 0,
 					                      1.0f);
 					mScenarioImg1->remove(1);
+#else
+					mScenarioImg1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+#endif
 
+#if defined(VERSION_GMSJ01)
 					mScenarioShadow1->insert(mScenarioTex[mSelectedShine], 0,
 					                         1.0f);
 					mScenarioShadow1->remove(1);
+#else
+					mScenarioShadow1->changeTexture(
+					    mScenarioTex[mSelectedShine]->getTexInfo(), 0);
+#endif
 
-					s16 shineID = SMS_getShineID(SMS_getShineStage(mStage),
-					                             mSelectedShine, false);
-					const char* scenarioName = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID));
-
-					strncpy(mScenarioText1->getStringPtr(), scenarioName, 127);
+					strncpy(mScenarioText1->getStringPtr(),
+					        SMSGetMessageData(
+					            mScenarioBmg2,
+					            SMS_getNormalStage(getSelectedShineID(this))),
+					        127);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = false;
@@ -925,11 +938,11 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 
 					mSelectedShine = nextIndex;
 
-					s16 shineID2 = SMS_getShineID(SMS_getShineStage(mStage),
-					                              mSelectedShine, false);
-					const char* scenarioName2 = SMSGetMessageData(
-					    mScenarioBmg2, SMS_getNormalStage(shineID2));
-					strncpy(mScenarioText2->getStringPtr(), scenarioName2, 127);
+					strncpy(mScenarioText2->getStringPtr(),
+					        SMSGetMessageData(
+					            mScenarioBmg2,
+					            SMS_getNormalStage(getSelectedShineID(this))),
+					        127);
 
 					mSelectShineMgr->mShines[mSelectedShine]->mIsSelected
 					    = true;
@@ -1076,6 +1089,7 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 			// TODO: recover the original color helper and remaining stack
 			// layout.
 			{
+				u8 alpha;
 				J2DPicture::TCornerColor corners;
 				((J2DPicture*)mLetterBoxTop->getPane())
 				    ->getCornerColor(corners);
@@ -1099,7 +1113,7 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 				}
 
 				// TODO: get rid of this crap and match properly!!!
-				u8 alpha              = var2;
+				alpha                 = var2;
 				JUtility::TColor col1 = makeBlackCornerColor(alpha);
 
 				alpha                 = var2;
@@ -1115,6 +1129,7 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 			}
 
 			{
+				u8 alpha;
 				J2DPicture::TCornerColor corners;
 				((J2DPicture*)mLetterBoxBottom->getPane())
 				    ->getCornerColor(corners);
@@ -1137,7 +1152,7 @@ void TSelectMenu::perform(u32 cue, JDrama::TGraphics* gfx)
 				}
 
 				// TODO: get rid of this crap and match properly!!!
-				u8 alpha              = var2;
+				alpha                 = var2;
 				JUtility::TColor col1 = makeBlackCornerColor(alpha);
 
 				alpha                 = var2;
@@ -1204,7 +1219,8 @@ s8 TSelectMenu::getNextIndex()
 	}
 
 	for (s32 i = index + 1; i < 8; i++) {
-		if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 3) {
+		if (mShineUnlockStates[i] == SELECT_SHINE_UNLOCKED
+		    || mShineUnlockStates[i] == SELECT_SHINE_COLLECTED) {
 			res = i;
 			break;
 		}
@@ -1224,7 +1240,8 @@ s8 TSelectMenu::getPrevIndex()
 	}
 
 	for (s32 i = index - 1; i >= 0; i--) {
-		if (mShineUnlockStates[i] == 2 || mShineUnlockStates[i] == 3) {
+		if (mShineUnlockStates[i] == SELECT_SHINE_UNLOCKED
+		    || mShineUnlockStates[i] == SELECT_SHINE_COLLECTED) {
 			res = i;
 			break;
 		}

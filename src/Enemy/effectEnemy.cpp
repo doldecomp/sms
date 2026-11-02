@@ -57,7 +57,7 @@ void TEffectEnemy::forceKill()
 	if (!(mGroundPlane->isIllegalData()
 	      || (!mGroundPlane->isDeathPlane() && !mGroundPlane->isPool()
 	          && !mGroundPlane->isWaterSurface())
-	      || isAirborne() || checkLiveFlag(LIVE_FLAG_UNK10))
+	      || isAirborne() || checkLiveFlag(LIVE_FLAG_NO_BIND))
 	    || !gpMap->isInArea(mPosition.x, mPosition.z)) {
 		kill();
 	}
@@ -109,7 +109,7 @@ void TEffectEnemy::setDeadAnm()
 	                                            &mPosition, 0, nullptr);
 	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 	                                nullptr, 0, 4);
-	onLiveFlag(LIVE_FLAG_UNK20000);
+	onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 }
 
 void TEffectEnemy::emitEffect()

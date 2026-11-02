@@ -270,7 +270,7 @@ void TPoiHana::attackToMario()
 	if (mSpine->getCurrentNerve() == &TNervePoihanaSleep::theNerve()) {
 		unk1A0 = true;
 		unk194 = true;
-		offLiveFlag(LIVE_FLAG_UNK10);
+		offLiveFlag(LIVE_FLAG_NO_BIND);
 		return;
 	}
 
@@ -299,8 +299,8 @@ void TPoiHana::setDeadAnm()
 	unk1BC->kill();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 	mHitPoints = 1;
-	if (!unk184)
-		unk18C = 3;
+	if (!mIsAttacker)
+		mDroppedCoinCount = 3;
 	setBckAnm(1);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
@@ -379,7 +379,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 
 	if (mSleepVersion && param_1 == 0) {
 		mGoToSleepTimer += 1;
-		if (checkCurAnmEnd(0)) {
+		if (checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (mGoToSleepTimer
 			    > unk19C->mSLWakeFrame.get() + mInstanceIndex * 100) {
 				mGoToSleepTimer = 0;
@@ -395,7 +395,7 @@ void TPoiHana::walkBehavior(int param_1, float param_2)
 
 BOOL TPoiHana::isInhibitedForceMove()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return true;
 	return false;
 }
@@ -487,14 +487,14 @@ bool TPoiHana::isMoving()
 
 void TPoiHana::genEventCoin()
 {
-	if (!mCoin)
+	if (!mEventCoin)
 		return;
 
 	TCoin* coin;
-	if (mCoin->isActorType(ACTOR_TYPE_COIN)) {
+	if (mEventCoin->isActorType(ACTOR_TYPE_COIN)) {
 		coin = (TCoin*)gpItemManager->makeObjAppear(ACTOR_TYPE_COIN);
 	} else {
-		coin = mCoin;
+		coin = mEventCoin;
 		coin->appear();
 	}
 
@@ -507,8 +507,8 @@ void TPoiHana::genEventCoin()
 	MsVECNormalize(&vec, &vec);
 	coin->mVelocity.set(vec.x * 10.0f, 18.0f, vec.z * 10.0f);
 
-	coin->offLiveFlag(LIVE_FLAG_UNK10);
-	mCoin = nullptr;
+	coin->offLiveFlag(LIVE_FLAG_NO_BIND);
+	mEventCoin = nullptr;
 }
 
 bool TPoiHana::changeByJuice()
@@ -559,7 +559,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 		if (!self->unk1C8) {
 			self->mGoToSleepTimer = 0;
 			spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-			self->offLiveFlag(LIVE_FLAG_UNK10);
+			self->offLiveFlag(LIVE_FLAG_NO_BIND);
 			return true;
 		}
 
@@ -568,7 +568,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 	}
 
 	if (!self->unk1A0 && !self->isAirborne())
-		self->onLiveFlag(LIVE_FLAG_UNK10);
+		self->onLiveFlag(LIVE_FLAG_NO_BIND);
 
 	self->mGoToSleepTimer += 1;
 	if ((self->unk194 || self->unsetUnk165()) && !self->isBckAnm(10)) {
@@ -579,7 +579,7 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 		self->getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(148.0f);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(6)) {
 			self->setBckAnm(5);
 		} else if (self->isBckAnm(5)) {
@@ -590,14 +590,14 @@ DEFINE_NERVE(TNervePoihanaSleep, TLiveActor)
 			if (self->isBckAnm(10)) {
 				self->mGoToSleepTimer = 0;
 				spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-				self->offLiveFlag(LIVE_FLAG_UNK10);
+				self->offLiveFlag(LIVE_FLAG_NO_BIND);
 				return true;
 			}
 
 			if (!self->unk1C8) {
 				self->mGoToSleepTimer = 0;
 				spine->pushAfterCurrent(&TNerveWalkerGraphWander::theNerve());
-				self->offLiveFlag(LIVE_FLAG_UNK10);
+				self->offLiveFlag(LIVE_FLAG_NO_BIND);
 				return true;
 			}
 
@@ -621,7 +621,7 @@ DEFINE_NERVE(TNervePoihanaFreeze, TLiveActor)
 		self->unk1BC->kill();
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (self->isBckAnm(12) || self->isBckAnm(3)) {
 			self->setBckAnm(4);
 			self->mIsTrapped = false;
@@ -682,7 +682,7 @@ DEFINE_NERVE(TNervePoihanaThrow, TLiveActor)
 		                                            mtx, 0, nullptr);
 	}
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 
 	return false;

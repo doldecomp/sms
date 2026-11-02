@@ -88,7 +88,7 @@ void TRiccoHook::init(TLiveManager* manager)
 	goToShortestNextGraphNode();
 	mMarchSpeed = getSaveLoadParam()->mSLMoveSpeed.get();
 	mTurnSpeed  = 10.0f;
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 }
 
 void TRiccoHook::kill() { }
@@ -147,7 +147,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 		self->goToDirectedNextGraphNode(polar);
 	}
 
-	if (self->unk104.getPoint().distance(self->getPosition()) < 10.0f) {
+	if (self->getGoalDistance() < 10.0f) {
 		TGraphNode& node = self->unk124->getCurrent();
 
 		if (node.checkFlag(0x800)) {
@@ -165,7 +165,7 @@ DEFINE_NERVE(TNerveRHGraphWander, TLiveActor)
 			return false;
 		}
 
-		JGeometry::TVec3<f32> dPos = self->getUnkF4().getPoint();
+		JGeometry::TVec3<f32> dPos = self->getCurrentTarget().getPoint();
 		dPos.sub(self->getPosition());
 		PSVECNormalize(&dPos, &dPos);
 		dPos.scale(self->getMarchSpeed());

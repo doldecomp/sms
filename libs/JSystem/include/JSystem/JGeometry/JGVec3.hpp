@@ -67,18 +67,18 @@ public:
 		return *this;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	friend TVec3 operator-(const TVec3& fst, const TVec3& snd)
 	{
-		fst -= snd;
-		return fst;
+		TVec3 result = fst;
+		result -= snd;
+		return result;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	friend TVec3 operator+(const TVec3& fst, const TVec3& snd)
 	{
-		fst += snd;
-		return fst;
+		TVec3 result = fst;
+		result += snd;
+		return result;
 	}
 };
 
@@ -91,13 +91,6 @@ public:
 	template <class T> TVec3(T x_, T y_, T z_) { set(x_, y_, z_); }
 
 	explicit TVec3(f32 value) { setAll(value); }
-
-	// NOTE: yes, this has to use lwz/stw and not lfs/stf.
-	// Checked via MarioCollision.cpp where this is not inlined
-	TVec3(const TVec3& other)
-	    : Vec(other)
-	{
-	}
 
 	TVec3& operator=(const TVec3& other)
 	{
@@ -217,30 +210,32 @@ public:
 		return *this;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator-(TVec3 fst, const TVec3& snd)
+	TVec3 operator-(const TVec3& other) const
 	{
-		fst -= snd;
-		return fst;
+		TVec3 result = *this;
+		result -= other;
+		return result;
 	}
 
-	// fabricated and fake and UB but it makes things match??
-	friend const TVec3& operator+(TVec3 fst, const TVec3& snd)
+	TVec3 operator+(const TVec3& other) const
 	{
-		fst += snd;
-		return fst;
+		TVec3 result = *this;
+		result += other;
+		return result;
 	}
 
-	// @fabricated
-	friend TVec3 operator*(TVec3 fst, f32 snd)
+	TVec3 operator*(f32 other) const
 	{
-		fst *= snd;
-		return fst;
+		TVec3 result = *this;
+		result *= other;
+		return result;
 	}
-	friend TVec3 operator/(TVec3 fst, f32 snd)
+
+	TVec3 operator/(f32 other) const
 	{
-		fst /= snd;
-		return fst;
+		TVec3 result = *this;
+		result /= other;
+		return result;
 	}
 
 	f32 dot(const TVec3& other) const

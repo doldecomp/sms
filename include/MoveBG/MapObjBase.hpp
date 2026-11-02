@@ -365,6 +365,12 @@ public:
 
 public:
 	enum {
+		/// While set, CUE_CALC_ANIM, CUE_ENTRY and CUE_CALC_VIEW are not
+		/// performed on by the map object.
+		LIVE_FLAG_SLEEPING = 1u << LIVE_FLAG_BIT_USER0, // 0x4000
+	};
+
+	enum {
 		MOVE_COLLISION_ON_CONTACT_GRACE_TIMER = 4,
 	};
 

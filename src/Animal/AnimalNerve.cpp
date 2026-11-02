@@ -71,22 +71,20 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 
 	actor->execWalk(true);
 
-	if (!actor->unk114.empty()) {
-		const JGeometry::TVec3<f32>& goalPos = actor->unkF4.getPoint();
+	if (!actor->mGoalPath.empty()) {
+		const JGeometry::TVec3<f32>& goalPos = actor->mCurrentTarget.getPoint();
 		f32 dist = calcDist(goalPos, actor->mPosition);
 
-		if (dist < 200.0f && !actor->unk114.empty()) {
-			actor->unkF4 = actor->unk114.pop();
-		}
+		if (dist < 200.0f)
+			actor->switchNextGoalPathNode();
 	} else {
-		const JGeometry::TVec3<f32>& curPos = actor->unk104.getPoint();
-		f32 dist = calcDist(curPos, actor->mPosition);
+		f32 dist = actor->getGoalDistance();
 
 		if (dist < 100.0f) {
 			actor->goToRandomNextGraphNode();
 			actor->resetRandomCurPathNode();
 
-			if (actor->mPosition.y <= actor->getUnkF4().getPoint().y) {
+			if (actor->mPosition.y <= actor->getCurrentTarget().getPoint().y) {
 				if (!mActor->checkCurBckFromIndex(1))
 					mActor->setBckFromIndex(1);
 

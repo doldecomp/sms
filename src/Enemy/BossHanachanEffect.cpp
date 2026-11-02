@@ -137,7 +137,7 @@ void TBossHanachan::emitParticle_()
 
 void TBossHanachan::emitOneTimeSandPillar_(TBossHanachanPartsBody* body)
 {
-	onLiveFlag(LIVE_FLAG_UNK10000);
+	onLiveFlag(LIVE_FLAG_SAND_PILLAR_ACTIVE);
 	unk1A0.set(body->unk108[0][3], mPosition.y, body->unk108[2][3]);
 	const TLiveActor* sand = body->getSandActor_();
 	if (sand) {
@@ -202,7 +202,7 @@ void TBossHanachan::emitCamShake_()
 				gpCameraShake->startShake(CAM_SHAKE_MODE_UNKC, 1.0f);
 				if (marioOnGround)
 					SMSRumbleMgr->start(8, (f32*)nullptr);
-				if (checkLiveFlag(LIVE_FLAG_UNK20000))
+				if (checkLiveFlag(TBossHanachan::LIVE_FLAG_BGM_CHANGE_PENDING))
 					MSBgm::stopTrackBGM(1, 30);
 			}
 			break;

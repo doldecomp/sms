@@ -65,10 +65,10 @@ void TMushroom1up::initMapObj()
 {
 	TMapObjBase::initMapObj();
 	mGravity = 0.35f;
-	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_UNK10 | LIVE_FLAG_HIDDEN
+	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_NO_BIND | LIVE_FLAG_HIDDEN
 	            | LIVE_FLAG_DEAD);
 	if (unk139 == 2) {
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 		makeObjAppeared();
 	}
 	mScaling.set(1.5f, 1.5f, 1.5f);
@@ -77,7 +77,7 @@ void TMushroom1up::initMapObj()
 void TMushroom1up::load(JSUMemoryInputStream& stream)
 {
 	TMapObjBase::load(stream);
-	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_UNK10);
+	offLiveFlag(LIVE_FLAG_AIRBORNE | LIVE_FLAG_NO_BIND);
 }
 
 void TMushroom1up::control()
@@ -168,7 +168,7 @@ void TJumpBase::initMapObj()
 		base->setAllActor(this);
 		base->setAllData(0x2710);
 	}
-	unkE8 = 0;
+	mRideMode = RIDE_MODE_NONE;
 }
 
 void TJumpBase::ensureTakeSituation()
@@ -243,7 +243,7 @@ void TJumpBase::control()
 {
 	int prevState = unk138;
 	if (!isAirborne())
-		onLiveFlag(LIVE_FLAG_UNK10);
+		onLiveFlag(LIVE_FLAG_NO_BIND);
 
 	switch (unk138) {
 	case 0:
@@ -281,7 +281,7 @@ void TJumpBase::control()
 				ctrl->setFrame(0.0f);
 				ctrl->setRate(SMSGetAnmFrameRate());
 			}
-			offLiveFlag(LIVE_FLAG_UNK10);
+			offLiveFlag(LIVE_FLAG_NO_BIND);
 			mScaledBodyRadius = 100.0f;
 		}
 		if (getMActor()->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
@@ -332,7 +332,7 @@ void TJumpBase::control()
 			    = JGeometry::TVec3<f32>(JMASSin(angle), 0.0f, JMASCos(angle));
 			JGeometry::TVec3<f32> v2 = mVelocity;
 			mPosition += v2;
-			offLiveFlag(LIVE_FLAG_UNK10);
+			offLiveFlag(LIVE_FLAG_NO_BIND);
 		}
 		if (!isAirborne()) {
 			unk13C = 0;

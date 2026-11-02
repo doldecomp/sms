@@ -831,7 +831,7 @@ void TFireWanwan::doWalk()
 		setCurAnmSound();
 	}
 
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(7);
 
 	walkToCurPathNode(mMarchSpeed, mTurnSpeed, 0.0f);
@@ -849,7 +849,7 @@ void TFireWanwan::doEscape()
 		setCurAnmSound();
 	}
 
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(0);
 
 	walkToCurPathNode(mMarchSpeed * getSaveParam2()->mEscapeSpeedRate.get(),
@@ -872,7 +872,7 @@ bool TFireWanwan::doAttack()
 		                  mTurnSpeed, 0.0f);
 	}
 
-	if (checkCurAnmEnd(0))
+	if (checkCurAnmEnd(ANM_TYPE_BCK))
 		setBckAnm(3);
 
 	return isMissMario();
@@ -940,14 +940,6 @@ bool TFireWanwan::isFindMario(f32 param_1)
 	return isFindMarioFromParam(param_1);
 }
 
-static inline f32 dist(const JGeometry::TVec3<f32>& a,
-                       const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> tmp = a;
-	tmp.sub(b);
-	return tmp.length();
-}
-
 bool TFireWanwan::isMissMario() const
 {
 	if (SMS_CheckMarioFlag(MARIO_FLAG_VISIBLE)
@@ -961,7 +953,7 @@ bool TFireWanwan::isMissMario() const
 		return true;
 
 	f32 giveUpLen = getSaveParam2()->mSLGiveUpLength.get();
-	if (dist(unk104.getPoint(), mPosition) > giveUpLen)
+	if (getGoalDistance() > giveUpLen)
 		return true;
 
 	return false;
@@ -1409,8 +1401,7 @@ void TFireWanwan::initTurnNextGraphNode()
 {
 	unk124->mCurrIdx = unk124->popCurr();
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TFireWanwan::initEscapeNextGraphNode()
@@ -1434,14 +1425,12 @@ void TFireWanwan::initEscapeNextGraphNode()
 		unk124->mPrevIdx = -1;
 		unk124->mCurrIdx = uVar2;
 		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
+		resetStayCount();
 	} else {
 		unk124->mPrevIdx = -1;
 		unk124->mCurrIdx = uVar1;
 		setGoalPathFromGraph();
-		unk128 = 0;
-		unk12C = 0.0f;
+		resetStayCount();
 	}
 }
 
@@ -1704,7 +1693,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 
 	const TBGCheckData* local_30;
 
-	if (checkLiveFlag(LIVE_FLAG_UNK1000))
+	if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS))
 		mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
 		    &local_30);
@@ -1719,7 +1708,7 @@ void TFireWanwan::bindPoint(JGeometry::TVec3<f32>* out_offset,
 		if (!local_30->isEnemyThrough()) {
 			f32 dVar9;
 			const TBGCheckData* local_34;
-			if (checkLiveFlag(LIVE_FLAG_UNK1000))
+			if (checkLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS))
 				dVar9 = gpMap->checkGroundIgnoreWaterSurface(
 				    actualPoint.x, actualPoint.y + mHeadHeight, actualPoint.z,
 				    &local_34);
@@ -1869,7 +1858,7 @@ DEFINE_NERVE(TNerveFireWanwanTurn, TLiveActor)
 		self->setBckAnm(5);
 	}
 
-	if (self->checkCurAnmEnd(0))
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 		self->setBckAnm(7);
 
 	if (self->doTurn()) {
@@ -1892,7 +1881,7 @@ DEFINE_NERVE(TNerveFireWanwanFindMario, TLiveActor)
 
 	self->doAdjustTarget();
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveFireWanwanAttack::theNerve());
 		return true;
 	}
@@ -1906,7 +1895,7 @@ DEFINE_NERVE(TNerveFireWanwanAttack, TLiveActor)
 
 	if (spine->getTime() == 0) {
 		self->setBckAnm(3);
-		self->setGoalPath(TPathNode((THitActor*)gpMarioAddress));
+		self->setGoal((THitActor*)gpMarioAddress);
 	}
 
 	if (self->doAttack()) {
@@ -1929,7 +1918,7 @@ DEFINE_NERVE(TNerveFireWanwanTired, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setBckAnm(4);
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->setBckAnm(4);
 
 		if (self->getSaveParam2()->mSLAttackWait.get() < spine->getTime()) {
@@ -1955,22 +1944,22 @@ DEFINE_NERVE(TNerveFireWanwanRecoverGraph, TLiveActor)
 		self->unk124->mCurrIdx = -1;
 		self->goToShortestNextGraphNode();
 
-		self->decideTarget(self->unk104.getPoint());
+		self->decideTarget(self->getGoal().getPoint());
 	}
 
 	// TODO: inline?
 	bool b = self->getMActor()->checkCurBckFromIndex(7);
 	if (b) {
 		self->doAdjustTarget();
-		if (self->checkCurAnmEnd(0)) {
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			// removed code?
 		}
 	} else {
-		if (self->checkCurAnmEnd(0))
+		if (self->checkCurAnmEnd(ANM_TYPE_BCK))
 			self->setBckAnm(7);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveFireWanwanGraphWander::theNerve());
 		return true;
 	}
@@ -1998,7 +1987,7 @@ DEFINE_NERVE(TNerveFireWanwanRecover, TLiveActor)
 		self->changeBodyToRed(end);
 	}
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		self->recoverFire();
 		spine->pushAfterCurrent(spine->getDefault());
 		return true;
@@ -2033,7 +2022,7 @@ DEFINE_NERVE(TNerveFireWanwanDie, TLiveActor)
 		self->changeBodyToSilver(40);
 
 		self->generateEffectColumWater();
-		self->onLiveFlag(LIVE_FLAG_UNK1000);
+		self->onLiveFlag(LIVE_FLAG_IGNORE_WATER_IN_GROUND_CHECKS);
 		self->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		self->setHitPoints(0);
 		self->mDamageHeight -= 250.0f;

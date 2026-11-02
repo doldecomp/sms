@@ -208,7 +208,7 @@ void TKumokun::reset() { }
 
 void TKumokun::bind()
 {
-	if (checkLiveFlag(LIVE_FLAG_UNK10))
+	if (checkLiveFlag(LIVE_FLAG_NO_BIND))
 		return;
 
 	if (isFlying()) {
@@ -628,7 +628,7 @@ void TKumokun::setDeadAnm()
 
 bool TKumokun::checkSerialAnmEnd() const
 {
-	return unk1D8.empty() && checkCurAnmEnd(0);
+	return unk1D8.empty() && checkCurAnmEnd(ANM_TYPE_BCK);
 }
 
 void TKumokun::calcRootMatrix()
@@ -1053,7 +1053,7 @@ DEFINE_NERVE(TNerveKumokunWalk, TLiveActor)
 
 	if ((self->doWalk()
 	     || self->getSaveParam2()->mMarchTimer.get() < spine->getTime())
-	    && self->checkCurAnmEnd(0)) {
+	    && self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKumokunPostWalk::theNerve());
 		return true;
 	}
@@ -1067,7 +1067,7 @@ DEFINE_NERVE(TNerveKumokunPostWalk, TLiveActor)
 	if (spine->getTime() == 0)
 		self->changeBck("kumo_run1_end");
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKumokunWait::theNerve());
 		return true;
 	}
@@ -1117,7 +1117,7 @@ DEFINE_NERVE(TNerveKumokunWait, TLiveActor)
 		return true;
 	}
 
-	if (self->checkCurAnmEnd(0)
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && self->getSaveParam2()->mWaitTimer.get() < spine->getTime()) {
 		spine->pushAfterCurrent(&TNerveKumokunSearch::theNerve());
 		return true;
@@ -1155,7 +1155,7 @@ DEFINE_NERVE(TNerveKumokunPostFreeze, TLiveActor)
 	if (spine->getTime() == 0)
 		self->changeBck("kumo_hit_end");
 
-	if (self->checkCurAnmEnd(0)) {
+	if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		spine->pushAfterCurrent(&TNerveKumokunSearch::theNerve());
 		return true;
 	}

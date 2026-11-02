@@ -582,8 +582,7 @@ void TBWBinder::bind(TLiveActor* actor)
 			if (!bgData->isEnemyThrough()) {
 				const TBGCheckData* bgData2;
 				f32 groundY2 = gpMap->checkGround(
-				    nextPos.x,
-				    boss->mPosition.y + boss->mHeadHeight * boss->mBodyScale,
+				    nextPos.x, boss->mPosition.y + boss->getHeadHeight(),
 				    nextPos.z, &bgData2);
 				if (groundY2 + 1.0f > groundY) {
 					groundY = groundY2 + 1.0f;
@@ -592,12 +591,12 @@ void TBWBinder::bind(TLiveActor* actor)
 			}
 		}
 
-		if (nextPos.y <= groundY && !bgData->checkFlag(0x10)
+		if (nextPos.y <= groundY && !bgData->isIllegalData()
 		    && !bgData->isEnemyThrough()) {
 			nextPos.y       = groundY;
 			boss->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 			boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
-			boss->offLiveFlag(0x8000);
+			boss->offLiveFlag(TSpineEnemy::LIVE_FLAG_JUMPING);
 		} else {
 			boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		}
@@ -1092,8 +1091,7 @@ void TBossWanwan::reverseNextGraphNode()
 	unk124->mCurrIdx = prev;
 
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TBossWanwan::rollNextGraphNode()
@@ -1113,13 +1111,12 @@ void TBossWanwan::rollNextGraphNode()
 
 	unk124->moveTo(next);
 	setGoalPathFromGraph();
-	unk128 = 0;
-	unk12C = 0.0f;
+	resetStayCount();
 }
 
 void TBossWanwan::slideToCurPathNode(float speed, float turnSpeed)
 {
-	JGeometry::TVec3<f32> pos = unkF4.getPoint();
+	JGeometry::TVec3<f32> pos = mCurrentTarget.getPoint();
 
 	pos.sub(mPosition);
 
@@ -1638,9 +1635,7 @@ DEFINE_NERVE(TNerveBWJump, TLiveActor)
 	TBossWanwan* boss = static_cast<TBossWanwan*>(spine->getBody());
 
 	if (spine->getTime() == 0) {
-		const JGeometry::TVec3<f32>& targetPos
-		    = boss->unk104.unk0 != nullptr ? boss->unk104.unk0->mPosition
-		                                   : boss->unk104.unk4;
+		const JGeometry::TVec3<f32>& targetPos = boss->getGoal().getPoint();
 
 		f32 speed       = boss->unk124->unkC;
 		boss->mVelocity = boss->calcVelocityToJumpToY(targetPos, speed,
@@ -1719,13 +1714,10 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
 		    BW_BATH_POS, 10.0f, boss->getGravityY());
 
-		TPathNode goal(BW_BATH_POS);
-		boss->unkF4  = goal;
-		boss->unk104 = goal;
-		boss->unk114.clear();
+		boss->setGoal(BW_BATH_POS);
 
 		boss->mVelocity = vel;
-		boss->mLiveFlag |= 0x80;
+		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->unk16C = 0;
 	}
 
@@ -1773,7 +1765,7 @@ DEFINE_NERVE(TNerveBWDie, TLiveActor)
 		JGeometry::TVec3<f32> zero(0.0f, 0.0f, 0.0f);
 		boss->mVelocity      = zero;
 		boss->mPositionDelta = zero;
-		boss->onLiveFlag(LIVE_FLAG_UNK10);
+		boss->onLiveFlag(LIVE_FLAG_NO_BIND);
 		boss->offLiveFlag(LIVE_FLAG_AIRBORNE);
 		gpMarioParticleManager->emit(0xB1, &boss->mPosition, 0, nullptr);
 	}
@@ -1849,10 +1841,7 @@ DEFINE_NERVE(TNerveBWJumpAway, TLiveActor)
 		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
 		    BW_HEAD_START, 40.0f, boss->getGravityY());
 
-		TPathNode goal(BW_HEAD_START);
-		boss->unkF4  = goal;
-		boss->unk104 = goal;
-		boss->unk114.clear();
+		boss->setGoal(BW_HEAD_START);
 
 		boss->mVelocity = vel;
 		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
@@ -1907,13 +1896,10 @@ DEFINE_NERVE(TNerveBWFall, TLiveActor)
 		JGeometry::TVec3<f32> vel = boss->calcVelocityToJumpToY(
 		    boss->mPicket->mPosition, 5.0f, boss->getGravityY());
 
-		TPathNode goal(boss->mPicket->mPosition);
-		boss->unkF4  = goal;
-		boss->unk104 = goal;
-		boss->unk114.clear();
+		boss->setGoal(boss->mPicket->mPosition);
 
 		boss->mVelocity = vel;
-		boss->mLiveFlag |= 0x80;
+		boss->onLiveFlag(LIVE_FLAG_AIRBORNE);
 		boss->unk16C = 0;
 	}
 

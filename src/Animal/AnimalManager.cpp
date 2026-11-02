@@ -32,7 +32,7 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 		JGeometry::TVec3<f32> pos = actor->mPosition;
 		pos.y += 75.0f;
 
-		if (actor->checkLiveFlag(LIVE_FLAG_UNK2000)
+		if (actor->checkLiveFlag(LIVE_FLAG_ENABLE_FAST_CUBE_CULLING)
 		    && SMS_IsInOtherFastCube(pos)) {
 			actor->onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 		} else {

@@ -92,7 +92,7 @@ void TMario::hitNpc(THitActor* actor)
 
 	keepDistance(*actor, 0.0f);
 
-	if (((TLiveActor*)actor)->checkLiveFlag(LIVE_FLAG_UNK100000))
+	if (((TLiveActor*)actor)->checkLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN))
 		wantToTakeActor(actor);
 }
 
@@ -210,7 +210,7 @@ void TMario::hangPole(THitActor* actor)
 
 void TMario::hitPickUpEnemy(THitActor* actor)
 {
-	if (((TSmallEnemy*)actor)->unk164 != 0
+	if (((TSmallEnemy*)actor)->mCanBePickedUp
 	    && !checkStatusType(MARIO_STATUS_FLAG_JUMPING)) {
 		hitWantToTake(actor);
 		return;

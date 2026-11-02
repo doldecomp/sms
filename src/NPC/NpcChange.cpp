@@ -199,7 +199,7 @@ void TBaseNPC::changeNerveFromTalk_()
 		}
 	}
 
-	offLiveFlag(LIVE_FLAG_UNK2000000);
+	offLiveFlag(LIVE_FLAG_ANGRY);
 }
 
 void TBaseNPC::changeNerveToWet_() { }
@@ -220,7 +220,7 @@ void TBaseNPC::releaseTaken_()
 	mVelocity.set(fVar1 * JMASSin(uVar4), mPtrSaveNormal->mThrowSpeedY.get(),
 	              fVar1 * JMASCos(uVar4));
 
-	onLiveFlag(LIVE_FLAG_UNK10000000);
+	onLiveFlag(LIVE_FLAG_ENABLE_WALL_COLLISION);
 
 	unk1DC = CLBPalFrame(15l);
 	unk158 = nullptr;
@@ -241,7 +241,8 @@ void TBaseNPC::behaveToBeTaken_(THitActor* param_1)
 
 	mInbetweenCtrl->startPosBlend();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	offLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK400000);
+	offLiveFlag(LIVE_FLAG_NO_BIND | TBaseNPC::LIVE_FLAG_TALKABLE
+	            | LIVE_FLAG_SINKING);
 	if (mActorType == ACTOR_TYPE_NPC_PEACH) {
 		peachParasolOut_();
 		mBalloonCtrl->setNextMessage(0xE004F, 0x2EE);
@@ -388,7 +389,7 @@ void TBaseNPC::behaveToHitObject_(THitActor* param_1,
 			    && (mSpine->getCurrentNerve() != &TNerveNPCTalk::theNerve()
 			        || mSpine->getTime() >= 4)) {
 				if (param_2 == 1)
-					onLiveFlag(LIVE_FLAG_UNK4000000);
+					onLiveFlag(LIVE_FLAG_BALL_HIT_REACTION);
 				mSpine->pushNerve(&TNerveNPCWet::theNerve());
 			}
 		}
@@ -428,10 +429,11 @@ bool TBaseNPC::isStateGoToMad_() const
 bool TBaseNPC::isNowCanTaken() const
 {
 	bool result = false;
-	if (checkLiveFlag(LIVE_FLAG_UNK100000) && mActorType != ACTOR_TYPE_NPC_DUMMY
-	    && mHolder == nullptr && mHeldObject == nullptr
+	if (checkLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN)
+	    && mActorType != ACTOR_TYPE_NPC_DUMMY && mHolder == nullptr
+	    && mHeldObject == nullptr
 	    && !checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
-	                      | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_UNK40000
+	                      | LIVE_FLAG_CLIPPED_OUT | LIVE_FLAG_TALK_REQUESTED
 	                      | LIVE_FLAG_SINK_BOTTOM)
 	    && !checkHitFilter(HIT_FILTER_NO_COLLISION) && isNerveCanGoToTaken()) {
 		result = true;
@@ -445,16 +447,16 @@ void TBaseNPC::changeNerveProc_()
 	const TNerveBase<TLiveActor>* latestNerve = mSpine->getLatestNerve();
 	if (latestNerve == &TNerveNPCTalk::theNerve()) {
 		bVar4 = true;
-		onLiveFlag(LIVE_FLAG_UNK20000);
-		offLiveFlag(LIVE_FLAG_UNK40000);
+		onLiveFlag(TBaseNPC::LIVE_FLAG_TALKABLE);
+		offLiveFlag(LIVE_FLAG_TALK_REQUESTED);
 	} else {
 		bool bVar5 = isTalkable_();
 
 		if (bVar5) {
-			onLiveFlag(LIVE_FLAG_UNK20000);
-			if (checkLiveFlag(LIVE_FLAG_UNK40000)) {
+			onLiveFlag(TBaseNPC::LIVE_FLAG_TALKABLE);
+			if (checkLiveFlag(LIVE_FLAG_TALK_REQUESTED)) {
 				bVar4 = true;
-				offLiveFlag(LIVE_FLAG_UNK40000);
+				offLiveFlag(LIVE_FLAG_TALK_REQUESTED);
 				const TNerveBase<TLiveActor>* current
 				    = mSpine->getCurrentNerve();
 				if (current == &TNerveNPCWet::theNerve()
@@ -464,11 +466,11 @@ void TBaseNPC::changeNerveProc_()
 				} else {
 					mSpine->pushNerve(&TNerveNPCTalk::theNerve());
 				}
-				offLiveFlag(LIVE_FLAG_UNK2000000);
+				offLiveFlag(LIVE_FLAG_ANGRY);
 			}
 		} else {
-			offLiveFlag(LIVE_FLAG_UNK20000);
-			offLiveFlag(LIVE_FLAG_UNK40000);
+			offLiveFlag(TBaseNPC::LIVE_FLAG_TALKABLE);
+			offLiveFlag(LIVE_FLAG_TALK_REQUESTED);
 		}
 	}
 
@@ -507,7 +509,7 @@ void TBaseNPC::changeNerveProc_()
 		return;
 	}
 
-	if (checkLiveFlag(LIVE_FLAG_UNK400000))
+	if (checkLiveFlag(LIVE_FLAG_SINKING))
 		return;
 
 	if (isAirborne())
@@ -519,8 +521,9 @@ void TBaseNPC::changeNerveProc_()
 	if (isNerveCanGoToSink()) {
 		unk1C4 = mPosition.y;
 		mVelocity.set(0.0f, 0.0f, 0.0f);
-		offLiveFlag(LIVE_FLAG_UNK20000 | LIVE_FLAG_UNK8000000);
-		onLiveFlag(LIVE_FLAG_UNK400000 | LIVE_FLAG_UNK10);
+		offLiveFlag(TBaseNPC::LIVE_FLAG_TALKABLE
+		            | LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED);
+		onLiveFlag(LIVE_FLAG_SINKING | LIVE_FLAG_NO_BIND);
 		npcFallIn();
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 	}
@@ -532,11 +535,11 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 
 	bool cVar8 = gpPollution->isPolluted(pos.x, pos.y, pos.z);
 	offLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT
-	            | LIVE_FLAG_UNK8 | LIVE_FLAG_UNK10 | LIVE_FLAG_UNK20000
-	            | LIVE_FLAG_UNK40000 | LIVE_FLAG_UNK400000
-	            | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_UNK2000000
-	            | LIVE_FLAG_UNK8000000);
-	onLiveFlag(LIVE_FLAG_UNK1000000);
+	            | LIVE_FLAG_NO_SHADOW | LIVE_FLAG_NO_BIND
+	            | TBaseNPC::LIVE_FLAG_TALKABLE | LIVE_FLAG_TALK_REQUESTED
+	            | LIVE_FLAG_SINKING | LIVE_FLAG_SINK_BOTTOM | LIVE_FLAG_ANGRY
+	            | LIVE_FLAG_SINK_RECOVERY_JUMP_STARTED);
+	onLiveFlag(LIVE_FLAG_RENDER_ENTRY_SKIPPED);
 	mHeldObject = nullptr;
 	mHolder     = nullptr;
 	if (unk15C != nullptr)
@@ -554,7 +557,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		mSpine->setDefaultNext();
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
 		mSpine->pushNerve(&TNerveNPCSink::theNerve());
-		onLiveFlag(LIVE_FLAG_UNK10 | LIVE_FLAG_UNK400000
+		onLiveFlag(LIVE_FLAG_NO_BIND | LIVE_FLAG_SINKING
 		           | LIVE_FLAG_SINK_BOTTOM);
 		unk1C4 = mGroundHeight = gpMap->checkGroundIgnoreWaterSurface(
 		    pos.x, pos.y + getHeadHeight(), pos.z, &mGroundPlane);
@@ -566,7 +569,7 @@ void TBaseNPC::setPosAndInitAfterSinkBottom()
 		mSpine->pushNerve(mSpine->getDefault());
 		pos.y += 2.0f;
 		mVelocity.set(0.0f, 5.0f, 0.0f);
-		onLiveFlag(LIVE_FLAG_UNK8000);
+		onLiveFlag(LIVE_FLAG_JUMPING);
 		onLiveFlag(LIVE_FLAG_AIRBORNE);
 	}
 

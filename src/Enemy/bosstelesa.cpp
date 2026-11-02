@@ -144,7 +144,7 @@ void TBubble::init(TLiveManager* manager)
 void TBubble::reset()
 {
 	TWalkerEnemy::reset();
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	TMsRange<f32> scaleRange(50.0f, 150.0f);
 	unk1CC = scaleRange.rand();
@@ -208,7 +208,7 @@ void TBubble::kill()
 		mSpine->reset();
 		mSpine->setNext(&TNerveSmallEnemyDie::theNerve());
 		mSpine->pushAfterCurrent(mSpine->getDefault());
-		onLiveFlag(LIVE_FLAG_UNK20000);
+		onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);
 	}
 
 	onLiveFlag(LIVE_FLAG_UNK40);
@@ -262,7 +262,7 @@ void TBubble::appendItem()
 		item->appear();
 		item->mPosition = mPosition;
 		item->mVelocity.set(0.0f, 15.0f, 0.0f);
-		item->offLiveFlag(LIVE_FLAG_UNK10);
+		item->offLiveFlag(LIVE_FLAG_NO_BIND);
 		mHeldObject = item;
 		unk198      = item;
 	}
@@ -322,14 +322,14 @@ DEFINE_NERVE_EXECUTE(TNerveBubbleLive, TLiveActor)
 			bubble->setBckAnm(8);
 		} else {
 			bubble->setBckAnm(10);
-			bubble->setGoalPath((THitActor*)gpMarioAddress);
+			bubble->setGoal((THitActor*)gpMarioAddress);
 		}
 
 		J3DFrameCtrl* frameCtrl = bubble->mMActor->getFrameCtrl(0);
 		TMsRange<f32> frameRange(0.0f, 20.0f);
 		frameCtrl->setFrame(frameRange.rand());
-		bubble->onLiveFlag(LIVE_FLAG_UNK8);
-	} else if (bubble->checkCurAnmEnd(0)) {
+		bubble->onLiveFlag(LIVE_FLAG_NO_SHADOW);
+	} else if (bubble->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		bubble->offHitFilter(HIT_FILTER_NO_COLLISION);
 		bubble->setBckAnm(10);
 	}
@@ -386,7 +386,8 @@ DEFINE_NERVE(TNerveBubbleSplit, TLiveActor)
 	if (spine->getTime() == 10)
 		bubble->setBckAnm(9);
 
-	if (bubble->checkCurAnmEnd(0) && bubble->mMActor->checkCurBckFromIndex(9)) {
+	if (bubble->checkCurAnmEnd(ANM_TYPE_BCK)
+	    && bubble->mMActor->checkCurBckFromIndex(9)) {
 		bubble->unk1D2 = 0;
 		bubble->kill();
 	}
@@ -520,7 +521,7 @@ void TBossTelesaKillSmallEnemy::checkHit()
 void TTelesaSlot::initMapObj()
 {
 	TSlotDrum::initMapObj();
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	unk14C = 160.0f;
 	unk150 = mPosition.y;
 	unk154 = 2.0f;
@@ -842,14 +843,14 @@ void TBossTelesa::init(TLiveManager* manager)
 	             HIT_CATEGORY_PLAYER | HIT_CATEGORY_ENEMY | HIT_CATEGORY_BOSS,
 	             mBodyRadius, mHeadHeight, mBodyRadius, mHeadHeight);
 	mGroundPlane = TMap::getIllegalCheckData();
-	setGoalPath((THitActor*)gpMarioAddress);
+	setGoal((THitActor*)gpMarioAddress);
 	initAnmSound();
 	unk15C     = static_cast<TBossTelesaSaveLoadParams*>(getSaveParam());
 	mActorType = ACTOR_TYPE_BOSS_TELESA;
 	onHitFilter(HIT_CATEGORY_PLAYER | HIT_CATEGORY_MAP_OBJECT
 	            | HIT_CATEGORY_ENEMY);
 	mSpine->initWith(&TNerveBossTelesaFallDemo::theNerve());
-	onLiveFlag(LIVE_FLAG_UNK8);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
 
 	mMActor->setLightType(1);
 	mMActor->markUnk40();
@@ -1102,8 +1103,8 @@ void TBossTelesa::reset()
 {
 	TSpineEnemy::reset();
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onLiveFlag(LIVE_FLAG_UNK8);
-	onLiveFlag(LIVE_FLAG_UNK10);
+	onLiveFlag(LIVE_FLAG_NO_SHADOW);
+	onLiveFlag(LIVE_FLAG_NO_BIND);
 	onLiveFlag(LIVE_FLAG_HIDDEN);
 
 	unk18C = 0;
@@ -1852,12 +1853,12 @@ void TBossTelesa::generateSlotItem()
 				mRedPeppers[i]->mVelocity.set(
 				    normalizedDir.x * fruitSpeedRange.rand(), -2.0f,
 				    normalizedDir.z * fruitSpeedRange.rand());
-				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				mRedPeppers[i]->offLiveFlag(LIVE_FLAG_NO_BIND);
 				if (i == 0) {
 					mRedPeppers[i]->mVelocity.set(
 					    normalizedDir.x * fruitSpeedRange.rand() * 2.0f, -2.0f,
 					    normalizedDir.z * fruitSpeedRange.rand() * 2.0f);
-					mRedPeppers[i]->offLiveFlag(LIVE_FLAG_UNK10);
+					mRedPeppers[i]->offLiveFlag(LIVE_FLAG_NO_BIND);
 				}
 				mRedPeppers[i]->mRotation.set(0.0f, 90.0f, 0.0f);
 				mSpitObjs[mSpitObjNum] = mRedPeppers[i];
@@ -1868,7 +1869,7 @@ void TBossTelesa::generateSlotItem()
 				mFruits[i]->mVelocity.set(
 				    normalizedDir.x * fruitSpeedRange.rand(), -2.0f,
 				    normalizedDir.z * fruitSpeedRange.rand());
-				mFruits[i]->offLiveFlag(LIVE_FLAG_UNK10);
+				mFruits[i]->offLiveFlag(LIVE_FLAG_NO_BIND);
 				mSpitObjs[mSpitObjNum] = mFruits[i];
 			}
 
@@ -1920,7 +1921,7 @@ void TBossTelesa::generateSlotItem()
 			item->mPosition.set(rootMtx[0][3], rootMtx[1][3] - 250.0f,
 			                    rootMtx[2][3]);
 			item->mVelocity.set(velocity);
-			item->offLiveFlag(LIVE_FLAG_UNK10);
+			item->offLiveFlag(LIVE_FLAG_NO_BIND);
 			item->mScaling.set(0.0f, 0.0f, 0.0f);
 			item->killByTimer(0x3C0);
 
@@ -2140,7 +2141,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 	}
 
 	if (boss->getHitPoints() == 0) {
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (boss->unk388 == 0) {
 				MtxPtr mtx = boss->getMActor()->getModel()->getAnmMtx(1);
 				boss->mEffectPos.set(mtx[0][3], mtx[1][3], mtx[2][3]);
@@ -2173,7 +2174,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 				    "シャイン（ボス用）", "ボスシャインカメラ",
 				    boss->mPosition.x, boss->mPosition.y, boss->mPosition.z);
 				boss->onLiveFlag(LIVE_FLAG_DEAD);
-				boss->onLiveFlag(LIVE_FLAG_UNK8);
+				boss->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 				boss->offLiveFlag(TBossTelesa::LIVE_FLAG_UNK10000);
 				boss->mHolder = nullptr;
 				boss->offAllCollision();
@@ -2187,7 +2188,7 @@ DEFINE_NERVE(TNerveBossTelesaDie, TLiveActor)
 		return FALSE;
 	}
 
-	if (boss->checkCurAnmEnd(0)) {
+	if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		if (boss->getMActor()->checkCurBckFromIndex(5)) {
 			boss->getMActor()->setBrkFromIndex(2);
 			boss->setBckAnm(7);
@@ -2226,7 +2227,7 @@ DEFINE_NERVE(TNerveBossTelesaSpit, TLiveActor)
 			boss->genAttacker();
 	}
 
-	if (boss->checkCurAnmEnd(0))
+	if (boss->checkCurAnmEnd(ANM_TYPE_BCK))
 		return true;
 	return false;
 }
@@ -2239,7 +2240,7 @@ DEFINE_NERVE(TNerveBossTelesaHide, TLiveActor)
 		boss->getMActor()->setBtpFromIndex(2);
 	}
 
-	if (boss->checkCurAnmEnd(0)) {
+	if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 		boss->offAllCollision();
 		SMSRumbleMgr->start(0x14, 0xF, (f32*)nullptr);
 		boss->rouletteStart();
@@ -2296,7 +2297,7 @@ DEFINE_NERVE(TNerveBossTelesaAppear, TLiveActor)
 			boss->mSlot->randomReset();
 			boss->onAllCollision();
 		}
-	} else if (boss->checkCurAnmEnd(0)
+	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK)
 	           && !boss->getMActor()->checkCurBckFromIndex(15)) {
 		boss->setBckAnm(15);
 		boss->getMActor()->setBtpFromIndex(2);
@@ -2334,7 +2335,7 @@ DEFINE_NERVE(TNerveBossTelesaSlotStart, TLiveActor)
 			boss->slotStart();
 		}
 
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			boss->setBckAnm(15);
 			boss->getMActor()->setBtpFromIndex(2);
 			boss->mSlot->forceStopSlot(1);
@@ -2354,7 +2355,7 @@ DEFINE_NERVE(TNerveBossTelesaSpitSlotItem, TLiveActor)
 	if (!boss->getMActor()->checkCurBckFromIndex(14)
 	    && boss->mHoseiPosY < TBossTelesa::mBaseHoseiPosY - 200.0f) {
 		boss->setBckAnm(14);
-	} else if (boss->checkCurAnmEnd(0) && spine->getTime() > 600) {
+	} else if (boss->checkCurAnmEnd(ANM_TYPE_BCK) && spine->getTime() > 600) {
 		spine->pushAfterCurrent(&TNerveBossTelesaPrepareSlot::theNerve());
 		boss->unk368 = 0;
 		boss->fruitCollisionOn();
@@ -2375,7 +2376,7 @@ DEFINE_NERVE(TNerveBossTelesaPrepareSlot, TLiveActor)
 
 	if (boss->mIsSpicy) {
 		boss->mSpicyTimer++;
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			if (boss->getMActor()->checkCurBckFromIndex(1)) {
 				boss->setBckAnm(12);
 				boss->getMActor()->setBtpFromIndex(1);
@@ -2444,7 +2445,7 @@ DEFINE_NERVE(TNerveBossTelesaFreeze, TLiveActor)
 {
 	TBossTelesa* boss = (TBossTelesa*)spine->getBody();
 	if (boss->getMActor()->checkCurBckFromIndex(16)) {
-		if (boss->checkCurAnmEnd(0)) {
+		if (boss->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			boss->mIsSpicy = 0;
 
 			u8 maxHp = boss->getMaxHitPoints();
