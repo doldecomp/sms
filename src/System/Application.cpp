@@ -1,4 +1,3 @@
-#include "System/FlagManagerFlags.hpp"
 #include <System/Application.hpp>
 #include <stdio.h>
 #include <stdlib.h>
@@ -794,7 +793,7 @@ int TApplication::gameLoop()
 {
 	u32 nextState = APP_STATE_DEFAULT;
 	while (nextState <= APP_STATE_DEFAULT) {
-#if VERSION_GMSP01_NX
+#ifdef VERSION_GMSP01_NX
 		gl_stardust_frameid++;
 #endif
 
