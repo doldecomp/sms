@@ -21,7 +21,6 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-// placeholder
 static const char* tori_bastable[] = { "/scene/tori/bas/tori_back.bas",
 	                                   "/scene/tori/bas/tori_down.bas",
 	                                   nullptr,
