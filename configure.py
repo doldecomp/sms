@@ -174,6 +174,7 @@ config.asflags = [
     f"-I {msl_include}/MSL_C/MSL_Common",
     f"-I {msl_include}/MSL_C++/MSL_Common",
     f"-I build/{config.version}/include",
+    f"--defsym VERSION_{config.version}=1",
     f"--defsym BUILD_VERSION={version_num}",
 ]
 config.ldflags = [
@@ -429,7 +430,7 @@ config.libs = [
             Object(Matching, "JSystem/JDrama/JDRNameRefGen.cpp"),
             Object(Matching, "JSystem/JDrama/JDRPlacement.cpp"),
             Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSP01_NX"), "JSystem/JDrama/JDRRenderMode.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSP01_NX"), "JSystem/JDrama/JDRResolution.cpp"),
+            Object(Matching, "JSystem/JDrama/JDRResolution.cpp"),
             Object(Matching, "JSystem/JDrama/JDRScreen.cpp"),
             Object(NonMatching, "JSystem/JDrama/JDRSmJ3DAct.cpp"),
             Object(Matching, "JSystem/JDrama/JDRSmJ3DScn.cpp"),
@@ -659,8 +660,8 @@ config.libs = [
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/flush_cache.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/mem_TRK.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/targimpl.c"),
-            Object(MatchingFor("GMSJ01"), "TRK_MINNOW_DOLPHIN/__exception.s"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c"),
+            Object(Matching, "TRK_MINNOW_DOLPHIN/__exception.s"),
+            Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Processor/ppc/Generic/mpc_7xx_603e.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Portable/main_TRK.c"),
             Object(Matching, "TRK_MINNOW_DOLPHIN/debugger/embedded/MetroTRK/Os/dolphin/dolphin_trk_glue.c"),
@@ -674,7 +675,7 @@ config.libs = [
             Object(Matching, "dolphin/db/db.c"),
         ]),
     DolphinLib("os", [
-            Object(MatchingFor("GMSJ01", "GMSP01"), "dolphin/os/OS.c"),
+            Object(Matching, "dolphin/os/OS.c"),
             Object(Matching, "dolphin/os/OSAlarm.c"),
             Object(Matching, "dolphin/os/OSAlloc.c"),
             Object(Matching, "dolphin/os/OSArena.c"),
@@ -694,9 +695,9 @@ config.libs = [
             Object(Matching, "dolphin/os/OSRtc.c"),
             Object(Matching, "dolphin/os/OSStopwatch.c"),
             Object(Matching, "dolphin/os/OSSync.c"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "dolphin/os/OSThread.c"),
+            Object(Matching, "dolphin/os/OSThread.c"),
             Object(Matching, "dolphin/os/OSTime.c"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "dolphin/os/__start.c"),
+            Object(Matching, "dolphin/os/__start.c"),
             Object(Matching, "dolphin/os/__ppc_eabi_init.cpp"),
         ]),
     DolphinLibUnpatched("mtx", [

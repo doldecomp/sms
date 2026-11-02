@@ -15,11 +15,20 @@
 
 extern void InitMetroTRK();
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
-#else
+#if defined(VERSION_GMSJ01)
 __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x80424008);
+#elif defined(VERSION_GMSJ01_01)
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x80418518);
+#elif defined(VERSION_GMSE01)
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x804277E8);
+#elif defined(VERSION_GMSP01)
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
+#elif defined(VERSION_GMSP01_NX)
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041C2F0);
+#else
+#error "Unhandled ROM"
 #endif
+
 __declspec(section ".init") extern char _SDA_BASE_[];
 __declspec(section ".init") extern char _SDA2_BASE_[];
 
@@ -41,7 +50,11 @@ extern int main(int argc, char* argv[]);
 extern void exit(int);
 
 __declspec(section ".init") static void __init_registers(void);
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSP01)
 __declspec(section ".init") static void __init_data(void);
+#else
+__declspec(section ".init") void __init_data_80005380(void);
+#endif
 
 __declspec(section ".init") static void __check_pad3(void)
 {
@@ -60,7 +73,11 @@ __declspec(section ".init") __declspec(weak) asm void __start(void)
 	stwu r1, -8(r1)
 	stw r0, 4(r1)
 	stw r0, 0(r1)
+	#if defined(VERSION_GMSJ01) || defined(VERSION_GMSP01)
 	bl __init_data
+	#else
+	bl __init_data_80005380
+	#endif
 	li r0, 0
 	lis r6, EXCEPTIONMASK_ADDR@ha
 	addi r6, r6, EXCEPTIONMASK_ADDR@l
@@ -186,7 +203,11 @@ asm static void __init_registers(void)
 #endif // clang-format on
 }
 
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSP01)
 static void __init_data(void)
+#else
+void __init_data_80005380(void)
+#endif
 {
 	__rom_copy_info* dci;
 	__bss_init_info* bii;

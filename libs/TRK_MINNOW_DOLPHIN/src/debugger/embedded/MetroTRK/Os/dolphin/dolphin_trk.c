@@ -64,12 +64,23 @@ asm void InitMetroTRK()
 	mtspr  0x3f2, r0
 	mtspr  0x3f5, r0
 	//Restore stack pointer
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
-	lis r1, 0x80420D48@h
-	ori r1, r1, 0x80420D48@l
-#else
+#if defined(VERSION_GMSJ01)
 	lis r1, 0x80426008@h
 	ori r1, r1, 0x80426008@l
+#elif defined(VERSION_GMSJ01_01)
+	lis r1, 0x8041A518@h
+	ori r1, r1, 0x8041A518@l
+#elif defined(VERSION_GMSE01)
+	lis r1, 0x804297E8@h
+	ori r1, r1, 0x804297E8@l
+#elif defined(VERSION_GMSP01)
+	lis r1, 0x80420D48@h
+	ori r1, r1, 0x80420D48@l
+#elif defined(VERSION_GMSP01_NX)
+	lis r1, 0x8041E2F0@h
+	ori r1, r1, 0x8041E2F0@l
+#else
+	#error "Unhandled ROM"
 #endif
 	mr r3, r5
 	bl InitMetroTRKCommTable //Initialize comm table
