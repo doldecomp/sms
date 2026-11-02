@@ -52,9 +52,9 @@ class TPopo : public TWalkerEnemy {
 public:
 	TPopo(const char* name = "ポポ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void kill();
@@ -128,7 +128,7 @@ public:
 	    : THitActor(name)
 	{
 	}
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void kill();
 	void checkHit();
@@ -141,8 +141,8 @@ class TPopoManager : public TSmallEnemyManager {
 public:
 	TPopoManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();

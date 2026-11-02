@@ -8,7 +8,7 @@ class TLiveActor;
 class THelpActor : public THitActor {
 public:
 	THelpActor(const char* = "バルーンヘルプ");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual bool check();

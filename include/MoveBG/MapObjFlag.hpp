@@ -13,7 +13,7 @@ class TMapObjFlag : public THitActor {
 public:
 	TMapObjFlag(const char* name = "旗");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void updateVertex();
 
 	void init(const char*);
@@ -52,8 +52,8 @@ public:
 
 	TMapObjFlagManager(const char* name = "旗管理");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void registerObj(TMapObjFlag*, const char*);
 	void loadFlag(TMapObjFlagInfo*, TMapObjFlag*, const char*);

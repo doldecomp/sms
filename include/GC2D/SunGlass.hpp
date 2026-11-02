@@ -24,7 +24,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void draw(const JDrama::TRect&, JUtility::TColor);

@@ -13,7 +13,7 @@ public:
 	TDrawBufObj(u32, u32, const char*);
 
 	virtual ~TDrawBufObj() { }
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, TGraphics* graphics);
 
 	// fabricated

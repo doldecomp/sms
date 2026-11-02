@@ -5,7 +5,7 @@
 
 class TMapObjGrassGroup : public THitActor {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 	void drawNear() const;
 	void drawFar() const;
@@ -29,7 +29,7 @@ extern TMapObjGrassManager* gpMapObjGrassManager;
 
 class TMapObjGrassManager : public JDrama::TViewObj {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void initDrawNear() const;

@@ -10,7 +10,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 public:
 	/* 0xC */ u32 unkC;

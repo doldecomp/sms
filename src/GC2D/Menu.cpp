@@ -55,7 +55,7 @@ TMenuPlane::TMenuPlane(const TMarioGamePad* param_1, J2DPane* param_2,
 		mItems[i] = foundTextBoxes[i];
 }
 
-void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
+void TMenuPlane::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mFlags & FLAG_INPUT_DISABLED)
 		return;
@@ -110,7 +110,7 @@ void TMenuPlane::perform(u32 cue, JDrama::TGraphics*)
 	}
 }
 
-void TFlashPane::perform(u32 cue, JDrama::TGraphics*)
+void TFlashPane::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		mAlpha += mAlphaStep;

@@ -21,7 +21,7 @@ public:
 class TPoiHanaManager : public TSmallEnemyManager {
 public:
 	TPoiHanaManager(const char* name = "ポイハナマネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSmallEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
@@ -36,7 +36,7 @@ public:
 	{
 	}
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void kill();
 	void checkHit();
@@ -49,9 +49,9 @@ class TPoiHana : public TWalkerEnemy {
 public:
 	TPoiHana(const char* name = "ポイハナ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void moveObject();
@@ -106,7 +106,7 @@ public:
 	{
 	}
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void attackToMario();
 };
 
@@ -114,7 +114,7 @@ class TSleepPoiHana : public TPoiHana {
 public:
 	TSleepPoiHana(const char* name = "居眠りポイハナ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 };
 
 DECLARE_NERVE(TNervePoihanaSleep, TLiveActor);

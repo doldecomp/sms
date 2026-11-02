@@ -1182,7 +1182,7 @@ void TChestRevolve::control()
 	}
 }
 
-BOOL TPanelRevolve::receiveMessage(THitActor* actor, u32 message)
+BOOL TPanelRevolve::receiveMessage(THitActor* sender, u32 message)
 {
 	if (isState(STATE_NORMAL)) {
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_PANEL_ROLL, &mPosition, 0,

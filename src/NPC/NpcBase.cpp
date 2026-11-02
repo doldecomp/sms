@@ -435,7 +435,7 @@ JGeometry::TVec3<f32> TBaseNPC::getFocalPoint() const
 	    mPosition.z);
 }
 
-BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TBaseNPC::receiveMessage(THitActor* sender, u32 message)
 {
 	bool result = false;
 
@@ -444,29 +444,29 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 		break;
 
 	default:
-		if (param_2 == HIT_MESSAGE_TAKE
+		if (message == HIT_MESSAGE_TAKE
 		    && checkLiveFlag(TBaseNPC::LIVE_FLAG_CAN_BE_TAKEN)
 		    && mHolder == nullptr) {
-			behaveToBeTaken_(param_1);
+			behaveToBeTaken_(sender);
 			result = true;
-		} else if (param_2 == HIT_MESSAGE_TRAMPLE) {
+		} else if (message == HIT_MESSAGE_TRAMPLE) {
 			behaveToBeTrampled_();
 			result = true;
-		} else if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER) {
+		} else if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
 			if (isBehaveToWaterNpc())
-				behaveToHitObject_(param_1, HIT_NPC_OBJECT_KIND_WATER_SPRAY);
+				behaveToHitObject_(sender, HIT_NPC_OBJECT_KIND_WATER_SPRAY);
 			result = true;
-		} else if (param_2 == HIT_MESSAGE_UNK10
-		           || (param_2 == HIT_MESSAGE_ATTACK
-		               && param_1->getActorType() == ACTOR_TYPE_WOOD_BARREL)) {
+		} else if (message == HIT_MESSAGE_UNK10
+		           || (message == HIT_MESSAGE_ATTACK
+		               && sender->getActorType() == ACTOR_TYPE_WOOD_BARREL)) {
 			if (mDamageParticleForbidCount == 0) {
-				SMS_EasyEmitParticle(PARTICLE_MS_DMG_A, &param_1->mPosition,
+				SMS_EasyEmitParticle(PARTICLE_MS_DMG_A, &sender->mPosition,
 				                     nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-				SMS_EasyEmitParticle(PARTICLE_MS_DMG_B, &param_1->mPosition,
+				SMS_EasyEmitParticle(PARTICLE_MS_DMG_B, &sender->mPosition,
 				                     nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
-				SMS_EasyEmitParticle(PARTICLE_MS_DMG_C, &param_1->mPosition,
+				SMS_EasyEmitParticle(PARTICLE_MS_DMG_C, &sender->mPosition,
 				                     nullptr,
 				                     JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 				mDamageParticleForbidCount = 16;
@@ -474,9 +474,9 @@ BOOL TBaseNPC::receiveMessage(THitActor* param_1, u32 param_2)
 
 			if (isBehaveToHitNpc()) {
 				EnumHitNpcObjectKind kind = HIT_NPC_OBJECT_KIND_UNK2;
-				if (param_2 == HIT_MESSAGE_UNK10)
+				if (message == HIT_MESSAGE_UNK10)
 					kind = HIT_NPC_OBJECT_KIND_UNK1;
-				behaveToHitObject_(param_1, kind);
+				behaveToHitObject_(sender, kind);
 			}
 
 			result = true;

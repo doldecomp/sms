@@ -13,8 +13,8 @@ class TBossManta : public TSpineEnemy {
 public:
 	TBossManta(const char* name = "ボスマンタ");
 
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void moveObject();
@@ -77,7 +77,7 @@ public:
 	TBossMantaAdditionalCollision(const char* name = "マンタ追加コリジョン");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void setManta(TBossManta*);
 
@@ -155,7 +155,7 @@ public:
 
 	TBossMantaManager(const char* name = "ボスマンタマネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();

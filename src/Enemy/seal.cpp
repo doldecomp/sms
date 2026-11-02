@@ -90,7 +90,7 @@ void TSeal::calcRootMatrix()
 	model->setBaseScale(mScaling);
 }
 
-void TSeal::perform(u32 cue, JDrama::TGraphics* param_2)
+void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) && (cue & CUE_MOVE)) {
 		for (int i = 0; i < getColNum(); ++i) {
@@ -100,7 +100,7 @@ void TSeal::perform(u32 cue, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TSpineEnemy::perform(cue, param_2);
+	TSpineEnemy::perform(cue, graphics);
 	if (cue & CUE_MOVE) {
 		updateSquareToMario();
 		unk150 = 0;

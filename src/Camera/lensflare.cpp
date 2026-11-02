@@ -41,7 +41,7 @@ TLensFlare::TLensFlare(const char* name)
 	unk14 = new J3DModel(unk10, 0, 1);
 }
 
-void TLensFlare::perform(u32 cue, JDrama::TGraphics*)
+void TLensFlare::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (gpSunMgr->isThing())
 		return;

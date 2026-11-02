@@ -28,7 +28,7 @@ class TKillerManager : public TSmallEnemyManager {
 public:
 	TKillerManager(const char* = "キラーマネージャー");
 	virtual ~TKillerManager() { }
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 };
@@ -52,7 +52,7 @@ public:
 	}
 	virtual ~TFlyEnemy() { }
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void bind();
 	virtual f32 getGravityY() const;
 	virtual void reset();
@@ -93,7 +93,7 @@ public:
 	TKiller(const char* name = "キラー");
 	virtual ~TKiller() { }
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual const char** getBasNameTable() const;

@@ -153,7 +153,7 @@ class TLeanMirror : public TMapObjBase {
 public:
 	TLeanMirror(const char* name = "ぐらぐら鏡");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
@@ -208,7 +208,7 @@ class TShiningStone : public THitActor {
 public:
 	TShiningStone(const char* name = "太陽石");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void putOnLight(TLiveActor*);
@@ -230,7 +230,7 @@ class TMammaBlockRotate : public TMapObjBase {
 public:
 	TMammaBlockRotate(const char* name = "太陽の塔ブロック");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void control();
 	virtual void initMapObj();
 	virtual u32 touchWater(THitActor*);
@@ -295,7 +295,7 @@ class TGoalWatermelon : public TMapObjBase {
 public:
 	TGoalWatermelon(const char* name = "スイカゴール");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void control();
 	virtual void touchActor(THitActor*);

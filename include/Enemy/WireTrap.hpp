@@ -38,7 +38,7 @@ public:
 	virtual ~TWireTrap() { }
 
 	virtual void init(TLiveManager* manager);
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
 

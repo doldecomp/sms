@@ -5,7 +5,7 @@
 
 class TMapObjTumblePole : public TMapObjBase {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void draw();
 
 	void fallDown();

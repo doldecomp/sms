@@ -75,7 +75,7 @@ public:
 	TCoasterKillerManager(const char* name = "コースターキラーマネージャー");
 	virtual ~TCoasterKillerManager() { }
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();

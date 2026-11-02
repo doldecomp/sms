@@ -1225,7 +1225,7 @@ bool TTalk2D2::appearBoardBoxWindow()
 	return result;
 }
 
-void TTalk2D2::perform(u32 cue, JDrama::TGraphics* param_2)
+void TTalk2D2::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		switch (SMSGetMarDirector()->getGameMode()) {
@@ -1341,7 +1341,7 @@ void TTalk2D2::perform(u32 cue, JDrama::TGraphics* param_2)
 			ReInitializeGX();
 			SMS_DrawInit();
 
-			J2DOrthoGraph ortho(param_2->getViewport());
+			J2DOrthoGraph ortho(graphics->getViewport());
 			ortho.setup2D();
 
 			if (unk250 != 0) {

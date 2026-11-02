@@ -105,7 +105,7 @@ class TBossPakkunManager : public TEnemyManager {
 public:
 	TBossPakkunManager(const char*, int);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 
 	void initJParticle();
@@ -125,9 +125,9 @@ public:
 
 	TBossPakkun(const char* name = "ボスパックン");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void setGroundCollision();
 	virtual void kill();
 	virtual const char** getBasNameTable() const;
@@ -203,8 +203,8 @@ class TBPNavel : public THitActor {
 public:
 	TBPNavel(TBossPakkun*, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
 	/* 0x68 */ TBossPakkun* mOwner;
@@ -214,8 +214,8 @@ class TBPHeadHit : public THitActor {
 public:
 	TBPHeadHit(TBossPakkun*, const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void throwActor(THitActor*);
 
@@ -227,7 +227,7 @@ class TBPTornado : public THitActor {
 public:
 	TBPTornado(TBossPakkun*, const char* name = "<TBPTornado>");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void launch(const JGeometry::TVec3<f32>&);
 	void vanish();
@@ -246,7 +246,7 @@ class TBPVomit : public JDrama::TViewObj {
 public:
 	TBPVomit(TBossPakkun*, const char* name = "<TBPVomit>");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void vomitFinished();
 	void vomit();
@@ -268,7 +268,7 @@ class TBPPolDrop : public THitActor {
 public:
 	TBPPolDrop(TBossPakkun*, const char* name = "<TBPPolDrop>");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void launch(const JGeometry::TVec3<f32>&, const JGeometry::TVec3<f32>&);
 	void move();

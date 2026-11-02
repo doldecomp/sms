@@ -25,7 +25,7 @@ public:
 	TGKHitObj(TGateKeeperBase*, int, const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
 	/* 0x68 */ TGateKeeperBase* mOwner;
@@ -38,7 +38,7 @@ public:
 	TGateKeeperBase(const char*);
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void kill();
 
 public:
@@ -54,7 +54,7 @@ public:
 class TBiancoGateKeeperManager : public TEnemyManager {
 public:
 	TBiancoGateKeeperManager(const char* name = "ゲートキーパーマネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual void initJParticle();
 };
@@ -84,7 +84,7 @@ public:
 	TBiancoGateKeeper(const char* name = "ビアンコゲートキーパー");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void kill();
 	virtual const char** getBasNameTable() const;
 

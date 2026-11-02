@@ -80,8 +80,8 @@ public:
 	TBathtubKiller(const char* name = "バスタブキラー");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual f32 getGravityY() const;
@@ -169,7 +169,7 @@ class TBathtubKillerManager : public TSmallEnemyManager {
 public:
 	TBathtubKillerManager(const char* name = "バスタブキラーマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();

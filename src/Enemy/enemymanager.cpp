@@ -260,7 +260,7 @@ void TEnemyManager::copyFromShared()
 	j3dSys.setViewMtx(afStack_88);
 }
 
-void TEnemyManager::performShared(u32 cue, JDrama::TGraphics* param_2)
+void TEnemyManager::performShared(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk30 & 1)
 		TTimeRec::snapCPUTime(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
@@ -278,7 +278,7 @@ void TEnemyManager::performShared(u32 cue, JDrama::TGraphics* param_2)
 	}
 
 	if (cue & CUE_CALC_ANIM) {
-		clipEnemies(param_2);
+		clipEnemies(graphics);
 		for (int i = 0; i < unk44; ++i)
 			for (int j = 0; j < unk40[i].unk4; ++j)
 				unk40[i].unk0[j]->calcAnm();

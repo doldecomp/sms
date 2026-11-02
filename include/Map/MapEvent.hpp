@@ -9,7 +9,7 @@ public:
 	TMapEvent(const char*);
 	TMapEvent();
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual bool isFinishedAll() const;
 	virtual bool watch() = 0;

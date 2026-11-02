@@ -32,7 +32,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, TGraphics* graphics);
 
 public:
@@ -50,7 +50,7 @@ public:
 		setColor(JUtility::TColor(0xff, 0xff, 0xff, 0xff));
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, TGraphics* graphics);
 
 	virtual JStage::TELight JSGGetLightType() const;
@@ -103,7 +103,7 @@ public:
 		setLightNum(0);
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TNameRef* searchF(u16, const char*);
 	virtual void perform(u32 cue, TGraphics* graphics);
 
@@ -128,7 +128,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, TGraphics* graphics);
 	virtual GXColor JSGGetColor() const;
 	virtual void JSGSetColor(GXColor color);
@@ -153,7 +153,7 @@ public:
 		setAmbNum(0);
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TNameRef* searchF(u16, const char*);
 	virtual void perform(u32 cue, TGraphics* graphics) { }
 

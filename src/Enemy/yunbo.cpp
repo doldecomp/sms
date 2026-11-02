@@ -60,7 +60,7 @@ void TYumboSeed::init()
 	group->getChildren().push_back(this);
 }
 
-void TYumboSeed::perform(u32 cue, JDrama::TGraphics* param_2)
+void TYumboSeed::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk70 & 1)
 		return;
@@ -83,7 +83,7 @@ void TYumboSeed::perform(u32 cue, JDrama::TGraphics* param_2)
 		}
 	}
 	if (!(unk70 & 4))
-		unk6C->perform(cue, param_2);
+		unk6C->perform(cue, graphics);
 }
 
 void TYumboSeed::checkHitActors()
@@ -180,12 +180,12 @@ void TYumbo::initCollision()
 	mScaling.set(1.5f, 1.5f, 1.5f);
 }
 
-BOOL TYumbo::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TYumbo::receiveMessage(THitActor* sender, u32 message)
 {
 	if (checkLiveFlag(LIVE_FLAG_DEAD))
 		return false;
 
-	switch (param_2) {
+	switch (message) {
 	case HIT_MESSAGE_TRAMPLE:
 	case HIT_MESSAGE_HIP_DROP:
 		if (!isFreeze())
@@ -194,7 +194,7 @@ BOOL TYumbo::receiveMessage(THitActor* param_1, u32 param_2)
 		return true;
 
 	default:
-		return TSmallEnemy::receiveMessage(param_1, param_2);
+		return TSmallEnemy::receiveMessage(sender, message);
 	}
 }
 
@@ -206,12 +206,12 @@ void TYumbo::moveObject()
 	TSmallEnemy::moveObject();
 }
 
-void TYumbo::perform(u32 cue, JDrama::TGraphics* param_2)
+void TYumbo::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	TYumboSeed** end = unk194 + ARRAY_COUNT(unk194);
 	for (TYumboSeed** it = unk194; it != end; ++it)
-		(*it)->perform(cue, param_2);
+		(*it)->perform(cue, graphics);
 }
 
 void TYumbo::behaveToWater(THitActor* param_1)

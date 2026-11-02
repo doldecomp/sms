@@ -26,7 +26,7 @@ public:
 	TDolpicEventRiccoMammaGate(const char* name
 	                           = "イベント（リコ、マンマゲート）");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual bool isFinishedAll() const;
 	virtual bool watch();

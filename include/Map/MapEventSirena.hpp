@@ -7,7 +7,7 @@ class TMapEventSirenaSink : public TMapEventSink {
 public:
 	TMapEventSirenaSink(const char* = "ホテル沈む");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual bool watch();
 	virtual void initPollution() { }

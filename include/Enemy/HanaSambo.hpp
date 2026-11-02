@@ -48,8 +48,8 @@ class TSamboHead : public TWalkerEnemy {
 public:
 	TSamboHead(const char* name = "サンボヘッド");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void kill();
 	virtual f32 getGravityY() const;
@@ -80,7 +80,7 @@ class TSamboHeadManager : public TSmallEnemyManager {
 public:
 	TSamboHeadManager(const char* name = "サンボヘッドマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 };
@@ -120,9 +120,9 @@ class THanaSambo : public TSmallEnemy {
 public:
 	THanaSambo(const char* name = "ハナサンボ");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void init(TLiveManager* manager);
 	virtual void moveObject();
 	virtual void drawObject(JDrama::TGraphics*);
 	virtual void kill();
@@ -164,7 +164,7 @@ public:
 	{
 	}
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void kill();
 	void checkHit();
@@ -177,7 +177,7 @@ class THanaSamboManager : public TSmallEnemyManager {
 public:
 	THanaSamboManager(const char* name = "ハナサンボマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 };
@@ -212,10 +212,10 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void control() { }
 	virtual void moveObject();
 	virtual void drawObject(JDrama::TGraphics*);
@@ -250,9 +250,9 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void dropLeaf(JGeometry::TVec3<f32>&, JGeometry::TVec3<f32>&);
@@ -290,7 +290,7 @@ public:
 	TSamboLeaf(TSamboFlowerManager*, SDLModelData*,
 	           const char* name = "サンボリーフ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void generate(JGeometry::TVec3<f32>&);
 

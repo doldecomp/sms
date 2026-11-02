@@ -37,7 +37,7 @@ class TTelesa;
 class TTelesaManager : public TSmallEnemyManager {
 public:
 	TTelesaManager(const char* name = "テレサマネージャー");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual void setFlagOutOfCube();
 	virtual TSmallEnemy* createEnemyInstance();
@@ -56,9 +56,9 @@ class TTelesa : public TWalkerEnemy {
 public:
 	TTelesa(const char* name = "テレサ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void moveObject();
@@ -146,7 +146,7 @@ class TBoxTelesa : public TTelesa {
 public:
 	TBoxTelesa(const char* name = "箱テレサ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void reset();
 	virtual bool isEatenByYosshi() { return false; }
 	virtual bool isHitValid(u32);
@@ -156,8 +156,8 @@ class TMarioModokiTelesa : public TTelesa {
 public:
 	TMarioModokiTelesa(const char* name = "マリオモドキテレサ");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 
 	void imitateAnm();
 
@@ -179,7 +179,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();
 };
@@ -191,8 +191,8 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 };
 
 DECLARE_NERVE(TNerveKageMarioModokiWait, TLiveActor);

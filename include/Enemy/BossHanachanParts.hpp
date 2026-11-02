@@ -60,7 +60,7 @@ public:
 	TBossHanachanPartsHead(TBossHanachan* owner,
 	                       const char* name = "ボスハナチャンの頭");
 	virtual ~TBossHanachanPartsHead() { }
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual bool setAnm_(EnumBossHanachanAnmKind,
 	                     EnumBossHanachanStopMotionBlendOnOff);
 
@@ -72,7 +72,7 @@ public:
 	TBossHanachanPartsBody(TBossHanachan* owner,
 	                       const char* name = "ボスハナチャンの体");
 	virtual ~TBossHanachanPartsBody() { }
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual bool setAnm_(EnumBossHanachanAnmKind,
 	                     EnumBossHanachanStopMotionBlendOnOff);
 	void initFootHitActor_(TIdxGroupObj*);

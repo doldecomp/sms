@@ -26,7 +26,7 @@ public:
 	void initializer();
 
 	virtual ~TCubeManagerBase() { }
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	s32 getDataNo(s32) const;

@@ -18,7 +18,7 @@ public:
 	THauntLeg(const char* = "ハントレッグ");
 
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual const char** getBasNameTable() const;
 	virtual void reset();
@@ -48,7 +48,7 @@ public:
 	    : THitActor("ハントオブジェクト")
 	{
 	}
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 	void kill();
 	void checkHit();
@@ -61,7 +61,7 @@ class THauntLegManager : public TSmallEnemyManager {
 public:
 	THauntLegManager(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();

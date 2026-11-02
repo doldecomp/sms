@@ -102,13 +102,13 @@ void THauntLegManager::createModelData()
 	createModelDataArray(entry);
 }
 
-BOOL THauntedObject::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL THauntedObject::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 <= HIT_MESSAGE_HIP_DROP) {
+	if (message <= HIT_MESSAGE_HIP_DROP) {
 		unk68->kill();
 		return true;
 	}
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return true;
 	return false;
 }

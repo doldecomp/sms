@@ -20,7 +20,7 @@ public:
 	}
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
 	/* 0x68 */ TRoulette* unk68;
@@ -225,7 +225,7 @@ class TWarpAreaActor : public THitActor {
 public:
 	TWarpAreaActor(const char* name = "ワープエリア");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 private:
@@ -255,7 +255,7 @@ public:
 	{
 	}
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void touchPlayer(THitActor*);
 

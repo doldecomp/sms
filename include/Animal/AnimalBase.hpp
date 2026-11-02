@@ -18,10 +18,10 @@ class TAnimalBase : public TSpineEnemy {
 public:
 	TAnimalBase(u32, const char* name = "?");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 
 	void execWalk(bool);

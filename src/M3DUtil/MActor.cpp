@@ -415,7 +415,7 @@ void MActor::matAnmFrameUpdate()
 			mAnmByType[i]->getFrameCtrl()->update();
 }
 
-void MActor::perform(u32 cue, JDrama::TGraphics*)
+void MActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM)
 		calcAnm();

@@ -59,7 +59,7 @@ class THinokuri2Manager : public TEnemyManager {
 public:
 	THinokuri2Manager(const char* name = "ヒノクリ２マネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	void createModelData();
 	TSpineEnemy* createEnemyInstance();
 };
@@ -138,7 +138,7 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void moveObject();
 	virtual void kill();
 	virtual void reset();
@@ -156,9 +156,9 @@ public:
 	void generateEnemy();
 	void updateAnmSound();
 	void changeBck(int);
-	BOOL receiveMessageLv0(THitActor*, u32);
-	BOOL receiveMessageLv1(THitActor*, u32);
-	BOOL receiveMessageLv2(THitActor*, u32);
+	BOOL receiveMessageLv0(THitActor* sender, u32 message);
+	BOOL receiveMessageLv1(THitActor* sender, u32 message);
+	BOOL receiveMessageLv2(THitActor* sender, u32 message);
 
 	// fabricated
 	THino2Params* getSaveParams() const

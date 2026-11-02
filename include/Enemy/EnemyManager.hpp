@@ -36,7 +36,7 @@ public:
 	TEnemyManager(const char* name = "エネミーマネージャ基底型");
 
 	virtual ~TEnemyManager();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*);

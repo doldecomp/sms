@@ -78,7 +78,7 @@ class TIgaigaManager : public TSmallEnemyManager {
 public:
 	TIgaigaManager(const char* name = "イガイガマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSmallEnemy* createEnemyInstance();
@@ -96,7 +96,7 @@ public:
 	TIgaiga(const char* name = "イガイガ");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void kill();
@@ -164,7 +164,7 @@ class TGorogoroManager : public TSmallEnemyManager {
 public:
 	TGorogoroManager(const char* name = "ゴロゴロマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -187,7 +187,7 @@ public:
 	TGorogoro(const char* name = "ゴロゴロ");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void kill();
 	virtual const char** getBasNameTable() const;

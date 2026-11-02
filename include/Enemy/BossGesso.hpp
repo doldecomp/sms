@@ -144,7 +144,7 @@ public:
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual const char** getBasNameTable() const;
@@ -248,7 +248,7 @@ class TBossGessoManager : public TEnemyManager {
 public:
 	TBossGessoManager(const char* name = "ボスゲッソーマネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 	void createModelData();
 	void initJParticle();

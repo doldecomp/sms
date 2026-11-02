@@ -114,7 +114,7 @@ public:
 	virtual MtxPtr getTakingMtx();
 	virtual BOOL belongToGround() const;
 	virtual Mtx* getRootJointMtx() const;
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	/**
 	 * @brief Updates the collision geometry for the actor.

@@ -14,7 +14,7 @@ class TDoor : public TMapObjBase {
 public:
 	TDoor(const char* name = "ドア");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void touchPlayer(THitActor*);
 
 private:
@@ -76,7 +76,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void touchPlayer(THitActor*);
 
 public:
@@ -103,7 +103,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void touchPlayer(THitActor*);
 
 private:
@@ -117,7 +117,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void init(u32);
@@ -132,7 +132,7 @@ class TMapObjWaterSpray : public TMapObjBase {
 public:
 	TMapObjWaterSpray(const char* name = "汎用水しぶき");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void calc();
 
 private:
@@ -146,7 +146,7 @@ class THideObjInfo : public JDrama::TActor {
 public:
 	THideObjInfo(const char* name = "オブジェ出現情報");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void action(s32);
 
 private:
@@ -159,8 +159,8 @@ class TMapObjSwitch : public TMapObjBase {
 public:
 	TMapObjSwitch(const char* name = "オブジェスイッチ");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 
 	void registerObjInfo(THideObjInfo*);
@@ -179,9 +179,9 @@ class TRedCoinSwitch : public TMapObjBase {
 public:
 	TRedCoinSwitch(const char* name = "赤コインスイッチ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 
 public:

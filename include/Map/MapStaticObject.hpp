@@ -15,7 +15,7 @@ class TMapStaticObj : public THitActor {
 public:
 	TMapStaticObj(const char* name = "簡易マップオブジェ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 
 	void init(const char*);
@@ -92,7 +92,7 @@ public:
 class TMapObjSoundGroup : public JDrama::TViewObj {
 public:
 	TMapObjSoundGroup(const char* name = "環境音テスト");
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:

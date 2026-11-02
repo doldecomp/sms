@@ -26,7 +26,7 @@ class TWalkerEnemy : public TSmallEnemy {
 public:
 	TWalkerEnemy(const char* name);
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void moveObject();
 	virtual void reset();
 	virtual void attackToMario();

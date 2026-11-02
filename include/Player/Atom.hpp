@@ -26,7 +26,7 @@ public:
 	void init();
 	void movement();
 	void draw(JDrama::TGraphics*);
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
 #endif

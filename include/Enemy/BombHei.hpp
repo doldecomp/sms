@@ -41,7 +41,7 @@ class TBombHei : public TWalkerEnemy {
 public:
 	TBombHei(const char* name = "ボム兵");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void kill();
@@ -83,7 +83,7 @@ class TBombHeiManager : public TSmallEnemyManager {
 public:
 	TBombHeiManager(const char* name = "ボム兵マネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)

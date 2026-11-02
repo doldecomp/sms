@@ -1190,7 +1190,7 @@ void TMammaMirrorMapOperator::hide(int i)
 	}
 }
 
-void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics*)
+void TMammaMirrorMapOperator::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		const int& mirrorIdx = gpMirrorModelManager->getActiveMirrorIdx();

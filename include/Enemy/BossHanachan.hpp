@@ -17,8 +17,8 @@ class TSphereLink;
 class TBossHanachan : public TSpineEnemy {
 public:
 	TBossHanachan(const char*);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void init(TLiveManager* manager);
 	virtual void bind();
 	virtual void moveObject();
 	virtual void kill();

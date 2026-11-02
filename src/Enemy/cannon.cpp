@@ -93,7 +93,7 @@ TChorobei::TChorobei(TCannon* param_1, int param_2, const char* param_3)
 	unk74->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TChorobei::perform(u32 cue, JDrama::TGraphics* param_2)
+void TChorobei::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (unk68->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
 	                         | LIVE_FLAG_CLIPPED_OUT))
@@ -119,8 +119,8 @@ void TChorobei::perform(u32 cue, JDrama::TGraphics* param_2)
 		mPosition.z = mtx[2][3];
 	}
 
-	THitActor::perform(cue, param_2);
-	unk6C->getMActor()->perform(cue, param_2);
+	THitActor::perform(cue, graphics);
+	unk6C->getMActor()->perform(cue, graphics);
 }
 
 void TChorobei::setBckAnm(int param_1)
@@ -152,10 +152,7 @@ void TChorobei::checkHit()
 	}
 }
 
-BOOL TChorobei::receiveMessage(THitActor* param_1, u32 param_2)
-{
-	return FALSE;
-}
+BOOL TChorobei::receiveMessage(THitActor* sender, u32 message) { return FALSE; }
 
 bool TChorobei::isUpEnd()
 {
@@ -195,16 +192,16 @@ TCannonDom::TCannonDom(TLiveActor* param_1, int param_2, SDLModelData* param_3,
 	unk1C->initAnmSound(nullptr, 1, 0.0f);
 }
 
-void TCannonDom::perform(u32 cue, JDrama::TGraphics* param_2)
+void TCannonDom::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk10->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
-	                         | LIVE_FLAG_CLIPPED_OUT))
+	if (mActor->checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN
+	                          | LIVE_FLAG_CLIPPED_OUT))
 		return;
 
 	if (cue == CUE_CALC_ANIM) {
 		if (unk1C != nullptr && unk20 != nullptr) {
-			J3DFrameCtrl* ctrl = unk18->getFrameCtrl(ANM_TYPE_BCK);
-			unk1C->animeLoop((Vec*)&unk10->mPosition, ctrl->getFrame(),
+			J3DFrameCtrl* ctrl = mMActor->getFrameCtrl(ANM_TYPE_BCK);
+			unk1C->animeLoop((Vec*)&mActor->mPosition, ctrl->getFrame(),
 			                 ctrl->getRate(), 0, 4);
 		}
 
@@ -213,16 +210,16 @@ void TCannonDom::perform(u32 cue, JDrama::TGraphics* param_2)
 		Mtx rot;
 		MsMtxSetRotRPH(rot, unk28, unk2C, 0.0f);
 		MTXConcat(mtx, rot, mtx);
-		unk18->getModel()->setBaseTRMtx(mtx);
+		mMActor->getModel()->setBaseTRMtx(mtx);
 	}
 
-	unk18->perform(cue, param_2);
+	mMActor->perform(cue, graphics);
 }
 
 void TCannonDom::setBckAnm(int param_1)
 {
-	unk18->setBckFromIndex(param_1);
-	unk20 = unk10->getBas(param_1);
+	mMActor->setBckFromIndex(param_1);
+	unk20 = mActor->getBas(param_1);
 	if (unk20 != nullptr)
 		unk1C->initAnmSound(JKRGetResource(unk20), 1, 0.0f);
 	else
@@ -400,14 +397,14 @@ void TCannon::moveObject()
 	updateAttachPos();
 }
 
-BOOL TCannon::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TCannon::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_1->mActorType == ACTOR_TYPE_MARE_CORK
-	    && param_2 == HIT_MESSAGE_TAKE && mHolder == nullptr) {
-		mHolder = (TTakeActor*)param_1;
+	if (sender->mActorType == ACTOR_TYPE_MARE_CORK
+	    && message == HIT_MESSAGE_TAKE && mHolder == nullptr) {
+		mHolder = (TTakeActor*)sender;
 		return TRUE;
 	}
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return TRUE;
 	return FALSE;
 }
@@ -458,11 +455,11 @@ void TCannon::entryObjCollision()
 
 const char** TCannon::getBasNameTable() const { return cannon_bastable; }
 
-void TCannon::perform(u32 cue, JDrama::TGraphics* param_2)
+void TCannon::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (unk238) {
-		unk1BC->getMActor()->perform(cue, param_2);
+		unk1BC->getMActor()->perform(cue, graphics);
 		if ((cue & CUE_MOVE) && unk1BC->getMActor()->curAnmEndsNext())
 			unk238 = 0;
 		if ((cue & CUE_CALC_ANIM) && unk230 == 1) {
@@ -490,13 +487,13 @@ void TCannon::perform(u32 cue, JDrama::TGraphics* param_2)
 		}
 	}
 	if (unk230 == 5 || unk230 == 9) {
-		unk1A8->perform(cue, param_2);
+		unk1A8->perform(cue, graphics);
 		if ((cue & CUE_ENTRY)
 		    && mSpine->getCurrentNerve() == &TNerveCannonDamage::theNerve()) {
 			unk1A8->unk6C->getMActor()->offMakeDL();
 			SMS_AddDamageFogEffect(
 			    unk1A8->unk6C->getMActor()->getModel()->getModelData(),
-			    mPosition, param_2);
+			    mPosition, graphics);
 		}
 		for (int i = 0; i < ARRAY_COUNT(unk1AC); i++) {
 			if (unk1AC[i]->unk24)
@@ -526,10 +523,10 @@ void TCannon::perform(u32 cue, JDrama::TGraphics* param_2)
 					unk1C0[i]->moveMtx(unk1AC[i]->getConnectedMtx());
 				}
 			}
-			unk1AC[i]->perform(cue, param_2);
+			unk1AC[i]->perform(cue, graphics);
 		}
 	} else if (!unk1B8->unk24) {
-		unk1B8->perform(cue, param_2);
+		unk1B8->perform(cue, graphics);
 	}
 }
 
