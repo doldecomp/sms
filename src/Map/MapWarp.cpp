@@ -22,9 +22,9 @@ void TMapWarp::changeModel(int i)
 	// TODO: inlines
 	gpMap->getModelManager()
 	    ->getJointModel(0)
-	    ->mChildren[mCurrentModelIndex]
+	    ->getChild(mCurrentModelIndex)
 	    ->sleep();
-	gpMap->getModelManager()->getJointModel(0)->mChildren[i]->awake();
+	gpMap->getModelManager()->getJointModel(0)->getChild(i)->awake();
 	mCurrentModelIndex = i;
 }
 
@@ -81,7 +81,7 @@ void TMapWarp::watchToWarp()
 
 void TMapWarp::initModel()
 {
-	int num = gpMap->getModelManager()->getJointModel(0)->mChildrenNum;
+	int num = gpMap->getModelManager()->getJointModel(0)->getChildrenNum();
 	for (int i = 0; i < num; ++i)
 		if (i != mCurrentModelIndex)
 			gpMap->getModelManager()

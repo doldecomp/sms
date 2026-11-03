@@ -32,7 +32,7 @@ public:
 	TJointObj* getChild(int i) { return mChildren[i]; }
 	J3DJoint* getJoint() { return mJoint; }
 
-public:
+protected:
 	enum {
 		FLAG_DEAD    = 0x1,
 		FLAG_ASLEEP  = 0x2,

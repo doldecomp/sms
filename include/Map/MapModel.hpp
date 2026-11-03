@@ -23,7 +23,7 @@ public:
 
 	void initUnderpass();
 
-public:
+protected:
 	/* 0x30 */ TJointObj* mUnderpass;
 	/* 0x34 */ J3DMaterial* mUnderpassMaterial;
 	/* 0x38 */ f32 unk38;

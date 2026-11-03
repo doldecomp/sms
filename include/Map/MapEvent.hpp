@@ -18,7 +18,7 @@ public:
 	virtual void finishControl();
 	virtual TJointObj* getBuilding(int i) const
 	{
-		return unk1C->mChildren[0]->mChildren[i];
+		return unk1C->getChild(0)->getChild(i);
 	}
 
 	void watchMapEvent();

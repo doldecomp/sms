@@ -204,7 +204,7 @@ void TMareWallRock::loadAfter()
 	mPosition.y     = (max.y + min.y) / 2.0f;
 	mPosition.z     = (max.z + min.z) / 2.0f;
 	unkFC           = 100.0f + (max.z - min.z);
-	TMapObjBase::moveJoint(unk104->mJoint, 0.0f, 0.0f, unkFC);
+	TMapObjBase::moveJoint(unk104->getJoint(), 0.0f, 0.0f, unkFC);
 	unk104->sleep();
 	initHitActor(ACTOR_TYPE_MARE_WALL_ROCK, 1, 0, 0.0f, 0.0f, 0.0f, 0.0f);
 	initEffect();

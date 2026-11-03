@@ -30,7 +30,7 @@ public:
 	J3DModelData* getModelData() { return mModelData; }
 	MActor* getMActor() { return mActor; }
 
-public:
+protected:
 	/* 0x20 */ TJointModelManager* mManager;
 	/* 0x24 */ J3DModelData* mModelData;
 	/* 0x28 */ J3DModel* mModel;
