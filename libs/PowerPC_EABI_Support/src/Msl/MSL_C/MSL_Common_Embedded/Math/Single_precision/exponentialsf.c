@@ -151,8 +151,19 @@ inline float __log2f(float x)
 }
 
 // fabricated
-inline float __exp2f(float f)
+inline float __exp2f(float t)
 {
+	int n = (int)t;
+	float f = t - (float)n;
+
+	if (n > 128)
+		return __INFINITY;
+	if (n < -127)
+		return 0.0f;
+
+	n = n + 127;
+	n = n << 23;
+
 	// assumed presence due to how powf tends to work, also seems like theres
 	// stack padding
 	float p;
@@ -176,7 +187,7 @@ inline float __exp2f(float f)
 	     + __two_to_x[0]);
 
 	float fp = f * p;
-	return 0.75f + (0.25f + fp);
+	return *(float*)&n * (0.75f + (0.25f + fp));
 }
 
 #pragma cplusplus off
@@ -184,26 +195,11 @@ inline float __exp2f(float f)
 float powf(float x, float y)
 {
 	// TODO: work on improving acc, im lazy right now so this is half assed
-	int ix, iy, n;
-	float logx, t, f, r;
-	int cx, cy;
+	int iy;
 
 	/* x > 0 */
 	if (x > 0.0f) {
-		logx = __log2f(x);
-		t    = y * logx;
-
-		n = (int)t;
-		f = t - (float)n;
-
-		if (n > 128)
-			return __INFINITY;
-		if (n < -127)
-			return 0.0f;
-
-		n = n + 127;
-		n = n << 23;
-		return *(float*)&n * __exp2f(f);
+		return __exp2f(y * __log2f(x));
 	}
 
 	/* x < 0 */
@@ -212,38 +208,10 @@ float powf(float x, float y)
 		if ((y - (float)iy) != 0.0f)
 			return __NAN;
 		if (((int)y % 2) != 0) {
-			logx = __log2f(-x);
-			t    = y * logx;
-
-			n = (int)t;
-			f = t - (float)n;
-
-			if (n > 128)
-				r = __INFINITY;
-			else if (n < -127)
-				r = 0.0f;
-			else {
-				n = n + 127;
-				n = n << 23;
-				r = *(float*)&n * __exp2f(f);
-			}
-			return -r;
+			return -__exp2f(y * __log2f(-x));
 		}
 
-		logx = __log2f(-x);
-		t    = y * logx;
-
-		n = (int)t;
-		f = t - (float)n;
-
-		if (n > 128)
-			return __INFINITY;
-		if (n < -127)
-			return 0.0f;
-
-		n = n + 127;
-		n = n << 23;
-		return *(float*)&n * __exp2f(f);
+		return __exp2f(y * __log2f(-x));
 	}
 
 	if (fpclassify(x) == FP_QNAN)
