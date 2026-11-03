@@ -244,9 +244,9 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_DRAW) {
 		j3dSys.setViewMtx(graphics->mViewMtx);
 		j3dSys.drawInit();
-		j3dSys.unk4C = 3;
+		j3dSys.unk4C = J3DMaterialMode_OpaTexEdge;
 		mOpaBuffer->draw();
-		j3dSys.unk4C = 4;
+		j3dSys.unk4C = J3DMaterialMode_Xlu;
 		mXluBuffer->draw();
 		mOpaBuffer->frameInit();
 		mXluBuffer->frameInit();

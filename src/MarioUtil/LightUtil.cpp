@@ -193,10 +193,12 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     , unk80(param_1)
 {
 	snprintf(unk1C, sizeof(unk1C), "%s%s", name, "opa");
-	mOpaDrawBufferObject = new JDrama::TDrawBufObj(3, param_2, unk1C);
+	mOpaDrawBufferObject
+	    = new JDrama::TDrawBufObj(J3DMaterialMode_OpaTexEdge, param_2, unk1C);
 
 	snprintf(unk4E, sizeof(unk4E), "%s%s", name, "xlu");
-	mXluDrawBufferObject = new JDrama::TDrawBufObj(4, param_2, unk4E);
+	mXluDrawBufferObject
+	    = new JDrama::TDrawBufObj(J3DMaterialMode_Xlu, param_2, unk4E);
 }
 
 void TLightDrawBuffer::perform(u32 cue, JDrama::TGraphics* graphics)

@@ -174,7 +174,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_UNK40000000) {
 		if (checkUnk114(UNK114_FLAG_UNK10)) {
-			j3dSys.setUnk4C(3);
+			j3dSys.setUnk4C(J3DMaterialMode_OpaTexEdge);
 			unk394->draw();
 			mYoshi->unkA8->draw();
 		}
@@ -182,7 +182,7 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 
 	if (cue & CUE_UNK20000000) {
 		if (checkUnk114(UNK114_FLAG_UNK10)) {
-			j3dSys.setUnk4C(4);
+			j3dSys.setUnk4C(J3DMaterialMode_Xlu);
 			unk398->draw();
 			mYoshi->unkAC->draw();
 		}
@@ -227,9 +227,9 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		GXSetColorUpdate(GX_FALSE);
 		GXSetAlphaUpdate(GX_TRUE);
 		GXSetDstAlpha(GX_ENABLE, gpSilhouetteManager->unk48);
-		j3dSys.setUnk4C(3);
+		j3dSys.setUnk4C(J3DMaterialMode_OpaTexEdge);
 		unk394->draw();
-		j3dSys.setUnk4C(4);
+		j3dSys.setUnk4C(J3DMaterialMode_Xlu);
 		unk398->draw();
 		boxDrawPrepare(graphics->mViewMtx);
 		GXSetChanMatColor(GX_COLOR0A0, gpSilhouetteManager->unk12);

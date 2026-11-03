@@ -620,7 +620,7 @@ void TPollutionCounterLayer::countTexDegree(int layer_index)
 	ReInitializeGX();
 	drawPollutionLayer(layer_index);
 	if (mModelStampTaskNum != 0) {
-		j3dSys.setUnk4C(7);
+		j3dSys.setUnk4C(J3DMaterialMode_All);
 		mModelStampDrawBuffers[layer_index]->draw();
 		mModelStampDrawBuffers[layer_index]->frameInit();
 	}
