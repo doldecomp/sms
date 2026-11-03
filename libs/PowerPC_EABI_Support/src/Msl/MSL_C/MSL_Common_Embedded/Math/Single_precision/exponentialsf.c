@@ -183,9 +183,9 @@ inline float __exp2f(float t)
 	                     + __two_to_x[2])
 	              + __two_to_x[1])
 	       + __two_to_x[0]);
-
 	float fp = f * p;
-	return *(float*)&n * (0.75f + (0.25f + fp));
+
+	return __U32_AS_F32(n) * (0.75f + (0.25f + fp));
 }
 
 #pragma cplusplus off
