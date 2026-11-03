@@ -227,7 +227,7 @@ static void initStage()
 void TMap::updateDelfino()
 {
 	int cube = gpCubeArea->unk1C;
-	if (cube != mWarp->unk8) {
+	if (cube != mWarp->mCurrentModelIndex) {
 		if (cube != -1)
 			mWarp->changeModel(cube);
 		else if (SMSGetMarDirector()->getCurrentScenario() != 0)

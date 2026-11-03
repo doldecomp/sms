@@ -16,24 +16,34 @@
 
 void TMapWarp::changeModel(int i)
 {
-	if (unk8 == i)
+	if (mCurrentModelIndex == i)
 		return;
 
 	// TODO: inlines
-	gpMap->getModelManager()->getJointModel(0)->mChildren[unk8]->sleep();
+	gpMap->getModelManager()
+	    ->getJointModel(0)
+	    ->mChildren[mCurrentModelIndex]
+	    ->sleep();
 	gpMap->getModelManager()->getJointModel(0)->mChildren[i]->awake();
-	unk8 = i;
+	mCurrentModelIndex = i;
 }
 
-void TMapWarp::warp(int idx)
+void TMapWarp::warp(int index)
 {
-	int no = unk4[idx].unk0;
-	if (unk8 != no) {
-		gpMap->getModelManager()->getJointModel(0)->getChild(unk8)->sleep();
-		gpMap->getModelManager()->getJointModel(0)->getChild(no)->awake();
-		unk8 = unk4[idx].unk0;
+	int dstModelIdx = mWarpInfos[index].mDestinationModelIndex;
+	if (mCurrentModelIndex != dstModelIdx) {
+		gpMap->getModelManager()
+		    ->getJointModel(0)
+		    ->getChild(mCurrentModelIndex)
+		    ->sleep();
+		gpMap->getModelManager()
+		    ->getJointModel(0)
+		    ->getChild(dstModelIdx)
+		    ->awake();
+		mCurrentModelIndex = mWarpInfos[index].mDestinationModelIndex;
 
-		JGeometry::TVec3<f32> pos = SMS_GetMarioPos() + unk4[idx].unk8;
+		JGeometry::TVec3<f32> pos
+		    = SMS_GetMarioPos() + mWarpInfos[index].mWarpOffset;
 		SMS_MarioWarpRequest(pos, (SMS_GetMarioAngleY() * 180.0f) / 32768.0f);
 	}
 }
@@ -71,13 +81,12 @@ void TMapWarp::watchToWarp()
 
 void TMapWarp::initModel()
 {
-	// TODO: inlines
 	int num = gpMap->getModelManager()->getJointModel(0)->mChildrenNum;
 	for (int i = 0; i < num; ++i)
-		if (i != unk8)
+		if (i != mCurrentModelIndex)
 			gpMap->getModelManager()
 			    ->getJointModel(0)
-			    ->mChildren[(u16)i]
+			    ->getChild((u16)i)
 			    ->sleep();
 }
 
@@ -117,38 +126,41 @@ void loadWarpPointPos(JSUMemoryInputStream& stream, int count, Vec* points)
 
 void TMapWarp::init(JSUMemoryInputStream& stream)
 {
-	unk0 = stream.readU32();
-	if (!unk0)
+	mWarpPairCount = stream.readU32();
+	if (!mWarpPairCount)
 		return;
 
-	unk8 = stream.readU32();
-	unk4 = new TMapWarpInfo[unk0 * 2];
+	mCurrentModelIndex = stream.readU32();
+	mWarpInfos         = new TMapWarpInfo[mWarpPairCount * 2];
 
 	u32 local_1d0[20];
 	u32 local_180[20];
 	JGeometry::TVec3<f32> local_130[20];
 
-	for (int i = 0; i < unk0; ++i) {
+	for (int i = 0; i < mWarpPairCount; ++i) {
 		local_1d0[i] = stream.readU32();
 		local_180[i] = stream.readU32();
 	}
 
-	loadWarpPointPos(stream, unk0 * 2, local_130);
+	loadWarpPointPos(stream, mWarpPairCount * 2, local_130);
 
-	for (int i = 0; i < unk0; ++i) {
-		unk4[2 * i].unk8.x = local_130[2 * i].x - local_130[2 * i + 1].x;
-		unk4[2 * i].unk8.y = local_130[2 * i].y - local_130[2 * i + 1].y;
-		unk4[2 * i].unk8.z = local_130[2 * i].z - local_130[2 * i + 1].z;
+	for (int i = 0; i < mWarpPairCount; ++i) {
+		mWarpInfos[2 * i].mWarpOffset.x
+		    = local_130[2 * i].x - local_130[2 * i + 1].x;
+		mWarpInfos[2 * i].mWarpOffset.y
+		    = local_130[2 * i].y - local_130[2 * i + 1].y;
+		mWarpInfos[2 * i].mWarpOffset.z
+		    = local_130[2 * i].z - local_130[2 * i + 1].z;
 
-		unk4[2 * i].unk0 = local_180[i];
-		unk4[2 * i].unk4 = local_1d0[i];
+		mWarpInfos[2 * i].mDestinationModelIndex = local_180[i];
+		mWarpInfos[2 * i].mSourceModelIndex      = local_1d0[i];
 
-		unk4[2 * i + 1].unk8.x = -unk4[2 * i].getUnk8().x;
-		unk4[2 * i + 1].unk8.y = -unk4[2 * i].getUnk8().y;
-		unk4[2 * i + 1].unk8.z = -unk4[2 * i].getUnk8().z;
+		mWarpInfos[2 * i + 1].mWarpOffset.x = -mWarpInfos[2 * i].mWarpOffset.x;
+		mWarpInfos[2 * i + 1].mWarpOffset.y = -mWarpInfos[2 * i].mWarpOffset.y;
+		mWarpInfos[2 * i + 1].mWarpOffset.z = -mWarpInfos[2 * i].mWarpOffset.z;
 
-		unk4[2 * i + 1].unk0 = local_1d0[i];
-		unk4[2 * i + 1].unk4 = local_180[i];
+		mWarpInfos[2 * i + 1].mDestinationModelIndex = local_1d0[i];
+		mWarpInfos[2 * i + 1].mSourceModelIndex      = local_180[i];
 	}
 
 	if (SMSGetMarDirector()->getCurrentStage() == 4) {
@@ -157,9 +169,9 @@ void TMapWarp::init(JSUMemoryInputStream& stream)
 }
 
 TMapWarp::TMapWarp()
-    : unk0(0)
-    , unk4(0)
-    , unk8(0)
+    : mWarpPairCount(0)
+    , mWarpInfos(0)
+    , mCurrentModelIndex(0)
     , unkC(3.0f)
 {
 }
