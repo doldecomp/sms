@@ -465,12 +465,14 @@ void TApplication::initialize_bootAfter()
 
 #ifdef VERSION_GMSP01_NX
 	if (s_RunOnGC) {
-		JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? JASOUTPUT_Mono : JASOUTPUT_Stereo);
+		JAIGlobalParameter::setParamSoundOutputMode(
+		    !OSGetSoundMode() ? JASOUTPUT_Mono : JASOUTPUT_Stereo);
 	} else {
 		JAIGlobalParameter::setParamSoundOutputMode(JASOUTPUT_Stereo);
 	}
 #else
-	JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? JASOUTPUT_Mono : JASOUTPUT_Stereo);
+	JAIGlobalParameter::setParamSoundOutputMode(
+	    !OSGetSoundMode() ? JASOUTPUT_Mono : JASOUTPUT_Stereo);
 #endif
 
 	gpMSound->loadWave(MS_WAVE_UNK0);
