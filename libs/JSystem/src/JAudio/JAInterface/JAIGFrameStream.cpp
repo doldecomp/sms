@@ -1,4 +1,3 @@
-#include "JSystem/JAudio/JASystem/JASDriverIF.hpp"
 #include <string.h>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIInter.hpp>
@@ -7,6 +6,7 @@
 #include <JSystem/JAudio/JASystem/JASHeapCtrl.hpp>
 #include <JSystem/JAudio/JASystem/JASCallback.hpp>
 #include <JSystem/JAudio/JASystem/JASSystemHeap.hpp>
+#include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/JAudio/JASystem/JASDvdThread.hpp>
 #include <JSystem/JAudio/JASystem/JASDSPChannel.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
