@@ -19,7 +19,7 @@ public:
 	// fabricated
 	J3DDrawBuffer* getDrawBuffer() { return mDrawBuffer; }
 
-public:
+protected:
 	/* 0x10 */ J3DDrawBuffer* mDrawBuffer;
 	/* 0x14 */ u32 mDrawBufferSize;
 	/* 0x18 */ u32 mDrawFlags;
