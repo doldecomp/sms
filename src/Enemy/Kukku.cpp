@@ -504,9 +504,11 @@ void TKukkuManager::initCoins() { }
 void TKukkuManager::createModelData()
 {
 	static const TModelDataLoadEntry entry[] = {
-		"tori.bmd",
-		0,
-		0,
+		{ "tori.bmd",
+		  J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
+		      | (1 << J3DMLF_TevStageNumShift),
+		  0 },
+		{ nullptr, 0, 0 },
 	};
 
 	createModelDataArray(entry);

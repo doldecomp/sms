@@ -103,7 +103,6 @@ class TKukkuManager : public TSmallEnemyManager {
 public:
 	TKukkuManager(const char* name = "クックマネージャー");
 	virtual void load(JSUMemoryInputStream&);
-	virtual TSpineEnemy* createEnemyInstance();
 	virtual void createModelData();
 	void initJParticle();
 
