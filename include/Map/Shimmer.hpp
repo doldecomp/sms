@@ -12,7 +12,7 @@ class TShimmer : public JDrama::TActor {
 public:
 	TShimmer(const char* name = "<Shimmer>");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 

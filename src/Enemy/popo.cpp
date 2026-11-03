@@ -135,7 +135,7 @@ void TPopoManager::createModelData()
 	createModelDataArray(entry);
 }
 
-void TPopoManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TPopoManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		for (int i = 0; i < getActiveObjNum(); i++) {
@@ -145,13 +145,13 @@ void TPopoManager::perform(u32 cue, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TEnemyManager::perform(cue, param_2);
+	TEnemyManager::perform(cue, graphics);
 }
 
-BOOL TPopoCollision::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TPopoCollision::receiveMessage(THitActor* sender, u32 message)
 {
 	if (unk68->isRollJump())
-		return unk68->receiveMessage(param_1, param_2);
+		return unk68->receiveMessage(sender, message);
 
 	return FALSE;
 }
@@ -323,10 +323,10 @@ void TPopo::init(TLiveManager* param_1)
 	unk23C->unk68 = this;
 }
 
-void TPopo::perform(u32 cue, JDrama::TGraphics* param_2)
+void TPopo::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(cue, param_2);
-	unk23C->THitActor::perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
+	unk23C->THitActor::perform(cue, graphics);
 }
 
 void TPopo::setMActorAndKeeper()

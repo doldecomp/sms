@@ -31,10 +31,10 @@ public:
 	TSpineEnemy(const char*);
 	~TSpineEnemy();
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void reset();
 	virtual void resetToPosition(const JGeometry::TVec3<f32>& position);

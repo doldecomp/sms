@@ -89,9 +89,9 @@ class TChuuHana : public TWalkerEnemy {
 public:
 	TChuuHana(const char* name = "チュウハナ");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void moveObject();
@@ -167,8 +167,8 @@ class TChuuHanaManager : public TSmallEnemyManager {
 public:
 	TChuuHanaManager(const char* name = "チュウハナマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();
 

@@ -10,19 +10,19 @@ namespace JDrama {
 class TDrawBufObj : public TViewObj {
 public:
 	TDrawBufObj();
-	TDrawBufObj(u32, u32, const char*);
+	TDrawBufObj(u32 draw_flags, u32 buffer_size, const char* name);
 
 	virtual ~TDrawBufObj() { }
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, TGraphics* graphics);
 
 	// fabricated
 	J3DDrawBuffer* getDrawBuffer() { return mDrawBuffer; }
 
-public:
+protected:
 	/* 0x10 */ J3DDrawBuffer* mDrawBuffer;
 	/* 0x14 */ u32 mDrawBufferSize;
-	/* 0x18 */ u32 unk18;
+	/* 0x18 */ u32 mDrawFlags;
 };
 
 }; // namespace JDrama

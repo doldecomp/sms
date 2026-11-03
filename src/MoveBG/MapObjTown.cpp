@@ -483,7 +483,7 @@ void TMapObjSwitch::control()
 		SMSGetMSound()->playTimer(mStateTimer);
 }
 
-BOOL TMapObjSwitch::receiveMessage(THitActor*, u32 message)
+BOOL TMapObjSwitch::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("objswitch");
@@ -549,7 +549,7 @@ TMapObjSwitch::TMapObjSwitch(const char* name)
 	gpMapObjSwitch = this;
 }
 
-BOOL TRedCoinSwitch::receiveMessage(THitActor*, u32 message)
+BOOL TRedCoinSwitch::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_HIP_DROP) {
 		startBck("redcoinswitch");

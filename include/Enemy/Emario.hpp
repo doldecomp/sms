@@ -42,7 +42,7 @@ class TEMarioManager : public TEnemyManager {
 public:
 	TEMarioManager(const char* name = "典型敵マネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSpineEnemy* createEnemyInstance();
 };
 

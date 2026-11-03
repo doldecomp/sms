@@ -16,7 +16,7 @@ class TMapEventSink : public TMapEvent {
 public:
 	TMapEventSink(const char*);
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual bool isFinishedAll() const;
 	virtual bool watch() { return false; }
 	virtual void startControl();
@@ -97,7 +97,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual bool watch();
 	virtual void startControl();

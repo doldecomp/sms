@@ -187,13 +187,13 @@ J3DIndBlock* J3DMaterial::createIndBlock(int param_1)
 J3DPEBlock* J3DMaterial::createPEBlock(int param_1, u32 param_2)
 {
 	if (param_1 == 1) {
-		if (param_2 & 1)
+		if (param_2 & J3DMaterialMode_Opa)
 			return new J3DPEBlockOpa;
 
-		if (param_2 & 2)
+		if (param_2 & J3DMaterialMode_TexEdge)
 			return new J3DPEBlockTexEdge;
 
-		if (param_2 & 4)
+		if (param_2 & J3DMaterialMode_Xlu)
 			return new J3DPEBlockXlu;
 	}
 	return new J3DPEBlockFull;
@@ -203,7 +203,7 @@ void J3DMaterial::initialize()
 {
 	mShape            = nullptr;
 	mNext             = nullptr;
-	mMaterialMode     = 1;
+	mMaterialMode     = J3DMaterialMode_Opa;
 	mIndex            = -1;
 	mInvalid          = 0;
 	unk18             = 0;

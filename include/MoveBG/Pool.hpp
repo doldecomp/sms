@@ -6,7 +6,7 @@
 
 class TPool : public TMapObjBase {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void makeObjAppeared();
 	virtual void draw() const;
 

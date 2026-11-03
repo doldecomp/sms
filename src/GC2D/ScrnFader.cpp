@@ -136,7 +136,7 @@ TSMSFader::TSMSFader(JUtility::TColor param_1, f32 param_2, const char* param_3)
 	mWipeRequest.unk0 = UNK30_UNK_18;
 }
 
-void TSMSFader::perform(u32 cue, JDrama::TGraphics*)
+void TSMSFader::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE)
 		update();

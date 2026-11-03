@@ -9,7 +9,7 @@ public:
 	TMapEvent(const char*);
 	TMapEvent();
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual bool isFinishedAll() const;
 	virtual bool watch() = 0;
@@ -18,7 +18,7 @@ public:
 	virtual void finishControl();
 	virtual TJointObj* getBuilding(int i) const
 	{
-		return unk1C->mChildren[0]->mChildren[i];
+		return unk1C->getChild(0)->getChild(i);
 	}
 
 	void watchMapEvent();

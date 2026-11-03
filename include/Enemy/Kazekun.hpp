@@ -32,7 +32,7 @@ class TKazekunManager : public TSmallEnemyManager {
 public:
 	TKazekunManager(const char* name = "かぜくんマネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -61,7 +61,7 @@ class TKazekun : public TSmallEnemy {
 public:
 	TKazekun(const char* name = "かぜくん");
 
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual const char** getBasNameTable() const;

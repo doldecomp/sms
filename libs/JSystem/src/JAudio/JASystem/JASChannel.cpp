@@ -834,7 +834,7 @@ BOOL TChannel::playLogicalChannel()
 		s.asS16 = unkA8[i].mWhole;
 		u32 om  = Driver::getOutputMode();
 
-		if (om == 0) {
+		if (om == JASOUTPUT_Mono) {
 			switch (s.asP.hi) {
 			case 8:
 				s.asP.hi = 0xB;
@@ -843,7 +843,7 @@ BOOL TChannel::playLogicalChannel()
 				s.asP.hi = 0x2;
 				break;
 			}
-		} else if (om == 1) {
+		} else if (om == JASOUTPUT_Stereo) {
 			if (s.asP.hi == 8)
 				s.asP.hi = 0xB;
 		}

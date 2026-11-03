@@ -7,7 +7,7 @@ struct ResTIMG;
 
 class TPolluterBase : public TMapObjBase {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	TPolluterBase(const char* name = "汚染オブジェ");
@@ -36,7 +36,7 @@ private:
 
 class TMapObjRevivalPollution : public JDrama::TViewObj {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 

@@ -54,7 +54,7 @@ void TDemoBossHanachan::initBase(TLiveManager* param_1, u32 param_2)
 	mMActor->setLightType(1);
 }
 
-BOOL TDemoBossHanachan::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TDemoBossHanachan::receiveMessage(THitActor* sender, u32 message)
 {
-	return 0;
+	return FALSE;
 }

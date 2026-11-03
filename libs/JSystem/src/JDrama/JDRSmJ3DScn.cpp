@@ -31,12 +31,12 @@ void TSmJ3DScn::perform(u32 cue, TGraphics* graphics)
 		for (int i = 0; i < mDrawBufferCount; ++i)
 			mDrawBuffers[i]->frameInit();
 
-		j3dSys.setDrawBuffer(mDrawBuffers[0], 0);
-		j3dSys.setDrawBuffer(mDrawBuffers[1], 1);
+		j3dSys.setDrawBuffer(mDrawBuffers[0], J3DSysDrawBuf_Opa);
+		j3dSys.setDrawBuffer(mDrawBuffers[1], J3DSysDrawBuf_Xlu);
 		TViewObjPtrListT::perform(cue | (CUE_CALC_VIEW | CUE_ENTRY), graphics);
-		j3dSys.setUnk4C(3);
+		j3dSys.setUnk4C(J3DMaterialMode_OpaTexEdge);
 		mDrawBuffers[0]->draw();
-		j3dSys.setUnk4C(4);
+		j3dSys.setUnk4C(J3DMaterialMode_Xlu);
 		mDrawBuffers[1]->draw();
 	}
 }

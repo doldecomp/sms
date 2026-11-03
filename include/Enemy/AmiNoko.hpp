@@ -38,9 +38,9 @@ class TAmiNoko : public TWalkerEnemy {
 public:
 	TAmiNoko(const char* name = "アミノコ");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual f32 getGravityY() const;
@@ -90,8 +90,8 @@ class TAmiHit : public THitActor {
 public:
 	TAmiHit(TAmiNoko*, const char* name = "アミノコ当り判定");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 
 public:
 	/* 0x68 */ TAmiNoko* unk68;
@@ -101,7 +101,7 @@ class TAmiNokoManager : public TSmallEnemyManager {
 public:
 	TAmiNokoManager(const char* name = "アミノコマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 };

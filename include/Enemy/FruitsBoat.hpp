@@ -11,10 +11,10 @@ class TFruitsBoat : public TSpineEnemy {
 public:
 	TFruitsBoat(const char* name = "フルーツの船");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual Mtx* getRootJointMtx() const;
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void setGroundCollision();
 	virtual void moveObject();
@@ -55,7 +55,7 @@ class TFruitsBoatManager : public TEnemyManager {
 public:
 	TFruitsBoatManager(int, const char* name = "フルーツの船マネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 

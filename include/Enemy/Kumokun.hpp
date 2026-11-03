@@ -32,8 +32,8 @@ class TKumokun : public TSmallEnemy {
 public:
 	TKumokun(const char* name = "くもくん");
 
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void bind();

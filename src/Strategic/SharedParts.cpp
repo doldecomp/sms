@@ -6,60 +6,61 @@
 #include <JSystem/JKernel/JKRFileLoader.hpp>
 #include <JSystem/J3D/J3DGraphLoader/J3DModelLoader.hpp>
 
-TSharedParts::TSharedParts(const TLiveActor* param_1, int param_2,
-                           const char* param_3, u32 param_4, u32 param_5,
+TSharedParts::TSharedParts(const TLiveActor* actor, int anmMtxIndex,
+                           const char* resName, u32 loadFlags, u32 modelFlags,
                            const char* name)
     : JDrama::TViewObj(name)
-    , unk10(param_1)
-    , mConnectedAnmMtxIndex(param_2)
-    , unk18(nullptr)
+    , mActor(actor)
+    , mConnectedAnmMtxIndex(anmMtxIndex)
+    , mMActor(nullptr)
 {
-	void* res             = JKRGetResource(param_3);
-	J3DModelData* data    = J3DModelLoaderDataBase::load(res, param_4);
+	void* res             = JKRGetResource(resName);
+	J3DModelData* data    = J3DModelLoaderDataBase::load(res, loadFlags);
 	SDLModelData* sdlData = new SDLModelData(data);
-	SDLModel* model       = new SDLModel(sdlData, param_5, 1);
-	unk18 = new MActor(unk10->getActorKeeper()->getMActorAnmData());
-	unk18->setModel(model, 0);
+	SDLModel* model       = new SDLModel(sdlData, modelFlags, 1);
+	mMActor = new MActor(mActor->getActorKeeper()->getMActorAnmData());
+	mMActor->setModel(model, 0);
 }
 
-TSharedParts::TSharedParts(const TLiveActor* param_1, int param_2,
-                           SDLModelData* param_3, u32 param_4, const char* name)
+TSharedParts::TSharedParts(const TLiveActor* actor, int anmMtxIndex,
+                           SDLModelData* modelData, u32 modelFlags,
+                           const char* name)
     : JDrama::TViewObj(name)
-    , unk10(param_1)
-    , mConnectedAnmMtxIndex(param_2)
-    , unk18(nullptr)
+    , mActor(actor)
+    , mConnectedAnmMtxIndex(anmMtxIndex)
+    , mMActor(nullptr)
 {
-	SDLModel* model = new SDLModel(param_3, param_4, 1);
-	unk18           = new MActor(unk10->getActorKeeper()->getMActorAnmData());
-	unk18->setModel(model, 0);
+	SDLModel* model = new SDLModel(modelData, modelFlags, 1);
+	mMActor         = new MActor(mActor->getActorKeeper()->getMActorAnmData());
+	mMActor->setModel(model, 0);
 }
 
-TSharedParts::TSharedParts(const TLiveActor* param_1, int param_2,
-                           MActor* param_3, const char* name)
+TSharedParts::TSharedParts(const TLiveActor* actor, int anmMtxIndex,
+                           MActor* mActorParam, const char* name)
     : JDrama::TViewObj(name)
-    , unk10(param_1)
-    , mConnectedAnmMtxIndex(param_2)
-    , unk18(param_3)
+    , mActor(actor)
+    , mConnectedAnmMtxIndex(anmMtxIndex)
+    , mMActor(mActorParam)
 {
 }
 
 MtxPtr TSharedParts::getConnectedMtx() const
 {
 	int idx = mConnectedAnmMtxIndex;
-	return idx == -1 ? unk10->getModel()->getBaseTRMtx()
-	                 : unk10->getModel()->getAnmMtx(idx);
+	return idx == -1 ? mActor->getModel()->getBaseTRMtx()
+	                 : mActor->getModel()->getAnmMtx(idx);
 }
 
 void TSharedParts::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (unk10->checkLiveFlag(7))
+	if (mActor->checkLiveFlag(LIVE_FLAG_BIT_AIRBORNE))
 		return;
 
 	if (cue & CUE_CALC_ANIM)
-		unk18->getModel()->setBaseTRMtx(getConnectedMtx());
+		mMActor->getModel()->setBaseTRMtx(getConnectedMtx());
 
 	if (cue & CUE_ENTRY)
-		unk18->setLightData(unk10->getGroundPlane(), unk10->mPosition);
+		mMActor->setLightData(mActor->getGroundPlane(), mActor->mPosition);
 
-	unk18->perform(cue, graphics);
+	mMActor->perform(cue, graphics);
 }

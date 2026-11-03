@@ -47,7 +47,7 @@ void TMapObjMonteRoot::initMapObj()
 	mPosition.y = mInitialPosition.y + mYOffset;
 }
 
-BOOL TJumpMushroom::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TJumpMushroom::receiveMessage(THitActor* sender, u32 message)
 {
 	startAnim(1);
 	return TRUE;
@@ -418,7 +418,7 @@ void THangingBridge::initDraw() const
 	GXSetCullMode(GX_CULL_BACK);
 }
 
-void THangingBridge::perform(u32 cue, JDrama::TGraphics* param_2)
+void THangingBridge::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_DRAW) {
 		initDraw();

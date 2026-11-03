@@ -1135,7 +1135,7 @@ void TBossPakkun::kill()
 		mPolDrop->onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
-BOOL TBossPakkun::receiveMessage(THitActor* sender, u32)
+BOOL TBossPakkun::receiveMessage(THitActor* sender, u32 message)
 {
 	if (static_cast<TBossPakkunManager*>(mManager)->unk54 != 0)
 		return false;

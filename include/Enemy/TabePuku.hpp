@@ -34,7 +34,7 @@ class TTabePukuManager : public TSmallEnemyManager {
 public:
 	TTabePukuManager(const char* name = "プクプク(レール巡回)マネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void createModelData();
 };
 
@@ -42,10 +42,10 @@ class TTabePuku : public TSmallEnemy {
 public:
 	TTabePuku(const char* name = "プクプク(レール巡回)");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual MtxPtr getTakingMtx();
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void control();
 	virtual void bind();
@@ -90,7 +90,7 @@ class TTPHitActor : public THitActor {
 public:
 	TTPHitActor(TTabePuku&);
 
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void init();
 
 	void checkHitActors();

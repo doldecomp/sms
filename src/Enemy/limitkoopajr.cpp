@@ -87,7 +87,7 @@ void TLimitKoopaJr::resetLimitKoopaJr()
 	unk170.unk0 = 0.0f;
 }
 
-void TLimitKoopaJr::perform(u32 cue, JDrama::TGraphics* param_2)
+void TLimitKoopaJr::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mKoopa == nullptr) {
 		TEnemyManager* manager = static_cast<TEnemyManager*>(
@@ -101,7 +101,7 @@ void TLimitKoopaJr::perform(u32 cue, JDrama::TGraphics* param_2)
 		updateTimers();
 		checkNerve();
 	}
-	TSpineEnemy::perform(cue, param_2);
+	TSpineEnemy::perform(cue, graphics);
 }
 
 void TLimitKoopaJr::bind() { }
@@ -142,9 +142,9 @@ static const char* koopajr_bastable[] = {
 
 const char** TLimitKoopaJr::getBasNameTable() const { return koopajr_bastable; }
 
-BOOL TLimitKoopaJr::receiveMessage(THitActor* param_1, u32 param_2)
+BOOL TLimitKoopaJr::receiveMessage(THitActor* sender, u32 message)
 {
-	if (param_2 == HIT_MESSAGE_SPRAYED_BY_WATER)
+	if (message == HIT_MESSAGE_SPRAYED_BY_WATER)
 		return TRUE;
 	return FALSE;
 }

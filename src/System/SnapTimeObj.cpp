@@ -1,7 +1,7 @@
 #include <System/SnapTimeObj.hpp>
 #include <System/TimeRec.hpp>
 
-void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics*)
+void TSnapTimeObj::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if ((unk14 & 1)) {
 		if ((cue & CUE_DRAW_INIT) != 0) {

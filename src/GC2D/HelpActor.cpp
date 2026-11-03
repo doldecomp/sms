@@ -49,7 +49,7 @@ int THelpActor::getHelpID()
 	return -1;
 }
 
-void THelpActor::perform(u32 cue, JDrama::TGraphics*)
+void THelpActor::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		if (unk74) {

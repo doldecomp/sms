@@ -222,7 +222,7 @@ BOOL TMapObjPlane::receiveMessage(THitActor* sender, u32 message)
 	return false;
 }
 
-void TMapObjPlane::perform(u32 cue, JDrama::TGraphics*)
+void TMapObjPlane::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (mAlbedo != nullptr && (cue & CUE_DRAW)) {
 		initDraw();

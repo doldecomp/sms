@@ -14,8 +14,8 @@ class TEffectEnemy : public TWalkerEnemy {
 public:
 	TEffectEnemy(const char* name = "エフェクト敵");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void init(TLiveManager* manager);
 	virtual void kill();
 	virtual void reset();
 	virtual void behaveToWater(THitActor*);
@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void initSetEnemies();

@@ -424,22 +424,22 @@ void TMapObjBall::control()
 	}
 }
 
-BOOL TMapObjBall::receiveMessage(THitActor* actor, u32 msg)
+BOOL TMapObjBall::receiveMessage(THitActor* sender, u32 message)
 {
-	if (TMapObjGeneral::receiveMessage(actor, msg) != 0) {
+	if (TMapObjGeneral::receiveMessage(sender, message) != 0) {
 		return TRUE;
 	}
 
-	if (msg == HIT_MESSAGE_TAKE) {
+	if (message == HIT_MESSAGE_TAKE) {
 		if (checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE)) {
-			hold(static_cast<TTakeActor*>(actor));
+			hold(static_cast<TTakeActor*>(sender));
 			return TRUE;
 		}
 	}
 
-	if (actor->isActorType(ACTOR_TYPE_MARIO)
+	if (sender->isActorType(ACTOR_TYPE_MARIO)
 	    && !isActorType(ACTOR_TYPE_WATERMELON)) {
-		if (msg != HIT_MESSAGE_TAKE) {
+		if (message != HIT_MESSAGE_TAKE) {
 			kicked();
 			return TRUE;
 		}
@@ -1009,10 +1009,10 @@ void TResetFruit::makeObjAppeared()
 	}
 }
 
-BOOL TResetFruit::receiveMessage(THitActor* actor, u32 msg)
+BOOL TResetFruit::receiveMessage(THitActor* sender, u32 message)
 {
 	BOOL res;
-	if (msg == HIT_MESSAGE_UNKB) {
+	if (message == HIT_MESSAGE_UNKB) {
 		if (isState(STATE_NORMAL) || isState(STATE_HOLDING)
 		    || isState(STATE_LIVING)) {
 			makeObjWaitingToAppear();
@@ -1020,23 +1020,23 @@ BOOL TResetFruit::receiveMessage(THitActor* actor, u32 msg)
 		} else {
 			res = FALSE;
 		}
-	} else if (msg == HIT_MESSAGE_UNKD) {
+	} else if (message == HIT_MESSAGE_UNKD) {
 		kill();
 		res = TRUE;
 	} else {
 		if (isState(STATE_NORMAL) || isState(STATE_HOLDING)
 		    || isState(STATE_LIVING)) {
-			pick(actor);
-			if (TMapObjGeneral::receiveMessage(actor, msg) != 0) {
+			pick(sender);
+			if (TMapObjGeneral::receiveMessage(sender, message) != 0) {
 				res = TRUE;
 			} else {
-				if (msg == HIT_MESSAGE_TAKE
+				if (message == HIT_MESSAGE_TAKE
 				    && checkMapObjFlag(MAP_OBJ_FLAG_TAKEABLE)) {
-					hold(static_cast<TTakeActor*>(actor));
+					hold(static_cast<TTakeActor*>(sender));
 					res = TRUE;
-				} else if (actor->isActorType(ACTOR_TYPE_MARIO)
+				} else if (sender->isActorType(ACTOR_TYPE_MARIO)
 				           && !isActorType(ACTOR_TYPE_WATERMELON)
-				           && msg != HIT_MESSAGE_TAKE) {
+				           && message != HIT_MESSAGE_TAKE) {
 					kicked();
 					res = TRUE;
 				} else {
@@ -1044,7 +1044,7 @@ BOOL TResetFruit::receiveMessage(THitActor* actor, u32 msg)
 				}
 			}
 
-			if (msg == HIT_MESSAGE_PUT && isState(STATE_NORMAL)) {
+			if (message == HIT_MESSAGE_PUT && isState(STATE_NORMAL)) {
 				mState = STATE_LIVING;
 			}
 		} else {
@@ -1128,16 +1128,16 @@ void TCoverFruit::calcRootMatrix()
 	getModel()->setBaseScale(mScaling);
 }
 
-BOOL TCoverFruit::receiveMessage(THitActor* actor, u32 msg)
+BOOL TCoverFruit::receiveMessage(THitActor* sender, u32 message)
 {
-	if (actor->isActorType(ACTOR_TYPE_YOSHI_TONGUE)
-	    && msg == HIT_MESSAGE_TAKE) {
+	if (sender->isActorType(ACTOR_TYPE_YOSHI_TONGUE)
+	    && message == HIT_MESSAGE_TAKE) {
 		onHitFilter(HIT_FILTER_NO_COLLISION);
-		mHolder = static_cast<TTakeActor*>(actor);
+		mHolder = static_cast<TTakeActor*>(sender);
 		return TRUE;
 	}
 
-	if (msg == HIT_MESSAGE_UNKB) {
+	if (message == HIT_MESSAGE_UNKB) {
 		kill();
 		TFlagManager::getInstance()->setBool(true,
 		                                     MSF_SIRENA_PIPE_PINEAPPLE_EATEN);
@@ -1369,14 +1369,14 @@ void TBigWatermelon::checkWallCollision(JGeometry::TVec3<f32>* wall)
 	TMapObjGeneral::checkWallCollision(wall);
 }
 
-BOOL TBigWatermelon::receiveMessage(THitActor* actor, u32 msg)
+BOOL TBigWatermelon::receiveMessage(THitActor* sender, u32 message)
 {
-	if (actor->isActorType(ACTOR_TYPE_MARIO)) {
-		boundByActor(actor);
+	if (sender->isActorType(ACTOR_TYPE_MARIO)) {
+		boundByActor(sender);
 		return TRUE;
 	}
 
-	return TMapObjBall::receiveMessage(actor, msg);
+	return TMapObjBall::receiveMessage(sender, message);
 }
 
 void TBigWatermelon::loadAfter()

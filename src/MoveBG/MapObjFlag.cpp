@@ -179,7 +179,7 @@ void TMapObjFlagManager::initDraw()
 	GXSetCullMode(GX_CULL_NONE);
 }
 
-void TMapObjFlagManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TMapObjFlagManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM) {
 		for (s32 i = 0; i < ARRAY_COUNT(unk10); ++i) {

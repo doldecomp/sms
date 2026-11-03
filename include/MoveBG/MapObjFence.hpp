@@ -116,7 +116,7 @@ public:
 
 class TRailFence : public TFence {
 public:
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
 	virtual void initMapCollisionData();

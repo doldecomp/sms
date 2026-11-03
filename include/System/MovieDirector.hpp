@@ -23,7 +23,7 @@ class TEndingString : public JDrama::TViewObj {
 public:
 	TEndingString(const char*);
 
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	void startFadeIn();
 

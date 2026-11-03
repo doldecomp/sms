@@ -22,7 +22,7 @@ public:
 
 	TPollutionManager(const char* name = "落書き管理");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TJointModel* newJointModel(int) const;
 

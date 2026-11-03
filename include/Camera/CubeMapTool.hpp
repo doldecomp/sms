@@ -21,7 +21,7 @@ public:
 	const JGeometry::TVec3<f32>& getUnk18() const { return unk18; }
 	const JGeometry::TVec3<f32>& getUnk24() const { return unk24; }
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 public:
 	/* 0xC */ JGeometry::TVec3<f32> unkC;
@@ -42,7 +42,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 public:
 	/* 0x38 */ s32 unk38;
@@ -60,7 +60,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 	// fabricated
 	TCameraMapTool* getCameraMapTool() const { return unk38; }

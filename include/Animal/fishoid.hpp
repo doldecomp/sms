@@ -74,8 +74,8 @@ class TFishoid : public TRealoid {
 public:
 	TFishoid(int type, const char* name);
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TRealoidActor* createRealoidActor(MActor*);
 

@@ -122,7 +122,7 @@ class TMapObjPuncher : public TMapObjBase {
 public:
 	virtual void touchPlayer(THitActor*);
 	virtual void control();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	TMapObjPuncher(const char* name = "パンチャー")
 	    : TMapObjBase(name)
 	    , unk138(0.0f)
@@ -179,7 +179,7 @@ private:
 class TMareFall : public TMapObjBase {
 public:
 	virtual void calc();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	TMareFall(const char* name = "マーレ滝")
 	    : TMapObjBase(name)
 	{
@@ -210,7 +210,7 @@ private:
 class TMareEventPoint : public THitActor {
 public:
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	TMareEventPoint(const char* name = "イベントポイント")
 	    : THitActor(name)
 	    , unk68(nullptr)

@@ -32,7 +32,7 @@ class TMameGessoManager : public TSmallEnemyManager {
 public:
 	TMameGessoManager(const char* name = "まめゲッソーマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual TSmallEnemy* createEnemyInstance();
@@ -45,8 +45,8 @@ class TMameGesso : public TWalkerEnemy {
 public:
 	TMameGesso(const char* name = "まめゲッソー");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual void kill();

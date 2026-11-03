@@ -13,24 +13,22 @@ public:
 	public:
 		TMapWarpInfo() { }
 
-		JGeometry::TVec3<f32>& getUnk8() { return unk8; }
-
 	public:
-		/* 0x0 */ u32 unk0;
-		/* 0x4 */ u32 unk4;
-		/* 0x8 */ JGeometry::TVec3<f32> unk8;
+		/* 0x0 */ u32 mDestinationModelIndex;
+		/* 0x4 */ u32 mSourceModelIndex;
+		/* 0x8 */ JGeometry::TVec3<f32> mWarpOffset;
 	};
 
 	void init(JSUMemoryInputStream&);
 	void initModel();
 	void watchToWarp();
-	void warp(int);
+	void warp(int index);
 	void changeModel(int);
 
 public:
-	/* 0x0 */ int unk0;
-	/* 0x4 */ TMapWarpInfo* unk4;
-	/* 0x8 */ int unk8;
+	/* 0x0 */ int mWarpPairCount;
+	/* 0x4 */ TMapWarpInfo* mWarpInfos;
+	/* 0x8 */ int mCurrentModelIndex;
 	/* 0xC */ f32 unkC;
 };
 

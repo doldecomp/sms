@@ -299,10 +299,10 @@ void TIgaigaManager::initSetEnemies()
 	unk60->init((TLiveActor*)unk18[0]);
 }
 
-void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TIgaigaManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TEnemyManager::perform(cue, param_2);
-	unk60->perform(cue, param_2);
+	TEnemyManager::perform(cue, graphics);
+	unk60->perform(cue, graphics);
 }
 
 void TIgaigaManager::requestPolluteModel(JGeometry::TVec3<f32>& param_1,
@@ -365,9 +365,9 @@ void TIgaiga::setMActorAndKeeper()
 	mMActor       = mMActorKeeper->createMActor("igaiga_model1.bmd", 0);
 }
 
-void TIgaiga::perform(u32 cue, JDrama::TGraphics* param_2)
+void TIgaiga::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
 }
 
 void TIgaiga::calcRootMatrix()
@@ -773,7 +773,7 @@ BOOL TGorogoroManager::inArea(const JGeometry::TVec3<f32>& param_1)
 	return unk70 ? unk70->contain(param_1) : TRUE;
 }
 
-void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* param_2)
+void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
 		++unk60;
@@ -811,8 +811,8 @@ void TGorogoroManager::perform(u32 cue, JDrama::TGraphics* param_2)
 		}
 	}
 
-	TEnemyManager::perform(cue, param_2);
-	unk6C->perform(cue, param_2);
+	TEnemyManager::perform(cue, graphics);
+	unk6C->perform(cue, graphics);
 }
 
 void TGorogoroManager::requestPolluteModel(JGeometry::TVec3<f32>& param_1,
@@ -867,9 +867,9 @@ void TGorogoro::init(TLiveManager* param_1)
 	mSurfaceAlignmentMode = SURFACE_ALIGNMENT_GROUND;
 }
 
-void TGorogoro::perform(u32 cue, JDrama::TGraphics* param_2)
+void TGorogoro::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	TSmallEnemy::perform(cue, param_2);
+	TSmallEnemy::perform(cue, graphics);
 	if (checkLiveFlag(LIVE_FLAG_CLIPPED_OUT)) {
 		if (gpMirrorModelManager->isInMirror(mPosition)) {
 			if (cue & CUE_CALC_ANIM) {

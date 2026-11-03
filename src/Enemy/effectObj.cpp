@@ -32,7 +32,7 @@ TEffectObjManager* gpEffectObjManager;
 // JGadget::TAllocator<TEffectObjBase*>>::insert(JGadget::TList<TEffectObjBase*,
 // JGadget::TAllocator<TEffectObjBase*>>::iterator, TEffectObjBase* const&) {}
 
-void TSimpleEffect::perform(u32 cue, JDrama::TGraphics*)
+void TSimpleEffect::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM)
 		emitEffect();
@@ -46,10 +46,10 @@ void TEffectPinnaFunsui::loadAfter()
 
 void TEffectPinnaFunsui::emitEffect()
 {
-	MsMtxSetXYZRPH(getUnk48(), mPosition.x, mPosition.y, mPosition.z,
+	MsMtxSetXYZRPH(getEffectMtx(), mPosition.x, mPosition.y, mPosition.z,
 	               mRotation.x, mRotation.y, mRotation.z);
 
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A8, getUnk48(), 1, this);
+	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A8, getEffectMtx(), 1, this);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -63,10 +63,10 @@ void TEffectBiancoFunsui::loadAfter()
 
 void TEffectBiancoFunsui::emitEffect()
 {
-	MsMtxSetXYZRPH(getUnk48(), mPosition.x, mPosition.y, mPosition.z,
+	MsMtxSetXYZRPH(getEffectMtx(), mPosition.x, mPosition.y, mPosition.z,
 	               mRotation.x, mRotation.y, mRotation.z);
 
-	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A9, getUnk48(), 1, this);
+	gpMarioParticleManager->emitAndBindToMtxPtr(0x1A9, getEffectMtx(), 1, this);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_EV_ARCHED_FOUNTAIN, &mPosition, 0,
 	                                nullptr, 0, 4);
@@ -74,9 +74,9 @@ void TEffectBiancoFunsui::emitEffect()
 
 TEffectObjBase::TEffectObjBase(const char* name)
     : THitActor(name)
-    , unk68(0)
-    , unk6C(0.0f)
-    , unk70(0.0f)
+    , mState(STATE_INACTIVE)
+    , mMaxFireStrength(0.0f)
+    , mFireStrength(0.0f)
 {
 }
 
@@ -97,19 +97,19 @@ void TEffectObjBase::init()
 
 void TEffectObjBase::reset()
 {
-	unk68 = 1;
-	unk6C = 200.0f;
-	unk70 = 200.0f;
+	mState           = STATE_READY;
+	mMaxFireStrength = 200.0f;
+	mFireStrength    = 200.0f;
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	unk74 = 0;
+	mActiveFrameCount = 0;
 }
 
-void TEffectObjBase::perform(u32 cue, JDrama::TGraphics*)
+void TEffectObjBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_MOVE) {
-		if (unk68 == 1) {
-			unk74 = 0;
-			unk68 = 2;
+		if (mState == STATE_READY) {
+			mActiveFrameCount = 0;
+			mState            = STATE_ACTIVE;
 		}
 
 		moveObject();
@@ -128,32 +128,32 @@ BOOL TEffectObjBase::receiveMessage(THitActor* sender, u32 message)
 
 void TEffectObjBase::moveObject()
 {
-	if (unk68 == 2) {
-		unk74 += 1;
-		Vec local_1c;
-		VECScale(&mScaling, &local_1c, unk70 / unk6C);
+	if (mState == STATE_ACTIVE) {
+		mActiveFrameCount += 1;
+		Vec scale;
+		VECScale(&mScaling, &scale, mFireStrength / mMaxFireStrength);
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_C, &mPosition, 3, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale(scale);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_A, &mPosition, 1, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale(scale);
 		}
 
 		if (JPABaseEmitter* emitter = gpMarioParticleManager->emit(
 		        PARTICLE_MS_MAP_FIRE_B, &mPosition, 1, this)) {
-			emitter->setGlobalScale(local_1c);
+			emitter->setGlobalScale(scale);
 		}
 
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_CALM_FLAME, &mPosition, 0,
 		                                nullptr, 0, 4);
 	}
 
-	if (unk68 == 3)
-		unk68 = 0;
+	if (mState == STATE_EXTINGUISHED)
+		mState = STATE_INACTIVE;
 
 	for (int i = 0; i < mColCount; ++i)
 		if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
@@ -162,17 +162,17 @@ void TEffectObjBase::moveObject()
 
 void TEffectObjBase::behaveToWater(THitActor* param_1)
 {
-	if (unk68 != 2)
+	if (mState != STATE_ACTIVE)
 		return;
 
-	if (unk70 > 0.0f) {
-		unk70 -= 1.0f;
+	if (mFireStrength > 0.0f) {
+		mFireStrength -= 1.0f;
 		return;
 	}
 
 	SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_TO_COOL, &mPosition, 0,
 	                                nullptr, 0, 4);
-	unk68 = 3;
+	mState = STATE_EXTINGUISHED;
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 
 	if (JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
@@ -185,17 +185,20 @@ void TEffectObjBase::forceKill() { }
 
 TEffectObjManager::TEffectObjManager(const char* name)
     : JDrama::TViewObj(name)
-    , unk10(0)
+    , mRegisteredEffectCount(0)
 {
 	gpConductor->registerOtherObj(this);
 	gpEffectObjManager = this;
 
-	unk24 = new TEffectObjBase*[COOL_EFFECT_OBJ_NUM];
-	for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
-		unk24[i] = new TEffectObjBase;
+	mEffectObjPool = new TEffectObjBase*[EFFECT_OBJ_POOL_SIZE];
+	for (int i = 0; i < EFFECT_OBJ_POOL_SIZE; ++i)
+		mEffectObjPool[i] = new TEffectObjBase;
 }
 
-void TEffectObjManager::generateEffect(Vec) { }
+void TEffectObjManager::generateEffect(Vec)
+{
+	// presumably generated an effect from mEffectObjPool but was dead-stripped
+}
 
 void TEffectObjManager::load(JSUMemoryInputStream& stream)
 {
@@ -205,20 +208,20 @@ void TEffectObjManager::load(JSUMemoryInputStream& stream)
 void TEffectObjManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & (CUE_DRAW | CUE_MOVE)) {
-		JGadget::TList<TEffectObjBase*>::iterator it  = unk14.begin();
-		JGadget::TList<TEffectObjBase*>::iterator end = unk14.end();
+		JGadget::TList<TEffectObjBase*>::iterator it  = mEffectObjList.begin();
+		JGadget::TList<TEffectObjBase*>::iterator end = mEffectObjList.end();
 		for (; it != end; ++it)
 			(*it)->perform(cue, graphics);
 
-		for (int i = 0; i < COOL_EFFECT_OBJ_NUM; ++i)
-			unk24[i]->perform(cue, graphics);
+		for (int i = 0; i < EFFECT_OBJ_POOL_SIZE; ++i)
+			mEffectObjPool[i]->perform(cue, graphics);
 	}
 }
 
 void TEffectObjManager::addListEffectObj(TEffectObjBase* param_1)
 {
-	unk14.push_back(param_1);
-	++unk10;
+	mEffectObjList.push_back(param_1);
+	++mRegisteredEffectCount;
 }
 
 void TEffectModel::init(TLiveManager* param_1)
@@ -245,7 +248,7 @@ void TEffectModel::reset()
 
 void TEffectModel::moveObject()
 {
-	if (!checkLiveFlag(LIVE_FLAG_DEAD) && mMActor->curAnmEndsNext()) {
+	if (!checkLiveFlag(LIVE_FLAG_DEAD) && getMActor()->curAnmEndsNext()) {
 		onLiveFlag(LIVE_FLAG_DEAD);
 		onLiveFlag(LIVE_FLAG_CLIPPED_OUT);
 	}
@@ -257,8 +260,8 @@ void TEffectModel::calcRootMatrix()
 	MsMtxSetXYZRPH(mtx, mPosition.x, mPosition.y, mPosition.z, mRotation.x,
 	               mRotation.y, mRotation.z);
 	mtx.translation(mPosition.x, mPosition.y, mPosition.z);
-	mMActor->getModel()->setBaseTRMtx(mtx);
-	mMActor->getModel()->setBaseScale(mScaling);
+	getMActor()->getModel()->setBaseTRMtx(mtx);
+	getMActor()->getModel()->setBaseScale(mScaling);
 }
 
 TEffectColumWaterManager::TEffectColumWaterManager(const char* name)
@@ -478,21 +481,21 @@ void TEffectColumSand::init(TLiveManager* param_1)
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	mActorType = ACTOR_TYPE_EFFECT_OBJ;
-	mMActor->setBck("08_sunabashira");
-	mMActor->setBrk("08_sunabashira");
-	mMActor->setBtk("08_sunabashira");
+	getMActor()->setBck("08_sunabashira");
+	getMActor()->setBrk("08_sunabashira");
+	getMActor()->setBtk("08_sunabashira");
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TEffectColumSand::reset()
 {
 	TEffectModel::reset();
-	mMActor->setBck("08_sunabashira");
-	mMActor->setBrk("08_sunabashira");
-	mMActor->setBtk("08_sunabashira");
-	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
-	mMActor->getFrameCtrl(5)->setFrame(0.0f);
-	mMActor->getFrameCtrl(4)->setFrame(0.0f);
+	getMActor()->setBck("08_sunabashira");
+	getMActor()->setBrk("08_sunabashira");
+	getMActor()->setBtk("08_sunabashira");
+	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+	getMActor()->getFrameCtrl(5)->setFrame(0.0f);
+	getMActor()->getFrameCtrl(4)->setFrame(0.0f);
 }
 
 void TEffectColumSand::generate(JGeometry::TVec3<f32>& param_1,
@@ -556,21 +559,21 @@ void TEffectExplosion::init(TLiveManager* param_1)
 	onLiveFlag(LIVE_FLAG_DEAD);
 	mScaling.set(0.0f, 0.0f, 0.0f);
 	mActorType = ACTOR_TYPE_EFFECT_OBJ;
-	mMActor->setBck("10_bomb");
-	mMActor->setBrk("10_bomb");
-	mMActor->setBtk("10_bomb");
+	getMActor()->setBck("10_bomb");
+	getMActor()->setBrk("10_bomb");
+	getMActor()->setBtk("10_bomb");
 	onHitFilter(HIT_FILTER_NO_COLLISION);
 }
 
 void TEffectExplosion::reset()
 {
 	TEffectModel::reset();
-	mMActor->setBck("10_bomb");
-	mMActor->setBrk("10_bomb");
-	mMActor->setBtk("10_bomb");
-	mMActor->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
-	mMActor->getFrameCtrl(5)->setFrame(0.0f);
-	mMActor->getFrameCtrl(4)->setFrame(0.0f);
+	getMActor()->setBck("10_bomb");
+	getMActor()->setBrk("10_bomb");
+	getMActor()->setBtk("10_bomb");
+	getMActor()->getFrameCtrl(ANM_TYPE_BCK)->setFrame(0.0f);
+	getMActor()->getFrameCtrl(5)->setFrame(0.0f);
+	getMActor()->getFrameCtrl(4)->setFrame(0.0f);
 }
 
 void TEffectExplosion::generate(JGeometry::TVec3<f32>& param_1,

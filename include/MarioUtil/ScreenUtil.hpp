@@ -17,7 +17,7 @@ class TAfterEffect : public JDrama::TViewObj {
 public:
 	TAfterEffect() { }
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
@@ -74,7 +74,7 @@ class TScreenTexture : public JDrama::TViewObj {
 public:
 	TScreenTexture() { }
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics) { }
 
 	bool replace(J3DModelData*, const char*);

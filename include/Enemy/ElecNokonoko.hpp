@@ -52,8 +52,8 @@ class TElecCarapace : public TEnemyAttachment {
 public:
 	TElecCarapace(const char* name = "ノコノコ甲羅");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual void kill();
@@ -98,9 +98,9 @@ class TElecNokonoko : public TWalkerEnemy {
 public:
 	TElecNokonoko(const char* name = "電気ノコノコ");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual const char** getBasNameTable() const;
@@ -151,8 +151,8 @@ class TElecNokonokoManager : public TSmallEnemyManager {
 public:
 	TElecNokonokoManager(const char* name = "電気ノコノコマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void clipEnemies(JDrama::TGraphics*);

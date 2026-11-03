@@ -10,7 +10,7 @@ class TLiveManager : public TObjManager {
 public:
 	TLiveManager(const char* = "ライブアクターマネージャ");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void clipActors(JDrama::TGraphics*);
 	virtual void setFlagOutOfCube();

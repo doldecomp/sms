@@ -80,7 +80,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	f32 getWPGravity(int) const;
 	void getWaterAlpha() const;

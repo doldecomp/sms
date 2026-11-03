@@ -43,9 +43,9 @@ void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
                                    JPAEmitterManager* emitter_manager)
 {
 	mOpaBuffer = new J3DDrawBuffer(0x400);
-	j3dSys.setDrawBuffer(mOpaBuffer, 0);
+	j3dSys.setDrawBuffer(mOpaBuffer, J3DSysDrawBuf_Opa);
 	mXluBuffer = new J3DDrawBuffer(0x400);
-	j3dSys.setDrawBuffer(mXluBuffer, 1);
+	j3dSys.setDrawBuffer(mXluBuffer, J3DSysDrawBuf_Xlu);
 
 	void* bmd = JKRFileLoader::getGlbResource("/select/shine_menu.bmd");
 	void* bpk = JKRFileLoader::getGlbResource("/select/shine_menu.bpk");
@@ -244,9 +244,9 @@ void TSelectShineManager::perform(u32 cue, JDrama::TGraphics* graphics)
 	if (cue & CUE_DRAW) {
 		j3dSys.setViewMtx(graphics->mViewMtx);
 		j3dSys.drawInit();
-		j3dSys.unk4C = 3;
+		j3dSys.unk4C = J3DMaterialMode_OpaTexEdge;
 		mOpaBuffer->draw();
-		j3dSys.unk4C = 4;
+		j3dSys.unk4C = J3DMaterialMode_Xlu;
 		mXluBuffer->draw();
 		mOpaBuffer->frameInit();
 		mXluBuffer->frameInit();

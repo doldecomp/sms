@@ -18,8 +18,8 @@ public:
 
 class TJumpMushroom : public TMapObjBase {
 public:
-	virtual void load(JSUMemoryInputStream&);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual void load(JSUMemoryInputStream& stream);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	TJumpMushroom(const char* name = "ジャンプきのこ")
 	    : TMapObjBase(name)
 	{
@@ -71,7 +71,7 @@ public:
 	void drawRopeBetweenBoards(f32, int) const;
 	void initDraw() const;
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	void initMonte();
 	THangingBridge(const char* name = "つり橋");
 
@@ -99,7 +99,7 @@ public:
 	                 const JGeometry::TVec3<f32>&) const;
 	void initDraw() const;
 	void swing();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void control();
 	virtual void draw() const;
 	TSwingBoard(const char* name = "つり橋");
@@ -175,7 +175,7 @@ public:
 class TFluffManager : public TMapObjBase {
 public:
 	void findNextFluff();
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void control();
 	void registerNextFluff(TFluff*);

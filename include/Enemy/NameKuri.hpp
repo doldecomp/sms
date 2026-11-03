@@ -52,7 +52,7 @@ class TNameKuriManager : public TSmallEnemyManager {
 public:
 	TNameKuriManager(const char* name = "ナメクリマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void createModelData();
@@ -92,7 +92,7 @@ public:
 	TNameKuri(const char* name = "ナメクリ");
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
-	virtual void init(TLiveManager*);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void moveObject();
 	virtual f32 getGravityY() const;
@@ -142,7 +142,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual TSmallEnemy* createEnemyInstance();
 };
 

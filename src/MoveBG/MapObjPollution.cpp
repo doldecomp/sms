@@ -12,7 +12,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 
-void TPolluterBase::perform(u32 cue, JDrama::TGraphics*)
+void TPolluterBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (cue & CUE_CALC_ANIM)
 		unk138->calcAnm();
@@ -81,7 +81,7 @@ TRevivalPolluter::TRevivalPolluter()
 {
 }
 
-void TMapObjRevivalPollution::perform(u32 cue, JDrama::TGraphics*)
+void TMapObjRevivalPollution::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!(cue & CUE_CALC_ANIM))
 		return;

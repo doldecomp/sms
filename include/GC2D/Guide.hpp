@@ -64,7 +64,7 @@ public:
 	// fabricated
 	void disappearSelectedPane() { disappearGuidePane(unk42C); }
 
-	void perform(u32, JDrama::TGraphics*);
+	void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
 	/* 0x10 */ s32 unk10;

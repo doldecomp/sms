@@ -22,7 +22,7 @@ public:
 	TLimitKoopaJrManager(const char* name
 	                     = "リミットクッパジュニアマネージャー");
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
@@ -40,9 +40,9 @@ class TLimitKoopaJr : public TSpineEnemy {
 public:
 	TLimitKoopaJr(const char* name = "リミットクッパジュニア");
 
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual const char** getBasNameTable() const;

@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 
 	const JGeometry::TVec3<f32>& getPosition() { return unkC; }
 
