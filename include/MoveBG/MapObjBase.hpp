@@ -217,16 +217,24 @@ public:
 	void initUnique();
 	void setMatTableTex(J3DMaterialTable*);
 	void setMatTable(J3DMaterialTable*);
-	JPABaseEmitter* emitAndRotate(s32, u8, const JGeometry::TVec3<f32>*) const;
-	JPABaseEmitter* emitAndScale(s32, u8, const JGeometry::TVec3<f32>*,
-	                             const JGeometry::TVec3<f32>&) const;
-	JPABaseEmitter* emitAndBindScale(s32, u8, const JGeometry::TVec3<f32>*,
-	                                 const JGeometry::TVec3<f32>&) const;
-	JPABaseEmitter* emitAndScale(s32, u8, const JGeometry::TVec3<f32>*) const;
-	void emitAndRotateScale(s32, u8, const JGeometry::TVec3<f32>*) const;
-	static void emitAndSRT(s32, u8, const JGeometry::TVec3<f32>*,
-	                       const JGeometry::TVec3<f32>&,
-	                       const JGeometry::TVec3<f32>&);
+
+	JPABaseEmitter* emitAndRotate(s32 id, u8 effect_type,
+	                              const JGeometry::TVec3<f32>* pos) const;
+	JPABaseEmitter* emitAndScale(s32 id, u8 effect_type,
+	                             const JGeometry::TVec3<f32>* pos,
+	                             const JGeometry::TVec3<f32>& scale) const;
+	JPABaseEmitter* emitAndBindScale(s32 id, u8 effect_type,
+	                                 const JGeometry::TVec3<f32>* pos,
+	                                 const JGeometry::TVec3<f32>& scale) const;
+	JPABaseEmitter* emitAndScale(s32 id, u8 effect_type,
+	                             const JGeometry::TVec3<f32>* pos) const;
+	void emitAndRotateScale(s32 id, u8 effect_type,
+	                        const JGeometry::TVec3<f32>* pos) const;
+	static void emitAndSRT(s32 id, u8 effect_type,
+	                       const JGeometry::TVec3<f32>* pos,
+	                       const JGeometry::TVec3<f32>& rot,
+	                       const JGeometry::TVec3<f32>& scale);
+
 	void emitColumnWater();
 	bool marioHipAttack() const;
 	bool marioHeadAttack() const;
@@ -270,34 +278,34 @@ public:
 	void makeRootMtxRotZ(MtxPtr);
 	static void makeLowerStr(const char*, char*);
 	static void moveJoint(J3DJoint*, f32, f32, f32);
-	static f32 getJointTransX(J3DJoint*);
-	static f32 getJointTransY(J3DJoint*);
-	static f32 getJointTransZ(J3DJoint*);
-	static void setJointTrans(J3DJoint*, f32, f32, f32);
-	static void setJointTransX(J3DJoint*, f32);
-	static void setJointTransY(J3DJoint*, f32);
-	static void setJointTransZ(J3DJoint*, f32);
-	static f32 getJointRotateX(J3DJoint*);
-	static f32 getJointRotateY(J3DJoint*);
-	static f32 getJointRotateZ(J3DJoint*);
-	void setJointRotate(J3DJoint*, short, short, short);
-	void setJointRotateX(J3DJoint*, short);
-	void setJointRotateY(J3DJoint*, short);
-	void setJointRotateZ(J3DJoint*, short);
+	static f32 getJointTransX(J3DJoint* joint);
+	static f32 getJointTransY(J3DJoint* joint);
+	static f32 getJointTransZ(J3DJoint* joint);
+	static void setJointTrans(J3DJoint* joint, f32 tx, f32 ty, f32 tz);
+	static void setJointTransX(J3DJoint* joint, f32 tx);
+	static void setJointTransY(J3DJoint* joint, f32 ty);
+	static void setJointTransZ(J3DJoint* joint, f32 tz);
+	static f32 getJointRotateX(J3DJoint* joint);
+	static f32 getJointRotateY(J3DJoint* joint);
+	static f32 getJointRotateZ(J3DJoint* joint);
+	static void setJointRotate(J3DJoint*, s16 rx, s16 ry, s16 rz);
+	static void setJointRotateX(J3DJoint* joint, s16 rx);
+	static void setJointRotateY(J3DJoint* joint, s16 ry);
+	static void setJointRotateZ(J3DJoint* joint, s16 rz);
 	void rotateJointX(J3DJoint*, f32);
 	void rotateJointY(J3DJoint*, f32);
 	void rotateJointZ(J3DJoint*, f32);
-	static f32 getJointScaleX(J3DJoint*);
-	static f32 getJointScaleY(J3DJoint*);
-	static f32 getJointScaleZ(J3DJoint*);
-	static void setJointScale(J3DJoint*, f32, f32, f32);
-	static void setJointScaleX(J3DJoint*, f32);
-	static void setJointScaleY(J3DJoint*, f32);
-	static void setJointScaleZ(J3DJoint*, f32);
+	static f32 getJointScaleX(J3DJoint* joint);
+	static f32 getJointScaleY(J3DJoint* joint);
+	static f32 getJointScaleZ(J3DJoint* joint);
+	static void setJointScale(J3DJoint*, f32 sx, f32 sy, f32 sz);
+	static void setJointScaleX(J3DJoint* joint, f32 sx);
+	static void setJointScaleY(J3DJoint* joint, f32 sy);
+	static void setJointScaleZ(J3DJoint* joint, f32 sz);
 	static void calcMap();
 	static J3DModel* getMapModel();
-	void getMapModelData();
-	void getMapMActor();
+	static J3DModelData* getMapModelData();
+	static MActor* getMapMActor();
 	static TJointObj* getBuildingJointObj(int);
 	static J3DJoint* getBuildingJoint(int);
 

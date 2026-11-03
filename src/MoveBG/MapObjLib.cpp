@@ -224,9 +224,14 @@ TMapObjBase::newAndInitBuildingCollisionMove(int param_1, TLiveActor* param_2)
 	return move;
 }
 
-TMapCollisionStatic* TMapObjBase::newAndInitBuildingCollisionStatic(int,
-                                                                    TLiveActor*)
+TMapCollisionStatic*
+TMapObjBase::newAndInitBuildingCollisionStatic(int param_1, TLiveActor* param_2)
 {
+	TMapCollisionStatic* move = new TMapCollisionStatic;
+	char buffer[64];
+	snprintf(buffer, 64, "/scene/map/map/building%02d.col", param_1);
+	move->init(buffer, 0, param_2);
+	return move;
 }
 
 J3DJoint* TMapObjBase::getBuildingJoint(int i)
@@ -240,9 +245,15 @@ TJointObj* TMapObjBase::getBuildingJointObj(int i)
 	    (u16)i);
 }
 
-void TMapObjBase::getMapMActor() { }
+MActor* TMapObjBase::getMapMActor()
+{
+	return gpMap->getRootJointModel()->getMActor();
+}
 
-void TMapObjBase::getMapModelData() { }
+J3DModelData* TMapObjBase::getMapModelData()
+{
+	return gpMap->getRootJointModel()->getModel()->getModelData();
+}
 
 J3DModel* TMapObjBase::getMapModel()
 {
@@ -251,18 +262,35 @@ J3DModel* TMapObjBase::getMapModel()
 
 void TMapObjBase::calcMap() { getMapModel()->calc(); }
 
-void TMapObjBase::setJointScaleZ(J3DJoint*, f32) { }
-
-void TMapObjBase::setJointScaleY(J3DJoint* joint, f32 scale)
+void TMapObjBase::setJointScaleZ(J3DJoint* joint, f32 sz)
 {
 	J3DTransformInfo& info = joint->getTransformInfo();
-	info.mScale.y          = scale;
+	info.mScale.z          = sz;
 	joint->setTransformInfo(info);
 }
 
-void TMapObjBase::setJointScaleX(J3DJoint*, f32) { }
+void TMapObjBase::setJointScaleY(J3DJoint* joint, f32 sy)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mScale.y          = sy;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointScale(J3DJoint*, f32, f32, f32) { }
+void TMapObjBase::setJointScaleX(J3DJoint* joint, f32 sx)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mScale.x          = sx;
+	joint->setTransformInfo(info);
+}
+
+void TMapObjBase::setJointScale(J3DJoint* joint, f32 sx, f32 sy, f32 sz)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mScale.x          = sx;
+	info.mScale.y          = sy;
+	info.mScale.z          = sz;
+	joint->setTransformInfo(info);
+}
 
 f32 TMapObjBase::getJointScaleZ(J3DJoint* joint)
 {
@@ -285,13 +313,35 @@ void TMapObjBase::rotateJointY(J3DJoint*, f32) { }
 
 void TMapObjBase::rotateJointX(J3DJoint*, f32) { }
 
-void TMapObjBase::setJointRotateZ(J3DJoint*, short) { }
+void TMapObjBase::setJointRotateZ(J3DJoint* joint, s16 rz)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.z       = rz;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotateY(J3DJoint*, short) { }
+void TMapObjBase::setJointRotateY(J3DJoint* joint, s16 ry)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.y       = ry;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotateX(J3DJoint*, short) { }
+void TMapObjBase::setJointRotateX(J3DJoint* joint, s16 rx)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.x       = rx;
+	joint->setTransformInfo(info);
+}
 
-void TMapObjBase::setJointRotate(J3DJoint*, short, short, short) { }
+void TMapObjBase::setJointRotate(J3DJoint* joint, s16 rx, s16 ry, s16 rz)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mRotation.x       = rx;
+	info.mRotation.y       = ry;
+	info.mRotation.z       = rz;
+	joint->setTransformInfo(info);
+}
 
 f32 TMapObjBase::getJointRotateZ(J3DJoint* joint)
 {
@@ -308,28 +358,35 @@ f32 TMapObjBase::getJointRotateX(J3DJoint* joint)
 	return joint->getTransformInfo().mRotation.x;
 }
 
-void TMapObjBase::setJointTransZ(J3DJoint* joint, f32 z)
+void TMapObjBase::setJointTransZ(J3DJoint* joint, f32 tz)
 {
 	J3DTransformInfo& info = joint->getTransformInfo();
-	info.mTranslate.z      = z;
+	info.mTranslate.z      = tz;
 	joint->setTransformInfo(info);
 }
 
-void TMapObjBase::setJointTransY(J3DJoint* joint, f32 y)
+void TMapObjBase::setJointTransY(J3DJoint* joint, f32 ty)
 {
 	J3DTransformInfo& info = joint->getTransformInfo();
-	info.mTranslate.y      = y;
+	info.mTranslate.y      = ty;
 	joint->setTransformInfo(info);
 }
 
-void TMapObjBase::setJointTransX(J3DJoint* joint, f32 x)
+void TMapObjBase::setJointTransX(J3DJoint* joint, f32 tx)
 {
 	J3DTransformInfo& info = joint->getTransformInfo();
-	info.mTranslate.x      = x;
+	info.mTranslate.x      = tx;
 	joint->setTransformInfo(info);
 }
 
-void TMapObjBase::setJointTrans(J3DJoint*, f32, f32, f32) { }
+void TMapObjBase::setJointTrans(J3DJoint* joint, f32 tx, f32 ty, f32 tz)
+{
+	J3DTransformInfo& info = joint->getTransformInfo();
+	info.mTranslate.x      = tx;
+	info.mTranslate.y      = ty;
+	info.mTranslate.z      = tz;
+	joint->setTransformInfo(info);
+}
 
 f32 TMapObjBase::getJointTransZ(J3DJoint* joint)
 {
@@ -346,12 +403,12 @@ f32 TMapObjBase::getJointTransX(J3DJoint* joint)
 	return joint->getTransformInfo().mTranslate.x;
 }
 
-void TMapObjBase::moveJoint(J3DJoint* joint, f32 x, f32 y, f32 z)
+void TMapObjBase::moveJoint(J3DJoint* joint, f32 dx, f32 dy, f32 dz)
 {
 	J3DTransformInfo& info = joint->getTransformInfo();
-	info.mTranslate.x += x;
-	info.mTranslate.y += y;
-	info.mTranslate.z += z;
+	info.mTranslate.x += dx;
+	info.mTranslate.y += dy;
+	info.mTranslate.z += dz;
 	joint->setTransformInfo(info);
 }
 
@@ -741,25 +798,25 @@ void TMapObjBase::emitColumnWater()
 		eff->generate(mPosition, mScaling);
 }
 
-void TMapObjBase::emitAndSRT(s32 param_1, u8 param_2,
-                             const JGeometry::TVec3<f32>* param_3,
-                             const JGeometry::TVec3<f32>& param_4,
-                             const JGeometry::TVec3<f32>& param_5)
+void TMapObjBase::emitAndSRT(s32 id, u8 effect_type,
+                             const JGeometry::TVec3<f32>* pos,
+                             const JGeometry::TVec3<f32>& rot,
+                             const JGeometry::TVec3<f32>& scale)
 {
 	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(param_1, param_3, param_2, param_3);
+	    = gpMarioParticleManager->emit(id, pos, effect_type, pos);
 
 	if (emitter) {
-		emitter->setRotation(param_4.x, param_4.y, param_4.z);
-		emitter->setGlobalScale(param_5);
+		emitter->setRotation(rot.x, rot.y, rot.z);
+		emitter->setGlobalScale(scale);
 	}
 }
 
-void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
-                                     const JGeometry::TVec3<f32>* param_3) const
+void TMapObjBase::emitAndRotateScale(s32 id, u8 effect_type,
+                                     const JGeometry::TVec3<f32>* pos) const
 {
 	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
+	    = gpMarioParticleManager->emit(id, pos, effect_type, this);
 
 	if (emitter) {
 		emitter->setRotation(mRotation.x / 180.0f * 32768.0f,
@@ -770,11 +827,11 @@ void TMapObjBase::emitAndRotateScale(s32 param_1, u8 param_2,
 }
 
 JPABaseEmitter*
-TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
-                          const JGeometry::TVec3<f32>* param_3) const
+TMapObjBase::emitAndScale(s32 id, u8 effect_type,
+                          const JGeometry::TVec3<f32>* pos) const
 {
 	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
+	    = gpMarioParticleManager->emit(id, pos, effect_type, this);
 
 	if (emitter) {
 		emitter->setGlobalScale(mScaling);
@@ -784,30 +841,30 @@ TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
 }
 
 JPABaseEmitter*
-TMapObjBase::emitAndBindScale(s32 param_1, u8 param_2,
-                              const JGeometry::TVec3<f32>* param_3,
-                              const JGeometry::TVec3<f32>& param_4) const
+TMapObjBase::emitAndBindScale(s32 id, u8 effect_type,
+                              const JGeometry::TVec3<f32>* pos,
+                              const JGeometry::TVec3<f32>& scale) const
 {
 	JPABaseEmitter* emitter = gpMarioParticleManager->emitAndBindToPosPtr(
-	    param_1, param_3, param_2, this);
+	    id, pos, effect_type, this);
 
 	if (emitter) {
-		emitter->setGlobalScale(param_4);
+		emitter->setGlobalScale(scale);
 	}
 
 	return emitter;
 }
 
 JPABaseEmitter*
-TMapObjBase::emitAndScale(s32 param_1, u8 param_2,
-                          const JGeometry::TVec3<f32>* param_3,
-                          const JGeometry::TVec3<f32>& param_4) const
+TMapObjBase::emitAndScale(s32 id, u8 effect_type,
+                          const JGeometry::TVec3<f32>* pos,
+                          const JGeometry::TVec3<f32>& scale) const
 {
 	JPABaseEmitter* emitter
-	    = gpMarioParticleManager->emit(param_1, param_3, param_2, this);
+	    = gpMarioParticleManager->emit(id, pos, effect_type, this);
 
 	if (emitter) {
-		emitter->setGlobalScale(param_4);
+		emitter->setGlobalScale(scale);
 	}
 
 	return emitter;

@@ -86,7 +86,7 @@ void TMapEventSink::rising()
 	J3DTransformInfo& info = unk30->getTransformInfo();
 	info.mTranslate.y += unk3C;
 	unk30->setTransformInfo(info);
-	unk1C->getActor()->getModel()->calc();
+	unk1C->getMActor()->getModel()->calc();
 }
 
 bool TMapEventSink::control()
@@ -134,7 +134,7 @@ void TMapEventSink::startControl()
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
-	J3DModel* model = unk1C->getActor()->getModel();
+	J3DModel* model = unk1C->getMActor()->getModel();
 	model->calc();
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
