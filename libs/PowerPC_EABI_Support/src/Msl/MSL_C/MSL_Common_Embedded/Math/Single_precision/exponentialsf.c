@@ -1,6 +1,7 @@
 #include <PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h>
 
 #define __U32_AS_F32(x) (*(float*)&x)
+#define __F32_AS_U32(x) (*(unsigned int*)&x)
 
 #ifndef __INFINITY
 static const signed int _inf = 0x7f800000;
@@ -121,16 +122,16 @@ inline float __log2f(float x)
 
 	int exp, index;
 	int hi_bits, lo_bits;
-	unsigned int bits = *(unsigned int*)&x;
+	// unsigned int bits = *(unsigned int*)&x;
 
-	exp   = ((unsigned int)bits >> 23) - 0x80;
-	index = ((unsigned int)bits >> 16) & 0x7F;
+	exp   = (__F32_AS_U32(x) >> 23) - 0x80;
+	index = (__F32_AS_U32(x) & 0x7FFFFF) >> 16;
 
-	if ((bits & 0xFFFF) != 0) {
-		hi_bits = (bits & 0x7F0000) | 0x3F800000;
-		lo_bits = (bits & 0x7FFFFF) | 0x3F800000;
+	if ((__F32_AS_U32(x) & 0xFFFF) != 0) {
+		hi_bits = (__F32_AS_U32(x) & 0x7F0000) | 0x3F800000;
+		lo_bits = (__F32_AS_U32(x) & 0x7FFFFF) | 0x3F800000;
 
-		if (bits & 0x8000) {
+		if (__F32_AS_U32(x) & 0x8000) {
 			index++;
 			hi_bits += 0x10000;
 		}
@@ -198,10 +199,11 @@ float powf(float x, float y)
 
 	/* x < 0 */
 	if (x < 0.0f) {
+		int iPow = y;
 		if (y - (int)y)
 			return __NAN;
 
-		if (((int)y % 2) != 0) {
+		if (iPow % 2 != 0) {
 			return -__exp2f(y * __log2f(-x));
 		}
 
