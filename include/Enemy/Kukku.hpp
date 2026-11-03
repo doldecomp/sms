@@ -36,7 +36,6 @@ class TEnemyCoinUnit {
 class TKukku : public TSmallEnemy {
 public:
 	TKukku(const char* name = "クック");
-	virtual ~TKukku() { };
 	virtual void bind();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
@@ -103,7 +102,6 @@ public:
 class TKukkuManager : public TSmallEnemyManager {
 public:
 	TKukkuManager(const char* name = "クックマネージャー");
-	virtual ~TKukkuManager() { };
 	virtual void load(JSUMemoryInputStream&);
 	virtual TSpineEnemy* createEnemyInstance();
 	virtual void createModelData();
@@ -117,7 +115,6 @@ public:
 class TKukkuBall : public THitActor {
 public:
 	TKukkuBall(MActor* actor);
-	virtual ~TKukkuBall() { };
 	virtual void init();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
