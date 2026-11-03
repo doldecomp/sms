@@ -9,8 +9,8 @@
 namespace JASystem {
 
 namespace Driver {
-	static u16 MAX_MIXERLEVEL         = 0x2ee0;
-	static u32 JAS_SYSTEM_OUTPUT_MODE = 1;
+	static u16 MAX_MIXERLEVEL         = 12000;
+	static u32 JAS_SYSTEM_OUTPUT_MODE = JASOUTPUT_Stereo;
 	static u8 JAS_UPDATE_INTERVAL     = 1;
 	static u32 DSP_VOICE_WAITS_MAX    = 0x20;
 

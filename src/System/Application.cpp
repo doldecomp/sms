@@ -23,6 +23,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <JSystem/JDrama/JDRVideo.hpp>
 #include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
+#include <JSystem/JAudio/JASystem/JASDriverIF.hpp>
 #include <JSystem/J2D/J2DPrint.hpp>
 #include <MarioUtil/RumbleMgr.hpp>
 #include <MarioUtil/DrawUtil.hpp>
@@ -464,12 +465,12 @@ void TApplication::initialize_bootAfter()
 
 #ifdef VERSION_GMSP01_NX
 	if (s_RunOnGC) {
-		JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? 0 : 1);
+		JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? JASOUTPUT_Mono : JASOUTPUT_Stereo);
 	} else {
-		JAIGlobalParameter::setParamSoundOutputMode(1);
+		JAIGlobalParameter::setParamSoundOutputMode(JASOUTPUT_Stereo);
 	}
 #else
-	JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? 0 : 1);
+	JAIGlobalParameter::setParamSoundOutputMode(!OSGetSoundMode() ? JASOUTPUT_Mono : JASOUTPUT_Stereo);
 #endif
 
 	gpMSound->loadWave(MS_WAVE_UNK0);
@@ -552,13 +553,13 @@ void TApplication::initialize_nlogoAfter()
 
 	gpCardManager->unmount();
 
-	int outputMode = 1;
+	int outputMode = JASOUTPUT_Stereo;
 	switch (TFlagManager::getInstance()->getFlag(MSF_SOUND_MODE)) {
 	case 0:
-		outputMode = 0;
+		outputMode = JASOUTPUT_Mono;
 		break;
 	case 2:
-		outputMode = 2;
+		outputMode = JASOUTPUT_Surround;
 		break;
 	}
 

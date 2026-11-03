@@ -323,6 +323,7 @@ private:
 
 class TOptionSoundUnit {
 public:
+	// equiv of JASOutputMode
 	enum SoundType {
 		SOUND_TYPE_MONO     = 0,
 		SOUND_TYPE_STEREO   = 1,

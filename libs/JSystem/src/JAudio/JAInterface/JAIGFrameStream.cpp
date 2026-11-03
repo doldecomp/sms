@@ -1,3 +1,4 @@
+#include "JSystem/JAudio/JASystem/JASDriverIF.hpp"
 #include <string.h>
 #include <JSystem/JAudio/JAInterface/JAIBasic.hpp>
 #include <JSystem/JAudio/JAInterface/JAIInter.hpp>
@@ -90,7 +91,7 @@ namespace StreamLib {
 
 	static u32 LOOP_BLOCKS     = 0xC;
 	static u32 LOOP_SAMPLESIZE = 0xf000;
-	static u32 outputmode      = 1;
+	static u32 outputmode      = JASOUTPUT_Stereo;
 
 } // namespace StreamLib
 } // namespace JAInter
@@ -825,7 +826,7 @@ namespace StreamLib {
 						Play_DirectPCM(assign_ch[i], loop_buffer[i][0],
 						               (u16)LOOP_SAMPLESIZE, playback_samples);
 						s16 v0, v1;
-						if (outputmode == 1) {
+						if (outputmode == JASOUTPUT_Stereo) {
 							v0 = 0x7FFF;
 							v1 = 0;
 						} else {
@@ -864,7 +865,7 @@ namespace StreamLib {
 			f32 fL = 1.0f;
 			f32 fR = 1.0f;
 			u16 base;
-			if (outputmode == 1) {
+			if (outputmode == JASOUTPUT_Stereo) {
 				if (outpan < 0.5f) {
 					fR = 1.4142f * JASystem::Calc::sinfT(outpan);
 				} else {
