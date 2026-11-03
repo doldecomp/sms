@@ -1,11 +1,13 @@
 #include <PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/math.h>
 
+#define __U32_AS_F32(x) (*(float*)&x)
+
 #ifndef __INFINITY
 static const signed int _inf = 0x7f800000;
-#define __INFINITY (*(float*)&_inf)
+#define __INFINITY (__U32_AS_F32(_inf))
 
 static const signed int _nan = 0x7fffffff;
-#define __NAN (*(float*)&_nan)
+#define __NAN (__U32_AS_F32(_nan))
 #endif
 
 static const float __log2_F[] = {
@@ -115,17 +117,16 @@ inline float __log2f(float x)
 	// inferred by presence of this var's mangled name
 	static const float __log2e_m1[2] = { 0.41015625f, 0.03253879088896f };
 
-	float unkConsts[2] = { -0.72135162353515625f, 0.4808933f };
+	float coeffs[2] = { -0.72135162353515625f, 0.4808933f };
 
-	float frac, r;
 	int exp, index;
 	int hi_bits, lo_bits;
-	int bits = *(int*)&x;
+	unsigned int bits = *(unsigned int*)&x;
 
 	exp   = ((unsigned int)bits >> 23) - 0x80;
 	index = ((unsigned int)bits >> 16) & 0x7F;
 
-	if ((unsigned short)bits != 0) {
+	if ((bits & 0xFFFF) != 0) {
 		hi_bits = (bits & 0x7F0000) | 0x3F800000;
 		lo_bits = (bits & 0x7FFFFF) | 0x3F800000;
 
@@ -134,26 +135,25 @@ inline float __log2f(float x)
 			hi_bits += 0x10000;
 		}
 
-		frac = (*(float*)&lo_bits - *(float*)&hi_bits) * __one_over_F[index];
+		float frac = __U32_AS_F32(lo_bits) - __U32_AS_F32(hi_bits);
+		frac *= __one_over_F[index];
 
-		r = 1.375f + (float)exp
-		    + (__log2_F[index]
-		       + (frac
-		          + ((__log2e_m1[0] * frac)
-		             + ((__log2e_m1[1] * frac)
-		                + (frac * frac
-		                   * ((frac * unkConsts[1]) + unkConsts[0]))))));
+		return 1.375f + (float)exp
+		       + (__log2_F[index]
+		          + (frac
+		             + ((__log2e_m1[0] * frac)
+		                + ((__log2e_m1[1] * frac)
+		                   + (frac * frac
+		                      * ((frac * coeffs[1]) + coeffs[0]))))));
 	} else {
-		r = 1.375f + (float)exp + __log2_F[index];
+		return 1.375f + (float)exp + __log2_F[index];
 	}
-
-	return r;
 }
 
 // fabricated
 inline float __exp2f(float t)
 {
-	int n = (int)t;
+	int n   = (int)t;
 	float f = t - (float)n;
 
 	if (n > 128)
@@ -165,22 +165,23 @@ inline float __exp2f(float t)
 	n = n << 23;
 
 	// horner expansion
-	float p = (f
-	         * (f
-	                * (f
-	                       * (f
-	                              * (f
-	                                     * (f
-	                                            * (f
-	                                                   * (f * __two_to_x[8]
-	                                                      + __two_to_x[7])
-	                                               + __two_to_x[6])
-	                                        + __two_to_x[5])
-	                                 + __two_to_x[4])
-	                          + __two_to_x[3])
-	                   + __two_to_x[2])
-	            + __two_to_x[1])
-	     + __two_to_x[0]);
+	float p
+	    = (f
+	           * (f
+	                  * (f
+	                         * (f
+	                                * (f
+	                                       * (f
+	                                              * (f
+	                                                     * (f * __two_to_x[8]
+	                                                        + __two_to_x[7])
+	                                                 + __two_to_x[6])
+	                                          + __two_to_x[5])
+	                                   + __two_to_x[4])
+	                            + __two_to_x[3])
+	                     + __two_to_x[2])
+	              + __two_to_x[1])
+	       + __two_to_x[0]);
 
 	float fp = f * p;
 	return *(float*)&n * (0.75f + (0.25f + fp));
