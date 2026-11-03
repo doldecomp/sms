@@ -238,58 +238,24 @@ float powf(float x, float y)
 		return *(float*)&n * __exp2f(f);
 	}
 
-	/* x classification */
-	{
-		float xc = x;
-		ix       = *(int*)&xc & 0x7F800000;
-		switch (ix) {
-		case 0x7F800000:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cx = (*(int*)&xc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cx = 4; /* normal */
-			break;
-		}
-	}
-	if (cx == 1)
+	if (fpclassify(x) == FP_QNAN)
 		return x; /* NaN */
 
-	/* y classification */
-	{
-		float yc = y;
-		iy       = *(int*)&yc & 0x7F800000;
-		switch (iy) {
-		case 0x7F800000:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 1 /* NaN */ : 2 /* inf */;
-			break;
-		case 0x0:
-			cy = (*(int*)&yc & 0x7FFFFF) ? 5 /* denorm */ : 3 /* zero */;
-			break;
-		default:
-			cy = 4; /* normal */
-			break;
-		}
-	}
-
-	switch (cy) {
-	case 3:
+	switch (fpclassify(y)) {
+	case FP_ZERO:
 		return 1.0f;
-	case 1:
-	case 2:
+	case FP_NAN:
+	case FP_INFINITE:
 		return __NAN;
-	case 4:
-	case 5:
+	case FP_NORMAL:
+	case FP_SUBNORMAL:
 		if (y < 0.0f) {
 			if (x == -0.0f)
 				return -__INFINITY;
 			return __INFINITY;
 		}
 		break;
-	default:
-		break;
 	}
+	
 	return 0.0f;
 }
