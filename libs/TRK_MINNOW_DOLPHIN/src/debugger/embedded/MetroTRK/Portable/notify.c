@@ -34,7 +34,7 @@ DSError TRKDoNotifyStopped(MessageCommandID cmd)
 			}
 		}
 
-		err = TRKRequestSend(msg, &reqIdx, 2, 3, 1);
+		err = TRKRequestSend(msg, &reqIdx, 2, 3, TRUE);
 		if (err == DS_NoError) {
 			TRKReleaseBuffer(reqIdx);
 		}
