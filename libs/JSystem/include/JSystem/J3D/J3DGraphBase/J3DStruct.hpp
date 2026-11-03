@@ -4,6 +4,14 @@
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
 
+enum J3DMaterialMode {
+	J3DMaterialMode_Opa        = 0x1, // opaque
+	J3DMaterialMode_TexEdge    = 0x2, // alpha mask at 0x80
+	J3DMaterialMode_Xlu        = 0x4, // alpha blended translucent
+	J3DMaterialMode_OpaTexEdge = J3DMaterialMode_Opa | J3DMaterialMode_TexEdge,
+	J3DMaterialMode_All = J3DMaterialMode_OpaTexEdge | J3DMaterialMode_Xlu,
+};
+
 class J3DLightInfo {
 public:
 	J3DLightInfo& operator=(const J3DLightInfo& other)

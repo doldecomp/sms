@@ -1837,7 +1837,7 @@ void TEnemyMario::perform(u32 cue, JDrama::TGraphics* graphics)
 			doDraw = FALSE;
 
 		if (doDraw == TRUE && mTrembleModelEffect != nullptr) {
-			j3dSys.setUnk4C(7);
+			j3dSys.setUnk4C(J3DMaterialMode_All);
 			unk394->draw();
 			unk398->draw();
 		}

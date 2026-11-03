@@ -89,10 +89,10 @@ void TMirrorActor::entryMirrorDrawBufferAlways(J3DModel* model)
 {
 	JDrama::TDrawBufObj* dbOpa = static_cast<JDrama::TDrawBufObj*>(
 	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Opa"));
-	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), 0);
+	j3dSys.setDrawBuffer(dbOpa->getDrawBuffer(), J3DSysDrawBuf_Opa);
 	JDrama::TDrawBufObj* dbXlu = static_cast<JDrama::TDrawBufObj*>(
 	    JDrama::TNameRefGen::search("DrawBuf MirrorAlways Xlu"));
-	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(dbXlu->getDrawBuffer(), J3DSysDrawBuf_Xlu);
 	model->calc();
 	model->viewCalc();
 	model->entry();

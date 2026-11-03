@@ -19,14 +19,14 @@ public:
 
 	void setDrawBufs()
 	{
-		unk0[0] = j3dSys.getDrawBuffer(0);
-		unk0[1] = j3dSys.getDrawBuffer(1);
+		unk0[0] = j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa);
+		unk0[1] = j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu);
 	}
 
 	bool checkDrawBufs()
 	{
-		return unk0[0] == j3dSys.getDrawBuffer(0)
-		       && unk0[1] == j3dSys.getDrawBuffer(1);
+		return unk0[0] == j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa)
+		       && unk0[1] == j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu);
 	}
 
 	void push(SDLModel* model)

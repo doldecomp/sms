@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <stdint.h>
 #include <dolphin/types.h>
+#include <JSystem/J3D/J3DGraphBase/J3DStruct.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTevBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DTexGenBlocks.hpp>
 #include <JSystem/J3D/J3DGraphBase/Blocks/J3DPEBlocks.hpp>
@@ -111,7 +112,8 @@ public:
 
 	GXBool isDrawModeOpaTexEdge()
 	{
-		return (mMaterialMode & 3) ? GX_TRUE : GX_FALSE;
+		return (mMaterialMode & J3DMaterialMode_OpaTexEdge) ? GX_TRUE
+		                                                    : GX_FALSE;
 	}
 
 	uintptr_t getMaterialID() const { return unk18 & ~DIFF_FLAG; }
