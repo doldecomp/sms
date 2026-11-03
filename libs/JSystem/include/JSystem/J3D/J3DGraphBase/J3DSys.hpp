@@ -11,6 +11,12 @@ enum J3DErrType {
 	J3DErrType_OutOfMemory = 4,
 };
 
+enum J3DSysDrawBuf {
+	J3DSysDrawBuf_Opa = 0,
+	J3DSysDrawBuf_Xlu = 1,
+	J3DSysDrawBuf_MAX = 2,
+};
+
 struct J3DTexCoordScaleInfo {
 	/* 0x0 */ u16 field_0x00;
 	/* 0x2 */ u16 field_0x02;
@@ -78,16 +84,15 @@ public:
 
 	J3DMtxCalc* getCurrentMtxCalc() const { return mCurrentMtxCalc; }
 
-	// Type 0: Opa (opaque) Buffer
-	// Type 1: Xlu (transparent) Buffer
-	void setDrawBuffer(J3DDrawBuffer* buffer, int type)
+	void setDrawBuffer(J3DDrawBuffer* buffer, J3DSysDrawBuf type)
 	{
 		mDrawBuffer[type] = buffer;
 	}
 
-	// Type 0: Opa (opaque) Buffer
-	// Type 1: Xlu (transparent) Buffer
-	J3DDrawBuffer* getDrawBuffer(int type) { return mDrawBuffer[type]; }
+	J3DDrawBuffer* getDrawBuffer(J3DSysDrawBuf type)
+	{
+		return mDrawBuffer[type];
+	}
 
 	void setModel(J3DModel* pModel) { mModel = pModel; }
 	void setTexture(J3DTexture* pTex) { mTexture = pTex; }
@@ -119,7 +124,7 @@ public:
 	/* 0x038 */ J3DModel* mModel;
 	/* 0x3C */ J3DMatPacket* mMatPacket;
 	/* 0x40 */ u32 unk40;
-	/* 0x44 */ J3DDrawBuffer* mDrawBuffer[2];
+	/* 0x44 */ J3DDrawBuffer* mDrawBuffer[J3DSysDrawBuf_MAX];
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ u32 unk50;
 	/* 0x54 */ J3DTexture* mTexture;

@@ -185,7 +185,6 @@ GXColor TLightMario::getAmbColor(int index) const
 	return color;
 }
 
-#pragma dont_inline on
 TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     : JDrama::TViewObj(name)
     , mLight(nullptr)
@@ -193,13 +192,12 @@ TLightDrawBuffer::TLightDrawBuffer(int param_1, u32 param_2, const char* name)
     , mXluDrawBufferObject(nullptr)
     , unk80(param_1)
 {
-	snprintf(unk1C, 0x32, "%s%s", name, "opa");
+	snprintf(unk1C, sizeof(unk1C), "%s%s", name, "opa");
 	mOpaDrawBufferObject = new JDrama::TDrawBufObj(3, param_2, unk1C);
 
-	snprintf(unk4E, 0x32, "%s%s", name, "xlu");
+	snprintf(unk4E, sizeof(unk4E), "%s%s", name, "xlu");
 	mXluDrawBufferObject = new JDrama::TDrawBufObj(4, param_2, unk4E);
 }
-#pragma dont_inline reset
 
 void TLightDrawBuffer::perform(u32 cue, JDrama::TGraphics* graphics)
 {
@@ -256,11 +254,13 @@ void TLightWithDBSet::changeLightDrawBuffer(int param_1)
 	if (param_1 > unk1C)
 		param_1 = 0;
 
-	unk14 = j3dSys.getDrawBuffer(0);
-	unk18 = j3dSys.getDrawBuffer(1);
+	unk14 = j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa);
+	unk18 = j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu);
 
-	j3dSys.setDrawBuffer(unk10[param_1]->getOpaDbo()->getDrawBuffer(), 0);
-	j3dSys.setDrawBuffer(unk10[param_1]->getXluDbo()->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(unk10[param_1]->getOpaDbo()->getDrawBuffer(),
+	                     J3DSysDrawBuf_Opa);
+	j3dSys.setDrawBuffer(unk10[param_1]->getXluDbo()->getDrawBuffer(),
+	                     J3DSysDrawBuf_Xlu);
 }
 
 void TLightWithDBSet::resetLightDrawBuffer()
@@ -270,8 +270,8 @@ void TLightWithDBSet::resetLightDrawBuffer()
 	if (!unk18)
 		return;
 
-	j3dSys.setDrawBuffer(unk14, 0);
-	j3dSys.setDrawBuffer(unk18, 1);
+	j3dSys.setDrawBuffer(unk14, J3DSysDrawBuf_Opa);
+	j3dSys.setDrawBuffer(unk18, J3DSysDrawBuf_Xlu);
 	unk14 = nullptr;
 	unk18 = nullptr;
 }

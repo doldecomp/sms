@@ -253,15 +253,17 @@ void TMapStaticObj::perform(u32 cue, JDrama::TGraphics* graphics)
 
 		if ((cue & CUE_ENTRY)
 		    && (mActorData->mFlags & TActorData::FLAG_UNK80)) {
-			J3DDrawBuffer* oldOpaBuf = j3dSys.getDrawBuffer(0);
-			J3DDrawBuffer* oldXluBuf = j3dSys.getDrawBuffer(1);
+			J3DDrawBuffer* oldOpaBuf = j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa);
+			J3DDrawBuffer* oldXluBuf = j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu);
 			j3dSys.setDrawBuffer(
-			    gpMapObjManager->getDrawBufferAfterIndirectOpa(), 0);
+			    gpMapObjManager->getDrawBufferAfterIndirectOpa(),
+			    J3DSysDrawBuf_Opa);
 			j3dSys.setDrawBuffer(
-			    gpMapObjManager->getDrawBufferAfterIndirectXlu(), 1);
+			    gpMapObjManager->getDrawBufferAfterIndirectXlu(),
+			    J3DSysDrawBuf_Xlu);
 			mMActor->perform(cue, graphics);
-			j3dSys.setDrawBuffer(oldOpaBuf, 0);
-			j3dSys.setDrawBuffer(oldXluBuf, 1);
+			j3dSys.setDrawBuffer(oldOpaBuf, J3DSysDrawBuf_Opa);
+			j3dSys.setDrawBuffer(oldXluBuf, J3DSysDrawBuf_Xlu);
 		} else {
 			mMActor->perform(cue, graphics);
 		}
@@ -288,10 +290,10 @@ void TMapStaticObj::initUnique()
 
 		JDrama::TDrawBufObj* dboOpa = static_cast<JDrama::TDrawBufObj*>(
 		    JDrama::TNameRefGen::search("DrawBuf MirrorSky Opa"));
-		j3dSys.setDrawBuffer(dboOpa->getDrawBuffer(), 0);
+		j3dSys.setDrawBuffer(dboOpa->getDrawBuffer(), J3DSysDrawBuf_Opa);
 		JDrama::TDrawBufObj* dboXlu = static_cast<JDrama::TDrawBufObj*>(
 		    JDrama::TNameRefGen::search("DrawBuf MirrorSky Xlu"));
-		j3dSys.setDrawBuffer(dboXlu->getDrawBuffer(), 1);
+		j3dSys.setDrawBuffer(dboXlu->getDrawBuffer(), J3DSysDrawBuf_Xlu);
 
 		getModel()->calc();
 		getModel()->viewCalc();

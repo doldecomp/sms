@@ -39,15 +39,17 @@ static TMapObjBase* newUniqueObjByName(const char*);
 
 void TMapObjManager::entryStaticDrawBufferShadow(J3DModel* model)
 {
-	j3dSys.setDrawBuffer(mDrawBufferShadowOpa->getDrawBuffer(), 0);
-	j3dSys.setDrawBuffer(mDrawBufferShadowXlu->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(mDrawBufferShadowOpa->getDrawBuffer(),
+	                     J3DSysDrawBuf_Opa);
+	j3dSys.setDrawBuffer(mDrawBufferShadowXlu->getDrawBuffer(),
+	                     J3DSysDrawBuf_Xlu);
 	model->entry();
 }
 
 void TMapObjManager::entryStaticDrawBufferSun(J3DModel* model)
 {
-	j3dSys.setDrawBuffer(mDrawBufferSunOpa->getDrawBuffer(), 0);
-	j3dSys.setDrawBuffer(mDrawBufferSunXlu->getDrawBuffer(), 1);
+	j3dSys.setDrawBuffer(mDrawBufferSunOpa->getDrawBuffer(), J3DSysDrawBuf_Opa);
+	j3dSys.setDrawBuffer(mDrawBufferSunXlu->getDrawBuffer(), J3DSysDrawBuf_Xlu);
 	model->entry();
 }
 

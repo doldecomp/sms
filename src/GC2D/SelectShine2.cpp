@@ -43,9 +43,9 @@ void TSelectShineManager::initData(u8* states, u8 shine_num, u8 selected,
                                    JPAEmitterManager* emitter_manager)
 {
 	mOpaBuffer = new J3DDrawBuffer(0x400);
-	j3dSys.setDrawBuffer(mOpaBuffer, 0);
+	j3dSys.setDrawBuffer(mOpaBuffer, J3DSysDrawBuf_Opa);
 	mXluBuffer = new J3DDrawBuffer(0x400);
-	j3dSys.setDrawBuffer(mXluBuffer, 1);
+	j3dSys.setDrawBuffer(mXluBuffer, J3DSysDrawBuf_Xlu);
 
 	void* bmd = JKRFileLoader::getGlbResource("/select/shine_menu.bmd");
 	void* bpk = JKRFileLoader::getGlbResource("/select/shine_menu.bpk");

@@ -35,10 +35,10 @@ void TDrawBufObj::perform(u32 cue, TGraphics* graphics)
 
 	if (cue & CUE_SET_DRAW_BUFFER) {
 		if (unk18 & 3)
-			j3dSys.setDrawBuffer(mDrawBuffer, 0);
+			j3dSys.setDrawBuffer(mDrawBuffer, J3DSysDrawBuf_Opa);
 
 		if (unk18 & 4)
-			j3dSys.setDrawBuffer(mDrawBuffer, 1);
+			j3dSys.setDrawBuffer(mDrawBuffer, J3DSysDrawBuf_Xlu);
 	}
 
 	if (cue & CUE_DRAW) {
