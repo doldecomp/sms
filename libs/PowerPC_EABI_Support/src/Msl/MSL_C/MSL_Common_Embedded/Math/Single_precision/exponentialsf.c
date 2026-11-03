@@ -164,12 +164,8 @@ inline float __exp2f(float t)
 	n = n + 127;
 	n = n << 23;
 
-	// assumed presence due to how powf tends to work, also seems like theres
-	// stack padding
-	float p;
-
 	// horner expansion
-	p = (f
+	float p = (f
 	         * (f
 	                * (f
 	                       * (f
@@ -194,9 +190,6 @@ inline float __exp2f(float t)
 
 float powf(float x, float y)
 {
-	// TODO: work on improving acc, im lazy right now so this is half assed
-	int iy;
-
 	/* x > 0 */
 	if (x > 0.0f) {
 		return __exp2f(y * __log2f(x));
@@ -204,9 +197,9 @@ float powf(float x, float y)
 
 	/* x < 0 */
 	if (x < 0.0f) {
-		iy = (int)y;
-		if ((y - (float)iy) != 0.0f)
+		if (y - (int)y)
 			return __NAN;
+
 		if (((int)y % 2) != 0) {
 			return -__exp2f(y * __log2f(-x));
 		}
