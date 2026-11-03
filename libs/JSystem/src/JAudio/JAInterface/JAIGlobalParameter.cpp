@@ -63,7 +63,10 @@ void JAIGlobalParameter::setParamAudioDvdThreadPriority(u8 value)
 {
 	audioDvdThreadPriority = value;
 }
-void JAIGlobalParameter::setParamInitFileLoadSwitch(u8) { }
+void JAIGlobalParameter::setParamInitFileLoadSwitch(u8 value)
+{
+	JAIBasic::getInterface()->mInitFileLoadSwitch = value;
+}
 void JAIGlobalParameter::setParamInitDataPointer(void* value)
 {
 	JAIBasic::getInterface()->mInitDataPointer    = (u8*)value;
@@ -247,31 +250,32 @@ void JAIGlobalParameter::setParamSeDistancepitchMax(f32 value)
 	seDistancepitchMax = value;
 }
 
-void JAIGlobalParameter::setParamSoundOutputMode(u32 value)
+void JAIGlobalParameter::setParamSoundOutputMode(u32 outputMode)
 {
-	int r31 = 1;
-	int r30 = 0;
-	switch (value) {
-	case 0:
-		r31 = 0;
-		r30 = 0;
+	int driverOutputMode = JASOUTPUT_Stereo;
+	int streamOutputMode = JASOUTPUT_Mono;
+	switch (outputMode) {
+	case JASOUTPUT_Mono:
+		driverOutputMode = JASOUTPUT_Mono;
+		streamOutputMode = JASOUTPUT_Mono;
 		break;
-	case 1:
-		r31 = 1;
-		r30 = 1;
+	case JASOUTPUT_Stereo:
+		driverOutputMode = JASOUTPUT_Stereo;
+		streamOutputMode = JASOUTPUT_Stereo;
 		break;
-	case 2:
-		r31 = 2;
-		r30 = 1;
+	case JASOUTPUT_Surround:
+		driverOutputMode = JASOUTPUT_Surround;
+		streamOutputMode = JASOUTPUT_Stereo;
 		break;
 	default:
-		JUT_ASSERT_MSG(false, "JAIGlobalParameter::setParamSoundOutputMode "
-		                      "出力モードが不正です。\n");
+		JUT_ASSERT_MSG(345, 0,
+		               "JAIGlobalParameter::setParamSoundOutputMode "
+		               "出力モードが不正です。\n");
 		break;
 	}
-	JAIBasic::getInterface()->mSoundOutputMode = value;
-	JASystem::Driver::setOutputMode(r31);
-	JAInter::StreamLib::setOutputMode(r30);
+	JAIBasic::getInterface()->setOutputMode(outputMode);
+	JASystem::Driver::setOutputMode(driverOutputMode);
+	JAInter::StreamLib::setOutputMode(streamOutputMode);
 }
 
 u8 JAIGlobalParameter::getParamAudioSystemThreadPriority()
@@ -282,8 +286,14 @@ u8 JAIGlobalParameter::getParamAudioDvdThreadPriority()
 {
 	return audioDvdThreadPriority;
 }
-u8 JAIGlobalParameter::getParamInitFileLoadSwitch() { return 0; }
-void* JAIGlobalParameter::getParamInitDataPointer() { return nullptr; }
+u8 JAIGlobalParameter::getParamInitFileLoadSwitch()
+{
+	return JAIBasic::getInterface()->mInitFileLoadSwitch;
+}
+void* JAIGlobalParameter::getParamInitDataPointer()
+{
+	return JAIBasic::getInterface()->mInitDataPointer;
+}
 u32 JAIGlobalParameter::getParamInterfaceHeapSize()
 {
 	return interfaceHeapSize;
@@ -324,7 +334,10 @@ f32 JAIGlobalParameter::getParamMinDistanceVolume()
 {
 	return minDistanceVolume;
 }
-u32 JAIGlobalParameter::getParamSoundOutputMode() { return 0; }
+u32 JAIGlobalParameter::getParamSoundOutputMode()
+{
+	return JAIBasic::getInterface()->mSoundOutputMode;
+}
 u16 JAIGlobalParameter::getParamSeDistanceFxParameter()
 {
 	return seDistanceFxParameter;
@@ -366,8 +379,14 @@ char* JAIGlobalParameter::getParamSequenceArchivesFileName()
 {
 	return sequenceArchivesFileName;
 }
-bool JAIGlobalParameter::getParamSeqEntryCancelFlag() { return false; }
-bool JAIGlobalParameter::getParamStreamEntryCancelFlag() { return false; }
+bool JAIGlobalParameter::getParamSeqEntryCancelFlag()
+{
+	return JAIBasic::getInterface()->unk1C.mSeqEntryCancel;
+}
+bool JAIGlobalParameter::getParamStreamEntryCancelFlag()
+{
+	return JAIBasic::getInterface()->unk1C.mStreamEntryCancel;
+}
 u32 JAIGlobalParameter::getParamDopplarMoveTime() { return dopplarMoveTime; }
 u8 JAIGlobalParameter::getParamDistanceParameterMoveTime()
 {

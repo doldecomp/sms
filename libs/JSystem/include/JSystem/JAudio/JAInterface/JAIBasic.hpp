@@ -181,6 +181,9 @@ public:
 	void checkRequestStream();
 	void checkPlayingStream();
 
+	// fabricated
+	void setOutputMode(u8 mode) { mSoundOutputMode = mode; }
+
 	static JAIBasic* basic;
 
 	static JAIBasic* getInterface() { return basic; }
