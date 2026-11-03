@@ -85,15 +85,12 @@ public:
 
 	J3DMtxCalc* getCurrentMtxCalc() const { return mCurrentMtxCalc; }
 
-	void setDrawBuffer(J3DDrawBuffer* buffer, J3DSysDrawBuf type)
+	void setDrawBuffer(J3DDrawBuffer* buffer, int type)
 	{
 		mDrawBuffer[type] = buffer;
 	}
 
-	J3DDrawBuffer* getDrawBuffer(J3DSysDrawBuf type)
-	{
-		return mDrawBuffer[type];
-	}
+	J3DDrawBuffer* getDrawBuffer(int type) { return mDrawBuffer[type]; }
 
 	void setModel(J3DModel* pModel) { mModel = pModel; }
 	void setTexture(J3DTexture* pTex) { mTexture = pTex; }
