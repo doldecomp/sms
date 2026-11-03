@@ -157,15 +157,23 @@ inline float __exp2f(float f)
 	// stack padding
 	float p;
 
-	p = __two_to_x[8];
-	p = f * p + __two_to_x[7];
-	p = f * p + __two_to_x[6];
-	p = f * p + __two_to_x[5];
-	p = f * p + __two_to_x[4];
-	p = f * p + __two_to_x[3];
-	p = f * p + __two_to_x[2];
-	p = f * p + __two_to_x[1];
-	p = f * p + __two_to_x[0];
+	// horner expansion
+	p = (f
+	         * (f
+	                * (f
+	                       * (f
+	                              * (f
+	                                     * (f
+	                                            * (f
+	                                                   * (f * __two_to_x[8]
+	                                                      + __two_to_x[7])
+	                                               + __two_to_x[6])
+	                                        + __two_to_x[5])
+	                                 + __two_to_x[4])
+	                          + __two_to_x[3])
+	                   + __two_to_x[2])
+	            + __two_to_x[1])
+	     + __two_to_x[0]);
 
 	float fp = f * p;
 	return 0.75f + (0.25f + fp);
@@ -256,6 +264,6 @@ float powf(float x, float y)
 		}
 		break;
 	}
-	
+
 	return 0.0f;
 }
