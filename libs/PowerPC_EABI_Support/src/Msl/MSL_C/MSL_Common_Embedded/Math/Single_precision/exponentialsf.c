@@ -87,14 +87,21 @@ float expf(float x)
 	x_fract = x - (float)(int_x);
 
 	// Horner expansion
-	estimate = __exp_to_x[7];
-	estimate = x_fract * estimate + __exp_to_x[6];
-	estimate = x_fract * estimate + __exp_to_x[5];
-	estimate = x_fract * estimate + __exp_to_x[4];
-	estimate = x_fract * estimate + __exp_to_x[3];
-	estimate = x_fract * estimate + __exp_to_x[2];
-	estimate = x_fract * estimate + __exp_to_x[1];
-	estimate = x_fract * estimate + __exp_to_x[0];
+	estimate
+	    = (x_fract
+	           * (x_fract
+	                  * (x_fract
+	                         * (x_fract
+	                                * (x_fract
+	                                       * (x_fract
+	                                              * (x_fract * __exp_to_x[7]
+	                                                 + __exp_to_x[6])
+	                                          + __exp_to_x[5])
+	                                   + __exp_to_x[4])
+	                            + __exp_to_x[3])
+	                     + __exp_to_x[2])
+	              + __exp_to_x[1])
+	       + __exp_to_x[0]);
 	finalVal = x_fract * estimate;
 
 	return __two_to_log2e_m1_tI[int_x_index]
