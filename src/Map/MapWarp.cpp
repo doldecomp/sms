@@ -16,15 +16,12 @@
 
 void TMapWarp::changeModel(int i)
 {
-	if (mCurrentModelIndex == i)
+	int current = mCurrentModelIndex;
+	if (current == i)
 		return;
 
-	// TODO: inlines
-	gpMap->getModelManager()
-	    ->getJointModel(0)
-	    ->getChild(mCurrentModelIndex)
-	    ->sleep();
-	gpMap->getModelManager()->getJointModel(0)->getChild(i)->awake();
+	gpMap->getRootJointModel()->getChild(current)->sleep();
+	gpMap->getRootJointModel()->getChild(i)->awake();
 	mCurrentModelIndex = i;
 }
 
@@ -32,14 +29,8 @@ void TMapWarp::warp(int index)
 {
 	int dstModelIdx = mWarpInfos[index].mDestinationModelIndex;
 	if (mCurrentModelIndex != dstModelIdx) {
-		gpMap->getModelManager()
-		    ->getJointModel(0)
-		    ->getChild(mCurrentModelIndex)
-		    ->sleep();
-		gpMap->getModelManager()
-		    ->getJointModel(0)
-		    ->getChild(dstModelIdx)
-		    ->awake();
+		gpMap->getRootJointModel()->getChild(mCurrentModelIndex)->sleep();
+		gpMap->getRootJointModel()->getChild(dstModelIdx)->awake();
 		mCurrentModelIndex = mWarpInfos[index].mDestinationModelIndex;
 
 		JGeometry::TVec3<f32> pos
@@ -81,13 +72,11 @@ void TMapWarp::watchToWarp()
 
 void TMapWarp::initModel()
 {
-	int num = gpMap->getModelManager()->getJointModel(0)->getChildrenNum();
+	int num = gpMap->getRootJointModel()->getChildrenNum();
 	for (int i = 0; i < num; ++i)
-		if (i != mCurrentModelIndex)
-			gpMap->getModelManager()
-			    ->getJointModel(0)
-			    ->getChild((u16)i)
-			    ->sleep();
+		if (i != mCurrentModelIndex) {
+			gpMap->getRootJointModel()->getChild((u16)i)->sleep();
+		}
 }
 
 int getWarpPointNo(const char* name)
