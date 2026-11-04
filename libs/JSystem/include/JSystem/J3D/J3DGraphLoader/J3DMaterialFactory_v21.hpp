@@ -87,33 +87,33 @@ struct J3DMaterialInitData_v21 {
 
 class J3DMaterialFactory_v21 {
 public:
-	J3DMaterialFactory_v21(const J3DMaterialBlock_v21&);
+	J3DMaterialFactory_v21(const J3DMaterialBlock_v21& block);
 	u16 countUniqueMaterials();
-	u32 countStages(int) const;
-	J3DMaterial* create(J3DMaterial*, int, u32) const;
-	J3DGXColor newMatColor(int, int) const;
-	u8 newColorChanNum(int) const;
-	J3DColorChan newColorChan(int, int) const;
-	u32 newTexGenNum(int) const;
-	J3DTexCoord newTexCoord(int, int) const;
-	J3DTexMtx* newTexMtx(int, int) const;
-	u8 newCullMode(int) const;
-	u16 newTexNo(int, int) const;
-	J3DTevOrder newTevOrder(int, int) const;
-	J3DGXColorS10 newTevColor(int, int) const;
-	J3DGXColor newTevKColor(int, int) const;
-	u8 newTevStageNum(int) const;
-	J3DTevStage newTevStage(int, int) const;
-	J3DTevSwapModeTable newTevSwapModeTable(int, int) const;
-	J3DFog* newFog(int) const;
-	J3DAlphaComp newAlphaComp(int) const;
-	J3DBlend newBlend(int) const;
-	J3DZMode newZMode(int) const;
-	u8 newZCompLoc(int) const;
-	u8 newDither(int) const;
-	J3DNBTScale newNBTScale(int) const;
+	u32 countStages(int idx) const;
+	J3DMaterial* create(J3DMaterial* mat, int idx, u32 flag) const;
+	J3DGXColor newMatColor(int idx, int stage) const;
+	u8 newColorChanNum(int idx) const;
+	J3DColorChan newColorChan(int idx, int stage) const;
+	u32 newTexGenNum(int idx) const;
+	J3DTexCoord newTexCoord(int idx, int stage) const;
+	J3DTexMtx* newTexMtx(int idx, int stage) const;
+	u8 newCullMode(int idx) const;
+	u16 newTexNo(int idx, int stage) const;
+	J3DTevOrder newTevOrder(int idx, int stage) const;
+	J3DGXColorS10 newTevColor(int idx, int stage) const;
+	J3DGXColor newTevKColor(int idx, int stage) const;
+	u8 newTevStageNum(int idx) const;
+	J3DTevStage newTevStage(int idx, int stage) const;
+	J3DTevSwapModeTable newTevSwapModeTable(int idx, int stage) const;
+	J3DFog* newFog(int idx) const;
+	J3DAlphaComp newAlphaComp(int idx) const;
+	J3DBlend newBlend(int idx) const;
+	J3DZMode newZMode(int idx) const;
+	u8 newZCompLoc(int idx) const;
+	u8 newDither(int idx) const;
+	J3DNBTScale newNBTScale(int idx) const;
 
-	J3DMaterialInitData_v21* getMaterialInitData_v21(u16) const;
+	J3DMaterialInitData_v21* getMaterialInitData_v21(u16 idx) const;
 
 	u16 getMaterialID(int idx) const { return mpMaterialID[idx]; }
 	u8 getMaterialMode(int idx) const
