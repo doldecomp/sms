@@ -281,10 +281,8 @@ void J3DJoint::updateIn()
 		j3dSys.getCurrentMtxCalc()->calc(mJntNo);
 	}
 
-	j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa)
-	    ->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
-	j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu)
-	    ->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
+	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
+	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
 
 	for (J3DMaterial* mesh = mMesh; mesh != nullptr;) {
 		if (mesh->getShape()->checkFlag(J3DShpFlag_Visible)) {
@@ -303,8 +301,8 @@ void J3DJoint::updateIn()
 
 			matPacket->setMaterialAnmID(mesh->getMaterialAnm());
 			matPacket->setShapePacket(shapePacket);
-			J3DDrawBuffer* drawBuffer = j3dSys.getDrawBuffer(
-			    (J3DSysDrawBuf)!mesh->isDrawModeOpaTexEdge());
+			J3DDrawBuffer* drawBuffer
+			    = j3dSys.getDrawBuffer(!mesh->isDrawModeOpaTexEdge());
 
 			if (matPacket->entry(drawBuffer)) {
 				j3dSys.setMatPacket(matPacket);
@@ -348,10 +346,8 @@ void J3DJoint::calcOut()
 
 void J3DJoint::entryIn()
 {
-	j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa)
-	    ->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
-	j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu)
-	    ->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
+	j3dSys.getDrawBuffer(0)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
+	j3dSys.getDrawBuffer(1)->setZMtx(j3dSys.getModel()->getAnmMtx(getJntNo()));
 
 	for (J3DMaterial* mesh = mMesh; mesh != nullptr;) {
 		if (mesh->getShape()->checkFlag(J3DShpFlag_Visible)) {
@@ -375,7 +371,7 @@ void J3DJoint::entryIn()
 			matPacket->setShapePacket(shapePacket);
 
 			bool b = !mesh->isDrawModeOpaTexEdge();
-			bool r = matPacket->entry(j3dSys.getDrawBuffer((J3DSysDrawBuf)b));
+			bool r = matPacket->entry(j3dSys.getDrawBuffer(b));
 			if (r) {
 				j3dSys.setMatPacket(matPacket);
 				J3DDrawBuffer::entryNum++;

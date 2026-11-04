@@ -8,14 +8,14 @@ TDrawBufObj::TDrawBufObj()
     : TViewObj("<DrawBufObj>")
     , mDrawBuffer(nullptr)
     , mDrawBufferSize(0)
-    , mDrawFlags(J3DMaterialMode_All)
+    , unk18(7)
 {
 }
 
-TDrawBufObj::TDrawBufObj(u32 draw_flags, u32 buffer_size, const char* name)
+TDrawBufObj::TDrawBufObj(u32 param_1, u32 param_2, const char* name)
     : TViewObj(name)
-    , mDrawBufferSize(buffer_size)
-    , mDrawFlags(draw_flags)
+    , mDrawBufferSize(param_2)
+    , unk18(param_1)
 {
 	mDrawBuffer = new J3DDrawBuffer(mDrawBufferSize);
 }
@@ -23,7 +23,7 @@ TDrawBufObj::TDrawBufObj(u32 draw_flags, u32 buffer_size, const char* name)
 void TDrawBufObj::load(JSUMemoryInputStream& stream)
 {
 	TNameRef::load(stream);
-	stream >> mDrawFlags;
+	stream >> unk18;
 	stream >> mDrawBufferSize;
 	mDrawBuffer = new J3DDrawBuffer(mDrawBufferSize);
 }
@@ -34,15 +34,15 @@ void TDrawBufObj::perform(u32 cue, TGraphics* graphics)
 		mDrawBuffer->frameInit();
 
 	if (cue & CUE_SET_DRAW_BUFFER) {
-		if (mDrawFlags & J3DMaterialMode_OpaTexEdge)
-			j3dSys.setDrawBuffer(mDrawBuffer, J3DSysDrawBuf_Opa);
+		if (unk18 & 3)
+			j3dSys.setDrawBuffer(mDrawBuffer, 0);
 
-		if (mDrawFlags & J3DMaterialMode_Xlu)
-			j3dSys.setDrawBuffer(mDrawBuffer, J3DSysDrawBuf_Xlu);
+		if (unk18 & 4)
+			j3dSys.setDrawBuffer(mDrawBuffer, 1);
 	}
 
 	if (cue & CUE_DRAW) {
-		j3dSys.unk4C = mDrawFlags;
+		j3dSys.unk4C = unk18;
 		mDrawBuffer->draw();
 	}
 }

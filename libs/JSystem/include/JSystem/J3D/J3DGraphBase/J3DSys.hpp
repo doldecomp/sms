@@ -3,19 +3,12 @@
 
 #include <dolphin/gx.h>
 #include <dolphin/mtx.h>
-#include <JSystem/J3D/J3DGraphBase/J3DStruct.hpp>
 #include <JSystem/J3D/J3DGraphBase/J3DTransform.hpp>
 
 enum J3DErrType {
 	J3DErrType_Success     = 0,
 	J3DErrType_Locked      = 2,
 	J3DErrType_OutOfMemory = 4,
-};
-
-enum J3DSysDrawBuf {
-	J3DSysDrawBuf_Opa = 0,
-	J3DSysDrawBuf_Xlu = 1,
-	J3DSysDrawBuf_MAX = 2,
 };
 
 struct J3DTexCoordScaleInfo {
@@ -85,11 +78,15 @@ public:
 
 	J3DMtxCalc* getCurrentMtxCalc() const { return mCurrentMtxCalc; }
 
+	// Type 0: Opa (opaque) Buffer
+	// Type 1: Xlu (transparent) Buffer
 	void setDrawBuffer(J3DDrawBuffer* buffer, int type)
 	{
 		mDrawBuffer[type] = buffer;
 	}
 
+	// Type 0: Opa (opaque) Buffer
+	// Type 1: Xlu (transparent) Buffer
 	J3DDrawBuffer* getDrawBuffer(int type) { return mDrawBuffer[type]; }
 
 	void setModel(J3DModel* pModel) { mModel = pModel; }
@@ -122,7 +119,7 @@ public:
 	/* 0x038 */ J3DModel* mModel;
 	/* 0x3C */ J3DMatPacket* mMatPacket;
 	/* 0x40 */ u32 unk40;
-	/* 0x44 */ J3DDrawBuffer* mDrawBuffer[J3DSysDrawBuf_MAX];
+	/* 0x44 */ J3DDrawBuffer* mDrawBuffer[2];
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ u32 unk50;
 	/* 0x54 */ J3DTexture* mTexture;

@@ -2054,7 +2054,7 @@ void TMario::drawLogic()
 {
 	// volatile u32 padding[2];
 	j3dSys.mFlags |= 2;
-	j3dSys.unk4C = J3DMaterialMode_All;
+	j3dSys.unk4C = 7;
 	SMS_DrawInit();
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, FALSE, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,

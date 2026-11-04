@@ -29,7 +29,7 @@ J3DSys::J3DSys()
 	makeZModeTable();
 	mFlags = 0;
 	MTXIdentity(mViewMtx);
-	unk4C  = J3DMaterialMode_Opa;
+	unk4C  = 1;
 	unk50  = 0;
 	mModel = nullptr;
 	unk40  = 0;

@@ -620,7 +620,7 @@ void TPollutionCounterLayer::countTexDegree(int layer_index)
 	ReInitializeGX();
 	drawPollutionLayer(layer_index);
 	if (mModelStampTaskNum != 0) {
-		j3dSys.setUnk4C(J3DMaterialMode_All);
+		j3dSys.setUnk4C(7);
 		mModelStampDrawBuffers[layer_index]->draw();
 		mModelStampDrawBuffers[layer_index]->frameInit();
 	}
@@ -673,8 +673,8 @@ void TPollutionCounterLayer::calcViewMtx()
 	TMtx34f afStack_68;
 	afStack_68.set(j3dSys.getViewMtx());
 
-	J3DDrawBuffer* oldDbOpa = j3dSys.getDrawBuffer(J3DSysDrawBuf_Opa);
-	J3DDrawBuffer* oldDbXlu = j3dSys.getDrawBuffer(J3DSysDrawBuf_Xlu);
+	J3DDrawBuffer* oldDbOpa = j3dSys.getDrawBuffer(0);
+	J3DDrawBuffer* oldDbXlu = j3dSys.getDrawBuffer(1);
 
 	for (int i = 0; i < mCounterNum; ++i) {
 		TPollutionLayer* layer = gpPollution->getLayer(i);
@@ -684,8 +684,8 @@ void TPollutionCounterLayer::calcViewMtx()
 		                        layer->mMinZ, &local_a4);
 
 		j3dSys.setViewMtx(local_a4);
-		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], J3DSysDrawBuf_Opa);
-		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], J3DSysDrawBuf_Xlu);
+		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 0);
+		j3dSys.setDrawBuffer(mModelStampDrawBuffers[i], 1);
 
 		for (int j = 0; j < mModelStampTaskNum; ++j) {
 			if (mModelStampTaskQueue[j].mLayerIdx != i)
@@ -696,8 +696,8 @@ void TPollutionCounterLayer::calcViewMtx()
 	}
 	j3dSys.setViewMtx(afStack_68);
 
-	j3dSys.setDrawBuffer(oldDbOpa, J3DSysDrawBuf_Opa);
-	j3dSys.setDrawBuffer(oldDbXlu, J3DSysDrawBuf_Xlu);
+	j3dSys.setDrawBuffer(oldDbOpa, 0);
+	j3dSys.setDrawBuffer(oldDbXlu, 1);
 }
 
 void TPollutionCounterLayer::pushModelStampTask(u8 target_layer,
