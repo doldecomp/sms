@@ -579,7 +579,7 @@ config.libs = [
             Object(Matching, "JSystem/JRenderer.cpp"),
             Object(Matching, "JSystem/random.cpp"),
             Object(Matching, "JSystem/dspproc.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "JSystem/dsptask.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
+            Object(Matching, "JSystem/dsptask.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
             Object(Matching, "JSystem/osdsp.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
             Object(Matching, "JSystem/osdsp_task.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
         ],
