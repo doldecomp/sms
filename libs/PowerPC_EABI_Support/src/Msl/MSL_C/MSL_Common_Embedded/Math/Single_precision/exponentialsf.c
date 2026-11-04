@@ -118,18 +118,21 @@ inline float __log2f(float x)
 	// inferred by presence of this var's mangled name
 	static const float __log2e_m1[2] = { 0.41015625f, 0.03253879088896f };
 
+	int hi_bits;
 	float coeffs[2] = { -0.72135162353515625f, 0.4808933f };
 
+	unsigned int highMantissa;
 	int exp, index;
-	int hi_bits, lo_bits;
+	int lo_bits;
 	// unsigned int bits = *(unsigned int*)&x;
 
 	exp   = (__F32_AS_U32(x) >> 23) - 0x80;
 	index = (__F32_AS_U32(x) & 0x7FFFFF) >> 16;
 
 	if ((__F32_AS_U32(x) & 0xFFFF) != 0) {
-		hi_bits = (__F32_AS_U32(x) & 0x7F0000) | 0x3F800000;
-		lo_bits = (__F32_AS_U32(x) & 0x7FFFFF) | 0x3F800000;
+		highMantissa = __F32_AS_U32(x) & 0x7F0000;
+		hi_bits      = highMantissa | 0x3F800000;
+		lo_bits      = (__F32_AS_U32(x) & 0x7FFFFF) | 0x3F800000;
 
 		if (__F32_AS_U32(x) & 0x8000) {
 			index++;
@@ -166,24 +169,24 @@ inline float __exp2f(float t)
 	n = n << 23;
 
 	// horner expansion
-	float p
-	    = (f
-	           * (f
-	                  * (f
-	                         * (f
-	                                * (f
-	                                       * (f
-	                                              * (f
-	                                                     * (f * __two_to_x[8]
-	                                                        + __two_to_x[7])
-	                                                 + __two_to_x[6])
-	                                          + __two_to_x[5])
-	                                   + __two_to_x[4])
-	                            + __two_to_x[3])
-	                     + __two_to_x[2])
-	              + __two_to_x[1])
-	       + __two_to_x[0]);
-	float fp = f * p;
+	float fp
+	    = f
+	      * (f
+	             * (f
+	                    * (f
+	                           * (f
+	                                  * (f
+	                                         * (f
+	                                                * (f
+	                                                       * (f * __two_to_x[8]
+	                                                          + __two_to_x[7])
+	                                                   + __two_to_x[6])
+	                                            + __two_to_x[5])
+	                                     + __two_to_x[4])
+	                              + __two_to_x[3])
+	                       + __two_to_x[2])
+	                + __two_to_x[1])
+	         + __two_to_x[0]);
 
 	return __U32_AS_F32(n) * (0.75f + (0.25f + fp));
 }
