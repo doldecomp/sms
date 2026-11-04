@@ -105,7 +105,8 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 	return error;
 }
 
-DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
+DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 minReplyLength,
+                       u32 retryCount, BOOL timeout)
 {
 	int error = DS_NoError;
 	TRKBuffer* buffer;
@@ -117,11 +118,11 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
 
 	*bufferId = -1;
 
-	for (tries = p2 + 1; tries != 0 && *bufferId == -1 && error == DS_NoError;
-	     tries--) {
+	for (tries = retryCount + 1;
+	     tries != 0 && *bufferId == -1 && error == DS_NoError; tries--) {
 		error = TRKMessageSend((TRK_Msg*)msgBuf);
 		if (error == DS_NoError) {
-			if (p3) {
+			if (timeout) {
 				timer = 0;
 			}
 
@@ -130,7 +131,7 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
 					*bufferId = TRKTestForPacket();
 					if (*bufferId != -1)
 						break;
-				} while (!p3 || ++timer < 79999980);
+				} while (!timeout || ++timer < 79999980);
 
 				if (*bufferId == -1)
 					break;
@@ -152,7 +153,7 @@ DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2, int p3)
 			}
 
 			if (*bufferId != -1) {
-				if (buffer->length < p1) {
+				if (buffer->length < minReplyLength) {
 					badReply = TRUE;
 				}
 				if (error == DS_NoError && !badReply) {

@@ -122,3 +122,13 @@ void __num2dec(const decform* f, double x, decimal* d)
 
 	d->exp = exp;
 }
+
+double __dec2num(const decimal* d)
+{
+	// unused and unknowable - use as a hack to enforce correct .rodata so that
+	// we can link ansi_fp
+	(void)0.0;
+	(void)1.0;
+	(void)4503601774854144.0;
+	return 0.0;
+}

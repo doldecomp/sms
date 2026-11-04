@@ -155,9 +155,6 @@ public:
 }; // Size: 0x2C
 
 struct J3DNBTScaleInfo {
-	/* 0x0 */ u8 mbHasScale;
-	/* 0x4 */ Vec mScale;
-
 	J3DNBTScaleInfo& operator=(const J3DNBTScaleInfo& other)
 	{
 		mbHasScale = other.mbHasScale;
@@ -166,6 +163,9 @@ struct J3DNBTScaleInfo {
 		mScale.z   = other.mScale.z;
 		return *this;
 	}
+
+	/* 0x0 */ bool mbHasScale;
+	/* 0x4 */ Vec mScale;
 }; // Size: 0x10
 
 struct J3DIndTexOrderInfo {

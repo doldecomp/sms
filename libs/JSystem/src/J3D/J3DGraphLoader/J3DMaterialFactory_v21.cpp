@@ -314,6 +314,12 @@ J3DTevSwapModeTable J3DMaterialFactory_v21::newTevSwapModeTable(int idx,
 		return J3DTevSwapModeTable(j3dDefaultTevSwapModeTable);
 }
 
+J3DMaterialInitData_v21*
+J3DMaterialFactory_v21::getMaterialInitData_v21(u16 idx) const
+{
+	return &mpMaterialInitData[mpMaterialID[idx]];
+}
+
 J3DFog* J3DMaterialFactory_v21::newFog(int idx) const
 {
 	J3DFog* ret                       = nullptr;
