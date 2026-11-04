@@ -503,7 +503,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASVload.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASNoteMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASOuterParam.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "JSystem/JAudio/JASystem/JASPlayer_impl.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASPlayer_impl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASRegisterParam.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASSeqCtrl.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrack.cpp"),
