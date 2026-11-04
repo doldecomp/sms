@@ -32,13 +32,7 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
-
-// TODO: from M3UJoint or J3DJoint?
-static void dummy()
-{
-	(Vec) { 0.0f, 0.0f, 0.0f };
-	(Vec) { 1.0f, 1.0f, 1.0f };
-}
+#include <Map/MapCollisionEntry.hpp>
 
 static void evGetSystemFlag(TSpcTypedInterp<TEventWatcher>* interp, u32 arg_num)
 {

@@ -7,6 +7,7 @@
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/MActorAnm.hpp>
+#include <Map/MapCollisionEntry.hpp>
 
 int TPollutionManager::mFlushTime = 200;
 u8 TPollutionManager::mEdgeAlpha  = 50;
@@ -77,12 +78,6 @@ bool TPollutionManager::isPolluted(f32 x, f32 y, f32 z) const
 }
 
 void TPollutionManager::subtractFromYMap(f32, f32, f32) const { }
-
-static void dummy()
-{
-	(Vec) { 0.0f, 0.0f, 0.0f };
-	(Vec) { 1.0f, 1.0f, 1.0f };
-}
 
 bool TPollutionManager::cleanedAll() const
 {
