@@ -1105,7 +1105,7 @@ config.libs = [
             PCHObject(NonMatching, "Map/Sky.cpp"),
             PCHObject(NonMatching, "Map/MapEventSirena.cpp"),
             PCHObject(NonMatching, "Map/PollutionLayer.cpp"),
-            PCHObject(NonMatching, "Map/PollutionEvent.cpp"),
+            PCHObject(Matching, "Map/PollutionEvent.cpp"),
             Object(NonMatching, "Map/MapCollisionPlane.cpp"),
             PCHObject(Matching, "Map/MarineSnow.cpp"),
             Object(Matching, "Map/MapData.cpp"),

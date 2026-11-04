@@ -16,12 +16,12 @@ public:
 	void registerEvent(JDrama::TViewObj*);
 };
 
-class TPollutionEventModelStampMario {
+class TPollutionEventModelStampMario : public JDrama::TViewObj {
 public:
 	void perform(u32 cue, JDrama::TGraphics* graphics);
 };
 
-class TPollutionEventModelStamp {
+class TPollutionEventModelStamp : public JDrama::TViewObj {
 public:
 	TPollutionEventModelStamp(const char*);
 
@@ -29,7 +29,7 @@ public:
 	void init(const char*);
 };
 
-class TPollutionEventMaze {
+class TPollutionEventMaze : public JDrama::TViewObj {
 public:
 	TPollutionEventMaze(const char*);
 
@@ -37,7 +37,7 @@ public:
 	void init();
 };
 
-class TPollutionEventAreaObj {
+class TPollutionEventAreaObj : public JDrama::TViewObj {
 public:
 	TPollutionEventAreaObj(const char*);
 
