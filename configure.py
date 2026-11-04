@@ -396,7 +396,7 @@ config.libs = [
 
             # JUtility
             Object(Matching, "JSystem/JUtility/JUTException.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "JSystem/JUtility/JUTDirectPrint.cpp"),
+            Object(Matching, "JSystem/JUtility/JUTDirectPrint.cpp"),
             Object(Matching, "JSystem/JUtility/JUTDbPrint.cpp"),
             Object(Matching, "JSystem/JUtility/JUTFont.cpp"),
             Object(Matching, "JSystem/JUtility/JUTGamePad.cpp"),
@@ -503,7 +503,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JASystem/JASVload.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASNoteMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASOuterParam.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "JSystem/JAudio/JASystem/JASPlayer_impl.cpp"),
+            Object(Matching, "JSystem/JAudio/JASystem/JASPlayer_impl.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASRegisterParam.cpp"),
             Object(Matching, "JSystem/JAudio/JASystem/JASSeqCtrl.cpp"),
             Object(NonMatching, "JSystem/JAudio/JASystem/JASTrack.cpp"),
@@ -543,11 +543,11 @@ config.libs = [
             # J3DGraphLoader
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DClusterLoader.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DJointFactory.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DModelLoader.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DShapeFactory.cpp"),
             Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DAnmLoader.cpp"),
-            Object(NonMatching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp"),
+            Object(Matching, "JSystem/J3D/J3DGraphLoader/J3DMaterialFactory_v21.cpp"),
 
             # JParticle
             Object(NonMatching, "JSystem/JParticle/JPAEmitter.cpp"),
@@ -579,7 +579,7 @@ config.libs = [
             Object(Matching, "JSystem/JRenderer.cpp"),
             Object(Matching, "JSystem/random.cpp"),
             Object(Matching, "JSystem/dspproc.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "JSystem/dsptask.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
+            Object(Matching, "JSystem/dsptask.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
             Object(Matching, "JSystem/osdsp.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
             Object(Matching, "JSystem/osdsp_task.c", cflags=cflags_jsystem_dsp, mw_version="GC/1.2.5n"),
         ],
@@ -1223,7 +1223,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/hauntLeg.cpp"),
             PCHObject(NonMatching, "Enemy/areacylinder.cpp"),
             PCHObject(NonMatching, "Enemy/wireTrap.cpp"),
-            PCHObject(MatchingFor("GMSJ01"), "Enemy/BossHanachanSound.cpp"),
+            PCHObject(Matching, "Enemy/BossHanachanSound.cpp"),
             PCHObject(NonMatching, "Enemy/rocket.cpp"),
             PCHObject(NonMatching, "Enemy/Kazekun.cpp"),
             PCHObject(NonMatching, "Enemy/bossManta.cpp"),

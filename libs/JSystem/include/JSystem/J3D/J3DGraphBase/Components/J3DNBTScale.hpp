@@ -9,28 +9,19 @@ class J3DNBTScale : public J3DNBTScaleInfo {
 public:
 	J3DNBTScale()
 	{
-		mbHasScale = j3dDefaultNBTScaleInfo.mbHasScale;
-		mScale.x   = j3dDefaultNBTScaleInfo.mScale.x;
-		mScale.y   = j3dDefaultNBTScaleInfo.mScale.y;
-		mScale.z   = j3dDefaultNBTScaleInfo.mScale.z;
+		J3DNBTScaleInfo* dst = getNbtScale();
+		*dst                 = j3dDefaultNBTScaleInfo;
 	}
+
+	// see J3DIndTevStage
+	J3DNBTScale* getNbtScale() { return this; }
+
 	explicit J3DNBTScale(const J3DNBTScaleInfo& info)
 	{
-		mbHasScale = info.mbHasScale;
-		mScale.x   = info.mScale.x;
-		mScale.y   = info.mScale.y;
-		mScale.z   = info.mScale.z;
+		J3DNBTScaleInfo::operator=(info);
 	}
 
-	J3DNBTScale& operator=(const J3DNBTScale& other)
-	{
-		mbHasScale = other.mbHasScale;
-		mScale.x   = other.mScale.x;
-		mScale.y   = other.mScale.y;
-		mScale.z   = other.mScale.z;
-		return *this;
-	}
-
+	bool hasScale() { return mbHasScale == 1; }
 	Vec* getScale() { return &mScale; }
 };
 
