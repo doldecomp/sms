@@ -396,7 +396,7 @@ config.libs = [
 
             # JUtility
             Object(Matching, "JSystem/JUtility/JUTException.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01"), "JSystem/JUtility/JUTDirectPrint.cpp"),
+            Object(Matching, "JSystem/JUtility/JUTDirectPrint.cpp"),
             Object(Matching, "JSystem/JUtility/JUTDbPrint.cpp"),
             Object(Matching, "JSystem/JUtility/JUTFont.cpp"),
             Object(Matching, "JSystem/JUtility/JUTGamePad.cpp"),
