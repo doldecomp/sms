@@ -26,7 +26,7 @@
 
 bool TDolpicEventBiancoGate::isFinishedAll() const
 {
-	if (stateIs(0))
+	if (stateIs(STATE_FINISHED))
 		return true;
 	return false;
 }
@@ -43,7 +43,7 @@ bool TDolpicEventBiancoGate::control()
 	if (unk20->mPosition.y >= unk20->getInitialPosition().y) {
 		unk20->mPosition.y = unk20->getInitialPosition().y;
 		unk20->setUpMapCollision(0);
-		unk18 = 0;
+		mState = STATE_FINISHED;
 		return true;
 	}
 	return false;
@@ -77,7 +77,7 @@ TDolpicEventBiancoGate::TDolpicEventBiancoGate(const char* name)
 
 bool TDolpicEventRiccoMammaGate::isFinishedAll() const
 {
-	if (stateIs(0))
+	if (stateIs(STATE_FINISHED))
 		return true;
 	return false;
 }
@@ -119,7 +119,7 @@ bool TDolpicEventRiccoMammaGate::control()
 	unk28->setUp();
 	SMSGetMarDirector()->fireEndDemoCamera();
 	MSBgm::setTrackVolume(0, 1.0f, 15, 0);
-	unk18 = 0;
+	mState = STATE_FINISHED;
 	return true;
 }
 
@@ -174,7 +174,7 @@ void TDolpicEventRiccoMammaGate::loadAfter()
 	unk34 = 1.0f / (f32)((unk38 - unk3C) - unk40);
 	if (unk30) {
 		unk28->setUp();
-		unk18 = 0;
+		mState = STATE_FINISHED;
 		if (unk2C == MSF_RICCO_UNLOCKABLE)
 			gpPollution->getCounterLayer().offLayer(0);
 		else

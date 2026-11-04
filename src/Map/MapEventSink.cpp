@@ -28,7 +28,7 @@ u32 TMapEventSink::mCleanedDegree = 10;
 
 TJointObj* TMapEventSink::getBuilding(int i) const
 {
-	return unk1C->getChild(0)->getChild(i + unk24);
+	return mRootMapJointModel->getChild(0)->getChild(i + unk24);
 }
 
 bool TMapEventSink::isBuried(int i) const
@@ -86,7 +86,7 @@ void TMapEventSink::rising()
 	J3DTransformInfo& info = unk30->getTransformInfo();
 	info.mTranslate.y += unk3C;
 	unk30->setTransformInfo(info);
-	unk1C->getMActor()->getModel()->calc();
+	mRootMapJointModel->getMActor()->getModel()->calc();
 }
 
 bool TMapEventSink::control()
@@ -117,8 +117,8 @@ bool TMapEventSink::control()
 
 void TMapEventSink::startControl()
 {
-	unk18 = 2;
-	unk2C = getBuilding(getRaisingBuildingIdx());
+	mState = STATE_CONTROLLING;
+	unk2C  = getBuilding(getRaisingBuildingIdx());
 	unk2C->alive();
 	unk30 = getBuilding(getRaisingBuildingIdx())->getJoint();
 
@@ -134,7 +134,7 @@ void TMapEventSink::startControl()
 	info.mTranslate.y -= dVar4;
 	unk30->setTransformInfo(info);
 
-	J3DModel* model = unk1C->getMActor()->getModel();
+	J3DModel* model = mRootMapJointModel->getMActor()->getModel();
 	model->calc();
 	int iVar3 = (unk40 - unk44) - unk48;
 	unk3C     = dVar4 / iVar3;
