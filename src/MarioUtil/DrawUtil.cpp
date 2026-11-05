@@ -29,8 +29,8 @@ TSilhouette* gpSilhouetteManager;
 void TSilhouette::load(JSUMemoryInputStream& stream)
 {
 	JDrama::TViewObj::load(stream);
-	unk12               = (GXColor) { 0, 0x27, 0x77, 0xff };
-	unk16               = (GXColor) { 0xff, 0xff, 0xff, 0xff };
+	mSilhouetteColor    = (GXColor) { 0, 0x27, 0x77, 0xff };
+	mLightColor         = (GXColor) { 0xff, 0xff, 0xff, 0xff };
 	unk1C               = 100.0f;
 	unk20               = 0.9f;
 	gpSilhouetteManager = this;
@@ -38,67 +38,50 @@ void TSilhouette::load(JSUMemoryInputStream& stream)
 
 void TSilhouette::loadAfter()
 {
-	// TODO: ewwww floats
-	unk10    = 1;
-	unk12    = gpSunMgr->unk18;
-	unk12.a  = 0;
-	unk24[0] = 30.0f;
-	unk24[1] = 650.0f;
-	unk24[2] = 1500.0f;
+	unk10                    = 1;
+	mSilhouetteColor         = gpSunMgr->getSilhouetteColor();
+	mSilhouetteColor.a       = 0;
+	mAttenuationDistances[0] = 30.0f;
+	mAttenuationDistances[1] = 650.0f;
+	mAttenuationDistances[2] = 1500.0f;
 
-	// quadratic-fit solve for the light attenuation coefficients k0/k1/k2
-	// (unk30/34/38) such that 1/atten == k0 + k1*d + k2*d^2 passes through the
-	// three sample points atten = {0.9, 0.5, 0.05} at distances
-	// d = {30, 650, 1500}. k0 is eliminated by subtracting adjacent equations
-	// scaled by a[i]*a[i+1], leaving a 2x2 system solved via Cramer's rule.
-	f32 m[3][2];
-	f32 dist[3];
-	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
-
-	for (int i = 0; i < 3; ++i)
-		dist[i] = unk24[i];
-
-	for (int i = 0; i < 2; ++i) {
-		m[0][i]
-		    = atten[i + 1]
-		      * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
-		m[1][i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
-		m[2][i] = atten[i + 1] - atten[i];
-	}
-
-	unk38 = (m[2][0] * m[1][1] - m[2][1] * m[1][0])
-	        / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
-	unk34 = (m[2][0] - m[0][0] * unk38) / m[1][0];
-	unk30 = atten[0] - (dist[0] * dist[0] * unk38 + dist[0] * unk34);
-	unk3C = 8e-05f;
+	calcSilhouetteBorder();
+	mProjectionScale = 8e-05f;
 
 	if (gpPollution->getJointModelNum() > 0) {
 		const ResTIMG* img = gpPollution->getLayer(0)->getPollutionImage();
-		unk40              = new JUTTexture(img);
+		mPollutionTexture  = new JUTTexture(img);
 	}
-	const ResTIMG* pRVar8
-	    = (const ResTIMG*)JKRGetResource("/common/timg/H_marukage_xlu_i8.bti");
 
-	unk44 = new JUTTexture(pRVar8);
-	unk48 = 0.0f;
-	unk4C = 0.01f;
-	unk50 = 128.0f;
+	const ResTIMG* mask
+	    = (const ResTIMG*)JKRGetResource("/common/timg/H_marukage_xlu_i8.bti");
+	mProjectionMaskTexture = new JUTTexture(mask);
+
+	mSilhouetteAlpha   = 0.0f;
+	mAlphaApproachRate = 0.01f;
+	mOccludedAlpha     = 128.0f;
 }
 
-void TSilhouette::setting(MtxPtr param_1)
+void TSilhouette::setting(MtxPtr view_mtx)
 {
-	GXSetChanAmbColor(GX_COLOR0A0, (GXColor) { unk12.r, unk12.g, unk12.b, 0 });
-	GXLightObj GStack_54;
-	Vec local_60;
-	Vec local_6C = SMS_GetMarioPos();
-	MTXMultVec(param_1, &local_6C, &local_60);
-	GXInitLightPos(&GStack_54, local_60.x, local_60.y, local_60.z);
-	GXInitLightAttnK(&GStack_54, unk30, unk34, unk38);
-	GXInitLightAttnA(&GStack_54, 1.0f, 0.0f, 0.0f);
-	unk16   = unk12;
-	unk16.a = unk48;
-	GXInitLightColor(&GStack_54, unk16);
-	GXLoadLightObjImm(&GStack_54, GX_LIGHT0);
+	GXColor ambColor = (GXColor) { mSilhouetteColor.r, mSilhouetteColor.g,
+		                           mSilhouetteColor.b, 0 };
+	GXSetChanAmbColor(GX_COLOR0A0, ambColor);
+
+	GXLightObj lightObj;
+	Vec screenMarioPos;
+	Vec marioPos = SMS_GetMarioPos();
+	MTXMultVec(view_mtx, &marioPos, &screenMarioPos);
+	GXInitLightPos(&lightObj, screenMarioPos.x, screenMarioPos.y,
+	               screenMarioPos.z);
+	GXInitLightAttnK(&lightObj, mAttenuationConstant, mAttenuationLinear,
+	                 mAttenuationQuadratic);
+	GXInitLightAttnA(&lightObj, 1.0f, 0.0f, 0.0f);
+	mLightColor   = mSilhouetteColor;
+	mLightColor.a = mSilhouetteAlpha;
+	GXInitLightColor(&lightObj, mLightColor);
+	GXLoadLightObjImm(&lightObj, GX_LIGHT0);
+
 	GXSetNumChans(1);
 	GXSetChanCtrl(GX_COLOR0A0, GX_TRUE, GX_SRC_REG, GX_SRC_REG, 1, GX_DF_NONE,
 	              GX_AF_SPOT);
@@ -112,61 +95,77 @@ void TSilhouette::setting(MtxPtr param_1)
 
 void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_MOVE) != 0) {
-		f32 fVar1 = SMS_CheckMarioFlag(MARIO_FLAG_OCCLUDED) ? unk50 : 0.0f;
-		unk48 += unk4C * (fVar1 - unk48);
-		unk12.a = unk48;
+	if (cue & CUE_MOVE) {
+		f32 targetAlpha
+		    = SMS_CheckMarioFlag(MARIO_FLAG_OCCLUDED) ? mOccludedAlpha : 0.0f;
+		mSilhouetteAlpha
+		    += mAlphaApproachRate * (targetAlpha - mSilhouetteAlpha);
+		mSilhouetteColor.a = mSilhouetteAlpha;
 	}
 
-	if ((cue & CUE_DRAW) != 0) {
+	if (cue & CUE_DRAW) {
 		GXSetNumChans(1);
 		GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 1,
 		              GX_DF_NONE, GX_AF_SPOT);
 		GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, 0,
 		              GX_DF_NONE, GX_AF_NONE);
-		GXSetChanMatColor(GX_COLOR0A0, unk12);
-		setting(graphics->getViewMtx());
+		GXSetChanMatColor(GX_COLOR0A0, mSilhouetteColor);
+		MtxPtr viewMtx = graphics->getViewMtx();
+		setting(viewMtx);
 	}
-	if ((cue & CUE_DRAW_INIT) != 0) {
-		GXColor color = unk12;
-		color.a       = gpSunMgr->unk18.a;
+
+	if (cue & CUE_DRAW_INIT) {
+		GXColor color = mSilhouetteColor;
+		color.a       = gpSunMgr->getSilhouetteColor().a;
 		GXSetChanMatColor(GX_COLOR0A0, color);
 		setting(graphics->getViewMtx());
 	}
-	if (((cue & CUE_SET_PROJECTION) != 0) && gpPollution->getJointModelNum()) {
-		Mtx afStack_80;
-		C_MTXLightFrustum(afStack_80, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
+
+	if (cue & CUE_SET_PROJECTION && gpPollution->getJointModelNum()) {
+		Mtx maskTexMtx;
+		Mtx maskFrustumMtx;
+		Mtx groundRotationMtx;
+		Mtx scaledMarioOffsetMtx;
+		Mtx marioOffsetMtx;
+		Mtx texCoordOffsetMtx;
+
+		C_MTXLightFrustum(maskFrustumMtx, -1.0f, 1.0f, -1.0f, 1.0f, 10.0f, 0.5f,
 		                  0.5f, 0.5f, 0.5f);
-		Mtx afStack_b0;
-		PSMTXRotRad(afStack_b0, 0x58, 1.5707964f);
-		Mtx afStack_50;
-		PSMTXConcat(afStack_80, afStack_b0, afStack_50);
-		Mtx afStack_e0;
-		PSMTXScale(afStack_e0, unk3C, unk3C, unk3C);
-		Mtx afStack_110;
-		PSMTXTrans(afStack_110, -SMS_GetMarioPos().x, 0.0f,
-		           -SMS_GetMarioPos().z);
-		Mtx afStack_140;
-		PSMTXTrans(afStack_140, 0.5f, 0.5f, 0.0f);
-		PSMTXConcat(afStack_e0, afStack_110, afStack_e0);
-		PSMTXConcat(afStack_50, afStack_e0, afStack_50);
-		PSMTXConcat(afStack_140, afStack_50, afStack_50);
-		GXLoadTexMtxImm(afStack_50, 0x1e, GX_MTX3x4);
+
+		MTXRotRad(groundRotationMtx, 'X', 1.5707964f);
+
+		MTXConcat(maskFrustumMtx, groundRotationMtx, maskTexMtx);
+
+		MTXScale(scaledMarioOffsetMtx, mProjectionScale, mProjectionScale,
+		         mProjectionScale);
+
+		MTXTrans(marioOffsetMtx, -SMS_GetMarioPos().x, 0.0f,
+		         -SMS_GetMarioPos().z);
+
+		MTXTrans(texCoordOffsetMtx, 0.5f, 0.5f, 0.0f);
+
+		MTXConcat(scaledMarioOffsetMtx, marioOffsetMtx, scaledMarioOffsetMtx);
+		MTXConcat(maskTexMtx, scaledMarioOffsetMtx, maskTexMtx);
+		MTXConcat(texCoordOffsetMtx, maskTexMtx, maskTexMtx);
+
+		GXLoadTexMtxImm(maskTexMtx, 0x1e, GX_MTX3x4);
+
 		GXSetNumTexGens(2);
 		GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0,
 		                  0x7d);
 		GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_POS, 0x1e, 0, 0x7d);
-		unk40->load(GX_TEXMAP0);
-		unk44->load(GX_TEXMAP1);
+		mPollutionTexture->load(GX_TEXMAP0);
+		mProjectionMaskTexture->load(GX_TEXMAP1);
+
 		GXSetNumChans(1);
 		GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_REG, 1, GX_DF_NONE,
 		              GX_AF_SPOT);
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
-		GXColor color = unk12;
-		GXSetChanMatColor(GX_COLOR0A0, color);
-		color.a = 0x40;
-		GXSetTevColor(GX_TEVREG0, color);
+		GXColor baseColor = mSilhouetteColor;
+		GXSetChanMatColor(GX_COLOR0A0, baseColor);
+		baseColor.a = 0x40;
+		GXSetTevColor(GX_TEVREG0, baseColor);
 		GXSetNumTevStages(2);
 		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
 		GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_TEXC, GX_CC_RASC,
@@ -187,7 +186,32 @@ void TSilhouette::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-void TSilhouette::calcSilhouetteBorder() { }
+void TSilhouette::calcSilhouetteBorder()
+{
+	f32 atten[3] = { 0.9f, 0.5f, 0.05f };
+	f32 dist[3];
+
+	dist[0] = mAttenuationDistances[0];
+	dist[1] = mAttenuationDistances[1];
+	dist[2] = mAttenuationDistances[2];
+
+	f32 P[2];
+	f32 Q[2];
+	f32 R[2];
+	for (int i = 0; i < 2; ++i) {
+		P[i] = atten[i + 1]
+		       * (atten[i] * (dist[i] * dist[i] - dist[i + 1] * dist[i + 1]));
+		Q[i] = atten[i + 1] * (atten[i] * (dist[i] - dist[i + 1]));
+		R[i] = atten[i + 1] - atten[i];
+	}
+
+	mAttenuationQuadratic
+	    = (R[0] * Q[1] - R[1] * Q[0]) / (P[0] * Q[1] - P[1] * Q[0]);
+	mAttenuationLinear   = (R[0] - P[0] * mAttenuationQuadratic) / Q[0];
+	mAttenuationConstant = atten[0]
+	                       - (dist[0] * dist[0] * mAttenuationQuadratic
+	                          + dist[0] * mAttenuationLinear);
+}
 
 void TTrembleModelEffect::init(J3DModel* model)
 {
@@ -419,34 +443,41 @@ void TTrembleModelEffect::reset()
 	unk0->getVertexBuffer()->setCurrentVtxPos(unk4);
 }
 
-void SMS_AddDamageFogEffect(J3DModelData* param_1,
-                            const JGeometry::TVec3<f32>& param_2,
-                            JDrama::TGraphics* param_3)
+void SMS_AddDamageFogEffect(J3DModelData* model_data,
+                            const JGeometry::TVec3<f32>& position,
+                            JDrama::TGraphics* graphics)
 {
-	Vec local_80;
-	MTXMultVec(param_3->getViewMtx(), param_2, &local_80);
+	Vec viewPosition;
+	MTXMultVec(graphics->getViewMtx(), position, &viewPosition);
 
-	f32 startBase = -700.0f;
-	f32 endBase   = 500.0f;
-	f32 s = JMASSin((s16)(SMSGetMarDirector()->getMoveTickCount() * 0x888));
-	f32 startOsc = (-400.0f - startBase) * s;
-	f32 endOsc   = (800.0f - endBase) * s;
+	f32 startBase  = -700.0f;
+	f32 endBase    = 500.0f;
+	f32 startRange = -400.0f;
+	f32 endRange   = 800.0f;
+	startRange -= startBase;
+	endRange -= endBase;
+	f32 pulse = JMASSin((s16)(SMSGetMarDirector()->getMoveTickCount() * 0x888));
+	f32 startOsc = startRange * pulse;
+	f32 endOsc   = endRange * pulse;
 
-	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
+	for (u16 i = 0; i < model_data->getMaterialNum(); i++) {
 		J3DFog* fog
-		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
-		fog->mStartZ = -local_80.z + startBase + startOsc;
-		fog->mEndZ   = -local_80.z + endBase + endOsc;
-		fog->mNearZ  = gpCamera->getNear();
-		fog->mFarZ   = gpCamera->getFar();
+		    = model_data->getMaterialNodePointer(i)->getPEBlock()->getFog();
+		f32 startZ = -viewPosition.z + startBase;
+		startZ += startOsc;
+		fog->mStartZ = startZ;
+		f32 endZ     = -viewPosition.z + endBase;
+		endZ += endOsc;
+		fog->mEndZ  = endZ;
+		fog->mNearZ = gpCamera->getNear();
+		fog->mFarZ  = gpCamera->getFar();
 	}
 }
 
-void SMS_ResetDamageFogEffect(J3DModelData* param_1)
+void SMS_ResetDamageFogEffect(J3DModelData* model_data)
 {
-	for (u16 i = 0; i < param_1->getMaterialNum(); i++) {
-		J3DFog* fog
-		    = param_1->getMaterialNodePointer(i)->getPEBlock()->getFog();
+	for (u16 i = 0; i < model_data->getMaterialNum(); i++) {
+		J3DFog* fog  = model_data->getMaterialNodePointer(i)->getFog();
 		fog->mNearZ  = gpCamera->getNear();
 		fog->mFarZ   = gpCamera->getFar();
 		fog->mEndZ   = fog->mFarZ;
@@ -785,15 +816,15 @@ void SMS_DrawHorzCircle(const JGeometry::TVec3<f32>&, f32, int, const GXColor&)
 {
 }
 
-void SMS_CalcMatAnmAndMakeDL(J3DModel* param_1, u16 param_2)
+void SMS_CalcMatAnmAndMakeDL(J3DModel* model, u16 mat_idx)
 {
-	J3DMaterial* mat = param_1->getModelData()->getMaterialNodePointer(param_2);
+	J3DMaterial* mat = model->getModelData()->getMaterialNodePointer(mat_idx);
 
-	param_1->getModelData()
-	    ->getMaterialNodePointer(param_2)
+	model->getModelData()
+	    ->getMaterialNodePointer(mat_idx)
 	    ->getMaterialAnm()
 	    ->calc(mat);
-	j3dSys.setMatPacket(param_1->getMatPacket(param_2));
+	j3dSys.setMatPacket(model->getMatPacket(mat_idx));
 	mat->makeDisplayList();
 }
 

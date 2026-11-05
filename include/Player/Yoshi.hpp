@@ -96,7 +96,7 @@ public:
 	/* 0x54 */ J3DMtxCalc* unk54;
 	/* 0x58 */ J3DMtxCalc* unk58;
 	/* 0x5C */ J3DFrameCtrl unk5C;
-	/* 0x70 */ s16 mEggRotSpeed;
+	/* 0x70 */ s16 mFaceAngleY;
 	/* 0x72 */ u16 unk72;
 	/* 0x74 */ JGeometry::TVec3<f32> unk74;
 	/* 0x80 */ f32 unk80;

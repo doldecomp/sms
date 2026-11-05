@@ -226,13 +226,13 @@ void TMario::perform(u32 cue, JDrama::TGraphics* graphics)
 		GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 		GXSetColorUpdate(GX_FALSE);
 		GXSetAlphaUpdate(GX_TRUE);
-		GXSetDstAlpha(GX_ENABLE, gpSilhouetteManager->unk48);
-		j3dSys.setUnk4C(3);
+		GXSetDstAlpha(GX_ENABLE, gpSilhouetteManager->mSilhouetteAlpha);
+		j3dSys.setUnk4C(J3DMaterialMode_OpaTexEdge);
 		unk394->draw();
 		j3dSys.setUnk4C(4);
 		unk398->draw();
 		boxDrawPrepare(graphics->mViewMtx);
-		GXSetChanMatColor(GX_COLOR0A0, gpSilhouetteManager->unk12);
+		GXSetChanMatColor(GX_COLOR0A0, gpSilhouetteManager->mSilhouetteColor);
 		GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
 		               GX_LO_NOOP);

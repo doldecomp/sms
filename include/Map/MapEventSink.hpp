@@ -38,26 +38,26 @@ public:
 
 public:
 	/* 0x20 */ int mBuildingNum;
-	/* 0x24 */ int unk24;
+	/* 0x24 */ int mFirstBuildingIdx;
 	/* 0x28 */ int mRaisingBuildingIdx;
-	/* 0x2C */ TJointObj* unk2C;
-	/* 0x30 */ J3DJoint* unk30;
-	/* 0x34 */ f32 unk34;
-	/* 0x38 */ f32 unk38;
-	/* 0x3C */ f32 unk3C;
-	/* 0x40 */ int unk40;
-	/* 0x44 */ int unk44;
-	/* 0x48 */ int unk48;
-	/* 0x4C */ int unk4C;
-	/* 0x50 */ JGeometry::TVec3<f32>* unk50;
+	/* 0x2C */ TJointObj* mRaisingBuilding;
+	/* 0x30 */ J3DJoint* mRaisingJoint;
+	/* 0x34 */ f32 mInitialY;
+	/* 0x38 */ f32 mSinkDepthOverride;
+	/* 0x3C */ f32 mRiseSpeed;
+	/* 0x40 */ int mDemoDuration;
+	/* 0x44 */ int mRiseStartDelay;
+	/* 0x48 */ int mRiseEndDelay;
+	/* 0x4C */ int mDemoTimer;
+	/* 0x50 */ JGeometry::TVec3<f32>* mBuildingEventPositions;
 	/* 0x54 */ bool* mIsBuildingRecovered;
-	/* 0x58 */ TMapCollisionWarp** unk58;
-	/* 0x5C */ TMapCollisionMove** unk5C;
-	struct Unk60Struct {
-		u16 unk0;
-		u16 unk2;
+	/* 0x58 */ TMapCollisionWarp** mRaisedBuildingCollisions;
+	/* 0x5C */ TMapCollisionMove** mRisingBuildingCollisions;
+	struct PollutionRef {
+		u16 mLayerIndex;
+		u16 mObjIndex;
 	};
-	/* 0x60 */ Unk60Struct* unk60;
+	/* 0x60 */ PollutionRef* mBuildingPollutionRefs;
 };
 
 class TMapEventSinkInPollution : public TMapEventSink {
@@ -91,9 +91,9 @@ class TMapEventSinkBianco : public TMapEventSinkInPollutionReset {
 public:
 	TMapEventSinkBianco(const char* name = "イベント（建物沈むビアンコ）")
 	    : TMapEventSinkInPollutionReset(name)
-	    , unk64(nullptr)
+	    , mRisingTerrainInMirrorJoint(nullptr)
 	    , mGateKeeper(nullptr)
-	    , unk7C(0)
+	    , mShineAppearDemoTime(0)
 	{
 	}
 
@@ -106,19 +106,19 @@ public:
 	virtual void rising();
 
 public:
-	/* 0x64 */ J3DJoint* unk64;
+	/* 0x64 */ J3DJoint* mRisingTerrainInMirrorJoint;
 	/* 0x68 */ TGateKeeperBase* mGateKeeper;
-	/* 0x6C */ JGeometry::TVec3<f32> unk6C;
-	/* 0x78 */ f32 unk78;
-	/* 0x7C */ int unk7C;
+	/* 0x6C */ JGeometry::TVec3<f32> mMarioWarpPosition;
+	/* 0x78 */ f32 mMarioWarpAngle;
+	/* 0x7C */ int mShineAppearDemoTime;
 };
 
 class TMapEventSinkShadowMario : public TMapEventSink {
 public:
 	TMapEventSinkShadowMario(const char* name = "建物沈む（影マリオ）")
 	    : TMapEventSink(name)
-	    , unk64(nullptr)
-	    , unk68(nullptr)
+	    , mBuildingPlacements(nullptr)
+	    , mBuildingPlacementNames(nullptr)
 	{
 	}
 
@@ -131,8 +131,8 @@ public:
 	void raiseBuilding(int);
 
 public:
-	/* 0x64 */ JDrama::TPlacement** unk64;
-	/* 0x68 */ const char** unk68;
+	/* 0x64 */ JDrama::TPlacement** mBuildingPlacements;
+	/* 0x68 */ const char** mBuildingPlacementNames;
 };
 
 #endif

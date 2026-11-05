@@ -49,18 +49,12 @@
 #include <Camera/CameraMapTool.hpp>
 #include <JSystem/JDrama/JDRViewObjPtrList.tpp>
 
-// rogue includes needed for matching sinit & bss
+// rogue includes
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
 #include <M3DUtil/MActorAnm.hpp>
-
 #include <M3DUtil/M3UModelMario.hpp>
-
-static void dummy(Vec* v)
-{
-	*v = (Vec) { 0.0f, 0.0f, 0.0f };
-	*v = (Vec) { 1.0f, 1.0f, 1.0f };
-}
+#include <Map/MapCollisionEntry.hpp>
 
 template class TNameRefPtrAryT<TStageEventInfo>;
 template class TNameRefAryT<TScenarioArchiveName>;

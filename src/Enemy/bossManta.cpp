@@ -841,7 +841,7 @@ void TBossMantaManager::TMantaBattleState::update()
 		if (sDefeatSE == nullptr) {
 			static_cast<TMapEventSirenaSink*>(
 			    JDrama::TNameRefGen::search("イベント（ホテル沈む）"))
-			    ->unk64
+			    ->mRiseRequested
 			    = true;
 			mState++;
 		}
