@@ -6,13 +6,9 @@
 class JUTTexture;
 class TDLTexQuad;
 
-class TQuestionRequest {
-public:
-	TQuestionRequest() { }
-
-public:
-	/* 0x0 */ JGeometry::TVec3<f32> unk0;
-	/* 0xC */ f32 unkC;
+struct TQuestionRequest {
+	/* 0x0 */ JGeometry::TVec3<f32> mPosition;
+	/* 0xC */ f32 mRadius;
 };
 
 class TQuestionManager;
@@ -32,12 +28,15 @@ public:
 	void draw() const;
 
 private:
-	/* 0x10 */ u16 unk10;
-	/* 0x12 */ u16 unk12;
-	/* 0x14 */ f32 unk14;
+	enum {
+		FLAG_UNK2 = 0x2,
+	};
+	/* 0x10 */ u16 mFlags;
+	/* 0x12 */ u16 mRequestNum;
+	/* 0x14 */ f32 mRequestClipFar;
 	/* 0x18 */ JUTTexture* unk18;
-	/* 0x1C */ TQuestionRequest* unk1C;
-	/* 0x20 */ TDLTexQuad* unk20;
+	/* 0x1C */ TQuestionRequest* mRequests;
+	/* 0x20 */ TDLTexQuad* mDisplayList;
 };
 
 #endif

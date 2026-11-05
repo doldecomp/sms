@@ -18,6 +18,12 @@ public:
 	// fabricated
 	TVec3(s16 x_, s16 y_, s16 z_) { set(x_, y_, z_); }
 
+	TVec3& operator=(const TVec3& other)
+	{
+		static_cast<S16Vec&>(*this) = other;
+		return *this;
+	}
+
 	void set(s16 x_, s16 y_, s16 z_)
 	{
 		x = (s16)x_;

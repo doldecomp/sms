@@ -37,7 +37,7 @@ void TSunMgr::load(JSUMemoryInputStream& stream)
 
 	u32 col1 = local_24[0] << 8 | local_24[1];
 	u32 col2 = local_24[2] << 8 | local_24[3];
-	unk18.set(col1);
+	mSilhouetteColor.set(col1);
 	unk1C.set(col2);
 
 	TSunModel* sun
