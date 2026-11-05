@@ -45,7 +45,8 @@ f32 TSmallEnemyManager::mBlockWaitMoveY  = 200.0f;
 u32 TSmallEnemyManager::mChangeBlockTime = 2500;
 f32 TSmallEnemyManager::mBlockXZScale    = 1.5f;
 f32 TSmallEnemyManager::mBlockYScale     = 0.6f;
-u8 TSmallEnemyManager::mTestJuiceType    = 0;
+u8 TSmallEnemyManager::mTestJuiceType
+    = TModelWaterManager::WATER_TYPE_NORMAL;
 
 bool TSmallEnemy::mIsPolluter    = true;
 bool TSmallEnemy::mIsAmpPolluter = true;
@@ -149,7 +150,7 @@ TSmallEnemy::TSmallEnemy(const char* name)
     , mCoinId(-1)
     , mEventCoin(nullptr)
     , mIsAttacker(false)
-    , unk185(0)
+    , unk185(TModelWaterManager::WATER_TYPE_NORMAL)
     , unk188(1.0f)
     , mDroppedCoinCount(0)
 {
@@ -550,9 +551,14 @@ BOOL TSmallEnemy::receiveMessage(THitActor* sender, u32 message)
 
 bool TSmallEnemy::changeByJuice()
 {
-	if (gpModelWaterManager->unk5D5F == 1 || gpModelWaterManager->unk5D5F == 2
-	    || gpModelWaterManager->unk5D5F == 3
-	    || TSmallEnemyManager::mTestJuiceType != 0) {
+	if (gpModelWaterManager->isWaterType(
+	        TModelWaterManager::WATER_TYPE_ORANGE_JUICE)
+	    || gpModelWaterManager->isWaterType(
+	        TModelWaterManager::WATER_TYPE_PURPLE_JUICE)
+	    || gpModelWaterManager->isWaterType(
+	        TModelWaterManager::WATER_TYPE_PINK_JUICE)
+	    || TSmallEnemyManager::mTestJuiceType
+	           != TModelWaterManager::WATER_TYPE_NORMAL) {
 
 		if (mJuiceBlock)
 			return true;
@@ -577,22 +583,23 @@ bool TSmallEnemy::changeByJuice()
 
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 
-		unk185 = gpModelWaterManager->unk5D5F;
-		if (TSmallEnemyManager::mTestJuiceType != 0)
+		unk185 = gpModelWaterManager->mWaterType;
+		if (TSmallEnemyManager::mTestJuiceType
+		    != TModelWaterManager::WATER_TYPE_NORMAL)
 			unk185 = TSmallEnemyManager::mTestJuiceType;
 
 		switch (unk185) {
-		case 1:
+		case TModelWaterManager::WATER_TYPE_ORANGE_JUICE:
 			block->unk138.r = 0x1C2;
 			block->unk138.g = 0xDC;
 			block->unk138.b = 0x50;
 			break;
-		case 2:
+		case TModelWaterManager::WATER_TYPE_PURPLE_JUICE:
 			block->unk138.r = 0x118;
 			block->unk138.g = 0x6E;
 			block->unk138.b = 0x154;
 			break;
-		case 3:
+		case TModelWaterManager::WATER_TYPE_PINK_JUICE:
 			block->unk138.r = 0x1E0;
 			block->unk138.g = 0xFA;
 			block->unk138.b = 0x154;
@@ -634,9 +641,9 @@ bool TSmallEnemy::changeMove()
 			}
 
 			switch (unk185) {
-			case 1:
+			case TModelWaterManager::WATER_TYPE_ORANGE_JUICE:
 				return false;
-			case 2: {
+			case TModelWaterManager::WATER_TYPE_PURPLE_JUICE: {
 				JGeometry::TVec3<f32> local_38(0.0f, 0.0f, 1.0f);
 				Mtx afStack_68;
 				MsMtxSetRotRPH(afStack_68, 0.0f, mRotation.y, 0.0f);
@@ -663,7 +670,7 @@ bool TSmallEnemy::changeMove()
 				break;
 			}
 
-			case 3: {
+			case TModelWaterManager::WATER_TYPE_PINK_JUICE: {
 				mJuiceBlock->mPosition.y += TSmallEnemyManager::mBlockMoveSpeed;
 				const TBGCheckData* local_2C;
 				f32 d = gpMap->checkRoof(mJuiceBlock->mPosition.x,

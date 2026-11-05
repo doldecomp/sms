@@ -2294,7 +2294,7 @@ void TMario::checkWet()
 void TMario::gunExec()
 {
 	if (!onYoshi())
-		gpModelWaterManager->unk5D5F = 0;
+		gpModelWaterManager->mWaterType = TModelWaterManager::WATER_TYPE_NORMAL;
 
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
 		return;
