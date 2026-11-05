@@ -2326,10 +2326,11 @@ void TMario::gunExec()
 	if (checkUnk114(UNK114_FLAG_UNK80))
 		mWaterGun->resetWaterToFull();
 
-	if (mStatus != MARIO_STATUS_BACK_JUMP && mStatus != MARIO_STATUS_THROWN_DOWN
+	if (!isStatus(MARIO_STATUS_BACK_JUMP) && !isStatus(MARIO_STATUS_THROWN_DOWN)
 	    && mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_X) && !onYoshi()
-	    && mStatus != MARIO_STATUS_TOROCCO)
+	    && !isStatus(MARIO_STATUS_TOROCCO)) {
 		mWaterGun->changeBackup();
+	}
 
 	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
 	    && mWaterGun->getEmittedWaterCount() != 0) {
@@ -2354,7 +2355,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	offUnk114(UNK114_FLAG_UNK8);
 
 	if (SMSGetMarDirector()->isTalkStartModeNow()
-	    && mStatus != MARIO_STATUS_READ_BILLBOARD)
+	    && !isStatus(MARIO_STATUS_READ_BILLBOARD))
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {
