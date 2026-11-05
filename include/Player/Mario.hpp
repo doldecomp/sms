@@ -52,16 +52,16 @@ enum E_MARIO_RAIL_TYPE {
 class TRidingInfo {
 public:
 	TRidingInfo()
-	    : unk0(nullptr)
-	    , localPos(0.0f, 0.0f, 0.0f)
-	    , unk10(0.0f)
+	    : mGroundActor(nullptr)
+	    , mLocalPos(0.0f, 0.0f, 0.0f)
+	    , mPrevGroundRotationY(0.0f)
 	{
 	}
 
 public:
-	/* 0x0 */ const TLiveActor* unk0;
-	/* 0x4 */ JGeometry::TVec3<f32> localPos;
-	/* 0x10 */ f32 unk10;
+	/* 0x0 */ const TLiveActor* mGroundActor;
+	/* 0x4 */ JGeometry::TVec3<f32> mLocalPos;
+	/* 0x10 */ f32 mPrevGroundRotationY;
 };
 
 class TMarioSoundValues {

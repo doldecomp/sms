@@ -826,7 +826,7 @@ config.libs = [
             PCHObject(NonMatching, "MarioUtil/ShadowUtil.cpp"),
             Object(Matching, "MarioUtil/gd-reinit-gx.cpp"),
             Object(NonMatching, "MarioUtil/EffectUtil.cpp"),
-            Object(NonMatching, "MarioUtil/ModelUtil.cpp"),
+            Object(Matching, "MarioUtil/ModelUtil.cpp"),
             Object(Matching, "MarioUtil/RumbleMgr.cpp"),
             Object(Matching, "MarioUtil/RumbleData.cpp"),
             Object(Matching, "MarioUtil/RumbleType.cpp"),

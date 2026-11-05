@@ -80,10 +80,10 @@ void TYoshi::init(TMario* param_1)
 	unk8   = 21300;
 	unkC   = unk8;
 	mTranslation.set(0.0f, 0.0f, 0.0f);
-	unk2C        = 0.0f;
-	mEggRotSpeed = 0;
-	unk72        = 0x180;
-	unk30        = new MActorAnmData;
+	unk2C       = 0.0f;
+	mFaceAngleY = 0;
+	unk72       = 0x180;
+	unk30       = new MActorAnmData;
 	unk30->init("yoshi", nullptr);
 	mActor              = new MActor(unk30);
 	void* yoshiModelRaw = JKRGetResource("/yoshi/yoshi_model.bmd");
@@ -388,8 +388,8 @@ bool TYoshi::appearFromEgg(const JGeometry::TVec3<f32>& pos, f32 yrot,
 	mLastTranslation = pos;
 	mTranslation     = pos;
 	mTranslation.y += 1.0f;
-	mEggRotSpeed = DEG2SHORTANGLE(yrot);
-	mState       = STATE_UNK2;
+	mFaceAngleY = DEG2SHORTANGLE(yrot);
+	mState      = STATE_UNK2;
 
 	changeAnimation(0);
 
@@ -689,9 +689,9 @@ void TYoshi::doSearch()
 		return;
 
 	case 1: {
-		s16 prev     = mEggRotSpeed;
-		s16 delta    = (s16)(unkE4 * (f32)(unkE0 - prev));
-		mEggRotSpeed = prev + delta;
+		s16 prev    = mFaceAngleY;
+		s16 delta   = (s16)(unkE4 * (f32)(unkE0 - prev));
+		mFaceAngleY = prev + delta;
 		if (delta > -256 && delta < 256) {
 			emitTongue();
 			unkDC = 3;
@@ -823,9 +823,9 @@ void TYoshi::movement()
 		if (mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr))
 			mActor->setBckFromIndex(0x17);
 
-		f32 rot = SHORTANGLE2DEG(mEggRotSpeed);
+		f32 rot = SHORTANGLE2DEG(mFaceAngleY);
 		SMS_RideMoveByGroundActor(unk94, &mTranslation, &rot);
-		mEggRotSpeed = DEG2SHORTANGLE(rot);
+		mFaceAngleY = DEG2SHORTANGLE(rot);
 
 		const TBGCheckData* ground;
 		JGeometry::TVec3<f32> trans = mTranslation;
@@ -852,15 +852,15 @@ void TYoshi::movement()
 	}
 
 	case STATE_UNK7: {
-		s16 prev = mEggRotSpeed;
-		mEggRotSpeed
+		s16 prev = mFaceAngleY;
+		mFaceAngleY
 		    = (s16)(unkE4 * (f32)(mMario->mFaceAngle.y - prev) + (f32)prev);
 		break;
 	}
 
 	case STATE_MOUNTED: {
 		mTranslation = mMario->mPosition;
-		mEggRotSpeed = mMario->mFaceAngle.y;
+		mFaceAngleY  = mMario->mFaceAngle.y;
 
 		if (mMario->mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_B)) {
 			emitTongue();
@@ -955,7 +955,7 @@ void TYoshi::calcAnim()
 	case STATE_DROWNING:
 	case STATE_UNMOUNTED:
 	case STATE_UNK7:
-		J3DGetTranslateRotateMtx(0, mEggRotSpeed, 0, mTranslation.x,
+		J3DGetTranslateRotateMtx(0, mFaceAngleY, 0, mTranslation.x,
 		                         mTranslation.y, mTranslation.z, mtx);
 		break;
 	case STATE_MOUNTED:
@@ -963,12 +963,12 @@ void TYoshi::calcAnim()
 		PSMTXCopy(mMario->getTakenMtx(), mtx);
 		break;
 	case STATE_UNK1:
-		J3DGetTranslateRotateMtx(0, mEggRotSpeed, 0, mTranslation.x,
+		J3DGetTranslateRotateMtx(0, mFaceAngleY, 0, mTranslation.x,
 		                         mTranslation.y + 100.0f * (f32)unk2,
 		                         mTranslation.z, mtx);
 		break;
 	case STATE_UNK5:
-		J3DGetTranslateRotateMtx(0, mEggRotSpeed, 0, mTranslation.x,
+		J3DGetTranslateRotateMtx(0, mFaceAngleY, 0, mTranslation.x,
 		                         mTranslation.y, mTranslation.z, mtx);
 		break;
 	case STATE_DYING:
