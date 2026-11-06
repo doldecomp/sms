@@ -45,8 +45,7 @@ f32 TSmallEnemyManager::mBlockWaitMoveY  = 200.0f;
 u32 TSmallEnemyManager::mChangeBlockTime = 2500;
 f32 TSmallEnemyManager::mBlockXZScale    = 1.5f;
 f32 TSmallEnemyManager::mBlockYScale     = 0.6f;
-u8 TSmallEnemyManager::mTestJuiceType
-    = TModelWaterManager::WATER_TYPE_NORMAL;
+u8 TSmallEnemyManager::mTestJuiceType = TModelWaterManager::WATER_TYPE_NORMAL;
 
 bool TSmallEnemy::mIsPolluter    = true;
 bool TSmallEnemy::mIsAmpPolluter = true;
