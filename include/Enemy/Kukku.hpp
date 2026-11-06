@@ -105,7 +105,7 @@ public:
 	/* 0x194 */ TKukkuBall* mBalls[3];
 	/* 0x1A0 */ TMapObjBase* mOneUp;
 	/* 0x1A4 */ u32 unk1A4;
-	/* 0x1A8 */ u32 mJointIndex;
+	/* 0x1A8 */ u32 mCenterJointIndex;
 	/* 0x1AC */ s32 mShootTimer;
 	/* 0x1B0 */ s32 mDroppedCoins;
 };
@@ -126,13 +126,15 @@ public:
 	void moveObject();
 
 	// fabricated
-	bool checkDeadFilter(u32 flag) const { return mDeadFilter & flag; }
-	void offDeadFilter(u32 flag) { mDeadFilter &= flag; }
-	void onDeadFilter(u32 flag) { mDeadFilter |= flag; }
+	bool checkDeadFlag(u32 flag) const { return mDeadFlag & flag; }
+	void offDeadFlag(u32 flag) { mDeadFlag &= flag; }
+	void onDeadFlag(u32 flag) { mDeadFlag |= flag; }
+
+	enum { FLAG_DEAD = 0x1, FLAG_ALIVE = 0x4 };
 
 public:
-	/* 0x68 */ MActor* mActor;
-	/* 0x6C */ s32 mDeadFilter;
+	/* 0x68 */ MActor* mMActor;
+	/* 0x6C */ s32 mDeadFlag;
 	/* 0x70 */ JGeometry::TVec3<f32> mVelocity;
 	/* 0x7C */ u32 mHitpoints;
 };

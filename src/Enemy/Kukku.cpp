@@ -32,10 +32,10 @@ static const char* tori_bastable[] = {
 
 static const int cDropCoinNumTable[] = { 3, 3, 1, 2 };
 
-TKukkuBall::TKukkuBall(MActor* mActor)
+TKukkuBall::TKukkuBall(MActor* mMActor)
     : THitActor("クック玉")
-    , mActor(mActor)
-    , mDeadFilter(1)
+    , mMActor(mMActor)
+    , mDeadFlag(1)
     , mHitpoints(0)
 {
 }
@@ -54,23 +54,23 @@ void TKukkuBall::init()
 	    JKRFileLoader::getGlbResource("/scene/map/pollution/H_ma_rak.bti"));
 
 	if (res)
-		SMS_ChangeTextureAll(mActor->getModel()->getModelData(), "K_name_dummy",
-		                     *res);
+		SMS_ChangeTextureAll(mMActor->getModel()->getModelData(),
+		                     "K_name_dummy", *res);
 }
 
 void TKukkuBall::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if (checkDeadFilter(HIT_FILTER_NO_COLLISION))
+	if (checkDeadFlag(FLAG_DEAD))
 		return;
 
 	if (cue & CUE_CALC_ANIM) {
 		TPosition3f mtx;
 		mtx.identity33();
 		mtx.setTrans(mPosition);
-		J3DModel* model = mActor->getModel();
+		J3DModel* model = mMActor->getModel();
 		model->setBaseScale(mScaling);
-		mActor->getModel()->setBaseTRMtx(mtx);
-		mActor->getModel()->calc();
+		mMActor->getModel()->setBaseTRMtx(mtx);
+		mMActor->getModel()->calc();
 	}
 
 	if (cue & CUE_MOVE) {
@@ -78,8 +78,8 @@ void TKukkuBall::perform(u32 cue, JDrama::TGraphics* graphics)
 		bind();
 	}
 
-	if (!checkDeadFilter(HIT_FILTER_NO_DAMAGE))
-		mActor->perform(cue, graphics);
+	if (!checkDeadFlag(FLAG_ALIVE))
+		mMActor->perform(cue, graphics);
 }
 
 void TKukkuBall::moveObject() { }
@@ -121,7 +121,7 @@ void TKukkuBall::startToMove(const JGeometry::TVec3<f32>& pos,
                              const JGeometry::TVec3<f32>& vel)
 {
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	mDeadFilter &= ~1;
+	mDeadFlag &= ~1;
 	mPosition = pos;
 	mVelocity = vel;
 }
@@ -129,7 +129,7 @@ void TKukkuBall::startToMove(const JGeometry::TVec3<f32>& pos,
 void TKukkuBall::kill()
 {
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onDeadFilter(HIT_FILTER_NO_COLLISION);
+	onDeadFlag(0x1);
 	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 500.0f);
 }
 
@@ -166,7 +166,7 @@ void TKukku::init(TLiveManager* manager)
 	initCollision();
 	initAnmSound();
 	initParticle();
-	mJointIndex = getModel()->getModelData()->unkB0->getIndex("center");
+	mCenterJointIndex = getModel()->getModelData()->unkB0->getIndex("center");
 	reset();
 }
 
@@ -272,12 +272,13 @@ void TKukku::updateEffect()
 {
 	if (isFalling()) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    COOC_JPA_MS_HANE, getModel()->getAnmMtx(mJointIndex), 1, this);
+		    COOC_JPA_MS_HANE, getModel()->getAnmMtx(mCenterJointIndex), 1,
+		    this);
 	}
 
 	if (getMActor()->checkCurAnm("tori_back", 0)) {
 		gpMarioParticleManager->emitAndBindToMtxPtr(
-		    COOC_JPA_MS_ASE, getModel()->getAnmMtx(mJointIndex), 1, this);
+		    COOC_JPA_MS_ASE, getModel()->getAnmMtx(mCenterJointIndex), 1, this);
 	}
 }
 
