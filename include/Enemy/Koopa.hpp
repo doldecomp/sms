@@ -147,7 +147,6 @@ enum TKoopaAnm {
 class TKoopaManager : public TEnemyManager {
 public:
 	TKoopaManager(const char*);
-	virtual ~TKoopaManager() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();
@@ -163,7 +162,6 @@ public:
 class TKoopa : public TSpineEnemy {
 public:
 	TKoopa(const char*);
-	virtual ~TKoopa() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -311,6 +309,7 @@ public:
 	// Fabricated
 	void setUnk155(bool val) { unk155 = val; }
 
+public:
 	/* 0x150 */ f32 unk150;
 	/* 0x154 */ bool unk154;
 	/* 0x155 */ bool unk155;
@@ -330,7 +329,6 @@ public:
 class TKoopaParts : public THitActor {
 public:
 	TKoopaParts(const char*, u32, TKoopa*, f32);
-	virtual ~TKoopaParts() { }
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void control() { }
 	virtual void attack_(THitActor*) = 0;
@@ -338,6 +336,8 @@ public:
 	void remove();
 	// Unused
 	void set(const JGeometry::TVec3<f32>& pos, f32 radius, f32 height);
+
+public:
 	/* 0x68 */ TKoopa* unk68;
 };
 
@@ -345,7 +345,6 @@ class TKoopaFlame : public TKoopaParts {
 public:
 	// Unused
 	TKoopaFlame(TKoopa* koopa);
-	virtual ~TKoopaFlame() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void control();
 	virtual void attack_(THitActor*);
@@ -360,6 +359,7 @@ public:
 	// Unused
 	bool isAlive() const;
 
+public:
 	/* 0x6C */ JGeometry::TVec3<f32> unk6C;
 	/* 0x78 */ JGeometry::TVec3<f32> unk78;
 	/* 0x84 */ f32 unk84;
@@ -373,7 +373,6 @@ class TKoopaHand : public TKoopaParts {
 public:
 	// Unused
 	TKoopaHand(TKoopa* koopa);
-	virtual ~TKoopaHand() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
@@ -382,7 +381,6 @@ class TKoopaHead : public TKoopaParts {
 public:
 	// Unused
 	TKoopaHead(TKoopa* koopa);
-	virtual ~TKoopaHead() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
@@ -391,14 +389,12 @@ class TKoopaBody : public TKoopaParts {
 public:
 	// Unused
 	TKoopaBody(TKoopa* koopa);
-	virtual ~TKoopaBody() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
 
 class TNerveKoopaTurn : public TNerveBase<TLiveActor> {
 public:
-	virtual ~TNerveKoopaTurn() { }
 };
 
 class TNerveKoopaTurnR : public TNerveKoopaTurn {

@@ -249,11 +249,7 @@ void TLimitKoopaParts::set(const JGeometry::TVec3<f32>& pos, f32 radius,
 	offHitFilter(HIT_FILTER_NO_ATTACK);
 	offHitFilter(HIT_FILTER_NO_DAMAGE);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	mAttackRadius = radius;
-	mAttackHeight = height;
-	mDamageRadius = radius;
-	mDamageHeight = height;
-	calcEntryRadius();
+	setHitParams(radius, height, radius, height);
 }
 
 void TLimitKoopaParts::remove()

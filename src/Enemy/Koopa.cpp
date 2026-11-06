@@ -105,11 +105,6 @@ enum TKoopaPartType {
 	KOOPA_PART_TYPE_HAND  = 0x0800002B,
 };
 
-enum TKoopaPartFlags {
-	KOOPA_PART_FLAG_UNK8000000  = 0x08000000,
-	KOOPA_PART_FLAG_UNK10000000 = 0x10000000,
-};
-
 enum TKoopaTargetSide {
 	KOOPA_TARGET_SIDE_LEFT  = -1,
 	KOOPA_TARGET_SIDE_FRONT = 0,
@@ -198,8 +193,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaTumble, TLiveActor)
 	koopa->getAnmFrame();
 	if (spine->getTime() == 190) {
 		gpCameraShake->startShake((EnumCamShakeMode)0x27, 1.0f);
-		static TBathtub* bathtub
-		    = (TBathtub*)JDrama::TNameRefGen::search("バスタブ");
+		TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search("バスタブ");
 		gpMarioParticleManager->emitAndBindToMtx(
 		    0xF5, (MtxPtr)bathtub->getRootJointMtx(), 0, this);
 		if (SMS_IsMarioTouchGround4cm())
@@ -327,7 +321,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaGetDown, TLiveActor)
 		break;
 	case KOOPA_ANM_DOWN_LOOP: {
 		TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search("バスタブ");
-		f32 downStep      = koopa->getParam()->getDownStep();
+		f32 downStep = koopa->getParam()->getDownStep();
 		if (!(spine->getTime() * (bathtub->getNumGripsDead() + 2) < downStep)
 		    && koopa->endsAnm())
 			koopa->changeAnm(KOOPA_ANM_GETUP, 0,
@@ -340,8 +334,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaGetDown, TLiveActor)
 		break;
 	default:
 		koopa->changeAnm(KOOPA_ANM_DOWN, 0, koopa->getParam()->getDownSpeed());
-		static TBathtub* bathtub
-		    = (TBathtub*)JDrama::TNameRefGen::search("バスタブ");
+		TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search("バスタブ");
 		gpMarioParticleManager->emitAndBindToMtx(
 		    0xF5, (MtxPtr)bathtub->getRootJointMtx(), 0, this);
 		break;
@@ -361,8 +354,8 @@ TKoopaParts::TKoopaParts(const char* name, u32 actor_type, TKoopa* koopa,
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onHitFilter(KOOPA_PART_FLAG_UNK10000000);
-	onHitFilter(KOOPA_PART_FLAG_UNK8000000);
+	onHitFilter(HIT_CATEGORY_ENEMY);
+	onHitFilter(HIT_CATEGORY_BOSS);
 }
 
 void TKoopaParts::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -384,11 +377,7 @@ void TKoopaParts::set(const JGeometry::TVec3<f32>& pos, f32 radius, f32 height)
 	offHitFilter(HIT_FILTER_NO_ATTACK);
 	offHitFilter(HIT_FILTER_NO_DAMAGE);
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	mAttackRadius = radius;
-	mAttackHeight = height;
-	mDamageRadius = radius;
-	mDamageHeight = height;
-	calcEntryRadius();
+	setHitParams(radius, height, radius, height);
 }
 
 // Unused
@@ -448,7 +437,7 @@ void TKoopaFlame::control()
 
 BOOL TKoopaFlame::receiveMessage(THitActor*, u32 message)
 {
-	switch ((int)message) {
+	switch (message) {
 	case HIT_MESSAGE_SPRAYED_BY_WATER:
 		return false;
 	default:
@@ -493,7 +482,8 @@ BOOL TKoopaHead::receiveMessage(THitActor* actor, u32 message)
 	switch (message) {
 	case HIT_MESSAGE_SPRAYED_BY_WATER:
 		if (unk68->getShowered()) {
-			gpMarioParticleManager->emit(0xE7, &actor->mPosition, 0, nullptr);
+			gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT,
+			                             &actor->mPosition, 0, nullptr);
 			gpMSound->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 			                        &unk68->mPosition, 0, 0.0f, 0, 0, 4);
 		}

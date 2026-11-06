@@ -124,7 +124,6 @@ private:
 class TLimitKoopaManager : public TEnemyManager {
 public:
 	TLimitKoopaManager(const char*);
-	virtual ~TLimitKoopaManager() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void createModelData();
@@ -140,7 +139,6 @@ public:
 class TLimitKoopa : public TSpineEnemy {
 public:
 	TLimitKoopa(const char*);
-	virtual ~TLimitKoopa() { }
 	virtual void load(JSUMemoryInputStream&);
 	virtual void loadAfter();
 	virtual void perform(u32, JDrama::TGraphics*);
@@ -201,6 +199,7 @@ public:
 	// fabricated
 	void setUnk168(bool value) { unk168 = value; }
 
+public:
 	/* 0x150 */ long unk150[3];
 	/* 0x15C */ JGeometry::TVec3<f32> unk15C;
 	/* 0x168 */ bool unk168;
@@ -214,12 +213,12 @@ public:
 	/* 0x1B0 */ int unk1B0;
 	/* 0x1B4 */ int unk1B4;
 	/* 0x1B8 */ int unk1B8;
+	/* 0x1BC */ u8 unk1BC[0xC];
 };
 
 class TLimitKoopaParts : public TLiveActor {
 public:
 	TLimitKoopaParts(const char*, u32, TLimitKoopa*, f32);
-	virtual ~TLimitKoopaParts() { }
 	virtual void perform(u32, JDrama::TGraphics*);
 	virtual void attack_(THitActor*) = 0;
 	void remove();
@@ -230,7 +229,6 @@ public:
 class TLimitKoopaFlame : public TLimitKoopaParts {
 public:
 	TLimitKoopaFlame(TLimitKoopa*);
-	virtual ~TLimitKoopaFlame() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
@@ -238,7 +236,6 @@ public:
 class TLimitKoopaHand : public TLimitKoopaParts {
 public:
 	TLimitKoopaHand(TLimitKoopa*);
-	virtual ~TLimitKoopaHand() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
@@ -246,7 +243,6 @@ public:
 class TLimitKoopaHead : public TLimitKoopaParts {
 public:
 	TLimitKoopaHead(TLimitKoopa*);
-	virtual ~TLimitKoopaHead() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
@@ -254,14 +250,12 @@ public:
 class TLimitKoopaBody : public TLimitKoopaParts {
 public:
 	TLimitKoopaBody(TLimitKoopa*);
-	virtual ~TLimitKoopaBody() { }
 	virtual BOOL receiveMessage(THitActor*, u32);
 	virtual void attack_(THitActor*);
 };
 
 class TNerveLimitKoopaTurn : public TNerveBase<TLiveActor> {
 public:
-	virtual ~TNerveLimitKoopaTurn() { }
 };
 
 class TNerveLimitKoopaHipDropJump : public TNerveBase<TLiveActor> {
