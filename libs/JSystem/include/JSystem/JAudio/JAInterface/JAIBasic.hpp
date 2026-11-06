@@ -43,7 +43,7 @@ struct JAISoundTable;
 
 class JAIBasic {
 public:
-	/* 0x0 */ JAIData* unk0;
+	/* 0x0 */ JAIData* mData;
 	/* 0x4 */ // vt
 public:
 	JAIBasic();

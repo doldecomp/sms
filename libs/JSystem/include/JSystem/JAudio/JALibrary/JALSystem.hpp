@@ -47,7 +47,7 @@ public:
 	static TFlagManager* get() { return spFManager; }
 
 public:
-	u16* unk0[16];
+	u16* mFlags[16];
 };
 
 }; // namespace JALSystem

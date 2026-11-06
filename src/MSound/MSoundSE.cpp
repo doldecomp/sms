@@ -791,11 +791,11 @@ void MSoundSE::startSoundNpcActor(u32 id, const Vec* position, u32 ground_no,
 bool MSoundSE::checkMonoSound(u32 id, JAIActor* actor)
 {
 	JAISoundInfo* local_c;
-	JAIBasic::getInterface()->unk0->getInfoPointer(id, (void**)&local_c);
+	JAIBasic::getInterface()->mData->getInfoPointer(id, (void**)&local_c);
 	if (local_c->mSwBit & JAISeSwBit_Mono) {
 		JAISound* sound
 		    = JAIBasic::getInterface()
-		          ->unk0
+		          ->mData
 		          ->getLinkBuffer(
 		              JAIBasic::getInterface()->changeIDToCategory(id))
 		          ->mUsedHead;
