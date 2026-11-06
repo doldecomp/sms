@@ -444,7 +444,7 @@ void TYoshi::ride()
 
 	changeAnimation(0x16);
 
-	gpModelWaterManager->mWaterType = mType;
+	gpModelWaterManager->setWaterType(mType);
 
 	SMSGetMSound()->startSoundActor(MSD_SE_YV_DELICIOUS, &mTranslation, 0,
 	                                nullptr, 0, 4);
@@ -936,7 +936,7 @@ void TYoshi::movement()
 	}
 
 	if (mMario->onYoshi())
-		gpModelWaterManager->mWaterType = mType;
+		gpModelWaterManager->setWaterType(mType);
 
 	{
 		MtxPtr m = mActor->getModel()->getAnmMtx(mJointIdxCenter);
