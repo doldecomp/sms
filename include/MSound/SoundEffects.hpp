@@ -1,6 +1,8 @@
 #ifndef MSOUND_SOUND_EFFECTS_HPP
 #define MSOUND_SOUND_EFFECTS_HPP
 
+#include <version.h>
+
 // Exact order and names were pulled from mSound.asn
 enum MSoundSEId {
 	MSD_SE_PO_WATER_HI          = 0x0000,
@@ -1483,7 +1485,7 @@ enum MSoundSEId {
 	MSD_SE_NPC_VA_MONTW_DANCE2  = 0x891E,
 	MSD_SE_NPC_VA_MONTW_RUNNING = 0x891F,
 	MSD_SE_BS_UNG_VACUUM        = 0x8120,
-	MSD_SE_BS_UNG_ROLL          = 0x8921,
+	MSD_SE_BS_UNG_ROLL          = VERSION_SELECT(0x2981, GMSJ01(0x8921)),
 	MSD_SE_BS_UNG_UP            = 0x8922,
 	MSD_SE_BS_UNG_DOWN          = 0x8923,
 	MSD_SE_BS_UNG_BITE          = 0x8924,
