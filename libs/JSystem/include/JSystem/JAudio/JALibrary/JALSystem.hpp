@@ -8,19 +8,19 @@ class JAISound;
 namespace JALSystem {
 
 enum ModType {
-	ModType_JALSeModVolFunk = 0x1,
-	ModType_JALSeModPitFunk = 0x2,
-	ModType_JALSeModEffFunk = 0x4,
-	ModType_JALSeModVolDist = 0x8,
-	ModType_JALSeModPitDist = 0x10,
-	ModType_JALSeModEffDist = 0x20,
+	ModType_JALSeModVolFunk = (1 << 0), // 0x1
+	ModType_JALSeModPitFunk = (1 << 1), // 0x2
+	ModType_JALSeModEffFunk = (1 << 2), // 0x4
+	ModType_JALSeModVolDist = (1 << 3), // 0x8
+	ModType_JALSeModPitDist = (1 << 4), // 0x10
+	ModType_JALSeModEffDist = (1 << 5), // 0x20
 
-	ModType_JALSeModVolFGrp = 0x40,
-	ModType_JALSeModPitFGrp = 0x80,
-	ModType_JALSeModEffFGrp = 0x100,
-	ModType_JALSeModVolDGrp = 0x200,
-	ModType_JALSeModEffDGrp = 0x400,
-	ModType_JALSeModPitDGrp = 0x800,
+	ModType_JALSeModVolFGrp = (1 << 6),  // 0x40
+	ModType_JALSeModPitFGrp = (1 << 7),  // 0x80
+	ModType_JALSeModEffFGrp = (1 << 8),  // 0x100
+	ModType_JALSeModVolDGrp = (1 << 9),  // 0x200
+	ModType_JALSeModEffDGrp = (1 << 10), // 0x400
+	ModType_JALSeModPitDGrp = (1 << 11), // 0x800
 };
 
 void init();
