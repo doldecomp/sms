@@ -24,23 +24,25 @@ enum ModType {
 };
 
 void init();
-bool gateCheckFunc(u32, f32);
-void processModFunc(JAISound*, f32, u32, u8);
-f32 processModDistVolume(u32, f32);
-f32 processModDistPitch(u32, f32);
-f32 processModDistFx(u32, f32);
-void append(ModType, const char*, u32, f32, f32, f32, f32, f32,
-            JALCalc::CurveSign, f32, f32, u8);
-void appendGrpMember(JALSystem::ModType, u32, u32);
+bool gateCheckFunc(u32 soundID, f32 value);
+void processModFunc(JAISound* sound, f32 value, u32 fadeTime, u8 slot);
+f32 processModDistVolume(u32 soundID, f32 distance);
+f32 processModDistPitch(u32 soundID, f32 distance);
+f32 processModDistFx(u32 soundID, f32 distance);
+void append(JALSystem::ModType type, const char* name, u32 soundID, f32 inMin,
+            f32 inMax, f32 defaultValue, f32 outMin, f32 outMax,
+            JALCalc::CurveSign curveSign, f32 unk1, f32 unk2, u8 flags);
+void appendGrpMember(JALSystem::ModType groupType, u32 groupID,
+                     u32 memberSoundID);
 
 extern class TFlagManager* spFManager;
 
 class TFlagManager {
 public:
 	TFlagManager();
-	void addUseFlag(u32, u16);
-	u16 getUseFlag(u32);
-	bool isRegistered(u32, u16);
+	void addUseFlag(u32 soundID, u16 modType);
+	u16 getUseFlag(u32 soundID);
+	bool isRegistered(u32 soundID, u16 modType);
 
 	static TFlagManager* get() { return spFManager; }
 
