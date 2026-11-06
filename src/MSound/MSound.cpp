@@ -731,7 +731,8 @@ void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
 		uVar2 = tmp;
 
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0 && param_1 >> cat & 1)
+		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0
+		    && param_1 >> cat & 1)
 			MSGMSound->setSeCategoryVolume(cat, uVar2);
 	}
 }

@@ -759,14 +759,14 @@ void JAIBasic::startSoundBasic(u32 id, JAISoundHandle* out_handle,
 			}
 
 			mData->unk1FC.storeBuffer(out_handle, actor, id, fade, camera_idx,
-			                         info);
+			                          info);
 		}
 		break;
 
 	case JAISoundID_Type_Se:
 		if (mSeCancelSwitch[id >> 12] == 0) {
 			mData->unk200.storeBuffer(out_handle, actor, id, fade, camera_idx,
-			                         info);
+			                          info);
 		} else if (out_handle != nullptr) {
 			*out_handle = nullptr;
 		}
@@ -775,7 +775,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISoundHandle* out_handle,
 	case JAISoundID_Type_Stream:
 		if (unk1C.mStreamUseOff == false && unk1C.mStreamEntryCancel != true)
 			mData->unk204.storeBuffer(out_handle, actor, id, fade, camera_idx,
-			                         info);
+			                          info);
 		break;
 	}
 }
@@ -818,7 +818,7 @@ void JAIBasic::stopSoundHandle(JAISoundHandle handle, u32 fadeout)
 		case JAISoundID_Type_Stream:
 			if (fadeout == 0) {
 				JAInter::StreamLib::stop();
-				handle->mState              = SOUNDSTATE_Inactive;
+				handle->mState               = SOUNDSTATE_Inactive;
 				mData->mStreamUpdate->mSound = nullptr;
 				handle->clearMainSoundPPointer();
 				releaseStreamParameterPointer(

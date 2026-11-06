@@ -130,9 +130,11 @@ void JAIBasic::checkNextFrameSe()
 						it = &sound;
 					}
 				} else {
-					bVar18 = mData->mCategoryInfoTable
-					             [mSoundScene][(u8)it->getSeCategoryNumber()]
-					                 .mMaxPlaying;
+					bVar18
+					    = mData
+					          ->mCategoryInfoTable
+					              [mSoundScene][(u8)it->getSeCategoryNumber()]
+					          .mMaxPlaying;
 					for (j = 0; j < bVar18; ++j) {
 						if (it->mPriority < candidates[j].score
 						    || (it->mPriority == candidates[j].score
@@ -182,7 +184,7 @@ void JAIBasic::checkNextFrameSe()
 				bVar7 = 1;
 			} else if (snd->mState == SOUNDSTATE_Inactive) {
 				mData->mSeTrack[i][j].mSound = nullptr;
-				bVar7                       = 1;
+				bVar7                        = 1;
 			} else {
 				for (k = 0; k < maxPlaying; ++k) {
 					if (mData->mSeTrack[i][j].mSound == candidates[k].sound) {
@@ -206,8 +208,8 @@ void JAIBasic::checkNextFrameSe()
 
 						if (bVar7 == 1) {
 							mData->mSeTrack[i][j].mSound = snd;
-							candidates[k].sound         = nullptr;
-							k                           = maxPlaying + 1;
+							candidates[k].sound          = nullptr;
+							k                            = maxPlaying + 1;
 						}
 					}
 				}
@@ -432,7 +434,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mVolume != vol) {
 		slot->mVolume = vol;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			mData->mSeqTrackInfo[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			mData->mSeqTrackInfo[mSeSequence->mTrack]
+			    .mTrackUpdate[sound->mTrack]
 			    |= 0x1;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 2,
@@ -461,7 +464,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mPan != pan) {
 		slot->mPan = pan;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			mData->mSeqTrackInfo[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			mData->mSeqTrackInfo[mSeSequence->mTrack]
+			    .mTrackUpdate[sound->mTrack]
 			    |= 0x4;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 4,
@@ -484,7 +488,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mPitch != pitch) {
 		slot->mPitch = pitch;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			mData->mSeqTrackInfo[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			mData->mSeqTrackInfo[mSeSequence->mTrack]
+			    .mTrackUpdate[sound->mTrack]
 			    |= 0x2;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 3,
@@ -507,7 +512,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mFxmix != fxmix) {
 		slot->mFxmix = fxmix;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			mData->mSeqTrackInfo[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			mData->mSeqTrackInfo[mSeSequence->mTrack]
+			    .mTrackUpdate[sound->mTrack]
 			    |= 0x8;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 5,
@@ -536,7 +542,8 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	if (slot->mDolby != dolby) {
 		slot->mDolby = dolby;
 		if (sound->mState != SOUNDSTATE_Prepared) {
-			mData->mSeqTrackInfo[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+			mData->mSeqTrackInfo[mSeSequence->mTrack]
+			    .mTrackUpdate[sound->mTrack]
 			    |= 0x10;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 6,
@@ -574,9 +581,10 @@ void JAIBasic::releaseSeRegist(JAISound* sound)
 	clearSeqMuteFromSeStop(sound);
 
 	u8 cat;
-	u8 maxCount = mData->mCategoryInfoTable[mSoundScene]
+	u8 maxCount = mData
+	                  ->mCategoryInfoTable[mSoundScene]
 	                                      [(u8)sound->getSeCategoryNumber()]
-	                                          .mMaxPlaying;
+	                  .mMaxPlaying;
 	cat = sound->getSeCategoryNumber();
 	for (u8 j = 0; j < maxCount; ++j) {
 		JAISound** slot = &mData->mSeTrack[cat][j].mSound;

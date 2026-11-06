@@ -137,7 +137,7 @@ void JAIBasic::checkEntriedSeq()
 			JAISound* snd = sound;
 			if (pos != 0xFF) {
 				mData->getFreeAutoHeapPointer(pos, snd->mSoundID
-				                                      & JAISoundID_IndexMask);
+				                                       & JAISoundID_IndexMask);
 			}
 
 			sound->getSeqParameter()->mAutoHeapPosition = pos;

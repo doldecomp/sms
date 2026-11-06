@@ -271,7 +271,7 @@ JALSystem::TFlagManager::TFlagManager()
 {
 	u16 size;
 	for (u8 i = 0; i < 16; ++i) {
-		size    = JAIBasic::getInterface()->mData->mSeTable.mSoundMax[i];
+		size      = JAIBasic::getInterface()->mData->mSeTable.mSoundMax[i];
 		mFlags[i] = new u16[size];
 		for (u16 j = 0; j < size; ++j)
 			mFlags[i][j] = 0;
