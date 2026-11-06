@@ -96,7 +96,7 @@ void TMario::doJumping()
 		}
 
 		f32 accelControl;
-		if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false)) {
+		if (onYoshi() && mYoshi->isFlutterState(TYoshi::FLUTTER_STATE_ACTIVE)) {
 			if (angleDiff > -0x4000 && angleDiff < 0x4000)
 				accelControl = mYoshiParams.mHoldOutAccCtrlF.get();
 			else
