@@ -39,7 +39,7 @@ f32 TMario::getJumpSlideControl() const
 	if (isStatus(MARIO_STATUS_WIRE_JUMP))
 		return mWireParams.mWireJumpSlideControl.get();
 
-	if (onYoshi() && mYoshi->checkFlutterState(1))
+	if (onYoshi() && mYoshi->isFlutterState(TYoshi::FLUTTER_STATE_ACTIVE))
 		return mYoshiParams.mHoldOutSldCtrl.get();
 
 	return mJumpParams.mJumpSlideControl.get();
@@ -667,7 +667,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	if (onYoshi()) {
 		mVel.y *= mYoshiParams.mJumpYoshiMult.get();
-		mYoshi->mFlutterState = 0;
+		mYoshi->mFlutterState = TYoshi::FLUTTER_STATE_READY;
 		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
 	}
 

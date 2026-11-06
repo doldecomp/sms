@@ -31,6 +31,11 @@ public:
 		STATE_UNK7      = 7,
 		STATE_MOUNTED   = 8
 	};
+	enum FlutterState {
+		FLUTTER_STATE_READY    = 0,
+		FLUTTER_STATE_ACTIVE   = 1,
+		FLUTTER_STATE_INACTIVE = 2
+	};
 
 	bool appearFromEgg(const JGeometry::TVec3<f32>&, f32, TEggYoshi*);
 	void calcAnim();
@@ -72,7 +77,7 @@ public:
 	u32 getUnkD4() const { return unkD4; }
 
 	// fabricated
-	bool checkFlutterState(u8 state) const
+	bool isFlutterState(u8 state) const
 	{
 		return mFlutterState == state ? true : false;
 	}
