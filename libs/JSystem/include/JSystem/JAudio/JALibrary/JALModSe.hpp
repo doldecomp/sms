@@ -17,6 +17,15 @@ struct JALPrmSet {
 	JADPrmS<f32> maxParam;
 };
 
+enum JALGateFlag {
+	JALGateFlag_None = 0x0,
+	JALGateFlag_BlockBelow
+	= 0x1, // refuse start when the driver is below the range
+	JALGateFlag_BlockAbove
+	= 0x2, // refuse start when the driver is above the range
+	JALGateFlag_Both = JALGateFlag_BlockBelow | JALGateFlag_BlockAbove,
+};
+
 template <class T> class JALSeModData : public JALListHioNode<T, u32> {
 public:
 	JALSeModData(const char* name, T* owner, u32 id, JALPrmSet* inputRange,
@@ -33,19 +42,19 @@ public:
 	virtual bool gateCheckDyna(f32 inputVal)
 	{
 		if (mInputRange.maxParam.data >= mInputRange.minParam.data) {
-			if ((inputVal > mInputRange.maxParam.data)
-			    && ((mGateFlags & 2) != 0))
+			if (inputVal > mInputRange.maxParam.data
+			    && mGateFlags & JALGateFlag_BlockAbove)
 				return true;
-			if ((inputVal < mInputRange.minParam.data)
-			    && ((mGateFlags & 1) != 0))
+			if (inputVal < mInputRange.minParam.data
+			    && mGateFlags & JALGateFlag_BlockBelow)
 				return true;
 			return false;
 		} else {
-			if ((inputVal > mInputRange.minParam.data)
-			    && ((mGateFlags & 2) != 0))
+			if (inputVal > mInputRange.minParam.data
+			    && mGateFlags & JALGateFlag_BlockAbove)
 				return true;
-			if ((inputVal < mInputRange.maxParam.data)
-			    && ((mGateFlags & 1) != 0))
+			if (inputVal < mInputRange.maxParam.data
+			    && mGateFlags & JALGateFlag_BlockBelow)
 				return true;
 			return false;
 		}
