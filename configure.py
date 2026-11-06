@@ -1240,7 +1240,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/DebuTelesa.cpp"),
             PCHObject(NonMatching, "Enemy/TabePuku.cpp"),
             PCHObject(NonMatching, "Enemy/BathtubBinder.cpp"),
-            PCHObject(NonMatching, "Enemy/limitkoopa.cpp"),
+            ObjectFor(["GMSJ01", "GMSE01"], PCHObject(NonMatching, "Enemy/limitkoopa.cpp")),
             PCHObject(NonMatching, "Enemy/limitkoopajr.cpp"),
         ],
     },
