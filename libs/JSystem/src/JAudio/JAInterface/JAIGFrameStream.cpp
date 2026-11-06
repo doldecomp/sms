@@ -98,23 +98,23 @@ namespace StreamLib {
 void JAIBasic::checkEntriedStream()
 {
 	JAISound* it;
-	for (it = unk0->mStreamControlBuffer.mUsedHead; it != nullptr;
+	for (it = mData->mStreamControlBuffer.mUsedHead; it != nullptr;
 	     it = it->mNextSound) {
 		bool bVar1 = false;
 		if (it->mState == SOUNDSTATE_Stored) {
-			if (!unk0->mStreamUpdate->mSound) {
+			if (!mData->mStreamUpdate->mSound) {
 				JAInter::StreamLib::stop();
 				bVar1 = true;
-			} else if (unk0->mStreamUpdate->mSound->mWaitTimer == 0) {
+			} else if (mData->mStreamUpdate->mSound->mWaitTimer == 0) {
 				JAInter::StreamLib::stop();
 				bVar1 = true;
 			}
 			if (bVar1) {
 				it->mState = SOUNDSTATE_Prepared;
 
-				it->getStreamParameter()->mUpdateData = unk0->mStreamUpdate;
-				unk0->initStreamUpdateParameter();
-				unk0->mStreamUpdate->mSound = it;
+				it->getStreamParameter()->mUpdateData = mData->mStreamUpdate;
+				mData->initStreamUpdateParameter();
+				mData->mStreamUpdate->mSound = it;
 			}
 		}
 	}
@@ -122,7 +122,7 @@ void JAIBasic::checkEntriedStream()
 
 void JAIBasic::checkWaitStream()
 {
-	JAISound* sound = unk0->mStreamUpdate->mSound;
+	JAISound* sound = mData->mStreamUpdate->mSound;
 	if (!sound)
 		return;
 	if (sound->mState != SOUNDSTATE_Prepared)
@@ -130,25 +130,26 @@ void JAIBasic::checkWaitStream()
 
 	char buffer[64];
 	strcpy(buffer, JAIGlobalParameter::streamPath);
-	strcat(buffer,
-	       unk0->mStreamList[sound->mSoundID & JAISoundID_IndexMask].mFileName);
+	strcat(
+	    buffer,
+	    mData->mStreamList[sound->mSoundID & JAISoundID_IndexMask].mFileName);
 	setSeExtParameter(sound);
 	sound->mState = SOUNDSTATE_Started;
 	checkPlayingStream();
 	JAInter::StreamLib::start(
 	    buffer, sound->getStreamParameter()->mStreamMode,
-	    &unk0->mStreamList[sound->mSoundID & JAISoundID_IndexMask].unk20);
+	    &mData->mStreamList[sound->mSoundID & JAISoundID_IndexMask].unk20);
 	JAInter::StreamLib::setPrepareFlag(1);
 }
 
 void JAIBasic::checkRequestStream()
 {
-	JAISound* sound = unk0->mStreamUpdate->mSound;
+	JAISound* sound = mData->mStreamUpdate->mSound;
 	if (!sound)
 		return;
 	if (sound->mState != SOUNDSTATE_Started)
 		return;
-	if (unk0->mStreamUpdate->mPrepareFlag)
+	if (mData->mStreamUpdate->mPrepareFlag)
 		return;
 	sound->mState = SOUNDSTATE_Playing;
 	if (sound->mFadeCounter > 1) {
@@ -160,7 +161,7 @@ void JAIBasic::checkRequestStream()
 
 void JAIBasic::checkPlayingStream()
 {
-	JAIStreamUpdateParameter* sud = unk0->mStreamUpdate;
+	JAIStreamUpdateParameter* sud = mData->mStreamUpdate;
 	JAISound* sound               = sud->mSound;
 
 	if (sound == nullptr)
@@ -177,7 +178,7 @@ void JAIBasic::checkPlayingStream()
 
 			releaseStreamParameterPointer(sound->getStreamParameter());
 			sound->clearMainSoundPPointer();
-			releaseControllerHandle(&unk0->mStreamControlBuffer, sound);
+			releaseControllerHandle(&mData->mStreamControlBuffer, sound);
 			return;
 		}
 
@@ -201,7 +202,7 @@ void JAIBasic::checkPlayingStream()
 
 			releaseStreamParameterPointer(sound->getStreamParameter());
 			sound->clearMainSoundPPointer();
-			releaseControllerHandle(&unk0->mStreamControlBuffer, sound);
+			releaseControllerHandle(&mData->mStreamControlBuffer, sound);
 		}
 	}
 
@@ -215,14 +216,14 @@ void JAIBasic::checkPlayingStream()
 		for (u8 j = 0; j < 13; ++j) {
 			JAIMoveParaSet* mps = &streamParam->mVolume[j];
 			if (streamParam->mVolumeUpdate & (1 << j))
-				if (!unk0->moveParameter(mps))
+				if (!mData->moveParameter(mps))
 					streamParam->mVolumeUpdate ^= 1 << j;
 
 			vol *= mps->mCurrentValue;
 		}
-		if (unk0->mStreamUpdate->mVolume != vol) {
+		if (mData->mStreamUpdate->mVolume != vol) {
 			JAInter::StreamLib::setVolume(vol);
-			unk0->mStreamUpdate->mVolume = vol;
+			mData->mStreamUpdate->mVolume = vol;
 		}
 		if (streamParam->mVolumeUpdate == 0)
 			r29 ^= 0x40000;
@@ -233,14 +234,14 @@ void JAIBasic::checkPlayingStream()
 		for (u8 j = 0; j < 13; ++j) {
 			JAIMoveParaSet* mps = &streamParam->mPitch[j];
 			if (streamParam->mPitchUpdate & (1 << j))
-				if (!unk0->moveParameter(mps))
+				if (!mData->moveParameter(mps))
 					streamParam->mPitchUpdate ^= 1 << j;
 
 			pitch *= mps->mCurrentValue;
 		}
-		if (unk0->mStreamUpdate->mPitch != pitch) {
+		if (mData->mStreamUpdate->mPitch != pitch) {
 			JAInter::StreamLib::setPitch(pitch);
-			unk0->mStreamUpdate->mPitch = pitch;
+			mData->mStreamUpdate->mPitch = pitch;
 		}
 		if (streamParam->mPitchUpdate == 0)
 			r29 ^= 0x100000;
@@ -251,7 +252,7 @@ void JAIBasic::checkPlayingStream()
 		for (u8 j = 0; j < 13; ++j) {
 			JAIMoveParaSet* mps = &streamParam->mPan[j];
 			if (streamParam->mPanUpdate & (1 << j))
-				if (!unk0->moveParameter(mps))
+				if (!mData->moveParameter(mps))
 					streamParam->mPanUpdate ^= 1 << j;
 
 			pan += mps->mCurrentValue - 0.5f;
@@ -262,9 +263,9 @@ void JAIBasic::checkPlayingStream()
 		else if (pan < 0.0f)
 			pan = 0.0f;
 
-		if (unk0->mStreamUpdate->mPan != pan) {
+		if (mData->mStreamUpdate->mPan != pan) {
 			JAInter::StreamLib::setPan(pan);
-			unk0->mStreamUpdate->mPan = pan;
+			mData->mStreamUpdate->mPan = pan;
 		}
 		if (streamParam->mPanUpdate == 0)
 			r29 ^= 0x80000;

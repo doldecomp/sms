@@ -7,253 +7,262 @@ JALSystem::TFlagManager* JALSystem::spFManager;
 
 void JALSystem::init() { spFManager = new TFlagManager; }
 
-bool JALSystem::gateCheckFunc(u32 param_1, f32 param_2)
+bool JALSystem::gateCheckFunc(u32 soundID, f32 value)
 {
-	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModVolFunk)
-	    && JALSeModVolFunk::gateCheck(param_1, param_2))
+	if (TFlagManager::get()->isRegistered(soundID, ModType_JALSeModVolFunk)
+	    && JALSeModVolFunk::gateCheck(soundID, value))
 		return true;
-	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModPitFunk)
-	    && JALSeModPitFunk::gateCheck(param_1, param_2))
+	if (TFlagManager::get()->isRegistered(soundID, ModType_JALSeModPitFunk)
+	    && JALSeModPitFunk::gateCheck(soundID, value))
 		return true;
-	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModEffFunk)
-	    && JALSeModEffFunk::gateCheck(param_1, param_2))
+	if (TFlagManager::get()->isRegistered(soundID, ModType_JALSeModEffFunk)
+	    && JALSeModEffFunk::gateCheck(soundID, value))
 		return true;
-	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModVolFGrp)
-	    && JALSeModVolFGrp::gateCheckGrp(param_1, param_2))
+	if (TFlagManager::get()->isRegistered(soundID, ModType_JALSeModVolFGrp)
+	    && JALSeModVolFGrp::gateCheckGrp(soundID, value))
 		return true;
-	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModPitFGrp)
-	    && JALSeModPitFGrp::gateCheckGrp(param_1, param_2))
+	if (TFlagManager::get()->isRegistered(soundID, ModType_JALSeModPitFGrp)
+	    && JALSeModPitFGrp::gateCheckGrp(soundID, value))
 		return true;
-	if (TFlagManager::get()->isRegistered(param_1, ModType_JALSeModEffFGrp)
-	    && JALSeModEffFGrp::gateCheckGrp(param_1, param_2))
+	if (TFlagManager::get()->isRegistered(soundID, ModType_JALSeModEffFGrp)
+	    && JALSeModEffFGrp::gateCheckGrp(soundID, value))
 		return true;
 
 	return false;
 }
 
-void JALSystem::processModFunc(JAISound* param_1, f32 param_2, u32 param_3,
-                               u8 param_4)
+void JALSystem::processModFunc(JAISound* sound, f32 value, u32 fadeTime,
+                               u8 slot)
 {
-	if (!param_1)
+	if (!sound)
 		return;
 
 	f32 val;
 
-	u32 thing = param_1->getID();
+	u32 theSoundId = sound->getID();
 
-	if (TFlagManager::get()->isRegistered(thing, ModType_JALSeModVolFunk)) {
-		if (JALSeModVolFunk::calc(thing, param_2, &val))
-			param_1->setVolume(val, param_3, param_4);
-	} else if (TFlagManager::get()->isRegistered(thing,
+	if (TFlagManager::get()->isRegistered(theSoundId,
+	                                      ModType_JALSeModVolFunk)) {
+		if (JALSeModVolFunk::calc(theSoundId, value, &val))
+			sound->setVolume(val, fadeTime, slot);
+	} else if (TFlagManager::get()->isRegistered(theSoundId,
 	                                             ModType_JALSeModVolFGrp)) {
-		if (JALSeModVolFGrp::calcGrp(thing, param_2, &val))
-			param_1->setVolume(val, param_3, param_4);
+		if (JALSeModVolFGrp::calcGrp(theSoundId, value, &val))
+			sound->setVolume(val, fadeTime, slot);
 	}
 
-	if (TFlagManager::get()->isRegistered(thing, ModType_JALSeModPitFunk)) {
-		if (JALSeModPitFunk::calc(thing, param_2, &val))
-			param_1->setPitch(val, param_3, param_4);
-	} else if (TFlagManager::get()->isRegistered(thing,
+	if (TFlagManager::get()->isRegistered(theSoundId,
+	                                      ModType_JALSeModPitFunk)) {
+		if (JALSeModPitFunk::calc(theSoundId, value, &val))
+			sound->setPitch(val, fadeTime, slot);
+	} else if (TFlagManager::get()->isRegistered(theSoundId,
 	                                             ModType_JALSeModPitFGrp)) {
-		if (JALSeModPitFGrp::calcGrp(thing, param_2, &val))
-			param_1->setPitch(val, param_3, param_4);
+		if (JALSeModPitFGrp::calcGrp(theSoundId, value, &val))
+			sound->setPitch(val, fadeTime, slot);
 	}
 
-	if (TFlagManager::get()->isRegistered(thing, ModType_JALSeModEffFunk)) {
-		if (JALSeModEffFunk::calc(thing, param_2, &val))
-			param_1->setFxmix(val, param_3, param_4);
-	} else if (TFlagManager::get()->isRegistered(thing,
+	if (TFlagManager::get()->isRegistered(theSoundId,
+	                                      ModType_JALSeModEffFunk)) {
+		if (JALSeModEffFunk::calc(theSoundId, value, &val))
+			sound->setFxmix(val, fadeTime, slot);
+	} else if (TFlagManager::get()->isRegistered(theSoundId,
 	                                             ModType_JALSeModEffFGrp)) {
-		if (JALSeModEffFGrp::calcGrp(thing, param_2, &val))
-			param_1->setFxmix(val, param_3, param_4);
+		if (JALSeModEffFGrp::calcGrp(theSoundId, value, &val))
+			sound->setFxmix(val, fadeTime, slot);
 	}
 }
 
-f32 JALSystem::processModDistVolume(u32 param_1, f32 param_2)
+f32 JALSystem::processModDistVolume(u32 soundID, f32 distance)
 {
 	f32 val;
-	u32 id = param_1;
+	u32 id = soundID;
 	if (TFlagManager::get()->isRegistered(id, ModType_JALSeModVolDist)) {
-		if (JALSeModVolDist::calc(id, param_2, &val))
+		if (JALSeModVolDist::calc(id, distance, &val))
 			return val;
 	} else if (TFlagManager::get()->isRegistered(id, ModType_JALSeModVolDGrp)) {
-		if (JALSeModVolDGrp::calcGrp(id, param_2, &val))
+		if (JALSeModVolDGrp::calcGrp(id, distance, &val))
 			return val;
 	}
 
 	return 1.0f;
 }
 
-f32 JALSystem::processModDistPitch(u32 param_1, f32 param_2)
+f32 JALSystem::processModDistPitch(u32 soundID, f32 distance)
 {
 	f32 val;
-	u32 id = param_1;
+	u32 id = soundID;
 	if (TFlagManager::get()->isRegistered(id, ModType_JALSeModPitDist)) {
-		if (JALSeModPitDist::calc(id, param_2, &val))
+		if (JALSeModPitDist::calc(id, distance, &val))
 			return val;
 	} else if (TFlagManager::get()->isRegistered(id, ModType_JALSeModPitDGrp)) {
-		if (JALSeModPitDGrp::calcGrp(id, param_2, &val))
+		if (JALSeModPitDGrp::calcGrp(id, distance, &val))
 			return val;
 	}
 
 	return 1.0f;
 }
 
-f32 JALSystem::processModDistFx(u32 param_1, f32 param_2)
+f32 JALSystem::processModDistFx(u32 soundID, f32 distance)
 {
 	f32 val;
-	u32 id = param_1;
+	u32 id = soundID;
 	if (TFlagManager::get()->isRegistered(id, ModType_JALSeModEffDist)) {
-		if (JALSeModEffDist::calc(id, param_2, &val))
+		if (JALSeModEffDist::calc(id, distance, &val))
 			return val;
 	} else if (TFlagManager::get()->isRegistered(id, ModType_JALSeModEffDGrp)) {
-		if (JALSeModEffDGrp::calcGrp(id, param_2, &val))
+		if (JALSeModEffDGrp::calcGrp(id, distance, &val))
 			return val;
 	}
 
 	return 1.0f;
 }
 
-void JALSystem::append(JALSystem::ModType param_1, const char* param_2,
-                       u32 param_3, f32 param_4, f32 param_5, f32 param_6,
-                       f32 param_7, f32 param_8, JALCalc::CurveSign param_9,
-                       f32 param_10, f32 param_11, u8 param_12)
+void JALSystem::append(JALSystem::ModType type, const char* name, u32 soundID,
+                       f32 inMin, f32 inMax, f32 defaultValue, f32 outMin,
+                       f32 outMax, JALCalc::CurveSign curveSign, f32 unk1,
+                       f32 unk2, u8 flags)
 {
-	JALPrmSet set1(param_4, param_5);
-	JADPrmS<f32> prm(param_6, nullptr);
-	JALPrmSet set2(param_7, param_8);
-	JALPrmSet set3(param_7, param_8);
+	JALPrmSet inputRange(inMin, inMax);
+	JADPrmS<f32> defaultParam(defaultValue, nullptr);
+	JALPrmSet outputRange(outMin, outMax);
+	JALPrmSet outputPitchRange(outMin, outMax);
 
-	switch (param_1) {
+	switch (type) {
 	case ModType_JALSeModVolFunk:
-		new JALSeModVolFunk(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
-		TFlagManager::get()->addUseFlag(param_3, param_1);
+		new JALSeModVolFunk(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
+		TFlagManager::get()->addUseFlag(soundID, type);
 		break;
 
 	case ModType_JALSeModPitFunk:
-		new JALSeModPitFunk(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
-		TFlagManager::get()->addUseFlag(param_3, param_1);
+		new JALSeModPitFunk(name, soundID, &inputRange, &outputPitchRange,
+		                    &defaultParam, curveSign, flags);
+		TFlagManager::get()->addUseFlag(soundID, type);
 		break;
 
 	case ModType_JALSeModEffFunk:
-		new JALSeModEffFunk(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
-		TFlagManager::get()->addUseFlag(param_3, param_1);
+		new JALSeModEffFunk(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
+		TFlagManager::get()->addUseFlag(soundID, type);
 		break;
 
 	case ModType_JALSeModVolDist:
-		new JALSeModVolDist(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
-		TFlagManager::get()->addUseFlag(param_3, param_1);
+		new JALSeModVolDist(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
+		TFlagManager::get()->addUseFlag(soundID, type);
 		break;
 
 	case ModType_JALSeModEffDist:
-		new JALSeModEffDist(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
-		TFlagManager::get()->addUseFlag(param_3, param_1);
+		new JALSeModEffDist(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
+		TFlagManager::get()->addUseFlag(soundID, type);
 		break;
 
 	case ModType_JALSeModPitDist:
-		new JALSeModPitDist(param_2, param_3, &set1, &set3, &prm, param_9,
-		                    param_12);
-		TFlagManager::get()->addUseFlag(param_3, param_1);
+		new JALSeModPitDist(name, soundID, &inputRange, &outputPitchRange,
+		                    &defaultParam, curveSign, flags);
+		TFlagManager::get()->addUseFlag(soundID, type);
 		break;
 
 	case ModType_JALSeModVolFGrp:
-		new JALSeModVolFGrp(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
+		new JALSeModVolFGrp(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
 		break;
 
 	case ModType_JALSeModPitFGrp:
-		new JALSeModPitFGrp(param_2, param_3, &set1, &set3, &prm, param_9,
-		                    param_12);
+		new JALSeModPitFGrp(name, soundID, &inputRange, &outputPitchRange,
+		                    &defaultParam, curveSign, flags);
 		break;
 
 	case ModType_JALSeModEffFGrp:
-		new JALSeModEffFGrp(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
+		new JALSeModEffFGrp(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
 		break;
 
 	case ModType_JALSeModVolDGrp:
-		new JALSeModVolDGrp(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
+		new JALSeModVolDGrp(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
 		break;
 
 	case ModType_JALSeModEffDGrp:
-		new JALSeModEffDGrp(param_2, param_3, &set1, &set2, &prm, param_9,
-		                    param_12);
+		new JALSeModEffDGrp(name, soundID, &inputRange, &outputRange,
+		                    &defaultParam, curveSign, flags);
 		break;
 
 	case ModType_JALSeModPitDGrp:
-		new JALSeModPitDGrp(param_2, param_3, &set1, &set3, &prm, param_9,
-		                    param_12);
+		new JALSeModPitDGrp(name, soundID, &inputRange, &outputPitchRange,
+		                    &defaultParam, curveSign, flags);
 		break;
 	}
 }
 
-void JALSystem::appendGrpMember(JALSystem::ModType param_1, u32 param_2,
-                                u32 param_3)
+void JALSystem::appendGrpMember(JALSystem::ModType groupType, u32 groupID,
+                                u32 memberSoundID)
 {
-	switch (param_1) {
+	switch (groupType) {
 	case ModType_JALSeModVolFGrp: {
 		JALSeModDataGrp<JALSeModVolFGrp>* found
-		    = JALListS<JALSeModVolFGrp, u32>::search(param_2);
-		if (found)
-			found->append(new JALSeModDataGrpMemb(param_3, nullptr));
-		spFManager->addUseFlag(param_3, param_1);
+		    = JALListS<JALSeModVolFGrp, u32>::search(groupID);
+		if (found) {
+			JALSeModDataGrpMemb* memb
+			    = new JALSeModDataGrpMemb(memberSoundID, nullptr);
+			found->append(memb);
+		}
+		spFManager->addUseFlag(memberSoundID, groupType);
 	} break;
 	case ModType_JALSeModPitFGrp: {
 		JALSeModDataGrp<JALSeModPitFGrp>* found
-		    = JALListS<JALSeModPitFGrp, u32>::search(param_2);
-		if (found)
-			found->append(new JALSeModDataGrpMemb(param_3, nullptr));
-		spFManager->addUseFlag(param_3, param_1);
+		    = JALListS<JALSeModPitFGrp, u32>::search(groupID);
+		if (found) {
+			JALSeModDataGrpMemb* memb
+			    = new JALSeModDataGrpMemb(memberSoundID, nullptr);
+			found->append(memb);
+		}
+		spFManager->addUseFlag(memberSoundID, groupType);
 	} break;
 	case ModType_JALSeModEffFGrp: {
 		JALSeModDataGrp<JALSeModEffFGrp>* found
-		    = JALListS<JALSeModEffFGrp, u32>::search(param_2);
+		    = JALListS<JALSeModEffFGrp, u32>::search(groupID);
 		if (found) {
 			JALSeModDataGrpMemb* memb
-			    = new JALSeModDataGrpMemb(param_3, nullptr);
+			    = new JALSeModDataGrpMemb(memberSoundID, nullptr);
 			if (found)
 				found->append(memb);
 		}
-		spFManager->addUseFlag(param_3, param_1);
+		spFManager->addUseFlag(memberSoundID, groupType);
 	} break;
 	case ModType_JALSeModVolDGrp: {
 		JALSeModDataGrp<JALSeModVolDGrp>* found
-		    = JALListS<JALSeModVolDGrp, u32>::search(param_2);
+		    = JALListS<JALSeModVolDGrp, u32>::search(groupID);
 		if (found) {
 			JALSeModDataGrpMemb* memb
-			    = new JALSeModDataGrpMemb(param_3, nullptr);
+			    = new JALSeModDataGrpMemb(memberSoundID, nullptr);
 			if (found)
 				found->append(memb);
 		}
-		spFManager->addUseFlag(param_3, param_1);
+		spFManager->addUseFlag(memberSoundID, groupType);
 	} break;
 	case ModType_JALSeModEffDGrp: {
 		JALSeModDataGrp<JALSeModEffDGrp>* found
-		    = JALListS<JALSeModEffDGrp, u32>::search(param_2);
+		    = JALListS<JALSeModEffDGrp, u32>::search(groupID);
 		if (found) {
 			JALSeModDataGrpMemb* memb
-			    = new JALSeModDataGrpMemb(param_3, nullptr);
+			    = new JALSeModDataGrpMemb(memberSoundID, nullptr);
 			if (found)
 				found->append(memb);
 		}
-		spFManager->addUseFlag(param_3, param_1);
+		spFManager->addUseFlag(memberSoundID, groupType);
 	} break;
 	case ModType_JALSeModPitDGrp: {
 		JALSeModDataGrp<JALSeModPitDGrp>* found
-		    = JALListS<JALSeModPitDGrp, u32>::search(param_2);
+		    = JALListS<JALSeModPitDGrp, u32>::search(groupID);
 		if (found) {
 			JALSeModDataGrpMemb* memb
-			    = new JALSeModDataGrpMemb(param_3, nullptr);
+			    = new JALSeModDataGrpMemb(memberSoundID, nullptr);
 			if (found)
 				found->append(memb);
 		}
-		spFManager->addUseFlag(param_3, param_1);
+		spFManager->addUseFlag(memberSoundID, groupType);
 	} break;
 	}
 }
@@ -261,29 +270,27 @@ void JALSystem::appendGrpMember(JALSystem::ModType param_1, u32 param_2,
 JALSystem::TFlagManager::TFlagManager()
 {
 	u16 size;
-	u8 i;
-	u16 j;
-	for (i = 0; i < 16; ++i) {
-		size    = JAIBasic::getInterface()->unk0->mSeTable.mSoundMax[i];
-		unk0[i] = new u16[size];
-		for (j = 0; j < size; ++j)
-			unk0[i][j] = 0;
+	for (u8 i = 0; i < 16; ++i) {
+		size      = JAIBasic::getInterface()->mData->mSeTable.mSoundMax[i];
+		mFlags[i] = new u16[size];
+		for (u16 j = 0; j < size; ++j)
+			mFlags[i][j] = 0;
 	}
 }
 
-void JALSystem::TFlagManager::addUseFlag(u32 param_1, u16 param_2)
+void JALSystem::TFlagManager::addUseFlag(u32 soundID, u16 modType)
 {
-	unk0[(u16)param_1 >> 12][param_1 & JAISoundID_IndexMask] += param_2;
+	mFlags[(u16)soundID >> 12][soundID & JAISoundID_IndexMask] += modType;
 }
 
-u16 JALSystem::TFlagManager::getUseFlag(u32 param_1)
+u16 JALSystem::TFlagManager::getUseFlag(u32 soundID)
 {
-	return unk0[(u16)param_1 >> 12][param_1 & JAISoundID_IndexMask];
+	return mFlags[(u16)soundID >> 12][soundID & JAISoundID_IndexMask];
 }
 
-bool JALSystem::TFlagManager::isRegistered(u32 param_1, u16 param_2)
+bool JALSystem::TFlagManager::isRegistered(u32 soundID, u16 modType)
 {
-	if (param_2 & unk0[(u16)param_1 >> 12][param_1 & JAISoundID_IndexMask])
+	if (modType & mFlags[(u16)soundID >> 12][soundID & JAISoundID_IndexMask])
 		return true;
 	return false;
 }

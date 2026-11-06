@@ -9,7 +9,7 @@ void JAIStreamEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 {
 	JAISoundHandle sound;
 
-	JAIData* data = unk0->unk0;
+	JAIData* data = unk0->mData;
 	if (checkSoundHandle(out_handle, sound_id, info))
 		return;
 
@@ -26,9 +26,9 @@ void JAIStreamEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 	}
 
 	data->initStreamParameter(sound->getStreamParameter());
-	sound->mState                           = SOUNDSTATE_Stored;
-	sound->mWaitTimer                       = 10;
-	unk0->unk0->mStreamUpdate->mPrepareFlag = false;
+	sound->mState                            = SOUNDSTATE_Stored;
+	sound->mWaitTimer                        = 10;
+	unk0->mData->mStreamUpdate->mPrepareFlag = false;
 	initSoundParameter(sound, out_handle, actor, sound_id, fade, camera_idx,
 	                   info);
 }

@@ -6,7 +6,7 @@
 void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
                              u32 sound_id, u32 fade, u8 camera_idx, void* info)
 {
-	JAIData* data = unk0->unk0;
+	JAIData* data = unk0->mData;
 	if (!out_handle || !*out_handle || (*out_handle)->mSoundID != sound_id
 	    || ((*out_handle)->mSoundID == sound_id
 	        && (sound_id & 0xC00) == 0x800)) {

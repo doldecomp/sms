@@ -9,29 +9,32 @@ class JSUPtrList {
 public:
 	JSUPtrList() { initiate(); }
 
-	JSUPtrList(bool);
+	JSUPtrList(bool skipInitialise);
 	~JSUPtrList();
 
 	void initiate();
-	void setFirst(JSUPtrLink*);
-	bool append(JSUPtrLink*);
+	void setFirst(JSUPtrLink* first);
+	bool append(JSUPtrLink* node);
 	bool prepend(JSUPtrLink*);
-	bool insert(JSUPtrLink*, JSUPtrLink*);
-	bool remove(JSUPtrLink*);
+	bool insert(JSUPtrLink* before, JSUPtrLink* ptr);
+	bool remove(JSUPtrLink* node);
 	JSUPtrLink* getNthLink(u32 idx) const;
 
 	JSUPtrLink* getFirstLink() const { return mHead; }
 	JSUPtrLink* getLastLink() const { return mTail; }
 	u32 getNumLinks() const { return mLinkCount; }
 
+protected:
 	JSUPtrLink* mHead; // _0
 	JSUPtrLink* mTail; // _4
 	u32 mLinkCount;    // _8
+
+	friend class JSUPtrLink;
 };
 
 class JSUPtrLink {
 public:
-	JSUPtrLink(void*);
+	JSUPtrLink(void* backingData);
 	~JSUPtrLink();
 
 	void* getObjectPtr() const { return mData; }
@@ -39,10 +42,13 @@ public:
 	JSUPtrLink* getNext() const { return mNext; }
 	JSUPtrLink* getPrev() const { return mPrev; }
 
+protected:
 	void* mData;          // _0
 	JSUPtrList* mPtrList; // _4
 	JSUPtrLink* mPrev;    // _8
 	JSUPtrLink* mNext;    // _C
+
+	friend class JSUPtrList;
 };
 
 template <class T> class JSULink;
@@ -53,8 +59,8 @@ public:
 	    : JSUPtrList()
 	{
 	}
-	JSUList(bool thing)
-	    : JSUPtrList(thing)
+	JSUList(bool skipInitialise)
+	    : JSUPtrList(skipInitialise)
 	{
 	}
 	~JSUList() { }
@@ -149,7 +155,7 @@ public:
 
 	T* operator->() const { return mLink->getObject(); }
 
-	// private:
+protected:
 	JSULink<T>* mLink;
 };
 
@@ -199,8 +205,9 @@ public:
 	u32 getNumChildren() const
 	{
 		return this->mLinkCount;
-	} // In TP Debug getNumLinks() gets called here, however that kills
-	  // something in JKRHeap::find(inline depth?)
+		// In TP Debug getNumLinks() gets called here, however that kills
+		// something in JKRHeap::find(inline depth?)
+	}
 	T* getObject() const { return (T*)this->mData; }
 	JSUTree<T>* getParent() const { return (JSUTree<T>*)this->mPtrList; }
 };

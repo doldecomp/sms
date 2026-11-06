@@ -10,7 +10,7 @@ void JAISeqEntry::storeBuffer(JAISound** out_handle, JAIActor* actor,
                               u32 sound_id, u32 fade, u8 camera_idx, void* info)
 {
 	JAISound* controller;
-	JAIData* data = unk0->unk0;
+	JAIData* data = unk0->mData;
 	u8 bVar10     = unk0->getSeqTrackNumber(info);
 	if (out_handle && *out_handle) {
 		if ((*out_handle)->mTrack != bVar10) {

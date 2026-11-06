@@ -341,7 +341,7 @@ void MSound::enterStage(MS_SCENE_WAVE wave, u8 param_2, u8 param3)
 void MSound::exitStage()
 {
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat)
-		if (unk0->mSeTable.mSoundMax[cat])
+		if (mData->mSeTable.mSoundMax[cat])
 			stopAllSe(cat);
 
 	MSBgm::stopTrackBGMs(7, 0);
@@ -483,7 +483,7 @@ MSound::MSound(JKRHeap* param_1, JKRHeap* param_2, u32 param_3, u8* param_4,
 	initInterface(1);
 	f32 fVar1 = 0.0f;
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (unk0->mSeTable.mSoundMax[cat] != 0) {
+		if (mData->mSeTable.mSoundMax[cat] != 0) {
 			f32 tmp  = MSHandle::smSeCategory[cat].unk4;
 			fVar1    = max(fVar1, tmp);
 			u8 uVar2 = min<u8>(MSHandle::smSeCategory[cat].unk8 * 127.0f, 127);
@@ -586,7 +586,7 @@ void MSound::initSound()
 {
 	mSeGateMask |= MSSeGate_OneShot;
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0
+		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0
 		    && JAIBasic::getInterface() != nullptr) {
 			JAIBasic::getInterface()->setSeCategoryVolume(
 			    cat, min<u8>(MSHandle::smSeCategory[cat].unk8 * 127.0f, 127));
@@ -612,7 +612,7 @@ void MSound::pauseOn(bool param_1)
 			                                             nullptr, 0);
 
 	for (u8 cat = 0; cat < 16; ++cat)
-		if (cat != 4 && MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+		if (cat != 4 && MSGMSound->mData->mSeTable.mSoundMax[cat] != 0)
 			MSGMSound->setSeCategoryVolume(cat, 0);
 
 	if (param_1)
@@ -632,7 +632,7 @@ void MSound::pauseOff(u8 param_1)
 
 	case 2:
 		for (u8 cat = 0; cat < 16; ++cat) {
-			if (cat != 4 && MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+			if (cat != 4 && MSGMSound->mData->mSeTable.mSoundMax[cat] != 0)
 				if (JAIBasic::getInterface() != nullptr) {
 					JAIBasic::getInterface()->setSeCategoryVolume(
 					    cat, min<u8>(MSHandle::smSeCategory[cat].unk8 * 127.0f,
@@ -648,7 +648,7 @@ void MSound::pauseOff(u8 param_1)
 			    MSD_SE_SY_DECIDE_COMMON, 0, nullptr, 0);
 
 		for (u8 cat = 0; cat < 16; ++cat)
-			if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+			if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0)
 				MSGMSound->setSeCategoryVolume(cat, 0);
 
 		MSBgm::setAllTracksVolume(0.0f, 15);
@@ -660,7 +660,7 @@ void MSound::demoModeIn(u16 param_1, bool param_2)
 {
 	for (u8 cat = 0; cat < 16; ++cat) {
 		if (param_1 >> cat & 1)
-			if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+			if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0)
 				MSGMSound->setSeCategoryVolume(cat, 0);
 	}
 
@@ -671,7 +671,7 @@ void MSound::demoModeIn(u16 param_1, bool param_2)
 void MSound::demoModeOut(bool param_1)
 {
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0)
+		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0)
 			if (JAIBasic::getInterface() != nullptr) {
 				JAIBasic::getInterface()->setSeCategoryVolume(
 				    cat,
@@ -691,7 +691,7 @@ void MSound::talkModeIn(bool param_1)
 	}
 
 	for (u8 cat = 0; cat < 16; ++cat)
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0 && (0x44 >> cat) & 1)
+		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0 && (0x44 >> cat) & 1)
 			MSGMSound->setSeCategoryVolume(cat, 0);
 
 	MSBgm::setAllTracksVolume(0.6f, 30);
@@ -712,7 +712,7 @@ void MSound::talkModeOut()
 void MSound::setCategoryVOLsDefault(u16 mask)
 {
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0 && mask >> cat & 1)
+		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0 && mask >> cat & 1)
 			if (JAIBasic::getInterface() != nullptr) {
 				JAIBasic::getInterface()->setSeCategoryVolume(
 				    cat,
@@ -731,7 +731,8 @@ void MSound::setCategoryVOLs(u16 param_1, f32 param_2)
 		uVar2 = tmp;
 
 	for (u8 cat = 0; cat < 16; ++cat) {
-		if (MSGMSound->unk0->mSeTable.mSoundMax[cat] != 0 && param_1 >> cat & 1)
+		if (MSGMSound->mData->mSeTable.mSoundMax[cat] != 0
+		    && param_1 >> cat & 1)
 			MSGMSound->setSeCategoryVolume(cat, uVar2);
 	}
 }
@@ -761,7 +762,7 @@ void MSound::stopAllSeInCategory(u8 param_1, u32 param_2) { }
 void MSound::setCategoryAllVolume(u8 category, f32 volume, u32 param_3,
                                   u8 param_4)
 {
-	for (JAISound* sound         = unk0->getLinkBuffer(category)->mUsedHead;
+	for (JAISound* sound         = mData->getLinkBuffer(category)->mUsedHead;
 	     sound != nullptr; sound = sound->getNextSound())
 		sound->setVolume(volume, param_3, param_4);
 }
@@ -771,7 +772,7 @@ void MSound::fadeOutAllSound(u32 fadeout)
 	mSeGateMask &= MSSeGate_Continuous;
 
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		if (unk0->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
+		if (mData->mSeTable.mSoundMax[cat] != 0 && cat != 4) {
 			setCategoryAllVolume(cat, 0.0f, fadeout, 2);
 		}
 	}
@@ -785,7 +786,7 @@ void MSound::fadeOutAllSound(u32 fadeout)
 void MSound::stopAllSound()
 {
 	for (u8 cat = 0; cat < JAIGlobalParameter::getParamSeCategoryMax(); ++cat) {
-		if (unk0->mSeTable.mSoundMax[cat] != 0)
+		if (mData->mSeTable.mSoundMax[cat] != 0)
 			JAIBasic::stopAllSe(cat);
 	}
 

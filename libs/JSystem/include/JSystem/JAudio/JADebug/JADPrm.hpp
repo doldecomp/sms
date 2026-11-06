@@ -6,16 +6,16 @@
 template <class T> class JADPrm {
 public:
 	JADPrm();
-	JADPrm(T val, const char*);
+	JADPrm(T val, const char* name);
 
-	T get() const { return unk0; }
+	T get() const { return data; }
 
-	T unk0;
+	T data;
 };
 
 template <class T>
-JADPrm<T>::JADPrm(T val, const char*)
-    : unk0(val)
+JADPrm<T>::JADPrm(T val, const char* name)
+    : data(val)
 {
 }
 

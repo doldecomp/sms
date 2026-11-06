@@ -1,9 +1,9 @@
 #include <JSystem/JSupport/JSUList.hpp>
 
-JSUPtrLink::JSUPtrLink(void* val)
+JSUPtrLink::JSUPtrLink(void* backingData)
 {
 	mPtrList = nullptr;
-	mData    = val;
+	mData    = backingData;
 	mPrev    = nullptr;
 	mNext    = nullptr;
 }
@@ -15,9 +15,9 @@ JSUPtrLink::~JSUPtrLink()
 	}
 }
 
-JSUPtrList::JSUPtrList(bool b)
+JSUPtrList::JSUPtrList(bool skipInitialise)
 {
-	if (b) {
+	if (skipInitialise) {
 		initiate();
 	}
 }
