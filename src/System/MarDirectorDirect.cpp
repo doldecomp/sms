@@ -167,7 +167,7 @@ int TMarDirector::direct()
 			mPerformListPollutionCountObj->perform(CUE_ALL, &local_140);
 			mPerformListPollutionCountLayer->perform(CUE_ALL, &local_140);
 			mPerformListGX->perform(CUE_ALL, &local_140);
-			if ((gpSilhouetteManager->unk48 > 0.0f ? true : false)
+			if ((gpSilhouetteManager->mSilhouetteAlpha > 0.0f ? true : false)
 			    || gpCamera->unk2C8 != -1) {
 				mPerformListSilhouette->perform(CUE_ALL, &local_140);
 			}

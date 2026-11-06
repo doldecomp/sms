@@ -50,10 +50,10 @@ void TAirportEventSink::finishControl()
 
 bool TAirportEventSink::control()
 {
-	if (unk4C == unk40 - 300)
+	if (mDemoTimer == mDemoDuration - 300)
 		gpPollution->offLayer(0);
 
-	if (unk4C > unk48)
+	if (mDemoTimer > mRiseEndDelay)
 		gpCameraShake->keepShake(CAM_SHAKE_MODE_UNK5, 0.1);
 
 	return TMapEventSinkInPollutionReset::control();
@@ -85,10 +85,10 @@ void TAirportEventSink::loadAfter()
 
 	unk6C = static_cast<TGateKeeperBase*>(
 	    JDrama::TNameRefGen::search("ゲートキーパー（ビアンコ）"));
-	unk40 = 720;
-	unk44 = 480;
-	unk48 = 60;
-	unk38 = 200.0f;
+	mDemoDuration      = 720;
+	mRiseStartDelay    = 480;
+	mRiseEndDelay      = 60;
+	mSinkDepthOverride = 200.0f;
 }
 
 TAirportEventSink::TAirportEventSink(const char* name)

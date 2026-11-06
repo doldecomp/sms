@@ -14,10 +14,10 @@ public:
 	virtual void makePollutionRecovered(u32) { }
 
 public:
-	/* 0x64 */ bool unk64;
-	/* 0x68 */ JGeometry::TVec3<f32> unk68;
-	/* 0x74 */ JGeometry::TVec3<f32> unk74;
-	/* 0x80 */ f32 unk80;
+	/* 0x64 */ bool mRiseRequested;
+	/* 0x68 */ JGeometry::TVec3<f32> mShineSpawnPos;
+	/* 0x74 */ JGeometry::TVec3<f32> mMarioWarpPosition;
+	/* 0x80 */ f32 mMarioWarpAngle;
 };
 
 #endif

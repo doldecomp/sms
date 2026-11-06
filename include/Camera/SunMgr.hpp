@@ -19,12 +19,16 @@ public:
 	int getAddColor() const;
 
 	bool isThing() const { return unk15 & 2; }
+	const JUtility::TColor& getSilhouetteColor() const
+	{
+		return mSilhouetteColor;
+	}
 
 public:
 	/* 0x14 */ u8 unk14;
 	/* 0x15 */ u8 unk15;
 	/* 0x16 */ char unk16[2];
-	/* 0x18 */ JUtility::TColor unk18;
+	/* 0x18 */ JUtility::TColor mSilhouetteColor;
 	/* 0x1C */ JUtility::TColor unk1C;
 	/* 0x20 */ f32 unk20;
 	/* 0x24 */ JGeometry::TVec3<f32> unk24;

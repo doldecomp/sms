@@ -16,9 +16,9 @@ public:
 	virtual bool watch();
 	virtual bool control();
 
-public:
-	/* 0x20 */ TMapObjBase* unk20;
-	/* 0x24 */ f32 unk24;
+private:
+	/* 0x20 */ TMapObjBase* mKingStatue;
+	/* 0x24 */ f32 mKingStatueRiseSpeed;
 };
 
 class TDolpicEventRiccoMammaGate : public TMapEvent {
@@ -35,19 +35,19 @@ public:
 	void rising();
 
 public:
-	/* 0x20 */ J3DJoint* unk20;
-	/* 0x24 */ TMapCollisionMove* unk24;
-	/* 0x28 */ TMapCollisionWarp* unk28;
-	/* 0x2C */ int unk2C;
-	/* 0x30 */ bool unk30;
-	/* 0x34 */ f32 unk34;
-	/* 0x38 */ int unk38;
-	/* 0x3C */ int unk3C;
-	/* 0x40 */ int unk40;
-	/* 0x44 */ int unk44;
-	/* 0x48 */ JGeometry::TVec3<f32> unk48;
-	/* 0x54 */ JGeometry::TVec3<f32> unk54;
-	/* 0x60 */ f32 unk60;
+	/* 0x20 */ J3DJoint* mEventBuildingJoint;
+	/* 0x24 */ TMapCollisionMove* mRisingBuildingCollision;
+	/* 0x28 */ TMapCollisionWarp* mRisenBuildingCollision;
+	/* 0x2C */ int mTriggerFlag;
+	/* 0x30 */ bool mBuildingAlreadyRevealed;
+	/* 0x34 */ f32 mScaleUpSpeed;
+	/* 0x38 */ int mDemoDuration;
+	/* 0x3C */ int mRiseStartDelay;
+	/* 0x40 */ int mRiseEndDelay;
+	/* 0x44 */ int mDemoTimer;
+	/* 0x48 */ JGeometry::TVec3<f32> mEffectPosition;
+	/* 0x54 */ JGeometry::TVec3<f32> mMarioStartPos;
+	/* 0x60 */ f32 mMarioStartAngle;
 };
 
 #endif

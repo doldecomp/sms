@@ -260,7 +260,7 @@ void TMario::checkCollision()
 			    && mStatus != MARIO_STATUS_THROWN_DOWN
 			    && mStatus != MARIO_STATUS_BACK_JUMP && dist < 180.0f) {
 				mPosition       = mYoshi->getTranslation();
-				mFaceAngle.y    = mYoshi->mEggRotSpeed;
+				mFaceAngle.y    = mYoshi->mFaceAngleY;
 				mModelFaceAngle = mFaceAngle.y;
 
 				if (checkFlag(MARIO_FLAG_HAS_FLUDD)) {

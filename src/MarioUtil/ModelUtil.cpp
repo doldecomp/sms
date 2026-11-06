@@ -47,30 +47,34 @@ void TMultiBtk::update()
 }
 
 void SMS_RideMoveByGroundActor(TRidingInfo* riding_info,
-                               JGeometry::TVec3<f32>* pos, f32* arg2)
+                               JGeometry::TVec3<f32>* pos, f32* yaw)
 {
+	const TLiveActor* actor;
 	const TBGCheckData* checkData;
-	f32 temp_f1
+	f32 groundY
 	    = gpMap->checkGround(pos->x, 100.0f + pos->y, pos->z, &checkData);
 
-	if (checkData->mActor != nullptr && ((pos->y - temp_f1) < 50.0f)) {
-		if (riding_info->unk0 == nullptr
-		    || riding_info->unk0 != checkData->mActor) {
-			riding_info->unk0 = checkData->mActor;
+	if (checkData->getActor() != nullptr && pos->y - groundY < 50.0f) {
+		actor = checkData->getActor();
+		if (riding_info->mGroundActor == nullptr
+		    || riding_info->mGroundActor != actor) {
+			riding_info->mGroundActor = actor;
 			SMS_RideMoveCalcLocalPos(riding_info, *pos);
 		} else {
 			TMtx34f mtx;
-			if (!riding_info->unk0->getRootJointMtx()) {
-				SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
-			} else {
-				PSMTXCopy(*riding_info->unk0->getRootJointMtx(), mtx.mMtx);
-			}
-			MTXMultVec(mtx.mMtx, &riding_info->localPos, pos);
-			*arg2 = *arg2 + riding_info->unk0->mRotation.y - riding_info->unk10;
-			riding_info->unk10 = riding_info->unk0->mRotation.y;
+			if (!riding_info->mGroundActor->getRootJointMtx())
+				SMS_GetActorMtx(*riding_info->mGroundActor, mtx);
+			else
+				MTXCopy(*riding_info->mGroundActor->getRootJointMtx(), mtx);
+
+			MTXMultVec(mtx, &riding_info->mLocalPos, pos);
+			*yaw = *yaw + riding_info->mGroundActor->mRotation.y
+			       - riding_info->mPrevGroundRotationY;
+			riding_info->mPrevGroundRotationY
+			    = riding_info->mGroundActor->mRotation.y;
 		}
 	} else {
-		riding_info->unk0 = nullptr;
+		riding_info->mGroundActor = nullptr;
 	}
 }
 
@@ -78,17 +82,17 @@ void SMS_RideMoveCalcLocalPos(TRidingInfo* riding_info,
                               const JGeometry::TVec3<float>& pos)
 {
 
-	if (riding_info->unk0 == nullptr)
+	if (riding_info->mGroundActor == nullptr)
 		return;
 
 	TMtx34f mtx;
-	if (!riding_info->unk0->getRootJointMtx()) {
-		SMS_GetActorMtx(*riding_info->unk0, mtx.mMtx);
-	} else {
-		PSMTXCopy(*riding_info->unk0->getRootJointMtx(), mtx.mMtx);
-	}
-	PSMTXInverse(mtx.mMtx, mtx.mMtx);
-	MTXMultVec(mtx.mMtx, (Vec*)&pos, &riding_info->localPos);
+	if (!riding_info->mGroundActor->getRootJointMtx())
+		SMS_GetActorMtx(*riding_info->mGroundActor, mtx);
+	else
+		MTXCopy(*riding_info->mGroundActor->getRootJointMtx(), mtx);
+
+	MTXInverse(mtx, mtx);
+	MTXMultVec(mtx, (Vec*)&pos, &riding_info->mLocalPos);
 }
 
 J3DModel* SMS_CreatePartsModel(char* arg0, u32 arg1)

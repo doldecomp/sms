@@ -11,26 +11,27 @@ TQuestionManager* gpQuestionManager;
 void TQuestionManager::load(JSUMemoryInputStream& param_1)
 {
 	JDrama::TViewObj::load(param_1);
-	unk10           = 0;
-	unk12           = 0;
-	unk14           = 5000.0;
-	ResTIMG* pRVar1 = (ResTIMG*)JKRGetResource("/common/timg/question.bti");
-	unk18           = new JUTTexture(pRVar1);
-	unk1C           = new TQuestionRequest[0x20];
-	unk20           = new TDLTexQuad;
-	unk20->createBuffer(0x20);
+	mFlags          = 0;
+	mRequestNum     = 0;
+	mRequestClipFar = 5000.0;
+	ResTIMG* questionImg
+	    = (ResTIMG*)JKRGetResource("/common/timg/question.bti");
+	unk18        = new JUTTexture(questionImg);
+	mRequests    = new TQuestionRequest[0x20];
+	mDisplayList = new TDLTexQuad;
+	mDisplayList->createBuffer(0x20);
 	gpQuestionManager = this;
 }
 
 bool TQuestionManager::request(JGeometry::TVec3<f32> param_1, f32 param_2)
 {
-	if (unk12 < 0x20) {
+	if (mRequestNum < 0x20) {
 		f32 dx = SMS_GetMarioPos().x - param_1.x;
 		f32 dz = SMS_GetMarioPos().z - param_1.z;
-		if (dx * dx + dz * dz < unk14 * unk14) {
-			unk1C[unk12].unk0 = param_1;
-			unk1C[unk12].unkC = param_2;
-			++unk12;
+		if (dx * dx + dz * dz < mRequestClipFar * mRequestClipFar) {
+			mRequests[mRequestNum].mPosition = param_1;
+			mRequests[mRequestNum].mRadius   = param_2;
+			++mRequestNum;
 			return true;
 		}
 	}
@@ -38,26 +39,24 @@ bool TQuestionManager::request(JGeometry::TVec3<f32> param_1, f32 param_2)
 	return false;
 }
 
-#pragma dont_inline on
-void TQuestionManager::makeDL(JDrama::TGraphics* param_1) const
+void TQuestionManager::makeDL(JDrama::TGraphics* graphics) const
 {
-	for (int i = 0; i < unk12; ++i) {
-		TQuestionRequest& req    = unk1C[i];
-		JGeometry::TVec3<f32> v1 = req.unk0;
-		f32 f                    = req.unkC;
-		v1.y += f;
-		JGeometry::TVec3<f32> v2;
-		MTXMultVec(param_1->mViewMtx, &v1, &v2);
+	for (int i = 0; i < mRequestNum; ++i) {
+		TQuestionRequest& req          = mRequests[i];
+		JGeometry::TVec3<f32> worldPos = req.mPosition;
+		f32 rad                        = req.mRadius;
+		worldPos.y += rad;
+		JGeometry::TVec3<f32> screenPos;
+		MTXMultVec(graphics->mViewMtx, &worldPos, &screenPos);
 		JGeometry::TVec3<f32> v3[4];
-		v3[0].set(v2.x - f, v2.y + f, v2.z + f);
-		v3[1].set(v2.x + f, v2.y + f, v2.z + f);
-		v3[2].set(v2.x + f, v2.y - f, v2.z + f);
-		v3[3].set(v2.x - f, v2.y - f, v2.z + f);
-		unk20->request(v3);
+		v3[0].set(screenPos.x - rad, screenPos.y + rad, screenPos.z + rad);
+		v3[1].set(screenPos.x + rad, screenPos.y + rad, screenPos.z + rad);
+		v3[2].set(screenPos.x + rad, screenPos.y - rad, screenPos.z + rad);
+		v3[3].set(screenPos.x - rad, screenPos.y - rad, screenPos.z + rad);
+		mDisplayList->request(v3);
 	}
-	unk20->setEnd();
+	mDisplayList->setEnd();
 }
-#pragma dont_inline off
 
 void TQuestionManager::draw() const
 {
@@ -89,25 +88,25 @@ void TQuestionManager::draw() const
 	GXSetAlphaUpdate(0);
 	GXSetDstAlpha(0, 0);
 	GXSetClipMode(GX_CLIP_DISABLE);
-	unk20->draw();
+	mDisplayList->draw();
 	GXSetClipMode(GX_CLIP_ENABLE);
 }
 
 void TQuestionManager::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_CALC_VIEW) != 0) {
+	if (cue & CUE_CALC_VIEW) {
 		if (gpSilhouetteManager->isUnk48Positive()) {
-			unk20->reset();
+			mDisplayList->reset();
 			makeDL(graphics);
-			unk10 |= 2;
+			mFlags |= FLAG_UNK2;
 		} else {
-			unk10 &= ~2;
+			mFlags &= ~FLAG_UNK2;
 		}
-		unk12 = 0;
+		mRequestNum = 0;
 	}
 
-	if ((cue & CUE_DRAW) != 0 && gpSilhouetteManager->isUnk48Positive()
-	    && (unk10 & 2) != 0) {
+	if (cue & CUE_DRAW && gpSilhouetteManager->isUnk48Positive()
+	    && mFlags & FLAG_UNK2) {
 		draw();
 	}
 }
