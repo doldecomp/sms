@@ -28,7 +28,7 @@
 
 f32 TMario::getJumpAccelControl() const
 {
-	if (mStatus == MARIO_STATUS_WIRE_JUMP)
+	if (isStatus(MARIO_STATUS_WIRE_JUMP))
 		return mWireParams.mWireJumpAccelControl.get();
 
 	return mJumpParams.mJumpAccelControl.get();
@@ -36,10 +36,10 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
-	if (mStatus == MARIO_STATUS_WIRE_JUMP)
+	if (isStatus(MARIO_STATUS_WIRE_JUMP))
 		return mWireParams.mWireJumpSlideControl.get();
 
-	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
+	if (onYoshi() && mYoshi->checkFlutterState(1))
 		return mYoshiParams.mHoldOutSldCtrl.get();
 
 	return mJumpParams.mJumpSlideControl.get();
@@ -48,7 +48,7 @@ f32 TMario::getJumpSlideControl() const
 bool TMario::canSquat() const
 {
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
-	    && mWaterGun->getCurrentNozzle()->mRocketType.get() != 1
+	    && !mWaterGun->checkCurrentNozzleRocketType(TWaterGun::Rocket)
 	    && mWaterGun->getCurrentNozzleType() != TWaterGun::Turbo
 	    && (mInput & 0x200))
 		return true;

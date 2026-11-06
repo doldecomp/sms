@@ -71,6 +71,12 @@ public:
 	// fabricated
 	u32 getUnkD4() const { return unkD4; }
 
+	// fabricated
+	bool checkFlutterState(u8 state) const
+	{
+		return mFlutterState == state ? true : false;
+	}
+
 public:
 	/* 0x0 */ u8 mState;
 	/* 0x1 */ u8 unk1;
