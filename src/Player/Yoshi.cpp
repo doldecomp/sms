@@ -165,7 +165,7 @@ void TYoshi::init(TMario* param_1)
 	unkB4   = 0;
 	unkA8->frameInit();
 	unkAC->frameInit();
-	mFlutterState        = 2;
+	mFlutterState        = FLUTTER_STATE_INACTIVE;
 	mFlutterTimer        = 0;
 	mMaxFlutterTimer     = 120;
 	mMaxVSpdStartFlutter = -5.0f;
@@ -314,7 +314,7 @@ u16 TYoshi::changeHand()
 	}
 
 	if (status & MARIO_STATUS_FLAG_JUMPING) {
-		if (mFlutterState == 1)
+		if (mFlutterState == FLUTTER_STATE_ACTIVE)
 			return 9;
 		if (status == MARIO_STATUS_HIP_DROP) {
 			u16 actionState = mMario->mStatusState;
@@ -509,7 +509,7 @@ void TYoshi::thinkAnimation()
 			}
 		}
 	} else if (status & MARIO_STATUS_FLAG_JUMPING) {
-		if (mFlutterState == 1) {
+		if (mFlutterState == FLUTTER_STATE_ACTIVE) {
 			newIdx = 9;
 		} else if (status == MARIO_STATUS_HIP_DROP) {
 			switch (mMario->mStatusState) {
@@ -770,12 +770,12 @@ void TYoshi::thinkEat()
 void TYoshi::thinkHoldOut()
 {
 	switch (mFlutterState) {
-	case 0:
+	case FLUTTER_STATE_READY:
 		if (mMario->mVel.y < mMaxVSpdStartFlutter
 		    && mMario->getGamePad()->checkMeaning(TMarioGamePad::MEANING_A))
-			mFlutterState = 1;
+			mFlutterState = FLUTTER_STATE_ACTIVE;
 		break;
-	case 1:
+	case FLUTTER_STATE_ACTIVE:
 		gpMarioParticleManager->emitAndBindToMtxPtr(
 		    0x119, mActor->getModel()->getAnmMtx(unkF6), 1, this);
 		if (mMario->mVel.y < 0.0f
@@ -786,13 +786,13 @@ void TYoshi::thinkHoldOut()
 			mFlutterTimer -= 1;
 			mMario->mVel.y += mFlutterAcceleration;
 		} else {
-			mFlutterState = 2;
+			mFlutterState = FLUTTER_STATE_INACTIVE;
 		}
 
 		if (!mMario->getGamePad()->checkMeaning(TMarioGamePad::MEANING_A))
-			mFlutterState = 2;
+			mFlutterState = FLUTTER_STATE_INACTIVE;
 		break;
-	case 2:
+	case FLUTTER_STATE_INACTIVE:
 		mFlutterTimer = 0;
 		break;
 	}
