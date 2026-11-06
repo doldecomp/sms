@@ -22,7 +22,6 @@ public:
 	JALSeModData(const char* name, T* owner, u32 id, JALPrmSet* inputRange,
 	             JALPrmSet* outputRange, JADPrmS<f32>* baseParam,
 	             JALCalc::CurveSign curveSign, u8 gateFlags);
-	~JALSeModData() { }
 
 	virtual f32 calcDyna(f32 inputVal)
 	{
@@ -173,8 +172,6 @@ public:
 		JSUList<T>::append(link->getLinkNode());
 		link->setList(this);
 	}
-
-	~JALListD() { }
 };
 
 template <class T, class U> class JALLinkD {
@@ -218,7 +215,6 @@ public:
 template <class T, class U, class V> class JALListGrp : public JALListD<V, U> {
 public:
 	static T* searchGroup(U id);
-	~JALListGrp() { }
 };
 
 template <class T, class U, class V> T* JALListGrp<T, U, V>::searchGroup(U id)
@@ -243,8 +239,6 @@ public:
 	                      curveSign, gateFlags)
 	{
 	}
-
-	~JALSeModDataGrp() { }
 
 	static bool calcGrp(u32 id, f32 inputVal, f32* outVal);
 	static bool gateCheckGrp(u32 id, f32 inputVal);
