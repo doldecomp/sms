@@ -35,19 +35,19 @@ public:
 		if (mInputRange.maxParam.data >= mInputRange.minParam.data) {
 			if ((inputVal > mInputRange.maxParam.data)
 			    && ((mGateFlags & 2) != 0))
-				return 1;
+				return true;
 			if ((inputVal < mInputRange.minParam.data)
 			    && ((mGateFlags & 1) != 0))
-				return 1;
-			return 0;
+				return true;
+			return false;
 		} else {
 			if ((inputVal > mInputRange.minParam.data)
 			    && ((mGateFlags & 2) != 0))
-				return 1;
+				return true;
 			if ((inputVal < mInputRange.maxParam.data)
 			    && ((mGateFlags & 1) != 0))
-				return 1;
-			return 0;
+				return true;
+			return false;
 		}
 	}
 
