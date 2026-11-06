@@ -211,144 +211,144 @@ void MSoundSE::construct()
 	// clang-format on
 
 	// clang-format off
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスパックン・汚染飛行擬音",
-    MSD_SE_BS_BSPAKU_POLLUT_IMI, 0.0f,     55000.0f, 6.0f,  0.5f,  2.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100000.0f, 0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "水音・距離によるピッチ下げ",
-    MSD_SE_WT_GND, 2000.0f,  0.0f,     6.0f,  0.82f, 1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 20000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "潜水艦の風車ピッチ",
-    MSD_SE_OBJ_SUBMARINE_MILL, 0.0f,     3.5f,     3.4f,  0.2f,  1.35f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 5.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "潜水艦の鎖のこすれる音",
-    MSD_SE_OBJ_SUBMARINE_CRANE, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 1.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "潜水艦の風車音量",
-    MSD_SE_OBJ_SUBMARINE_MILL, 0.0f,     3.5f,     3.4f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 1.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "潜水艦の浮上する水音",
-    MSD_SE_OBJ_SUBMARINE_SINK, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 1.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "コイン風車",
-    MSD_SE_OBJ_BI_COINMILL, 0.14f,    10.5f,    0.78f, 0.2f,  1.93f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 20.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "コイン風車",
-    MSD_SE_OBJ_BI_COINMILL, 0.14f,    10.5f,    0.78f, 0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "上下向回転門",
-    MSD_SE_OBJ_BI_UPDOWNMILL, 0.0f,     10.0f,    3.4f,  0.2f,  1.35f, JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "上下向回転門",
-    MSD_SE_OBJ_BI_UPDOWNMILL, 0.0f,     10.0f,    3.4f,  0.44f, 1.35f, JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "足台風車(足台移動音)",
-    MSD_SE_OBJ_BI_STEPMILL_MOVE, 0.0f,     0.05f,    6.0f,  0.0f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "足台風車(風車音)",
-    MSD_SE_OBJ_BI_STEPMILL_WIND, 0.0f,     2.36f,    6.0f,  0.3f,  1.5f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "足台風車(風車音)",
-    MSD_SE_OBJ_BI_STEPMILL_WIND, 0.0f,     2.36f,    6.0f,  0.2f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "放水音",
-    0,      0.01f,    1.0f,     6.0f,  0.3f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 5.0f,      1);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "マリオしりもち音",
-    MSD_SE_MA_BOUND, 0.01f,    50.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ジャンプキノコ",
-    MSD_SE_OBJ_JUMP_KINOKO, 15000.0f, 3000.0f,  1.0f,  1.0f,  1.3f,  JALCalc::CS_LINEAR,      0.0f, 30000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ジャンプキノコ",
-    MSD_SE_OBJ_JUMP_KINOKO, 3000.0f,  15000.0f, 1.0f,  0.68f, 1.0f,  JALCalc::CS_LINEAR,      0.0f, 30000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "マーレー壷を支えるロープ",
-    MSD_SE_OBJ_MR_TSUBO_PULL, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 50.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "マーレー壷を支えるロープ",
-    MSD_SE_OBJ_MR_TSUBO_PULL, 0.0f,     20.0f,    1.0f,  0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 50.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "マーレー壷",
-    MSD_SE_OBJ_MR_TSUBO_WATER, 0.0f,     20.0f,    1.0f,  0.5f,  1.5f,  JALCalc::CS_LINEAR,      0.0f, 300.0f,    0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "コインバウンド音",
-    MSD_SE_SY_COIN_BOUND, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 100.0f,    1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ノーマルノズルのエアノイズ",
-    0x24,   0.01f,    0.56f,    5.0f,  0.25f, 1.5f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "お化けスイカバウンド",
-    MSD_SE_OBJ_WATERMELON_BBUND, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "通常スイカバウンド",
-    MSD_SE_OBJ_WATERMELON_SBUND, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "お化けスイカ回転",
-    MSD_SE_OBJ_WATERMELON_BROLL, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "通常スイカバ回転",
-    MSD_SE_OBJ_WATERMELON_SROLL, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "お化けスイカ回転",
-    MSD_SE_OBJ_WATERMELON_BROLL, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "通常スイカバ回転",
-    MSD_SE_OBJ_WATERMELON_SROLL, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスパックン・汚染飛行擬音",
+		MSD_SE_BS_BSPAKU_POLLUT_IMI, 0.0f,     55000.0f, 6.0f,  0.5f,  2.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100000.0f, 0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "水音・距離によるピッチ下げ",
+		MSD_SE_WT_GND, 2000.0f,  0.0f,     6.0f,  0.82f, 1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 20000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "潜水艦の風車ピッチ",
+		MSD_SE_OBJ_SUBMARINE_MILL, 0.0f,     3.5f,     3.4f,  0.2f,  1.35f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 5.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "潜水艦の鎖のこすれる音",
+		MSD_SE_OBJ_SUBMARINE_CRANE, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 1.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "潜水艦の風車音量",
+		MSD_SE_OBJ_SUBMARINE_MILL, 0.0f,     3.5f,     3.4f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 1.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "潜水艦の浮上する水音",
+		MSD_SE_OBJ_SUBMARINE_SINK, 0.0f,     0.7f,     6.0f,  0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 1.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "コイン風車",
+		MSD_SE_OBJ_BI_COINMILL, 0.14f,    10.5f,    0.78f, 0.2f,  1.93f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 20.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "コイン風車",
+		MSD_SE_OBJ_BI_COINMILL, 0.14f,    10.5f,    0.78f, 0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "上下向回転門",
+		MSD_SE_OBJ_BI_UPDOWNMILL, 0.0f,     10.0f,    3.4f,  0.2f,  1.35f, JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "上下向回転門",
+		MSD_SE_OBJ_BI_UPDOWNMILL, 0.0f,     10.0f,    3.4f,  0.44f, 1.35f, JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "足台風車(足台移動音)",
+		MSD_SE_OBJ_BI_STEPMILL_MOVE, 0.0f,     0.05f,    6.0f,  0.0f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "足台風車(風車音)",
+		MSD_SE_OBJ_BI_STEPMILL_WIND, 0.0f,     2.36f,    6.0f,  0.3f,  1.5f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "足台風車(風車音)",
+		MSD_SE_OBJ_BI_STEPMILL_WIND, 0.0f,     2.36f,    6.0f,  0.2f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 20.0f,     0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "放水音",
+		0,      0.01f,    1.0f,     6.0f,  0.3f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 5.0f,      1);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "マリオしりもち音",
+		MSD_SE_MA_BOUND, 0.01f,    50.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ジャンプキノコ",
+		MSD_SE_OBJ_JUMP_KINOKO, 15000.0f, 3000.0f,  1.0f,  1.0f,  1.3f,  JALCalc::CS_LINEAR,      0.0f, 30000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ジャンプキノコ",
+		MSD_SE_OBJ_JUMP_KINOKO, 3000.0f,  15000.0f, 1.0f,  0.68f, 1.0f,  JALCalc::CS_LINEAR,      0.0f, 30000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "マーレー壷を支えるロープ",
+		MSD_SE_OBJ_MR_TSUBO_PULL, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 50.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "マーレー壷を支えるロープ",
+		MSD_SE_OBJ_MR_TSUBO_PULL, 0.0f,     20.0f,    1.0f,  0.5f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 50.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "マーレー壷",
+		MSD_SE_OBJ_MR_TSUBO_WATER, 0.0f,     20.0f,    1.0f,  0.5f,  1.5f,  JALCalc::CS_LINEAR,      0.0f, 300.0f,    0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "コインバウンド音",
+		MSD_SE_SY_COIN_BOUND, 0.0f,     20.0f,    1.0f,  0.0f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 100.0f,    1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ノーマルノズルのエアノイズ",
+		0x24,   0.01f,    0.56f,    5.0f,  0.25f, 1.5f,  JALCalc::CS_POSITIVE_CURVE, 0.0f, 100.0f,    1);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "お化けスイカバウンド",
+		MSD_SE_OBJ_WATERMELON_BBUND, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "通常スイカバウンド",
+		MSD_SE_OBJ_WATERMELON_SBUND, 0.7f,     15.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "お化けスイカ回転",
+		MSD_SE_OBJ_WATERMELON_BROLL, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "通常スイカバ回転",
+		MSD_SE_OBJ_WATERMELON_SROLL, 0.01f,    10.0f,    10.0f, 0.2f,  1.0f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "お化けスイカ回転",
+		MSD_SE_OBJ_WATERMELON_BROLL, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "通常スイカバ回転",
+		MSD_SE_OBJ_WATERMELON_SROLL, 0.01f,    10.0f,    1.0f,  0.8f,  1.2f,  JALCalc::CS_NEGATIVE_CURVE, 0.0f, 30.0f,     1);
 
-  JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ロープ揺れ音",
-    0,      1.0f,     52.0f,    3.98f, 0.0f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 300.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_A);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_B);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_ROLL);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_HALFA);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_HALFB);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ロープ揺れ音",
+		0,      1.0f,     52.0f,    3.98f, 0.0f,  1.0f,  JALCalc::CS_LINEAR,      0.0f, 300.0f,    1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_A);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_B);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_ROLL);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_HALFA);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 0, MSD_SE_OBJ_ROPE_CLEAK_HALFB);
 
-  JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ロープ揺れ時のマリオの風切音",
-    1,      1.0f,     83.0f,    1.2f,  0.0f,  1.0f, JALCalc::CS_LINEAR,       0.0f, 300.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_HALF_A);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_HALF_B);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_FULL_A);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_FULL_B);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ロープ揺れ時のマリオの風切音",
+		1,      1.0f,     83.0f,    1.2f,  0.0f,  1.0f, JALCalc::CS_LINEAR,       0.0f, 300.0f,    1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_HALF_A);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_HALF_B);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_FULL_A);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 1, MSD_SE_MA_ROPE_ROLL_FULL_B);
 
-  JALSystem::append(JALSystem::ModType_JALSeModPitFGrp, "ボール系のバウンド音(ピッチ上昇)",
-    2,      30.0f,    0.0f,     1.0f,  1.0f,  2.0f, JALCalc::CS_LINEAR,       0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, MSD_SE_IT_EGG_BOUND);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, MSD_SE_IT_DRIAN_BOUND);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFGrp, "ボール系のバウンド音(ピッチ上昇)",
+		2,      30.0f,    0.0f,     1.0f,  1.0f,  2.0f, JALCalc::CS_LINEAR,       0.0f, 100.0f,    1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, MSD_SE_IT_EGG_BOUND);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 2, MSD_SE_IT_DRIAN_BOUND);
 
-  JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ボール系のバウンド音(ボリューム減少)",
-    2,      0.0f,     20.0f,    1.0f,  0.0f,  1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, MSD_SE_IT_EGG_BOUND);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, MSD_SE_IT_DRIAN_BOUND);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ボール系のバウンド音(ボリューム減少)",
+		2,      0.0f,     20.0f,    1.0f,  0.0f,  1.0f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 100.0f,    1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, MSD_SE_IT_EGG_BOUND);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 2, MSD_SE_IT_DRIAN_BOUND);
 
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ジェットコースター実音",
-    MSD_SE_OBJ_JET_COASTER, 0.0f,     50.0f,    2.87f, 1.0f,  2.3f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 300.0f,    0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ジェットコースター実音",
+		MSD_SE_OBJ_JET_COASTER, 0.0f,     50.0f,    2.87f, 1.0f,  2.3f, JALCalc::CS_NEGATIVE_CURVE,  0.0f, 300.0f,    0);
 
-  JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ブランコ(vol)",
-    3,      0.0f,     30.0f,    1.0f,  0.0f,  1.0f, JALCalc::CS_LINEAR,       0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, MSD_SE_OBJ_SWING1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, MSD_SE_OBJ_SWING2);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFGrp, "ブランコ(vol)",
+		3,      0.0f,     30.0f,    1.0f,  0.0f,  1.0f, JALCalc::CS_LINEAR,       0.0f, 100.0f,    1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, MSD_SE_OBJ_SWING1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModVolFGrp, 3, MSD_SE_OBJ_SWING2);
 
-  JALSystem::append(JALSystem::ModType_JALSeModPitFGrp, "ブランコ(pitch)",
-    3,      0.0f,     30.0f,    1.0f, 0.3f,   1.0f, JALCalc::CS_LINEAR,       0.0f, 100.0f,    1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, MSD_SE_OBJ_SWING1);
-  JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, MSD_SE_OBJ_SWING2);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFGrp, "ブランコ(pitch)",
+		3,      0.0f,     30.0f,    1.0f, 0.3f,   1.0f, JALCalc::CS_LINEAR,       0.0f, 100.0f,    1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, MSD_SE_OBJ_SWING1);
+	JALSystem::appendGrpMember(JALSystem::ModType_JALSeModPitFGrp, 3, MSD_SE_OBJ_SWING2);
 
-  JALSystem::append(JALSystem::ModType_JALSeModVolDist, "コロパク着地音",
-    MSD_SE_BS_KRPAKU_GND, 38468.0f, 0.0f,    12.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolDist, "コロパク回転音",
-    MSD_SE_BS_KRPAKU_ROLL, 40966.0f, 0.0f,    16.8f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolDist, "ボスパックン汚染飛行音(real)",
-    MSD_SE_BS_BSPAKU_POLLUT_FLY, 50000.0f, 0.0f,    20.0f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolDist, "ボスパックン汚染飛行音(imit)",
-    MSD_SE_BS_BSPAKU_POLLUT_IMI, 50000.0f, 0.0f,    28.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "メカクッパ戦・キラー飛行音",
-    MSD_SE_EN_KILLER_FLY_KUPPA, 5000.0f,  50.0f,   1.0f,  0.7f,  1.2f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 50000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ポポのふくらみ音",
-    MSD_SE_EN_POPO_GROW, 2.5f,     1.0f,    3.0f,  0.54f, 1.1f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ポポのふくらみ音",
-    MSD_SE_EN_POPO_GROW, 2.5f,     1.0f,    3.0f,  0.55f, 1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "キャンキャン尻尾ひっぱり音",
-    MSD_SE_EN_WANWAN_PULL, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_LINEAR,      0.0f, 500.0f,    0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ハチの巣揺れ音",
-    MSD_SE_EN_BEENEST_SWING, 0.04f,    1.2f,    1.0f,  0.0f,  1.0f, JALCalc::CS_LINEAR,      0.0f, 150.0f,    0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "イガイガバウンド音",
-    MSD_SE_EN_IGAIGA_BOUND, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "イガイガバウンド音",
-    MSD_SE_EN_IGAIGA_BOUND, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "イガイガ転がり音",
-    MSD_SE_EN_IGAIGA_ROLL, 0.95f,    2.3f,    4.0f,  0.2f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 2.5f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "イガイガ転がり音",
-    MSD_SE_EN_IGAIGA_ROLL, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_LINEAR,      0.0f, 500.0f,    0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスパックン竜巻音",
-    MSD_SE_BS_BSPAKU_TORNADO, 1538.0f,  500.0f,  3.0f,  0.65f, 1.7f, JALCalc::CS_LINEAR,      0.0f, 10000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスゲッソー回転攻撃音",
-    MSD_SE_BS_GESO_ROLL, 13500.0f, 9700.0f, 4.0f,  0.6f,  1.8f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ボスゲッソー回転攻撃音",
-    MSD_SE_BS_GESO_ROLL, 13500.0f, 9700.0f, 5.0f,  0.3f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスワンワン引きずり音",
-    MSD_SE_BS_WANWAN_M_DRAG, 4.0f,     8.0f,    1.0f,  0.9f,  1.1f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 500.0f,    0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "メカクッパ火炎",
-    MSD_SE_BS_MKP_FIRE, 0.3f,     1.6f,    2.0f,  0.3f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      1);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ウナギ回転",
-    MSD_SE_BS_UNG_ROLL, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ウナギ回転",
-    MSD_SE_BS_UNG_ROLL, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
-  JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "クッパ風呂あふれ水",
-    MSD_SE_BS_KOOPA_FLOOD, 0.0f,     1.0f,    2.0f,  0.3f,  1.0f, JALCalc::CS_LINEAR,      0.0f, 2.0f,      0);
-  MSSetSound::init();
+	JALSystem::append(JALSystem::ModType_JALSeModVolDist, "コロパク着地音",
+		MSD_SE_BS_KRPAKU_GND, 38468.0f, 0.0f,    12.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolDist, "コロパク回転音",
+		MSD_SE_BS_KRPAKU_ROLL, 40966.0f, 0.0f,    16.8f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolDist, "ボスパックン汚染飛行音(real)",
+		MSD_SE_BS_BSPAKU_POLLUT_FLY, 50000.0f, 0.0f,    20.0f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolDist, "ボスパックン汚染飛行音(imit)",
+		MSD_SE_BS_BSPAKU_POLLUT_IMI, 50000.0f, 0.0f,    28.2f, 0.0f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 100000.0f, 0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "メカクッパ戦・キラー飛行音",
+		MSD_SE_EN_KILLER_FLY_KUPPA, 5000.0f,  50.0f,   1.0f,  0.7f,  1.2f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 50000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ポポのふくらみ音",
+		MSD_SE_EN_POPO_GROW, 2.5f,     1.0f,    3.0f,  0.54f, 1.1f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ポポのふくらみ音",
+		MSD_SE_EN_POPO_GROW, 2.5f,     1.0f,    3.0f,  0.55f, 1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 3.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "キャンキャン尻尾ひっぱり音",
+		MSD_SE_EN_WANWAN_PULL, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_LINEAR,      0.0f, 500.0f,    0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ハチの巣揺れ音",
+		MSD_SE_EN_BEENEST_SWING, 0.04f,    1.2f,    1.0f,  0.0f,  1.0f, JALCalc::CS_LINEAR,      0.0f, 150.0f,    0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "イガイガバウンド音",
+		MSD_SE_EN_IGAIGA_BOUND, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "イガイガバウンド音",
+		MSD_SE_EN_IGAIGA_BOUND, 0.8f,     1.01f,   10.0f, 0.4f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 1.5f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "イガイガ転がり音",
+		MSD_SE_EN_IGAIGA_ROLL, 0.95f,    2.3f,    4.0f,  0.2f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 2.5f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "イガイガ転がり音",
+		MSD_SE_EN_IGAIGA_ROLL, 100.0f,   500.0f,  5.0f,  0.0f,  1.3f, JALCalc::CS_LINEAR,      0.0f, 500.0f,    0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスパックン竜巻音",
+		MSD_SE_BS_BSPAKU_TORNADO, 1538.0f,  500.0f,  3.0f,  0.65f, 1.7f, JALCalc::CS_LINEAR,      0.0f, 10000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスゲッソー回転攻撃音",
+		MSD_SE_BS_GESO_ROLL, 13500.0f, 9700.0f, 4.0f,  0.6f,  1.8f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ボスゲッソー回転攻撃音",
+		MSD_SE_BS_GESO_ROLL, 13500.0f, 9700.0f, 5.0f,  0.3f,  1.0f, JALCalc::CS_POSITIVE_CURVE, 0.0f, 14000.0f,  0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ボスワンワン引きずり音",
+		MSD_SE_BS_WANWAN_M_DRAG, 4.0f,     8.0f,    1.0f,  0.9f,  1.1f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 500.0f,    0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "メカクッパ火炎",
+		MSD_SE_BS_MKP_FIRE, 0.3f,     1.6f,    2.0f,  0.3f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      1);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "ウナギ回転",
+		MSD_SE_BS_UNG_ROLL, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModVolFunk, "ウナギ回転",
+		MSD_SE_BS_UNG_ROLL, 0.0f,     9.0f,    2.0f,  0.2f,  1.0f, JALCalc::CS_NEGATIVE_CURVE, 0.0f, 2.0f,      0);
+	JALSystem::append(JALSystem::ModType_JALSeModPitFunk, "クッパ風呂あふれ水",
+		MSD_SE_BS_KOOPA_FLOOD, 0.0f,     1.0f,    2.0f,  0.3f,  1.0f, JALCalc::CS_LINEAR,      0.0f, 2.0f,      0);
+	MSSetSound::init();
 	// clang-format on
 
 	{
