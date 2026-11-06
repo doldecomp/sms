@@ -206,14 +206,14 @@ void MSoundSE::construct()
 	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	MSRandPlay::construct(MSD_SE_OBJ_BIRD_DOL_CHUN, 0x66, 0x181, JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-#ifdef GMSJ01
-	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 45, 173,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 45, 173,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 45,    173,   JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
-#else
+#ifdef VERSION_GMSJ01
 	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 0x56, 0xf3,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 8,    0xd,   JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+#else
+	MSRandPlay::construct(MSD_SE_OBJ_BIRD_BIA_1, 45, 173,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_DAY_A1, 45, 173,  JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
+	MSRandPlay::construct(MSD_SE_OBJ_MONTE_NIGHT_A1, 45,    173,   JALCalc::cEqualCSlope, JALCalc::cPlusPSlope);
 #endif
 	// clang-format on
 
