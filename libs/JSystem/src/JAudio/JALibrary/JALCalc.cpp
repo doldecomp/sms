@@ -32,7 +32,7 @@ f32 getParamByExp(f32 x, f32 xStart, f32 xEnd, f32 y, f32 yStart, f32 yEnd,
 		param = linearTransform(x, xStart, xEnd, y, 0.0f, true);
 		param = expf(param);
 		param = linearTransform(param, expf(y), 1.0f, yStart, yEnd, true);
-	} else {
+	} else { // CS_LINEAR
 		param = linearTransform(x, xStart, xEnd, yStart, yEnd, false);
 	}
 
