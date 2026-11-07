@@ -7,6 +7,10 @@
 #include <Enemy/BossManta.hpp>
 #include <Enemy/BossPakkun.hpp>
 #include <Enemy/Hinokuri2.hpp>
+#include <Enemy/Koopa.hpp>
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
+#include <Enemy/LimitKoopa.hpp>
+#endif
 #include <Enemy/LimitKoopaJr.hpp>
 #include <Enemy/SleepBossHanachan.hpp>
 #include <Enemy/TinKoopa.hpp>
@@ -46,13 +50,11 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "BEelTearsManager") == 0)
 		return new TBEelTearsManager("めおとウナギ涙マネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "Koopa" ) == 0 )
-	//     return new TKoopa("クッパ");
+	if (strcmp(name, "Koopa") == 0)
+		return new TKoopa("クッパ");
 
-	// TODO:
-	// if ( strcmp( name, "KoopaManager" ) == 0 )
-	//     return new TKoopaManager("クッパマネージャー");
+	if (strcmp(name, "KoopaManager") == 0)
+		return new TKoopaManager("クッパマネージャー");
 
 	if (strcmp(name, "HinoKuri2") == 0)
 		return new THinokuri2;
@@ -101,13 +103,13 @@ JDrama::TNameRef* TMarNameRefGen::getNameRef_BossEnemy(const char* name) const
 	if (strcmp(name, "LimitKoopaJr") == 0)
 		return new TLimitKoopaJr;
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopaManager" ) == 0 )
-	//     return new TLimitKoopaManager("クッパマネージャー");
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
+	if (strcmp(name, "LimitKoopaManager") == 0)
+		return new TLimitKoopaManager("クッパマネージャー");
 
-	// TODO:
-	// if ( strcmp( name, "LimitKoopa" ) == 0 )
-	//     return new TLimitKoopa("クッパ");
+	if (strcmp(name, "LimitKoopa") == 0)
+		return new TLimitKoopa("クッパ");
+#endif
 
 	if (strcmp(name, "BathtubKillerManager") == 0)
 		return new TBathtubKillerManager;
