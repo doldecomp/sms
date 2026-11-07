@@ -321,7 +321,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaGetDown, TLiveActor)
 		break;
 	case KOOPA_ANM_DOWN_LOOP: {
 		TBathtub* bathtub = (TBathtub*)JDrama::TNameRefGen::search("バスタブ");
-		f32 downStep = koopa->getParam()->getDownStep();
+		f32 downStep      = koopa->getParam()->getDownStep();
 		if (!(spine->getTime() * (bathtub->getNumGripsDead() + 2) < downStep)
 		    && koopa->endsAnm())
 			koopa->changeAnm(KOOPA_ANM_GETUP, 0,
