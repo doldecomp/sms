@@ -2,6 +2,7 @@
 #define JASDSPINTERFACE_HPP
 
 #include <dolphin/types.h>
+#include <stdint.h>
 
 namespace JASystem {
 
@@ -33,7 +34,7 @@ namespace DSPInterface {
 		void setFIR8FilterParam(s16*);
 		void setFilterMode(u16);
 		void setDistFilter(s16);
-		void setWaveInfo(Driver::Wave_*, u32);
+		void setWaveInfo(Driver::Wave_*, uintptr_t);
 		void setOscInfo(u32);
 		void setBusConnect(u8, u8);
 		void initAutoMixer();

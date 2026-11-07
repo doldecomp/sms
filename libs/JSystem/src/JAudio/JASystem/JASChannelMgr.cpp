@@ -8,14 +8,14 @@ namespace JASystem {
 
 void TChannelMgr::init()
 {
-	unk8  = 0;
-	unkC  = 0;
-	unk10 = 0;
-	unk14 = 0;
+	mFreeChannels    = nullptr;
+	mPlayingChannels = nullptr;
+	mReleaseChannels = nullptr;
+	mPendingChannels = nullptr;
 
-	unk4             = 0;
-	mManagedChannels = 0;
-	unk70            = TRUE;
+	mGlobalChannelBorrows = 0;
+	mManagedChannels      = 0;
+	mMaintainPoolSize     = TRUE;
 
 	mVolume = 1.0f;
 	mPitch  = 1.0f;
@@ -24,39 +24,39 @@ void TChannelMgr::init()
 	mDolby  = 0.0f;
 
 	for (int i = 0; i < 8; ++i)
-		unk2C[i] = 0;
+		mFirCoeffs[i] = 0;
 
-	unk2C[0] = 0x7FFF;
-	unk4C    = 0;
+	mFirCoeffs[0] = 0x7FFF;
+	mDistFilter   = 0;
 
 	for (int i = 0; i < 4; ++i)
-		unk3C[i] = 0;
+		mIirCoeffs[i] = 0;
 
 	for (int i = 0; i < 6; ++i)
-		unk5A[i] = 0;
+		mMixerDelaySamples[i] = 0;
 
-	unk60    = 0;
-	unk3C[0] = 0x7FFF;
-	unk61    = 0;
+	mMixerDelayMax = 0;
+	mIirCoeffs[0]  = 0x7FFF;
+	mFilterMode    = 0;
 
-	unk4E[0] = 0x150;
-	unk4E[1] = 0x210;
-	unk4E[2] = 0x352;
-	unk4E[3] = 0x412;
-	unk4E[4] = 0;
-	unk4E[5] = 0;
+	mMixConfig[0] = 0x150;
+	mMixConfig[1] = 0x210;
+	mMixConfig[2] = 0x352;
+	mMixConfig[3] = 0x412;
+	mMixConfig[4] = 0;
+	mMixConfig[5] = 0;
 
-	unk68 = 0x20103;
-	unk6C = 600;
+	mPriorityConfig = 0x20103;
+	mPriorityTime   = 600;
 
-	unk62[0] = 0xD;
-	unk62[1] = 0xD;
-	unk62[2] = 0xD;
+	mCalcTypes[0] = 0xD;
+	mCalcTypes[1] = 0xD;
+	mCalcTypes[2] = 0xD;
 }
 
 void TChannelMgr::stopAll()
 {
-	TChannel* channel = unkC;
+	TChannel* channel = mPlayingChannels;
 	while (channel) {
 		TChannel* r31 = channel->mNext;
 		channel->stop(0);
@@ -66,62 +66,63 @@ void TChannelMgr::stopAll()
 
 void TChannelMgr::stopAllRelease()
 {
-	for (TChannel* channel = unk10; channel; channel = channel->mNext)
-		for (u32 i = 0; i < 4; ++i)
-			channel->forceStopOsc(i);
+	for (TChannel* channel = mReleaseChannels; channel;
+	     channel           = channel->mNext)
+        for (u32 i = 0; i < 4; ++i)
+            channel->forceStopOsc(i);
 }
 
 BOOL TChannelMgr::checkGlobalRelease() { return mManagedChannels != 0; }
 
-void TChannelMgr::addListHead(TChannel* channel, u32 param)
+void TChannelMgr::addListHead(TChannel* channel, u32 list_type)
 {
 	TChannel** list;
-	switch (param) {
-	case 0:
-		list = &unk8;
+	switch (list_type) {
+	case CHAN_LIST_FREE:
+		list = &mFreeChannels;
 		break;
-	case 1:
-		list = &unkC;
+	case CHAN_LIST_PLAYING:
+		list = &mPlayingChannels;
 		break;
-	case 2:
-		list = &unk10;
+	case CHAN_LIST_RELEASE:
+		list = &mReleaseChannels;
 		break;
-	case 3:
-		list = &unk14;
+	case CHAN_LIST_PENDING:
+		list = &mPendingChannels;
 		break;
 	default:
 		list = nullptr;
 		break;
 	}
-	TChannel* prevHead = *list;
-	channel->unk8      = list;
-	*list              = channel;
-	channel->mNext     = prevHead;
+	TChannel* prevHead   = *list;
+	channel->mOwningList = list;
+	*list                = channel;
+	channel->mNext       = prevHead;
 }
 
-void TChannelMgr::addListTail(TChannel* channel, u32 param)
+void TChannelMgr::addListTail(TChannel* channel, u32 list_type)
 {
 	TChannel** list;
-	switch (param) {
-	case 0:
-		list = &unk8;
+	switch (list_type) {
+	case CHAN_LIST_FREE:
+		list = &mFreeChannels;
 		break;
-	case 1:
-		list = &unkC;
+	case CHAN_LIST_PLAYING:
+		list = &mPlayingChannels;
 		break;
-	case 2:
-		list = &unk10;
+	case CHAN_LIST_RELEASE:
+		list = &mReleaseChannels;
 		break;
-	case 3:
-		list = &unk14;
+	case CHAN_LIST_PENDING:
+		list = &mPendingChannels;
 		break;
 	default:
 		list = nullptr;
 		break;
 	}
 
-	TChannel* head = *list;
-	channel->unk8  = list;
+	TChannel* head       = *list;
+	channel->mOwningList = list;
 
 	if (!head) {
 		*list          = channel;
@@ -139,21 +140,21 @@ void TChannelMgr::addListTail(TChannel* channel, u32 param)
 	}
 }
 
-TChannel* TChannelMgr::getListHead(u32 param)
+TChannel* TChannelMgr::getListHead(u32 list_type)
 {
 	TChannel** list;
-	switch (param) {
-	case 0:
-		list = &unk8;
+	switch (list_type) {
+	case CHAN_LIST_FREE:
+		list = &mFreeChannels;
 		break;
-	case 1:
-		list = &unkC;
+	case CHAN_LIST_PLAYING:
+		list = &mPlayingChannels;
 		break;
-	case 2:
-		list = &unk10;
+	case CHAN_LIST_RELEASE:
+		list = &mReleaseChannels;
 		break;
-	case 3:
-		list = &unk14;
+	case CHAN_LIST_PENDING:
+		list = &mPendingChannels;
 		break;
 	default:
 		list = nullptr;
@@ -164,25 +165,25 @@ TChannel* TChannelMgr::getListHead(u32 param)
 	if (!head)
 		return nullptr;
 
-	*list      = head->mNext;
-	head->unk8 = nullptr;
+	*list             = head->mNext;
+	head->mOwningList = nullptr;
 	return head;
 }
 
-u32 TChannelMgr::countList(u32 param) const { return 0; }
+u32 TChannelMgr::countList(u32) const { return 0; }
 
 int TChannelMgr::cutList(TChannel* channel)
 {
 	int i = 0;
 
-	TChannel* head = *channel->unk8;
+	TChannel* head = *channel->mOwningList;
 
 	if (!head)
 		return -1;
 
 	if (head == channel) {
-		*channel->unk8 = channel->mNext;
-		channel->unk8  = nullptr;
+		*channel->mOwningList = channel->mNext;
+		channel->mOwningList  = nullptr;
 		return 0;
 	}
 
@@ -195,102 +196,103 @@ int TChannelMgr::cutList(TChannel* channel)
 		head = head->mNext;
 	}
 
-	head->mNext   = channel->mNext;
-	channel->unk8 = nullptr;
+	head->mNext          = channel->mNext;
+	channel->mOwningList = nullptr;
 	return i;
 }
 
-void TChannelMgr::initAllocChannel(u32 param)
+void TChannelMgr::initAllocChannel(u32 capacity)
 {
 	if (checkGlobalRelease() != FALSE)
 		ChGlobal::releaseAll(this);
 
 	init();
 
-	ChGlobal::alloc(this, param);
-	unk70 = !param ? FALSE : TRUE;
+	ChGlobal::alloc(this, capacity);
+	mMaintainPoolSize = capacity == 0 ? FALSE : TRUE;
 }
 
-TChannel* TChannelMgr::getLogicalChannel(u32 param)
+TChannel* TChannelMgr::getLogicalChannel(u32 polyphony_key)
 {
 	BOOL bVar1 = false;
-	if (!checkLimitStart(param)) {
-		if ((param >> 0x18) & 0x10)
+	if (!checkLimitStart(polyphony_key)) {
+		if ((polyphony_key >> 0x18) & 0x10)
 			return nullptr;
 		bVar1 = true;
 	}
 
-	TChannel* head = getListHead(0);
-	if (head == nullptr) {
+	TChannel* result = getListHead(CHAN_LIST_FREE);
+	if (result == nullptr) {
 		if (!ChGlobal::alloc(this, 1))
 			return nullptr;
 
-		++unk4;
-		head = getListHead(0);
-		if (unk70 == TRUE) {
-			TChannel* chan = getListHead(2);
+		++mGlobalChannelBorrows;
+		result = getListHead(CHAN_LIST_FREE);
+
+		if (mMaintainPoolSize == TRUE) {
+			TChannel* chan = getListHead(CHAN_LIST_RELEASE);
 			if (chan == nullptr)
-				chan = getListHead(1);
+				chan = getListHead(CHAN_LIST_PLAYING);
 			if (chan != nullptr) {
 				chan->forceStopOsc(0);
-				addListHead(chan, 3);
-				TDSPChannel::forceStop(chan->unk20);
+				addListHead(chan, CHAN_LIST_PENDING);
+				TDSPChannel::forceStop(chan->mDspChannel);
 			}
 		}
 	}
 
-	head->init();
+	result->init();
 	if (bVar1) {
-		head->unk2 = 1;
-		head->unk3 = 1;
+		result->mPauseFlag        = 1;
+		result->mDspUpdatePending = 1;
 	}
 
-	head->unkC8 = param;
-	head->unk18 = 0;
-	head->setPanPower(1.0f, 1.0f, 1.0f, 1.0f);
-	return head;
+	result->mPolyphonyKey = polyphony_key;
+	result->unk18         = 0;
+	result->setPanPower(1.0f, 1.0f, 1.0f, 1.0f);
+	return result;
 }
 
 int TChannelMgr::receiveAllChannels(TChannelMgr* other)
 {
 	TChannel* stolen;
 	for (;;) {
-		stolen = other->getListHead(0);
+		stolen = other->getListHead(CHAN_LIST_FREE);
 		if (!stolen)
 			break;
-		addListHead(stolen, 0);
-		stolen->unk4 = this;
+		addListHead(stolen, CHAN_LIST_FREE);
+		stolen->mManager = this;
 	}
 	for (;;) {
-		stolen = other->getListHead(1);
+		stolen = other->getListHead(CHAN_LIST_PLAYING);
 		if (!stolen)
 			break;
-		addListHead(stolen, 1);
-		stolen->unk4  = this;
-		stolen->unkD0 = 1;
+		addListHead(stolen, CHAN_LIST_PLAYING);
+		stolen->mManager           = this;
+		stolen->mPreserveDspConfig = TRUE;
 	}
 	for (;;) {
-		stolen = other->getListHead(2);
+		stolen = other->getListHead(CHAN_LIST_RELEASE);
 		if (!stolen)
 			break;
-		addListHead(stolen, 2);
-		stolen->unk4  = this;
-		stolen->unkD0 = 1;
+		addListHead(stolen, CHAN_LIST_RELEASE);
+		stolen->mManager           = this;
+		stolen->mPreserveDspConfig = TRUE;
 	}
 	for (;;) {
-		stolen = other->getListHead(3);
+		stolen = other->getListHead(CHAN_LIST_PENDING);
 		if (!stolen)
 			break;
 		if (Driver::DSPQueue::deleteQueue(stolen))
-			addListHead(stolen, 0);
+			addListHead(stolen, CHAN_LIST_FREE);
 		else
-			addListHead(stolen, 3);
-		stolen->unk4 = this;
+			addListHead(stolen, CHAN_LIST_PENDING);
+		stolen->mManager = this;
 	}
 	mManagedChannels += other->mManagedChannels;
 	other->mManagedChannels = 0;
-	unk4 += other->unk4;
-	other->unk4 = 0;
+	mGlobalChannelBorrows += other->mGlobalChannelBorrows;
+	other->mGlobalChannelBorrows = 0;
 
 	return 0;
 }
@@ -301,30 +303,30 @@ namespace Driver {
 } // namespace Driver
 
 // BUG: oooops, all infinite loops!
-BOOL TChannelMgr::checkLimitStart(u32 param)
+BOOL TChannelMgr::checkLimitStart(u32 polyphony_key)
 {
-	u32 thing = Driver::polys_table[(param >> 0x18) & 0xF];
+	u32 thing = Driver::polys_table[(polyphony_key >> 0x18) & 0xF];
 	if (!thing)
 		return true;
 
 	int i = 0;
 
-	TChannel* head = unk10;
-	if (((param >> 0x18) & 0x20)) {
+	TChannel* head = mReleaseChannels;
+	if (((polyphony_key >> 0x18) & 0x20)) {
 		for (;;) {
 			if (!head)
 				break;
 
-			if (head->unkC8 == param && head->unk2 == 0)
+			if (head->mPolyphonyKey == polyphony_key && head->mPauseFlag == 0)
 				++i;
 		}
 
-		head = unkC;
+		head = mPlayingChannels;
 		for (;;) {
 			if (!head)
 				break;
 
-			if (head->unkC8 == param && head->unk2 == 0)
+			if (head->mPolyphonyKey == polyphony_key && head->mPauseFlag == 0)
 				++i;
 		}
 
@@ -341,7 +343,7 @@ BOOL TChannelMgr::checkLimitStart(u32 param)
 			if (!head)
 				break;
 
-			if (head->unkC8 == param && head->unk2 == 0) {
+			if (head->mPolyphonyKey == polyphony_key && head->mPauseFlag == 0) {
 				if (found == nullptr)
 					found = head;
 				if (i == thing) {
@@ -352,16 +354,16 @@ BOOL TChannelMgr::checkLimitStart(u32 param)
 			}
 		}
 
-		head = unkC;
+		head = mPlayingChannels;
 		for (;;) {
 			if (!head)
 				break;
 
-			if (head->unkC8 == param && head->unk2 == 0) {
+			if (head->mPolyphonyKey == polyphony_key && head->mPauseFlag == 0) {
 				if (found == nullptr)
 					found = head;
 				if (i == thing) {
-					if ((param >> 0x18) & 0x10)
+					if ((polyphony_key >> 0x18) & 0x10)
 						found->forceStopLogicalChannel();
 					else
 						head->setPauseFlagReq(1);
@@ -375,21 +377,21 @@ BOOL TChannelMgr::checkLimitStart(u32 param)
 	}
 }
 
-void TChannelMgr::checkLimitStop(TChannel* channel, u32 param)
+void TChannelMgr::checkLimitStop(TChannel* channel, u32 polyphony_key)
 {
-	TChannel* chan = channel->unk4->unkC;
-	u32 thing      = Driver::polys_table[(param >> 0x18) & 0xF];
+	TChannel* chan = channel->mManager->mPlayingChannels;
+	u32 thing      = Driver::polys_table[(polyphony_key >> 0x18) & 0xF];
 
-	if (param == 0)
+	if (polyphony_key == 0)
 		return;
 	if (thing == 0)
 		return;
 
-	if ((param >> 0x18) & 0x20) {
+	if ((polyphony_key >> 0x18) & 0x20) {
 		for (;;) {
 			if (!chan)
 				break;
-			if (chan->unkC8 == param && chan->unk2 == 1) {
+			if (chan->mPolyphonyKey == polyphony_key && chan->mPauseFlag == 1) {
 				chan->setPauseFlagReq(0);
 				return;
 			}
@@ -400,7 +402,7 @@ void TChannelMgr::checkLimitStop(TChannel* channel, u32 param)
 		for (;;) {
 			if (!chan)
 				break;
-			if (chan->unkC8 == param && chan->unk2 == 1)
+			if (chan->mPolyphonyKey == polyphony_key && chan->mPauseFlag == 1)
 				found = chan;
 			chan = chan->mNext;
 		}

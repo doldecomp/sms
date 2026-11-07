@@ -246,7 +246,7 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 				    JASystem::TTrack::UPDATE_Dolby);
 			}
 		}
-		param_1->mChannelUpdater.unk4E[0] = 0xffff;
+		param_1->mChannelUpdater.mMixConfig[0] = 0xffff;
 		return uVar3;
 	}
 

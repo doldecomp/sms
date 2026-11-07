@@ -35,36 +35,36 @@ TBasicInst::TKeymap* TBasicInst::searchKeymap(int key) const
 	return nullptr;
 }
 
-bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
+bool TBasicInst::getParam(int key, int velocity, TInstParam* out_param) const
 {
-	param->mSourceType = 0;
-	param->mFixedPitch = 0;
-	param->mOscData    = mOscillators;
-	param->mOscCount   = mOscillatorCount;
-	param->mVolume *= mVolume;
-	param->mPitch *= mPitch;
+	out_param->mSourceType = 0;
+	out_param->mFixedPitch = 0;
+	out_param->mOscData    = mOscillators;
+	out_param->mOscCount   = mOscillatorCount;
+	out_param->mVolume *= mVolume;
+	out_param->mPitch *= mPitch;
 
 	for (int i = 0; i < mEffectCount; i++) {
 		TInstEffect* effect = mEffects[i];
 		if (!effect)
 			continue;
 
-		f32 y = effect->getY(key, velo);
+		f32 y = effect->getY(key, velocity);
 		switch (effect->mTarget) {
 		case 0:
-			param->mEffectVolume *= y;
+			out_param->mEffectVolume *= y;
 			break;
 		case 1:
-			param->mEffectPitch *= y;
+			out_param->mEffectPitch *= y;
 			break;
 		case 2:
-			param->mEffectPan = y;
+			out_param->mEffectPan = y;
 			break;
 		case 3:
-			param->mEffectFxmix = y;
+			out_param->mEffectFxmix = y;
 			break;
 		case 4:
-			param->mEffectDolby = y;
+			out_param->mEffectDolby = y;
 			break;
 		}
 	}
@@ -72,8 +72,8 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 	const TKeymap* keymap = nullptr;
 	for (int i = 0; i < mKeyRegionCount; i++) {
 		if (key <= mKeyRegions[i].mHighKey) {
-			keymap       = &mKeyRegions[i];
-			param->unk3C = i;
+			keymap                     = &mKeyRegions[i];
+			out_param->mKeyRegionIndex = i;
 			break;
 		}
 	}
@@ -83,10 +83,10 @@ bool TBasicInst::getParam(int key, int velo, TInstParam* param) const
 
 	for (int i = 0; i < keymap->getVeloRegionCount(); i++) {
 		const TVeloRegion* region = keymap->getVeloRegion(i);
-		if (velo <= region->unk0) {
-			param->mVolume *= region->unk8;
-			param->mPitch *= region->unkC;
-			param->mWaveId = region->unk4;
+		if (velocity <= region->unk0) {
+			out_param->mVolume *= region->unk8;
+			out_param->mPitch *= region->unkC;
+			out_param->mWaveId = region->unk4;
 			return true;
 		}
 	}

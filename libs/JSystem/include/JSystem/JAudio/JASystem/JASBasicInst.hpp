@@ -15,7 +15,7 @@ public:
 	TBasicInst();
 	virtual ~TBasicInst();
 
-	virtual bool getParam(int, int, TInstParam*) const;
+	virtual bool getParam(int key, int velocity, TInstParam* out_param) const;
 	virtual int getType() const { return 'BSIC'; }
 	virtual int getKeymapIndex(int) const;
 

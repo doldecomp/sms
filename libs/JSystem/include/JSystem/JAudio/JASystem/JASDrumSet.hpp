@@ -45,7 +45,7 @@ public:
 
 	virtual ~TDrumSet() { }
 	virtual int getType() const { return 'PERC'; }
-	virtual bool getParam(int, int, TInstParam*) const;
+	virtual bool getParam(int key, int velocity, TInstParam* out_param) const;
 
 	TPerc* getPerc(int);
 	const TPerc* getPerc(int) const;

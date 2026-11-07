@@ -37,8 +37,8 @@ void ChGlobal::init()
 			CHANNEL[i].setOscillator(j, &OSCILLATOR[i * 4 + j]);
 
 		CHANNEL[i].init();
-		mgr->addListHead(&CHANNEL[i], 0);
-		CHANNEL[i].unk4 = mgr;
+		mgr->addListHead(&CHANNEL[i], TChannelMgr::CHAN_LIST_FREE);
+		CHANNEL[i].mManager = mgr;
 	}
 	mgr->mManagedChannels = 256;
 }
@@ -47,12 +47,13 @@ u32 ChGlobal::alloc(TChannelMgr* mgr, u32 count)
 {
 	int i;
 	for (i = 0; i < count; i++) {
-		TChannel* channel = GLOBAL_CHANNEL->getListHead(0);
-		if (!channel) {
+		TChannel* channel
+		    = GLOBAL_CHANNEL->getListHead(TChannelMgr::CHAN_LIST_FREE);
+		if (!channel)
 			break;
-		}
-		mgr->addListHead(channel, 0);
-		channel->unk4 = mgr;
+
+		mgr->addListHead(channel, TChannelMgr::CHAN_LIST_FREE);
+		channel->mManager = mgr;
 		channel->init();
 	}
 	mgr->mManagedChannels += i;
@@ -62,10 +63,10 @@ u32 ChGlobal::alloc(TChannelMgr* mgr, u32 count)
 
 int ChGlobal::release(TChannel* channel)
 {
-	GLOBAL_CHANNEL->addListHead(channel, 0);
-	channel->unk4->mManagedChannels--;
+	GLOBAL_CHANNEL->addListHead(channel, TChannelMgr::CHAN_LIST_FREE);
+	channel->mManager->mManagedChannels--;
 	GLOBAL_CHANNEL->mManagedChannels++;
-	channel->unk4 = GLOBAL_CHANNEL;
+	channel->mManager = GLOBAL_CHANNEL;
 	return 0;
 }
 
@@ -73,42 +74,43 @@ int ChGlobal::releaseAll(TChannelMgr* mgr)
 {
 	TChannel* channel;
 	while (true) {
-		channel = mgr->getListHead(0);
+		channel = mgr->getListHead(TChannelMgr::CHAN_LIST_FREE);
 		if (!channel)
 			break;
 
-		GLOBAL_CHANNEL->addListHead(channel, 0);
-		channel->unk4 = GLOBAL_CHANNEL;
+		GLOBAL_CHANNEL->addListHead(channel, TChannelMgr::CHAN_LIST_FREE);
+		channel->mManager = GLOBAL_CHANNEL;
 	};
 	while (true) {
-		channel = mgr->getListHead(1);
+		channel = mgr->getListHead(TChannelMgr::CHAN_LIST_PLAYING);
 		if (!channel)
 			break;
 
-		GLOBAL_CHANNEL->addListHead(channel, 1);
-		channel->unk4  = GLOBAL_CHANNEL;
-		channel->unkD0 = 1;
+		GLOBAL_CHANNEL->addListHead(channel, TChannelMgr::CHAN_LIST_PLAYING);
+		channel->mManager           = GLOBAL_CHANNEL;
+		channel->mPreserveDspConfig = TRUE;
 	}
 	while (true) {
-		channel = mgr->getListHead(2);
+		channel = mgr->getListHead(TChannelMgr::CHAN_LIST_RELEASE);
 		if (!channel)
 			break;
 
-		GLOBAL_CHANNEL->addListHead(channel, 2);
-		channel->unk4  = GLOBAL_CHANNEL;
-		channel->unkD0 = 1;
+		GLOBAL_CHANNEL->addListHead(channel, TChannelMgr::CHAN_LIST_RELEASE);
+		channel->mManager           = GLOBAL_CHANNEL;
+		channel->mPreserveDspConfig = TRUE;
 	}
 	while (true) {
-		channel = mgr->getListHead(3);
+		channel = mgr->getListHead(TChannelMgr::CHAN_LIST_PENDING);
 		if (!channel)
 			break;
 
 		if (Driver::DSPQueue::deleteQueue(channel))
-			GLOBAL_CHANNEL->addListHead(channel, 0);
+			GLOBAL_CHANNEL->addListHead(channel, TChannelMgr::CHAN_LIST_FREE);
 		else
-			GLOBAL_CHANNEL->addListHead(channel, 3);
+			GLOBAL_CHANNEL->addListHead(channel,
+			                            TChannelMgr::CHAN_LIST_PENDING);
 
-		channel->unk4 = GLOBAL_CHANNEL;
+		channel->mManager = GLOBAL_CHANNEL;
 	}
 	GLOBAL_CHANNEL->mManagedChannels += mgr->mManagedChannels;
 	mgr->mManagedChannels = 0;

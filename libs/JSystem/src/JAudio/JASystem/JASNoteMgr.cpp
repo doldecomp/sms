@@ -11,8 +11,8 @@ void TTrack::TNoteMgr::init()
 	mLastNote      = 0;
 	mBeforeTieMode = 0;
 	for (int i = 0; i < 8; i++) {
-		unk0[i]  = nullptr;
-		unk20[i] = 0;
+		mVoices[i]           = nullptr;
+		mVoiceGenerations[i] = 0;
 	}
 }
 
@@ -24,17 +24,17 @@ void TTrack::TNoteMgr::endProcess()
 	if (mConnectCase != 0)
 		return;
 
-	unk0[0] = nullptr;
+	mVoices[0] = nullptr;
 }
 
-TChannel* TTrack::TNoteMgr::getChannel(int index)
+TChannel* TTrack::TNoteMgr::getChannel(int voice_slot)
 {
-	TChannel* channel = unk0[index];
+	TChannel* channel = mVoices[voice_slot];
 	if (!channel)
 		return nullptr;
 
-	if (unk20[index] != channel->unkC6) {
-		unk0[index] = nullptr;
+	if (mVoiceGenerations[voice_slot] != channel->mGeneration) {
+		mVoices[voice_slot] = nullptr;
 		return nullptr;
 	}
 	return channel;

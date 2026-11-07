@@ -16,24 +16,24 @@ struct TVeloRegion {
 struct TInstParam {
 	TInstParam()
 	{
-		mSourceType   = 0;
-		mWaveId       = 0;
-		mOscData      = nullptr;
-		mOscCount     = 0;
-		mVolume       = 1.0f;
-		mPitch        = 1.0f;
-		mEffectVolume = 1.0f;
-		mEffectPitch  = 1.0f;
-		mPan          = 0.5f;
-		mFxmix        = 0.0f;
-		mDolby        = 0.0f;
-		mEffectPan    = 0.5f;
-		mEffectFxmix  = 0.0f;
-		mEffectDolby  = 0.0f;
-		mFixedPitch   = 0;
-		mRelease      = 0;
-		unk3C         = 0;
-		unk40         = 0;
+		mSourceType     = 0;
+		mWaveId         = 0;
+		mOscData        = nullptr;
+		mOscCount       = 0;
+		mVolume         = 1.0f;
+		mPitch          = 1.0f;
+		mEffectVolume   = 1.0f;
+		mEffectPitch    = 1.0f;
+		mPan            = 0.5f;
+		mFxmix          = 0.0f;
+		mDolby          = 0.0f;
+		mEffectPan      = 0.5f;
+		mEffectFxmix    = 0.0f;
+		mEffectDolby    = 0.0f;
+		mFixedPitch     = 0;
+		mRelease        = 0;
+		mKeyRegionIndex = 0;
+		mPolyphonyFlags = 0;
 	}
 
 	/* 0x00 */ u8 mSourceType;
@@ -52,16 +52,17 @@ struct TInstParam {
 	/* 0x34 */ f32 mEffectDolby;
 	/* 0x38 */ u8 mFixedPitch;
 	/* 0x3A */ u16 mRelease;
-	/* 0x3C */ int unk3C;
-	/* 0x40 */ int unk40;
+	/* 0x3C */ int mKeyRegionIndex;
+	/* 0x40 */ int mPolyphonyFlags;
 };
 
 class TInst {
 public:
 	virtual ~TInst() { }
 
-	virtual bool getParam(int, int, TInstParam*) const = 0;
-	virtual int getType() const                        = 0;
+	virtual bool getParam(int key, int velocity, TInstParam* out_param) const
+	    = 0;
+	virtual int getType() const = 0;
 };
 
 } // namespace JASystem

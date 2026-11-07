@@ -2,6 +2,7 @@
 #define JASCHANNEL_HPP
 
 #include <JSystem/JAudio/JASystem/JASOscillator.hpp>
+#include <stdint.h>
 
 namespace JASystem {
 
@@ -33,6 +34,13 @@ class TChannelMgr;
 
 class TChannel {
 public:
+	enum EventType {
+		EVENT_RELEASE           = 0,
+		EVENT_DSP_FINISHED      = 1,
+		EVENT_ENVELOPE_FINISHED = 2,
+		EVENT_CANCELLED         = 6,
+	};
+
 	enum CalcType {
 		// (TWW) NB: haven't seen others used, add from calc_sw_table in
 		// JASChannel.cpp if needed
@@ -43,13 +51,13 @@ public:
 	};
 
 	TChannel()
-	    : unk4(0)
-	    , unk8(0)
-	    , unk20(0)
-	    , mNext(0)
+	    : mManager(nullptr)
+	    , mOwningList(nullptr)
+	    , mDspChannel(nullptr)
+	    , mNext(nullptr)
 	{
 		for (int i = 0; i < 4; ++i)
-			unk38[i] = 0;
+			mOscillators[i] = nullptr;
 	}
 	~TChannel() { }
 
@@ -85,10 +93,10 @@ public:
 	BOOL playLogicalChannel();
 	void updateEffectorParam();
 
-	u8 getNoteOnPriority() const { return unkC0 & 0xff; }
-	u8 getReleasePriority() const { return (unkC0 >> 8) & 0xff; }
-	u8 getLifeTimePriority() const { return unkC0 >> 0x10; }
-	bool isDolbyMode() const { return unkA8[0].mWhole == 0xFFFF; }
+	u8 getNoteOnPriority() const { return mPriorityConfig & 0xff; }
+	u8 getReleasePriority() const { return (mPriorityConfig >> 8) & 0xff; }
+	u8 getLifeTimePriority() const { return mPriorityConfig >> 0x10; }
+	bool isDolbyMode() const { return mMixConfigs[0].mWhole == 0xFFFF; }
 
 	union MixConfig {
 		u16 mWhole;
@@ -100,47 +108,47 @@ public:
 	};
 
 public:
-	/* 0x0 */ u8 unk0;
-	/* 0x1 */ u8 unk1;
-	/* 0x2 */ u8 unk2;
-	/* 0x3 */ u8 unk3;
-	/* 0x4 */ TChannelMgr* unk4;
-	/* 0x8 */ TChannel** unk8;
+	/* 0x0 */ u8 mVelocity;
+	/* 0x1 */ u8 mKey;
+	/* 0x2 */ u8 mPauseFlag;
+	/* 0x3 */ u8 mDspUpdatePending;
+	/* 0x4 */ TChannelMgr* mManager;
+	/* 0x8 */ TChannel** mOwningList;
 	/* 0xC */ u8 mLogicalChanType;
 	/* 0x10 */ Driver::Wave_* mWaveData;
-	/* 0x14 */ u32 unk14;
+	/* 0x14 */ uintptr_t mSourceData;
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ u32 unk1C;
-	/* 0x20 */ TDSPChannel* unk20;
+	/* 0x20 */ TDSPChannel* mDspChannel;
 	/* 0x24 */ TChannel* mNext;
-	/* 0x28 */ BOOL (*unk28)(TChannel*, u32);
-	/* 0x2C */ u32 (*unk2C)(TChannel*, u32);
-	/* 0x30 */ s32 unk30;
-	/* 0x34 */ s32 unk34;
-	/* 0x38 */ TOscillator* unk38[4];
-	/* 0x48 */ f32 unk48;
-	/* 0x4C */ f32 unk4C;
-	/* 0x50 */ f32 unk50;
-	/* 0x54 */ f32 unk54;
-	/* 0x58 */ u8 unk58[3];
+	/* 0x28 */ BOOL (*mEventCallback)(TChannel*, u32);
+	/* 0x2C */ u32 (*mUpdateCallback)(TChannel*, u32);
+	/* 0x30 */ s32 mGateTime;
+	/* 0x34 */ s32 mGateTimeRemaining;
+	/* 0x38 */ TOscillator* mOscillators[4];
+	/* 0x48 */ f32 mBasePitch;
+	/* 0x4C */ f32 mInstrumentVolume;
+	/* 0x50 */ f32 mNotePitch;
+	/* 0x54 */ f32 mNoteVolume;
+	/* 0x58 */ u8 mCalcTypes[3];
 	/* 0x5C */ Driver::PanMatrix_ unk5C;
 	/* 0x68 */ Driver::PanMatrix_ unk68[3];
-	/* 0x8C */ f32 unk8C;
-	/* 0x90 */ f32 unk90;
-	/* 0x94 */ f32 unk94;
-	/* 0x98 */ u16 unk98;
-	/* 0x9A */ u16 unk9A;
-	/* 0x9C */ TChannelMgr* unk9C;
-	/* 0xA0 */ f32 unkA0;
-	/* 0xA0 */ f32 unkA4;
-	/* 0xA8 */ MixConfig unkA8[6];
-	/* 0xB4 */ s16 unkB4[6];
-	/* 0xC0 */ u32 unkC0;
-	/* 0xC4 */ u16 unkC4;
-	/* 0xC6 */ u16 unkC6;
-	/* 0xC8 */ u32 unkC8;
+	/* 0x8C */ f32 mOscPitch;
+	/* 0x90 */ f32 mOscVolume;
+	/* 0x94 */ f32 mPitchSweepTarget;
+	/* 0x98 */ u16 mDspPitch;
+	/* 0x9A */ u16 mPitchSweepRemaining;
+	/* 0x9C */ TChannelMgr* mInitialManager;
+	/* 0xA0 */ f32 mManagerPitch;
+	/* 0xA4 */ f32 mManagerVolume;
+	/* 0xA8 */ MixConfig mMixConfigs[6];
+	/* 0xB4 */ s16 mMixerVolumes[6];
+	/* 0xC0 */ u32 mPriorityConfig;
+	/* 0xC4 */ u16 mPriorityTime;
+	/* 0xC6 */ u16 mGeneration;
+	/* 0xC8 */ u32 mPolyphonyKey;
 	/* 0xCC */ char unkCC[0x4];
-	/* 0xD0 */ s32 unkD0;
+	/* 0xD0 */ BOOL mPreserveDspConfig;
 	/* 0xD4 */ char unkD4[0xC];
 };
 

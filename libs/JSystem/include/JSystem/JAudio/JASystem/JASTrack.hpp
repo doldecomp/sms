@@ -6,6 +6,7 @@
 #include <JSystem/JAudio/JASystem/JASSeqCtrl.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackInterrupt.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackPort.hpp>
+#include <JSystem/JUtility/JUTAssert.hpp>
 #include <dolphin/types.h>
 
 namespace JASystem {
@@ -23,11 +24,17 @@ public:
 	public:
 		void init();
 		void endProcess();
-		TChannel* getChannel(int);
+		TChannel* getChannel(int voice_slot);
 
-		void releaseChannel(int i) { unk0[i] = nullptr; }
+		void setChannel(int voice_slot, TChannel* channel)
+		{
+			JUT_ASSERT(voice_slot >= 0);
+			JUT_ASSERT(voice_slot < 8);
+			mVoices[voice_slot]           = channel;
+			mVoiceGenerations[voice_slot] = channel->mGeneration;
+		}
 
-		u16 getUnk20(u8 i) { return unk20[i]; }
+		void releaseChannel(int voice_slot) { mVoices[voice_slot] = nullptr; }
 
 		void setLastNote(u8 note) { mLastNote = note; }
 		u8 getLastNote() const { return mLastNote; }
@@ -41,8 +48,8 @@ public:
 		bool checkBeforeTieMode() const { return mBeforeTieMode; }
 
 	public:
-		/* 0x00 */ TChannel* unk0[8];
-		/* 0x20 */ u16 unk20[8];
+		/* 0x00 */ TChannel* mVoices[8];
+		/* 0x20 */ u16 mVoiceGenerations[8];
 		/* 0x30 */ int mBaseTime;
 		/* 0x34 */ u8 mConnectCase;
 		/* 0x35 */ u8 mLastNote;
@@ -122,6 +129,15 @@ public:
 		TIMED_Count, // 18
 	};
 
+	enum TrackMode {
+		TRACK_MODE_INHERIT            = 0,
+		TRACK_MODE_INDEPENDENT_PARAMS = 1 << 0,
+		TRACK_MODE_CLEAR_REGISTERS    = 1 << 1,
+		TRACK_MODE_INDEPENDENT
+		= TRACK_MODE_INDEPENDENT_PARAMS | TRACK_MODE_CLEAR_REGISTERS,
+		TRACK_MODE_PARENT_CHANNELS = 4,
+	};
+
 	enum ParamUpdateFlag {
 		UPDATE_Volume    = 1 << TIMED_Volume, // 0x00001
 		UPDATE_Pitch     = 1 << TIMED_Pitch,  // 0x00002
@@ -178,21 +194,22 @@ public:
 	void initTimed();
 	TTrack* openTrack(u8 param);
 	bool closeTrack();
-	int startTrack(TTrack* parent, u8 param1, u8 param2, u32 param3);
+	int startTrack(TTrack* parent, u8 child_index, u8 track_mode,
+	               u32 seq_offset);
 	bool startSeq();
 	bool stopSeq();
 	void stopSeqMain();
 	void allNoteOff();
 	int setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode);
-	void updateSeq(u32 param, bool flag);
-	void updateTrack(u32 param);
+	void updateSeq(u32 update_flags, bool recurse_now);
+	void updateTrack(u32 update_flags);
 	void updateTrackAll();
 	void updateTempo();
 	s8 mainProc();
-	int noteOn(u8 note, s32 velocity, s32 length, s32 delay);
-	bool noteOff(u8 note, u16 release);
-	int gateOn(u8 note, s32 velocity, s32 length, s32 delay);
-	bool checkNoteStop(s32 param);
+	int noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time);
+	bool noteOff(u8 voice_slot, u16 release);
+	int gateOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time);
+	bool checkNoteStop(s32 voice_slot);
 	void releaseChannelAll();
 	void flushAll();
 	void flushRelease();
@@ -242,7 +259,7 @@ public:
 	f32 getPan() const;
 	f32 getFxmix() const;
 	f32 getDolby() const;
-	u8 getNoteStatus(u8 note);
+	u8 getNoteStatus(u8 voice_slot);
 
 	static bool registerTrackCallback(u16 (*callback)(TTrack*, u16));
 	static TSeqParser sParser;
@@ -288,11 +305,11 @@ public:
 	/* 0x3A8 */ u32 mConnectName;
 	/* 0x3AC */ f32 mTickCounter;
 	/* 0x3B0 */ f32 mTickRate;
-	/* 0x3B4 */ u32 unk3B4;
+	/* 0x3B4 */ u32 mPendingUpdateFlags;
 	/* 0x3B8 */ u16 mTempo;
 	/* 0x3BA */ u16 mTimeBase;
-	/* 0x3BC */ u8 unk3BC;
-	/* 0x3BD */ u8 unk3BD;
+	/* 0x3BC */ u8 mTrackMode;
+	/* 0x3BD */ bool mOverrideParentTempo;
 	/* 0x3BE */ u8 mInnerMemory;
 	/* 0x3BF */ s8 mTranspose;
 	/* 0x3C0 */ s8 mTransposeTotal;

@@ -99,23 +99,23 @@ namespace BankMgr {
 	static TChannel* noteOnOsc(TChannelMgr* param_1, int param_2, u8 param_3,
 	                           u8 param_4, u32 param_5);
 
-	TChannel* noteOn(TChannelMgr* param_1, int param_2, int param_3, u8 param_4,
-	                 u8 param_5, u32 param_6)
+	TChannel* noteOn(TChannelMgr* chan_mgr, int bank_no, int prog_no, u8 key,
+	                 u8 velocity, u32 gate_time)
 	{
-		if (param_3 > 0xEF)
-			return noteOnOsc(param_1, param_3 - 0xF0, param_4, param_5,
-			                 param_6);
+		if (prog_no > 0xEF)
+			return noteOnOsc(chan_mgr, prog_no - 0xF0, key, velocity,
+			                 gate_time);
 
-		TBank* bank = getBank(param_2);
+		TBank* bank = getBank(bank_no);
 		if (!bank)
 			return nullptr;
 
-		TInst* inst = bank->getInst(param_3);
+		TInst* inst = bank->getInst(prog_no);
 		if (!inst)
 			return nullptr;
 
 		TInstParam instParam;
-		if (!inst->getParam(param_4, param_5, &instParam))
+		if (!inst->getParam(key, velocity, &instParam))
 			return nullptr;
 
 		TWaveBank* waveBank = bank->getWaveBank();
@@ -134,96 +134,99 @@ namespace BankMgr {
 		if (!wave)
 			return nullptr;
 
-		u32 chanKey = (instParam.unk40 << 0x18) | (param_2 << 8) | param_3;
-		switch (instParam.unk40 & 0xC0) {
+		u32 polyphonyKey
+		    = (instParam.mPolyphonyFlags << 0x18) | (bank_no << 8) | prog_no;
+		switch (instParam.mPolyphonyFlags & 0xC0) {
 		case 0xC0:
-			chanKey |= 0xffffff;
+			polyphonyKey |= 0xffffff;
 			break;
 		case 0x80:
-			chanKey |= 0xff;
+			polyphonyKey |= 0xff;
 			break;
 		case 0x40: {
-			u32 keymap = instParam.unk3C;
-			keymap <<= 0x10;
-			chanKey |= keymap;
+			u32 keyRegionIdx = instParam.mKeyRegionIndex;
+			keyRegionIdx <<= 0x10;
+			polyphonyKey |= keyRegionIdx;
 			break;
 		}
 		}
 
-		TChannel* chan = param_1->getLogicalChannel(chanKey);
-		if (!chan)
+		TChannel* result = chan_mgr->getLogicalChannel(polyphonyKey);
+		if (!result)
 			return nullptr;
 
-		chan->mWaveData        = (Driver::Wave_*)waveInfo;
-		chan->unk14            = (u32)wave;
-		chan->mLogicalChanType = instParam.mSourceType;
-		chan->unk0             = param_5;
-		chan->unk1             = param_4;
-		chan->unk48
+		result->mWaveData        = (Driver::Wave_*)waveInfo;
+		result->mSourceData      = (uintptr_t)wave;
+		result->mLogicalChanType = instParam.mSourceType;
+		result->mVelocity        = velocity;
+		result->mKey             = key;
+		result->mBasePitch
 		    = instParam.mPitch * (waveInfo->unk4 / Kernel::getDacRate());
-		chan->unk50 = chan->unk48 * instParam.mEffectPitch;
+		result->mNotePitch = result->mBasePitch * instParam.mEffectPitch;
 		if (instParam.mFixedPitch == 0) {
-			int var = (param_4 + 0x3C) - waveInfo->unk2;
+			int var = (key + 0x3C) - waveInfo->unk2;
 			if (var < 0)
 				var = 0;
 			if (var > 0x7f)
 				var = 0x7f;
-			chan->unk50 *= Driver::C5BASE_PITCHTABLE[var];
+			result->mNotePitch *= Driver::C5BASE_PITCHTABLE[var];
 		}
-		chan->unk4C = instParam.mVolume;
-		chan->unk54 = chan->unk0 / 127.0f;
-		chan->unk54 = chan->unk4C * (chan->unk54 * chan->unk54);
-		chan->unk54 *= instParam.mEffectVolume;
+		result->mInstrumentVolume = instParam.mVolume;
+		result->mNoteVolume       = result->mVelocity / 127.0f;
+		result->mNoteVolume       = result->mInstrumentVolume
+		                      * (result->mNoteVolume * result->mNoteVolume);
+		result->mNoteVolume *= instParam.mEffectVolume;
 
-		chan->unk68[0].mSound = instParam.mPan;
-		chan->unk68[1].mSound = instParam.mFxmix;
-		chan->unk68[2].mSound = instParam.mDolby;
+		result->unk68[0].mSound = instParam.mPan;
+		result->unk68[1].mSound = instParam.mFxmix;
+		result->unk68[2].mSound = instParam.mDolby;
 
 		for (int i = 0; i < 2; ++i)
-			chan->unk68[i].mSound = clamp01(chan->unk68[i].mSound);
+			result->unk68[i].mSound = clamp01(result->unk68[i].mSound);
 
-		chan->unk68[0].mEffect = instParam.mEffectPan;
-		chan->unk68[1].mEffect = instParam.mEffectFxmix;
-		chan->unk68[2].mEffect = instParam.mEffectDolby;
+		result->unk68[0].mEffect = instParam.mEffectPan;
+		result->unk68[1].mEffect = instParam.mEffectFxmix;
+		result->unk68[2].mEffect = instParam.mEffectDolby;
 
-		chan->unk8C = 1.0f;
-		chan->unk90 = 1.0f;
+		result->mOscPitch  = 1.0f;
+		result->mOscVolume = 1.0f;
 
 		for (u32 i = 0; i < instParam.mOscCount; ++i)
-			chan->setOscInit(i, instParam.mOscData[i]);
+			result->setOscInit(i, instParam.mOscData[i]);
 
-		chan->directReleaseOsc(0, instParam.mRelease);
-		if (!chan->play(param_6))
+		result->directReleaseOsc(0, instParam.mRelease);
+		if (!result->play(gate_time))
 			return nullptr;
 
-		return chan;
+		return result;
 	}
 
-	static TChannel* noteOnOsc(TChannelMgr* param_1, int param_2, u8 param_3,
-	                           u8 param_4, u32 param_5)
+	static TChannel* noteOnOsc(TChannelMgr* chan_mgr, int param_2, u8 key,
+	                           u8 velocity, u32 gate_time)
 	{
-		TChannel* channel = param_1->getLogicalChannel(0);
+		TChannel* channel = chan_mgr->getLogicalChannel(0);
 		if (!channel)
 			return nullptr;
 
-		channel->unk14            = param_2;
+		channel->mSourceData      = param_2;
 		channel->mLogicalChanType = 2;
-		channel->unk0             = param_4;
-		channel->unk1             = param_3;
-		channel->unk48            = 16736.016f / Kernel::getDacRate();
-		channel->unk50            = channel->unk48;
+		channel->mVelocity        = velocity;
+		channel->mKey             = key;
+		channel->mBasePitch       = 16736.016f / Kernel::getDacRate();
+		channel->mNotePitch       = channel->mBasePitch;
 
-		s32 var1 = param_3;
-		if (var1 < 0)
-			var1 = 0;
+		s32 pitchIdx = key;
+		if (pitchIdx < 0)
+			pitchIdx = 0;
 
-		if (var1 > 127)
-			var1 = 127;
+		if (pitchIdx > 127)
+			pitchIdx = 127;
 
-		channel->unk50 *= Driver::C5BASE_PITCHTABLE[var1];
-		channel->unk4C = 1.0f;
-		channel->unk54 = channel->unk0 / 127.0f;
-		channel->unk54 = channel->unk4C * (channel->unk54 * channel->unk54);
+		channel->mNotePitch *= Driver::C5BASE_PITCHTABLE[pitchIdx];
+		channel->mInstrumentVolume = 1.0f;
+		channel->mNoteVolume       = channel->mVelocity / 127.0f;
+		channel->mNoteVolume       = channel->mInstrumentVolume
+		                       * (channel->mNoteVolume * channel->mNoteVolume);
 
 		channel->unk68[0].mSound  = 0.5f;
 		channel->unk68[1].mSound  = 0.0f;
@@ -232,41 +235,42 @@ namespace BankMgr {
 		channel->unk68[1].mEffect = 0.0f;
 		channel->unk68[2].mEffect = 0.0f;
 
-		channel->unk8C = 1.0f;
-		channel->unk90 = 1.0f;
+		channel->mOscPitch  = 1.0f;
+		channel->mOscVolume = 1.0f;
 		channel->setOscInit(0, &OSC_ENV);
-		channel->unkC8 = 0;
+		channel->mPolyphonyKey = 0;
 
-		if (!channel->play(param_5))
+		if (!channel->play(gate_time))
 			return nullptr;
 
 		return channel;
 	}
 
-	void gateOn(TChannel* channel, u8 param_2, u8 param_3, u32 param_4)
+	void gateOn(TChannel* channel, u8 key, u8 velocity, u32 gate_time)
 	{
-		if (channel->unk30 != -1)
+		if (channel->mGateTime != -1)
 			return;
 
-		channel->unk30 = param_4;
-		channel->unk34 = channel->unk30;
+		channel->mGateTime          = gate_time;
+		channel->mGateTimeRemaining = channel->mGateTime;
 		s32 var;
 		if (channel->mLogicalChanType == 2)
-			var = param_2;
+			var = key;
 		else
-			var = (param_2 + 0x3C) - channel->mWaveData->mKey;
+			var = (key + 0x3C) - channel->mWaveData->mKey;
 
 		if (var < 0)
 			var = 0;
 		if (var > 0x7F)
 			var = 0x7F;
 
-		f32 pitch      = Driver::C5BASE_PITCHTABLE[var];
-		channel->unk0  = param_3;
-		channel->unk1  = param_2;
-		channel->unk50 = channel->unk48 * pitch;
-		channel->unk54 = channel->unk0 / 127.0f;
-		channel->unk54 = channel->unk4C * (channel->unk54 * channel->unk54);
+		f32 pitch            = Driver::C5BASE_PITCHTABLE[var];
+		channel->mVelocity   = velocity;
+		channel->mKey        = key;
+		channel->mNotePitch  = channel->mBasePitch * pitch;
+		channel->mNoteVolume = channel->mVelocity / 127.0f;
+		channel->mNoteVolume = channel->mInstrumentVolume
+		                       * (channel->mNoteVolume * channel->mNoteVolume);
 	}
 
 	u32 getUsedHeapSize() { return BNKParser::getUsedHeapSize(); }

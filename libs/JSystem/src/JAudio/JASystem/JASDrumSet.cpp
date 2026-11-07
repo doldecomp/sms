@@ -4,7 +4,7 @@
 
 namespace JASystem {
 
-bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
+bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 {
 	if (key >= 128u)
 		return false;
@@ -35,7 +35,7 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 	for (int i = 0; i < perc->mEffectCount; i++) {
 		TInstEffect* effect = perc->mEffects[i];
 		if (effect) {
-			f32 y = effect->getY(key, param_2);
+			f32 y = effect->getY(key, velocity);
 			switch (effect->mTarget) {
 			case 0:
 				param_3->mEffectVolume *= y;
@@ -57,7 +57,7 @@ bool TDrumSet::getParam(int key, int param_2, TInstParam* param_3) const
 	}
 	for (int i = 0; i < perc->mVeloRegionCount; i++) {
 		TVeloRegion* region = &perc->mVeloRegions[i];
-		if (param_2 > region->unk0) {
+		if (velocity > region->unk0) {
 			continue;
 		}
 		param_3->mVolume *= region->unk8;

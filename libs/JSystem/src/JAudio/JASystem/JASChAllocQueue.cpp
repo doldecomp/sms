@@ -54,10 +54,11 @@ namespace Driver {
 				TDSPChannel* dspChan = TDSPChannel::alloc(0, (uintptr_t)chan);
 				if (!dspChan)
 					return;
-				chan->unk20 = dspChan;
+				chan->mDspChannel = dspChan;
 				chan->playLogicalChannel();
-				if (chan->unk4->cutList(chan) != -1) {
-					chan->unk4->addListTail(chan, 1);
+				if (chan->mManager->cutList(chan) != -1) {
+					chan->mManager->addListTail(chan,
+					                            TChannelMgr::CHAN_LIST_PLAYING);
 				}
 
 				++cur_top;
@@ -94,10 +95,10 @@ namespace Driver {
 			TChannel* chan = waitp[(cur_top + i) % waitMax];
 			if (chan != nullptr) {
 				++waittime[(cur_top + i) % waitMax];
-				if (chan->unk30 > 0)
-					--chan->unk30;
-				if (chan->unk30 == 0) {
-					chan->unk28(chan, 6);
+				if (chan->mGateTime > 0)
+					--chan->mGateTime;
+				if (chan->mGateTime == 0) {
+					chan->mEventCallback(chan, TChannel::EVENT_CANCELLED);
 					waitp[(cur_top + i) % waitMax] = nullptr;
 				}
 			}

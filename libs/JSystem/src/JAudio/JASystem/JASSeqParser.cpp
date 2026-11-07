@@ -107,15 +107,17 @@ static const Arg_s Arglist[0x40] = {
 
 int TSeqParser::cmdOpenTrack(TTrack* track, u32* args)
 {
-	u32 param1 = args[0];
-	u32 param2 = args[1];
-	u8 b1      = param1 & 0xF;
-	u8 b2      = (param1 >> 6) & 3;
+	u32 param1   = args[0];
+	u32 param2   = args[1];
+	u8 b1        = param1 & 0xF;
+	u8 trackMode = (param1 >> 6)
+	               & (TTrack::TRACK_MODE_INDEPENDENT_PARAMS
+	                  | TTrack::TRACK_MODE_CLEAR_REGISTERS);
 	if (param1 & 0x20)
-		b2 = 4;
+		trackMode = TTrack::TRACK_MODE_PARENT_CHANNELS;
 
 	TTrack* child = track->openTrack(b1);
-	child->startTrack(track, b1, b2, param2);
+	child->startTrack(track, b1, trackMode, param2);
 	return 0;
 }
 
@@ -125,15 +127,17 @@ int TSeqParser::cmdOpenTrackBros(TTrack* track, u32* args)
 	if (!parent)
 		return 0;
 
-	u32 param1 = args[0];
-	u32 param2 = args[1];
-	u8 b1      = param1 & 0xF;
-	u8 b2      = (param1 >> 6) & 3;
+	u32 param1   = args[0];
+	u32 param2   = args[1];
+	u8 b1        = param1 & 0xF;
+	u8 trackMode = (param1 >> 6)
+	               & (TTrack::TRACK_MODE_INDEPENDENT_PARAMS
+	                  | TTrack::TRACK_MODE_CLEAR_REGISTERS);
 	if (param1 & 0x20)
-		b2 = 4;
+		trackMode = TTrack::TRACK_MODE_PARENT_CHANNELS;
 
 	TTrack* bros = parent->openTrack(b1);
-	bros->startTrack(parent, b1, b2, param2);
+	bros->startTrack(parent, b1, trackMode, param2);
 	return 0;
 }
 
@@ -368,7 +372,7 @@ int TSeqParser::cmdBusConnect(TTrack* track, u32* args)
 {
 	u32 i = args[0];
 	if (i < 6)
-		track->mChannelUpdater.unk4E[i] = args[1];
+		track->mChannelUpdater.mMixConfig[i] = args[1];
 	return 0;
 }
 
@@ -474,7 +478,7 @@ int TSeqParser::cmdTempo(TTrack* track, u32* args)
 	if (!track->getParent())
 		track->updateTempo();
 	else
-		track->unk3BD = 1;
+		track->mOverrideParentTempo = true;
 	return 0;
 }
 
@@ -543,10 +547,10 @@ int TSeqParser::cmdPanSwSet(TTrack* track, u32* args)
 	u8 parentCalcTypes[] = { 0, 1, 2, 0, 2, 0, 2 };
 
 	for (u8 i = 0; i < 3; i++) {
-		track->mPanSwitchExt[i]         = calcTypes[args[i] >> 5];
-		track->mPanSwitchParent[i]      = parentCalcTypes[args[i] >> 5];
-		track->mChannelUpdater.unk62[i] = args[i] & 0x1F;
-		track->unk3B4 |= TTrack::UPDATE_Pan;
+		track->mPanSwitchExt[i]              = calcTypes[args[i] >> 5];
+		track->mPanSwitchParent[i]           = parentCalcTypes[args[i] >> 5];
+		track->mChannelUpdater.mCalcTypes[i] = args[i] & 0x1F;
+		track->mPendingUpdateFlags |= TTrack::UPDATE_Pan;
 	}
 
 	return 0;

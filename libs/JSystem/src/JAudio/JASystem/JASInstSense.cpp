@@ -2,15 +2,15 @@
 
 namespace JASystem {
 
-f32 TInstSense::getY(int param1, int param2) const
+f32 TInstSense::getY(int key, int velocity) const
 {
 	int r6 = 0;
 	switch (unk8) {
 	case 1:
-		r6 = param2;
+		r6 = velocity;
 		break;
 	case 2:
-		r6 = param1;
+		r6 = key;
 		break;
 	}
 	f32 ret;

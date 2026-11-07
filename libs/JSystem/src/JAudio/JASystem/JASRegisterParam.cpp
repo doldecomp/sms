@@ -4,20 +4,20 @@ namespace JASystem {
 
 TRegisterParam::TRegisterParam()
 {
-	unk0[0]      = 0;
-	unk0[1]      = 0;
-	unk0[2]      = 0;
-	unk0[3]      = 0;
-	unk0[4]      = 0;
-	unk0[5]      = 0;
-	unkC         = 0;
-	unkE         = 0;
-	unk1A        = 0;
-	mPanPower[0] = 0;
-	mPanPower[1] = 0;
-	mPanPower[2] = 0;
-	mPanPower[3] = 0;
-	mPanPower[4] = 0;
+	mRegisters[0]  = 0;
+	mRegisters[1]  = 0;
+	mRegisters[2]  = 0;
+	mRegisters[3]  = 0;
+	mRegisters[4]  = 0;
+	mRegisters[5]  = 0;
+	mRegisters[6]  = 0;
+	mRegisters[7]  = 0;
+	mRegisters[13] = 0;
+	mRegisters[8]  = 0;
+	mRegisters[9]  = 0;
+	mRegisters[10] = 0;
+	mRegisters[11] = 0;
+	mRegisters[12] = 0;
 
 	for (int i = 0; i < 4; ++i)
 		unk20[i] = 0;
@@ -25,20 +25,20 @@ TRegisterParam::TRegisterParam()
 
 void TRegisterParam::init()
 {
-	unk0[0]      = 0;
-	unk0[1]      = 0;
-	unk0[2]      = 0;
-	unk0[3]      = 0;
-	unk0[4]      = 0;
-	unk0[5]      = 0;
-	unkC         = 0xf0;
-	unkE         = 0x0c;
-	unk1A        = 0x40;
-	mPanPower[0] = 0;
-	mPanPower[1] = 1;
-	mPanPower[2] = 1;
-	mPanPower[3] = 0x7fff;
-	mPanPower[4] = 0x4000;
+	mRegisters[0]  = 0;
+	mRegisters[1]  = 0;
+	mRegisters[2]  = 0;
+	mRegisters[3]  = 0;
+	mRegisters[4]  = 0;
+	mRegisters[5]  = 0;
+	mRegisters[6]  = 0xf0;
+	mRegisters[7]  = 0x0c;
+	mRegisters[13] = 0x40;
+	mRegisters[8]  = 0;
+	mRegisters[9]  = 1;
+	mRegisters[10] = 1;
+	mRegisters[11] = 0x7fff;
+	mRegisters[12] = 0x4000;
 
 	for (int i = 0; i < 4; ++i)
 		unk20[i] = 0;
@@ -46,18 +46,18 @@ void TRegisterParam::init()
 
 void TRegisterParam::inherit(const TRegisterParam& other)
 {
-	unk0[0] = 0;
-	unk0[1] = 0;
-	unk0[2] = 0;
-	unk0[3] = 0;
-	unk0[4] = 0;
-	unk0[5] = 0;
-	unkC    = other.unkC;
-	unkE    = other.unkE;
-	unk1A   = other.unk1A;
+	mRegisters[0]  = 0;
+	mRegisters[1]  = 0;
+	mRegisters[2]  = 0;
+	mRegisters[3]  = 0;
+	mRegisters[4]  = 0;
+	mRegisters[5]  = 0;
+	mRegisters[6]  = other.mRegisters[6];
+	mRegisters[7]  = other.mRegisters[7];
+	mRegisters[13] = other.mRegisters[13];
 
 	for (int i = 0; i < 5; ++i)
-		mPanPower[i] = other.mPanPower[i];
+		mRegisters[8 + i] = other.mRegisters[8 + i];
 
 	for (int i = 0; i < 4; ++i)
 		unk20[i] = 0;
@@ -65,8 +65,8 @@ void TRegisterParam::inherit(const TRegisterParam& other)
 
 void TRegisterParam::setBankNumber(u8 bankNum) { }
 
-u8 TRegisterParam::getBankNumber() const { return unkC >> 8; }
+u8 TRegisterParam::getBankNumber() const { return mRegisters[6] >> 8; }
 
-u8 TRegisterParam::getProgramNumber() const { return unkC; }
+u8 TRegisterParam::getProgramNumber() const { return mRegisters[6]; }
 
 } // namespace JASystem

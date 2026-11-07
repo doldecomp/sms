@@ -2,6 +2,7 @@
 #define JASREGISTERPARAM_HPP
 
 #include <dolphin/types.h>
+#include <JSystem/JUtility/JUTAssert.hpp>
 
 namespace JASystem {
 
@@ -15,27 +16,40 @@ public:
 	u8 getBankNumber() const;
 	u8 getProgramNumber() const;
 
-	void setPanPower(int i, u16 power) { mPanPower[i] = power; }
-	u16 getPanPower(int i) const { return mPanPower[i]; }
+	void setPanPower(int i, u16 power)
+	{
+		JUT_ASSERT(i >= 0);
+		JUT_ASSERT(i < 5);
+		mRegisters[8 + i] = power;
+	}
+	u16 getPanPower(int i) const { return mRegisters[8 + i]; }
 
-	u16 getPanPowerBank() const { return mPanPower[0]; }
-	u16 getPanPowerExt() const { return mPanPower[1]; }
-	u16 getPanPowerOsc() const { return mPanPower[2]; }
-	u16 getPanPowerParent() const { return mPanPower[3]; }
-	u16 getPanPowerTrack() const { return mPanPower[4]; }
+	u16 getPanPowerBank() const { return mRegisters[8]; }
+	u16 getPanPowerExt() const { return mRegisters[9]; }
+	u16 getPanPowerOsc() const { return mRegisters[10]; }
+	u16 getPanPowerParent() const { return mRegisters[11]; }
+	u16 getPanPowerTrack() const { return mRegisters[12]; }
+	u16 getBendSense() const { return mRegisters[7]; }
+	u16 getPriority() const { return mRegisters[13]; }
 
-	u16 getFlag() const { return unk0[3]; }
-	void setFlag(u16 flag) { unk0[3] = flag; }
+	u16 getFlag() const { return mRegisters[3]; }
+	void setFlag(u16 flag) { mRegisters[3] = flag; }
 
-	int getAddress(int i) const { return unk20[i]; }
-	void setAddress(int i, u32 value) { unk20[i] = value; }
+	int getAddress(int i) const
+	{
+		JUT_ASSERT(i >= 0);
+		JUT_ASSERT(i < 4);
+		return unk20[i];
+	}
+	void setAddress(int i, u32 value)
+	{
+		JUT_ASSERT(i >= 0);
+		JUT_ASSERT(i < 4);
+		unk20[i] = value;
+	}
 
 public:
-	/* 0x00 */ u16 unk0[6];
-	/* 0x0C */ u16 unkC;
-	/* 0x0E */ u16 unkE;
-	/* 0x10 */ u16 mPanPower[5];
-	/* 0x1A */ u16 unk1A;
+	/* 0x00 */ u16 mRegisters[14];
 	/* 0x1C */ int unk1C;
 	/* 0x20 */ int unk20[4];
 };
