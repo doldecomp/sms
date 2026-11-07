@@ -342,7 +342,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaGetDown, TLiveActor)
 	return false;
 }
 
-TKoopaParts::TKoopaParts(const char* name, u32 actor_type, TKoopa* koopa,
+TKoopaParts::TKoopaParts(const char* name, u32 actorType, TKoopa* koopa,
                          f32 radius)
     : THitActor(name)
     , unk68(koopa)
@@ -350,7 +350,8 @@ TKoopaParts::TKoopaParts(const char* name, u32 actor_type, TKoopa* koopa,
 	TIdxGroupObj* groupObj
 	    = (TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ");
 	groupObj->getChildren().push_back(this);
-	initHitActor(actor_type, 5, 0x88000000, radius, radius, radius, radius);
+	initHitActor(actorType, 5, HIT_CATEGORY_PLAYER | HIT_CATEGORY_BOSS, radius,
+	             radius, radius, radius);
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
@@ -445,10 +446,10 @@ BOOL TKoopaFlame::receiveMessage(THitActor*, u32 message)
 	}
 }
 
-void TKoopaFlame::attack_(THitActor* actor)
+void TKoopaFlame::attack_(THitActor* target)
 {
-	if (actor->receiveMessage(this, HIT_MESSAGE_BURN)
-	    && actor == gpMarioAddress) {
+	if (target->receiveMessage(this, HIT_MESSAGE_BURN)
+	    && target == gpMarioAddress) {
 		f32 jump = unk68->getParam()->getFlameJump();
 		JGeometry::TVec3<f32> dir(0.0f, 1.0f, 0.0f);
 		SMS_ThrowMario(dir, jump);
@@ -466,9 +467,9 @@ TKoopaHand::TKoopaHand(TKoopa* koopa)
 
 BOOL TKoopaHand::receiveMessage(THitActor*, u32) { return true; }
 
-void TKoopaHand::attack_(THitActor* actor)
+void TKoopaHand::attack_(THitActor* target)
 {
-	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	target->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 // Unused
@@ -496,10 +497,10 @@ BOOL TKoopaHead::receiveMessage(THitActor* actor, u32 message)
 	return true;
 }
 
-void TKoopaHead::attack_(THitActor* actor)
+void TKoopaHead::attack_(THitActor* target)
 {
-	if (actor->receiveMessage(this, HIT_MESSAGE_ATTACK)
-	    && actor == SMS_GetMarioLiveActor())
+	if (target->receiveMessage(this, HIT_MESSAGE_ATTACK)
+	    && target == SMS_GetMarioLiveActor())
 		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 60.0f);
 }
 
@@ -522,10 +523,10 @@ BOOL TKoopaBody::receiveMessage(THitActor* actor, u32 message)
 	return true;
 }
 
-void TKoopaBody::attack_(THitActor* actor)
+void TKoopaBody::attack_(THitActor* target)
 {
-	if (actor->receiveMessage(this, HIT_MESSAGE_ATTACK)
-	    && actor == SMS_GetMarioLiveActor())
+	if (target->receiveMessage(this, HIT_MESSAGE_ATTACK)
+	    && target == SMS_GetMarioLiveActor())
 		SMS_ThrowMario(JGeometry::TVec3<f32>(0.0f, 1.0f, 0.0f), 60.0f);
 }
 
@@ -664,14 +665,14 @@ void TKoopa::setUpHitActors()
 	unk198->set(mPosition, 800.0f, 2000.0f);
 }
 
-void TKoopa::changeAnm(int bck, int btp, f32 speed)
+void TKoopa::changeAnm(int bckIndex, int btpIndex, f32 speed)
 {
-	if (!getMActor()->checkCurBckFromIndex(bck)) {
-		getMActor()->setBckFromIndex(bck);
-		setAnmSound(getBas(bck));
+	if (!getMActor()->checkCurBckFromIndex(bckIndex)) {
+		getMActor()->setBckFromIndex(bckIndex);
+		setAnmSound(getBas(bckIndex));
 	}
-	if (btp != getMActor()->getCurAnmIdx(ANM_TYPE_BTP))
-		getMActor()->setBtpFromIndex(btp);
+	if (btpIndex != getMActor()->getCurAnmIdx(ANM_TYPE_BTP))
+		getMActor()->setBtpFromIndex(btpIndex);
 	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 	f32 rate           = speed * SMSGetAnmFrameRate();
 	rate               = 0.5f * rate;
@@ -1055,9 +1056,11 @@ void TKoopa::init(TLiveManager* manager)
 	initAnmSound();
 	reset();
 
-	// Important to loop through nothing...
 	JUTNameTab* names = getModel()->getModelData()->getJointName();
-	for (u16 i = 0; i < names->getNameNum(); ++i) { }
+	for (u16 i = 0; i < names->getNameNum(); ++i) {
+		// Important to loop through nothing...
+		// Debug code?
+	}
 
 	unk1A8                  = names->getIndex("ago");
 	unk1A0                  = names->getIndex("head");

@@ -123,8 +123,8 @@ private:
 
 class TLimitKoopaManager : public TEnemyManager {
 public:
-	TLimitKoopaManager(const char*);
-	virtual void load(JSUMemoryInputStream&);
+	TLimitKoopaManager(const char* name);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
@@ -139,11 +139,11 @@ public:
 class TLimitKoopa : public TSpineEnemy {
 public:
 	TLimitKoopa(const char*);
-	virtual void load(JSUMemoryInputStream&);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void bind();
 	virtual f32 getGravityY() const;
@@ -159,7 +159,7 @@ public:
 	void fall();
 	f32 getAnmFrame() const;
 	bool isTumbling() const;
-	void stagger(bool);
+	void stagger(bool force);
 	void getShowered();
 	void getDown();
 	f32 getNeckFocus() const;
@@ -168,8 +168,8 @@ public:
 	bool isBreathing() const;
 	bool endsAnm() const;
 	int getAnmIndex() const;
-	void changeBck(int, f32);
-	void setAnimationIndex(int);
+	void changeBck(int index, f32 speed);
+	void setAnimationIndex(int index);
 	void breathFlame();
 
 	// fabricated and fake
@@ -182,7 +182,7 @@ public:
 	}
 
 	void stopFlame();
-	void makeDirection(f32);
+	void makeDirection(f32 direction);
 	f32 calcTargetDirection();
 	bool finishedTurn();
 	void moveTurn();
@@ -218,40 +218,43 @@ public:
 
 class TLimitKoopaParts : public TLiveActor {
 public:
-	TLimitKoopaParts(const char*, u32, TLimitKoopa*, f32);
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual void attack_(THitActor*) = 0;
+	TLimitKoopaParts(const char* name, u32 actorType, TLimitKoopa* koopa,
+	                 f32 radius);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual void attack_(THitActor* target) = 0;
 	void remove();
-	void set(const JGeometry::TVec3<f32>&, f32, f32);
+	void set(const JGeometry::TVec3<f32>& pos, f32 radius, f32 height);
+
+public:
 	/* 0xF4 */ TLimitKoopa* unkF4;
 };
 
 class TLimitKoopaFlame : public TLimitKoopaParts {
 public:
-	TLimitKoopaFlame(TLimitKoopa*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	TLimitKoopaFlame(TLimitKoopa* koopa);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TLimitKoopaHand : public TLimitKoopaParts {
 public:
-	TLimitKoopaHand(TLimitKoopa*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	TLimitKoopaHand(TLimitKoopa* koopa);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TLimitKoopaHead : public TLimitKoopaParts {
 public:
-	TLimitKoopaHead(TLimitKoopa*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	TLimitKoopaHead(TLimitKoopa* koopa);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TLimitKoopaBody : public TLimitKoopaParts {
 public:
-	TLimitKoopaBody(TLimitKoopa*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	TLimitKoopaBody(TLimitKoopa* koopa);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TNerveLimitKoopaTurn : public TNerveBase<TLiveActor> {
@@ -260,67 +263,67 @@ public:
 
 class TNerveLimitKoopaHipDropJump : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaHipDropJump& theNerve();
 };
 
 class TNerveLimitKoopaHipDropStart : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaHipDropStart& theNerve();
 };
 
 class TNerveLimitKoopaTurnR : public TNerveLimitKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaTurnR& theNerve();
 };
 
 class TNerveLimitKoopaTurnL : public TNerveLimitKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaTurnL& theNerve();
 };
 
 class TNerveLimitKoopaTumble : public TNerveLimitKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaTumble& theNerve();
 };
 
 class TNerveLimitKoopaWait : public TNerveLimitKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaWait& theNerve();
 };
 
 class TNerveLimitKoopaFlame : public TNerveLimitKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaFlame& theNerve();
 };
 
 class TNerveLimitKoopaGetDown : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaGetDown& theNerve();
 };
 
 class TNerveLimitKoopaStagger : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaStagger& theNerve();
 };
 
 class TNerveLimitKoopaFall : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaFall& theNerve();
 };
 
 class TNerveLimitKoopaGetShowered : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveLimitKoopaGetShowered& theNerve();
 };
 

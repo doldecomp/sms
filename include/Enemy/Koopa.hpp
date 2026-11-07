@@ -146,8 +146,8 @@ enum TKoopaAnm {
 
 class TKoopaManager : public TEnemyManager {
 public:
-	TKoopaManager(const char*);
-	virtual void load(JSUMemoryInputStream&);
+	TKoopaManager(const char* name);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
 	virtual void createModelData();
 	virtual TSpineEnemy* createEnemyInstance();
@@ -161,29 +161,29 @@ public:
 
 class TKoopa : public TSpineEnemy {
 public:
-	TKoopa(const char*);
-	virtual void load(JSUMemoryInputStream&);
+	TKoopa(const char* name);
+	virtual void load(JSUMemoryInputStream& stream);
 	virtual void loadAfter();
-	virtual void perform(u32, JDrama::TGraphics*);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void init(TLiveManager*);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void init(TLiveManager* manager);
 	virtual void calcRootMatrix();
 	virtual void updateAnmSound();
 	virtual const char** getBasNameTable() const;
 	virtual void reset();
 
 	void fall();
-	void stagger(bool);
+	void stagger(bool force);
 	bool getShowered();
 	bool effectsTumble() const;
 	void getDown();
 	bool allowsLaunch() const;
-	f32 getTargetDir(const JGeometry::TVec3<f32>&) const;
+	f32 getTargetDir(const JGeometry::TVec3<f32>& target) const;
 	f32 getNeckFocus() const;
 	bool isFlaming() const;
 	f32 getFlameDirRate() const;
 	f32 getFlameDirDegree() const;
-	void changeAnm(int, int, f32);
+	void changeAnm(int bckIndex, int btpIndex, f32 speed);
 	void setUpHitActors();
 
 	// Unused
@@ -328,10 +328,10 @@ public:
 
 class TKoopaParts : public THitActor {
 public:
-	TKoopaParts(const char*, u32, TKoopa*, f32);
-	virtual void perform(u32, JDrama::TGraphics*);
+	TKoopaParts(const char* name, u32 actorType, TKoopa* koopa, f32 radius);
+	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual void control() { }
-	virtual void attack_(THitActor*) = 0;
+	virtual void attack_(THitActor* target) = 0;
 	// Unused
 	void remove();
 	// Unused
@@ -345,9 +345,9 @@ class TKoopaFlame : public TKoopaParts {
 public:
 	// Unused
 	TKoopaFlame(TKoopa* koopa);
-	virtual BOOL receiveMessage(THitActor*, u32);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void control();
-	virtual void attack_(THitActor*);
+	virtual void attack_(THitActor* target);
 	// Unused
 	void fire(const JGeometry::TVec3<f32>& pos,
 	          const JGeometry::TVec3<f32>& dir, f32 speed, f32 length,
@@ -373,24 +373,24 @@ class TKoopaHand : public TKoopaParts {
 public:
 	// Unused
 	TKoopaHand(TKoopa* koopa);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TKoopaHead : public TKoopaParts {
 public:
 	// Unused
 	TKoopaHead(TKoopa* koopa);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TKoopaBody : public TKoopaParts {
 public:
 	// Unused
 	TKoopaBody(TKoopa* koopa);
-	virtual BOOL receiveMessage(THitActor*, u32);
-	virtual void attack_(THitActor*);
+	virtual BOOL receiveMessage(THitActor* sender, u32 message);
+	virtual void attack_(THitActor* target);
 };
 
 class TNerveKoopaTurn : public TNerveBase<TLiveActor> {
@@ -400,60 +400,60 @@ public:
 class TNerveKoopaTurnR : public TNerveKoopaTurn {
 public:
 	static const TNerveKoopaTurnR& theNerve();
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 };
 
 class TNerveKoopaTurnL : public TNerveKoopaTurn {
 public:
 	static const TNerveKoopaTurnL& theNerve();
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 };
 
 class TNerveKoopaTumble : public TNerveKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaTumble& theNerve();
 };
 
 class TNerveKoopaProvoke : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaProvoke& theNerve();
 };
 
 class TNerveKoopaWait : public TNerveKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaWait& theNerve();
 };
 
 class TNerveKoopaFlame : public TNerveKoopaTurn {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaFlame& theNerve();
 };
 
 class TNerveKoopaGetDown : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaGetDown& theNerve();
 };
 
 class TNerveKoopaStagger : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaStagger& theNerve();
 };
 
 class TNerveKoopaFall : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaFall& theNerve();
 };
 
 class TNerveKoopaGetShowered : public TNerveBase<TLiveActor> {
 public:
-	virtual BOOL execute(TSpineBase<TLiveActor>*) const;
+	virtual BOOL execute(TSpineBase<TLiveActor>* spine) const;
 	static const TNerveKoopaGetShowered& theNerve();
 };
 

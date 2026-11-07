@@ -218,7 +218,7 @@ DEFINE_NERVE_EXECUTE(TNerveLimitKoopaGetDown, TLiveActor)
 	return false;
 }
 
-TLimitKoopaParts::TLimitKoopaParts(const char* name, u32 actor_type,
+TLimitKoopaParts::TLimitKoopaParts(const char* name, u32 actorType,
                                    TLimitKoopa* koopa, f32 radius)
     : TLiveActor(name)
     , unkF4(koopa)
@@ -226,7 +226,8 @@ TLimitKoopaParts::TLimitKoopaParts(const char* name, u32 actor_type,
 	((TIdxGroupObj*)JDrama::TNameRefGen::search("敵グループ"))
 	    ->getChildren()
 	    .push_back(this);
-	initHitActor(actor_type, 5, 0x80000000, radius, radius, radius, radius);
+	initHitActor(actorType, 5, HIT_CATEGORY_PLAYER, radius, radius, radius,
+	             radius);
 	onHitFilter(HIT_FILTER_NO_ATTACK);
 	onHitFilter(HIT_FILTER_NO_DAMAGE);
 	onHitFilter(HIT_FILTER_NO_COLLISION);
@@ -274,9 +275,9 @@ BOOL TLimitKoopaFlame::receiveMessage(THitActor*, u32 message)
 	}
 }
 
-void TLimitKoopaFlame::attack_(THitActor* actor)
+void TLimitKoopaFlame::attack_(THitActor* target)
 {
-	if (actor->receiveMessage(this, HIT_MESSAGE_BURN)) {
+	if (target->receiveMessage(this, HIT_MESSAGE_BURN)) {
 		unkF4->stopFlame();
 	}
 }
@@ -288,9 +289,9 @@ TLimitKoopaHand::TLimitKoopaHand(TLimitKoopa* koopa)
 
 BOOL TLimitKoopaHand::receiveMessage(THitActor*, u32) { return true; }
 
-void TLimitKoopaHand::attack_(THitActor* actor)
+void TLimitKoopaHand::attack_(THitActor* target)
 {
-	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	target->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 TLimitKoopaHead::TLimitKoopaHead(TLimitKoopa* koopa)
@@ -308,9 +309,9 @@ BOOL TLimitKoopaHead::receiveMessage(THitActor*, u32 message)
 	return true;
 }
 
-void TLimitKoopaHead::attack_(THitActor* actor)
+void TLimitKoopaHead::attack_(THitActor* target)
 {
-	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	target->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 TLimitKoopaBody::TLimitKoopaBody(TLimitKoopa* koopa)
@@ -320,9 +321,9 @@ TLimitKoopaBody::TLimitKoopaBody(TLimitKoopa* koopa)
 
 BOOL TLimitKoopaBody::receiveMessage(THitActor*, u32) { return true; }
 
-void TLimitKoopaBody::attack_(THitActor* actor)
+void TLimitKoopaBody::attack_(THitActor* target)
 {
-	actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
+	target->receiveMessage(this, HIT_MESSAGE_ATTACK);
 }
 
 namespace {
@@ -563,7 +564,7 @@ void TLimitKoopa::setUpHitActors()
 
 // Unused: GMSJ01/D38J01 mario.MAP, 0x70 bytes.
 // Unused: D38J01 marioL.MAP, 0x94 bytes.
-void TLimitKoopa::setAnimationIndex(int) { }
+void TLimitKoopa::setAnimationIndex(int index) { }
 
 void TLimitKoopa::changeBck(int index, f32 speed)
 {
