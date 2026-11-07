@@ -35,7 +35,7 @@ static const int cDropCoinNumTable[] = { 3, 3, 1, 2 };
 TKukkuBall::TKukkuBall(MActor* mMActor)
     : THitActor("クック玉")
     , mMActor(mMActor)
-    , mDeadFlag(1)
+    , mDeadFlag(FLAG_DEAD)
     , mHitpoints(0)
 {
 }
@@ -121,7 +121,7 @@ void TKukkuBall::startToMove(const JGeometry::TVec3<f32>& pos,
                              const JGeometry::TVec3<f32>& vel)
 {
 	offHitFilter(HIT_FILTER_NO_COLLISION);
-	mDeadFlag &= ~1;
+	mDeadFlag &= ~FLAG_DEAD;
 	mPosition = pos;
 	mVelocity = vel;
 }
@@ -129,7 +129,7 @@ void TKukkuBall::startToMove(const JGeometry::TVec3<f32>& pos,
 void TKukkuBall::kill()
 {
 	onHitFilter(HIT_FILTER_NO_COLLISION);
-	onDeadFlag(0x1);
+	onDeadFlag(FLAG_DEAD);
 	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 500.0f);
 }
 
