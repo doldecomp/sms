@@ -33,6 +33,17 @@ class TEnemyCoinUnit {
 	TMapObjBase* getUnusedItem();
 };
 
+class TKukkuManager : public TSmallEnemyManager {
+public:
+	TKukkuManager(const char* name = "クックマネージャー");
+	virtual void load(JSUMemoryInputStream&);
+	virtual void createModelData();
+	void initJParticle();
+
+	// Unused
+	void initCoins();
+};
+
 class TKukku : public TSmallEnemy {
 public:
 	TKukku(const char* name = "クック");
@@ -74,7 +85,7 @@ public:
 
 	// fabricated
 	s32 getUnk1A4() const { return unk1A4; }
-	s32 getUnk1AC() const { return unk1AC; }
+	s32 getShootTimer() const { return mShootTimer; }
 
 	// fabricated
 	const TKukkuParams* getKukkuParams() const
@@ -92,25 +103,13 @@ public:
 
 public:
 	/* 0x194 */ TKukkuBall* mBalls[3];
-	/* 0x1A0 */ TMapObjBase* mMapObj;
+	/* 0x1A0 */ TMapObjBase* mOneUp;
 	/* 0x1A4 */ u32 unk1A4;
-	/* 0x1A8 */ u32 unk1A8;
-	/* 0x1AC */ s32 unk1AC;
-	/* 0x1B0 */ s32 unk1B0;
+	/* 0x1A8 */ u32 mCenterJointIndex;
+	/* 0x1AC */ s32 mShootTimer;
+	/* 0x1B0 */ s32 mDroppedCoins;
 };
 
-class TKukkuManager : public TSmallEnemyManager {
-public:
-	TKukkuManager(const char* name = "クックマネージャー");
-	virtual void load(JSUMemoryInputStream&);
-	virtual void createModelData();
-	void initJParticle();
-
-	// Unused
-	void initCoins();
-};
-
-// class Thitactor adds all the bloat libraries horrible
 class TKukkuBall : public THitActor {
 public:
 	TKukkuBall(MActor* actor);
@@ -126,11 +125,18 @@ public:
 	void bind();
 	void moveObject();
 
+	// fabricated
+	bool checkDeadFlag(u32 flag) const { return mDeadFlag & flag; }
+	void offDeadFlag(u32 flag) { mDeadFlag &= flag; }
+	void onDeadFlag(u32 flag) { mDeadFlag |= flag; }
+
+	enum { FLAG_DEAD = 0x1, FLAG_ALIVE = 0x4 };
+
 public:
-	/* 0x68 */ MActor* actor;
-	/* 0x6C */ s32 unk6C;
+	/* 0x68 */ MActor* mMActor;
+	/* 0x6C */ s32 mDeadFlag;
 	/* 0x70 */ JGeometry::TVec3<f32> mVelocity;
-	/* 0x7C */ u32 unk7C;
+	/* 0x7C */ u32 mHitpoints;
 };
 
 DECLARE_NERVE(TNerveKukkuRecoverGraph, TLiveActor);
