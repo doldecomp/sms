@@ -1586,6 +1586,7 @@ def generate_objdiff_config(
         "custom_make": ninja,
         "build_target": False,
         "watch_patterns": [
+            "*.ds",
             "*.c",
             "*.cc",
             "*.cp",

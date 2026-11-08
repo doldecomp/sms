@@ -199,6 +199,33 @@ if args.map:
 # Use for any additional files that should cause a re-configure when modified
 config.reconfig_deps = [Path("tools/download_tool.py")]
 
+dsptool = config.dsptool_path or (
+    config.build_dir / "tools" / ("dsptool.exe" if is_windows() else "dsptool")
+)
+jdsp_include = Path("libs/JSystem/src/sms_jdsp.inc").resolve()
+jdsp_binary = config.build_dir / "dsp/jdsp.bin"
+assemble_dsp = config.tools_dir / "assemble_dsp.py"
+config.custom_build_rules = [
+    {
+        "name": "dspasm",
+        "command": f'$python "{assemble_dsp}" "{dsptool}" --binary "{jdsp_binary}" $in $out',
+        "description": "DSPASM $in",
+        # Reuse the checked-in include even without a local Ninja build log.
+        "generator": True,
+        "restat": True,
+    },
+]
+config.custom_build_steps = {
+    "pre-compile": [
+        {
+            "rule": "dspasm",
+            "inputs": Path("libs/JSystem/src/sms_jdsp.ds"),
+            "outputs": jdsp_include,
+            "order_only": [dsptool, assemble_dsp, config.tools_dir / "bin2c.py"],
+        },
+    ],
+}
+
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects
 config.scratch_preset_id = 61  # Super Mario Sunshine
