@@ -148,6 +148,8 @@ class ProjectConfig:
         self.binutils_path: Optional[Path] = None  # If None, download
         self.dtk_tag: Optional[str] = None  # Git tag
         self.dtk_path: Optional[Path] = None  # If None, download
+        self.dsptool_tag: Optional[str] = None  # Git tag
+        self.dsptool_path: Optional[Path] = None  # If None, download
         self.compilers_tag: Optional[str] = None  # 1
         self.compilers_path: Optional[Path] = None  # If None, download
         self.wibo_tag: Optional[str] = None  # Git tag
@@ -551,6 +553,16 @@ def generate_build_ninja(
     else:
         sys.exit("ProjectConfig.dtk_tag missing")
 
+    dsptool = config.dsptool_path
+    if dsptool is None and config.dsptool_tag:
+        dsptool = build_tools_path / f"dsptool{EXE}"
+        n.build(
+            outputs=dsptool,
+            rule="download_tool",
+            implicit=download_tool,
+            variables={"tool": "dsptool", "tag": config.dsptool_tag},
+        )
+
     if config.objdiff_path is not None and config.objdiff_path.is_file():
         objdiff = config.objdiff_path
     elif config.objdiff_path is not None:
@@ -655,7 +667,7 @@ def generate_build_ninja(
     n.build(
         outputs="tools",
         rule="phony",
-        inputs=[dtk, sjiswrap, wrapper, compilers, binutils, objdiff],
+        inputs=[dtk, sjiswrap, wrapper, compilers, binutils, objdiff, dsptool],
     )
     n.newline()
 
