@@ -20,6 +20,9 @@ public:
 	f32 calcNearerDirection(f32);
 	void normalize();
 
+	// Fabricated
+	f32 getUnk0() const { return unk0; }
+
 public:
 	/* 0x0 */ f32 unk0;
 };
