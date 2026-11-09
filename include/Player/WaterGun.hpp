@@ -112,6 +112,7 @@ public:
 	f32 getPressureMax();
 	void init();
 	void initInLoadAfter();
+#if defined(VERSION_GMSJ01)
 	bool isEmitting()
 	{
 		if (mCurrentWater == 0)
@@ -129,6 +130,9 @@ public:
 
 		return false;
 	}
+#else
+	bool isEmitting();
+#endif
 
 	BOOL isPressureOn();
 	void movement();
