@@ -30,7 +30,7 @@ class J2DPicture;
  */
 class TArrowControl {
 public:
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01) \
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
     || defined(VERSION_D38J01)
 	TArrowControl(J2DPane* pane)
 	    : mPane(pane)
@@ -53,7 +53,7 @@ public:
 	int calcMoveX(int phase) const;
 
 private:
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)                       \
     && !defined(VERSION_D38J01)
 	/* 0x0 */ J2DScreen* mScreen;
 #endif
