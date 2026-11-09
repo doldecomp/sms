@@ -1219,22 +1219,14 @@ void J3DModel::prepareShapePackets()
 	}
 }
 
-void J3DCreateModel(J3DModelData*, unsigned long, JKRHeap*, bool,
-                    JKRSolidHeap**)
-{
-}
-void J3DCreateModel(JKRSolidHeap*, unsigned long, J3DModelData*, unsigned long)
-{
-}
-void J3DCreateModelArray(JKRSolidHeap*, int, J3DModel**, J3DModelData*,
-                         unsigned long)
-{
-}
+void J3DCreateModel(J3DModelData*, u32, JKRHeap*, bool, JKRSolidHeap**) { }
+void J3DCreateModel(JKRSolidHeap*, u32, J3DModelData*, u32) { }
+void J3DCreateModelArray(JKRSolidHeap*, int, J3DModel**, J3DModelData*, u32) { }
 
-J3DSimpleModel::J3DSimpleModel(J3DModelData*, unsigned long) { }
+J3DSimpleModel::J3DSimpleModel(J3DModelData*, u32) { }
 
 void J3DSimpleModel::initialize() { }
-void J3DSimpleModel::entryModelData(J3DModelData*, unsigned long) { }
+void J3DSimpleModel::entryModelData(J3DModelData*, u32) { }
 void J3DSimpleModel::lock() { }
 void J3DSimpleModel::unlock() { }
 void J3DSimpleModel::update() { }
