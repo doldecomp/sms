@@ -977,7 +977,7 @@ config.libs = [
         "progress_category": "game",
         "objects": [
             Object(Matching, "Player/Atom.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01", "GMSP01_NX"), "Player/MarioAction.cpp"),
+            Object(Matching, "Player/MarioAction.cpp"),
             Object(NonMatching, "Player/MarioAutodemo.cpp"),
             PCHObject(NonMatching, "Player/MarioBlend.cpp"),
             PCHObject(NonMatching, "Player/MarioCap.cpp"),
