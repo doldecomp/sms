@@ -469,7 +469,13 @@ void JUTGamePad::CRumble::update(s16 port)
 	mFrame++;
 }
 
-void JUTGamePad::CRumble::triggerPatternedRumble(u32 length) { }
+void JUTGamePad::CRumble::triggerPatternedRumble(u32 length)
+{
+	if (mPattern != nullptr && mFrameCount != 0) {
+		mLength = length;
+		mFrame  = 0;
+	}
+}
 
 void JUTGamePad::CRumble::setPatternedRumble(s16 port, u16 length, u8* pattern)
 {
@@ -478,6 +484,20 @@ void JUTGamePad::CRumble::setPatternedRumble(s16 port, u16 length, u8* pattern)
 void JUTGamePad::CRumble::startPatternedRumble(u8* data, ERumble rumble,
                                                u32 length)
 {
+	mFrameCount = (data[0] << 8) + data[1];
+	mPattern    = data + 2;
+
+	switch (rumble) {
+	case VAL_0:
+		triggerPatternedRumble(mFrameCount);
+		break;
+	case VAL_1:
+		triggerPatternedRumble(-1);
+		break;
+	case VAL_2:
+		triggerPatternedRumble(length);
+		break;
+	}
 }
 
 void JUTGamePad::CRumble::stopPatternedRumble(s16 port)
