@@ -96,8 +96,8 @@ namespace BankMgr {
 		return value;
 	}
 
-	static TChannel* noteOnOsc(TChannelMgr* param_1, int param_2, u8 param_3,
-	                           u8 param_4, u32 param_5);
+	static TChannel* noteOnOsc(TChannelMgr* param_1, int waveform_type, u8 key,
+	                           u8 velocity, u32 gate_time);
 
 	TChannel* noteOn(TChannelMgr* chan_mgr, int bank_no, int prog_no, u8 key,
 	                 u8 velocity, u32 gate_time)
@@ -201,14 +201,14 @@ namespace BankMgr {
 		return result;
 	}
 
-	static TChannel* noteOnOsc(TChannelMgr* chan_mgr, int param_2, u8 key,
+	static TChannel* noteOnOsc(TChannelMgr* chan_mgr, int waveform_type, u8 key,
 	                           u8 velocity, u32 gate_time)
 	{
 		TChannel* channel = chan_mgr->getLogicalChannel(0);
 		if (!channel)
 			return nullptr;
 
-		channel->mSourceData      = param_2;
+		channel->mSourceData      = waveform_type;
 		channel->mLogicalChanType = 2;
 		channel->mVelocity        = velocity;
 		channel->mKey             = key;

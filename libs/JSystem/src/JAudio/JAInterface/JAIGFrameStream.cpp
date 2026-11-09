@@ -284,7 +284,8 @@ namespace StreamLib {
 		    = JASystem::DSPInterface::getDSPHandle(channel->mNumber);
 		pDVar1->baseAddress       = param_2;
 		pDVar1->isLooping         = 0;
-		pDVar1->samplesSourceType = 0x21;
+		pDVar1->samplesSourceType
+		    = JASystem::DSPInterface::DSPBuffer::SOURCE_PCM16_MRAM_RESAMPLED;
 		pDVar1->remainingLength   = param_4;
 		pDVar1->loopAddress       = param_2;
 		pDVar1->endPosition       = param_3 << 0x10;

@@ -72,8 +72,8 @@ namespace DSPInterface {
 	}
 	void setupBuffer()
 	{
-		DsetupTable(64, (u32)CH_BUF, (u32)&DSPRES_FILTER, (u32)&DSPADPCM_FILTER,
-		            (u32)FX_BUF);
+		DsetupTable(64, (uintptr_t)CH_BUF, (uintptr_t)&DSPRES_FILTER,
+		            (uintptr_t)&DSPADPCM_FILTER, (uintptr_t)FX_BUF);
 	}
 	void initBuffer()
 	{
@@ -140,7 +140,7 @@ namespace DSPInterface {
 	}
 	void DSPBuffer::playStart()
 	{
-		unk10C          = 0;
+		updateCount     = 0;
 		currentPosition = 0;
 		currentPosFrac  = 0;
 		resetVpb        = 1;
@@ -158,30 +158,31 @@ namespace DSPInterface {
 		enabled = 1;
 	}
 	void DSPBuffer::playStop() { enabled = 0; }
-	void DSPBuffer::setWaveInfo(Driver::Wave_* param_1, uintptr_t param_2)
+	void DSPBuffer::setWaveInfo(Driver::Wave_* wave, uintptr_t samples_address)
 	{
 		static u8 COMP_BLOCKSAMPLES[8] = {
 			0x10, 0x10, 0x01, 0x01, 0x01, 0x10, 0x10, 0x01,
 		};
 		static u8 COMP_BLOCKBYTES[8] = {
-			0x09, 0x05, 0x08, 0x10, 0x01, 0x01, 0x01, 0x01,
+			SOURCE_AFC_HQ, SOURCE_AFC_LQ, SOURCE_PCM8_ARAM, SOURCE_PCM16_ARAM,
+			SOURCE_SAW,    SOURCE_SAW,    SOURCE_SAW,       SOURCE_SAW,
 		};
 
-		baseAddress                = (s16*)param_2;
-		afcRemainingDecodedSamples = COMP_BLOCKSAMPLES[param_1->mFormat];
-		samplesSourceType          = COMP_BLOCKBYTES[param_1->mFormat];
+		baseAddress                = (s16*)samples_address;
+		afcRemainingDecodedSamples = COMP_BLOCKSAMPLES[wave->mFormat];
+		samplesSourceType          = COMP_BLOCKBYTES[wave->mFormat];
 
 		if (samplesSourceType < 4)
 			return;
 
-		sampleCount = param_1->mSampleCount;
-		isLooping   = param_1->mLoop;
+		sampleCount = wave->mSampleCount;
+		isLooping   = wave->mLoop;
 
 		if (isLooping != 0) {
-			loopAddress = (s16*)param_1->mLoopStart;
-			endPosition = param_1->mLoopEnd;
-			loopYN1     = param_1->mLast;
-			loopYN2     = param_1->mPenult;
+			loopAddress = (s16*)wave->mLoopStart;
+			endPosition = wave->mLoopEnd;
+			loopYN1     = wave->mLast;
+			loopYN2     = wave->mPenult;
 		} else {
 			endPosition = sampleCount;
 		}
@@ -189,11 +190,11 @@ namespace DSPInterface {
 		for (s32 i = 0; i < 16; i++)
 			afcRemainingSamples[i] = 0;
 	}
-	void DSPBuffer::setOscInfo(u32 param_1)
+	void DSPBuffer::setOscInfo(u32 waveform_type)
 	{
 		baseAddress                = 0;
 		afcRemainingDecodedSamples = 16;
-		samplesSourceType          = param_1;
+		samplesSourceType          = waveform_type;
 	}
 	void DSPBuffer::initAutoMixer()
 	{

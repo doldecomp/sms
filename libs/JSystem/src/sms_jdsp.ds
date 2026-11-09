@@ -1,5 +1,40 @@
 ; SMS jdsp
 
+; VOICE_SOURCE_TYPE values (DSPBuffer::SampleSourceType on the CPU).
+SOURCE_SQUARE: equ 0x00
+SOURCE_SAW: equ 0x01
+SOURCE_PHASE_MODULATED_SQUARE: equ 0x02
+SOURCE_QUARTER_DUTY_SQUARE: equ 0x03
+SOURCE_PATTERN_1: equ 0x04
+SOURCE_AFC_LQ: equ 0x05
+SOURCE_CONSTANT: equ 0x06
+SOURCE_PATTERN_0: equ 0x07
+SOURCE_PCM8_ARAM: equ 0x08
+SOURCE_AFC_HQ: equ 0x09
+SOURCE_PHASE_MODULATED_PATTERN: equ 0x0a
+SOURCE_PATTERN_2: equ 0x0b
+SOURCE_PATTERN_3: equ 0x0c
+SOURCE_PCM16_ARAM: equ 0x10
+SOURCE_PCM16_MRAM_DIRECT: equ 0x20
+SOURCE_PCM16_MRAM_RESAMPLED: equ 0x21
+
+; DSPTaskMail low halfwords; the mailbox high halfword carries the prefix.
+DSP_MAIL_PREFIX: equ 0xdcd1
+DSP_MAIL_INIT: equ 0x0000
+DSP_MAIL_RESUME: equ 0x0001
+DSP_MAIL_YIELD: equ 0x0002
+DSP_MAIL_DONE: equ 0x0003
+DSP_MAIL_SYNC: equ 0x0004
+DSP_MAIL_FRAME_END: equ 0x0005
+
+; SBSET/SBCLR selectors (SR bit number - 6)
+SB_LOGIC_ZERO: equ 6 - 6
+SB_UNKNOWN_8: equ 8 - 6
+SB_INTERRUPT_ENABLE: equ 9 - 6
+SB_UNKNOWN_10: equ 10 - 6
+SB_EXTERNAL_INTERRUPT_ENABLE: equ 11 - 6
+SB_UNKNOWN_12: equ 12 - 6
+
 ; DSP ROM entry points
 ROM_BOOT: equ 0x8000
 ROM_SWITCH_TASK: equ 0x80b5
@@ -58,13 +93,18 @@ DATA_0360: equ 0x0360
 DATA_0361: equ 0x0361
 DATA_0362: equ 0x0362
 AFC_RESIDUAL_SCRATCH: equ 0x0370
+
+; Sequential in memory, basically arguments for command_setup
 VOICE_TABLE_ADDRESS_H: equ 0x0380
 VOICE_TABLE_ADDRESS_L: equ 0x0381
 RENDER_TABLES_ADDRESS_H: equ 0x0382
 AFC_TABLE_ADDRESS_H: equ 0x0384
 EFFECTS_TABLE_ADDRESS_H: equ 0x0386
+
+; Sequential in memory, basically arguments for command_render
 OUTPUT_LEFT_ADDRESS_H: equ 0x0388
 OUTPUT_RIGHT_ADDRESS_H: equ 0x038a
+
 MASTER_GAIN: equ 0x038e
 FILTERED_VOICE_POINTER: equ 0x038f
 EFFECTS_LINE_FLAGS: equ 0x0390
@@ -98,6 +138,9 @@ INTERRUPT_SAVED_WR0: equ 0x03fc
 INTERRUPT_SAVED_ACC0_H: equ 0x03fd
 INTERRUPT_SAVED_ACC0_M: equ 0x03fe
 INTERRUPT_SAVED_ACC0_L: equ 0x03ff
+
+VOICE_BLOCK: equ 0x0400
+; Contiguous block: the voice currently being processed
 VOICE_ENABLED: equ 0x0400
 VOICE_DONE: equ 0x0401
 VOICE_PITCH: equ 0x0402
@@ -150,6 +193,8 @@ VOICE_FIR_COEFFICIENTS: equ 0x0490
 VOICE_RECURSIVE_COEFFICIENTS: equ 0x04a4
 VOICE_RECURSIVE_COEFFICIENT_LAST: equ 0x04a7
 VOICE_DISTANCE_COEFFICIENT: equ 0x04a8
+
+
 ACTIVE_VOICE_MASK_0: equ 0x04fc
 ACTIVE_VOICE_MASK_1: equ 0x04fd
 ACTIVE_VOICE_MASK_2: equ 0x04fe
@@ -179,8 +224,6 @@ BUS_FRONT_RIGHT_FX: equ 0x0ee0
 BUS_FRONT_RIGHT_FX_SECOND_HALF: equ 0x0f08
 BUS_REAR_LEFT: equ 0x0f40
 BUS_AUX_RIGHT_SUBTRACT: equ 0x0fa0
-
-VOICE_BLOCK: equ VOICE_ENABLED
 
 ; Paged voice operands: LRS/SRS encode a signed 8-bit address, with CR=4.
 VOICE_PAGE: equ 0x0400
@@ -213,7 +256,7 @@ VOICE_BASE_ADDRESS_H_SHORT: equ VOICE_BASE_ADDRESS_H - VOICE_PAGE + 0xff00
 VOICE_BASE_ADDRESS_L_SHORT: equ VOICE_BASE_ADDRESS_L - VOICE_PAGE + 0xff00
 
 
-; 0000: Boot vector; all code addresses and DSP RAM addresses are 16-bit WORD addresses.
+; Boot vector; all code addresses and DSP RAM addresses are 16-bit WORD addresses.
 boot_vector:
 	jmp         boot
 	nop
@@ -229,17 +272,23 @@ boot_vector:
 	rti
 	nop
 
-; 000E: CPU interrupt vector -> mailbox receiver.
+
+
+; CPU interrupt vector -> mailbox receiver.
 cpu_interrupt_vector:
 	jmp         receive_cpu_interrupt
 
-; 0010: Task resume vector.
+
+
+; Task resume vector.
 resume_vector:
 	jmp         resume_task
 
-; 0012: Boot: initialize registers, clear 0x1000 DRAM words, send DCD10000 and F3551111.
+
+
+; Boot: initialize registers, clear 0x1000 DRAM words, send DCD10000 and F3551111.
 boot:
-	sbclr       #0x05
+	sbclr       #SB_EXTERNAL_INTERRUPT_ENABLE
 	call        initialize_registers
 	clr         $ACC0
 	lri         $AC1.M, #0x1000
@@ -247,22 +296,28 @@ boot:
 	loop        $AC1.M
 	srri        @$AR0, $AC0.M
 	call        initialize_command_queue
-	lris        $AC0.M, #0x00
+	lris        $AC0.M, #DSP_MAIL_INIT
 	call        send_task_mail
 	lri         $AC0.M, #0x1111
 	call        send_audio_mail
 	lris        $AC0.M, #0x01
 	sr          @CPU_RELEASE_GATE, $AC0.M
-	sbset       #0x05
+	sbset       #SB_EXTERNAL_INTERRUPT_ENABLE
 
-; 0029: Main command-queue polling loop.
+
+
+; Main command-queue polling loop.
 command_loop:
 	jmp         read_command_queue
 
-; 002B: Decode command header; high byte selects command, low halfword is extra data.
+
+
+; Decode command header
 dispatch_command:
+	; Low halfword is extra data
 	lr          $AC1.M, @COMMAND_HEADER_L
 	sr          @COMMAND_EXTRA_DATA, $AC1.M
+	; High halfword is the command itself
 	lr          $AC0.M, @COMMAND_HEADER_H
 	mrr         $AC1.M, $AC0.M
 	andi        $AC1.M, #0x00ff
@@ -274,30 +329,36 @@ dispatch_command:
 	mrr         $AR0, $AC0.M
 	jmpr        $AR0
 
-; 003F: Standard acknowledgement: DCD10004 interrupt, then F355 + command high halfword.
+
+
+; Standard acknowledgement: DCD10004 interrupt, then F355 + command high halfword.
 acknowledge_command:
 	lri         $CR, #0x00ff
-	lris        $AC0.M, #0x04
+	lris        $AC0.M, #DSP_MAIL_SYNC
 	call        send_task_mail
 	lr          $AC0.M, @COMMAND_HEADER_H
 	call        send_audio_mail
 	jmp         command_loop
 
-; 004A: Resume task, restore working modes, send DCD10001.
+
+
+; Resume task, restore working modes, send DCD10001.
 resume_task:
-	sbclr       #0x05
+	sbclr       #SB_EXTERNAL_INTERRUPT_ENABLE
 	call        initialize_registers
-	lris        $AC0.M, #0x01
+	lris        $AC0.M, #DSP_MAIL_RESUME
 	call        send_task_mail
-	sbset       #0x05
+	sbset       #SB_EXTERNAL_INTERRUPT_ENABLE
 	jmp         command_loop
 
-; 0053: Initialize status/control and disable address wrapping (WR0..3 = FFFF).
+
+
+; Initialize status/control and disable address wrapping (WR0..3 = FFFF).
 initialize_registers:
-	sbset       #0x02
-	sbset       #0x03
-	sbclr       #0x04
-	sbset       #0x06
+	sbset       #SB_UNKNOWN_8
+	sbset       #SB_INTERRUPT_ENABLE
+	sbclr       #SB_UNKNOWN_10
+	sbset       #SB_UNKNOWN_12
 	set16
 	clr15
 	m0
@@ -309,24 +370,27 @@ initialize_registers:
 	lri         $CR, #0x00ff
 	ret
 
-; 0063: Copy pairs of words from staged arguments at DRAM 0358 to AR0.
+
+
+; Copy pairs of words from staged arguments at DRAM 0358 to AR0.
 copy_command_arguments:
 	lri         $AC0.H, #0x0000
 	lris        $AC0.L, #0x00
 	lri         $AR1, #COMMAND_ARGUMENTS
-	bloop       $AC0.M, loc_006d
+	bloop       $AC0.M, copy_command_arguments_loop_last_instruction
 	lrri        $AC0.M, @$AR1
 	srri        @$AR0, $AC0.M
 	lrri        $AC0.M, @$AR1
-
-loc_006d:
+copy_command_arguments_loop_last_instruction:
 	srri        @$AR0, $AC0.M
 	ret
+
+
 
 loc_006f:
 	jmp         acknowledge_command
 
-; 0071: 16-entry command dispatch table; JMP instructions, not address words.
+; 16-entry command dispatch table; JMP instructions, not address words.
 command_dispatch_table:
 	jmp         acknowledge_command
 	jmp         command_setup
@@ -345,25 +409,34 @@ command_dispatch_table:
 	jmp         acknowledge_command
 	jmp         acknowledge_command
 
-; 0091: Command 01: parameter-block/table setup.
+
+
+; Command 01: parameter-block/table setup.
 command_setup:
+	; Arguments are 4 MRAM addresses: chan_buffer, render_tables, adpcm_filters, fx_buffer
+	; Copy all of the arguments
 	lri         $AR0, #VOICE_TABLE_ADDRESS_H
 	lris        $AC0.M, #0x04
 	call        copy_command_arguments
-	lri         $AR1, #RENDER_TABLES_ADDRESS_H
-	lri         $AC1.M, #RESAMPLING_COEFFICIENTS
-	lri         $AR0, #0x0280
+	; DMA-copy the various rendering-related tables
+	lri         $AR1, #RENDER_TABLES_ADDRESS_H ; from
+	lri         $AC1.M, #RESAMPLING_COEFFICIENTS ; to
+	lri         $AR0, #0x0280 ; size (words)
 	call        dma_read_pointer
-	lri         $AR1, #AFC_TABLE_ADDRESS_H
-	lri         $AC1.M, #AFC_COEFFICIENTS
-	lri         $AR0, #0x0020
+	; DMA-copy the ADPCM coefficients
+	lri         $AR1, #AFC_TABLE_ADDRESS_H ; from
+	lri         $AC1.M, #AFC_COEFFICIENTS ; to
+	lri         $AR0, #0x0020 ; size (words)
 	call        dma_read_pointer
+	; Save the voice/channel count
 	lr          $AC0.M, @COMMAND_EXTRA_DATA
 	sr          @RENDER_VOICE_COUNT, $AC0.M
 	call        initialize_modulated_delay
 	jmp         acknowledge_command
 
-; 00AE: Fetch one 0xC0-word voice block into DRAM 0400.
+
+
+; Fetch one 0xC0-word voice block into DRAM 0400.
 fetch_voice_parameters:
 	lri         $AR1, #CURRENT_VOICE_ADDRESS_H
 	lri         $AC1.M, #VOICE_BLOCK
@@ -371,7 +444,9 @@ fetch_voice_parameters:
 	call        dma_read_pointer
 	ret
 
-; 00B7: Write back only the first 0x80 words of the voice block.
+
+
+; Write back only the first 0x80 words of the voice block.
 store_voice_state:
 	lri         $AR1, #CURRENT_VOICE_ADDRESS_H
 	lri         $AC1.M, #VOICE_BLOCK
@@ -384,7 +459,9 @@ store_voice_state:
 	call        dma_write
 	ret
 
-; 00C7: Word-copy helper, pipelined with parallel load/store.
+
+
+; Word-copy helper, pipelined with parallel load/store.
 copy_words:
 	lrri        $AC0.M, @$AR0
 	lrri        $AX0.H, @$AR0
@@ -394,7 +471,9 @@ copy_words:
 	srri        @$AR3, $AX0.H
 	ret
 
-; 00CE: Complement/copy helper; not part of the normal render path traced here.
+
+
+; Complement/copy helper; not part of the normal render path traced here.
 complement_copy_words:
 	lrri        $AC0.M, @$AR0
 	lrri        $AX0.H, @$AR0
@@ -402,13 +481,14 @@ complement_copy_words:
 	not's       $AC0.M : @$AR2, $AC0.M
 	movr'ls     $ACC1, $AX0.H : $AX0.H, $AC0.M
 	not's       $AC1.M : @$AR2, $AC1.M
-
 loc_00d5:
 	movr'ls     $ACC0, $AX0.H : $AX0.H, $AC1.M
 	nop
 	ret
 
-; 00D8: Add scaled source into destination, Q1.15 gain.
+
+
+; Add scaled source into destination, Q1.15 gain.
 add_scaled_buffer:
 	m2
 	lsr         $ACC1, #-1
@@ -421,13 +501,14 @@ add_scaled_buffer:
 	addr'l      $ACC0, $AX1.H : $AX0.H, @$AR1
 	mulmvz'sl   $AX0.L, $AX0.H, $ACC0 : $AC0.M, $AX1.H
 	addr'l      $ACC0, $AX1.H : $AX0.H, @$AR1
-
 loc_00e4:
 	mulmvz'sl   $AX0.L, $AX0.H, $ACC0 : $AC0.M, $AX1.H
 	m0
 	ret
 
-; 00E7: Copy scaled source into destination, Q1.15 gain.
+
+
+; Copy scaled source into destination, Q1.15 gain.
 copy_scaled_buffer:
 	m2
 	lrri        $AX0.H, @$AR0
@@ -438,7 +519,9 @@ copy_scaled_buffer:
 	m0
 	ret
 
-; 00EF: Block preparation: fold previous rear buses into stereo, then clear transient buses.
+
+
+; Block preparation: fold previous rear buses into stereo, then clear transient buses.
 prepare_rear_and_front_buses:
 	lris        $AC1.M, #0x50
 	lri         $AR0, #BUS_REAR_LEFT
@@ -482,7 +565,9 @@ prepare_rear_and_front_buses:
 	srri        @$AR0, $AC1.M
 	ret
 
-; 012D: Read one effects delay block, optional 8-tap FIR, two destination sends.
+
+
+; Read one effects delay block, optional 8-tap FIR, two destination sends.
 read_effects_line:
 	lr          $AR0, @EFFECTS_RING_INDEX_POINTER
 	lrri        $AX0.H, @$AR0
@@ -502,7 +587,6 @@ read_effects_line:
 	lris        $AC0.M, #0x08
 	lr          $AR1, @EFFECTS_WORK_BUFFER_POINTER
 	call        filter_fir8
-
 loc_014b:
 	lris        $AC1.M, #0x50
 	lr          $AR0, @EFFECTS_WORK_BUFFER_POINTER
@@ -512,7 +596,6 @@ loc_014b:
 	mrr         $AR3, $AX0.H
 	lr          $AX0.L, @EFFECTS_LINE_SEND_0_GAIN
 	call        add_scaled_buffer
-
 loc_0158:
 	lris        $AC1.M, #0x50
 	lr          $AR0, @EFFECTS_WORK_BUFFER_POINTER
@@ -522,7 +605,6 @@ loc_0158:
 	mrr         $AR3, $AX0.H
 	lr          $AX0.L, @EFFECTS_LINE_SEND_1_GAIN
 	call        add_scaled_buffer
-
 loc_0165:
 	lr          $AC0.M, @EFFECTS_LINE_FLAGS
 	andf        $AC0.M, #0x0002
@@ -533,7 +615,9 @@ loc_0165:
 	call        filter_fir8
 	ret
 
-; 0172: Prepare four effects lines; fold previous rear effects sends into front sends.
+
+
+; Prepare four effects lines; fold previous rear effects sends into front sends.
 prepare_effects_lines:
 	lri         $AC1.M, #BUS_EFFECTS_0
 	sr          @EFFECTS_WORK_BUFFER_POINTER, $AC1.M
@@ -556,7 +640,6 @@ prepare_effects_lines:
 	lris        $AC1.M, #0x06
 	call        copy_words
 	call        read_effects_line
-
 loc_0196:
 	lr          $AC0.M, @EFFECTS_PARAMETERS_POINTER
 	addis       $AC0.M, #0x10
@@ -567,7 +650,6 @@ loc_0196:
 	lr          $AC0.M, @EFFECTS_RING_INDEX_POINTER
 	incm        $AC0.M
 	sr          @EFFECTS_RING_INDEX_POINTER, $AC0.M
-
 loc_01a5:
 	nop
 	lris        $AC1.M, #0x50
@@ -601,7 +683,9 @@ loc_01a5:
 	srri        @$AR0, $AC1.M
 	ret
 
-; 01D6: Write one effects block to its external ring slot, advance/wrap slot index.
+
+
+; Write one effects block to its external ring slot, advance/wrap slot index.
 write_effects_line:
 	lr          $AR0, @EFFECTS_RING_INDEX_POINTER
 	lrr         $AX0.H, @$AR0
@@ -623,7 +707,9 @@ write_effects_line:
 	call        dma_write
 	ret
 
-; 01F0: Finish rear effects cross-block contribution, then write four effects lines.
+
+
+; Finish rear effects cross-block contribution, then write four effects lines.
 finish_effects_lines:
 	clr         $ACC1
 	lris        $AC1.M, #0x28
@@ -652,7 +738,6 @@ finish_effects_lines:
 	tstaxh      $AX0.H
 	jz          loc_0220
 	call        write_effects_line
-
 loc_0220:
 	lr          $AC0.M, @EFFECTS_PARAMETERS_POINTER
 	addis       $AC0.M, #0x10
@@ -663,12 +748,13 @@ loc_0220:
 	lr          $AC0.M, @EFFECTS_RING_INDEX_POINTER
 	incm        $AC0.M
 	sr          @EFFECTS_RING_INDEX_POINTER, $AC0.M
-
 loc_022f:
 	nop
 	ret
 
-; 0231: Fetch four 16-word effects parameter blocks into 03A8.
+
+
+; Fetch four 16-word effects parameter blocks into 03A8.
 fetch_effects_parameters:
 	lri         $AR1, #EFFECTS_TABLE_ADDRESS_H
 	lri         $AC1.M, #EFFECTS_PARAMETERS
@@ -676,7 +762,9 @@ fetch_effects_parameters:
 	call        dma_read_pointer
 	ret
 
-; 023A: Add AX0 to a stored 32-bit pointer.
+
+
+; Add AX0 to a stored 32-bit pointer.
 advance_external_pointer:
 	lrri        $AC0.M, @$AR0
 	lrrd        $AC0.L, @$AR0
@@ -685,7 +773,9 @@ advance_external_pointer:
 	srri        @$AR0, $AC0.L
 	ret
 
-; 0240: Wait until CPU releases this block (DRAM 034E == 0).
+
+
+; Wait until CPU releases this block (DRAM 034E == 0).
 wait_for_cpu_release:
 	clr         $ACC0
 	lr          $AC0.M, @CPU_RELEASE_GATE
@@ -693,427 +783,405 @@ wait_for_cpu_release:
 	jnz         wait_for_cpu_release
 	ret
 
-; 0247: Command 02: render requested 80-sample blocks to two MRAM output pointers.
+
+
+; Command 02: render requested 80-sample blocks to two MRAM output pointers.
 command_render:
+	; Arguments are 2 MRAM addresses: pcm output left, pcm output right
+	; Copy the args
 	lri         $AR0, #OUTPUT_LEFT_ADDRESS_H
 	lri         $AR1, #copy_command_arguments
 	lris        $AC0.M, #0x02
 	callr       $AR1
+	; "Sub frame" amount -- effectively how many blocks
+	; we were asked to render with this single command
 	lr          $AC0.M, @COMMAND_HEADER_LOW_BYTE
 	sr          @RENDER_BLOCKS_REMAINING, $AC0.M
+	; save new master gain
 	lr          $AC0.M, @COMMAND_EXTRA_DATA
 	sr          @MASTER_GAIN, $AC0.M
+	; zero curr block idx
 	clr         $ACC0
 	sr          @CURRENT_BLOCK_INDEX, $AC0.M
 	call        fetch_effects_parameters
+	; Loop over sample blocks
 	lr          $AC0.M, @RENDER_BLOCKS_REMAINING
-	bloop       $AC0.M, loc_0448
-
-; 025E: Per-block preparation: rear fold, effects reads, generated-pattern updates.
-render_block:
-	call        prepare_rear_and_front_buses
-	call        prepare_effects_lines
-	call        update_waveform_patterns
-	call        wait_for_cpu_release
-	lr          $AC0.M, @CURRENT_BLOCK_INDEX
-	incm        $AC0.M
-	sr          @CURRENT_BLOCK_INDEX, $AC0.M
-	clr         $ACC0
-	sr          @CURRENT_VOICE_INDEX, $AC0.M
-	lr          $AC0.M, @RENDER_VOICE_COUNT
-	bloop       $AC0.M, loc_03dc
-
-; 0272: Per-voice loop: test bit in CPU-supplied 64-voice active mask.
-render_voice:
-	clr         $ACC0
-	clr         $ACC1
-	lr          $AC0.M, @CURRENT_VOICE_INDEX
-	lsr         $ACC0, #-4
-	addi        $AC0.M, #ACTIVE_VOICE_MASK_0
-	mrr         $AR0, $AC0.M
-	lrr         $AC1.M, @$AR0
-	lr          $AC0.M, @CURRENT_VOICE_INDEX
-	andi        $AC0.M, #0x000f
-	lsrnr       $ACC1, $AC0.M
-	andcf       $AC1.M, #0x8000
-	jlnz        next_voice
-
-; 0284: Voice address = voice table base + voice_index * 0x180 BYTES.
-	lr          $AX0.L, @CURRENT_VOICE_INDEX
-	lri         $AX0.H, #0x0180
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_TABLE_ADDRESS_H
-	lr          $AC0.L, @VOICE_TABLE_ADDRESS_L
-	mul         $AX0.L, $AX0.H
-	mulac       $AX0.L, $AX0.H, $ACC0
-	sr          @CURRENT_VOICE_ADDRESS_H, $AC0.M
-	sr          @CURRENT_VOICE_ADDRESS_L, $AC0.L
-
-; 0293: DMA voice into 0400; skip if disabled or already done.
-	call        fetch_voice_parameters
-	lr          $AX0.H, @VOICE_ENABLED
-	tstaxh      $AX0.H
-	jz          next_voice
-	lr          $AX0.H, @VOICE_DONE
-	tstaxh      $AX0.H
-	jnz         next_voice
-	lr          $AX0.H, @VOICE_CONSTANT_SAMPLE
-	sr          @SAVED_VOICE_CONSTANT_SAMPLE, $AX0.H
-
-; 02A3: Constant/paused source bypasses source advance and resampling.
-	lr          $AX0.H, @VOICE_USE_CONSTANT_SAMPLE
-	tstaxh      $AX0.H
-	jnz         load_constant_voice
-
-; 02A8: Dispatch ARAM AFC/PCM, MRAM PCM (20/21), or generated waveform.
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_SOURCE_TYPE
-	cmpis       $AC0.M, #0x09
-	jz          load_afc_source
-	cmpis       $AC0.M, #0x05
-	jz          load_afc_source
-	cmpis       $AC0.M, #0x08
-	jz          load_pcm8_aram
-	cmpis       $AC0.M, #0x10
-	jz          load_pcm16_aram
-	cmpis       $AC0.M, #0x20
-	jz          load_pcm16_mram_direct
-	cmpis       $AC0.M, #0x21
-	jz          load_pcm16_mram_resampled
-	jmp         generate_waveform
-
-; 02BF: Compute raw input count from Q4.12 pitch and saved fraction.
+	bloop       $AC0.M, block_rendering_loop_end
+		; Initialize stuff
+		call        prepare_rear_and_front_buses
+		call        prepare_effects_lines
+		call        update_waveform_patterns
+		call        wait_for_cpu_release
+		; Increment cur block idx
+		lr          $AC0.M, @CURRENT_BLOCK_INDEX
+		incm        $AC0.M
+		sr          @CURRENT_BLOCK_INDEX, $AC0.M
+		; zero cur voice idx
+		clr         $ACC0
+		sr          @CURRENT_VOICE_INDEX, $AC0.M
+		; Loop over voices/channels
+		lr          $AC0.M, @RENDER_VOICE_COUNT
+		bloop       $AC0.M, voice_rendering_loop_end
+			clr         $ACC0
+			clr         $ACC1
+			lr          $AC0.M, @CURRENT_VOICE_INDEX
+			lsr         $ACC0, #-4
+			addi        $AC0.M, #ACTIVE_VOICE_MASK_0
+			mrr         $AR0, $AC0.M
+			lrr         $AC1.M, @$AR0
+			lr          $AC0.M, @CURRENT_VOICE_INDEX
+			andi        $AC0.M, #0x000f
+			lsrnr       $ACC1, $AC0.M
+			andcf       $AC1.M, #0x8000
+			jlnz        next_voice
+			; Voice address = voice table base + voice_index * 0x180 BYTES.
+			lr          $AX0.L, @CURRENT_VOICE_INDEX
+			lri         $AX0.H, #0x0180
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_TABLE_ADDRESS_H
+			lr          $AC0.L, @VOICE_TABLE_ADDRESS_L
+			mul         $AX0.L, $AX0.H
+			mulac       $AX0.L, $AX0.H, $ACC0
+			sr          @CURRENT_VOICE_ADDRESS_H, $AC0.M
+			sr          @CURRENT_VOICE_ADDRESS_L, $AC0.L
+			; DMA voice into VOICE_BLOCK
+			call        fetch_voice_parameters
+			; Skip disabled and done voices
+			lr          $AX0.H, @VOICE_ENABLED
+			tstaxh      $AX0.H
+			jz          next_voice
+			lr          $AX0.H, @VOICE_DONE
+			tstaxh      $AX0.H
+			jnz         next_voice
+			; Save voice constant for no reason?
+			lr          $AX0.H, @VOICE_CONSTANT_SAMPLE
+			sr          @SAVED_VOICE_CONSTANT_SAMPLE, $AX0.H
+			; Constant/paused source bypasses source advance and resampling
+			lr          $AX0.H, @VOICE_USE_CONSTANT_SAMPLE
+			tstaxh      $AX0.H
+			jnz         load_constant_voice
+			; Dispatch based on voice source type: actual PCM/ADPCM sample streams
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_SOURCE_TYPE
+			cmpis       $AC0.M, #SOURCE_AFC_HQ
+			jz          load_afc_source
+			cmpis       $AC0.M, #SOURCE_AFC_LQ
+			jz          load_afc_source
+			cmpis       $AC0.M, #SOURCE_PCM8_ARAM
+			jz          load_pcm8_aram
+			cmpis       $AC0.M, #SOURCE_PCM16_ARAM
+			jz          load_pcm16_aram
+			cmpis       $AC0.M, #SOURCE_PCM16_MRAM_DIRECT
+			jz          load_pcm16_mram_direct
+			cmpis       $AC0.M, #SOURCE_PCM16_MRAM_RESAMPLED
+			jz          load_pcm16_mram_resampled
+			jmp         generate_waveform
+			; Spaghetty jumps above teleport us into a random point in the middle of the loop below.
+			;
+			; Compute raw input count from Q4.12 pitch and saved fraction.
 load_afc_source:
-	lr          $AX0.L, @VOICE_PITCH
-	clr         $ACC0
-	clr         $ACC1
-	lr          $AC0.L, @VOICE_PHASE_FRACTION
-	set15
-	lris        $AX1.L, #0x50
-	mulx        $AX0.L, $AX1.L
-	mulxac      $AX0.L, $AX1.L, $ACC0
-	lsl         $ACC0, #4
-	clr15
-	mrr         $AC1.M, $AC0.M
-	lri         $AR3, #RAW_SAMPLE_BUFFER
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_SOURCE_TYPE
-	cmpis       $AC0.M, #0x05
-	jz          loc_02e3
-	lr          $AX0.H, @VOICE_LOOP_ENABLED
-	tstaxh      $AX0.H
-	jz          loc_02e7
-	lr          $AX0.H, @VOICE_LOOP_ADDRESS_L
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_LOOP_END_POSITION_L
-	orr         $AC0.M, $AX0.H
-	andi        $AC0.M, #0x000f
-	jz          loc_02e7
-
-; 02E3: General buffered AFC path, also handles unaligned loop boundaries.
+			lr          $AX0.L, @VOICE_PITCH
+			clr         $ACC0
+			clr         $ACC1
+			lr          $AC0.L, @VOICE_PHASE_FRACTION
+			set15
+			lris        $AX1.L, #0x50
+			mulx        $AX0.L, $AX1.L
+			mulxac      $AX0.L, $AX1.L, $ACC0
+			lsl         $ACC0, #4
+			clr15
+			mrr         $AC1.M, $AC0.M
+			lri         $AR3, #RAW_SAMPLE_BUFFER
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_SOURCE_TYPE
+			cmpis       $AC0.M, #SOURCE_AFC_LQ
+			jz          loc_02e3
+			lr          $AX0.H, @VOICE_LOOP_ENABLED
+			tstaxh      $AX0.H
+			jz          loc_02e7
+			lr          $AX0.H, @VOICE_LOOP_ADDRESS_L
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_LOOP_END_POSITION_L
+			orr         $AC0.M, $AX0.H
+			andi        $AC0.M, #0x000f
+			jz          loc_02e7
+			; General buffered AFC path, also handles unaligned loop boundaries.
 loc_02e3:
-	call        load_afc_buffered
-	jmp         resample_voice
-
-; 02E7: Aligned HQ AFC streaming path.
+			call        load_afc_buffered
+			jmp         resample_voice
+			; Aligned HQ AFC streaming path.
 loc_02e7:
-	call        load_afc_hq_aligned
-
-; 02E9: Resample raw input at 0580 to 80 voice samples at 0520.
+			call        load_afc_hq_aligned
+			; Resample raw input to 80 voice samples
 resample_voice:
-	lri         $AR0, #RAW_SAMPLE_BUFFER
-	lri         $AR1, #VOICE_SAMPLE_BUFFER
-	lri         $AX1.L, #0x0000
-	call        resample
-
-; 02F1: Optional distance filter, coefficient at 04A8 (VPB byte 0150).
+			lri         $AR0, #RAW_SAMPLE_BUFFER
+			lri         $AR1, #VOICE_SAMPLE_BUFFER
+			lri         $AX1.L, #0x0000
+			call        resample
+			; Optional distance filter
 filter_voice:
-	lr          $AX0.H, @VOICE_DISTANCE_COEFFICIENT
-	tstaxh      $AX0.H
-	jz          loc_02fa
-	lri         $AR0, #VOICE_SAMPLE_BUFFER
-	call        filter_distance
-
+			lr          $AX0.H, @VOICE_DISTANCE_COEFFICIENT
+			tstaxh      $AX0.H
+			jz          loc_02fa
+			lri         $AR0, #VOICE_SAMPLE_BUFFER
+			call        filter_distance
 loc_02fa:
-	lri         $AC0.M, #VOICE_SAMPLE_BUFFER
-	sr          @FILTERED_VOICE_POINTER, $AC0.M
-
-; 02FE: Optional variable FIR: low 5 bits of VPB filter mode give tap count.
-	clr         $ACC1
-	lr          $AC1.M, @VOICE_FILTER_MODE
-	andi        $AC1.M, #0x001f
-	tst         $ACC1
-	jz          check_recursive_filter
-	lr          $AC0.M, @FILTERED_VOICE_POINTER
-	sub         $ACC0, $ACC1
-	sr          @FILTERED_VOICE_POINTER, $AC0.M
-	mrr         $AR3, $AC0.M
-	lri         $AR0, #VOICE_FIR_HISTORY
-	addis       $AC1.M, #0xfe
-	call        copy_words
-	lri         $AR0, #VOICE_FIR_COEFFICIENTS
-	lr          $AR1, @FILTERED_VOICE_POINTER
-	clr         $ACC1
-	lr          $AC1.M, @VOICE_FILTER_MODE
-	andi        $AC1.M, #0x001f
-	call        filter_fir_variable
-	lr          $AC0.M, @FILTERED_VOICE_POINTER
-	addis       $AC0.M, #0x50
-	mrr         $AR0, $AC0.M
-	lri         $AR3, #VOICE_FIR_HISTORY
-	clr         $ACC1
-	lr          $AC1.M, @VOICE_FILTER_MODE
-	andi        $AC1.M, #0x001f
-	addis       $AC1.M, #0xfe
-	call        copy_words
-
-; 032A: Optional 4-coefficient recursive filter, enabled by filter-mode bit 5.
+			lri         $AC0.M, #VOICE_SAMPLE_BUFFER
+			sr          @FILTERED_VOICE_POINTER, $AC0.M
+			; Optional variable FIR
+			clr         $ACC1
+			lr          $AC1.M, @VOICE_FILTER_MODE
+			andi        $AC1.M, #0x001f
+			tst         $ACC1
+			jz          check_recursive_filter
+			lr          $AC0.M, @FILTERED_VOICE_POINTER
+			sub         $ACC0, $ACC1
+			sr          @FILTERED_VOICE_POINTER, $AC0.M
+			mrr         $AR3, $AC0.M
+			lri         $AR0, #VOICE_FIR_HISTORY
+			addis       $AC1.M, #0xfe
+			call        copy_words
+			lri         $AR0, #VOICE_FIR_COEFFICIENTS
+			lr          $AR1, @FILTERED_VOICE_POINTER
+			clr         $ACC1
+			lr          $AC1.M, @VOICE_FILTER_MODE
+			andi        $AC1.M, #0x001f
+			call        filter_fir_variable
+			lr          $AC0.M, @FILTERED_VOICE_POINTER
+			addis       $AC0.M, #0x50
+			mrr         $AR0, $AC0.M
+			lri         $AR3, #VOICE_FIR_HISTORY
+			clr         $ACC1
+			lr          $AC1.M, @VOICE_FILTER_MODE
+			andi        $AC1.M, #0x001f
+			addis       $AC1.M, #0xfe
+			call        copy_words
+			; Optional 4-coefficient recursive filter
 check_recursive_filter:
-	lr          $AC0.M, @VOICE_FILTER_MODE
-	andi        $AC0.M, #0x0020
-	jz          select_voice_mixer
-	lri         $AR0, #VOICE_RECURSIVE_COEFFICIENTS
-	lr          $AR1, @FILTERED_VOICE_POINTER
-	lri         $AR2, #VOICE_RECURSIVE_HISTORY
-	lri         $AR3, #VOICE_RECURSIVE_COEFFICIENT_LAST
-	lrrd        $AX0.H, @$AR3
-	tstaxh      $AX0.H
-	jnz         loc_034a
-	lrrd        $AX0.H, @$AR3
-	tstaxh      $AX0.H
-	jnz         loc_034a
-	lrrd        $AX0.H, @$AR3
-	tstaxh      $AX0.H
-	jnz         loc_034a
-	clr         $ACC0
-	lrrd        $AC0.M, @$AR3
-	cmpi        $AC0.M, #0x7fff
-	jz          select_voice_mixer
-
+			lr          $AC0.M, @VOICE_FILTER_MODE
+			andi        $AC0.M, #0x0020
+			jz          select_voice_mixer
+			lri         $AR0, #VOICE_RECURSIVE_COEFFICIENTS
+			lr          $AR1, @FILTERED_VOICE_POINTER
+			lri         $AR2, #VOICE_RECURSIVE_HISTORY
+			lri         $AR3, #VOICE_RECURSIVE_COEFFICIENT_LAST
+			lrrd        $AX0.H, @$AR3
+			tstaxh      $AX0.H
+			jnz         loc_034a
+			lrrd        $AX0.H, @$AR3
+			tstaxh      $AX0.H
+			jnz         loc_034a
+			lrrd        $AX0.H, @$AR3
+			tstaxh      $AX0.H
+			jnz         loc_034a
+			clr         $ACC0
+			lrrd        $AC0.M, @$AR3
+			cmpi        $AC0.M, #0x7fff
+			jz          select_voice_mixer
 loc_034a:
-	call        filter_recursive
-
-; 034C: Choose automatic positional mixer or six explicitly routed mixer sends.
+			call        filter_recursive
+			; Choose automatic positional mixer or six explicitly routed mixer sends
 select_voice_mixer:
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_USE_POSITIONAL_MIXER
-	sr          @DATA_042D, $AC0.M
-	tst         $ACC0
-	jz          loc_0358
-	call        mix_positional_voice
-	jmp         finish_voice
-
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_USE_POSITIONAL_MIXER
+			sr          @DATA_042D, $AC0.M
+			tst         $ACC0
+			jz          loc_0358
+			call        mix_positional_voice
+			jmp         finish_voice
 loc_0358:
-	clr         $ACC0
-	mrr         $IX0, $AC0.M
-	mrr         $IX2, $AC0.M
-	incm        $AC0.M
-	mrr         $IX3, $AC0.M
-
-; 035D: Restore requested preceding samples for per-send delays.
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_SAVED_SAMPLE_COUNT
-	tst         $ACC0
-	jz          loc_0370
-	lr          $AR3, @FILTERED_VOICE_POINTER
-	dar         $AR3
-	lri         $AR0, #VOICE_SEND_DELAY_HISTORY_END
-	lri         $IX0, #0xffff
-	lri         $IX3, #0xffff
-	lrrn        $AX0.H, @$AR0
-	movr'ln     $ACC1, $AX0.H : $AX0.H, @$AR0
-	loop        $AC0.M
-	movr'lsnm   $ACC1, $AX0.H : $AX0.H, $AC1.M
-
-; 0370: Requested voice stop: halve six current gains; finish once all zero.
+			clr         $ACC0
+			mrr         $IX0, $AC0.M
+			mrr         $IX2, $AC0.M
+			incm        $AC0.M
+			mrr         $IX3, $AC0.M
+			; Restore requested preceding samples for per-send delays
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_SAVED_SAMPLE_COUNT
+			tst         $ACC0
+			jz          loc_0370
+			lr          $AR3, @FILTERED_VOICE_POINTER
+			dar         $AR3
+			lri         $AR0, #VOICE_SEND_DELAY_HISTORY_END
+			lri         $IX0, #0xffff
+			lri         $IX3, #0xffff
+			lrrn        $AX0.H, @$AR0
+			movr'ln     $ACC1, $AX0.H : $AX0.H, @$AR0
+			loop        $AC0.M
+			movr'lsnm   $ACC1, $AX0.H : $AX0.H, $AC1.M
+			; Requested voice stop: halve six current gains; finish once all zero.
 loc_0370:
-	lr          $AX0.H, @VOICE_STOP_REQUESTED
-	tstaxh      $AX0.H
-	jz          mix_voice_sends
-	clr         $ACC1
-	lri         $IX2, #0x0005
-	lri         $AR2, #VOICE_SEND_0_GAIN_CURRENT
-	bloopi      #0x06, loc_037e
-	lrrd        $AC0.M, @$AR2
-	lsr         $ACC0, #-1
-
+			lr          $AX0.H, @VOICE_STOP_REQUESTED
+			tstaxh      $AX0.H
+			jz          mix_voice_sends
+			clr         $ACC1
+			lri         $IX2, #0x0005
+			lri         $AR2, #VOICE_SEND_0_GAIN_CURRENT
+			bloopi      #0x06, loc_037e
+			lrrd        $AC0.M, @$AR2
+			lsr         $ACC0, #-1
 loc_037e:
-	add'sn      $ACC1, $ACC0 : @$AR2, $AC0.M
-	tst         $ACC1
-	jnz         mix_voice_sends
-	lri         $AX0.H, #0x0001
-	sr          @VOICE_DONE, $AX0.H
-
-; 0386: Six-send mixing loop; compute gain delta / 32 in full fixed-point accumulator.
+			add'sn      $ACC1, $ACC0 : @$AR2, $AC0.M
+			tst         $ACC1
+			jnz         mix_voice_sends
+			lri         $AX0.H, #0x0001
+			sr          @VOICE_DONE, $AX0.H
+			; Six-send mixing loop; compute gain delta / 32 in full fixed-point accumulator
 mix_voice_sends:
-	set40
-	lri         $IX2, #0x0002
-	lri         $AR2, #VOICE_SEND_0_DESTINATION
-	bloopi      #0x06, loc_03b6
-	clr         $ACC0
-	lrri        $AC0.M, @$AR2
-	sbclr       #0x00
-	tst         $ACC0
-	ifz
-	sbset       #0x00
-	mrr         $AR3, $AC0.M
-	lrri        $AC0.M, @$AR2
-	lrri        $AC1.M, @$AR2
-	sub         $ACC0, $ACC1
-	asr         $ACC0, #-5
-	mrr         $AX0.H, $AC0.M
-	mrr         $AX0.L, $AC0.L
-
-; 039A: Send delay word: high byte moves one step toward low byte; low byte offsets input.
-	lrr         $AC0.M, @$AR2
-	andi        $AC0.M, #0x00ff
-	mrr         $AX1.H, $AC0.M
-	lrr         $AC0.M, @$AR2
-	lsr         $ACC0, #-8
-	lri         $AC0.L, #0x0000
-	cmpaxh      $ACC0, $AX1.H
-	jz          loc_03ab
-	lrr         $AC0.M, @$AR2
-	ifg
-	incm        $AC0.M
-	ifl
-	decm        $AC0.M
-	srr         @$AR2, $AC0.M
-
+			set40
+			lri         $IX2, #0x0002
+			lri         $AR2, #VOICE_SEND_0_DESTINATION
+			bloopi      #0x06, loc_03b6
+			clr         $ACC0
+			lrri        $AC0.M, @$AR2
+			sbclr       #SB_LOGIC_ZERO
+			tst         $ACC0
+			ifz
+			sbset       #SB_LOGIC_ZERO
+			mrr         $AR3, $AC0.M
+			lrri        $AC0.M, @$AR2
+			lrri        $AC1.M, @$AR2
+			sub         $ACC0, $ACC1
+			asr         $ACC0, #-5
+			mrr         $AX0.H, $AC0.M
+			mrr         $AX0.L, $AC0.L
+			; Send delay word: high byte moves one step toward low byte; low byte offsets input.
+			lrr         $AC0.M, @$AR2
+			andi        $AC0.M, #0x00ff
+			mrr         $AX1.H, $AC0.M
+			lrr         $AC0.M, @$AR2
+			lsr         $ACC0, #-8
+			lri         $AC0.L, #0x0000
+			cmpaxh      $ACC0, $AX1.H
+			jz          loc_03ab
+			lrr         $AC0.M, @$AR2
+			ifg
+			incm        $AC0.M
+			ifl
+			decm        $AC0.M
+			srr         @$AR2, $AC0.M
 loc_03ab:
-	dar         $AR2
-	lr          $AC0.M, @FILTERED_VOICE_POINTER
-	subr        $ACC0, $AX1.H
-	jlz         loc_03b4
-	mrr         $AR0, $AC0.M
-	call        mix_buffer_with_gain_ramp
-
+			dar         $AR2
+			lr          $AC0.M, @FILTERED_VOICE_POINTER
+			subr        $ACC0, $AX1.H
+			jlz         loc_03b4
+			mrr         $AR0, $AC0.M
+			call        mix_buffer_with_gain_ramp
 loc_03b4:
-	nop
-	srri        @$AR2, $AC1.M
-
+			nop
+			srri        @$AR2, $AC1.M
 loc_03b6:
-	iar         $AR2
-
-; 03B7: Save trailing samples for delayed sends in the next block.
-	set16
-	clr         $ACC0
-	lr          $AC0.M, @VOICE_SAVED_SAMPLE_COUNT
-	tst         $ACC0
-	jz          finish_voice
-	lr          $AR3, @FILTERED_VOICE_POINTER
-	lri         $IX3, #0x004f
-	addarn      $AR3, $IX3
-	lri         $AR0, #VOICE_SEND_DELAY_HISTORY_END
-	lri         $IX0, #0xffff
-	lri         $IX3, #0xffff
-	lrrn        $AX0.H, @$AR3
-	movr'ln     $ACC1, $AX0.H : $AX0.H, @$AR3
-	loop        $AC0.M
-	movr'slnm   $ACC1, $AX0.H : $AC1.M, $AX0.H
-
-; 03CD: Clear reset flag unless constant/paused; write mutable voice state back.
+			iar         $AR2
+			; Save trailing samples for delayed sends in the next block.
+			set16
+			clr         $ACC0
+			lr          $AC0.M, @VOICE_SAVED_SAMPLE_COUNT
+			tst         $ACC0
+			jz          finish_voice
+			lr          $AR3, @FILTERED_VOICE_POINTER
+			lri         $IX3, #0x004f
+			addarn      $AR3, $IX3
+			lri         $AR0, #VOICE_SEND_DELAY_HISTORY_END
+			lri         $IX0, #0xffff
+			lri         $IX3, #0xffff
+			lrrn        $AX0.H, @$AR3
+			movr'ln     $ACC1, $AX0.H : $AX0.H, @$AR3
+			loop        $AC0.M
+			movr'slnm   $ACC1, $AX0.H : $AC1.M, $AX0.H
+			; Clear reset flag unless constant/paused; write mutable voice state back.
 finish_voice:
-	lr          $AX0.H, @VOICE_USE_CONSTANT_SAMPLE
-	tstaxh      $AX0.H
-	jnz         loc_03d5
-	clr         $ACC0
-	sr          @VOICE_RESET, $AC0.M
-
+			lr          $AX0.H, @VOICE_USE_CONSTANT_SAMPLE
+			tstaxh      $AX0.H
+			jnz         loc_03d5
+			clr         $ACC0
+			sr          @VOICE_RESET, $AC0.M
 loc_03d5:
-	call        store_voice_state
-
+			call        store_voice_state
 next_voice:
-	lr          $AC0.M, @CURRENT_VOICE_INDEX
-	incm        $AC0.M
-	sr          @CURRENT_VOICE_INDEX, $AC0.M
-
-loc_03dc:
-	nop
-
-; 03DD: Set CPU gate, notify DCD10004 / F355FFxx; block counter starts at 1 here.
+			lr          $AC0.M, @CURRENT_VOICE_INDEX
+			incm        $AC0.M
+			sr          @CURRENT_VOICE_INDEX, $AC0.M
+voice_rendering_loop_end:
+		nop
+		; All voices rendered now.
+		;
+		; Set CPU gate, notify DCD10004 / F355FFxx; block counter starts at 1 here.
 notify_block_processed:
-	lris        $AC0.M, #0x01
-	sr          @CPU_RELEASE_GATE, $AC0.M
-	lris        $AC0.M, #0x04
-	call        send_task_mail
-	lr          $AC0.M, @CURRENT_BLOCK_INDEX
-	ori         $AC0.M, #0xff00
-	call        send_audio_mail
-
-; 03E9: Post-voice delay/modulation path at 0C6B, 0C7D, 0CD2.
-	call        write_modulated_delay
-	call        read_modulated_delay
-	call        mix_modulated_delay
-	lr          $AC0.M, @RENDER_BLOCKS_REMAINING
-	decm        $AC0.M
-	sr          @RENDER_BLOCKS_REMAINING, $AC0.M
-
-; 03F4: Mix auxiliary 09A0 into both fronts at gain 5A82 (~1/sqrt(2)).
-	lri         $AR0, #BUS_AUX_CENTER
-	lri         $AR3, #BUS_FRONT_LEFT
-	lris        $AC1.M, #0x50
-	lri         $AX0.L, #0x5a82
-	call        add_scaled_buffer
-	lri         $AR0, #BUS_AUX_CENTER
-	lri         $AR3, #BUS_FRONT_RIGHT
-	lris        $AC1.M, #0x50
-	call        add_scaled_buffer
-
-; 0404: Fold first 40 samples of current rear-right into last 40 front samples.
-	clr         $ACC1
-	lris        $AC1.M, #0x28
-	lri         $AR0, #BUS_REAR_RIGHT
-	lri         $AR3, #BUS_FRONT_LEFT_SECOND_HALF
-	lri         $AX0.L, #0xb820
-	call        add_scaled_buffer
-	clr         $ACC1
-	lris        $AC1.M, #0x28
-	lri         $AR0, #BUS_REAR_RIGHT
-	lri         $AR3, #BUS_FRONT_RIGHT_SECOND_HALF
-	lri         $AX0.L, #0x7fff
-	call        add_scaled_buffer
-
-; 0418: Apply master Q4.12 gain and DMA 80 left samples to MRAM.
-	lri         $AR3, #BUS_FRONT_LEFT
-	call        apply_master_gain
-	lri         $AR1, #OUTPUT_LEFT_ADDRESS_H
-	lri         $AC1.M, #BUS_FRONT_LEFT
-	lri         $AR0, #0x0050
-	call        dma_write_pointer
-
-; 0424: Add 0FA0 to right at gain 8000 (negative unity), master gain, DMA right.
-	lri         $AR0, #BUS_AUX_RIGHT_SUBTRACT
-	lri         $AR3, #BUS_FRONT_RIGHT
-	lris        $AC1.M, #0x50
-	lri         $AX0.L, #0x8000
-	call        add_scaled_buffer
-	lri         $AR3, #BUS_FRONT_RIGHT
-	call        apply_master_gain
-	lri         $AR1, #OUTPUT_RIGHT_ADDRESS_H
-	lri         $AC1.M, #BUS_FRONT_RIGHT
-	lri         $AR0, #0x0050
-	call        dma_write_pointer
-
-; 0439: Advance each output pointer by 0xA0 BYTES, write effects rings.
-	lri         $AX0.H, #0x0000
-	lri         $AX0.L, #0x00a0
-	lri         $AR0, #OUTPUT_LEFT_ADDRESS_H
-	call        advance_external_pointer
-	lri         $AR0, #OUTPUT_RIGHT_ADDRESS_H
-	call        advance_external_pointer
-	call        finish_effects_lines
+		lris        $AC0.M, #0x01
+		sr          @CPU_RELEASE_GATE, $AC0.M
+		lris        $AC0.M, #DSP_MAIL_SYNC
+		call        send_task_mail
+		lr          $AC0.M, @CURRENT_BLOCK_INDEX
+		ori         $AC0.M, #0xff00
+		call        send_audio_mail
+		; Post-voice delay/modulation path at 0C6B, 0C7D, 0CD2.
+		call        write_modulated_delay
+		call        read_modulated_delay
+		call        mix_modulated_delay
+		lr          $AC0.M, @RENDER_BLOCKS_REMAINING
+		decm        $AC0.M
+		sr          @RENDER_BLOCKS_REMAINING, $AC0.M
+		; Mix auxiliary 09A0 into both fronts at gain 5A82 (~1/sqrt(2)).
+		lri         $AR0, #BUS_AUX_CENTER
+		lri         $AR3, #BUS_FRONT_LEFT
+		lris        $AC1.M, #0x50
+		lri         $AX0.L, #0x5a82
+		call        add_scaled_buffer
+		lri         $AR0, #BUS_AUX_CENTER
+		lri         $AR3, #BUS_FRONT_RIGHT
+		lris        $AC1.M, #0x50
+		call        add_scaled_buffer
+		; Fold first 40 samples of current rear-right into last 40 front samples.
+		clr         $ACC1
+		lris        $AC1.M, #0x28
+		lri         $AR0, #BUS_REAR_RIGHT
+		lri         $AR3, #BUS_FRONT_LEFT_SECOND_HALF
+		lri         $AX0.L, #0xb820
+		call        add_scaled_buffer
+		clr         $ACC1
+		lris        $AC1.M, #0x28
+		lri         $AR0, #BUS_REAR_RIGHT
+		lri         $AR3, #BUS_FRONT_RIGHT_SECOND_HALF
+		lri         $AX0.L, #0x7fff
+		call        add_scaled_buffer
+		; Apply master Q4.12 gain and DMA 80 left samples to MRAM.
+		lri         $AR3, #BUS_FRONT_LEFT
+		call        apply_master_gain
+		lri         $AR1, #OUTPUT_LEFT_ADDRESS_H
+		lri         $AC1.M, #BUS_FRONT_LEFT
+		lri         $AR0, #0x0050
+		call        dma_write_pointer
+		; Add 0FA0 to right at gain 8000 (negative unity), master gain, DMA right.
+		lri         $AR0, #BUS_AUX_RIGHT_SUBTRACT
+		lri         $AR3, #BUS_FRONT_RIGHT
+		lris        $AC1.M, #0x50
+		lri         $AX0.L, #0x8000
+		call        add_scaled_buffer
+		lri         $AR3, #BUS_FRONT_RIGHT
+		call        apply_master_gain
+		lri         $AR1, #OUTPUT_RIGHT_ADDRESS_H
+		lri         $AC1.M, #BUS_FRONT_RIGHT
+		lri         $AR0, #0x0050
+		call        dma_write_pointer
+		; Advance each output pointer by 0xA0 BYTES, write effects rings.
+		lri         $AX0.H, #0x0000
+		lri         $AX0.L, #0x00a0
+		lri         $AR0, #OUTPUT_LEFT_ADDRESS_H
+		call        advance_external_pointer
+		lri         $AR0, #OUTPUT_RIGHT_ADDRESS_H
+		call        advance_external_pointer
+		call        finish_effects_lines
+		nop
+block_rendering_loop_end:
 	nop
-
-loc_0448:
-	nop
-
-; 0449: Render batch finished; enter scheduler handshake, continuation = dispatcher.
+	; Render batch finished; enter scheduler handshake, continuation = dispatcher.
 finish_render_batch:
 	lri         $AR0, #command_loop
 	jmp         wait_for_task_action
 
-; 044D: Command 07 utility body: DMA two arrays, exchange them; usage unverified.
+
+
+; Command 07 utility body: DMA two arrays, exchange them; usage unverified.
 command_exchange_arrays:
 	lri         $AR0, #UTILITY_ARGUMENTS
 	call        copy_command_arguments
@@ -1144,7 +1212,9 @@ command_exchange_arrays:
 	call        dma_write
 	jmp         acknowledge_command
 
-; 047D: Command 09 utility body: MRAM copy via DRAM; usage unverified.
+
+
+; Command 09 utility body: MRAM copy via DRAM; usage unverified.
 command_copy_mram:
 	lri         $AR0, #UTILITY_ARGUMENTS
 	call        copy_command_arguments
@@ -1163,7 +1233,9 @@ command_copy_mram:
 	call        dma_write
 	jmp         acknowledge_command
 
-; 0499: Command 06 utility body: ARAM read then MRAM write; usage unverified.
+
+
+; Command 06 utility body: ARAM read then MRAM write; usage unverified.
 command_copy_aram_to_mram:
 	lri         $AR0, #UTILITY_ARGUMENTS
 	call        copy_command_arguments
@@ -1182,7 +1254,9 @@ command_copy_aram_to_mram:
 	call        dma_write
 	jmp         acknowledge_command
 
-; 04B5: Command 08 utility body: multiply/add arrays; usage unverified.
+
+
+; Command 08 utility body: multiply/add arrays; usage unverified.
 command_multiply_add_arrays:
 	lri         $AR0, #UTILITY_ARGUMENTS
 	call        copy_command_arguments
@@ -1212,7 +1286,6 @@ command_multiply_add_arrays:
 	lrrn        $AC0.M, @$AR0
 	mulxac      $AX0.H, $AX1.H, $ACC0
 	nx'sl       : $AC0.M, $AX1.H
-
 loc_04e2:
 	nop
 	set16
@@ -1224,16 +1297,16 @@ loc_04e2:
 	call        dma_write
 	jmp         acknowledge_command
 
-; 04F0: MRAM -> DRAM DMA; read 32-bit MRAM pointer from AR1.
+
+
+; MRAM -> DRAM DMA; read 32-bit MRAM pointer from AR1.
 dma_read_pointer:
 	lrri        $AC0.M, @$AR1
 	lrri        $AC0.L, @$AR1
-
-; 04F2: DMA input core: DSPA=word address, DSMA=byte address, DSBL=2*AR0.
+	; DMA input core: DSPA=word address, DSMA=byte address, DSBL=2*AR0.
 dma_read:
 	srs         @DMA_DSP_WORD_ADDRESS, $AC1.M
 	lris        $AC1.M, #0x00
-
 loc_04f4:
 	srs         @DMA_CONTROL, $AC1.M
 	srs         @DMA_MAIN_ADDRESS_H, $AC0.M
@@ -1244,24 +1317,29 @@ loc_04f4:
 	call        wait_for_dma
 	ret
 
-; 04FD: DRAM -> MRAM DMA; read MRAM pointer from AR1.
+
+
+; DRAM -> MRAM DMA; read MRAM pointer from AR1.
 dma_write_pointer:
 	lrri        $AC0.M, @$AR1
 	lrri        $AC0.L, @$AR1
-
 dma_write:
 	srs         @DMA_DSP_WORD_ADDRESS, $AC1.M
 	lris        $AC1.M, #0x01
 	jmp         loc_04f4
 
-; 0503: Wait for DMA busy flag to clear.
+
+
+; Wait for DMA busy flag to clear.
 wait_for_dma:
 	lrs         $AC0.M, @DMA_CONTROL
 	andf        $AC0.M, #0x0004
 	jlnz        wait_for_dma
 	ret
 
-; 0509: Non-waiting DMA input helper.
+
+
+; Non-waiting DMA input helper.
 start_dma_read:
 	lrri        $AC0.M, @$AR1
 	lrri        $AC0.L, @$AR1
@@ -1275,18 +1353,21 @@ start_dma_read:
 	sr          @DMA_BYTE_LENGTH, $AC1.M
 	ret
 
-; 0519: Wait for DMA, using full addresses independent of CR page.
+
+
+; Wait for DMA, using full addresses independent of CR page.
 wait_for_dma_full_address:
 	lr          $AC0.M, @DMA_CONTROL
 	andf        $AC0.M, #0x0004
 	jlnz        wait_for_dma_full_address
 	ret
 
-; 0520: Raw ARAM read helper.
+
+
+; Raw ARAM read helper.
 aram_read_pointer:
 	lrri        $AC0.M, @$AR1
 	lrri        $AC0.L, @$AR1
-
 aram_read:
 	andi        $AC0.M, #0x7fff
 	call        configure_raw_aram_access
@@ -1295,12 +1376,13 @@ aram_read:
 	srri        @$AR1, $AC0.M
 	nop
 	nop
-
 loc_052c:
 	nop
 	ret
 
-; 052E: Set up raw ARAM accelerator registers.
+
+
+; Set up raw ARAM accelerator registers.
 configure_raw_aram_access:
 	mrr         $AR1, $AC1.M
 	lris        $AC1.M, #0x05
@@ -1323,7 +1405,9 @@ configure_raw_aram_access:
 	mrr         $AX0.H, $AR0
 	ret
 
-; 0543: Raw ARAM write helper.
+
+
+; Raw ARAM write helper.
 aram_write_pointer:
 	lrri        $AC0.M, @$AR1
 	lrri        $AC0.L, @$AR1
@@ -1335,12 +1419,13 @@ aram_write_pointer:
 	nop
 	nop
 	nop
-
 loc_0550:
 	nop
 	ret
 
-; 0552: Command 04 utility body: MRAM -> DRAM; usage unverified.
+
+
+; Command 04 utility body: MRAM -> DRAM; usage unverified.
 command_dma_read:
 	lri         $AR0, #UTILITY_ARGUMENTS
 	call        copy_command_arguments
@@ -1352,7 +1437,9 @@ command_dma_read:
 	call        dma_read_pointer
 	jmp         acknowledge_command
 
-; 0564: Command 05 utility body: DRAM -> MRAM; usage unverified.
+
+
+; Command 05 utility body: DRAM -> MRAM; usage unverified.
 command_dma_write:
 	lri         $AR0, #UTILITY_ARGUMENTS
 	call        copy_command_arguments
@@ -1364,7 +1451,9 @@ command_dma_write:
 	call        dma_write_pointer
 	jmp         acknowledge_command
 
-; 0576: Program accelerator format, start/end/current addresses; restores CR=FF.
+
+
+; Program accelerator format, start/end/current addresses; restores CR=FF.
 configure_sample_accelerator:
 	lri         $CR, #0x00ff
 	srs         @ACCEL_FORMAT, $AC1.M
@@ -1390,7 +1479,9 @@ configure_sample_accelerator:
 	srs         @ACCEL_CURRENT_ADDRESS_L, $AC0.L
 	ret
 
-; 0591: CPU interrupt: save registers, receive command or synchronization data.
+
+
+; CPU interrupt: save registers, receive command or synchronization data.
 receive_cpu_interrupt:
 	sr          @INTERRUPT_SAVED_ACC0_H, $AC0.H
 	sr          @INTERRUPT_SAVED_ACC0_L, $AC0.L
@@ -1403,11 +1494,9 @@ receive_cpu_interrupt:
 	lr          $AX0.H, @CPU_TO_DSP_MAILBOX_L
 	tstaxh      $AX0.H
 	jnz         receive_command_payload
-
-; 05A5: Synchronization: clear CPU gate, then receive four 16-bit active-mask words.
+	; Synchronization: clear CPU gate, then receive four 16-bit active-mask words.
 receive_active_voice_mask:
 	sr          @CPU_RELEASE_GATE, $AX0.H
-
 loc_05a7:
 	lr          $AC0.M, @CPU_TO_DSP_MAILBOX_H
 	andcf       $AC0.M, #0x8000
@@ -1415,7 +1504,6 @@ loc_05a7:
 	lr          $AC0.L, @CPU_TO_DSP_MAILBOX_L
 	sr          @ACTIVE_VOICE_MASK_0, $AC0.M
 	sr          @ACTIVE_VOICE_MASK_1, $AC0.L
-
 loc_05b3:
 	lr          $AC0.M, @CPU_TO_DSP_MAILBOX_H
 	andcf       $AC0.M, #0x8000
@@ -1423,7 +1511,6 @@ loc_05b3:
 	lr          $AC0.L, @CPU_TO_DSP_MAILBOX_L
 	sr          @ACTIVE_VOICE_MASK_2, $AC0.M
 	sr          @ACTIVE_VOICE_MASK_3, $AC0.L
-
 return_from_cpu_interrupt:
 	lr          $AC0.M, @INTERRUPT_SAVED_ACC0_M
 	lr          $AC0.L, @INTERRUPT_SAVED_ACC0_L
@@ -1431,28 +1518,34 @@ return_from_cpu_interrupt:
 	lr          $AX0.H, @INTERRUPT_SAVED_AX0_H
 	rti
 
-; 05C8: Task yield path.
+
+
+; Task yield path.
 yield_task:
 	lri         $AX0.H, #0x0002
 	sr          @DATA_03A3, $AX0.H
 	sr          @TASK_CONTINUATION, $AR0
 	call        wait_for_outgoing_mail_acc0
-	si          @DSP_TO_CPU_MAILBOX_H, #0xdcd1
-	si          @DSP_TO_CPU_MAILBOX_L, #0x0002
+	si          @DSP_TO_CPU_MAILBOX_H, #DSP_MAIL_PREFIX
+	si          @DSP_TO_CPU_MAILBOX_L, #DSP_MAIL_YIELD
 	si          @CPU_INTERRUPT_REQUEST, #0x0001
 	halt
 
-; 05D7: DATA: four scheduler target addresses, read with ILRR (not executed).
+
+
+; DATA: four scheduler target addresses, read with ILRR (not executed).
 task_action_table:
 	cw halt_task
 	cw switch_task_context
 	cw return_to_rom
 	cw continue_task
 
-; 05DB: Send DCD10005; wait for CPU task action, select target from preceding table.
+
+
+; Send DCD10005; wait for CPU task action, select target from preceding table.
 wait_for_task_action:
 	sr          @TASK_CONTINUATION, $AR0
-	lri         $AC0.M, #0x0005
+	lri         $AC0.M, #DSP_MAIL_FRAME_END
 	call        send_task_mail
 	set16
 	clr         $ACC0
@@ -1467,10 +1560,14 @@ wait_for_task_action:
 	jmpr        $AR3
 	halt
 
+
+
 halt_task:
 	halt
 
-; 05F0: Save/load task context handshake; tail-call DSP ROM at 80B5.
+
+
+; Save/load task context handshake; tail-call DSP ROM at 80B5.
 switch_task_context:
 	lri         $AX0.H, #0x0002
 	sr          @DATA_03A3, $AX0.H
@@ -1511,34 +1608,41 @@ switch_task_context:
 	lrs         $AX1.L, @CPU_TO_DSP_MAILBOX_L
 	call        wait_for_cpu_mail_acc0
 	lrs         $AX1.H, @CPU_TO_DSP_MAILBOX_L
-
 loc_0624:
 	lrs         $AC0.M, @DMA_CONTROL
 	andf        $AC0.M, #0x0004
 	jlnz        loc_0624
-	sbclr       #0x06
-	sbclr       #0x03
-	sbclr       #0x04
-	sbclr       #0x05
+	sbclr       #SB_UNKNOWN_12
+	sbclr       #SB_INTERRUPT_ENABLE
+	sbclr       #SB_UNKNOWN_10
+	sbclr       #SB_EXTERNAL_INTERRUPT_ENABLE
 	jmp         ROM_SWITCH_TASK
 	halt
 
-; 0630: Return to ROM boot entry at 8000.
+
+
+; Return to ROM boot entry at 8000.
 return_to_rom:
 	jmp         ROM_BOOT
 	halt
 
-; 0633: Continue using saved continuation address.
+
+
+; Continue using saved continuation address.
 continue_task:
 	lr          $AR0, @TASK_CONTINUATION
 	jmpr        $AR0
 
-; 0636: Wait for CPU mailbox word (CMBH full).
+
+
+; Wait for CPU mailbox word (CMBH full).
 wait_for_cpu_mail_acc0:
 	lrs         $AC0.M, @CPU_TO_DSP_MAILBOX_H
 	andcf       $AC0.M, #0x8000
 	jlnz        wait_for_cpu_mail_acc0
 	ret
+
+
 
 wait_for_cpu_mail_acc1:
 	lrs         $AC1.M, @CPU_TO_DSP_MAILBOX_H
@@ -1546,16 +1650,20 @@ wait_for_cpu_mail_acc1:
 	jlnz        wait_for_cpu_mail_acc1
 	ret
 
-; 0642: Send DCD1xxxx and request CPU interrupt.
+
+
+; Send DCD1xxxx and request CPU interrupt.
 send_task_mail:
 	call        wait_for_outgoing_mail_acc1
-	si          @DSP_TO_CPU_MAILBOX_H, #0xdcd1
+	si          @DSP_TO_CPU_MAILBOX_H, #DSP_MAIL_PREFIX
 	srs         @DSP_TO_CPU_MAILBOX_L, $AC0.M
 	si          @CPU_INTERRUPT_REQUEST, #0x0001
 	call        wait_for_outgoing_mail_acc1
 	ret
 
-; 064C: Send F355xxxx payload.
+
+
+; Send F355xxxx payload.
 send_audio_mail:
 	call        wait_for_outgoing_mail_acc1
 	si          @DSP_TO_CPU_MAILBOX_H, #0xf355
@@ -1563,12 +1671,16 @@ send_audio_mail:
 	call        wait_for_outgoing_mail_acc1
 	ret
 
-; 0654: Wait for DSP outgoing mailbox to be empty.
+
+
+; Wait for DSP outgoing mailbox to be empty.
 wait_for_outgoing_mail_acc0:
 	lrs         $AC0.M, @DSP_TO_CPU_MAILBOX_H
 	andcf       $AC0.M, #0x8000
 	jlz         wait_for_outgoing_mail_acc0
 	ret
+
+
 
 wait_for_outgoing_mail_acc1:
 	lrs         $AC1.M, @DSP_TO_CPU_MAILBOX_H
@@ -1576,7 +1688,9 @@ wait_for_outgoing_mail_acc1:
 	jlz         wait_for_outgoing_mail_acc1
 	ret
 
-; 0660: Initialize 48-word command ring at 0280.
+
+
+; Initialize 48-word command ring at 0280.
 initialize_command_queue:
 	lri         $AX0.H, #COMMAND_QUEUE
 	sr          @COMMAND_QUEUE_WRITE_POINTER, $AX0.H
@@ -1585,14 +1699,15 @@ initialize_command_queue:
 	sr          @PENDING_COMMAND_COUNT, $AX0.H
 	ret
 
-; 066A: Interrupt-side receiver: count + command payload into circular command queue.
+
+
+; Interrupt-side receiver: count + command payload into circular command queue.
 receive_command_payload:
 	sr          @INTERRUPT_SAVED_AR0, $AR0
 	sr          @INTERRUPT_SAVED_WR0, $WR0
 	lr          $AR0, @COMMAND_QUEUE_WRITE_POINTER
 	lri         $WR0, #0x002f
 	srri        @$AR0, $AX0.H
-
 loc_0673:
 	lr          $AC0.M, @CPU_TO_DSP_MAILBOX_H
 	andcf       $AC0.M, #0x8000
@@ -1605,7 +1720,6 @@ loc_0673:
 	mrr         $AX0.H, $AC0.M
 	tstaxh      $AX0.H
 	jnz         loc_0673
-
 loc_0683:
 	clr         $ACC0
 	lr          $AC0.M, @PENDING_COMMAND_COUNT
@@ -1616,7 +1730,9 @@ loc_0683:
 	lr          $WR0, @INTERRUPT_SAVED_WR0
 	jmp         return_from_cpu_interrupt
 
-; 0691: Queue task-control marker.
+
+
+; Queue task-control marker.
 queue_task_control:
 	sr          @INTERRUPT_SAVED_AR0, $AR0
 	sr          @INTERRUPT_SAVED_WR0, $WR0
@@ -1626,54 +1742,65 @@ queue_task_control:
 	srri        @$AR0, $AX0.H
 	jmp         loc_0683
 
-; 069D: Main-loop queue reader and command staging.
+
+
+; Main-loop queue reader and command staging.
 read_command_queue:
+	; We read commands from a 48-byte long ringbuffer,
+	; with COMMAND_QUEUE_READ_POINTER storing the current
+	; read position in it.
+	; There's a quirk here where the ringbuffer might actually
+	; be 64 word long with first 8 bytes being unused, not sure about it.
 	lr          $AR0, @COMMAND_QUEUE_READ_POINTER
 	lri         $WR0, #0x002f
-
-loc_06a1:
+read_command_retry:
+	; If there are 0 pending commands, we keep looping until CPU sends us one
 	lr          $AX0.H, @PENDING_COMMAND_COUNT
 	tstaxh      $AX0.H
-	jz          loc_06c5
-	sbclr       #0x05
-
+	jz          cancel_read_command
+	; decrement pending command count "atomically"
+	sbclr       #SB_EXTERNAL_INTERRUPT_ENABLE
 	lr          $AX0.H, @PENDING_COMMAND_COUNT
 	mrr         $AC0.M, $AX0.H
 	decm        $AC0.M
 	sr          @PENDING_COMMAND_COUNT, $AC0.M
-
-	sbset       #0x05
+	sbset       #SB_EXTERNAL_INTERRUPT_ENABLE
+	; COMMAND_HEADER_H is the command staging area
 	lri         $AR1, #COMMAND_HEADER_H
 	lrri        $AC0.M, @$AR0
+	; If size is negative -- skip this word
 	andcf       $AC0.M, #0x8000
-	jlz         loc_06c9
+	jlz         read_command_skip
+	; If size is 0 -- yield and wait for CPU to wake us up
 	mrr         $AX0.H, $AC0.M
 	tstaxh      $AX0.H
-	jz          loc_06cd
-	bloop       $AX0.H, loc_06be
+	jz          yield_read_command_queue
+	; Copy the entire command into staging area, two words at a time
+	bloop       $AX0.H, command_read_loop_last_instruction
 	lrri        $AC0.M, @$AR0
 	srri        @$AR1, $AC0.M
 	lrri        $AC0.M, @$AR0
-
-loc_06be:
+command_read_loop_last_instruction:
 	srri        @$AR1, $AC0.M
+	; Store the incremented read pointe, restore wrapping, and dispatch
 	sr          @COMMAND_QUEUE_READ_POINTER, $AR0
 	lri         $WR0, #0xffff
 	jmp         dispatch_command
-
-loc_06c5:
+cancel_read_command:
+  ; Restore wrapping on AR0 just in case
 	lri         $WR0, #0xffff
 	jmp         command_loop
-
-loc_06c9:
+read_command_skip:
 	sr          @COMMAND_QUEUE_READ_POINTER, $AR0
-	jmp         loc_06a1
-
-loc_06cd:
+	jmp         read_command_retry
+yield_read_command_queue:
+	; yield with read_command_queue being the continuation when the CPU resumes us
 	lri         $AR0, #read_command_queue
 	jmp         yield_task
 
-; 06D1: Buffered AFC: copy retained samples and update position.
+
+
+; Buffered AFC: copy retained samples and update position.
 copy_afc_retained_samples:
 	lri         $AC0.M, #VOICE_AFC_DECODED_SAMPLES
 	lrs         $AX0.H, @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT
@@ -1686,7 +1813,6 @@ copy_afc_retained_samples:
 	addr        $ACC0, $AX0.H
 	lri         $AC0.H, #0x0000
 	jmp         loc_06ee
-
 copy_afc_retained_samples_bounded:
 	lri         $AC0.M, #VOICE_AFC_DECODED_SAMPLES
 	lrs         $AX0.H, @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT
@@ -1701,7 +1827,6 @@ copy_afc_retained_samples_bounded:
 	cmp
 	ifge
 	mrr         $AC0.M, $AC1.M
-
 loc_06ee:
 	mrr         $AX1.L, $AC0.M
 	call        copy_sample_run
@@ -1713,7 +1838,9 @@ loc_06ee:
 	srs         @VOICE_SOURCE_POSITION_L_SHORT, $AC0.L
 	ret
 
-; 06F8: Compute AFC block address, within-block index and remaining sample count.
+
+
+; Compute AFC block address, within-block index and remaining sample count.
 compute_afc_position:
 	clr         $ACC0
 	lrs         $AX0.H, @VOICE_SOURCE_POSITION_H_SHORT
@@ -1745,7 +1872,9 @@ compute_afc_position:
 	srs         @VOICE_REMAINING_LENGTH_L_SHORT, $AC0.L
 	ret
 
-; 0716: AFC end/loop handling; restore loop predictor history, or mark done and zero-fill.
+
+
+; AFC end/loop handling; restore loop predictor history, or mark done and zero-fill.
 handle_afc_block_boundary:
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_DONE_SHORT
@@ -1761,13 +1890,11 @@ handle_afc_block_boundary:
 	jz          loc_072b
 	call        decode_afc_block
 	lris        $AC0.M, #0x10
-
 loc_0727:
 	srs         @VOICE_AFC_DECODED_SAMPLE_COUNT_SHORT, $AC0.M
 	clr         $ACC0
 	srs         @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT, $AC0.M
 	ret
-
 loc_072b:
 	lrs         $AX0.H, @VOICE_LOOP_END_POSITION_H_SHORT
 	lrs         $AX0.L, @VOICE_LOOP_END_POSITION_L_SHORT
@@ -1779,7 +1906,6 @@ loc_072b:
 	call        decode_afc_block
 	lrs         $AC0.M, @VOICE_REMAINING_LENGTH_L_SHORT
 	jmp         loc_0727
-
 loc_0738:
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_LOOP_ENABLED_SHORT
@@ -1800,10 +1926,8 @@ loc_0738:
 	sr          @DATA_0362, $AC0.M
 	call        decode_afc_block
 	ret
-
 loc_074f:
 	clr         $ACC0
-
 loc_0750:
 	lri         $AR1, #VOICE_AFC_DECODED_SAMPLES
 	loopi       #0x10
@@ -1816,7 +1940,9 @@ loc_0750:
 	srs         @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT, $AC0.M
 	ret
 
-; 075B: Copy a bounded run of samples to output scratch.
+
+
+; Copy a bounded run of samples to output scratch.
 copy_sample_run:
 	tst         $ACC0
 	retz
@@ -1828,18 +1954,18 @@ copy_sample_run:
 	loop        $AX0.L
 	movr'ls     $ACC0, $AX0.H : $AX0.H, $AC0.M
 	movr's      $ACC0, $AX0.H : @$AR3, $AC0.M
-
 loc_0766:
 	srri        @$AR3, $AC0.M
 	ret
 
-; 0768: General AFC reader: decode 16-sample blocks and retain leftovers.
+
+
+; General AFC reader: decode 16-sample blocks and retain leftovers.
 load_afc_buffered:
 	lri         $CR, #0x0004
 	call        compute_afc_position
 	clr         $ACC0
 	sr          @DATA_0362, $AC0.M
-
 loc_076f:
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_REMAINING_LENGTH_H_SHORT
@@ -1854,12 +1980,10 @@ loc_076f:
 	tst         $ACC1
 	jz          loc_07ae
 	call        compute_afc_position
-
 loc_0782:
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_REMAINING_LENGTH_H_SHORT
 	lrs         $AC0.L, @VOICE_REMAINING_LENGTH_L_SHORT
-
 loc_0785:
 	mrr         $AX0.L, $AC1.M
 	lris        $AX0.H, #0x00
@@ -1873,36 +1997,33 @@ loc_0785:
 	lrs         $AX0.H, @VOICE_DONE_SHORT
 	tstaxh      $AX0.H
 	jnz         loc_07ab
-
 loc_0795:
 	call        copy_afc_retained_samples
 	call        compute_afc_position
 	jmp         loc_076f
-
 loc_079b:
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT
 	tst         $ACC0
 	jnz         loc_07a2
 	call        handle_afc_block_boundary
-
 loc_07a2:
 	call        copy_afc_retained_samples_bounded
 	tst         $ACC1
 	jz          loc_07ae
 	call        compute_afc_position
 	jmp         loc_079b
-
 loc_07ab:
 	clr         $ACC0
 	loop        $AC1.M
 	srri        @$AR3, $AC0.M
-
 loc_07ae:
 	lri         $CR, #0x00ff
 	ret
 
-; 07B1: Decode one 5-byte (LQ) or 9-byte (HQ) AFC block.
+
+
+; Decode one 5-byte (LQ) or 9-byte (HQ) AFC block.
 decode_afc_block:
 	sr          @DATA_0360, $AC1.M
 	lr          $AX0.H, @DATA_0362
@@ -1915,12 +2036,10 @@ decode_afc_block:
 	lris        $AC1.M, #0x05
 	call        configure_sample_accelerator
 	lri         $CR, #0x0004
-
 loc_07c2:
 	lri         $AR0, #ACCEL_RAW_DATA
 	lri         $IX0, #0x0000
-
-; 07C6: AFC header: upper nibble exponent, lower nibble predictor coefficient pair.
+	; AFC header: upper nibble exponent, lower nibble predictor coefficient pair.
 	lrrn        $AC0.M, @$AR0
 	mrr         $AC1.M, $AC0.M
 	lsl         $ACC0, #1
@@ -1933,10 +2052,9 @@ loc_07c2:
 	subr        $ACC1, $AX0.H
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_SOURCE_TYPE_SHORT
-	cmpis       $AC0.M, #0x05
+	cmpis       $AC0.M, #SOURCE_AFC_LQ
 	jz          unpack_afc_lq
-
-; 07D8: HQ: unpack sixteen signed 4-bit residuals.
+	; HQ: unpack sixteen signed 4-bit residuals.
 	lri         $AX0.H, #0x00f0
 	lris        $AX1.H, #0x0f
 	lri         $AR2, #AFC_RESIDUAL_SCRATCH
@@ -1948,7 +2066,6 @@ loc_07c2:
 	movr's      $ACC0, $AX0.L : @$AR2, $AC0.M
 	andr'ln     $AC0.M, $AX1.H : $AX0.L, @$AR0
 	lsl         $ACC0, #12
-
 loc_07e6:
 	movr's      $ACC0, $AX0.L : @$AR2, $AC0.M
 	andr        $AC0.M, $AX0.H
@@ -1958,8 +2075,7 @@ loc_07e6:
 	lsl         $ACC0, #12
 	srri        @$AR2, $AC0.M
 	jmp         apply_afc_predictor
-
-; 07EF: LQ: unpack sixteen signed 2-bit residuals.
+	; LQ: unpack sixteen signed 2-bit residuals.
 unpack_afc_lq:
 	lri         $AX0.H, #0xc000
 	lri         $AR2, #AFC_RESIDUAL_SCRATCH
@@ -1977,7 +2093,6 @@ unpack_afc_lq:
 	movr's      $ACC0, $AX0.L : @$AR2, $AC0.M
 	lsl         $ACC0, #14
 	andr'ln     $AC0.M, $AX0.H : $AX0.L, @$AR0
-
 loc_0802:
 	movr's      $ACC0, $AX0.L : @$AR2, $AC0.M
 	lsl         $ACC0, #8
@@ -1992,8 +2107,7 @@ loc_0802:
 	lsl         $ACC0, #14
 	andr        $AC0.M, $AX0.H
 	srri        @$AR2, $AC0.M
-
-; 080F: Two-history-sample predictor MAC loop; saturating stores in 40-bit mode.
+	; Two-history-sample predictor MAC loop; saturating stores in 40-bit mode.
 apply_afc_predictor:
 	set40
 	mrr         $AX1.H, $AC1.M
@@ -2014,7 +2128,6 @@ apply_afc_predictor:
 	asrnrx'mv   $ACC1, $AX1.H : $AX0.L, $AC0.M
 	mulxac'l    $AX0.L, $AX1.L, $ACC1 : $AC0.M, @$AR0
 	asl         $ACC1, #5
-
 loc_0825:
 	maddc's     $AC1.M, $AX1.L : @$AR1, $AC1.M
 	set16
@@ -2022,7 +2135,9 @@ loc_0825:
 	lr          $AC1.M, @DATA_0360
 	ret
 
-; 082B: Generated-waveform dispatcher; maintains phase at VPB byte 0060.
+
+
+; Generated-waveform dispatcher; maintains phase at VPB byte 0060.
 generate_waveform:
 	clr         $ACC0
 	mrr         $AX0.H, $AC0.M
@@ -2037,30 +2152,30 @@ generate_waveform:
 	callr       $AR2
 	sr          @VOICE_PHASE_FRACTION, $AC0.L
 	jmp         filter_voice
-
-; 0840: 16-entry waveform dispatch table (JMP instructions).
+; 16-entry waveform dispatch table (JMP instructions).
 waveform_dispatch_table:
-	jmp         generate_square
-	jmp         generate_saw
-	jmp         generate_phase_modulated_square
-	jmp         generate_quarter_duty_square
-	jmp         generate_pattern_1
+	jmp         generate_square                 ; SOURCE_SQUARE
+	jmp         generate_saw                    ; SOURCE_SAW
+	jmp         generate_phase_modulated_square ; SOURCE_PHASE_MODULATED_SQUARE
+	jmp         generate_quarter_duty_square    ; SOURCE_QUARTER_DUTY_SQUARE
+	jmp         generate_pattern_1              ; SOURCE_PATTERN_1
+	jmp         waveform_return                 ; SOURCE_AFC_LQ handled before table
+	jmp         generate_constant               ; SOURCE_CONSTANT
+	jmp         generate_pattern_0              ; SOURCE_PATTERN_0
+	jmp         waveform_return                 ; SOURCE_PCM8_ARAM handled before table
+	jmp         waveform_return                 ; SOURCE_AFC_HQ handled before table
+	jmp         generate_phase_modulated_pattern ; SOURCE_PHASE_MODULATED_PATTERN
+	jmp         generate_pattern_2              ; SOURCE_PATTERN_2
+	jmp         generate_pattern_3              ; SOURCE_PATTERN_3
 	jmp         waveform_return
-	jmp         generate_constant
-	jmp         generate_pattern_0
 	jmp         waveform_return
 	jmp         waveform_return
-	jmp         generate_phase_modulated_pattern
-	jmp         generate_pattern_2
-	jmp         generate_pattern_3
-	jmp         waveform_return
-	jmp         waveform_return
-	jmp         waveform_return
-
 waveform_return:
 	ret
 
-; 0861: Source 00: square wave.
+
+
+; Source 00: square wave.
 generate_square:
 	lsl         $ACC0, #1
 	lri         $AX1.H, #0xc000
@@ -2071,13 +2186,14 @@ generate_square:
 	srri        @$AR0, $AX1.H
 	iflz
 	srri        @$AR0, $AX1.L
-
 loc_086e:
 	addax       $ACC0, $AX0
 	lsr         $ACC0, #-1
 	ret
 
-; 0871: Source 03: quarter-duty square wave.
+
+
+; Source 03: quarter-duty square wave.
 generate_quarter_duty_square:
 	lsl         $ACC0, #2
 	clr         $ACC1
@@ -2091,13 +2207,14 @@ generate_quarter_duty_square:
 	srri        @$AR0, $AX1.H
 	iflz
 	srri        @$AR0, $AX1.L
-
 loc_0881:
 	add         $ACC0, $ACC1
 	lsr         $ACC0, #-2
 	ret
 
-; 0884: Source 02: square-wave variant using bus 0CA0 to update phase.
+
+
+; Source 02: square-wave variant using bus 0CA0 to update phase.
 generate_phase_modulated_square:
 	lsl         $ACC0, #1
 	lri         $AR1, #BUS_REAR_RIGHT
@@ -2114,13 +2231,14 @@ generate_phase_modulated_square:
 	lrr         $AC1.L, @$AR1
 	addax       $ACC1, $AX0
 	mrr         $AC1.M, $AR2
-
 loc_0899:
 	add's       $ACC0, $ACC1 : @$AR1, $AC1.M
 	lsr         $ACC0, #-1
 	ret
 
-; 089C: Source 01: saw wave.
+
+
+; Source 01: saw wave.
 generate_saw:
 	clr         $ACC1
 	mrr         $AC1.L, $AX0.L
@@ -2129,19 +2247,18 @@ generate_saw:
 	add's       $ACC0, $ACC1 : @$AR0, $AC0.L
 	ret
 
-; 08A2: Sources 0B/0C: evolving 64-word patterns 0180/01C0.
+
+
+; Sources 0B/0C: evolving 64-word patterns 0180/01C0.
 generate_pattern_2:
 	lri         $AR2, #WAVEFORM_PATTERN_2
 	jmp         generate_pattern_common
-
 generate_pattern_3:
 	lri         $AR2, #WAVEFORM_PATTERN_3
 	jmp         generate_pattern_common
-
-; 08AA: Source 04: table at 0140.
+; Source 04: table at 0140.
 generate_pattern_1:
 	lri         $AR2, #WAVEFORM_PATTERN_1
-
 generate_pattern_common:
 	lri         $WR2, #0x003f
 	lri         $IX2, #0x0000
@@ -2160,7 +2277,6 @@ generate_pattern_common:
 	andr'dr     $AC0.M, $AX1.H : $AR2
 	mrr         $IX2, $AC0.M
 	andr'nr     $AC0.M, $AX0.H : $AR2
-
 loc_08c2:
 	srri        @$AR0, $AX1.L
 	mrr         $AC0.M, $AR2
@@ -2168,13 +2284,17 @@ loc_08c2:
 	lri         $WR2, #0xffff
 	ret
 
-; 08C8: Source 06: fill with pitch word (constant generator).
+
+
+; Source 06: fill with pitch word (constant generator).
 generate_constant:
 	loopi       #0x50
 	srri        @$AR0, $AX0.L
 	ret
 
-; 08CB: Source 07: table at 0100.
+
+
+; Source 07: table at 0100.
 generate_pattern_0:
 	lri         $AR2, #WAVEFORM_PATTERN_0
 	lri         $WR2, #0x003f
@@ -2194,7 +2314,6 @@ generate_pattern_0:
 	andr'dr     $AC0.M, $AX1.H : $AR2
 	mrr         $IX2, $AC0.M
 	andr'nr     $AC0.M, $AX0.H : $AR2
-
 loc_08e3:
 	srri        @$AR0, $AX1.L
 	mrr         $AC0.M, $AR2
@@ -2202,7 +2321,9 @@ loc_08e3:
 	lri         $WR2, #0xffff
 	ret
 
-; 08E9: Source 0A: table at 0100 with phase modulation from bus 0CA0.
+
+
+; Source 0A: table at 0100 with phase modulation from bus 0CA0.
 generate_phase_modulated_pattern:
 	lri         $AR2, #WAVEFORM_PATTERN_0
 	lri         $WR2, #0x003f
@@ -2228,7 +2349,6 @@ generate_phase_modulated_pattern:
 	andr'dr     $AC0.M, $AX1.H : $AR2
 	mrr         $IX2, $AC0.M
 	andr'nr     $AC0.M, $AX0.H : $AR2
-
 loc_0908:
 	srri        @$AR0, $AX1.L
 	mrr         $AC0.M, $AR2
@@ -2236,7 +2356,9 @@ loc_0908:
 	lri         $WR2, #0xffff
 	ret
 
-; 090E: Update two evolving waveform patterns once per block.
+
+
+; Update two evolving waveform patterns once per block.
 update_waveform_patterns:
 	lri         $AR0, #WAVEFORM_PATTERN_2_HISTORY
 	lrri        $AX0.L, @$AR0
@@ -2251,7 +2373,6 @@ update_waveform_patterns:
 	movr's      $ACC1, $AX0.H : @$AR3, $AC0.M
 	mulcac'l    $AC0.M, $AX0.H, $ACC1 : $AX0.H, @$AR0
 	lsl         $ACC1, #1
-
 loc_091f:
 	movr's      $ACC0, $AX0.H : @$AR3, $AC1.M
 	lri         $AR0, #WAVEFORM_PATTERN_3_HISTORY
@@ -2267,6 +2388,8 @@ loc_091f:
 	call        fill_evolving_pattern
 	ret
 
+
+
 fill_evolving_pattern:
 	tst         $ACC1
 	ifg
@@ -2277,12 +2400,13 @@ fill_evolving_pattern:
 	addr's      $ACC1, $AX1.H : @$AR3, $AC1.M
 	addr's      $ACC1, $AX1.H : @$AR3, $AC1.M
 	addr's      $ACC1, $AX1.H : @$AR3, $AC1.M
-
 loc_093c:
 	addr's      $ACC1, $AX1.H : @$AR3, $AC1.M
 	ret
 
-; 093E: Source 08: signed PCM8 from ARAM, expand to signed PCM16, then resample.
+
+
+; Source 08: signed PCM8 from ARAM, expand to signed PCM16, then resample.
 load_pcm8_aram:
 	lri         $CR, #0x0004
 	lrs         $AX0.L, @VOICE_PITCH_SHORT
@@ -2307,14 +2431,12 @@ load_pcm8_aram:
 	lrs         $AC0.M, @VOICE_END_REACHED_SHORT
 	tst         $ACC0
 	jz          loc_096d
-
 loc_095a:
 	clr         $ACC0
 	srs         @VOICE_END_REACHED_SHORT, $AC0.M
 	lrs         $AX0.H, @VOICE_LOOP_ENABLED_SHORT
 	tstaxh      $AX0.H
 	jnz         loc_0967
-
 loc_0960:
 	clr         $ACC0
 	loop        $AC1.M
@@ -2322,14 +2444,12 @@ loc_0960:
 	incm        $AC0.M
 	srs         @VOICE_DONE_SHORT, $AC0.M
 	jmp         loc_09a3
-
 loc_0967:
 	lrs         $AC0.M, @VOICE_LOOP_ADDRESS_H_SHORT
 	lrs         $AC0.L, @VOICE_LOOP_ADDRESS_L_SHORT
 	srs         @VOICE_SOURCE_POSITION_H_SHORT, $AC0.M
 	srs         @VOICE_SOURCE_POSITION_L_SHORT, $AC0.L
 	call        compute_pcm8_position
-
 loc_096d:
 	sr          @DATA_0360, $AC1.M
 	lrs         $AC0.M, @VOICE_ARAM_ADDRESS_H_SHORT
@@ -2351,7 +2471,6 @@ loc_096d:
 	lris        $AX0.H, #0x01
 	sr          @VOICE_END_REACHED, $AX0.H
 	jmp         loc_095a
-
 loc_098a:
 	mrr         $AX0.H, $AC1.M
 	call        read_pcm8_samples
@@ -2374,16 +2493,16 @@ loc_098a:
 	addaxl      $ACC0, $AX0.L
 	srs         @VOICE_ARAM_ADDRESS_L_SHORT, $AC0.L
 	srs         @VOICE_ARAM_ADDRESS_H_SHORT, $AC0.M
-
 loc_09a3:
 	lri         $CR, #0x00ff
 	jmp         resample_voice
+
+
 
 reset_pcm8_position:
 	clr         $ACC0
 	srs         @VOICE_SOURCE_POSITION_H_SHORT, $AC0.M
 	srs         @VOICE_SOURCE_POSITION_L_SHORT, $AC0.M
-
 compute_pcm8_position:
 	lrs         $AX1.H, @VOICE_SOURCE_POSITION_H_SHORT
 	lrs         $AX1.L, @VOICE_SOURCE_POSITION_L_SHORT
@@ -2403,19 +2522,22 @@ compute_pcm8_position:
 	srs         @VOICE_END_REACHED_SHORT, $AC0.M
 	ret
 
-; 09BB: PCM8 read loop through raw accelerator port FFD3.
+
+
+; PCM8 read loop through raw accelerator port FFD3.
 read_pcm8_samples:
 	lri         $AR0, #ACCEL_RAW_DATA
 	lri         $IX0, #0x0000
 	bloop       $AX0.H, loc_09c3
 	lrrn        $AC0.M, @$AR0
 	asl         $ACC0, #8
-
 loc_09c3:
 	srri        @$AR3, $AC0.M
 	ret
 
-; 09C5: Source 10: signed PCM16 from ARAM, then resample.
+
+
+; Source 10: signed PCM16 from ARAM, then resample.
 load_pcm16_aram:
 	lri         $CR, #0x0004
 	lrs         $AX0.L, @VOICE_PITCH_SHORT
@@ -2440,14 +2562,12 @@ load_pcm16_aram:
 	lrs         $AC0.M, @VOICE_END_REACHED_SHORT
 	tst         $ACC0
 	jz          loc_09f4
-
 loc_09e1:
 	clr         $ACC0
 	srs         @VOICE_END_REACHED_SHORT, $AC0.M
 	lrs         $AX0.H, @VOICE_LOOP_ENABLED_SHORT
 	tstaxh      $AX0.H
 	jnz         loc_09ee
-
 loc_09e7:
 	clr         $ACC0
 	loop        $AC1.M
@@ -2455,14 +2575,12 @@ loc_09e7:
 	incm        $AC0.M
 	srs         @VOICE_DONE_SHORT, $AC0.M
 	jmp         loc_0a2b
-
 loc_09ee:
 	lrs         $AC0.M, @VOICE_LOOP_ADDRESS_H_SHORT
 	lrs         $AC0.L, @VOICE_LOOP_ADDRESS_L_SHORT
 	srs         @VOICE_SOURCE_POSITION_H_SHORT, $AC0.M
 	srs         @VOICE_SOURCE_POSITION_L_SHORT, $AC0.L
 	call        compute_pcm16_position
-
 loc_09f4:
 	sr          @DATA_0360, $AC1.M
 	lrs         $AC0.M, @VOICE_ARAM_ADDRESS_H_SHORT
@@ -2484,7 +2602,6 @@ loc_09f4:
 	lris        $AX0.H, #0x01
 	sr          @VOICE_END_REACHED, $AX0.H
 	jmp         loc_09e1
-
 loc_0a11:
 	mrr         $AX0.H, $AC1.M
 	call        read_pcm16_samples
@@ -2508,16 +2625,16 @@ loc_0a11:
 	addaxl      $ACC0, $AX0.L
 	srs         @VOICE_ARAM_ADDRESS_L_SHORT, $AC0.L
 	srs         @VOICE_ARAM_ADDRESS_H_SHORT, $AC0.M
-
 loc_0a2b:
 	lri         $CR, #0x00ff
 	jmp         resample_voice
+
+
 
 reset_pcm16_position:
 	clr         $ACC0
 	srs         @VOICE_SOURCE_POSITION_H_SHORT, $AC0.M
 	srs         @VOICE_SOURCE_POSITION_L_SHORT, $AC0.M
-
 compute_pcm16_position:
 	lrs         $AX1.H, @VOICE_SOURCE_POSITION_H_SHORT
 	lrs         $AX1.L, @VOICE_SOURCE_POSITION_L_SHORT
@@ -2538,18 +2655,21 @@ compute_pcm16_position:
 	srs         @VOICE_END_REACHED_SHORT, $AC0.M
 	ret
 
-; 0A44: PCM16 read loop through raw accelerator port FFD3.
+
+
+; PCM16 read loop through raw accelerator port FFD3.
 read_pcm16_samples:
 	lri         $AR0, #ACCEL_RAW_DATA
 	lri         $IX0, #0x0000
 	bloop       $AX0.H, loc_0a4b
 	lrrn        $AC0.M, @$AR0
-
 loc_0a4b:
 	srri        @$AR3, $AC0.M
 	ret
 
-; 0A4D: Source 20: MRAM PCM16 directly into 80-sample voice buffer; no resampling.
+
+
+; Source 20: MRAM PCM16 directly into 80-sample voice buffer; no resampling.
 load_pcm16_mram_direct:
 	clr         $ACC1
 	lris        $AC1.M, #0x50
@@ -2557,7 +2677,9 @@ load_pcm16_mram_direct:
 	call        load_pcm16_mram_common
 	jmp         filter_voice
 
-; 0A55: Source 21: MRAM PCM16 through common resampler.
+
+
+; Source 21: MRAM PCM16 through common resampler.
 load_pcm16_mram_resampled:
 	lr          $AX0.L, @VOICE_PITCH
 	clr         $ACC0
@@ -2572,7 +2694,9 @@ load_pcm16_mram_resampled:
 	call        load_pcm16_mram_common
 	jmp         resample_voice
 
-; 0A66: MRAM PCM end/loop handling.
+
+
+; MRAM PCM end/loop handling.
 load_pcm16_mram_common:
 	lri         $CR, #0x0004
 	clr         $ACC0
@@ -2599,7 +2723,6 @@ load_pcm16_mram_common:
 	srs         @VOICE_REMAINING_LENGTH_L_SHORT, $AC1.M
 	lri         $CR, #0x00ff
 	ret
-
 loc_0a84:
 	srs         @VOICE_REMAINING_LENGTH_H_SHORT, $AC0.M
 	srs         @VOICE_REMAINING_LENGTH_L_SHORT, $AC0.L
@@ -2627,14 +2750,15 @@ loc_0a84:
 	call        dma_pcm16_samples
 	lri         $CR, #0x00ff
 	ret
-
 loc_0aa3:
 	mrr         $AR0, $AX0.L
 	call        dma_pcm16_samples
 	lri         $CR, #0x00ff
 	ret
 
-; 0AA9: Aligned MRAM DMA to temporary 0B00, copy requested samples to voice/raw scratch.
+
+
+; Aligned MRAM DMA to temporary 0B00, copy requested samples to voice/raw scratch.
 dma_pcm16_samples:
 	clr         $ACC0
 	mrr         $AC0.M, $AR0
@@ -2683,12 +2807,13 @@ dma_pcm16_samples:
 	srri        @$AR3, $AC0.M
 	srri        @$AR3, $AX0.H
 	ret
-
 loc_0adf:
 	srri        @$AR3, $AC0.M
 	ret
 
-; 0AE1: Fast aligned HQ AFC source with accelerator byte reads.
+
+
+; Fast aligned HQ AFC source with accelerator byte reads.
 load_afc_hq_aligned:
 	lri         $CR, #0x0004
 	lrs         $AX0.H, @VOICE_DONE_SHORT
@@ -2714,28 +2839,23 @@ load_afc_hq_aligned:
 	add         $ACC0, $ACC1
 	srs         @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT, $AC0.M
 	jmp         loc_0b62
-
 loc_0b02:
 	clr         $ACC0
 	srs         @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT, $AC0.M
 	jmp         loc_0b62
-
 loc_0b06:
 	subr        $ACC1, $AX1.H
-
 loc_0b07:
 	clr         $ACC0
 	lrs         $AC0.M, @VOICE_END_REACHED_SHORT
 	tst         $ACC0
 	jz          loc_0b23
-
 loc_0b0c:
 	clr         $ACC0
 	srs         @VOICE_END_REACHED_SHORT, $AC0.M
 	lrs         $AX0.H, @VOICE_LOOP_ENABLED_SHORT
 	tstaxh      $AX0.H
 	jnz         loc_0b19
-
 loc_0b12:
 	clr         $ACC0
 	loop        $AC1.M
@@ -2743,7 +2863,6 @@ loc_0b12:
 	incm        $AC0.M
 	srs         @VOICE_DONE_SHORT, $AC0.M
 	jmp         loc_0b62
-
 loc_0b19:
 	lrs         $AC0.M, @VOICE_LOOP_ADDRESS_H_SHORT
 	lrs         $AC0.L, @VOICE_LOOP_ADDRESS_L_SHORT
@@ -2754,7 +2873,6 @@ loc_0b19:
 	lrs         $AC0.L, @VOICE_LOOP_HISTORY_OLDER_SHORT
 	srs         @VOICE_AFC_HISTORY_NEWER_SHORT, $AC0.M
 	srs         @VOICE_AFC_HISTORY_OLDER_SHORT, $AC0.L
-
 loc_0b23:
 	sr          @DATA_0360, $AC1.M
 	lrs         $AC0.M, @VOICE_ARAM_ADDRESS_H_SHORT
@@ -2765,7 +2883,6 @@ loc_0b23:
 	clr         $ACC1
 	sr          @DATA_0362, $AC1.M
 	lr          $AC1.M, @DATA_0360
-
 loc_0b31:
 	call        decode_afc_hq_block
 	clr         $ACC0
@@ -2791,7 +2908,6 @@ loc_0b31:
 	tstaxh      $AX0.H
 	jnz         loc_0b0c
 	jmp         loc_0b31
-
 loc_0b50:
 	ifz
 	clr         $ACC1
@@ -2808,10 +2924,11 @@ loc_0b50:
 	addaxl      $ACC0, $AX0.L
 	srs         @VOICE_ARAM_ADDRESS_L_SHORT, $AC0.L
 	srs         @VOICE_ARAM_ADDRESS_H_SHORT, $AC0.M
-
 loc_0b62:
 	lri         $CR, #0x00ff
 	ret
+
+
 
 reset_afc_hq_position:
 	clr         $ACC0
@@ -2819,7 +2936,6 @@ reset_afc_hq_position:
 	srs         @VOICE_SOURCE_POSITION_L_SHORT, $AC0.M
 	srs         @VOICE_AFC_HISTORY_OLDER_SHORT, $AC0.M
 	srs         @VOICE_AFC_HISTORY_NEWER_SHORT, $AC0.M
-
 compute_afc_hq_position:
 	lrs         $AX1.H, @VOICE_SOURCE_POSITION_H_SHORT
 	lrs         $AX1.L, @VOICE_SOURCE_POSITION_L_SHORT
@@ -2847,7 +2963,9 @@ compute_afc_hq_position:
 	srs         @VOICE_AFC_DECODED_SAMPLE_INDEX_SHORT, $AC0.M
 	ret
 
-; 0B83: Fast HQ AFC block decoder (9 bytes -> 16 samples).
+
+
+; Fast HQ AFC block decoder (9 bytes -> 16 samples).
 decode_afc_hq_block:
 	sr          @DATA_0360, $AC1.M
 	lri         $AR0, #ACCEL_RAW_DATA
@@ -2873,7 +2991,6 @@ decode_afc_hq_block:
 	movr's      $ACC0, $AX0.L : @$AR2, $AC0.M
 	andr'ln     $AC0.M, $AX1.H : $AX0.L, @$AR0
 	lsl         $ACC0, #12
-
 loc_0ba4:
 	movr's      $ACC0, $AX0.L : @$AR2, $AC0.M
 	andr        $AC0.M, $AX0.H
@@ -2908,7 +3025,6 @@ loc_0ba4:
 	asrnrx'mv   $ACC1, $AX1.H : $AX0.L, $AC0.M
 	mulxac'l    $AX0.L, $AX1.L, $ACC1 : $AC0.M, @$AR0
 	asl         $ACC1, #5
-
 loc_0bc7:
 	maddc's     $AC1.M, $AX1.L : @$AR3, $AC1.M
 	asrnrx'mv   $ACC0, $AX1.H : $AX0.L, $AC1.M
@@ -2926,7 +3042,9 @@ loc_0bc7:
 	lr          $AC1.M, @DATA_0360
 	ret
 
-; 0BD7: 8-tap FIR used by effects-line preprocessing.
+
+
+; 8-tap FIR used by effects-line preprocessing.
 filter_fir8:
 	m2
 	lri         $AR3, #FILTER_COEFFICIENT_SCRATCH
@@ -2950,14 +3068,15 @@ filter_fir8:
 	madd'ldax   $AX0.L, $AX0.H : $AX0, @$AR0
 	madd        $AX0.L, $AX0.H
 	movpz       $ACC0
-
 loc_0bf1:
 	srri        @$AR1, $AC0.M
 	lri         $WR0, #0xffff
 	m0
 	ret
 
-; 0BF6: Variable-length FIR used by each voice.
+
+
+; Variable-length FIR used by each voice.
 filter_fir_variable:
 	m2
 	addis       $AC1.M, #0xfe
@@ -2978,14 +3097,15 @@ filter_fir_variable:
 	madd'ldax   $AX0.L, $AX0.H : $AX0, @$AR0
 	madd        $AX0.L, $AX0.H
 	movpz       $ACC0
-
 loc_0c0c:
 	srri        @$AR1, $AC0.M
 	lri         $WR0, #0xffff
 	m0
 	ret
 
-; 0C11: Four-coefficient recursive filter; histories at caller-supplied AR2.
+
+
+; Four-coefficient recursive filter; histories at caller-supplied AR2.
 filter_recursive:
 	lri         $AR3, #FILTER_COEFFICIENT_SCRATCH
 	lrri        $AC0.M, @$AR0
@@ -3024,7 +3144,6 @@ filter_recursive:
 	lrri        $AC1.M, @$AR3
 	maddc'l     $AC1.M, $AX1.L : $AX0.H, @$AR0
 	maddc'ldm   $AC0.M, $AX1.L : $AX0.H, $AX1.L, @$AR0
-
 loc_0c3c:
 	mulxmv'l    $AX0.H, $AX1.L, $ACC0 : $AX0.H, @$AR0
 	maddx'lsm   $AX0.H, $AX1.H : $AX0.H, $AC0.M
@@ -3043,7 +3162,9 @@ loc_0c3c:
 	srri        @$AR2, $AC0.M
 	ret
 
-; 0C4D: Initialize special delay/modulation state 03F0..03F7.
+
+
+; Initialize special delay/modulation state 03F0..03F7.
 initialize_modulated_delay:
 	lris        $AC0.M, #0xff
 	sr          @MODULATED_DELAY_DIRECTION, $AC0.M
@@ -3064,7 +3185,9 @@ initialize_modulated_delay:
 	sr          @MODULATED_DELAY_READ_OFFSET, $AC0.M
 	ret
 
-; 0C6B: Copy 80 samples from bus 0A00 into alternating halves of 160-word ring 0A60.
+
+
+; Copy 80 samples from bus 0A00 into alternating halves of 160-word ring 0A60.
 write_modulated_delay:
 	lri         $AR0, #BUS_MODULATED_DELAY
 	clr         $ACC0
@@ -3080,7 +3203,9 @@ write_modulated_delay:
 	call        copy_words
 	ret
 
-; 0C7D: Read ring with varying near-unity step; retain pointer/fraction between blocks.
+
+
+; Read ring with varying near-unity step; retain pointer/fraction between blocks.
 read_modulated_delay:
 	lr          $AC0.M, @MODULATED_DELAY_READ_OFFSET
 	addi        $AC0.M, #MODULATED_DELAY_RING
@@ -3101,18 +3226,15 @@ read_modulated_delay:
 	sub         $ACC0, $ACC1
 	jle         loc_0c99
 	jmp         loc_0cb3
-
 loc_0c99:
 	lr          $AX1.H, @MODULATED_DELAY_STEP_DELTA
 	lri         $AC0.M, #0x8000
 	addr        $ACC0, $AX1.H
 	jmp         loc_0ca5
-
 loc_0ca0:
 	lr          $AX1.H, @MODULATED_DELAY_STEP_DELTA
 	lri         $AC0.M, #0x8000
 	subr        $ACC0, $AX1.H
-
 loc_0ca5:
 	sr          @MODULATED_DELAY_READ_STEP, $AC0.M
 	mrr         $AC0.M, $AX0.H
@@ -3120,12 +3242,10 @@ loc_0ca5:
 	mrr         $AX0.H, $AC0.M
 	sr          @MODULATED_DELAY_DIRECTION, $AC0.M
 	jmp         loc_0cb3
-
 loc_0cae:
 	lr          $AC0.M, @MODULATED_DELAY_THRESHOLD_1
 	sub         $ACC1, $ACC0
 	jle         loc_0ca0
-
 loc_0cb3:
 	clr         $ACC1
 	lr          $AC1.L, @MODULATED_DELAY_READ_STEP
@@ -3141,7 +3261,6 @@ loc_0cb3:
 	mrr         $IX3, $AC0.M
 	addarn      $AR3, $IX3
 	mrr         $AC0.M, $AX1.L
-
 loc_0cc6:
 	srri        @$AR0, $AX0.L
 	lri         $AC1.M, #MODULATED_DELAY_RING
@@ -3152,7 +3271,9 @@ loc_0cc6:
 	lri         $WR3, #0xffff
 	ret
 
-; 0CD2: Add processed 0A00 bus into both front buses with gain 3FFF (~1/2).
+
+
+; Add processed 0A00 bus into both front buses with gain 3FFF (~1/2).
 mix_modulated_delay:
 	lris        $AC1.M, #0x50
 	lri         $AR0, #BUS_MODULATED_DELAY
@@ -3166,7 +3287,9 @@ mix_modulated_delay:
 	call        add_scaled_buffer
 	ret
 
-; 0CE5: Distance filter: y[n] = y[n-1] + k*(x[n]-x[n-1])/128, with saturation.
+
+
+; Distance filter: y[n] = y[n-1] + k*(x[n]-x[n-1])/128, with saturation.
 filter_distance:
 	m2
 	set40
@@ -3177,7 +3300,6 @@ filter_distance:
 	clr         $ACC0
 	sr          @VOICE_DISTANCE_HISTORY_Y, $AC0.M
 	sr          @VOICE_DISTANCE_HISTORY_X, $AC0.M
-
 loc_0cf2:
 	lr          $AC1.M, @VOICE_DISTANCE_HISTORY_X
 	lr          $AX1.H, @VOICE_DISTANCE_HISTORY_Y
@@ -3191,7 +3313,6 @@ loc_0cf2:
 	asl         $ACC0, #8
 	addax       $ACC0, $AX1
 	srri        @$AR0, $AC0.M
-
 loc_0d02:
 	mrr         $AX1.H, $AC0.M
 	sr          @VOICE_DISTANCE_HISTORY_Y, $AX1.H
@@ -3200,14 +3321,15 @@ loc_0d02:
 	set16
 	ret
 
-; 0D0A: Mix 80 samples: first 32 pairs ramp volume, last 8 pairs hold volume.
+
+
+; Mix 80 samples: first 32 pairs ramp volume, last 8 pairs hold volume.
 mix_buffer_with_gain_ramp:
 	tst         $ACC1
 	jnz         loc_0d10
 	movax       $ACC0, $AX0
 	tst         $ACC0
 	retz
-
 loc_0d10:
 	mrr         $AR1, $AR3
 	lrri        $AC0.M, @$AR3
@@ -3218,19 +3340,19 @@ loc_0d10:
 	movr's      $ACC0, $AX1.L : @$AR1, $AC0.M
 	mulcac'ldax $AC1.M, $AX1.H, $ACC0 : $AX1, @$AR0
 	movr's      $ACC0, $AX1.L : @$AR1, $AC0.M
-
 loc_0d1a:
 	addax       $ACC1, $AX0
 	bloopi      #0x08, loc_0d20
 	mulcac'ldax $AC1.M, $AX1.H, $ACC0 : $AX1, @$AR0
 	movr's      $ACC0, $AX1.L : @$AR1, $AC0.M
 	mulcac'ldax $AC1.M, $AX1.H, $ACC0 : $AX1, @$AR0
-
 loc_0d20:
 	movr's      $ACC0, $AX1.L : @$AR1, $AC0.M
 	ret
 
-; 0D22: Master Q4.12 gain, saturate to signed PCM16.
+
+
+; Master Q4.12 gain, saturate to signed PCM16.
 apply_master_gain:
 	set40
 	mrr         $AR0, $AR3
@@ -3243,13 +3365,14 @@ apply_master_gain:
 	asrnrx'l    $ACC0, $AX0.H : $AX0.L, @$AR3
 	mulxmv's    $AX0.L, $AX1.H, $ACC0 : @$AR0, $AC0.M
 	asrnrx'l    $ACC0, $AX0.H : $AX0.L, @$AR3
-
 loc_0d2f:
 	mulxmv's    $AX0.L, $AX1.H, $ACC0 : @$AR0, $AC0.M
 	set16
 	ret
 
-; 0D32: Automatic positional/Dolby mixer: 4 dry and 4 effects destinations.
+
+
+; Automatic positional/Dolby mixer: 4 dry and 4 effects destinations.
 mix_positional_voice:
 	lr          $AX0.H, @VOICE_STOP_REQUESTED
 	tstaxh      $AX0.H
@@ -3262,7 +3385,6 @@ mix_positional_voice:
 	jnz         loc_0d44
 	lri         $AX0.H, #0x0001
 	sr          @VOICE_DONE, $AX0.H
-
 loc_0d44:
 	set40
 	clr         $ACC0
@@ -3348,13 +3470,14 @@ loc_0d44:
 	lr          $AR1, @POSITIONAL_SAVED_AR1
 	lr          $AR2, @POSITIONAL_SAVED_AR2
 	lr          $AR3, @POSITIONAL_SAVED_AR3
-
 loc_0dbe:
 	nop
 	set16
 	ret
 
-; 0DC1: Multiply a four-element gain vector.
+
+
+; Multiply a four-element gain vector.
 scale_gain_vector:
 	lrri        $AC1.M, @$AR0
 	mulc'l      $AC1.M, $AX0.H : $AC1.M, @$AR0
@@ -3366,7 +3489,9 @@ scale_gain_vector:
 	srri        @$AR1, $AC0.M
 	ret
 
-; 0DCA: Multiply a four-element gain-difference vector with unsigned handling.
+
+
+; Multiply a four-element gain-difference vector with unsigned handling.
 scale_gain_delta_vector:
 	set15
 	mrr         $AX1.H, $AC0.M
@@ -3381,7 +3506,9 @@ scale_gain_delta_vector:
 	clr15
 	ret
 
-; 0DD6: DATA: eight DRAM destination addresses for positional mixing.
+
+
+; DATA: eight DRAM destination addresses for positional mixing.
 positional_destination_table:
 	cw BUS_FRONT_LEFT
 	cw BUS_FRONT_RIGHT
@@ -3392,7 +3519,9 @@ positional_destination_table:
 	cw BUS_REAR_LEFT_FX
 	cw BUS_REAR_RIGHT_FX
 
-; 0DDE: Common resampler: prepend four saved raw history samples.
+
+
+; Common resampler: prepend four saved raw history samples.
 resample:
 	sr          @DATA_0361, $AX1.L
 	mrr         $AC0.M, $AR0
@@ -3416,12 +3545,10 @@ resample:
 	clr         $ACC1
 	lr          $AC1.L, @VOICE_PHASE_FRACTION
 	lsl         $ACC1, #4
-
-; 0DFA: Pitch >= 4.0 branches to simple sample selection.
+	; Pitch >= 4.0 branches to simple sample selection.
 	cmpis       $AC0.M, #0x04
 	jge         resample_without_interpolation
-
-; 0DFD: Build 80 phase/coeff selections from 64 phases * 4 taps.
+	; Build 80 phase/coeff selections from 64 phases * 4 taps.
 	mrr         $AC0.M, $AC1.L
 	lri         $AR2, #RESAMPLER_PHASE_SCRATCH
 	loopi       #0x50
@@ -3441,7 +3568,6 @@ resample:
 	andr'l      $AC0.M, $AX1.H : $AC1.M, @$AR2
 	lsrnrx's    $ACC1, $AX0.H : @$AR3, $AC0.M
 	andr'l      $AC1.M, $AX1.H : $AC0.M, @$AR2
-
 loc_0e17:
 	lsrnrx's    $ACC0, $AX0.H : @$AR3, $AC1.M
 	m2
@@ -3454,8 +3580,7 @@ loc_0e17:
 	lsr         $ACC0, #-12
 	mrr         $AX1.H, $AC0.M
 	mrr         $AX1.L, $AC0.L
-
-; 0E25: Four-tap fixed-point FIR interpolation using coefficient table at 0000.
+	; Four-tap fixed-point FIR interpolation using coefficient table at 0000.
 	set40
 	lrri        $AR3, @$AR2
 	addax'ldax  $ACC1, $AX1 : $AX0, @$AR0
@@ -3475,7 +3600,6 @@ loc_0e17:
 	mrr         $AR0, $AC1.M
 	lrri        $AR3, @$AR2
 	addax'ldax  $ACC1, $AX1 : $AX0, @$AR0
-
 loc_0e39:
 	mulmvz'ldax $AX0.L, $AX0.H, $ACC0 : $AX0, @$AR0
 	madd'ldax   $AX0.L, $AX0.H : $AX0, @$AR0
@@ -3485,8 +3609,7 @@ loc_0e39:
 	srri        @$AR1, $AC0.M
 	m0
 	set16
-
-; 0E41: Save last output sample, fractional phase, and four raw history samples.
+	; Save last output sample, fractional phase, and four raw history samples.
 save_resampler_state:
 	sr          @VOICE_CONSTANT_SAMPLE, $AC0.M
 	mrr         $AR0, $AC1.M
@@ -3502,7 +3625,9 @@ save_resampler_state:
 	srri        @$AR3, $AC1.M
 	ret
 
-; 0E52: Pitch >= 4: no FIR interpolation.
+
+
+; Pitch >= 4: no FIR interpolation.
 resample_without_interpolation:
 	mrr         $AC1.M, $AR0
 	mrr         $AR0, $AC1.M
@@ -3512,12 +3637,13 @@ resample_without_interpolation:
 	mrr         $AR0, $AC1.M
 	addax'l     $ACC1, $AX1 : $AC0.M, @$AR0
 	srri        @$AR1, $AC0.M
-
 loc_0e5b:
 	mrr         $AR0, $AC1.M
 	jmp         save_resampler_state
 
-; 0E5E: Constant/paused voice: fill 80 samples from saved constant, continue at filters.
+
+
+; Constant/paused voice: fill 80 samples from saved constant, continue at filters.
 load_constant_voice:
 	lri         $AR3, #VOICE_SAMPLE_BUFFER
 	lr          $AC0.M, @VOICE_CONSTANT_SAMPLE
@@ -3525,7 +3651,9 @@ load_constant_voice:
 	srri        @$AR3, $AC0.M
 	jmp         filter_voice
 
-; 0E66: Padding to DMA-aligned 0x1CE0-byte blob end.
+
+
+; Padding to DMA-aligned 0x1CE0-byte blob end.
 ucode_padding:
 	nop
 	nop

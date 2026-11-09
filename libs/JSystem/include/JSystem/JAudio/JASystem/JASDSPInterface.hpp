@@ -21,7 +21,31 @@ namespace DSPInterface {
 		/* 0x10 */ s16 unk10[8];
 	};
 
+	/**
+	 * @brief A single voice as seen and processed by the DSP microcode.
+	 * The struct gets DMA'd to the DSP as-is and some fields are only used on
+	 * the DSP side, while some are shared between the CPU and the DSP.
+	 */
 	struct DSPBuffer {
+		enum SampleSourceType {
+			SOURCE_SQUARE                  = 0x00,
+			SOURCE_SAW                     = 0x01,
+			SOURCE_PHASE_MODULATED_SQUARE  = 0x02,
+			SOURCE_QUARTER_DUTY_SQUARE     = 0x03,
+			SOURCE_PATTERN_1               = 0x04,
+			SOURCE_AFC_LQ                  = 0x05,
+			SOURCE_CONSTANT                = 0x06,
+			SOURCE_PATTERN_0               = 0x07,
+			SOURCE_PCM8_ARAM               = 0x08,
+			SOURCE_AFC_HQ                  = 0x09,
+			SOURCE_PHASE_MODULATED_PATTERN = 0x0A,
+			SOURCE_PATTERN_2               = 0x0B,
+			SOURCE_PATTERN_3               = 0x0C,
+			SOURCE_PCM16_ARAM              = 0x10,
+			SOURCE_PCM16_MRAM_DIRECT       = 0x20,
+			SOURCE_PCM16_MRAM_RESAMPLED    = 0x21,
+		};
+
 		void flushChannel();
 		void allocInit();
 		void initFilter();
@@ -34,7 +58,7 @@ namespace DSPInterface {
 		void setFIR8FilterParam(s16*);
 		void setFilterMode(u16);
 		void setDistFilter(s16);
-		void setWaveInfo(Driver::Wave_*, uintptr_t);
+		void setWaveInfo(Driver::Wave_* wave, uintptr_t samples_address);
 		void setOscInfo(u32);
 		void setBusConnect(u8, u8);
 		void initAutoMixer();
@@ -62,46 +86,52 @@ namespace DSPInterface {
 			/* 0x6 */ u16 level;
 		};
 
-		// Names stolen from Dolphin with some fixes, see
-		// https://github.com/dolphin-emu/dolphin/blob/master/Source/Core/Core/HW/DSPHLE/UCodes/Zelda.cpp#L682
-
 		/* 0x000 */ u16 enabled;
 		/* 0x002 */ u16 done;
 		/* 0x004 */ u16 resamplingRatio;
-		/* 0x006 */ u8 unk6[0x8 - 0x6];
+		/* 0x006 */ char pad6[0x8 - 0x6];
 		/* 0x008 */ u16 resetVpb;
 		/* 0x00A */ u16 endReached;
 		/* 0x00C */ u16 useConstantSample;
 		/* 0x00E */ u16 samplesToKeepCount;
 		/* 0x010 */ Channel mixChannels[6];
-		/* 0x040 */ u8 unk40[0x50 - 0x40];
+		/* 0x040 */ char pad40[0x50 - 0x40];
 		/* 0x050 */ u16 dolbyVoicePosition;
 		/* 0x052 */ u16 dolbyReverbFactor;
 		/* 0x054 */ u16 dolbyVolumeCurrent;
 		/* 0x056 */ u16 dolbyVolumeTarget;
 		/* 0x058 */ u16 useDolbyVolume;
-		/* 0x05A */ u8 unk5A[0x60 - 0x5a];
-		/* 0x060 */ s16 currentPosFrac;
-		/* 0x062 */ u8 unk62[0x64 - 0x62];
-		/* 0x064 */ s16 afcRemainingDecodedSamples;
+		/* 0x05A */ u16 useDolbyVolumeCopy;
+		/* 0x05C */ char pad5C[0x60 - 0x5C];
+		/* 0x060 */ u16 currentPosFrac;
+		/* 0x062 */ u16 afcDecodedSampleIndex;
+		/* 0x064 */ u16 afcRemainingDecodedSamples;
 		/* 0x066 */ s16 constantSample;
 		/* 0x068 */ int currentPosition;
 		/* 0x06C */ u32 samplesBeforeLoop;
 		/* 0x070 */ u32 currentAramAddr;
 		/* 0x074 */ u32 remainingLength;
 		/* 0x078 */ s16 resampleBuffer[4];
-		/* 0x080 */ u16 variableFirHistory[20];
+		/* 0x080 */ s16 variableFirHistory[20];
 		/* 0x0A8 */ s16 biquadHistory[4];
-		/* 0x0B0 */ u16 afcRemainingSamples[16];
-		/* 0x0D0 */ s16 lowPassHistory[2];
-		/* 0x0D4 */ u8 unkD4[0x100 - 0xd4];
+		/* 0x0B0 */ union {
+			/* 0x0B0 */ s16 afcRemainingSamples[16];
+			struct {
+				/* 0x0B0 */ s16 samples[14];
+				/* 0x0CC */ s16 yn2;
+				/* 0x0CE */ s16 yn1;
+			} afcHistory;
+		};
+		/* 0x0D0 */ s16 mixerDelayHistory[16];
+		/* 0x0F0 */ s16 lowPassHistory[2];
+		/* 0x0F4 */ char padF4[0x100 - 0xF4];
 		/* 0x100 */ u16 samplesSourceType;
 		/* 0x102 */ u16 isLooping;
 		/* 0x104 */ s16 loopYN1;
 		/* 0x106 */ s16 loopYN2;
 		/* 0x108 */ s16 filterMode;
 		/* 0x10A */ u16 endRequested;
-		/* 0x10C */ u32 unk10C;
+		/* 0x10C */ u32 updateCount;
 		/* 0x110 */ s16* loopAddress;
 		/* 0x114 */ u32 endPosition;
 		/* 0x118 */ s16* baseAddress;
@@ -109,7 +139,7 @@ namespace DSPInterface {
 		/* 0x120 */ s16 variableFirCoeffs[20];
 		/* 0x148 */ s16 biquadFilterCoeffs[4];
 		/* 0x150 */ s16 lowPassCoeff;
-		/* 0x152 */ u8 padding[0x180 - 0x152];
+		/* 0x152 */ char pad152[0x180 - 0x152];
 	};
 
 	class FXBuffer {
@@ -162,9 +192,9 @@ namespace DSPInterface {
 	{
 		getDSPHandle(i)->setPauseFlag(flag);
 	}
-	inline void setOscInfo(u8 i, u32 type)
+	inline void setOscInfo(u8 i, u32 waveform_type)
 	{
-		getDSPHandle(i)->setOscInfo(type);
+		getDSPHandle(i)->setOscInfo(waveform_type);
 	}
 	inline void setWaveInfo(u8 i, Driver::Wave_* wave, u32 base)
 	{

@@ -164,8 +164,9 @@ JASystem::TDSPChannel* TDSPChannel::getLower()
 		if (DSPCH[i].mCallback) {
 			TDSPChannel* chan = &DSPCH[i];
 			if (chan->mPriority <= r31) {
-				if (chan->mPriority != r31 || chan->mDSPHandle->unk10C >= r29) {
-					r29 = chan->mDSPHandle->unk10C;
+				if (chan->mPriority != r31
+				    || chan->mDSPHandle->updateCount >= r29) {
+					r29 = chan->mDSPHandle->updateCount;
 					r30 = i;
 					r31 = chan->mPriority;
 				}
@@ -186,8 +187,9 @@ JASystem::TDSPChannel* TDSPChannel::getLowerActive()
 
 		TDSPChannel* dspch = &DSPCH[i];
 		if (dspch->mPriority <= r29) {
-			if (dspch->mPriority != r29 || dspch->mDSPHandle->unk10C >= r27) {
-				r27 = dspch->mDSPHandle->unk10C;
+			if (dspch->mPriority != r29
+			    || dspch->mDSPHandle->updateCount >= r27) {
+				r27 = dspch->mDSPHandle->updateCount;
 				r28 = i;
 				r29 = dspch->mPriority;
 			}
@@ -265,8 +267,8 @@ void TDSPChannel::updateAll()
 			dspBuffer->flushChannel();
 		}
 		if (dspBuffer->endRequested == 0) {
-			dspBuffer->unk10C++;
-			if (dspBuffer->unk10C == dspChannel->getPriorityTime()
+			dspBuffer->updateCount++;
+			if (dspBuffer->updateCount == dspChannel->getPriorityTime()
 			    && dspChannel->mCallback)
 				dspChannel->mCallback(dspChannel, 4);
 		}

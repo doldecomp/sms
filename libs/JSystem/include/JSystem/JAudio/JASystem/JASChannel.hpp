@@ -116,7 +116,7 @@ public:
 	/* 0x8 */ TChannel** mOwningList;
 	/* 0xC */ u8 mLogicalChanType;
 	/* 0x10 */ Driver::Wave_* mWaveData;
-	/* 0x14 */ uintptr_t mSourceData;
+	/* 0x14 */ uintptr_t mSourceData; // wave samples addr or waveform type
 	/* 0x18 */ u32 unk18;
 	/* 0x1C */ u32 unk1C;
 	/* 0x20 */ TDSPChannel* mDspChannel;

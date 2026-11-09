@@ -67,8 +67,8 @@ s16* DSPBuf::process(DSPBUF_EVENTS event)
 			AudioThread::setDSPSyncCount(Kernel::getSubFrames());
 			Kernel::probeStart(7, "DSP-MAIN");
 			DsyncFrame2(Kernel::getSubFrames(),
-			            uintptr_t(dsp_buf[write_buffer]),
-			            uintptr_t(&dsp_buf[write_buffer][frameSamples]));
+			            (uintptr_t)&dsp_buf[write_buffer][0],
+			            (uintptr_t)&dsp_buf[write_buffer][frameSamples]);
 			dspstatus = 1;
 			updateDSP();
 		}

@@ -10,8 +10,14 @@ namespace Driver {
 } // namespace Driver
 
 namespace DSPInterface {
-	extern u32 DSPADPCM_FILTER[];
-	extern u32 DSPRES_FILTER[];
+	struct DSPRenderTables {
+		s16 resamplingCoefficients[64][4];
+		s16 waveforms[4][64];
+		s16 sine[128];
+	};
+
+	extern s16 DSPADPCM_FILTER[16][2];
+	extern DSPRenderTables DSPRES_FILTER;
 } // namespace DSPInterface
 
 } // namespace JASystem

@@ -2,6 +2,7 @@
 #define JSYSTEM_DSPPROC_H
 
 #include <dolphin/types.h>
+#include <stdint.h>
 
 void DSPSendCommands(u32*, u32);
 void DSPReleaseHalt();
@@ -16,15 +17,17 @@ void DsetLoopState(u32);
 void DadpcmDec(u32, u32, u32, u32);
 void DloadFilter(u32, u32);
 void DcopyfromARAM(u32, u32, u32);
-void DoscStart(unsigned char, u16, u16);
-void DoscStop(unsigned char);
+void DoscStart(u8, u16, u16);
+void DoscStop(u8);
 void DoscStore(u32);
 void Dmixer(u32, u32);
 void Dresampletest();
 void Dadpcmtest(u32);
-void DsetupTable(u32, u32, u32, u32, u32);
-void DsetMixerLevel(float);
-void DsyncFrame(u32, u32, u32);
+void DsetupTable(u32 chan_num, uintptr_t chan_buffer, uintptr_t render_tables,
+                 uintptr_t adpcm_filters, uintptr_t fx_buffer);
+void DsetMixerLevel(f32 level);
+void DsyncFrame(u32 sub_frames, uintptr_t out_pcm_left,
+                uintptr_t out_pcm_right);
 void wait_callback(u16);
 void DwaitFrame();
 void DiplSec(u32, void (*)(u16));
