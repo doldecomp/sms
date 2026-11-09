@@ -107,6 +107,8 @@ OUTPUT_RIGHT_ADDRESS_H: equ 0x038a
 
 MASTER_GAIN: equ 0x038e
 FILTERED_VOICE_POINTER: equ 0x038f
+
+; Sequential in memory, current effect line config
 EFFECTS_LINE_FLAGS: equ 0x0390
 EFFECTS_LINE_RING_LENGTH: equ 0x0391
 EFFECTS_LINE_ADDRESS_L: equ 0x0393
@@ -115,6 +117,7 @@ EFFECTS_LINE_SEND_0_GAIN: equ 0x0395
 EFFECTS_LINE_SEND_1_DESTINATION: equ 0x0396
 EFFECTS_LINE_SEND_1_GAIN: equ 0x0397
 EFFECTS_LINE_FIR_COEFFICIENTS: equ 0x0398
+
 EFFECTS_RING_INDEX_POINTER: equ 0x03a0
 EFFECTS_WORK_BUFFER_POINTER: equ 0x03a1
 EFFECTS_PARAMETERS_POINTER: equ 0x03a2
@@ -461,7 +464,7 @@ store_voice_state:
 
 
 
-; Word-copy helper, pipelined with parallel load/store.
+; Copy $AC1.M + 2 (!) words from $AR0 to $AR3
 copy_words:
 	lrri        $AC0.M, @$AR0
 	lrri        $AX0.H, @$AR0
@@ -488,7 +491,7 @@ loc_00d5:
 
 
 
-; Add scaled source into destination, Q1.15 gain.
+; Add scaled source ($AC1.M samples at $AR0) into destination ($AR3), Q1.15 gain ($AX0.L).
 add_scaled_buffer:
 	m2
 	lsr         $ACC1, #-1
@@ -497,18 +500,18 @@ add_scaled_buffer:
 	lrri        $AX0.H, @$AR1
 	mul'l       $AX0.L, $AX0.H : $AX0.H, @$AR1
 	mulmvz'l    $AX0.L, $AX0.H, $ACC0 : $AX1.H, @$AR3
-	bloop       $AC1.M, loc_00e4
+	bloop       $AC1.M, add_scaled_buffer_loop_last_instruction
 	addr'l      $ACC0, $AX1.H : $AX0.H, @$AR1
 	mulmvz'sl   $AX0.L, $AX0.H, $ACC0 : $AC0.M, $AX1.H
 	addr'l      $ACC0, $AX1.H : $AX0.H, @$AR1
-loc_00e4:
+add_scaled_buffer_loop_last_instruction:
 	mulmvz'sl   $AX0.L, $AX0.H, $ACC0 : $AC0.M, $AX1.H
 	m0
 	ret
 
 
 
-; Copy scaled source into destination, Q1.15 gain.
+; Copy scaled source ($AC1.M samples at $AR0) into destination ($AR3), Q1.15 gain ($AX0.L).
 copy_scaled_buffer:
 	m2
 	lrri        $AX0.H, @$AR0
@@ -523,6 +526,15 @@ copy_scaled_buffer:
 
 ; Block preparation: fold previous rear buses into stereo, then clear transient buses.
 prepare_rear_and_front_buses:
+	; First, do this tricky dance of mixing 4 surround channels into 2 stereo channels
+	; as told by dolby (presumably). Essentially comes down to this:
+	;
+	; L[t] = frontLeft[t]  + a·rearLeft[t−80] − b·rearRight[t−40]
+	; R[t] = frontRight[t] − b·rearLeft[t−80] + a·rearRight[t−40]
+	; where a = 32767 / 32768, b = 18400 / 32768
+	;
+	; but to get a 40-sample delay we only mix in half of the old buffer here
+	; and later on mix in the other half from the current buffer.
 	lris        $AC1.M, #0x50
 	lri         $AR0, #BUS_REAR_LEFT
 	lri         $AR3, #BUS_FRONT_LEFT
@@ -545,6 +557,7 @@ prepare_rear_and_front_buses:
 	lri         $AR3, #BUS_FRONT_RIGHT
 	lri         $AX0.L, #0x7fff
 	call        add_scaled_buffer
+	; Clear all transient busses
 	clr         $ACC0
 	clr         $ACC1
 	lris        $AC0.M, #0x50
@@ -569,6 +582,7 @@ prepare_rear_and_front_buses:
 
 ; Read one effects delay block, optional 8-tap FIR, two destination sends.
 read_effects_line:
+	; Read the current 80-sample block from MRAM
 	lr          $AR0, @EFFECTS_RING_INDEX_POINTER
 	lrri        $AX0.H, @$AR0
 	lr          $AC1.M, @EFFECTS_WORK_BUFFER_POINTER
@@ -580,35 +594,42 @@ read_effects_line:
 	lri         $AR0, #0x0050
 	addis       $AC1.M, #0x08
 	call        dma_read
+	; Flag 1 enables pre-send filtering
 	lr          $AC0.M, @EFFECTS_LINE_FLAGS
 	andf        $AC0.M, #0x0001
-	jlz         loc_014b
+	jlz         read_effects_line_skip_pre_filter
+	; Apply the FIR filter to the work buffer
 	lri         $AR0, #EFFECTS_LINE_FIR_COEFFICIENTS
 	lris        $AC0.M, #0x08
 	lr          $AR1, @EFFECTS_WORK_BUFFER_POINTER
 	call        filter_fir8
-loc_014b:
+read_effects_line_skip_pre_filter:
+	; Now mix the delayed sample block into it's 2 destinations
 	lris        $AC1.M, #0x50
 	lr          $AR0, @EFFECTS_WORK_BUFFER_POINTER
 	lr          $AX0.H, @EFFECTS_LINE_SEND_0_DESTINATION
 	tstaxh      $AX0.H
-	jz          loc_0158
+	jz          read_effects_line_skip_send_0
+	; Mix into send 0
 	mrr         $AR3, $AX0.H
 	lr          $AX0.L, @EFFECTS_LINE_SEND_0_GAIN
 	call        add_scaled_buffer
-loc_0158:
+read_effects_line_skip_send_0:
 	lris        $AC1.M, #0x50
 	lr          $AR0, @EFFECTS_WORK_BUFFER_POINTER
 	lr          $AX0.H, @EFFECTS_LINE_SEND_1_DESTINATION
 	tstaxh      $AX0.H
-	jz          loc_0165
+	jz          read_effects_line_skip_send_1
+	; Mix into send 1
 	mrr         $AR3, $AX0.H
 	lr          $AX0.L, @EFFECTS_LINE_SEND_1_GAIN
 	call        add_scaled_buffer
-loc_0165:
+read_effects_line_skip_send_1:
+	; Flag 2 enables post-send filtering
 	lr          $AC0.M, @EFFECTS_LINE_FLAGS
 	andf        $AC0.M, #0x0002
 	retlz
+	; Apply the FIR filter to the work buffer (again)
 	lri         $AR0, #EFFECTS_LINE_FIR_COEFFICIENTS
 	lris        $AC0.M, #0x08
 	lr          $AR1, @EFFECTS_WORK_BUFFER_POINTER
@@ -619,39 +640,46 @@ loc_0165:
 
 ; Prepare four effects lines; fold previous rear effects sends into front sends.
 prepare_effects_lines:
+	; Init current pointers to line 0
 	lri         $AC1.M, #BUS_EFFECTS_0
 	sr          @EFFECTS_WORK_BUFFER_POINTER, $AC1.M
 	lri         $AC1.M, #EFFECTS_PARAMETERS
 	sr          @EFFECTS_PARAMETERS_POINTER, $AC1.M
 	lri         $AC1.M, #EFFECTS_RING_INDICES
 	sr          @EFFECTS_RING_INDEX_POINTER, $AC1.M
-	bloopi      #0x04, loc_01a5
-	lr          $AR0, @EFFECTS_PARAMETERS_POINTER
-	lri         $AR3, #EFFECTS_LINE_FLAGS
-	lris        $AC1.M, #0x0e
-	call        copy_words
-	lr          $AX0.H, @EFFECTS_LINE_FLAGS
-	tstaxh      $AX0.H
-	jz          loc_0196
-	lr          $AC1.M, @EFFECTS_WORK_BUFFER_POINTER
-	mrr         $AR3, $AC1.M
-	addis       $AC1.M, #0x50
-	mrr         $AR0, $AC1.M
-	lris        $AC1.M, #0x06
-	call        copy_words
-	call        read_effects_line
-loc_0196:
-	lr          $AC0.M, @EFFECTS_PARAMETERS_POINTER
-	addis       $AC0.M, #0x10
-	sr          @EFFECTS_PARAMETERS_POINTER, $AC0.M
-	lr          $AC0.M, @EFFECTS_WORK_BUFFER_POINTER
-	addis       $AC0.M, #0x60
-	sr          @EFFECTS_WORK_BUFFER_POINTER, $AC0.M
-	lr          $AC0.M, @EFFECTS_RING_INDEX_POINTER
-	incm        $AC0.M
-	sr          @EFFECTS_RING_INDEX_POINTER, $AC0.M
-loc_01a5:
+	; Loop over the 4 effect lines
+	bloopi      #0x04, prepare_effects_lines_loop_end
+		; Copy the entire fxline params into current work area
+		lr          $AR0, @EFFECTS_PARAMETERS_POINTER
+		lri         $AR3, #EFFECTS_LINE_FLAGS
+		lris        $AC1.M, #0x0e
+		call        copy_words
+		; Flags being 0 means the line is disabled
+		lr          $AX0.H, @EFFECTS_LINE_FLAGS
+		tstaxh      $AX0.H
+		jz          prepare_effects_lines_loop_next
+		; Preserve 8 samples of history for FIR filtering
+		lr          $AC1.M, @EFFECTS_WORK_BUFFER_POINTER
+		mrr         $AR3, $AC1.M
+		addis       $AC1.M, #0x50
+		mrr         $AR0, $AC1.M
+		lris        $AC1.M, #0x06
+		call        copy_words
+		call        read_effects_line
+prepare_effects_lines_loop_next:
+		; Increment the current pointers
+		lr          $AC0.M, @EFFECTS_PARAMETERS_POINTER
+		addis       $AC0.M, #0x10
+		sr          @EFFECTS_PARAMETERS_POINTER, $AC0.M
+		lr          $AC0.M, @EFFECTS_WORK_BUFFER_POINTER
+		addis       $AC0.M, #0x60
+		sr          @EFFECTS_WORK_BUFFER_POINTER, $AC0.M
+		lr          $AC0.M, @EFFECTS_RING_INDEX_POINTER
+		incm        $AC0.M
+		sr          @EFFECTS_RING_INDEX_POINTER, $AC0.M
+prepare_effects_lines_loop_end:
 	nop
+	; Do the same surround-into-stereo dance as in prepare_rear_and_front_buses
 	lris        $AC1.M, #0x50
 	lri         $AR0, #BUS_REAR_LEFT_FX
 	lri         $AR3, #BUS_FRONT_LEFT_FX
@@ -672,6 +700,7 @@ loc_01a5:
 	lri         $AR3, #BUS_FRONT_RIGHT_FX
 	lri         $AX0.L, #0x7fff
 	call        add_scaled_buffer
+	; Clear out rear fx buffers
 	clr         $ACC0
 	clr         $ACC1
 	lris        $AC0.M, #0x50
@@ -687,8 +716,9 @@ loc_01a5:
 
 ; Write one effects block to its external ring slot, advance/wrap slot index.
 write_effects_line:
+	; Increment the ring index
 	lr          $AR0, @EFFECTS_RING_INDEX_POINTER
-	lrr         $AX0.H, @$AR0
+	lrr         $AX0.H, @$AR0 ; current idx saved to use below
 	clr         $ACC0
 	lrr         $AC0.M, @$AR0
 	lr          $AX1.H, @EFFECTS_LINE_RING_LENGTH
@@ -697,6 +727,7 @@ write_effects_line:
 	ifge
 	clr         $ACC0
 	srri        @$AR0, $AC0.M
+	; DMA the new sample block to the current index
 	lr          $AC1.M, @EFFECTS_WORK_BUFFER_POINTER
 	lri         $AX1.H, #0x00a0
 	lri         $AR1, #EFFECTS_LINE_ADDRESS_L
@@ -711,6 +742,7 @@ write_effects_line:
 
 ; Finish rear effects cross-block contribution, then write four effects lines.
 finish_effects_lines:
+	; Finish the dolby dance started in prepare_effects_lines
 	clr         $ACC1
 	lris        $AC1.M, #0x28
 	lri         $AR0, #BUS_REAR_RIGHT_FX
@@ -723,32 +755,38 @@ finish_effects_lines:
 	lri         $AR3, #BUS_FRONT_RIGHT_FX_SECOND_HALF
 	lri         $AX0.L, #0x7fff
 	call        add_scaled_buffer
+	; Initialize current line pointers
 	lri         $AC1.M, #BUS_EFFECTS_0
 	sr          @EFFECTS_WORK_BUFFER_POINTER, $AC1.M
 	lri         $AC1.M, #EFFECTS_PARAMETERS
 	sr          @EFFECTS_PARAMETERS_POINTER, $AC1.M
 	lri         $AC1.M, #EFFECTS_RING_INDICES
 	sr          @EFFECTS_RING_INDEX_POINTER, $AC1.M
-	bloopi      #0x04, loc_022f
-	lr          $AR0, @EFFECTS_PARAMETERS_POINTER
-	lri         $AR3, #EFFECTS_LINE_FLAGS
-	lris        $AC1.M, #0x0e
-	call        copy_words
-	lr          $AX0.H, @EFFECTS_LINE_FLAGS
-	tstaxh      $AX0.H
-	jz          loc_0220
-	call        write_effects_line
-loc_0220:
-	lr          $AC0.M, @EFFECTS_PARAMETERS_POINTER
-	addis       $AC0.M, #0x10
-	sr          @EFFECTS_PARAMETERS_POINTER, $AC0.M
-	lr          $AC0.M, @EFFECTS_WORK_BUFFER_POINTER
-	addis       $AC0.M, #0x60
-	sr          @EFFECTS_WORK_BUFFER_POINTER, $AC0.M
-	lr          $AC0.M, @EFFECTS_RING_INDEX_POINTER
-	incm        $AC0.M
-	sr          @EFFECTS_RING_INDEX_POINTER, $AC0.M
-loc_022f:
+	; Loop over the 4 lines
+	bloopi      #0x04, finish_effects_lines_loop_end
+		; Copy the params of the current line into the work area
+		lr          $AR0, @EFFECTS_PARAMETERS_POINTER
+		lri         $AR3, #EFFECTS_LINE_FLAGS
+		lris        $AC1.M, #0x0e
+		call        copy_words
+		; Skip disabled lines
+		lr          $AX0.H, @EFFECTS_LINE_FLAGS
+		tstaxh      $AX0.H
+		jz          finish_effects_lines_loop_next
+		; Process the line
+		call        write_effects_line
+finish_effects_lines_loop_next:
+		; Increment the current pointers
+		lr          $AC0.M, @EFFECTS_PARAMETERS_POINTER
+		addis       $AC0.M, #0x10
+		sr          @EFFECTS_PARAMETERS_POINTER, $AC0.M
+		lr          $AC0.M, @EFFECTS_WORK_BUFFER_POINTER
+		addis       $AC0.M, #0x60
+		sr          @EFFECTS_WORK_BUFFER_POINTER, $AC0.M
+		lr          $AC0.M, @EFFECTS_RING_INDEX_POINTER
+		incm        $AC0.M
+		sr          @EFFECTS_RING_INDEX_POINTER, $AC0.M
+finish_effects_lines_loop_end:
 	nop
 	ret
 
@@ -1131,7 +1169,8 @@ notify_block_processed:
 		lri         $AR3, #BUS_FRONT_RIGHT
 		lris        $AC1.M, #0x50
 		call        add_scaled_buffer
-		; Fold first 40 samples of current rear-right into last 40 front samples.
+		; Fold first 40 samples of current rear-right into last 40 front samples,
+		; completing the dolby dance started in prepare_rear_and_front_buses
 		clr         $ACC1
 		lris        $AC1.M, #0x28
 		lri         $AR0, #BUS_REAR_RIGHT

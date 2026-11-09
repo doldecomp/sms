@@ -142,12 +142,14 @@ namespace DSPInterface {
 		/* 0x152 */ char pad152[0x180 - 0x152];
 	};
 
-	class FXBuffer {
-	public:
+	/**
+	 * @brief A delay line as seen and processed by the DSP microcode.
+	 * Configured by the CPU and DMA'd to the DSP.
+	 */
+	struct FXBuffer {
 		BOOL setFXLine(s16*, FxlineConfig_*);
 		void changeFXLineParam(u8, u32);
 
-	public:
 		/* 0x00 */ u16 mFlags;
 		/* 0x02 */ u16 mDelayBlocks;
 		/* 0x04 */ s16* mDelayBuffer;
