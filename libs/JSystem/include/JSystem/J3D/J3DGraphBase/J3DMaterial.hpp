@@ -122,6 +122,9 @@ public:
 	BOOL getSomeFlag() { return unk1C & 1 ? TRUE : FALSE; }
 	void setSomeFlag() { unk1C |= 1; }
 
+	// fabricated
+	bool hasNBTScale() { return mTexGenBlock->getNBTScale()->hasScale(); }
+
 private:
 	enum {
 		DIFF_FLAG   = 1 << (sizeof(uintptr_t) * CHAR_BIT - 1),
