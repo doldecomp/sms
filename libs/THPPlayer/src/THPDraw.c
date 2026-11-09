@@ -133,17 +133,27 @@ void THPGXYuv2RgbDraw(u8* y_data, u8* u_data, u8* v_data, s16 x, s16 y,
 {
 	GXTexObj tobj0, tobj1, tobj2;
 
+// THP decodes using linear sampling on Switch, and point filtering on gamecube
+#ifdef VERSION_GMSP01_NX
+#define THP_SAMPLE_FILTER (GX_LINEAR)
+#else
+#define THP_SAMPLE_FILTER (GX_NEAR)
+#endif
+
 	GXInitTexObj(&tobj0, y_data, textureWidth, textureHeight, GX_TF_I8,
 	             GX_CLAMP, GX_CLAMP, GX_FALSE);
-	GXInitTexObjLOD(&tobj0, GX_NEAR, GX_NEAR, 0, 0, 0, 0, 0, GX_ANISO_1);
+	GXInitTexObjLOD(&tobj0, THP_SAMPLE_FILTER, THP_SAMPLE_FILTER, 0, 0, 0, 0, 0,
+	                GX_ANISO_1);
 	GXLoadTexObj(&tobj0, GX_TEXMAP0);
 	GXInitTexObj(&tobj1, u_data, (textureWidth >> 1), (textureHeight >> 1),
 	             GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
-	GXInitTexObjLOD(&tobj1, GX_NEAR, GX_NEAR, 0, 0, 0, 0, 0, GX_ANISO_1);
+	GXInitTexObjLOD(&tobj1, THP_SAMPLE_FILTER, THP_SAMPLE_FILTER, 0, 0, 0, 0, 0,
+	                GX_ANISO_1);
 	GXLoadTexObj(&tobj1, GX_TEXMAP1);
 	GXInitTexObj(&tobj2, v_data, (textureWidth >> 1), (textureHeight >> 1),
 	             GX_TF_I8, GX_CLAMP, GX_CLAMP, GX_FALSE);
-	GXInitTexObjLOD(&tobj2, GX_NEAR, GX_NEAR, 0, 0, 0, 0, 0, GX_ANISO_1);
+	GXInitTexObjLOD(&tobj2, THP_SAMPLE_FILTER, THP_SAMPLE_FILTER, 0, 0, 0, 0, 0,
+	                GX_ANISO_1);
 	GXLoadTexObj(&tobj2, GX_TEXMAP2);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);

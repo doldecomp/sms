@@ -44,7 +44,8 @@ void TVideo::waitForRetrace(u16 param_1)
 			VISetBlack(1);
 			mCurFrameBuffer = 0;
 			VIFlush();
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 			for (int i = 0; i < 5; ++i)
 				VIWaitForRetrace();
 #else
@@ -54,7 +55,8 @@ void TVideo::waitForRetrace(u16 param_1)
 			if (((uVar11 == 2) && ((mNextRenderMode.viTVmode & 3) != 2))
 			    || ((uVar11 != 2 && ((mNextRenderMode.viTVmode & 3) == 2)))) {
 
-#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)
+#if defined(VERSION_GMSP01) || defined(VERSION_GMSP01_NX)                      \
+    || defined(VERSION_GMSJ01_01)
 				for (int i = 0; i < 55; ++i)
 					VIWaitForRetrace();
 #else
