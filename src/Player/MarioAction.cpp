@@ -7,9 +7,11 @@
 
 BOOL TMario::taking()
 {
+#ifndef VERSION_D38J01
 	if ((mInput & 4) != 0) {
 		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
 	}
+#endif
 
 	setAnimation(ANIM_RAISE, 1.0f);
 	if (unk384 != nullptr && mModel->getFrameCtrl(0).checkPass(11.0f)) {
@@ -33,8 +35,10 @@ BOOL TMario::taking()
 
 BOOL TMario::takePose()
 {
+#ifndef VERSION_D38J01
 	if ((mInput & 4) != 0)
 		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
+#endif
 
 	if (isLast1AnimeFrame()) {
 		setAnimation(ANIM_WAIT, 1.0f);
@@ -66,8 +70,10 @@ BOOL TMario::catchLost()
 
 BOOL TMario::putting()
 {
+#ifndef VERSION_D38J01
 	if ((mInput & 4) != 0)
 		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
+#endif
 
 	stopCommon(ANIM_PUT, MARIO_STATUS_WAIT);
 	if (mHeldObject != nullptr && mModel->getFrameCtrl(0).checkPass(20.0f)) {
@@ -80,8 +86,10 @@ BOOL TMario::putting()
 
 BOOL TMario::pitching()
 {
+#ifndef VERSION_D38J01
 	if ((mInput & 4) != 0)
 		return changePlayerDropping(MARIO_STATUS_LANDING, 0);
+#endif
 
 	stopCommon(ANIM_THROW, MARIO_STATUS_WAIT);
 	checkThrowObject();
@@ -98,11 +106,9 @@ BOOL TMario::actnMain()
 	case MARIO_STATUS_TAKE:
 		result = taking();
 		break;
-
 	case MARIO_STATUS_TAKE_POSE:
 		result = takePose();
 		break;
-
 	case MARIO_STATUS_CATCH_LOST:
 		result = catchLost();
 		break;
