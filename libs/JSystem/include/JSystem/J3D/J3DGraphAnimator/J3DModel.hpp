@@ -30,6 +30,9 @@ class J3DModel;
 class J3DMaterial;
 class J3DMtxCalc;
 
+class JKRHeap;
+class JKRSolidHeap;
+
 enum J3DMaterialCopyFlag {
 	J3DMatCopyFlag_Material = 0x01,
 	J3DMatCopyFlag_Texture  = 0x02,
@@ -318,9 +321,9 @@ public:
 	J3DSkinDeform* getSkinDeform() { return mSkinDeform; }
 
 	// TODO: might be wrong
-	MtxPtr getBaseTRMtx() { return unk20; }
-	void setBaseTRMtx(Mtx m) { MTXCopy(m, unk20); }
-	void setBaseScale(const Vec& scale) { unk14 = scale; }
+	MtxPtr getBaseTRMtx() { return mBaseMtx; }
+	void setBaseTRMtx(Mtx m) { MTXCopy(m, mBaseMtx); }
+	void setBaseScale(const Vec& scale) { mBaseScale = scale; }
 
 	virtual ~J3DModel();
 
@@ -329,8 +332,8 @@ protected:
 	/* 0x08 */ u32 mFlags;
 	/* 0x0C */ J3DCalcCallBack unkC;
 	char pad1[0x4];
-	/* 0x14 */ Vec unk14; // mBaseScale
-	/* 0x20 */ Mtx unk20; // mBaseMtx
+	/* 0x14 */ Vec mBaseScale;
+	/* 0x20 */ Mtx mBaseMtx;
 	/* 0x50 */ u8* mScaleFlagArr;
 	/* 0x54 */ u8* mEvlpScaleFlagArr;
 	/* 0x58 */ Mtx* mNodeMatrices;
@@ -351,6 +354,29 @@ protected:
 	/* 0x94 */ J3DUnkCalc1* unk94;
 	/* 0x98 */ J3DVertexBuffer* mVertexBuffer;
 	/* 0x9C */ J3DUnkCalc2* unk9C;
+};
+
+// below are ALL UNUSED but also REAL. no attempt to decomp them because speculating is silly here
+void J3DCreateModel(J3DModelData*, unsigned long, JKRHeap*, bool,
+                    JKRSolidHeap**);
+void J3DCreateModel(JKRSolidHeap*, unsigned long, J3DModelData*, unsigned long);
+void J3DCreateModelArray(JKRSolidHeap*, int, J3DModel**, J3DModelData*,
+                         unsigned long);
+
+class J3DSimpleModel {
+public:
+	J3DSimpleModel(J3DModelData*, unsigned long);
+
+	void initialize();
+	void entryModelData(J3DModelData*, unsigned long);
+	void lock();
+	void unlock();
+	void update();
+	void calc();
+	void entry();
+	void viewCalc();
+	void calcNrmMtx();
+	void prepareShapePackets();
 };
 
 #endif
