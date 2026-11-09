@@ -730,8 +730,7 @@ void TGesso::rollCheck()
 	    && !MsIsInSight(mPosition, getSightDirection(), SMS_GetMarioPos(),
 	                    unk1E8->mSLSearchLengthOnObj.get(),
 	                    unk1E8->mSLSearchAngleOnObj.get(), 0.0f)) {
-		const TNerveBase<TLiveActor>* nerve = &TNerveGessoTurn::theNerve();
-		mSpine->pushNerve(nerve);
+		getSpine()->pushNerve(&TNerveGessoTurn::theNerve());
 	}
 }
 

@@ -226,6 +226,8 @@ public:
 			return nullptr;
 		return basTable[idx];
 	}
+	// fabricated
+	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
 
 	enum {
 		RIDE_MODE_NONE             = 0,

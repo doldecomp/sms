@@ -64,15 +64,13 @@ BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
 		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
-		if (!gpModelWaterManager->isWaterType(
-		        TModelWaterManager::WATER_TYPE_NORMAL)) {
+		if (!gpModelWaterManager->getWaterType()
+		    == TModelWaterManager::WATER_TYPE_NORMAL) {
 			SMSGetMSound()->startSoundSet(MSD_SE_ERASE_SCRAWL,
 			                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (!mSpine->isNerve(&TNerveSealDie::theNerve())) {
 				mMapCollisionManager->removeActiveCollision();
-				const TNerveBase<TLiveActor>* nextNerve
-				    = &TNerveSealDie::theNerve();
-				mSpine->pushNerve(nextNerve);
+				getSpine()->pushNerve(&TNerveSealDie::theNerve());
 			}
 			unk150++;
 			return true;
