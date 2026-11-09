@@ -368,26 +368,26 @@ void TTrack::oscSetupSimpleEnv(u8 param_1, u32 param_2)
 	}
 }
 
-void TTrack::oscUpdateParam(u8 param_1, f32 param_2)
+void TTrack::oscUpdateParam(u8 param_id, f32 value)
 {
-	switch (param_1) {
+	switch (param_id) {
 	case 6:
-		mOscData[0].mWidth = param_2;
+		mOscData[0].mWidth = value;
 		break;
 	case 7:
-		mOscData[0].mRate = param_2;
+		mOscData[0].mRate = value;
 		break;
 	case 8:
-		mOscData[0].mVertex = param_2;
+		mOscData[0].mVertex = value;
 		break;
 	case 9:
-		mOscData[1].mWidth = param_2;
+		mOscData[1].mWidth = value;
 		break;
 	case 10:
-		mOscData[1].mRate = param_2;
+		mOscData[1].mRate = value;
 		break;
 	case 11:
-		mOscData[1].mVertex = param_2;
+		mOscData[1].mVertex = value;
 		break;
 	}
 }

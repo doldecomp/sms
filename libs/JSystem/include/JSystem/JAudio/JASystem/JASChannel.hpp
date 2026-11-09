@@ -17,16 +17,19 @@ namespace Driver {
 
 	struct Wave_ {
 		/* 0x0 */ u8 unk0;
-		/* 0x1 */ u8 mFormat; // 0 = ADPCM4, 1 = ADPCM2, 2 = PCM8, 3 = PCM16
-		/* 0x2 */ u8 mKey;    // root key of the sample; C5 (0x3C) is the base
-		/* 0x4 */ char unk4[0xC];
-		/* 0x10 */ int mLoop;
-		/* 0x14 */ int mLoopStart;
-		/* 0x18 */ int mLoopEnd;
-		/* 0x1C */ int mSampleCount;
-		/* 0x20 */ s16 mLast;         // ADPCM history y[n-1] at the loop start
-		/* 0x22 */ s16 mPenult;       // ADPCM history y[n-2] at the loop start
-		/* 0x24 */ u32* mLoadFlagPtr; // 0 while the wave data is not in memory
+		/* 0x1 */ u8 mFormat;
+		/* 0x2 */ u8 mKey;
+		/* 0x4 */ f32 mSampleRate;
+		/* 0x8 */ s32 mOffset;
+		/* 0xC */ s32 mDataSize;
+		/* 0x10 */ s32 mLoop;
+		/* 0x14 */ s32 mLoopStart;
+		/* 0x18 */ s32 mLoopEnd;
+		/* 0x1C */ s32 mSampleCount;
+		/* 0x20 */ s16 mLoopHistory1;
+		/* 0x22 */ s16 mLoopHistory2;
+		/* 0x24 */ u32* mLoadFlagPtr;
+		/* 0x28 */ s32 unk28;
 	};
 } // namespace Driver
 

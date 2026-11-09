@@ -4,31 +4,33 @@ namespace JASystem {
 
 f32 TInstSense::getY(int key, int velocity) const
 {
-	int r6 = 0;
-	switch (unk8) {
+	int x = 0;
+	switch (mSource) {
 	case 1:
-		r6 = velocity;
+		x = velocity;
 		break;
 	case 2:
-		r6 = key;
+		x = key;
 		break;
 	}
-	f32 ret;
-	if (unk9 == 0x7f || unk9 == 0)
-		ret = unkC + r6 * (unk10 - unkC) / 127.0f;
-	else if (r6 < unk9)
-		ret = unkC + (1.0f - unkC) * (r6 / (f32)unk9);
+
+	f32 y;
+	if (mCenter == 127 || mCenter == 0)
+		y = mLowY + x * (mHighY - mLowY) / 127.0f;
+	else if (x < mCenter)
+		y = mLowY + (1.0f - mLowY) * (x / (f32)mCenter);
 	else
-		ret = (unk10 - 1.0f) * ((r6 - unk9) / (f32)(0x7f - unk9)) + 1.0f;
-	return ret;
+		y = (mHighY - 1.0f) * ((x - mCenter) / (f32)(127 - mCenter)) + 1.0f;
+	return y;
 }
 
-void TInstSense::setParams(int param1, int param2, f32 param3, f32 param4)
+void TInstSense::setParams(int source, int center, f32 low_value,
+                           f32 high_value)
 {
-	unk8  = param1;
-	unk9  = param2;
-	unkC  = param3;
-	unk10 = param4;
+	mSource = source;
+	mCenter = center;
+	mLowY   = low_value;
+	mHighY  = high_value;
 }
 
 } // namespace JASystem

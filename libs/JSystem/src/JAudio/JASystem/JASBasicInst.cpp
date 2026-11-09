@@ -84,9 +84,9 @@ bool TBasicInst::getParam(int key, int velocity, TInstParam* out_param) const
 	for (int i = 0; i < keymap->getVeloRegionCount(); i++) {
 		const TVeloRegion* region = keymap->getVeloRegion(i);
 		if (velocity <= region->unk0) {
-			out_param->mVolume *= region->unk8;
-			out_param->mPitch *= region->unkC;
-			out_param->mWaveId = region->unk4;
+			out_param->mVolume *= region->mVolume;
+			out_param->mPitch *= region->mPitch;
+			out_param->mWaveId = region->mWaveId;
 			return true;
 		}
 	}

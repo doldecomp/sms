@@ -8,9 +8,9 @@ namespace JASystem {
 
 struct TVeloRegion {
 	/* 0x00 */ s32 unk0;
-	/* 0x04 */ s32 unk4;
-	/* 0x08 */ f32 unk8;
-	/* 0x0C */ f32 unkC;
+	/* 0x04 */ s32 mWaveId;
+	/* 0x08 */ f32 mVolume;
+	/* 0x0C */ f32 mPitch;
 };
 
 struct TInstParam {

@@ -161,10 +161,10 @@ namespace BankMgr {
 		result->mVelocity        = velocity;
 		result->mKey             = key;
 		result->mBasePitch
-		    = instParam.mPitch * (waveInfo->unk4 / Kernel::getDacRate());
+		    = instParam.mPitch * (waveInfo->mSampleRate / Kernel::getDacRate());
 		result->mNotePitch = result->mBasePitch * instParam.mEffectPitch;
 		if (instParam.mFixedPitch == 0) {
-			int var = (key + 0x3C) - waveInfo->unk2;
+			int var = (key + 0x3C) - waveInfo->mKey;
 			if (var < 0)
 				var = 0;
 			if (var > 0x7f)

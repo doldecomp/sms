@@ -60,9 +60,9 @@ bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 		if (velocity > region->unk0) {
 			continue;
 		}
-		param_3->mVolume *= region->unk8;
-		param_3->mPitch *= region->unkC;
-		param_3->mWaveId = region->unk4;
+		param_3->mVolume *= region->mVolume;
+		param_3->mPitch *= region->mPitch;
+		param_3->mWaveId = region->mWaveId;
 		return true;
 	}
 	return false;

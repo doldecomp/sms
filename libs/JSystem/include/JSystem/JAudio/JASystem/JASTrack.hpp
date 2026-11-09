@@ -250,7 +250,7 @@ public:
 	void oscSetupSimple(u8 param);
 	void oscSetupSimpleEnv(u8 param, u32 env);
 	void oscSetupFull(u8 param1, u32 param2, u32 param3);
-	void oscUpdateParam(u8 param, f32 value);
+	void oscUpdateParam(u8 param_id, f32 value);
 
 	u8 getBank() const;
 	u8 getProgram() const;

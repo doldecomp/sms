@@ -23,36 +23,37 @@ namespace WSParser {
 		/* 0x00 */ u32 unk0;
 	};
 
-	// same as JASystem::Driver::Wave_
 	struct TWave {
 		/* 0x00 */ u8 unk0;
-		/* 0x01 */ u8 unk1;
-		/* 0x02 */ u8 unk2;
-		/* 0x04 */ f32 unk4;
-		/* 0x08 */ u32 mOffset;
-		/* 0x0C */ u32 unkC;
-		/* 0x10 */ u32 unk10;
-		/* 0x14 */ u32 unk14;
-		/* 0x18 */ u32 unk18;
-		/* 0x1C */ u32 unk1c;
-		/* 0x20 */ s16 unk20;
-		/* 0x22 */ s16 unk22;
-		/* 0x24 */ u8 unk24[0x28 - 0x24];
-		/* 0x28 */ int unk28;
+		/// ADPCM_HQ = 0, ADPCM_LQ = 1, PCM8 = 2, PCM16 = 3
+		/// 4-7 are unimplemented
+		/* 0x01 */ u8 mFormat;
+		/* 0x02 */ u8 mKey;
+		/* 0x04 */ f32 mSampleRate;
+		/* 0x08 */ s32 mOffset;
+		/* 0x0C */ s32 mDataSize;
+		/* 0x10 */ s32 mLoop;
+		/* 0x14 */ s32 mLoopStart;
+		/* 0x18 */ s32 mLoopEnd;
+		/* 0x1C */ s32 mSampleCount;
+		/* 0x20 */ s16 mLoopHistory1;
+		/* 0x22 */ s16 mLoopHistory2;
+		/* 0x24 */ u32* mLoadFlagPtr;
+		/* 0x28 */ s32 unk28;
 	};
 	struct TWaveArchive {
 		/* 0x00 */ char mFileName[0x74];
-		/* 0x74 */ TOffset<TWave> mWaveOffsets[1];
+		/* 0x74 */ TOffset<TWave> mWaveOffsets[];
 	};
 	struct TWaveArchiveBank {
 		/* 0x00 */ u32 mMagic;
 		/* 0x04 */ u8 unk4[0x08 - 0x04];
-		/* 0x08 */ TOffset<TWaveArchive> mArchiveOffsets[1];
+		/* 0x08 */ TOffset<TWaveArchive> mArchiveOffsets[];
 	};
 	struct TCtrl {
 		/* 0x00 */ u32 mMagic;
 		/* 0x04 */ u32 mWaveCount;
-		/* 0x08 */ TOffset<TCtrlWave> mCtrlWaveOffsets[1];
+		/* 0x08 */ TOffset<TCtrlWave> mCtrlWaveOffsets[];
 	};
 	struct TCtrlScene {
 		/* 0x00 */ u32 mMagic;

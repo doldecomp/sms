@@ -181,8 +181,8 @@ namespace DSPInterface {
 		if (isLooping != 0) {
 			loopAddress = (s16*)wave->mLoopStart;
 			endPosition = wave->mLoopEnd;
-			loopYN1     = wave->mLast;
-			loopYN2     = wave->mPenult;
+			loopYN1     = wave->mLoopHistory1;
+			loopYN2     = wave->mLoopHistory2;
 		} else {
 			endPosition = sampleCount;
 		}

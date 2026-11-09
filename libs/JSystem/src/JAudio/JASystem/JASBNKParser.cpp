@@ -32,8 +32,8 @@ namespace BNKParser {
 			TInst* instRaw = header->mInstOffsets[i].ptr(header);
 			if (instRaw != nullptr) {
 				TBasicInst* instp = new (heap, 0) TBasicInst();
-				instp->setVolume(instRaw->unk8);
-				instp->setPitch(instRaw->unkC);
+				instp->setVolume(instRaw->mVolume);
+				instp->setPitch(instRaw->mPitch);
 
 				instp->setOscCount(2);
 				for (int oscIndex = 0, j = 0; j < 2; j++) {
@@ -43,8 +43,8 @@ namespace BNKParser {
 						    = findOscPtr(bank, header, oscRaw);
 						if (osc == nullptr) {
 							osc           = new (heap, 0) TOscillator::Osc_;
-							osc->mTarget  = oscRaw->unk0;
-							osc->mRate    = oscRaw->unk4;
+							osc->mTarget  = oscRaw->mTarget;
+							osc->mRate    = oscRaw->mRate;
 							s16* oscTable = oscRaw->mAdsTableOffset.ptr(header);
 							if (oscTable != nullptr) {
 								s32 tableLength
@@ -65,8 +65,8 @@ namespace BNKParser {
 							} else {
 								osc->mRelTable = nullptr;
 							}
-							osc->mWidth  = oscRaw->unk10;
-							osc->mVertex = oscRaw->unk14;
+							osc->mWidth  = oscRaw->mWidth;
+							osc->mVertex = oscRaw->mVertex;
 						}
 						instp->setOsc(oscIndex, osc);
 						oscIndex++;
@@ -78,9 +78,9 @@ namespace BNKParser {
 					TRand* randRaw = instRaw->mRandOffsets[j].ptr(header);
 					if (randRaw != nullptr) {
 						TInstRand* randp = new (heap, 0) TInstRand;
-						randp->setTarget(randRaw->unk0);
-						randp->setBase(randRaw->unk4);
-						randp->setWidth(randRaw->unk8);
+						randp->setTarget(randRaw->mTarget);
+						randp->setBase(randRaw->mBase);
+						randp->setWidth(randRaw->mWidth);
 						instp->setEffect(j, randp);
 					}
 				}
@@ -88,9 +88,10 @@ namespace BNKParser {
 					TSense* senseRaw = instRaw->mSenseOffsets[j].ptr(header);
 					if (senseRaw != nullptr) {
 						TInstSense* sensep = new (heap, 0) TInstSense;
-						sensep->setTarget(senseRaw->unk0);
-						sensep->setParams(senseRaw->unk1, senseRaw->unk2,
-						                  senseRaw->unk4, senseRaw->unk8);
+						sensep->setTarget(senseRaw->mTarget);
+						sensep->setParams(senseRaw->mSource, senseRaw->mCenter,
+						                  senseRaw->mLowValue,
+						                  senseRaw->mHighValue);
 						instp->setEffect(j + 2, sensep);
 					}
 				}
@@ -100,15 +101,16 @@ namespace BNKParser {
 					TBasicInst::TKeymap* instKeymap = instp->getKeyRegion(j);
 					TKeymap* keymapRaw = instRaw->mKeymapOffsets[j].ptr(header);
 					instKeymap->setHighKey(keymapRaw->unk0);
-					instKeymap->setVeloRegionCount(keymapRaw->unk4);
-					for (int k = 0; k < keymapRaw->unk4; k++) {
+					instKeymap->setVeloRegionCount(keymapRaw->mVeloRegionCount);
+					for (int k = 0; k < keymapRaw->mVeloRegionCount; k++) {
 						TVeloRegion* instVeloRegion
 						    = instKeymap->getVeloRegion(k);
-						TVmap* vmapRaw = keymapRaw->mVmapOffsets[k].ptr(header);
-						instVeloRegion->unk0 = vmapRaw->unk0;
-						instVeloRegion->unk4 = JSULoHalf(vmapRaw->unk4);
-						instVeloRegion->unk8 = vmapRaw->unk8;
-						instVeloRegion->unkC = vmapRaw->unkC;
+						TVmap* vmapRaw
+						    = keymapRaw->mVeloRegionOffsets[k].ptr(header);
+						instVeloRegion->unk0    = vmapRaw->mHighVelocity;
+						instVeloRegion->mWaveId = JSULoHalf(vmapRaw->mWaveId);
+						instVeloRegion->mVolume = vmapRaw->mVolume;
+						instVeloRegion->mPitch  = vmapRaw->mPitch;
 					}
 				}
 				bank->setInst(i, instp);
@@ -123,8 +125,8 @@ namespace BNKParser {
 					TPmap* pmapRaw = percRaw->mPmapOffsets[j].ptr(header);
 					if (pmapRaw != nullptr) {
 						TDrumSet::TPerc* drumSetPerc = setp->getPerc(j);
-						drumSetPerc->setVolume(pmapRaw->unk0);
-						drumSetPerc->setPitch(pmapRaw->unk4);
+						drumSetPerc->setVolume(pmapRaw->mVolume);
+						drumSetPerc->setPitch(pmapRaw->mPitch);
 						if (percRaw->mMagic == 'PER2') {
 							drumSetPerc->setPan(percRaw->mPan[j] / 127.0f);
 							drumSetPerc->setRelease(percRaw->mRelease[j]);
@@ -135,9 +137,9 @@ namespace BNKParser {
 							    = pmapRaw->mRandOffsets[k].ptr(header);
 							if (randRaw != nullptr) {
 								TInstRand* randp = new (heap, 0) TInstRand();
-								randp->setTarget(randRaw->unk0);
-								randp->setBase(randRaw->unk4);
-								randp->setWidth(randRaw->unk8);
+								randp->setTarget(randRaw->mTarget);
+								randp->setBase(randRaw->mBase);
+								randp->setWidth(randRaw->mWidth);
 								drumSetPerc->setEffect(effectIndex, randp);
 								effectIndex++;
 							}
@@ -149,10 +151,11 @@ namespace BNKParser {
 							    = drumSetPerc->getVeloRegion(k);
 							TVmap* vmapRaw
 							    = pmapRaw->mVeloRegionOffsets[k].ptr(header);
-							instVeloRegion->unk0 = vmapRaw->unk0;
-							instVeloRegion->unk4 = JSULoHalf(vmapRaw->unk4);
-							instVeloRegion->unk8 = vmapRaw->unk8;
-							instVeloRegion->unkC = vmapRaw->unkC;
+							instVeloRegion->unk0 = vmapRaw->mHighVelocity;
+							instVeloRegion->mWaveId
+							    = JSULoHalf(vmapRaw->mWaveId);
+							instVeloRegion->mVolume = vmapRaw->mVolume;
+							instVeloRegion->mPitch  = vmapRaw->mPitch;
 						}
 					}
 				}

@@ -9,20 +9,20 @@ namespace JASystem {
 class TInstSense : public TInstEffect {
 public:
 	TInstSense()
-	    : unk8(0)
-	    , unk9(0x3C)
-	    , unkC(1.0f)
-	    , unk10(1.0f)
+	    : mSource(0)
+	    , mCenter(60)
+	    , mLowY(1.0f)
+	    , mHighY(1.0f)
 	{
 	}
 
 	virtual f32 getY(int, int) const;
-	void setParams(int, int, f32, f32);
+	void setParams(int source, int center, f32 low_value, f32 high_value);
 
-	u8 unk8;
-	u8 unk9;
-	f32 unkC;
-	f32 unk10;
+	u8 mSource;
+	u8 mCenter;
+	f32 mLowY;
+	f32 mHighY;
 };
 
 } // namespace JASystem
