@@ -999,7 +999,7 @@ config.libs = [
             PCHObject(NonMatching, "Player/Yoshi.cpp"),
             PCHObject(NonMatching, "Player/MarioEffect.cpp"),
             Object(NonMatching, "Player/MarioSwim.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01", "GMSP01_NX"), "Player/MarioAccess.cpp"),
+            Object(Matching, "Player/MarioAccess.cpp"),
             PCHObject(NonMatching, "Player/MarioInit.cpp"),
             PCHObject(NonMatching, "Player/ModelWaterManager.cpp"),
             PCHObject(Matching, "Player/MarioPositionObj.cpp"),
