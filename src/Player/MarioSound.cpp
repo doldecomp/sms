@@ -81,7 +81,7 @@ void TMario::soundMovement()
 			u8 unk20 = mSoundValues.callsound_delay;
 			if (unk20 != 0) {
 				mSoundValues.callsound_delay = unk20 - 1;
-				u8 unk20New        = mSoundValues.callsound_delay;
+				u8 unk20New                  = mSoundValues.callsound_delay;
 				if (unk20New == 0) {
 					if (inputBit == 0) {
 						SMSGetMSound()->startSoundActor(MSD_SE_MA_BOUND,
@@ -258,7 +258,7 @@ void TMario::soundMovement()
 
 		if (mColCount != 0) {
 			if (mCollisions[0] != nullptr) {
-				mSoundValues.lasthittimer = 4;
+				mSoundValues.lasthittimer   = 4;
 				mSoundValues.latesthitactor = mCollisions[0]->mActorType;
 				if (mCollisions[0]->isHitCategory(HIT_CATEGORY_NPC))
 					mSoundValues.lasthitactor = 1;
@@ -496,7 +496,8 @@ void TMario::soundMovement()
 			}
 		}
 
-		if ((mSoundValues.oldstatus & 0x800) && curStatus == MARIO_STATUS_HANGING) {
+		if ((mSoundValues.oldstatus & 0x800)
+		    && curStatus == MARIO_STATUS_HANGING) {
 			if (mHealth > 2) {
 				if (!onYoshi())
 					SMSGetMSound()->startMarioVoice(MSD_SE_MV15_EXERT_INST_02,
@@ -614,9 +615,9 @@ void TMario::soundMovement()
 	}
 
 	mSoundValues.lastStatus = mStatus;
-	mSoundValues.oldstatus = curStatus;
-	mSoundValues.oldaction = mInput;
-	mSoundValues.oldflag = unk78;
+	mSoundValues.oldstatus  = curStatus;
+	mSoundValues.oldaction  = mInput;
+	mSoundValues.oldflag    = unk78;
 }
 #else
 void TMario::soundMovement()
@@ -1313,21 +1314,21 @@ void TMario::startSoundActor(u32 param_1)
 
 TMarioSoundValues::TMarioSoundValues()
 {
-	oldstatus = 0;
-	mss_state = -1;
-	lastStatus = 0;
-	oldaction = 0;
-	oldflag = 0;
-	latesthitactor = 0;
-	unk18 = 0;
-	jtimer = 0;
+	oldstatus       = 0;
+	mss_state       = -1;
+	lastStatus      = 0;
+	oldaction       = 0;
+	oldflag         = 0;
+	latesthitactor  = 0;
+	unk18           = 0;
+	jtimer          = 0;
 	callsound_delay = 0;
-	spin_timer = 0;
-	boundtimer = 0;
-	timer = 0;
-	latesthitactor = 0;
-	lasthittimer = 0;
-	oldrate = 1;
-	pull_timer = 0;
-	stimer = 0;
+	spin_timer      = 0;
+	boundtimer      = 0;
+	timer           = 0;
+	latesthitactor  = 0;
+	lasthittimer    = 0;
+	oldrate         = 1;
+	pull_timer      = 0;
+	stimer          = 0;
 }
