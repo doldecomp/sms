@@ -1169,7 +1169,7 @@ config.libs = [
             Object(Matching, "GC2D/BoundPane.cpp"),
             PCHObject(NonMatching, "GC2D/PauseMenu2.cpp"),
             Object(NonMatching, "GC2D/MessageLoader.cpp"),
-            PCHObject(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01", "GMSP01_NX"), "GC2D/HelpActor.cpp"),
+            PCHObject(Matching, "GC2D/HelpActor.cpp"),
             Object(MatchingFor("GMSJ01", "D38J01"), "GC2D/MessageUtil.cpp"),
             PCHObject(NonMatching, "GC2D/CardSave.cpp"),
             PCHObject(NonMatching, "GC2D/CardLoad.cpp"),
