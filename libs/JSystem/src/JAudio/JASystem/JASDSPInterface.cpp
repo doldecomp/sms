@@ -25,14 +25,32 @@ u64 DSP_CreateMap()
 namespace JASystem {
 
 namespace DSPInterface {
-
-	static u16 SEND_TABLE[] = {
-		0x0D00, 0x0D60, 0x0DC0, 0x0E20, 0x0E80, 0x0EE0,
-		0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0, 0x0000,
+	// DSP memory addresses for various buffers
+	enum {
+		BUS_FRONT_LEFT             = 0x0D00,
+		BUS_FRONT_RIGHT            = 0x0D60,
+		BUS_EFFECTS_0              = 0x0DC0,
+		BUS_EFFECTS_1              = 0x0E20,
+		BUS_EFFECTS_2              = 0x0E80,
+		BUS_EFFECTS_3              = 0x0EE0,
+		BUS_REAR_RIGHT             = 0x0CA0,
+		BUS_REAR_LEFT              = 0x0F40,
+		BUS_AUX_RIGHT_SUBTRACT     = 0x0FA0,
+		SHARED_SAMPLE_GAIN_SCRATCH = 0x0B00,
+		BUS_AUX_CENTER             = 0x09A0,
 	};
 
-	static DSPBuffer* CH_BUF = 0;
-	static FXBuffer* FX_BUF  = 0;
+	static u16 SEND_TABLE[] = {
+		BUS_FRONT_LEFT,         BUS_FRONT_RIGHT,
+		BUS_EFFECTS_0,          BUS_EFFECTS_1,
+		BUS_EFFECTS_2,          BUS_EFFECTS_3,
+		BUS_REAR_RIGHT,         BUS_REAR_LEFT,
+		BUS_AUX_RIGHT_SUBTRACT, SHARED_SAMPLE_GAIN_SCRATCH,
+		BUS_AUX_CENTER,         0x0000,
+	};
+
+	static DSPBuffer* CH_BUF = nullptr;
+	static FXBuffer* FX_BUF  = nullptr;
 
 	u16 JAS_DSP_PREFIX = 0xF355;
 
@@ -97,30 +115,30 @@ namespace DSPInterface {
 	BOOL FXBuffer::setFXLine(s16* buffer, FxlineConfig_* config)
 	{
 		BOOL enable = OSDisableInterrupts();
-		unk0        = 0;
+		mFlags      = 0;
 
 		if (config) {
-			unkA = config->unk4;
-			unk8 = SEND_TABLE[config->unk2];
-			unkE = config->unk8;
-			unkC = SEND_TABLE[config->unk6];
-			unk2 = config->unkC;
-			setFilterTable(unk10, config->unk10, 8);
+			mSend0Gain    = config->mSend0Gain;
+			mSend0Address = SEND_TABLE[config->mSend0Bus];
+			mSend1Gain    = config->mSend1Gain;
+			mSend1Address = SEND_TABLE[config->mSend1Bus];
+			mDelayBlocks  = config->mDelayBlocks;
+			setFilterTable(mFirCoeffs, config->mFirCoeffs, 8);
 		}
 
 		if (buffer && config) {
-			u32 bufsize = config->unkC * 0xA0;
-			unk4        = buffer;
+			u32 bufsize  = config->mDelayBlocks * (80 * sizeof(u16));
+			mDelayBuffer = buffer;
 			Calc::bzero(buffer, bufsize);
 			DCFlushRange(buffer, bufsize);
 		} else if (!config || buffer) {
-			unk4 = buffer;
+			mDelayBuffer = buffer;
 		}
 
-		if (unk4)
-			unk0 = config->unk0;
+		if (mDelayBuffer)
+			mFlags = config->mFlags;
 		else
-			unk0 = 0;
+			mFlags = 0;
 
 		DCFlushRange(this, sizeof(*this));
 		OSRestoreInterrupts(enable);

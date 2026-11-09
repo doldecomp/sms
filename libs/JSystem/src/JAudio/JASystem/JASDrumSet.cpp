@@ -9,7 +9,7 @@ bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 	if (key >= 128u)
 		return false;
 
-	const TPerc* perc = unk4 + key;
+	const TPerc* perc = mPercs + key;
 
 	param_3->mSourceType = 0;
 	param_3->mFixedPitch = 1;
@@ -68,11 +68,11 @@ bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 	return false;
 }
 
-TDrumSet::TPerc* TDrumSet::getPerc(int index) { return &unk4[index]; }
+TDrumSet::TPerc* TDrumSet::getPerc(int index) { return &mPercs[index]; }
 
 const TDrumSet::TPerc* TDrumSet::getPerc(int index) const
 {
-	return &unk4[index];
+	return &mPercs[index];
 }
 
 TDrumSet::TPerc::TPerc()

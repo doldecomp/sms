@@ -51,7 +51,7 @@ public:
 	const TPerc* getPerc(int) const;
 
 public:
-	/* 0x04 */ TPerc unk4[128];
+	/* 0x04 */ TPerc mPercs[128];
 };
 
 } // namespace JASystem

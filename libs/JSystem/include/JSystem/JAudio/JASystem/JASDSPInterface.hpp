@@ -12,13 +12,13 @@ namespace Driver {
 
 namespace DSPInterface {
 	struct FxlineConfig_ {
-		/* 0x00 */ u8 unk0;
-		/* 0x02 */ u16 unk2;
-		/* 0x04 */ s16 unk4;
-		/* 0x06 */ u16 unk6;
-		/* 0x08 */ s16 unk8;
-		/* 0x0C */ int unkC;
-		/* 0x10 */ s16 unk10[8];
+		/* 0x00 */ u8 mFlags;
+		/* 0x02 */ u16 mSend0Bus;
+		/* 0x04 */ s16 mSend0Gain;
+		/* 0x06 */ u16 mSend1Bus;
+		/* 0x08 */ s16 mSend1Gain;
+		/* 0x0C */ int mDelayBlocks;
+		/* 0x10 */ s16 mFirCoeffs[8];
 	};
 
 	/**
@@ -148,14 +148,14 @@ namespace DSPInterface {
 		void changeFXLineParam(u8, u32);
 
 	public:
-		/* 0x00 */ u16 unk0;
-		/* 0x02 */ u16 unk2;
-		/* 0x04 */ s16* unk4;
-		/* 0x08 */ u16 unk8;
-		/* 0x0A */ s16 unkA;
-		/* 0x0C */ u16 unkC;
-		/* 0x0E */ s16 unkE;
-		/* 0x10 */ s16 unk10[8];
+		/* 0x00 */ u16 mFlags;
+		/* 0x02 */ u16 mDelayBlocks;
+		/* 0x04 */ s16* mDelayBuffer;
+		/* 0x08 */ u16 mSend0Address;
+		/* 0x0A */ s16 mSend0Gain;
+		/* 0x0C */ u16 mSend1Address;
+		/* 0x0E */ s16 mSend1Gain;
+		/* 0x10 */ s16 mFirCoeffs[8];
 	};
 
 	extern u16 JAS_DSP_PREFIX;
