@@ -75,6 +75,13 @@ extern TModelWaterManager* gpModelWaterManager;
 
 class TModelWaterManager : public JDrama::TViewObj {
 public:
+	enum WaterType {
+		WATER_TYPE_NORMAL       = 0,
+		WATER_TYPE_ORANGE_JUICE = 1,
+		WATER_TYPE_PURPLE_JUICE = 2,
+		WATER_TYPE_PINK_JUICE   = 3,
+	};
+
 	TModelWaterManager(const char* name = "<TModelWaterParticle>")
 	    : JDrama::TViewObj(name)
 	{
@@ -116,6 +123,13 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	static TWaterHitActor mStaticHitActor;
+
+	// fabricated
+	u8 getWaterType() const { return mWaterType; }
+	// fabricated
+	bool isWaterType(u8 waterType) const { return mWaterType == waterType; }
+	// fabricated
+	void setWaterType(u8 waterType) { mWaterType = waterType; }
 
 	// fabricated
 	BOOL checkParticleFlag(TWaterHitActor* hit, u16 flag)
@@ -195,7 +209,7 @@ public:
 	/* 0x5D5C */ u8 unk5D5C;
 	/* 0x5D5D */ u8 unk5D5D;
 	/* 0x5D5E */ u8 unk5D5E;
-	/* 0x5D5F */ u8 unk5D5F;
+	/* 0x5D5F */ u8 mWaterType;
 	/* 0x5D60 */ u16 unk5D60;
 	/* 0x5D62 */ u8 unk5D62;
 	/* 0x5D63 */ u8 unk5D63;

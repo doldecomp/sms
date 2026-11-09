@@ -49,7 +49,10 @@ void TWireTrap::init(TLiveManager* manager)
 	mManager = manager;
 	mManager->manageActor(this);
 
-	initWire();
+	mMActorKeeper = new TMActorKeeper(mManager, 1);
+	mMActor       = mMActorKeeper->createMActor("wire_trap.bmd", 0);
+	mBinder       = new TWireBinder;
+	getSpine()->initWith(&TNerveWaitForever<TLiveActor>::theNerve());
 	initCollision();
 	initParticle();
 }
@@ -85,14 +88,7 @@ void TWireTrap::load(JSUMemoryInputStream& stream)
 		initThisColor(&cBlueColor);
 	}
 
-	getWireBinder()->init(getPosition());
-
-	setMoveMode(mInitialMode);
-
-	mWireDirectionMultiplier
-	    = 0.0f <= fromPolar(mRotation.y, 1.0f).dot(getWireDir()) ? 1.0f : -1.0f;
-
-	mModelScaleMultiplier = 1.0f;
+	initWire();
 }
 
 void TWireTrap::initCollision()
@@ -113,13 +109,14 @@ void TWireTrap::initParticle()
 
 void TWireTrap::initWire()
 {
-	mMActorKeeper = new TMActorKeeper(mManager, 1);
-	mMActor       = mMActorKeeper->createMActor("wire_trap.bmd", 0);
-	mBinder       = new TWireBinder;
-	// inline getter?
-	const TNerveBase<TLiveActor>* pNerve
-	    = &TNerveWaitForever<TLiveActor>::theNerve();
-	mSpine->initWith(pNerve);
+	getWireBinder()->init(getPosition());
+
+	setMoveMode(mInitialMode);
+
+	mWireDirectionMultiplier
+	    = 0.0f <= fromPolar(mRotation.y, 1.0f).dot(getWireDir()) ? 1.0f : -1.0f;
+
+	mModelScaleMultiplier = 1.0f;
 }
 
 void TWireTrap::initThisColor(const GXColorS10* color)

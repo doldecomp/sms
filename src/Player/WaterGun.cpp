@@ -1649,6 +1649,31 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
+#if !defined(VERSION_GMSJ01)
+bool TWaterGun::isEmitting()
+{
+	if (mCurrentWater == 0)
+		return false;
+
+	if (SMSGetMarDirector()->isInnerDemoModeNow()
+	    || SMSGetMarDirector()->isTalkingDemoModeNow()
+	    || SMSGetMarDirector()->isTalkModeNow())
+		return false;
+
+	if (getCurrentNozzle()->getNozzleKind() == 1) {
+		if (((TNozzleTrigger*)getCurrentNozzle())->getSprayState()
+		    == TNozzleTrigger::SPRAY_STATE_ACTIVE)
+			return true;
+		return false;
+	}
+
+	if (getCurrentNozzle()->getUnk378() > 0.0f)
+		return true;
+
+	return false;
+}
+#endif
+
 TNozzleBase* TWaterGun::getCurrentNozzle() const
 {
 	return getNozzle(mCurrentNozzle);

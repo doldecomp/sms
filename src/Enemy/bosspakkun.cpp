@@ -972,9 +972,10 @@ void TBossPakkun::gotWaterDamage()
 			unk178 += 1;
 		unk174 = getBossPakkunParams()->mSLWaterHitTimer.get();
 
-		const TNerveBase<TLiveActor>* swallowNerve
-		    = &TNerveBPSwallow::theNerve();
-		if (!mSpine->isNerve(swallowNerve)) {
+		// Feels fake, but used other places in bosspakkun rn
+		// I tried everything to use existing spine functions, but could not
+		// improve AZ
+		if (getLatestNerve() != &TNerveBPSwallow::theNerve()) {
 			mSpine->reset();
 			mSpine->setNext(&TNerveBPSwallow::theNerve());
 		}

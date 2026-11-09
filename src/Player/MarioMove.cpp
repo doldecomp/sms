@@ -28,7 +28,7 @@
 
 f32 TMario::getJumpAccelControl() const
 {
-	if (mStatus == MARIO_STATUS_WIRE_JUMP)
+	if (isStatus(MARIO_STATUS_WIRE_JUMP))
 		return mWireParams.mWireJumpAccelControl.get();
 
 	return mJumpParams.mJumpAccelControl.get();
@@ -36,10 +36,10 @@ f32 TMario::getJumpAccelControl() const
 
 f32 TMario::getJumpSlideControl() const
 {
-	if (mStatus == MARIO_STATUS_WIRE_JUMP)
+	if (isStatus(MARIO_STATUS_WIRE_JUMP))
 		return mWireParams.mWireJumpSlideControl.get();
 
-	if (onYoshi() && (mYoshi->mFlutterState == 1 ? true : false))
+	if (onYoshi() && mYoshi->isFlutterState(TYoshi::FLUTTER_STATE_ACTIVE))
 		return mYoshiParams.mHoldOutSldCtrl.get();
 
 	return mJumpParams.mJumpSlideControl.get();
@@ -48,7 +48,7 @@ f32 TMario::getJumpSlideControl() const
 bool TMario::canSquat() const
 {
 	if (checkFlag(MARIO_FLAG_HAS_FLUDD) && mWaterGun
-	    && mWaterGun->getCurrentNozzle()->mRocketType.get() != 1
+	    && !mWaterGun->checkCurrentNozzleRocketType(TWaterGun::Rocket)
 	    && mWaterGun->getCurrentNozzleType() != TWaterGun::Turbo
 	    && (mInput & 0x200))
 		return true;
@@ -667,7 +667,7 @@ u32 TMario::setStatusToJumping(u32 status, u32 arg)
 
 	if (onYoshi()) {
 		mVel.y *= mYoshiParams.mJumpYoshiMult.get();
-		mYoshi->mFlutterState = 0;
+		mYoshi->mFlutterState = TYoshi::FLUTTER_STATE_READY;
 		mYoshi->mFlutterTimer = mYoshi->mMaxFlutterTimer;
 	}
 
@@ -2293,8 +2293,13 @@ void TMario::checkWet()
 
 void TMario::gunExec()
 {
-	if (!onYoshi())
-		gpModelWaterManager->unk5D5F = 0;
+	// Another inline?
+	bool ridingYoshi = false;
+	if (onYoshi())
+		ridingYoshi = true;
+	if (!ridingYoshi)
+		gpModelWaterManager->setWaterType(
+		    TModelWaterManager::WATER_TYPE_NORMAL);
 
 	if (!checkFlag(MARIO_FLAG_HAS_FLUDD) && !onYoshi())
 		return;
@@ -2326,10 +2331,11 @@ void TMario::gunExec()
 	if (checkUnk114(UNK114_FLAG_UNK80))
 		mWaterGun->resetWaterToFull();
 
-	if (mStatus != MARIO_STATUS_BACK_JUMP && mStatus != MARIO_STATUS_THROWN_DOWN
+	if (!isStatus(MARIO_STATUS_BACK_JUMP) && !isStatus(MARIO_STATUS_THROWN_DOWN)
 	    && mGamePad->checkFrameMeaning(TMarioGamePad::MEANING_X) && !onYoshi()
-	    && mStatus != MARIO_STATUS_TOROCCO)
+	    && !isStatus(MARIO_STATUS_TOROCCO)) {
 		mWaterGun->changeBackup();
+	}
 
 	if (mWaterGun->getCurrentNozzleType() == TWaterGun::Spray
 	    && mWaterGun->getEmittedWaterCount() != 0) {
@@ -2354,7 +2360,7 @@ void TMario::playerControl(JDrama::TGraphics* param_1)
 	offUnk114(UNK114_FLAG_UNK8);
 
 	if (SMSGetMarDirector()->isTalkStartModeNow()
-	    && mStatus != MARIO_STATUS_READ_BILLBOARD)
+	    && !isStatus(MARIO_STATUS_READ_BILLBOARD))
 		changePlayerStatus(MARIO_STATUS_READ_BILLBOARD, 0, false);
 
 	if (gpMarioOriginal == this) {

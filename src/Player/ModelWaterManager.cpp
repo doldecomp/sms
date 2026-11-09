@@ -155,13 +155,13 @@ void TModelWaterManager::load(JSUMemoryInputStream& stream)
 	    J3DMLF_MaterialPEFull | J3DMLF_UseUniqueMaterials
 	        | (1 << J3DMLF_TevStageNumShift));
 
-	unk5D5C = 128;
-	unk5D5D = 80;
-	unk5D5E = 200;
-	unk5D5F = 0;
-	unk5D60 = 367;
-	unk5D62 = 1;
-	unk5D63 = 1;
+	unk5D5C    = 128;
+	unk5D5D    = 80;
+	unk5D5E    = 200;
+	mWaterType = WATER_TYPE_NORMAL;
+	unk5D60    = 367;
+	unk5D62    = 1;
+	unk5D63    = 1;
 
 	unk5D64 = 150;
 	unk5D65 = 255;
@@ -1115,7 +1115,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 		GXSetColorUpdate(GX_TRUE);
 		GXSetAlphaUpdate(GX_TRUE);
 		GXSetDstAlpha(GX_TRUE, 0);
-		GXSetChanMatColor(GX_COLOR0A0, gModelWaterManagerWaterColor[unk5D5F]);
+		GXSetChanMatColor(GX_COLOR0A0,
+		                  gModelWaterManagerWaterColor[mWaterType]);
 		GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_INVDSTALPHA,
 		               GX_LO_NOOP);
 
@@ -1169,7 +1170,8 @@ void TModelWaterManager::drawWaterVolume(MtxPtr param_1)
 		GXSetNumChans(1);
 		GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
-		GXSetChanMatColor(GX_COLOR0A0, gModelWaterManagerWaterColor[unk5D5F]);
+		GXSetChanMatColor(GX_COLOR0A0,
+		                  gModelWaterManagerWaterColor[mWaterType]);
 		GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE,
 		              GX_AF_NONE);
 		GXSetColorUpdate(GX_TRUE);
@@ -1872,7 +1874,7 @@ void TModelWaterManager::drawRefracAndSpec() const
 	GXSetTevDirect(GX_TEVSTAGE0);
 	GXSetNumTexGens(1);
 	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3c, 0, 0x7d);
-	GXSetTevColor(GX_TEVREG0, gModelWaterManagerWaterColor[unk5D5F]);
+	GXSetTevColor(GX_TEVREG0, gModelWaterManagerWaterColor[mWaterType]);
 	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP2, GX_COLOR_NULL);
 	GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C0);

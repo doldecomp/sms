@@ -579,8 +579,8 @@ BOOL TBiancoGateKeeper::isHeadHitActive() const
 
 BOOL TBiancoGateKeeper::isDamageFogSituation() const
 {
-	const TNerveBase<TLiveActor>* awake = &TNerveBGKAwakeDamage::theNerve();
-	if (mSpine->getLatestNerve() == awake && mSpine->getTime() <= 110)
+	if (mSpine->isNerve(&TNerveBGKAwakeDamage::theNerve())
+	    && mSpine->getTime() <= 110)
 		return true;
 
 	if (mMActor->checkCurBckFromIndex(0x12)) {
@@ -607,10 +607,8 @@ const char** TBiancoGateKeeper::getBasNameTable() const
 
 void TBiancoGateKeeper::emitParticles()
 {
-	const TNerveBase<TLiveActor>* sleep = &TNerveBGKSleep::theNerve();
-	if (mSpine->getLatestNerve() != sleep) {
-		const TNerveBase<TLiveActor>* goro = &TNerveBGKLaunchGoro::theNerve();
-		if (mSpine->getLatestNerve() != goro) {
+	if (!mSpine->isNerve(&TNerveBGKSleep::theNerve())) {
+		if (!mSpine->isNerve(&TNerveBGKLaunchGoro::theNerve())) {
 			J3DModel* model = getModel();
 			JPABaseEmitter* emitter;
 			emitter = gpMarioParticleManager->emitAndBindToMtxPtr(
