@@ -97,7 +97,7 @@ const u32 cRumbleToggleItems[] = {
 	'sel0',
 };
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 const u32 cSubtitleToggleItems[] = {
 	'sel6',
@@ -149,7 +149,7 @@ const TOptionSoundUnit::FabricatedFlagInfo TOptionSoundUnit::cFlagInfos[] = {
 	{ TOptionSoundUnit::SOUND_TYPE_SURROUND, 2 },
 };
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)                       \
     && !defined(VERSION_D38J01)
 TArrowControl::TArrowControl(J2DScreen* screen, J2DPicture* picture)
     : mScreen(screen)
@@ -629,7 +629,7 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane,
 	}
 }
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
     : mScreen(screen)
@@ -1293,7 +1293,7 @@ void TOptionControl::load()
 	textBoxB->setFont((JUTFont*)gpSystemFont);
 #endif
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01) \
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
     || defined(VERSION_D38J01)
 	mBackArrow = new TArrowControl(mScreen->search('yaji'));
 #else
@@ -1303,7 +1303,7 @@ void TOptionControl::load()
 
 	mRumbleOption = new TOptionRumbleUnit(mScreen);
 	mSoundOption  = new TOptionSoundUnit(mScreen);
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 	mSubtitleOption = new TOptionSubtitleUnit(mScreen);
 #endif
@@ -1346,7 +1346,7 @@ void TOptionControl::loadSetting()
 		break;
 	}
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 	switch (TFlagManager::getInstance()->getFlag(MSF_SUBTITLES)) {
 	case TOptionSubtitleUnit::SUBTITLE_TYPE_OFF:
@@ -1390,7 +1390,7 @@ void TOptionControl::movementCommon()
 	mBackArrow->update();
 	mRumbleOption->update();
 	mSoundOption->update();
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 	mSubtitleOption->update();
 #endif
@@ -1407,7 +1407,7 @@ bool TOptionControl::movementCard2Option()
 	if (gpCameraOption->unk12 == 0) {
 		mRumbleOption->show();
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 		mScreen->search('txp2')->show();
 #endif
@@ -1470,7 +1470,7 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_RUMBLE_OPTION:
 			mRumbleOption->activate();
 			mSoundOption->deactivate(initial_options_entry);
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 			mSubtitleOption->deactivate(initial_options_entry);
 #endif
@@ -1482,7 +1482,7 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_SOUND_OPTION:
 			mRumbleOption->deactivate(initial_options_entry);
 			mSoundOption->activate();
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 			mSubtitleOption->deactivate(initial_options_entry);
 #endif
@@ -1491,7 +1491,7 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 #endif
 			break;
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 		case SELECT_TYPE_SUBTITLE_OPTION:
 			mSubtitleOption->activate();
@@ -1598,7 +1598,7 @@ void TOptionControl::toggleCurType()
 	case SELECT_TYPE_SOUND_OPTION:
 		mSoundOption->toggle();
 		break;
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 	case SELECT_TYPE_SUBTITLE_OPTION:
 		mSubtitleOption->toggle();
@@ -1617,7 +1617,7 @@ void TOptionControl::checkInput()
 {
 	f32 fVar1
 	    = SMSGetMarDirector()->getGamePad()->getMainStickInDir(0.0f, 1.0f);
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01) \
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_D38J01)
 	if (0.75f <= fVar1) {
 		setType(SELECT_TYPE_RUMBLE_OPTION, false);
@@ -1746,7 +1746,7 @@ void TOptionControl::writeValue()
 	TFlagManager::getInstance()->setFlag(MSF_RUMBLE, mRumbleOption->getValue());
 	TFlagManager::getInstance()->setFlag(MSF_SOUND_MODE,
 	                                     mSoundOption->getValue());
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 	TFlagManager::getInstance()->setFlag(MSF_SUBTITLES,
 	                                     mSubtitleOption->getValue());
@@ -1761,7 +1761,7 @@ bool TOptionControl::isChangedSetting() const
 {
 	bool result = true;
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01) \
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)                      \
     || defined(VERSION_D38J01)
 	if (mInitialRumbleValue == mRumbleOption->getValue()
 	    && mInitialSoundValue == mSoundOption->getValue())
@@ -1793,7 +1793,7 @@ void TOptionControl::resetChangedSetting()
 {
 	mInitialRumbleValue = mRumbleOption->getValue();
 	mInitialSoundValue  = mSoundOption->getValue();
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01) \
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
     && !defined(VERSION_D38J01)
 	mInitialSubtitleValue = mSubtitleOption->getValue();
 #endif
