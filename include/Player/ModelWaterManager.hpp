@@ -125,6 +125,8 @@ public:
 	static TWaterHitActor mStaticHitActor;
 
 	// fabricated
+	u8 getWaterType() const { return mWaterType; }
+	// fabricated
 	bool isWaterType(u8 waterType) const { return mWaterType == waterType; }
 	// fabricated
 	void setWaterType(u8 waterType) { mWaterType = waterType; }

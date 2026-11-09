@@ -582,7 +582,7 @@ bool TSmallEnemy::changeByJuice()
 
 		mSpine->pushNerve(&TNerveSmallEnemyChange::theNerve());
 
-		unk185 = gpModelWaterManager->mWaterType;
+		unk185 = gpModelWaterManager->getWaterType();
 		if (TSmallEnemyManager::mTestJuiceType
 		    != TModelWaterManager::WATER_TYPE_NORMAL)
 			unk185 = TSmallEnemyManager::mTestJuiceType;

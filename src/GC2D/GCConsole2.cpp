@@ -375,7 +375,7 @@ static inline void updateCoinBlendPaneState(TBlendPane*& pane, bool& isFinished)
 static inline void drawWaterOrJuice(TGCConsole2* console, J2DOrthoGraph& graph)
 {
 	if (gpMarioOriginal->mYoshi->onYoshi()) {
-		switch (gpModelWaterManager->mWaterType) {
+		switch (gpModelWaterManager->getWaterType()) {
 		case TModelWaterManager::WATER_TYPE_ORANGE_JUICE:
 			console->drawJuice(graph, ((u32)console->unkA2.r << 24)
 			                              + ((u32)console->unkA2.g << 16)
@@ -1056,7 +1056,7 @@ void TGCConsole2::loadAfter()
 		unk4EC[i].set(bounds.x1, bounds.y1);
 	}
 
-	unk7A = gpModelWaterManager->mWaterType;
+	unk7A = gpModelWaterManager->getWaterType();
 
 	JGeometry::TVec3<f32> emitterPos(-20.0f, -20.0f, 0.0f);
 
@@ -4797,7 +4797,7 @@ void TGCConsole2::performCalcAnim()
 			unk314[unk7A]->show();
 		}
 
-		u8 type = gpModelWaterManager->mWaterType;
+		u8 type = gpModelWaterManager->getWaterType();
 		if (unk7A != type) {
 			unk314[unk7A]->hide();
 			unk314[type]->show();
