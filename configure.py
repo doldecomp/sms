@@ -1200,7 +1200,7 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/emario.cpp"),
             PCHObject(NonMatching, "Enemy/enemy.cpp"),
             PCHObject(NonMatching, "Enemy/enemyAttachment.cpp"),
-            PCHObject(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01", "GMSP01_NX"), "Enemy/enemyinterp.cpp"),
+            PCHObject(Matching, "Enemy/enemyinterp.cpp"),
             PCHObject(NonMatching, "Enemy/enemymanager.cpp"),
             PCHObject(NonMatching, "Enemy/enemyMario.cpp"),
             PCHObject(NonMatching, "Enemy/feetinv.cpp"),
