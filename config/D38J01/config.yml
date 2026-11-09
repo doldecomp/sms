@@ -36,3 +36,16 @@ block_relocations:
   - source: 0x8022C690
   - source: 0x80231958
   - source: 0x80231960
+
+  # JUTDirectPrint font bitmap words that resemble code addresses
+  - source: 0x803A6F08
+  - source: 0x803A7028
+
+  # DSP filter coefficients, oscillator samples, and DSP microcode
+  - source: 0x803A9A20
+  - source: 0x803AA2C0
+  - source: 0x803ACCD8
+  - source: 0x803ACD58
+
+  # ModelWaterManager display-list bytes
+  - source: 0x803B60D0
