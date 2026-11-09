@@ -30,7 +30,8 @@ class J2DPicture;
  */
 class TArrowControl {
 public:
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01) \
+    || defined(VERSION_D38J01)
 	TArrowControl(J2DPane* pane)
 	    : mPane(pane)
 	    , unk14(true)
@@ -52,7 +53,8 @@ public:
 	int calcMoveX(int phase) const;
 
 private:
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01) \
+    && !defined(VERSION_D38J01)
 	/* 0x0 */ J2DScreen* mScreen;
 #endif
 	/* 0x0 */ J2DPane* mPane;
@@ -64,7 +66,7 @@ private:
 #endif
 };
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 class TBalloonControl {
 public:
 	TBalloonControl(int size);
@@ -208,7 +210,7 @@ private:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 	/* 0xC */ TBalloonControl* unkC;
 #endif
 	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
@@ -222,7 +224,7 @@ private:
 #endif
 };
 
-#ifndef VERSION_GMSJ01
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_D38J01)
 class TOptionSubtitleUnit {
 public:
 	enum SubtitleType {
@@ -380,7 +382,7 @@ private:
 	/* 0x0 */ J2DScreen* mScreen;
 	/* 0x4 */ TExPane* mParentPane;
 	/* 0x8 */ u8 mInitialAlpha;
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 	/* 0xC */ TBalloonControl* unkC;
 #endif
 	/* 0x10 */ TPaneScalingControl* mSelectionBubble;
@@ -443,7 +445,7 @@ private:
 #endif
 	/* 0x10 */ SelectType mSelectedOption;
 	/* 0x14 */ bool mWasJumping;
-#ifndef VERSION_GMSJ01
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_D38J01)
 	/* 0x15 */ bool mStickNeutral;
 #endif
 	/* 0x18 */ int mInitialRumbleValue;

@@ -85,6 +85,9 @@ extern unsigned char _stack_end[] AT_ADDRESS(0x8040ED44);
 #elif defined(VERSION_GMSP01_NX)
 extern char _stack_addr[] AT_ADDRESS(0x8041C2F0);
 extern unsigned char _stack_end[] AT_ADDRESS(0x8040C2EC);
+#elif defined(VERSION_D38J01)
+extern char _stack_addr[] AT_ADDRESS(0x80422748);
+extern unsigned char _stack_end[] AT_ADDRESS(0x80412744);
 #else
 #error "Unhandled ROM"
 #endif

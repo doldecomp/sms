@@ -25,6 +25,8 @@ __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x804277E8);
 __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
 #elif defined(VERSION_GMSP01_NX)
 __declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x8041C2F0);
+#elif defined(VERSION_D38J01)
+__declspec(section ".init") extern char _stack_addr[] AT_ADDRESS(0x80422748);
 #else
 #error "Unhandled ROM"
 #endif

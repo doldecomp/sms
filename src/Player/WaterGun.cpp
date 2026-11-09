@@ -1649,7 +1649,7 @@ void TWaterGun::perform(u32 cue, JDrama::TGraphics* graphics)
 	}
 }
 
-#if !defined(VERSION_GMSJ01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_D38J01)
 bool TWaterGun::isEmitting()
 {
 	if (mCurrentWater == 0)
