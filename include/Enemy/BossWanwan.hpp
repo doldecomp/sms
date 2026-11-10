@@ -171,6 +171,12 @@ public:
 		getMActor()->getAnmBck()->setFrameCtrl(idx);
 	}
 
+	// fabricated
+	TBWParams* getTBWParams() const
+	{
+		return static_cast<TBWParams*>(getSaveParam());
+	}
+
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
 	/* 0x158 */ TBWPicket* mPicket;
