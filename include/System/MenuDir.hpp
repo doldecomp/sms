@@ -10,6 +10,7 @@ class J2DTextBox;
 class TFlashPane;
 class J2DSetScreen;
 class TMenuPlane;
+class TMenuBase;
 
 class TMenuDirector : public JDrama::TDirector {
 public:
@@ -19,10 +20,18 @@ public:
 	void setup(JDrama::TDisplay*, TMarioGamePad*);
 	int rsetup();
 	int direct();
+#ifndef VERSION_D38J01
 	void setFixedStageValue();
+#endif
 
 public:
 	/* 0x18 */ u8 unk18;
+#ifdef VERSION_D38J01
+	/* 0x19 */ bool mSetupDone;
+	/* 0x1C */ TMarioGamePad* mGamePad;
+	/* 0x20 */ J2DSetScreen* mScreen;
+	/* 0x24 */ TMenuBase* mMenu;
+#else
 	/* 0x1C */ void* unk1C;
 	/* 0x20 */ J2DPane* unk20;
 	/* 0x24 */ TFlashPane* unk24;
@@ -38,6 +47,7 @@ public:
 	/* 0x4C */ u32 unk4C;
 	/* 0x50 */ bool unk50;
 	/* 0x54 */ u32 unk54;
+#endif
 };
 
 #endif

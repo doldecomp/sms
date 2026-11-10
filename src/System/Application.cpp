@@ -595,6 +595,9 @@ void TApplication::finalize()
 
 bool TApplication::checkAdditionalMovie()
 {
+#ifdef VERSION_D38J01
+	return false;
+#endif
 	bool result = false;
 
 	const TGameSequence& currArea = SMSGetApplication()->mCurrArea;
@@ -707,15 +710,28 @@ void TApplication::proc()
 				mDirector           = dir;
 				dir->setup(mDisplay, mGamePads[0]);
 			} else {
-				SMSSetupGameRenderingInfo(mDisplay, (unk44 & 1) != 0);
-				mFader->setDisplaySize((u16)SMSGetGameRenderWidth(),
-				                       (u16)SMSGetGameRenderHeight());
-				TMarDirector* dir = new TMarDirector;
-				mDirector         = dir;
-				iVar9 = dir->setup(mDisplay, mGamePads, mCurrArea.getStage(),
-				                   mCurrArea.getScenario());
-				if (iVar9)
-					nextState = APP_STATE_DONE;
+#ifdef VERSION_D38J01
+				if (mCurrArea.getStage() == 0x31) {
+					iVar9     = 1;
+					nextState = APP_STATE_MENU;
+				} else if (mCurrArea.getStage() <= 1) {
+					iVar9     = 1;
+					nextState = APP_STATE_QUIT;
+				} else {
+#endif
+					SMSSetupGameRenderingInfo(mDisplay, (unk44 & 1) != 0);
+					mFader->setDisplaySize((u16)SMSGetGameRenderWidth(),
+					                       (u16)SMSGetGameRenderHeight());
+					TMarDirector* dir = new TMarDirector;
+					mDirector         = dir;
+					iVar9
+					    = dir->setup(mDisplay, mGamePads, mCurrArea.getStage(),
+					                 mCurrArea.getScenario());
+					if (iVar9)
+						nextState = APP_STATE_DONE;
+#ifdef VERSION_D38J01
+				}
+#endif
 			}
 			break;
 
@@ -780,9 +796,14 @@ void TApplication::proc()
 			} else if (mAppState == APP_STATE_BOOT
 			           || mAppState == APP_STATE_NLOGO) {
 				nextState = APP_STATE_QUIT;
+#ifdef VERSION_D38J01
+			} else {
+				nextState = APP_STATE_QUIT;
+#else
 			} else if (nextState != APP_STATE_QUIT) {
 				nextState = APP_STATE_DONE;
 				gpCardManager->unmount();
+#endif
 			}
 		}
 
