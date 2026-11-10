@@ -1,13 +1,11 @@
 #include <GC2D/ChangeValue.hpp>
 #include <Camera/cameralib.hpp>
 
-void TChangeValue::calcChangeValue() { }
-
-void dummy(s32 param_1, s32 param_2, s32 param_3)
+void TChangeValue::calcChangeValue()
 {
-	CLBCalcRatio(param_1, param_2, param_3);
+	s32 ratio = CLBCalcRatio(unk0, unk1, unk2);
 #if defined(VERSION_GMSJ01_01)
-	// fakematch for JP rev 1, else it fails to link
-	CLBLinearInbetween<f32>(param_1, param_2, param_3);
+	f32 delta = CLBLinearInbetween<f32>(0.0f, 1.0f, unk5);
+#else
 #endif
 }
