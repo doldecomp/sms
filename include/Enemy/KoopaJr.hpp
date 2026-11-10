@@ -18,6 +18,8 @@ public:
 	f32 calcTurnDirection(f32, f32);
 	f32 sub(f32);
 	f32 calcNearerDirection(f32);
+
+	// UNUSED - 0x4c size from map
 	void normalize();
 
 	// Fabricated
