@@ -9,21 +9,12 @@
 #include <Strategic/LiveManager.hpp>
 #include <Strategic/ObjModel.hpp>
 #include <Strategic/LiveActor.hpp>
-#include <M3DUtil/M3UJoint.hpp>
 #include <M3DUtil/MActorData.hpp>
+#include <M3DUtil/M3UJoint.hpp>
 #include <M3DUtil/MActor.hpp>
 #include <Enemy/EnemyManager.hpp>
 #include <Enemy/Enemy.hpp>
-#include <JSystem/JDrama/JDRViewObj.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DJoint.hpp>
-#include <JSystem/J3D/J3DGraphAnimator/J3DAnimation.hpp>
-#include <MarioUtil/MtxUtil.hpp>
 #include <GC2D/GCConsole2.hpp>
-#include <System/EmitterViewObj.hpp>
-#include <System/Particles.hpp>
-#include <Enemy/Graph.hpp>
-#include <Player/MarioAccess.hpp>
-#include <System/MarDirector.hpp>
 
 class TBossWanwan;
 class TBWParams;
@@ -54,7 +45,7 @@ public:
 
 private:
 	/* 0x70 */ TBossWanwan* mOwner;
-	/* 0x74 */ TMtx34f unk74;
+	/* 0x74 */ TMtx34f mTakingMtx;
 	/* 0xA4 */ MActor* mActor;
 };
 
@@ -98,13 +89,6 @@ public:
 
 class TBWParams : public TSpineEnemyParams {
 public:
-	/* * TSpineEnemyParams ends at 0xA8. *
-	 * Every TParamRT<T> occupies 0x14 bytes:
-	 * * +0x00 : TParam / base data
-	 * * +0x04 : ...
-	 * * +0x0C : ...
-	 * * +0x10 : actual parameter value
-	 * * * Therefore: * parameter start = X * parameter value = X + 0x10 */
 	TBWParams(const char*);
 
 	/* 0x0A8 */ TParamRT<f32> mSLMarchSpeed;
@@ -157,7 +141,7 @@ public:
 
 	// UNUSED
 	BOOL isHeadPulled();
-	bool isMarioInSight();
+	BOOL isMarioInSight();
 	bool isTailBurning();
 	bool isBurning();
 	void startGoldBrk();
@@ -187,21 +171,6 @@ public:
 		getMActor()->getAnmBck()->setFrameCtrl(idx);
 	}
 
-	// fabricated
-	static inline void setRotDirY(JGeometry::TVec3<f32>& dir, f32 rot)
-	{
-		u16 angle = (int)(rot * 182.04445f);
-		dir.set(JMASSin(angle), 0.0f, JMASCos(angle));
-	}
-
-	// fabricated
-	JGeometry::TVec3<f32> getRotDirY(f32 rot) const
-	{
-		JGeometry::TVec3<f32> rotdir;
-		setRotDirY(rotdir, rot);
-		return rotdir;
-	}
-
 	/* 0x150 */ TBossWanwanMtxCalc* mMtxCalc;
 	/* 0x154 */ TBWLeash* mLeash;
 	/* 0x158 */ TBWPicket* mPicket;
@@ -215,7 +184,7 @@ public:
 	/* 0x184 */ s32 unk184;
 	/* 0x188 */ BOOL mIsBurnt;
 	/* 0x18C */ s8 msInvincible;
-	/* 0x18D */ s8 unk18D;
+	/* 0x18D */ bool isDefeated;
 	/* 0x190 */ s32 unk190;
 	/* 0x194 */ s8 unk194;
 	/* 0x195 */ s8 mHasSpawnedWater;

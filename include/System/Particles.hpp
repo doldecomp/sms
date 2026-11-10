@@ -173,6 +173,7 @@ enum E_SMS_EFFECT_ONETIME_NORMAL /* 0 */ {
 	BWAN_JPA_JUMP_SMOKE                   = 0xAE,
 	BWAN_JPA_MS_HIBANA                    = 0xAF,
 	BWAN_JPA_MS_DOWNYUGE                  = 0xB0,
+	BWAN_JPA_MS_DEADYUGE                  = 0xB1,
 	PARTICLE_MS_SMB_KAFUN_OW              = 0xB2,
 	PARTICLE_MS_SMB_KAFUN_OA              = 0xB3,
 	PARTICLE_MS_SMB_AP_ROCK               = 0xB6,
