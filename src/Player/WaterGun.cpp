@@ -798,8 +798,9 @@ void TNozzleButton::init() { unk378 = 0.0f; }
 
 void TNozzleButton::movement(const TMarioControllerWork& controllerWork)
 {
-	unk378 = controllerWork.mAnalogR;
-	calcGunAngle(controllerWork);
+	if (mFludd->hasWater()
+	    && (controllerWork.mInput & TMarioControllerWork::R) != 0)
+		mButtonState = 1;
 }
 
 void TNozzleButton::animation(int) { }
