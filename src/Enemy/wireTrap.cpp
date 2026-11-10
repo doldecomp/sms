@@ -232,7 +232,7 @@ void TWireTrap::calcRootMatrix()
 
 	// Spin about the wire. The angle is the float at +0x38 on the base.
 	mRotation.z += -17.75f;
-	mRotation.z = std::fmodf(360.0f + mRotation.z, 360.0f);
+	mRotation.z = MsRepeat(mRotation.z, 0.0f, 360.0f);
 	f32 halfRad = 0.5f * DEG_TO_RAD(mRotation.z);
 	f32 s       = sinf(halfRad);
 	f32 c       = cosf(halfRad);

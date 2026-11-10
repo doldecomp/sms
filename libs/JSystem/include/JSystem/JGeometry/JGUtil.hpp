@@ -29,6 +29,10 @@ template <> struct TUtil<f32> {
 	static f32 epsilon() { return 3.81469727e-06f; }
 	static f32 PI() { return 3.14159265358979323846f; }
 	static f32 halfPI() { return 1.5707963267948966f; }
+	static f32 mod(f32 value, f32 modulus)
+	{
+		return std::fmodf(value, modulus);
+	}
 
 	// from SMG
 	static bool epsilonEquals(f32 param_1, f32 param_2, f32 eps)
