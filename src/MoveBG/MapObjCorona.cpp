@@ -896,9 +896,7 @@ bool TBathtub::getNearGrip(const JGeometry::TVec3<f32>& pos, f32 maxDiff,
 	f32 best  = 360.0f;
 	int index = 0;
 	for (int i = 0; i < ARRAY_COUNT(unk150); i++) {
-		f32 diff = fabsf(
-		    -180.0f
-		    + std::fmodf(360.0f + (unk150[i] - angle - -180.0f), 360.0f));
+		f32 diff = fabsf(MsRepeat(unk150[i] - angle, -180.0f, 180.0f));
 		if (diff < best) {
 			index = i;
 			best  = diff;
@@ -919,9 +917,7 @@ f32 TBathtub::getNextJuncture(const JGeometry::TVec3<f32>& pos,
 	f32 best  = 360.0f;
 	int index = 0;
 	for (int i = 0; i < ARRAY_COUNT(unk13C); ++i) {
-		f32 diff = fabsf(
-		    -180.0f
-		    + std::fmodf(360.0f + (unk13C[i] - angle - -180.0f), 360.0f));
+		f32 diff = fabsf(MsRepeat(unk13C[i] - angle, -180.0f, 180.0f));
 		if (diff < best) {
 			index = i;
 			best  = diff;
@@ -938,9 +934,7 @@ bool TBathtub::getNextGrip(const JGeometry::TVec3<f32>& pos,
 	f32 best  = 360.0f;
 	int index = 0;
 	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
-		f32 diff = fabsf(
-		    -180.0f
-		    + std::fmodf(360.0f + (unk150[i] - angle - -180.0f), 360.0f));
+		f32 diff = fabsf(MsRepeat(unk150[i] - angle, -180.0f, 180.0f));
 		if (diff < best) {
 			index = i;
 			best  = diff;
