@@ -6,6 +6,7 @@
 #include <JSystem/JAudio/JASystem/JASCmdStack.hpp>
 #include <JSystem/JAudio/JASystem/JASVload.hpp>
 #include <math.h>
+#include <version.h>
 
 void JAIBasic::stopSeq(JAISound* param_1)
 {
@@ -14,7 +15,8 @@ void JAIBasic::stopSeq(JAISound* param_1)
 			JAISound* sound = mData->mSeqTrackInfo[i].mSound;
 			if (param_1 != sound && sound) {
 				if (sound->mState >= SOUNDSTATE_Started
-				    && !(sound->getSwBit() & JAISeqSwBit_NoPause)) {
+				    && !(VERSION_SELECT(sound, D38J01(param_1))->getSwBit()
+				         & JAISeqSwBit_NoPause)) {
 					sound->setSeqInterVolume(10, 1.0f, 10);
 					JASystem::TrackMgr::handleToSeq(
 					    sound->getSeqParameter()->mSeqHandle)
