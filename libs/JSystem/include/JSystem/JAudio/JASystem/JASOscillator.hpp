@@ -65,6 +65,10 @@ public:
 		CURVE_SQUARE      = 1,
 		CURVE_SQRT        = 2,
 		CURVE_SAMPLE_CELL = 3,
+		// Sentinel values in the data, not actual curves.
+		CURVE_LOOP = 13,
+		CURVE_HOLD = 14,
+		CURVE_HALT = 15,
 	};
 
 private:

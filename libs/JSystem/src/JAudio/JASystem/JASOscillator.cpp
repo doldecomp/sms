@@ -7,7 +7,9 @@
 namespace JASystem {
 
 namespace Driver {
-	s16 FORCE_STOP_TABLE[6] = { TOscillator::CURVE_LINEAR, 15, 0, 15, 0, 0 };
+	s16 FORCE_STOP_TABLE[6] = {
+		TOscillator::CURVE_LINEAR, 15, 0, TOscillator::CURVE_HALT, 0, 0,
+	};
 
 	static const f32 relTableSampleCell[17] = {
 		1.0f,        0.970489f,   0.781274f,   0.54628098f, 0.39979199f,
@@ -182,23 +184,17 @@ f32 TOscillator::calc(s16* table)
 		s16 time  = table[idx + 1];
 		s16 value = table[idx + 2];
 
-		enum {
-			SPECIAL_TYPE_LOOP = 13,
-			SPECIAL_TYPE_HOLD = 14,
-			SPECIAL_TYPE_HALT = 15,
-		};
-
-		if (type == SPECIAL_TYPE_LOOP) {
+		if (type == CURVE_LOOP) {
 			mTableIndex = value;
 			continue;
 		}
 
-		if (type == SPECIAL_TYPE_HALT) {
+		if (type == CURVE_HALT) {
 			mState = STATE_STOPPED;
 			break;
 		}
 
-		if (type == SPECIAL_TYPE_HOLD) {
+		if (type == CURVE_HOLD) {
 			mState = STATE_HOLD;
 			return mOsc->mBias + mCurrentValue * mOsc->mDepth;
 		}

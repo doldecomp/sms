@@ -14,8 +14,9 @@
 namespace JASystem {
 namespace BankMgr {
 
-	static s16 OSC_RELEASE_TABLE[6]
-	    = { TOscillator::CURVE_SQUARE, 0xA, 0x0, 0xf, 0x0, 0x0 };
+	static s16 OSC_RELEASE_TABLE[6] = {
+		TOscillator::CURVE_SQUARE, 10, 0, TOscillator::CURVE_HALT, 0, 0,
+	};
 	static TOscillator::Osc_ OSC_ENV
 	    = { 0, 1.0f, nullptr, OSC_RELEASE_TABLE, 1.0f, 0.0f };
 	static s32 sTableSize     = 0;
