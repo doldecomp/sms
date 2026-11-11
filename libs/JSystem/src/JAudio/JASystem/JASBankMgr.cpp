@@ -18,7 +18,7 @@ namespace BankMgr {
 		TOscillator::CURVE_SQUARE, 10, 0, TOscillator::CURVE_HALT, 0, 0,
 	};
 	static TOscillator::Osc_ OSC_ENV
-	    = { 0, 1.0f, nullptr, OSC_RELEASE_TABLE, 1.0f, 0.0f };
+	    = { EFFECT_VOLUME, 1.0f, nullptr, OSC_RELEASE_TABLE, 1.0f, 0.0f };
 	static s32 sTableSize     = 0;
 	static TBank** sBankArray = nullptr;
 	static u16* sVir2PhyTable = nullptr;
@@ -179,16 +179,17 @@ namespace BankMgr {
 		                      * (result->mNoteVolume * result->mNoteVolume);
 		result->mNoteVolume *= instParam.mEffectVolume;
 
-		result->unk68[0].mSound = instParam.mPan;
-		result->unk68[1].mSound = instParam.mFxmix;
-		result->unk68[2].mSound = instParam.mDolby;
+		result->mMixInputs[MIX_PAN].mInstrument   = instParam.mPan;
+		result->mMixInputs[MIX_FXMIX].mInstrument = instParam.mFxmix;
+		result->mMixInputs[MIX_DOLBY].mInstrument = instParam.mDolby;
 
 		for (int i = 0; i < 2; ++i)
-			result->unk68[i].mSound = clamp01(result->unk68[i].mSound);
+			result->mMixInputs[i].mInstrument
+			    = clamp01(result->mMixInputs[i].mInstrument);
 
-		result->unk68[0].mEffect = instParam.mEffectPan;
-		result->unk68[1].mEffect = instParam.mEffectFxmix;
-		result->unk68[2].mEffect = instParam.mEffectDolby;
+		result->mMixInputs[MIX_PAN].mModulation   = instParam.mEffectPan;
+		result->mMixInputs[MIX_FXMIX].mModulation = instParam.mEffectFxmix;
+		result->mMixInputs[MIX_DOLBY].mModulation = instParam.mEffectDolby;
 
 		result->mOscPitch  = 1.0f;
 		result->mOscVolume = 1.0f;
@@ -230,12 +231,12 @@ namespace BankMgr {
 		channel->mNoteVolume       = channel->mInstrumentVolume
 		                       * (channel->mNoteVolume * channel->mNoteVolume);
 
-		channel->unk68[0].mSound  = 0.5f;
-		channel->unk68[1].mSound  = 0.0f;
-		channel->unk68[2].mSound  = 0.0f;
-		channel->unk68[0].mEffect = 0.5f;
-		channel->unk68[1].mEffect = 0.0f;
-		channel->unk68[2].mEffect = 0.0f;
+		channel->mMixInputs[MIX_PAN].mInstrument   = 0.5f;
+		channel->mMixInputs[MIX_FXMIX].mInstrument = 0.0f;
+		channel->mMixInputs[MIX_DOLBY].mInstrument = 0.0f;
+		channel->mMixInputs[MIX_PAN].mModulation   = 0.5f;
+		channel->mMixInputs[MIX_FXMIX].mModulation = 0.0f;
+		channel->mMixInputs[MIX_DOLBY].mModulation = 0.0f;
 
 		channel->mOscPitch  = 1.0f;
 		channel->mOscVolume = 1.0f;

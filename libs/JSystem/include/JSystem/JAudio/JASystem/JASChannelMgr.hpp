@@ -6,6 +6,10 @@
 
 namespace JASystem {
 
+/**
+ * @brief Manages a group of related logical channels. Provides shared mixing
+ * and filtering configs for the managed channels.
+ */
 class TChannelMgr {
 public:
 	void init();

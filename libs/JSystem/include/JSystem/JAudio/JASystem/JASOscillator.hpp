@@ -5,6 +5,14 @@
 
 namespace JASystem {
 
+enum EffectTarget {
+	EFFECT_VOLUME = 0,
+	EFFECT_PITCH  = 1,
+	EFFECT_PAN    = 2,
+	EFFECT_FXMIX  = 3,
+	EFFECT_DOLBY  = 4,
+};
+
 /**
  * @brief Generic modulation source used by the audio engine. Supports a wide
  * range of data-driven envelope curves, including periodic and infinitely
@@ -14,7 +22,7 @@ class TOscillator {
 public:
 	/// Serialized data that customizes this oscillator
 	struct Osc_ {
-		/* 0x00 */ u8 mTarget;
+		/* 0x00 */ u8 mTarget; // see EffectTarget
 		/* 0x04 */ f32 mRate;
 		/* 0x08 */ s16* mAdsTable;
 		/* 0x0C */ s16* mRelTable;
@@ -40,10 +48,16 @@ public:
 	/// Requests a release
 	bool release();
 
-	void releaseDirect(u16 param_0) { mDirectRelease = param_0; }
+	/// Makes release requests direct by providing an ad-hoc config whose low 14
+	/// bits are the release time and high 2 bits are the curve to be used.
+	void releaseDirect(u16 release_config)
+	{
+		mDirectReleaseConfig = release_config;
+	}
 
 	bool forceStop();
 
+	/// What mix parameter this oscillator targets, see EffectTarget
 	u8 getEffectorKind() { return mOsc->mTarget; }
 	u8 getOscMode() const { return mState; }
 	void setOsc(const Osc_* osc) { mOsc = osc; }
@@ -82,7 +96,7 @@ private:
 	/* 0x0C */ f32 mCurrentValue;
 	/* 0x10 */ f32 mTargetValue;
 	/* 0x14 */ f32 mInterpolationScale;
-	/* 0x18 */ u16 mDirectRelease;
+	/* 0x18 */ u16 mDirectReleaseConfig;
 	/* 0x1C */ f32 mSegmentDuration;
 };
 

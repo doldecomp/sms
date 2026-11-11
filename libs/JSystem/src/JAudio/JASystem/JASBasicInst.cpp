@@ -51,19 +51,19 @@ bool TBasicInst::getParam(int key, int velocity, TInstParam* out_param) const
 
 		f32 y = effect->getY(key, velocity);
 		switch (effect->mTarget) {
-		case 0:
+		case EFFECT_VOLUME:
 			out_param->mEffectVolume *= y;
 			break;
-		case 1:
+		case EFFECT_PITCH:
 			out_param->mEffectPitch *= y;
 			break;
-		case 2:
+		case EFFECT_PAN:
 			out_param->mEffectPan = y;
 			break;
-		case 3:
+		case EFFECT_FXMIX:
 			out_param->mEffectFxmix = y;
 			break;
-		case 4:
+		case EFFECT_DOLBY:
 			out_param->mEffectDolby = y;
 			break;
 		}

@@ -207,7 +207,7 @@ public:
 	void updateTempo();
 	s8 mainProc();
 	int noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time);
-	bool noteOff(u8 voice_slot, u16 release);
+	bool noteOff(u8 voice_slot, u16 release_time);
 	int gateOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time);
 	bool checkNoteStop(s32 voice_slot);
 	void releaseChannelAll();

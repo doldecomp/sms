@@ -1,14 +1,14 @@
 #ifndef JASINSTEFFECT_HPP
 #define JASINSTEFFECT_HPP
 
-#include <dolphin/types.h>
+#include <JSystem/JAudio/JASystem/JASOscillator.hpp>
 
 namespace JASystem {
 
 class TInstEffect {
 public:
 	TInstEffect()
-	    : mTarget(0)
+	    : mTarget(EFFECT_VOLUME)
 	{
 	}
 

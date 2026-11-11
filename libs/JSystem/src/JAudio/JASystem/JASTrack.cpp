@@ -285,16 +285,16 @@ int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 	return 0;
 }
 
-bool TTrack::noteOff(u8 voice_slot, u16 release)
+bool TTrack::noteOff(u8 voice_slot, u16 release_time)
 {
 	TChannel* chan = mNoteMgr.getChannel(voice_slot);
 	if (!chan)
 		return false;
 
-	if (release == 0)
+	if (release_time == 0)
 		chan->stop(0);
 	else
-		chan->stop(release);
+		chan->stop(release_time);
 
 	mNoteMgr.releaseChannel(voice_slot);
 	return true;
@@ -334,7 +334,7 @@ void TTrack::oscSetupFull(u8 param_1, u32 param_2, u32 param_3)
 		mOscData[var1]         = Player::sEnvelopeDef;
 		mOscData[var1].mTarget = var2;
 		switch (var2) {
-		case 1:
+		case EFFECT_PITCH:
 			mOscData[var1].mBias = 1.0f;
 			break;
 		}
@@ -613,19 +613,19 @@ void TTrack::updateTrack(u32 update_flags)
 		if (mOscMode[i] == 0xE) {
 			f32 off = mOscillators[i].getOffsetNoCount();
 			switch (mOscillators[i].getEffectorKind()) {
-			case 1:
+			case EFFECT_PITCH:
 				curPitch *= off;
 				break;
-			case 0:
+			case EFFECT_VOLUME:
 				curVolume *= off;
 				break;
-			case 2:
+			case EFFECT_PAN:
 				curPan *= off;
 				break;
-			case 3:
+			case EFFECT_FXMIX:
 				curFxmix *= off;
 				break;
-			case 4:
+			case EFFECT_DOLBY:
 				curDolby *= off;
 				break;
 			}
@@ -1251,7 +1251,7 @@ void TTrack::initTrack(void* data, u32 size, TTrack* parent)
 		for (u8 i = 0; i < 3; ++i) {
 			mPanSwitchExt[i]              = 0;
 			mPanSwitchParent[i]           = 0;
-			mChannelUpdater.mCalcTypes[i] = 0x1A;
+			mChannelUpdater.mCalcTypes[i] = TChannel::CALC_WEIGHTED_SUM_ALL;
 		}
 	} else {
 		mRegisterParam.inherit(mParent->mRegisterParam);

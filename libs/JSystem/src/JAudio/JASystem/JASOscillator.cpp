@@ -32,30 +32,30 @@ namespace Driver {
 
 void TOscillator::init()
 {
-	mOsc                = nullptr;
-	mState              = STATE_READY;
-	mCurveType          = CURVE_LINEAR;
-	mTableIndex         = 0;
-	mTimeRemaining      = 0.0f;
-	mCurrentValue       = 0.0f;
-	mTargetValue        = 0.0f;
-	mInterpolationScale = 0.0f;
-	mDirectRelease      = 0;
-	mSegmentDuration    = 0.0f;
+	mOsc                 = nullptr;
+	mState               = STATE_READY;
+	mCurveType           = CURVE_LINEAR;
+	mTableIndex          = 0;
+	mTimeRemaining       = 0.0f;
+	mCurrentValue        = 0.0f;
+	mTargetValue         = 0.0f;
+	mInterpolationScale  = 0.0f;
+	mDirectReleaseConfig = 0;
+	mSegmentDuration     = 0.0f;
 }
 
 void TOscillator::initStart()
 {
-	mState         = STATE_RUNNING;
-	mDirectRelease = 0;
+	mState               = STATE_RUNNING;
+	mDirectReleaseConfig = 0;
 	if (mOsc == nullptr || !mOsc->mAdsTable) {
 		mCurrentValue = 0.0f;
 		return;
 	}
-	mTableIndex    = 0;
-	mTimeRemaining = 0.0f;
-	mTargetValue   = 0.0f;
-	mDirectRelease = 0;
+	mTableIndex          = 0;
+	mTimeRemaining       = 0.0f;
+	mTargetValue         = 0.0f;
+	mDirectReleaseConfig = 0;
 	mTimeRemaining -= mOsc->mRate;
 }
 
@@ -141,17 +141,17 @@ bool TOscillator::release()
 		mTargetValue   = mCurrentValue;
 	}
 
-	if (mOsc->mRelTable == nullptr && mDirectRelease == 0)
-		mDirectRelease = 0x10;
+	if (mOsc->mRelTable == nullptr && mDirectReleaseConfig == 0)
+		mDirectReleaseConfig = 16;
 
-	if (mDirectRelease != 0) {
+	if (mDirectReleaseConfig != 0) {
 		mState     = STATE_DIRECT_RELEASE;
-		mCurveType = (mDirectRelease >> 14) & 3;
+		mCurveType = (mDirectReleaseConfig >> 14) & 3;
 
-		f32 temp_f31 = mDirectRelease & 0x3FFF;
-		temp_f31 *= ((Kernel::getDacRate() / 80.0f) / 600.0f);
-		temp_f31 /= Driver::getUpdateInterval();
-		mTimeRemaining = temp_f31;
+		f32 releaseTime = mDirectReleaseConfig & 0x3FFF;
+		releaseTime *= ((Kernel::getDacRate() / 80.0f) / 600.0f);
+		releaseTime /= Driver::getUpdateInterval();
+		mTimeRemaining = releaseTime;
 
 		if (mTimeRemaining < 1.0f)
 			mTimeRemaining = 1.0f;

@@ -102,9 +102,9 @@ public:
 
 public:
 	/* 0x0 */ u8 mNumber;
-	/* 0x0 */ u8 mStatus;
-	/* 0x0 */ u8 unk2;
-	/* 0x0 */ u8 mPriority;
+	/* 0x1 */ u8 mStatus;
+	/* 0x2 */ u8 unk2;
+	/* 0x3 */ u8 mPriority;
 	/* 0x4 */ u16 mPriorityTime;
 	/* 0x6 */ u16 mCBInterval;
 	/* 0x8 */ uintptr_t mSign;

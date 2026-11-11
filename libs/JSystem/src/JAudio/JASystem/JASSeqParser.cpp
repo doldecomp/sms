@@ -759,14 +759,14 @@ int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
 
 	u8 note = flag & 0xF;
 
-	s32 release = 0;
+	s32 releaseTime = 0;
 	if (note & 0x8) {
 		note -= 0x8;
-		release = track->mSeqCtrl.readByte();
-		if (release > 100)
-			release = (release - 98) * 20;
+		releaseTime = track->mSeqCtrl.readByte();
+		if (releaseTime > 100)
+			releaseTime = (releaseTime - 98) * 20;
 	}
-	track->noteOff(note, release);
+	track->noteOff(note, releaseTime);
 	return 0;
 }
 

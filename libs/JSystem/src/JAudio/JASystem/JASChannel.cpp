@@ -14,10 +14,10 @@ namespace JASystem {
 
 namespace Driver {
 
-	enum CalcSource {
-		CALC_Sound   = 0,
-		CALC_Effect  = 1,
-		CALC_Channel = 2,
+	enum MixSource {
+		MIX_SOURCE_INSTRUMENT = 0,
+		MIX_SOURCE_MODULATION = 1,
+		MIX_SOURCE_MANAGER    = 2,
 	};
 
 	enum CalcStyle {
@@ -28,7 +28,7 @@ namespace Driver {
 
 	// clang-format off
 	static u8 calc_sw_table[27][3] = {
-		// sound, effect, channel
+		// instrument, modulation, manager
 		{ CALC_NONE, CALC_NONE, CALC_NONE },       // 0, null
 		{ CALC_NONE, CALC_NONE, CALC_ADD },        // 1, add only channel
 		{ CALC_NONE, CALC_NONE, CALC_ADD },        // 2, add only channel
@@ -60,40 +60,40 @@ namespace Driver {
 	// clang-format on
 
 	static f32 calcEffect(const PanMatrix_* params, const PanMatrix_* power,
-	                      u8 calcType)
+	                      u8 calc_type)
 	{
-		f32 value           = 0.0f;
-		const u8* calcTypes = Driver::calc_sw_table[calcType];
-		switch (calcTypes[CALC_Sound]) {
+		f32 value              = 0.0f;
+		const u8* sourceStyles = Driver::calc_sw_table[calc_type];
+		switch (sourceStyles[MIX_SOURCE_INSTRUMENT]) {
 		case CALC_NONE:
 			break;
 		case CALC_ADD:
-			value += params->mSound;
+			value += params->mInstrument;
 			break;
 		case CALC_WEIGHT:
-			value += params->mSound * power->mSound;
+			value += params->mInstrument * power->mInstrument;
 			break;
 		}
 
-		switch (calcTypes[CALC_Effect]) {
+		switch (sourceStyles[MIX_SOURCE_MODULATION]) {
 		case CALC_NONE:
 			break;
 		case CALC_ADD:
-			value += params->mEffect;
+			value += params->mModulation;
 			break;
 		case CALC_WEIGHT:
-			value += params->mEffect * power->mEffect;
+			value += params->mModulation * power->mModulation;
 			break;
 		}
 
-		switch (calcTypes[CALC_Channel]) {
+		switch (sourceStyles[MIX_SOURCE_MANAGER]) {
 		case CALC_NONE:
 			break;
 		case CALC_ADD:
-			value += params->mChannel;
+			value += params->mChannelManager;
 			break;
 		case CALC_WEIGHT:
-			value += params->mChannel * power->mChannel;
+			value += params->mChannelManager * power->mChannelManager;
 			break;
 		}
 
@@ -103,38 +103,38 @@ namespace Driver {
 	static f32 calcPan(const PanMatrix_* params, const PanMatrix_* power,
 	                   u8 calcType)
 	{
-		f32 value           = 0.0f;
-		const u8* calcTypes = Driver::calc_sw_table[calcType];
-		switch (calcTypes[CALC_Sound]) {
+		f32 value              = 0.0f;
+		const u8* sourceStyles = Driver::calc_sw_table[calcType];
+		switch (sourceStyles[MIX_SOURCE_INSTRUMENT]) {
 		case CALC_NONE:
 			break;
 		case CALC_ADD:
-			value += (params->mSound - 0.5f);
+			value += (params->mInstrument - 0.5f);
 			break;
 		case CALC_WEIGHT:
-			value += (params->mSound - 0.5f) * power->mSound;
+			value += (params->mInstrument - 0.5f) * power->mInstrument;
 			break;
 		}
 
-		switch (calcTypes[CALC_Effect]) {
+		switch (sourceStyles[MIX_SOURCE_MODULATION]) {
 		case CALC_NONE:
 			break;
 		case CALC_ADD:
-			value += (params->mEffect - 0.5f);
+			value += (params->mModulation - 0.5f);
 			break;
 		case CALC_WEIGHT:
-			value += (params->mEffect - 0.5f) * power->mEffect;
+			value += (params->mModulation - 0.5f) * power->mModulation;
 			break;
 		}
 
-		switch (calcTypes[CALC_Channel]) {
+		switch (sourceStyles[MIX_SOURCE_MANAGER]) {
 		case CALC_NONE:
 			break;
 		case CALC_ADD:
-			value += (params->mChannel - 0.5f);
+			value += (params->mChannelManager - 0.5f);
 			break;
 		case CALC_WEIGHT:
-			value += (params->mChannel - 0.5f) * power->mChannel;
+			value += (params->mChannelManager - 0.5f) * power->mChannelManager;
 			break;
 		}
 
@@ -453,11 +453,11 @@ namespace Driver {
 		}
 
 		if (event == TDSPChannel::EVENT_UPDATE) {
-			channel->mOscPitch        = 1.0f;
-			channel->mOscVolume       = 1.0f;
-			channel->unk68[0].mEffect = 0.5f;
-			channel->unk68[1].mEffect = 0.0f;
-			channel->unk68[2].mEffect = 0.0f;
+			channel->mOscPitch                         = 1.0f;
+			channel->mOscVolume                        = 1.0f;
+			channel->mMixInputs[MIX_PAN].mModulation   = 0.5f;
+			channel->mMixInputs[MIX_FXMIX].mModulation = 0.0f;
+			channel->mMixInputs[MIX_DOLBY].mModulation = 0.0f;
 
 			for (i = 0; i < 4; i++) {
 				if (!channel->isOsc(i))
@@ -546,18 +546,18 @@ void TChannel::init()
 		mMixConfigs[5].mWhole = DSPInterface::DSPBuffer::SEND_NONE;
 		mPriorityConfig       = 0x10101;
 		mPriorityTime         = 600;
-		mCalcTypes[0]         = CALC_WeightAll;      // Pan
-		mCalcTypes[1]         = CALC_AddChannelOnly; // FxMix
-		mCalcTypes[2]         = CALC_AddChannelOnly;
+		mCalcTypes[MIX_PAN]   = CALC_WEIGHTED_SUM_ALL;
+		mCalcTypes[MIX_FXMIX] = CALC_MANAGER_ONLY;
+		mCalcTypes[MIX_DOLBY] = CALC_MANAGER_ONLY;
 	} else {
 		for (int i = 0; i < 6; i++)
 			mMixConfigs[i].mWhole = mManager->mMixConfig[i];
 
-		mPriorityConfig = mManager->mPriorityConfig;
-		mPriorityTime   = mManager->mPriorityTime;
-		mCalcTypes[0]   = mManager->mCalcTypes[0];
-		mCalcTypes[1]   = mManager->mCalcTypes[1];
-		mCalcTypes[2]   = mManager->mCalcTypes[2];
+		mPriorityConfig       = mManager->mPriorityConfig;
+		mPriorityTime         = mManager->mPriorityTime;
+		mCalcTypes[MIX_PAN]   = mManager->mCalcTypes[MIX_PAN];
+		mCalcTypes[MIX_FXMIX] = mManager->mCalcTypes[MIX_FXMIX];
+		mCalcTypes[MIX_DOLBY] = mManager->mCalcTypes[MIX_DOLBY];
 	}
 	for (u32 i = 0; i < 4; i++) {
 		JUT_ASSERT(mOscillators[i]);
@@ -610,24 +610,24 @@ f32 TChannel::bankOscToOfs(u32 index)
 	                                    : 1.0f;
 }
 
-void TChannel::effectOsc(u32 index, f32 effect)
+void TChannel::effectOsc(u32 index, f32 modulation)
 {
 	JUT_ASSERT(index < 4);
 	switch (mOscillators[index]->getEffectorKind()) {
-	case 1:
-		mOscPitch *= effect;
+	case EFFECT_PITCH:
+		mOscPitch *= modulation;
 		break;
-	case 0:
-		mOscVolume *= effect;
+	case EFFECT_VOLUME:
+		mOscVolume *= modulation;
 		break;
-	case 2:
-		unk68[0].mEffect = effect;
+	case EFFECT_PAN:
+		mMixInputs[MIX_PAN].mModulation = modulation;
 		break;
-	case 3:
-		unk68[1].mEffect = effect;
+	case EFFECT_FXMIX:
+		mMixInputs[MIX_FXMIX].mModulation = modulation;
 		break;
-	case 4:
-		unk68[2].mEffect = effect;
+	case EFFECT_DOLBY:
+		mMixInputs[MIX_DOLBY].mModulation = modulation;
 		break;
 	}
 }
@@ -702,15 +702,15 @@ void TChannel::setPauseFlagReq(u8 flag)
 	mDspUpdatePending = 1;
 }
 
-void TChannel::setPanPower(f32 fl, f32 fr, f32 rl, f32 rr)
+void TChannel::setPanPower(f32 instrument, f32 modulation, f32 manager, f32)
 {
-	f32 px = fl + fr + rl;
+	f32 px = instrument + modulation + manager;
 	if (px == 0.0f)
 		px = 1.0f;
 
-	unk5C.mSound   = fl / px;
-	unk5C.mEffect  = fr / px;
-	unk5C.mChannel = rl / px;
+	mSourceWeights.mInstrument     = instrument / px;
+	mSourceWeights.mModulation     = modulation / px;
+	mSourceWeights.mChannelManager = manager / px;
 }
 
 void TChannel::setPanParam(const f32* pan, const f32* dolby, const f32* fx) { }
@@ -776,14 +776,14 @@ BOOL TChannel::play(u32 gate_time)
 	}
 }
 
-void TChannel::stop(u16 release)
+void TChannel::stop(u16 release_time)
 {
-	if (mDspChannel == 0)
+	if (mDspChannel == nullptr)
 		Driver::updatecallLogicalChannel(this, EVENT_CANCELLED);
-	else if (release == 0)
+	else if (release_time == 0)
 		Driver::updatecallLogicalChannel(this, EVENT_RELEASE);
 	else {
-		mOscillators[0]->releaseDirect(release);
+		mOscillators[0]->releaseDirect(release_time);
 		Driver::updatecallLogicalChannel(this, EVENT_RELEASE);
 	}
 }
@@ -886,11 +886,11 @@ void TChannel::updateEffectorParam()
 	f32 dolby = 0.0f;
 
 	if (mInitialManager == mManager) {
-		mManagerPitch     = mManager->mPitch;
-		mManagerVolume    = mManager->mVolume;
-		unk68[0].mChannel = mManager->mPan;
-		unk68[1].mChannel = mManager->mFxmix;
-		unk68[2].mChannel = mManager->mDolby;
+		mManagerPitch                         = mManager->mPitch;
+		mManagerVolume                        = mManager->mVolume;
+		mMixInputs[MIX_PAN].mChannelManager   = mManager->mPan;
+		mMixInputs[MIX_FXMIX].mChannelManager = mManager->mFxmix;
+		mMixInputs[MIX_DOLBY].mChannelManager = mManager->mDolby;
 		for (int i = 0; i < 3; i++)
 			mCalcTypes[i] = mManager->mCalcTypes[i];
 	}
@@ -899,23 +899,29 @@ void TChannel::updateEffectorParam()
 	case JASOUTPUT_Mono:
 		pan   = 0.5f;
 		dolby = 0.0f;
-		fxmix = calcEffect(&unk68[1], &unk5C, mCalcTypes[1]);
+		fxmix = calcEffect(&mMixInputs[MIX_FXMIX], &mSourceWeights,
+		                   mCalcTypes[MIX_FXMIX]);
 		break;
 	case JASOUTPUT_Stereo:
-		if (mCalcTypes[0] == CALC_None)
+		if (mCalcTypes[MIX_PAN] == CALC_IGNORE_ALL)
 			pan = 0.5f;
 		else
-			pan = calcPan(&unk68[0], &unk5C, mCalcTypes[0]);
-		fxmix = calcEffect(&unk68[1], &unk5C, mCalcTypes[1]);
+			pan = calcPan(&mMixInputs[MIX_PAN], &mSourceWeights,
+			              mCalcTypes[MIX_PAN]);
+		fxmix = calcEffect(&mMixInputs[MIX_FXMIX], &mSourceWeights,
+		                   mCalcTypes[MIX_FXMIX]);
 		dolby = 0.0f;
 		break;
 	case JASOUTPUT_Surround:
-		if (mCalcTypes[0] == CALC_None)
+		if (mCalcTypes[MIX_PAN] == CALC_IGNORE_ALL)
 			pan = 0.5f;
 		else
-			pan = calcPan(&unk68[0], &unk5C, mCalcTypes[0]);
-		fxmix = calcEffect(&unk68[1], &unk5C, mCalcTypes[1]);
-		dolby = calcEffect(&unk68[2], &unk5C, mCalcTypes[2]);
+			pan = calcPan(&mMixInputs[MIX_PAN], &mSourceWeights,
+			              mCalcTypes[MIX_PAN]);
+		fxmix = calcEffect(&mMixInputs[MIX_FXMIX], &mSourceWeights,
+		                   mCalcTypes[MIX_FXMIX]);
+		dolby = calcEffect(&mMixInputs[MIX_DOLBY], &mSourceWeights,
+		                   mCalcTypes[MIX_DOLBY]);
 		break;
 	}
 

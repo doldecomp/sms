@@ -6,13 +6,19 @@
 
 namespace JASystem {
 
+enum MixParameter {
+	MIX_PAN   = 0,
+	MIX_FXMIX = 1,
+	MIX_DOLBY = 2,
+};
+
 class TDSPChannel;
 
 namespace Driver {
 	struct PanMatrix_ {
-		/* 0x0 */ f32 mSound;
-		/* 0x4 */ f32 mEffect;
-		/* 0x8 */ f32 mChannel;
+		/* 0x0 */ f32 mInstrument;
+		/* 0x4 */ f32 mModulation;
+		/* 0x8 */ f32 mChannelManager;
 	};
 
 	struct Wave_ {
@@ -35,22 +41,45 @@ namespace Driver {
 
 class TChannelMgr;
 
+/**
+ * @brief A single logical channel used by the audio engine. Playing it produces
+ * a single note, be it a synthesized not or a wave sample, with particular
+ * mixing & filtering setup.
+ *
+ * @details A logical channel plays it's note either from a wave sample, or
+ * synthesizes it in the DSP based on a waveform config. The mixing parameters
+ * of a channel are:
+ * - Volume
+ * - Pitch (essentially sample playback speed)
+ * - Fxmix (essentially reverb)
+ * - Pan (left-right position of the sound)
+ * - Dolby (front-back position of the sound)
+ *
+ * Each channel also contains 4 oscillators, which can modulate any of it's mix
+ * parameters with an almost arbitrary envelope. Channels are also grouped via
+ * JASystem::TChannelMgr and share mixing and filtering parameters within the
+ * group.
+ *
+ * Updates for a playing note are pumped backwards from DSP syncs to physical
+ * DSP channels and then back to logical channels, applying the necessary
+ * modulation from oscillators to be included in the next audio frame.
+ *
+ * Logical channels compete for physical DSP channels, the former being
+ * unlimited, the later there being only 64 of. The scheduling mechanism is
+ * spread out over JASystem::TChannel, JASystem::TDSPChannel and
+ * JASystem::Driver::DSPQueue, and has priorities, stealing, and other fancy
+ * mechanisms.
+ *
+ * @warning The shipped scheduling implementation seems to contain a bug, see
+ * the killBrokenLogicalChannels workaround.
+ */
 class TChannel {
 public:
-	enum EventType {
-		EVENT_RELEASE           = 0,
-		EVENT_DSP_FINISHED      = 1,
-		EVENT_ENVELOPE_FINISHED = 2,
-		EVENT_CANCELLED         = 6,
-	};
-
 	enum CalcType {
-		// (TWW) NB: haven't seen others used, add from calc_sw_table in
-		// JASChannel.cpp if needed
-		CALC_None           = 0,
-		CALC_AddChannelOnly = 1,
-		CALC_AddAll         = 13,
-		CALC_WeightAll      = 26,
+		CALC_IGNORE_ALL       = 0,
+		CALC_MANAGER_ONLY     = 1,
+		CALC_SUM_ALL          = 13,
+		CALC_WEIGHTED_SUM_ALL = 26,
 	};
 
 	TChannel()
@@ -64,37 +93,65 @@ public:
 	}
 	~TChannel() { }
 
+	/// Sets the data backing an oscillator
+	void setOscInit(u32 index, const TOscillator::Osc_* osc);
+
+	/// Makes the release of an oscillator direct: release_config specifies a
+	/// custom time and curve for the release
+	void directReleaseOsc(u32 index, u16 release_config);
+
+	/// True when oscillator \p index has backing data
+	BOOL isOsc(u32 index);
+
+	/// Copies backing data of one of the oscillators to \p dest
+	void copyOsc(u32 index, TOscillator::Osc_* dest);
+
+	/// Replaces oscillator \p index with a new oscillator \p src,
+	/// re-initializing it to off state and applying it's first value
+	/// immediately.
+	void overwriteOsc(u32 index, TOscillator::Osc_* src);
+
+	void setKeySweepTarget(u8 key, u32 target);
+
+	/// True pauses the channel from playing but does not evict it from the DSP
+	void setPauseFlag(u8 flag);
+
+	/// Sets the power of various pan sources, normalizing the sum to unity
+	void setPanPower(f32 instrument, f32 modulation, f32 manager, f32);
+
+	/// Updates the DSP parameters of this channel and sends them to it
+	bool resetInitialVolume();
+
+	/// Starts playing the logical channel by attaching it to a DSP channel
+	BOOL play(u32 gate_time);
+
+	/// Requests the channel to stop playing, possibly overriding the release
+	/// time with \p release_time
+	void stop(u16 release_time);
+
+public:
+	// private-ISH stuff that's internal to the quartet of
+	// TChannel-TChannelMgr-DSPQueue-DSPChannel.
 	void init();
 	void setOscillator(u32 index, TOscillator* oscillator);
-	void setOscInit(u32 index, const TOscillator::Osc_* osc);
 	bool forceStopOsc(u32 index);
 	bool releaseOsc(u32 index);
-	void directReleaseOsc(u32 index, u16 release);
 	f32 bankOscToOfs(u32 index);
-	void effectOsc(u32 index, f32 effect);
+	void effectOsc(u32 index, f32 modulation);
 	u8 getOscState(u32 index) const;
-	BOOL isOsc(u32 index);
-	void copyOsc(u32 index, TOscillator::Osc_* dest);
-	void overwriteOsc(u32 index, TOscillator::Osc_* src);
 	void overwriteOscMultiple(TOscillator::Osc_* osc1, TOscillator::Osc_* osc2,
 	                          TOscillator::Osc_* osc3, TOscillator::Osc_* osc4);
 	void initOscForOscSound();
-	void setKeySweepTarget(u8 key, u32 target);
-	void setPauseFlag(u8 flag);
 	void setPauseFlagReq(u8 flag);
-	void setPanPower(f32 fl, f32 fr, f32 rl, f32 rr);
 	void setPanParam(const f32* pan, const f32* dolby, const f32* fx);
 	void setFxParam(const f32* pan, const f32* dolby, const f32* fx);
 	void setDolbyParam(const f32* pan, const f32* dolby, const f32* fx);
 	BOOL checkLogicalChannel();
-	bool resetInitialVolume();
-	BOOL play(u32 param);
-	void stop(u16 release);
 	void updateJcToDSP();
-	BOOL forceStopLogicalChannel();
 	BOOL stopLogicalChannel();
-	BOOL playLogicalChannel();
 	void updateEffectorParam();
+	BOOL forceStopLogicalChannel();
+	BOOL playLogicalChannel();
 
 	u8 getNoteOnPriority() const { return mPriorityConfig & 0xff; }
 	u8 getReleasePriority() const { return (mPriorityConfig >> 8) & 0xff; }
@@ -118,6 +175,13 @@ public:
 			u8 mGainSource0 : 4;
 			u8 mGainSource1 : 4;
 		} mParts;
+	};
+
+	enum EventType {
+		EVENT_RELEASE           = 0,
+		EVENT_DSP_FINISHED      = 1,
+		EVENT_ENVELOPE_FINISHED = 2,
+		EVENT_CANCELLED         = 6,
 	};
 
 public:
@@ -144,8 +208,8 @@ public:
 	/* 0x50 */ f32 mNotePitch;
 	/* 0x54 */ f32 mNoteVolume;
 	/* 0x58 */ u8 mCalcTypes[3];
-	/* 0x5C */ Driver::PanMatrix_ unk5C;
-	/* 0x68 */ Driver::PanMatrix_ unk68[3];
+	/* 0x5C */ Driver::PanMatrix_ mSourceWeights;
+	/* 0x68 */ Driver::PanMatrix_ mMixInputs[3];
 	/* 0x8C */ f32 mOscPitch;
 	/* 0x90 */ f32 mOscVolume;
 	/* 0x94 */ f32 mPitchSweepTarget;

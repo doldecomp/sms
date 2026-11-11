@@ -87,10 +87,10 @@ namespace Player {
 	};
 
 	// clang-format off
-	TOscillator::Osc_ sAdsrDef = { 0, 1.0f, nullptr, nullptr, 1.0f, 0.0f };
-	TOscillator::Osc_ sEnvelopeDef = { 0, 1.0f, nullptr, sRelTable, 1.0f, 0.0f };
-	TOscillator::Osc_ sVibratoDef = { 1, 0.5f, sVibTable, sVibTable, 0.0f, 1.0f };
-	TOscillator::Osc_ sTremoroDef = { 0, 0.5f, sTreTable, sTreTable, 0.0f, 1.0f };
+	TOscillator::Osc_ sAdsrDef = { EFFECT_VOLUME, 1.0f, nullptr, nullptr, 1.0f, 0.0f };
+	TOscillator::Osc_ sEnvelopeDef = { EFFECT_VOLUME, 1.0f, nullptr, sRelTable, 1.0f, 0.0f };
+	TOscillator::Osc_ sVibratoDef = { EFFECT_PITCH, 0.5f, sVibTable, sVibTable, 0.0f, 1.0f };
+	TOscillator::Osc_ sTremoroDef = { EFFECT_VOLUME, 0.5f, sTreTable, sTreTable, 0.0f, 1.0f };
 	// clang-format on
 
 	s16 sAdsTable[12] = {

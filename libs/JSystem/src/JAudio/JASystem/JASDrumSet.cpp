@@ -20,7 +20,7 @@ bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 
 	static TOscillator::Osc_ osc;
 
-	osc.mTarget   = 0;
+	osc.mTarget   = EFFECT_VOLUME;
 	osc.mRate     = 1.0f;
 	osc.mAdsTable = nullptr;
 	osc.mRelTable = nullptr;
@@ -37,19 +37,19 @@ bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 		if (effect) {
 			f32 y = effect->getY(key, velocity);
 			switch (effect->mTarget) {
-			case 0:
+			case EFFECT_VOLUME:
 				param_3->mEffectVolume *= y;
 				break;
-			case 1:
+			case EFFECT_PITCH:
 				param_3->mEffectPitch *= y;
 				break;
-			case 2:
+			case EFFECT_PAN:
 				param_3->mEffectPan = y;
 				break;
-			case 3:
+			case EFFECT_FXMIX:
 				param_3->mEffectFxmix = y;
 				break;
-			case 4:
+			case EFFECT_DOLBY:
 				param_3->mEffectDolby = y;
 				break;
 			}

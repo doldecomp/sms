@@ -55,12 +55,16 @@ void TChannelMgr::init()
 	mMixConfig[4] = DSPInterface::DSPBuffer::SEND_NONE;
 	mMixConfig[5] = DSPInterface::DSPBuffer::SEND_NONE;
 
-	mPriorityConfig = 0x20103;
-	mPriorityTime   = 600;
+	const u32 noteOnPriority   = 3;
+	const u32 releasePriority  = 1;
+	const u32 lifeTimePriority = 2;
+	mPriorityConfig
+	    = noteOnPriority | (releasePriority << 8) | (lifeTimePriority << 16);
+	mPriorityTime = 600;
 
-	mCalcTypes[0] = 0xD;
-	mCalcTypes[1] = 0xD;
-	mCalcTypes[2] = 0xD;
+	mCalcTypes[MIX_PAN]   = TChannel::CALC_SUM_ALL;
+	mCalcTypes[MIX_FXMIX] = TChannel::CALC_SUM_ALL;
+	mCalcTypes[MIX_DOLBY] = TChannel::CALC_SUM_ALL;
 }
 
 void TChannelMgr::stopAll()
