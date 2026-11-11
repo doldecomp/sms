@@ -11,6 +11,8 @@ namespace Driver {
 }
 
 namespace DSPInterface {
+	enum { DSP_VOICE_COUNT = 64 };
+
 	struct FxlineConfig_ {
 		/* 0x00 */ u8 mFlags;
 		/* 0x02 */ u16 mSend0Bus;
@@ -27,6 +29,26 @@ namespace DSPInterface {
 	 * the DSP side, while some are shared between the CPU and the DSP.
 	 */
 	struct DSPBuffer {
+		enum FilterMode {
+			FILTER_FIR_TAP_COUNT_MASK = 0x1F,
+			FILTER_IIR_ENABLED        = 0x20,
+		};
+
+		enum SendDestination {
+			SEND_NONE                = 0x00,
+			SEND_FRONT_LEFT          = 0x01,
+			SEND_FRONT_RIGHT         = 0x02,
+			SEND_EFFECTS_0           = 0x03,
+			SEND_EFFECTS_1           = 0x04,
+			SEND_EFFECTS_2           = 0x05,
+			SEND_EFFECTS_3           = 0x06,
+			SEND_REAR_RIGHT          = 0x07,
+			SEND_REAR_LEFT           = 0x08,
+			SEND_AUX_RIGHT_SUBTRACT  = 0x09,
+			SEND_SAMPLE_GAIN_SCRATCH = 0x0A,
+			SEND_AUX_CENTER          = 0x0B,
+		};
+
 		enum SampleSourceType {
 			SOURCE_SQUARE                  = 0x00,
 			SOURCE_SAW                     = 0x01,
@@ -49,26 +71,26 @@ namespace DSPInterface {
 		void flushChannel();
 		void allocInit();
 		void initFilter();
-		void setAutoMixer(u16, u8, u8, u8, u8);
-		void setMixerVolumeOnly(u8, s16);
-		void setPitch(u16);
-		void setPauseFlag(u8);
-		void setMixerVolume(u8, s16, u8);
-		void setIIRFilterParam(s16*);
-		void setFIR8FilterParam(s16*);
-		void setFilterMode(u16);
-		void setDistFilter(s16);
+		void setAutoMixer(u16 volume, u8 pan, u8 dolby, u8 fxmix, u8 param_5);
+		void setMixerVolumeOnly(u8 send_idx, s16 volume);
+		void setPitch(u16 pitch);
+		void setPauseFlag(u8 flag);
+		void setMixerVolume(u8 send_idx, s16 volume, u8 delay);
+		void setIIRFilterParam(s16* coeffs);
+		void setFIR8FilterParam(s16* coeffs);
+		void setFilterMode(u16 mode);
+		void setDistFilter(s16 value);
 		void setWaveInfo(Driver::Wave_* wave, uintptr_t samples_address);
-		void setOscInfo(u32);
-		void setBusConnect(u8, u8);
+		void setOscInfo(u32 waveform_type);
+		void setBusConnect(u8 send_idx, u8 dst_bus);
 		void initAutoMixer();
-		void setMixerInitDelayMax(u8);
-		void setMixerInitVolume(u8, s16, u8);
+		void setMixerInitDelayMax(u8 max_delay);
+		void setMixerInitVolume(u8 send_idx, s16 volume, u8 delay);
 		void playStart();
 		void playStop();
-		void updateAMVolume(u16);
-		void updateAMPan(u8, u8);
-		void updateAMFX(u8);
+		void updateAMVolume(u16 volume);
+		void updateAMPan(u8 pan, u8 dolby);
+		void updateAMFX(u8 fxmix);
 		void setPitchIndirect(f32, f32);
 		void cacheChannel();
 
@@ -79,11 +101,11 @@ namespace DSPInterface {
 			enabled = 0;
 		}
 
-		struct Channel {
-			/* 0x0 */ u16 id;
+		struct Send {
+			/* 0x0 */ u16 sendAddress;
 			/* 0x2 */ u16 targetVolume;
 			/* 0x4 */ u16 currentVolume;
-			/* 0x6 */ u16 level;
+			/* 0x6 */ u16 delayRequestedActivePacked;
 		};
 
 		/* 0x000 */ u16 enabled;
@@ -94,14 +116,14 @@ namespace DSPInterface {
 		/* 0x00A */ u16 endReached;
 		/* 0x00C */ u16 useConstantSample;
 		/* 0x00E */ u16 samplesToKeepCount;
-		/* 0x010 */ Channel mixChannels[6];
+		/* 0x010 */ Send sends[6];
 		/* 0x040 */ char pad40[0x50 - 0x40];
-		/* 0x050 */ u16 dolbyVoicePosition;
-		/* 0x052 */ u16 dolbyReverbFactor;
-		/* 0x054 */ u16 dolbyVolumeCurrent;
-		/* 0x056 */ u16 dolbyVolumeTarget;
-		/* 0x058 */ u16 useDolbyVolume;
-		/* 0x05A */ u16 useDolbyVolumeCopy;
+		/* 0x050 */ u16 autoMixerVoicePosition;
+		/* 0x052 */ u16 autoMixerReverbFactor;
+		/* 0x054 */ u16 autoMixerVolumeCurrent;
+		/* 0x056 */ u16 autoMixerVolumeTarget;
+		/* 0x058 */ u16 useAutoMixer;
+		/* 0x05A */ u16 useAutoMixerCopy;
 		/* 0x05C */ char pad5C[0x60 - 0x5C];
 		/* 0x060 */ u16 currentPosFrac;
 		/* 0x062 */ u16 afcDecodedSampleIndex;
@@ -202,9 +224,9 @@ namespace DSPInterface {
 	{
 		getDSPHandle(i)->setWaveInfo(wave, base);
 	}
-	inline void setBusConnect(u8 i, u8 mixer, u8 bus)
+	inline void setBusConnect(u8 i, u8 send_idx, u8 dst_bus)
 	{
-		getDSPHandle(i)->setBusConnect(mixer, bus);
+		getDSPHandle(i)->setBusConnect(send_idx, dst_bus);
 	}
 
 	inline void setMixerInitDelayMax(u8 i, u8 delay)

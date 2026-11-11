@@ -65,8 +65,8 @@ namespace BNKParser {
 							} else {
 								osc->mRelTable = nullptr;
 							}
-							osc->mWidth  = oscRaw->mWidth;
-							osc->mVertex = oscRaw->mVertex;
+							osc->mDepth = oscRaw->mDepth;
+							osc->mBias  = oscRaw->mBias;
 						}
 						instp->setOsc(oscIndex, osc);
 						oscIndex++;

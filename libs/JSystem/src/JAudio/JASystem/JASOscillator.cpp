@@ -7,7 +7,7 @@
 namespace JASystem {
 
 namespace Driver {
-	s16 FORCE_STOP_TABLE[6] = { 0, 15, 0, 15, 0, 0 };
+	s16 FORCE_STOP_TABLE[6] = { TOscillator::CURVE_LINEAR, 15, 0, 15, 0, 0 };
 
 	static const f32 relTableSampleCell[17] = {
 		1.0f,        0.970489f,   0.781274f,   0.54628098f, 0.39979199f,
@@ -31,137 +31,138 @@ namespace Driver {
 void TOscillator::init()
 {
 	mOsc                = nullptr;
-	mState              = 1;
-	unk5                = 0;
-	unk6                = 0;
-	mReleaseRate        = 0.0f;
-	mPhase              = 0.0f;
-	mTargetPhase        = 0.0f;
-	mPhaseChangeRate    = 0.0f;
+	mState              = STATE_READY;
+	mCurveType          = CURVE_LINEAR;
+	mTableIndex         = 0;
+	mTimeRemaining      = 0.0f;
+	mCurrentValue       = 0.0f;
+	mTargetValue        = 0.0f;
+	mInterpolationScale = 0.0f;
 	mDirectRelease      = 0;
-	mInitialReleaseRate = 0.0f;
+	mSegmentDuration    = 0.0f;
 }
 
 void TOscillator::initStart()
 {
-	mState         = 2;
+	mState         = STATE_RUNNING;
 	mDirectRelease = 0;
 	if (mOsc == nullptr || !mOsc->mAdsTable) {
-		mPhase = 0.0f;
+		mCurrentValue = 0.0f;
 		return;
 	}
-	unk6           = 0;
-	mReleaseRate   = 0.0f;
-	mTargetPhase   = 0.0f;
+	mTableIndex    = 0;
+	mTimeRemaining = 0.0f;
+	mTargetValue   = 0.0f;
 	mDirectRelease = 0;
-	mReleaseRate -= mOsc->mRate;
+	mTimeRemaining -= mOsc->mRate;
 }
 
 f32 TOscillator::getOffset()
 {
 	if (mOsc == nullptr) {
-		mPhase = 1.0f;
+		mCurrentValue = 1.0f;
 		return 1.0f;
 	}
 
 	switch (mState) {
-	case 0:
+	case STATE_STOPPED:
 		return 1.0f;
-	case 3:
-		return mOsc->mVertex + (mPhase * mOsc->mWidth);
+	case STATE_HOLD:
+		return mOsc->mBias + (mCurrentValue * mOsc->mDepth);
 
-	case 1:
-		mState = 2;
+	case STATE_READY:
+		mState = STATE_RUNNING;
 		/* Fallthrough */
 	default:
-		s16* var_r4;
-		if (mState == 4) {
-			var_r4 = mOsc->mRelTable;
-		} else if (mState == 5) {
-			var_r4 = Driver::FORCE_STOP_TABLE;
+		s16* table;
+		if (mState == STATE_RELEASE) {
+			table = mOsc->mRelTable;
+		} else if (mState == STATE_FORCE_STOP) {
+			table = Driver::FORCE_STOP_TABLE;
 		} else {
-			var_r4 = mOsc->mAdsTable;
+			table = mOsc->mAdsTable;
 		}
 
-		if (var_r4 == nullptr && mState != 6) {
-			mPhase = 1.0f;
+		if (table == nullptr && mState != STATE_DIRECT_RELEASE) {
+			mCurrentValue = 1.0f;
 			return 1.0f;
 		}
 
-		if (mState == 5) {
-			mReleaseRate -= 1.0f;
+		if (mState == STATE_FORCE_STOP) {
+			mTimeRemaining -= 1.0f;
 		} else {
-			mReleaseRate -= mOsc->mRate;
+			mTimeRemaining -= mOsc->mRate;
 		}
 
-		return calc(var_r4);
+		return calc(table);
 	}
 }
 
 f32 TOscillator::getOffsetNoCount()
 {
 	if (mOsc == nullptr) {
-		mPhase = 1.0f;
+		mCurrentValue = 1.0f;
 		return 1.0f;
 	}
 
 	switch (mState) {
-	case 0:
+	case STATE_STOPPED:
 		return 1.0f;
-	case 1:
-		mState = 2;
+	case STATE_READY:
+		mState = STATE_RUNNING;
 		break;
 	}
 
-	return mPhase * mOsc->mWidth + mOsc->mVertex;
+	return mCurrentValue * mOsc->mDepth + mOsc->mBias;
 }
 
 bool TOscillator::forceStop()
 {
-	if (mState == 5)
+	if (mState == STATE_FORCE_STOP)
 		return false;
 
-	unk6         = 0;
-	mReleaseRate = 0.0f;
-	mTargetPhase = mPhase;
-	mState       = 5;
+	mTableIndex    = 0;
+	mTimeRemaining = 0.0f;
+	mTargetValue   = mCurrentValue;
+	mState         = STATE_FORCE_STOP;
 	return true;
 }
 
 bool TOscillator::release()
 {
-	if (mState == 5)
+	if (mState == STATE_FORCE_STOP)
 		return false;
 
 	if (mOsc->mAdsTable != mOsc->mRelTable) {
-		unk6         = 0;
-		mReleaseRate = 0.0f;
-		mTargetPhase = mPhase;
+		mTableIndex    = 0;
+		mTimeRemaining = 0.0f;
+		mTargetValue   = mCurrentValue;
 	}
 
 	if (mOsc->mRelTable == nullptr && mDirectRelease == 0)
 		mDirectRelease = 0x10;
 
 	if (mDirectRelease != 0) {
-		mState = 6;
-		unk5   = (mDirectRelease >> 14) & 3;
+		mState     = STATE_DIRECT_RELEASE;
+		mCurveType = (mDirectRelease >> 14) & 3;
 
 		f32 temp_f31 = mDirectRelease & 0x3FFF;
 		temp_f31 *= ((Kernel::getDacRate() / 80.0f) / 600.0f);
 		temp_f31 /= Driver::getUpdateInterval();
-		mReleaseRate = temp_f31;
+		mTimeRemaining = temp_f31;
 
-		if (mReleaseRate < 1.0f)
-			mReleaseRate = 1.0f;
+		if (mTimeRemaining < 1.0f)
+			mTimeRemaining = 1.0f;
 
-		mInitialReleaseRate = mReleaseRate;
-		mTargetPhase        = 0.0f;
-		if (unk5 == 0)
-			mPhaseChangeRate = (mTargetPhase - mPhase) / mReleaseRate;
+		mSegmentDuration = mTimeRemaining;
+		mTargetValue     = 0.0f;
+		if (mCurveType == CURVE_LINEAR)
+			mInterpolationScale
+			    = (mTargetValue - mCurrentValue) / mTimeRemaining;
 		else
-			mPhaseChangeRate = mTargetPhase - mPhase;
+			mInterpolationScale = mTargetValue - mCurrentValue;
 	} else {
-		mState = 4;
+		mState = STATE_RELEASE;
 	}
 
 	return true;
@@ -169,87 +170,94 @@ bool TOscillator::release()
 
 f32 TOscillator::calc(s16* table)
 {
-	while (mReleaseRate <= 0.0f) {
-		int idx = unk6 * 3;
-		mPhase  = mTargetPhase;
-		if (mState == 6) {
-			mState = 0;
+	while (mTimeRemaining <= 0.0f) {
+		int idx       = mTableIndex * 3;
+		mCurrentValue = mTargetValue;
+		if (mState == STATE_DIRECT_RELEASE) {
+			mState = STATE_STOPPED;
 			break;
 		}
 
-		s16 envMode  = table[idx];
-		s16 envTime  = table[idx + 1];
-		s16 envValue = table[idx + 2];
+		s16 type  = table[idx];
+		s16 time  = table[idx + 1];
+		s16 value = table[idx + 2];
 
-		if (envMode == 13) {
-			unk6 = envValue;
+		enum {
+			SPECIAL_TYPE_LOOP = 13,
+			SPECIAL_TYPE_HOLD = 14,
+			SPECIAL_TYPE_HALT = 15,
+		};
+
+		if (type == SPECIAL_TYPE_LOOP) {
+			mTableIndex = value;
 			continue;
 		}
 
-		if (envMode == 15) {
-			mState = 0;
+		if (type == SPECIAL_TYPE_HALT) {
+			mState = STATE_STOPPED;
 			break;
 		}
 
-		if (envMode == 14) {
-			mState = 3;
-			return mOsc->mVertex + mPhase * mOsc->mWidth;
+		if (type == SPECIAL_TYPE_HOLD) {
+			mState = STATE_HOLD;
+			return mOsc->mBias + mCurrentValue * mOsc->mDepth;
 		}
 
-		unk5 = envMode;
+		mCurveType = type;
 
-		if (envTime == 0) {
-			mTargetPhase = envValue / 32768.0f;
-			unk6 += 1;
+		if (time == 0) {
+			mTargetValue = value / 32768.0f;
+			mTableIndex += 1;
 			continue;
 		}
 
-		mReleaseRate = envTime * ((Kernel::getDacRate() / 80.0f) / 600.0f)
-		               / Driver::getUpdateInterval();
-		mInitialReleaseRate = mReleaseRate;
-		mTargetPhase        = envValue / 32768.0f;
+		mTimeRemaining = time * ((Kernel::getDacRate() / 80.0f) / 600.0f)
+		                 / Driver::getUpdateInterval();
+		mSegmentDuration = mTimeRemaining;
+		mTargetValue     = value / 32768.0f;
 
-		if (unk5 == 0)
-			mPhaseChangeRate = (mTargetPhase - mPhase) / mReleaseRate;
+		if (mCurveType == CURVE_LINEAR)
+			mInterpolationScale
+			    = (mTargetValue - mCurrentValue) / mTimeRemaining;
 		else
-			mPhaseChangeRate = mTargetPhase - mPhase;
+			mInterpolationScale = mTargetValue - mCurrentValue;
 
-		unk6 += 1;
+		mTableIndex += 1;
 	}
 
-	if (mOsc->mWidth == 0.0f)
-		return mOsc->mVertex;
+	if (mOsc->mDepth == 0.0f)
+		return mOsc->mBias;
 
-	f32 temp_f31 = 0.0f;
-	f32 newPhase;
-	if (mInitialReleaseRate == 0.0) { // Developer probably forgot the f suffix
-		newPhase = mTargetPhase;
-		mPhase   = mTargetPhase;
+	f32 newValue;
+	if (mSegmentDuration == 0.0) { // Developer probably forgot the f suffix
+		newValue      = mTargetValue;
+		mCurrentValue = mTargetValue;
 	} else {
-		if (unk5 == 0 || (temp_f31 = mPhaseChangeRate) == 0.0f) {
-			newPhase = mTargetPhase - (mPhaseChangeRate * mReleaseRate);
-			mPhase   = newPhase;
-		} else if (unk5 == 3 || unk5 == 1 || unk5 == 2) {
+		if (mCurveType == CURVE_LINEAR || mInterpolationScale == 0.0f) {
+			newValue = mTargetValue - (mInterpolationScale * mTimeRemaining);
+			mCurrentValue = newValue;
+		} else if (mCurveType == CURVE_SAMPLE_CELL || mCurveType == CURVE_SQUARE
+		           || mCurveType == CURVE_SQRT) {
 			const f32* table = nullptr;
 
-			switch (unk5) {
-			case 3:
+			switch (mCurveType) {
+			case CURVE_SAMPLE_CELL:
 				table = Driver::relTableSampleCell;
 				break;
-			case 1:
+			case CURVE_SQUARE:
 				table = Driver::relTableSquare;
 				break;
-			case 2:
+			case CURVE_SQRT:
 				table = Driver::relTableSqRoot;
 				break;
 			}
 
 			f32 fIdx;
 
-			if (temp_f31 < 0.0f)
-				fIdx = 16.0f * (1.0f - (mReleaseRate / mInitialReleaseRate));
+			if (mInterpolationScale < 0.0f)
+				fIdx = 16.0f * (1.0f - (mTimeRemaining / mSegmentDuration));
 			else
-				fIdx = 16.0f * (mReleaseRate / mInitialReleaseRate);
+				fIdx = 16.0f * (mTimeRemaining / mSegmentDuration);
 
 			u32 idx  = fIdx;
 			f32 prop = fIdx - (f32)idx;
@@ -259,21 +267,22 @@ f32 TOscillator::calc(s16* table)
 			}
 
 			f32 valAbs = std::fabsf(
-			    temp_f31 * (prop * (table[idx + 1] - table[idx]) + table[idx]));
+			    mInterpolationScale
+			    * (prop * (table[idx + 1] - table[idx]) + table[idx]));
 
-			if (mPhaseChangeRate < 0.0f)
-				newPhase = mTargetPhase + valAbs;
+			if (mInterpolationScale < 0.0f)
+				newValue = mTargetValue + valAbs;
 			else
-				newPhase = mTargetPhase - (mPhaseChangeRate - valAbs);
+				newValue = mTargetValue - (mInterpolationScale - valAbs);
 
-			mPhase = newPhase;
+			mCurrentValue = newValue;
 		} else {
-			newPhase = mTargetPhase - (temp_f31 * mReleaseRate);
-			mPhase   = newPhase;
+			newValue = mTargetValue - (mInterpolationScale * mTimeRemaining);
+			mCurrentValue = newValue;
 		}
 	}
 
-	return newPhase * mOsc->mWidth + mOsc->mVertex;
+	return newValue * mOsc->mDepth + mOsc->mBias;
 }
 
 } // namespace JASystem

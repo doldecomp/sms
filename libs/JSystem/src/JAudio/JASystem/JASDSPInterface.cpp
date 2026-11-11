@@ -10,7 +10,7 @@
 u64 DSP_CreateMap()
 {
 	u64 var1 = 0;
-	for (u8 i = 0; i < 64; i++) {
+	for (u8 i = 0; i < JASystem::DSPInterface::DSP_VOICE_COUNT; i++) {
 		var1 <<= 1;
 
 		JASystem::DSPInterface::DSPBuffer* buffer
@@ -71,18 +71,21 @@ namespace DSPInterface {
 	}
 	void flushBuffer()
 	{
-		DCFlushRange(CH_BUF, sizeof(DSPBuffer) * 64);
+		DCFlushRange(CH_BUF, sizeof(DSPBuffer) * DSP_VOICE_COUNT);
 		DCFlushRange(FX_BUF, sizeof(FXBuffer) * 4);
 	}
-	void flushChannelAll() { DCFlushRange(CH_BUF, sizeof(DSPBuffer) * 64); }
+	void flushChannelAll()
+	{
+		DCFlushRange(CH_BUF, sizeof(DSPBuffer) * DSP_VOICE_COUNT);
+	}
 	void cacheChannelAll() { }
 	void invalChannelAll()
 	{
-		DCInvalidateRange(CH_BUF, sizeof(DSPBuffer) * 64);
+		DCInvalidateRange(CH_BUF, sizeof(DSPBuffer) * DSP_VOICE_COUNT);
 	}
 	void clearBuffer()
 	{
-		for (u32 i = 0; i < 64; i++)
+		for (u32 i = 0; i < DSP_VOICE_COUNT; i++)
 			Calc::bzero(CH_BUF + i, sizeof(DSPBuffer));
 
 		for (u32 i = 0; i < 4; i++)
@@ -90,12 +93,13 @@ namespace DSPInterface {
 	}
 	void setupBuffer()
 	{
-		DsetupTable(64, (uintptr_t)CH_BUF, (uintptr_t)&DSPRES_FILTER,
-		            (uintptr_t)&DSPADPCM_FILTER, (uintptr_t)FX_BUF);
+		DsetupTable(DSP_VOICE_COUNT, (uintptr_t)CH_BUF,
+		            (uintptr_t)&DSPRES_FILTER, (uintptr_t)&DSPADPCM_FILTER,
+		            (uintptr_t)FX_BUF);
 	}
 	void initBuffer()
 	{
-		CH_BUF = new (JASDram, 0x20) DSPBuffer[64];
+		CH_BUF = new (JASDram, 0x20) DSPBuffer[DSP_VOICE_COUNT];
 		FX_BUF = new (JASDram, 0x20) FXBuffer[4];
 
 		for (u8 i = 0; i < 4; i++)
@@ -152,7 +156,7 @@ namespace DSPInterface {
 		done              = 0;
 		endRequested      = 0;
 		enabled           = 0;
-		useDolbyVolume    = 0;
+		useAutoMixer      = 0;
 		initFilter();
 		flushChannel();
 	}
@@ -216,90 +220,92 @@ namespace DSPInterface {
 	}
 	void DSPBuffer::initAutoMixer()
 	{
-		if (useDolbyVolume) {
-			dolbyVolumeCurrent = dolbyVolumeTarget;
+		if (useAutoMixer) {
+			autoMixerVolumeCurrent = autoMixerVolumeTarget;
 			return;
 		}
-		dolbyVolumeCurrent = 0;
-		useDolbyVolume     = 1;
+		autoMixerVolumeCurrent = 0;
+		useAutoMixer           = 1;
 	}
-	void DSPBuffer::setAutoMixer(u16 param_1, u8 param_2, u8 param_3,
-	                             u8 param_4, u8 param_5)
+	void DSPBuffer::setAutoMixer(u16 volume, u8 pan, u8 dolby, u8 fxmix,
+	                             u8 param_5)
 	{
-		dolbyVoicePosition = param_2 << 8 | param_3;
-		dolbyReverbFactor  = param_4 << 8;
-		dolbyVolumeTarget  = param_1;
-		useDolbyVolume     = 1;
+		autoMixerVoicePosition = pan << 8 | dolby;
+		autoMixerReverbFactor  = fxmix << 8;
+		autoMixerVolumeTarget  = volume;
+		useAutoMixer           = 1;
 	}
-	void DSPBuffer::updateAMVolume(u16 param_1) { dolbyVolumeTarget = param_1; }
-	void DSPBuffer::updateAMPan(u8 param_1, u8 param_2)
+	void DSPBuffer::updateAMVolume(u16 volume)
 	{
-		dolbyVoicePosition = param_1 << 8 | param_2;
+		autoMixerVolumeTarget = volume;
 	}
-	void DSPBuffer::updateAMFX(u8 param_1) { dolbyReverbFactor = param_1 << 8; }
-	void DSPBuffer::setPitch(u16 param_1)
+	void DSPBuffer::updateAMPan(u8 pan, u8 dolby)
 	{
-		if (param_1 >= 0x7fff)
-			param_1 = 0x7fff;
+		autoMixerVoicePosition = pan << 8 | dolby;
+	}
+	void DSPBuffer::updateAMFX(u8 fxmix) { autoMixerReverbFactor = fxmix << 8; }
+	void DSPBuffer::setPitch(u16 pitch)
+	{
+		if (pitch >= 0x7fff)
+			pitch = 0x7fff;
 
-		resamplingRatio = param_1;
+		resamplingRatio = pitch;
 	}
 	void DSPBuffer::setPitchIndirect(f32 param_1, f32 param_2) { }
 
-	void DSPBuffer::setMixerInitDelayMax(u8 param_1)
+	void DSPBuffer::setMixerInitDelayMax(u8 max_delay)
 	{
-		samplesToKeepCount = param_1;
+		samplesToKeepCount = max_delay;
 	}
-	void DSPBuffer::setMixerInitVolume(u8 param_1, s16 param_2, u8 param_3)
+	void DSPBuffer::setMixerInitVolume(u8 send_idx, s16 volume, u8 delay)
 	{
-		Channel& chan      = mixChannels[param_1];
-		chan.currentVolume = param_2;
-		chan.targetVolume  = param_2;
-		chan.level         = param_3 << 8 | param_3;
+		Send& send                      = sends[send_idx];
+		send.currentVolume              = volume;
+		send.targetVolume               = volume;
+		send.delayRequestedActivePacked = delay << 8 | delay;
 	}
-	void DSPBuffer::setMixerVolume(u8 param_1, s16 param_2, u8 param_3)
+	void DSPBuffer::setMixerVolume(u8 send_idx, s16 volume, u8 delay)
 	{
 		if (endRequested)
 			return;
 
-		Channel& chan     = mixChannels[param_1];
-		chan.targetVolume = param_2;
-		chan.level        = param_3 << 8 | chan.level & 0xff;
+		Send& send        = sends[send_idx];
+		send.targetVolume = volume;
+		send.delayRequestedActivePacked
+		    = delay << 8 | send.delayRequestedActivePacked & 0xff;
 	}
-	void DSPBuffer::setMixerVolumeOnly(u8 param_1, s16 param_2)
+	void DSPBuffer::setMixerVolumeOnly(u8 send_idx, s16 volume)
 	{
 		if (endRequested)
 			return;
 
-		mixChannels[param_1].targetVolume = param_2;
+		sends[send_idx].targetVolume = volume;
 	}
 	void DSPBuffer::setPauseFlag(u8 flag) { useConstantSample = flag; }
 	void DSPBuffer::flushChannel() { DCFlushRangeNoSync(this, sizeof(*this)); }
 	void DSPBuffer::cacheChannel() { }
 
-	void DSPBuffer::setIIRFilterParam(s16* param)
+	void DSPBuffer::setIIRFilterParam(s16* coeffs)
 	{
-		setFilterTable(biquadFilterCoeffs, param, 4);
+		setFilterTable(biquadFilterCoeffs, coeffs, 4);
 	}
-	void DSPBuffer::setFIR8FilterParam(s16* param)
+	void DSPBuffer::setFIR8FilterParam(s16* coeffs)
 	{
-		setFilterTable(variableFirCoeffs, param, 8);
+		setFilterTable(variableFirCoeffs, coeffs, 8);
 	}
 
-	void DSPBuffer::setFilterMode(u16 param)
+	void DSPBuffer::setFilterMode(u16 mode)
 	{
-		u8 r30 = param & 0x20;
-		u8 r31 = param & 0x1f;
-		if (r30) {
-			if (r31 > 0x14) {
-				r31 = 0x14;
-			}
+		u8 irrEnabled  = mode & FILTER_IIR_ENABLED;
+		u8 firTapCount = mode & FILTER_FIR_TAP_COUNT_MASK;
+		if (irrEnabled) {
+			if (firTapCount > 20)
+				firTapCount = 20;
 		} else {
-			if (r31 > 0x18) {
-				r31 = 0x18;
-			}
+			if (firTapCount > 24)
+				firTapCount = 24;
 		}
-		filterMode = r30 + r31;
+		filterMode = irrEnabled + firTapCount;
 	}
 
 	void DSPBuffer::initFilter()
@@ -319,14 +325,24 @@ namespace DSPInterface {
 
 	void DSPBuffer::setDistFilter(s16 value) { lowPassCoeff = value; }
 
-	void DSPBuffer::setBusConnect(u8 param_1, u8 param_2)
+	void DSPBuffer::setBusConnect(u8 send_idx, u8 dst_bus)
 	{
 		static u16 connect_table[12] = {
-			0x0000, 0x0D00, 0x0D60, 0x0DC0, 0x0E20, 0x0E80,
-			0x0EE0, 0x0CA0, 0x0F40, 0x0FA0, 0x0B00, 0x09A0,
+			0x0000,
+			BUS_FRONT_LEFT,
+			BUS_FRONT_RIGHT,
+			BUS_EFFECTS_0,
+			BUS_EFFECTS_1,
+			BUS_EFFECTS_2,
+			BUS_EFFECTS_3,
+			BUS_REAR_RIGHT,
+			BUS_REAR_LEFT,
+			BUS_AUX_RIGHT_SUBTRACT,
+			SHARED_SAMPLE_GAIN_SCRATCH,
+			BUS_AUX_CENTER,
 		};
-		Channel& chan = mixChannels[param_1];
-		chan.id       = connect_table[param_2];
+		Send& send       = sends[send_idx];
+		send.sendAddress = connect_table[dst_bus];
 	}
 
 } // namespace DSPInterface

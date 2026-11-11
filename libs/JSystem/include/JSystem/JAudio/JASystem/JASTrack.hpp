@@ -108,24 +108,24 @@ public:
 		/* 0x0C */ f32 mMoveAmount;
 	};
 	enum TimedParamType {
-		TIMED_Volume      = 0,
-		TIMED_Pitch       = 1,
-		TIMED_Fxmix       = 2,
-		TIMED_Pan         = 3,
-		TIMED_Dolby       = 4,
-		TIMED_Unk5        = 5,
-		TIMED_Osc0_Width  = 6,
-		TIMED_Osc0_Rate   = 7,
-		TIMED_Osc0_Vertex = 8,
-		TIMED_Osc1_Width  = 9,
-		TIMED_Osc1_Rate   = 10,
-		TIMED_Osc1_Vertex = 11,
-		TIMED_IIR_Unk0    = 12,
-		TIMED_IIR_Unk1    = 13,
-		TIMED_IIR_Unk2    = 14,
-		TIMED_IIR_Unk3    = 15,
-		TIMED_Unk16       = 16,
-		TIMED_Unk17       = 17,
+		TIMED_Volume     = 0,
+		TIMED_Pitch      = 1,
+		TIMED_Fxmix      = 2,
+		TIMED_Pan        = 3,
+		TIMED_Dolby      = 4,
+		TIMED_Unk5       = 5,
+		TIMED_Osc0_Depth = 6,
+		TIMED_Osc0_Rate  = 7,
+		TIMED_Osc0_Bias  = 8,
+		TIMED_Osc1_Depth = 9,
+		TIMED_Osc1_Rate  = 10,
+		TIMED_Osc1_Bias  = 11,
+		TIMED_IIR_Unk0   = 12,
+		TIMED_IIR_Unk1   = 13,
+		TIMED_IIR_Unk2   = 14,
+		TIMED_IIR_Unk3   = 15,
+		TIMED_Unk16      = 16,
+		TIMED_Unk17      = 17,
 		TIMED_Count, // 18
 	};
 
@@ -166,12 +166,12 @@ public:
 		/* 0x030 */ MoveParam_ mPan;
 		/* 0x040 */ MoveParam_ mDolby;
 		/* 0x050 */ MoveParam_ unk50;
-		/* 0x060 */ MoveParam_ mOsc0Width;
+		/* 0x060 */ MoveParam_ mOsc0Depth;
 		/* 0x070 */ MoveParam_ mOsc0Rate;
-		/* 0x080 */ MoveParam_ mOsc0Vertex;
-		/* 0x090 */ MoveParam_ mOsc1Width;
+		/* 0x080 */ MoveParam_ mOsc0Bias;
+		/* 0x090 */ MoveParam_ mOsc1Depth;
 		/* 0x0A0 */ MoveParam_ mOsc1Rate;
-		/* 0x0B0 */ MoveParam_ mOsc1Vertex;
+		/* 0x0B0 */ MoveParam_ mOsc1Bias;
 		/* 0x0C0 */ MoveParam_ mIIRs[4];
 		/* 0x100 */ MoveParam_ unk100;
 		/* 0x110 */ MoveParam_ unk110;

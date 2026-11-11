@@ -301,7 +301,9 @@ namespace StreamLib {
 				                                           0, 0);
 			}
 
-			JASystem::DSPInterface::setBusConnect(channel->mNumber, i, i + 1);
+			JASystem::DSPInterface::setBusConnect(
+			    channel->mNumber, i,
+			    i + JASystem::DSPInterface::DSPBuffer::SEND_FRONT_LEFT);
 		}
 		JASystem::DSPInterface::setPitch(channel->mNumber, 0x800);
 		JASystem::DSPInterface::playStart(channel->mNumber);

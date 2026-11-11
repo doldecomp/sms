@@ -102,11 +102,21 @@ public:
 	bool isDolbyMode() const { return mMixConfigs[0].mWhole == 0xFFFF; }
 
 	union MixConfig {
+		enum GainSource {
+			GAIN_NONE      = 0,
+			GAIN_PAN       = 1,
+			GAIN_FXMIX     = 2,
+			GAIN_DOLBY     = 3,
+			GAIN_INV_PAN   = 5,
+			GAIN_INV_FXMIX = 6,
+			GAIN_INV_DOLBY = 7,
+		};
+
 		u16 mWhole;
 		struct {
-			u8 u;
-			u8 l0 : 4;
-			u8 l1 : 4;
+			u8 mSendDestination;
+			u8 mGainSource0 : 4;
+			u8 mGainSource1 : 4;
 		} mParts;
 	};
 

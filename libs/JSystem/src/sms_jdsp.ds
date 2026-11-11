@@ -67,7 +67,7 @@ WAVEFORM_PATTERN_2: equ 0x0180
 WAVEFORM_PATTERN_2_HISTORY: equ 0x01be
 WAVEFORM_PATTERN_3: equ 0x01c0
 WAVEFORM_PATTERN_3_HISTORY: equ 0x01fe
-POSITIONAL_SINE_TABLE: equ 0x0200
+AUTOMIXER_SINE_TABLE: equ 0x0200
 COMMAND_QUEUE: equ 0x0280
 RESAMPLER_PHASE_SCRATCH: equ 0x02b0
 AFC_COEFFICIENTS: equ 0x0300
@@ -153,11 +153,11 @@ VOICE_USE_CONSTANT_SAMPLE: equ 0x0406
 VOICE_SAVED_SAMPLE_COUNT: equ 0x0407
 VOICE_SEND_0_DESTINATION: equ 0x0408
 VOICE_SEND_0_GAIN_CURRENT: equ 0x040a
-VOICE_POSITION: equ 0x0428
-VOICE_EFFECTS_GAIN: equ 0x0429
-VOICE_POSITIONAL_GAIN_CURRENT: equ 0x042a
-VOICE_POSITIONAL_GAIN_TARGET: equ 0x042b
-VOICE_USE_POSITIONAL_MIXER: equ 0x042c
+VOICE_AUTOMIXER_POSITION: equ 0x0428
+VOICE_AUTOMIXER_EFFECTS_GAIN: equ 0x0429
+VOICE_AUTOMIXER_GAIN_CURRENT: equ 0x042a
+VOICE_AUTOMIXER_GAIN_TARGET: equ 0x042b
+VOICE_USE_AUTOMIXER: equ 0x042c
 DATA_042D: equ 0x042d
 VOICE_PHASE_FRACTION: equ 0x0430
 VOICE_AFC_DECODED_SAMPLE_INDEX: equ 0x0431
@@ -208,9 +208,9 @@ BUS_AUX_CENTER: equ 0x09a0
 BUS_MODULATED_DELAY: equ 0x0a00
 MODULATED_DELAY_RING: equ 0x0a60
 SHARED_SAMPLE_GAIN_SCRATCH: equ 0x0b00
-POSITIONAL_SAVED_AR1: equ 0x0b24
-POSITIONAL_SAVED_AR2: equ 0x0b25
-POSITIONAL_SAVED_AR3: equ 0x0b26
+AUTOMIXER_SAVED_AR1: equ 0x0b24
+AUTOMIXER_SAVED_AR2: equ 0x0b25
+AUTOMIXER_SAVED_AR3: equ 0x0b26
 BUS_REAR_LEFT_FX: equ 0x0c00
 BUS_REAR_RIGHT_FX: equ 0x0c50
 BUS_REAR_RIGHT_FX_SECOND_HALF: equ 0x0c78
@@ -527,7 +527,7 @@ copy_scaled_buffer:
 ; Block preparation: fold previous rear buses into stereo, then clear transient buses.
 prepare_rear_and_front_buses:
 	; First, do this tricky dance of mixing 4 surround channels into 2 stereo channels
-	; as told by dolby (presumably). Essentially comes down to this:
+	; for surround downmixing. Essentially comes down to this:
 	;
 	; L[t] = frontLeft[t]  + a·rearLeft[t−80] − b·rearRight[t−40]
 	; R[t] = frontRight[t] − b·rearLeft[t−80] + a·rearRight[t−40]
@@ -742,7 +742,7 @@ write_effects_line:
 
 ; Finish rear effects cross-block contribution, then write four effects lines.
 finish_effects_lines:
-	; Finish the dolby dance started in prepare_effects_lines
+	; Finish the surround downmix started in prepare_effects_lines
 	clr         $ACC1
 	lris        $AC1.M, #0x28
 	lri         $AR0, #BUS_REAR_RIGHT_FX
@@ -860,6 +860,7 @@ command_render:
 		; Loop over voices/channels
 		lr          $AC0.M, @RENDER_VOICE_COUNT
 		bloop       $AC0.M, voice_rendering_loop_end
+			; Skip the voice if it's not in the active voice mask
 			clr         $ACC0
 			clr         $ACC1
 			lr          $AC0.M, @CURRENT_VOICE_INDEX
@@ -882,7 +883,7 @@ command_render:
 			mulac       $AX0.L, $AX0.H, $ACC0
 			sr          @CURRENT_VOICE_ADDRESS_H, $AC0.M
 			sr          @CURRENT_VOICE_ADDRESS_L, $AC0.L
-			; DMA voice into VOICE_BLOCK
+			; DMA voice into VOICE_BLOCK to get updates from the CPU
 			call        fetch_voice_parameters
 			; Skip disabled and done voices
 			lr          $AX0.H, @VOICE_ENABLED
@@ -1018,14 +1019,14 @@ check_recursive_filter:
 			jz          select_voice_mixer
 loc_034a:
 			call        filter_recursive
-			; Choose automatic positional mixer or six explicitly routed mixer sends
+			; Choose automixer or six explicitly routed mixer sends
 select_voice_mixer:
 			clr         $ACC0
-			lr          $AC0.M, @VOICE_USE_POSITIONAL_MIXER
+			lr          $AC0.M, @VOICE_USE_AUTOMIXER
 			sr          @DATA_042D, $AC0.M
 			tst         $ACC0
 			jz          loc_0358
-			call        mix_positional_voice
+			call        mix_automixer_voice
 			jmp         finish_voice
 loc_0358:
 			clr         $ACC0
@@ -1104,7 +1105,7 @@ loc_03ab:
 			subr        $ACC0, $AX1.H
 			jlz         loc_03b4
 			mrr         $AR0, $AC0.M
-			call        mix_buffer_with_gain_ramp
+			call        mix_send_with_gain_ramp
 loc_03b4:
 			nop
 			srri        @$AR2, $AC1.M
@@ -1170,7 +1171,7 @@ notify_block_processed:
 		lris        $AC1.M, #0x50
 		call        add_scaled_buffer
 		; Fold first 40 samples of current rear-right into last 40 front samples,
-		; completing the dolby dance started in prepare_rear_and_front_buses
+		; completing the surround downmix started in prepare_rear_and_front_buses
 		clr         $ACC1
 		lris        $AC1.M, #0x28
 		lri         $AR0, #BUS_REAR_RIGHT
@@ -3362,8 +3363,8 @@ loc_0d02:
 
 
 
-; Mix 80 samples: first 32 pairs ramp volume, last 8 pairs hold volume.
-mix_buffer_with_gain_ramp:
+; Mix one send: first 32 sample pairs ramp gain, last 8 pairs hold gain.
+mix_send_with_gain_ramp:
 	tst         $ACC1
 	jnz         loc_0d10
 	movax       $ACC0, $AX0
@@ -3411,15 +3412,15 @@ loc_0d2f:
 
 
 
-; Automatic positional/Dolby mixer: 4 dry and 4 effects destinations.
-mix_positional_voice:
+; Automixer: 4 dry and 4 effects destinations.
+mix_automixer_voice:
 	lr          $AX0.H, @VOICE_STOP_REQUESTED
 	tstaxh      $AX0.H
 	jz          loc_0d44
 	clr         $ACC0
-	lr          $AC0.M, @VOICE_POSITIONAL_GAIN_CURRENT
+	lr          $AC0.M, @VOICE_AUTOMIXER_GAIN_CURRENT
 	lsr         $ACC0, #-1
-	sr          @VOICE_POSITIONAL_GAIN_TARGET, $AC0.M
+	sr          @VOICE_AUTOMIXER_GAIN_TARGET, $AC0.M
 	tst         $ACC0
 	jnz         loc_0d44
 	lri         $AX0.H, #0x0001
@@ -3427,9 +3428,9 @@ mix_positional_voice:
 loc_0d44:
 	set40
 	clr         $ACC0
-	lr          $AC0.M, @VOICE_POSITION
+	lr          $AC0.M, @VOICE_AUTOMIXER_POSITION
 	lsr         $ACC0, #-8
-	lr          $AC1.M, @VOICE_POSITION
+	lr          $AC1.M, @VOICE_AUTOMIXER_POSITION
 	andi        $AC1.M, #0x007f
 	mrr         $AX0.L, $AC0.M
 	mrr         $AX0.H, $AC1.M
@@ -3439,7 +3440,7 @@ loc_0d44:
 	mrr         $AX1.H, $AC1.M
 	clr         $ACC0
 	clr         $ACC1
-	lri         $AC1.M, #POSITIONAL_SINE_TABLE
+	lri         $AC1.M, #AUTOMIXER_SINE_TABLE
 	mrr         $AC0.M, $AX0.L
 	add         $ACC0, $ACC1
 	mrr         $AR0, $AC0.M
@@ -3465,12 +3466,12 @@ loc_0d44:
 	srri        @$AR0, $AC0.M
 	lri         $AR0, #SHARED_SAMPLE_GAIN_SCRATCH
 	lri         $AR1, #0x0b04
-	lr          $AX0.H, @VOICE_POSITIONAL_GAIN_CURRENT
+	lr          $AX0.H, @VOICE_AUTOMIXER_GAIN_CURRENT
 	call        scale_gain_vector
 	lri         $AR1, #0x0b08
 	lri         $AR0, #0x0b04
-	lr          $AX0.H, @VOICE_POSITIONAL_GAIN_CURRENT
-	lr          $AC0.M, @VOICE_EFFECTS_GAIN
+	lr          $AX0.H, @VOICE_AUTOMIXER_GAIN_CURRENT
+	lr          $AC0.M, @VOICE_AUTOMIXER_EFFECTS_GAIN
 	mulc        $AC0.M, $AX0.H
 	movp        $ACC0
 	asl         $ACC0, #1
@@ -3480,35 +3481,35 @@ loc_0d44:
 	lri         $AR1, #0x0b0c
 	clr         $ACC0
 	clr         $ACC1
-	lr          $AC0.M, @VOICE_POSITIONAL_GAIN_TARGET
-	lr          $AC1.M, @VOICE_POSITIONAL_GAIN_CURRENT
-	sr          @VOICE_POSITIONAL_GAIN_CURRENT, $AC0.M
+	lr          $AC0.M, @VOICE_AUTOMIXER_GAIN_TARGET
+	lr          $AC1.M, @VOICE_AUTOMIXER_GAIN_CURRENT
+	sr          @VOICE_AUTOMIXER_GAIN_CURRENT, $AC0.M
 	sub         $ACC0, $ACC1
 	mrr         $AX0.H, $AC0.M
 	call        scale_gain_delta_vector
 	lri         $AR0, #0x0b0c
 	lri         $AR1, #0x0b10
-	lr          $AX0.H, @VOICE_EFFECTS_GAIN
+	lr          $AX0.H, @VOICE_AUTOMIXER_EFFECTS_GAIN
 	call        scale_gain_vector
 	lri         $AR1, #0x0b04
 	lri         $AR2, #0x0b0c
-	lri         $AR3, #positional_destination_table
+	lri         $AR3, #automixer_destination_table
 	bloopi      #0x08, loc_0dbe
 	lrri        $AC1.M, @$AR2
 	asr         $ACC1, #-5
 	mrr         $AX0.L, $AC1.L
 	mrr         $AX0.H, $AC1.M
 	lrri        $AC1.M, @$AR1
-	sr          @POSITIONAL_SAVED_AR1, $AR1
-	sr          @POSITIONAL_SAVED_AR2, $AR2
+	sr          @AUTOMIXER_SAVED_AR1, $AR1
+	sr          @AUTOMIXER_SAVED_AR2, $AR2
 	ilrri       $AC0.M, @$AR3
-	sr          @POSITIONAL_SAVED_AR3, $AR3
+	sr          @AUTOMIXER_SAVED_AR3, $AR3
 	mrr         $AR3, $AC0.M
 	lr          $AR0, @FILTERED_VOICE_POINTER
-	call        mix_buffer_with_gain_ramp
-	lr          $AR1, @POSITIONAL_SAVED_AR1
-	lr          $AR2, @POSITIONAL_SAVED_AR2
-	lr          $AR3, @POSITIONAL_SAVED_AR3
+	call        mix_send_with_gain_ramp
+	lr          $AR1, @AUTOMIXER_SAVED_AR1
+	lr          $AR2, @AUTOMIXER_SAVED_AR2
+	lr          $AR3, @AUTOMIXER_SAVED_AR3
 loc_0dbe:
 	nop
 	set16
@@ -3547,8 +3548,8 @@ scale_gain_delta_vector:
 
 
 
-; DATA: eight DRAM destination addresses for positional mixing.
-positional_destination_table:
+; DATA: eight DRAM destination addresses for automixing.
+automixer_destination_table:
 	cw BUS_FRONT_LEFT
 	cw BUS_FRONT_RIGHT
 	cw BUS_REAR_LEFT

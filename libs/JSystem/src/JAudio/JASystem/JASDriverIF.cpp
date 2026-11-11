@@ -16,7 +16,7 @@ namespace Driver {
 
 	void init()
 	{
-		DSPBuf::process(DSPBuf::DSPBUF_EVENTS_UNK0);
+		DSPBuf::process(DSPBuf::DSPBUF_EVENTS_INIT);
 		DSPInterface::initBuffer();
 		TDSPChannel::initAll();
 		ChGlobal::init();

@@ -54,8 +54,8 @@ namespace BNKParser {
 		/* 0x04 */ f32 mRate;
 		/* 0x08 */ TOffset<s16> mAdsTableOffset;
 		/* 0x0C */ TOffset<s16> mRelTableOffset;
-		/* 0x10 */ f32 mWidth;
-		/* 0x14 */ f32 mVertex;
+		/* 0x10 */ f32 mDepth;
+		/* 0x14 */ f32 mBias;
 	};
 	struct TPerc {
 		/* 0x000 */ u32 mMagic;

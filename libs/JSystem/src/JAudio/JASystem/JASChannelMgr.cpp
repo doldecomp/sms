@@ -1,4 +1,5 @@
 #include <JSystem/JAudio/JASystem/JASChannelMgr.hpp>
+#include <JSystem/JAudio/JASystem/JASDSPInterface.hpp>
 #include <JSystem/JAudio/JASystem/JASChGlobal.hpp>
 #include <JSystem/JAudio/JASystem/JASDSPChannel.hpp>
 #include <JSystem/JAudio/JASystem/JASChAllocQueue.hpp>
@@ -39,12 +40,20 @@ void TChannelMgr::init()
 	mIirCoeffs[0]  = 0x7FFF;
 	mFilterMode    = 0;
 
-	mMixConfig[0] = 0x150;
-	mMixConfig[1] = 0x210;
-	mMixConfig[2] = 0x352;
-	mMixConfig[3] = 0x412;
-	mMixConfig[4] = 0;
-	mMixConfig[5] = 0;
+	mMixConfig[0] = (DSPInterface::DSPBuffer::SEND_FRONT_LEFT << 8)
+	                | (TChannel::MixConfig::GAIN_INV_PAN << 4)
+	                | TChannel::MixConfig::GAIN_NONE;
+	mMixConfig[1] = (DSPInterface::DSPBuffer::SEND_FRONT_RIGHT << 8)
+	                | (TChannel::MixConfig::GAIN_PAN << 4)
+	                | TChannel::MixConfig::GAIN_NONE;
+	mMixConfig[2] = (DSPInterface::DSPBuffer::SEND_EFFECTS_0 << 8)
+	                | (TChannel::MixConfig::GAIN_INV_PAN << 4)
+	                | TChannel::MixConfig::GAIN_FXMIX;
+	mMixConfig[3] = (DSPInterface::DSPBuffer::SEND_EFFECTS_1 << 8)
+	                | (TChannel::MixConfig::GAIN_PAN << 4)
+	                | TChannel::MixConfig::GAIN_FXMIX;
+	mMixConfig[4] = DSPInterface::DSPBuffer::SEND_NONE;
+	mMixConfig[5] = DSPInterface::DSPBuffer::SEND_NONE;
 
 	mPriorityConfig = 0x20103;
 	mPriorityTime   = 600;

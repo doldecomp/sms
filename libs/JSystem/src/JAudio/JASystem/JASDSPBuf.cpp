@@ -33,15 +33,15 @@ void DSPBuf::updateDSP()
 	Kernel::probeFinish(3);
 }
 
-s16* DSPBuf::mixDSP(s32 param) { return process(DSPBUF_EVENTS_UNK2); }
+s16* DSPBuf::mixDSP(s32 param) { return process(DSPBUF_EVENTS_READ_FRAME); }
 
-void DSPBuf::finishDSPFrame() { process(DSPBUF_EVENTS_UNK1); }
+void DSPBuf::finishDSPFrame() { process(DSPBUF_EVENTS_START_FRAME); }
 
 s16* DSPBuf::process(DSPBUF_EVENTS event)
 {
 	u32 samples = Kernel::getFrameSamples();
 	switch (event) {
-	case DSPBUF_EVENTS_UNK0: {
+	case DSPBUF_EVENTS_INIT: {
 		write_buffer = 2;
 		read_buffer  = 0;
 		for (u32 i = 0; i < 3; ++i) {
@@ -54,7 +54,7 @@ s16* DSPBuf::process(DSPBUF_EVENTS event)
 		dspstatus = 0;
 		break;
 	}
-	case DSPBUF_EVENTS_UNK1: {
+	case DSPBUF_EVENTS_START_FRAME: {
 		u8 nextWriteBuf  = write_buffer + 1;
 		u32 frameSamples = Kernel::getFrameSamples();
 		if (nextWriteBuf == 3)
@@ -74,7 +74,7 @@ s16* DSPBuf::process(DSPBUF_EVENTS event)
 		}
 		break;
 	}
-	case DSPBUF_EVENTS_UNK2: {
+	case DSPBUF_EVENTS_READ_FRAME: {
 		u8 nextReadBuf   = read_buffer + 1;
 		u32 frameSamples = Kernel::getFrameSamples();
 		if (nextReadBuf == 3)

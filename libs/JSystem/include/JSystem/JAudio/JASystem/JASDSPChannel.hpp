@@ -2,8 +2,8 @@
 #define JASDSPCHANNEL_HPP
 
 #include <dolphin/types.h>
+#include <dolphin/os/OSTime.h>
 #include <stdint.h>
-#include <dolphin/types.h>
 
 namespace JASystem {
 
@@ -13,9 +13,26 @@ namespace DSPInterface {
 
 class TChannel;
 
+/**
+ * @brief Represents a single physical channel/voice of the DSP.
+ * Only 64 exist. Essentially, a wrapper around DSPInterface::DSPBuffer.
+ */
 class TDSPChannel {
 private:
 public:
+	enum Status {
+		STATUS_ALLOCATED = 0,
+		STATUS_FREE      = 1,
+		STATUS_STOPPING  = 2,
+	};
+
+	enum EventType {
+		EVENT_UPDATE           = 0,
+		EVENT_FINISHED         = 2,
+		EVENT_FORCE_STOP       = 3,
+		EVENT_PRIORITY_EXPIRED = 4,
+	};
+
 	TDSPChannel()
 	    : mDSPHandle(nullptr)
 	    , mCallback(nullptr)
@@ -23,7 +40,7 @@ public:
 	}
 	~TDSPChannel() { }
 
-	void init(u8 param);
+	void init(u8 number);
 	BOOL allocate(uintptr_t sign);
 	void free();
 	void play();
@@ -32,12 +49,12 @@ public:
 	void restart();
 	bool forceStop();
 	void forceDelete();
-	u32 getNumUse();
-	u32 getNumFree();
-	void setLimitDSP(f32 limit);
-	f32* getHistory();
+	static u32 getNumUse();
+	static u32 getNumFree();
+	static void setLimitDSP(f32 limit);
+	static OSTick* getHistory();
 
-	BOOL isFree() const { return mStatus == 1 ? TRUE : FALSE; }
+	BOOL isFree() const { return mStatus == STATUS_FREE ? TRUE : FALSE; }
 	BOOL checkSign(uintptr_t sign) { return mSign == sign ? TRUE : FALSE; }
 
 	u8 getNumber() { return mNumber; }
@@ -62,7 +79,7 @@ public:
 		}
 	}
 
-	void onUpdate(u32 param_1) { mCBInterval = mCallback(this, param_1); }
+	void onUpdate(u32 event) { mCBInterval = mCallback(this, event); }
 
 	static void initAll();
 	static void updateAll();
@@ -71,8 +88,8 @@ public:
 	static TDSPChannel* getHandle(u32 handle);
 	static JASystem::TDSPChannel* getLower();
 	static JASystem::TDSPChannel* getLowerActive();
-	static BOOL breakLower(u8 param);
-	static BOOL breakLowerActive(u8 param);
+	static BOOL breakLower(u8 priority);
+	static BOOL breakLowerActive(u8 priority);
 	static void forceStop(TDSPChannel* channel)
 	{
 		if (channel != nullptr)

@@ -1,4 +1,5 @@
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
+#include <JSystem/JAudio/JASystem/JASDSPInterface.hpp>
 #include <JSystem/JAudio/JASystem/JASPlayer_impl.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <JSystem/JAudio/JASystem/JASBankMgr.hpp>
@@ -334,7 +335,7 @@ void TTrack::oscSetupFull(u8 param_1, u32 param_2, u32 param_3)
 		mOscData[var1].mTarget = var2;
 		switch (var2) {
 		case 1:
-			mOscData[var1].mVertex = 1.0f;
+			mOscData[var1].mBias = 1.0f;
 			break;
 		}
 	}
@@ -372,22 +373,22 @@ void TTrack::oscUpdateParam(u8 param_id, f32 value)
 {
 	switch (param_id) {
 	case 6:
-		mOscData[0].mWidth = value;
+		mOscData[0].mDepth = value;
 		break;
 	case 7:
 		mOscData[0].mRate = value;
 		break;
 	case 8:
-		mOscData[0].mVertex = value;
+		mOscData[0].mBias = value;
 		break;
 	case 9:
-		mOscData[1].mWidth = value;
+		mOscData[1].mDepth = value;
 		break;
 	case 10:
 		mOscData[1].mRate = value;
 		break;
 	case 11:
-		mOscData[1].mVertex = value;
+		mOscData[1].mBias = value;
 		break;
 	}
 }
@@ -499,7 +500,8 @@ void TTrack::updateTrackAll()
 			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
 		}
 
-		mChannelUpdater.mFilterMode |= 0x20;
+		mChannelUpdater.mFilterMode
+		    |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
 		mChannelUpdater.mDistFilter
 		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
 	}
@@ -587,7 +589,8 @@ void TTrack::updateTrack(u32 update_flags)
 			mChannelUpdater.mIirCoeffs[i]
 			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
 
-		mChannelUpdater.mFilterMode |= 0x20;
+		mChannelUpdater.mFilterMode
+		    |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
 	}
 
 	if (mOuterParam && (update_flags & UPDATE_FirFilter)
@@ -595,7 +598,10 @@ void TTrack::updateTrack(u32 update_flags)
 		for (u8 i = 0; i < 8; ++i)
 			mChannelUpdater.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
 
-		mChannelUpdater.mFilterMode = (mChannelUpdater.mFilterMode & 0x20) + 8;
+		mChannelUpdater.mFilterMode
+		    = (mChannelUpdater.mFilterMode
+		       & DSPInterface::DSPBuffer::FILTER_IIR_ENABLED)
+		      + 8;
 	}
 
 	if (update_flags & UPDATE_Unk5) {
@@ -606,7 +612,7 @@ void TTrack::updateTrack(u32 update_flags)
 	for (int i = 0; i < 2; ++i) {
 		if (mOscMode[i] == 0xE) {
 			f32 off = mOscillators[i].getOffsetNoCount();
-			switch (mOscillators[i].getOsc()->mTarget) {
+			switch (mOscillators[i].getEffectorKind()) {
 			case 1:
 				curPitch *= off;
 				break;
@@ -775,28 +781,28 @@ s8 TTrack::mainProc()
 		if (param->mMoveTime > 0.0f) {
 			param->mCurrentValue += param->mMoveAmount;
 			param->mMoveTime -= 1.0f;
-			if (i <= TIMED_Unk5 || i >= TIMED_Osc1_Vertex) {
+			if (i <= TIMED_Unk5 || i >= TIMED_Osc1_Bias) {
 				r31 |= 1 << i;
 			} else {
 				f32 cur = param->mCurrentValue;
 				switch ((u8)i) {
-				case TIMED_Osc0_Width:
-					mOscData[0].mWidth = cur;
+				case TIMED_Osc0_Depth:
+					mOscData[0].mDepth = cur;
 					break;
 				case TIMED_Osc0_Rate:
 					mOscData[0].mRate = cur;
 					break;
-				case TIMED_Osc0_Vertex:
-					mOscData[0].mVertex = cur;
+				case TIMED_Osc0_Bias:
+					mOscData[0].mBias = cur;
 					break;
-				case TIMED_Osc1_Width:
-					mOscData[1].mWidth = cur;
+				case TIMED_Osc1_Depth:
+					mOscData[1].mDepth = cur;
 					break;
 				case TIMED_Osc1_Rate:
 					mOscData[1].mRate = cur;
 					break;
-				case TIMED_Osc1_Vertex:
-					mOscData[1].mVertex = cur;
+				case TIMED_Osc1_Bias:
+					mOscData[1].mBias = cur;
 					break;
 				}
 			}

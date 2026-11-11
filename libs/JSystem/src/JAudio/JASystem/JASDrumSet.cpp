@@ -24,8 +24,8 @@ bool TDrumSet::getParam(int key, int velocity, TInstParam* param_3) const
 	osc.mRate     = 1.0f;
 	osc.mAdsTable = nullptr;
 	osc.mRelTable = nullptr;
-	osc.mWidth    = 1.0f;
-	osc.mVertex   = 0.0f;
+	osc.mDepth    = 1.0f;
+	osc.mBias     = 0.0f;
 
 	static TOscillator::Osc_* oscp = &osc;
 
