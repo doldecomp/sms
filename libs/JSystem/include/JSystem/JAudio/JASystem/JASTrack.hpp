@@ -18,6 +18,16 @@ namespace Player {
 class TSeqCtrl;
 class TSeqParser;
 
+/**
+ * @brief An instance of a sequence interpreting VM that plays a track.
+ * The sequences are also known as BMS.
+ * @details The VM is actually very advanced and almost turing-complete, modulo
+ * having limited memory. It's best thought of as an emulator for an imaginary
+ * micro-controller. It has registers for storing state, "move params" which
+ * are values eased towards a target over time, two oscillators for generating
+ * waveforms, ports for communication with the game (triggering sounds via game
+ * events and vice-versa!), as well as a call stack of depth 8.
+ */
 class TTrack {
 public:
 	class TNoteMgr {
@@ -85,7 +95,7 @@ public:
 		u16 getSwitch();
 		void setIntFirFilter(s16, u8);
 
-	public:
+	private:
 		/* 0x00 */ u16 mEnabledParams;
 		/* 0x02 */ u16 mDirtyParams;
 		/* 0x04 */ f32 mVolume;
