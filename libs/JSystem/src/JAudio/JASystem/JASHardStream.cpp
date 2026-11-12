@@ -80,75 +80,79 @@ namespace HardStream {
 			return;
 		}
 		while (true) {
-			u16 introNum;
+			u16 introFileIndex;
 			switch (strCtrl.getState()) {
-			case 1:
-				if (!strCtrl.getList()) {
+			case TControl::STATE_START_REQUESTED:
+				if (!strCtrl.getList())
 					return;
-				}
-				introNum = strCtrl.getIntroNum();
-				if (introNum != 0xffff) {
-					if (!strCtrl.startFirst(introNum, finfo, &cur_finfo)) {
-						strCtrl.setState(0);
+
+				introFileIndex = strCtrl.getIntroNum();
+				if (introFileIndex != 0xffff) {
+					if (!strCtrl.startFirst(introFileIndex, finfo,
+					                        &cur_finfo)) {
+						strCtrl.setState(TControl::STATE_IDLE);
 						return;
 					}
-					strCtrl.setPlayArea(0);
+					strCtrl.setPlayArea(TControl::PHASE_INTRO_SELECTED);
 				} else {
 					if (!strCtrl.startFirst(strCtrl.getLoopNum(), finfo,
 					                        &cur_finfo)) {
-						strCtrl.setState(0);
+						strCtrl.setState(TControl::STATE_IDLE);
 						return;
 					}
 					strCtrl.clearListOne();
-					strCtrl.setPlayArea(1);
+					strCtrl.setPlayArea(TControl::PHASE_PAIR_CONSUMED);
 				}
-				strCtrl.setState(3);
+				strCtrl.setState(TControl::STATE_WAITING_FIRST_PREPARE);
 				return;
-			case 2:
-				if (strCtrl.getPlayArea() == 0) {
-					u16 loopNum = strCtrl.getLoopNum();
-					if (loopNum != 0xffff) {
-						if (!strCtrl.startSecond(loopNum, finfo, &cur_finfo)) {
-							strCtrl.setState(0);
+			case TControl::STATE_PREPARE_SECOND:
+				if (strCtrl.getPlayArea() == TControl::PHASE_INTRO_SELECTED) {
+					u16 loopFileIndex = strCtrl.getLoopNum();
+					if (loopFileIndex != 0xffff) {
+						if (!strCtrl.startSecond(loopFileIndex, finfo,
+						                         &cur_finfo)) {
+							strCtrl.setState(TControl::STATE_IDLE);
 							return;
 						}
 						strCtrl.clearListOne();
-						strCtrl.setPlayArea(1);
-						strCtrl.setState(4);
+						strCtrl.setPlayArea(TControl::PHASE_PAIR_CONSUMED);
+						strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 						return;
 					}
 				}
 				strCtrl.clearListOne();
 				if (!strCtrl.getList()) {
-					if (strCtrl.getPlayArea() == 0) {
+					if (strCtrl.getPlayArea()
+					    == TControl::PHASE_INTRO_SELECTED) {
 						DVDStopStreamAtEndAsync(&stop_cmd, 0);
-						strCtrl.setState(4);
-						strCtrl.setPlayArea(2);
+						strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
+						strCtrl.setPlayArea(TControl::PHASE_DRAINING);
 						return;
 					}
-					strCtrl.setPlayArea(3);
-					strCtrl.setState(4);
+					strCtrl.setPlayArea(TControl::PHASE_NO_NEXT_PAIR);
+					strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 					return;
 				}
-				introNum = strCtrl.getIntroNum();
-				if (introNum != 0xffff) {
-					if (!strCtrl.startSecond(introNum, finfo, &cur_finfo)) {
-						strCtrl.setState(0);
+				introFileIndex = strCtrl.getIntroNum();
+				if (introFileIndex != 0xffff) {
+					if (!strCtrl.startSecond(introFileIndex, finfo,
+					                         &cur_finfo)) {
+						strCtrl.setState(TControl::STATE_IDLE);
 						return;
 					}
-					strCtrl.setPlayArea(0);
+					strCtrl.setPlayArea(TControl::PHASE_INTRO_SELECTED);
 				} else {
 					if (!strCtrl.startSecond(strCtrl.getLoopNum(), finfo,
 					                         &cur_finfo)) {
-						strCtrl.setState(0);
+						strCtrl.setState(TControl::STATE_IDLE);
 						return;
 					}
 					strCtrl.clearListOne();
-					strCtrl.setPlayArea(1);
+					strCtrl.setPlayArea(TControl::PHASE_PAIR_CONSUMED);
 				}
-				strCtrl.setState(4);
+				strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 				return;
-			case 4: {
+			case TControl::STATE_POLL_PLAYBACK: {
 				u8 currentVol = strCtrl.getCurVol();
 				AISetStreamVolLeft(currentVol);
 				AISetStreamVolRight(currentVol);
@@ -158,65 +162,66 @@ namespace HardStream {
 				cur_addr_cmd %= 16;
 				return;
 			}
-			case 5: {
+			case TControl::STATE_ADVANCE_PLAYLIST: {
 				TPlayList* list = strCtrl.getList();
 				if (!list) {
-					if (strCtrl.getPlayArea() != 2) {
-						strCtrl.setPlayArea(3);
+					if (strCtrl.getPlayArea() != TControl::PHASE_DRAINING) {
+						strCtrl.setPlayArea(TControl::PHASE_NO_NEXT_PAIR);
 					}
-					strCtrl.setState(4);
+					strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 					return;
 				}
-				if (strCtrl.getPlayArea() == 0) {
+				if (strCtrl.getPlayArea() == TControl::PHASE_INTRO_SELECTED) {
 					if (list->getPair()->getLoop() == 0xffff) {
 						if (list->getNext() == nullptr) {
 							DVDStopStreamAtEndAsync(&stop_cmd, 0);
 							strCtrl.clearListOne();
-							strCtrl.setPlayArea(2);
+							strCtrl.setPlayArea(TControl::PHASE_DRAINING);
 						} else {
 							strCtrl.clearListOne();
-							strCtrl.setPlayArea(1);
+							strCtrl.setPlayArea(TControl::PHASE_PAIR_CONSUMED);
 							break;
 						}
 					} else {
 						if (!strCtrl.startSecond(strCtrl.getLoopNum(), finfo,
 						                         &cur_finfo)) {
-							strCtrl.setState(0);
+							strCtrl.setState(TControl::STATE_IDLE);
 							return;
 						}
 						strCtrl.clearListOne();
-						strCtrl.setPlayArea(1);
+						strCtrl.setPlayArea(TControl::PHASE_PAIR_CONSUMED);
 					}
 				} else if (!list) {
-					strCtrl.setPlayArea(3);
-					strCtrl.setState(4);
+					strCtrl.setPlayArea(TControl::PHASE_NO_NEXT_PAIR);
+					strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 				} else {
-					introNum = strCtrl.getIntroNum();
-					if (introNum == 0xffff) {
-						strCtrl.setPlayArea(0);
+					introFileIndex = strCtrl.getIntroNum();
+					if (introFileIndex == 0xffff) {
+						strCtrl.setPlayArea(TControl::PHASE_INTRO_SELECTED);
 						break;
 					}
-					if (!strCtrl.startSecond(introNum, finfo, &cur_finfo)) {
-						strCtrl.setState(0);
+					if (!strCtrl.startSecond(introFileIndex, finfo,
+					                         &cur_finfo)) {
+						strCtrl.setState(TControl::STATE_IDLE);
 						return;
 					}
-					strCtrl.setPlayArea(0);
+					strCtrl.setPlayArea(TControl::PHASE_INTRO_SELECTED);
 				}
-				strCtrl.setState(4);
+				strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 				return;
 			}
-			case 6:
+			case TControl::STATE_STOP_REQUESTED:
 				AISetStreamVolLeft(0);
 				AISetStreamVolRight(0);
 				AISetStreamPlayState(0);
 				DVDCancelStreamAsync(&finish_cmd, nullptr);
-				strCtrl.setState(0);
-				strCtrl.setPlayArea(0);
+				strCtrl.setState(TControl::STATE_IDLE);
+				strCtrl.setPlayArea(TControl::PHASE_INTRO_SELECTED);
 				strCtrl.resetFader();
 				strCtrl.setRestart(0);
 				return;
-			case 0:
-			case 3:
+			case TControl::STATE_IDLE:
+			case TControl::STATE_WAITING_FIRST_PREPARE:
 			default:
 				return;
 			}
@@ -234,98 +239,101 @@ namespace HardStream {
 			AISetStreamSampleRate(1);
 			AIResetStreamSampleCount();
 			AISetStreamPlayState(1);
-			strCtrl.setState(2);
+			strCtrl.setState(TControl::STATE_PREPARE_SECOND);
 		} else {
-			strCtrl.setState(4);
+			strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
 			strCtrl.setRestart(0);
 		}
 	}
 
-	static void secondBgmCallback(s32, DVDFileInfo*) { strCtrl.setState(4); }
+	static void secondBgmCallback(s32, DVDFileInfo*)
+	{
+		strCtrl.setState(TControl::STATE_POLL_PLAYBACK);
+	}
 
-	static void getAddrCallback(s32 param_1, DVDCommandBlock*)
+	static void getAddrCallback(s32 play_address, DVDCommandBlock*)
 	{
 		static BOOL last_frame = 0;
-		if (strCtrl.getPlayArea() == 3) {
-			if (param_1 == strCtrl.getLastAddrBefore()) {
+		if (strCtrl.getPlayArea() == TControl::PHASE_NO_NEXT_PAIR) {
+			if (play_address == strCtrl.getLastAddrBefore()) {
 				last_frame = true;
 			} else if (last_frame) {
 				last_frame = false;
-				strCtrl.setState(5);
+				strCtrl.setState(TControl::STATE_ADVANCE_PLAYLIST);
 			}
-		} else if (strCtrl.getPlayArea() == 2) {
-			if (param_1 == strCtrl.getLastAddrBefore() - 0x8000) {
+		} else if (strCtrl.getPlayArea() == TControl::PHASE_DRAINING) {
+			if (play_address == strCtrl.getLastAddrBefore() - 0x8000) {
 				last_frame = true;
 			} else if (last_frame) {
-				strCtrl.setState(6);
+				strCtrl.setState(TControl::STATE_STOP_REQUESTED);
 				unregistBgmAll();
 				last_frame = false;
 			}
 		} else {
-			if (param_1 == strCtrl.getLastAddr()) {
+			if (play_address == strCtrl.getLastAddr()) {
 				last_frame = true;
 			} else if (last_frame) {
 				last_frame = false;
-				strCtrl.setState(5);
+				strCtrl.setState(TControl::STATE_ADVANCE_PLAYLIST);
 			}
 		}
 	}
 
 	TControl::TControl()
 	{
-		unk0      = 0;
-		mList     = nullptr;
-		mRestart  = 0;
-		mPlayArea = 0;
-		mState    = 0;
-		unkC      = 1.0f;
-		unk10     = 0.0f;
-		unk14     = 0;
-		unk18     = 0;
-		unk1C     = 0;
-		unk20     = 0.0f;
-		unk24     = 0.0f;
-		unk2C     = 1.0f;
-		unk30     = 1.0f;
-		unk28     = 1.0f;
-		unk34     = 0.0f;
-		unk38     = 0;
-		unk3C     = 0;
-		unk40     = 0;
-		unk4C     = 0;
+		unk0                     = 0;
+		mPlaylistHead            = nullptr;
+		mRestart                 = 0;
+		mPlaybackPhase           = PHASE_INTRO_SELECTED;
+		mState                   = STATE_IDLE;
+		mMasterVolume            = 1.0f;
+		mOutputVolume            = 0.0f;
+		mFadeInDurationTicks     = 0;
+		mFadeOutDurationTicks    = 0;
+		mVolumeMoveDurationTicks = 0;
+		mFadeInStep              = 0.0f;
+		mFadeOutStep             = 0.0f;
+		mVolumeMoveCurrent       = 1.0f;
+		mVolumeMoveStart         = 1.0f;
+		mVolumeMoveTarget        = 1.0f;
+		mVolumeMoveStep          = 0.0f;
+		mFadeInElapsedTicks      = 0;
+		mFadeOutElapsedTicks     = 0;
+		mVolumeMoveElapsedTicks  = 0;
+		mNextBoundarySlot        = 0;
 	}
 
 	void TControl::setMasterVol(f32) { }
 
 	u16 TControl::getIntroNum()
 	{
-		if (!mList)
+		if (!mPlaylistHead)
 			return 0xffff;
 
-		if (mList->getPair() == NULL)
+		if (mPlaylistHead->getPair() == NULL)
 			return 0xffff;
 
-		return mList->getPair()->getIntro();
+		return mPlaylistHead->getPair()->getIntro();
 	}
 
 	u16 TControl::getLoopNum()
 	{
-		if (!mList)
+		if (!mPlaylistHead)
 			return 0xffff;
 
-		if (mList->getPair() == NULL)
+		if (mPlaylistHead->getPair() == NULL)
 			return 0xffff;
 
-		return mList->getPair()->getLoop();
+		return mPlaylistHead->getPair()->getLoop();
 	}
 
-	BOOL TControl::fileOpen(u16 param_1, DVDFileInfo* param_2)
+	BOOL TControl::fileOpen(u16 file_index, DVDFileInfo* file_info)
 	{
 		char buffer[64];
-		char* ptr = streamFiles + param_1 * 0x24;
+		char* ptr = streamFiles + file_index * 0x24;
 		strcpy(buffer, rootDir);
 		strcat(buffer, ptr);
-		if (!DVDOpen(buffer, param_2))
+		if (!DVDOpen(buffer, file_info))
 			return false;
 
 		return true;
@@ -333,156 +341,167 @@ namespace HardStream {
 
 	BOOL TControl::clearListOne()
 	{
-		if (mList == NULL)
+		if (mPlaylistHead == NULL)
 			return FALSE;
 
-		TPlayList* oldList = mList;
-		mList              = mList->getNext();
+		TPlayList* oldList = mPlaylistHead;
+		mPlaylistHead      = mPlaylistHead->getNext();
 		oldList->clear();
 		return TRUE;
 	}
 
-	void TControl::setLastAddr(DVDFileInfo* param_1)
+	void TControl::setLastAddr(DVDFileInfo* file_info)
 	{
-		unk44[unk4C] = param_1->startAddr + param_1->length - 0x8000;
-		unk4C ^= 1;
+		mLastBlockAddresses[mNextBoundarySlot]
+		    = file_info->startAddr + file_info->length - 0x8000;
+		mNextBoundarySlot ^= 1;
 	}
 
-	u32 TControl::getLastAddr() { return unk44[unk4C]; }
-
-	BOOL TControl::startFirst(u16 param_1, DVDFileInfo* param_2, u32* param_3)
+	u32 TControl::getLastAddr()
 	{
-		if (!fileOpen(param_1, param_2 + *param_3))
+		return mLastBlockAddresses[mNextBoundarySlot];
+	}
+
+	BOOL TControl::startFirst(u16 file_index, DVDFileInfo* file_infos,
+	                          u32* next_file_info_index)
+	{
+		if (!fileOpen(file_index, file_infos + *next_file_info_index))
 			return false;
 
-		setLastAddr(param_2 + *param_3);
-		DVDPrepareStreamAsync(param_2 + *param_3, 0, 0, firstBgmCallback);
-		param_3[0]++;
-		param_3[0] %= 3;
+		setLastAddr(file_infos + *next_file_info_index);
+		DVDPrepareStreamAsync(file_infos + *next_file_info_index, 0, 0,
+		                      firstBgmCallback);
+		next_file_info_index[0]++;
+		next_file_info_index[0] %= 3;
 		return true;
 	}
 
-	BOOL TControl::startSecond(u16 param_1, DVDFileInfo* param_2, u32* param_3)
+	BOOL TControl::startSecond(u16 file_index, DVDFileInfo* file_infos,
+	                           u32* next_file_info_index)
 	{
-		if (!fileOpen(param_1, param_2 + *param_3))
+		if (!fileOpen(file_index, file_infos + *next_file_info_index))
 			return false;
 
-		setLastAddr(param_2 + *param_3);
-		DVDPrepareStreamAsync(param_2 + *param_3, 0, 0, secondBgmCallback);
-		param_3[0]++;
-		param_3[0] %= 3;
+		setLastAddr(file_infos + *next_file_info_index);
+		DVDPrepareStreamAsync(file_infos + *next_file_info_index, 0, 0,
+		                      secondBgmCallback);
+		next_file_info_index[0]++;
+		next_file_info_index[0] %= 3;
 		return true;
 	}
 
 	void TControl::resetFader()
 	{
-		unk14 = 0;
-		unk20 = 0.0f;
-		unk38 = 0;
-		unk18 = 0;
-		unk24 = 0.0f;
-		unk3C = 0;
-		unk30 = 1.0f;
-		unk2C = 1.0f;
-		unk28 = 1.0f;
-		unk1C = 0;
-		unk40 = 0;
+		mFadeInDurationTicks     = 0;
+		mFadeInStep              = 0.0f;
+		mFadeInElapsedTicks      = 0;
+		mFadeOutDurationTicks    = 0;
+		mFadeOutStep             = 0.0f;
+		mFadeOutElapsedTicks     = 0;
+		mVolumeMoveStart         = 1.0f;
+		mVolumeMoveCurrent       = 1.0f;
+		mVolumeMoveTarget        = 1.0f;
+		mVolumeMoveDurationTicks = 0;
+		mVolumeMoveElapsedTicks  = 0;
 	}
 
 	u8 TControl::getCurVol()
 	{
 		calcCurVolume();
-		return volFloatToU8(unk10);
+		return volFloatToU8(mOutputVolume);
 	}
 
 	void TControl::calcCurVolume()
 	{
-		f32 f0 = 1.0f;
-		f32 f6 = 1.0f;
-		f32 f5 = 1.0f;
+		f32 outputVolume = 1.0f;
+		f32 fadeInGain   = 1.0f;
+		f32 fadeOutGain  = 1.0f;
 
-		if (unk14 != 0) {
-			if (unk38 == 0)
-				unk20 = 1.0f / (float)unk14;
+		if (mFadeInDurationTicks != 0) {
+			if (mFadeInElapsedTicks == 0)
+				mFadeInStep = 1.0f / (f32)mFadeInDurationTicks;
 
-			f32 thing = unk20 * (float)unk38;
+			f32 fadeInValue = mFadeInStep * (f32)mFadeInElapsedTicks;
 
-			f6 = thing;
-			if (thing >= 1.0f) {
-				unk14 = 0;
-				unk20 = 0.0f;
-				unk38 = 0;
-				f6    = 1.0f;
+			fadeInGain = fadeInValue;
+			if (fadeInValue >= 1.0f) {
+				mFadeInDurationTicks = 0;
+				mFadeInStep          = 0.0f;
+				mFadeInElapsedTicks  = 0;
+				fadeInGain           = 1.0f;
 			} else {
-				++unk38;
+				++mFadeInElapsedTicks;
 			}
 		}
 
-		if (unk18 != 0) {
-			if (unk3C == 0)
-				unk24 = 1.0f / (float)unk18;
+		if (mFadeOutDurationTicks != 0) {
+			if (mFadeOutElapsedTicks == 0)
+				mFadeOutStep = 1.0f / (f32)mFadeOutDurationTicks;
 
-			f32 thing = -(unk24 * (float)unk3C - 1.0f);
+			f32 fadeOutValue
+			    = -(mFadeOutStep * (f32)mFadeOutElapsedTicks - 1.0f);
 
-			f5 = thing;
-			if (thing <= 0.0f) {
-				f5 = 0.0f;
+			fadeOutGain = fadeOutValue;
+			if (fadeOutValue <= 0.0f) {
+				fadeOutGain = 0.0f;
 
-				unk14  = 0;
-				unk20  = 0.0f;
-				unk38  = 0;
-				unk18  = 0;
-				unk24  = 0.0f;
-				unk3C  = 0;
-				unk30  = 1.0f;
-				unk2C  = 1.0f;
-				unk28  = 1.0f;
-				unk1C  = 0;
-				unk40  = 0;
-				mState = 6;
+				mFadeInDurationTicks     = 0;
+				mFadeInStep              = 0.0f;
+				mFadeInElapsedTicks      = 0;
+				mFadeOutDurationTicks    = 0;
+				mFadeOutStep             = 0.0f;
+				mFadeOutElapsedTicks     = 0;
+				mVolumeMoveStart         = 1.0f;
+				mVolumeMoveCurrent       = 1.0f;
+				mVolumeMoveTarget        = 1.0f;
+				mVolumeMoveDurationTicks = 0;
+				mVolumeMoveElapsedTicks  = 0;
+				mState                   = STATE_STOP_REQUESTED;
 
 				unregistBgmAll();
 			} else {
-				++unk3C;
+				++mFadeOutElapsedTicks;
 			}
 		}
 
-		if (unk1C != 0) {
-			if (unk40 == 0)
-				unk34 = (unk28 - unk30) / (float)unk1C;
+		if (mVolumeMoveDurationTicks != 0) {
+			if (mVolumeMoveElapsedTicks == 0)
+				mVolumeMoveStep = (mVolumeMoveTarget - mVolumeMoveStart)
+				                  / (f32)mVolumeMoveDurationTicks;
 
-			f32 fVar2 = unk34 * (float)unk40 + unk30;
-			if (unk40 >= unk1C) {
-				fVar2 = unk28;
-				unk30 = fVar2;
-				unk28 = unk30;
-				unk1C = 0;
-				unk34 = 0.0f;
-				unk40 = 0;
+			f32 movedVolume = mVolumeMoveStep * (f32)mVolumeMoveElapsedTicks
+			                  + mVolumeMoveStart;
+			if (mVolumeMoveElapsedTicks >= mVolumeMoveDurationTicks) {
+				movedVolume              = mVolumeMoveTarget;
+				mVolumeMoveStart         = movedVolume;
+				mVolumeMoveTarget        = mVolumeMoveStart;
+				mVolumeMoveDurationTicks = 0;
+				mVolumeMoveStep          = 0.0f;
+				mVolumeMoveElapsedTicks  = 0;
 			} else {
-				++unk40;
+				++mVolumeMoveElapsedTicks;
 			}
-			unk2C = fVar2;
+			mVolumeMoveCurrent = movedVolume;
 		}
 
-		f0 *= unk2C * (f6 * f5);
-		f0 *= unkC;
-		unk10 = f0;
+		outputVolume *= mVolumeMoveCurrent * (fadeInGain * fadeOutGain);
+		outputVolume *= mMasterVolume;
+		mOutputVolume = outputVolume;
 	}
 
 	void TControl::extendFilename(char*, char*) { }
 
 	u32 TControl::msecToFrames(u32) { return 0; }
 
-	u8 TControl::volFloatToU8(f32 param_1)
+	u8 TControl::volFloatToU8(f32 volume)
 	{
-		if (param_1 > 1.0f)
-			param_1 = 1.0f;
+		if (volume > 1.0f)
+			volume = 1.0f;
 
-		if (param_1 < 0.0f)
-			param_1 = 0.0f;
+		if (volume < 0.0f)
+			volume = 0.0f;
 
-		return param_1 * 255.0f;
+		return volume * 255.0f;
 	}
 
 	THardStreamFile::THardStreamFile() { }
