@@ -3,16 +3,18 @@
 #include <JSystem/JAudio/JASystem/JASTrack.hpp>
 #include <JSystem/JAudio/JASystem/JASCalc.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <macros.h>
 
 namespace JASystem {
 
-struct FabricatedTrackListEntryStruct {
-	TTrack* unk0;
-	u32 unk4;
+// fabricated
+struct TrackRegistration {
+	TTrack* mTrack;
+	u32 mRegistrationId;
 };
 
 namespace TrackMgr {
-	static FabricatedTrackListEntryStruct sTrackList[32];
+	static TrackRegistration sTrackList[32];
 }
 
 TTrack* TrackMgr::sTrackPool             = 0;
@@ -26,27 +28,29 @@ u32 TrackMgr::seqRemain                  = 0;
 u32 TrackMgr::getP                       = 0;
 u32 TrackMgr::backP                      = 0;
 
-void TrackMgr::init(int param1, int param2)
+void TrackMgr::init(int track_capacity, int root_sequence_capacity)
 {
-	sTrackPool = new (JASDram, 0) TTrack[param1];
-	sSeqOuter  = new (JASDram, 0) TTrack::TOuterParam[param1];
+	sTrackPool = new (JASDram, 0) TTrack[track_capacity];
+	sSeqOuter  = new (JASDram, 0) TTrack::TOuterParam[track_capacity];
 
-	sFreeSeqpQueue = new (JASDram, 0) TTrack*[param1];
-	Calc::bzero(sFreeSeqpQueue, param2 * sizeof(TTrack*));
+	sFreeSeqpQueue = new (JASDram, 0) TTrack*[track_capacity];
 
-	sRootTrack = new (JASDram, 0) TTrack*[param2];
-	Calc::bzero(sRootTrack, param2 * sizeof(TTrack*));
+	// BUG: uses root capacity, which can under-clear or overrun this queue.
+	Calc::bzero(sFreeSeqpQueue, root_sequence_capacity * sizeof(TTrack*));
 
-	sTrackCount   = param1;
-	sRootSeqCount = param2;
+	sRootTrack = new (JASDram, 0) TTrack*[root_sequence_capacity];
+	Calc::bzero(sRootTrack, root_sequence_capacity * sizeof(TTrack*));
+
+	sTrackCount   = track_capacity;
+	sRootSeqCount = root_sequence_capacity;
 }
 
-TTrack* TrackMgr::handleToSeq(u32 idx)
+TTrack* TrackMgr::handleToSeq(u32 handle)
 {
-	if (idx >= sRootSeqCount)
+	if (handle >= sRootSeqCount)
 		return nullptr;
 
-	return sRootTrack[idx];
+	return sRootTrack[handle];
 }
 
 u32 TrackMgr::getTrackHandle(u32 param) { return 0; }
@@ -75,8 +79,8 @@ int TrackMgr::getRemainFreeTracks() { return seqRemain; }
 void TrackMgr::initRegistTrack()
 {
 	sTLists = 0;
-	for (int i = 0; i < 0x20; ++i)
-		sTrackList[i].unk0 = nullptr;
+	for (int i = 0; i < ARRAY_COUNT(sTrackList); ++i)
+		sTrackList[i].mTrack = nullptr;
 }
 
 TTrack* TrackMgr::getNewTrack()
@@ -117,39 +121,38 @@ u32 TrackMgr::deAllocRoot(TTrack* track)
 	return -1;
 }
 
-void TrackMgr::registTrack(u32 param, TTrack* track)
+void TrackMgr::registTrack(u32 id, TTrack* track)
 {
-	for (int i = 0; i < sTLists; ++i) {
-		if (param == sTrackList[i].unk4)
+	// BUG: checks IDs even in empty slots, blocking reuse of stale IDs.
+	for (int i = 0; i < sTLists; ++i)
+		if (id == sTrackList[i].mRegistrationId)
 			return;
-	}
 
-	u32 i;
-	if (sTLists == 32) {
-		for (i = 0; i < 32; ++i) {
-			if (sTrackList[i].unk0 == 0)
+	u32 index;
+	if (sTLists == ARRAY_COUNT(sTrackList)) {
+		for (index = 0; index < ARRAY_COUNT(sTrackList); ++index)
+			if (sTrackList[index].mTrack == 0)
 				break;
-		}
-		if (i == 32)
+
+		if (index == ARRAY_COUNT(sTrackList))
 			return;
 	} else {
-		i = sTLists;
+		index = sTLists;
 		++sTLists;
 	}
 
-	sTrackList[i].unk4 = param;
-	sTrackList[i].unk0 = track;
+	sTrackList[index].mRegistrationId = id;
+	sTrackList[index].mTrack          = track;
 }
 
 void TrackMgr::unRegistTrack(TTrack* track)
 {
-	for (int i = 0; i < sTLists; ++i) {
-		if (sTrackList[i].unk0 == track)
-			sTrackList[i].unk0 = nullptr;
-	}
+	for (int i = 0; i < sTLists; ++i)
+		if (sTrackList[i].mTrack == track)
+			sTrackList[i].mTrack = nullptr;
 
 	while (sTLists != 0) {
-		if (sTrackList[sTLists - 1].unk0 != 0)
+		if (sTrackList[sTLists - 1].mTrack != 0)
 			break;
 		--sTLists;
 	}

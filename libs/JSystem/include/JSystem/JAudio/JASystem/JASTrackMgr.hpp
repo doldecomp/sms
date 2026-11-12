@@ -11,21 +11,21 @@ namespace Kernel {
 }
 
 namespace TrackMgr {
-	void init(int, int);
+	void init(int track_capacity, int root_sequence_capacity);
 	void reset();
 	void initRegistTrack();
 	TTrack* getNewTrack();
-	u32 allocNewRoot(TTrack*);
-	u32 deAllocRoot(TTrack*);
-	void registTrack(u32, TTrack*);
-	void unRegistTrack(TTrack*);
-	bool backTrack(TTrack*);
+	u32 allocNewRoot(TTrack* track);
+	u32 deAllocRoot(TTrack* track);
+	void registTrack(u32 id, TTrack* track);
+	void unRegistTrack(TTrack* track);
+	bool backTrack(TTrack* track);
 	u32 getTrackHandle(u32);
-	TTrack* handleToSeq(u32);
+	TTrack* handleToSeq(u32 handle);
 	void setPause(Kernel::TPortArgs*);
 	void clearPause(Kernel::TPortArgs*);
 	int getRemainFreeTracks();
-	void registerTrackCallback(u16 (*)(TTrack*, u16));
+	void registerTrackCallback(u16 (*callback)(TTrack*, u16));
 
 	extern TTrack* sTrackPool;
 	extern TTrack::TOuterParam* sSeqOuter;
