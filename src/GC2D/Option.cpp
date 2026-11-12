@@ -97,7 +97,8 @@ const u32 cRumbleToggleItems[] = {
 	'sel0',
 };
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 const u32 cSubtitleToggleItems[] = {
 	'sel6',
 	'sel5',
@@ -148,7 +149,8 @@ const TOptionSoundUnit::FabricatedFlagInfo TOptionSoundUnit::cFlagInfos[] = {
 	{ TOptionSoundUnit::SOUND_TYPE_SURROUND, 2 },
 };
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSE01)                       \
+    && !defined(VERSION_D38J01)
 TArrowControl::TArrowControl(J2DScreen* screen, J2DPicture* picture)
     : mScreen(screen)
     , mPane(picture)
@@ -217,7 +219,7 @@ int TArrowControl::calcMoveX(int phase) const
 	return fVar1 * 8.0f * fVar1 + fVar2 * -8.0f * fVar2 + fVar1 * fVar2;
 }
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 TBalloonControl::TBalloonControl(int size)
     : unk4(size)
     , unk8(0)
@@ -405,7 +407,7 @@ TOptionRumbleUnit::TOptionRumbleUnit(J2DScreen* screen)
 	mParentPane   = new TExPane(mScreen, 'oya1');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 	unkC = new TBalloonControl(3);
 	unkC->add(new TExPane(mScreen, 'bub0'));
 	unkC->add(new TExPane(mScreen, 'bub1'));
@@ -589,7 +591,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 		unkC->stopAnm();
 #endif
 		mShouldRumble = false;
@@ -598,7 +600,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 		unkC->stopAnm();
 #endif
 		mShouldRumble = false;
@@ -608,7 +610,7 @@ void TOptionRumbleUnit::setState(TOptionRumbleUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 		unkC->setupAnm();
 		unkC->startAnm();
 #endif
@@ -627,7 +629,8 @@ void TOptionRumbleUnit::setInfluencedAlphaRecursive(J2DPane* pane,
 	}
 }
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 TOptionSubtitleUnit::TOptionSubtitleUnit(J2DScreen* screen)
     : mScreen(screen)
 {
@@ -910,7 +913,7 @@ TOptionSoundUnit::TOptionSoundUnit(J2DScreen* screen)
 	mParentPane   = new TExPane(mScreen, 'oya2');
 	mInitialAlpha = mParentPane->getPane()->getAlpha();
 
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 	unkC = new TBalloonControl(2);
 	unkC->add(new TExPane(mScreen, 'bub3'));
 	unkC->add(new TExPane(mScreen, 'bub4'));
@@ -1156,7 +1159,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(150);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
 		mSelectionBubble->stopAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 		unkC->stopAnm();
 #endif
 		stopSound();
@@ -1165,7 +1168,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 	case STATE_DEACTIVATING:
 		mParentPane->setPaneAlpha(30, 150, mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), true);
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 		unkC->stopAnm();
 #endif
 		break;
@@ -1174,7 +1177,7 @@ void TOptionSoundUnit::setState(TOptionSoundUnit::State state)
 		mParentPane->getPane()->setAlpha(mInitialAlpha);
 		setInfluencedAlphaRecursive(mParentPane->getPane(), false);
 		mSelectionBubble->startAnm();
-#ifdef VERSION_GMSJ01
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 		unkC->setupAnm();
 		unkC->startAnm();
 #endif
@@ -1290,7 +1293,8 @@ void TOptionControl::load()
 	textBoxB->setFont((JUTFont*)gpSystemFont);
 #endif
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSE01)                         \
+    || defined(VERSION_D38J01)
 	mBackArrow = new TArrowControl(mScreen->search('yaji'));
 #else
 	mBackArrow
@@ -1299,7 +1303,8 @@ void TOptionControl::load()
 
 	mRumbleOption = new TOptionRumbleUnit(mScreen);
 	mSoundOption  = new TOptionSoundUnit(mScreen);
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 	mSubtitleOption = new TOptionSubtitleUnit(mScreen);
 #endif
 #ifdef VERSION_GMSP01
@@ -1309,7 +1314,7 @@ void TOptionControl::load()
 	setType(SELECT_TYPE_RUMBLE_OPTION, true);
 	loadSetting();
 	mWasJumping = false;
-#ifndef VERSION_GMSJ01
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_D38J01)
 	mStickNeutral = true;
 #endif
 }
@@ -1341,7 +1346,8 @@ void TOptionControl::loadSetting()
 		break;
 	}
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 	switch (TFlagManager::getInstance()->getFlag(MSF_SUBTITLES)) {
 	case TOptionSubtitleUnit::SUBTITLE_TYPE_OFF:
 		mSubtitleOption->setValue(TOptionSubtitleUnit::SUBTITLE_TYPE_OFF);
@@ -1384,7 +1390,8 @@ void TOptionControl::movementCommon()
 	mBackArrow->update();
 	mRumbleOption->update();
 	mSoundOption->update();
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 	mSubtitleOption->update();
 #endif
 #ifdef VERSION_GMSP01
@@ -1400,7 +1407,8 @@ bool TOptionControl::movementCard2Option()
 	if (gpCameraOption->unk12 == 0) {
 		mRumbleOption->show();
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 		mScreen->search('txp2')->show();
 #endif
 #ifdef VERSION_GMSP01
@@ -1462,7 +1470,8 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_RUMBLE_OPTION:
 			mRumbleOption->activate();
 			mSoundOption->deactivate(initial_options_entry);
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 			mSubtitleOption->deactivate(initial_options_entry);
 #endif
 #ifdef VERSION_GMSP01
@@ -1473,7 +1482,8 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 		case SELECT_TYPE_SOUND_OPTION:
 			mRumbleOption->deactivate(initial_options_entry);
 			mSoundOption->activate();
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 			mSubtitleOption->deactivate(initial_options_entry);
 #endif
 #ifdef VERSION_GMSP01
@@ -1481,7 +1491,8 @@ void TOptionControl::setType(TOptionControl::SelectType type,
 #endif
 			break;
 
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 		case SELECT_TYPE_SUBTITLE_OPTION:
 			mSubtitleOption->activate();
 			mRumbleOption->deactivate(initial_options_entry);
@@ -1587,7 +1598,8 @@ void TOptionControl::toggleCurType()
 	case SELECT_TYPE_SOUND_OPTION:
 		mSoundOption->toggle();
 		break;
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 	case SELECT_TYPE_SUBTITLE_OPTION:
 		mSubtitleOption->toggle();
 		break;
@@ -1605,7 +1617,8 @@ void TOptionControl::checkInput()
 {
 	f32 fVar1
 	    = SMSGetMarDirector()->getGamePad()->getMainStickInDir(0.0f, 1.0f);
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_D38J01)
 	if (0.75f <= fVar1) {
 		setType(SELECT_TYPE_RUMBLE_OPTION, false);
 	} else if (fVar1 <= -0.75f) {
@@ -1733,7 +1746,8 @@ void TOptionControl::writeValue()
 	TFlagManager::getInstance()->setFlag(MSF_RUMBLE, mRumbleOption->getValue());
 	TFlagManager::getInstance()->setFlag(MSF_SOUND_MODE,
 	                                     mSoundOption->getValue());
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 	TFlagManager::getInstance()->setFlag(MSF_SUBTITLES,
 	                                     mSubtitleOption->getValue());
 #endif
@@ -1747,7 +1761,8 @@ bool TOptionControl::isChangedSetting() const
 {
 	bool result = true;
 
-#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_GMSJ01_01)                      \
+    || defined(VERSION_D38J01)
 	if (mInitialRumbleValue == mRumbleOption->getValue()
 	    && mInitialSoundValue == mSoundOption->getValue())
 		result = false;
@@ -1778,7 +1793,8 @@ void TOptionControl::resetChangedSetting()
 {
 	mInitialRumbleValue = mRumbleOption->getValue();
 	mInitialSoundValue  = mSoundOption->getValue();
-#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)
+#if !defined(VERSION_GMSJ01) && !defined(VERSION_GMSJ01_01)                    \
+    && !defined(VERSION_D38J01)
 	mInitialSubtitleValue = mSubtitleOption->getValue();
 #endif
 #ifdef VERSION_GMSP01

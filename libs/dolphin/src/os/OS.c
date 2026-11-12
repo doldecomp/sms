@@ -39,6 +39,9 @@ extern char _stack_addr[] AT_ADDRESS(0x8041ED48);
 #elif defined(VERSION_GMSP01_NX)
 extern unsigned char __ArenaLo[] AT_ADDRESS(0x8041E300);
 extern char _stack_addr[] AT_ADDRESS(0x8041C2F0);
+#elif defined(VERSION_D38J01)
+extern unsigned char __ArenaLo[] AT_ADDRESS(0x80424760);
+extern char _stack_addr[] AT_ADDRESS(0x80422748);
 #else
 #error "Unhandled ROM"
 #endif

@@ -35,6 +35,7 @@ VERSIONS = [
     "GMSE01",     # 2
     "GMSJ01_01",  # 3
     "GMSP01_NX",  # 4 (Switch 3D all stars version)
+    "D38J01",     # 5 (Gekkan Nintendo Tentou Demo 2002.9.1)
 ]
 
 parser = argparse.ArgumentParser()
@@ -327,6 +328,8 @@ cflags_dolphin = [
 
 config.linker_version = "GC/1.2.5"
 
+game_compiler = "GC/1.2.5n" if config.version == "D38J01" else "GC/1.2.5"
+
 
 # Some parts of the SDK were compiled with the 1.2.5n patch, some weren't
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
@@ -371,14 +374,14 @@ config.warn_missing_source = False
 config.precompiled_headers = [
     {
         "source": "SMS.pch",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": ["-lang=c++", *cflags_game_base],
     },
 ]
 config.libs = [
     {
         "lib": "main",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -387,7 +390,7 @@ config.libs = [
     },
     {
         "lib": "JSystem",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_jsystem,
         "progress_category": "jsystem",
         "objects": [
@@ -661,7 +664,6 @@ config.libs = [
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/string.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/strtoul.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/float.c"),
-            Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/uart_consolle_io.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/wchar_io.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_asin.c"),
             Object(Matching, "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_atan2.c"),
@@ -836,7 +838,7 @@ config.libs = [
     # with jsystem and game code
     {
         "lib": "THPPlayer",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": [*cflags_base, "-O4,p", "-inline auto", "-fp_contract on", "-str reuse,readonly", "-lang=c++", "-inline deferred"],
         "progress_category": "game",
         "objects": [
@@ -849,7 +851,7 @@ config.libs = [
     },
     {
         "lib": "MarioUtil",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -875,7 +877,7 @@ config.libs = [
     },
     {
         "lib": "M3DUtil",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -885,7 +887,7 @@ config.libs = [
             PCHObject(Matching, "M3DUtil/MActorAnm.cpp"),
             Object(NonMatching, "M3DUtil/MActorData.cpp"),
             PCHObject(NonMatching, "M3DUtil/SDLModel.cpp"),
-            Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01"), "M3DUtil/MActorUtil.cpp"),
+            Object(MatchingFor("GMSJ01", "GMSP01", "GMSE01", "GMSJ01_01", "D38J01"), "M3DUtil/MActorUtil.cpp"),
             PCHObject(NonMatching, "M3DUtil/SampleCtrlNode.cpp"),
             PCHObject(Matching, "M3DUtil/SampleCtrlModel.cpp"),
             Object(Matching, "M3DUtil/MotionBlendCtrl.cpp"),
@@ -894,7 +896,7 @@ config.libs = [
     },
     {
         "lib": "System",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -934,7 +936,7 @@ config.libs = [
             PCHObject(Matching, "System/THPRender.cpp"),
             PCHObject(NonMatching, "System/MarNameRefGen_BossEnemy.cpp"),
             PCHObject(NonMatching, "System/MarNameRefGen_Enemy.cpp"),
-            PCHObject(MatchingFor("GMSJ01", "GMSJ01_01"), "System/MarNameRefGen_Map.cpp"),
+            PCHObject(MatchingFor("GMSJ01", "GMSJ01_01", "D38J01"), "System/MarNameRefGen_Map.cpp"),
             PCHObject(MatchingFor("GMSJ01_01", "GMSE01", "GMSP01", "GMSP01_NX"), "System/MarNameRefGen_MapObj.cpp"),
             PCHObject(Matching, "System/MarNameRefGen_NPC.cpp"),
             PCHObject(NonMatching, "System/CardManager.cpp"),
@@ -948,7 +950,7 @@ config.libs = [
     },
     {
         "lib": "Strategic",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -970,7 +972,7 @@ config.libs = [
     },
     {
         "lib": "Player",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1008,7 +1010,7 @@ config.libs = [
     },
     {
         "lib": "NPC",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1040,7 +1042,7 @@ config.libs = [
     },
     {
         "lib": "MSound",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1057,7 +1059,7 @@ config.libs = [
     },
     {
         "lib": "MoveBG",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1084,7 +1086,7 @@ config.libs = [
             PCHObject(NonMatching, "MoveBG/MapObjPlane.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjCloud.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjBall.cpp"),
-            PCHObject(MatchingFor("GMSJ01"), "MoveBG/MapObjAirport.cpp"),
+            PCHObject(MatchingFor("GMSJ01", "D38J01"), "MoveBG/MapObjAirport.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjDolpic.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjPollution.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjGrass.cpp"),
@@ -1107,7 +1109,7 @@ config.libs = [
     },
     {
         "lib": "Map",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1153,11 +1155,11 @@ config.libs = [
     },
     {
         "lib": "GC2D",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
-            ObjectFor(["GMSJ01", "GMSJ01_01"], Object(MatchingFor("GMSJ01", "GMSJ01_01"), "GC2D/ChangeValue.cpp")),
+            ObjectFor(["GMSJ01", "GMSJ01_01", "D38J01"], Object(MatchingFor("GMSJ01", "GMSJ01_01", "D38J01"), "GC2D/ChangeValue.cpp")),
             Object(Matching, "GC2D/Coord2D.cpp"),
             Object(Matching, "GC2D/ExPane.cpp"),
             PCHObject(NonMatching, "GC2D/Menu.cpp"),
@@ -1168,7 +1170,7 @@ config.libs = [
             PCHObject(NonMatching, "GC2D/PauseMenu2.cpp"),
             Object(NonMatching, "GC2D/MessageLoader.cpp"),
             PCHObject(Matching, "GC2D/HelpActor.cpp"),
-            Object(MatchingFor("GMSJ01"), "GC2D/MessageUtil.cpp"),
+            Object(MatchingFor("GMSJ01", "D38J01"), "GC2D/MessageUtil.cpp"),
             PCHObject(NonMatching, "GC2D/CardSave.cpp"),
             PCHObject(NonMatching, "GC2D/CardLoad.cpp"),
             PCHObject(NonMatching, "GC2D/ConsoleStr.cpp"),
@@ -1189,7 +1191,7 @@ config.libs = [
     },
     {
         "lib": "Enemy",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1276,13 +1278,13 @@ config.libs = [
             PCHObject(NonMatching, "Enemy/DebuTelesa.cpp"),
             PCHObject(NonMatching, "Enemy/TabePuku.cpp"),
             PCHObject(NonMatching, "Enemy/BathtubBinder.cpp"),
-            ObjectFor(["GMSJ01", "GMSE01"], PCHObject(NonMatching, "Enemy/limitkoopa.cpp")),
+            ObjectFor(["GMSJ01", "GMSE01", "D38J01"], PCHObject(NonMatching, "Enemy/limitkoopa.cpp")),
             PCHObject(NonMatching, "Enemy/limitkoopajr.cpp"),
         ],
     },
     {
         "lib": "Camera",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [
@@ -1320,7 +1322,7 @@ config.libs = [
     },
     {
         "lib": "Animal",
-        "mw_version": "GC/1.2.5",
+        "mw_version": game_compiler,
         "cflags": cflags_game,
         "progress_category": "game",
         "objects": [

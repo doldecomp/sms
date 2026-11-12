@@ -69,23 +69,23 @@ public:
 	TMarioSoundValues();
 
 public:
-	/* 0x00 */ u32 unk00;
-	/* 0x04 */ int unk04;
-	/* 0x08 */ u32 unk08;
-	/* 0x0C */ int unk0C;
-	/* 0x10 */ int unk10;
-	/* 0x14 */ int unk14;
+	/* 0x00 */ u32 oldstatus;
+	/* 0x04 */ int mss_state;
+	/* 0x08 */ u32 lastStatus;
+	/* 0x0C */ int oldaction;
+	/* 0x10 */ int oldflag;
+	/* 0x14 */ int latesthitactor;
 	/* 0x18 */ u8 unk18;
-	/* 0x1C */ u32 unk1C;
-	/* 0x20 */ u8 unk20;
-	/* 0x22 */ u16 unk22;
-	/* 0x24 */ u8 unk24;
-	/* 0x26 */ u16 unk26;
-	/* 0x28 */ u8 unk28;
-	/* 0x29 */ u8 unk29;
-	/* 0x2A */ u8 unk2A;
-	/* 0x2B */ u8 unk2B;
-	/* 0x2C */ u8 unk2C;
+	/* 0x1C */ u32 jtimer;
+	/* 0x20 */ u8 callsound_delay;
+	/* 0x22 */ u16 spin_timer;
+	/* 0x24 */ u8 boundtimer;
+	/* 0x26 */ u16 timer;
+	/* 0x28 */ u8 lasthitactor;
+	/* 0x29 */ u8 lasthittimer;
+	/* 0x2A */ u8 oldrate;
+	/* 0x2B */ u8 pull_timer;
+	/* 0x2C */ u8 stimer;
 };
 
 class TMarioGamePad;
@@ -1826,7 +1826,9 @@ public:
 	/* 0x4EE */ s16 mWaterWakeAlpha;
 	/* 0x4F0 */ JGeometry::TVec3<f32> unk4F0;
 	/* 0x4FC */ TMarioGamePad* mGamePad;
+#ifndef VERSION_D38J01
 	/* 0x500 */ TMarioSoundValues mSoundValues;
+#endif
 	/* 0x530 */ s16* unk530;
 	/* 0x534 */ u8 unk534;
 	/* 0x535 */ u8 unk535;

@@ -21,12 +21,23 @@
 // rogue includes needed for matching sinit & bss
 #include <MSound/MSSetSound.hpp>
 #include <MSound/MSoundBGM.hpp>
+#ifdef VERSION_D38J01
+#include <System/EmitterViewObj.hpp>
+#include <JSystem/JParticle/JPAResourceManager.hpp>
+#include <JSystem/JParticle/JPAEmitterManager.hpp>
+#endif
 
 TMenuDirector::TMenuDirector()
     : unk18(0)
+#ifdef VERSION_D38J01
+    , mSetupDone(false)
+    , mScreen(nullptr)
+#else
     , unk1C(nullptr)
     , unk28(0)
+#endif
 {
+#ifndef VERSION_D38J01
 	f32 sync = SMSGetVSyncTimesPerSec();
 	unk30    = 0;
 	unk34    = sync;
@@ -36,12 +47,24 @@ TMenuDirector::TMenuDirector()
 	unk48    = 0;
 	unk4C    = 0;
 	unk50    = false;
+#endif
 }
 
 TMenuDirector::~TMenuDirector()
 {
+#ifdef VERSION_D38J01
+	SMSGetMSound()->stopAllSound();
+	mGamePad->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
+#else
 	unk2C->offFlag(TMarioGamePad::PAD_FLAG_MENU_INPUT);
-	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume("title");
+#endif
+	JKRMemArchive* arc = (JKRMemArchive*)JKRFileLoader::getVolume(
+#ifdef VERSION_D38J01
+	    "titleE3"
+#else
+	    "title"
+#endif
+	);
 	if (arc)
 		arc->unmountFixed();
 }
@@ -57,9 +80,16 @@ extern u8* gpSetupThreadStack;
 
 void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 {
-	unk14         = new JDrama::TDStageGroup(param_1);
+	unk14 = new JDrama::TDStageGroup(param_1);
+#ifdef VERSION_D38J01
+	mGamePad         = param_2;
+	mGamePad->mFlags = TMarioGamePad::PAD_FLAG_MENU_INPUT;
+	TFlagManager::getInstance()->firstStart();
+	TFlagManager::getInstance()->setFlag(MSF_LIFE_COUNT, 0);
+#else
 	unk2C         = param_2;
 	unk2C->mFlags = TMarioGamePad::PAD_FLAG_MENU_INPUT;
+#endif
 	OSCreateThread(&gSetupThread, &setupThreadFunc, this,
 	               gpSetupThreadStack + 0x10000, 0x10000, 0x11, 0);
 	OSResumeThread(&gSetupThread);
@@ -67,6 +97,46 @@ void TMenuDirector::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 
 int TMenuDirector::rsetup()
 {
+#ifdef VERSION_D38J01
+	void* arcBlob = SMSLoadArchive("/data/titleE3.arc", nullptr, 0, nullptr);
+	JKRMemArchive* arc = new JKRMemArchive;
+	arc->mountFixed(arcBlob, MBF_0);
+
+	JDrama::TViewObjPtrListT<JDrama::TViewObj>* rootViewObjs
+	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("root View Objs");
+	unk10 = rootViewObjs;
+	JDrama::TViewObjPtrListT<JDrama::TViewObj>* group2d
+	    = new JDrama::TViewObjPtrListT<JDrama::TViewObj>("Group 2D");
+	rootViewObjs->getChildren().push_back(group2d);
+
+	mScreen = new J2DSetScreen("e3_select_1.blo", arc);
+	if (!mScreen)
+		return 1;
+
+	mMenu = new TMenuBase(mScreen, mGamePad);
+	group2d->getChildren().push_back(mMenu);
+
+	JPAResourceManager* resources = new JPAResourceManager(1, 0x200, nullptr);
+	resources->load("/title/ms_2d_pause_sel.jpa", 0);
+	JPAEmitterManager* emitters
+	    = new JPAEmitterManager(resources, 0x400, 0x80, 0x100, nullptr);
+	mMenu->mEmitterManager = emitters;
+	group2d->getChildren().push_back(new TEmitterViewObj(emitters));
+
+	JDrama::TDStageDisp* stageDisp = new JDrama::TDStageDisp("<DStageDisp>");
+	unk14->getChildren().push_back(stageDisp);
+	JDrama::TRect rect(0, 0, SMSGetTitleRenderWidth(),
+	                   SMSGetTitleRenderHeight());
+	stageDisp->getEfbCtrlDisp()->TEfbCtrl::setSrcRect(rect);
+	JDrama::TOrthoProj* camera
+	    = new JDrama::TOrthoProj(-1.0f, 1.0f, 0.0f, 16.0f, 600.0f, 464.0f);
+	group2d->getChildren().push_back(camera);
+	JDrama::TScreen* screen = new JDrama::TScreen(rect, "Screen 2D");
+	stageDisp->getUnk14()->getChildren().push_back(screen);
+	screen->assignCamera(camera);
+	screen->assignViewObj(group2d);
+	return 0;
+#else
 	void* arcBlob      = SMSLoadArchive("/data/title.arc", nullptr, 0, nullptr);
 	JKRMemArchive* arc = new JKRMemArchive;
 	arc->mountFixed(arcBlob, MBF_0);
@@ -161,10 +231,86 @@ int TMenuDirector::rsetup()
 	unk40->show();
 
 	return 0;
+#endif
 }
 
 int TMenuDirector::direct()
 {
+#ifdef VERSION_D38J01
+	if (!mSetupDone) {
+		if (!OSIsThreadTerminated(&gSetupThread))
+			return 0;
+		void* res;
+		OSJoinThread(&gSetupThread, &res);
+		SMSGetApplication()->getFader()->setColor(JUtility::TColor(0x000000FF));
+		SMSGetApplication()->getFader()->startFadeinT(0.25f);
+		SMSGetMSound()->initSound();
+		MSBgm::startBGM(MSD_BGM_BOSSPAKU_DEMO);
+		mSetupDone = true;
+	}
+
+	u32 nextState = TApplication::APP_STATE_DEFAULT;
+	JDrama::TDirector::direct();
+	switch (unk18) {
+	case 0:
+		if (mMenu->unkCC) {
+			u8 stage;
+			u8 scenario;
+			u8 episode;
+			switch (mMenu->unkCE) {
+			default:
+				stage    = 2;
+				scenario = 1;
+				episode  = 1;
+				break;
+			case 2:
+				stage    = 0x37;
+				scenario = 0;
+				episode  = 1;
+				break;
+			case 3:
+				stage    = 3;
+				scenario = 0;
+				episode  = 0;
+				break;
+			case 4:
+				stage    = 4;
+				scenario = 1;
+				episode  = 1;
+				break;
+			case 5:
+				stage    = 4;
+				scenario = 2;
+				episode  = 2;
+				break;
+			case 6:
+				stage    = 0x2F;
+				scenario = 0;
+				episode  = 2;
+				break;
+			}
+			SMSGetApplication()->getFader()->setColor(
+			    JUtility::TColor(0xFFFFFFFF));
+			SMSGetApplication()->getFader()->startFadeoutT(1.0f);
+			SMSGetMSound()->fadeOutAllSound(SMSGetVSyncTimesPerSec());
+			SMSGetApplication()->setNextArea(TGameSequence(stage, scenario));
+			TFlagManager::getInstance()->setFlag(MSF_EPISODE, episode);
+			MSBgm::stopBGM(0xFFFFFFFF, 10);
+			unk18 = 2;
+		}
+		break;
+	case 2:
+		if (SMSGetApplication()->getFader()->isFullyFadedOut()
+		    && SMSGetMSound()->checkWaveOnAram(MS_WAVE_DEFAULT))
+			nextState = TApplication::APP_STATE_GAMEPLAY;
+		break;
+	case 3:
+		if (SMSGetApplication()->getFader()->isFullyFadedOut())
+			nextState = TApplication::APP_STATE_QUIT;
+		break;
+	}
+	return nextState;
+#else
 	if (!unk50) {
 		if (!OSIsThreadTerminated(&gSetupThread))
 			return 0;
@@ -347,8 +493,10 @@ int TMenuDirector::direct()
 	}
 
 	return uVar13;
+#endif
 }
 
+#ifndef VERSION_D38J01
 void TMenuDirector::setFixedStageValue()
 {
 	unk48 = unk40->mSelectedIndex;
@@ -454,3 +602,4 @@ void TMenuDirector::setFixedStageValue()
 		}
 	}
 }
+#endif

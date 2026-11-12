@@ -238,20 +238,31 @@ void MSBgm::setStageBgmYoshiPercussion(bool param)
 	}
 }
 
-JASystem::TTrack* MSBgm::getJASTrack(JAISound* sound, u8 param_2)
+JASystem::TTrack* MSBgm::getJASTrack(JAISound* sound, u8 track)
 {
 	JASystem::TTrack* pTVar3
 	    = JASystem::TrackMgr::handleToSeq(sound->getSeqParameter()->mSeqHandle);
 	if (!pTVar3)
 		return nullptr;
 
-	return pTVar3->getChild(param_2);
+	return pTVar3->getChild(track & 0xf);
 }
 
 void MSBgm::setSeqTrackMute(u8 param1, u8 param2, bool param3) { }
 
 void MSBgm::setSeqTRACKsMute(u8 param1, bool param2, u16 param3) { }
 
-void MSBgm::setSeqTRACKsMuteH(JAISound* param1, bool param2, u16 param3) { }
+void MSBgm::setSeqTRACKsMuteH(JAISound* sound, bool mute, u16 track_mask)
+{
+	if (sound != nullptr) {
+		for (u8 i = 0; i < 16; ++i) {
+			if ((track_mask >> i) & 1) {
+				JASystem::TTrack* track = getJASTrack(sound, i);
+				if (track != nullptr)
+					track->mMute = mute;
+			}
+		}
+	}
+}
 
 void MSBgm::setPause(u8 param1, bool param2) { }

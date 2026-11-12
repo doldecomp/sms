@@ -638,17 +638,24 @@ JAISound* MSoundSE::startSoundActorInner(u32 id, JAISoundHandle* out_handle,
 {
 	u32 uVar2 = MSound::getBstSwitch(id);
 	if (actor != (JAIActor*)0xffffffff) {
-		switch (MSGMSound->unkCD) {
+		u8 stage = MSGMSound->unkCD;
+		switch (stage) {
 		case 7:
-			if (!checkSoundArea(MSGMSound->unkCD, *actor->mTranslation)) {
+			if (!checkSoundArea(stage, *actor->mTranslation)) {
+#ifndef VERSION_D38J01
 				if (get_thing(id) != 1 && get_thing(id) != 0)
+#endif
 					return nullptr;
 			}
+#ifndef VERSION_D38J01
 			break;
+#endif
 
 		case 8:
-			if (!checkSoundArea(MSGMSound->unkCD, *actor->mTranslation)) {
+			if (!checkSoundArea(stage, *actor->mTranslation)) {
+#ifndef VERSION_D38J01
 				if (get_thing(id) != 1 && get_thing(id) != 0)
+#endif
 					return nullptr;
 			}
 
@@ -739,16 +746,17 @@ u32 MSoundSE::getNewIDByGroundCode(u32 id, JAIActor* actor)
 	if (ground & 0xf00)
 		return id;
 
+	u32 newID = id;
 	switch (id) {
 	case MSD_SE_MA_WALK_STONE_L_HEEL:
 	case MSD_SE_MA_WALK_STONE_L_TIP:
 	case MSD_SE_MA_WALK_STONE_R_HEEL:
 	case MSD_SE_MA_WALK_STONE_R_TIP:
-		id += ground << 3 & 0x7f8;
+		newID += ground << 3 & 0x7f8;
 		break;
 	}
 
-	return id;
+	return newID;
 }
 
 u32 MSoundSE::getNewIDBySurfaceCode(u32 id, JAIActor* actor)

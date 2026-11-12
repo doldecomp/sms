@@ -1,0 +1,51 @@
+name: mario
+object_base: orig/D38J01
+object: files/zz_marioTaiken5.tgc:sys/main.dol
+hash: 5d8bfbf7aa6a7d0dabd234d5f1e378efa90def46
+
+# Generated from the Sunshine payload's mario.MAP
+# map: orig/D38J01/sunshine/mario.MAP
+# common_start: 0x803FF24C
+symbols: config/D38J01/symbols.txt
+splits: config/D38J01/splits.txt
+
+mw_comment_version: 8
+symbols_known: true
+fill_gaps: false
+
+# MSoundBGMId constants (0x800100xx) that the tracker pairs into .text
+block_relocations:
+  - source: 0x800EBAEC
+  - source: 0x800EBAF0
+  - source: 0x800EBB34
+  - source: 0x800EBB38
+  - source: 0x8010ED3C
+  - source: 0x8010F078
+  - source: 0x8010F088
+  - source: 0x8010F0C8
+  - source: 0x8010F0D0
+  - source: 0x8010F1F4
+  - source: 0x8010F1F8
+  - source: 0x8010F20C
+  - source: 0x8010F210
+  - source: 0x8010F224
+  - source: 0x8010F234
+  - source: 0x8010F364
+  - source: 0x8010F36C
+  - source: 0x8022C68C
+  - source: 0x8022C690
+  - source: 0x80231958
+  - source: 0x80231960
+
+  # JUTDirectPrint font bitmap words that resemble code addresses
+  - source: 0x803A6F08
+  - source: 0x803A7028
+
+  # DSP filter coefficients, oscillator samples, and DSP microcode
+  - source: 0x803A9A20
+  - source: 0x803AA2C0
+  - source: 0x803ACCD8
+  - source: 0x803ACD58
+
+  # ModelWaterManager display-list bytes
+  - source: 0x803B60D0
