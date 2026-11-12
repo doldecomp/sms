@@ -183,7 +183,7 @@ namespace BankMgr {
 		result->mMixInputs[MIX_FXMIX].mInstrument = instParam.mFxmix;
 		result->mMixInputs[MIX_DOLBY].mInstrument = instParam.mDolby;
 
-		for (int i = 0; i < 2; ++i)
+		for (int i = MIX_PAN; i < MIX_DOLBY; ++i)
 			result->mMixInputs[i].mInstrument
 			    = clamp01(result->mMixInputs[i].mInstrument);
 

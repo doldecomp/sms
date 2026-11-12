@@ -54,7 +54,7 @@ public:
 	/* 0x5A */ u8 mMixerDelaySamples[6];
 	/* 0x60 */ u8 mMixerDelayMax;
 	/* 0x61 */ u8 mFilterMode;
-	/* 0x62 */ u8 mCalcTypes[3];
+	/* 0x62 */ u8 mCalcTypes[MIX_COUNT];
 	/* 0x68 */ u32 mPriorityConfig;
 	/* 0x6C */ u16 mPriorityTime;
 	/* 0x70 */ BOOL mMaintainPoolSize;

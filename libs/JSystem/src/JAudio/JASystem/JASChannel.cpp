@@ -891,7 +891,7 @@ void TChannel::updateEffectorParam()
 		mMixInputs[MIX_PAN].mChannelManager   = mManager->mPan;
 		mMixInputs[MIX_FXMIX].mChannelManager = mManager->mFxmix;
 		mMixInputs[MIX_DOLBY].mChannelManager = mManager->mDolby;
-		for (int i = 0; i < 3; i++)
+		for (int i = MIX_PAN; i < MIX_COUNT; i++)
 			mCalcTypes[i] = mManager->mCalcTypes[i];
 	}
 

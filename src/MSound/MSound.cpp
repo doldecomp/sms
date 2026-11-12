@@ -210,7 +210,9 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 	case 0: {
 		u16 uVar3 = JAIBasic::setParameterSeqSync(param_1, param_2);
 
-		param_1->setPauseStatus(74);
+		param_1->setPauseStatus(JASystem::TTrack::PAUSE_SEQUENCE
+		                        | JASystem::TTrack::PAUSE_CHANNELS
+		                        | JASystem::TTrack::MUTE_SKIP_NOTE_ON);
 		if (param_1->getParent()->getChild(15) == param_1)
 			param_1->mMute = 1;
 
@@ -222,27 +224,33 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 
 	case 30: {
 		u16 uVar3 = JAIBasic::setParameterSeqSync(param_1, 0);
-		param_1->setPanSwitchParent(1, 0);
-		param_1->setPanSwitchParent(1, 1);
-		param_1->setPanSwitchParent(1, 2);
+		param_1->setPanSwitchParent(JASystem::TTrack::MIX_MODE_SOURCE,
+		                            JASystem::MIX_PAN);
+		param_1->setPanSwitchParent(JASystem::TTrack::MIX_MODE_SOURCE,
+		                            JASystem::MIX_FXMIX);
+		param_1->setPanSwitchParent(JASystem::TTrack::MIX_MODE_SOURCE,
+		                            JASystem::MIX_DOLBY);
 		param_1->writeRegDirect(8, 0);
 		param_1->writeRegDirect(10, 0);
 		param_1->writeRegDirect(11, 0);
 		param_1->writeRegDirect(12, 0x7fff);
-		JASystem::TTrack* pTVar1 = param_1->getParent();
-		if (pTVar1 != nullptr) {
-			pTVar1->setPanSwitchExt(1, 0);
-			pTVar1->setPanSwitchExt(1, 1);
-			pTVar1->setPanSwitchExt(1, 2);
-			pTVar1->writeRegDirect(8, 0);
-			pTVar1->writeRegDirect(10, 0);
-			pTVar1->writeRegDirect(11, 0x7fff);
-			pTVar1->writeRegDirect(12, 0);
-			if (pTVar1->getOuterParam() != nullptr) {
-				pTVar1->getOuterParam()->onSwitch(JASystem::TTrack::UPDATE_PAN);
-				pTVar1->getOuterParam()->onSwitch(
+		JASystem::TTrack* parent = param_1->getParent();
+		if (parent != nullptr) {
+			parent->setPanSwitchExt(JASystem::TTrack::MIX_MODE_SOURCE,
+			                        JASystem::MIX_PAN);
+			parent->setPanSwitchExt(JASystem::TTrack::MIX_MODE_SOURCE,
+			                        JASystem::MIX_FXMIX);
+			parent->setPanSwitchExt(JASystem::TTrack::MIX_MODE_SOURCE,
+			                        JASystem::MIX_DOLBY);
+			parent->writeRegDirect(8, 0);
+			parent->writeRegDirect(10, 0);
+			parent->writeRegDirect(11, 0x7fff);
+			parent->writeRegDirect(12, 0);
+			if (parent->getOuterParam() != nullptr) {
+				parent->getOuterParam()->onSwitch(JASystem::TTrack::UPDATE_PAN);
+				parent->getOuterParam()->onSwitch(
 				    JASystem::TTrack::UPDATE_FXMIX);
-				pTVar1->getOuterParam()->onSwitch(
+				parent->getOuterParam()->onSwitch(
 				    JASystem::TTrack::UPDATE_DOLBY);
 			}
 		}

@@ -20,7 +20,7 @@ TRegisterParam::TRegisterParam()
 	mRegisters[REG_PAN_POWER_PARENT] = 0;
 
 	for (int i = 0; i < 4; ++i)
-		unk20[i] = 0;
+		mAddresses[i] = 0;
 }
 
 void TRegisterParam::init()
@@ -41,7 +41,7 @@ void TRegisterParam::init()
 	mRegisters[REG_PAN_POWER_PARENT] = 0x4000;
 
 	for (int i = 0; i < 4; ++i)
-		unk20[i] = 0;
+		mAddresses[i] = 0;
 }
 
 void TRegisterParam::inherit(const TRegisterParam& other)
@@ -61,7 +61,7 @@ void TRegisterParam::inherit(const TRegisterParam& other)
 		    = other.mRegisters[REG_PAN_POWER_BANK + i];
 
 	for (int i = 0; i < 4; ++i)
-		unk20[i] = 0;
+		mAddresses[i] = 0;
 }
 
 void TRegisterParam::setBankNumber(u8 bankNum) { }

@@ -26,19 +26,19 @@ public:
 
 	void call(u32 offset)
 	{
-		mLoopStartPositions[mLoopIndex++] = mCurrentFilePtr;
-		mCurrentFilePtr                   = mRawFilePtr + offset;
+		mStackPositions[mStackDepth++] = mCurrentFilePtr;
+		mCurrentFilePtr                = mRawFilePtr + offset;
 	}
 	bool ret()
 	{
-		mCurrentFilePtr = mLoopStartPositions[--mLoopIndex];
+		mCurrentFilePtr = mStackPositions[--mStackDepth];
 		return true;
 	}
 	void jump(u32 offset) { mCurrentFilePtr = mRawFilePtr + offset; }
 	void loopS(u32 timer)
 	{
-		mLoopStartPositions[mLoopIndex] = mCurrentFilePtr;
-		mLoopTimers[mLoopIndex++]       = timer;
+		mStackPositions[mStackDepth] = mCurrentFilePtr;
+		mLoopTimers[mStackDepth++]   = timer;
 	}
 
 	void wait(s32 timer) { mWaitTimer = timer; }
@@ -46,23 +46,23 @@ public:
 
 	u16 getLoopCount() const
 	{
-		if (mLoopIndex == 0)
+		if (mStackDepth == 0)
 			return 0;
-		return mLoopTimers[mLoopIndex - 1];
+		return mLoopTimers[mStackDepth - 1];
 	}
 
-	bool isIntr() const { return mPreviousFilePtr != 0 ? true : false; }
-	void clrIntr() { mPreviousFilePtr = 0; }
+	bool isIntr() const { return mInterruptReturnPtr != 0 ? true : false; }
+	void clrIntr() { mInterruptReturnPtr = 0; }
 
 public:
 	/* 0x00 */ u8* mRawFilePtr;
 	/* 0x04 */ u8* mCurrentFilePtr;
 	/* 0x08 */ int mWaitTimer;
-	/* 0x0C */ u32 mLoopIndex;
-	/* 0x10 */ u8* mLoopStartPositions[8];
+	/* 0x0C */ u32 mStackDepth;
+	/* 0x10 */ u8* mStackPositions[8];
 	/* 0x30 */ u16 mLoopTimers[8];
-	/* 0x40 */ int field_0x40;
-	/* 0x44 */ u8* mPreviousFilePtr;
+	/* 0x40 */ int mSavedWaitTimer;
+	/* 0x44 */ u8* mInterruptReturnPtr;
 };
 } // namespace JASystem
 

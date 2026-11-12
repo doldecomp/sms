@@ -10,6 +10,7 @@ enum MixParameter {
 	MIX_PAN   = 0,
 	MIX_FXMIX = 1,
 	MIX_DOLBY = 2,
+	MIX_COUNT,
 };
 
 class TDSPChannel;
@@ -207,9 +208,9 @@ public:
 	/* 0x4C */ f32 mInstrumentVolume;
 	/* 0x50 */ f32 mNotePitch;
 	/* 0x54 */ f32 mNoteVolume;
-	/* 0x58 */ u8 mCalcTypes[3];
+	/* 0x58 */ u8 mCalcTypes[MIX_COUNT];
 	/* 0x5C */ Driver::PanMatrix_ mSourceWeights;
-	/* 0x68 */ Driver::PanMatrix_ mMixInputs[3];
+	/* 0x68 */ Driver::PanMatrix_ mMixInputs[MIX_COUNT];
 	/* 0x8C */ f32 mOscPitch;
 	/* 0x90 */ f32 mOscVolume;
 	/* 0x94 */ f32 mPitchSweepTarget;

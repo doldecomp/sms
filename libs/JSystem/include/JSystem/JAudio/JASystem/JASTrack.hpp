@@ -22,6 +22,12 @@ class TTrack {
 public:
 	class TNoteMgr {
 	public:
+		enum ConnectFlag {
+			CONNECT_NONE      = 0,
+			CONNECT_TIE       = 1 << 0,
+			CONNECT_KEY_SWEEP = 1 << 1,
+		};
+
 		void init();
 		void endProcess();
 		TChannel* getChannel(int voice_slot);
@@ -39,8 +45,8 @@ public:
 		void setLastNote(u8 note) { mLastNote = note; }
 		u8 getLastNote() const { return mLastNote; }
 
-		void setConnectCase(u8 val) { mConnectCase = val; }
-		u8 getConnectCase() const { return mConnectCase; }
+		void setConnectCase(u8 val) { mConnectFlags = val; }
+		u8 getConnectCase() const { return mConnectFlags; }
 
 		void setBaseTime(u32 time) { mBaseTime = time; }
 		void setBeforeTieMode(bool mode) { mBeforeTieMode = mode; }
@@ -51,7 +57,7 @@ public:
 		/* 0x00 */ TChannel* mVoices[8];
 		/* 0x20 */ u16 mVoiceGenerations[8];
 		/* 0x30 */ int mBaseTime;
-		/* 0x34 */ u8 mConnectCase;
+		/* 0x34 */ u8 mConnectFlags;
 		/* 0x35 */ u8 mLastNote;
 		/* 0x36 */ u8 mBeforeTieMode;
 	};
@@ -108,7 +114,7 @@ public:
 		/* 0x0C */ f32 mStepPerTick;
 	};
 
-	enum TIMED_PARAM_TYPE {
+	enum TimedParamType {
 		TIMED_VOLUME              = 0,
 		TIMED_PITCH               = 1,
 		TIMED_FXMIX               = 2,
@@ -130,7 +136,32 @@ public:
 		TIMED_COUNT, // 18
 	};
 
-	enum TRACK_MODE {
+	enum ProcessResult {
+		TRACK_ACTIVE   = 0,
+		TRACK_FINISHED = -1,
+	};
+
+	enum OscRouteMode {
+		OSC_ROUTE_CHANNEL           = 0,
+		OSC_ROUTE_COPY_KEEP_RELEASE = 4,
+		OSC_ROUTE_COPY              = 8,
+		OSC_ROUTE_TRACK             = 0xE,
+		OSC_ROUTE_DISABLED          = 0xF,
+	};
+
+	enum VolumeMode {
+		VOLUME_SQUARED = 0,
+		VOLUME_LINEAR  = 1,
+	};
+
+	enum SeqState {
+		SEQ_INACTIVE     = 0,
+		SEQ_PLAYING      = 1,
+		SEQ_READY        = 2,
+		SEQ_STOP_PENDING = 3,
+	};
+
+	enum TrackMode {
 		TRACK_MODE_INHERIT            = 0,
 		TRACK_MODE_INDEPENDENT_PARAMS = 1 << 0,
 		TRACK_MODE_INIT_REGISTERS     = 1 << 1,
@@ -139,7 +170,24 @@ public:
 		TRACK_MODE_PARENT_CHANNELS = 4,
 	};
 
-	enum PARAM_UPDATE_FLAG {
+	enum MixMode {
+		MIX_MODE_LOCAL  = 0,
+		MIX_MODE_SOURCE = 1,
+		MIX_MODE_BLEND  = 2,
+	};
+
+	enum PauseMuteFlag {
+		PAUSE_MUTE_NONE    = 0,
+		PAUSE_SCALE_VOLUME = 1 << 0,
+		PAUSE_SEQUENCE     = 1 << 1,
+		PAUSE_STOP_NOTES   = 1 << 2,
+		PAUSE_CHANNELS     = 1 << 3,
+		PAUSE_SKIP_NOTE_ON = 1 << 4,
+		MUTE_STOP_NOTES    = 1 << 5,
+		MUTE_SKIP_NOTE_ON  = 1 << 6,
+	};
+
+	enum ParamUpdateFlag {
 		UPDATE_VOLUME      = 1 << TIMED_VOLUME,      // 0x00001
 		UPDATE_PITCH       = 1 << TIMED_PITCH,       // 0x00002
 		UPDATE_FXMIX       = 1 << TIMED_FXMIX,       // 0x00004
@@ -193,7 +241,7 @@ public:
 	void reset();
 	void initTrack(void* data, u32 seq_offset, TTrack* parent);
 	void initTimed();
-	TTrack* openTrack(u8 param);
+	TTrack* openTrack(u8 index);
 	bool closeTrack();
 	int startTrack(TTrack* parent, u8 child_index, u8 track_mode,
 	               u32 seq_offset);
@@ -225,8 +273,8 @@ public:
 	void setInnerMemory(u8 param);
 	void setBankNumber(u8 bank);
 	bool assignExtBuffer(TOuterParam* buffer);
-	void setPanSwitchExt(u8 param1, u8 param2);
-	void setPanSwitchParent(u8 param1, u8 param2);
+	void setPanSwitchExt(u8 mix_mode, u8 mix_param);
+	void setPanSwitchParent(u8 mix_mode, u8 mix_param);
 	void setTrackExtPanPower(f32 power);
 	void setExtFirFilterD(s16* filter);
 	TTrack* routeTrack(u32 route);
@@ -236,21 +284,23 @@ public:
 	bool readPortAppDirect(u32 port, u16* value);
 	void checkExportApp(u32 port);
 	void checkImportApp(u32 port);
-	int loadTbl(u32 param1, u32 param2, u32 param3);
+	int loadTbl(u32 table_offset, u32 index_or_offset, u32 mode);
 	u32 readReg32(u8 reg);
 	u32 exchangeRegisterValue(u8 reg);
 	u16 readRegDirect(u8 reg);
 	void writeRegDirect(u8 reg, u16 value);
 	void writeTimeParam(u8 opcode_params);
 	void writeRegParam(u8 opcode_params);
-	int seqTimeToDspTime(s32 time, u8 param);
-	f32 panCalc(f32 param1, f32 param2, f32 param3, u8 param4);
+	int seqTimeToDspTime(s32 time, u8 gate_percent);
+	f32 panCalc(f32 local_value, f32 source_value, f32 source_weight,
+	            u8 mix_mode);
 	static s32 rootCallback(void* param);
 	void updateSyncSw(u8 param);
 	void incSelfOsc();
-	void oscSetupSimple(u8 param);
-	void oscSetupSimpleEnv(u8 param, u32 env);
-	void oscSetupFull(u8 param1, u32 param2, u32 param3);
+	void oscSetupSimple(u8 preset);
+	void oscSetupSimpleEnv(u8 table, u32 table_offset);
+	void oscSetupFull(u8 flags, u32 attack_table_offset,
+	                  u32 release_table_offset);
 	void oscUpdateParam(u8 param_id, f32 value);
 
 	u8 getBank() const;
@@ -272,7 +322,7 @@ public:
 	TTrack* getParent() { return mParent; }
 	TTrack* getChild(int index) { return mChildren[index]; }
 	TOuterParam* getOuterParam() { return mOuterParam; }
-	TSeqCtrl* getSeq() { return &mSeqCtrl; }
+	TSeqCtrl& getSeq() { return mSeqCtrl; }
 
 	u8 checkImport(int i) const { return mTrackPort.checkImport(i); }
 	u8 checkExport(int i) const { return mTrackPort.checkExport(i); }
@@ -343,8 +393,8 @@ public:
 	/* 0x3C3 */ u8 mVolumeMode;
 
 	/* 0x3C4 */ u8 mSeqState;
-	/* 0x3C5 */ u8 mExternalMixModes[3];
-	/* 0x3C8 */ u8 mParentMixModes[3];
+	/* 0x3C5 */ u8 mExternalMixModes[MIX_COUNT];
+	/* 0x3C8 */ u8 mParentMixModes[MIX_COUNT];
 
 	/* 0x3CB */ u8 mTimeRelate;
 	/* 0x3CC */ u8 mRegistered;

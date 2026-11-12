@@ -7,7 +7,7 @@ namespace JASystem {
 void TTrack::TNoteMgr::init()
 {
 	mBaseTime      = 0;
-	mConnectCase   = 0;
+	mConnectFlags  = CONNECT_NONE;
 	mLastNote      = 0;
 	mBeforeTieMode = 0;
 	for (int i = 0; i < 8; i++) {
@@ -21,7 +21,7 @@ void TTrack::TNoteMgr::endProcess()
 	if (mBaseTime == 0xffffffff)
 		return;
 
-	if (mConnectCase != 0)
+	if (mConnectFlags != CONNECT_NONE)
 		return;
 
 	mVoices[0] = nullptr;

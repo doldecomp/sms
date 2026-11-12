@@ -8,6 +8,14 @@ namespace JASystem {
 
 class TRegisterParam {
 public:
+	enum PanPowerSource {
+		PAN_POWER_BANK   = 0,
+		PAN_POWER_OSC    = 1,
+		PAN_POWER_TRACK  = 2,
+		PAN_POWER_EXT    = 3,
+		PAN_POWER_PARENT = 4,
+	};
+
 	enum RegisterId {
 		REG_U8_0              = 0x00,
 		REG_U8_1              = 0x01,
@@ -70,19 +78,19 @@ public:
 	{
 		JUT_ASSERT(i >= 0);
 		JUT_ASSERT(i < 4);
-		return unk20[i];
+		return mAddresses[i];
 	}
 	void setAddress(int i, u32 value)
 	{
 		JUT_ASSERT(i >= 0);
 		JUT_ASSERT(i < 4);
-		unk20[i] = value;
+		mAddresses[i] = value;
 	}
 
 public:
 	/* 0x00 */ u16 mRegisters[14];
 	/* 0x1C */ int unk1C;
-	/* 0x20 */ int unk20[4];
+	/* 0x20 */ int mAddresses[4];
 };
 
 } // namespace JASystem

@@ -15,6 +15,37 @@
 
 namespace JASystem {
 
+enum OscSetupFlag {
+	OSC_SETUP_TARGET_MASK     = 0x0F,
+	OSC_SETUP_OSCILLATOR_MASK = 0x10,
+	OSC_SETUP_RELEASE_TABLE   = 0x20,
+	OSC_SETUP_ATTACK_TABLE    = 0x40,
+	OSC_SETUP_RESET           = 0x80,
+};
+
+enum OscEnvTable {
+	OSC_ENV_ATTACK  = 0,
+	OSC_ENV_RELEASE = 1,
+};
+
+enum OscPreset {
+	OSC_PRESET_VIBRATO1 = 0,
+	OSC_PRESET_TREMOLO0 = 1,
+	OSC_PRESET_TREMOLO1 = 2,
+};
+
+enum RegisterValueSource {
+	VALUE_NEGATIVE_ONE = 0x10,
+};
+
+enum TableLoadMode {
+	TABLE_LOAD_U8              = 4,
+	TABLE_LOAD_U16             = 5,
+	TABLE_LOAD_U24             = 6,
+	TABLE_LOAD_U32             = 7,
+	TABLE_LOAD_U32_BYTE_OFFSET = 8,
+};
+
 namespace Player {
 	static JMath::TRandom_enough_ oRandom(0);
 }
@@ -49,10 +80,10 @@ TTrack::TTrack()
 	mFromTrackPool      = 0;
 	mTranspose          = 0;
 	mEffectiveTranspose = 0;
-	mPauseMuteFlags     = 0;
+	mPauseMuteFlags     = PAUSE_MUTE_NONE;
 	mMute               = 0;
-	mVolumeMode         = 0;
-	mSeqState           = 0;
+	mVolumeMode         = VOLUME_SQUARED;
+	mSeqState           = SEQ_INACTIVE;
 
 	mTimeRelate = 0;
 	mRegistered = 0;
@@ -61,8 +92,8 @@ TTrack::TTrack()
 	for (int i = 0; i < 16; ++i)
 		mChildren[i] = nullptr;
 
-	for (int i = 0; i < 3; ++i)
-		mParentMixModes[i] = mExternalMixModes[i] = 0;
+	for (int i = MIX_PAN; i < MIX_COUNT; ++i)
+		mParentMixModes[i] = mExternalMixModes[i] = MIX_MODE_LOCAL;
 
 	for (int i = 0; i < 12; ++i)
 		mAdsTable[i] = Player::sAdsTable[i];
@@ -70,7 +101,7 @@ TTrack::TTrack()
 		mRelTable[i] = Player::sRelTable[i];
 
 	for (int i = 0; i < 2; ++i)
-		mOscMode[i] = 0xf;
+		mOscMode[i] = OSC_ROUTE_DISABLED;
 
 	mChannelMgr.init();
 
@@ -106,14 +137,14 @@ bool TTrack::assignExtBuffer(TOuterParam* buffer)
 
 void TTrack::setInnerMemory(u8 param) { mFromTrackPool = param; }
 
-void TTrack::setPanSwitchExt(u8 param1, u8 param2)
+void TTrack::setPanSwitchExt(u8 mix_mode, u8 mix_param)
 {
-	mExternalMixModes[param2] = param1;
+	mExternalMixModes[mix_param] = mix_mode;
 }
 
-void TTrack::setPanSwitchParent(u8 param1, u8 param2)
+void TTrack::setPanSwitchParent(u8 mix_mode, u8 mix_param)
 {
-	mParentMixModes[param2] = param1;
+	mParentMixModes[mix_param] = mix_mode;
 }
 
 u8 TTrack::getBank() const { return mRegisterParam.getBankNumber(); }
@@ -163,34 +194,34 @@ void TTrack::flushAll()
 
 void TTrack::initTimed()
 {
-	for (u8 i = 0; i < 18; i++) {
+	for (u8 i = 0; i < TIMED_COUNT; i++) {
 		mTimedParam.mMoveParams[i].mTicksRemaining = 0.0f;
 		mTimedParam.mMoveParams[i].mCurrentValue   = 1.0f;
 		mTimedParam.mMoveParams[i].mTargetValue    = 1.0f;
 	}
-	mTimedParam.mMoveParams[1].mCurrentValue  = 0.0f;
-	mTimedParam.mMoveParams[1].mTargetValue   = 0.0f;
-	mTimedParam.mMoveParams[3].mCurrentValue  = 0.5f;
-	mTimedParam.mMoveParams[3].mTargetValue   = 0.5f;
-	mTimedParam.mMoveParams[16].mCurrentValue = 0.5f;
-	mTimedParam.mMoveParams[16].mTargetValue  = 0.5f;
-	mTimedParam.mMoveParams[17].mCurrentValue = 0.0f;
-	mTimedParam.mMoveParams[17].mTargetValue  = 0.0f;
-	mTimedParam.mMoveParams[2].mCurrentValue  = 0.0f;
-	mTimedParam.mMoveParams[2].mTargetValue   = 0.0f;
-	mTimedParam.mMoveParams[4].mCurrentValue  = 0.0f;
-	mTimedParam.mMoveParams[4].mTargetValue   = 0.0f;
+	mTimedParam.mMoveParams[TIMED_PITCH].mCurrentValue               = 0.0f;
+	mTimedParam.mMoveParams[TIMED_PITCH].mTargetValue                = 0.0f;
+	mTimedParam.mMoveParams[TIMED_PAN].mCurrentValue                 = 0.5f;
+	mTimedParam.mMoveParams[TIMED_PAN].mTargetValue                  = 0.5f;
+	mTimedParam.mMoveParams[TIMED_PAUSE_VOLUME].mCurrentValue        = 0.5f;
+	mTimedParam.mMoveParams[TIMED_PAUSE_VOLUME].mTargetValue         = 0.5f;
+	mTimedParam.mMoveParams[TIMED_MIXER_DELAY_BALANCE].mCurrentValue = 0.0f;
+	mTimedParam.mMoveParams[TIMED_MIXER_DELAY_BALANCE].mTargetValue  = 0.0f;
+	mTimedParam.mMoveParams[TIMED_FXMIX].mCurrentValue               = 0.0f;
+	mTimedParam.mMoveParams[TIMED_FXMIX].mTargetValue                = 0.0f;
+	mTimedParam.mMoveParams[TIMED_DOLBY].mCurrentValue               = 0.0f;
+	mTimedParam.mMoveParams[TIMED_DOLBY].mTargetValue                = 0.0f;
 	for (u8 i = 1; i < 4; i++) {
-		mTimedParam.mMoveParams[i + 12].mCurrentValue = 0.0f;
-		mTimedParam.mMoveParams[i + 12].mTargetValue  = 0.0f;
+		mTimedParam.mMoveParams[i + TIMED_IIR0].mCurrentValue = 0.0f;
+		mTimedParam.mMoveParams[i + TIMED_IIR0].mTargetValue  = 0.0f;
 	}
-	mTimedParam.mMoveParams[5].mCurrentValue = 0.0f;
-	mTimedParam.mMoveParams[5].mTargetValue  = 0.0f;
+	mTimedParam.mMoveParams[TIMED_DIST_FILTER].mCurrentValue = 0.0f;
+	mTimedParam.mMoveParams[TIMED_DIST_FILTER].mTargetValue  = 0.0f;
 }
 
 int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 {
-	if (mMute && (mPauseMuteFlags & 0x40))
+	if (mMute && (mPauseMuteFlags & MUTE_SKIP_NOTE_ON))
 		return -1;
 
 	u32 voiceSlot = voice_slot;
@@ -259,13 +290,13 @@ int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 
 	for (u8 i = 0; i < 2; ++i) {
 		u32 oscMode = mOscMode[i];
-		if (oscMode != 0xF && oscMode != 0xE) {
-			if (oscMode >= 8) {
-				oscMode -= 8;
+		if (oscMode != OSC_ROUTE_DISABLED && oscMode != OSC_ROUTE_TRACK) {
+			if (oscMode >= OSC_ROUTE_COPY) {
+				oscMode -= OSC_ROUTE_COPY;
 				if (chan->isOsc(oscMode))
 					chan->copyOsc(oscMode, &mOscData[i]);
-			} else if (oscMode >= 4) {
-				oscMode -= 4;
+			} else if (oscMode >= OSC_ROUTE_COPY_KEEP_RELEASE) {
+				oscMode -= OSC_ROUTE_COPY_KEEP_RELEASE;
 				s16* v = mOscData[i].mRelTable;
 				if (chan->isOsc(oscMode)) {
 					chan->copyOsc(oscMode, &mOscData[i]);
@@ -321,49 +352,52 @@ bool TTrack::checkNoteStop(s32 voice_slot)
 	return false;
 }
 
-void TTrack::oscSetupFull(u8 param_1, u32 param_2, u32 param_3)
+void TTrack::oscSetupFull(u8 flags, u32 attack_table_offset,
+                          u32 release_table_offset)
 {
-	u32 var1  = (param_1 & 0x10) >> 4;
-	int var2  = param_1 & 0x0f;
-	bool var3 = param_1 & 0x80 ? true : false;
-	bool var4 = param_1 & 0x40 ? true : false;
-	bool var5 = param_1 & 0x20 ? true : false;
+	u32 oscillatorIndex  = (flags & OSC_SETUP_OSCILLATOR_MASK) >> 4;
+	int effectTarget     = flags & OSC_SETUP_TARGET_MASK;
+	bool resetDefinition = flags & OSC_SETUP_RESET ? true : false;
+	bool setAttackTable  = flags & OSC_SETUP_ATTACK_TABLE ? true : false;
+	bool setReleaseTable = flags & OSC_SETUP_RELEASE_TABLE ? true : false;
 
-	if (var3) {
-		mOscData[var1]         = Player::sEnvelopeDef;
-		mOscData[var1].mTarget = var2;
-		switch (var2) {
+	if (resetDefinition) {
+		mOscData[oscillatorIndex]         = Player::sEnvelopeDef;
+		mOscData[oscillatorIndex].mTarget = effectTarget;
+		switch (effectTarget) {
 		case EFFECT_PITCH:
-			mOscData[var1].mBias = 1.0f;
+			mOscData[oscillatorIndex].mBias = 1.0f;
 			break;
 		}
 	}
 
-	if (var4) {
-		if (param_2 == 0)
-			mOscData[var1].mAdsTable = nullptr;
+	if (setAttackTable) {
+		if (attack_table_offset == 0)
+			mOscData[oscillatorIndex].mAdsTable = nullptr;
 
-		mOscData[var1].mAdsTable = (s16*)(mSeqCtrl.getBase() + param_2);
+		mOscData[oscillatorIndex].mAdsTable
+		    = (s16*)(mSeqCtrl.getBase() + attack_table_offset);
 	}
 
-	if (!var5)
+	if (!setReleaseTable)
 		return;
 
-	if (param_3 == 0)
-		mOscData[var1].mRelTable = Player::sRelTable;
+	if (release_table_offset == 0)
+		mOscData[oscillatorIndex].mRelTable = Player::sRelTable;
 
-	mOscData[var1].mRelTable = (s16*)(mSeqCtrl.getBase() + param_3);
+	mOscData[oscillatorIndex].mRelTable
+	    = (s16*)(mSeqCtrl.getBase() + release_table_offset);
 }
 
-void TTrack::oscSetupSimpleEnv(u8 param_1, u32 param_2)
+void TTrack::oscSetupSimpleEnv(u8 table, u32 table_offset)
 {
-	switch (param_1) {
-	case 0:
+	switch (table) {
+	case OSC_ENV_ATTACK:
 		mOscData[0]           = Player::sEnvelopeDef;
-		mOscData[0].mAdsTable = (s16*)(mSeqCtrl.getBase() + param_2);
+		mOscData[0].mAdsTable = (s16*)(mSeqCtrl.getBase() + table_offset);
 		break;
-	case 1:
-		mOscData[0].mRelTable = (s16*)(mSeqCtrl.getBase() + param_2);
+	case OSC_ENV_RELEASE:
+		mOscData[0].mRelTable = (s16*)(mSeqCtrl.getBase() + table_offset);
 		break;
 	}
 }
@@ -371,37 +405,37 @@ void TTrack::oscSetupSimpleEnv(u8 param_1, u32 param_2)
 void TTrack::oscUpdateParam(u8 param_id, f32 value)
 {
 	switch (param_id) {
-	case 6:
+	case TIMED_OSC0_DEPTH:
 		mOscData[0].mDepth = value;
 		break;
-	case 7:
+	case TIMED_OSC0_RATE:
 		mOscData[0].mRate = value;
 		break;
-	case 8:
+	case TIMED_OSC0_BIAS:
 		mOscData[0].mBias = value;
 		break;
-	case 9:
+	case TIMED_OSC1_DEPTH:
 		mOscData[1].mDepth = value;
 		break;
-	case 10:
+	case TIMED_OSC1_RATE:
 		mOscData[1].mRate = value;
 		break;
-	case 11:
+	case TIMED_OSC1_BIAS:
 		mOscData[1].mBias = value;
 		break;
 	}
 }
 
-void TTrack::oscSetupSimple(u8 param_1)
+void TTrack::oscSetupSimple(u8 preset)
 {
-	switch (param_1) {
-	case 0:
+	switch (preset) {
+	case OSC_PRESET_VIBRATO1:
 		mOscData[1] = Player::sVibratoDef;
 		break;
-	case 1:
+	case OSC_PRESET_TREMOLO0:
 		mOscData[0] = Player::sTremoroDef;
 		break;
-	case 2:
+	case OSC_PRESET_TREMOLO1:
 		mOscData[1] = Player::sTremoroDef;
 		break;
 	}
@@ -437,7 +471,7 @@ void TTrack::updateTrackAll()
 	mChannelMgr.mMixerDelaySamples[1] = local_4c;
 
 	curVolume = mTimedParam.mInnerParam.mVolume.mCurrentValue;
-	if (mVolumeMode == 0)
+	if (mVolumeMode == VOLUME_SQUARED)
 		curVolume = curVolume * curVolume;
 
 	if (mMute != 0)
@@ -459,15 +493,15 @@ void TTrack::updateTrackAll()
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_FXMIX))
 			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar6,
-			                   mExternalMixModes[1]);
+			                   mExternalMixModes[MIX_FXMIX]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_DOLBY))
 			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar6,
-			                   mExternalMixModes[2]);
+			                   mExternalMixModes[MIX_DOLBY]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_PAN))
 			curPan = panCalc(curPan, mOuterParam->getPan(), fVar6,
-			                 mParentMixModes[0]);
+			                 mParentMixModes[MIX_PAN]);
 	}
 
 	if (!mParent || (mTrackMode & TRACK_MODE_INDEPENDENT_PARAMS)) {
@@ -481,11 +515,11 @@ void TTrack::updateTrackAll()
 		mChannelMgr.mVolume = mParent->mChannelMgr.mVolume * curVolume;
 		mChannelMgr.mPitch  = mParent->mChannelMgr.mPitch * curPitch;
 		mChannelMgr.mPan    = panCalc(curPan, mParent->mChannelMgr.mPan, fVar6,
-		                              mParentMixModes[0]);
+		                              mParentMixModes[MIX_PAN]);
 		mChannelMgr.mFxmix  = panCalc(curFxmix, mParent->mChannelMgr.mFxmix,
-		                              fVar6, mParentMixModes[1]);
+		                              fVar6, mParentMixModes[MIX_FXMIX]);
 		mChannelMgr.mDolby  = panCalc(curDolby, mParent->mChannelMgr.mDolby,
-		                              fVar6, mParentMixModes[2]);
+		                              fVar6, mParentMixModes[MIX_DOLBY]);
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_FIR_FILTER)) {
 			for (u8 i = 0; i < 8; ++i)
@@ -536,7 +570,7 @@ void TTrack::updateTrack(u32 update_flags)
 
 	if (update_flags & UPDATE_VOLUME) {
 		curVolume = mTimedParam.mInnerParam.mVolume.mCurrentValue;
-		if (!mVolumeMode)
+		if (mVolumeMode == VOLUME_SQUARED)
 			curVolume *= curVolume;
 
 		if (mMute)
@@ -545,7 +579,7 @@ void TTrack::updateTrack(u32 update_flags)
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_VOLUME))
 			curVolume *= mOuterParam->getVolume();
 
-		if (mPaused && (mPauseMuteFlags & 1))
+		if (mPaused && (mPauseMuteFlags & PAUSE_SCALE_VOLUME))
 			curVolume *= mTimedParam.mInnerParam.mPauseVolume.mCurrentValue;
 	}
 
@@ -563,7 +597,7 @@ void TTrack::updateTrack(u32 update_flags)
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_PAN))
 			curPan = panCalc(curPan, mOuterParam->getPan(), fVar3,
-			                 mExternalMixModes[0]);
+			                 mExternalMixModes[MIX_PAN]);
 	}
 
 	if (update_flags & UPDATE_FXMIX) {
@@ -571,7 +605,7 @@ void TTrack::updateTrack(u32 update_flags)
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_FXMIX))
 			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar3,
-			                   mExternalMixModes[1]);
+			                   mExternalMixModes[MIX_FXMIX]);
 	}
 
 	if (update_flags & UPDATE_DOLBY) {
@@ -579,7 +613,7 @@ void TTrack::updateTrack(u32 update_flags)
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_DOLBY))
 			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar3,
-			                   mExternalMixModes[2]);
+			                   mExternalMixModes[MIX_DOLBY]);
 	}
 
 	if (update_flags & UPDATE_IIRS) {
@@ -607,7 +641,7 @@ void TTrack::updateTrack(u32 update_flags)
 	}
 
 	for (int i = 0; i < 2; ++i) {
-		if (mOscMode[i] == 0xE) {
+		if (mOscMode[i] == OSC_ROUTE_TRACK) {
 			f32 off = mOscillators[i].getOffsetNoCount();
 			switch (mOscillators[i].getEffectorKind()) {
 			case EFFECT_PITCH:
@@ -648,13 +682,13 @@ void TTrack::updateTrack(u32 update_flags)
 			mChannelMgr.mPitch = mParent->mChannelMgr.mPitch * curPitch;
 		if (update_flags & UPDATE_PAN)
 			mChannelMgr.mPan = panCalc(curPan, mParent->mChannelMgr.mPan, fVar3,
-			                           mParentMixModes[0]);
+			                           mParentMixModes[MIX_PAN]);
 		if (update_flags & UPDATE_FXMIX)
 			mChannelMgr.mFxmix = panCalc(curFxmix, mParent->mChannelMgr.mFxmix,
-			                             fVar3, mParentMixModes[1]);
+			                             fVar3, mParentMixModes[MIX_FXMIX]);
 		if (update_flags & UPDATE_DOLBY)
 			mChannelMgr.mDolby = panCalc(curDolby, mParent->mChannelMgr.mDolby,
-			                             fVar3, mParentMixModes[2]);
+			                             fVar3, mParentMixModes[MIX_DOLBY]);
 	}
 }
 
@@ -674,7 +708,7 @@ void TTrack::updateTempo()
 	}
 
 	for (u32 i = 0; i < 16; ++i)
-		if (mChildren[i] && mChildren[i]->mSeqState)
+		if (mChildren[i] && mChildren[i]->mSeqState != SEQ_INACTIVE)
 			mChildren[i]->updateTempo();
 }
 
@@ -692,7 +726,7 @@ void TTrack::updateSeq(u32 update_flags, bool recurse_now)
 
 	for (int i = 0; i < 16; ++i) {
 		TTrack* child = mChildren[i];
-		if (child && child->mSeqState) {
+		if (child && child->mSeqState != SEQ_INACTIVE) {
 			if (recurse_now)
 				child->updateSeq(totalUpdateFlags, recurse_now);
 			else
@@ -704,7 +738,7 @@ void TTrack::updateSeq(u32 update_flags, bool recurse_now)
 void TTrack::incSelfOsc()
 {
 	for (int i = 0; i < 2; ++i)
-		if (mOscMode[i] == 0xE)
+		if (mOscMode[i] == OSC_ROUTE_TRACK)
 			mOscillators[i].getOffset();
 
 	for (int i = 0; i < 16; ++i)
@@ -721,7 +755,7 @@ s8 TTrack::mainProc()
 			tempo = 1.0f;
 		mTickAccumulator += tempo;
 		if (mTickAccumulator < 1.0f)
-			return 0;
+			return TRACK_ACTIVE;
 		mTickAccumulator -= 1.0f;
 	}
 
@@ -746,7 +780,7 @@ s8 TTrack::mainProc()
 	do {
 		tryInterrupt();
 
-		if (mPaused != 0 && (mPauseMuteFlags & 2))
+		if (mPaused != 0 && (mPauseMuteFlags & PAUSE_SEQUENCE))
 			goto finishTick;
 
 		if (mSeqCtrl.getWait() == -1) {
@@ -763,9 +797,9 @@ s8 TTrack::mainProc()
 
 		retcode = sParser.mainProc(this, &mSeqCtrl);
 
-		if (retcode == -1)
-			return -1;
-	} while (retcode == -2);
+		if (retcode == TSeqParser::PARSE_FINISH)
+			return TRACK_FINISHED;
+	} while (retcode == TSeqParser::PARSE_RECHECK);
 
 	updateFlags = 0;
 	for (int i = 0; i != TIMED_COUNT; ++i) {
@@ -782,7 +816,7 @@ s8 TTrack::mainProc()
 	}
 
 	for (int i = 0; i < 2; ++i)
-		if (mOscMode[i] == 0xE)
+		if (mOscMode[i] == OSC_ROUTE_TRACK)
 			updateFlags |= sOscTable[mOscData[i].mTarget];
 
 finishTick:
@@ -793,21 +827,21 @@ finishTick:
 
 	for (int i = 0; i < 16; ++i) {
 		TTrack* child = mChildren[i];
-		if (child && child->mSeqState) {
-			if (child->mainProc() == -1) {
+		if (child && child->mSeqState != SEQ_INACTIVE) {
+			if (child->mainProc() == TRACK_FINISHED) {
 				child->closeTrack();
 				mChildren[i] = nullptr;
 			}
 		}
 	}
 
-	return 0;
+	return TRACK_ACTIVE;
 }
 
-int TTrack::seqTimeToDspTime(s32 param_1, u8 param_2)
+int TTrack::seqTimeToDspTime(s32 time, u8 gate_percent)
 {
-	f32 res = param_1;
-	res *= param_2;
+	f32 res = time;
+	res *= gate_percent;
 	res /= 100.0f;
 	if (mTimeRelate) {
 		res /= mTicksPerSubframe;
@@ -875,11 +909,10 @@ void TTrack::writeTimeParam(u8 opcode_params)
 
 void TTrack::writeRegParam(u8 opcode_params)
 {
-
 	u32 valueSource = opcode_params & TSeqParser::VALUE_MASK;
 	u32 regAction   = opcode_params & TSeqParser::REG_OPERATION_MASK;
 
-	u32 r26;
+	u32 tableLoadMode;
 
 	if ((opcode_params & TSeqParser::OPCODE_PARAM_MASK)
 	    == TSeqParser::REG_SUBTRACT) {
@@ -892,7 +925,7 @@ void TTrack::writeRegParam(u8 opcode_params)
 		regAction     = TSeqParser::REG_LOAD_TABLE;
 		opcode_params = mSeqCtrl.readByte();
 		valueSource   = opcode_params & TSeqParser::VALUE_MASK;
-		r26           = ((opcode_params >> 4) & 0xF) + 4;
+		tableLoadMode = ((opcode_params >> 4) & 0xF) + TABLE_LOAD_U8;
 	}
 
 	if ((opcode_params & TSeqParser::OPCODE_PARAM_MASK)
@@ -901,7 +934,7 @@ void TTrack::writeRegParam(u8 opcode_params)
 		valueSource = regAction & TSeqParser::VALUE_MASK;
 		regAction &= TSeqParser::OPCODE_FAMILY_MASK;
 		if (valueSource == TSeqParser::VALUE_S16_FROM_8)
-			valueSource = 0x10;
+			valueSource = VALUE_NEGATIVE_ONE;
 	}
 
 	u8 regNo = mSeqCtrl.readByte();
@@ -930,7 +963,7 @@ void TTrack::writeRegParam(u8 opcode_params)
 	case TSeqParser::VALUE_S16:
 		value = mSeqCtrl.read16();
 		break;
-	case 0x10:
+	case VALUE_NEGATIVE_ONE:
 		value = 0xffff;
 		break;
 	}
@@ -1003,7 +1036,7 @@ void TTrack::writeRegParam(u8 opcode_params)
 		break;
 
 	case TSeqParser::REG_LOAD_TABLE:
-		r25   = loadTbl(r25, value, r26);
+		r25   = loadTbl(r25, value, tableLoadMode);
 		value = (u16)r25;
 		break;
 	}
@@ -1061,8 +1094,8 @@ void TTrack::writeRegParam(u8 opcode_params)
 
 	if (regNo == TRegisterParam::REG_BANK_PROGRAM) {
 		for (int i = 0; i < 2; i++)
-			if (mOscMode[i] != 0xE)
-				mOscMode[i] = 0xF;
+			if (mOscMode[i] != OSC_ROUTE_TRACK)
+				mOscMode[i] = OSC_ROUTE_DISABLED;
 	}
 
 	if (regNo == TRegisterParam::REG_BEND_SENSE)
@@ -1087,7 +1120,7 @@ int TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode)
 	mTickAccumulator  = 0.0f;
 	mTicksPerSubframe = 1.0f;
 	updateTrackAll();
-	mSeqState = 2;
+	mSeqState = SEQ_READY;
 
 	return result;
 }
@@ -1095,14 +1128,14 @@ int TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode)
 bool TTrack::startSeq()
 {
 	switch (mSeqState) {
-	case 0:
+	case SEQ_INACTIVE:
 		return false;
-	case 1:
+	case SEQ_PLAYING:
 		return false;
-	case 3:
+	case SEQ_STOP_PENDING:
 		return false;
-	case 2:
-		mSeqState = 1;
+	case SEQ_READY:
+		mSeqState = SEQ_PLAYING;
 		break;
 	}
 	Kernel::registerSubframeCallback(&TTrack::rootCallback, this);
@@ -1119,18 +1152,18 @@ void TTrack::stopSeqMain()
 bool TTrack::stopSeq()
 {
 	switch (mSeqState) {
-	case 0:
+	case SEQ_INACTIVE:
 		break;
 
-	case 2:
-		mSeqState = 0;
+	case SEQ_READY:
+		mSeqState = SEQ_INACTIVE;
 		if (mFromTrackPool == 1)
 			TrackMgr::backTrack(this);
 		TrackMgr::deAllocRoot(this);
 		break;
 
 	default:
-		mSeqState = 3;
+		mSeqState = SEQ_STOP_PENDING;
 		break;
 	}
 	return true;
@@ -1150,11 +1183,11 @@ void TTrack::allNoteOff()
 
 bool TTrack::closeTrack()
 {
-	if (!mSeqState)
+	if (mSeqState == SEQ_INACTIVE)
 		return false;
 
 	allNoteOff();
-	mSeqState = 0;
+	mSeqState = SEQ_INACTIVE;
 
 	if (mFromTrackPool == 1)
 		TrackMgr::backTrack(this);
@@ -1181,7 +1214,7 @@ void TTrack::muteTrack(u8 flag)
 {
 	mMute = flag;
 	mPendingUpdateFlags |= UPDATE_VOLUME;
-	if (mMute && (mPauseMuteFlags & 0x20)) {
+	if (mMute && (mPauseMuteFlags & MUTE_STOP_NOTES)) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
 			if (chan) {
@@ -1208,8 +1241,8 @@ void TTrack::initTrack(void* data, u32 seq_offset, TTrack* parent)
 		mTimeBase       = 0x30;
 		mTimeRelate     = 1;
 		mPaused         = 0;
-		mPauseMuteFlags = 10;
-		mVolumeMode     = 0;
+		mPauseMuteFlags = PAUSE_SEQUENCE | PAUSE_CHANNELS;
+		mVolumeMode     = VOLUME_SQUARED;
 		mMute           = 0;
 	} else {
 		mTempo               = parent->mTempo;
@@ -1224,7 +1257,7 @@ void TTrack::initTrack(void* data, u32 seq_offset, TTrack* parent)
 	}
 
 	mNoteMgr.init();
-	mSeqState = 1;
+	mSeqState = SEQ_PLAYING;
 	mParent   = parent;
 	mIntrMgr.init();
 
@@ -1232,14 +1265,14 @@ void TTrack::initTrack(void* data, u32 seq_offset, TTrack* parent)
 
 	if ((mTrackMode & TRACK_MODE_INIT_REGISTERS) || !mParent) {
 		mRegisterParam.init();
-		for (u8 i = 0; i < 3; ++i) {
-			mExternalMixModes[i]      = 0;
-			mParentMixModes[i]        = 0;
+		for (u8 i = MIX_PAN; i < MIX_COUNT; ++i) {
+			mExternalMixModes[i]      = MIX_MODE_LOCAL;
+			mParentMixModes[i]        = MIX_MODE_LOCAL;
 			mChannelMgr.mCalcTypes[i] = TChannel::CALC_WEIGHTED_SUM_ALL;
 		}
 	} else {
 		mRegisterParam.inherit(mParent->mRegisterParam);
-		for (u8 i = 0; i < 3; ++i) {
+		for (u8 i = MIX_PAN; i < MIX_COUNT; ++i) {
 			mExternalMixModes[i]      = mParent->mExternalMixModes[i];
 			mParentMixModes[i]        = mParent->mParentMixModes[i];
 			mChannelMgr.mCalcTypes[i] = mParent->mChannelMgr.mCalcTypes[i];
@@ -1250,10 +1283,10 @@ void TTrack::initTrack(void* data, u32 seq_offset, TTrack* parent)
 		mChildren[i] = nullptr;
 
 	mOscData[0] = Player::sEnvelopeDef;
-	mOscMode[0] = 0xf;
+	mOscMode[0] = OSC_ROUTE_DISABLED;
 	mOscData[1] = Player::sVibratoDef;
 	mOscillators[1].initStart();
-	mOscMode[1] = 0xe;
+	mOscMode[1] = OSC_ROUTE_TRACK;
 
 	mTranspose          = 0;
 	mEffectiveTranspose = 0;
@@ -1277,9 +1310,9 @@ int TTrack::startTrack(TTrack* parent, u8 child_index, u8 track_mode,
 	return 0;
 }
 
-TTrack* TTrack::openTrack(u8 param)
+TTrack* TTrack::openTrack(u8 index)
 {
-	TTrack* oldTrack = mChildren[param];
+	TTrack* oldTrack = mChildren[index];
 	if (oldTrack)
 		oldTrack->closeTrack();
 
@@ -1287,30 +1320,30 @@ TTrack* TTrack::openTrack(u8 param)
 	if (!newTrack)
 		return nullptr;
 
-	mChildren[param] = newTrack;
+	mChildren[index] = newTrack;
 	return newTrack;
 }
 
-int TTrack::loadTbl(u32 param_1, u32 param_2, u32 param_3)
+int TTrack::loadTbl(u32 table_offset, u32 index_or_offset, u32 mode)
 {
 	u32 res;
-	switch (param_3) {
-	case 4:
-		res = mSeqCtrl.getByte(param_1 + param_2);
+	switch (mode) {
+	case TABLE_LOAD_U8:
+		res = mSeqCtrl.getByte(table_offset + index_or_offset);
 		break;
-	case 5:
-		res = mSeqCtrl.get16(param_1 + 2 * param_2);
+	case TABLE_LOAD_U16:
+		res = mSeqCtrl.get16(table_offset + 2 * index_or_offset);
 		break;
-	case 6: {
-		u32 offset = param_2 + 2 * param_2;
-		res        = mSeqCtrl.get24(param_1 + offset);
+	case TABLE_LOAD_U24: {
+		u32 offset = index_or_offset + 2 * index_or_offset;
+		res        = mSeqCtrl.get24(table_offset + offset);
 		break;
 	}
-	case 7:
-		res = mSeqCtrl.get32(param_1 + 4 * param_2);
+	case TABLE_LOAD_U32:
+		res = mSeqCtrl.get32(table_offset + 4 * index_or_offset);
 		break;
-	case 8:
-		res = mSeqCtrl.get32(param_1 + param_2);
+	case TABLE_LOAD_U32_BYTE_OFFSET:
+		res = mSeqCtrl.get32(table_offset + index_or_offset);
 		break;
 	}
 	return res;
@@ -1373,7 +1406,7 @@ u16 TTrack::readRegDirect(u8 reg)
 		for (i = 15; i >= 0; --i) {
 			TTrack* child = mChildren[i];
 			result <<= 1;
-			if (child && child->mSeqState)
+			if (child && child->mSeqState != SEQ_INACTIVE)
 				result |= 1;
 		}
 		break;
@@ -1408,14 +1441,14 @@ u16 TTrack::readRegDirect(u8 reg)
 
 void TTrack::writeRegDirect(u8 reg, u16 value)
 {
-	u16 r4;
+	u16 flags;
 
 	switch (reg) {
 	case TRegisterParam::REG_U8_0:
 	case TRegisterParam::REG_U8_1:
 	case TRegisterParam::REG_U8_2:
 		value = value & 0xff;
-		r4    = Player::extend8to16(value);
+		flags = Player::extend8to16(value);
 		break;
 
 	case TRegisterParam::REG_BANK:
@@ -1426,18 +1459,18 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 		writeRegDirect(TRegisterParam::REG_U8_0, value >> 8);
 
 		reg   = TRegisterParam::REG_U8_1;
-		r4    = value;
+		flags = value;
 		value = value & 0xff;
 		break;
 	}
 
 	default:
-		r4 = value;
+		flags = value;
 		break;
 	}
 
 	mRegisterParam.mRegisters[reg] = value;
-	mRegisterParam.setFlag(r4);
+	mRegisterParam.setFlag(flags);
 }
 
 void TTrack::setTrackExtPanPower(f32 power) { }
@@ -1520,10 +1553,10 @@ void TTrack::checkImportApp(u32 port) { }
 void TTrack::pauseTrack(u8 flag)
 {
 	mPaused = 1;
-	if (mPauseMuteFlags & 0x1)
+	if (mPauseMuteFlags & PAUSE_SCALE_VOLUME)
 		mPendingUpdateFlags |= UPDATE_VOLUME;
 
-	if (mPauseMuteFlags & 0x4) {
+	if (mPauseMuteFlags & PAUSE_STOP_NOTES) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
 			if (chan) {
@@ -1533,7 +1566,7 @@ void TTrack::pauseTrack(u8 flag)
 		}
 	}
 
-	if (mPauseMuteFlags & 8) {
+	if (mPauseMuteFlags & PAUSE_CHANNELS) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
 			if (chan)
@@ -1545,7 +1578,7 @@ void TTrack::pauseTrack(u8 flag)
 
 	if (flag == 1) {
 		for (u32 i = 0; i < 16; ++i) {
-			if (mChildren[i] && mChildren[i]->mSeqState)
+			if (mChildren[i] && mChildren[i]->mSeqState != SEQ_INACTIVE)
 				mChildren[i]->pauseTrack(1);
 		}
 	}
@@ -1566,7 +1599,7 @@ void TTrack::unPauseTrack(u8 flag)
 
 	if (flag == 1) {
 		for (u8 i = 0; i < 16; ++i)
-			if (mChildren[i] && mChildren[i]->mSeqState)
+			if (mChildren[i] && mChildren[i]->mSeqState != SEQ_INACTIVE)
 				mChildren[i]->unPauseTrack(1);
 	}
 }
@@ -1577,20 +1610,22 @@ void TTrack::unPauseTrackAll() { unPauseTrack(1); }
 
 void TTrack::reset()
 {
-	mSeqState = 0;
+	mSeqState = SEQ_INACTIVE;
 	mMute     = 0;
 }
 
-f32 TTrack::panCalc(f32 param1, f32 param2, f32 param3, u8 param4)
+f32 TTrack::panCalc(f32 local_value, f32 source_value, f32 source_weight,
+                    u8 mix_mode)
 {
 	f32 result;
-	switch (param4) {
-	case 0:
-		return param1;
-	case 1:
-		return param2;
-	case 2:
-		result = param1 * (1.0f - param3) + param2 * param3;
+	switch (mix_mode) {
+	case MIX_MODE_LOCAL:
+		return local_value;
+	case MIX_MODE_SOURCE:
+		return source_value;
+	case MIX_MODE_BLEND:
+		result = local_value * (1.0f - source_weight)
+		         + source_value * source_weight;
 	}
 	return result;
 }
@@ -1598,8 +1633,8 @@ f32 TTrack::panCalc(f32 param1, f32 param2, f32 param3, u8 param4)
 s32 TTrack::rootCallback(void* param)
 {
 	TTrack* self = static_cast<TTrack*>(param);
-	if (self && self->mSeqState != 0) {
-		if (self->mSeqState == 3) {
+	if (self && self->mSeqState != SEQ_INACTIVE) {
+		if (self->mSeqState == SEQ_STOP_PENDING) {
 			self->stopSeqMain();
 			return -1;
 		} else {
@@ -1610,7 +1645,7 @@ s32 TTrack::rootCallback(void* param)
 			} else {
 				while (self->mTickAccumulator >= 1.0f) {
 					self->mTickAccumulator -= 1.0f;
-					if ((int)self->mainProc() != -1)
+					if ((int)self->mainProc() != TRACK_FINISHED)
 						continue;
 
 					self->stopSeqMain();

@@ -8,18 +8,18 @@ void TSeqCtrl::init(void* data, u32 seq_offset)
 	mRawFilePtr     = (u8*)data;
 	mCurrentFilePtr = mRawFilePtr + seq_offset;
 	mWaitTimer      = 0;
-	mLoopIndex      = 0;
+	mStackDepth     = 0;
 	for (int i = 0; i < 8; i++) {
-		mLoopStartPositions[i] = nullptr;
-		mLoopTimers[i]         = 0;
+		mStackPositions[i] = nullptr;
+		mLoopTimers[i]     = 0;
 	}
-	field_0x40       = 0;
-	mPreviousFilePtr = nullptr;
+	mSavedWaitTimer     = 0;
+	mInterruptReturnPtr = nullptr;
 }
 
 bool TSeqCtrl::loopE()
 {
-	u32 var1 = mLoopIndex;
+	u32 var1 = mStackDepth;
 	if (var1 == 0)
 		return false;
 
@@ -28,12 +28,12 @@ bool TSeqCtrl::loopE()
 		var3--;
 
 	if (var3 == 0) {
-		mLoopIndex--;
+		mStackDepth--;
 		return true;
 	}
 
 	mLoopTimers[var1 - 1] = var3;
-	mCurrentFilePtr       = mLoopStartPositions[mLoopIndex - 1];
+	mCurrentFilePtr       = mStackPositions[mStackDepth - 1];
 	return true;
 }
 
@@ -49,24 +49,24 @@ bool TSeqCtrl::waitCountDown()
 
 bool TSeqCtrl::callIntr(void* handler)
 {
-	if (mPreviousFilePtr)
+	if (mInterruptReturnPtr)
 		return false;
 
-	mPreviousFilePtr = mCurrentFilePtr;
-	mCurrentFilePtr  = (u8*)handler;
-	field_0x40       = mWaitTimer;
-	mWaitTimer       = 0;
+	mInterruptReturnPtr = mCurrentFilePtr;
+	mCurrentFilePtr     = (u8*)handler;
+	mSavedWaitTimer     = mWaitTimer;
+	mWaitTimer          = 0;
 	return true;
 }
 
 bool TSeqCtrl::retIntr()
 {
-	if (!mPreviousFilePtr)
+	if (!mInterruptReturnPtr)
 		return false;
 
-	mWaitTimer       = field_0x40;
-	mCurrentFilePtr  = mPreviousFilePtr;
-	mPreviousFilePtr = nullptr;
+	mWaitTimer          = mSavedWaitTimer;
+	mCurrentFilePtr     = mInterruptReturnPtr;
+	mInterruptReturnPtr = nullptr;
 	return true;
 }
 

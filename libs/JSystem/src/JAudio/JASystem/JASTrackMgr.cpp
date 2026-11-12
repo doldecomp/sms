@@ -90,7 +90,7 @@ TTrack* TrackMgr::getNewTrack()
 	if (getP == sTrackCount)
 		getP = 0;
 
-	result->mSeqState = 2;
+	result->mSeqState = TTrack::SEQ_READY;
 	result->setInnerMemory(1);
 	return result;
 }
