@@ -436,7 +436,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
 			    .mTrackUpdate[sound->mTrack]
-			    |= 0x1;
+			    |= JASystem::Kernel::TPortArgs::UPDATE_VOLUME;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 2,
 			    vol);
@@ -466,7 +466,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
 			    .mTrackUpdate[sound->mTrack]
-			    |= 0x4;
+			    |= JASystem::Kernel::TPortArgs::UPDATE_PAN;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 4,
 			    pan);
@@ -490,7 +490,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
 			    .mTrackUpdate[sound->mTrack]
-			    |= 0x2;
+			    |= JASystem::Kernel::TPortArgs::UPDATE_PITCH;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 3,
 			    pitch);
@@ -514,7 +514,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
 			    .mTrackUpdate[sound->mTrack]
-			    |= 0x8;
+			    |= JASystem::Kernel::TPortArgs::UPDATE_FXMIX;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 5,
 			    fxmix);
@@ -544,7 +544,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
 			    .mTrackUpdate[sound->mTrack]
-			    |= 0x10;
+			    |= JASystem::Kernel::TPortArgs::UPDATE_DOLBY;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 6,
 			    dolby);
@@ -560,7 +560,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		        .mTrackUpdate[sound->mTrack]);
 		mData->mSeqTrackInfo[mSeSequence->mTrack]
 		    .mPlayerParams[sound->mTrack]
-		    .mCmd.mHead
+		    .mCmd.mQueue
 		    = nullptr;
 		mData->mSeqTrackInfo[mSeSequence->mTrack]
 		    .mPlayerParams[sound->mTrack]

@@ -11,56 +11,56 @@ namespace JASystem {
 namespace Kernel {
 
 	static s32 portCmdMain(void* data);
-	static TPortCmd* getPortCmd(TPortHead* head);
+	static TPortCmd* getPortCmd(TPortHead* queue);
 
 	TPortCmd::TPortCmd()
 	{
-		mHead = nullptr;
-		mNext = nullptr;
-		mFunc = nullptr;
-		mArgs = nullptr;
+		mQueue    = nullptr;
+		mNext     = nullptr;
+		mCallback = nullptr;
+		mArgs     = nullptr;
 	}
 
 	BOOL TPortCmd::addPortCmdOnce() { return addPortCmd(&cmd_once); }
 
 	BOOL TPortCmd::addPortCmdStay() { return addPortCmd(&cmd_stay); }
 
-	BOOL TPortCmd::setPortCmd(PortCallback cb, TPortArgs* args)
+	BOOL TPortCmd::setPortCmd(PortCallback callback, TPortArgs* args)
 	{
-		mFunc = cb;
-		mArgs = args;
-		mHead = nullptr;
+		mCallback = callback;
+		mArgs     = args;
+		mQueue    = nullptr;
 		return true;
 	}
 
-	BOOL TPortCmd::addPortCmd(TPortHead* head)
+	BOOL TPortCmd::addPortCmd(TPortHead* queue)
 	{
-		BOOL enable = OSDisableInterrupts();
-		if (mHead) {
-			OSRestoreInterrupts(enable);
+		BOOL interruptsWereEnabled = OSDisableInterrupts();
+		if (mQueue) {
+			OSRestoreInterrupts(interruptsWereEnabled);
 			return false;
 		}
 
-		if (head->unk4)
-			head->unk4->mNext = this;
+		if (queue->mLast)
+			queue->mLast->mNext = this;
 		else
-			head->unk0 = this;
+			queue->mFirst = this;
 
-		head->unk4 = this;
-		mNext      = nullptr;
-		mHead      = head;
-		OSRestoreInterrupts(enable);
+		queue->mLast = this;
+		mNext        = nullptr;
+		mQueue       = queue;
+		OSRestoreInterrupts(interruptsWereEnabled);
 		return true;
 	}
 
-	void TPortCmd::cancelPortCmd(TPortHead* head) { }
+	void TPortCmd::cancelPortCmd(TPortHead* queue) { }
 
 	void TPortCmd::cancelPortCmdStay() { }
 
-	void portCmdProcOnce(TPortHead* head)
+	void portCmdProcOnce(TPortHead* queue)
 	{
 		for (;;) {
-			TPortCmd* cmd = getPortCmd(head);
+			TPortCmd* cmd = getPortCmd(queue);
 			if (!cmd)
 				break;
 
@@ -68,9 +68,9 @@ namespace Kernel {
 		}
 	}
 
-	void portCmdProcStay(TPortHead* head)
+	void portCmdProcStay(TPortHead* queue)
 	{
-		TPortCmd* cmd = head->unk0;
+		TPortCmd* cmd = queue->mFirst;
 		for (;;) {
 			if (!cmd)
 				break;
@@ -81,10 +81,10 @@ namespace Kernel {
 		}
 	}
 
-	void portHeadInit(TPortHead* head)
+	void portHeadInit(TPortHead* queue)
 	{
-		head->unk0 = nullptr;
-		head->unk4 = nullptr;
+		queue->mFirst = nullptr;
+		queue->mLast  = nullptr;
 	}
 
 	void portCmdInit()
@@ -94,20 +94,20 @@ namespace Kernel {
 		registerAiCallback(portCmdMain, nullptr);
 	}
 
-	static TPortCmd* getPortCmd(TPortHead* head)
+	static TPortCmd* getPortCmd(TPortHead* queue)
 	{
-		TPortCmd* r30 = nullptr;
+		TPortCmd* result = nullptr;
 
-		if (head->unk0) {
-			TPortCmd* r31 = head->unk0;
-			r30           = r31;
-			head->unk0    = r31->mNext;
-			if (!head->unk0)
-				head->unk4 = nullptr;
+		if (queue->mFirst) {
+			TPortCmd* first = queue->mFirst;
+			result          = first;
+			queue->mFirst   = first->mNext;
+			if (!queue->mFirst)
+				queue->mLast = nullptr;
 
-			r31->mHead = nullptr;
+			first->mQueue = nullptr;
 		}
-		return r30;
+		return result;
 	}
 
 	static s32 portCmdMain(void* data)
