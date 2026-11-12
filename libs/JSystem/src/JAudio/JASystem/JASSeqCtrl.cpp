@@ -3,10 +3,10 @@
 
 namespace JASystem {
 
-void TSeqCtrl::init(void* data, u32 size)
+void TSeqCtrl::init(void* data, u32 seq_offset)
 {
 	mRawFilePtr     = (u8*)data;
-	mCurrentFilePtr = mRawFilePtr + size;
+	mCurrentFilePtr = mRawFilePtr + seq_offset;
 	mWaitTimer      = 0;
 	mLoopIndex      = 0;
 	for (int i = 0; i < 8; i++) {
@@ -47,13 +47,13 @@ bool TSeqCtrl::waitCountDown()
 	return true;
 }
 
-bool TSeqCtrl::callIntr(void* intr)
+bool TSeqCtrl::callIntr(void* handler)
 {
 	if (mPreviousFilePtr)
 		return false;
 
 	mPreviousFilePtr = mCurrentFilePtr;
-	mCurrentFilePtr  = (u8*)intr;
+	mCurrentFilePtr  = (u8*)handler;
 	field_0x40       = mWaitTimer;
 	mWaitTimer       = 0;
 	return true;

@@ -179,7 +179,7 @@ void JAISystemInterface::setSePortParameter(JASystem::Kernel::TPortArgs* args)
 	setPortParameter(args, track, JASystem::TTrack::UPDATE_Dolby, 4);
 
 	if ((args->mFlags & 0x40) != 0 && args->unk20 != 0)
-		track->setInterrupt(5);
+		track->setInterrupt(JASystem::TIntrMgr::INTR_APPLICATION);
 }
 
 void* JAISystemInterface::JAIouterP(void*) { return nullptr; }

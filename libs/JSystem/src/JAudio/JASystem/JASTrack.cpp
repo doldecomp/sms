@@ -34,10 +34,10 @@ TTrack::TTrack()
     : mParent(0)
     , mOuterParam(0)
     , mTrackRoute(0)
-    , mConnectName(0)
+    , mRegistrationId(0)
 {
-	mTickCounter        = 0.0f;
-	mTickRate           = 0.0f;
+	mTickAccumulator    = 0.0f;
+	mTicksPerSubframe   = 0.0f;
 	mPendingUpdateFlags = 0;
 	mTempo              = 0x78;
 	mTimeBase           = 0x78;
@@ -45,23 +45,23 @@ TTrack::TTrack()
 	mTrackMode           = TRACK_MODE_INHERIT;
 	mOverrideParentTempo = false;
 
-	mInnerMemory    = 0;
-	mTranspose      = 0;
-	mTransposeTotal = 0;
-	mPauseStatus    = 0;
-	mMute           = 0;
-	mVolumeMode     = 0;
-	mSeqState       = 0;
+	mFromTrackPool      = 0;
+	mTranspose          = 0;
+	mEffectiveTranspose = 0;
+	mPauseMuteFlags     = 0;
+	mMute               = 0;
+	mVolumeMode         = 0;
+	mSeqState           = 0;
 
 	mTimeRelate = 0;
-	mConnected  = 0;
-	mPause      = 0;
+	mRegistered = 0;
+	mPaused     = 0;
 
 	for (int i = 0; i < 16; ++i)
 		mChildren[i] = nullptr;
 
 	for (int i = 0; i < 3; ++i)
-		mPanSwitchParent[i] = mPanSwitchExt[i] = 0;
+		mParentMixModes[i] = mExternalMixModes[i] = 0;
 
 	for (int i = 0; i < 12; ++i)
 		mAdsTable[i] = Player::sAdsTable[i];
@@ -71,7 +71,7 @@ TTrack::TTrack()
 	for (int i = 0; i < 2; ++i)
 		mOscMode[i] = 0xf;
 
-	mChannelUpdater.init();
+	mChannelMgr.init();
 
 	Calc::bzero(&mTimedParam, sizeof(mTimedParam));
 
@@ -103,16 +103,16 @@ bool TTrack::assignExtBuffer(TOuterParam* buffer)
 	return true;
 }
 
-void TTrack::setInnerMemory(u8 param) { mInnerMemory = param; }
+void TTrack::setInnerMemory(u8 param) { mFromTrackPool = param; }
 
 void TTrack::setPanSwitchExt(u8 param1, u8 param2)
 {
-	mPanSwitchExt[param2] = param1;
+	mExternalMixModes[param2] = param1;
 }
 
 void TTrack::setPanSwitchParent(u8 param1, u8 param2)
 {
-	mPanSwitchParent[param2] = param1;
+	mParentMixModes[param2] = param1;
 }
 
 u8 TTrack::getBank() const { return mRegisterParam.getBankNumber(); }
@@ -149,23 +149,23 @@ u8 TTrack::getNoteStatus(u8 voice_slot) { return 0; }
 void TTrack::releaseChannelAll()
 {
 	if (mParent)
-		mParent->mChannelUpdater.receiveAllChannels(&mChannelUpdater);
+		mParent->mChannelMgr.receiveAllChannels(&mChannelMgr);
 	else
-		ChGlobal::releaseAll(&mChannelUpdater);
+		ChGlobal::releaseAll(&mChannelMgr);
 }
 
 void TTrack::flushAll()
 {
-	mChannelUpdater.stopAll();
-	mChannelUpdater.stopAllRelease();
+	mChannelMgr.stopAll();
+	mChannelMgr.stopAllRelease();
 }
 
 void TTrack::initTimed()
 {
 	for (u8 i = 0; i < 18; i++) {
-		mTimedParam.mMoveParams[i].mMoveTime     = 0.0f;
-		mTimedParam.mMoveParams[i].mCurrentValue = 1.0f;
-		mTimedParam.mMoveParams[i].mTargetValue  = 1.0f;
+		mTimedParam.mMoveParams[i].mTicksRemaining = 0.0f;
+		mTimedParam.mMoveParams[i].mCurrentValue   = 1.0f;
+		mTimedParam.mMoveParams[i].mTargetValue    = 1.0f;
 	}
 	mTimedParam.mMoveParams[1].mCurrentValue  = 0.0f;
 	mTimedParam.mMoveParams[1].mTargetValue   = 0.0f;
@@ -189,7 +189,7 @@ void TTrack::initTimed()
 
 int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 {
-	if (mMute && (mPauseStatus & 0x40))
+	if (mMute && (mPauseMuteFlags & 0x40))
 		return -1;
 
 	u32 voiceSlot = voice_slot;
@@ -197,16 +197,16 @@ int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 		noteOff(voice_slot, 0);
 
 	TTrack* parent       = mParent;
-	TChannelMgr* chanMgr = &mChannelUpdater;
+	TChannelMgr* chanMgr = &mChannelMgr;
 
 	TTrack* it = parent;
 	while (!chanMgr->mManagedChannels || !chanMgr->mFreeChannels) {
 		if (it == nullptr) {
-			chanMgr = &mChannelUpdater;
+			chanMgr = &mChannelMgr;
 			break;
 		}
-		// BUG: should be it->mChannelUpdater?
-		chanMgr = &parent->mChannelUpdater;
+		// BUG: should be it->mChannelMgr?
+		chanMgr = &parent->mChannelMgr;
 		it      = it->getParent();
 	}
 
@@ -217,33 +217,31 @@ int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 		if (parent == nullptr)
 			return -1;
 
-		if (chanMgr != &parent->mChannelUpdater) {
+		if (chanMgr != &parent->mChannelMgr) {
 			borrowed = chanMgr->getListHead(TChannelMgr::CHAN_LIST_FREE);
 			if (borrowed) {
 				--chanMgr->mManagedChannels;
-				// BUG: should be parent->mChannelUpdater.addListHead
-				mChannelUpdater.addListHead(borrowed,
-				                            TChannelMgr::CHAN_LIST_FREE);
-				++parent->mChannelUpdater.mManagedChannels;
-				borrowed->mManager = &parent->mChannelUpdater;
+				// BUG: should be parent->mChannelMgr.addListHead
+				mChannelMgr.addListHead(borrowed, TChannelMgr::CHAN_LIST_FREE);
+				++parent->mChannelMgr.mManagedChannels;
+				borrowed->mManager = &parent->mChannelMgr;
 			}
-			chanMgr = &parent->mChannelUpdater;
+			chanMgr = &parent->mChannelMgr;
 		}
 	} else {
-		if (chanMgr != &mChannelUpdater) {
+		if (chanMgr != &mChannelMgr) {
 			borrowed = chanMgr->getListHead(TChannelMgr::CHAN_LIST_FREE);
 			if (borrowed) {
 				--chanMgr->mManagedChannels;
-				mChannelUpdater.addListHead(borrowed,
-				                            TChannelMgr::CHAN_LIST_FREE);
-				++mChannelUpdater.mManagedChannels;
-				borrowed->mManager = &mChannelUpdater;
+				mChannelMgr.addListHead(borrowed, TChannelMgr::CHAN_LIST_FREE);
+				++mChannelMgr.mManagedChannels;
+				borrowed->mManager = &mChannelMgr;
 			}
-			chanMgr = &mChannelUpdater;
+			chanMgr = &mChannelMgr;
 		}
 	}
 
-	reg       = readRegDirect(6);
+	reg       = readRegDirect(TRegisterParam::REG_BANK_PROGRAM);
 	u8 bankNo = BankMgr::getPhysicalNumber(reg >> 8);
 	u8 progNo = reg & 0xff;
 	TChannel* chan
@@ -255,8 +253,8 @@ int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 	mNoteMgr.setChannel(voiceSlot, chan);
 
 	chan->setPanPower(
-	    mRegisterParam.getPanPowerBank(), mRegisterParam.getPanPowerExt(),
-	    mRegisterParam.getPanPowerOsc(), mRegisterParam.getPanPowerParent());
+	    mRegisterParam.getPanPowerBank(), mRegisterParam.getPanPowerOsc(),
+	    mRegisterParam.getPanPowerTrack(), mRegisterParam.getPanPowerExt());
 
 	for (u8 i = 0; i < 2; ++i) {
 		u32 oscMode = mOscMode[i];
@@ -410,7 +408,7 @@ void TTrack::oscSetupSimple(u8 param_1)
 
 void TTrack::updateTrackAll()
 {
-	f32 fVar6 = mRegisterParam.getPanPowerParent() / 32767.0f;
+	f32 fVar6 = mRegisterParam.getPanPowerExt() / 32767.0f;
 	f32 curVolume;
 	f32 curPitch;
 	f32 curFxmix;
@@ -420,11 +418,12 @@ void TTrack::updateTrackAll()
 	if (mTrackMode == TRACK_MODE_PARENT_CHANNELS)
 		return;
 
-	mChannelUpdater.mPriorityConfig = mRegisterParam.getPriority() | 0x10000;
-	mChannelUpdater.mPriorityTime   = 0;
+	mChannelMgr.mPriorityConfig = mRegisterParam.getPriority() | 0x10000;
+	mChannelMgr.mPriorityTime   = 0;
 
-	u8 cVar8  = 0;
-	f32 thing = mTimedParam.mInnerParam.unk110.mCurrentValue * 128.0f;
+	u8 cVar8 = 0;
+	f32 thing
+	    = mTimedParam.mInnerParam.mMixerDelayBalance.mCurrentValue * 128.0f;
 	s8 local_4c;
 	OSf32tos8(&thing, &local_4c);
 	if (local_4c < 0) {
@@ -432,9 +431,9 @@ void TTrack::updateTrackAll()
 		local_4c = 0;
 	}
 
-	mChannelUpdater.mMixerDelayMax        = 0x10;
-	mChannelUpdater.mMixerDelaySamples[0] = cVar8;
-	mChannelUpdater.mMixerDelaySamples[1] = local_4c;
+	mChannelMgr.mMixerDelayMax        = 0x10;
+	mChannelMgr.mMixerDelaySamples[0] = cVar8;
+	mChannelMgr.mMixerDelaySamples[1] = local_4c;
 
 	curVolume = mTimedParam.mInnerParam.mVolume.mCurrentValue;
 	if (mVolumeMode == 0)
@@ -459,50 +458,47 @@ void TTrack::updateTrackAll()
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
 			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar6,
-			                   mPanSwitchExt[1]);
+			                   mExternalMixModes[1]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Dolby))
 			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar6,
-			                   mPanSwitchExt[2]);
+			                   mExternalMixModes[2]);
 
 		if (mOuterParam->checkOuterSwitch(UPDATE_Pan))
 			curPan = panCalc(curPan, mOuterParam->getPan(), fVar6,
-			                 mPanSwitchParent[0]);
+			                 mParentMixModes[0]);
 	}
 
 	if (!mParent || (mTrackMode & TRACK_MODE_INDEPENDENT_PARAMS)) {
-		mChannelUpdater.mVolume = curVolume;
-		mChannelUpdater.mPitch  = curPitch;
-		mChannelUpdater.mPan    = curPan;
-		mChannelUpdater.mFxmix  = curFxmix;
-		mChannelUpdater.mDolby  = curDolby;
+		mChannelMgr.mVolume = curVolume;
+		mChannelMgr.mPitch  = curPitch;
+		mChannelMgr.mPan    = curPan;
+		mChannelMgr.mFxmix  = curFxmix;
+		mChannelMgr.mDolby  = curDolby;
 	} else {
-		f32 fVar6               = mRegisterParam.getPanPowerTrack() / 32767.0f;
-		mChannelUpdater.mVolume = mParent->mChannelUpdater.mVolume * curVolume;
-		mChannelUpdater.mPitch  = mParent->mChannelUpdater.mPitch * curPitch;
-		mChannelUpdater.mPan    = panCalc(curPan, mParent->mChannelUpdater.mPan,
-		                                  fVar6, mPanSwitchParent[0]);
-		mChannelUpdater.mFxmix
-		    = panCalc(curFxmix, mParent->mChannelUpdater.mFxmix, fVar6,
-		              mPanSwitchParent[1]);
-		mChannelUpdater.mDolby
-		    = panCalc(curDolby, mParent->mChannelUpdater.mDolby, fVar6,
-		              mPanSwitchParent[2]);
+		f32 fVar6           = mRegisterParam.getPanPowerParent() / 32767.0f;
+		mChannelMgr.mVolume = mParent->mChannelMgr.mVolume * curVolume;
+		mChannelMgr.mPitch  = mParent->mChannelMgr.mPitch * curPitch;
+		mChannelMgr.mPan    = panCalc(curPan, mParent->mChannelMgr.mPan, fVar6,
+		                              mParentMixModes[0]);
+		mChannelMgr.mFxmix  = panCalc(curFxmix, mParent->mChannelMgr.mFxmix,
+		                              fVar6, mParentMixModes[1]);
+		mChannelMgr.mDolby  = panCalc(curDolby, mParent->mChannelMgr.mDolby,
+		                              fVar6, mParentMixModes[2]);
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_FirFilter)) {
 			for (u8 i = 0; i < 8; ++i)
-				mChannelUpdater.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
-			mChannelUpdater.mFilterMode = 8;
+				mChannelMgr.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
+			mChannelMgr.mFilterMode = 8;
 		}
 
 		for (u8 i = 0; i < 4; ++i) {
-			mChannelUpdater.mIirCoeffs[i]
+			mChannelMgr.mIirCoeffs[i]
 			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
 		}
 
-		mChannelUpdater.mFilterMode
-		    |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
-		mChannelUpdater.mDistFilter
+		mChannelMgr.mFilterMode |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
+		mChannelMgr.mDistFilter
 		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
 	}
 }
@@ -514,14 +510,15 @@ void TTrack::updateTrack(u32 update_flags)
 	f32 curPan;
 	f32 curFxmix;
 	f32 curDolby;
-	f32 fVar3 = mRegisterParam.getPanPowerParent() / 32767.0f;
+	f32 fVar3 = mRegisterParam.getPanPowerExt() / 32767.0f;
 
 	if (mTrackMode == TRACK_MODE_PARENT_CHANNELS)
 		return;
 
-	if (update_flags & UPDATE_Unk17) {
-		u8 cVar8  = 0;
-		f32 thing = mTimedParam.mInnerParam.unk110.mCurrentValue * 128.0f;
+	if (update_flags & UPDATE_MixerDelayBalance) {
+		u8 cVar8 = 0;
+		f32 thing
+		    = mTimedParam.mInnerParam.mMixerDelayBalance.mCurrentValue * 128.0f;
 		s8 local_4c;
 		OSf32tos8(&thing, &local_4c);
 		if (local_4c < 0) {
@@ -529,8 +526,8 @@ void TTrack::updateTrack(u32 update_flags)
 			local_4c = 0;
 		}
 
-		mChannelUpdater.mMixerDelaySamples[0] = cVar8;
-		mChannelUpdater.mMixerDelaySamples[1] = local_4c;
+		mChannelMgr.mMixerDelaySamples[0] = cVar8;
+		mChannelMgr.mMixerDelaySamples[1] = local_4c;
 	}
 
 	if ((update_flags & UPDATE_Tempo) && !mParent)
@@ -547,8 +544,8 @@ void TTrack::updateTrack(u32 update_flags)
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Volume))
 			curVolume *= mOuterParam->getVolume();
 
-		if (mPause && (mPauseStatus & 1))
-			curVolume *= mTimedParam.mInnerParam.unk100.mCurrentValue;
+		if (mPaused && (mPauseMuteFlags & 1))
+			curVolume *= mTimedParam.mInnerParam.mPauseVolume.mCurrentValue;
 	}
 
 	if (update_flags & UPDATE_Pitch) {
@@ -565,7 +562,7 @@ void TTrack::updateTrack(u32 update_flags)
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pan))
 			curPan = panCalc(curPan, mOuterParam->getPan(), fVar3,
-			                 mPanSwitchExt[0]);
+			                 mExternalMixModes[0]);
 	}
 
 	if (update_flags & UPDATE_Fxmix) {
@@ -573,7 +570,7 @@ void TTrack::updateTrack(u32 update_flags)
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
 			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar3,
-			                   mPanSwitchExt[1]);
+			                   mExternalMixModes[1]);
 	}
 
 	if (update_flags & UPDATE_Dolby) {
@@ -581,31 +578,30 @@ void TTrack::updateTrack(u32 update_flags)
 
 		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Dolby))
 			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar3,
-			                   mPanSwitchExt[2]);
+			                   mExternalMixModes[2]);
 	}
 
 	if (update_flags & UPDATE_IIRs) {
 		for (u8 i = 0; i < 4; ++i)
-			mChannelUpdater.mIirCoeffs[i]
+			mChannelMgr.mIirCoeffs[i]
 			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
 
-		mChannelUpdater.mFilterMode
-		    |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
+		mChannelMgr.mFilterMode |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
 	}
 
 	if (mOuterParam && (update_flags & UPDATE_FirFilter)
 	    && mOuterParam->checkOuterSwitch(UPDATE_FirFilter)) {
 		for (u8 i = 0; i < 8; ++i)
-			mChannelUpdater.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
+			mChannelMgr.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
 
-		mChannelUpdater.mFilterMode
-		    = (mChannelUpdater.mFilterMode
+		mChannelMgr.mFilterMode
+		    = (mChannelMgr.mFilterMode
 		       & DSPInterface::DSPBuffer::FILTER_IIR_ENABLED)
 		      + 8;
 	}
 
 	if (update_flags & UPDATE_Unk5) {
-		mChannelUpdater.mDistFilter
+		mChannelMgr.mDistFilter
 		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
 	}
 
@@ -634,50 +630,46 @@ void TTrack::updateTrack(u32 update_flags)
 
 	if (!mParent || (mTrackMode & TRACK_MODE_INDEPENDENT_PARAMS)) {
 		if (update_flags & UPDATE_Volume)
-			mChannelUpdater.mVolume = curVolume;
+			mChannelMgr.mVolume = curVolume;
 		if (update_flags & UPDATE_Pitch)
-			mChannelUpdater.mPitch = curPitch;
+			mChannelMgr.mPitch = curPitch;
 		if (update_flags & UPDATE_Pan)
-			mChannelUpdater.mPan = curPan;
+			mChannelMgr.mPan = curPan;
 		if (update_flags & UPDATE_Fxmix)
-			mChannelUpdater.mFxmix = curFxmix;
+			mChannelMgr.mFxmix = curFxmix;
 		if (update_flags & UPDATE_Dolby)
-			mChannelUpdater.mDolby = curDolby;
+			mChannelMgr.mDolby = curDolby;
 	} else {
-		fVar3 = mRegisterParam.getPanPowerTrack() / 32767.0f;
+		fVar3 = mRegisterParam.getPanPowerParent() / 32767.0f;
 		if (update_flags & UPDATE_Volume)
-			mChannelUpdater.mVolume
-			    = mParent->mChannelUpdater.mVolume * curVolume;
+			mChannelMgr.mVolume = mParent->mChannelMgr.mVolume * curVolume;
 		if (update_flags & UPDATE_Pitch)
-			mChannelUpdater.mPitch = mParent->mChannelUpdater.mPitch * curPitch;
+			mChannelMgr.mPitch = mParent->mChannelMgr.mPitch * curPitch;
 		if (update_flags & UPDATE_Pan)
-			mChannelUpdater.mPan
-			    = panCalc(curPan, mParent->mChannelUpdater.mPan, fVar3,
-			              mPanSwitchParent[0]);
+			mChannelMgr.mPan = panCalc(curPan, mParent->mChannelMgr.mPan, fVar3,
+			                           mParentMixModes[0]);
 		if (update_flags & UPDATE_Fxmix)
-			mChannelUpdater.mFxmix
-			    = panCalc(curFxmix, mParent->mChannelUpdater.mFxmix, fVar3,
-			              mPanSwitchParent[1]);
+			mChannelMgr.mFxmix = panCalc(curFxmix, mParent->mChannelMgr.mFxmix,
+			                             fVar3, mParentMixModes[1]);
 		if (update_flags & UPDATE_Dolby)
-			mChannelUpdater.mDolby
-			    = panCalc(curDolby, mParent->mChannelUpdater.mDolby, fVar3,
-			              mPanSwitchParent[2]);
+			mChannelMgr.mDolby = panCalc(curDolby, mParent->mChannelMgr.mDolby,
+			                             fVar3, mParentMixModes[2]);
 	}
 }
 
 void TTrack::updateTempo()
 {
 	if (mParent == 0) {
-		mTickRate = mTimeBase;
-		mTickRate *= mTempo;
-		mTickRate /= Kernel::getDacRate();
-		mTickRate *= 80.0f;
-		mTickRate /= 60.0f;
+		mTicksPerSubframe = mTimeBase;
+		mTicksPerSubframe *= mTempo;
+		mTicksPerSubframe /= Kernel::getDacRate();
+		mTicksPerSubframe *= 80.0f;
+		mTicksPerSubframe /= 60.0f;
 		if (mOuterParam->checkOuterSwitch(UPDATE_Tempo))
-			mTickRate *= mOuterParam->getTempo();
+			mTicksPerSubframe *= mOuterParam->getTempo();
 	} else {
-		mTickRate = mParent->mTickRate;
-		mTimeBase = mParent->mTimeBase;
+		mTicksPerSubframe = mParent->mTicksPerSubframe;
+		mTimeBase         = mParent->mTimeBase;
 	}
 
 	for (u32 i = 0; i < 16; ++i)
@@ -726,36 +718,35 @@ s8 TTrack::mainProc()
 		tempo /= mParent->mTempo;
 		if (tempo > 1.0f)
 			tempo = 1.0f;
-		mTickCounter += tempo;
-		if (mTickCounter < 1.0f)
+		mTickAccumulator += tempo;
+		if (mTickAccumulator < 1.0f)
 			return 0;
-		mTickCounter -= 1.0f;
+		mTickAccumulator -= 1.0f;
 	}
 
-	if (mParent && mChannelUpdater.mManagedChannels != 0) {
-		TChannel* head
-		    = mChannelUpdater.getListHead(TChannelMgr::CHAN_LIST_FREE);
+	if (mParent && mChannelMgr.mManagedChannels != 0) {
+		TChannel* head = mChannelMgr.getListHead(TChannelMgr::CHAN_LIST_FREE);
 		if (head) {
-			mParent->mChannelUpdater.addListHead(head,
-			                                     TChannelMgr::CHAN_LIST_FREE);
-			head->mManager = &mParent->mChannelUpdater;
-			--mChannelUpdater.mManagedChannels;
-			++mParent->mChannelUpdater.mManagedChannels;
+			mParent->mChannelMgr.addListHead(head, TChannelMgr::CHAN_LIST_FREE);
+			head->mManager = &mParent->mChannelMgr;
+			--mChannelMgr.mManagedChannels;
+			++mParent->mChannelMgr.mManagedChannels;
 		}
 	}
 
-	mTransposeTotal = mTranspose;
+	mEffectiveTranspose = mTranspose;
 	if (mParent)
-		mTransposeTotal += mParent->mTransposeTotal;
-	mIntrMgr.request(7);
+		mEffectiveTranspose += mParent->mEffectiveTranspose;
+	mIntrMgr.request(TIntrMgr::INTR_TICK);
 	mIntrMgr.timerProcess();
 
+	u32 updateFlags;
 	s32 retcode;
 	do {
 		tryInterrupt();
 
-		if (mPause != 0 && (mPauseStatus & 2))
-			goto bail; // TODO: is this goto real? looks quite real to me
+		if (mPaused != 0 && (mPauseMuteFlags & 2))
+			goto finishTick;
 
 		if (mSeqCtrl.getWait() == -1) {
 			if (!checkNoteStop(0))
@@ -775,46 +766,27 @@ s8 TTrack::mainProc()
 			return -1;
 	} while (retcode == -2);
 
-	u32 r31 = 0;
+	updateFlags = 0;
 	for (int i = 0; i != TIMED_Count; ++i) {
 		MoveParam_* param = &mTimedParam.mMoveParams[i];
-		if (param->mMoveTime > 0.0f) {
-			param->mCurrentValue += param->mMoveAmount;
-			param->mMoveTime -= 1.0f;
+		if (param->mTicksRemaining > 0.0f) {
+			param->mCurrentValue += param->mStepPerTick;
+			param->mTicksRemaining -= 1.0f;
 			if (i <= TIMED_Unk5 || i >= TIMED_Osc1_Bias) {
-				r31 |= 1 << i;
+				updateFlags |= 1 << i;
 			} else {
-				f32 cur = param->mCurrentValue;
-				switch ((u8)i) {
-				case TIMED_Osc0_Depth:
-					mOscData[0].mDepth = cur;
-					break;
-				case TIMED_Osc0_Rate:
-					mOscData[0].mRate = cur;
-					break;
-				case TIMED_Osc0_Bias:
-					mOscData[0].mBias = cur;
-					break;
-				case TIMED_Osc1_Depth:
-					mOscData[1].mDepth = cur;
-					break;
-				case TIMED_Osc1_Rate:
-					mOscData[1].mRate = cur;
-					break;
-				case TIMED_Osc1_Bias:
-					mOscData[1].mBias = cur;
-					break;
-				}
+				updateOscParam(i, param->mCurrentValue);
 			}
 		}
 	}
 
 	for (int i = 0; i < 2; ++i)
 		if (mOscMode[i] == 0xE)
-			r31 |= sOscTable[mOscData[i].mTarget];
+			updateFlags |= sOscTable[mOscData[i].mTarget];
 
-bail:
-	mPendingUpdateFlags |= r31;
+finishTick:
+	// BUG: updateFlags might be uninitialized!
+	mPendingUpdateFlags |= updateFlags;
 
 	updateSeq(0, false);
 
@@ -837,7 +809,7 @@ int TTrack::seqTimeToDspTime(s32 param_1, u8 param_2)
 	res *= param_2;
 	res /= 100.0f;
 	if (mTimeRelate) {
-		res /= mTickRate;
+		res /= mTicksPerSubframe;
 	} else {
 		res = (res * 120.0f) / mTimeBase;
 		if (Kernel::getOutputRate() == 0)
@@ -846,247 +818,258 @@ int TTrack::seqTimeToDspTime(s32 param_1, u8 param_2)
 	return res;
 }
 
-void TTrack::writeTimeParam(u8 param)
+void TTrack::writeTimeParam(u8 opcode_params)
 {
+	u8 paramIdx = mSeqCtrl.readByte();
 
-	u8 bVar1 = mSeqCtrl.readByte();
-
-	s16 r29;
-	switch (param & 0xC) {
-	case 0:
-		r29 = readRegDirect(mSeqCtrl.readByte());
+	s16 value;
+	switch (opcode_params & TSeqParser::VALUE_MASK) {
+	case TSeqParser::VALUE_REGISTER:
+		value = readRegDirect(mSeqCtrl.readByte());
 		break;
-	case 4:
-		r29 = mSeqCtrl.readByte();
+	case TSeqParser::VALUE_U8:
+		value = mSeqCtrl.readByte();
 		break;
-	case 8: {
+	case TSeqParser::VALUE_S16_FROM_8: {
 		u16 byte = mSeqCtrl.readByte();
 		if (byte & 0x80)
-			r29 = byte << 8;
+			value = byte << 8;
 		else
-			r29 = byte << 8 | byte << 1;
+			value = byte << 8 | byte << 1;
 		break;
 	}
-	case 0xC:
-		r29 = mSeqCtrl.read16();
-		break;
-	}
-
-	s32 iVar7 = 0;
-	switch (param & 3) {
-	case 0:
-		iVar7 = -1;
-		break;
-	case 1:
-		iVar7 = readRegDirect(mSeqCtrl.readByte());
-		break;
-	case 2:
-		iVar7 = mSeqCtrl.readByte();
-		break;
-	case 3:
-		iVar7 = mSeqCtrl.read16();
+	case TSeqParser::VALUE_S16:
+		value = mSeqCtrl.read16();
 		break;
 	}
 
-	MoveParam_* moveParam   = &mTimedParam.mMoveParams[bVar1];
-	moveParam->mTargetValue = r29 / 32768.0f;
-	if (iVar7 <= 0) {
-		moveParam->mCurrentValue = moveParam->mTargetValue;
-		moveParam->mMoveAmount   = 0.0f;
-		moveParam->mMoveTime     = 1.0f;
+	s32 duration = 0;
+	switch (opcode_params & TSeqParser::DURATION_MASK) {
+	case TSeqParser::DURATION_IMMEDIATE:
+		duration = -1;
+		break;
+	case TSeqParser::DURATION_REGISTER:
+		duration = readRegDirect(mSeqCtrl.readByte());
+		break;
+	case TSeqParser::DURATION_U8:
+		duration = mSeqCtrl.readByte();
+		break;
+	case TSeqParser::DURATION_U16:
+		duration = mSeqCtrl.read16();
+		break;
+	}
+
+	MoveParam_* moveParam   = &mTimedParam.mMoveParams[paramIdx];
+	moveParam->mTargetValue = value / 32768.0f;
+	if (duration <= 0) {
+		moveParam->mCurrentValue   = moveParam->mTargetValue;
+		moveParam->mStepPerTick    = 0.0f;
+		moveParam->mTicksRemaining = 1.0f;
 	} else {
-		moveParam->mMoveAmount
-		    = (moveParam->mTargetValue - moveParam->mCurrentValue) / iVar7;
-		moveParam->mMoveTime = iVar7;
+		moveParam->mStepPerTick
+		    = (moveParam->mTargetValue - moveParam->mCurrentValue) / duration;
+		moveParam->mTicksRemaining = duration;
 	}
 }
 
-void TTrack::writeRegParam(u8 param)
+void TTrack::writeRegParam(u8 opcode_params)
 {
 
-	u32 bVar9 = param & 0xC;
-	u32 bVar8 = param & 0x3;
+	u32 valueSource = opcode_params & TSeqParser::VALUE_MASK;
+	u32 regAction   = opcode_params & TSeqParser::REG_OPERATION_MASK;
 
 	u32 r26;
 
-	if ((param & 0xF) == 0xB) {
-		bVar9 = 0;
-		bVar8 = 0xB;
+	if ((opcode_params & TSeqParser::OPCODE_PARAM_MASK)
+	    == TSeqParser::REG_SUBTRACT) {
+		valueSource = TSeqParser::VALUE_REGISTER;
+		regAction   = TSeqParser::REG_SUBTRACT;
 	}
 
-	if ((param & 0xF) == 0xA) {
-		bVar8 = 10;
-		param = mSeqCtrl.readByte();
-		bVar9 = param & 0xC;
-		r26   = ((param >> 4) & 0xF) + 4;
+	if ((opcode_params & TSeqParser::OPCODE_PARAM_MASK)
+	    == TSeqParser::REG_LOAD_TABLE) {
+		regAction     = TSeqParser::REG_LOAD_TABLE;
+		opcode_params = mSeqCtrl.readByte();
+		valueSource   = opcode_params & TSeqParser::VALUE_MASK;
+		r26           = ((opcode_params >> 4) & 0xF) + 4;
 	}
 
-	if ((param & 0xF) == 0x9) {
-		bVar8 = mSeqCtrl.readByte();
-		bVar9 = bVar8 & 0xC;
-		bVar8 &= 0xF0;
-		if (bVar9 == 8)
-			bVar9 = 0x10;
+	if ((opcode_params & TSeqParser::OPCODE_PARAM_MASK)
+	    == TSeqParser::REG_EXTENDED) {
+		regAction   = mSeqCtrl.readByte();
+		valueSource = regAction & TSeqParser::VALUE_MASK;
+		regAction &= TSeqParser::OPCODE_FAMILY_MASK;
+		if (valueSource == TSeqParser::VALUE_S16_FROM_8)
+			valueSource = 0x10;
 	}
 
-	u8 bVar1 = mSeqCtrl.readByte();
+	u8 regNo = mSeqCtrl.readByte();
 	u32 r25;
 
-	if (bVar8 == 10)
+	if (regAction == TSeqParser::REG_LOAD_TABLE)
 		r25 = readReg32(mSeqCtrl.readByte());
 
-	s16 r24;
+	s16 value;
 
-	switch (bVar9) {
-	case 0:
-		r24 = readRegDirect(mSeqCtrl.readByte());
+	switch (valueSource) {
+	case TSeqParser::VALUE_REGISTER:
+		value = readRegDirect(mSeqCtrl.readByte());
 		break;
-	case 4:
-		r24 = mSeqCtrl.readByte();
+	case TSeqParser::VALUE_U8:
+		value = mSeqCtrl.readByte();
 		break;
-	case 8: {
+	case TSeqParser::VALUE_S16_FROM_8: {
 		u16 byte = mSeqCtrl.readByte();
 		if (byte & 0x80)
-			r24 = byte << 8;
+			value = byte << 8;
 		else
-			r24 = byte << 8 | byte << 1;
+			value = byte << 8 | byte << 1;
 		break;
 	}
-	case 0xC:
-		r24 = mSeqCtrl.read16();
+	case TSeqParser::VALUE_S16:
+		value = mSeqCtrl.read16();
 		break;
 	case 0x10:
-		r24 = 0xffff;
+		value = 0xffff;
 		break;
 	}
 
-	s16 uVar5 = readRegDirect(bVar1);
+	s16 oldValue = readRegDirect(regNo);
 
-	switch (bVar8) {
-	case 0x0:
+	switch (regAction) {
+	case TSeqParser::REG_SET:
 		break;
-	case 0x1:
-		if (bVar9 == 4)
-			r24 = Player::extend8to16(r24);
-		r24 = uVar5 + r24;
+
+	case TSeqParser::REG_ADD:
+		if (valueSource == TSeqParser::VALUE_U8)
+			value = Player::extend8to16(value);
+		value = oldValue + value;
 		break;
-	case 0x2: {
-		u32 product = uVar5;
-		product *= r24;
-		writeRegDirect(4, product >> 0x10);
-		writeRegDirect(5, JSULoHalf(product));
+
+	case TSeqParser::REG_MULTIPLY: {
+		u32 product = oldValue;
+		product *= value;
+		writeRegDirect(TRegisterParam::REG_PRODUCT_HI, product >> 0x10);
+		writeRegDirect(TRegisterParam::REG_PRODUCT_LO, JSULoHalf(product));
 		return;
 	}
 
-	case 0x3:
-		mRegisterParam.setFlag(uVar5 - r24);
+	case TSeqParser::REG_COMPARE:
+		mRegisterParam.setFlag(oldValue - value);
 		return;
-	case 0xB:
-		r24 = uVar5 - r24;
+
+	case TSeqParser::REG_SUBTRACT:
+		value = oldValue - value;
 		break;
-	case 0x10:
-		if (bVar9 == 4)
-			r24 = Player::extend8to16(r24);
-		if (r24 < 0)
-			r24 = (u16)uVar5 >> -r24;
+
+	case TSeqParser::REG_SHIFT_LOGICAL:
+		if (valueSource == TSeqParser::VALUE_U8)
+			value = Player::extend8to16(value);
+		if (value < 0)
+			value = (u16)oldValue >> -value;
 		else
-			r24 = (u16)uVar5 << r24;
+			value = (u16)oldValue << value;
 		break;
-	case 0x20:
-		if (bVar9 == 4)
-			r24 = Player::extend8to16(r24);
-		if (r24 < 0)
-			r24 = uVar5 >> -r24;
+
+	case TSeqParser::REG_SHIFT_ARITHMETIC:
+		if (valueSource == TSeqParser::VALUE_U8)
+			value = Player::extend8to16(value);
+		if (value < 0)
+			value = oldValue >> -value;
 		else
-			r24 = uVar5 << r24;
+			value = oldValue << value;
 		break;
-	case 0x30:
-		r24 = uVar5 & r24;
+
+	case TSeqParser::REG_AND:
+		value = oldValue & value;
 		break;
-	case 0x40:
-		r24 = uVar5 | r24;
+
+	case TSeqParser::REG_OR:
+		value = oldValue | value;
 		break;
-	case 0x50:
-		r24 = uVar5 ^ r24;
+
+	case TSeqParser::REG_XOR:
+		value = oldValue ^ value;
 		break;
-	case 0x60:
-		r24 = -uVar5;
+
+	case TSeqParser::REG_NEGATE:
+		value = -oldValue;
 		break;
-	case 0x90:
-		r25 = Player::getRandomS32();
-		r24 = r25 % (u16)r24;
+
+	case TSeqParser::REG_RANDOM:
+		r25   = Player::getRandomS32();
+		value = r25 % (u16)value;
 		break;
-	case 0xA:
-		r25 = loadTbl(r25, r24, r26);
-		r24 = (u16)r25;
+
+	case TSeqParser::REG_LOAD_TABLE:
+		r25   = loadTbl(r25, value, r26);
+		value = (u16)r25;
 		break;
 	}
 
-	s16 uVar6;
-	switch (bVar1) {
-	case 0:
-	case 1:
-	case 2:
-		r24   = (u8)r24;
-		uVar6 = Player::extend8to16(r24);
+	s16 flagRegisterValue;
+	switch (regNo) {
+	case TRegisterParam::REG_U8_0:
+	case TRegisterParam::REG_U8_1:
+	case TRegisterParam::REG_U8_2:
+		value             = (u8)value;
+		flagRegisterValue = Player::extend8to16(value);
 		break;
 
-	case 0x21:
-		r24   = (u8)r24 | (mRegisterParam.getBankNumber() << 8);
-		bVar1 = 6;
+	case TRegisterParam::REG_PROGRAM:
+		value = (u8)value | (mRegisterParam.getBankNumber() << 8);
+		regNo = TRegisterParam::REG_BANK_PROGRAM;
 		break;
 
-	case 0x20:
-		r24   = (r24 << 8) | (u8)mRegisterParam.getProgramNumber();
-		bVar1 = 6;
+	case TRegisterParam::REG_BANK:
+		value = (value << 8) | (u8)mRegisterParam.getProgramNumber();
+		regNo = TRegisterParam::REG_BANK_PROGRAM;
 		break;
 
-	case 0x2E:
-		r24   = (mRegisterParam.getPriority() & 0xff00) | JSULoByte(r24);
-		bVar1 = 0xd;
+	case TRegisterParam::REG_NOTE_ON_PRIORITY:
+		value = (mRegisterParam.getPriority() & 0xff00) | JSULoByte(value);
+		regNo = TRegisterParam::REG_PRIORITY;
 		break;
 
-	case 0x2F:
-		r24   = (r24 << 8) | JSULoByte(mRegisterParam.getPriority());
-		bVar1 = 0xd;
+	case TRegisterParam::REG_RELEASE_PRIORITY:
+		value = (value << 8) | JSULoByte(mRegisterParam.getPriority());
+		regNo = TRegisterParam::REG_PRIORITY;
 		break;
 
-	case 0x22:
-		writeRegDirect(0, r24 >> 8);
-		r24   = r24 & 0xff;
-		uVar6 = r24;
-		bVar1 = 1;
+	case TRegisterParam::REG_U8_PAIR:
+		writeRegDirect(TRegisterParam::REG_U8_0, value >> 8);
+		value             = value & 0xff;
+		flagRegisterValue = value;
+		regNo             = TRegisterParam::REG_U8_1;
 		break;
 
-	case 0x28:
-	case 0x29:
-	case 0x2A:
-	case 0x2B:
-		mRegisterParam.setAddress(bVar1 - 0x28, r25);
+	case TRegisterParam::REG_ADDRESS0:
+	case TRegisterParam::REG_ADDRESS1:
+	case TRegisterParam::REG_ADDRESS2:
+	case TRegisterParam::REG_ADDRESS3:
+		mRegisterParam.setAddress(regNo - TRegisterParam::REG_ADDRESS0, r25);
 		return;
 
 	default:
-		uVar6 = r24;
+		flagRegisterValue = value;
 		break;
 	}
 
-	mRegisterParam.mRegisters[bVar1] = r24;
-	mRegisterParam.setFlag(uVar6);
+	mRegisterParam.mRegisters[regNo] = value;
+	mRegisterParam.setFlag(flagRegisterValue);
 
-	if (bVar1 == 6) {
-		for (int i = 0; i < 2; i++) {
+	if (regNo == TRegisterParam::REG_BANK_PROGRAM) {
+		for (int i = 0; i < 2; i++)
 			if (mOscMode[i] != 0xE)
 				mOscMode[i] = 0xF;
-		}
 	}
 
-	if (bVar1 == 7)
+	if (regNo == TRegisterParam::REG_BEND_SENSE)
 		mPendingUpdateFlags |= UPDATE_Pitch;
 
-	if (bVar1 == 0xD) {
-		mChannelUpdater.mPriorityConfig
-		    = mRegisterParam.getPriority() | 0x10000;
-		mChannelUpdater.mPriorityTime = 0;
+	if (regNo == TRegisterParam::REG_PRIORITY) {
+		mChannelMgr.mPriorityConfig = mRegisterParam.getPriority() | 0x10000;
+		mChannelMgr.mPriorityTime   = 0;
 	}
 }
 
@@ -1099,9 +1082,9 @@ int TTrack::setSeqData(u8* data, s32 size, Player::SEQ_PLAYMODE mode)
 	mTrackRoute = result;
 	mTrackMode  = TRACK_MODE_INDEPENDENT;
 	initTrack(data, 0, nullptr);
-	mChannelUpdater.initAllocChannel(0);
-	mTickCounter = 0.0f;
-	mTickRate    = 1.0f;
+	mChannelMgr.initAllocChannel(0);
+	mTickAccumulator  = 0.0f;
+	mTicksPerSubframe = 1.0f;
 	updateTrackAll();
 	mSeqState = 2;
 
@@ -1140,7 +1123,7 @@ bool TTrack::stopSeq()
 
 	case 2:
 		mSeqState = 0;
-		if (mInnerMemory == 1)
+		if (mFromTrackPool == 1)
 			TrackMgr::backTrack(this);
 		TrackMgr::deAllocRoot(this);
 		break;
@@ -1172,7 +1155,7 @@ bool TTrack::closeTrack()
 	allNoteOff();
 	mSeqState = 0;
 
-	if (mInnerMemory == 1)
+	if (mFromTrackPool == 1)
 		TrackMgr::backTrack(this);
 
 	for (u8 i = 0; i < 16; ++i)
@@ -1185,9 +1168,9 @@ bool TTrack::closeTrack()
 
 	releaseChannelAll();
 
-	if (mConnected) {
+	if (mRegistered) {
 		TrackMgr::unRegistTrack(this);
-		mConnected = 0;
+		mRegistered = 0;
 	}
 
 	return false;
@@ -1197,7 +1180,7 @@ void TTrack::muteTrack(u8 flag)
 {
 	mMute = flag;
 	mPendingUpdateFlags |= UPDATE_Volume;
-	if (mMute && (mPauseStatus & 0x20)) {
+	if (mMute && (mPauseMuteFlags & 0x20)) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
 			if (chan) {
@@ -1216,25 +1199,25 @@ void TTrack::muteTrack(u8 flag)
 
 void TTrack::muteChildTracks(u16 flags) { }
 
-void TTrack::initTrack(void* data, u32 size, TTrack* parent)
+void TTrack::initTrack(void* data, u32 seq_offset, TTrack* parent)
 {
-	mSeqCtrl.init(data, size);
+	mSeqCtrl.init(data, seq_offset);
 	if (parent == nullptr) {
-		mTempo       = 0x78;
-		mTimeBase    = 0x30;
-		mTimeRelate  = 1;
-		mPause       = 0;
-		mPauseStatus = 10;
-		mVolumeMode  = 0;
-		mMute        = 0;
+		mTempo          = 0x78;
+		mTimeBase       = 0x30;
+		mTimeRelate     = 1;
+		mPaused         = 0;
+		mPauseMuteFlags = 10;
+		mVolumeMode     = 0;
+		mMute           = 0;
 	} else {
 		mTempo               = parent->mTempo;
 		mOverrideParentTempo = false;
-		mTickRate            = parent->mTickRate;
+		mTicksPerSubframe    = parent->mTicksPerSubframe;
 		mTimeBase            = parent->mTimeBase;
 		mTimeRelate          = parent->mTimeRelate;
-		mPause               = parent->mPause;
-		mPauseStatus         = parent->mPauseStatus;
+		mPaused              = parent->mPaused;
+		mPauseMuteFlags      = parent->mPauseMuteFlags;
 		mVolumeMode          = parent->mVolumeMode;
 		mMute                = parent->mMute;
 	}
@@ -1249,17 +1232,16 @@ void TTrack::initTrack(void* data, u32 size, TTrack* parent)
 	if ((mTrackMode & TRACK_MODE_CLEAR_REGISTERS) || !mParent) {
 		mRegisterParam.init();
 		for (u8 i = 0; i < 3; ++i) {
-			mPanSwitchExt[i]              = 0;
-			mPanSwitchParent[i]           = 0;
-			mChannelUpdater.mCalcTypes[i] = TChannel::CALC_WEIGHTED_SUM_ALL;
+			mExternalMixModes[i]      = 0;
+			mParentMixModes[i]        = 0;
+			mChannelMgr.mCalcTypes[i] = TChannel::CALC_WEIGHTED_SUM_ALL;
 		}
 	} else {
 		mRegisterParam.inherit(mParent->mRegisterParam);
 		for (u8 i = 0; i < 3; ++i) {
-			mPanSwitchExt[i]    = mParent->mPanSwitchExt[i];
-			mPanSwitchParent[i] = mParent->mPanSwitchParent[i];
-			mChannelUpdater.mCalcTypes[i]
-			    = mParent->mChannelUpdater.mCalcTypes[i];
+			mExternalMixModes[i]      = mParent->mExternalMixModes[i];
+			mParentMixModes[i]        = mParent->mParentMixModes[i];
+			mChannelMgr.mCalcTypes[i] = mParent->mChannelMgr.mCalcTypes[i];
 		}
 	}
 
@@ -1272,10 +1254,10 @@ void TTrack::initTrack(void* data, u32 size, TTrack* parent)
 	mOscillators[1].initStart();
 	mOscMode[1] = 0xe;
 
-	mTranspose      = 0;
-	mTransposeTotal = 0;
+	mTranspose          = 0;
+	mEffectiveTranspose = 0;
 	mTrackPort.init();
-	mConnected = 0;
+	mRegistered = 0;
 }
 
 int TTrack::startTrack(TTrack* parent, u8 child_index, u8 track_mode,
@@ -1284,12 +1266,12 @@ int TTrack::startTrack(TTrack* parent, u8 child_index, u8 track_mode,
 	mTrackRoute = (((parent->mTrackRoute << 4) | child_index) & 0xfffffff)
 	              | ((parent->mTrackRoute & 0xf0000000) + 0x10000000);
 
-	mConnectName = 0;
-	mTrackMode   = track_mode;
+	mRegistrationId = 0;
+	mTrackMode      = track_mode;
 	initTrack(parent->mSeqCtrl.getBase(), seq_offset, parent);
 	if (mOuterParam)
 		mOuterParam->initExtBuffer();
-	mChannelUpdater.initAllocChannel(0);
+	mChannelMgr.initAllocChannel(0);
 	updateTrackAll();
 	return 0;
 }
@@ -1337,17 +1319,17 @@ u32 TTrack::readReg32(u8 reg)
 {
 	u32 result;
 	switch (reg) {
-	case 0x28:
-	case 0x29:
-	case 0x2A:
-	case 0x2B:
-		result = mRegisterParam.getAddress(reg - 0x28);
+	case TRegisterParam::REG_ADDRESS0:
+	case TRegisterParam::REG_ADDRESS1:
+	case TRegisterParam::REG_ADDRESS2:
+	case TRegisterParam::REG_ADDRESS3:
+		result = mRegisterParam.getAddress(reg - TRegisterParam::REG_ADDRESS0);
 		break;
 
-	case 0x23:
-		result = readRegDirect(4);
+	case TRegisterParam::REG_PRODUCT:
+		result = readRegDirect(TRegisterParam::REG_PRODUCT_HI);
 		result <<= 0x10;
-		result |= readRegDirect(5);
+		result |= readRegDirect(TRegisterParam::REG_PRODUCT_LO);
 		break;
 
 	default:
@@ -1359,10 +1341,10 @@ u32 TTrack::readReg32(u8 reg)
 
 u32 TTrack::exchangeRegisterValue(u8 reg)
 {
-	if (reg < 0x40)
+	if (reg < TRegisterParam::REG_PORT_BASE)
 		return readReg32(reg);
 	else
-		return mTrackPort.get((u8)(reg - 0x40));
+		return mTrackPort.get((u8)(reg - TRegisterParam::REG_PORT_BASE));
 }
 
 u16 TTrack::readRegDirect(u8 reg)
@@ -1371,21 +1353,21 @@ u16 TTrack::readRegDirect(u8 reg)
 	int i;
 
 	switch (reg) {
-	case 32:
+	case TRegisterParam::REG_BANK:
 		result = mRegisterParam.getBankNumber();
 		break;
 
-	case 33:
+	case TRegisterParam::REG_PROGRAM:
 		result = mRegisterParam.getProgramNumber();
 		break;
 
-	case 34:
-		result = readRegDirect(0);
+	case TRegisterParam::REG_U8_PAIR:
+		result = readRegDirect(TRegisterParam::REG_U8_0);
 		result <<= 8;
-		result |= readRegDirect(1);
+		result |= readRegDirect(TRegisterParam::REG_U8_1);
 		break;
 
-	case 44:
+	case TRegisterParam::REG_ACTIVE_CHILD_MASK:
 		result = 0;
 		for (i = 15; i >= 0; --i) {
 			TTrack* child = mChildren[i];
@@ -1395,7 +1377,7 @@ u16 TTrack::readRegDirect(u8 reg)
 		}
 		break;
 
-	case 45:
+	case TRegisterParam::REG_NOTE_STOP_MASK:
 		result = 0;
 		for (i = 7; i >= 0; --i) {
 			result <<= 1;
@@ -1411,7 +1393,7 @@ u16 TTrack::readRegDirect(u8 reg)
 		}
 		break;
 
-	case 48:
+	case TRegisterParam::REG_LOOP_COUNT:
 		result = mSeqCtrl.getLoopCount();
 		break;
 
@@ -1428,21 +1410,21 @@ void TTrack::writeRegDirect(u8 reg, u16 value)
 	u16 r4;
 
 	switch (reg) {
-	case 0:
-	case 1:
-	case 2:
+	case TRegisterParam::REG_U8_0:
+	case TRegisterParam::REG_U8_1:
+	case TRegisterParam::REG_U8_2:
 		value = value & 0xff;
 		r4    = Player::extend8to16(value);
 		break;
 
-	case 32:
-	case 33:
+	case TRegisterParam::REG_BANK:
+	case TRegisterParam::REG_PROGRAM:
 		return;
 
-	case 34: {
-		writeRegDirect(0, value >> 8);
+	case TRegisterParam::REG_U8_PAIR: {
+		writeRegDirect(TRegisterParam::REG_U8_0, value >> 8);
 
-		reg   = 1;
+		reg   = TRegisterParam::REG_U8_1;
 		r4    = value;
 		value = value & 0xff;
 		break;
@@ -1464,7 +1446,8 @@ bool TTrack::writePortAppDirect(u32 port, u16 value)
 	mTrackPort.mImportFlag[port] = 1;
 	mTrackPort.mValue[port]      = value;
 	if (port <= 1)
-		mIntrMgr.request(port == 0 ? 3 : 4);
+		mIntrMgr.request(port == 0 ? TIntrMgr::INTR_PORT0_WRITE
+		                           : TIntrMgr::INTR_PORT1_WRITE);
 	return true;
 }
 
@@ -1509,7 +1492,8 @@ bool TTrack::writePortApp(u32 port, u16 value)
 	found->mTrackPort.mValue[realPort]      = value;
 
 	if (realPort <= 1)
-		found->mIntrMgr.request(realPort == 0 ? 3 : 4);
+		found->mIntrMgr.request(realPort == 0 ? TIntrMgr::INTR_PORT0_WRITE
+		                                      : TIntrMgr::INTR_PORT1_WRITE);
 	return true;
 }
 
@@ -1534,11 +1518,11 @@ void TTrack::checkImportApp(u32 port) { }
 
 void TTrack::pauseTrack(u8 flag)
 {
-	mPause = 1;
-	if (mPauseStatus & 0x1)
+	mPaused = 1;
+	if (mPauseMuteFlags & 0x1)
 		mPendingUpdateFlags |= UPDATE_Volume;
 
-	if (mPauseStatus & 0x4) {
+	if (mPauseMuteFlags & 0x4) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
 			if (chan) {
@@ -1548,7 +1532,7 @@ void TTrack::pauseTrack(u8 flag)
 		}
 	}
 
-	if (mPauseStatus & 8) {
+	if (mPauseMuteFlags & 8) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
 			if (chan)
@@ -1556,7 +1540,7 @@ void TTrack::pauseTrack(u8 flag)
 		}
 	}
 
-	mIntrMgr.request(0);
+	mIntrMgr.request(TIntrMgr::INTR_PAUSE);
 
 	if (flag == 1) {
 		for (u32 i = 0; i < 16; ++i) {
@@ -1568,7 +1552,7 @@ void TTrack::pauseTrack(u8 flag)
 
 void TTrack::unPauseTrack(u8 flag)
 {
-	mPause = 0;
+	mPaused = 0;
 	mPendingUpdateFlags |= UPDATE_Volume;
 
 	for (u8 i = 0; i < 8; ++i) {
@@ -1577,7 +1561,7 @@ void TTrack::unPauseTrack(u8 flag)
 			chan->setPauseFlag(0);
 	}
 
-	mIntrMgr.request(1);
+	mIntrMgr.request(TIntrMgr::INTR_RESUME);
 
 	if (flag == 1) {
 		for (u8 i = 0; i < 16; ++i)
@@ -1618,13 +1602,13 @@ s32 TTrack::rootCallback(void* param)
 			self->stopSeqMain();
 			return -1;
 		} else {
-			self->mTickCounter += self->mTickRate;
+			self->mTickAccumulator += self->mTicksPerSubframe;
 
-			if (self->mTickCounter < 1.0f) {
+			if (self->mTickAccumulator < 1.0f) {
 				self->updateSeq(0, true);
 			} else {
-				while (self->mTickCounter >= 1.0f) {
-					self->mTickCounter -= 1.0f;
+				while (self->mTickAccumulator >= 1.0f) {
+					self->mTickAccumulator -= 1.0f;
 					if ((int)self->mainProc() != -1)
 						continue;
 

@@ -4,20 +4,20 @@ namespace JASystem {
 
 TRegisterParam::TRegisterParam()
 {
-	mRegisters[0]  = 0;
-	mRegisters[1]  = 0;
-	mRegisters[2]  = 0;
-	mRegisters[3]  = 0;
-	mRegisters[4]  = 0;
-	mRegisters[5]  = 0;
-	mRegisters[6]  = 0;
-	mRegisters[7]  = 0;
-	mRegisters[13] = 0;
-	mRegisters[8]  = 0;
-	mRegisters[9]  = 0;
-	mRegisters[10] = 0;
-	mRegisters[11] = 0;
-	mRegisters[12] = 0;
+	mRegisters[REG_U8_0]             = 0;
+	mRegisters[REG_U8_1]             = 0;
+	mRegisters[REG_U8_2]             = 0;
+	mRegisters[REG_FLAG]             = 0;
+	mRegisters[REG_PRODUCT_HI]       = 0;
+	mRegisters[REG_PRODUCT_LO]       = 0;
+	mRegisters[REG_BANK_PROGRAM]     = 0;
+	mRegisters[REG_BEND_SENSE]       = 0;
+	mRegisters[REG_PRIORITY]         = 0;
+	mRegisters[REG_PAN_POWER_BANK]   = 0;
+	mRegisters[REG_PAN_POWER_OSC]    = 0;
+	mRegisters[REG_PAN_POWER_TRACK]  = 0;
+	mRegisters[REG_PAN_POWER_EXT]    = 0;
+	mRegisters[REG_PAN_POWER_PARENT] = 0;
 
 	for (int i = 0; i < 4; ++i)
 		unk20[i] = 0;
@@ -25,20 +25,20 @@ TRegisterParam::TRegisterParam()
 
 void TRegisterParam::init()
 {
-	mRegisters[0]  = 0;
-	mRegisters[1]  = 0;
-	mRegisters[2]  = 0;
-	mRegisters[3]  = 0;
-	mRegisters[4]  = 0;
-	mRegisters[5]  = 0;
-	mRegisters[6]  = 0xf0;
-	mRegisters[7]  = 0x0c;
-	mRegisters[13] = 0x40;
-	mRegisters[8]  = 0;
-	mRegisters[9]  = 1;
-	mRegisters[10] = 1;
-	mRegisters[11] = 0x7fff;
-	mRegisters[12] = 0x4000;
+	mRegisters[REG_U8_0]             = 0;
+	mRegisters[REG_U8_1]             = 0;
+	mRegisters[REG_U8_2]             = 0;
+	mRegisters[REG_FLAG]             = 0;
+	mRegisters[REG_PRODUCT_HI]       = 0;
+	mRegisters[REG_PRODUCT_LO]       = 0;
+	mRegisters[REG_BANK_PROGRAM]     = 0xf0;
+	mRegisters[REG_BEND_SENSE]       = 0x0c;
+	mRegisters[REG_PRIORITY]         = 0x40;
+	mRegisters[REG_PAN_POWER_BANK]   = 0;
+	mRegisters[REG_PAN_POWER_OSC]    = 1;
+	mRegisters[REG_PAN_POWER_TRACK]  = 1;
+	mRegisters[REG_PAN_POWER_EXT]    = 0x7fff;
+	mRegisters[REG_PAN_POWER_PARENT] = 0x4000;
 
 	for (int i = 0; i < 4; ++i)
 		unk20[i] = 0;
@@ -46,18 +46,19 @@ void TRegisterParam::init()
 
 void TRegisterParam::inherit(const TRegisterParam& other)
 {
-	mRegisters[0]  = 0;
-	mRegisters[1]  = 0;
-	mRegisters[2]  = 0;
-	mRegisters[3]  = 0;
-	mRegisters[4]  = 0;
-	mRegisters[5]  = 0;
-	mRegisters[6]  = other.mRegisters[6];
-	mRegisters[7]  = other.mRegisters[7];
-	mRegisters[13] = other.mRegisters[13];
+	mRegisters[REG_U8_0]         = 0;
+	mRegisters[REG_U8_1]         = 0;
+	mRegisters[REG_U8_2]         = 0;
+	mRegisters[REG_FLAG]         = 0;
+	mRegisters[REG_PRODUCT_HI]   = 0;
+	mRegisters[REG_PRODUCT_LO]   = 0;
+	mRegisters[REG_BANK_PROGRAM] = other.mRegisters[REG_BANK_PROGRAM];
+	mRegisters[REG_BEND_SENSE]   = other.mRegisters[REG_BEND_SENSE];
+	mRegisters[REG_PRIORITY]     = other.mRegisters[REG_PRIORITY];
 
 	for (int i = 0; i < 5; ++i)
-		mRegisters[8 + i] = other.mRegisters[8 + i];
+		mRegisters[REG_PAN_POWER_BANK + i]
+		    = other.mRegisters[REG_PAN_POWER_BANK + i];
 
 	for (int i = 0; i < 4; ++i)
 		unk20[i] = 0;
@@ -65,8 +66,14 @@ void TRegisterParam::inherit(const TRegisterParam& other)
 
 void TRegisterParam::setBankNumber(u8 bankNum) { }
 
-u8 TRegisterParam::getBankNumber() const { return mRegisters[6] >> 8; }
+u8 TRegisterParam::getBankNumber() const
+{
+	return mRegisters[REG_BANK_PROGRAM] >> 8;
+}
 
-u8 TRegisterParam::getProgramNumber() const { return mRegisters[6]; }
+u8 TRegisterParam::getProgramNumber() const
+{
+	return mRegisters[REG_BANK_PROGRAM];
+}
 
 } // namespace JASystem

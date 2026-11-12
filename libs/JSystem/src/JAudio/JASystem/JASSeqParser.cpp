@@ -76,8 +76,8 @@ TSeqParser::CmdFunc TSeqParser::sCmdPList[] = {
 
 // Fabricated
 struct Arg_s {
-	u16 m00;
-	u16 m02;
+	u16 mArgCount;
+	u16 mArgTypes;
 };
 
 static const Arg_s Arglist[0x40] = {
@@ -203,7 +203,8 @@ int TSeqParser::cmdJmp(TTrack* track, u32* args)
 			}
 			offset = track->mSeqCtrl.get24(offs + otherOffset * 3);
 		} else {
-			if (cData >= 0x28 && 0x2b >= cData)
+			if (cData >= TRegisterParam::REG_ADDRESS0
+			    && TRegisterParam::REG_ADDRESS3 >= cData)
 				trackptr = (void*)track->readReg32(cData);
 			else
 				offset = track->readReg32(cData);
@@ -250,13 +251,15 @@ int TSeqParser::cmdWritePort(TTrack* track, u32* args)
 
 int TSeqParser::cmdCheckPortImport(TTrack* track, u32* args)
 {
-	track->writeRegDirect(3, track->checkImport(args[0]));
+	track->writeRegDirect(TRegisterParam::REG_FLAG,
+	                      track->checkImport(args[0]));
 	return 0;
 }
 
 int TSeqParser::cmdCheckPortExport(TTrack* track, u32* args)
 {
-	track->writeRegDirect(3, track->checkExport(args[0]));
+	track->writeRegDirect(TRegisterParam::REG_FLAG,
+	                      track->checkExport(args[0]));
 	return 0;
 }
 
@@ -269,7 +272,7 @@ int TSeqParser::cmdWait(TTrack* track, u32* args)
 
 int TSeqParser::cmdConnectName(TTrack* track, u32* args)
 {
-	track->mConnectName = args[0] << 16 | args[1];
+	track->mRegistrationId = args[0] << 16 | args[1];
 	return 0;
 }
 
@@ -288,7 +291,7 @@ int TSeqParser::cmdChildWritePort(TTrack* track, u32* args)
 int TSeqParser::cmdSetLastNote(TTrack* track, u32* args)
 {
 	u32 key = args[0];
-	key += track->mTransposeTotal;
+	key += track->mEffectiveTranspose;
 	track->mNoteMgr.setLastNote(key);
 	return 0;
 }
@@ -332,9 +335,9 @@ int TSeqParser::cmdSimpleADSR(TTrack* track, u32* args)
 int TSeqParser::cmdTranspose(TTrack* track, u32* args)
 {
 	track->setTranspose(args[0]);
-	track->mTransposeTotal = track->mTranspose;
+	track->mEffectiveTranspose = track->mTranspose;
 	if (track->getParent())
-		track->mTransposeTotal += track->getParent()->mTranspose;
+		track->mEffectiveTranspose += track->getParent()->mTranspose;
 	return 0;
 }
 
@@ -372,7 +375,7 @@ int TSeqParser::cmdBusConnect(TTrack* track, u32* args)
 {
 	u32 i = args[0];
 	if (i < 6)
-		track->mChannelUpdater.mMixConfig[i] = args[1];
+		track->mChannelMgr.mMixConfig[i] = args[1];
 	return 0;
 }
 
@@ -428,16 +431,16 @@ int TSeqParser::cmdIntTimer(TTrack* track, u32* args)
 
 int TSeqParser::cmdConnectOpen(TTrack* track, u32* args)
 {
-	TrackMgr::registTrack(track->mConnectName, track);
-	track->mConnected = 1;
+	TrackMgr::registTrack(track->mRegistrationId, track);
+	track->mRegistered = 1;
 	return 0;
 }
 
 int TSeqParser::cmdConnectClose(TTrack* track, u32* args)
 {
-	if (track->mConnected) {
+	if (track->mRegistered) {
 		TrackMgr::unRegistTrack(track);
-		track->mConnected = 0;
+		track->mRegistered = 0;
 	}
 	return 0;
 }
@@ -448,7 +451,7 @@ int TSeqParser::cmdSyncCPU(TTrack* track, u32* args)
 	if (TTrack::sCallBackFunc) {
 		var1 = TTrack::sCallBackFunc(track, args[0]);
 	}
-	track->writeRegDirect(3, var1);
+	track->writeRegDirect(TRegisterParam::REG_FLAG, var1);
 	return 0;
 }
 
@@ -460,7 +463,7 @@ int TSeqParser::cmdFlushAll(TTrack* track, u32* args)
 
 int TSeqParser::cmdFlushRelease(TTrack* track, u32* args)
 {
-	track->mChannelUpdater.stopAllRelease();
+	track->mChannelMgr.stopAllRelease();
 	return 0;
 }
 
@@ -487,9 +490,9 @@ int TSeqParser::cmdFinish(TTrack* track, u32* args)
 	u32 mask = 0;
 	for (u8 i = 0; i < 18; ++i) {
 		TTrack::MoveParam_* param = &track->mTimedParam.mMoveParams[i];
-		if (param->mMoveTime > 0.0f) {
-			param->mCurrentValue += param->mMoveAmount;
-			param->mMoveTime -= 1.0f;
+		if (param->mTicksRemaining > 0.0f) {
+			param->mCurrentValue += param->mStepPerTick;
+			param->mTicksRemaining -= 1.0f;
 			if (i <= 5 || i >= 11)
 				mask = mask | 1 << i;
 			else
@@ -519,8 +522,8 @@ int TSeqParser::cmdIIRSet(TTrack* track, u32* args)
 		TTrack::MoveParam_* iir = &track->mTimedParam.mInnerParam.mIIRs[i];
 		iir->mTargetValue       = target / 32768.0f;
 		iir->mCurrentValue      = iir->mTargetValue;
-		iir->mMoveAmount        = 0.0f;
-		iir->mMoveTime          = 1.0f;
+		iir->mStepPerTick       = 0.0f;
+		iir->mTicksRemaining    = 1.0f;
 	}
 	return 0;
 }
@@ -547,9 +550,9 @@ int TSeqParser::cmdPanSwSet(TTrack* track, u32* args)
 	u8 parentCalcTypes[] = { 0, 1, 2, 0, 2, 0, 2 };
 
 	for (u8 i = 0; i < 3; i++) {
-		track->mPanSwitchExt[i]              = calcTypes[args[i] >> 5];
-		track->mPanSwitchParent[i]           = parentCalcTypes[args[i] >> 5];
-		track->mChannelUpdater.mCalcTypes[i] = args[i] & 0x1F;
+		track->mExternalMixModes[i]      = calcTypes[args[i] >> 5];
+		track->mParentMixModes[i]        = parentCalcTypes[args[i] >> 5];
+		track->mChannelMgr.mCalcTypes[i] = args[i] & 0x1F;
 		track->mPendingUpdateFlags |= TTrack::UPDATE_Pan;
 	}
 
@@ -577,8 +580,8 @@ int TSeqParser::cmdIIRCutOff(TTrack* track, u32* args)
 		TTrack::MoveParam_* iir = &track->mTimedParam.mMoveParams[iirIndex];
 		iir->mTargetValue       = table[i] / (32768.0f - 1.0f);
 		iir->mCurrentValue      = iir->mTargetValue;
-		iir->mMoveAmount        = 0.0f;
-		iir->mMoveTime          = 1.0f;
+		iir->mStepPerTick       = 0.0f;
+		iir->mTicksRemaining    = 1.0f;
 	}
 	return 0;
 }
@@ -591,7 +594,7 @@ int TSeqParser::cmdOscFull(TTrack* track, u32* args)
 
 int TSeqParser::cmdCheckWave(TTrack* track, u32* args)
 {
-	track->writeRegDirect(3, 0);
+	track->writeRegDirect(TRegisterParam::REG_FLAG, 0);
 	return 0;
 }
 
@@ -672,48 +675,49 @@ int TSeqParser::cmdPrintf(TTrack* track, u32* args)
 	return 0;
 }
 
-int TSeqParser::Cmd_Process(TTrack* track, u8 param_2, u16 param_3)
+int TSeqParser::Cmd_Process(TTrack* track, u8 opcode, u16 register_arg_types)
 {
-	JASystem::Arg_s sp08 = Arglist[param_2 - 0xC0];
-	u16 r29              = sp08.m02;
-	r29 |= param_3;
-	u32 sp18[8];
-	for (int i = 0; i < sp08.m00; i++) {
-		u32 r3 = 0;
-		switch (r29 & 0x3) {
-		case 0:
-			r3 = track->mSeqCtrl.readByte();
+	Arg_s sp08       = Arglist[opcode - OP_COMMAND_BASE];
+	u16 argTypesMask = sp08.mArgTypes;
+	argTypesMask |= register_arg_types;
+	u32 args[8];
+	for (int i = 0; i < sp08.mArgCount; i++) {
+		u32 arg = 0;
+		switch (argTypesMask & ARG_TYPE_MASK) {
+		case ARG_U8:
+			arg = track->mSeqCtrl.readByte();
 			break;
-		case 1:
-			r3 = track->mSeqCtrl.read16();
+		case ARG_U16:
+			arg = track->mSeqCtrl.read16();
 			break;
-		case 2:
-			r3 = track->mSeqCtrl.read24();
+		case ARG_U24:
+			arg = track->mSeqCtrl.read24();
 			break;
-		case 3:
-			r3 = track->exchangeRegisterValue(track->mSeqCtrl.readByte());
+		case ARG_REGISTER:
+			arg = track->exchangeRegisterValue(track->mSeqCtrl.readByte());
 			break;
 		}
-		sp18[i] = r3;
-		r29 >>= 2;
+		args[i] = arg;
+		argTypesMask >>= 2;
 	}
 
-	JASystem::TSeqParser::CmdFunc cmdFunc = sCmdPList[param_2 - 0xC0];
-	return cmdFunc == nullptr ? 0 : (this->*cmdFunc)(track, sp18);
+	JASystem::TSeqParser::CmdFunc cmdFunc = sCmdPList[opcode - OP_COMMAND_BASE];
+	return cmdFunc == nullptr ? 0 : (this->*cmdFunc)(track, args);
 }
 
-int TSeqParser::RegCmd_Process(TTrack* track, int param_2, int param_3)
+int TSeqParser::RegCmd_Process(TTrack* track, int opcode_register,
+                               int arg_count_minus_one)
 {
 	u8 r5 = track->mSeqCtrl.readByte();
-	if (param_2 != 0) {
+	if (opcode_register != 0) {
 		r5 = track->exchangeRegisterValue(r5);
 	}
 	u16 r6 = 0;
-	if (param_2 == 0 || param_3 != 0) {
+	if (opcode_register == 0 || arg_count_minus_one != 0) {
 		u8 r3  = track->mSeqCtrl.readByte();
-		u16 r4 = 3;
-		for (int i = 0; i < (u32)param_3 + 1; i++) {
-			if (r3 & 0x80) {
+		u16 r4 = ARG_REGISTER;
+		for (int i = 0; i < (u32)arg_count_minus_one + 1; i++) {
+			if (r3 & REG_CMD_REGISTER_ARG) {
 				r6 |= r4;
 			}
 			r3 <<= 1;
@@ -725,43 +729,42 @@ int TSeqParser::RegCmd_Process(TTrack* track, int param_2, int param_3)
 
 int TSeqParser::cmdWait(TTrack* track, u8 flag)
 {
-	int end = flag == 0x80 ? 1 : 2;
-	int val = 0;
-	for (int i = 0; i < end; i++) {
-		val <<= 8;
-		val |= track->mSeqCtrl.readByte();
+	int bytes = flag == OP_WAIT8 ? 1 : 2;
+	int time  = 0;
+	for (int i = 0; i < bytes; i++) {
+		time <<= 8;
+		time |= track->mSeqCtrl.readByte();
 	}
-	track->mSeqCtrl.wait(val);
-	if (!val) {
+	track->mSeqCtrl.wait(time);
+	if (!time)
 		return 0;
-	} else {
+	else
 		return 1;
-	}
 }
 
-int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
+int TSeqParser::cmdNoteOff(TTrack* track, u8 opcode)
 {
-	if (flag == 0xF9) {
+	if (opcode == OP_NOTE_OFF_REG) {
 		u32 r31   = track->mSeqCtrl.readByte();
-		u8 rdata2 = track->exchangeRegisterValue(r31 & 0x7);
+		u8 rdata2 = track->exchangeRegisterValue(r31 & NOTE_OFF_VOICE_MASK);
 
-		if (rdata2 > 7 || rdata2 == 0) {
-			if (r31 & 0x80)
+		if (rdata2 > NOTE_OFF_VOICE_MASK || rdata2 == 0) {
+			if (r31 & NOTE_OFF_REG_RELEASE_TIME)
 				track->mSeqCtrl.readByte();
 
 			return 0;
 		}
 
-		flag = rdata2 + 0x80;
-		if (r31 & 0x80)
-			flag |= 0x08;
+		opcode = rdata2 + OP_NOTE_OFF;
+		if (r31 & NOTE_OFF_REG_RELEASE_TIME)
+			opcode |= NOTE_OFF_RELEASE_TIME;
 	}
 
-	u8 note = flag & 0xF;
+	u8 note = opcode & OPCODE_PARAM_MASK;
 
 	s32 releaseTime = 0;
-	if (note & 0x8) {
-		note -= 0x8;
+	if (note & NOTE_OFF_RELEASE_TIME) {
+		note -= NOTE_OFF_RELEASE_TIME;
 		releaseTime = track->mSeqCtrl.readByte();
 		if (releaseTime > 100)
 			releaseTime = (releaseTime - 98) * 20;
@@ -772,7 +775,7 @@ int TSeqParser::cmdNoteOff(TTrack* track, u8 flag)
 
 int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 {
-	u8 r31 = note + track->mTransposeTotal;
+	u8 r31 = note + track->mEffectiveTranspose;
 
 	union {
 		u8 b;
@@ -787,7 +790,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 	u8 cmdByte = track->mSeqCtrl.readByte();
 	if (cmdByte & 0x80) {
 		r31 = track->exchangeRegisterValue(r31);
-		r31 += track->mTransposeTotal;
+		r31 += track->mEffectiveTranspose;
 	}
 	cmd.b = cmdByte;
 
@@ -841,7 +844,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 		if (r25 != -1)
 			r25 = track->seqTimeToDspTime(r25, r26);
 
-		if (!track->mPause || !(track->mPauseStatus & 0x10))
+		if (!track->mPaused || !(track->mPauseMuteFlags & 0x10))
 			track->gateOn(r27, r31, r29, r25);
 	} else {
 		if ((s32)r25 != -1)
@@ -850,7 +853,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 		if (track->mNoteMgr.getConnectCase() & 1)
 			r25 = -1;
 
-		if (!track->mPause || !(track->mPauseStatus & 0x10))
+		if (!track->mPaused || !(track->mPauseMuteFlags & 0x10))
 			track->noteOn(r27, r31, r29, r25);
 	}
 
@@ -864,7 +867,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 
 		JASystem::TChannel* channel = track->mNoteMgr.getChannel(0);
 		if (channel)
-			channel->setKeySweepTarget(r30 + track->mTransposeTotal, r25);
+			channel->setKeySweepTarget(r30 + track->mEffectiveTranspose, r25);
 
 		r31 = r30;
 	}
@@ -880,7 +883,7 @@ int TSeqParser::cmdNoteOn(TTrack* track, u8 note)
 
 bool TSeqParser::conditionCheck(TTrack* track, u8 condition)
 {
-	u16 val = track->readRegDirect(3);
+	u16 val = track->readRegDirect(TRegisterParam::REG_FLAG);
 
 	switch (condition & 0xF) {
 	case 0:
@@ -903,28 +906,31 @@ bool TSeqParser::conditionCheck(TTrack* track, u8 condition)
 int TSeqParser::mainProc(TTrack* track, TSeqCtrl* ctrl)
 {
 	while (true) {
-		u8 flag     = ctrl->readByte();
+		u8 opcode   = ctrl->readByte();
 		u32 retCode = 0;
-		if (!(flag & 0x80)) {
-			retCode = cmdNoteOn(track, flag);
-		} else if (((flag & 0xF0) == 128) && !(flag & 0x07)) {
-			retCode = cmdWait(track, flag);
-		} else if (((flag & 0xF0) == 128) || flag == (u32)0xF9) {
-			retCode = cmdNoteOff(track, flag);
+		if (!(opcode & OPCODE_COMMAND_BIT)) {
+			retCode = cmdNoteOn(track, opcode);
+		} else if (((opcode & OPCODE_FAMILY_MASK) == OP_NOTE_OFF)
+		           && !(opcode & NOTE_OFF_VOICE_MASK)) {
+			retCode = cmdWait(track, opcode);
+		} else if ((opcode & OPCODE_FAMILY_MASK) == OP_NOTE_OFF
+		           || opcode == (u32)OP_NOTE_OFF_REG) {
+			retCode = cmdNoteOff(track, opcode);
 		} else {
-			switch ((s32)flag & 0xF0) {
-			case 0x90:
-				track->writeTimeParam(flag & 0xF);
+			switch ((s32)opcode & OPCODE_FAMILY_MASK) {
+			case OP_TIME_PARAM:
+				track->writeTimeParam(opcode & OPCODE_PARAM_MASK);
 				break;
-			case 0xA0:
-				track->writeRegParam(flag & 0xF);
+			case OP_REG_PARAM:
+				track->writeRegParam(opcode & OPCODE_PARAM_MASK);
 				break;
-			case 0xB0:
-				retCode
-				    = RegCmd_Process(track, (flag & 8) ? 1 : 0, flag & 0x07);
+			case OP_REG_CMD:
+				retCode = RegCmd_Process(
+				    track, opcode & REG_CMD_OPCODE_REGISTER ? 1 : 0,
+				    opcode & REG_CMD_ARG_COUNT_MINUS_ONE_MASK);
 				break;
 			default:
-				retCode = Cmd_Process(track, flag, 0);
+				retCode = Cmd_Process(track, opcode, 0);
 				break;
 			}
 		}

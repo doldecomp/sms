@@ -4,36 +4,36 @@ namespace JASystem {
 
 TTrack::TOuterParam::TOuterParam()
 {
-	mSwitch = 0;
-	mUpdate = 0;
-	mVolume = 0.0f;
-	mPitch  = 0.0f;
-	mFxmix  = 0.0f;
-	mDolby  = 0.0f;
-	mPan    = 0.0f;
-	mTempo  = 0.0f;
+	mEnabledParams = 0;
+	mDirtyParams   = 0;
+	mVolume        = 0.0f;
+	mPitch         = 0.0f;
+	mFxmix         = 0.0f;
+	mDolby         = 0.0f;
+	mPan           = 0.0f;
+	mTempo         = 0.0f;
 	for (int i = 0; i < 8; i++)
 		mFirFilter[i] = 0;
 }
 
 void TTrack::TOuterParam::initExtBuffer()
 {
-	mSwitch = 0;
-	mUpdate = 0;
+	mEnabledParams = 0;
+	mDirtyParams   = 0;
 }
 
-void TTrack::TOuterParam::setOuterSwitch(u16 param) { mSwitch = param; }
+void TTrack::TOuterParam::setOuterSwitch(u16 param) { mEnabledParams = param; }
 
-u16 TTrack::TOuterParam::getSwitch() { return mSwitch; }
+u16 TTrack::TOuterParam::getSwitch() { return mEnabledParams; }
 
 bool TTrack::TOuterParam::checkOuterSwitch(u16 param)
 {
-	return mSwitch & param;
+	return mEnabledParams & param;
 }
 
-void TTrack::TOuterParam::setOuterUpdate(u16 param) { mUpdate = param; }
+void TTrack::TOuterParam::setOuterUpdate(u16 param) { mDirtyParams = param; }
 
-u16 TTrack::TOuterParam::getOuterUpdate() { return mUpdate; }
+u16 TTrack::TOuterParam::getOuterUpdate() { return mDirtyParams; }
 
 void TTrack::TOuterParam::setIntFirFilter(s16 param1, u8 param2)
 {
@@ -68,19 +68,19 @@ void TTrack::TOuterParam::setParam(u8 param, f32 value)
 		return;
 	}
 	*var1 = value;
-	mUpdate |= param;
+	mDirtyParams |= param;
 }
 
 void TTrack::TOuterParam::onSwitch(u16 param)
 {
-	mSwitch |= param;
-	mUpdate |= param;
+	mEnabledParams |= param;
+	mDirtyParams |= param;
 }
 
 void TTrack::TOuterParam::setFirFilter(s16* param)
 {
-	mUpdate |= TTrack::UPDATE_FirFilter;
-	mSwitch |= TTrack::UPDATE_FirFilter;
+	mDirtyParams |= TTrack::UPDATE_FirFilter;
+	mEnabledParams |= TTrack::UPDATE_FirFilter;
 	for (u8 i = 0; i < 8; i++)
 		mFirFilter[i] = param[i];
 }

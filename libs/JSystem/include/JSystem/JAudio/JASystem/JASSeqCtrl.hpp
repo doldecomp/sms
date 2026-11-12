@@ -6,10 +6,10 @@
 namespace JASystem {
 class TSeqCtrl {
 public:
-	void init(void* data, u32 size);
+	void init(void* data, u32 seq_offset);
 	bool loopE();
 	bool waitCountDown();
-	bool callIntr(void* intr);
+	bool callIntr(void* handler);
 	bool retIntr();
 	u16 read16();
 	u16 get16(u32 offset) const;

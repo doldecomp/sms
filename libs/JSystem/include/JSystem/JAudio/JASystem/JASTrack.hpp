@@ -80,8 +80,8 @@ public:
 		void setIntFirFilter(s16, u8);
 
 	public:
-		/* 0x00 */ u16 mSwitch;
-		/* 0x02 */ u16 mUpdate;
+		/* 0x00 */ u16 mEnabledParams;
+		/* 0x02 */ u16 mDirtyParams;
 		/* 0x04 */ f32 mVolume;
 		/* 0x08 */ f32 mPitch;
 		/* 0x0C */ f32 mFxmix;
@@ -96,36 +96,36 @@ public:
 		MoveParam_()
 		    : mCurrentValue(0.0f)
 		    , mTargetValue(0.0f)
-		    , mMoveTime(0.0f)
-		    , mMoveAmount(0.0f)
+		    , mTicksRemaining(0.0f)
+		    , mStepPerTick(0.0f)
 		{
 		}
 #endif
 
 		/* 0x00 */ f32 mCurrentValue;
 		/* 0x04 */ f32 mTargetValue;
-		/* 0x08 */ f32 mMoveTime;
-		/* 0x0C */ f32 mMoveAmount;
+		/* 0x08 */ f32 mTicksRemaining;
+		/* 0x0C */ f32 mStepPerTick;
 	};
 	enum TimedParamType {
-		TIMED_Volume     = 0,
-		TIMED_Pitch      = 1,
-		TIMED_Fxmix      = 2,
-		TIMED_Pan        = 3,
-		TIMED_Dolby      = 4,
-		TIMED_Unk5       = 5,
-		TIMED_Osc0_Depth = 6,
-		TIMED_Osc0_Rate  = 7,
-		TIMED_Osc0_Bias  = 8,
-		TIMED_Osc1_Depth = 9,
-		TIMED_Osc1_Rate  = 10,
-		TIMED_Osc1_Bias  = 11,
-		TIMED_IIR_Unk0   = 12,
-		TIMED_IIR_Unk1   = 13,
-		TIMED_IIR_Unk2   = 14,
-		TIMED_IIR_Unk3   = 15,
-		TIMED_Unk16      = 16,
-		TIMED_Unk17      = 17,
+		TIMED_Volume            = 0,
+		TIMED_Pitch             = 1,
+		TIMED_Fxmix             = 2,
+		TIMED_Pan               = 3,
+		TIMED_Dolby             = 4,
+		TIMED_Unk5              = 5,
+		TIMED_Osc0_Depth        = 6,
+		TIMED_Osc0_Rate         = 7,
+		TIMED_Osc0_Bias         = 8,
+		TIMED_Osc1_Depth        = 9,
+		TIMED_Osc1_Rate         = 10,
+		TIMED_Osc1_Bias         = 11,
+		TIMED_IIR_Unk0          = 12,
+		TIMED_IIR_Unk1          = 13,
+		TIMED_IIR_Unk2          = 14,
+		TIMED_IIR_Unk3          = 15,
+		TIMED_PauseVolume       = 16,
+		TIMED_MixerDelayBalance = 17,
 		TIMED_Count, // 18
 	};
 
@@ -151,9 +151,9 @@ public:
 		UPDATE_IIR1      = 1 << TIMED_IIR_Unk1, // 0x02000
 		UPDATE_IIR2      = 1 << TIMED_IIR_Unk2, // 0x04000
 		UPDATE_IIR3      = 1 << TIMED_IIR_Unk3, // 0x08000
-		UPDATE_IIRs  = UPDATE_IIR0 | UPDATE_IIR1 | UPDATE_IIR2 | UPDATE_IIR3,
-		UPDATE_Unk16 = 1 << TIMED_Unk16, // 0x10000
-		UPDATE_Unk17 = 1 << TIMED_Unk17, // 0x20000
+		UPDATE_IIRs = UPDATE_IIR0 | UPDATE_IIR1 | UPDATE_IIR2 | UPDATE_IIR3,
+		UPDATE_PauseVolume       = 1 << TIMED_PauseVolume,       // 0x10000
+		UPDATE_MixerDelayBalance = 1 << TIMED_MixerDelayBalance, // 0x20000
 	};
 	struct AInnerParam_ {
 #ifdef __MWERKS__
@@ -173,8 +173,8 @@ public:
 		/* 0x0A0 */ MoveParam_ mOsc1Rate;
 		/* 0x0B0 */ MoveParam_ mOsc1Bias;
 		/* 0x0C0 */ MoveParam_ mIIRs[4];
-		/* 0x100 */ MoveParam_ unk100;
-		/* 0x110 */ MoveParam_ unk110;
+		/* 0x100 */ MoveParam_ mPauseVolume;
+		/* 0x110 */ MoveParam_ mMixerDelayBalance;
 	};
 
 	struct TimedParam_ {
@@ -190,7 +190,7 @@ public:
 	~TTrack() { }
 
 	void reset();
-	void initTrack(void* data, u32 size, TTrack* parent);
+	void initTrack(void* data, u32 seq_offset, TTrack* parent);
 	void initTimed();
 	TTrack* openTrack(u8 param);
 	bool closeTrack();
@@ -240,8 +240,8 @@ public:
 	u32 exchangeRegisterValue(u8 reg);
 	u16 readRegDirect(u8 reg);
 	void writeRegDirect(u8 reg, u16 value);
-	void writeTimeParam(u8 param);
-	void writeRegParam(u8 param);
+	void writeTimeParam(u8 opcode_params);
+	void writeRegParam(u8 opcode_params);
 	int seqTimeToDspTime(s32 time, u8 param);
 	f32 panCalc(f32 param1, f32 param2, f32 param3, u8 param4);
 	static s32 rootCallback(void* param);
@@ -277,9 +277,33 @@ public:
 	u8 checkExport(int i) const { return mTrackPort.checkExport(i); }
 
 	void setPanPower(int i, u16 power) { mRegisterParam.setPanPower(i, power); }
-	void setPauseStatus(u8 status) { mPauseStatus = status; }
+	void setPauseStatus(u8 status) { mPauseMuteFlags = status; }
 	void setTranspose(s32 transpose) { mTranspose = transpose; }
 	void setVolumeMode(u8 mode) { mVolumeMode = mode; }
+
+	void updateOscParam(u8 param, f32 value)
+	{
+		switch (param) {
+		case TIMED_Osc0_Depth:
+			mOscData[0].mDepth = value;
+			break;
+		case TIMED_Osc0_Rate:
+			mOscData[0].mRate = value;
+			break;
+		case TIMED_Osc0_Bias:
+			mOscData[0].mBias = value;
+			break;
+		case TIMED_Osc1_Depth:
+			mOscData[1].mDepth = value;
+			break;
+		case TIMED_Osc1_Rate:
+			mOscData[1].mRate = value;
+			break;
+		case TIMED_Osc1_Bias:
+			mOscData[1].mBias = value;
+			break;
+		}
+	}
 
 	// fabricated
 	u32 getTrackRoute() const { return mTrackRoute; }
@@ -289,7 +313,7 @@ public:
 	/* 0x48 */ TTrackPort mTrackPort;
 	/* 0x88 */ TIntrMgr mIntrMgr;
 	/* 0xB4 */ TNoteMgr mNoteMgr;
-	/* 0xEC */ TChannelMgr mChannelUpdater;
+	/* 0xEC */ TChannelMgr mChannelMgr;
 	/* 0x160 */ TimedParam_ mTimedParam;
 	/* 0x280 */ TRegisterParam mRegisterParam;
 	/* 0x2B0 */ char unk2B0[0x2C0 - 0x2B0];
@@ -302,28 +326,28 @@ public:
 	/* 0x37C */ s16 mAdsTable[12];
 	/* 0x394 */ s16 mRelTable[6];
 	/* 0x3A0 */ s32 mOscMode[2];
-	/* 0x3A8 */ u32 mConnectName;
-	/* 0x3AC */ f32 mTickCounter;
-	/* 0x3B0 */ f32 mTickRate;
+	/* 0x3A8 */ u32 mRegistrationId;
+	/* 0x3AC */ f32 mTickAccumulator;
+	/* 0x3B0 */ f32 mTicksPerSubframe;
 	/* 0x3B4 */ u32 mPendingUpdateFlags;
 	/* 0x3B8 */ u16 mTempo;
 	/* 0x3BA */ u16 mTimeBase;
 	/* 0x3BC */ u8 mTrackMode;
 	/* 0x3BD */ bool mOverrideParentTempo;
-	/* 0x3BE */ u8 mInnerMemory;
+	/* 0x3BE */ u8 mFromTrackPool;
 	/* 0x3BF */ s8 mTranspose;
-	/* 0x3C0 */ s8 mTransposeTotal;
-	/* 0x3C1 */ u8 mPauseStatus;
+	/* 0x3C0 */ s8 mEffectiveTranspose;
+	/* 0x3C1 */ u8 mPauseMuteFlags;
 	/* 0x3C2 */ u8 mMute;
 	/* 0x3C3 */ u8 mVolumeMode;
 
 	/* 0x3C4 */ u8 mSeqState;
-	/* 0x3C5 */ u8 mPanSwitchExt[3];
-	/* 0x3C8 */ u8 mPanSwitchParent[3];
+	/* 0x3C5 */ u8 mExternalMixModes[3];
+	/* 0x3C8 */ u8 mParentMixModes[3];
 
 	/* 0x3CB */ u8 mTimeRelate;
-	/* 0x3CC */ u8 mConnected;
-	/* 0x3CD */ u8 mPause;
+	/* 0x3CC */ u8 mRegistered;
+	/* 0x3CD */ u8 mPaused;
 };
 
 } // namespace JASystem

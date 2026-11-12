@@ -5,42 +5,42 @@ namespace JASystem {
 
 void TIntrMgr::init()
 {
-	unk0 = 1;
-	unk1 = 0;
-	unk2 = 0;
-	unk3 = 0;
-	unk4 = 0;
-	unk8 = 0;
+	mEnabled               = 1;
+	mPendingMask           = 0;
+	mEnabledMask           = 0;
+	mTimerFiringsRemaining = 0;
+	mTimerTicksRemaining   = 0;
+	mTimerPeriodTicks      = 0;
 	for (int i = 0; i < 8; i++)
-		unkC[i] = nullptr;
+		mHandlers[i] = nullptr;
 }
 
-void TIntrMgr::request(u32 param)
+void TIntrMgr::request(u32 interrupt)
 {
-	if ((unk2 & 1 << param) == 0) {
+	if ((mEnabledMask & 1 << interrupt) == 0)
 		return;
-	}
-	unk1 |= 1 << param;
+
+	mPendingMask |= 1 << interrupt;
 }
 
-void TIntrMgr::setIntr(u32 param, void* data)
+void TIntrMgr::setIntr(u32 interrupt, void* handler)
 {
-	unk2 |= 1 << param;
-	unkC[param] = data;
+	mEnabledMask |= 1 << interrupt;
+	mHandlers[interrupt] = handler;
 }
 
-void TIntrMgr::resetInter(u32 param) { unk2 &= ~(1 << param); }
+void TIntrMgr::resetInter(u32 interrupt) { mEnabledMask &= ~(1 << interrupt); }
 
 void* TIntrMgr::checkIntr()
 {
-	if (unk0 == 0)
+	if (mEnabled == 0)
 		return nullptr;
 
-	u32 r4 = unk2 & unk1;
+	u32 r4 = mEnabledMask & mPendingMask;
 	for (u32 i = 0; r4; i++) {
 		if (r4 & 1) {
-			unk1 &= ~(1 << i);
-			return unkC[i];
+			mPendingMask &= ~(1 << i);
+			return mHandlers[i];
 		}
 		r4 >>= 1;
 	}
@@ -49,20 +49,20 @@ void* TIntrMgr::checkIntr()
 
 void TIntrMgr::timerProcess()
 {
-	if (unk4 == 0)
+	if (mTimerTicksRemaining == 0)
 		return;
 
-	unk4--;
-	if (unk4 != 0)
+	mTimerTicksRemaining--;
+	if (mTimerTicksRemaining != 0)
 		return;
 
-	request(6);
-	if (unk3) {
-		unk3--;
-		if (unk3)
-			unk4 = unk8;
+	request(INTR_TIMER);
+	if (mTimerFiringsRemaining) {
+		mTimerFiringsRemaining--;
+		if (mTimerFiringsRemaining)
+			mTimerTicksRemaining = mTimerPeriodTicks;
 	} else {
-		unk4 = unk8;
+		mTimerTicksRemaining = mTimerPeriodTicks;
 	}
 }
 
