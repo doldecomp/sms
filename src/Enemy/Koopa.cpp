@@ -114,8 +114,7 @@ enum TKoopaTargetSide {
 // fabricated
 inline int TKoopa::getTargetSide() const
 {
-	f32 diff = -180.0f
-	           + std::fmodf(360.0f + (unk150 - mRotation.y - -180.0f), 360.0f);
+	f32 diff = MsRepeat(unk150 - mRotation.y, -180.0f, 180.0f);
 	if (diff < -getParam()->getFocusRange())
 		return KOOPA_TARGET_SIDE_LEFT;
 	if (diff > getParam()->getFocusRange())
@@ -1148,12 +1147,8 @@ void TKoopa::calcRootMatrix()
 // Unused
 void TKoopa::checkMarioWhichSide()
 {
-	unk154
-	    = -180.0f
-	          + std::fmodf(
-	              360.0f + (getTargetDir(SMS_GetMarioPos()) - unk150 - -180.0f),
-	              360.0f)
-	      < 0.0f;
+	unk154 = MsRepeat(getTargetDir(SMS_GetMarioPos()) - unk150, -180.0f, 180.0f)
+	         < 0.0f;
 }
 
 // Unused
