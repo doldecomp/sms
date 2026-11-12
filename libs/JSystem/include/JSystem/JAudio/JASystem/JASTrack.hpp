@@ -107,53 +107,54 @@ public:
 		/* 0x08 */ f32 mTicksRemaining;
 		/* 0x0C */ f32 mStepPerTick;
 	};
-	enum TimedParamType {
-		TIMED_Volume            = 0,
-		TIMED_Pitch             = 1,
-		TIMED_Fxmix             = 2,
-		TIMED_Pan               = 3,
-		TIMED_Dolby             = 4,
-		TIMED_Unk5              = 5,
-		TIMED_Osc0_Depth        = 6,
-		TIMED_Osc0_Rate         = 7,
-		TIMED_Osc0_Bias         = 8,
-		TIMED_Osc1_Depth        = 9,
-		TIMED_Osc1_Rate         = 10,
-		TIMED_Osc1_Bias         = 11,
-		TIMED_IIR_Unk0          = 12,
-		TIMED_IIR_Unk1          = 13,
-		TIMED_IIR_Unk2          = 14,
-		TIMED_IIR_Unk3          = 15,
-		TIMED_PauseVolume       = 16,
-		TIMED_MixerDelayBalance = 17,
-		TIMED_Count, // 18
+
+	enum TIMED_PARAM_TYPE {
+		TIMED_VOLUME              = 0,
+		TIMED_PITCH               = 1,
+		TIMED_FXMIX               = 2,
+		TIMED_PAN                 = 3,
+		TIMED_DOLBY               = 4,
+		TIMED_DIST_FILTER         = 5,
+		TIMED_OSC0_DEPTH          = 6,
+		TIMED_OSC0_RATE           = 7,
+		TIMED_OSC0_BIAS           = 8,
+		TIMED_OSC1_DEPTH          = 9,
+		TIMED_OSC1_RATE           = 10,
+		TIMED_OSC1_BIAS           = 11,
+		TIMED_IIR0                = 12,
+		TIMED_IIR1                = 13,
+		TIMED_IIR2                = 14,
+		TIMED_IIR3                = 15,
+		TIMED_PAUSE_VOLUME        = 16,
+		TIMED_MIXER_DELAY_BALANCE = 17,
+		TIMED_COUNT, // 18
 	};
 
-	enum TrackMode {
+	enum TRACK_MODE {
 		TRACK_MODE_INHERIT            = 0,
 		TRACK_MODE_INDEPENDENT_PARAMS = 1 << 0,
-		TRACK_MODE_CLEAR_REGISTERS    = 1 << 1,
+		TRACK_MODE_INIT_REGISTERS     = 1 << 1,
 		TRACK_MODE_INDEPENDENT
-		= TRACK_MODE_INDEPENDENT_PARAMS | TRACK_MODE_CLEAR_REGISTERS,
+		= TRACK_MODE_INDEPENDENT_PARAMS | TRACK_MODE_INIT_REGISTERS,
 		TRACK_MODE_PARENT_CHANNELS = 4,
 	};
 
-	enum ParamUpdateFlag {
-		UPDATE_Volume    = 1 << TIMED_Volume, // 0x00001
-		UPDATE_Pitch     = 1 << TIMED_Pitch,  // 0x00002
-		UPDATE_Fxmix     = 1 << TIMED_Fxmix,  // 0x00004
-		UPDATE_Pan       = 1 << TIMED_Pan,    // 0x00008
-		UPDATE_Dolby     = 1 << TIMED_Dolby,  // 0x00010
-		UPDATE_Unk5      = 1 << TIMED_Unk5,   // 0x00020
-		UPDATE_Tempo     = 0x00040,
-		UPDATE_FirFilter = 0x00080,
-		UPDATE_IIR0      = 1 << TIMED_IIR_Unk0, // 0x01000
-		UPDATE_IIR1      = 1 << TIMED_IIR_Unk1, // 0x02000
-		UPDATE_IIR2      = 1 << TIMED_IIR_Unk2, // 0x04000
-		UPDATE_IIR3      = 1 << TIMED_IIR_Unk3, // 0x08000
-		UPDATE_IIRs = UPDATE_IIR0 | UPDATE_IIR1 | UPDATE_IIR2 | UPDATE_IIR3,
-		UPDATE_PauseVolume       = 1 << TIMED_PauseVolume,       // 0x10000
-		UPDATE_MixerDelayBalance = 1 << TIMED_MixerDelayBalance, // 0x20000
+	enum PARAM_UPDATE_FLAG {
+		UPDATE_VOLUME      = 1 << TIMED_VOLUME,      // 0x00001
+		UPDATE_PITCH       = 1 << TIMED_PITCH,       // 0x00002
+		UPDATE_FXMIX       = 1 << TIMED_FXMIX,       // 0x00004
+		UPDATE_PAN         = 1 << TIMED_PAN,         // 0x00008
+		UPDATE_DOLBY       = 1 << TIMED_DOLBY,       // 0x00010
+		UPDATE_DIST_FILTER = 1 << TIMED_DIST_FILTER, // 0x00020
+		UPDATE_TEMPO       = 0x00040,
+		UPDATE_FIR_FILTER  = 0x00080,
+		UPDATE_IIR0        = 1 << TIMED_IIR0, // 0x01000
+		UPDATE_IIR1        = 1 << TIMED_IIR1, // 0x02000
+		UPDATE_IIR2        = 1 << TIMED_IIR2, // 0x04000
+		UPDATE_IIR3        = 1 << TIMED_IIR3, // 0x08000
+		UPDATE_IIRS = UPDATE_IIR0 | UPDATE_IIR1 | UPDATE_IIR2 | UPDATE_IIR3,
+		UPDATE_PAUSE_VOLUME        = 1 << TIMED_PAUSE_VOLUME,        // 0x10000
+		UPDATE_MIXER_DELAY_BALANCE = 1 << TIMED_MIXER_DELAY_BALANCE, // 0x20000
 	};
 	struct AInnerParam_ {
 #ifdef __MWERKS__
@@ -165,7 +166,7 @@ public:
 		/* 0x020 */ MoveParam_ mFxmix;
 		/* 0x030 */ MoveParam_ mPan;
 		/* 0x040 */ MoveParam_ mDolby;
-		/* 0x050 */ MoveParam_ unk50;
+		/* 0x050 */ MoveParam_ mDistFilter;
 		/* 0x060 */ MoveParam_ mOsc0Depth;
 		/* 0x070 */ MoveParam_ mOsc0Rate;
 		/* 0x080 */ MoveParam_ mOsc0Bias;
@@ -182,7 +183,7 @@ public:
 
 		union {
 			AInnerParam_ mInnerParam;
-			MoveParam_ mMoveParams[TIMED_Count];
+			MoveParam_ mMoveParams[TIMED_COUNT];
 		};
 	};
 
@@ -284,22 +285,22 @@ public:
 	void updateOscParam(u8 param, f32 value)
 	{
 		switch (param) {
-		case TIMED_Osc0_Depth:
+		case TIMED_OSC0_DEPTH:
 			mOscData[0].mDepth = value;
 			break;
-		case TIMED_Osc0_Rate:
+		case TIMED_OSC0_RATE:
 			mOscData[0].mRate = value;
 			break;
-		case TIMED_Osc0_Bias:
+		case TIMED_OSC0_BIAS:
 			mOscData[0].mBias = value;
 			break;
-		case TIMED_Osc1_Depth:
+		case TIMED_OSC1_DEPTH:
 			mOscData[1].mDepth = value;
 			break;
-		case TIMED_Osc1_Rate:
+		case TIMED_OSC1_RATE:
 			mOscData[1].mRate = value;
 			break;
-		case TIMED_Osc1_Bias:
+		case TIMED_OSC1_BIAS:
 			mOscData[1].mBias = value;
 			break;
 		}

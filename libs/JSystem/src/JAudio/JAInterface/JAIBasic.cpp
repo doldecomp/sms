@@ -1205,20 +1205,20 @@ u16 JAIBasic::setParameterSeqSync(JASystem::TTrack* track, u16 param_2)
 		JASystem::TTrack::TOuterParam* outer = track->getOuterParam();
 		JAIData::FabricatedSeTrackParameter* seTrackUpdate = basic->mData->unk0;
 
-		outer->setParam(JASystem::TTrack::UPDATE_Volume,
+		outer->setParam(JASystem::TTrack::UPDATE_VOLUME,
 		                seTrackUpdate[index].mVolume);
-		outer->setParam(JASystem::TTrack::UPDATE_Pan,
+		outer->setParam(JASystem::TTrack::UPDATE_PAN,
 		                seTrackUpdate[index].mPan);
-		outer->setParam(JASystem::TTrack::UPDATE_Pitch,
+		outer->setParam(JASystem::TTrack::UPDATE_PITCH,
 		                seTrackUpdate[index].mPitch);
-		outer->setParam(JASystem::TTrack::UPDATE_Fxmix,
+		outer->setParam(JASystem::TTrack::UPDATE_FXMIX,
 		                seTrackUpdate[index].mFxmix);
 		f32 thing;
 		if (basic->mSoundOutputMode != 2)
 			thing = 0.0f;
 		else
 			thing = seTrackUpdate[index].mDolby;
-		outer->setParam(JASystem::TTrack::UPDATE_Dolby, thing);
+		outer->setParam(JASystem::TTrack::UPDATE_DOLBY, thing);
 		break;
 	}
 	case 0x7F:

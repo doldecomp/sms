@@ -26,9 +26,10 @@ u16 (*TTrack::sCallBackFunc)(TTrack*, u16) = nullptr;
 
 // Indexed by TOscillator::Osc_::mTarget (0 volume, 1 pitch, 2 pan,
 // 3 fxmix, 4 dolby).
-u8 TTrack::sOscTable[5]
-    = { TTrack::UPDATE_Volume, TTrack::UPDATE_Pitch, TTrack::UPDATE_Pan,
-	    TTrack::UPDATE_Fxmix, TTrack::UPDATE_Dolby };
+u8 TTrack::sOscTable[5] = {
+	TTrack::UPDATE_VOLUME, TTrack::UPDATE_PITCH, TTrack::UPDATE_PAN,
+	TTrack::UPDATE_FXMIX,  TTrack::UPDATE_DOLBY,
+};
 
 TTrack::TTrack()
     : mParent(0)
@@ -276,7 +277,7 @@ int TTrack::noteOn(u8 voice_slot, s32 key, s32 velocity, s32 gate_time)
 	}
 
 	if (sUpdateSyncMode == 0)
-		updateTrack(UPDATE_Volume | UPDATE_Pitch | UPDATE_Pan);
+		updateTrack(UPDATE_VOLUME | UPDATE_PITCH | UPDATE_PAN);
 
 	chan->resetInitialVolume();
 
@@ -450,21 +451,21 @@ void TTrack::updateTrackAll()
 	curDolby = mTimedParam.mInnerParam.mDolby.mCurrentValue;
 
 	if (mOuterParam) {
-		if (mOuterParam->checkOuterSwitch(UPDATE_Volume))
+		if (mOuterParam->checkOuterSwitch(UPDATE_VOLUME))
 			curVolume *= mOuterParam->getVolume();
 
-		if (mOuterParam->checkOuterSwitch(UPDATE_Pitch))
+		if (mOuterParam->checkOuterSwitch(UPDATE_PITCH))
 			curPitch *= mOuterParam->getPitch();
 
-		if (mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
+		if (mOuterParam->checkOuterSwitch(UPDATE_FXMIX))
 			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar6,
 			                   mExternalMixModes[1]);
 
-		if (mOuterParam->checkOuterSwitch(UPDATE_Dolby))
+		if (mOuterParam->checkOuterSwitch(UPDATE_DOLBY))
 			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar6,
 			                   mExternalMixModes[2]);
 
-		if (mOuterParam->checkOuterSwitch(UPDATE_Pan))
+		if (mOuterParam->checkOuterSwitch(UPDATE_PAN))
 			curPan = panCalc(curPan, mOuterParam->getPan(), fVar6,
 			                 mParentMixModes[0]);
 	}
@@ -486,7 +487,7 @@ void TTrack::updateTrackAll()
 		mChannelMgr.mDolby  = panCalc(curDolby, mParent->mChannelMgr.mDolby,
 		                              fVar6, mParentMixModes[2]);
 
-		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_FirFilter)) {
+		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_FIR_FILTER)) {
 			for (u8 i = 0; i < 8; ++i)
 				mChannelMgr.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
 			mChannelMgr.mFilterMode = 8;
@@ -499,7 +500,7 @@ void TTrack::updateTrackAll()
 
 		mChannelMgr.mFilterMode |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
 		mChannelMgr.mDistFilter
-		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
+		    = mTimedParam.mInnerParam.mDistFilter.mCurrentValue * 32767.0f;
 	}
 }
 
@@ -515,7 +516,7 @@ void TTrack::updateTrack(u32 update_flags)
 	if (mTrackMode == TRACK_MODE_PARENT_CHANNELS)
 		return;
 
-	if (update_flags & UPDATE_MixerDelayBalance) {
+	if (update_flags & UPDATE_MIXER_DELAY_BALANCE) {
 		u8 cVar8 = 0;
 		f32 thing
 		    = mTimedParam.mInnerParam.mMixerDelayBalance.mCurrentValue * 128.0f;
@@ -530,10 +531,10 @@ void TTrack::updateTrack(u32 update_flags)
 		mChannelMgr.mMixerDelaySamples[1] = local_4c;
 	}
 
-	if ((update_flags & UPDATE_Tempo) && !mParent)
+	if ((update_flags & UPDATE_TEMPO) && !mParent)
 		updateTempo();
 
-	if (update_flags & UPDATE_Volume) {
+	if (update_flags & UPDATE_VOLUME) {
 		curVolume = mTimedParam.mInnerParam.mVolume.mCurrentValue;
 		if (!mVolumeMode)
 			curVolume *= curVolume;
@@ -541,47 +542,47 @@ void TTrack::updateTrack(u32 update_flags)
 		if (mMute)
 			curVolume = 0.0f;
 
-		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Volume))
+		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_VOLUME))
 			curVolume *= mOuterParam->getVolume();
 
 		if (mPaused && (mPauseMuteFlags & 1))
 			curVolume *= mTimedParam.mInnerParam.mPauseVolume.mCurrentValue;
 	}
 
-	if (update_flags & UPDATE_Pitch) {
+	if (update_flags & UPDATE_PITCH) {
 		curPitch
 		    = Player::pitchToCent(mTimedParam.mInnerParam.mPitch.mCurrentValue,
 		                          mRegisterParam.getBendSense());
 
-		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pitch))
+		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_PITCH))
 			curPitch *= mOuterParam->getPitch();
 	}
 
-	if (update_flags & UPDATE_Pan) {
+	if (update_flags & UPDATE_PAN) {
 		curPan = mTimedParam.mInnerParam.mPan.mCurrentValue;
 
-		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Pan))
+		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_PAN))
 			curPan = panCalc(curPan, mOuterParam->getPan(), fVar3,
 			                 mExternalMixModes[0]);
 	}
 
-	if (update_flags & UPDATE_Fxmix) {
+	if (update_flags & UPDATE_FXMIX) {
 		curFxmix = mTimedParam.mInnerParam.mFxmix.mCurrentValue;
 
-		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Fxmix))
+		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_FXMIX))
 			curFxmix = panCalc(curFxmix, mOuterParam->getFxVol(), fVar3,
 			                   mExternalMixModes[1]);
 	}
 
-	if (update_flags & UPDATE_Dolby) {
+	if (update_flags & UPDATE_DOLBY) {
 		curDolby = mTimedParam.mInnerParam.mDolby.mCurrentValue;
 
-		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_Dolby))
+		if (mOuterParam && mOuterParam->checkOuterSwitch(UPDATE_DOLBY))
 			curDolby = panCalc(curDolby, mOuterParam->getDolby(), fVar3,
 			                   mExternalMixModes[2]);
 	}
 
-	if (update_flags & UPDATE_IIRs) {
+	if (update_flags & UPDATE_IIRS) {
 		for (u8 i = 0; i < 4; ++i)
 			mChannelMgr.mIirCoeffs[i]
 			    = mTimedParam.mInnerParam.mIIRs[i].mCurrentValue * 32767.0f;
@@ -589,8 +590,8 @@ void TTrack::updateTrack(u32 update_flags)
 		mChannelMgr.mFilterMode |= DSPInterface::DSPBuffer::FILTER_IIR_ENABLED;
 	}
 
-	if (mOuterParam && (update_flags & UPDATE_FirFilter)
-	    && mOuterParam->checkOuterSwitch(UPDATE_FirFilter)) {
+	if (mOuterParam && (update_flags & UPDATE_FIR_FILTER)
+	    && mOuterParam->checkOuterSwitch(UPDATE_FIR_FILTER)) {
 		for (u8 i = 0; i < 8; ++i)
 			mChannelMgr.mFirCoeffs[i] = mOuterParam->getIntFirFilter(i);
 
@@ -600,9 +601,9 @@ void TTrack::updateTrack(u32 update_flags)
 		      + 8;
 	}
 
-	if (update_flags & UPDATE_Unk5) {
+	if (update_flags & UPDATE_DIST_FILTER) {
 		mChannelMgr.mDistFilter
-		    = mTimedParam.mInnerParam.unk50.mCurrentValue * 32767.0f;
+		    = mTimedParam.mInnerParam.mDistFilter.mCurrentValue * 32767.0f;
 	}
 
 	for (int i = 0; i < 2; ++i) {
@@ -629,29 +630,29 @@ void TTrack::updateTrack(u32 update_flags)
 	}
 
 	if (!mParent || (mTrackMode & TRACK_MODE_INDEPENDENT_PARAMS)) {
-		if (update_flags & UPDATE_Volume)
+		if (update_flags & UPDATE_VOLUME)
 			mChannelMgr.mVolume = curVolume;
-		if (update_flags & UPDATE_Pitch)
+		if (update_flags & UPDATE_PITCH)
 			mChannelMgr.mPitch = curPitch;
-		if (update_flags & UPDATE_Pan)
+		if (update_flags & UPDATE_PAN)
 			mChannelMgr.mPan = curPan;
-		if (update_flags & UPDATE_Fxmix)
+		if (update_flags & UPDATE_FXMIX)
 			mChannelMgr.mFxmix = curFxmix;
-		if (update_flags & UPDATE_Dolby)
+		if (update_flags & UPDATE_DOLBY)
 			mChannelMgr.mDolby = curDolby;
 	} else {
 		fVar3 = mRegisterParam.getPanPowerParent() / 32767.0f;
-		if (update_flags & UPDATE_Volume)
+		if (update_flags & UPDATE_VOLUME)
 			mChannelMgr.mVolume = mParent->mChannelMgr.mVolume * curVolume;
-		if (update_flags & UPDATE_Pitch)
+		if (update_flags & UPDATE_PITCH)
 			mChannelMgr.mPitch = mParent->mChannelMgr.mPitch * curPitch;
-		if (update_flags & UPDATE_Pan)
+		if (update_flags & UPDATE_PAN)
 			mChannelMgr.mPan = panCalc(curPan, mParent->mChannelMgr.mPan, fVar3,
 			                           mParentMixModes[0]);
-		if (update_flags & UPDATE_Fxmix)
+		if (update_flags & UPDATE_FXMIX)
 			mChannelMgr.mFxmix = panCalc(curFxmix, mParent->mChannelMgr.mFxmix,
 			                             fVar3, mParentMixModes[1]);
-		if (update_flags & UPDATE_Dolby)
+		if (update_flags & UPDATE_DOLBY)
 			mChannelMgr.mDolby = panCalc(curDolby, mParent->mChannelMgr.mDolby,
 			                             fVar3, mParentMixModes[2]);
 	}
@@ -665,7 +666,7 @@ void TTrack::updateTempo()
 		mTicksPerSubframe /= Kernel::getDacRate();
 		mTicksPerSubframe *= 80.0f;
 		mTicksPerSubframe /= 60.0f;
-		if (mOuterParam->checkOuterSwitch(UPDATE_Tempo))
+		if (mOuterParam->checkOuterSwitch(UPDATE_TEMPO))
 			mTicksPerSubframe *= mOuterParam->getTempo();
 	} else {
 		mTicksPerSubframe = mParent->mTicksPerSubframe;
@@ -767,12 +768,12 @@ s8 TTrack::mainProc()
 	} while (retcode == -2);
 
 	updateFlags = 0;
-	for (int i = 0; i != TIMED_Count; ++i) {
+	for (int i = 0; i != TIMED_COUNT; ++i) {
 		MoveParam_* param = &mTimedParam.mMoveParams[i];
 		if (param->mTicksRemaining > 0.0f) {
 			param->mCurrentValue += param->mStepPerTick;
 			param->mTicksRemaining -= 1.0f;
-			if (i <= TIMED_Unk5 || i >= TIMED_Osc1_Bias) {
+			if (i <= TIMED_DIST_FILTER || i >= TIMED_OSC1_BIAS) {
 				updateFlags |= 1 << i;
 			} else {
 				updateOscParam(i, param->mCurrentValue);
@@ -1065,7 +1066,7 @@ void TTrack::writeRegParam(u8 opcode_params)
 	}
 
 	if (regNo == TRegisterParam::REG_BEND_SENSE)
-		mPendingUpdateFlags |= UPDATE_Pitch;
+		mPendingUpdateFlags |= UPDATE_PITCH;
 
 	if (regNo == TRegisterParam::REG_PRIORITY) {
 		mChannelMgr.mPriorityConfig = mRegisterParam.getPriority() | 0x10000;
@@ -1179,7 +1180,7 @@ bool TTrack::closeTrack()
 void TTrack::muteTrack(u8 flag)
 {
 	mMute = flag;
-	mPendingUpdateFlags |= UPDATE_Volume;
+	mPendingUpdateFlags |= UPDATE_VOLUME;
 	if (mMute && (mPauseMuteFlags & 0x20)) {
 		for (u8 i = 0; i < 8; ++i) {
 			TChannel* chan = mNoteMgr.getChannel(i);
@@ -1229,7 +1230,7 @@ void TTrack::initTrack(void* data, u32 seq_offset, TTrack* parent)
 
 	initTimed();
 
-	if ((mTrackMode & TRACK_MODE_CLEAR_REGISTERS) || !mParent) {
+	if ((mTrackMode & TRACK_MODE_INIT_REGISTERS) || !mParent) {
 		mRegisterParam.init();
 		for (u8 i = 0; i < 3; ++i) {
 			mExternalMixModes[i]      = 0;
@@ -1520,7 +1521,7 @@ void TTrack::pauseTrack(u8 flag)
 {
 	mPaused = 1;
 	if (mPauseMuteFlags & 0x1)
-		mPendingUpdateFlags |= UPDATE_Volume;
+		mPendingUpdateFlags |= UPDATE_VOLUME;
 
 	if (mPauseMuteFlags & 0x4) {
 		for (u8 i = 0; i < 8; ++i) {
@@ -1553,7 +1554,7 @@ void TTrack::pauseTrack(u8 flag)
 void TTrack::unPauseTrack(u8 flag)
 {
 	mPaused = 0;
-	mPendingUpdateFlags |= UPDATE_Volume;
+	mPendingUpdateFlags |= UPDATE_VOLUME;
 
 	for (u8 i = 0; i < 8; ++i) {
 		TChannel* chan = mNoteMgr.getChannel(i);

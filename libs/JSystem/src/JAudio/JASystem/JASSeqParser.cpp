@@ -112,7 +112,7 @@ int TSeqParser::cmdOpenTrack(TTrack* track, u32* args)
 	u8 b1        = param1 & 0xF;
 	u8 trackMode = (param1 >> 6)
 	               & (TTrack::TRACK_MODE_INDEPENDENT_PARAMS
-	                  | TTrack::TRACK_MODE_CLEAR_REGISTERS);
+	                  | TTrack::TRACK_MODE_INIT_REGISTERS);
 	if (param1 & 0x20)
 		trackMode = TTrack::TRACK_MODE_PARENT_CHANNELS;
 
@@ -132,7 +132,7 @@ int TSeqParser::cmdOpenTrackBros(TTrack* track, u32* args)
 	u8 b1        = param1 & 0xF;
 	u8 trackMode = (param1 >> 6)
 	               & (TTrack::TRACK_MODE_INDEPENDENT_PARAMS
-	                  | TTrack::TRACK_MODE_CLEAR_REGISTERS);
+	                  | TTrack::TRACK_MODE_INIT_REGISTERS);
 	if (param1 & 0x20)
 		trackMode = TTrack::TRACK_MODE_PARENT_CHANNELS;
 
@@ -553,7 +553,7 @@ int TSeqParser::cmdPanSwSet(TTrack* track, u32* args)
 		track->mExternalMixModes[i]      = calcTypes[args[i] >> 5];
 		track->mParentMixModes[i]        = parentCalcTypes[args[i] >> 5];
 		track->mChannelMgr.mCalcTypes[i] = args[i] & 0x1F;
-		track->mPendingUpdateFlags |= TTrack::UPDATE_Pan;
+		track->mPendingUpdateFlags |= TTrack::UPDATE_PAN;
 	}
 
 	return 0;
@@ -576,7 +576,7 @@ int TSeqParser::cmdIIRCutOff(TTrack* track, u32* args)
 	u8 iirTableIdx = args[0];
 	for (u8 i = 0; i < 4; i++) {
 		s16* table  = JASystem::Player::CUTOFF_TO_IIR_TABLE[iirTableIdx];
-		u8 iirIndex = TTrack::TIMED_IIR_Unk0 + i;
+		u8 iirIndex = TTrack::TIMED_IIR0 + i;
 		TTrack::MoveParam_* iir = &track->mTimedParam.mMoveParams[iirIndex];
 		iir->mTargetValue       = table[i] / (32768.0f - 1.0f);
 		iir->mCurrentValue      = iir->mTargetValue;

@@ -239,11 +239,11 @@ u16 MSSeCallBack::setParameterSeqSync(JASystem::TTrack* param_1, u16 param_2)
 			pTVar1->writeRegDirect(11, 0x7fff);
 			pTVar1->writeRegDirect(12, 0);
 			if (pTVar1->getOuterParam() != nullptr) {
-				pTVar1->getOuterParam()->onSwitch(JASystem::TTrack::UPDATE_Pan);
+				pTVar1->getOuterParam()->onSwitch(JASystem::TTrack::UPDATE_PAN);
 				pTVar1->getOuterParam()->onSwitch(
-				    JASystem::TTrack::UPDATE_Fxmix);
+				    JASystem::TTrack::UPDATE_FXMIX);
 				pTVar1->getOuterParam()->onSwitch(
-				    JASystem::TTrack::UPDATE_Dolby);
+				    JASystem::TTrack::UPDATE_DOLBY);
 			}
 		}
 		param_1->mChannelMgr.mMixConfig[0] = 0xffff;
