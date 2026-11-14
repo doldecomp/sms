@@ -98,7 +98,7 @@ public:
 	void processFrameWork();
 	void checkDummyPositionBuffer();
 	void startSoundVec(u32, JAISoundHandle*, Vec*, u32, u32, u8);
-	JAISoundHandle startSoundVecReturnHandle(u32, Vec*, u32, u32, u8);
+	void startSoundVecReturnHandle(u32, Vec*, u32, u32, u8);
 	void startSoundActor(u32 id, JAISoundHandle* out_handle, JAIActor* actor,
 	                     u32 fade, u8 camera_idx);
 	JAISoundHandle startSoundActorReturnHandle(u32 id, JAIActor* actor,

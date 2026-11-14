@@ -701,7 +701,7 @@ void JAIBasic::checkDummyPositionBuffer()
 
 void JAIBasic::startSoundVec(u32, JAISoundHandle*, Vec*, u32, u32, u8) { }
 
-JAISoundHandle JAIBasic::startSoundVecReturnHandle(u32, Vec*, u32, u32, u8) { }
+void JAIBasic::startSoundVecReturnHandle(u32, Vec*, u32, u32, u8) { }
 
 void JAIBasic::startSoundActor(u32 id, JAISoundHandle* out_handle,
                                JAIActor* actor, u32 fade, u8 camera_idx)

@@ -4,60 +4,68 @@
 #include <dolphin/dvd.h>
 #include <dolphin/os.h>
 #include <dolphin/types.h>
+#include <stdint.h>
 
 namespace JASystem {
 
 namespace Dvd {
 	typedef void (*DvdCallback)(u32);
 
-	void unpauseDvdT();
-
-	u32 checkFileExtend(char*);
-	s32 openDvd(char*, DVDFileInfo*);
-	s32 registerFastOpen(char*);
-	s32 loadToAramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
-	s32 loadToAramDvdTMain(void*);
-
-	struct TDvdCall {
-		/* 0x0 */ u32 unk0;
-		/* 0x4 */ char unk4[0x20];
-		/* 0x24 */ void* unk24;
-		/* 0x28 */ u32 unk28;
-		/* 0x2C */ u32 unk2C;
-		/* 0x30 */ u32* unk30;
-		/* 0x34 */ DvdCallback unk34;
-	};
-
-	s32 loadToDramDvdT(u32, char*, void*, u32, u32, u32*, DvdCallback);
-	s32 loadToDramDvdTMain(void*);
-	s32 checkPassDvdT(u32, u32*, DvdCallback);
-	void pauseDvdT();
 	void init();
-
 	void dvdProcInit();
 	void* dvdProc(void*);
 
-	void extendPath(char*, char*);
-	s32 checkFile(char*);
-	s32 loadFile(char*, void*);
-	u32 loadFileDvdT(char*, void*);
-	void setNumOfMsgs(s32);
-	void setDvdBufSize(u32);
-	void setRootPath(char*);
-	s32 addTaskHigh(s32 (*)(void*), void*, u32);
-	s32 addTask(s32 (*)(void*), void*, u32);
-	void setBufferDvdT(u8*, u32, u32);
-	void closeBufferDvdT(u8*);
-	void getCurrentBufferDvdT(u8**);
-	s32 aramToDramDvdTMain(void*);
-	s32 dramToAramDvdTMain(void*);
-	s32 aramToDramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
-	s32 dramToAramDvdT(u32, void*, void*, u32, u32*, void (*)(u32));
+	void pauseDvdT();
+	void unpauseDvdT();
+
+	s32 loadToAramDvdT(u32 user_data, char* path, void* buffer, u32 offset,
+	                   u32 size, u32* result_ptr, DvdCallback callback);
+	s32 loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 size,
+	                   u32 param5, u32* result_ptr, DvdCallback callback);
+
+	s32 aramToDramDvdT(u32 user_data, void* dst, void* src, u32 size,
+	                   u32* result_ptr, DvdCallback callback);
+	s32 dramToAramDvdT(u32 user_data, void* src, void* dst, u32 size,
+	                   u32* result_ptr, DvdCallback callback);
+
+	s32 checkPassDvdT(u32 user_data, u32* result_ptr, DvdCallback callback);
+	u32 loadFileDvdT(char* path, void* buffer);
+
+	s32 checkFile(char* path);
+	void extendPath(char* path1, char* path2);
+	u32 checkFileExtend(char* path);
+	s32 loadFile(char* path, void* buffer);
+
+	struct TDvdCall {
+		/* 0x0 */ u32 mCbUserData;
+		/* 0x4 */ char mPath[0x20];
+		/* 0x24 */ void* mDramBuffer;
+		/* 0x28 */ uintptr_t mOffsetOrAramAddress;
+		/* 0x2C */ u32 mTransferSize;
+		/* 0x30 */ u32* mResult;
+		/* 0x34 */ DvdCallback mCallback;
+	};
+
+	s32 openDvd(char* path, DVDFileInfo* fileInfo);
+	s32 addTask(s32 (*func)(void*), void* data, u32 size);
+	s32 addTaskHigh(s32 (*func)(void*), void* data, u32 size);
+	s32 loadToAramDvdTMain(void* task_data);
+	s32 loadToDramDvdTMain(void* task_data);
+	s32 aramToDramDvdTMain(void* task_data);
+	s32 dramToAramDvdTMain(void* task_data);
 
 	typedef void (*ErrorCallback)(char*, u8*);
 	void registerDvdErrorCallback(ErrorCallback);
 	void setFastOpenMaxDic(s32);
-	void registerExtFastOpen(char*);
+	void registerExtFastOpen(char* path);
+	s32 registerFastOpen(char* path);
+
+	void setNumOfMsgs(s32 num);
+	void setDvdBufSize(u32 size);
+	void setRootPath(char*);
+	void setBufferDvdT(u8*, u32, u32);
+	void closeBufferDvdT(u8*);
+	void getCurrentBufferDvdT(u8**);
 } // namespace Dvd
 
 } // namespace JASystem

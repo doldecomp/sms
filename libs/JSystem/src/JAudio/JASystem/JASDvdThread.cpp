@@ -30,10 +30,10 @@ namespace Dvd {
 	static volatile u32 bufferFull = false;
 	static volatile u32 bufferFull2;
 
-	typedef u8 FabricatedCallstack[0x40];
-	static FabricatedCallstack* callStackArray = 0;
-	static void** msgBuf                       = 0;
-	static u32 curQ                            = 0;
+	typedef u8 TaskStorage[0x40];
+	static TaskStorage* callStackArray = 0;
+	static void** msgBuf               = 0;
+	static u32 curQ                    = 0;
 
 	static OSThreadQueue dvdtSleep;
 	static BOOL dvdThreadPauseFlag = false;
@@ -61,13 +61,13 @@ namespace Dvd {
 
 void Dvd::init()
 {
-	callStackArray = new (JASDram, 0) FabricatedCallstack[dvdMsgsSize];
+	callStackArray = new (JASDram, 0) TaskStorage[dvdMsgsSize];
 	msgBuf         = new (JASDram, 0) void*[dvdMsgsSize];
 }
 
 void Dvd::setNumOfMsgs(s32 num) { dvdMsgsSize = num; }
 void Dvd::setDvdBufSize(u32 size) { dvdBufSize = size; }
-void Dvd::setRootPath(char* path) { }
+void Dvd::setRootPath(char*) { }
 void Dvd::extendPath(char* path1, char* path2)
 {
 	if (audioRootPath[0]) {
@@ -80,24 +80,24 @@ void Dvd::extendPath(char* path1, char* path2)
 		strcpy(path1, path2);
 	}
 }
-s32 Dvd::addTaskHigh(s32 (*func)(void*), void* param, u32 size)
+s32 Dvd::addTaskHigh(s32 (*func)(void*), void* data, u32 size)
 {
 	if (!mqInit)
 		return 0;
 
 	void* cs = getCallStack();
-	Calc::bcopy(param, (void**)cs + 1, size);
+	Calc::bcopy(data, (void**)cs + 1, size);
 	*(void**)cs = (void*)func;
 	OSJamMessage(&mq, cs, 1);
 	return 1;
 }
-s32 Dvd::addTask(s32 (*func)(void*), void* param, u32 size)
+s32 Dvd::addTask(s32 (*func)(void*), void* data, u32 size)
 {
 	if (!mqInit)
 		return 0;
 
 	void* cs = getCallStack();
-	Calc::bcopy(param, (void**)cs + 1, size);
+	Calc::bcopy(data, (void**)cs + 1, size);
 	*(void**)cs = (void*)func;
 	OSSendMessage(&mq, cs, 1);
 	return 1;
@@ -111,7 +111,7 @@ void Dvd::dvdProcInit()
 		dvdFile[i] = new (JASDram, 0) char[64];
 	dvdEntryNum = new (JASDram, 0) s32[maxDics];
 }
-void* Dvd::dvdProc(void* param)
+void* Dvd::dvdProc(void*)
 {
 	void* cs;
 	u8* buf;
@@ -134,14 +134,14 @@ void* Dvd::dvdProc(void* param)
 	}
 }
 
-s32 Dvd::loadToDramDvdTMain(void* param)
+s32 Dvd::loadToDramDvdTMain(void* task_data)
 {
 	s32 ret;
-	TDvdCall* call = (TDvdCall*)param;
+	TDvdCall* call = (TDvdCall*)task_data;
 	DVDFileInfo finfo;
 	char path[64];
 
-	extendPath(path, call->unk4);
+	extendPath(path, call->mPath);
 
 	if (!openDvd(path, &finfo)) {
 		doError(call, 0);
@@ -153,45 +153,45 @@ s32 Dvd::loadToDramDvdTMain(void* param)
 		return -1;
 	}
 
-	if (call->unk2C == 0) {
-		call->unk2C = finfo.length;
-		call->unk2C -= call->unk28;
+	if (call->mTransferSize == 0) {
+		call->mTransferSize = finfo.length;
+		call->mTransferSize -= call->mOffsetOrAramAddress;
 	}
 
-	DCInvalidateRange(call->unk24, call->unk2C);
-	ret = dvdReadMutex(&finfo, call->unk24, call->unk2C, call->unk28,
-	                   call->unk4);
+	DCInvalidateRange(call->mDramBuffer, call->mTransferSize);
+	ret = dvdReadMutex(&finfo, call->mDramBuffer, call->mTransferSize,
+	                   call->mOffsetOrAramAddress, call->mPath);
 	DVDClose(&finfo);
 	doFinish(call, ret);
 	return 0;
 }
 
-s32 Dvd::loadToDramDvdT(u32 param1, char* path, void* buffer, u32 size,
-                        u32 param5, u32* param6, DvdCallback callback)
+s32 Dvd::loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 size,
+                        u32 param5, u32* result_ptr, DvdCallback callback)
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
 
-	call->unk0 = param1;
-	strcpy(call->unk4, path);
-	call->unk24 = buffer;
+	call->mCbUserData = user_data;
+	strcpy(call->mPath, path);
+	call->mDramBuffer = buffer;
 
-	call->unk30 = param6;
-	if (param6 != 0)
-		*param6 = 0;
+	call->mResult = result_ptr;
+	if (result_ptr != 0)
+		*result_ptr = 0;
 
-	call->unk34 = callback;
-	call->unk28 = size;
-	call->unk2C = param5;
+	call->mCallback            = callback;
+	call->mOffsetOrAramAddress = size;
+	call->mTransferSize        = param5;
 
 	addTask(&loadToDramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
 
-void Dvd::setBufferDvdT(u8* buffer, u32 size, u32 param3) { }
-void Dvd::closeBufferDvdT(u8* buffer) { }
-void Dvd::getCurrentBufferDvdT(u8** buffer) { }
+void Dvd::setBufferDvdT(u8*, u32, u32) { }
+void Dvd::closeBufferDvdT(u8*) { }
+void Dvd::getCurrentBufferDvdT(u8**) { }
 
 s32 Dvd::loadToAramDvdTMain(void* param)
 {
@@ -205,7 +205,7 @@ s32 Dvd::loadToAramDvdTMain(void* param)
 	static ARQRequest req[4];
 	static u32 arq_index = 0;
 
-	extendPath(path, call->unk4);
+	extendPath(path, call->mPath);
 
 	if (!openDvd(path, &finfo)) {
 		doError(call, 0);
@@ -219,35 +219,37 @@ s32 Dvd::loadToAramDvdTMain(void* param)
 		return -1;
 	}
 
-	if (call->unk2C == 0) {
-		call->unk2C = ret;
-		call->unk2C -= call->unk28;
+	if (call->mTransferSize == 0) {
+		call->mTransferSize = ret;
+		call->mTransferSize -= call->mOffsetOrAramAddress;
 	}
 
 	OSTick time = OSGetTick();
-	while (call->unk2C) {
+	while (call->mTransferSize) {
 		buf        = audioDvdBuffer[bufferLoad];
 		bufferLoad = (bufferLoad + 1) % buffers;
 
 		while (bufferFull == buffers)
 			;
 
-		if (call->unk2C < buffersize) {
-			batchSize = ALIGN_NEXT(call->unk2C, 32);
-			ret = dvdReadMutex(&finfo, buf, batchSize, call->unk28, call->unk4);
-			call->unk2C = 0;
+		if (call->mTransferSize < buffersize) {
+			batchSize           = ALIGN_NEXT(call->mTransferSize, 32);
+			ret                 = dvdReadMutex(&finfo, buf, batchSize,
+			                                   call->mOffsetOrAramAddress, call->mPath);
+			call->mTransferSize = 0;
 		} else {
 			batchSize = buffersize;
-			ret = dvdReadMutex(&finfo, buf, batchSize, call->unk28, call->unk4);
-			call->unk28 += buffersize;
-			call->unk2C -= buffersize;
+			ret       = dvdReadMutex(&finfo, buf, batchSize,
+			                         call->mOffsetOrAramAddress, call->mPath);
+			call->mOffsetOrAramAddress += buffersize;
+			call->mTransferSize -= buffersize;
 		}
 		ARQPostRequest(&req[arq_index], 0x12345678, 0, 1, (uintptr_t)buf,
-		               (uintptr_t)call->unk24, batchSize, &aramDmaFinish);
+		               (uintptr_t)call->mDramBuffer, batchSize, &aramDmaFinish);
 		++bufferFull;
 		++arq_index;
 		arq_index %= 4;
-		call->unk24 = (u8*)call->unk24 + batchSize;
+		call->mDramBuffer = (u8*)call->mDramBuffer + batchSize;
 	}
 	time -= DVDClose(&finfo);
 	while (bufferFull != 0)
@@ -257,99 +259,101 @@ s32 Dvd::loadToAramDvdTMain(void* param)
 
 	return 0;
 }
-s32 Dvd::loadToAramDvdT(u32 param1, char* path, void* buffer, u32 size,
-                        u32 param5, u32* param6, DvdCallback callback)
+s32 Dvd::loadToAramDvdT(u32 user_data, char* path, void* buffer, u32 offset,
+                        u32 size, u32* result_ptr, DvdCallback callback)
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
 
-	call->unk0 = param1;
-	strcpy(call->unk4, path);
-	call->unk24 = buffer;
+	call->mCbUserData = user_data;
+	strcpy(call->mPath, path);
+	call->mDramBuffer = buffer;
 
-	call->unk30 = param6;
-	if (param6 != 0)
-		*param6 = 0;
+	call->mResult = result_ptr;
+	if (result_ptr != 0)
+		*result_ptr = 0;
 
-	call->unk34 = callback;
-	call->unk28 = size;
-	call->unk2C = param5;
+	call->mCallback            = callback;
+	call->mOffsetOrAramAddress = offset;
+	call->mTransferSize        = size;
 
 	addTask(&loadToAramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
 
-s32 Dvd::aramToDramDvdTMain(void* param)
+s32 Dvd::aramToDramDvdTMain(void* task_data)
 {
 
 	static DVDFileInfo finfo;
 	static ARQRequest req;
-	TDvdCall* call = (TDvdCall*)param;
+	TDvdCall* call = (TDvdCall*)task_data;
 
 	++bufferFull2;
 	ARQPostRequest(&req, (u32)(uintptr_t)call, ARQ_TYPE_ARAM_TO_MRAM,
-	               ARQ_PRIORITY_HIGH, call->unk28, (uintptr_t)call->unk24,
-	               call->unk2C, &aramDmaFinish2);
+	               ARQ_PRIORITY_HIGH, call->mOffsetOrAramAddress,
+	               (uintptr_t)call->mDramBuffer, call->mTransferSize,
+	               &aramDmaFinish2);
 	while (bufferFull2 != 0)
 		;
 
-	doFinish(call, call->unk2C);
+	doFinish(call, call->mTransferSize);
 	return 0;
 }
-s32 Dvd::dramToAramDvdTMain(void* param)
+s32 Dvd::dramToAramDvdTMain(void* task_data)
 {
 	static DVDFileInfo finfo;
 	static ARQRequest req;
-	TDvdCall* call = (TDvdCall*)param;
+	TDvdCall* call = (TDvdCall*)task_data;
 
 	++bufferFull2;
 	ARQPostRequest(&req, (u32)(uintptr_t)call, ARQ_TYPE_MRAM_TO_ARAM,
-	               ARQ_PRIORITY_HIGH, (uintptr_t)call->unk24, call->unk28,
-	               call->unk2C, &aramDmaFinish2);
+	               ARQ_PRIORITY_HIGH, (uintptr_t)call->mDramBuffer,
+	               call->mOffsetOrAramAddress, call->mTransferSize,
+	               &aramDmaFinish2);
 	while (bufferFull2 != 0)
 		;
 
-	doFinish(call, call->unk2C);
+	doFinish(call, call->mTransferSize);
 	return 0;
 }
-s32 Dvd::aramToDramDvdT(u32 param1, void* dest, void* src, u32 size,
-                        u32* param5, DvdCallback callback)
+s32 Dvd::aramToDramDvdT(u32 user_data, void* dst, void* src, u32 size,
+                        u32* result_ptr, DvdCallback callback)
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
 
-	call->unk0  = param1;
-	call->unk24 = dest;
+	call->mCbUserData = user_data;
+	call->mDramBuffer = dst;
 
-	call->unk30 = param5;
-	if (param5 != 0)
-		*param5 = 0;
+	call->mResult = result_ptr;
+	if (result_ptr != 0)
+		*result_ptr = 0;
 
-	call->unk34 = callback;
-	call->unk28 = (u32)(uintptr_t)src;
-	call->unk2C = size;
+	call->mCallback            = callback;
+	call->mOffsetOrAramAddress = (uintptr_t)src;
+	call->mTransferSize        = size;
 
 	addTaskHigh(&aramToDramDvdTMain, call, sizeof(TDvdCall));
 
 	return 0;
 }
-s32 Dvd::dramToAramDvdT(u32 param1, void* dest, void* src, u32 size,
-                        u32* param5, DvdCallback callback)
+s32 Dvd::dramToAramDvdT(u32 user_data, void* src, void* dst, u32 size,
+                        u32* result_ptr, DvdCallback callback)
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
 
-	call->unk0  = param1;
-	call->unk24 = dest;
+	call->mCbUserData = user_data;
+	call->mDramBuffer = src;
 
-	call->unk30 = param5;
-	if (param5 != 0)
-		*param5 = 0;
+	call->mResult = result_ptr;
+	if (result_ptr != 0)
+		*result_ptr = 0;
 
-	call->unk34 = callback;
-	call->unk28 = (u32)(uintptr_t)src;
-	call->unk2C = size;
+	call->mCallback            = callback;
+	call->mOffsetOrAramAddress = (uintptr_t)dst;
+	call->mTransferSize        = size;
 
 	addTaskHigh(&dramToAramDvdTMain, call, sizeof(TDvdCall));
 
@@ -386,14 +390,14 @@ u32 Dvd::loadFileDvdT(char* path, void* buffer)
 	else
 		return done;
 }
-s32 Dvd::checkPassDvdT(u32 scene_set_id, u32* param2, void (*callback)(u32))
+s32 Dvd::checkPassDvdT(u32 user_data, u32* result_ptr, DvdCallback callback)
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
 
-	callData.unk0  = scene_set_id;
-	callData.unk30 = param2;
-	callData.unk34 = callback;
+	callData.mCbUserData = user_data;
+	callData.mResult     = result_ptr;
+	callData.mCallback   = callback;
 
 	addTask(&dvdThreadCheckBack, call, sizeof(TDvdCall));
 	return 0;
@@ -441,7 +445,7 @@ void Dvd::registerDvdErrorCallback(ErrorCallback callback)
 {
 	errorCallback = callback;
 }
-void Dvd::setFastOpenMaxDic(s32 max) { }
+void Dvd::setFastOpenMaxDic(s32) { }
 void Dvd::registerExtFastOpen(char* path)
 {
 	char realPath[64];
@@ -515,33 +519,28 @@ static s32 Dvd::dvdReadMutex(DVDFileInfo* fileInfo, void* buffer, s32 size,
 	return ret;
 }
 
-static void Dvd::doError(TDvdCall* call, u32 param)
+static void Dvd::doError(TDvdCall* call, u32)
 {
-	if (call->unk30 != nullptr)
-		*call->unk30 = -1;
+	if (call->mResult != nullptr)
+		*call->mResult = -1;
 
-	if (call->unk34)
-		call->unk34(-1);
+	if (call->mCallback)
+		call->mCallback(-1);
 }
 
-static void Dvd::doFinish(TDvdCall* call, u32 param)
+static void Dvd::doFinish(TDvdCall* call, u32 result)
 {
-	if (call->unk30 != nullptr)
-		*call->unk30 = param;
+	if (call->mResult != nullptr)
+		*call->mResult = result;
 
-	if (call->unk34)
-		call->unk34(call->unk0);
+	if (call->mCallback)
+		call->mCallback(call->mCbUserData);
 }
 
 static s32 Dvd::dvdThreadCheckBack(void* param)
 {
 	TDvdCall* call = (TDvdCall*)param;
-	u32 thing      = call->unk0;
-	if (call->unk30 != nullptr)
-		*call->unk30 = thing;
-
-	if (call->unk34)
-		call->unk34(call->unk0);
+	doFinish(call, call->mCbUserData);
 
 	return false;
 }
@@ -552,7 +551,7 @@ static void Dvd::allocDvdBuffer()
 		return;
 
 	for (u32 i = 0; i < buffers; ++i)
-		audioDvdBuffer[i] = 0;
+		audioDvdBuffer[i] = nullptr;
 }
 
 static void Dvd::writeBufferSize(u8* buffer, u32 buffer_count, u32 buffer_size)
@@ -573,7 +572,7 @@ static void Dvd::updateBuffer()
 	}
 }
 
-static void Dvd::aramDmaFinish(uintptr_t param) { --bufferFull; }
-static void Dvd::aramDmaFinish2(uintptr_t param) { --bufferFull2; }
+static void Dvd::aramDmaFinish(uintptr_t) { --bufferFull; }
+static void Dvd::aramDmaFinish2(uintptr_t) { --bufferFull2; }
 
 } // namespace JASystem
