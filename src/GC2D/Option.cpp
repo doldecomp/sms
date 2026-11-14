@@ -207,7 +207,7 @@ void TArrowControl::updateScale()
 	mPane->place(
 	    JUTRect(mBounds.x1 - move, mBounds.y1, mBounds.x2, mBounds.y2));
 
-	mPhase = JGeometry::TUtil<int>::mod(mPhase + 101, 100);
+	mPhase = MsRepeat(mPhase + 1, 100);
 }
 
 int TArrowControl::calcMoveX(int phase) const

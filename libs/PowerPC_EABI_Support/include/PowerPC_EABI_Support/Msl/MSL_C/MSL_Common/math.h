@@ -89,7 +89,17 @@ inline float atan2(float x, float y) { return atan2f(x, y); }
 namespace std {
 inline float fabsf(float f) { return ::fabsf(f); }
 inline float abs(float f) { return ::fabs(f); }
-inline float fmodf(float x, float y) { return ::fmod(x, y); }
+inline float fmodf(float x, float y)
+{
+	float result;
+	if (::fabsf(y) > ::fabsf(x)) {
+		result = x;
+	} else {
+		long long quotient = x / y;
+		result             = x - y * quotient;
+	}
+	return result;
+}
 inline float atan2f(float y, float x) { return ::atan2((double)y, (double)x); }
 inline float sinf(float x) { return ::sin((double)x); }
 inline float cosf(float x) { return ::cos((double)x); }

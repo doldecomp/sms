@@ -125,6 +125,18 @@ template <class T> inline T MsWrap(T t, T l, T r)
 	return t;
 }
 
+// fabricated, inspired by Petari's MR::repeat
+template <class T> inline T MsRepeat(T value, T period)
+{
+	return JGeometry::TUtil<T>::mod(period + value, period);
+}
+
+// fabricated, inspired by Petari's MR::repeat
+template <class T> inline T MsRepeat(T value, T minimum, T maximum)
+{
+	return minimum + MsRepeat(value - minimum, maximum - minimum);
+}
+
 // fabricated
 // NOTE: these MUST take references, as constants passed to them are stored in
 // sdata, not sdata2. See also the note on TParamRT::set.

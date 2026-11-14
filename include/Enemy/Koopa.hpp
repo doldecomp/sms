@@ -7,6 +7,7 @@
 #include <JSystem/JDrama/JDRNameRefGen.hpp>
 #include <MoveBG/MapObjCorona.hpp>
 #include <Player/MarioAccess.hpp>
+#include <MarioUtil/MathUtil.hpp>
 
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <System/EmitterViewObj.hpp>
@@ -242,17 +243,13 @@ public:
 			changeAnm(KOOPA_ANM_TURN_R, 0, amount * getParam()->getTurnAnim());
 		else
 			changeAnm(KOOPA_ANM_TURN_L, 0, -amount * getParam()->getTurnAnim());
-		mRotation.y
-		    = -180.0f
-		      + std::fmodf(360.0f + (mRotation.y + amount - -180.0f), 360.0f);
+		mRotation.y = MsRepeat(mRotation.y + amount, -180.0f, 180.0f);
 	}
 
 	// fabricated
 	bool turnToTarget(bool right)
 	{
-		f32 diff
-		    = -180.0f
-		      + std::fmodf(360.0f + (unk150 - mRotation.y - -180.0f), 360.0f);
+		f32 diff = MsRepeat(unk150 - mRotation.y, -180.0f, 180.0f);
 		bool turned;
 		if (right) {
 			if (diff > getParam()->getTurnSpeed()) {

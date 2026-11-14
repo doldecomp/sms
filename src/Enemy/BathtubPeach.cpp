@@ -81,25 +81,15 @@ public:
 		f32 dz        = self->mPosition.z - cz;
 		f32 dx        = self->mPosition.x - cx;
 		f32 selfAngle = (360.0f / 65536.0f) * matan(dz, dx);
-		f32 diff
-		    = -180.0f
-		      + std::fmodf(360.0f + (selfAngle - marioAngle - -180.0f), 360.0f);
+		f32 diff      = MsRepeat(selfAngle - marioAngle, -180.0f, 180.0f);
 
 		f32 angle;
 		if (diff < 0.0f)
-			angle
-			    = -180.0f
-			      + std::fmodf(360.0f
-			                       + (marioAngle - self->getParam()->angle.get()
-			                          - -180.0f),
-			                   360.0f);
+			angle = MsRepeat(marioAngle - self->getParam()->angle.get(),
+			                 -180.0f, 180.0f);
 		else
-			angle
-			    = -180.0f
-			      + std::fmodf(360.0f
-			                       + (marioAngle + self->getParam()->angle.get()
-			                          - -180.0f),
-			                   360.0f);
+			angle = MsRepeat(marioAngle + self->getParam()->angle.get(),
+			                 -180.0f, 180.0f);
 
 		f32 radius = self->getParam()->radius.get();
 		JGeometry::TVec3<f32> target;
@@ -147,17 +137,12 @@ void TBathtubPeach::faceTo(const JGeometry::TVec3<f32>& target, f32 speed)
 	if (dx * dx + dz * dz <= 0.0000038146973f)
 		return;
 
-	f32 yaw = MsAtan2(dz, dx) - 90.0f;
-	f32 diff
-	    = -180.0f + std::fmodf(360.0f + (yaw - mRotation.y - -180.0f), 360.0f);
+	f32 yaw  = MsAtan2(dz, dx) - 90.0f;
+	f32 diff = MsRepeat(yaw - mRotation.y, -180.0f, 180.0f);
 	if (diff < -speed)
-		mRotation.y
-		    = -180.0f
-		      + std::fmodf(360.0f + (mRotation.y - speed - -180.0f), 360.0f);
+		mRotation.y = MsRepeat(mRotation.y - speed, -180.0f, 180.0f);
 	else if (diff > speed)
-		mRotation.y
-		    = -180.0f
-		      + std::fmodf(360.0f + (mRotation.y + speed - -180.0f), 360.0f);
+		mRotation.y = MsRepeat(mRotation.y + speed, -180.0f, 180.0f);
 	else
 		mRotation.y = yaw;
 }
