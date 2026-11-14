@@ -26,7 +26,7 @@ namespace AudioThread {
 	static int isDSPBoot         = false;
 	static u32 audioproc_mq_init = false;
 	static volatile int intcount = 0;
-	static int priority_set      = 0;
+	static BOOL priority_set     = 0;
 	static u32 jac_pri           = 0;
 	static u32 dvd_pri           = 0;
 
@@ -36,6 +36,13 @@ namespace AudioThread {
 	void setDSPSyncCount(u32 count) { intcount = count; }
 
 	u32 getDSPSyncCount() { return intcount; }
+
+	enum {
+		AUDIOPROC_MSG_PUMP_DAC = 0,
+		AUDIOPROC_MSG_PUMP_DSP = 1,
+		AUDIOPROC_MSG_UNK2     = 2,
+		AUDIOPROC_MSG_EXIT     = 3,
+	};
 
 	static void syncAudio()
 	{
@@ -48,12 +55,12 @@ namespace AudioThread {
 		Kernel::probeStart(4, "UPDATE-DAC");
 
 		if (audioproc_mq_init != 0)
-			OSSendMessage(&audioproc_mq, 0, 0);
+			OSSendMessage(&audioproc_mq, (void*)AUDIOPROC_MSG_PUMP_DAC, 0);
 	}
 
 	static void syncDSP(void* arg);
 
-	static void* audioproc(void* arg)
+	static void* audioproc(void*)
 	{
 		OSInitFastCast();
 
@@ -74,11 +81,11 @@ namespace AudioThread {
 			OSReceiveMessage(&audioproc_mq, &msg, 1);
 
 			switch ((uintptr_t)msg) {
-			case 0:
+			case AUDIOPROC_MSG_PUMP_DAC:
 				Kernel::updateDac();
 				break;
 
-			case 1:
+			case AUDIOPROC_MSG_PUMP_DSP:
 				if (intcount == 0)
 					return nullptr;
 				--intcount;
@@ -92,10 +99,10 @@ namespace AudioThread {
 				}
 				break;
 
-			case 2:
+			case AUDIOPROC_MSG_UNK2:
 				continue;
 
-			case 3:
+			case AUDIOPROC_MSG_EXIT:
 				OSExitThread(nullptr);
 				break;
 			}
@@ -113,7 +120,7 @@ namespace AudioThread {
 		switch (mail & 0xFF00) {
 		case 0xFF00:
 			if (audioproc_mq_init)
-				OSSendMessage(&audioproc_mq, (void*)1, 0);
+				OSSendMessage(&audioproc_mq, (void*)AUDIOPROC_MSG_PUMP_DSP, 0);
 			else
 				DSPReleaseHalt();
 			break;
@@ -129,20 +136,20 @@ namespace AudioThread {
 		if (!audioproc_mq_init)
 			return;
 
-		if (!OSSendMessage(&audioproc_mq, (void*)3, 0))
+		if (!OSSendMessage(&audioproc_mq, (void*)AUDIOPROC_MSG_EXIT, 0))
 			OSCancelThread(&jac_audioThread);
 	}
 
-	void setPriority(u8 audioPriority, u8 dvdPriority)
+	void setPriority(u8 audio_prio, u8 dvd_prio)
 	{
-		jac_pri      = audioPriority;
-		priority_set = true;
-		dvd_pri      = dvdPriority;
+		jac_pri      = audio_prio;
+		priority_set = TRUE;
+		dvd_pri      = dvd_prio;
 	}
 
 	void start(JKRSolidHeap* heap, u32 aram_size, u32 flags)
 	{
-		if (priority_set == 0) {
+		if (!priority_set) {
 			s32 pri = OSGetThreadPriority(OSGetCurrentThread());
 			jac_pri = pri - 3;
 			dvd_pri = jac_pri + 1;

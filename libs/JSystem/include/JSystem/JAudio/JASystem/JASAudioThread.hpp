@@ -13,8 +13,8 @@ namespace AudioThread {
 	extern OSThread jac_dvdThread;
 	extern u8 jac_dvdStack[0x1000];
 
-	void setPriority(u8, u8);
-	void start(JKRSolidHeap*, u32, u32);
+	void setPriority(u8 audio_prio, u8 dvd_prio);
+	void start(JKRSolidHeap* heap, u32 aram_size, u32 flags);
 	void setDSPSyncCount(u32);
 	u32 getDSPSyncCount();
 	void stop();
