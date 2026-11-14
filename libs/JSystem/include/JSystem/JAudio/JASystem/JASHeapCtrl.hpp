@@ -13,11 +13,11 @@ namespace Kernel {
 		~THeap() { }
 
 		void init();
-		void* alloc(THeap*, u32);
-		BOOL allocHeapCheck(THeap*, u32);
+		void* alloc(THeap* parent, u32 size);
+		BOOL allocHeapCheck(THeap* parent, u32 size);
 		BOOL free();
-		BOOL selfAlloc(THeap*, u32, uintptr_t);
-		void initMotherHeap(uintptr_t, u32, u8);
+		BOOL selfAlloc(THeap* parent, u32 size, uintptr_t address);
+		void initMotherHeap(uintptr_t address, u32 size, u8 param_3);
 		void* getUnlockHeap();
 		void checkAlloc();
 		void selfInit(u32, u32, u32);
@@ -35,37 +35,37 @@ namespace Kernel {
 	public:
 		/* 0x0 */ u8 unk0;
 		/* 0x1 */ u8 unk1;
-		/* 0x2 */ u16 unk2;
-		/* 0x4 */ u32 unk4;
+		/* 0x2 */ u16 mChildCount;
+		/* 0x4 */ u32 mId;
 		/* 0x8 */ u8* mBase;
-		/* 0xC */ u32 unkC;
-		/* 0x10 */ u32 unk10;
-		/* 0x14 */ THeap* unk14;
-		/* 0x18 */ THeap* unk18;
-		/* 0x1C */ THeap* mNext;
-		/* 0x20 */ THeap* unk20;
-		/* 0x24 */ THeap* unk24;
-		/* 0x28 */ THeap* unk28;
+		/* 0xC */ u32 mEndOffset;
+		/* 0x10 */ u32 mSize;
+		/* 0x14 */ THeap* mFirstChild;
+		/* 0x18 */ THeap* mParent;
+		/* 0x1C */ THeap* mNextSibling;
+		/* 0x20 */ THeap* mGroupOwner;
+		/* 0x24 */ THeap* mFirstGroupMember;
+		/* 0x28 */ THeap* mNextGroupMember;
 	};
 
 	class TSolidHeap {
 	public:
 		TSolidHeap();
-		TSolidHeap(u8*, s32);
+		TSolidHeap(u8* mem_start, s32 mem_size);
 		~TSolidHeap() { }
 
-		void init(u8*, s32);
-		void* alloc(s32);
+		void init(u8* mem_start, s32 mem_size);
+		void* alloc(s32 size);
 		u32 getRemain();
 		void freeLast();
 		void freeAll();
 
 	public:
 		/* 0x00 */ u8* mStart;
-		/* 0x04 */ u8* mEnd;
+		/* 0x04 */ u8* mCurrent;
 		/* 0x08 */ int mSize;
-		/* 0x0C */ int unkC;
-		/* 0x10 */ u8* unk10;
+		/* 0x0C */ int mAllocCount;
+		/* 0x10 */ u8* mLastAlloc;
 	};
 
 	extern u32 global_id;

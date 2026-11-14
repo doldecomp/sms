@@ -11,19 +11,19 @@ namespace Kernel {
 
 	THeap::THeap()
 	    : mBase(0)
-	    , unkC(0)
-	    , unk10(0)
+	    , mEndOffset(0)
+	    , mSize(0)
 	{
-		unk4  = global_id++;
-		unk0  = 0;
-		unk1  = 1;
-		unk2  = 0;
-		unk14 = 0;
-		unk18 = 0;
-		mNext = 0;
-		unk20 = 0;
-		unk24 = 0;
-		unk28 = 0;
+		mId               = global_id++;
+		unk0              = 0;
+		unk1              = 1;
+		mChildCount       = 0;
+		mFirstChild       = 0;
+		mParent           = 0;
+		mNextSibling      = 0;
+		mGroupOwner       = 0;
+		mFirstGroupMember = 0;
+		mNextGroupMember  = 0;
 	}
 
 	void* THeap::getUnlockHeap() { return 0; }
@@ -34,48 +34,48 @@ namespace Kernel {
 
 	void THeap::selfInit(u32, u32, u32) { }
 
-	BOOL THeap::selfAlloc(THeap* param_1, u32 param_2, uintptr_t param_3)
+	BOOL THeap::selfAlloc(THeap* parent, u32 size, uintptr_t address)
 	{
 		if (mBase != 0 && mBase != (u8*)0xffffffff)
 			return 0;
 
-		mBase = (u8*)param_3;
-		unk10 = param_2;
-		unkC  = 0;
-		unk0  = 0;
-		unk1  = param_1->unk1;
-		unk2  = 0;
-		unk14 = nullptr;
-		unk18 = param_1;
+		mBase       = (u8*)address;
+		mSize       = size;
+		mEndOffset  = 0;
+		unk0        = 0;
+		unk1        = parent->unk1;
+		mChildCount = 0;
+		mFirstChild = nullptr;
+		mParent     = parent;
 
-		if (param_1->unk14 == nullptr) {
-			param_1->unk14 = this;
-			mNext          = nullptr;
-			param_1->unkC  = unk10 + (mBase - param_1->mBase);
+		if (parent->mFirstChild == nullptr) {
+			parent->mFirstChild = this;
+			mNextSibling        = nullptr;
+			parent->mEndOffset  = mSize + (mBase - parent->mBase);
 		} else {
-			THeap* it = param_1->unk14;
-			if (mBase < param_1->unk14->mBase) {
-				mNext          = param_1->unk14;
-				param_1->unk14 = this;
+			THeap* it = parent->mFirstChild;
+			if (mBase < parent->mFirstChild->mBase) {
+				mNextSibling        = parent->mFirstChild;
+				parent->mFirstChild = this;
 			} else {
-				for (;; it = it->mNext) {
-					if (!it->mNext) {
-						mNext         = nullptr;
-						it->mNext     = this;
-						param_1->unkC = unk10 + (mBase - param_1->mBase);
+				for (;; it = it->mNextSibling) {
+					if (!it->mNextSibling) {
+						mNextSibling       = nullptr;
+						it->mNextSibling   = this;
+						parent->mEndOffset = mSize + (mBase - parent->mBase);
 						break;
 					}
 
-					if (mBase < it->mNext->mBase) {
-						mNext     = it->mNext;
-						it->mNext = this;
+					if (mBase < it->mNextSibling->mBase) {
+						mNextSibling     = it->mNextSibling;
+						it->mNextSibling = this;
 						break;
 					}
 				}
 			}
 		}
 
-		++param_1->unk2;
+		++parent->mChildCount;
 		return 1;
 	}
 
@@ -83,119 +83,119 @@ namespace Kernel {
 
 	void THeap::cutDown() { }
 
-	void THeap::initMotherHeap(uintptr_t param_1, u32 param_2, u8 param_3)
+	void THeap::initMotherHeap(uintptr_t address, u32 size, u8 param_3)
 	{
-		mBase = (u8*)ALIGN_NEXT(param_1, 0x20);
-		unkC  = 0;
-		unk10 = param_2 - (param_1 & 0x1F);
-		unk4  = global_id++;
-		unk0  = 1;
-		unk1  = param_3;
-		unk2  = 0;
-		unk14 = 0;
-		unk18 = 0;
-		mNext = 0;
-		unk20 = 0;
-		unk24 = 0;
-		unk28 = 0;
+		mBase             = (u8*)ALIGN_NEXT(address, 0x20);
+		mEndOffset        = 0;
+		mSize             = size - (address & 0x1F);
+		mId               = global_id++;
+		unk0              = 1;
+		unk1              = param_3;
+		mChildCount       = 0;
+		mFirstChild       = 0;
+		mParent           = 0;
+		mNextSibling      = 0;
+		mGroupOwner       = 0;
+		mFirstGroupMember = 0;
+		mNextGroupMember  = 0;
 	}
 
-	BOOL THeap::allocHeapCheck(THeap* param_1, u32 param_2)
+	BOOL THeap::allocHeapCheck(THeap* parent, u32 size)
 	{
-		u8* uVar3;
+		u8* gapStart;
 		THeap* it;
-		THeap* bestCandidate;
-		u8* in_r11;
+		THeap* bestNextSibling;
+		u8* bestGapStart;
 		u32 bestCandidateLeftover;
 		u32 targetSize;
 
-		targetSize = ALIGN_NEXT(param_2, 0x20);
+		targetSize = ALIGN_NEXT(size, 0x20);
 
-		if (param_1->mBase == 0)
+		if (parent->mBase == 0)
 			return false;
 
 		if (mBase != 0 && mBase != (void*)0xffffffff)
 			return false;
 
-		if (param_1->unk10 - param_1->unkC < targetSize) {
+		if (parent->mSize - parent->mEndOffset < targetSize) {
 			bestCandidateLeftover = 0xfffffff;
-			bestCandidate         = nullptr;
-			uVar3                 = param_1->mBase;
+			bestNextSibling       = nullptr;
+			gapStart              = parent->mBase;
 
-			for (it = param_1->unk14;; it = it->mNext) {
+			for (it = parent->mFirstChild;; it = it->mNextSibling) {
 				if (!it)
 					break;
 
-				u32 availSpace = it->mBase - uVar3;
+				u32 availSpace = it->mBase - gapStart;
 				if (availSpace >= targetSize
 				    && availSpace - targetSize < bestCandidateLeftover) {
-					bestCandidate         = it;
-					in_r11                = uVar3;
+					bestNextSibling       = it;
+					bestGapStart          = gapStart;
 					bestCandidateLeftover = availSpace - targetSize;
 				}
-				uVar3 = it->mBase + it->unk10;
+				gapStart = it->mBase + it->mSize;
 			}
 
-			if (bestCandidate == nullptr)
+			if (bestNextSibling == nullptr)
 				return false;
 
-			if (bestCandidate == param_1->unk14) {
-				mNext          = param_1->unk14;
-				param_1->unk14 = this;
+			if (bestNextSibling == parent->mFirstChild) {
+				mNextSibling        = parent->mFirstChild;
+				parent->mFirstChild = this;
 			} else {
-				for (THeap* it = param_1->unk14;; it = it->mNext) {
-					if (it->mNext != bestCandidate)
+				for (THeap* it = parent->mFirstChild;; it = it->mNextSibling) {
+					if (it->mNextSibling != bestNextSibling)
 						continue;
 
-					mNext     = it->mNext;
-					it->mNext = this;
+					mNextSibling     = it->mNextSibling;
+					it->mNextSibling = this;
 					break;
 				}
 			}
 
-			mBase = in_r11;
-			unk10 = targetSize;
-			unkC  = 0;
-			unk0  = 0;
-			unk1  = param_1->unk1;
-			unk2  = 0;
-			unk14 = 0;
-			unk18 = param_1;
-			++param_1->unk2;
+			mBase       = bestGapStart;
+			mSize       = targetSize;
+			mEndOffset  = 0;
+			unk0        = 0;
+			unk1        = parent->unk1;
+			mChildCount = 0;
+			mFirstChild = 0;
+			mParent     = parent;
+			++parent->mChildCount;
 			return true;
 		}
 
-		mBase = param_1->mBase + param_1->unkC;
-		unk10 = targetSize;
-		unkC  = 0;
-		unk0  = 0;
-		unk1  = param_1->unk1;
-		unk2  = 0;
-		unk14 = 0;
-		unk18 = param_1;
+		mBase       = parent->mBase + parent->mEndOffset;
+		mSize       = targetSize;
+		mEndOffset  = 0;
+		unk0        = 0;
+		unk1        = parent->unk1;
+		mChildCount = 0;
+		mFirstChild = 0;
+		mParent     = parent;
 
-		if (param_1->unk14 == 0) {
-			param_1->unk14 = this;
-			mNext          = 0;
+		if (parent->mFirstChild == 0) {
+			parent->mFirstChild = this;
+			mNextSibling        = 0;
 		} else {
-			for (it = param_1->unk14;; it = it->mNext) {
-				if (it->mNext != nullptr)
+			for (it = parent->mFirstChild;; it = it->mNextSibling) {
+				if (it->mNextSibling != nullptr)
 					continue;
 
-				it->mNext = this;
+				it->mNextSibling = this;
 				break;
 			}
 		}
 
-		mNext = 0;
-		param_1->unkC += targetSize;
-		++param_1->unk2;
+		mNextSibling = 0;
+		parent->mEndOffset += targetSize;
+		++parent->mChildCount;
 		return true;
 	}
 
-	void* THeap::alloc(THeap* param_1, u32 param_2)
+	void* THeap::alloc(THeap* parent, u32 size)
 	{
-		if (!allocHeapCheck(param_1, param_2))
+		if (!allocHeapCheck(parent, size))
 			return nullptr;
 
 		return mBase;
@@ -208,64 +208,66 @@ namespace Kernel {
 		if (mBase == 0)
 			return false;
 
-		for (it = unk14; it != nullptr;) {
-			THeap* next = it->mNext;
+		for (it = mFirstChild; it != nullptr;) {
+			THeap* next = it->mNextSibling;
 			it->free();
 			it = next;
 		}
-		unk14 = nullptr;
+		mFirstChild = nullptr;
 
-		for (it = unk24; it != nullptr;) {
-			THeap* next = it->unk28;
+		for (it = mFirstGroupMember; it != nullptr;) {
+			THeap* next = it->mNextGroupMember;
 			it->free();
 			it = next;
 		}
-		unk24 = nullptr;
+		mFirstGroupMember = nullptr;
 
-		if (unk18 != 0) {
-			if (unk18->unk14 == this) {
-				unk18->unk14 = mNext;
-				if (mNext == nullptr)
-					unk18->unkC = 0;
+		if (mParent != 0) {
+			if (mParent->mFirstChild == this) {
+				mParent->mFirstChild = mNextSibling;
+				if (mNextSibling == nullptr)
+					mParent->mEndOffset = 0;
 			} else {
-				for (it = unk18->unk14;; it = it->mNext) {
+				for (it = mParent->mFirstChild;; it = it->mNextSibling) {
 					if (it == nullptr) {
 						mBase = 0;
 						return false;
 					}
 
-					if (it->mNext != this)
+					if (it->mNextSibling != this)
 						continue;
 
-					it->mNext = mNext;
+					it->mNextSibling = mNextSibling;
 
-					if (mNext == nullptr)
-						unk18->unkC = (it->mBase + it->unk10) - unk18->mBase;
+					if (mNextSibling == nullptr)
+						mParent->mEndOffset
+						    = (it->mBase + it->mSize) - mParent->mBase;
 
 					break;
 				}
 			}
-			--unk18->unk2;
+			--mParent->mChildCount;
 		}
 
-		if (unk20 != 0) {
-			if (unk20->unk24 == this) {
-				unk20->unk24 = unk28;
+		if (mGroupOwner != 0) {
+			if (mGroupOwner->mFirstGroupMember == this) {
+				mGroupOwner->mFirstGroupMember = mNextGroupMember;
 			} else {
-				for (it = unk20->unk24;; it = it->unk28) {
+				for (it = mGroupOwner->mFirstGroupMember;;
+				     it = it->mNextGroupMember) {
 					if (it == nullptr)
 						return false;
 
-					if (it->unk28 != this)
+					if (it->mNextGroupMember != this)
 						continue;
 
-					it->unk28 = unk28;
+					it->mNextGroupMember = mNextGroupMember;
 
 					break;
 				}
 			}
-			unk20 = 0;
-			unk28 = 0;
+			mGroupOwner      = 0;
+			mNextGroupMember = 0;
 		}
 
 		mBase = 0;
@@ -290,14 +292,17 @@ namespace Kernel {
 
 	TSolidHeap::TSolidHeap()
 	    : mStart(0)
-	    , mEnd(0)
+	    , mCurrent(0)
 	    , mSize(0)
-	    , unkC(0)
-	    , unk10(0)
+	    , mAllocCount(0)
+	    , mLastAlloc(0)
 	{
 	}
 
-	TSolidHeap::TSolidHeap(u8* param_1, s32 param_2) { init(param_1, param_2); }
+	TSolidHeap::TSolidHeap(u8* mem_start, s32 mem_size)
+	{
+		init(mem_start, mem_size);
+	}
 
 	void* TSolidHeap::alloc(s32 size)
 	{
@@ -306,15 +311,15 @@ namespace Kernel {
 			return 0;
 
 		u8* result = nullptr;
-		if (mEnd + alignedSize <= mStart + mSize) {
-			result = mEnd;
-			mEnd += alignedSize;
+		if (mCurrent + alignedSize <= mStart + mSize) {
+			result = mCurrent;
+			mCurrent += alignedSize;
 		} else {
 			return result;
 		}
 
-		unkC++;
-		unk10 = result;
+		mAllocCount++;
+		mLastAlloc = result;
 		return result;
 	}
 
@@ -324,20 +329,20 @@ namespace Kernel {
 
 	void TSolidHeap::init(u8* mem_start, s32 mem_size)
 	{
-		unkC = 0;
+		mAllocCount = 0;
 		if (!mem_start) {
-			mSize = 0;
-			mEnd  = 0;
-			unk10 = 0;
+			mSize      = 0;
+			mCurrent   = 0;
+			mLastAlloc = 0;
 		} else {
-			mStart = (u8*)ALIGN_NEXT((uintptr_t)mem_start, 0x20);
-			mEnd   = mStart;
-			mSize  = mem_size - ((uintptr_t)mem_start & 0x1F);
-			unk10  = 0;
+			mStart     = (u8*)ALIGN_NEXT((uintptr_t)mem_start, 0x20);
+			mCurrent   = mStart;
+			mSize      = mem_size - ((uintptr_t)mem_start & 0x1F);
+			mLastAlloc = 0;
 		}
 	}
 
-	u32 TSolidHeap::getRemain() { return mSize - (mEnd - mStart); }
+	u32 TSolidHeap::getRemain() { return mSize - (mCurrent - mStart); }
 
 } // namespace Kernel
 
