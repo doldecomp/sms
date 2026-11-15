@@ -172,7 +172,7 @@ public:
 	};
 
 	/* 0x0 */ FabricatedSeTrackParameter* unk0;
-	/* 0x4 */ JAICategoryInfo** mCategoryInfoTable;
+	/* 0x4 */ JAICategoryInfo** mSeCategoryInfoTable;
 
 	struct FabricatedSeTrack {
 		/* 0x0 */ u32 unk0;

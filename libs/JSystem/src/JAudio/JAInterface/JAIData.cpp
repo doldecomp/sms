@@ -627,12 +627,12 @@ void JAIData::initData()
 	mStreamUpdate->mSound           = nullptr;
 
 	if (unk1F4->mSoundSceneList) {
-		mCategoryInfoTable = unk1F4->mSoundSceneList;
+		mSeCategoryInfoTable = unk1F4->mSoundSceneList;
 	} else {
-		mCategoryInfoTable = (JAICategoryInfo**)unk1F4->allocHeap(
+		mSeCategoryInfoTable = (JAICategoryInfo**)unk1F4->allocHeap(
 		    JAIGlobalParameter::soundSceneMax * 4);
 		for (int i = 0; i < JAIGlobalParameter::soundSceneMax; ++i)
-			mCategoryInfoTable[i] = JAIConst::sCInfos_0;
+			mSeCategoryInfoTable[i] = JAIConst::sCInfos_0;
 	}
 
 	if (unk1F4->mFxSceneTable) {

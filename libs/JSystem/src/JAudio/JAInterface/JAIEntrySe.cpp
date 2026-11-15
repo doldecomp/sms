@@ -27,10 +27,10 @@ void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 	u8 bVar10 = 0;
 	JAISound* local_88[16];
 
-	u32 bVar9 = data->mCategoryInfoTable[unk0->mSoundScene]
-	                                    [(sound_id & JAISoundID_CategoryMask)
-	                                     >> JAISoundID_CategoryShift]
-	                                        .mMaxSameSound;
+	u32 bVar9 = data->mSeCategoryInfoTable[unk0->mSoundScene]
+	                                      [(sound_id & JAISoundID_CategoryMask)
+	                                       >> JAISoundID_CategoryShift]
+	                                          .mMaxSameSound;
 
 	while (it != nullptr) {
 		if (it->mActor == uVar14) {

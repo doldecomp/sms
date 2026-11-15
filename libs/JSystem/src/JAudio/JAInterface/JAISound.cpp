@@ -200,12 +200,12 @@ f32 JAISound::setDistanceVolumeCommon(f32 param_1, u8 param_2)
 {
 	f32 var1;
 	if (mCameraIdx != 4) {
-		var1 = unk1C[mCameraIdx].unk18;
+		var1 = unk1C[mCameraIdx].mCameraDistance;
 	} else {
-		var1 = unk1C[0].unk18;
+		var1 = unk1C[0].mCameraDistance;
 		for (u8 i = 1; i < JAIGlobalParameter::audioCameraMax; i++)
-			if (unk1C[i].unk18 < var1)
-				var1 = unk1C[i].unk18;
+			if (unk1C[i].mCameraDistance < var1)
+				var1 = unk1C[i].mCameraDistance;
 	}
 
 	if (var1 < JAIGlobalParameter::maxVolumeDistance)
@@ -735,7 +735,7 @@ void JAISound::setSeDistancePitch(u8 param_1)
 	if (checkSwBit(JAISeSwBit_Mono) && !checkSwBit(JAISeSwBit_NoDistanceVolume)
 	    && !checkSwBit(JAISeSwBit_DopplarLevelMask)) {
 		if (JAIGlobalParameter::audioCameraMax == 1) {
-			f32 dist = unk1C->unk18;
+			f32 dist = unk1C->mCameraDistance;
 			if (dist >= JAIGlobalParameter::distanceMax) {
 				pitch += JAIGlobalParameter::seDistancepitchMax;
 			} else {
@@ -776,7 +776,7 @@ void JAISound::setSeDistanceFxmix(u8 param_1)
 	if (!(interPointer->getSoundSwBit(mInfo) & JAISeSwBit_NoDistanceFxmix)
 	    && JAIGlobalParameter::audioCameraMax == 1) {
 		// TODO: likely an inline
-		f32 dist = unk1C->unk18;
+		f32 dist = unk1C->mCameraDistance;
 		if (dist < JAIGlobalParameter::distanceMax) {
 			fx = JAIGlobalParameter::seDistanceFxParameter
 			     * (dist / JAIGlobalParameter::distanceMax);

@@ -35,7 +35,7 @@ public:
 	struct FabricatedPositionInfo {
 		/* 0x00 */ Vec mCamSpacePos;
 		/* 0x0C */ Vec mPrevCamSpacePos;
-		/* 0x18 */ f32 unk18;
+		/* 0x18 */ f32 mCameraDistance;
 	};
 
 	/* 0x0 */ u8 mTrack;

@@ -212,7 +212,7 @@ public:
 	/* 0x24 */ u32 unk24;
 	/* 0x28 */ f32* mSeCategoryVolume;
 	/* 0x2C */ u32 mSeqArchiveHandle;
-	/* 0x30 */ u32 unk30;
+	/* 0x30 */ u32 mSeqMuteSeTrackMask;
 	/* 0x34 */ u32 mFinishedSceneSet;
 	/* 0x38 */ JAISound* mSeSequence;
 

@@ -46,7 +46,7 @@ JAIBasic::JAIBasic()
 	mAudioCameras       = nullptr;
 	mSeSequence         = nullptr;
 	unk20               = 0;
-	unk30               = 0;
+	mSeqMuteSeTrackMask = 0;
 	mInitFileLoadSwitch = 3;
 	mInitDataPointer    = nullptr;
 	mBankFileList       = nullptr;

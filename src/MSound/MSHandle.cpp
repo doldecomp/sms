@@ -126,7 +126,7 @@ void MSHandle::setSeDistancePan(u8 moveTime)
 {
 	FabricatedPositionInfo* ptr = unk1C;
 
-	f32 thing = ptr->unk18;
+	f32 thing = ptr->mCameraDistance;
 
 	f32 d = calcPan(ptr->mCamSpacePos, thing,
 	                smSeCategory[get_thing(mSoundID)].unk4);
@@ -168,7 +168,7 @@ f32 MSHandle::calcPan(const Vec& param_1, f32 param_2, f32 param_3)
 
 void MSHandle::setSeDistanceDolby(u8 moveTime)
 {
-	f32 d = calcDolby(unk1C->mCamSpacePos, unk1C->unk18);
+	f32 d = calcDolby(unk1C->mCamSpacePos, unk1C->mCameraDistance);
 	setSeInterDolby(4, d, moveTime, 0);
 }
 
@@ -202,7 +202,8 @@ void MSHandle::setSeDistanceVolume(u8 moveTime)
 {
 	u32 swBit = getSwBit();
 	if (swBit & MSSeSwBit_ModDistanceVolume) {
-		f32 d = JALSystem::processModDistVolume(mSoundID, unk1C->unk18);
+		f32 d
+		    = JALSystem::processModDistVolume(mSoundID, unk1C->mCameraDistance);
 		setSeInterVolume(4, d, moveTime, 0);
 		return;
 	}
@@ -222,7 +223,7 @@ void MSHandle::setSeDistanceVolume(u8 moveTime)
 
 f32 MSHandle::setDistanceVolumeCommon(f32 volume, u8 moveTime)
 {
-	f32 fVar1         = unk1C->unk18;
+	f32 fVar1         = unk1C->mCameraDistance;
 	f32 maxVolumeDist = JAIGlobalParameter::getParamMaxVolumeDistance();
 	u32 uVar1         = get_thing(mSoundID);
 	return calcVolume(fVar1, volume, maxVolumeDist, moveTime, uVar1);
