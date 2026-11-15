@@ -94,12 +94,12 @@ void TKukkuBall::bind()
 
 	const TBGCheckData* ground;
 	f32 groundHeight
-	    = gpMap->checkGround(next.x, next.y + mAttackHeight, next.z, &ground);
+	    = gpMap->checkGround(next.x, mAttackHeight + next.y, next.z, &ground);
 	groundHeight += 1.0f;
 	if (next.y <= 0.05f + groundHeight)
 		kill();
 
-	gpMap->isTouchedOneWallAndMoveXZ(&next.x, next.y + mAttackHeight, &next.z,
+	gpMap->isTouchedOneWallAndMoveXZ(&next.x, mAttackHeight + next.y, &next.z,
 	                                 mAttackRadius);
 	mPosition = next;
 }
@@ -284,11 +284,9 @@ void TKukku::updateEffect()
 
 void TKukku::behaveToWater(THitActor* sender)
 {
-	if (!isFalling()) {
-		if (!isRecoveringGraph()) {
-			mSpine->reset();
-			mSpine->setNext(&TNerveKukkuFall::theNerve());
-		}
+	if (!isFalling() && !isRecoveringGraph()) {
+		mSpine->reset();
+		mSpine->setNext(&TNerveKukkuFall::theNerve());
 	}
 }
 
