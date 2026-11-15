@@ -435,7 +435,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		slot->mVolume = vol;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
-			    .mTrackUpdate[sound->mTrack]
+			    .mTrackPendingFlags[sound->mTrack]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_VOLUME;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 2,
@@ -465,7 +465,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		slot->mPan = pan;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
-			    .mTrackUpdate[sound->mTrack]
+			    .mTrackPendingFlags[sound->mTrack]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_PAN;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 4,
@@ -489,7 +489,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		slot->mPitch = pitch;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
-			    .mTrackUpdate[sound->mTrack]
+			    .mTrackPendingFlags[sound->mTrack]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_PITCH;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 3,
@@ -513,7 +513,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		slot->mFxmix = fxmix;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
-			    .mTrackUpdate[sound->mTrack]
+			    .mTrackPendingFlags[sound->mTrack]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_FXMIX;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 5,
@@ -543,7 +543,7 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 		slot->mDolby = dolby;
 		if (sound->mState != SOUNDSTATE_Prepared) {
 			mData->mSeqTrackInfo[mSeSequence->mTrack]
-			    .mTrackUpdate[sound->mTrack]
+			    .mTrackPendingFlags[sound->mTrack]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_DOLBY;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 6,
@@ -552,18 +552,19 @@ void JAIBasic::sendSeAllParameter(JAISound* sound)
 	}
 
 	// Final block: U32 param
-	if (mData->mSeqTrackInfo[mSeSequence->mTrack].mTrackUpdate[sound->mTrack]
+	if (mData->mSeqTrackInfo[mSeSequence->mTrack]
+	        .mTrackPendingFlags[sound->mTrack]
 	    != 0) {
 		JAISystemInterface::setSeqPortargsU32(
 		    &mData->mSeqTrackInfo[mSeSequence->mTrack], sound->mTrack, 1,
 		    mData->mSeqTrackInfo[mSeSequence->mTrack]
-		        .mTrackUpdate[sound->mTrack]);
+		        .mTrackPendingFlags[sound->mTrack]);
 		mData->mSeqTrackInfo[mSeSequence->mTrack]
-		    .mPlayerParams[sound->mTrack]
+		    .mTrackCommands[sound->mTrack]
 		    .mCmd.mQueue
 		    = nullptr;
 		mData->mSeqTrackInfo[mSeSequence->mTrack]
-		    .mPlayerParams[sound->mTrack]
+		    .mTrackCommands[sound->mTrack]
 		    .mCmd.addPortCmdOnce();
 	}
 }

@@ -277,12 +277,12 @@ void JAIData::initSeqTrackInfoParameter(u32 param)
 	mSeqTrackInfo[param].mSeqDolby  = 0.0f;
 	mSeqTrackInfo[param].mSeqTempo  = 1.0f;
 	for (int i = 0; i < JAIGlobalParameter::seqTrackMax; ++i) {
-		mSeqTrackInfo[param].mTrackVolume[i] = 1.0f;
-		mSeqTrackInfo[param].mTrackPan[i]    = 64.0f;
-		mSeqTrackInfo[param].mTrackPitch[i]  = 1.0f;
-		mSeqTrackInfo[param].mTrackFxmix[i]  = 0.0f;
-		mSeqTrackInfo[param].mTrackDolby[i]  = 0.0f;
-		mSeqTrackInfo[param].mTrackUpdate[i] = 0;
+		mSeqTrackInfo[param].mTrackVolume[i]       = 1.0f;
+		mSeqTrackInfo[param].mTrackPan[i]          = 64.0f;
+		mSeqTrackInfo[param].mTrackPitch[i]        = 1.0f;
+		mSeqTrackInfo[param].mTrackFxmix[i]        = 0.0f;
+		mSeqTrackInfo[param].mTrackDolby[i]        = 0.0f;
+		mSeqTrackInfo[param].mTrackPendingFlags[i] = 0;
 	}
 }
 
@@ -590,15 +590,16 @@ void JAIData::initData()
 	mSeqTrackInfo = (JAISeqUpdateData*)unk1F4->allocHeap(
 	    JAIGlobalParameter::seqPlayTrackMax * sizeof(JAISeqUpdateData));
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		mSeqTrackInfo[i].mPlayerParams = (JAIPlayerParameter*)unk1F4->allocHeap(
-		    33 * sizeof(JAIPlayerParameter));
-		mDefaultSeqHandle[i]          = 0;
-		mSeqTrackInfo[i].mPauseMode   = 0;
-		mSeqTrackInfo[i].mPauseVolume = 0;
-		mSeqTrackInfo[i].mPrepareFlag = false;
-		mSeqTrackInfo[i].mLoadingFlag = false;
-		mSeqTrackInfo[i].unk8         = 0;
-		mSeqTrackInfo[i].mSound       = 0;
+		mSeqTrackInfo[i].mTrackCommands
+		    = (JAIPlayerParameter*)unk1F4->allocHeap(
+		        33 * sizeof(JAIPlayerParameter));
+		mDefaultSeqHandle[i]           = 0;
+		mSeqTrackInfo[i].mPauseMode    = 0;
+		mSeqTrackInfo[i].mPauseVolume  = 0;
+		mSeqTrackInfo[i].mPrepareFlag  = false;
+		mSeqTrackInfo[i].mLoadingFlag  = false;
+		mSeqTrackInfo[i].mRequestFlags = 0;
+		mSeqTrackInfo[i].mSound        = nullptr;
 
 		mSeqTrackInfo[i].mTrackVolume = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
@@ -610,7 +611,7 @@ void JAIData::initData()
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
 		mSeqTrackInfo[i].mTrackDolby = (f32*)unk1F4->allocHeap(
 		    JAIGlobalParameter::seqTrackMax * sizeof(f32));
-		mSeqTrackInfo[i].mTrackUpdate = (u32*)unk1F4->allocHeap(
+		mSeqTrackInfo[i].mTrackPendingFlags = (u32*)unk1F4->allocHeap(
 		    (JAIGlobalParameter::seqTrackMax + 1) * sizeof(u32));
 		initSeqTrackInfoParameter(i);
 	}

@@ -39,17 +39,17 @@ void JAIBasic::stopSeq(JAISound* param_1)
 void JAIBasic::checkEntriedSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISeqUpdateData* sud = &mData->mSeqTrackInfo[i];
-		JAISoundHandle& sound = mData->mSeqTrackInfo[i].mSound;
-		u32& r27              = mData->mSeqTrackInfo[i].unk8;
+		JAISeqUpdateData* updateData = &mData->mSeqTrackInfo[i];
+		JAISoundHandle& sound        = mData->mSeqTrackInfo[i].mSound;
+		u32& requestFlags            = mData->mSeqTrackInfo[i].mRequestFlags;
 
 		if (!sound)
 			continue;
 
-		if (!(r27 & 1))
+		if (!(requestFlags & JAISeqUpdateData::REQUEST_LOAD))
 			continue;
 
-		if (sud->mLoadingFlag)
+		if (updateData->mLoadingFlag)
 			return;
 
 		u32 size = JASystem::Vload::checkSize(
@@ -122,7 +122,7 @@ void JAIBasic::checkEntriedSeq()
 				JASystem::Vload::loadFileAsync(
 				    mSeqArchiveHandle + (soundId & JAISoundID_IndexMask), ptr,
 				    0, size, checkDvdLoadArc, param);
-				sud->mLoadingFlag = true;
+				updateData->mLoadingFlag = true;
 			} else {
 				JASystem::Vload::loadFile(
 				    mSeqArchiveHandle
@@ -146,8 +146,8 @@ void JAIBasic::checkEntriedSeq()
 		}
 
 		if (ptr != nullptr) {
-			sud->mSeqData = ptr;
-			r27 ^= 1;
+			updateData->mSeqData = ptr;
+			requestFlags ^= JAISeqUpdateData::REQUEST_LOAD;
 		} else {
 			stopSeq(sound);
 		}
@@ -156,20 +156,20 @@ void JAIBasic::checkEntriedSeq()
 
 void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 {
-	JAISeqUpdateData* sud = &mData->mSeqTrackInfo[trackID];
-	JAISoundHandle& sound = sud->mSound;
+	JAISeqUpdateData* updateData = &mData->mSeqTrackInfo[trackID];
+	JAISoundHandle& sound        = updateData->mSound;
 	if (sound->getSeqParameter()->mPauseMode == 2)
 		return;
 
-	u32& r30 = sud->unk8;
+	u32& requestFlags = updateData->mRequestFlags;
 
 	JAISeqParameter* seqParam = sound->getSeqParameter();
-	u32* portFlags            = sud->mTrackUpdate;
+	u32* pendingFlags         = updateData->mTrackPendingFlags;
 
 	for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax + 1; ++j)
-		portFlags[j] = 0;
+		pendingFlags[j] = 0;
 
-	if (r30 & 2) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_STOP) {
 		JAISound* snd = sound;
 		if (snd->mFadeCounter == 0 || snd->mState < SOUNDSTATE_Playing) {
 			if (snd->mState >= SOUNDSTATE_Started) {
@@ -177,12 +177,12 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			}
 			sound->clearMainSoundPPointer();
 			stopSeq(sound);
-			r30 = 0;
+			requestFlags = 0;
 			return;
 		} else {
 			snd->setSeqInterVolume(6, 0.0f, snd->mFadeCounter);
 			sound->mState = SOUNDSTATE_Stopping;
-			r30 ^= 2;
+			requestFlags ^= JAISeqUpdateData::REQUEST_STOP;
 		}
 	}
 
@@ -227,12 +227,12 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 	if (sound != nullptr)
 		sound->incPlayGameFrameCounter();
 
-	if (r30 == 0)
+	if (requestFlags == 0)
 		return;
 
 	u8 envMax = JAIGlobalParameter::seqPlayTrackMax + 12;
 
-	if (r30 & 0x40000) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_VOLUME) {
 		f32 vol = 1.0f;
 		for (u8 j = 0; j < envMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mVolume[j];
@@ -243,20 +243,21 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			}
 			vol *= mps->mCurrentValue;
 		}
-		if (sud->mSeqVolume != vol) {
-			sud->mSeqVolume = vol;
+
+		if (updateData->mSeqVolume != vol) {
+			updateData->mSeqVolume = vol;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[trackID], JAIGlobalParameter::seqTrackMax,
 			    2, vol);
-			portFlags[JAIGlobalParameter::seqTrackMax]
+			pendingFlags[JAIGlobalParameter::seqTrackMax]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_VOLUME;
 		}
-		if (seqParam->mVolumeUpdate == 0) {
-			r30 ^= 0x40000;
-		}
+
+		if (seqParam->mVolumeUpdate == 0)
+			requestFlags ^= JAISeqUpdateData::REQUEST_VOLUME;
 	}
 
-	if (r30 & 0x80000) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_PAN) {
 		f32 pan = 0.0f;
 		for (u8 j = 0; j < envMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mPan[j];
@@ -267,25 +268,27 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			}
 			pan += mps->mCurrentValue - 0.5f;
 		}
+
 		pan += 0.5f;
 		if (pan > 1.0f)
 			pan = 1.0f;
 		else if (pan < 0.0f)
 			pan = 0.0f;
-		if (sud->mSeqPan != pan) {
-			sud->mSeqPan = pan;
+
+		if (updateData->mSeqPan != pan) {
+			updateData->mSeqPan = pan;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[trackID], JAIGlobalParameter::seqTrackMax,
 			    4, pan);
-			portFlags[JAIGlobalParameter::seqTrackMax]
+			pendingFlags[JAIGlobalParameter::seqTrackMax]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_PAN;
 		}
-		if (seqParam->mPanUpdate == 0) {
-			r30 ^= 0x80000;
-		}
+
+		if (seqParam->mPanUpdate == 0)
+			requestFlags ^= JAISeqUpdateData::REQUEST_PAN;
 	}
 
-	if (r30 & 0x100000) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_PITCH) {
 		f32 pitch = 1.0f;
 		for (u8 j = 0; j < envMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mPitch[j];
@@ -296,20 +299,21 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			}
 			pitch *= mps->mCurrentValue;
 		}
-		if (sud->mSeqPitch != pitch) {
-			sud->mSeqPitch = pitch;
+
+		if (updateData->mSeqPitch != pitch) {
+			updateData->mSeqPitch = pitch;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[trackID], JAIGlobalParameter::seqTrackMax,
 			    3, pitch);
-			portFlags[JAIGlobalParameter::seqTrackMax]
+			pendingFlags[JAIGlobalParameter::seqTrackMax]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_PITCH;
 		}
-		if (seqParam->mPitchUpdate == 0) {
-			r30 ^= 0x100000;
-		}
+
+		if (seqParam->mPitchUpdate == 0)
+			requestFlags ^= JAISeqUpdateData::REQUEST_PITCH;
 	}
 
-	if (r30 & 0x200000) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_FXMIX) {
 		f32 fxmix = 0.0f;
 		for (u8 j = 0; j < envMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mFxmix[j];
@@ -320,22 +324,23 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 				fxmix += mps->mCurrentValue;
 			}
 		}
+
 		if (fxmix > 1.0f)
 			fxmix = 1.0f;
-		if (sud->mSeqFxmix != fxmix) {
-			sud->mSeqFxmix = fxmix;
+		if (updateData->mSeqFxmix != fxmix) {
+			updateData->mSeqFxmix = fxmix;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[trackID], JAIGlobalParameter::seqTrackMax,
 			    5, fxmix);
-			portFlags[JAIGlobalParameter::seqTrackMax]
+			pendingFlags[JAIGlobalParameter::seqTrackMax]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_FXMIX;
 		}
-		if (seqParam->mFxmixUpdate == 0) {
-			r30 ^= 0x200000;
-		}
+
+		if (seqParam->mFxmixUpdate == 0)
+			requestFlags ^= JAISeqUpdateData::REQUEST_FXMIX;
 	}
 
-	if (r30 & 0x400000) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_DOLBY) {
 		f32 dolby = 1.0f;
 		for (u8 j = 0; j < envMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mDolby[j];
@@ -346,34 +351,35 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 				dolby *= mps->mCurrentValue;
 			}
 		}
-		if (sud->mSeqDolby != dolby) {
-			sud->mSeqDolby = dolby;
+
+		if (updateData->mSeqDolby != dolby) {
+			updateData->mSeqDolby = dolby;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[trackID], JAIGlobalParameter::seqTrackMax,
 			    6, dolby);
-			portFlags[JAIGlobalParameter::seqTrackMax]
+			pendingFlags[JAIGlobalParameter::seqTrackMax]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_DOLBY;
 		}
-		if (seqParam->mDolbyUpdate == 0) {
-			r30 ^= 0x400000;
-		}
+
+		if (seqParam->mDolbyUpdate == 0)
+			requestFlags ^= JAISeqUpdateData::REQUEST_DOLBY;
 	}
 
-	if (r30 & 4) {
-		if (!mData->moveParameter(&seqParam->mTempo)) {
-			r30 ^= 4;
-		}
-		if (sud->mSeqTempo != seqParam->mTempo.mCurrentValue) {
-			sud->mSeqTempo = seqParam->mTempo.mCurrentValue;
+	if (requestFlags & JAISeqUpdateData::REQUEST_TEMPO) {
+		if (!mData->moveParameter(&seqParam->mTempo))
+			requestFlags ^= JAISeqUpdateData::REQUEST_TEMPO;
+
+		if (updateData->mSeqTempo != seqParam->mTempo.mCurrentValue) {
+			updateData->mSeqTempo = seqParam->mTempo.mCurrentValue;
 			JAISystemInterface::setSeqPortargsF32(
 			    &mData->mSeqTrackInfo[trackID], JAIGlobalParameter::seqTrackMax,
 			    9, seqParam->mTempo.mCurrentValue);
-			portFlags[JAIGlobalParameter::seqTrackMax]
+			pendingFlags[JAIGlobalParameter::seqTrackMax]
 			    |= JASystem::Kernel::TPortArgs::UPDATE_TEMPO;
 		}
 	}
 
-	if (r30 & 0x10) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_PORT_DATA) {
 		for (u8 j = 0; j < 16; ++j) {
 			if (seqParam->mPortUpdate & (1 << j))
 				if (!mData->moveParameter(&seqParam->mPortData[j]))
@@ -388,31 +394,33 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 				    seqParam->mPortData[j].mCurrentValue);
 		}
 		if (seqParam->mPortUpdate == 0)
-			r30 ^= 0x10;
+			requestFlags ^= JAISeqUpdateData::REQUEST_PORT_DATA;
 	}
 
-	if (r30 & 0x40) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_VOLUME) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mTrackVolume[j];
 			if (seqParam->mTrackVolumeUpdate & (1 << j)) {
 				if (!mData->moveParameter(mps))
 					seqParam->mTrackVolumeUpdate ^= 1 << j;
 
-				if (mps->mCurrentValue != sud->mTrackVolume[j]) {
-					sud->mTrackVolume[j] = mps->mCurrentValue;
-					portFlags[j] |= JASystem::Kernel::TPortArgs::UPDATE_VOLUME;
+				if (mps->mCurrentValue != updateData->mTrackVolume[j]) {
+					updateData->mTrackVolume[j] = mps->mCurrentValue;
+					pendingFlags[j]
+					    |= JASystem::Kernel::TPortArgs::UPDATE_VOLUME;
 					JAISystemInterface::setSeqPortargsF32(
 					    &mData->mSeqTrackInfo[trackID], j, 2,
 					    mps->mCurrentValue);
 				}
 			}
 		}
+
 		if (seqParam->mTrackVolumeUpdate == 0)
-			r30 ^= 0x40;
+			requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_VOLUME;
 	}
 
-	if (r30 & 0x20) {
-		r30 ^= 0x20;
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_MUTE) {
+		requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_MUTE;
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			if (seqParam->mMuteBits[j].mEnable == 1
 			    && seqParam->mMuteBits[j].mCurrent
@@ -427,36 +435,38 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 		}
 	}
 
-	if (r30 & 0x80) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_PAN) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mTrackPan[j];
 			if (seqParam->mTrackPanUpdate & (1 << j)) {
 				if (!mData->moveParameter(mps))
 					seqParam->mTrackPanUpdate ^= 1 << j;
 
-				if (mps->mCurrentValue != sud->mTrackPan[j]) {
-					sud->mTrackPan[j] = mps->mCurrentValue;
-					portFlags[j] |= JASystem::Kernel::TPortArgs::UPDATE_PAN;
+				if (mps->mCurrentValue != updateData->mTrackPan[j]) {
+					updateData->mTrackPan[j] = mps->mCurrentValue;
+					pendingFlags[j] |= JASystem::Kernel::TPortArgs::UPDATE_PAN;
 					JAISystemInterface::setSeqPortargsF32(
 					    &mData->mSeqTrackInfo[trackID], j, 4,
 					    seqParam->mTrackPan[j].mCurrentValue);
 				}
 			}
 		}
+
 		if (seqParam->mTrackPanUpdate == 0)
-			r30 ^= 0x80;
+			requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_PAN;
 	}
 
-	if (r30 & 0x200) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_PITCH) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mTrackPitch[j];
 			if (seqParam->mTrackPitchUpdate & (1 << j)) {
 				if (!mData->moveParameter(mps)) {
 					seqParam->mTrackPitchUpdate ^= 1 << j;
 				}
-				if (mps->mCurrentValue != sud->mTrackPitch[j]) {
-					sud->mTrackPitch[j] = mps->mCurrentValue;
-					portFlags[j] |= JASystem::Kernel::TPortArgs::UPDATE_PITCH;
+				if (mps->mCurrentValue != updateData->mTrackPitch[j]) {
+					updateData->mTrackPitch[j] = mps->mCurrentValue;
+					pendingFlags[j]
+					    |= JASystem::Kernel::TPortArgs::UPDATE_PITCH;
 					JAISystemInterface::setSeqPortargsF32(
 					    &mData->mSeqTrackInfo[trackID], j, 3,
 					    seqParam->mTrackPitch[j].mCurrentValue);
@@ -464,55 +474,59 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 			}
 		}
 		if (seqParam->mTrackPitchUpdate == 0)
-			r30 ^= 0x200;
+			requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_PITCH;
 	}
 
-	if (r30 & 0x800) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_FXMIX) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mTrackFxmix[j];
 			if (seqParam->mTrackFxmixUpdate & (1 << j)) {
 				if (!mData->moveParameter(mps)) {
 					seqParam->mTrackFxmixUpdate ^= 1 << j;
 				}
-				if (mps->mCurrentValue != sud->mTrackFxmix[j]) {
-					sud->mTrackFxmix[j] = mps->mCurrentValue;
-					portFlags[j] |= JASystem::Kernel::TPortArgs::UPDATE_FXMIX;
+				if (mps->mCurrentValue != updateData->mTrackFxmix[j]) {
+					updateData->mTrackFxmix[j] = mps->mCurrentValue;
+					pendingFlags[j]
+					    |= JASystem::Kernel::TPortArgs::UPDATE_FXMIX;
 					JAISystemInterface::setSeqPortargsF32(
 					    &mData->mSeqTrackInfo[trackID], j, 5,
 					    seqParam->mTrackFxmix[j].mCurrentValue);
 				}
 			}
 		}
+
 		if (seqParam->mTrackFxmixUpdate == 0)
-			r30 ^= 0x800;
+			requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_FXMIX;
 	}
 
-	if (r30 & 0x100) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_DOLBY) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			JAIMoveParaSet* mps = &seqParam->mTrackDolby[j];
 			if (seqParam->mTrackDolbyUpdate & (1 << j)) {
 				if (!mData->moveParameter(mps)) {
 					seqParam->mTrackDolbyUpdate ^= 1 << j;
 				}
-				if (mps->mCurrentValue != sud->mTrackDolby[j]) {
-					sud->mTrackDolby[j] = mps->mCurrentValue;
-					portFlags[j] |= JASystem::Kernel::TPortArgs::UPDATE_DOLBY;
+				if (mps->mCurrentValue != updateData->mTrackDolby[j]) {
+					updateData->mTrackDolby[j] = mps->mCurrentValue;
+					pendingFlags[j]
+					    |= JASystem::Kernel::TPortArgs::UPDATE_DOLBY;
 					JAISystemInterface::setSeqPortargsF32(
 					    &mData->mSeqTrackInfo[trackID], j, 6,
 					    seqParam->mTrackDolby[j].mCurrentValue);
 				}
 			}
 		}
+
 		if (seqParam->mTrackDolbyUpdate == 0)
-			r30 ^= 0x100;
+			requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_DOLBY;
 	}
 
-	if (r30 & 0x800000) {
-		r30 ^= 0x800000;
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_INTERRUPT) {
+		requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_INTERRUPT;
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			u8* sw = &seqParam->mTrackInterruptSwitch[j];
 			if (*sw == 1) {
-				portFlags[j] |= JASystem::Kernel::TPortArgs::
+				pendingFlags[j] |= JASystem::Kernel::TPortArgs::
 				    UPDATE_APPLICATION_INTERRUPT;
 				JAISystemInterface::setSeqPortargsU32(
 				    &mData->mSeqTrackInfo[trackID], j, 8, 1);
@@ -521,7 +535,7 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 		}
 	}
 
-	if (r30 & 0x1000) {
+	if (requestFlags & JAISeqUpdateData::REQUEST_TRACK_PORT_DATA) {
 		for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax; ++j) {
 			u16* ports = seqParam->mTrackPortData[j];
 			if (seqParam->mTrackPortUpdate & (1 << j)) {
@@ -536,8 +550,9 @@ void JAIBasic::checkPlayingSeqTrack(u32 trackID)
 				}
 			}
 		}
+
 		if (seqParam->mTrackPortUpdate == 0)
-			r30 ^= 0x1000;
+			requestFlags ^= JAISeqUpdateData::REQUEST_TRACK_PORT_DATA;
 	}
 }
 
@@ -548,15 +563,15 @@ void JAIBasic::checkPlayingSeq()
 		if (sound && sound->mState >= SOUNDSTATE_Playing) {
 			checkPlayingSeqTrack(i);
 			for (u8 j = 0; j < JAIGlobalParameter::seqTrackMax + 1; ++j) {
-				if (mData->mSeqTrackInfo[i].mTrackUpdate[j] != 0) {
+				if (mData->mSeqTrackInfo[i].mTrackPendingFlags[j] != 0) {
 					JAISystemInterface::setSeqPortargsU32(
 					    &mData->mSeqTrackInfo[i], j, 1,
-					    mData->mSeqTrackInfo[i].mTrackUpdate[j]);
+					    mData->mSeqTrackInfo[i].mTrackPendingFlags[j]);
 
-					mData->mSeqTrackInfo[i].mPlayerParams[j].mCmd.mQueue
+					mData->mSeqTrackInfo[i].mTrackCommands[j].mCmd.mQueue
 					    = nullptr;
 					mData->mSeqTrackInfo[i]
-					    .mPlayerParams[j]
+					    .mTrackCommands[j]
 					    .mCmd.addPortCmdOnce();
 				}
 			}
@@ -574,12 +589,12 @@ void JAIBasic::checkStoppedSeq()
 
 		if (sound->mState == SOUNDSTATE_Playing
 		    || sound->mState == SOUNDSTATE_Stopping) {
-			u8 flag = JAISystemInterface::checkSeqActiveFlag(
+			u8 seqState = JAISystemInterface::checkSeqActiveFlag(
 			    sound->getSeqParameter()->mSeqHandle);
-			if (flag == 0) {
+			if (seqState == 0) {
 				sound->clearMainSoundPPointer();
 				stopSeq(sound);
-				mData->mSeqTrackInfo[i].unk8 = 0;
+				mData->mSeqTrackInfo[i].mRequestFlags = 0;
 			}
 		}
 	}
@@ -594,9 +609,9 @@ void JAIBasic::checkStartedSeq()
 			continue;
 
 		if (sound->mState == SOUNDSTATE_Started) {
-			u8 flag = JAISystemInterface::checkSeqActiveFlag(
+			u8 seqState = JAISystemInterface::checkSeqActiveFlag(
 			    sound->getSeqParameter()->mSeqHandle);
-			if (flag != 0) {
+			if (seqState != 0) {
 				sound->mState = SOUNDSTATE_Playing;
 				JAISystemInterface::trackInit(&mData->mSeqTrackInfo[i]);
 			}
@@ -617,7 +632,7 @@ void JAIBasic::checkFadeoutSeq()
 			JAISystemInterface::stopSeq(sound->getSeqParameter()->mSeqHandle);
 			sound->clearMainSoundPPointer();
 			stopSeq(sound);
-			mData->mSeqTrackInfo[i].unk8 = 0;
+			mData->mSeqTrackInfo[i].mRequestFlags = 0;
 		}
 	}
 }
@@ -625,8 +640,8 @@ void JAIBasic::checkFadeoutSeq()
 void JAIBasic::checkReadSeq()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISeqUpdateData* sud = &mData->mSeqTrackInfo[i];
-		JAISoundHandle& sound = sud->mSound;
+		JAISeqUpdateData* updateData = &mData->mSeqTrackInfo[i];
+		JAISoundHandle& sound        = updateData->mSound;
 		if (!sound)
 			continue;
 		if (sound->mState != SOUNDSTATE_Prepared)
@@ -639,7 +654,7 @@ void JAIBasic::checkReadSeq()
 		u32 lVar2 = JASystem::Vload::checkSize(
 		    mSeqArchiveHandle + (sound->mSoundID & JAISoundID_IndexMask));
 		int uVar3 = JAISystemInterface::setSeqData(
-		    nullptr, sud->mSeqData, lVar2,
+		    nullptr, updateData->mSeqData, lVar2,
 		    JASystem::Player::SEQ_PLAYMODE_UNK_0);
 
 		sound->getSeqParameter()->mSeqHandle = uVar3;
@@ -651,14 +666,15 @@ void JAIBasic::checkReadSeq()
 				sound->setSeqInterVolume(6, 0.0f, 0);
 				sound->setSeqInterVolume(6, 1.0f, sound->mFadeCounter);
 			}
-			if (sud->mPauseMode != 0) {
-				sound->setPauseMode(sud->mPauseMode, sud->mPauseVolume);
-				sud->mSeqVolume = 1.1f;
+			if (updateData->mPauseMode != 0) {
+				sound->setPauseMode(updateData->mPauseMode,
+				                    updateData->mPauseVolume);
+				updateData->mSeqVolume = 1.1f;
 			}
 			setSeExtParameter(sound);
 			checkPlayingSeqTrack(i);
 			if (sound != nullptr) {
-				JAISystemInterface::rootInit(sud);
+				JAISystemInterface::rootInit(updateData);
 				JAISystemInterface::startSeq(
 				    sound->getSeqParameter()->mSeqHandle);
 			}
@@ -672,8 +688,8 @@ void JAIBasic::checkReadSeq()
 void JAIBasic::checkSeqWave()
 {
 	for (int i = 0; i < JAIGlobalParameter::seqPlayTrackMax; ++i) {
-		JAISeqUpdateData* sud = &mData->mSeqTrackInfo[i];
-		JAISoundHandle& sound = sud->mSound;
+		JAISeqUpdateData* updateData = &mData->mSeqTrackInfo[i];
+		JAISoundHandle& sound        = updateData->mSound;
 		if (!sound)
 			continue;
 		if (!sound->getSeqParameter())

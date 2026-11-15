@@ -76,8 +76,9 @@ void JAISeqEntry::storeBuffer(JAISound** out_handle, JAIActor* actor,
 
 		pvVar5->mUpdateData = pJVar1;
 
-		sound->mTrack                               = bVar10;
-		data->mSeqTrackInfo[bVar10].unk8            = 1;
+		sound->mTrack = bVar10;
+		data->mSeqTrackInfo[bVar10].mRequestFlags
+		    = JAISeqUpdateData::REQUEST_LOAD;
 		data->mSeqTrackInfo[bVar10].mPrepareFlag    = false;
 		data->mSeqTrackInfo[bVar10].mTrackInitFlags = 0;
 		data->initSeqTrackInfoParameter(bVar10);

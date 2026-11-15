@@ -798,7 +798,8 @@ void JAIBasic::stopSoundHandle(JAISoundHandle handle, u32 fadeout)
 				handle->clearMainSoundPPointer();
 				stopSeq(handle);
 			} else {
-				mData->mSeqTrackInfo[handle->mTrack].unk8 |= 0x2;
+				mData->mSeqTrackInfo[handle->mTrack].mRequestFlags
+				    |= JAISeqUpdateData::REQUEST_STOP;
 				mData->mSeqTrackInfo[handle->mTrack].mSound->mFadeCounter
 				    = fadeout;
 			}

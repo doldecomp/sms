@@ -338,7 +338,8 @@ void JAISound::setSeqInterVolume(u8 param, f32 volume, u32 moveTime)
 		getSeqParameter()->mVolumeUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
-		getSeqParameter()->mUpdateData->unk8 |= 0x40000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_VOLUME;
 }
 
 void JAISound::setSeqInterPan(u8 param, f32 pan, u32 moveTime)
@@ -354,7 +355,8 @@ void JAISound::setSeqInterPan(u8 param, f32 pan, u32 moveTime)
 		getSeqParameter()->mPanUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
-		getSeqParameter()->mUpdateData->unk8 |= 0x80000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_PAN;
 }
 
 void JAISound::setSeqInterPitch(u8 param, f32 pitch, u32 moveTime)
@@ -371,7 +373,8 @@ void JAISound::setSeqInterPitch(u8 param, f32 pitch, u32 moveTime)
 		getSeqParameter()->mPitchUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
-		getSeqParameter()->mUpdateData->unk8 |= 0x100000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_PITCH;
 }
 
 void JAISound::setSeqInterFxmix(u8 param, f32 fxmix, u32 moveTime)
@@ -388,7 +391,8 @@ void JAISound::setSeqInterFxmix(u8 param, f32 fxmix, u32 moveTime)
 		getSeqParameter()->mFxmixUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
-		getSeqParameter()->mUpdateData->unk8 |= 0x200000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_FXMIX;
 }
 
 void JAISound::setSeqInterDolby(u8 param, f32 dolby, u32 moveTime)
@@ -412,7 +416,8 @@ void JAISound::setSeqInterDolby(u8 param, f32 dolby, u32 moveTime)
 		getSeqParameter()->mDolbyUpdate |= 1 << param;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
-		getSeqParameter()->mUpdateData->unk8 |= 0x400000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_DOLBY;
 }
 
 void JAISound::setSeqTempoProportion(f32 tempo, u32 moveTime)
@@ -426,7 +431,8 @@ void JAISound::setSeqTempoProportion(f32 tempo, u32 moveTime)
 	int ret = initMoveParameter(&getSeqParameter()->mTempo, tempo, moveTime);
 
 	if (getSeqParameter()->mUpdateData)
-		getSeqParameter()->mUpdateData->unk8 |= 0x4;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_TEMPO;
 }
 
 void JAISound::setSeqPortData(u8 param_1, u16 param_2, u32 param_3)
@@ -451,7 +457,8 @@ void JAISound::setSeqPortData(u8 param_1, u16 param_2, u32 param_3)
 		getSeqParameter()->mPortUpdate |= 1 << param_1;
 
 	if (getSeqParameter()->mUpdateData && ret != 2)
-		getSeqParameter()->mUpdateData->unk8 |= 0x10;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_PORT_DATA;
 }
 
 void JAISound::setWaveReadMode(s32 bank_id, s32 group_no)
@@ -487,7 +494,8 @@ void JAISound::setTrackInterruptSwitch(u8 param_1, u8 param_2)
 
 	getSeqParameter()->mTrackInterruptSwitch[param_1] = param_2;
 	if (getSeqParameter()->mUpdateData)
-		getSeqParameter()->mUpdateData->unk8 |= 0x800000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_TRACK_INTERRUPT;
 }
 
 void JAISound::setTrackPan(u8, f32, u32) { }
@@ -526,7 +534,8 @@ void JAISound::setTrackPortData(u8 param_1, u8 param_2, u16 param_3)
 		                                 getTrackPortRoute(param_1, param_2),
 		                                 param_3);
 	} else {
-		getSeqParameter()->mUpdateData->unk8 |= 0x1000;
+		getSeqParameter()->mUpdateData->mRequestFlags
+		    |= JAISeqUpdateData::REQUEST_TRACK_PORT_DATA;
 		getSeqParameter()->mTrackPortUpdate |= 1 << param_1;
 		getSeqParameter()->mTrackPortDataUpdate[param_1] |= 1 << param_2;
 	}

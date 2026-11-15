@@ -21,7 +21,7 @@ namespace Kernel {
 		};
 
 		/* 0x00 */ TTrack* mTrack;
-		/* 0x04 */ u32 mUpdateFlags;
+		/* 0x04 */ u32 mPendingFlags;
 		/* 0x08 */ f32 mTrackVolume;
 		/* 0x0C */ f32 mTrackPitch;
 		/* 0x10 */ f32 mTrackPan;
