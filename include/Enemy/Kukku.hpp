@@ -70,7 +70,7 @@ public:
 	void changeBck(const char*);
 	BOOL isFindOutMario() const;
 	BOOL isDying() const;
-	BOOL isRecoveringGraph() const;
+	bool isRecoveringGraph() const;
 	BOOL isFalling() const;
 	void shotBall();
 	void decideFlyingAnm();
@@ -117,7 +117,7 @@ public:
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 	// UNUSED
-	BOOL isDead() const;
+	bool isDead() const;
 	void kill();
 	void startToMove(const JGeometry::TVec3<f32>& start,
 	                 const JGeometry::TVec3<f32>& end);
@@ -134,7 +134,7 @@ public:
 
 public:
 	/* 0x68 */ MActor* mMActor;
-	/* 0x6C */ s32 mDeadFlag;
+	/* 0x6C */ u32 mDeadFlag;
 	/* 0x70 */ JGeometry::TVec3<f32> mVelocity;
 	/* 0x7C */ u32 mHitpoints;
 };

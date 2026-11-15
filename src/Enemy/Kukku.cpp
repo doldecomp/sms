@@ -133,11 +133,12 @@ void TKukkuBall::kill()
 	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, 500.0f);
 }
 
-BOOL TKukkuBall::isDead() const
+bool TKukkuBall::isDead() const
 {
-	if (checkHitFilter(HIT_FILTER_NO_DAMAGE) && mHitpoints == 0)
-		return true;
-	return false;
+	bool result = false;
+	if (checkDeadFlag(FLAG_DEAD) && mHitpoints == 0)
+		result = true;
+	return result;
 }
 
 TEnemyCoinUnit::TEnemyCoinUnit(int) { }
@@ -172,8 +173,7 @@ void TKukku::init(TLiveManager* manager)
 
 void TKukku::initBalls()
 {
-	TKukkuBall** end = mBalls + ARRAY_COUNT(mBalls);
-	for (TKukkuBall** it = mBalls; it != end; ++it) {
+	for (TKukkuBall** it = mBalls; it != mBalls + ARRAY_COUNT(mBalls); ++it) {
 		*it = new TKukkuBall(mMActorKeeper->createMActor("torifun.bmd", 3));
 		(*it)->init();
 	}
@@ -284,7 +284,7 @@ void TKukku::updateEffect()
 
 void TKukku::behaveToWater(THitActor* sender)
 {
-	if (!isFalling() && isRecoveringGraph()) {
+	if (!isFalling() && !isRecoveringGraph()) {
 		mSpine->reset();
 		mSpine->setNext(&TNerveKukkuFall::theNerve());
 	}
@@ -300,7 +300,7 @@ void TKukku::doFlyToCurPathNode()
 
 void TKukku::updateRotation()
 {
-	JGeometry::TVec3<f32> toTarget = mCurrentTarget.getPoint();
+	JGeometry::TVec3<f32> toTarget = getCurrentTarget().getPoint();
 	toTarget.sub(mPosition);
 
 	f32 dist = toTarget.length();
@@ -363,8 +363,10 @@ void TKukku::shotBall()
 	if (ball) {
 		JGeometry::TVec3<f32> velocity(0.0f, 1.0f, 0.0f);
 		velocity.setLength(getKukkuParams()->mShootSpeed.get());
-		getModel()->getModelData()->getJointName()->getIndex("null_osen");
-		ball->startToMove(mPosition, velocity);
+		s32 idx
+		    = getModel()->getModelData()->getJointName()->getIndex("null_osen");
+		JGeometry::TVec3<f32> pos = mPosition;
+		ball->startToMove(pos, velocity);
 		mShootTimer = getKukkuParams()->mShootInterval.get();
 		SMSGetMSound()->startSoundActor(MSD_SE_EN_TORI_SHIT, &mPosition, 0,
 		                                nullptr, 0, 4);
@@ -392,8 +394,9 @@ void TKukku::dropCoins()
 			JGeometry::TQuat4<f32> tilt;
 			tilt.setEulerX(M_PI * getKukkuParams()->mDropAngleX.get());
 
+			f32 rot = mRotation.y;
 			JGeometry::TVec3<f32> velocity
-			    = polarXZ(mRotation.y, getKukkuParams()->mDropSpeed.get());
+			    = polarXZ(rot, getKukkuParams()->mDropSpeed.get());
 			tilt.rotate(velocity);
 			step.rotate(velocity);
 
@@ -420,9 +423,12 @@ BOOL TKukku::isFalling() const
 	       || nerve == &TNerveKukkuPostFall::theNerve();
 }
 
-BOOL TKukku::isRecoveringGraph() const
+bool TKukku::isRecoveringGraph() const
 {
-	return mSpine->getLatestNerve() == &TNerveKukkuRecoverGraph::theNerve();
+	const TNerveBase<TLiveActor>* nerve = mSpine->getLatestNerve();
+	if (nerve != &TNerveKukkuRecoverGraph::theNerve())
+		return false;
+	return true;
 }
 
 BOOL TKukku::isDying() const
@@ -549,6 +555,10 @@ DEFINE_NERVE(TNerveKukkuGraphWander, TLiveActor)
 	}
 
 	kukku->doRecoverToCurPathNode();
+	// kukku->doFlyToCurPathNode();
+	// Biggest what if? fly calls update and then calls recover, so that it can
+	// call callmomentum and being inlined regularly. understanding if
+	// updateRotation needs to be called there or somewhere else.
 	return false;
 }
 
@@ -579,7 +589,8 @@ DEFINE_NERVE(TNerveKukkuFall, TLiveActor)
 		kukku->dropCoins();
 	}
 
-	if (!kukku->isAirborne()) {
+	// apparently isAirborne() does not work here?
+	if (!kukku->checkLiveFlag(LIVE_FLAG_AIRBORNE)) {
 		SMS_EasyEmitParticle(PARTICLE_MS_POPO_BOMB_A, &kukku->mPosition,
 		                     nullptr, JGeometry::TVec3<f32>(1.0f, 1.0f, 1.0f));
 		SMS_EasyEmitParticle(PARTICLE_MS_POPO_BOMB_B, &kukku->mPosition,
@@ -604,10 +615,11 @@ DEFINE_NERVE(TNerveKukkuPostFall, TLiveActor)
 		kukku->mVelocity = JGeometry::TVec3<f32>(0.0f, 0.0f, 0.0f);
 	}
 
-	if (!kukku->checkCurAnmEnd(0)
-	    || kukku->getKukkuParams()->mHabatakiTimer.get() < spine->getTime()) {
-		spine->pushAfterCurrent(&TNerveKukkuGraphWander::theNerve());
-		return true;
+	if (kukku->checkCurAnmEnd(0)) {
+		if (kukku->getKukkuParams()->mHabatakiTimer.get() < spine->getTime()) {
+			spine->pushAfterCurrent(&TNerveKukkuGraphWander::theNerve());
+			return true;
+		}
 	}
 
 	return false;
