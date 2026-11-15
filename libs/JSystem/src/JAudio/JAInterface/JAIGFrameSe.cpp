@@ -25,9 +25,11 @@ void JAIBasic::checkNextFrameSe()
 	u8 candidateIndex;
 	u8 slotIndex;
 	u8 canAssign;
-	u8 candidateLimit;
+	JAISound* sound;
 	u8 slotCount;
+	u8 cameraIndex;
 	JAISound::FabricatedPositionInfo* posInfo;
+	u8 candidateCount;
 
 	f32 maxDistanceSq
 	    = JAIGlobalParameter::distanceMax * JAIGlobalParameter::distanceMax;
@@ -48,11 +50,11 @@ void JAIBasic::checkNextFrameSe()
 			candidates[slotIndex].state = 0xff;
 		}
 
-		u8 candidateCount = 0;
+		candidateCount = 0;
 
 		// Iterate over all sound effects in this category & build up the array
 		// of candidates to be playing this frame
-		JAISound* sound = mData->mSeRegist[category].mUsedHead;
+		sound = mData->mSeRegist[category].mUsedHead;
 		while (sound) {
 			if (sound->mState == SOUNDSTATE_Stored
 			    && (sound->mSoundID & JAISoundID_SeModeMask)) {
@@ -64,7 +66,7 @@ void JAIBasic::checkNextFrameSe()
 				sound = &dummySound;
 			}
 
-			if (sound->getWait() == 0) {
+			if (sound->mWaitTimer == 0) {
 				dummySound.mNextSound = sound->mNextSound;
 				releaseSeRegist(sound);
 				sound = &dummySound;
@@ -80,16 +82,16 @@ void JAIBasic::checkNextFrameSe()
 
 				// Calculate sound priorities based on distances to audio
 				// cameras and inherent priorities of the sounds.
-				for (u8 cameraIndex = cameraBegin; cameraIndex < cameraEnd;
+				for (cameraIndex = cameraBegin; cameraIndex < cameraEnd;
 				     ++cameraIndex) {
 					posInfo = &sound->unk1C[cameraIndex];
 
 					posInfo->mPrevCamSpacePos = posInfo->mCamSpacePos;
-					if (sound->mActorTrans == nullptr) {
+					if (sound->getTrans() == nullptr) {
 						posInfo->mCamSpacePos = JAIConst::dummyZeroVec;
 					} else {
 						MTXMultVec(mAudioCameras[cameraIndex].nViewMtx,
-						           (Vec*)sound->mActorTrans,
+						           (Vec*)sound->getTrans(),
 						           &posInfo->mCamSpacePos);
 					}
 
@@ -99,8 +101,8 @@ void JAIBasic::checkNextFrameSe()
 					      + posInfo->mCamSpacePos.y * posInfo->mCamSpacePos.y
 					      + posInfo->mCamSpacePos.z * posInfo->mCamSpacePos.z;
 					priority = sound->getInfoPriority();
-					if (sound->getAdjustPriority()) {
-						priority += sound->getAdjustPriority();
+					if (sound->mAdjustPrio) {
+						priority += sound->mAdjustPrio;
 						if (priority < 0)
 							priority = 0;
 						else if (priority > 0xff)
@@ -147,22 +149,21 @@ void JAIBasic::checkNextFrameSe()
 						sound = &dummySound;
 					}
 				} else {
-					candidateLimit = mData
-					                     ->mSeCategoryInfoTable
-					                         [mSoundScene]
-					                         [(u8)sound->getSeCategoryNumber()]
-					                     .mMaxPlaying;
-					for (slotIndex = 0; slotIndex < candidateLimit;
-					     ++slotIndex) {
+					slotCount = mData
+					                ->mSeCategoryInfoTable
+					                    [mSoundScene]
+					                    [(u8)sound->getSeCategoryNumber()]
+					                .mMaxPlaying;
+					for (slotIndex = 0; slotIndex < slotCount; ++slotIndex) {
 						if (sound->mPriority < candidates[slotIndex].score
 						    || (sound->mPriority == candidates[slotIndex].score
 						        && candidates[slotIndex].state
 						               >= sound->mState)) {
 							// We take this candidate -- insertion-sort it into
 							// the candidates array
-							if (candidateCount < candidateLimit)
+							if (candidateCount < slotCount)
 								++candidateCount;
-							for (candidateIndex = candidateLimit - 1;
+							for (candidateIndex = slotCount - 1;
 							     candidateIndex > slotIndex; --candidateIndex) {
 								candidates[candidateIndex].score
 								    = candidates[candidateIndex - 1].score;
@@ -175,7 +176,7 @@ void JAIBasic::checkNextFrameSe()
 							candidates[slotIndex].sound = sound;
 							candidates[slotIndex].state = sound->mState;
 
-							slotIndex = candidateLimit;
+							slotIndex = slotCount;
 						}
 					}
 				}
