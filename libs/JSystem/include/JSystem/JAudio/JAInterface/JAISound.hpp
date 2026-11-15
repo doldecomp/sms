@@ -10,11 +10,16 @@ struct JAISeParameter;
 struct JAIStreamParameter;
 class JAIBasic;
 
-#define JAISoundID_IndexMask     0x000003FF
-#define JAISoundID_TypeMask      0xC0000000
-#define JAISoundID_Type_Se       0x00000000
-#define JAISoundID_Type_Sequence 0x80000000
-#define JAISoundID_Type_Stream   0xC0000000
+#define JAISoundID_IndexMask         0x000003FF
+#define JAISoundID_TypeMask          0xC0000000
+#define JAISoundID_Type_Se           0x00000000
+#define JAISoundID_Type_Sequence     0x80000000
+#define JAISoundID_Type_Stream       0xC0000000
+#define JAISoundID_CategoryMask      0x000FF000
+#define JAISoundID_CategoryShift     12
+#define JAISoundID_SeModeMask        0x00000C00
+#define JAISoundID_SeMode_Retrigger  0x00000800
+#define JAISoundID_SeqTwoLevelTracks 0x00000800
 
 enum JAISoundState {
 	SOUNDSTATE_Inactive = 0,

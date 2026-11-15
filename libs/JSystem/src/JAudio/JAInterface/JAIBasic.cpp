@@ -68,7 +68,8 @@ JAIBasic::JAIBasic()
 void JAIBasic::startSeSequence()
 {
 	mSeSequence = nullptr;
-	startSoundDirectID(0x80000800, &mSeSequence, nullptr, 1, 4);
+	startSoundDirectID(JAISoundID_Type_Sequence | JAISoundID_SeqTwoLevelTracks,
+	                   &mSeSequence, nullptr, 1, 4);
 }
 
 void JAIBasic::initInterfaceMain()
@@ -739,7 +740,8 @@ void JAIBasic::startSoundIndirectID(u32 id, JAISoundHandle* out_handle,
 	void* info;
 	mData->getInfoPointer(id, &info);
 	if (info)
-		startSoundBasic((id & 0xFFFFFC00) + ((JAISoundInfo*)info)->mOffsetNo,
+		startSoundBasic((id & ~JAISoundID_IndexMask)
+		                    + ((JAISoundInfo*)info)->mOffsetNo,
 		                out_handle, actor, fade, camera_idx, info);
 }
 
@@ -764,7 +766,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISoundHandle* out_handle,
 		break;
 
 	case JAISoundID_Type_Se:
-		if (mSeCancelSwitch[id >> 12] == 0) {
+		if (mSeCancelSwitch[id >> JAISoundID_CategoryShift] == 0) {
 			mData->unk200.storeBuffer(out_handle, actor, id, fade, camera_idx,
 			                          info);
 		} else if (out_handle != nullptr) {
@@ -838,7 +840,10 @@ void JAIBasic::stopSoundHandle(JAISoundHandle handle, u32 fadeout)
 	}
 }
 
-u32 JAIBasic::changeIDToCategory(u32 id) { return id >> 12 & 0xff; }
+u32 JAIBasic::changeIDToCategory(u32 id)
+{
+	return (id & JAISoundID_CategoryMask) >> JAISoundID_CategoryShift;
+}
 
 void JAIBasic::stopPlayingObjectSe(void*) { }
 

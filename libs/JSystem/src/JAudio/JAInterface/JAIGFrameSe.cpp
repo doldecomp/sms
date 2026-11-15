@@ -47,9 +47,10 @@ void JAIBasic::checkNextFrameSe()
 
 		JAISound* it = mData->mSeRegist[i].mUsedHead;
 		while (it) {
-			if (it->mState == SOUNDSTATE_Stored && (it->mSoundID & 0xC00)) {
+			if (it->mState == SOUNDSTATE_Stored
+			    && (it->mSoundID & JAISoundID_SeModeMask)) {
 				it->decWait();
-			} else if (!(it->mSoundID & 0xC00)
+			} else if (!(it->mSoundID & JAISoundID_SeModeMask)
 			           && it->mState == SOUNDSTATE_Stopping) {
 				sound.mNextSound = it->mNextSound;
 				releaseSeRegist(it);
@@ -114,7 +115,7 @@ void JAIBasic::checkNextFrameSe()
 					fVar3 = 1e+10f;
 
 				if (fVar2 > fVar3) {
-					if (!(it->mSoundID & 0xC00)) {
+					if (!(it->mSoundID & JAISoundID_SeModeMask)) {
 						if (it->mState != SOUNDSTATE_Stored) {
 							JAISystemInterface::writePortApp(
 							    mSeSequence->getSeqParameter()->mSeqHandle,
@@ -175,7 +176,7 @@ void JAIBasic::checkNextFrameSe()
 			if (snd == nullptr) {
 				bVar7 = 1;
 			} else if (snd->mState == SOUNDSTATE_Playing) {
-				if (snd->mSoundID & 0xC00) {
+				if (snd->mSoundID & JAISoundID_SeModeMask) {
 					releaseSeRegist(snd);
 				} else {
 					snd->mState     = SOUNDSTATE_Stored;
@@ -331,7 +332,7 @@ void JAIBasic::sendPlayingSeCommand()
 				                                 portValue);
 				JAISystemInterface::writePortApp(seqPort, portAddr, 1);
 
-				if (sound->mSoundID & 0xC00) {
+				if (sound->mSoundID & JAISoundID_SeModeMask) {
 					sound->mState = SOUNDSTATE_Playing;
 				} else {
 					sound->mState = SOUNDSTATE_Stopping;
@@ -342,7 +343,7 @@ void JAIBasic::sendPlayingSeCommand()
 				if (sound->getSeParameter()->mVolume[6].mCurrentValue != 0.0f) {
 					sound->setSeDistanceParameters();
 					sendSeAllParameter(sound);
-					if (sound->mSoundID & 0xC00) {
+					if (sound->mSoundID & JAISoundID_SeModeMask) {
 						sound->mState = SOUNDSTATE_Playing;
 					} else {
 						sound->mState = SOUNDSTATE_Stopping;
@@ -353,7 +354,7 @@ void JAIBasic::sendPlayingSeCommand()
 			} else if (state == SOUNDSTATE_Started) {
 				sound->setSeDistanceParameters();
 				sendSeAllParameter(sound);
-				if (sound->mSoundID & 0xC00) {
+				if (sound->mSoundID & JAISoundID_SeModeMask) {
 					sound->mState = SOUNDSTATE_Playing;
 				} else {
 					sound->mState = SOUNDSTATE_Stopping;

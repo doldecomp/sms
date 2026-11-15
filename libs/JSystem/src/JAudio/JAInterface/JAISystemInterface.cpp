@@ -43,7 +43,7 @@ BOOL JAISystemInterface::checkSeqActiveFlag(u32 seq_handle)
 JASystem::TTrack* JAISystemInterface::trackToSeqp(JAISound* sound, u8 track_no)
 {
 	JASystem::TTrack* result = nullptr;
-	if (sound->mSoundID & 0x800) {
+	if (sound->mSoundID & JAISoundID_SeqTwoLevelTracks) {
 		JASystem::TTrack* rootTrack = JASystem::TrackMgr::handleToSeq(
 		    sound->getSeqParameter()->mSeqHandle);
 		if (rootTrack->getChild(track_no >> 4))
@@ -92,7 +92,7 @@ void JAISystemInterface::trackInit(JAISeqUpdateData* update_data)
 {
 	JAISound* sound = update_data->mSound;
 	u32 trackCount  = 0x10;
-	if (sound->mSoundID & 0x800)
+	if (sound->mSoundID & JAISoundID_SeqTwoLevelTracks)
 		trackCount = JAIGlobalParameter::getParamSeqTrackMax();
 
 	for (u32 trackNo = 0; trackNo < trackCount; ++trackNo)

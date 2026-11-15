@@ -9,7 +9,8 @@ void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 	JAIData* data = unk0->mData;
 	if (!out_handle || !*out_handle || (*out_handle)->mSoundID != sound_id
 	    || ((*out_handle)->mSoundID == sound_id
-	        && (sound_id & 0xC00) == 0x800)) {
+	        && (sound_id & JAISoundID_SeModeMask)
+	               == JAISoundID_SeMode_Retrigger)) {
 		if (checkSoundHandle(out_handle, sound_id, info))
 			return;
 	}
@@ -26,15 +27,16 @@ void JAISeEntry::storeBuffer(JAISoundHandle* out_handle, JAIActor* actor,
 	u8 bVar10 = 0;
 	JAISound* local_88[16];
 
-	u32 bVar9
-	    = data->mCategoryInfoTable[unk0->mSoundScene][(sound_id >> 12) & 0xFF]
-	          .mMaxSameSound;
+	u32 bVar9 = data->mCategoryInfoTable[unk0->mSoundScene]
+	                                    [(sound_id & JAISoundID_CategoryMask)
+	                                     >> JAISoundID_CategoryShift]
+	                                        .mMaxSameSound;
 
 	while (it != nullptr) {
 		if (it->mActor == uVar14) {
 			if (it->mSoundID == sound_id
 			    && (unk0->getSoundSwBit(info) & JAISeSwBit_Multi) == 0) {
-				if ((sound_id & 0x800) == 0
+				if ((sound_id & JAISoundID_SeMode_Retrigger) == 0
 				    && it->mState == SOUNDSTATE_Stopping) {
 					it->mState = SOUNDSTATE_Playing;
 					if (out_handle == nullptr)

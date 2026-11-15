@@ -449,7 +449,7 @@ void JAIData::getInfoPointer(u32 sound_id, void** result)
 		table = &mSeTable;
 		switch (sound_id & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
-			category = (u8)(sound_id >> 12);
+			category = (u8)(sound_id >> JAISoundID_CategoryShift);
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;
 		case JAISoundID_Type_Sequence:
@@ -462,7 +462,7 @@ void JAIData::getInfoPointer(u32 sound_id, void** result)
 	} else {
 		switch (sound_id & JAISoundID_TypeMask) {
 		case JAISoundID_Type_Se:
-			category = (u8)(sound_id >> 12);
+			category = (u8)(sound_id >> JAISoundID_CategoryShift);
 			table    = &mSeTable;
 			JAIGlobalParameter::getParamSeCategoryMax();
 			break;

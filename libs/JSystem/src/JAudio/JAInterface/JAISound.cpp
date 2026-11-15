@@ -1025,7 +1025,7 @@ JAIStreamParameter* JAISound::getStreamParameter()
 
 u32 JAISound::getTrackPortRoute(u8 param_1, u8 param_2)
 {
-	if (mSoundID & 0x800)
+	if (mSoundID & JAISoundID_SeqTwoLevelTracks)
 		return (param_1 >> 4) + 0x20000000 + ((param_1 & 0xF) << 4)
 		       + (param_2 << 16);
 	return (param_1 & 0xf) + 0x10000000 + (param_2 << 16);

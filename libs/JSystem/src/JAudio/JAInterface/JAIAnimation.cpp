@@ -56,7 +56,7 @@ void JAIAnimeSound::initActorAnimSound(void* interface, u32 param, f32 frame)
 		}
 		if (sound == nullptr) {
 			mSlots[i].mIsPlaying = 0;
-		} else if (!(sound->getID() & 0xC00)) {
+		} else if (!(sound->getID() & JAISoundID_SeModeMask)) {
 			mSlots[i].mIsPlaying = 0;
 		}
 	}
@@ -99,7 +99,8 @@ void JAIAnimeSound::setAnimSoundActor(JAIBasic* interface, JAIActor* actor,
 			JAISoundHandle& handle = mSlots[i].mSoundHandle;
 			if (mSlots[i].mIsPlaying != 0) {
 				u32 id = (sd = mSlots[i].mData)->mSoundID;
-				if (!(id & 0xC00) && (speed != 0.0f || !(sd->unk10 & 0x20))) {
+				if (!(id & JAISoundID_SeModeMask)
+				    && (speed != 0.0f || !(sd->unk10 & 0x20))) {
 					f32 start = sd->mStartFrame;
 					f32 end   = sd->mEndFrame;
 					if (start == end
@@ -143,7 +144,8 @@ void JAIAnimeSound::setAnimSoundActor(JAIBasic* interface, JAIActor* actor,
 			JAISoundHandle& handle = mSlots[i].mSoundHandle;
 			if (mSlots[i].mIsPlaying != 0) {
 				u32 id = (sd = mSlots[i].mData)->mSoundID;
-				if (!(id & 0xC00) && (speed != 0.0f || !(sd->unk10 & 0x20))) {
+				if (!(id & JAISoundID_SeModeMask)
+				    && (speed != 0.0f || !(sd->unk10 & 0x20))) {
 					f32 t1 = sd->mStartFrame;
 					f32 t2 = sd->mEndFrame;
 					if (t1 == t2 || (t1 > t2 && t2 < frame && t1 > frame)
@@ -188,7 +190,7 @@ void JAIAnimeSound::playActorAnimSound(JAIBasic* interface, JAIActor* actor,
 			++i;
 			continue;
 		}
-		if (!(curData->mSoundID & 0xC00)) {
+		if (!(curData->mSoundID & JAISoundID_SeModeMask)) {
 			mDataCounter += mDataCounterInc;
 			return;
 		}
