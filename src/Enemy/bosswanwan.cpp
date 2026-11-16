@@ -55,6 +55,12 @@ static inline JGeometry::TVec3<f32> fromPolar(s16 angle, f32 radius)
 	                             radius * JMASCos(angle));
 }
 
+// fabricated
+static inline JGeometry::TVec3<f32> fromPolar2(s16 angle)
+{
+	return JGeometry::TVec3<f32>(JMASSin(angle), 0.0f, JMASCos(angle));
+}
+
 TBWParams::TBWParams(const char* path)
     : TSpineEnemyParams(path)
     , PARAM_INIT(mSLMarchSpeed, 6.0f)
@@ -660,7 +666,8 @@ void TBWBinder::bind(TLiveActor* actor)
 		if (speed != 0.0f) {
 			f32 deg = (speed / 3141.5928f) * 360.0f;
 
-			JGeometry::TVec3<f32> dirCopy = fromPolar(boss->mRotation.y, 1.0f);
+			f32 angle                     = boss->mRotation.y * 182.04445f;
+			JGeometry::TVec3<f32> dirCopy = fromPolar2(angle);
 
 			if (dirCopy.dot(vel) < 0.0f) {
 				deg = -deg;
@@ -698,9 +705,8 @@ void TBWBinder::bind(TLiveActor* actor)
 
 	if (!boss->isAirborne()) {
 		TGraphTracer* tracer = boss->unk124;
-		int prevIdx          = tracer->mPrevIdx;
-		TGraphNode& curNode  = tracer->getCurrent();
-		TGraphNode& prevNode = tracer->getPrevious();
+		TGraphNode& curNode  = tracer->unk0->getGraphNode(tracer->mCurrIdx);
+		TGraphNode& prevNode = tracer->unk0->getGraphNode(tracer->mPrevIdx);
 
 		JGeometry::TVec3<f32> curPoint;
 		JGeometry::TVec3<f32> prevPoint;
