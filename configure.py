@@ -1080,7 +1080,7 @@ config.libs = [
             PCHObject(NonMatching, "MoveBG/MapObjMare.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjFlag.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjWave.cpp"),
-            PCHObject(NonMatching, "MoveBG/MapObjFloat.cpp"),
+            PCHObject(Matching, "MoveBG/MapObjFloat.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjPlane.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjCloud.cpp"),
             PCHObject(NonMatching, "MoveBG/MapObjBall.cpp"),
