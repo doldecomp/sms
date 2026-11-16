@@ -166,8 +166,8 @@ s32 Dvd::loadToDramDvdTMain(void* task_data)
 	return 0;
 }
 
-s32 Dvd::loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 size,
-                        u32 param5, u32* result_ptr, DvdCallback callback)
+s32 Dvd::loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 offset,
+                        u32 size, u32* result_ptr, DvdCallback callback)
 {
 	TDvdCall callData;
 	TDvdCall* call = &callData;
@@ -181,8 +181,8 @@ s32 Dvd::loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 size,
 		*result_ptr = 0;
 
 	call->mCallback            = callback;
-	call->mOffsetOrAramAddress = size;
-	call->mTransferSize        = param5;
+	call->mOffsetOrAramAddress = offset;
+	call->mTransferSize        = size;
 
 	addTask(&loadToDramDvdTMain, call, sizeof(TDvdCall));
 

@@ -9,17 +9,18 @@ namespace Vload {
 	struct VLArcEntry;
 
 	void initVloadBuffers();
-	void setMaxArcs(s32);
-	BOOL initHeader(char*);
-	BOOL initHeaderM(char*, u8*, u8*);
-	u32 getArchiveHandle(char*);
+	void setMaxArcs(s32 max_arcs);
+	BOOL initHeader(char* path);
+	BOOL initHeaderM(char* path, u8* header, u8*);
+	u32 getArchiveHandle(char* archive_name);
 	u32 getLogicalHandle(char*);
 	u32 getLogicalHandleS(char*, char*);
 	u32 getHandle(u32);
-	VLArcEntry* getRealHandle(u32);
-	u32 checkSize(u32);
-	u32 loadFile(u32, u8*, u32, u32);
-	u32 loadFileAsync(u32, u8*, u32, u32, void (*)(u32), u32);
+	VLArcEntry* getRealHandle(u32 handle);
+	u32 checkSize(u32 handle);
+	u32 loadFile(u32 handle, u8* buffer, u32 offset, u32 size);
+	u32 loadFileAsync(u32 handle, u8* buffer, u32 offset, u32 size,
+	                  void (*callback)(u32), u32 user_data);
 	void* getMemoryFile(u32);
 }; // namespace Vload
 

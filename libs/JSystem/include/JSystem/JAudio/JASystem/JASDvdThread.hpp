@@ -20,8 +20,8 @@ namespace Dvd {
 
 	s32 loadToAramDvdT(u32 user_data, char* path, void* buffer, u32 offset,
 	                   u32 size, u32* result_ptr, DvdCallback callback);
-	s32 loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 size,
-	                   u32 param5, u32* result_ptr, DvdCallback callback);
+	s32 loadToDramDvdT(u32 user_data, char* path, void* buffer, u32 offset,
+	                   u32 size, u32* result_ptr, DvdCallback callback);
 
 	s32 aramToDramDvdT(u32 user_data, void* dst, void* src, u32 size,
 	                   u32* result_ptr, DvdCallback callback);

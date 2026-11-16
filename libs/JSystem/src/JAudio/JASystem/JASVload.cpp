@@ -10,56 +10,60 @@ namespace JASystem {
 namespace Vload {
 
 	// fabricated
-	struct VLArc {
-		/* 0x0 */ u32 unk0;
-		/* 0x4 */ u32 unk4;
-		/* 0x8 */ u8* unk8;
-		/* 0xC */ u32 unkC;
-		/* 0x10 */ char unk10[0x10];
-	};
-
-	// fabricated
 	struct VLArcEntry {
 		/* 0x0 */ u32 unk0;
 		/* 0x4 */ u32 unk4;
 		/* 0x8 */ u32 unk8;
 		/* 0xC */ u16 unkC;
-		/* 0xE */ u16 unkE;
+		/* 0xE */ u16 redirectIndex;
 		/* 0x10 */ u32 unk10;
 		/* 0x14 */ u32 unk14;
-		/* 0x18 */ u32 unk18;
-		/* 0x1C */ u32 unk1C;
+		/* 0x18 */ u32 dataOffset;
+		/* 0x1C */ u32 fileSize;
 	};
 
-	s32 vlMaxArcs     = 0x10;
-	char** vlDirName  = 0;
-	char** vlArcName  = 0;
-	VLArc** vlArc     = 0;
-	u32 vlCurrentArcs = 0;
+	// fabricated
+	struct VLArcHeader {
+		/* 0x0 */ u32 unk0;
+		/* 0x4 */ u32 unk4;
+		/* 0x8 */ u8* unk8;
+		/* 0xC */ u32 entryCount;
+		/* 0x10 */ char dataFileName[0x10];
+		/* 0x20 */ VLArcEntry entries[];
+	};
+
+	s32 vlMaxArcs       = 16;
+	char** vlDirName    = nullptr;
+	char** vlArcName    = nullptr;
+	VLArcHeader** vlArc = nullptr;
+	u32 vlCurrentArcs   = 0;
 } // namespace Vload
 
-void Vload::setMaxArcs(s32 param) { }
+void Vload::setMaxArcs(s32 max_arcs) { vlMaxArcs = max_arcs; }
 
-BOOL Vload::initHeader(char* param) { return initHeaderM(param, 0, 0); }
-
-BOOL Vload::initHeaderM(char* param_1, u8* param_2, u8* param_3)
+BOOL Vload::initHeader(char* path)
 {
-	if (param_2 == nullptr) {
-		u32 uVar1 = Dvd::checkFileExtend(param_1);
-		if (!uVar1)
+	return initHeaderM(path, nullptr, nullptr);
+}
+
+BOOL Vload::initHeaderM(char* path, u8* header, u8* param_3)
+{
+	if (header == nullptr) {
+		u32 fileSize = Dvd::checkFileExtend(path);
+		if (!fileSize)
 			return 0;
 
-		param_2 = (u8*)Kernel::allocFromSysDram(uVar1);
-		if (!param_2)
+		header = (u8*)Kernel::allocFromSysDram(fileSize);
+		if (!header)
 			return 0;
 
-		if (!Dvd::loadFileDvdT(param_1, param_2))
+		if (!Dvd::loadFileDvdT(path, header))
 			return 0;
 	}
 
-	u32 lastSlash = strlen(param_1) - 1;
+	u32 lastSlash = strlen(path) - 1;
 	while (lastSlash != 0) {
-		if (param_1[lastSlash] == '/')
+		if (path[lastSlash] == '/')
 			break;
 		--lastSlash;
 	}
@@ -67,13 +71,13 @@ BOOL Vload::initHeaderM(char* param_1, u8* param_2, u8* param_3)
 	if (lastSlash == 0) {
 		strcpy(vlDirName[vlCurrentArcs], "/");
 	} else {
-		strncpy(vlDirName[vlCurrentArcs], param_1, lastSlash);
+		strncpy(vlDirName[vlCurrentArcs], path, lastSlash);
 		vlDirName[vlCurrentArcs][lastSlash] = 0;
 	}
 
-	strcpy(vlArcName[vlCurrentArcs], &param_1[lastSlash + 1]);
+	strcpy(vlArcName[vlCurrentArcs], &path[lastSlash + 1]);
 
-	vlArc[vlCurrentArcs]       = (VLArc*)param_2;
+	vlArc[vlCurrentArcs]       = (VLArcHeader*)header;
 	vlArc[vlCurrentArcs]->unk8 = param_3;
 
 	++vlCurrentArcs;
@@ -81,11 +85,11 @@ BOOL Vload::initHeaderM(char* param_1, u8* param_2, u8* param_3)
 	return true;
 }
 
-u32 Vload::getArchiveHandle(char* param)
+u32 Vload::getArchiveHandle(char* archive_name)
 {
 	u32 i = 0;
 	for (; i < vlCurrentArcs; ++i)
-		if (strcmp(param, vlArcName[i]) == 0)
+		if (strcmp(archive_name, vlArcName[i]) == 0)
 			break;
 
 	if (i != vlCurrentArcs)
@@ -94,63 +98,61 @@ u32 Vload::getArchiveHandle(char* param)
 	return -1;
 }
 
-u32 Vload::getLogicalHandleS(char* param1, char* param2) { return 0; }
+u32 Vload::getLogicalHandleS(char*, char*) { return 0; }
 
-u32 Vload::getLogicalHandle(char* param) { return 0; }
+u32 Vload::getLogicalHandle(char*) { return 0; }
 
-u32 Vload::getHandle(u32 param) { return 0; }
+u32 Vload::getHandle(u32) { return 0; }
 
 #pragma dont_inline on
-Vload::VLArcEntry* Vload::getRealHandle(u32 param)
+Vload::VLArcEntry* Vload::getRealHandle(u32 handle)
 {
-	// TODO: wtf is happening here
-	u32 low = param & 0xffff;
-	if ((param >> 0x10) >= vlCurrentArcs)
-		return 0;
-	VLArc* arc = vlArc[param >> 0x10];
+	u32 entryIndex = handle & 0xffff;
+	if ((handle >> 16) >= vlCurrentArcs)
+		return nullptr;
+
+	VLArcHeader* arc = vlArc[handle >> 16];
 	if (!arc)
-		return 0;
+		return nullptr;
 
-	if (low >= arc->unkC)
-		return 0;
+	if (entryIndex >= arc->entryCount)
+		return nullptr;
 
-	VLArcEntry* thing = (VLArcEntry*)(&arc[low] + 1);
-	while (thing->unkE != 0xffff) {
-		thing = (VLArcEntry*)(&arc[thing->unkE] + 1);
-	}
+	VLArcEntry* entry = arc[entryIndex].entries;
+	while (entry->redirectIndex != 0xffff)
+		entry = arc[entry->redirectIndex].entries;
 
-	return thing;
+	return entry;
 }
 #pragma dont_inline off
 
-u32 Vload::checkSize(u32 param)
+u32 Vload::checkSize(u32 handle)
 {
-	VLArcEntry* hndl = getRealHandle(param);
-	if (!hndl)
+	VLArcEntry* entry = getRealHandle(handle);
+	if (!entry)
 		return 0;
-	return hndl->unk1C;
+	return entry->fileSize;
 }
 
-u32 Vload::loadFile(u32 param1, u8* param2, u32 param3, u32 param4)
+u32 Vload::loadFile(u32 handle, u8* buffer, u32 offset, u32 size)
 {
-	char buffer[0x80];
+	char path[0x80];
 	volatile u32 result;
-	u32 hi;
-	u32 thing;
+	u32 archiveIndex;
+	u32 fileOffset;
 
-	hi     = param1 >> 0x10;
 	result = 0;
 
-	VLArcEntry* hndl = getRealHandle(param1);
+	archiveIndex = handle >> 0x10;
 
-	thing = hndl->unk18;
-	thing += param3;
+	fileOffset = getRealHandle(handle)->dataOffset;
+	fileOffset += offset;
 
-	strcpy(buffer, vlDirName[hi]);
-	strcat(buffer, "/");
-	strcat(buffer, vlArc[hi]->unk10);
+	strcpy(path, vlDirName[archiveIndex]);
+	strcat(path, "/");
+	strcat(path, vlArc[archiveIndex]->dataFileName);
 
-	Dvd::loadToDramDvdT(0, buffer, param2, thing, param4, (u32*)&result,
+	Dvd::loadToDramDvdT(0, path, buffer, fileOffset, size, (u32*)&result,
 	                    nullptr);
 
 	while (result == 0)
@@ -158,36 +160,34 @@ u32 Vload::loadFile(u32 param1, u8* param2, u32 param3, u32 param4)
 	return result;
 }
 
-u32 Vload::loadFileAsync(u32 param1, u8* param2, u32 param3, u32 param4,
-                         void (*param5)(u32), u32 param6)
+u32 Vload::loadFileAsync(u32 handle, u8* buffer, u32 offset, u32 size,
+                         void (*callback)(u32), u32 user_data)
 {
-	char buffer[0x80];
-	u32 hi;
-	u32 thing;
+	char path[0x80];
+	u32 archiveIndex;
+	u32 fileOffset;
 
-	hi = param1 >> 0x10;
+	archiveIndex = handle >> 0x10;
 
-	VLArcEntry* hndl = getRealHandle(param1);
+	fileOffset = getRealHandle(handle)->dataOffset;
+	fileOffset += offset;
 
-	thing = hndl->unk18;
-	thing += param3;
+	strcpy(path, vlDirName[archiveIndex]);
+	strcat(path, "/");
+	strcat(path, vlArc[archiveIndex]->dataFileName);
 
-	strcpy(buffer, vlDirName[hi]);
-	strcat(buffer, "/");
-	strcat(buffer, vlArc[hi]->unk10);
+	Dvd::loadToDramDvdT(user_data, path, buffer, fileOffset, size, 0, callback);
 
-	Dvd::loadToDramDvdT(param6, buffer, param2, thing, param4, 0, param5);
-
-	return param4;
+	return size;
 }
 
-void* Vload::getMemoryFile(u32 param) { return 0; }
+void* Vload::getMemoryFile(u32) { return 0; }
 
 void Vload::initVloadBuffers()
 {
 	vlDirName = new (JASDram, 0) char*[vlMaxArcs];
 	vlArcName = new (JASDram, 0) char*[vlMaxArcs];
-	vlArc     = new (JASDram, 0) VLArc*[vlMaxArcs];
+	vlArc     = new (JASDram, 0) VLArcHeader*[vlMaxArcs];
 	for (s32 i = 0; i < vlMaxArcs; ++i) {
 		vlDirName[i] = new (JASDram, 0) char[0x40];
 		vlArcName[i] = new (JASDram, 0) char[0x20];
