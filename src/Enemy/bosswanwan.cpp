@@ -49,16 +49,11 @@ static JGeometry::TVec3<f32> BW_PICKET_START(6012.84f, 0.0f, 7323.15f);
 static JGeometry::TVec3<f32> BW_HEAD_START(5741.72f, -100.0f, 6311.62f);
 
 // fabricated
-static inline JGeometry::TVec3<f32> fromPolar(s16 angle, f32 radius)
+static inline JGeometry::TVec3<f32> fromPolar(f32 theta, f32 radius)
 {
-	return JGeometry::TVec3<f32>(radius * JMASSin(angle), 0.0f,
-	                             radius * JMASCos(angle));
-}
-
-// fabricated
-static inline JGeometry::TVec3<f32> fromPolar2(s16 angle)
-{
-	return JGeometry::TVec3<f32>(JMASSin(angle), 0.0f, JMASCos(angle));
+	return JGeometry::TVec3<f32>(radius * JMASSin(theta * (65536.0f / 360.0f)),
+	                             0.0f,
+	                             radius * JMASCos(theta * (65536.0f / 360.0f)));
 }
 
 TBWParams::TBWParams(const char* path)
@@ -666,8 +661,7 @@ void TBWBinder::bind(TLiveActor* actor)
 		if (speed != 0.0f) {
 			f32 deg = (speed / 3141.5928f) * 360.0f;
 
-			f32 angle                     = boss->mRotation.y * 182.04445f;
-			JGeometry::TVec3<f32> dirCopy = fromPolar2(angle);
+			JGeometry::TVec3<f32> dirCopy = fromPolar(boss->mRotation.y, 1.0f);
 
 			if (dirCopy.dot(vel) < 0.0f) {
 				deg = -deg;
@@ -1532,7 +1526,6 @@ DEFINE_NERVE(TNerveBWGraphWander, TLiveActor)
 
 	if (boss->mPicket->isTaken()) {
 		f32 marioYaw = (f32)gpMarioOriginal->mIntendedYaw * (180.0f / 32768.0f);
-
 		JGeometry::TVec3<f32> marioDir = fromPolar(marioYaw, 1.0f);
 
 		JGeometry::TVec3<f32> diff = boss->mPosition;
