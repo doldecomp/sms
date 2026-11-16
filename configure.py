@@ -1026,7 +1026,7 @@ config.libs = [
             Object(NonMatching, "NPC/NpcColor.cpp"),
             PCHObject(Matching, "NPC/NpcSound.cpp"),
             Object(NonMatching, "NPC/NpcChange.cpp"),
-            Object(NonMatching, "NPC/NpcThrow.cpp"),
+            Object(Matching, "NPC/NpcThrow.cpp"),
             Object(Matching, "NPC/NpcTrample.cpp"),
             Object(NonMatching, "NPC/NpcEffect.cpp"),
             PCHObject(Matching, "NPC/NpcInitAnmData.cpp"),
