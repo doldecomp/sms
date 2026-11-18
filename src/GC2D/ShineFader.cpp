@@ -10,15 +10,15 @@ void TShineFader::update()
 		mFadeColor.a = 0xff;
 		break;
 	case FADE_STATUS_FADING_OUT:
-		unk12 += 1;
-		s32 fadeAlpha = unk38 + unk10;
-		if (unk12 > fadeAlpha) {
+		mFadeFrame += 1;
+		s32 endFrame = mFadeDelayFrames + mFadeDurationFrames;
+		if (mFadeFrame > endFrame) {
 			mFadeStatus = FADE_STATUS_FULLY_FADED_OUT;
-			unk1C       = 0;
+			mUseBoxWipe = 0;
 		} else {
-			if (unk12 > unk38) {
-				fadeAlpha    = unk12 - 1 - unk38;
-				mFadeColor.a = ((u16)fadeAlpha * 0xff) / unk10;
+			if (mFadeFrame > mFadeDelayFrames) {
+				s32 fadeFrame = mFadeFrame - 1 - mFadeDelayFrames;
+				mFadeColor.a  = ((u16)fadeFrame * 0xff) / mFadeDurationFrames;
 			}
 		}
 		break;
@@ -27,29 +27,27 @@ void TShineFader::update()
 
 void TShineFader::perform(u32 cue, JDrama::TGraphics* graphics)
 {
-	if ((cue & CUE_MOVE) != 0) {
+	if (cue & CUE_MOVE)
 		update();
-	}
 
-	if ((cue & CUE_DRAW) != 0) {
+	if (cue & CUE_DRAW)
 		draw(graphics->getViewport());
-	}
 }
 
-bool TShineFader::registFadeout(u16 param1, u16 param2)
+bool TShineFader::registFadeout(u16 duration_frames, u16 delay_frames)
 {
 	bool result = false;
-	if (param1 == 0) {
-		param1 = 1;
+	if (duration_frames == 0) {
+		duration_frames = 1;
 	}
 
 	switch (mFadeStatus) {
 	case FADE_STATUS_FULLY_FADED_IN:
-		result      = true;
-		mFadeStatus = FADE_STATUS_FADING_OUT;
-		unk12       = 0;
-		unk10       = param1;
-		unk38       = param2;
+		result              = true;
+		mFadeStatus         = FADE_STATUS_FADING_OUT;
+		mFadeFrame          = 0;
+		mFadeDurationFrames = duration_frames;
+		mFadeDelayFrames    = delay_frames;
 		break;
 	}
 

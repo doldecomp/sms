@@ -145,7 +145,8 @@ void TGCLogoDir::setup(JDrama::TDisplay* param_1, TMarioGamePad* param_2)
 	screen->assignViewObj(group2d);
 
 	SMSGetApplication()->getFader()->setColor(JUtility::TColor(0, 0, 0, 0));
-	SMSGetApplication()->getFader()->startWipe(14, 0.4f, 0.0f);
+	SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_IN, 0.4f,
+	                                           0.0f);
 }
 
 TGCLogoDir::~TGCLogoDir()
@@ -193,7 +194,8 @@ int TGCLogoDir::direct()
 			mLogoView->mLogoTex = mDolbyTexture;
 			mLogoView->mRect    = JUTRect(254, 201, 404, 271);
 			mLogoView->mColor   = JUtility::TColor(255, 255, 255, 255);
-			SMSGetApplication()->getFader()->startWipe(14, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_IN,
+			                                           0.4f, 0.0f);
 #endif
 			nextState = OVERALL_STATE_DOLBY;
 		}
@@ -315,7 +317,8 @@ bool TGCLogoDir::direct_nlogo()
 			mProgSelect->unkC = 0;
 			break;
 		case STATE_FADE_OUT:
-			SMSGetApplication()->getFader()->startWipe(15, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_OUT,
+			                                           0.4f, 0.0f);
 			break;
 		}
 		mState = nextState;
@@ -376,7 +379,8 @@ bool TGCLogoDir::direct_nlogo()
 	if (nextState != mState) {
 		switch (nextState) {
 		case STATE_FADE_OUT:
-			SMSGetApplication()->getFader()->startWipe(15, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_OUT,
+			                                           0.4f, 0.0f);
 			break;
 		}
 		mState = nextState;
@@ -416,7 +420,8 @@ bool TGCLogoDir::direct_dolby()
 	if (nextState != mState) {
 		switch (nextState) {
 		case STATE_FADE_OUT:
-			SMSGetApplication()->getFader()->startWipe(15, 0.4f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_OUT,
+			                                           0.4f, 0.0f);
 			break;
 		}
 		mState = nextState;

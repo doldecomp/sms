@@ -818,7 +818,8 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 	switch (unk10) {
 	case STATE_OPEN: {
 		if (unkC5 && gpApplication.getFader()->isFullyFadedOut()) {
-			gpApplication.getFader()->startWipe(5, 1.0f, 0.0f);
+			gpApplication.getFader()->startWipe(
+			    TSMSFader::WIPE_TWISTING_TILES_IN, 1.0f, 0.0f);
 			unk10 = STATE_OPENING;
 		}
 #if defined(VERSION_GMSP01) || defined(VERSION_GMSJ01_01)                      \
@@ -882,14 +883,16 @@ void TGuide::perform(u32 cue, JDrama::TGraphics* graphics)
 		}
 		break;
 	case STATE_CLOSE:
-		gpApplication.getFader()->startWipe(6, 1.0f, 0.0f);
+		gpApplication.getFader()->startWipe(TSMSFader::WIPE_TWISTING_TILES_OUT,
+		                                    1.0f, 0.0f);
 		mGamePad->offFlag(TMarioGamePad::PAD_FLAG_GUIDE_INPUT);
 		SMSGetMSound()->startSoundSystemSE(0x4818, 0, nullptr, 0);
 		unk10 = STATE_CLOSING;
 		break;
 	case STATE_CLOSING:
 		if (gpApplication.getFader()->isFullyFadedOut()) {
-			gpApplication.getFader()->startWipe(5, 1.0f, 0.0f);
+			gpApplication.getFader()->startWipe(
+			    TSMSFader::WIPE_TWISTING_TILES_IN, 1.0f, 0.0f);
 			if (unk424 && unk424->getPane()->isVisible())
 				unk424->getPane()->hide();
 			if (unk428 && unk428->getPane()->isVisible())

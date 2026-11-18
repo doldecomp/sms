@@ -41,12 +41,12 @@ void TMarDirector::decideMarioPosIdx()
 {
 	mMarioPosIdx = 0;
 	unkD1        = 0;
-	unkE4        = 1;
+	unkE4        = TSMSFader::WIPE_CIRCLE_IN;
 
 	const TGameSequence& prevArea = SMSGetApplication()->getPrevArea();
 	switch (SMSGetApplication()->getCurrArea().getStage()) {
 	case 15:
-		unkE4 = 14;
+		unkE4 = TSMSFader::WIPE_FADE_IN;
 		SMSGetApplication()->getFader()->setColor(
 		    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 		break;
@@ -63,7 +63,7 @@ void TMarDirector::decideMarioPosIdx()
 	case 6:
 	case 8:
 	case 9: {
-		unkE4 = 14;
+		unkE4 = TSMSFader::WIPE_FADE_IN;
 		SMSGetApplication()->getFader()->setColor(
 		    JUtility::TColor(0xd2, 0xd2, 0xd2, 0xff));
 		unkD1 = 1;
@@ -83,43 +83,43 @@ void TMarDirector::decideMarioPosIdx()
 				case 2:
 					mMarioPosIdx = 1;
 					unkD1        = 2;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				case 3:
 					mMarioPosIdx = 2;
 					unkD1        = 2;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				case 4:
 					mMarioPosIdx = 3;
 					unkD1        = 2;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				case 5:
 					mMarioPosIdx = 4;
 					unkD1        = 2;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				case 6:
 					mMarioPosIdx = 5;
 					unkD1        = 2;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				case 7:
 					mMarioPosIdx = 6;
 					unkD1        = 2;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				case 8:
 					mMarioPosIdx = 7;
 					unkD1        = 2;
-					unkE4        = 0xe;
+					unkE4        = TSMSFader::WIPE_FADE_IN;
 					SMSGetApplication()->getFader()->setColor(
 					    JUtility::TColor(0x00, 0x00, 0x00, 0xff));
 					break;
 				case 9:
 					mMarioPosIdx = 8;
-					unkE4        = 7;
+					unkE4        = TSMSFader::WIPE_SPIRAL_IN;
 					break;
 				}
 			}

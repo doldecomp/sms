@@ -121,19 +121,19 @@ void draw_wipe_box(const JDrama::TRect& param_1, JUtility::TColor param_2)
 
 } // namespace
 
-TSMSFader::TSMSFader(JUtility::TColor param_1, f32 param_2, const char* param_3)
-    : JDrama::TViewObj(param_3)
-    , unk10(0)
-    , unk12(0)
-    , mRate(param_2)
-    , mFadeColor(param_1)
-    , unk1C(false)
+TSMSFader::TSMSFader(JUtility::TColor color, f32 frame_rate, const char* name)
+    : JDrama::TViewObj(name)
+    , mFadeDurationFrames(0)
+    , mFadeFrame(0)
+    , mFrameRate(frame_rate)
+    , mFadeColor(color)
+    , mUseBoxWipe(false)
     , mFadeStatus(FADE_STATUS_FULLY_FADED_OUT)
-    , unk30(UNK30_UNK_14)
+    , mWipeType(WIPE_FADE_IN)
     , unk34(0.0f)
 {
 	Hx_ResetWipe(640, 480);
-	mWipeRequest.unk0 = UNK30_UNK_18;
+	mPendingWipeRequest.mWipeType = WIPE_NONE;
 }
 
 void TSMSFader::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -152,7 +152,7 @@ void TSMSFader::update()
 	if (mFadeStatus == TSMSFader::FADE_STATUS_FULLY_FADED_OUT)
 		mFadeColor.a = 0xff;
 
-	if (unk30 >= UNK30_UNK_18 || unk30 < UNK30_UNK_14)
+	if (mWipeType >= WIPE_NONE || mWipeType < WIPE_FADE_IN)
 		return;
 
 	updateFadeinout();
@@ -160,18 +160,18 @@ void TSMSFader::update()
 
 void TSMSFader::updateRequest()
 {
-	if (mWipeRequest.unk0 == UNK30_UNK_18)
+	if (mPendingWipeRequest.mWipeType == WIPE_NONE)
 		return;
 
-	f32 fVar1 = mWipeRequest.unk8;
-	fVar1 -= 1.0f / mRate;
-	if (fVar1 < 0.0f)
-		fVar1 = 0.0f;
-	mWipeRequest.unk8 = fVar1;
+	f32 delay = mPendingWipeRequest.mDelaySeconds;
+	delay -= 1.0f / mFrameRate;
+	if (delay < 0.0f)
+		delay = 0.0f;
+	mPendingWipeRequest.mDelaySeconds = delay;
 
-	if (fVar1 <= 0.0f) {
-		requestWipe(&mWipeRequest);
-		mWipeRequest.unk0 = UNK30_UNK_18;
+	if (delay <= 0.0f) {
+		requestWipe(&mPendingWipeRequest);
+		mPendingWipeRequest.mWipeType = WIPE_NONE;
 	}
 }
 
@@ -185,26 +185,26 @@ void TSMSFader::updateFadeinout()
 		mFadeColor.a = 0xff;
 		break;
 	case FADE_STATUS_FADING_IN:
-		mFadeColor.a = 0xff - (unk12++ * 0xff) / (unk10 + 1);
-		if (unk12 > unk10)
+		mFadeColor.a = 0xff - (mFadeFrame++ * 0xff) / (mFadeDurationFrames + 1);
+		if (mFadeFrame > mFadeDurationFrames)
 			mFadeStatus = FADE_STATUS_FULLY_FADED_IN;
 		break;
 	case FADE_STATUS_FADING_OUT:
-		mFadeColor.a = (++unk12 * 0xff) / (unk10 + 1);
-		if (unk12 > unk10)
+		mFadeColor.a = (++mFadeFrame * 0xff) / (mFadeDurationFrames + 1);
+		if (mFadeFrame > mFadeDurationFrames)
 			mFadeStatus = FADE_STATUS_FULLY_FADED_OUT;
 		break;
 	}
 }
 
-void TSMSFader::draw(const JDrama::TRect& param_1)
+void TSMSFader::draw(const JDrama::TRect& viewport)
 {
 	switch (mFadeStatus) {
 	case FADE_STATUS_FULLY_FADED_OUT: {
 		setupGraphicsFadeinout();
 		JUtility::TColor color = mFadeColor;
 		color.a                = 0xff;
-		fill_rect(param_1, color);
+		fill_rect(viewport, color);
 		break;
 	}
 
@@ -212,47 +212,47 @@ void TSMSFader::draw(const JDrama::TRect& param_1)
 		break;
 
 	default:
-		drawWipe(param_1);
+		drawWipe(viewport);
 	}
 }
 
-void TSMSFader::drawWipe(const JDrama::TRect& param_1)
+void TSMSFader::drawWipe(const JDrama::TRect& viewport)
 {
-	switch (unk30) {
-	case UNK30_UNK_14:
-	case UNK30_UNK_15:
-	case UNK30_UNK_16:
-	case UNK30_UNK_17:
-		drawFadeinout(param_1);
+	switch (mWipeType) {
+	case WIPE_FADE_IN:
+	case WIPE_FADE_OUT:
+	case WIPE_BOX_OPEN:
+	case WIPE_BOX_CLOSE:
+		drawFadeinout(viewport);
 		break;
 	default:
-		if (Hx_UpdateWipe(mRate) == 3)
-			mFadeStatus = Hx_GetWipeType(unk30) != 0
+		if (Hx_UpdateWipe(mFrameRate) == 3)
+			mFadeStatus = Hx_GetWipeType(mWipeType) != 0
 			                  ? FADE_STATUS_FULLY_FADED_IN
 			                  : FADE_STATUS_FULLY_FADED_OUT;
 		break;
 	}
 }
 
-void TSMSFader::drawFadeinout(const JDrama::TRect& param_1)
+void TSMSFader::drawFadeinout(const JDrama::TRect& viewport)
 {
-	switch (unk30) {
-	case UNK30_UNK_14:
-	case UNK30_UNK_15: {
+	switch (mWipeType) {
+	case WIPE_FADE_IN:
+	case WIPE_FADE_OUT: {
 		if (mFadeColor.a == 0)
 			break;
 
 		setupGraphicsFadeinout();
-		fill_rect(param_1, mFadeColor);
+		fill_rect(viewport, mFadeColor);
 		break;
 	}
 
-	case UNK30_UNK_16:
-	case UNK30_UNK_17: {
+	case WIPE_BOX_OPEN:
+	case WIPE_BOX_CLOSE: {
 		if (mFadeColor.a == 0)
 			break;
 		setupGraphicsFadeinout();
-		draw_wipe_box(param_1, mFadeColor);
+		draw_wipe_box(viewport, mFadeColor);
 		break;
 	}
 	}
@@ -275,102 +275,106 @@ void TSMSFader::setupGraphicsFadeinout()
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 }
 
-void TSMSFader::requestWipe(TSMSFader::WipeRequest* param_1)
+void TSMSFader::requestWipe(TSMSFader::WipeRequest* request)
 {
-	unk1C = false;
-	unk30 = param_1->unk0;
-	unk34 = param_1->unk8;
+	mUseBoxWipe = false;
+	mWipeType   = request->mWipeType;
+	unk34       = request->mDelaySeconds;
 
-	int iVar3 = param_1->unk4 * mRate;
+	int durationFrames = request->mDurationSeconds * mFrameRate;
 
-	switch (param_1->unk0) {
-	case UNK30_UNK_13:
+	switch (request->mWipeType) {
+	case WIPE_GAME_OVER:
 		getGameOverBtiResource();
 		break;
-	case UNK30_UNK_12:
+	case WIPE_LOGO:
 		getMmarkBtiResource();
 		getLogoBtiResource();
 		break;
 	}
 
-	switch (param_1->unk0) {
-	case UNK30_UNK_14:
-	case UNK30_UNK_16:
-		startFadein(iVar3);
+	switch (request->mWipeType) {
+	case WIPE_FADE_IN:
+	case WIPE_BOX_OPEN:
+		startFadein(durationFrames);
 		break;
 
-	case UNK30_UNK_15:
-	case UNK30_UNK_17:
-		startFadeout(iVar3);
+	case WIPE_FADE_OUT:
+	case WIPE_BOX_CLOSE:
+		startFadeout(durationFrames);
 		break;
 
 	default:
-		Hx_StartWipe(param_1->unk0, iVar3);
-		mFadeStatus = Hx_GetWipeType(param_1->unk0) == 1
+		Hx_StartWipe(request->mWipeType, durationFrames);
+		mFadeStatus = Hx_GetWipeType(request->mWipeType) == 1
 		                  ? FADE_STATUS_FADING_IN
 		                  : FADE_STATUS_FADING_OUT;
 		break;
 	}
 
-	param_1->unk0 = UNK30_UNK_18;
+	request->mWipeType = WIPE_NONE;
 }
 
-void TSMSFader::startWipe(u32 param_1, f32 param_2, f32 param_3)
+void TSMSFader::startWipe(u32 wipe_type, f32 duration_seconds,
+                          f32 delay_seconds)
 {
-	mWipeRequest.unk0 = param_1;
-	mWipeRequest.unk4 = param_2;
-	mWipeRequest.unk8 = param_3;
+	mPendingWipeRequest.mWipeType        = wipe_type;
+	mPendingWipeRequest.mDurationSeconds = duration_seconds;
+	mPendingWipeRequest.mDelaySeconds    = delay_seconds;
 }
 
-void TSMSFader::startFadein(int param_1)
+void TSMSFader::startFadein(int duration_frames)
 {
 	switch (mFadeStatus) {
 	case FADE_STATUS_FULLY_FADED_OUT:
-		mFadeStatus = FADE_STATUS_FADING_IN;
-		unk12       = 0;
-		unk10       = param_1;
+		mFadeStatus         = FADE_STATUS_FADING_IN;
+		mFadeFrame          = 0;
+		mFadeDurationFrames = duration_frames;
 		break;
 	case FADE_STATUS_FADING_OUT:
 		mFadeStatus = FADE_STATUS_FADING_IN;
-		unk12       = param_1 * (unk10 - unk12) / unk10;
-		unk10       = param_1;
+		mFadeFrame  = duration_frames * (mFadeDurationFrames - mFadeFrame)
+		             / mFadeDurationFrames;
+		mFadeDurationFrames = duration_frames;
 		break;
 	}
 }
 
-void TSMSFader::startFadeinT(f32 param_1)
+void TSMSFader::startFadeinT(f32 duration_seconds)
 {
-	mWipeRequest.unk0 = unk1C ? UNK30_UNK_16 : UNK30_UNK_14;
-	mWipeRequest.unk4 = param_1;
-	mWipeRequest.unk8 = 0.0f;
+	mPendingWipeRequest.mWipeType = mUseBoxWipe ? WIPE_BOX_OPEN : WIPE_FADE_IN;
+	mPendingWipeRequest.mDurationSeconds = duration_seconds;
+	mPendingWipeRequest.mDelaySeconds    = 0.0f;
 }
 
-void TSMSFader::startFadeout(int param_1)
+void TSMSFader::startFadeout(int duration_frames)
 {
 	switch (mFadeStatus) {
 	case FADE_STATUS_FULLY_FADED_IN:
-		mFadeStatus = FADE_STATUS_FADING_OUT;
-		unk12       = 0;
-		unk10       = param_1;
+		mFadeStatus         = FADE_STATUS_FADING_OUT;
+		mFadeFrame          = 0;
+		mFadeDurationFrames = duration_frames;
 		break;
 	case FADE_STATUS_FADING_IN:
 		mFadeStatus = FADE_STATUS_FADING_OUT;
-		unk12       = param_1 * (unk10 - unk12) / unk10;
-		unk10       = param_1;
+		mFadeFrame  = duration_frames * (mFadeDurationFrames - mFadeFrame)
+		             / mFadeDurationFrames;
+		mFadeDurationFrames = duration_frames;
 		break;
 	}
 }
 
-void TSMSFader::startFadeoutT(f32 param_1)
+void TSMSFader::startFadeoutT(f32 duration_seconds)
 {
-	mWipeRequest.unk0 = unk1C ? UNK30_UNK_17 : UNK30_UNK_15;
-	mWipeRequest.unk4 = param_1;
-	mWipeRequest.unk8 = 0.0f;
+	mPendingWipeRequest.mWipeType
+	    = mUseBoxWipe ? WIPE_BOX_CLOSE : WIPE_FADE_OUT;
+	mPendingWipeRequest.mDurationSeconds = duration_seconds;
+	mPendingWipeRequest.mDelaySeconds    = 0.0f;
 }
 
-void TSMSFader::setColor(JUtility::TColor param_1)
+void TSMSFader::setColor(JUtility::TColor color)
 {
-	mFadeColor = param_1;
+	mFadeColor = color;
 	if (mFadeColor.r > 0xD2)
 		mFadeColor.r = 0xD2;
 	if (mFadeColor.g > 0xD2)
@@ -391,23 +395,23 @@ void TSMSFader::load(JSUMemoryInputStream& stream)
 	                          local_18));
 }
 
-void TSMSFader::setDisplaySize(int param_1, int param_2)
+void TSMSFader::setDisplaySize(int width, int height)
 {
-	Hx_ResetWipe(param_1, param_2);
+	Hx_ResetWipe(width, height);
 }
 
-void TSMSFader::setFadeStatus(TSMSFader::EFadeStatus param_1)
+void TSMSFader::setFadeStatus(TSMSFader::EFadeStatus status)
 {
-	switch (param_1) {
+	switch (status) {
 	case FADE_STATUS_FULLY_FADED_IN:
-		mFadeStatus       = param_1;
-		mFadeColor.a      = 0;
-		mWipeRequest.unk0 = UNK30_UNK_18;
+		mFadeStatus                   = status;
+		mFadeColor.a                  = 0;
+		mPendingWipeRequest.mWipeType = WIPE_NONE;
 		break;
 	case FADE_STATUS_FULLY_FADED_OUT:
-		mFadeStatus       = param_1;
-		mFadeColor.a      = 0xFF;
-		mWipeRequest.unk0 = UNK30_UNK_18;
+		mFadeStatus                   = status;
+		mFadeColor.a                  = 0xFF;
+		mPendingWipeRequest.mWipeType = WIPE_NONE;
 		break;
 	}
 }

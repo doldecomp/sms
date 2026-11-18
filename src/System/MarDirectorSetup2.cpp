@@ -67,7 +67,7 @@ void TMarDirector::setup2()
 	unkDC = static_cast<TShineFader*>(
 	    JDrama::TNameRefGen::search("シャインフェーダー"));
 
-	unkDC->mRate = 120.0f;
+	unkDC->mFrameRate = 120.0f;
 	unkDC->setColor(JUtility::TColor(0xD2, 0xD2, 0xD2, 0xFF));
 
 	unkE0 = static_cast<TSunGlass*>(

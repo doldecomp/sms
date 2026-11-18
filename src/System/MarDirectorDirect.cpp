@@ -360,7 +360,7 @@ int TMarDirector::changeState()
 			nextState = STATE_UNK4;
 			break;
 		case 1:
-			unkE4     = 4;
+			unkE4     = TSMSFader::WIPE_CORNER_CIRCLES_OUT;
 			nextState = STATE_UNK12;
 			unkB4     = TApplication::APP_STATE_DONE;
 			break;
@@ -368,7 +368,7 @@ int TMarDirector::changeState()
 			decideNextStage();
 			mFlags &= ~DIRECTOR_FLAG_MOVIE_PENDING;
 			moveStage();
-			unkE4     = 2;
+			unkE4     = TSMSFader::WIPE_CIRCLE_OUT;
 			nextState = STATE_UNK9;
 			break;
 		}
@@ -405,7 +405,7 @@ int TMarDirector::changeState()
 				    TSMSFader::FADE_STATUS_FULLY_FADED_OUT);
 				desiredAppState = TApplication::APP_STATE_DONE;
 			} else {
-				unkE4     = 4;
+				unkE4     = TSMSFader::WIPE_CORNER_CIRCLES_OUT;
 				nextState = STATE_UNK12;
 				unkB4     = TApplication::APP_STATE_DONE;
 			}
@@ -423,12 +423,13 @@ int TMarDirector::changeState()
 				decideNextStageOfMiss();
 				mFlags &= ~DIRECTOR_FLAG_MOVIE_PENDING;
 				moveStage();
-				unkE4 = 0xf;
+				unkE4 = TSMSFader::WIPE_FADE_OUT;
 				SMSGetApplication()->getFader()->setColor(
 				    JUtility::TColor(0, 0, 0, 0xff));
 				nextState = STATE_UNK12;
 			} else {
-				SMSGetApplication()->getFader()->startWipe(0xE, 0.3f, 0.0f);
+				SMSGetApplication()->getFader()->startWipe(
+				    TSMSFader::WIPE_FADE_IN, 0.3f, 0.0f);
 				SMSGetApplication()->getFader()->setColor(
 				    JUtility::TColor(0, 0, 0, 0xff));
 				unk261    = TCardSave::PURPOSE_GAME_OVER;
@@ -453,7 +454,7 @@ int TMarDirector::changeState()
 	    && !checkTransitionFlag(TRANSITION_FLAG_RESET_HANDLED)) {
 		nextState = STATE_UNK12;
 		onTransitionFlag(TRANSITION_FLAG_RESET_HANDLED);
-		unkE4 = 4;
+		unkE4 = TSMSFader::WIPE_CORNER_CIRCLES_OUT;
 		unkB4 = TApplication::APP_STATE_DONE;
 	}
 
@@ -734,7 +735,7 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 	// !!!fallthrough!!!
 	case STATE_UNK9: {
 		SMSGetApplication()->getFader()->startWipe(unkE4, 0.4f, 0.0f);
-		if (unkE4 == 8)
+		if (unkE4 == TSMSFader::WIPE_SPIRAL_OUT)
 			SMSGetMSound()->startSoundSystemSE(MSD_SE_MA_INTO_DOKAN, 0, nullptr,
 			                                   0);
 		MSound* sound = gpMSound;
@@ -767,7 +768,8 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		static_cast<JDrama::TViewObj*>(JDrama::TNameRefGen::search("Guide"))
 		    ->unkC.off(CUE_MOVE | CUE_CALC_ANIM | CUE_DRAW);
 		SMSGetMSound()->startSoundSystemSE(MSD_SE_SY_WIPE_IN, 0, nullptr, 0);
-		SMSGetApplication()->getFader()->startWipe(6, 1.0f, 0.0f);
+		SMSGetApplication()->getFader()->startWipe(
+		    TSMSFader::WIPE_TWISTING_TILES_OUT, 1.0f, 0.0f);
 		mGuide->setup(nullptr);
 		mGuide->startMoveCursor();
 		break;
@@ -791,12 +793,15 @@ void TMarDirector::nextStateInitialize(u8 next_state)
 		if (TFlagManager::getInstance()->getFlag(MSF_LIFE_COUNT) >= 0) {
 			MSBgm::startBGM(MSD_BGM_BOSS);
 			if (checkDemoFlag(DEMO_FLAG_HELL_DEAD))
-				SMSGetApplication()->getFader()->startWipe(2, 0.0f, 2.0f);
+				SMSGetApplication()->getFader()->startWipe(
+				    TSMSFader::WIPE_CIRCLE_OUT, 0.0f, 2.0f);
 			else
-				SMSGetApplication()->getFader()->startWipe(10, 0.0f, 2.2f);
+				SMSGetApplication()->getFader()->startWipe(
+				    TSMSFader::WIPE_CURVED_SWEEP_OUT, 0.0f, 2.2f);
 		} else {
 			MSBgm::startBGM(MSD_BGM_BOSSHANA_2ND3RD);
-			SMSGetApplication()->getFader()->startWipe(0xD, 0.0f, 2.0f);
+			SMSGetApplication()->getFader()->startWipe(
+			    TSMSFader::WIPE_GAME_OVER, 0.0f, 2.0f);
 		}
 		break;
 	}
@@ -852,7 +857,7 @@ u8 TMarDirector::updateGameMode()
 				TFlagManager::getInstance()->setBool(
 				    true, MSF_GOT_SHINE_IN_PREV_STAGE);
 				TFlagManager::getInstance()->setShineFlag(unk25C->getEventId());
-				f32 fVar3     = unkDC->mRate;
+				f32 fVar3     = unkDC->mFrameRate;
 				f32 fadeInSec = 1.0f;
 				unkDC->registFadeout(fadeInSec * fVar3, fVar3 * 5.3333333f);
 				onFlag(DIRECTOR_FLAG_SHINE_TAKEN
@@ -1058,7 +1063,7 @@ u8 TMarDirector::updateGameMode()
 void TMarDirector::moveStage()
 {
 	unkB4 = TApplication::APP_STATE_GAMEPLAY;
-	unkE4 = 15;
+	unkE4 = TSMSFader::WIPE_FADE_OUT;
 	SMSGetApplication()->getFader()->setColor(JUtility::TColor(0, 0, 0, 0xff));
 
 	u8 sVar4 = SMS_getShineStage(SMSGetApplication()->getNextArea().getStage());
@@ -1071,13 +1076,13 @@ void TMarDirector::moveStage()
 	if (nextArea.getScenario() == 0xff)
 		switch (nextArea.getStage()) {
 		case 1:
-			unkE4              = 2;
+			unkE4              = TSMSFader::WIPE_CIRCLE_OUT;
 			nextArea.mScenario = decideNextScenario(nextArea.getStage());
 			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
 
 		case 13: {
-			unkE4     = 2;
+			unkE4     = TSMSFader::WIPE_CIRCLE_OUT;
 			u32 thing = 0;
 			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 0:
@@ -1104,7 +1109,7 @@ void TMarDirector::moveStage()
 		}
 
 		case 0x3A: {
-			unkE4     = 2;
+			unkE4     = TSMSFader::WIPE_CIRCLE_OUT;
 			u32 thing = 0;
 			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 0:
@@ -1119,7 +1124,7 @@ void TMarDirector::moveStage()
 		}
 
 		case 7: {
-			unkE4     = 2;
+			unkE4     = TSMSFader::WIPE_CIRCLE_OUT;
 			u32 thing = 0;
 			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 1:
@@ -1144,7 +1149,7 @@ void TMarDirector::moveStage()
 		}
 
 		case 14: {
-			unkE4     = 2;
+			unkE4     = TSMSFader::WIPE_CIRCLE_OUT;
 			u32 thing = 0;
 			switch (TFlagManager::getInstance()->getFlag(MSF_EPISODE)) {
 			case 3:
@@ -1164,7 +1169,7 @@ void TMarDirector::moveStage()
 		case 5:
 		case 6:
 		case 8:
-			unkE4 = 8;
+			unkE4 = TSMSFader::WIPE_SPIRAL_OUT;
 			unkB4 = TApplication::APP_STATE_TITLE;
 			break;
 
@@ -1175,7 +1180,7 @@ void TMarDirector::moveStage()
 			break;
 
 		case 0x34:
-			unkE4              = 8;
+			unkE4              = TSMSFader::WIPE_SPIRAL_OUT;
 			nextArea.mScenario = 0;
 			TFlagManager::getInstance()->setFlag(MSF_EPISODE, 0);
 			break;
@@ -1186,14 +1191,14 @@ void TMarDirector::moveStage()
 			break;
 
 		default:
-			unkE4              = 2;
+			unkE4              = TSMSFader::WIPE_CIRCLE_OUT;
 			nextArea.mScenario = 0;
 			break;
 		}
 
 	if (nextArea.getScenario() != 0xff) {
 		if (mFlags & DIRECTOR_FLAG_MOVIE_PENDING) {
-			unkE4 = 15;
+			unkE4 = TSMSFader::WIPE_FADE_OUT;
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 0xff));
 			unkB4 = TApplication::APP_STATE_MOVIE;

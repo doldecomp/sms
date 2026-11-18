@@ -14,24 +14,35 @@ public:
 		FADE_STATUS_FADING_OUT      = 3,
 	};
 
-	// TODO: maybe this is from the hx_wipe.h header/libary type thing?
-	enum {
-		UNK30_UNK_12 = 12,
-		UNK30_UNK_13 = 13,
-		UNK30_UNK_14 = 14,
-		UNK30_UNK_15 = 15,
-		UNK30_UNK_16 = 16,
-		UNK30_UNK_17 = 17,
-		UNK30_UNK_18 = 18,
+	enum EWipeType {
+		WIPE_DUMMY              = 0,
+		WIPE_CIRCLE_IN          = 1,
+		WIPE_CIRCLE_OUT         = 2,
+		WIPE_CORNER_CIRCLES_IN  = 3,
+		WIPE_CORNER_CIRCLES_OUT = 4,
+		WIPE_TWISTING_TILES_IN  = 5,
+		WIPE_TWISTING_TILES_OUT = 6,
+		WIPE_SPIRAL_IN          = 7,
+		WIPE_SPIRAL_OUT         = 8,
+		WIPE_CURVED_SWEEP_IN    = 9,
+		WIPE_CURVED_SWEEP_OUT   = 10,
+		WIPE_DOOR_OUT           = 11,
+		WIPE_LOGO               = 12,
+		WIPE_GAME_OVER          = 13,
+		WIPE_FADE_IN            = 14,
+		WIPE_FADE_OUT           = 15,
+		WIPE_BOX_OPEN           = 16,
+		WIPE_BOX_CLOSE          = 17,
+		WIPE_NONE               = 18,
 	};
 
 	struct WipeRequest {
-		/* 0x0 */ u32 unk0;
-		/* 0x4 */ f32 unk4;
-		/* 0x8 */ f32 unk8;
+		/* 0x0 */ u32 mWipeType;
+		/* 0x4 */ f32 mDurationSeconds;
+		/* 0x8 */ f32 mDelaySeconds;
 	};
 
-	TSMSFader(JUtility::TColor, f32, const char* name);
+	TSMSFader(JUtility::TColor color, f32 frame_rate, const char* name);
 
 	virtual void load(JSUMemoryInputStream& stream);
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
@@ -44,14 +55,14 @@ public:
 	void drawWipe(const JDrama::TRect&);
 	void drawFadeinout(const JDrama::TRect&);
 	void setupGraphicsFadeinout();
-	void requestWipe(WipeRequest*);
-	void startWipe(u32, f32, f32);
-	void startFadein(int);
-	void startFadeinT(f32);
-	void startFadeout(int);
-	void startFadeoutT(f32);
-	void setColor(JUtility::TColor);
-	void setDisplaySize(int, int);
+	void requestWipe(WipeRequest* request);
+	void startWipe(u32 wipe_type, f32 duration_seconds, f32 delay_seconds);
+	void startFadein(int duration_frames);
+	void startFadeinT(f32 duration_seconds);
+	void startFadeout(int duration_frames);
+	void startFadeoutT(f32 duration_seconds);
+	void setColor(JUtility::TColor color);
+	void setDisplaySize(int width, int height);
 	void setFadeStatus(EFadeStatus);
 	void getGameOverBtiResource();
 	void getMmarkBtiResource();
@@ -65,35 +76,35 @@ public:
 	{
 		return mFadeStatus == FADE_STATUS_FULLY_FADED_OUT;
 	}
-	f32 getRate() const { return mRate; }
+	f32 getRate() const { return mFrameRate; }
 
 public:
-	/* 0x10 */ u16 unk10;
-	/* 0x12 */ u16 unk12;
-	/* 0x14 */ f32 mRate;
+	/* 0x10 */ u16 mFadeDurationFrames;
+	/* 0x12 */ u16 mFadeFrame;
+	/* 0x14 */ f32 mFrameRate;
 	/* 0x18 */ JUtility::TColor mFadeColor;
-	/* 0x1C */ bool unk1C;
+	/* 0x1C */ bool mUseBoxWipe;
 	/* 0x20 */ TSMSFader::EFadeStatus mFadeStatus;
-	/* 0x24 */ WipeRequest mWipeRequest;
-	/* 0x30 */ int unk30;
+	/* 0x24 */ WipeRequest mPendingWipeRequest;
+	/* 0x30 */ int mWipeType;
 	/* 0x34 */ f32 unk34;
 };
 
 class TSmplFader : public TSMSFader {
 public:
-	TSmplFader(JUtility::TColor param_1 = JUtility::TColor(0, 0, 0, 0),
-	           f32 param_2 = 60.0f, const char* name = "<ScrnFader>")
-	    : TSMSFader(param_1, param_2, name)
+	TSmplFader(JUtility::TColor color = JUtility::TColor(0, 0, 0, 0),
+	           f32 frame_rate = 60.0f, const char* name = "<ScrnFader>")
+	    : TSMSFader(color, frame_rate, name)
 	{
 	}
 };
 
 class TShineFader : public TSmplFader {
 public:
-	TShineFader(JUtility::TColor param_1 = JUtility::TColor(0, 0, 0, 0),
-	            f32 param_2 = 60.0f, const char* name = "<ShineFader>")
-	    : TSmplFader(param_1, param_2, name)
-	    , unk38(0)
+	TShineFader(JUtility::TColor color = JUtility::TColor(0, 0, 0, 0),
+	            f32 frame_rate = 60.0f, const char* name = "<ShineFader>")
+	    : TSmplFader(color, frame_rate, name)
+	    , mFadeDelayFrames(0)
 	{
 		mFadeStatus = TSMSFader::FADE_STATUS_FULLY_FADED_IN;
 	}
@@ -103,9 +114,9 @@ public:
 
 	virtual void update();
 
-	bool registFadeout(u16, u16);
+	bool registFadeout(u16 duration_frames, u16 delay_frames);
 
-	/* 0x38 */ u16 unk38;
+	/* 0x38 */ u16 mFadeDelayFrames;
 };
 
 #endif

@@ -378,10 +378,12 @@ int TMovieDirector::direct()
 			mEndingString->startFadeIn();
 #endif
 		if (SMSGetApplication()->getMovie() == 9) {
-			SMSGetApplication()->getFader()->startWipe(12, 0.0f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_LOGO,
+			                                           0.0f, 0.0f);
 			unk18 = false;
 		} else {
-			SMSGetApplication()->getFader()->startWipe(14, 1.0f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_IN,
+			                                           1.0f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 255));
 			THPPlayerPlay();
@@ -517,7 +519,8 @@ int TMovieDirector::direct()
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			SMSGetApplication()->getFader()->startWipe(14, 0.3f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_IN,
+			                                           0.3f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 255));
 			unk24->init(SMSGetApplication()->getMovie() == 17
@@ -529,7 +532,8 @@ int TMovieDirector::direct()
 			THPPlayerStop();
 			unk28->unkC.on(CUE_DRAW | CUE_MOVE);
 			unk2C->unkC.on(CUE_DRAW | CUE_MOVE);
-			SMSGetApplication()->getFader()->startWipe(14, 0.3f, 0.0f);
+			SMSGetApplication()->getFader()->startWipe(TSMSFader::WIPE_FADE_IN,
+			                                           0.3f, 0.0f);
 			SMSGetApplication()->getFader()->setColor(
 			    JUtility::TColor(0, 0, 0, 255));
 			unk24->init(TCardSave::PURPOSE_EXPLANATION_AGAIN);
@@ -537,9 +541,11 @@ int TMovieDirector::direct()
 
 		case STATE_FADE_OUT:
 			if (unk20->isSomethingPushed()) {
-				SMSGetApplication()->getFader()->startWipe(4, 1.0f, 0.0f);
+				SMSGetApplication()->getFader()->startWipe(
+				    TSMSFader::WIPE_CORNER_CIRCLES_OUT, 1.0f, 0.0f);
 			} else {
-				SMSGetApplication()->getFader()->startWipe(15, 1.0f, 0.0f);
+				SMSGetApplication()->getFader()->startWipe(
+				    TSMSFader::WIPE_FADE_OUT, 1.0f, 0.0f);
 				SMSGetApplication()->getFader()->setColor(
 				    JUtility::TColor(0, 0, 0, 255));
 			}
