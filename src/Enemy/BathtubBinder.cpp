@@ -73,8 +73,8 @@ void TBathtubBinder::float_(TLiveActor* param_1)
 
 	f32 horizontal
 	    = JGeometry::TUtil<f32>::sqrt(delta.x * delta.x + delta.z * delta.z);
-	f32 angle = JGeometry::TUtil<f32>::clamp(
-	    matan(horizontal, delta.y) * (360.0f / 65536.0f), -15.0f, 15.0f);
+	f32 angle = JGeometry::TUtil<f32>::clamp(MsAtan2(horizontal, delta.y),
+	                                         -15.0f, 15.0f);
 	param_1->mRotation.x += 0.1f * (angle - param_1->mRotation.x);
 	param_1->mRotation.z = 0.0f;
 

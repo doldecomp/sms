@@ -50,6 +50,35 @@ s16 matan(f32 x, f32 y);
 // fabricated
 inline f32 MsAtan2(f32 x, f32 y) { return matan(x, y) * (360.0f / 65536.0f); }
 
+// fabricated
+inline f32 MsAsin(f32 x)
+{
+	if (x == 1.0f) {
+		return 90.0f;
+	} else if (x == -1.0f) {
+		return -90.0f;
+	} else {
+		f32 cosSq           = -((x * x) - 1.0f);
+		volatile f32 cosVal = cosSq * __frsqrte(cosSq);
+		return MsAtan2(cosVal, x);
+	}
+}
+
+// fabricated
+inline f32 MsAcos(f32 x)
+{
+	if (x == 1.0f) {
+		return 0.0f;
+	} else if (x == -1.0f) {
+		return 180.0f;
+	} else {
+		f32 cosSq           = -((x * x) - 1.0f);
+		volatile f32 cosVal = cosSq * __frsqrte(cosSq);
+		f32 tmp             = MsAtan2(cosVal, x);
+		return 90.0f - tmp;
+	}
+}
+
 inline f32 MsGetRotFromZaxisY(const JGeometry::TVec3<f32>& axis)
 {
 	if (axis.z == 0.0f) {
@@ -76,9 +105,9 @@ inline f32 MsGetRotFromYaxisZ(const JGeometry::TVec3<f32>& axis)
 	}
 
 	if (axis.y >= 0.0f) {
-		return -((360.0f / 65536.0f) * matan(axis.y, axis.x));
+		return -MsAtan2(axis.y, axis.x);
 	} else {
-		f32 theta = matan(-axis.y, axis.x) * (360.0f / 65536.0f);
+		f32 theta = MsAtan2(-axis.y, axis.x);
 		return 180.0f + theta;
 	}
 }

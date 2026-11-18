@@ -861,7 +861,7 @@ f32 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos)
 	delta.sub(pos, trans);
 	f32 localZ = zDir.dot(delta);
 	f32 localX = xDir.dot(delta);
-	return (360.0f / 65536.0f) * matan(localZ, localX);
+	return MsAtan2(localZ, localX);
 }
 
 // Unused
@@ -880,7 +880,7 @@ f32 getDir(MtxPtr mtx, const JGeometry::TVec3<f32>& pos,
 	delta += tangent;
 	f32 localZ = zDir.dot(delta);
 	f32 localX = xDir.dot(delta);
-	return (360.0f / 65536.0f) * matan(localZ, localX);
+	return MsAtan2(localZ, localX);
 }
 
 } // namespace

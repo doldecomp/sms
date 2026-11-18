@@ -954,7 +954,7 @@ f32 TKoopa::getTargetDir(const JGeometry::TVec3<f32>& target) const
 	offset.sub(target, position);
 	f32 z = zDir.dot(offset);
 	f32 x = xDir.dot(offset);
-	return SHORTANGLE2DEG(matan(z, x));
+	return MsAtan2(z, x);
 }
 
 // Unused

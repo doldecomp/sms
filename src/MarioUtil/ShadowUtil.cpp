@@ -114,7 +114,7 @@ void TMBindShadowParts::calc(f32 param_1)
 
 	if (!mIsCircle && mBody->mActor->getActorType() != ACTOR_TYPE_MARIO
 	    && mBody->mActor->getActorType() != ACTOR_TYPE_E_MARIO) {
-		f32 rotY = matan(z2 - z1, x2 - x1) * (360.0f / 65536.0f);
+		f32 rotY = MsAtan2(z2 - z1, x2 - x1);
 		if (radiusX > radiusZ)
 			rotY -= 90.0f;
 		request.mRotationY = rotY;

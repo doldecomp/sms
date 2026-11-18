@@ -470,11 +470,9 @@ void TBossHanachan::perform(u32 cue, JDrama::TGraphics* graphics)
 						    && fabsf(leftDiff) < 0.001f)
 							body->unk120 = 0.0f;
 						else if (fabsf(rightDiff) > fabsf(leftDiff))
-							body->unk120 = (360.0f / 65536.0f)
-							               * matan(200.0f, rightDiff);
+							body->unk120 = MsAtan2(200.0f, rightDiff);
 						else
-							body->unk120 = -((360.0f / 65536.0f)
-							                 * matan(200.0f, leftDiff));
+							body->unk120 = -MsAtan2(200.0f, leftDiff);
 					}
 				}
 				if (nerve == &TNerveBossHanachanGetUp::theNerve()) {

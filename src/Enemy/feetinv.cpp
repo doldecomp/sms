@@ -17,35 +17,6 @@ inline f32 getAngleBetween(const JGeometry::TVec3<f32>& a,
 	return fabsf(SHORTANGLE2DEG(rawAngle));
 }
 
-// fabricated
-inline f32 MsAsin(f32 x)
-{
-	if (x == 1.0f) {
-		return 90.0f;
-	} else if (x == -1.0f) {
-		return -90.0f;
-	} else {
-		f32 cosSq           = -((x * x) - 1.0f);
-		volatile f32 cosVal = cosSq * __frsqrte(cosSq);
-		return SHORTANGLE2DEG(matan(cosVal, x));
-	}
-}
-
-// fabricated
-inline f32 MsAcos(f32 x)
-{
-	if (x == 1.0f) {
-		return 0.0f;
-	} else if (x == -1.0f) {
-		return 180.0f;
-	} else {
-		f32 cosSq           = -((x * x) - 1.0f);
-		volatile f32 cosVal = cosSq * __frsqrte(cosSq);
-		f32 tmp             = SHORTANGLE2DEG(matan(cosVal, x));
-		return 90.0f - tmp;
-	}
-}
-
 void FeetInvCalc(J3DModel* model, u16 hipIdx, u16 kneeIdx, u16 footIdx,
                  f32 heightOffset)
 {

@@ -76,12 +76,13 @@ public:
 		f32 cz   = (*mtx)[2][3];
 
 		JGeometry::TVec3<f32> marioPos = *gpMarioPos;
-		f32 marioAngle
-		    = (360.0f / 65536.0f) * matan(marioPos.z - cz, marioPos.x - cx);
-		f32 dz        = self->mPosition.z - cz;
-		f32 dx        = self->mPosition.x - cx;
-		f32 selfAngle = (360.0f / 65536.0f) * matan(dz, dx);
-		f32 diff      = MsRepeat(selfAngle - marioAngle, -180.0f, 180.0f);
+		f32 marioDz                    = marioPos.z - cz;
+		f32 marioDx                    = marioPos.x - cx;
+		f32 marioAngle                 = MsAtan2(marioDz, marioDx);
+		f32 dz                         = self->mPosition.z - cz;
+		f32 dx                         = self->mPosition.x - cx;
+		f32 selfAngle                  = MsAtan2(dz, dx);
+		f32 diff = MsRepeat(selfAngle - marioAngle, -180.0f, 180.0f);
 
 		f32 angle;
 		if (diff < 0.0f)

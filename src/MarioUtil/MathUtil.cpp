@@ -182,9 +182,9 @@ static inline void MsGetRotFromZaxisY2(const JGeometry::TVec3<f32>& axis,
 	}
 
 	if (axis.z > 0.0f) {
-		*out = (360.0f / 65536.0f) * matan(axis.z, axis.x);
+		*out = MsAtan2(axis.z, axis.x);
 	} else {
-		f32 theta = matan(-axis.z, axis.x) * (360.0f / 65536.0f);
+		f32 theta = MsAtan2(-axis.z, axis.x);
 		*out      = 180.0f - theta;
 	}
 }
@@ -206,7 +206,7 @@ static inline void MsGetRotFromZaxisX2(const JGeometry::TVec3<f32>& axis,
 	// TODO: it smells to me like this entire function is not real but a result
 	// of MWCC optimizing out stuff for once
 
-	*out = -(matan(MsSqrtf(a), axis.y) * (360.0f / 65536.0f));
+	*out = -MsAtan2(MsSqrtf(a), axis.y);
 }
 
 JGeometry::TVec3<f32> MsGetRotFromZaxis(const JGeometry::TVec3<f32>& param_1)
