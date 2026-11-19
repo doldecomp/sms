@@ -8,6 +8,7 @@ class TAnimalSaveIndividual : public TParams {
 public:
 	TAnimalSaveIndividual(const char* prm);
 
+	// fabricated
 	s32 getSLSharedAnmNum() { return mSLSharedAnmNum.get(); }
 	f32 getSLViewClipNear() { return mSLViewClipNear.get(); }
 	f32 getSLViewClipFar() { return mSLViewClipFar.get(); }
