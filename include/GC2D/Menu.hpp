@@ -8,19 +8,41 @@ class TMarioGamePad;
 class J2DScreen;
 class J2DPane;
 class J2DTextBox;
+class J2DPicture;
+class JPAEmitterManager;
 
 class TMenuBase : public JDrama::TViewObj {
 public:
+#ifdef VERSION_D38J01
+	TMenuBase(J2DScreen* screen, TMarioGamePad* game_pad);
+#else
 	TMenuBase(J2DScreen* screen, const char* name = "<TMenuBase>")
 	    : JDrama::TViewObj(name)
 	    , mScreen(screen)
 	{
 	}
+#endif
 
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 
 public:
+#ifdef VERSION_D38J01
+	/* 0x10 */ TMarioGamePad* mGamePad;
+	/* 0x14 */ J2DScreen* mScreen;
+	/* 0x18 */ J2DPicture* unk18;
+	/* 0x1C */ J2DPicture* unk1C[7];
+	/* 0x38 */ J2DPane* unk38[7];
+	/* 0x54 */ JUTRect unk54[7];
+	/* 0xC4 */ JPAEmitterManager* mEmitterManager;
+	/* 0xC8 */ u32 unkC8;
+	/* 0xCC */ bool unkCC;
+	/* 0xCD */ bool unkCD;
+	/* 0xCE */ u8 unkCE;
+	/* 0xCF */ u8 unkCF;
+	/* 0xD0 */ f32 unkD0;
+#else
 	/* 0x10 */ J2DScreen* mScreen;
+#endif
 };
 
 class TMenuPlane : public JDrama::TViewObj {

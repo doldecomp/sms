@@ -557,6 +557,9 @@ void MSMainProc::setMSoundEnterStage(u8 param_1, u8 param_2)
 	    && MSStageInfo::stageBgmSilentStartStatus == 0
 	    && SMSGetMSound()->unkCF != 0) {
 		JAISound* sound = MSBgm::startBGM(MSStageInfo::stageBgmSilent);
+#ifdef VERSION_D38J01
+		MSBgm::setSeqTRACKsMuteH(sound, true, 0xffff);
+#endif
 		if (sound)
 			sound->setVolume(0.0f, 0, 0);
 	}
@@ -572,6 +575,9 @@ void MSMainProc::startStageEntranceDemo(u8, u8)
 	    && MSStageInfo::stageBgmSilentStartStatus == 1
 	    && gpMSound->unkCF != 0) {
 		JAISound* sound = MSBgm::startBGM(MSStageInfo::stageBgmSilent);
+#ifdef VERSION_D38J01
+		MSBgm::setSeqTRACKsMuteH(sound, true, 0xffff);
+#endif
 		if (sound)
 			sound->setVolume(0.0f, 0, 0);
 	}
@@ -610,6 +616,10 @@ void MSMainProc::startStageBGM(u8, u8)
 			if (MSStageInfo::flags & 1) {
 				if (gpMSound->unkCF != 0) {
 					JAISound* sound = MSBgm::startBGM(bgm);
+#ifdef VERSION_D38J01
+					MSBgm::setSeqTRACKsMuteH(sound, true, 0xffff);
+#endif
+
 					if (sound)
 						sound->setVolume(0.0f, 0, 0);
 				}
@@ -623,6 +633,9 @@ void MSMainProc::startStageBGM(u8, u8)
 	    && MSStageInfo::stageBgmSilentStartStatus == 2
 	    && gpMSound->unkCF != 0) {
 		JAISound* sound = MSBgm::startBGM(MSStageInfo::stageBgmSilent);
+#ifdef VERSION_D38J01
+		MSBgm::setSeqTRACKsMuteH(sound, true, 0xffff);
+#endif
 		if (sound)
 			sound->setVolume(0.0f, 0, 0);
 	}

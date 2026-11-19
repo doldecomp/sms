@@ -5,6 +5,11 @@
 .section .init, "ax"
 .balign 4
 
+.ifdef VERSION_D38J01
+    .equ OS_EXCEPTION_VECTOR_HI, 0x8008
+    .equ OS_EXCEPTION_VECTOR_LO, 0xae98
+.endif
+
 .ifdef VERSION_GMSJ01
     .equ OS_EXCEPTION_VECTOR_HI, 0x8008
     .equ OS_EXCEPTION_VECTOR_LO, 0xadd8

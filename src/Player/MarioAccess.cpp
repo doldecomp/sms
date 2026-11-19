@@ -95,7 +95,17 @@ bool SMS_IsStatusHipDropOrHipDropEnd(THitActor*) { return false; }
 
 bool SMS_IsMarioNoCap() { return false; }
 
-bool SMS_IsMarioWearingAloha() { return false; }
+bool SMS_IsMarioWearingAloha()
+{
+#ifdef VERSION_D38J01
+	if (gpMarioOriginal->checkFlag(MARIO_FLAG_HAS_SHIRT))
+		return true;
+	else
+		return false;
+#else
+	return false;
+#endif
+}
 
 bool SMS_IsMarioHeadSlideAttack()
 {

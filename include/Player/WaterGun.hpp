@@ -112,7 +112,7 @@ public:
 	f32 getPressureMax();
 	void init();
 	void initInLoadAfter();
-#if defined(VERSION_GMSJ01)
+#if defined(VERSION_GMSJ01) || defined(VERSION_D38J01)
 	bool isEmitting()
 	{
 		if (mCurrentWater == 0)

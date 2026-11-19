@@ -4,6 +4,38 @@
 #include <JSystem/J2D/J2DTextBox.hpp>
 #include <System/MarioGamePad.hpp>
 #include <dolphin/gx.h>
+#ifdef VERSION_D38J01
+#include <JSystem/J2D/J2DPicture.hpp>
+#include <JSystem/JAudio/JAInterface/JAIGlobalParameter.hpp>
+#endif
+
+#ifdef VERSION_D38J01
+TMenuBase::TMenuBase(J2DScreen* screen, TMarioGamePad* game_pad)
+    : JDrama::TViewObj("<TMenuBase>")
+    , mGamePad(game_pad)
+    , mScreen(screen)
+    , mEmitterManager(nullptr)
+    , unkC8(0)
+    , unkCC(false)
+    , unkCD(false)
+    , unkCE(1)
+    , unkCF(0)
+{
+	unk18 = (J2DPicture*)mScreen->search('tx_1');
+	for (int i = 1; i <= 6; ++i) {
+		unk1C[i] = (J2DPicture*)mScreen->search('mk_0' + i);
+		unk38[i] = mScreen->search('ti_0' + i);
+		unk54[i] = unk38[i]->getBounds();
+	}
+	unkCF = unk1C[1]->getAlpha();
+	if (JAIGlobalParameter::getParamSoundOutputMode() == 2) {
+		unk18->setBlack(JUtility::TColor(0x00FF0020));
+		unk18->setWhite(JUtility::TColor(0x00FF00FF));
+		unkCD = true;
+	}
+	unk18->setAlpha(32);
+}
+#endif
 
 void TMenuBase::perform(u32 cue, JDrama::TGraphics* graphics)
 {

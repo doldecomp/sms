@@ -31,6 +31,12 @@
 #define GMSP01_NX(value)
 #endif
 
+#ifdef VERSION_D38J01
+#define D38J01(value) (value)
+#else
+#define D38J01(value)
+#endif
+
 // VERSION_SELECT(default_value, GMSJ01(value), ...) expands to just the
 // selected expression, or the default when no listed version is enabled.
 // Enabled version wrappers form a parenthesized value; disabled ones are empty.

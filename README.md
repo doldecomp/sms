@@ -22,6 +22,7 @@ Supported versions:
 - `GMSE01`: Rev 0 (NTSC)
 - `GMSJ01_01`: Rev 1 (JPN)
 - `GMSP01_NX`: Rev 0 (Mario 3D All Stars (Switch))
+- `D38J01`: Gekkan Nintendo Tentou Demo 2002.9.1 (JPN)
 
 Dependencies
 ============

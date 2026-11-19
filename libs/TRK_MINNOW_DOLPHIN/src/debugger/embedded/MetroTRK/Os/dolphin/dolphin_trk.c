@@ -79,6 +79,9 @@ asm void InitMetroTRK()
 #elif defined(VERSION_GMSP01_NX)
 	lis r1, 0x8041E2F0@h
 	ori r1, r1, 0x8041E2F0@l
+#elif defined(VERSION_D38J01)
+	lis r1, 0x80424748@h
+	ori r1, r1, 0x80424748@l
 #else
 	#error "Unhandled ROM"
 #endif
