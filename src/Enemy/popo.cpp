@@ -99,11 +99,11 @@ TPopoSaveLoadParams::TPopoSaveLoadParams(const char* param_1)
 TPopoManager::TPopoManager(const char* param_1)
     : TSmallEnemyManager(param_1)
 {
-	unk60     = 1;
-	unk64     = nullptr;
-	unk68     = nullptr;
-	gpCurPopo = nullptr;
-	unk5C     = 0;
+	unk60         = 1;
+	unk64         = nullptr;
+	unk68         = nullptr;
+	gpCurPopo     = nullptr;
+	mDeadWaitTime = 0;
 }
 
 void TPopoManager::load(JSUMemoryInputStream& param_1)

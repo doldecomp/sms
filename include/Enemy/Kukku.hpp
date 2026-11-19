@@ -47,13 +47,16 @@ public:
 class TKukku : public TSmallEnemy {
 public:
 	TKukku(const char* name = "クック");
+
+	// NOTE: has to go first for weak func ordering
+	virtual const char** getBasNameTable() const;
+
 	virtual void bind();
 	virtual void perform(u32 cue, JDrama::TGraphics* graphics);
 	virtual BOOL receiveMessage(THitActor* sender, u32 message);
 	virtual void reset();
 	virtual void control();
 	virtual void init(TLiveManager*);
-	virtual const char** getBasNameTable() const;
 
 	void setAfterDeadEffect();
 	void setDeadAnm();

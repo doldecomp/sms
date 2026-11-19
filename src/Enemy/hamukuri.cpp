@@ -2520,11 +2520,11 @@ DEFINE_NERVE(TNerveHamuKuriWallDie, TLiveActor)
 		self->onHitFilter(HIT_FILTER_NO_COLLISION);
 		self->setHitPoints(0);
 	} else {
-		int pTVar7 = self->getManager()->unk5C;
+		int waitTime = self->getManager()->mDeadWaitTime;
 		if (self->checkCurAnmEnd(ANM_TYPE_BCK)) {
 			J3DFrameCtrl* ctrl = self->getMActor()->getFrameCtrl(ANM_TYPE_BCK);
 
-			if (spine->getTime() > pTVar7 + ctrl->getEnd()) {
+			if (spine->getTime() > waitTime + ctrl->getEnd()) {
 				self->onLiveFlag(LIVE_FLAG_DEAD);
 				self->onLiveFlag(LIVE_FLAG_NO_SHADOW);
 				self->onLiveFlag(TSmallEnemy::LIVE_FLAG_NO_ITEM_DROPS);

@@ -90,7 +90,8 @@ public:
 	{
 		return (TSmallEnemyParams*)unk38;
 	}
-	u16 getUnk58() const { return unk58; }
+	// fabricated
+	u16 getPollutionStampId() const { return mPollutionStampId; }
 
 	static int mBlockWaitTime;
 	static f32 mBlockMoveSpeed;
@@ -103,8 +104,8 @@ public:
 
 public:
 	/* 0x54 */ char unk54[0x4];
-	/* 0x58 */ u16 unk58;
-	/* 0x5C */ u32 unk5C;
+	/* 0x58 */ u16 mPollutionStampId;
+	/* 0x5C */ u32 mDeadWaitTime;
 };
 
 class TSmallEnemy : public TSpineEnemy {

@@ -1522,7 +1522,7 @@ DEFINE_NERVE(TNerveSamboHeadHitWall, TLiveActor)
 	if (spine->getTime() == 0)
 		self->setCrashAnm();
 
-	int waitTime = ((TSmallEnemyManager*)self->getManager())->unk5C;
+	int waitTime = ((TSmallEnemyManager*)self->getManager())->mDeadWaitTime;
 	if (self->checkCurAnmEnd(ANM_TYPE_BCK)
 	    && spine->getTime() > waitTime
 	                              + self->getMActor()

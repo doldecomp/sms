@@ -92,8 +92,8 @@ TSmallEnemyParams::TSmallEnemyParams(const char* name)
 
 TSmallEnemyManager::TSmallEnemyManager(const char* name)
     : TEnemyManager(name)
-    , unk58(0)
-    , unk5C(0x3C)
+    , mPollutionStampId(0)
+    , mDeadWaitTime(60)
 {
 }
 
@@ -118,7 +118,8 @@ void TSmallEnemyManager::loadAfter()
 {
 	TEnemyManager::loadAfter();
 	ResTIMG* img = (ResTIMG*)JKRGetResource("/common/timg/down_osen.bti");
-	unk58 = gpPollution->getCounterLayer().registerTexStamp(1, mCapacity, img);
+	mPollutionStampId
+	    = gpPollution->getCounterLayer().registerTexStamp(1, mCapacity, img);
 }
 
 void TSmallEnemyManager::createEnemies(int param_1)
@@ -946,8 +947,9 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 			if (self->checkUnk150(0x20)) {
 				TSmallEnemyManager* man
 				    = (TSmallEnemyManager*)self->getManager();
-				gpPollution->stamp(man->getUnk58(), self->getPosition().x,
-				                   self->getPosition().y, self->getPosition().z,
+				gpPollution->stamp(man->getPollutionStampId(),
+				                   self->getPosition().x, self->getPosition().y,
+				                   self->getPosition().z,
 				                   man->getSaveParam2()->getSLStampRange()
 				                       * 32.0f * self->getUnk158());
 			}
@@ -961,7 +963,7 @@ DEFINE_NERVE(TNerveSmallEnemyDie, TLiveActor)
 		}
 	}
 
-	int uVar8 = ((TSmallEnemyManager*)self->getManager())->unk5C;
+	int uVar8 = ((TSmallEnemyManager*)self->getManager())->mDeadWaitTime;
 	if (self->getGroundPlane()->isWaterSurface())
 		uVar8 = 0;
 

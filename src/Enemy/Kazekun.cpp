@@ -326,7 +326,7 @@ void TKazekunManager::load(JSUMemoryInputStream& param_1)
 	params->mSLDamageHeight.set(40);
 
 	TSmallEnemyManager::load(param_1);
-	unk5C = 0;
+	mDeadWaitTime = 0;
 }
 
 void TKazekunManager::createModelData()

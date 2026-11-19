@@ -138,7 +138,7 @@ void TDebuTelesaManager::load(JSUMemoryInputStream& stream)
 	params->mBodyScaleRange.set(1.0f, 1.0f);
 
 	TSmallEnemyManager::load(stream);
-	unk5C = 0;
+	mDeadWaitTime = 0;
 }
 
 void TDebuTelesaManager::createModelData()

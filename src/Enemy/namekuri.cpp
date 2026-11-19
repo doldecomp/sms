@@ -95,7 +95,7 @@ TNameKuriManager::TNameKuriManager(const char* name)
     : TSmallEnemyManager(name)
     , unk60(0)
 {
-	unk5C         = 0;
+	mDeadWaitTime = 0;
 	gpCurNameKuri = nullptr;
 }
 

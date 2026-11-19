@@ -163,7 +163,7 @@ TPakkunManager::TPakkunManager(const char* name)
 {
 	gpCurPakkun     = nullptr;
 	gpCurPakkunSeed = nullptr;
-	unk5C           = 0;
+	mDeadWaitTime   = 0;
 }
 
 void TPakkunManager::load(JSUMemoryInputStream& stream)
@@ -378,9 +378,9 @@ void TPakkun::createPakkunSmoke(JGeometry::TVec3<f32>& position)
 void TPakkun::seedPollute(JGeometry::TVec3<f32>& position)
 {
 	TSmallEnemyManager* manager = (TSmallEnemyManager*)getManager();
-	gpPollution->stamp(manager->getUnk58(), position.x, position.y, position.z,
-	                   32.0f * manager->getSaveParam2()->getSLStampRange()
-	                       * unk158);
+	gpPollution->stamp(
+	    manager->getPollutionStampId(), position.x, position.y, position.z,
+	    32.0f * manager->getSaveParam2()->getSLStampRange() * unk158);
 }
 
 void TPakkun::onShootLiner(JGeometry::TVec3<f32>& direction)
