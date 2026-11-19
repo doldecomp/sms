@@ -6,6 +6,7 @@
 
 class TAnimalManagerBase;
 
+// fabricated
 struct TRandomIntervalTimer {
 	TRandomIntervalTimer()
 	{
