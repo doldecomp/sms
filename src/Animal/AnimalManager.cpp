@@ -21,6 +21,14 @@ TAnimalManagerBase::TAnimalManagerBase(const char* name)
 	mAnimalSave     = nullptr;
 }
 
+void TAnimalManagerBase::loadSaveParams_(const char* path)
+{
+	mAnimalSave     = new TAnimalSaveIndividual(path);
+	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
+	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();
+	unk3C           = mAnimalSave->mSLViewClipRadius.get();
+}
+
 void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 {
 	SetViewFrustumClipCheckPerspective(gpCamera->mFovy, gpCamera->getAspect(),
@@ -47,10 +55,7 @@ void TAnimalManagerBase::clipEnemies(JDrama::TGraphics* graphics)
 void TMewManager::load(JSUMemoryInputStream& stream)
 {
 	TAnimalManagerBase::load(stream);
-	mAnimalSave     = new TAnimalSaveIndividual("/Animal/mew.prm");
-	mViewClipNear   = mAnimalSave->mSLViewClipNear.get();
-	mViewClipFarPtr = &mAnimalSave->mSLViewClipFar.get();
-	unk3C           = mAnimalSave->mSLViewClipRadius.get();
+	loadSaveParams_("/Animal/mew.prm");
 }
 
 void TMewManager::loadAfter()

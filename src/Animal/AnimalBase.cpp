@@ -65,7 +65,7 @@ void TAnimalBase::init(TLiveManager* manager)
 	unk124->reset();
 	goToShortestNextGraphNode();
 
-	mFrameTimer = (int*)new TAnimalBaseUnk150;
+	mFrameTimer = new TRandomIntervalTimer();
 
 	mMActor->setBckFromIndex(0);
 	mMarchSpeed = 0.0f;
@@ -130,10 +130,11 @@ void TAnimalBase::load(JSUMemoryInputStream& stream)
 
 void TAnimalBase::loadAfter()
 {
-	TNameRef::loadAfter();
-	if (mActorType == ACTOR_TYPE_ANIMAL_MEW)
+	TSpineEnemy::loadAfter();
+	if (mActorType == ACTOR_TYPE_ANIMAL_MEW) {
 		MSoundSESystem::MSRandPlay::registerTrans(MSD_SE_OBJ_KAMOME_SOLO,
 		                                          &mPosition);
+	}
 }
 
 void TAnimalBase::calcRootMatrix() { }
@@ -158,26 +159,27 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 		cue &= ~CUE_MOVE;
 	}
 
-	TLiveManager* manager = mManager;
-	s32 sharedAnmNum
-	    = ((TAnimalManagerBase*)manager)->mAnimalSave->mSLSharedAnmNum.get();
+	TAnimalManagerBase* manager = getManager();
+	s32 sharedAnmNum            = manager->mAnimalSave->mSLSharedAnmNum.get();
 
 	if (cue & CUE_CALC_ANIM) {
 		updateAnmSound();
 		mMActor->frameUpdate();
-		if (!(mLiveFlag & 6))
+		if (!checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))
 			calcRootMatrix();
 		if ((sharedAnmNum != 0 && mInstanceIndex < sharedAnmNum)
-		    || (sharedAnmNum == 0 && !(mLiveFlag & 6)))
+		    || (sharedAnmNum == 0
+		        && !checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT))) {
 			mMActor->calc();
+		}
 		cue &= ~CUE_CALC_ANIM;
 	}
 
 	if (cue & CUE_CALC_VIEW) {
-		if (!(mLiveFlag & 6)) {
+		if (!checkLiveFlag(LIVE_FLAG_HIDDEN | LIVE_FLAG_CLIPPED_OUT)) {
 			Mtx save;
-			Mtx local;
 			Mtx world;
+			Mtx local;
 			MTXCopy(j3dSys.mViewMtx, save);
 			CLBCalcRotateZXYTranslateMatrix(local, mRotation, mPosition);
 			MTXConcat(save, local, world);
@@ -186,23 +188,24 @@ void TAnimalBase::perform(u32 cue, JDrama::TGraphics* graphics)
 			if (sharedAnmNum == 0 || mInstanceIndex < sharedAnmNum) {
 				mMActor->viewCalc();
 			} else {
-				J3DModel* shared = ((TLiveActor*)manager->getObj(
-				                        mInstanceIndex % sharedAnmNum))
-				                       ->getModel();
+				J3DModel* shared
+				    = manager->getObj(mInstanceIndex % sharedAnmNum)
+				          ->getModel();
 				J3DModel* model    = getModel();
 				J3DModelData* data = model->getModelData();
-				int count          = data->getDrawMtxNum();
+				u16 i;
+				int count = data->getDrawMtxNum();
 
-				model->swapAllMtx();
+				model->swapDrawMtx();
+				model->swapNrmMtx();
 
 				Mtx* srcArrays[2];
 				srcArrays[0] = (Mtx*)shared->getAnmMtx(0);
 				srcArrays[1] = (Mtx*)shared->getWeightAnmMtx(0);
 
-				for (u16 i = 0; i < count; ++i) {
-					MTXConcat(world,
-					          srcArrays[data->getDrawMtxFlag(i)]
-					                   [data->getDrawMtxIndex(i)],
+				for (i = 0; i < count; ++i) {
+					Mtx* src = srcArrays[data->getDrawMtxFlag(i)];
+					MTXConcat(world, src[data->getDrawMtxIndex(i)],
 					          model->getDrawMtx(i));
 				}
 
@@ -267,21 +270,21 @@ void TAnimalBase::flyToCurPathNode(f32 a1, f32 a2) { }
 
 void TAnimalBase::execWalk(bool moving)
 {
-	TAnimalSaveIndividual* save = ((TAnimalManagerBase*)mManager)->mAnimalSave;
+	TAnimalSaveIndividual* save = getManager()->mAnimalSave;
 
 	if (moving) {
-		f32 speed = save->mSLMaxMarchSpeed.get() * SMSGetAnmFrameRate();
-		f32 accel = save->mSLMarchAccel.get() * SMSGetAnmFrameRate()
-		            * SMSGetAnmFrameRate();
+		f32 accel = save->getSLMarchAccel()
+		            * (SMSGetAnmFrameRate() * SMSGetAnmFrameRate());
+		f32 speed = save->getSLMaxMarchSpeed() * SMSGetAnmFrameRate();
 		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, speed, accel);
 	} else {
-		f32 decel = save->mSLMarchDecrease.get() * SMSGetAnmFrameRate()
-		            * SMSGetAnmFrameRate();
+		f32 decel = save->getSLMarchDecrease()
+		            * (SMSGetAnmFrameRate() * SMSGetAnmFrameRate());
 		CLBChaseGeneralConstantSpecifySpeed<f32>(&mMarchSpeed, 0.0f, decel);
 	}
 
 	if (mMarchSpeed < 0.001f) {
-		f32 waitSpeed = save->mSLWaitTurnSpeed.get();
+		f32 waitSpeed = save->getSLWaitTurnSpeed();
 		mTurnSpeed    = waitSpeed * SMSGetAnmFrameRate();
 	} else {
 		f32 walkSpeed = save->mSLWalkTurnSpeed.get();

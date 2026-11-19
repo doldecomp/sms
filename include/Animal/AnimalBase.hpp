@@ -2,12 +2,29 @@
 #define ANIMAL_ANIMAL_BASE_HPP
 
 #include <Enemy/Enemy.hpp>
+#include <MarioUtil/RandomUtil.hpp>
 
-struct TAnimalBaseUnk150 {
-	TAnimalBaseUnk150()
+class TAnimalManagerBase;
+
+struct TRandomIntervalTimer {
+	TRandomIntervalTimer()
 	{
 		unk0 = 0;
 		unk4 = 1;
+	}
+
+	void set(int lo, int hi)
+	{
+		unk0 = 0;
+		unk4 = MsRandI(lo, hi);
+	}
+
+	void update()
+	{
+		unk0 += 1;
+		if (unk0 >= unk4) {
+			unk0 = unk4;
+		}
 	}
 
 	int unk0;
@@ -35,7 +52,10 @@ public:
 	void animalWalkIn();
 	void flyToCurPathNode(f32, f32);
 
+	// fabricated
+	TAnimalManagerBase* getManager() { return (TAnimalManagerBase*)mManager; }
+
 public:
-	/* 0x150 */ int* mFrameTimer;
+	/* 0x150 */ TRandomIntervalTimer* mFrameTimer;
 };
 #endif
