@@ -8,21 +8,13 @@
 #include <Camera/cameralib.hpp>
 #include <Strategic/Spine.hpp>
 
-f32 calcDist(const JGeometry::TVec3<f32>& a, const JGeometry::TVec3<f32>& b)
-{
-	JGeometry::TVec3<f32> diff = a;
-	diff.sub(b);
-	return JGeometry::TUtil<f32>::sqrt(diff.squared());
-}
-
 DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 {
-	TAnimalBase* actor          = (TAnimalBase*)spine->getBody();
-	MActor* mActor              = actor->getMActor();
-	TAnimalManagerBase* manager = (TAnimalManagerBase*)actor->getManager();
+	TAnimalBase* actor = (TAnimalBase*)spine->getBody();
+	MActor* mActor     = actor->getMActor();
 
-	TAnimalSaveIndividual* save = manager->mAnimalSave;
-	int count                   = save->mSLSharedAnmNum.get();
+	TAnimalManagerBase* manager = actor->getManager();
+	int count                   = manager->mAnimalSave->mSLSharedAnmNum.get();
 
 	if (count != 0 && actor->getInstanceIndex() >= count) {
 		TLiveActor* other = manager->getObj(actor->getInstanceIndex() % count);
@@ -38,32 +30,20 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 		// not the right type, skip animation setup
 	} else {
 		if (spine->getTime() == 0) {
-			int hi     = CLBPalFrame<int>(500);
-			int lo     = CLBPalFrame<int>(150);
-			int* timer = actor->mFrameTimer;
-			timer[0]   = 0;
-			timer[1]   = MsRandI(lo, hi);
+			actor->mFrameTimer->set(CLBPalFrame<int>(150),
+			                        CLBPalFrame<int>(500));
 		}
 
-		int* timer = actor->mFrameTimer;
-		timer[0]   = timer[0] + 1;
-		if (timer[0] >= timer[1]) {
-			timer[0] = timer[1];
-		}
+		actor->mFrameTimer->update();
 
 		BOOL anmEndsNext = mActor->curAnmEndsNext(ANM_TYPE_BCK, nullptr);
 
 		switch (mActor->getCurAnmIdx(ANM_TYPE_BCK)) {
 		case 1:
 			if (anmEndsNext) {
-				if (!mActor->checkCurBckFromIndex(0))
-					mActor->setBckFromIndex(0);
-
-				int hi     = CLBPalFrame<int>(500);
-				int lo     = CLBPalFrame<int>(150);
-				int* timer = actor->mFrameTimer;
-				timer[0]   = 0;
-				timer[1]   = MsRandI(lo, hi);
+				mActor->setBck(0);
+				actor->mFrameTimer->set(CLBPalFrame<int>(150),
+				                        CLBPalFrame<int>(500));
 			}
 			break;
 		}
@@ -72,39 +52,24 @@ DEFINE_NERVE(TNerveAnimalGraphWander, TLiveActor)
 	actor->execWalk(true);
 
 	if (!actor->mGoalPath.empty()) {
-		const JGeometry::TVec3<f32>& goalPos = actor->mCurrentTarget.getPoint();
-		f32 dist = calcDist(goalPos, actor->mPosition);
-
-		if (dist < 200.0f)
+		if (actor->getCurrentTargetDistance() < 200.0f)
 			actor->switchNextGoalPathNode();
 	} else {
-		f32 dist = actor->getGoalDistance();
 
-		if (dist < 100.0f) {
+		if (actor->getGoalDistance() < 100.0f) {
 			actor->goToRandomNextGraphNode();
 			actor->resetRandomCurPathNode();
 
 			if (actor->mPosition.y <= actor->getCurrentTarget().getPoint().y) {
-				if (!mActor->checkCurBckFromIndex(1))
-					mActor->setBckFromIndex(1);
-
-				int hi     = CLBPalFrame<int>(180);
-				int lo     = CLBPalFrame<int>(60);
-				int* timer = actor->mFrameTimer;
-				timer[0]   = 0;
-				timer[1]   = MsRandI(lo, hi);
+				mActor->setBck(1);
+				actor->mFrameTimer->set(CLBPalFrame<int>(60),
+				                        CLBPalFrame<int>(180));
 			} else {
-				if (!mActor->checkCurBckFromIndex(0))
-					mActor->setBckFromIndex(0);
-
-				int hi     = CLBPalFrame<int>(500);
-				int lo     = CLBPalFrame<int>(150);
-				int* timer = actor->mFrameTimer;
-				timer[0]   = 0;
-				timer[1]   = MsRandI(lo, hi);
+				mActor->setBck(0);
+				actor->mFrameTimer->set(CLBPalFrame<int>(150),
+				                        CLBPalFrame<int>(500));
 			}
 		}
 	}
-
 	return FALSE;
 }
