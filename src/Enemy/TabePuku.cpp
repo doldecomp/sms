@@ -162,9 +162,7 @@ void TTPHitActor::bind()
 	pos.x            = record.mCenter.x;
 	pos.z            = record.mCenter.z;
 
-	JGeometry::TVec3<f32> moved = pos;
-	moved -= mPosition;
-	mVelocity    = moved;
+	mVelocity    = pos - mPosition;
 	mTouchedWall = touchedWall;
 	mPosition    = pos;
 }
@@ -345,7 +343,25 @@ bool TTabePuku::isFindMario(f32 param_1)
 
 bool TTabePuku::doKeepDistance() { return !(isAttacking() || isBiting()); }
 
-bool TTabePuku::isMissMario() const { return false; }
+bool TTabePuku::isMissMario() const
+{
+	if (fabsf(SMS_GetMarioY() - mPosition.y)
+	    > getSaveParams()->getSLGiveUpHeight())
+		return true;
+
+	f32 giveUpLength = getSaveParams()->getSLGiveUpLength();
+	if (getGoalDistance() > giveUpLength)
+		return true;
+
+	JGeometry::TVec3<f32> nearest
+	    = unk124->getGraph()->getNearestPosOnGraphLink(mPosition);
+	nearest.sub(mPosition);
+	f32 radius = ((TTabePukuParams*)getSaveParam())->mTerritoryRange.get();
+	if (radius * radius <= nearest.squared())
+		return true;
+
+	return false;
+}
 
 bool TTabePuku::isTouchedPlane() const { return !isAirborne() || mTouchedWall; }
 
@@ -569,25 +585,7 @@ DEFINE_NERVE(TNerveTabePukuAttack, TLiveActor)
 		self->mMarchSpeed
 		    = ((TTabePukuParams*)self->getSaveParam())->mAttackSpeed.get();
 	}
-	bool lost = fabsf(SMS_GetMarioY() - self->mPosition.y)
-	            > self->getSaveParams()->getSLGiveUpHeight();
-	if (!lost) {
-		f32 giveUpLength = self->getSaveParams()->getSLGiveUpLength();
-		JGeometry::TVec3<f32> toGoal = self->getGoal().getPoint();
-		toGoal -= self->mPosition;
-		if (toGoal.length() > giveUpLength) {
-			lost = true;
-		} else {
-			JGeometry::TVec3<f32> nearest
-			    = self->getTracer()->getGraph()->getNearestPosOnGraphLink(
-			        self->mPosition);
-			nearest.sub(self->mPosition);
-			f32 radius = ((TTabePukuParams*)self->getSaveParam())
-			                 ->mTerritoryRange.get();
-			lost = radius * radius <= nearest.squared();
-		}
-	}
-	if (lost || self->mTouchedWall) {
+	if (self->isMissMario() || self->mTouchedWall) {
 		spine->pushAfterCurrent(&TNerveTabePukuRecoverGraph::theNerve());
 		return true;
 	}
