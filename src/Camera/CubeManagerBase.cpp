@@ -88,6 +88,8 @@ bool TCubeManagerBase::isInCube(const Vec& v, s32 i) const
 	return result;
 }
 
+bool TCubeManagerBase::isInCube(const Vec&, const char*) const { }
+
 void TCubeManagerBase::calcPointInCubeRatio(const Vec& param_1, s32 param_2,
                                             float* param_3, float* param_4,
                                             float* param_5) const
@@ -99,31 +101,31 @@ void TCubeManagerBase::calcPointInCubeRatio(const Vec& param_1, s32 param_2,
 
 bool TCubeManagerArea::isInAreaCube(const Vec& pos) const
 {
-	int found = getInCubeNo(pos);
+	bool result = false;
+	int found   = getInCubeNo(pos);
 
-	if (unk1C == found)
-		return true;
-
-	// Presumably hotel delphino floor transitions?
-	if (SMSGetMarDirector()->getCurrentStage() == 7 && unk1C != -1
-	    && found != -1) {
+	if (unk1C == found) {
+		result = true;
+	} else if (SMSGetMarDirector()->getCurrentStage() == 7 && unk1C != -1
+	           && found != -1) {
+		// Presumably hotel delphino floor transitions?
 		const char* curFloor   = (*unk14)[unk1C].getName();
 		const char* foundFloor = (*unk14)[found].getName();
 
 		if (strcmp(curFloor, "３階") == 0) {
 			if (strcmp(foundFloor, "２階") == 0
 			    || strcmp(foundFloor, "１階") == 0)
-				return true;
+				result = true;
 		} else if (strcmp(curFloor, "２階") == 0) {
 			if (strcmp(foundFloor, "１階") == 0)
-				return true;
+				result = true;
 		}
 	}
 
-	return false;
+	return result;
 }
 
-inline bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
+bool TCubeManagerFast::isInOtherCube(const Vec& pos) const
 {
 	bool result = false;
 	int in      = getInCubeNo(pos);
