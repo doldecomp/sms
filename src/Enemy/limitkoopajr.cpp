@@ -79,10 +79,10 @@ void TLimitKoopaJr::resetLimitKoopaJr()
 	unk158[1] = 0;
 	unk158[1]
 	    = ((TLimitKoopaJrParams*)getSaveParam())->mSLShotDoodlePeriod.get();
-	unk160      = 0.0f;
-	unk164      = 0.0f;
-	unk168      = 0.0f;
-	unk16C      = 1.0f;
+	unk160            = 0.0f;
+	unk164            = 0.0f;
+	unk168            = 0.0f;
+	unk16C            = 1.0f;
 	unk178.mDirection = 0.0f;
 	unk170.mDirection = 0.0f;
 }
@@ -164,7 +164,7 @@ void TLimitKoopaJr::moveRun()
 	      * ((TLimitKoopaJrParams*)getSaveParam())->mSLRoundAngleVelocity.get();
 	TDirectionCalc direction(
 	    unk170.calcTurnDirection(calcTargetDirection(), angleVelocity));
-	f32 turn     = direction.sub(unk170.mDirection);
+	f32 turn          = direction.sub(unk170.mDirection);
 	unk170.mDirection = direction.mDirection;
 	mRoundRadius = ((TLimitKoopaJrParams*)getSaveParam())->mSLRoundRadius.get();
 	JGeometry::TVec3<f32> offset = unk170.calcDirectionVector();
