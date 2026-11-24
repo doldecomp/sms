@@ -89,6 +89,9 @@ public:
 
 	const TBathtubData& getBathtubData() const { return mBathtubData; }
 
+	// fabricated
+	bool getUnk29A() { return unk29A; }
+
 public:
 	/* 0x138 */ MActorAnmData* unk138;
 	/* 0x13C */ f32 unk13C[5];
@@ -123,7 +126,7 @@ public:
 	/* 0x294 */ int unk294;
 	/* 0x298 */ u8 unk298;
 	/* 0x299 */ u8 unk299;
-	/* 0x29A */ u8 unk29A;
+	/* 0x29A */ bool unk29A;
 	/* 0x29C */ MActor* unk29C;
 	/* 0x2A0 */ u32 unk2A0;
 };

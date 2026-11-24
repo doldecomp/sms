@@ -5,6 +5,7 @@
 #include <Strategic/TakeActor.hpp>
 #include <Strategic/LiveManager.hpp>
 #include <Strategic/Nerve.hpp>
+#include <Strategic/Spine.hpp>
 
 // TODO: where should this live?
 struct TLodAnmIndex;
@@ -226,8 +227,17 @@ public:
 			return nullptr;
 		return basTable[idx];
 	}
+
 	// fabricated
 	TSpineBase<TLiveActor>* getSpine() const { return mSpine; }
+
+	// fabricated and fake?
+	// Only way i could make checkNerve make sense in koopajr and this looks
+	// sensible
+	void pushNerve(const TNerveBase<TLiveActor>* nerve)
+	{
+		mSpine->pushNerve(nerve);
+	}
 
 	enum {
 		RIDE_MODE_NONE             = 0,

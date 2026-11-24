@@ -139,6 +139,11 @@ public:
 		return (TBathtubKillerParams*)getSaveParam();
 	}
 
+	// fabricated
+	bool isHitMario() const { return mHitMario == 1; }
+
+	void setKillerType(s8 type) { mKillerType = type; }
+
 public:
 	/* 0x194 */ u8 mKillerType;
 	/* 0x198 */ TBathtubKillerPersonality mPersonality;
@@ -177,6 +182,12 @@ public:
 	void generateMushroom(JGeometry::TVec3<f32>);
 	int countActiveKillers();
 	int countActiveShineKillers();
+
+	// fabricated
+	TBathtubKiller* getDeadEnemy()
+	{
+		return (TBathtubKiller*)TEnemyManager::getDeadEnemy();
+	}
 
 public:
 	/* 0x60 */ s8 mInitialLifeCount;

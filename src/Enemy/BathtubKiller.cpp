@@ -671,7 +671,7 @@ bool TBathtubKiller::isAboided()
 	JGeometry::TVec3<f32> forward;
 	mQuat.getZDir(forward);
 	TDirectionCalc current(forward);
-	f32 angle = current.absDirection(target.unk0);
+	f32 angle = current.absDirection(target.mDirection);
 	if (angle > TDirectionCalc::d2r(getSaveParam2()->aboidAngle.get()))
 		return false;
 	return true;

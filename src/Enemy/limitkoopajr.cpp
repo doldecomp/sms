@@ -83,8 +83,8 @@ void TLimitKoopaJr::resetLimitKoopaJr()
 	unk164      = 0.0f;
 	unk168      = 0.0f;
 	unk16C      = 1.0f;
-	unk178.unk0 = 0.0f;
-	unk170.unk0 = 0.0f;
+	unk178.mDirection = 0.0f;
+	unk170.mDirection = 0.0f;
 }
 
 void TLimitKoopaJr::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -109,7 +109,7 @@ void TLimitKoopaJr::bind() { }
 void TLimitKoopaJr::calcRootMatrix()
 {
 	JGeometry::TQuat4<f32> quat;
-	quat.setEulerY(unk178.unk0);
+	quat.setEulerY(unk178.mDirection);
 	TPosition3f matrix;
 	matrix.setQT(quat, mPosition);
 	getModel()->setBaseTRMtx(matrix);
@@ -164,8 +164,8 @@ void TLimitKoopaJr::moveRun()
 	      * ((TLimitKoopaJrParams*)getSaveParam())->mSLRoundAngleVelocity.get();
 	TDirectionCalc direction(
 	    unk170.calcTurnDirection(calcTargetDirection(), angleVelocity));
-	f32 turn     = direction.sub(unk170.unk0);
-	unk170.unk0  = direction.unk0;
+	f32 turn     = direction.sub(unk170.mDirection);
+	unk170.mDirection = direction.mDirection;
 	mRoundRadius = ((TLimitKoopaJrParams*)getSaveParam())->mSLRoundRadius.get();
 	JGeometry::TVec3<f32> offset = unk170.calcDirectionVector();
 	offset.scale(mRoundRadius);
@@ -206,7 +206,7 @@ f32 TLimitKoopaJr::calcTargetDirection()
 	offset.sub(mBathtub->mPosition, SMS_GetMarioPos());
 	offset.y = 0.0f;
 	direction.makeDirection(offset);
-	return direction.unk0;
+	return direction.mDirection;
 }
 
 void TLimitKoopaJr::makeDirection(JGeometry::TVec3<f32> param_1)
@@ -215,7 +215,8 @@ void TLimitKoopaJr::makeDirection(JGeometry::TVec3<f32> param_1)
 	TDirectionCalc direction(param_1);
 	f32 rotationSpeed = TDirectionCalc::d2r(
 	    ((TLimitKoopaJrParams*)getSaveParam())->mSLRotationSpeed.get());
-	unk178.unk0 = unk178.calcTurnDirection(direction.unk0, rotationSpeed);
+	unk178.mDirection
+	    = unk178.calcTurnDirection(direction.mDirection, rotationSpeed);
 }
 
 DEFINE_NERVE(TNerveLimitKoopaJrRun, TLiveActor)
