@@ -388,11 +388,11 @@ void TLimitKoopa::reset()
 void TLimitKoopa::resetLimitKoopa()
 {
 	mSpine->reset();
-	unk150[0]   = 0;
-	unk150[1]   = 0;
-	unk150[2]   = 0;
-	unk168      = true;
-	unk16C.unk0 = 0.0f;
+	unk150[0]         = 0;
+	unk150[1]         = 0;
+	unk150[2]         = 0;
+	unk168            = true;
+	unk16C.mDirection = 0.0f;
 }
 
 void TLimitKoopa::perform(u32 cue, JDrama::TGraphics* graphics)
@@ -482,7 +482,7 @@ f32 TLimitKoopa::calcTargetDirection()
 	direction.sub(SMS_GetMarioPos(), mPosition);
 	direction.y = 0.0f;
 	target.makeDirection(direction);
-	return target.getUnk0();
+	return target.mDirection;
 }
 
 // Unused: GMSJ01/D38J01 mario.MAP, 0x5C bytes.
@@ -490,7 +490,7 @@ f32 TLimitKoopa::calcTargetDirection()
 void TLimitKoopa::makeDirection(f32 direction)
 {
 	f32 rotationSpeed = TDirectionCalc::d2r(getParam()->getRotationSpeed());
-	unk16C.unk0       = unk16C.calcTurnDirection(direction, rotationSpeed);
+	unk16C.mDirection = unk16C.calcTurnDirection(direction, rotationSpeed);
 }
 
 f32 TLimitKoopa::getGravityY() const
@@ -507,7 +507,7 @@ void TLimitKoopa::calcRootMatrix()
 {
 	f32 scale = getParam()->getBodyScale();
 	mScaling.set(scale, scale, scale);
-	mRotation.y = TDirectionCalc::r2d(unk16C.getUnk0());
+	mRotation.y = TDirectionCalc::r2d(unk16C.mDirection);
 	TSpineEnemy::calcRootMatrix();
 }
 
