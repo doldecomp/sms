@@ -11,6 +11,9 @@ public:
 
 	virtual void clipEnemies(JDrama::TGraphics*);
 
+	// Unused 128B in map
+	void loadSaveParams_(const char*);
+
 public:
 	/* 0x54 */ f32 mViewClipNear;
 	/* 0x58 */ const f32* mViewClipFarPtr;
