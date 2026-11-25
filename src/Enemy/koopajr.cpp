@@ -970,7 +970,8 @@ void TKoopaJrSubmarine::makeRelativeAngle()
 		target = marioDirection.mDirection;
 
 	unk164.mDirection = unk164.calcTurnDirection(
-	    target, DEG_TO_RAD(getParam()->mSLRoundAngleVelocity.get()));
+	    target,
+	    (M_PI * (1.0f / 180.0f)) * getParam()->mSLRoundAngleVelocity.get());
 }
 
 void TKoopaJrSubmarine::makeRoundVelocity()
