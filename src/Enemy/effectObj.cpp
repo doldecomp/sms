@@ -156,7 +156,7 @@ void TEffectObjBase::moveObject()
 		mState = STATE_INACTIVE;
 
 	for (int i = 0; i < mColCount; ++i)
-		if (getCollision(i)->isActorType(ACTOR_TYPE_MARIO))
+		if (mCollisions[i]->isActorType(ACTOR_TYPE_MARIO))
 			SMS_SendMessageToMario(this, HIT_MESSAGE_BURN);
 }
 

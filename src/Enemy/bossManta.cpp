@@ -366,9 +366,8 @@ void TBossManta::startWalkAnim()
 	getMActor()->initBckNormalMotionBlend();
 	getMActor()->setBckFromIndex(3);
 
-	J3DAnmTransform* oldAnm
-	    = getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(4);
-	getMActor()->setBckOldMotionBlendAnmPtr(oldAnm);
+	getMActor()->setBckOldMotionBlendAnmPtr(
+	    getActorKeeper()->getMActorAnmData()->mBckAnms->getAnmPtr(4));
 	getMActor()->setBckMotionBlendRatio(0.5f);
 
 	getMActor()->setFrameRate(TBossManta::sFrameRate[mGeneration]

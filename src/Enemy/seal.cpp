@@ -91,8 +91,8 @@ void TSeal::calcRootMatrix()
 void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) && (cue & CUE_MOVE)) {
-		for (int i = 0; i < getColNum(); ++i) {
-			THitActor* actor = getCollision(i);
+		for (int i = 0; i < mColCount; ++i) {
+			THitActor* actor = mCollisions[i];
 			if (actor->isActorType(ACTOR_TYPE_MARIO))
 				actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		}

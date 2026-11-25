@@ -389,12 +389,8 @@ BOOL TBWPicket::receiveMessage(THitActor* sender, u32 message)
 			return TRUE;
 		}
 		if (message == HIT_MESSAGE_TAKE) {
-			TBossWanwan* owner = mOwner;
-
-			owner->releasePicket();
-			owner->unk194       = 0;
-			owner->mIsNearMario = 0;
-			mHolder             = (TTakeActor*)sender;
+			mOwner->releasePicket();
+			mHolder = (TTakeActor*)sender;
 			return TRUE;
 		}
 		if (message == HIT_MESSAGE_THROWN || message == HIT_MESSAGE_DETACH) {
@@ -1021,7 +1017,7 @@ void TBossWanwan::takeBath()
 
 void TBossWanwan::releasePicket()
 {
-	if (!isMarioInSight()) {
+	if (isMarioInSight()) {
 		JPABaseEmitter* emit = gpMarioParticleManager->emit(
 		    BWAN_JPA_JUMP_SMOKE, &mPicket->mPosition, 0, nullptr);
 		if (emit != nullptr) {
@@ -1029,14 +1025,15 @@ void TBossWanwan::releasePicket()
 			emit->setGlobalScale(scale);
 		}
 	}
+	unk194       = 0;
+	mIsNearMario = 0;
 }
 
 void TBossWanwan::changeBck(int index)
 {
 	setBckFromIndex(index);
-	J3DFrameCtrl* ctrl = getMActor()->getFrameCtrl(0);
-	unk178             = 10.0f / ctrl->getEnd();
-	const char* path   = bwanwan_bastable[index];
+	unk178 = 10.0f / getMActor()->getFrameCtrl(ANM_TYPE_BCK)->getEnd();
+	const char* path = bwanwan_bastable[index];
 	setAnmSound(path);
 }
 
@@ -1586,20 +1583,10 @@ DEFINE_NERVE(TNerveBWBark, TLiveActor)
 		boss->unk168 = 0.0f;
 
 		if (!boss->unk194) {
-			if (boss->isMarioInSight()) {
-				JPABaseEmitter* emit = gpMarioParticleManager->emit(
-				    BWAN_JPA_JUMP_SMOKE, &boss->mPicket->mPosition, 0, 0);
-				if (emit != nullptr) {
-					JGeometry::TVec3<f32> scale(0.3f, 0.5f, 0.3f);
-					emit->setGlobalScale(scale);
-				}
-
-				boss->unk194       = 0;
-				boss->mIsNearMario = 0;
-				SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
-				                                &boss->mPicket->mPosition, 0,
-				                                nullptr, 0, 4);
-			}
+			boss->releasePicket();
+			SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE1,
+			                                &boss->mPicket->mPosition, 0,
+			                                nullptr, 0, 4);
 		}
 	}
 
@@ -1720,10 +1707,9 @@ DEFINE_NERVE(TNerveBWJumpToBath, TLiveActor)
 
 		if (effectBase != nullptr) {
 			JGeometry::TVec3<f32> scale(5.0f, 5.0f, 5.0f);
-			JGeometry::TVec3<f32> effectPos;
-			effectPos.x = boss->mPosition.x;
-			effectPos.y = (boss->mPosition.y + 500.0f) - 30.0f;
-			effectPos.z = boss->mPosition.z;
+			JGeometry::TVec3<f32> effectPos(
+			    boss->mPosition.x, (boss->mPosition.y + 500.0f) - 30.0f,
+			    boss->mPosition.z);
 			effectBase->generate(effectPos, scale);
 			boss->mHasSpawnedWater = true;
 		}
@@ -1841,9 +1827,6 @@ DEFINE_NERVE(TNerveBWShake, TLiveActor)
 
 	if (actor->curAnmEndsNext(ANM_TYPE_BCK, nullptr)) {
 		boss->releasePicket();
-
-		boss->unk194       = 0;
-		boss->mIsNearMario = 0;
 		SMSGetMSound()->startSoundActor(MSD_SE_BS_WANWAN_ESCAPE2,
 		                                &boss->mPicket->mPosition, 0, nullptr,
 		                                0, 4);

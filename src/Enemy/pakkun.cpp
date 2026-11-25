@@ -731,8 +731,7 @@ void TStayPakkun::setBehavior()
 	if (isBckAnm(PAKKUN_ANM_UNK4))
 		--mHitPoints;
 
-	u8 maxHitPoints = getMaxHitPoints();
-	unk1B2.a        = mHitPoints * 255 / maxHitPoints;
+	unk1B2.a = mHitPoints * 255 / getMaxHitPoints();
 	unk1B8
 	    = 1.0f
 	      + TPakkunManager::mRootExplosionScaleRate * (255 - unk1B2.a) / 255.0f;
