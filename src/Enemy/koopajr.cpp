@@ -474,10 +474,7 @@ f32 TKoopaJr::getBathtubY()
 	return matrix->at(1, 3);
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrWait)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrWait, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrWait, TLiveActor)
 {
 	TKoopaJr* self = (TKoopaJr*)spine->getBody();
 	if (spine->getTime() == 0) {
@@ -501,10 +498,7 @@ DEFINE_NERVE(TNerveKoopaJrDamage, TLiveActor)
 	return FALSE;
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrDemo)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrDemo, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrDemo, TLiveActor)
 {
 	TKoopaJr* self = (TKoopaJr*)spine->getBody();
 	if (spine->getTime() == 0)
@@ -512,10 +506,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaJrDemo, TLiveActor)
 	return FALSE;
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrLaunch)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrLaunch, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrLaunch, TLiveActor)
 {
 	TKoopaJr* self = (TKoopaJr*)spine->getBody();
 	if (spine->getTime() == 0)
@@ -525,10 +516,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaJrLaunch, TLiveActor)
 	return FALSE;
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrYahoo)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrYahoo, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrYahoo, TLiveActor)
 {
 	TKoopaJr* self = (TKoopaJr*)spine->getBody();
 	if (spine->getTime() == 0)
@@ -686,12 +674,12 @@ void TKoopaJrSubmarine::moveSwing()
 {
 	if (unk18C) {
 		unk18C = 0;
-		unk190 += 0.06283186f;
+		unk190 += (M_PI * 2.0f) / 100.0f;
 		f32 amplitude = unk190;
 		f32 limit1    = getParam()->mSLSwingAmplitudeMax.get();
 		unk190        = limit1 >= amplitude ? amplitude : limit1;
 	}
-	unk190 -= 0.009424779f;
+	unk190 -= (M_PI / 100.0f) * 0.3f;
 	f32 amplitude = unk190;
 	f32 limit2    = getParam()->mSLSwingAmplitudeMin.get();
 	unk190        = limit2 >= amplitude ? limit2 : amplitude;
@@ -703,19 +691,19 @@ void TKoopaJrSubmarine::moveSwing()
 
 	for (int i = 0; i < ARRAY_COUNT(unk150); ++i) {
 		if (unk150[i] > 0) {
-			unk198 += 0.03141593f;
+			unk198 += M_PI / 100.0f;
 			f32 amplitude = unk198;
 			f32 limit3    = getParam()->mSLWaveAmplitudeMaxLaunch.get();
 			unk198        = limit3 >= amplitude ? amplitude : limit3;
 		}
 	}
 	if (speed > 0.5f) {
-		unk198 += 0.03141593f;
+		unk198 += M_PI / 100.0f;
 		f32 amplitude = unk198;
 		f32 limit4    = getParam()->mSLWaveAmplitudeMax.get();
 		unk198        = limit4 >= amplitude ? amplitude : limit4;
 	}
-	unk198 -= 0.018849557f;
+	unk198 -= ((M_PI * 2.0f) / 100.0f) * 0.3f;
 	amplitude  = unk198;
 	f32 limit5 = getParam()->mSLWaveAmplitudeMin.get();
 	unk198     = limit5 >= amplitude ? limit5 : amplitude;
@@ -768,7 +756,8 @@ void TKoopaJrSubmarine::calcRootMatrix()
 BOOL TKoopaJrSubmarine::receiveMessage(THitActor* sender, u32 message)
 {
 	if (message == HIT_MESSAGE_SPRAYED_BY_WATER) {
-		gpMarioParticleManager->emit(0xE7, &sender->mPosition, 0, nullptr);
+		gpMarioParticleManager->emit(PARTICLE_MS_ENM_WATHIT, &sender->mPosition,
+		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK, &mPosition, 0,
 		                              0.0f, 0, 0, 4);
 		damageKoopaJrSubmarine();
@@ -981,7 +970,7 @@ void TKoopaJrSubmarine::makeRelativeAngle()
 		target = marioDirection.mDirection;
 
 	unk164.mDirection = unk164.calcTurnDirection(
-	    target, 0.017453294f * getParam()->mSLRoundAngleVelocity.get());
+	    target, DEG_TO_RAD(getParam()->mSLRoundAngleVelocity.get()));
 }
 
 void TKoopaJrSubmarine::makeRoundVelocity()
@@ -1049,10 +1038,7 @@ void TKoopaJrSubmarine::checkNerve()
 	}
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrSubmarineWait)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrSubmarineWait, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrSubmarineWait, TLiveActor)
 {
 	TKoopaJrSubmarine* self = (TKoopaJrSubmarine*)spine->getBody();
 	if (spine->getTime() == 0) {
@@ -1062,10 +1048,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaJrSubmarineWait, TLiveActor)
 	return FALSE;
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrSubmarineCannonOpenClose)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrSubmarineCannonOpenClose, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrSubmarineCannonOpenClose, TLiveActor)
 {
 	TKoopaJrSubmarine* self = (TKoopaJrSubmarine*)spine->getBody();
 	if (spine->getTime() == 0) {
@@ -1079,10 +1062,7 @@ DEFINE_NERVE_EXECUTE(TNerveKoopaJrSubmarineCannonOpenClose, TLiveActor)
 	return FALSE;
 }
 
-// UNUSED - 0x64 size from map
-DEFINE_NERVE_INSTANCE(TNerveKoopaJrSubmarineLaunchKiller)
-
-DEFINE_NERVE_EXECUTE(TNerveKoopaJrSubmarineLaunchKiller, TLiveActor)
+DEFINE_NERVE(TNerveKoopaJrSubmarineLaunchKiller, TLiveActor)
 {
 	TKoopaJrSubmarine* self = (TKoopaJrSubmarine*)spine->getBody();
 	if (self->unk180 == self->unk184) {
