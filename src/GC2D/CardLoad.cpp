@@ -1222,9 +1222,10 @@ bool TCardLoad::titleDraw()
 			bool any = true;
 			for (int i = 0; i < CARD_LOAD_GAME_LOGO_NUM; ++i) {
 				any &= mGameLogoLetters[i]->update();
-				JUtility::TColor col
-				    = ((J2DPicture*)mGameLogoLetters[i]->getPane())->getBlack();
-				u16 r = col.r;
+				// fake? Matches for now
+				u16 r = ((J2DPicture*)mGameLogoLetters[i]->getPane())
+				            ->getBlack()
+				            .r;
 				r += 7;
 				if (r > 255)
 					r = 255;

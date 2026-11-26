@@ -62,8 +62,8 @@ public:
 	/// Initiates a pane's alpha animation.
 	void setPaneAlpha(s32 time, s16 target_alpha, s16 initial_alpha)
 	{
-		s16 lower = initial_alpha < 0 ? s16(0) : initial_alpha;
-		s16 alpha = lower > 255 ? s16(255) : lower;
+		s16 alpha = initial_alpha < 0 ? s16(0) : initial_alpha;
+		alpha     = alpha > 255 ? s16(255) : alpha;
 		mPane->setAlpha(alpha);
 
 		mCurrentAlpha     = initial_alpha;
