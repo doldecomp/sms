@@ -1328,6 +1328,14 @@ public:
 		return mPrevPosition;
 	}
 
+	// fabricated
+	JGeometry::TVec3<f32> getToroccoOffset() const
+	{
+		JGeometry::TVec3<f32> offset = mPosition;
+		offset.sub(mToroccoPos);
+		return offset;
+	}
+
 	// Fabricated
 	const JGeometry::TVec3<f32>& getFloorPosition() const
 	{

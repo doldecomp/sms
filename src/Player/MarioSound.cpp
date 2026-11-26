@@ -678,7 +678,7 @@ void TMario::soundHitBound() { }
 
 void TMario::soundTorocco()
 {
-	f32 len = (mPosition - mToroccoPos).length();
+	f32 len = getToroccoOffset().length();
 	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_JET_COASTER, &mPosition,
 	                                        nullptr, len, 0, 0, nullptr, 0, 4);
 }
