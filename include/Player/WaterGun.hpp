@@ -175,7 +175,7 @@ public:
 		return mNozzleList[nozzle_index];
 	}
 
-	// Fabricated
+	// Fabricated and probably fake
 	bool hasWater() const { return mCurrentWater > 0; }
 
 	// Fabricated

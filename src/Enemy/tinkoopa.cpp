@@ -859,9 +859,9 @@ void TTinKoopa::launchKiller(int dir)
 
 	killer->reset();
 
-	int joint
-	    = TTinKoopa_getJointIndex(dir == 1 ? mQueuedKillersLaunchedNum + 11
-	                                       : 14 - mQueuedKillersLaunchedNum);
+	int slot  = dir == 1 ? mQueuedKillersLaunchedNum + 11
+	                     : 14 - mQueuedKillersLaunchedNum;
+	int joint = TTinKoopa_getJointIndex(slot);
 
 	getJointTransByIndex(joint, &killer->mPosition);
 	killer->mPathDir = dir;

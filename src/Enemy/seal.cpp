@@ -64,13 +64,13 @@ BOOL TSeal::receiveMessage(THitActor* sender, u32 message)
 		                             0, nullptr);
 		SMSGetMSound()->startSoundSet(MSD_SE_EN_COMMON_W_HIT_OK,
 		                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
-		if (!gpModelWaterManager->getWaterType()
-		    == TModelWaterManager::WATER_TYPE_NORMAL) {
+		if (gpModelWaterManager->getWaterType()
+		    != TModelWaterManager::WATER_TYPE_NORMAL) {
 			SMSGetMSound()->startSoundSet(MSD_SE_ERASE_SCRAWL,
 			                              &sender->mPosition, 0, 0.0f, 0, 0, 4);
 			if (!mSpine->isNerve(&TNerveSealDie::theNerve())) {
 				mMapCollisionManager->removeActiveCollision();
-				getSpine()->pushNerve(&TNerveSealDie::theNerve());
+				pushNerve(&TNerveSealDie::theNerve());
 			}
 			unk150++;
 			return true;
@@ -91,8 +91,8 @@ void TSeal::calcRootMatrix()
 void TSeal::perform(u32 cue, JDrama::TGraphics* graphics)
 {
 	if (!checkLiveFlag(LIVE_FLAG_DEAD | LIVE_FLAG_HIDDEN) && (cue & CUE_MOVE)) {
-		for (int i = 0; i < getColNum(); ++i) {
-			THitActor* actor = getCollision(i);
+		for (int i = 0; i < mColCount; ++i) {
+			THitActor* actor = mCollisions[i];
 			if (actor->isActorType(ACTOR_TYPE_MARIO))
 				actor->receiveMessage(this, HIT_MESSAGE_ATTACK);
 		}

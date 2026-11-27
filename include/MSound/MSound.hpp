@@ -3,6 +3,8 @@
 
 #include <dolphin/types.h>
 #include <dolphin/mtx.h>
+#include <dolphin/os.h>
+#include <macros.h>
 
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JAudio/JASystem/JASTrackMgr.hpp>
@@ -231,6 +233,10 @@ extern JAIBasic* MSGBasic;
 extern MSound* gpMSound;
 
 // real
-inline MSound* SMSGetMSound() { return gpMSound; }
+inline MSound* SMSGetMSound()
+{
+	ASSERTLINE(__LINE__, gpMSound != NULL);
+	return gpMSound;
+}
 
 #endif // MSOUND_HPP

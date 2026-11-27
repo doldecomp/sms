@@ -82,9 +82,14 @@ void TMapObjFlag::update()
 	unk88 += mFlutterSpeed;
 	if (unk88 > 360.0f)
 		unk88 -= 360.0f;
-	if (mScaling.y > 3.0f && mScaling.z > 3.0f)
+	if (mScaling.y > 3.0f && mScaling.z > 3.0f) {
+#ifndef VERSION_GMSJ01
+		if (SMSGetMarDirector()->getCurrentStage() == 3)
+			return;
+#endif
 		SMSGetMSound()->startSoundActor(MSD_SE_OBJ_FLAG, &mPosition, 0, nullptr,
 		                                0, 4);
+	}
 }
 
 void TMapObjFlag::init(const char* param_1)

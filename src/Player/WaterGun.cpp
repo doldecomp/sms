@@ -504,7 +504,7 @@ void TNozzleTrigger::init()
 
 void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 {
-	if (!mFludd->hasWater()) {
+	if (mFludd->getCurrentWater() <= 0) {
 		mSprayState     = TNozzleTrigger::SPRAY_STATE_INACTIVE;
 		mSprayTimer     = 0;
 		mInsidePressure = 0.0f;
@@ -531,7 +531,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		if (mSoundId != 0xffffffff) {
 			u32 soundId = unk378 < 1.0f ? MSD_SE_PO_WATER_LOW_TRG
 			                            : MSD_SE_PO_WATER_HI_TRG;
-			SMSGetMSound()->startSoundActor(soundId, mFludd->getEmitPos(0), 0,
+			SMSGetMSound()->startSoundActor(soundId, &mFludd->getEmitPos(0), 0,
 			                                nullptr, 0, 4);
 		}
 		mSprayTimer = mTriggerTime.get();
@@ -549,7 +549,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		mInsidePressure += 150.0f * controllerWork.mAnalogR;
 		if (!mRumbleOnCharge
 		    && mSprayState == TNozzleTrigger::SPRAY_STATE_INACTIVE) {
-			if (gpMarDirector->getMoveTickCount()
+			if (SMSGetMarDirector()->getMoveTickCount()
 			        % (int)mFludd->getMario()->getUnk568()
 			    == 0)
 				SMSRumbleMgr->start(20, mFludd->getMario()->getUnk564(),
@@ -559,7 +559,7 @@ void TNozzleTrigger::movement(const TMarioControllerWork& controllerWork)
 		    && mSprayState == TNozzleTrigger::SPRAY_STATE_INACTIVE
 		    && controllerWork.mAnalogR > 0.0f) {
 			SMSGetMSound()->startSoundActor(MSD_SE_SY_NEWP_AIR_TAME,
-			                                mFludd->getEmitPos(0), 0, nullptr,
+			                                &mFludd->getEmitPos(0), 0, nullptr,
 			                                0, 4);
 		}
 	}

@@ -267,7 +267,7 @@ void TBiancoMiniWindmill::calc()
 	MTXConcat(getModel()->getAnmMtx(0), mtxP, mtxP);
 	MtxPtr srcMtx = getModel()->getAnmMtx(1);
 	for (int i = 0; i < 3; ++i)
-		mtx.ref(i, 3) = srcMtx[i][3];
+		mtxP[i][3] = srcMtx[i][3];
 	MTXCopy(mtxP, getModel()->getAnmMtx(1));
 	SMSGetMSound()->startSoundActorWithInfo(MSD_SE_OBJ_BI_COINMILL, &mPosition,
 	                                        nullptr, fabsf(unk154), 0, 0,

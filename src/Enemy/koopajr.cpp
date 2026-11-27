@@ -854,8 +854,8 @@ void TKoopaJrSubmarine::launchKiller()
 		return;
 	killer->setKillerType(unk178[unk180]);
 	killer->reset();
-	index++;
-	MtxPtr matrix = getModel()->getAnmMtx(TKoopaJr_getJointIndex(index));
+	int joint     = TKoopaJr_getJointIndex(index + 1);
+	MtxPtr matrix = getModel()->getAnmMtx(joint);
 	killer->mPosition.set(matrix[0][3], matrix[1][3], matrix[2][3]);
 	JGeometry::TVec3<f32> direction;
 	direction.x = matrix[0][2];

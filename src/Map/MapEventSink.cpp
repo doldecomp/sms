@@ -31,9 +31,10 @@ TJointObj* TMapEventSink::getBuilding(int i) const
 	return mRootMapJointModel->getChild(0)->getChild(i + mFirstBuildingIdx);
 }
 
-bool TMapEventSink::isBuried(int i) const
+bool TMapEventSink::isBuried(int building_id) const
 {
-	return !mIsBuildingRecovered[i - mFirstBuildingIdx];
+	int index = building_id - mFirstBuildingIdx;
+	return !mIsBuildingRecovered[index];
 }
 
 f32 TMapEventSink::getSinkOffsetY() const
@@ -97,13 +98,13 @@ bool TMapEventSink::control()
 		rising();
 
 	const J3DTransformInfo& info = mRaisingJoint->getTransformInfo();
-	mRisingBuildingCollisions[mRaisingBuildingIdx]->moveTrans(
-	    JGeometry::TVec3<f32>(info.mTranslate.x, info.mTranslate.y,
-	                          info.mTranslate.z));
+	// probably fake, different Vec ctor? possibly timer object
+	JGeometry::TVec3<f32> trans(info.mTranslate.x, info.mTranslate.y,
+	                            info.mTranslate.z);
+	mRisingBuildingCollisions[mRaisingBuildingIdx]->moveTrans(trans);
 
 	if (mDemoTimer > mRiseEndDelay
-	    && (SMSGetMarDirector()->getCurrentStage() != 2
-	        || mIsBuildingRecovered[1 - mFirstBuildingIdx] == 0
+	    && (SMSGetMarDirector()->getCurrentStage() != 2 || isBuried(1)
 	        || mRaisingBuildingIdx != 1)) {
 		SMSRumbleMgr->start(0x13, (f32*)nullptr);
 		SMSGetMSound()->startSoundActor(

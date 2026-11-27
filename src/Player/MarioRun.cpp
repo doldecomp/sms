@@ -1249,15 +1249,13 @@ BOOL TMario::oilRun()
 		}
 	}
 
-	f32 tmp = mDirtyParams.mPolSizeRun.get();
-	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+	                     mDirtyParams.mPolSizeRun.get());
 
-	{
-		f32 rotSp = mDirtyParams.mSlipRotate.get();
-		s16 diff  = mIntendedYaw - mFaceAngle.y;
-		mFaceAngle.y
-		    = mIntendedYaw - IConverge(diff, 0, (s16)rotSp, (s16)rotSp);
-	}
+	// probably still fake, f32 cast makes no sense
+	s16 rotSp    = (f32)mDirtyParams.mSlipRotate.get();
+	s16 diff     = mIntendedYaw - mFaceAngle.y;
+	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 
 	mVel.x
 	    += mIntendedMag * JMASSin(mFaceAngle.y) * mDirtyParams.mSlipRunSp.get();
@@ -1305,12 +1303,10 @@ BOOL TMario::oilSlip()
 		return changePlayerJumping(MARIO_STATUS_JUMP, 0);
 	}
 
-	{
-		f32 rotSp = mDirtyParams.mSlipCatchRotate.get();
-		s16 diff  = mIntendedYaw - mFaceAngle.y;
-		mFaceAngle.y
-		    = mIntendedYaw - IConverge(diff, 0, (s16)rotSp, (s16)rotSp);
-	}
+	// probably still fake, f32 cast makes no sense
+	s16 rotSp    = (f32)mDirtyParams.mSlipCatchRotate.get();
+	s16 diff     = mIntendedYaw - mFaceAngle.y;
+	mFaceAngle.y = mIntendedYaw - IConverge(diff, 0, rotSp, rotSp);
 
 	mDirtyTimer--;
 	if (mDirtyTimer <= 0) {
@@ -1319,13 +1315,14 @@ BOOL TMario::oilSlip()
 		changePlayerStatus(MARIO_STATUS_CATCH, 0, false);
 	}
 
-	f32 tmp = mDirtyParams.mPolSizeSlip.get();
-	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z, tmp);
+	gpPollution->pollute(mPosition.x, mPosition.y, mPosition.z,
+	                     mDirtyParams.mPolSizeSlip.get());
 	SMSGetMSound()->startSoundActor(MSD_SE_MA_SLIP_POLLUT_CP, &mPosition, 0,
 	                                nullptr, 0, 4);
 
-	mForwardVel += mIntendedMag * JMASCos((s16)(mFaceAngle.y - mIntendedYaw))
-	               * mDirtyParams.mSlipCatchSp.get();
+	s16 angleDiff = mFaceAngle.y - mIntendedYaw;
+	mForwardVel
+	    += mIntendedMag * JMASCos(angleDiff) * mDirtyParams.mSlipCatchSp.get();
 	mForwardVel *= mOilBrake;
 	setPlayerVelocity(mForwardVel);
 
