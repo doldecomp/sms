@@ -29,7 +29,7 @@ BOOL TMario::considerRotateStart()
 			return changePlayerStatus(MARIO_STATUS_ROTATE_R, 0, false);
 	}
 
-	return 0;
+	return FALSE;
 }
 
 static int unknown_inline_10(TMario* mario)
@@ -648,7 +648,7 @@ BOOL TMario::running()
 			return changePlayerStatus(0xC400209, 0, false);
 		}
 		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y <= 0.17364818f) {
+		    && mGroundPlane->mNormal.y >= 0.17364818f) {
 			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
 		}
 		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
@@ -673,7 +673,7 @@ BOOL TMario::running()
 			return changePlayerStatus(0xC400209, 0, false);
 		}
 		if (mStatusTimer > 0xF0 && mForwardVel >= 16.0f
-		    && mGroundPlane->mNormal.y <= 0.17364818f) {
+		    && mGroundPlane->mNormal.y >= 0.17364818f) {
 			return changePlayerStatus(MARIO_STATUS_BRAKE, 0, false);
 		}
 		return changePlayerStatus(MARIO_STATUS_WALK_END, 0, false);
@@ -1185,18 +1185,17 @@ BOOL TMario::slipBack()
 
 BOOL TMario::catching()
 {
-	// TODO: removeme
-	(void)0;
-
 	if (!(mInput & 0x8) && (mInput & 0x2)) {
-		if (mForwardVel > mDeParams.mClashSpeed.get())
+		if (mForwardVel > mJumpParams.mRotBroadEnableV.get()) {
 			return changePlayerStatus(MARIO_STATUS_ROTATE_BROAD_JUMP, 0, false);
-
-		return changePlayerStatus(MARIO_STATUS_CATCH_STOP, 0, false);
+		} else {
+			return changePlayerStatus(MARIO_STATUS_CATCH_STOP, 0, false);
+		}
 	}
 
-	if (checkFlag(MARIO_FLAG_RECENTLY_LEFT_WATER))
+	if (checkFlag(MARIO_FLAG_RECENTLY_LEFT_WATER)) {
 		mStatusState = 1;
+	}
 
 	if (doSliding(getSlideStopCatch())) {
 		setPlayerVelocity(0.0f);
@@ -1211,7 +1210,7 @@ BOOL TMario::catching()
 	if (getMotionFrameCtrl().getFrame() > 50.0f)
 		getMotionFrameCtrl().setFrame(50.0f);
 
-	return 0;
+	return FALSE;
 }
 
 BOOL TMario::squatSlipping()
